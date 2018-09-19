@@ -3,10 +3,13 @@
  */
 package com.hyjf.am.trade.service.front.borrow;
 
+import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
+import com.hyjf.am.trade.bean.repay.ProjectBean;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -15,8 +18,10 @@ import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
+import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author fuqiang
@@ -170,4 +175,55 @@ public interface BorrowService extends BaseService {
 	 * @date 2018/9/3 17:25
 	 */
 	public Borrow selectBorrowByNidAndNowTime(String borrowNid, Integer nowtime);
+
+	/**
+	 * 获取还款计算公式 add by liushouyi
+	 *
+	 * @param borrowStyle
+	 * @return
+	 */
+    List<BorrowStyleWithBLOBs> selectBorrowStyleWithBLOBs(String borrowStyle);
+    /**
+     * 合计
+     *
+     * @param batchCenterCustomize
+     * @return
+     */
+	public Long countBatchCenter(BatchCenterCustomizeRequest batchCenterCustomize);
+    /**
+     * 列表
+     *
+     * @param batchCenterCustomize
+     * @return
+     */
+	public List<BatchCenterCustomize> selectBatchCenterList(BatchCenterCustomizeRequest batchCenterCustomize);
+    /**
+     * 查询
+     *
+     * @param params
+     * @return
+     */
+	public String getborrowIdByProductId(Map<String, Object> params);
+    /**
+     * 还款列表
+     *
+     * @param params
+     * @return
+     */
+	public List<WebUserRepayProjectListCustomizeVO> selectOrgRepayProjectList(Map<String, Object> params);
+    /**
+     * 还款列表
+     *
+     * @param params
+     * @return
+     */
+	public List<WebUserRepayProjectListCustomizeVO> selectUserRepayProjectList(Map<String, Object> params);
+    /**
+     * 还款明细
+     *
+     * @param form
+     * @return
+     */
+	public ProjectBean searchRepayProjectDetail(ProjectBean form) throws Exception;
+
 }

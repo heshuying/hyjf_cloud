@@ -37,4 +37,12 @@ public interface AccountBankService extends BaseService {
      * @return
      */
     List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId);
+
+    /**
+     * 获取卡号
+     * @param userId
+     * @param bankId
+     * @return
+     */
+    AccountBank getBankInfo(Integer userId, Integer bankId);
 }

@@ -4,6 +4,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
+import com.hyjf.am.response.trade.CouponConfigExportCustomizeResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
@@ -72,4 +73,18 @@ public interface CouponConfigService {
      * @return
      */
     String getAdminInfoByUserId(String userId);
+
+    /**
+     * 查询导出列表
+     * @param request
+     * @return
+     */
+    CouponConfigExportCustomizeResponse getExportConfigList(CouponConfigRequest request);
+
+    /**
+     * 根据用户名获取用户id
+     * @param auditUser
+     * @return
+     */
+    Integer getUserId(String auditUser);
 }

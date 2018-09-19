@@ -29,12 +29,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -42,7 +39,6 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BorrowCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
-import com.hyjf.admin.service.InstConfigService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
@@ -126,9 +122,9 @@ public class BorrowCommonController extends BaseController {
 		borrowCommonRequest.setAdminId(Integer.valueOf(this.getUser(request).getId()));
 		borrowCommonRequest.setAdminUsername(this.getUser(request).getUsername());
 		BorrowCommonResponse bcr = borrowCommonService.insertAction(borrowCommonRequest);
-		if(bcr==null) {
-			return new AdminResult<>(FAIL, FAIL_DESC);
-		}
+//		if(bcr==null) {
+//			return new AdminResult<>(FAIL, FAIL_DESC);
+//		}
 		if (!Response.isSuccess(bcr)) {
 			return new AdminResult<>(FAIL, bcr.getMessage());
 
@@ -197,12 +193,12 @@ public class BorrowCommonController extends BaseController {
 		BigDecimal increaseMoney = new BigDecimal("100");
 		if (account.compareTo(increaseMoney) < 0) {
 			// 发标金额应大于递增金额
-			return new AdminResult<>(FAIL, "发标金额应大于递增金额");
+			return new AdminResult<>(FAIL, "借款金额应大于递增金额");
 		}
 		// 不是100的整数倍
 		if (account.divideAndRemainder(increaseMoney)[1].compareTo(BigDecimal.ZERO) != 0) {
 			// 发标金额应大于递增金额
-			return new AdminResult<>(FAIL, "发标金额应大于递增金额");
+			return new AdminResult<>(FAIL, "借款金额应该是整百金额");
 		}
 		return new AdminResult();
 	}
@@ -272,7 +268,7 @@ public class BorrowCommonController extends BaseController {
 //		String message = this.borrowCommonService.isExistsBorrowPreNidRecord(request);
 //		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISEXISTSBORROWPRENIDRECORD);
 		boolean borrowPreNidFlag = borrowCommonService.isExistsBorrowPreNidRecord(borrowPreNid.get("borrowPreNid"));
-		return new AdminResult<>(borrowPreNidFlag);
+		return new AdminResult<>(!borrowPreNidFlag);
 
 	}
 
@@ -1730,12 +1726,16 @@ public class BorrowCommonController extends BaseController {
 		List<BorrowCustomizeVO> vo = bcr.getResultList();
 		List<BorrowCustomizeVO> vo2=new ArrayList<BorrowCustomizeVO>();
 		Map<String, String> map = CacheUtil.getParamNameMap("BORROW_STATUS");
-		for (BorrowCustomizeVO borrowCustomizeVO : vo) {
-			BorrowCustomizeVO bvo=new BorrowCustomizeVO();
-			bvo=borrowCustomizeVO;
-			bvo.setStatus(map.get(bvo.getStatus()));
-			vo2.add(bvo);
+		bcr.setBs(map);
+		if(vo!=null) {
+			for (BorrowCustomizeVO borrowCustomizeVO : vo) {
+				BorrowCustomizeVO bvo=new BorrowCustomizeVO();
+				bvo=borrowCustomizeVO;
+				bvo.setStatus(map.get(bvo.getStatus()));
+				vo2.add(bvo);
+			}
 		}
+
 		bcr.setSt(CacheUtil.getParamNameMap("ASSET_STATUS"));
 		bcr.setResultList(vo2);
 		return new AdminResult<BorrowCustomizeResponse>(bcr);
@@ -1769,7 +1769,7 @@ public class BorrowCommonController extends BaseController {
 	 * @param form
 	 */
 	@ApiOperation(value = "导出功能")
-	@RequestMapping("/exportOptAction")
+	@PostMapping("/exportOptAction")
 	public void exportOptAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowBeanRequest form) throws Exception {
 		form.setPageSize(-1);
 		form.setCurrPage(-1);

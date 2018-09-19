@@ -29,11 +29,11 @@
         SELECT
         COUNT(1)
         FROM
-        huiyingdai_borrow_repay_plan AS rp
-        INNER JOIN huiyingdai_borrow AS b ON rp.borrow_nid = b.borrow_nid
-        LEFT JOIN huiyingdai_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
-        LEFT JOIN huiyingdai_users u ON b.user_id = u.user_id
-        LEFT JOIN hyjf_hjh_inst_config hic ON hic.inst_code = b.inst_code
+        ht_borrow_repay_plan AS rp
+        INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
+        LEFT JOIN ht_users u ON b.user_id = u.user_id
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
         <include refid="Where_Clause" />
         AND rp.repay_money_source=2
         AND hba.api_type = 1
@@ -45,11 +45,11 @@
         SELECT
         COUNT(1)
         FROM
-        huiyingdai_borrow_repay AS rp
-        INNER JOIN huiyingdai_borrow AS b ON rp.borrow_nid = b.borrow_nid
-        LEFT JOIN huiyingdai_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
-        LEFT JOIN huiyingdai_users u ON b.user_id = u.user_id
-        LEFT JOIN hyjf_hjh_inst_config hic ON hic.inst_code = b.inst_code
+        ht_borrow_repay AS rp
+        INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
+        LEFT JOIN ht_users u ON b.user_id = u.user_id
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
         <include refid="Where_Clause" />
         AND rp.repay_money_source=2
         AND hba.api_type = 1
@@ -87,11 +87,11 @@
         if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
         '',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayYseTime
         FROM
-        huiyingdai_borrow_repay_plan AS rp
-        INNER JOIN huiyingdai_borrow AS b ON rp.borrow_nid = b.borrow_nid
-        LEFT JOIN huiyingdai_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
-        LEFT JOIN huiyingdai_users u ON b.user_id = u.user_id
-        LEFT JOIN hyjf_hjh_inst_config hic ON hic.inst_code = b.inst_code
+        ht_borrow_repay_plan AS rp
+        INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
+        LEFT JOIN ht_users u ON b.user_id = u.user_id
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
         <include refid="Where_Clause" />
         AND rp.repay_money_source=2
         AND hba.api_type = 1
@@ -117,11 +117,11 @@
         if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
         '',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayYseTime
         FROM
-        huiyingdai_borrow_repay AS rp
-        INNER JOIN huiyingdai_borrow AS b ON rp.borrow_nid = b.borrow_nid
-        LEFT JOIN huiyingdai_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
-        LEFT JOIN huiyingdai_users u ON b.user_id = u.user_id
-        LEFT JOIN hyjf_hjh_inst_config hic ON hic.inst_code = b.inst_code
+        ht_borrow_repay AS rp
+        INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
+        LEFT JOIN ht_users u ON b.user_id = u.user_id
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
         <include refid="Where_Clause" />
         AND rp.repay_money_source=2
         AND hba.api_type = 1

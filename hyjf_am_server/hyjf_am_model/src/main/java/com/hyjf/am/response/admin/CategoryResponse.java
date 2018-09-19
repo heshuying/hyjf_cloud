@@ -1,7 +1,7 @@
 package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
-import org.apache.poi.ss.formula.functions.T;
+import com.hyjf.am.vo.admin.ContentHelpVO;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class CategoryResponse<T> extends Response {
 
     //返回数据
     private T data;
-
+    private ContentHelpVO contentHelpVO;
     //返回List
     private List<T> recordList;
 
@@ -34,6 +34,9 @@ public class CategoryResponse<T> extends Response {
 
     //flag：新增或修改或删除结果标识
     private Integer flag;
+
+    //flag：新增或修改或删除结果标识
+    private boolean success;
 
     public Integer getCount() {
         return count;
@@ -97,5 +100,21 @@ public class CategoryResponse<T> extends Response {
 
     public void setHelpList(List<T> helpList) {
         this.helpList = helpList;
+    }
+
+    public boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public ContentHelpVO getContentHelpVO() {
+        return contentHelpVO;
+    }
+
+    public void setContentHelpVO(ContentHelpVO contentHelpVO) {
+        this.contentHelpVO = contentHelpVO;
     }
 }

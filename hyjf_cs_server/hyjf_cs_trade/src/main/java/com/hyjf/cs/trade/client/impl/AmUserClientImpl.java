@@ -127,7 +127,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserVO getSpreadsUsersByUserId(Integer userId) {
 		String url = urlBase + "user/findReffer/" + userId;
 		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
-		if (response != null) {
+		if (Response.isSuccess(response)) {
 			return response.getResult();
 		}
 		return null;
@@ -154,8 +154,8 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public Integer selectMyInviteCount(MyInviteListRequest requestBean){
 		String url = urlBase + "invite/myInviteCount";
-		Integer response = restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
-		return response;
+		IntegerResponse response = restTemplate.postForEntity(url,requestBean,IntegerResponse.class).getBody();
+		return response.getResultInt();
 	}
 
 	/**
@@ -389,12 +389,12 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setStatus(ckcodeYiyan);
 		request.setUpdateStatus(ckcodeYiyan1);
 
-		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/check/", request, Integer.class)
+		IntegerResponse response = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/check/", request, IntegerResponse.class)
 				.getBody();
-		if (result == null) {
-			return 0;
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
 		}
-		return result;
+		return 0;
 	}
 
 	/**
@@ -622,5 +622,65 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+	/**
+	 * 根据用户id获取银行卡信息
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public List<AccountBankVO> getAccountBankByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/accountbank/getAccountBankByUserId/" + userId;
+		AccountBankResponse response = restTemplate.getForEntity(url, AccountBankResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public AccountChinapnrVO getAccountChinapnr(Integer userId) {
+		AccountChinapnrResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/getAccountChinapnr/" + userId, AccountChinapnrResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public AccountBankVO getBankInfo(Integer userId, int bankId) {
+		String url = "http://AM-USER/am-user/accountbank/getBankInfo/" + userId+"/"+bankId;
+		AccountBankResponse response = restTemplate.getForEntity(url, AccountBankResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过account 获取用户开户信息
+	 * @param account
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public BankOpenAccountVO getBankOpenAccountByAccountId(String account) {
+		String url = urlBase + "bankopen/getBankOpenAccountByAccountId/" + account;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public Integer selectUserIdByUsrcustid(Long chinapnrUsrcustid) {
+		IntegerResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/chinapnr/selectUserIdByUsrcustid/"+chinapnrUsrcustid, IntegerResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 }

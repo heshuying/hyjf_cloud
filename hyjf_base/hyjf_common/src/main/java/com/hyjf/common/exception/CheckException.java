@@ -11,6 +11,7 @@
 package com.hyjf.common.exception;
 
 import com.hyjf.common.constants.MsgCode;
+import com.hyjf.common.util.StringUtil;
 
 /**
  * 自定义异常，用于组合层返回给页面
@@ -89,6 +90,13 @@ public class CheckException extends RuntimeException{
 		super(message);
 		this.code = code;
 		this.data = data;
+	}
+
+	public CheckException(MsgCode msgCode, Object... params) {
+		super(StringUtil.getEnumMessage(msgCode, params));
+		this.code = msgCode.getCode();
+
+
 	}
 	
 	public String getCode() {

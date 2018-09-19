@@ -127,6 +127,14 @@
 		,sum(reinvest_account)as 'reinvestAccount',sum(add_account)as
 		'addAccount'
 		from ht_hjh_account_balance
+		<where>
+		<if test="addTimeStart != null and addTimeStart != ''">
+		and rpt_date &gt;= STR_TO_DATE(#{addTimeStart},"%Y-%m-%d")
+		</if>
+		<if test="addTimeEnd != null and addTimeEnd != ''">
+		AND rpt_date &lt;= STR_TO_DATE(#{addTimeEnd},"%Y-%m-%d")
+		</if>
+		</where>
 		group by DATE_FORMAT(rpt_date,'%Y-%m')
 		order by rpt_date desc
 		<include refid="pagination_Tail" />

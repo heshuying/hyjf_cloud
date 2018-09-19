@@ -6,13 +6,13 @@
 	<sql id="Where_Clause">
 		<where>
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
-				AND b.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+				AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
 			<if test="borrowStatusSrch != null and borrowStatusSrch != ''">
-				AND b.borrow_status LIKE CONCAT('%', #{borrowStatusSrch}, '%')
+				AND b.borrow_status LIKE CONCAT( #{borrowStatusSrch}, '%')
 			</if>
 			<if test="typeSrch != null and typeSrch != ''">
-				AND b.type LIKE CONCAT('%', #{typeSrch}, '%')
+				AND b.type LIKE CONCAT( #{typeSrch}, '%')
 			</if>
 			<!-- 标的状态 -->
 			<if test="createUserNameSrch != null and createUserNameSrch != ''">
@@ -89,7 +89,7 @@
 		FROM_UNIXTIME( b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
 		b.del_flag
 		FROM
-		hyjf_borrow_log b
+		ht_borrow_log b
 		<include refid="Where_Clause" />
 		ORDER BY
 		<if test="col != null and col != '' and sort != null and sort != ''">

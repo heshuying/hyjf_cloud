@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service.front.coupon;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponConfigExportCustomize;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -204,4 +205,11 @@ public interface CouponConfigService {
      * @return
      */
     List<CouponConfigCustomize> getConfigCustomizeList(CouponConfigCustomize couponConfigCustomize);
+
+    /**
+     * 查询导出列表
+     * @param configCustomize
+     * @return
+     */
+    List<CouponConfigExportCustomize> exoportRecordList(CouponConfigCustomize configCustomize);
 }

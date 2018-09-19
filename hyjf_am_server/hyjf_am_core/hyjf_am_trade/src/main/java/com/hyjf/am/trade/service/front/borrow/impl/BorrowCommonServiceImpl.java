@@ -54,9 +54,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
     private AutoIssueMessageProducer autoIssueMessageProducer;
     @Autowired
     private AutoRecordMessageProducer autoRecordMessageProducer;
-//    @Autowired
-//    @Qualifier("myAmqpTemplate")
-//    private RabbitTemplate rabbitTemplate;
 	@Value("${file.domain.url}")
     private String url; 
 	@Value("${file.physical.path}")
@@ -237,12 +234,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	private void changeOntimeOfRedis(BorrowWithBLOBs borrow) {
 		if (borrow.getVerifyStatus() == 3){
 			//定时发标 写定时发标时间 redis 有效期10天 
-			RedisUtils.set(borrow.getBorrowNid()+CustomConstants.UNDERLINE+
-					CustomConstants.REDIS_KEY_ONTIME, String.valueOf(borrow.getOntime()), 864000);
+			RedisUtils.set(CustomConstants.REDIS_KEY_ONTIME+CustomConstants.COLON+borrow.getBorrowNid(), String.valueOf(borrow.getOntime()), 864000);
 		} else{
 			//非定时发标 删redis
-			RedisUtils.del(borrow.getBorrowNid()+CustomConstants.UNDERLINE+
-					CustomConstants.REDIS_KEY_ONTIME);
+			RedisUtils.del(CustomConstants.REDIS_KEY_ONTIME+CustomConstants.COLON+borrow.getBorrowNid());
 		}
 	}
 
@@ -440,8 +435,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setBorrowIncomeDescription(borrowBean.getBorrowIncomeDescription());
 		// 发行人
 		borrow.setBorrowPublisher(borrowBean.getBorrowPublisher());
-		// 产品加息收益率
-		borrow.setBorrowExtraYield(new BigDecimal(StringUtils.isNotEmpty(borrowBean.getBorrowExtraYield()) ? borrowBean.getBorrowExtraYield() : "0"));
+		// del by liuyang 20180906
+//		// 产品加息收益率
+//		borrow.setBorrowExtraYield(new BigDecimal(StringUtils.isNotEmpty(borrowBean.getBorrowExtraYield()) ? borrowBean.getBorrowExtraYield() : "0"));
+		// del by liuyang 20180906
 		// ----------风险缓释金添加 end-------
 
 		/**************网站改版添加 ******************/
@@ -759,6 +756,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		borrow.setPublishInstCode(borrowBean.getPublishInstCode());
 		borrow.setIsMonth(borrowBean.getIsMonth());
+		if(StringUtils.isNotBlank(borrowBean.getIsEngineUsed()) && "1".equals(borrowBean.getIsEngineUsed())){
+			borrow.setLabelId(borrowBean.getLabelId());
+		}
 		this.borrowMapper.insertSelective(borrow);
 		
 		BorrowInfoWithBLOBs borrowinfo=new BorrowInfoWithBLOBs();
@@ -772,6 +772,25 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			borrowinfo.setEntrustedUserId(0);
 		}
 		borrowinfo.setTrusteePayTime(0);
+		// 产品加息 add by liuyang 20180730 start
+		// 根据项目编号查询项目类型配置
+		BorrowProjectType borrowProjectType = this.getBrrowProjectTpyeByProjectType(String.valueOf(borrowBean.getProjectType()));
+		if (borrowProjectType.getIncreaseInterestFlag() == 1 && !StringUtils.isEmpty(borrowBean.getBorrowExtraYield()) && new BigDecimal(borrowBean.getBorrowExtraYield()).compareTo(BigDecimal.ZERO) > 0) {
+			// 是否加息
+			borrowinfo.setIncreaseInterestFlag(1);
+			// 产品加息率
+			borrowinfo.setBorrowExtraYield(new BigDecimal(borrowBean.getBorrowExtraYield()));
+		} else {
+			// 是否加息
+			borrowinfo.setIncreaseInterestFlag(0);
+			// 产品加息率
+			if (!StringUtils.isEmpty(borrowBean.getBorrowExtraYield())) {
+				borrowinfo.setBorrowExtraYield(new BigDecimal(borrowBean.getBorrowExtraYield()));
+			} else {
+				borrowinfo.setBorrowExtraYield(new BigDecimal(0));
+			}
+		}
+		// 产品加息 add by liuyang 20180730 end
 		this.borrowInfoMapper.insert(borrowinfo);
 		// 个人信息(信批新增字段)
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
@@ -5979,4 +5998,21 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		return this.hjhAssetTypeMapper.selectByExample(example);
 	}
 
+
+	/**
+	 * 根据项目类型查询项目配置信息
+	 *
+	 * @param projectType
+	 * @return
+	 */
+	private BorrowProjectType getBrrowProjectTpyeByProjectType(String projectType) {
+		BorrowProjectTypeExample example = new BorrowProjectTypeExample();
+		BorrowProjectTypeExample.Criteria cra = example.createCriteria();
+		cra.andBorrowCdEqualTo(projectType);
+		List<BorrowProjectType> list = this.borrowProjectTypeMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
 }

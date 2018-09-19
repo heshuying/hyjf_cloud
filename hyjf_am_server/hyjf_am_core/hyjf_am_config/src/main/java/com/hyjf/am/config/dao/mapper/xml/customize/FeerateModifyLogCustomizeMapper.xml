@@ -39,7 +39,7 @@
             </if>
             <!-- 期限 -->
             <if test="borrowPeriodSrch != null and borrowPeriodSrch != ''">
-                AND hfml.borrow_period LIKE CONCAT('%', #{borrowPeriodSrch}, '%')
+                AND hfml.borrow_period LIKE CONCAT( #{borrowPeriodSrch}, '%')
             </if>
             <!-- 修改类型 -->
             <if test="modifyTypeSrch != null and modifyTypeSrch != ''">
@@ -47,15 +47,15 @@
             </if>
             <!-- 操作人 -->
             <if test="userNameSrch != null and userNameSrch != ''">
-                AND hfml.create_user_id in(select id from ht_admin hui where hui.truename LIKE CONCAT('%', #{userNameSrch}, '%'))
+                AND hfml.create_user_id in(select id from ht_admin hui where hui.truename LIKE CONCAT( #{userNameSrch}, '%'))
             </if>
             <!-- 操作时间 -->
             <if test="recieveTimeStartSrch != null and recieveTimeStartSrch != ''">
-                AND hfml.create_time<![CDATA[>=]]>unix_timestamp(#{recieveTimeStartSrch})
+                AND hfml.create_time<![CDATA[>=]]>str_to_date(#{recieveTimeStartSrch},'%Y-%m-%d %H:%i:%s')
             </if>
             <!-- 操作时间 -->
             <if test="recieveTimeEndSrch != null and recieveTimeEndSrch != ''">
-                AND hfml.create_time<![CDATA[<=]]>unix_timestamp(#{recieveTimeEndSrch})+86399
+                AND hfml.create_time<![CDATA[<=]]>str_to_date(#{recieveTimeEndSrch},'%Y-%m-%d %H:%i:%s')
             </if>
         </where>
     </sql>

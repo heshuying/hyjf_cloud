@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.hyjf.am.vo.BaseVO;
 
-public class TreeVO extends BaseVO implements Serializable {
+public class TreeVO extends AdminMenuVO implements Serializable {
 
 	/**
 	 * serialVersionUID
@@ -57,13 +57,6 @@ public class TreeVO extends BaseVO implements Serializable {
 		this.icon = icon;
 	}
 
-	public String getMenuSort() {
-		return menuSort;
-	}
-
-	public void setMenuSort(String menuSort) {
-		this.menuSort = menuSort;
-	}
 
 	public boolean isSelected() {
 		return selected;
@@ -83,7 +76,6 @@ public class TreeVO extends BaseVO implements Serializable {
 
 	private String icon;
 
-	private String menuSort;
 
 	private List<TreeVO> children = new ArrayList<TreeVO>();
 

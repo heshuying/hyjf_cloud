@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.AdminCustomizeMapper">
+	<resultMap id="selectAdminListMap" type="com.hyjf.am.config.dao.model.customize.AdminCustomize">
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="username" property="username" jdbcType="VARCHAR" />
+	    <result column="truename" property="truename" jdbcType="VARCHAR" />
+	    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+	    <result column="sex" property="sex" jdbcType="VARCHAR" />
+	    <result column="password" property="password" jdbcType="VARCHAR" />
+	    <result column="phone" property="phone" jdbcType="VARCHAR" />
+	    <result column="mobile" property="mobile" jdbcType="CHAR" />
+	    <result column="qq" property="qq" jdbcType="VARCHAR" />
+	    <result column="email" property="email" jdbcType="VARCHAR" />
+	    <result column="fax" property="fax" jdbcType="VARCHAR" />
+	    <result column="address" property="address" jdbcType="VARCHAR" />
+	    <result column="state" property="state" jdbcType="VARCHAR" />
+	    <result column="login_num" property="loginNum" jdbcType="INTEGER" />
+	    <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+	    <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR" />
+	    <result column="operator" property="operator" jdbcType="VARCHAR" />
+	    <result column="role" property="role" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="TINYINT" />
+	    <result column="posttime" property="posttime" jdbcType="INTEGER" />
+	    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+	    <result column="accredit" property="accredit" jdbcType="VARCHAR" />
+	    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+	    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+	    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="departmentname" property="departmentName" jdbcType="VARCHAR" />
+		<result column="role_id" property="roleId" jdbcType="VARCHAR" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectAdminList" resultMap="selectAdminListMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminCustomize">
+		SELECT
+			admin.*,
+			role.id as role_id,
+			role.role_name,
+			dep.name AS departmentname
+		FROM
+			ht_admin admin
+			LEFT JOIN ht_admin_and_role aar ON aar.user_id = admin.id
+			LEFT JOIN ht_admin_role role ON aar.role_id = role.id 
+			LEFT JOIN ht_user.ht_r_oa_department dep ON admin.department_id = dep.id
+		WHERE
+			1=1
+			<if test="id != null and id != ''">
+				AND admin.id = #{id}
+			</if>
+			<if test="usernameSrch != null and usernameSrch != ''">
+				AND admin.username LIKE CONCAT( #{usernameSrch}, '%')
+			</if>
+			<if test="truenameSrch != null and truenameSrch != ''">
+				AND admin.truename LIKE CONCAT( #{truenameSrch}, '%')
+			</if>
+			<if test="mobileSrch != null and mobileSrch != ''">
+				AND admin.mobile = #{mobileSrch}
+			</if>
+			<if test="departmentSrch != null and departmentSrch != ''">
+				AND dep.`name` LIKE CONCAT( #{departmentSrch}, '%')
+			</if>
+          	<if test="stateSrchOn != null and stateSrchOn != '' and stateSrchOff != null and stateSrchOff != ''" >
+          		AND (admin.state = #{stateSrchOn} or admin.state = #{stateSrchOff})
+          	</if>
+          	<if test="stateSrchOn != null and stateSrchOn != '' and (stateSrchOff == null or stateSrchOff == '')" >
+          		AND admin.state = #{stateSrchOn}
+          	</if>
+          	<if test="stateSrchOff != null and stateSrchOff != '' and (stateSrchOn == null or stateSrchOn == '')" >
+          		AND admin.state = #{stateSrchOff}
+          	</if>
+          	<if test="stateSrch != null and stateSrch != ''">
+          		AND admin.state = #{stateSrch}
+          	</if>
+			<if test="addtimeStartSrch != null and addtimeStartSrch != ''">
+				AND admin.create_time  <![CDATA[>=]]> #{addtimeStartSrch}
+			</if>
+			<if test="addtimeEndSrch != null and addtimeEndSrch != ''">
+				AND admin.create_time <![CDATA[<=]]> #{addtimeEndSrch}
+			</if>
+		ORDER BY
+			admin.create_time DESC
+		<if test="limitStart >= 0" >
+	      limit #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+
+</mapper>

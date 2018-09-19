@@ -12,6 +12,8 @@
 package com.hyjf.am.vo.admin;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 import com.hyjf.am.vo.BaseVO;
 
@@ -89,7 +91,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	/**
 	 * 发布时间
 	 */
-	private String addtime;
+	private Date addtime;
 	/**
 	 * 状态
 	 */
@@ -170,8 +172,63 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	 */
 	private String verifyTime;
 	// ADD BY ZHANGYK END
-	
-	/**
+
+	private Integer repayOrgUserId;
+	private String manageFeeRate;
+	private String differentialRate;
+	private Integer lateFreeDays;
+    private String lateInterestRate;
+    private Integer id;
+    private String borrowUserName;
+    private Integer borrowValidTime;
+    private Integer labelId;
+    private Integer isShow;
+    private Integer isEngineUsed;
+    private Integer isInstallment;
+    private Integer isMonth;
+    private Integer registStatus;
+    private Date registTime;
+    private Integer registUserId;
+    private String registUserName;
+    private Integer verifyStatus;
+    private Integer verifyOverTime;
+    private String verifyUserid;
+    private String verifyUserName;
+    private String verifyRemark;
+    private String verifyContents;
+    private Integer borrowStatus;
+    private Integer ontime;
+    private String borrowEndTime;
+    private Integer borrowFullStatus;
+    private Integer tenderTimes;
+    private String borrowService;
+    private Integer reverifyStatus;
+    private String reverifyUserid;
+    private String reverifyRemark;
+    private String reverifyContents;
+    private Integer repayLastTime;
+    private Integer repayNextTime;
+    private Integer repayStatus;
+    private Integer repayFullStatus;
+    private BigDecimal repayFeeNormal;
+    private BigDecimal repayAccountAll;
+    private BigDecimal repayAccountInterest;
+    private BigDecimal repayAccountCapital;
+    private BigDecimal repayAccountYes;
+    private BigDecimal repayAccountInterestYes;
+    private BigDecimal repayAccountCapitalYes;
+    private BigDecimal repayAccountWait;
+    private BigDecimal repayAccountInterestWait;
+    private BigDecimal repayAccountCapitalWait;
+    private String borrowManager;
+    private String serviceFeeRate;
+    private String createUserName;
+    private String addIp;
+    private Date createTime;
+    private Date updatetime;
+    private Boolean increaseInterestFlag;
+
+    /**
 	 * recoverLastTime
 	 * 
 	 * @return the recoverLastTime
@@ -489,7 +546,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	 * @return the addtime
 	 */
 
-	public String getAddtime() {
+	public Date getAddtime() {
 		return addtime;
 	}
 
@@ -498,7 +555,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	 *            the addtime to set
 	 */
 
-	public void setAddtime(String addtime) {
+	public void setAddtime(Date addtime) {
 		this.addtime = addtime;
 	}
 
@@ -746,4 +803,440 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	public void setVerifyTime(String verifyTime) {
 		this.verifyTime = verifyTime;
 	}
+
+	public Integer getRepayOrgUserId() {
+		return repayOrgUserId;
+	}
+
+	public void setRepayOrgUserId(Integer repayOrgUserId) {
+		this.repayOrgUserId = repayOrgUserId;
+	}
+
+	public String getManageFeeRate() {
+		return manageFeeRate;
+	}
+
+	public void setManageFeeRate(String manageFeeRate) {
+		this.manageFeeRate = manageFeeRate;
+	}
+
+	public String getDifferentialRate() {
+		return differentialRate;
+	}
+
+	public void setDifferentialRate(String differentialRate) {
+		this.differentialRate = differentialRate;
+	}
+
+	public Integer getLateFreeDays() {
+		return lateFreeDays;
+	}
+
+	public void setLateFreeDays(Integer lateFreeDays) {
+		this.lateFreeDays = lateFreeDays;
+	}
+
+    public String getLateInterestRate() {
+        return lateInterestRate;
+    }
+
+    public void setLateInterestRate(String lateInterestRate) {
+        this.lateInterestRate = lateInterestRate;
+    }
+
+    public void setTruename(String truename) {
+        this.truename = truename;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getBorrowUserName() {
+        return borrowUserName;
+    }
+
+    public void setBorrowUserName(String borrowUserName) {
+        this.borrowUserName = borrowUserName;
+    }
+
+    public Integer getBorrowValidTime() {
+        return borrowValidTime;
+    }
+
+    public void setBorrowValidTime(Integer borrowValidTime) {
+        this.borrowValidTime = borrowValidTime;
+    }
+
+    public Integer getLabelId() {
+        return labelId;
+    }
+
+    public void setLabelId(Integer labelId) {
+        this.labelId = labelId;
+    }
+
+    public Integer getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(Integer isShow) {
+        this.isShow = isShow;
+    }
+
+    public Integer getIsEngineUsed() {
+        return isEngineUsed;
+    }
+
+    public void setIsEngineUsed(Integer isEngineUsed) {
+        this.isEngineUsed = isEngineUsed;
+    }
+
+    public Integer getIsInstallment() {
+        return isInstallment;
+    }
+
+    public void setIsInstallment(Integer isInstallment) {
+        this.isInstallment = isInstallment;
+    }
+
+    public Integer getIsMonth() {
+        return isMonth;
+    }
+
+    public void setIsMonth(Integer isMonth) {
+        this.isMonth = isMonth;
+    }
+
+    public Integer getRegistStatus() {
+        return registStatus;
+    }
+
+    public void setRegistStatus(Integer registStatus) {
+        this.registStatus = registStatus;
+    }
+
+    public Date getRegistTime() {
+        return registTime;
+    }
+
+    public void setRegistTime(Date registTime) {
+        this.registTime = registTime;
+    }
+
+    public Integer getRegistUserId() {
+        return registUserId;
+    }
+
+    public void setRegistUserId(Integer registUserId) {
+        this.registUserId = registUserId;
+    }
+
+    public String getRegistUserName() {
+        return registUserName;
+    }
+
+    public void setRegistUserName(String registUserName) {
+        this.registUserName = registUserName;
+    }
+
+    public Integer getVerifyStatus() {
+        return verifyStatus;
+    }
+
+    public void setVerifyStatus(Integer verifyStatus) {
+        this.verifyStatus = verifyStatus;
+    }
+
+    public Integer getVerifyOverTime() {
+        return verifyOverTime;
+    }
+
+    public void setVerifyOverTime(Integer verifyOverTime) {
+        this.verifyOverTime = verifyOverTime;
+    }
+
+    public String getVerifyUserid() {
+        return verifyUserid;
+    }
+
+    public void setVerifyUserid(String verifyUserid) {
+        this.verifyUserid = verifyUserid;
+    }
+
+    public String getVerifyUserName() {
+        return verifyUserName;
+    }
+
+    public void setVerifyUserName(String verifyUserName) {
+        this.verifyUserName = verifyUserName;
+    }
+
+    public String getVerifyRemark() {
+        return verifyRemark;
+    }
+
+    public void setVerifyRemark(String verifyRemark) {
+        this.verifyRemark = verifyRemark;
+    }
+
+    public String getVerifyContents() {
+        return verifyContents;
+    }
+
+    public void setVerifyContents(String verifyContents) {
+        this.verifyContents = verifyContents;
+    }
+
+    public Integer getBorrowStatus() {
+        return borrowStatus;
+    }
+
+    public void setBorrowStatus(Integer borrowStatus) {
+        this.borrowStatus = borrowStatus;
+    }
+
+    public Integer getOntime() {
+        return ontime;
+    }
+
+    public void setOntime(Integer ontime) {
+        this.ontime = ontime;
+    }
+
+    public String getBorrowEndTime() {
+        return borrowEndTime;
+    }
+
+    public void setBorrowEndTime(String borrowEndTime) {
+        this.borrowEndTime = borrowEndTime;
+    }
+
+    public Integer getBorrowFullStatus() {
+        return borrowFullStatus;
+    }
+
+    public void setBorrowFullStatus(Integer borrowFullStatus) {
+        this.borrowFullStatus = borrowFullStatus;
+    }
+
+    public Integer getTenderTimes() {
+        return tenderTimes;
+    }
+
+    public void setTenderTimes(Integer tenderTimes) {
+        this.tenderTimes = tenderTimes;
+    }
+
+    public String getBorrowService() {
+        return borrowService;
+    }
+
+    public void setBorrowService(String borrowService) {
+        this.borrowService = borrowService;
+    }
+
+    public Integer getReverifyStatus() {
+        return reverifyStatus;
+    }
+
+    public void setReverifyStatus(Integer reverifyStatus) {
+        this.reverifyStatus = reverifyStatus;
+    }
+
+    public String getReverifyUserid() {
+        return reverifyUserid;
+    }
+
+    public void setReverifyUserid(String reverifyUserid) {
+        this.reverifyUserid = reverifyUserid;
+    }
+
+    public String getReverifyRemark() {
+        return reverifyRemark;
+    }
+
+    public void setReverifyRemark(String reverifyRemark) {
+        this.reverifyRemark = reverifyRemark;
+    }
+
+    public String getReverifyContents() {
+        return reverifyContents;
+    }
+
+    public void setReverifyContents(String reverifyContents) {
+        this.reverifyContents = reverifyContents;
+    }
+
+    public Integer getRepayLastTime() {
+        return repayLastTime;
+    }
+
+    public void setRepayLastTime(Integer repayLastTime) {
+        this.repayLastTime = repayLastTime;
+    }
+
+    public Integer getRepayNextTime() {
+        return repayNextTime;
+    }
+
+    public void setRepayNextTime(Integer repayNextTime) {
+        this.repayNextTime = repayNextTime;
+    }
+
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
+    }
+
+    public Integer getRepayFullStatus() {
+        return repayFullStatus;
+    }
+
+    public void setRepayFullStatus(Integer repayFullStatus) {
+        this.repayFullStatus = repayFullStatus;
+    }
+
+    public BigDecimal getRepayFeeNormal() {
+        return repayFeeNormal;
+    }
+
+    public void setRepayFeeNormal(BigDecimal repayFeeNormal) {
+        this.repayFeeNormal = repayFeeNormal;
+    }
+
+    public BigDecimal getRepayAccountAll() {
+        return repayAccountAll;
+    }
+
+    public void setRepayAccountAll(BigDecimal repayAccountAll) {
+        this.repayAccountAll = repayAccountAll;
+    }
+
+    public BigDecimal getRepayAccountInterest() {
+        return repayAccountInterest;
+    }
+
+    public void setRepayAccountInterest(BigDecimal repayAccountInterest) {
+        this.repayAccountInterest = repayAccountInterest;
+    }
+
+    public BigDecimal getRepayAccountCapital() {
+        return repayAccountCapital;
+    }
+
+    public void setRepayAccountCapital(BigDecimal repayAccountCapital) {
+        this.repayAccountCapital = repayAccountCapital;
+    }
+
+    public BigDecimal getRepayAccountYes() {
+        return repayAccountYes;
+    }
+
+    public void setRepayAccountYes(BigDecimal repayAccountYes) {
+        this.repayAccountYes = repayAccountYes;
+    }
+
+    public BigDecimal getRepayAccountInterestYes() {
+        return repayAccountInterestYes;
+    }
+
+    public void setRepayAccountInterestYes(BigDecimal repayAccountInterestYes) {
+        this.repayAccountInterestYes = repayAccountInterestYes;
+    }
+
+    public BigDecimal getRepayAccountCapitalYes() {
+        return repayAccountCapitalYes;
+    }
+
+    public void setRepayAccountCapitalYes(BigDecimal repayAccountCapitalYes) {
+        this.repayAccountCapitalYes = repayAccountCapitalYes;
+    }
+
+    public BigDecimal getRepayAccountWait() {
+        return repayAccountWait;
+    }
+
+    public void setRepayAccountWait(BigDecimal repayAccountWait) {
+        this.repayAccountWait = repayAccountWait;
+    }
+
+    public BigDecimal getRepayAccountInterestWait() {
+        return repayAccountInterestWait;
+    }
+
+    public void setRepayAccountInterestWait(BigDecimal repayAccountInterestWait) {
+        this.repayAccountInterestWait = repayAccountInterestWait;
+    }
+
+    public BigDecimal getRepayAccountCapitalWait() {
+        return repayAccountCapitalWait;
+    }
+
+    public void setRepayAccountCapitalWait(BigDecimal repayAccountCapitalWait) {
+        this.repayAccountCapitalWait = repayAccountCapitalWait;
+    }
+
+    public String getBorrowManager() {
+        return borrowManager;
+    }
+
+    public void setBorrowManager(String borrowManager) {
+        this.borrowManager = borrowManager;
+    }
+
+    public String getServiceFeeRate() {
+        return serviceFeeRate;
+    }
+
+    public void setServiceFeeRate(String serviceFeeRate) {
+        this.serviceFeeRate = serviceFeeRate;
+    }
+
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public String getAddIp() {
+        return addIp;
+    }
+
+    public void setAddIp(String addIp) {
+        this.addIp = addIp;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public Boolean getIncreaseInterestFlag() {
+        return increaseInterestFlag;
+    }
+
+    public void setIncreaseInterestFlag(Boolean increaseInterestFlag) {
+        this.increaseInterestFlag = increaseInterestFlag;
+    }
 }

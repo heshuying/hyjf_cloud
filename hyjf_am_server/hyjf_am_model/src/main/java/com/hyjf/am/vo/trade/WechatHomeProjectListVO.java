@@ -27,6 +27,8 @@ public class WechatHomeProjectListVO  extends BaseVO {
 
     //剩余可投金额
     private String accountWait;
+    //产品加息率
+    public String borrowExtraYield;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -100,6 +102,9 @@ public class WechatHomeProjectListVO  extends BaseVO {
         this.accountWait = accountWait;
     }
 
+    public String getBorrowExtraYield() { return borrowExtraYield; }
+
+    public void setBorrowExtraYield(String borrowExtraYield) { this.borrowExtraYield = borrowExtraYield; }
 
 }
 

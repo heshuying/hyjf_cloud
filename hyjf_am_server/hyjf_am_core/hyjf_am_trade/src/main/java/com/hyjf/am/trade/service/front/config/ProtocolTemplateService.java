@@ -11,6 +11,7 @@ import com.hyjf.am.vo.admin.ProtocolVersionVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author libin
@@ -30,6 +31,8 @@ public interface ProtocolTemplateService {
      * @return
      */
     Integer countRecord(AdminProtocolRequest request);
+
+    int startUseExistProtocol(AdminProtocolRequest request);
 
     List<ProtocolTemplateCommonVO> getRecordList(AdminProtocolRequest request);
 
@@ -103,4 +106,6 @@ public interface ProtocolTemplateService {
     ProtocolTemplateVO byIdTemplateBy(String protocolId);
 
     int updateProtocolVersionSize(ProtocolTemplateVO protocolTemplate);
+
+    Map<String,Object> validatorFieldCheck(String protocolName, String versionNumber, String displayName, String protocolUrl, String protocolType, String oldDisplayName, String flagT);
 }

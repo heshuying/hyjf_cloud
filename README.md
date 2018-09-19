@@ -69,6 +69,40 @@ CS-MARKET页面：http://47.104.203.75:8083/swagger-ui.html
 CS-MESSAGE页面:http://47.104.203.75:8084/swagger-ui.html
 CS-TRADE页面:http://47.104.203.75:8082/swagger-ui.html
 CS-USER页面:http://47.104.203.75:8081/swagger-ui.html
+BATCH页面：http://47.104.203.75:9091
+```
+###数据库相关
+```
+trade ：
+118.190.148.153   3301
+写用户： trade_m  密码： aAR!Q23AUP!ogk$J
+读用户： trade_s  密码： uCLeilNVcMxM5GRR
+
+user :  包含剩下的 market , config
+118.190.148.153  3302
+写用户： user_m   密码：  aAR!Q23AUP!ogk$J
+读用户： user_s   密码： uCLeilNVcMxM5GRR
+
+admin：
+47.104.244.26 33306
+读用户： admin_s  密码： uCLeilNVcMxM5GRR 
+```
+###redis配置
+```
+redis:
+123.56.216.212   6666  密码：RH06863b3e6
+```
+###mongo链接
+```
+47.94.171.28 28001
+user: testuser
+passwd:e2VdOav40i
+DB:mservice
+```
+###rocketMQ
+```
+47.104.250.73:9876;47.104.250.28:9876
+rocketmq控制台http://123.56.216.212:8888
 ```
 ### 微服务架构
    ![调用链](pic2.png)    

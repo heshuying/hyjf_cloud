@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -55,4 +56,13 @@ public interface BorrowCreditTenderService extends BaseTradeService {
      * @return
      */
     JSONObject getInterestInfo(int userId, String creditNid, String assignCapital);
+
+    /**
+     * App页面投资可债转输入投资金额后获取收益
+     * @param tender
+     * @param creditNid
+     * @param assignCapital
+     * @return
+     */
+    AppInvestInfoResultVO getInterestInfoApp(TenderRequest tender, String creditNid, String assignCapital);
 }

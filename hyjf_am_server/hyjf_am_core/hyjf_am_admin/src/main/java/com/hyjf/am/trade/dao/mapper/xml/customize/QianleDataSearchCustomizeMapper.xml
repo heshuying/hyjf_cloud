@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.QianleDataSearchCustomizeMapper">
+
+
+    <select id="queryList" resultType="com.hyjf.am.vo.trade.DataSearchCustomizeVO" parameterType="java.util.Map">
+        SELECT
+        t1.accede_order_id AS nid,
+        t1.user_id userId,
+        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/365)*0.07,2) END money,
+        t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'计划' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
+        CASE WHEN t4.is_month = 1 THEN CONCAT(t4.lock_period, '个月') ELSE CONCAT(t4.lock_period, '天') END borrow_period,
+        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/365),2) END yearAccount,
+        t5.truename reffername,INSERT(t5.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
+        FROM ht_hjh_accede t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
+        LEFT JOIN ht_hjh_plan t4 ON t1.plan_nid = t4.plan_nid
+        LEFT JOIN ht_r_user t5 ON t5.user_id = t2.spreads_user_id
+        where t1.user_id in
+        <foreach collection="list" item="userId" index="index"
+                 open="(" close=")" separator=",">
+            #{userId}
+        </foreach>
+
+        <if test="regTimeStart != null and regTimeEnd != null">
+            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null and addTimeEnd != null">
+            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        </if>
+        union
+        SELECT
+        t1.nid,
+        t1.user_id userId,
+        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
+        t2.create_time reg_time,t2.username username,t2.truename truename,
+        INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,
+        i.name,
+        t1.account,
+        CASE WHEN t4.borrow_style = 'endday' THEN CONCAT(t4.borrow_period, '天') ELSE CONCAT(t4.borrow_period, '个月') END borrow_period,
+        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
+        t5.truename reffername,
+        INSERT(t5.mobile, 4, 4, '****') reffermobile,
+        t1.create_time addtimes
+        FROM ht_borrow_tender t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
+        LEFT JOIN ht_borrow t4 ON t1.borrow_nid = t4.borrow_nid
+        LEFT JOIN ht_borrow_info i on i.borrow_nid=t4.borrow_nid
+        LEFT JOIN ht_r_user t5 ON t5.user_id = t2.spreads_user_id
+        AND t1.accede_order_id IS NULL
+        where t1.user_id in
+        <foreach collection="list" item="userId" index="index"
+                 open="(" close=")" separator=",">
+            #{userId}
+        </foreach>
+        <if test="regTimeStart != null and regTimeEnd != null">
+            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null and addTimeEnd != null">
+            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        </if>
+        order by addtimes DESC
+        <if test="limitStart != null and limitEnd!=null and limitStart >= 0" >
+            limit #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+    <select id="queryCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(userId) from(
+        SELECT
+        t1.user_id userId
+        FROM ht_hjh_accede t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
+        LEFT JOIN ht_hjh_plan t4 ON t1.plan_nid = t4.plan_nid
+        LEFT JOIN ht_r_user t5 ON t5.user_id = t2.spreads_user_id
+        where t1.user_id in
+        <foreach collection="list" item="userId" index="index"
+                 open="(" close=")" separator=",">
+            #{userId}
+        </foreach>
+
+        <if test="regTimeStart != null and regTimeEnd != null">
+            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null and addTimeEnd != null">
+            AND t1.create_time &gt;= #{addTimeStart} AND t1.create_time &lt;= #{addTimeEnd}
+        </if>
+        union
+        SELECT
+        t1.user_id userId
+        FROM ht_borrow_tender t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
+        LEFT JOIN ht_borrow t4 ON t1.borrow_nid = t4.borrow_nid
+        LEFT JOIN ht_borrow_info i on i.borrow_nid=t4.borrow_nid
+        LEFT JOIN ht_r_user t5 ON t5.user_id = t2.spreads_user_id
+        AND t1.accede_order_id IS NULL
+        where t1.user_id in
+        <foreach collection="list" item="userId" index="index"
+                 open="(" close=")" separator=",">
+            #{userId}
+        </foreach>
+        <if test="regTimeStart != null and regTimeEnd != null">
+            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null and addTimeEnd != null">
+            AND t1.create_time &gt;= #{addTimeStart} AND t1.create_time &lt;= #{addTimeEnd}
+        </if>
+        )a
+    </select>
+
+    <select id="queryPlanList" resultType="com.hyjf.am.vo.trade.DataSearchCustomizeVO" parameterType="java.util.Map">
+        SELECT
+        t1.accede_order_id AS nid,
+        t1.user_id userId,
+        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/365)*0.07,2) END money,
+        FROM_UNIXTIME(t2.create_time,'%Y-%m-%d %H:%i') create_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'计划' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
+        CASE WHEN t4.is_month = 1 THEN CONCAT(t4.lock_period, '个月') ELSE CONCAT(t4.lock_period, '天') END borrow_period,
+        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/365),2) END yearAccount,
+        t5.truename reffername,INSERT(t5.mobile, 4, 4, '****') reffermobile,FROM_UNIXTIME(t1.create_time,'%Y-%m-%d %H:%i') addtimes
+        FROM ht_hjh_accede t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
+        LEFT JOIN ht_hjh_plan t4 ON t1.plan_nid = t4.plan_nid
+        LEFT JOIN ht_r_user t5 ON t5.user_id = t2.spreads_user_id
+        where t1.user_id in
+        <foreach collection="list" item="userId" index="index"
+                 open="(" close=")" separator=",">
+            #{userId}
+        </foreach>
+
+        <if test="regTimeStart != null and regTimeEnd != null">
+            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null and addTimeEnd != null">
+            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        </if>
+        order by t1.create_time DESC
+        <if test="limitStart != null and limitEnd!=null and limitStart >= 0" >
+            limit #{limitStart} , #{limitEnd}
+        </if>
+
+    </select>
+
+    <select id="queryPlanCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(*)
+        FROM ht_hjh_accede t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
+        LEFT JOIN ht_hjh_plan t4 ON t1.plan_nid = t4.plan_nid
+        LEFT JOIN ht_r_user t5 ON t5.user_id = t2.spreads_user_id
+        where t1.user_id in
+        <foreach collection="list" item="userId" index="index"
+                 open="(" close=")" separator=",">
+            #{userId}
+        </foreach>
+
+        <if test="regTimeStart != null and regTimeEnd != null">
+            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null and addTimeEnd != null">
+            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        </if>
+        order by t1.create_time DESC
+    </select>
+
+
+    <select id="querySanList" resultType="com.hyjf.am.vo.trade.DataSearchCustomizeVO" parameterType="java.util.Map">
+        SELECT
+        t1.nid,
+        t1.user_id userId,
+        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
+        FROM_UNIXTIME(t2.create_time,'%Y-%m-%d %H:%i') reg_time,t2.username username,t2.truename truename,
+        INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,
+        i.name,
+        t1.account,
+        CASE WHEN t4.borrow_style = 'endday' THEN CONCAT(t4.borrow_period, '天') ELSE CONCAT(t4.borrow_period, '个月') END borrow_period,
+        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
+        t5.truename reffername,
+        INSERT(t5.mobile, 4, 4, '****') reffermobile,
+        FROM_UNIXTIME(t1.create_time,'%Y-%m-%d %H:%i') addtimes
+        FROM ht_borrow_tender t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
+        LEFT JOIN ht_borrow t4 ON t1.borrow_nid = t4.borrow_nid
+        LEFT JOIN ht_borrow_info i on i.borrow_nid=t4.borrow_nid
+        LEFT JOIN ht_r_user t5 ON t5.user_id = t2.spreads_user_id
+        AND t1.accede_order_id IS NULL
+        where t1.user_id in
+        <foreach collection="list" item="userId" index="index"
+                 open="(" close=")" separator=",">
+            #{userId}
+        </foreach>
+        <if test="regTimeStart != null and regTimeEnd != null">
+            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null and addTimeEnd != null">
+            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        </if>
+        order by t1.create_time DESC
+        <if test="limitStart != null and limitEnd!=null and limitStart >= 0" >
+            limit #{limitStart} , #{limitEnd}
+        </if>
+
+    </select>
+
+    <select id="querySanCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(*)
+        FROM ht_borrow_tender t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
+        LEFT JOIN ht_borrow t4 ON t1.borrow_nid = t4.borrow_nid
+        LEFT JOIN ht_borrow_info i on i.borrow_nid=t4.borrow_nid
+        LEFT JOIN ht_r_user t5 ON t5.user_id = t2.spreads_user_id
+        AND t1.accede_order_id IS NULL
+        where t1.user_id in
+        <foreach collection="list" item="userId" index="index"
+                 open="(" close=")" separator=",">
+            #{userId}
+        </foreach>
+        <if test="regTimeStart != null and regTimeEnd != null">
+            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null and addTimeEnd != null">
+            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        </if>
+    </select>
+
+
+    <select id="querySanMoney" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT
+        SUM(t.account) summoney,
+        SUM(t.yearAccount) yearmoney,
+        SUM(t.commission) AS commission
+        FROM
+        (
+        SELECT
+        t1.account account,
+        CASE
+        WHEN t4.borrow_style = 'endday' THEN
+        ROUND(
+        (
+        t1.account * t4.borrow_period / 365
+        ),
+        2
+        )
+        ELSE
+        ROUND(
+        (
+        t1.account * t4.borrow_period / 12
+        ),
+        2
+        )
+        END yearAccount,
+        CASE
+        WHEN t4.borrow_style = 'endday' THEN
+        ROUND(
+        (
+        t1.account * t4.borrow_period / 365
+        )*0.07,
+        2
+        )
+        ELSE
+        ROUND(
+        (
+        t1.account * t4.borrow_period / 12
+        )*0.07,
+        2
+        )
+        END commission
+        FROM ht_borrow_tender t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
+        LEFT JOIN ht_borrow t4 ON t1.borrow_nid = t4.borrow_nid
+        LEFT JOIN ht_borrow_info i on i.borrow_nid=t4.borrow_nid
+        LEFT JOIN ht_r_user t5 ON t5.user_id = t2.spreads_user_id
+        AND t1.accede_order_id IS NULL
+        where t1.user_id in
+        <foreach collection="list" item="userId" index="index"
+                 open="(" close=")" separator=",">
+            #{userId}
+        </foreach>        AND t1.accede_order_id IS NULL
+        <if test="regTimeStart != null and regTimeEnd != null">
+            and t2.create_time &gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null and addTimeEnd != null">
+            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        </if>
+        ) t
+    </select>
+
+    <select id="queryPlanMoney" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT
+        SUM(t.account) summoney,
+        SUM(t.yearAccount) yearmoney,
+        SUM(t.commission) AS commission
+        FROM
+        (
+        SELECT
+        t1.accede_account account,
+        CASE
+        WHEN t4.is_month = 1 THEN
+        ROUND(
+        (
+        t1.accede_account * t4.lock_period / 12
+        ) * 0.07,
+        2
+        )
+        ELSE
+        ROUND(
+        (
+        t1.accede_account * t4.lock_period / 365
+        ) * 0.07,
+        2
+        )
+        END commission,
+
+        CASE
+        WHEN t4.is_month = 1 THEN
+        ROUND(
+        (
+        t1.accede_account * t4.lock_period / 12
+        ),
+        2
+        )
+        ELSE
+        ROUND(
+        (
+        t1.accede_account * t4.lock_period / 365
+        ) ,
+        2
+        )
+        END yearAccount
+        FROM ht_hjh_accede t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
+        LEFT JOIN ht_hjh_plan t4 ON t1.plan_nid = t4.plan_nid
+        LEFT JOIN ht_r_user t5 ON t5.user_id = t2.spreads_user_id
+        where t1.user_id in
+        <foreach collection="list" item="userId" index="index"
+                 open="(" close=")" separator=",">
+            #{userId}
+        </foreach>
+
+        <if test="regTimeStart != null and regTimeEnd != null">
+            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null and addTimeEnd != null">
+            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        </if>
+        ) t
+    </select>
+
+
+
+    <select id="queryFirstTender" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT nid AS nid,create_time AS ADDTIME,user_id AS user_id FROM ht_borrow_tender
+            where 1=1
+            <if test="userId != null">
+                AND  user_id= #{userId}
+            </if>
+          UNION ALL
+        SELECT credit_tender_nid AS nid,create_time AS ADDTIME,user_id AS user_id FROM ht_credit_tender
+            where 1=1
+            <if test="userId != null">
+                AND  user_id= #{userId}
+            </if>
+          UNION ALL
+        SELECT nid AS nid,create_time AS ADDTIME,user_id AS user_id FROM ht_borrow_tender_cpn
+            where 1=1
+            <if test="userId != null">
+                AND  user_id= #{userId}
+            </if>
+          UNION ALL
+        SELECT accede_order_id AS nid,create_time AS ADDTIME,user_id AS user_id FROM ht_hjh_accede
+            where 1=1
+            <if test="userId != null">
+                AND  user_id= #{userId}
+            </if>
+        order by ADDTIME limit 1
+
+    </select>
+</mapper>

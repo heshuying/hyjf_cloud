@@ -593,11 +593,11 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (flag == 1) {//还款申请查询
 			crt.andRepayStatusEqualTo(0);
 			crt.andDelFlagEqualTo(0);
-			crt.andRepayAccountGreaterThan(BigDecimal.ZERO);
+			crt.andRepayAccountGreaterThanOrEqualTo(BigDecimal.ZERO);
 		}else{
 			crt.andRepayStatusNotEqualTo(1);
 			crt.andDelFlagEqualTo(0);
-			crt.andRepayAccountGreaterThan(BigDecimal.ZERO);
+			crt.andRepayAccountGreaterThanOrEqualTo(BigDecimal.ZERO);
 		}
 		List<HjhDebtCreditRepay> creditRepayList = this.hjhDebtCreditRepayMapper.selectByExample(example);
 		return creditRepayList;

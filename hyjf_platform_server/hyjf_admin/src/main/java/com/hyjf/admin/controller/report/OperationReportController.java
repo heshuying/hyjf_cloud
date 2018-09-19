@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.report;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -8,10 +9,8 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.OperationReportService;
 import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.config.WhereaboutsPictureResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
-import com.hyjf.am.vo.datacollect.MonthlyOperationReportVO;
 import com.hyjf.am.vo.datacollect.OperationReportVO;
 import com.hyjf.am.vo.datacollect.OperationSelectVO;
 import com.hyjf.am.vo.datacollect.QuarterOperationReportVO;
@@ -32,8 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -88,28 +87,11 @@ public class OperationReportController extends BaseController {
     }
 
     @ApiOperation(value = "月度报告新增和公用修改頁面", notes = "月度报告新增和公用修改頁面")
-    @GetMapping("/initupdatepage/{id}/{month}/{year}")
-    public AdminResult<OperationReportResponse> initUpdatePage(@PathVariable String id,@PathVariable String month,@PathVariable String year){
+    @GetMapping("/initupdatepage/{id}")
+    public AdminResult<OperationReportResponse> initUpdatePage(@PathVariable String id){
         OperationReportResponse response = new OperationReportResponse();
-        MonthlyOperationReportVO monthlyOperationReport = new MonthlyOperationReportVO();
-        OperationReportVO operationReport = new OperationReportVO();
         if (StringUtils.isNotEmpty(id)) {
             response = operationReportService.selectOperationreportCommon(id);
-        } else {
-            if (StringUtils.isNotEmpty(month)) {
-                monthlyOperationReport.setMonth(Integer.parseInt(month));
-            } else {
-                monthlyOperationReport.setMonth(1);
-            }
-            if (StringUtils.isNotEmpty(year)) {
-                operationReport.setYear(year);
-            } else {
-                int nowYear = Calendar.getInstance().get(Calendar.YEAR);
-                operationReport.setYear(String.valueOf(nowYear));
-            }
-            operationReport.setOperationReportType(1);
-            response.setOperationReport(operationReport);
-            response.setMonthlyOperationReport(monthlyOperationReport);
         }
         return new AdminResult<>(response);
     }
@@ -192,7 +174,6 @@ public class OperationReportController extends BaseController {
     public AdminResult<OperationReportResponse> monthPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.monthPreview(request);
         //服务器配置路径跳转预览需要用到
-        response.setPath(systemConfig.getWebHost());
         return new AdminResult<>(response);
     }
 
@@ -201,7 +182,6 @@ public class OperationReportController extends BaseController {
     public AdminResult<OperationReportResponse> yearPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.yearPreview(request);
         //服务器配置路径跳转预览需要用到
-        response.setPath(systemConfig.getWebHost());
         return new AdminResult<>(response);
     }
 
@@ -210,7 +190,6 @@ public class OperationReportController extends BaseController {
     public AdminResult<OperationReportResponse> quarterPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.quarterPreview(request);
         //服务器配置路径跳转预览需要用到
-        response.setPath(systemConfig.getWebHost());
         return new AdminResult<>(response);
     }
     @ApiOperation(value = "半年度新增修改页面预览", notes = "半年度新增修改页面预览")
@@ -218,7 +197,6 @@ public class OperationReportController extends BaseController {
     public AdminResult<OperationReportResponse> halfPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.halfPreview(request);
         //服务器配置路径跳转预览需要用到
-        response.setPath(systemConfig.getAdminFrontHost());
         return new AdminResult<>(response);
     }
     /**
@@ -343,8 +321,10 @@ public class OperationReportController extends BaseController {
      */
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping("/uploadFile")
-    public WhereaboutsPictureResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        WhereaboutsPictureResponse files = whereaboutsPageService.uploadFile(request, response);
-        return files;
+    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        AdminResult adminResult = new AdminResult();
+        LinkedList<BorrowCommonImage> borrowCommonImages = operationReportService.uploadFile(request, response);
+        adminResult.setData(borrowCommonImages);
+        return adminResult;
     }
 }

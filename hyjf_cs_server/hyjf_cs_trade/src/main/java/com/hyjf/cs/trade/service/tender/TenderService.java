@@ -5,7 +5,7 @@ package com.hyjf.cs.trade.service.tender;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -73,5 +73,5 @@ public interface TenderService extends BaseTradeService{
 	 * @return
 	 * @throws Exception 
 	 */
-	public JSONObject userAutoTender(BorrowVO borrow, BankCallBean bean,String couponGrantId) throws Exception;
+	public JSONObject userAutoTender(BorrowAndInfoVO borrow, BankCallBean bean,String couponGrantId) throws Exception;
 }

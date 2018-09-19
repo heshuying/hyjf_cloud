@@ -34,7 +34,7 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -374,7 +374,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         }
 
         // 获取标的信息
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrowNid);
         if (borrow == null || borrowInfo == null) {
             return new AdminResult(BaseResult.FAIL, "标的不存在");
@@ -491,7 +491,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                     UserInfoVO borrowerUserinfo = amUserClient.findUsersInfoById(borrowerUserId);
                     UserVO borrowerUser = amUserClient.findUserById(borrowerUserId);
                     //查询标的信息
-                    BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+                    BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
                     //汇计划的标的 借款人用真实姓名 否则用平台注册用户名
                     if (borrow.getPlanNid() != null) {
                         contents.put("borrowUsername", borrowerUserinfo.getTruename().substring(0, 1) + "**");

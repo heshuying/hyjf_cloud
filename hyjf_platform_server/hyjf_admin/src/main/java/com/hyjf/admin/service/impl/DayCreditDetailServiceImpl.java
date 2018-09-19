@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.DayCreditDetailClient;
 import com.hyjf.admin.service.DayCreditDetailService;
 import com.hyjf.am.response.admin.DayCreditDetailResponse;
 import com.hyjf.am.resquest.admin.DayCreditDetailRequest;

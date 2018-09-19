@@ -33,7 +33,7 @@
 		FROM
 			ht_coupon_tender t
 		INNER JOIN ht_coupon_user u ON t.coupon_grant_id = u.id
-		INNER JOIN hyjf_coupon_config c ON u.coupon_code = c.coupon_code
+		INNER JOIN ht_coupon_config c ON u.coupon_code = c.coupon_code
 		WHERE t.order_id=#{nid}
 	</select>
 	

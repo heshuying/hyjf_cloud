@@ -59,7 +59,7 @@ public class CouponController extends BaseController {
     }
 
     @ApiOperation(value = " 优惠券投资")
-    @GetMapping("/updateCouponTender")
+    @PostMapping("/updateCouponTender")
     public Integer updateCouponTender(CouponTenderVO couponTender) {
         try{
             couponService.updateCouponTender(couponTender);

@@ -11,7 +11,7 @@ import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -310,7 +310,7 @@ public class NewAgreementController extends BaseTradeController{
                     // 承接人
                     UserVO user = this.agreementService.getUserByUserId(hjhDebtCreditTender.getUserId());
                     // 标的信息
-                    BorrowVO borrow = this.agreementService.getBorrowByNid(hjhDebtCreditTender.getBorrowNid());
+                    BorrowAndInfoVO borrow = this.agreementService.getBorrowByNid(hjhDebtCreditTender.getBorrowNid());
                     // 借款人
                     UserVO borrowUser = this.agreementService.getUserByUserId(borrow.getUserId());
                     // 债转信息
@@ -702,7 +702,7 @@ public class NewAgreementController extends BaseTradeController{
 			borrowCra.andBorrowNidEqualTo(creditTender.getBidNid());
 			List<Borrow> borrow = this.borrowMapper.selectByExample(borrowExample);*/
             // 现 获取借款标的信息
-            BorrowVO borrow = this.agreementService.getBorrowByNid(creditTender.getBidNid());
+            BorrowAndInfoVO borrow = this.agreementService.getBorrowByNid(creditTender.getBidNid());
 			
 			// 原 获取承接人身份信息
 /*			UsersInfoExample usersInfoExample = new UsersInfoExample();
@@ -907,7 +907,7 @@ public class NewAgreementController extends BaseTradeController{
         }
         Borrow borrow=borrows.get(0);*/
         //现 获取标的信息
-        BorrowVO borrow = this.agreementService.getBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = this.agreementService.getBorrowByNid(borrowNid);
         
         //原 获取用户投资信息
 /*        BorrowTenderExample borrowTenderExample=new BorrowTenderExample();

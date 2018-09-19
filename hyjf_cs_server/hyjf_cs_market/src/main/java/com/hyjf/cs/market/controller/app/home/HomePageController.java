@@ -39,23 +39,15 @@ public class HomePageController extends BaseMarketController {
     @Value("file.domain.url")
     private String FILE_DOMAIN_URL;
 
-    /** @RequestMapping值 */
-    public static final String REQUEST_HOME = "/hyjf-app";
-    /** 首页接口  @RequestMapping值 */
-    public static final String REQUEST_MAPPING = "/homepage";
-    /** 首页项目列表  @RequestMapping值 */
-    public static final String START_PAGE_ACTION = "/getStartPage";
-
     /**
      * 获取起始页banner
-     * @param platform
-     * @param realPlatform
+     * @param
+     * @param
      * @return
      */
-    @ResponseBody
     @ApiOperation(value = "获取起始页广告信息", httpMethod = "POST", notes = "获取起始页广告信息")
     @ApiParam(required = true, name = "request", value = "查询条件")
-    @PostMapping(START_PAGE_ACTION)
+    @PostMapping("/getStartPage")
     public JSONObject getStartPage(@RequestHeader(value = "platform", required = false) String platform,
                                     @RequestHeader(value = "realPlatform", required = false) String realPlatform) {
         logger.info(HomePageController.class.toString(), "startLog -- /hyjf-app/homepage/getStartPage");
@@ -64,7 +56,7 @@ public class HomePageController extends BaseMarketController {
         if (StringUtils.isBlank(platformT)) {
             platformT = platform;
         }
-        result.put(CustomConstants.APP_REQUEST, REQUEST_HOME + REQUEST_MAPPING + START_PAGE_ACTION);
+        result.put("request", "/hyjf-app/homepage/getStartPage");
         try {
             Map<String, Object> ads = new HashMap<String, Object>();
             ads.put("limitStart",0 );
@@ -82,7 +74,7 @@ public class HomePageController extends BaseMarketController {
                 result.put(CustomConstants.APP_STATUS_DESC, "获取banner失败,暂无数据");
                 return result;
             }
-            logger.info("platform======"+platform);
+            //logger.info("platform======"+platform);
             logger.info("picUrl======"+picList.get(0).getImage());
             logger.info("actionUrl======"+picList.get(0).getUrl());
             result.put("picUrl",picList.get(0).getImage());

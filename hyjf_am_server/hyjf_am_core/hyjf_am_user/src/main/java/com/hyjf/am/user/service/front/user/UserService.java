@@ -48,13 +48,20 @@ public interface UserService extends BaseService {
 	 */
 	User findUserByUsernameOrMobile(String condition);
 
-	/**
-	 * 根据推荐人手机号或userId查询推荐人
+    /**
+     * 查询推荐人是否存在
+     * @param reffer
+     * @return
+     */
+    User findUserByRecommendName(String reffer);
+
+    /**
+	 * 根据userId 查询推荐人
 	 *
-	 * @param reffer
+	 * @param userId
 	 * @return
 	 */
-	User findUserByRecommendName(String reffer);
+	User findReffer(Integer userId);
 
 	void updateLoginUser(int userId, String ip);
 

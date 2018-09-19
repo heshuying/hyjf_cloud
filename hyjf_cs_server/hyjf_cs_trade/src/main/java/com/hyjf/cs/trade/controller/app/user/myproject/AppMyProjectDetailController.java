@@ -45,7 +45,7 @@ public class AppMyProjectDetailController extends BaseTradeController {
      */
     @ApiOperation(value = "App端:发送短信验证码(ajax请求)短信验证码数据保存", notes = "App端:发送短信验证码(ajax请求)短信验证码数据保存")
     @PostMapping(value = "/sendcode", produces = "application/json; charset=utf-8")
-    public AppResult sendCode(@RequestBody TenderBorrowCreditCustomize request,@RequestHeader(value = "userId",required = false) Integer userId){
+    public AppResult sendCode(HttpServletRequest request,@RequestHeader(value = "userId",required = false) Integer userId){
     	AppResult result = appMyProjectService.sendCreditCode(request,userId);
     	return result;
     }
@@ -56,9 +56,22 @@ public class AppMyProjectDetailController extends BaseTradeController {
      */
     @ApiOperation(value = "App端:用户中心债转提交保存", notes = "App端:用户中心债转提交保存")
     @PostMapping(value = "/saveTenderToCredit", produces = "application/json; charset=utf-8")
-    public AppResult saveTenderToCredit(@RequestBody TenderBorrowCreditCustomize request,@RequestHeader(value = "userId",required = false) Integer userId){
+    public JSONObject saveTenderToCredit(@ModelAttribute TenderBorrowCreditCustomize request,@RequestHeader(value = "userId",required = false) Integer userId){
     	request.setPlatform(Integer.parseInt(CommonConstant.CLIENT_PC));
-    	AppResult result =  appMyProjectService.saveTenderToCredit(request,userId);
+    	JSONObject  result =  appMyProjectService.saveTenderToCredit(request,userId);
     	return result;
-    }	
+    }
+
+    /**
+     * 已持有债权列表去转让接口
+     * 原接口：com.hyjf.app.user.credit.AppTenderCreditBorrowController.searchTenderToCreditDetail()
+     * @author zhangyk
+     * @date 2018/9/12 13:53
+     */
+    @ApiOperation(value = "App端：已持有列表前往债转接口" , notes = "App端：已持有列表前往债转接口")
+    @GetMapping(value = "/transfer/setting", produces = "application/json; charset=utf-8")
+    public Object tenderToCreditDetail(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId){
+        JSONObject result = appMyProjectService.tenderToCreditDetail( request, userId);
+        return result;
+    }
 }

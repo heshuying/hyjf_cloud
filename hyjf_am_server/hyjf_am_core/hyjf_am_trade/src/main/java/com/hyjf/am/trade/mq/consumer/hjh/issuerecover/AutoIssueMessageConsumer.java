@@ -40,6 +40,7 @@ import static com.hyjf.am.trade.service.task.issuerecover.impl.AutoIssueRecoverS
  * @Auther: walter.limeng
  * @Date: 2018/7/12 10:56
  * @Description: AutoIssueMessageConsumer
+ * 关联计划
  */
 @Component
 public class AutoIssueMessageConsumer extends Consumer {
@@ -64,7 +65,7 @@ public class AutoIssueMessageConsumer extends Consumer {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
         defaultMQPushConsumer.setConsumerGroup(MQConstant.ROCKETMQ_BORROW_PREAUDIT_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
-        defaultMQPushConsumer.subscribe(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, "*");
+        defaultMQPushConsumer.subscribe(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);

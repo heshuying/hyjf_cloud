@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractStatusCustomizeMapper" >
+    <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.NifaContractStatusCustomize" >
+        <result column="platform_no" jdbcType="VARCHAR" property="platformNo" />
+        <result column="project_no" jdbcType="VARCHAR" property="projectNo" />
+        <result column="contract_no" jdbcType="VARCHAR" property="contractNo" />
+        <result column="contract_status" jdbcType="TINYINT" property="contractStatus" />
+        <result column="change_date" jdbcType="VARCHAR" property="changeDate" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    platform_no, project_no, contract_no, contract_status, change_date, create_user_id,
+    create_time, update_user_id, update_time
+    </sql>
+
+    <select id="selectNifaContractStatus" resultMap="BaseResultMap">
+        select
+            platform_no,
+            project_no,
+            contract_no,
+            LPAD(contract_status,2,0) as contract_status,
+            change_date
+        from ht_nifa_contract_status hncs
+        where UNIX_TIMESTAMP(hncs.update_time) <![CDATA[>=]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE) - INTERVAL 1 DAY)
+        and UNIX_TIMESTAMP(hncs.update_time) <![CDATA[<]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE))
+    </select>
+
+    <resultMap id="RecoverResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowRecover" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+        <result column="nid" property="nid" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectBorrowRecoverCredit" resultMap="RecoverResultMap">
+        SELECT
+            hbr.nid
+        FROM
+            ht_borrow_recover hbr
+        WHERE
+            (
+                hbr.credit_status = 2
+                OR hbr.recover_capital = hbr.credit_amount
+            )
+        AND hbr.nid NOT IN (
+            SELECT
+                hncs.contract_no
+            FROM
+                ht_nifa_contract_status hncs
+            WHERE
+                hncs.contract_status = '6'
+        )
+        AND credit_time > 1536119818
+    </select>
+
+</mapper>

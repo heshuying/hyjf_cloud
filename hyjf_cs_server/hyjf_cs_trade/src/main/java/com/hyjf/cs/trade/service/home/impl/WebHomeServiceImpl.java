@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
@@ -31,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,22 +61,16 @@ public class WebHomeServiceImpl implements WebHomeService {
     private AmUserClient amUserClient;
 
     @Autowired
-    private CouponUserClient couponUserClient;
-
-    @Autowired
-    private AccountClient accountClient;
-
-    @Autowired
-    private WebProjectListClient webProjectListClient;
-
-    @Autowired
-    private ContentArticleClient contentArticleClient;
-
-    @Autowired
     private SystemConfig systemConfig;
 
     @Autowired
     private BaseClient baseClient;
+
+    @Autowired
+    private AmTradeClient amTradeClient;
+
+    @Autowired
+    private AmConfigClient amConfigClient;
 
 
     /**
@@ -98,11 +95,11 @@ public class WebHomeServiceImpl implements WebHomeService {
             result.setLoginFlag("0");
         } else {
             result.setLoginFlag("1");
-            int count = couponUserClient.getUserCouponCount(Integer.valueOf(userId), "0");
+            int count = amTradeClient.getUserCouponCount(Integer.valueOf(userId), "0");
             result.setCouponCount(count);
             if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1) { // 已开户
                 result.setOpenFlag(CustomConstants.FLAG_OPENACCOUNT_YES);
-                AccountVO accountVO = accountClient.getAccountByUserId(Integer.valueOf(userId));
+                AccountVO accountVO = amTradeClient.getAccountByUserId(Integer.valueOf(userId));
                 result.setUserInterest(accountVO != null ? (accountVO.getBankInterestSum() != null ? accountVO.getBankInterestSum() : BigDecimal.valueOf(0.00)) : BigDecimal.valueOf(0.00));
 
                 UserInfoVO userinfo = amUserClient.findUsersInfoById(Integer.valueOf(userId));
@@ -186,7 +183,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setBorrowClass("NEW");
         request.setLimitStart(0);
         request.setLimitEnd(1);
-        List<WebProjectListCustomizeVO> newProjectList = webProjectListClient.searchProjectList(request);
+        List<WebProjectListCustomizeVO> newProjectList = amTradeClient.searchProjectList(request);
         result.setNewProjectList(CollectionUtils.isEmpty(newProjectList) ? new ArrayList<>() : newProjectList);
 
         //首页散标推荐
@@ -194,7 +191,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setBorrowClass("");
         request.setLimitStart(0);
         request.setLimitEnd(4);
-        List<WebProjectListCustomizeVO> projectList = webProjectListClient.searchProjectList(request);
+        List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
         result.setProjectList(CollectionUtils.isEmpty(projectList) ? new ArrayList<>() : projectList);
 
 
@@ -202,13 +199,13 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setLimitStart(0);
         request.setLimitEnd(4);
         request.setIsHome("1");
-        List<HjhPlanCustomizeVO> planList = webProjectListClient.searchPlanList(request);
+        List<HjhPlanCustomizeVO> planList = amTradeClient.searchPlanList(request);
         result.setHjhPlanList(planList);
         ContentArticleRequest req = new ContentArticleRequest();
         req.setNoticeType(NOTICE_TYPE_COMPANY_DYNAMICS);
         req.setLimitStart(0);
         req.setLimitEnd(1);
-        List<ContentArticleVO> list1 = contentArticleClient.searchContentArticleList(req);
+        List<ContentArticleVO> list1 = amConfigClient.searchContentArticleList(req);
         if (!CollectionUtils.isEmpty(list1)){
             for (ContentArticleVO contentArticleVO : list1) {
                 if (contentArticleVO.getContent().contains("../../../..")) {
@@ -224,7 +221,7 @@ public class WebHomeServiceImpl implements WebHomeService {
 
         req.setLimitStart(1);
         req.setLimitEnd(3);
-        List<ContentArticleVO> list2 = contentArticleClient.searchContentArticleList(req);
+        List<ContentArticleVO> list2 = amConfigClient.searchContentArticleList(req);
         if (!CollectionUtils.isEmpty(list2)){
             for (ContentArticleVO companyDynamics : list2) {
                 if (companyDynamics.getContent().contains("../../../..")) {
@@ -241,5 +238,29 @@ public class WebHomeServiceImpl implements WebHomeService {
          /*首页原来接口 有推广session部分,此处暂时不做处理，如果需要再加*/
         webResult.setData(result);
         return webResult;
+    }
+
+
+    /**
+     * 安卓下载
+     * @author zhangyk
+     * @date 2018/9/5 11:38
+     */
+    @Override
+    public void androidDownload(HttpServletResponse response) {
+        String url = "http://app.hyjf.com/data/download/com.huiyingdai.apptest_wangye.apk";
+        VersionVO versionVO = amConfigClient.getLastestVersion();
+        if( versionVO != null && StringUtils.isNotBlank(versionVO.getUrl())){
+            url = versionVO.getUrl().trim();
+        }else{
+            logger.error("没有获取到安卓app最新版本信息，请核实");
+            return;
+        }
+        try {
+            logger.info("android download url = {}",url);
+            response.sendRedirect(url);
+        } catch (IOException e) {
+            logger.error("安卓apk下载失败,{}",e);
+        }
     }
 }

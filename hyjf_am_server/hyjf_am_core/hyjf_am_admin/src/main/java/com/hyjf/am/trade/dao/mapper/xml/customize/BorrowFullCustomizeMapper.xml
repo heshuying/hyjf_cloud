@@ -10,10 +10,10 @@
 			)
 				AND (habt.auto_record != 1 OR habt.auto_record IS NULL)
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
-				AND b.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+				AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND b.borrow_user_name LIKE CONCAT('%', #{usernameSrch}, '%')
+				AND b.borrow_user_name LIKE CONCAT( #{usernameSrch}, '%')
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
 				AND b.create_time <![CDATA[>=]]> STR_TO_DATE(#{timeStartSrch}, '%Y-%m-%d %H:%i:%s')
@@ -32,7 +32,7 @@
 		LEFT JOIN ht_borrow_info bi ON
 			bi.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			bi.project_type = habt.borrow_cd
+			b.project_type = habt.borrow_cd
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1
@@ -101,7 +101,7 @@
 		LEFT JOIN ht_borrow_info bi ON
 			bi.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			bi.project_type = habt.borrow_cd
+			b.project_type = habt.borrow_cd
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1
@@ -186,12 +186,12 @@
 			CASE WHEN verify_time IS NOT NULL AND verify_time != '0' THEN FROM_UNIXTIME( b.verify_time, '%Y-%m-%d %H:%i:%s' )  ELSE '' END AS ontime,
 			CASE WHEN b.borrow_full_time IS NOT NULL AND b.borrow_full_time != '' THEN FROM_UNIXTIME( b.borrow_full_time, '%Y-%m-%d %H:%i:%s' ) ELSE FROM_UNIXTIME(b.verify_time + (b.borrow_valid_time * 24 * 60 * 60), '%Y-%m-%d %H:%i:%s') END AS over_time,
 			FORMAT(b.borrow_account_yes, 2) AS borrow_account_yes,
-			bi.project_type,
+			b.project_type,
 			bpt.borrow_name AS project_type_name
 		FROM ht_borrow b
 			LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
 			LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(bi.project_type AS CHAR)
+			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 		WHERE
 		    b.borrow_nid = #{borrowNid}
 	</select>	
@@ -348,7 +348,7 @@
 		LEFT JOIN ht_borrow_info bi ON
 			bi.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			bi.project_type = habt.borrow_cd
+			b.project_type = habt.borrow_cd
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1

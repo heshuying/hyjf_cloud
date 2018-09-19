@@ -25,6 +25,14 @@ public interface AssetManageService  extends BaseService {
 
     int selectRepaymentListTotal(AssetManageBeanRequest request);
 
+    /**
+     * @Description 获取用户已回款债权列表数量(产品加息需求迁移时添加)
+     * @Author sunpeikai
+     * @Version v0.1
+     * @Date
+     */
+    int selectRepaymentListTotalWeb(AssetManageBeanRequest request);
+
     int countCreditRecordTotal(AssetManageBeanRequest request);
 
     List<RepayMentListCustomize> selectRepaymentList(AssetManageBeanRequest request);

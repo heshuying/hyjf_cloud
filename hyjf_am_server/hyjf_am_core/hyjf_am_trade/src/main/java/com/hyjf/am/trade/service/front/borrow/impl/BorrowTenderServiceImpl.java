@@ -209,4 +209,18 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
             throw new RuntimeException("============borrowTender表更新成功失败!========");
         }
     }
+
+    /**
+     * 根据放款编号获取该标的的投资信息 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public List<BorrowTender> getBorrowTenderListByBorrowNid(String borrowNid) {
+        BorrowTenderExample example = new BorrowTenderExample();
+        example.createCriteria().andBorrowNidEqualTo(borrowNid).andStatusEqualTo(1);
+        List<BorrowTender> tenderList = this.borrowTenderMapper.selectByExample(example);
+        return tenderList;
+    }
 }

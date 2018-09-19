@@ -7,6 +7,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyleWithBLOBs;
 import com.hyjf.am.trade.service.front.borrow.BorrowStyleService;
 import com.hyjf.common.util.CustomConstants;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +102,22 @@ public class BorrowStyleServiceImpl implements BorrowStyleService {
         record.setId(id);
         record.setStatus(CustomConstants.FLAG_STATUS_ENABLE);
         borrowStyleMapper.updateByPrimaryKeySelective(record);
+    }
+
+    /**
+     * 获取还款方式
+     * @param borrowStyle
+     * @return
+     */
+    @Override
+    public BorrowStyle getBorrowStyle(String borrowStyle) {
+        BorrowStyleExample example = new BorrowStyleExample();
+        example.createCriteria().andNidEqualTo(borrowStyle);
+        List<BorrowStyle> borrowStyles = this.borrowStyleMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(borrowStyles)){
+            return borrowStyles.get(0);
+        }
+        return null;
     }
 
 }

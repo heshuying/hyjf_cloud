@@ -68,7 +68,7 @@
                 AND b.borrow_nid = #{borrowNid}
             </if>
             <if test="borrowName != null and borrowName !='' ">
-                AND b.`name` LIKE CONCAT('%', #{borrowName}, '%')
+                AND b.`name` LIKE CONCAT( #{borrowName}, '%')
             </if>
             <if test="recoverLastTimeStart != null and recoverLastTimeStart !='' ">
                 AND FROM_UNIXTIME( b.recover_last_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{recoverLastTimeStart}
@@ -167,7 +167,7 @@
             AND tc.status = #{statusSearch}
         </if>
         <if test="borrowName != null and borrowName != ''">
-            AND b.`name` LIKE CONCAT('%', #{borrowName}, '%')
+            AND b.`name` LIKE CONCAT( #{borrowName}, '%')
         </if>
         <if test="recoverDateStart != null and recoverDateStart != ''">
             AND FROM_UNIXTIME(b.recover_last_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{recoverDateStart},'00:00:00'
@@ -305,10 +305,10 @@
         SELECT u.user_id, u.username, u.truename,u.mobile,u.attribute,
         od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
         FROM ht_r_user u
-        LEFT JOIN hyjf_crm.oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_crm.oa_department od ON od.id = ou.departmentid
-        LEFT JOIN hyjf_crm.oa_department od2 ON od2.id = od.parentid
-        LEFT JOIN hyjf_crm.oa_department od3 on od3.id = od2.parentid
+        LEFT JOIN ht_crm.oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN ht_crm.oa_department od ON od.id = ou.departmentid
+        LEFT JOIN ht_crm.oa_department od2 ON od2.id = od.parentid
+        LEFT JOIN ht_crm.oa_department od3 on od3.id = od2.parentid
         WHERE 1=1
         <if test="user_id != null">
             AND u.user_id= #{user_id}

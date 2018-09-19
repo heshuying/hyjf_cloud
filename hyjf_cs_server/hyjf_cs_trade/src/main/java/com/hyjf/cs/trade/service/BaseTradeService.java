@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
 
@@ -54,7 +54,7 @@ public interface BaseTradeService extends BaseService{
 
     BankCardVO getBankCardVOByUserId(Integer userId);
 
-    BorrowVO getBorrowByNid(String borrowNid);
+    BorrowAndInfoVO getBorrowByNid(String borrowNid);
 
     /**
      * 根据用户Id,银行卡号检索用户银行卡信息

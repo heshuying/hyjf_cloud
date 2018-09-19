@@ -52,6 +52,18 @@ public class ProtocolsRequestBean extends FddTempletVO {
 	 */
 	private int limitEnd = -1;
 
+	private Integer protocolType;
+
+	@Override
+	public Integer getProtocolType() {
+		return protocolType;
+	}
+
+	@Override
+	public void setProtocolType(Integer protocolType) {
+		this.protocolType = protocolType;
+	}
+
 	public int getLimitStart() {
 		return (getCurrPage() - 1) * (getPageSize());
 	}

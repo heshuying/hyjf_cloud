@@ -86,6 +86,8 @@
         <result column="credit_discount" property="creditDiscount" jdbcType="VARCHAR" />
         <result column="credit_capital_assigned" property="creditCapitalAssigned" jdbcType="VARCHAR" />
         <result column="borrow_desc" property="borrowDesc" jdbcType="VARCHAR"/>
+        <!-- add by nxl 20180727 产品加息标志位-->
+        <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="HjhPlanMap" type="com.hyjf.am.trade.dao.model.customize.HjhPlanCustomize">
@@ -227,16 +229,24 @@
         <result column="status_orginal" property="statusOrginal" />
         <!--标的审核状态-->
         <result column="project_status" property="projectStatus"></result>
-
+        <!-- add by nxl 20180727 产品加息标志位-->
+        <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="VARCHAR" />
     </resultMap>
     <!--Web端获取项目列表-->
     <select id="searchProjectList" resultMap="ProjectListNewMap" parameterType="Map">
         SELECT
             htb.borrow_nid,
+            hbi.`name` AS borrow_name,
+            hbi.is_new,
             htb.borrow_nid AS project_name,
             htb.borrow_style AS borrow_style,
+            htb.project_type,
+            htbpt.borrow_name AS borrow_type,
             htb.borrow_apr,
             htb.borrow_period,
+            hbi.borrow_extra_yield,
+            <!-- add by nxl 查找产品加息标志位(0:不加息,1:加息)-->
+            htb.increase_interest_flag,
             CASE WHEN htb.borrow_style = 'endday'
             THEN '天' ELSE '个月' END AS borrow_period_type,
             htb.account AS borrow_account,
@@ -418,6 +428,8 @@
         htbi.borrow_income_description,
         htbi.borrow_publisher,
         htbi.borrow_extra_yield,
+        <!-- add by nxl 添加产品加息标志位查询-->
+        hydb.increase_interest_flag,
         htbi.contract_period,
         FROM_UNIXTIME(
         hydb.recover_last_time,
@@ -1239,6 +1251,9 @@
         <result column="on_time" property="onTime" jdbcType="VARCHAR" />
         <!-- 剩余可投金额-->
         <result column="account_wait" property="accountWait" jdbcType="VARCHAR" />
+        <!-- 产品加息收益率（风险缓释金） borrowExtraYield -->
+        <result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="VARCHAR" />
+
     </resultMap>
 
     <select id="searchWechatProjectList" resultMap="wechatHomeProjectListMap">
@@ -1254,7 +1269,8 @@
         t.order_by_available_invest_account account_wait,
         '1' type ,
          0 borrow_account_scale,
-        '0' verify_time
+        '0' verify_time,
+        '' borrow_extra_yield
         FROM (SELECT
         hp.id as order_by_id,
         hp.plan_nid AS plan_nid,
@@ -1348,9 +1364,16 @@
         IFNULL(hydb.borrow_account_wait,0) borrow_account_wait,
         '2' type,
         hydb.borrow_account_scale borrow_account_scale,
-        hydb.verify_time verify_time
+        hydb.verify_time verify_time,
+        case when borrowInfo.borrow_extra_yield=0 then
+        ''
+        else
+        CONCAT(borrowInfo.borrow_extra_yield, '%')
+        end
+        borrow_extra_yield
         FROM
         ht_borrow hydb
+        INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hydb.borrow_nid
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
         WHERE
         hydbpt.borrow_project_type = 'HZT'
@@ -1385,9 +1408,16 @@
         IFNULL(hydb.borrow_account_wait,0) borrow_account_wait,
         '2' type,
         hydb.borrow_account_scale borrow_account_scale,
-        hydb.verify_time verify_time
+        hydb.verify_time verify_time,
+        case when borrowInfo.borrow_extra_yield=0 then
+        ''
+        else
+        CONCAT(borrowInfo.borrow_extra_yield, '%')
+        end
+        borrow_extra_yield
         FROM
         ht_borrow hydb
+        INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hydb.borrow_nid
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
         WHERE
         hydbpt.borrow_project_type = 'HZT'
@@ -1423,6 +1453,7 @@
 					'1' type ,
 					 0 borrow_account_scale,
 					'0' verify_time,
+					'' borrow_extra_yield,
 					t.order_by_lock_period
 					FROM (SELECT
 						hp.id as order_by_id,
@@ -1522,9 +1553,16 @@
 					IFNULL(hydb.borrow_account_wait,0) account_wait,
 					'2' type,
 				    hydb.borrow_account_scale borrow_account_scale,
-					hydb.verify_time verify_time
+					hydb.verify_time verify_time,
+					case when borrowInfo.borrow_extra_yield=0 then
+					''
+					else
+						CONCAT(borrowInfo.borrow_extra_yield, '%')
+					 end
+					borrow_extra_yield
 					FROM
 			        	ht_borrow hydb
+			        INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hydb.borrow_nid
 					LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 			        WHERE
 			        	hydbpt.borrow_project_type = 'HZT'

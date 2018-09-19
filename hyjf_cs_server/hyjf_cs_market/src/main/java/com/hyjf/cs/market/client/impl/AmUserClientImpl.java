@@ -417,7 +417,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
     public List<Integer> getQianleUser() {
-		return restTemplate.getForObject("http://AM-USER/am-user/user/getQianleUser", List.class);
+		return restTemplate.getForObject("http://AM-ADMIN/am-user/user/getQianleUser", List.class);
     }
     /**
 	 * 获取渠道用户userid集合

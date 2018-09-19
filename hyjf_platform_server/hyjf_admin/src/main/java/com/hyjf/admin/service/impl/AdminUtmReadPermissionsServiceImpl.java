@@ -1,8 +1,6 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AdminUtmReadPermissionsClient;
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.ChannelStatisticsDetailClient;
 import com.hyjf.admin.service.AdminUtmReadPermissionsService;
 import com.hyjf.admin.service.ChannelStatisticsDetailService;
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;

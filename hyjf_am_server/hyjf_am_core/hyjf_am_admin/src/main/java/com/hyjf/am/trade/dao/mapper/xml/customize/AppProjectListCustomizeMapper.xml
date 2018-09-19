@@ -508,7 +508,12 @@
 		hydb.borrow_safeguard_way,
 		hydb.borrow_income_description,
 		hydb.borrow_publisher,
-		hydb.borrow_extra_yield,
+		case when borrowInfo.borrow_extra_yield=0 then
+		''
+		else
+		CONCAT('+',borrowInfo.borrow_extra_yield, '%')
+		end
+		borrow_extra_yield,
 		hydb.contract_period,
 		truncate(hydb.account/10000,2) AS borrow_account_wan,
  		truncate(hydb.tender_account_min/10000,2) tender_account_min_wan,
@@ -523,6 +528,7 @@
 		hydb.borrow_level
 		FROM
 			ht_borrow hydb
+		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		LEFT JOIN ht_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
 		LEFT JOIN ht_borrow_repay re ON re.borrow_nid = hydb.borrow_nid
@@ -769,7 +775,7 @@
 			bh.houses_belong
 		FROM
 			ht_borrow_houses bh
-		LEFT JOIN hyjf_param_name pn ON bh.houses_type = pn.name_cd
+		LEFT JOIN ht_param_name pn ON bh.houses_type = pn.name_cd
 		AND pn.name_class = 'HOUSES_TYPE'
 		WHERE
 			bh.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
@@ -842,13 +848,13 @@
 	</resultMap>
 	<select id="selectProjectInvestList" resultMap="AppProjectInvestMap" parameterType="Map">
 		SELECT
-			CONCAT(substring(hydu.username,1,1),'**') AS user_name,
+			CONCAT(substring(hydbt.user_name,1,1),'**') AS user_name,
 			SUBSTRING(FORMAT(hydbt.account,4),1,LENGTH(FORMAT(hydbt.account,4))-2) AS account,
 			hydbt.`client` AS client,
 			hydbt.`client` AS client_name,
 			date_format(hydbt.create_time, '%Y-%m-%d %H:%i:%s') AS invest_time
 			FROM ht_borrow_tender hydbt
-			LEFT JOIN ht_r_user hydu ON hydbt.user_id = hydu.user_id
+			-- LEFT JOIN ht_r_user hydu ON hydbt.user_id = hydu.user_id
 		<where>
 			hydbt.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		</where>

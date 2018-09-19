@@ -19,4 +19,18 @@ public interface PlatformCountService {
      * @return
      */
     List<PlatformCountCustomize> searchAction(PlatformCountRequest request);
+
+    /**
+     * 获取注册人数
+     * @param request
+     * @return
+     */
+    List<PlatformCountCustomize> searchRegistNumber(PlatformCountRequest request);
+
+    /**
+     * 获取开户数量
+     * @param request
+     * @return
+     */
+    List<PlatformCountCustomize> searchAccountNumber(PlatformCountRequest request);
 }

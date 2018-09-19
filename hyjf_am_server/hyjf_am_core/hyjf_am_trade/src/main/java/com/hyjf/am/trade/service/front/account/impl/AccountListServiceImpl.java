@@ -1,15 +1,16 @@
 package com.hyjf.am.trade.service.front.account.impl;
 
+import com.hyjf.am.resquest.ApiTransactionDetailsRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountListExample;
+import com.hyjf.am.trade.dao.model.customize.ApiTransactionDetailsCustomize;
+import com.hyjf.am.trade.service.front.account.AccountListService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.service.front.account.AccountListService;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -81,5 +82,40 @@ public class AccountListServiceImpl extends BaseServiceImpl implements AccountLi
 		return this.accountListMapper.countByExample(accountListExample);
     }
 
+	/**
+	 * 第三方交易明细查询
+	 * @param detailsRequest
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public List<ApiTransactionDetailsCustomize> selectTransactionDetails(ApiTransactionDetailsRequest detailsRequest) {
+		ApiTransactionDetailsCustomize transactionDetailsCustomize = new ApiTransactionDetailsCustomize();
 
+		//必传
+		transactionDetailsCustomize.setStartDate(detailsRequest.getStartDate());
+		//必传
+		transactionDetailsCustomize.setEndDate(detailsRequest.getEndDate());
+		//通过必传的phone
+		transactionDetailsCustomize.setUserId(detailsRequest.getUserId());
+		//必传
+		transactionDetailsCustomize.setAccountId(detailsRequest.getAccountId());
+		//必传
+		transactionDetailsCustomize.setLimitStart(detailsRequest.getLimitStart());
+		//必传
+		transactionDetailsCustomize.setLimitEnd(detailsRequest.getLimitEnd());
+		//选传
+		transactionDetailsCustomize.setNid(detailsRequest.getNid());
+		//默认为1 江西银行
+		transactionDetailsCustomize.setIsBank("1");
+		//选传 交易状态 :0失败 1成功
+		transactionDetailsCustomize.setTradeStatus(detailsRequest.getTradeStatus());
+		//选传 收支类型 :1收入 2支出 3冻结 4解冻
+		transactionDetailsCustomize.setTypeSearch(detailsRequest.getTypeSearch());
+		//选传 交易类型ID
+		transactionDetailsCustomize.setTradeTypeSearch(detailsRequest.getTradeTypeSearch());
+
+		List<ApiTransactionDetailsCustomize> accountInfos = this.apiTransactionDetailsCustomizeMapper.queryApiAccountDetails(transactionDetailsCustomize);
+		return accountInfos;
+	}
 }

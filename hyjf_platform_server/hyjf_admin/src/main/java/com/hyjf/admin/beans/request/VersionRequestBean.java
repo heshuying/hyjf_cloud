@@ -4,6 +4,7 @@ import com.hyjf.admin.beans.BaseRequest;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/16.
@@ -11,6 +12,7 @@ import java.io.Serializable;
 public class VersionRequestBean extends BaseRequest implements Serializable {
     private static final long serialVersionUID = 387630498860089653L;
     @ApiModelProperty(value = "删除条件 ")
+    private List<Integer> delids;
     private String ids;
     @ApiModelProperty(value = "系统名称--检索条件")
     private String nameSrh;
@@ -28,6 +30,14 @@ public class VersionRequestBean extends BaseRequest implements Serializable {
     private String url;
     @ApiModelProperty(value = "版本描述")
     private String content;
+
+    public List<Integer> getDelids() {
+        return delids;
+    }
+
+    public void setDelids(List<Integer> delids) {
+        this.delids = delids;
+    }
 
     public String getIds() {
         return ids;

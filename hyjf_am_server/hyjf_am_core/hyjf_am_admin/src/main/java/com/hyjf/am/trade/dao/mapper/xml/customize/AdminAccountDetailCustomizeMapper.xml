@@ -31,6 +31,8 @@
 		SELECT
 		l.id,
 		l.user_id AS user_id,
+		hu.username as username,
+		hu2.username as 'referrer_name',
 		l.nid,
 		CASE l.type
 		WHEN 1 THEN
@@ -66,9 +68,12 @@
 		FROM
 		ht_account_list l
 		LEFT JOIN ht_account_trade t ON l.trade = t.`value`
+		LEFT JOIN ht_user.ht_user hu ON l.user_id = hu.user_id
+		LEFT JOIN ht_user.ht_spreads_user hsu ON l.user_id = hsu.user_id
+		LEFT JOIN ht_user.ht_user hu2 on hsu.spreads_user_id = hu2.user_id
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
-		<!--ORDER BY l.create_time DESC, l.id DESC-->
+		ORDER BY l.create_time DESC, l.id DESC
 		<if test="limitStart >= 0 and limitEnd > 0" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
@@ -77,6 +82,9 @@
 		SELECT COUNT(1)
 		FROM ht_account_list l
 		LEFT JOIN ht_account_trade t ON l.trade= t.`value`
+		LEFT JOIN ht_user.ht_user hu ON l.user_id = hu.user_id
+		LEFT JOIN ht_user.ht_spreads_user hsu ON l.user_id = hsu.user_id
+		LEFT JOIN ht_user.ht_user hu2 on hsu.spreads_user_id = hu2.user_id
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
 	</select>
@@ -84,15 +92,15 @@
 		<if test="userId != null and userId != 0">
 			AND l.user_id = #{userId}
 		</if>
-		<!--<if test="referrerName != null and referrerName != ''">
-			AND u2.username = #{referrerName}
-		</if>-->
+		<if test="referrerName != null and referrerName != ''">
+			AND hu2.username = #{referrerName}
+		</if>
+		<if test="userName != null and userName != ''">
+			AND hu.username = #{userName}
+		</if>
 		<if test="tradeTypeSearch != null and tradeTypeSearch != ''">
 			AND t.id = #{tradeTypeSearch}
 		</if>
-		<!--<if test="username != null and username != ''">
-			AND u.username = #{username}
-		</if>-->
 		<if test="nid != null and nid != ''">
 			AND l.nid = #{nid}
 		</if>

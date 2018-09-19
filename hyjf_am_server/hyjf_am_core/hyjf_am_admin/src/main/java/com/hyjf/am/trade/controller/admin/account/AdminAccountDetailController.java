@@ -60,6 +60,7 @@ public class AdminAccountDetailController {
         logger.info("---accountdetaillist by param---  " + JSONObject.toJSON(request));
         AccountDetailResponse response = new AccountDetailResponse();
         Map<String, Object> mapParam = paramSet(request);
+        logger.info("---selectAccountDetailList by param---  " + JSONObject.toJSON(mapParam));
         int intCountAccountDetail = accountDetailService.countAccountDetail(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), intCountAccountDetail, request.getPageSize());
         if (request.getPageSize() == 0) {
@@ -107,8 +108,7 @@ public class AdminAccountDetailController {
         mapParam.put("tradeTypeSearch", userRequest.getTradeTypeSearch());
         mapParam.put("startDate", userRequest.getStartDate());
         mapParam.put("endDate", userRequest.getEndDate());
-        mapParam.put("remarkSrch", userRequest.getRemark());
-        //mapParam.put("limit",userRequest.getPageSize());
+        mapParam.put("remarkSrch", userRequest.getRemarkSrch());
 
         return mapParam;
     }

@@ -3,17 +3,15 @@ package com.hyjf.pay.lib.anrong.util;
 import java.io.Serializable;
 import java.util.Map;
 
+import com.hyjf.pay.lib.config.URLSystemConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.anrong.bean.AnRongBean;
-import com.hyjf.pay.lib.config.PaySystemConfig;
 
 /**
  * 
@@ -29,7 +27,8 @@ public class AnRongCallUtils implements Serializable {
 
 	/** 接口路径(后台) */
 	private static final String REQUEST_MAPPING_CALLAPIBG = "/callApiBg.json";
-	private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+	//private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+	private static URLSystemConfig urlSystemConfig = SpringUtils.getBean(URLSystemConfig.class);
 	private static RestTemplate restTemplate = SpringUtils.getBean(RestTemplate.class);
 
 
@@ -47,7 +46,7 @@ public class AnRongCallUtils implements Serializable {
 			// bean转换成参数
 			bean.convert();
 
-			if (Validator.isNull(paySystemConfig.getPayUrl())) {
+			if (Validator.isNull(urlSystemConfig.getPayUrl())) {
 				throw new Exception("接口工程URL不能为空");
 			}
 			Map<String, String> allParams = bean.getAllParams();
@@ -78,7 +77,7 @@ public class AnRongCallUtils implements Serializable {
 			// 调用安融接口
 			//String result = HttpDeal.post(paySystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, allParams);
 			String result = restTemplate
-				.postForEntity(paySystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, allParams, String.class).getBody();
+				.postForEntity(urlSystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, allParams, String.class).getBody();
 			ret = result;
 		} catch (Exception e) {
 			log.error(String.valueOf(e));
@@ -104,7 +103,7 @@ public class AnRongCallUtils implements Serializable {
 			// 调用安融接口
 			//String result = HttpDeal.post(paySystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, allParams);
 			String result = restTemplate
-				.postForEntity(paySystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, params, String.class).getBody();
+				.postForEntity(urlSystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, params, String.class).getBody();
 			ret = result;
 		} catch (Exception e) {
 			log.error(String.valueOf(e));

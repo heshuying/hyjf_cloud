@@ -9,7 +9,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.dao.model.customize.*;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 
@@ -96,7 +96,7 @@ public interface HjhPlanCustomizeMapper {
      *  查询计划标的组成list
      * @date 2018/7/23 10:43
      */
-    List<BorrowVO> getPlanBorrowList(Map<String,Object> params);
+    List<BorrowAndInfoVO> getPlanBorrowList(Map<String,Object> params);
 
     /**
      * 计划加入总数 和加入金额总计

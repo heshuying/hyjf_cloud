@@ -11,6 +11,7 @@
 
 package com.hyjf.admin.controller.finance.bank.merchant.redpacket;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.BankMerchantAccountListCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,7 +24,7 @@ import java.util.List;
  * @author
  */
 
-public class BankRedPacketAccounttListBean implements Serializable {
+public class BankRedPacketAccounttListBean extends BasePage implements Serializable {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 7768418442884796575L;

@@ -28,8 +28,9 @@ public class TestDb {
 	@Test
 	public void getUser() {
 		Ads ads = adsMapper.selectByPrimaryKey(1);
-		if (ads != null)
+		if (ads != null) {
 			logger.info("ads is :{}", JSONObject.toJSONString(ads));
+		}
 		logger.info("none this ads");
 	}
 }

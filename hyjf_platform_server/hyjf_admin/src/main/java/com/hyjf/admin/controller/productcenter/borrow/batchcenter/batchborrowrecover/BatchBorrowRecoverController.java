@@ -18,6 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -47,7 +48,6 @@ public class BatchBorrowRecoverController extends BaseController{
     @ApiOperation(value = "批次中心-批次放款页面初始化", notes = "页面初始化")
     @PostMapping(value = "/batchBorrowRecoverInit")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    @ResponseBody
     public JSONObject batchBorrowRecoverInit() {
         JSONObject jsonObject = batchBorrowRecoverService.initPage(NAME_CLASS);
         BatchBorrowRecoverRequest request = new BatchBorrowRecoverRequest();
@@ -69,7 +69,6 @@ public class BatchBorrowRecoverController extends BaseController{
             @ApiResponse(code = 200, message = "成功")
     })
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    @ResponseBody
     public JSONObject querybatchBorrowRecoverList(@RequestBody BatchBorrowRecoverRequest request) {
         JSONObject jsonObject;
         request.setApiType(0);
@@ -84,13 +83,12 @@ public class BatchBorrowRecoverController extends BaseController{
             @ApiResponse(code = 200, message = "成功")
     })
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    @ResponseBody
     @ApiImplicitParam(name = "apicronID",value = "任务ID")
     public JSONObject querybatchBorrowRecoverBankInfoList(@RequestBody Map map) {
         JSONObject jsonObject;
         String apicronID = map.get("apicronID").toString();
         List<BorrowRecoverBankInfoVo> resultList= batchBorrowRecoverService.queryBatchBorrowRecoverBankInfoList(apicronID);
-        if (null != resultList) {
+        if (!CollectionUtils.isEmpty(resultList)) {
             jsonObject = this.success(String.valueOf(resultList.size()), resultList);
         } else {
             jsonObject = this.fail("暂无符合条件数据");
@@ -105,7 +103,6 @@ public class BatchBorrowRecoverController extends BaseController{
             @ApiResponse(code = 200, message = "成功")
     })
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    @ResponseBody
     public JSONObject exportBatchBorrowRecoverList(@RequestBody BatchBorrowRecoverRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
         String sheetName = "批次放款列表";
 

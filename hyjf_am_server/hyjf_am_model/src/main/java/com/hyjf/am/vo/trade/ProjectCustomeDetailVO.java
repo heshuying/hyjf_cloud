@@ -151,6 +151,12 @@ public class ProjectCustomeDetailVO  extends BaseVO {
 
     private Integer projectStatus;
 
+    // add by nxl 20180730 产品加息标志位(0:不加息,1:加息)
+    private String increaseInterestFlag;
+    // add by nxl 20180730 是否为产品加息
+    private  String isIncrease;
+
+
     public ProjectCustomeDetailVO() {
         super();
     }
@@ -657,5 +663,21 @@ public class ProjectCustomeDetailVO  extends BaseVO {
 
     public void setProjectStatus(Integer projectStatus) {
         this.projectStatus = projectStatus;
+    }
+
+    public String getIncreaseInterestFlag() {
+        return increaseInterestFlag;
+    }
+
+    public void setIncreaseInterestFlag(String increaseInterestFlag) {
+        this.increaseInterestFlag = increaseInterestFlag;
+    }
+
+    public String isIncrease() {
+        return isIncrease;
+    }
+
+    public void setIncrease(String increase) {
+        isIncrease = increase;
     }
 }

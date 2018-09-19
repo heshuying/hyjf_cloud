@@ -2,12 +2,12 @@ package com.hyjf.am.trade.controller.admin.productcenter.batchcenter.borrowrecov
 
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.response.Response;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "批次中心-批次放款")
 @RestController
-@RequestMapping("/am-trade/adminBatchBorrowRecover")
+@RequestMapping("/am-admin/adminBatchBorrowRecover")
 public class AdminBatchBorrowRecoverController extends BaseController {
 
     @Autowired
@@ -51,6 +51,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
     @PostMapping("/getList")
     public BatchBorrowRecoverReponse getList(@RequestBody BatchBorrowRecoverRequest request){
 
+        logger.info("BatchBorrowRecoverRequest:::::::[{}]", JSON.toJSONString(request));
         BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
         Integer total = getListTotal(request);
         Paginator paginator = new Paginator(request.getCurrPage(), total,request.getPageSize());
@@ -68,6 +69,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
         List<BatchBorrowRecoverVo> list =  batchBorrowRecoverService.getList(request,limitStart,limitEnd);
         reponse.setRecordTotal(total);
         reponse.setResultList(list);
+        reponse.setRtn(Response.SUCCESS);
         return reponse;
     }
 
@@ -76,20 +78,21 @@ public class AdminBatchBorrowRecoverController extends BaseController {
     public BatchBorrowRecoverReponse getListSum(@RequestBody BatchBorrowRecoverRequest request){
 
         BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
-
         BatchBorrowRecoverVo result =  batchBorrowRecoverService.getListSum(request);
+        logger.info("====================开始调用列表求和------");
         reponse.setResult(result);
         return reponse;
     }
 
     @ApiOperation(value = "根据id获取放款任务")
-    @PostMapping("/getRecoverApicronByID")
-    public BorrowApicronResponse getRecoverApicronByID(@RequestBody String id){
+    @GetMapping("/getRecoverApicronByID/{id}")
+    public BorrowApicronResponse getRecoverApicronByID(@PathVariable String id){
 
         BorrowApicronResponse reponse = new BorrowApicronResponse();
         BorrowApicron apicron = batchBorrowRecoverService.getRecoverApicronByID(id);
-        BorrowApicronVO result = (BorrowApicronVO) ConvertUtils.convert(apicron, BorrowApicronVO.class);
+        BorrowApicronVO result = CommonUtils.convertBean(apicron, BorrowApicronVO.class);
         reponse.setResult(result);
+        reponse.setRtn(Response.SUCCESS);
         return reponse;
     }
 

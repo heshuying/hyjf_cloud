@@ -36,7 +36,7 @@
 
     <sql id="where-all-page-condition">
         <if test="userNameSrch != null and userNameSrch != ''">
-            AND t.username LIKE CONCAT('%', #{userNameSrch}, '%')
+            AND t.username LIKE CONCAT( #{userNameSrch}, '%')
         </if>
         <if test="combotreeListSrch != null and combotreeListSrch != ''">
             AND od.id in
@@ -77,7 +77,7 @@
         where
         1=1
         <if test="accountSrch != null and accountSrch != ''">
-            AND a.account_id LIKE CONCAT('%', #{accountSrch}, '%')
+            AND a.account_id LIKE CONCAT( #{accountSrch}, '%')
         </if><!--
         <if test="vipSrch != null and vipSrch != ''">
             AND vip.id =  #{vipSrch}
@@ -94,6 +94,7 @@
     <select id="queryAccountInfos" resultMap="accountInfoMapResult"
             parameterType="com.hyjf.am.resquest.admin.BankAccountManageRequest">
         select t.*,
+        t.account_id as account,
         `od3`.`name` AS `regionName`,
         `od2`.`name` AS `branchName`,
         `od`.`name` AS `departmentName`,
@@ -141,7 +142,7 @@
         where
         1=1
         <if test="accountSrch != null and accountSrch != ''">
-            AND a.account_id LIKE CONCAT('%', #{accountSrch}, '%')
+            AND a.account_id LIKE CONCAT( #{accountSrch}, '%')
         </if><!--
         <if test="vipSrch != null and vipSrch != ''">
             AND vip.id =  #{vipSrch}

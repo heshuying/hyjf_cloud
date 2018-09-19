@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.trade.service.admin;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.ProtocolsRequest;
 import com.hyjf.am.trade.dao.model.customize.FddTempletCustomize;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -16,10 +16,11 @@ public interface ProtocolsService {
 	/**
 	 * 获取协议列表
 	 *
-	 * @param request
+	 * @param limitStart
+	 * @param limitEnd
 	 * @return
 	 */
-	List<FddTempletCustomize> selectFddTempletList(ProtocolsRequest request);
+	List<FddTempletCustomize> selectFddTempletList(int limitStart, int limitEnd);
 
 	/**
 	 * 添加协议列表
@@ -34,4 +35,19 @@ public interface ProtocolsService {
 	 * @param request
 	 */
 	void updateAction(ProtocolsRequest request);
+
+	/**
+	 * 取得新规的模板编号
+	 * @param protocolType
+	 * @return
+	 */
+    String getNewTempletId(Integer protocolType);
+
+	/**
+	 * 协议管理-画面迁移
+	 *
+	 * @param id
+	 * @return
+	 */
+    FddTempletCustomize getRecordInfoById(Integer id);
 }

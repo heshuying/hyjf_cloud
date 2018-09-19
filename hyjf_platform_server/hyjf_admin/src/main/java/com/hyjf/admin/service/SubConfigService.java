@@ -1,6 +1,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
+import com.hyjf.am.response.user.UserInfoCustomizeResponse;
 import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
 
 /**
@@ -40,5 +41,21 @@ public interface SubConfigService {
      * @return
      */
     AdminSubConfigResponse deleteSubConfig(AdminSubConfigRequest adminRequest);
+    /**
+     *
+     * 查询用户名信息
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    UserInfoCustomizeResponse userMap(AdminSubConfigRequest adminRequest);
+
+    /**
+     * 根据用户名查询分账名单是否存在
+     * @author xiehuili
+     * @param username
+     * @return
+     */
+    AdminSubConfigResponse subconfig(AdminSubConfigRequest adminRequest);
 
 }

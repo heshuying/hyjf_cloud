@@ -4,10 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -1126,5 +1129,42 @@ public interface AmUserClient {
     Boolean updateByPrimaryKeySelective(AppChannelStatisticsDetailVO appChannelStatisticsDetailVO);
 
 	int isExistsUser(String userId);
+    /**
+     * 根据推荐人id查找用信息
+     * @param userId
+     * @auther: nxl
+     * @return
+     */
+    List<SpreadsUserVO> selectSpreadsUserBySpreadUserId(int userId);
+
+    /**
+     * 校验手机号
+     * @param mobile
+     * @return
+     * @auth nxl
+     */
+    int countByMobile(String mobile);
+
+    /**
+     * 着落页配置查询
+     * @param form
+     * @return
+     * @auth
+     */
+    WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form);
+
+    /**
+     * 检查渠道
+     *
+     *
+     */
+    public StringResponse checkUtmId(Integer utmId);
+
+    /**
+     * 检查渠道
+     *
+     *
+     */
+    public StringResponse checkReferrer(String referrer);
 
 }

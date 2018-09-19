@@ -21,7 +21,7 @@ import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.vo.admin.BorrowFirstCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowConfigVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CommonUtils;
@@ -96,7 +96,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         if (StringUtils.isBlank(borrowNid)) {
             return new AdminResult(BaseResult.FAIL, "标的编号为空！");
         } else {
-            BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+            BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
             BorrowInfoVO borrowInfoVO = amTradeClient.selectBorrowInfoByNid(borrowNid);
             if (borrowVO == null || borrowInfoVO == null) {
                 return new AdminResult(BaseResult.FAIL, "未查询到标的信息！");
@@ -151,7 +151,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
 //            int engineFlag = this.borrowFirstClient.isEngineUsed(borrowNid);
 //            jsonObject.put("engineFlag", engineFlag);
 
-            BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+            BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
             BorrowInfoVO borrowInfoVO = amTradeClient.selectBorrowInfoByNid(borrowNid);
             if (borrowVO != null && borrowInfoVO != null) {
                 BorrowFireInfoResponseBean response = new BorrowFireInfoResponseBean();
@@ -191,7 +191,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         }
 
         //获取标的信息
-        BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
         BorrowInfoVO borrowInfoVO = amTradeClient.selectBorrowInfoByNid(borrowNid);
         if (borrowVO == null || borrowInfoVO == null) {
             return new AdminResult(BaseResult.FAIL, "未查询到标的信息");
@@ -200,7 +200,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         borrowVO.setBorrowValidTime(borrowInfoVO.getBorrowValidTime());
 
         BorrowFireRequest borrowFireRequest = new BorrowFireRequest();
-        borrowFireRequest.setBorrowVO(borrowVO);
+        borrowFireRequest.setBorrowNid(borrowNid);
         borrowFireRequest.setVerifyStatus(verifyStatus);
         borrowFireRequest.setOntime(ontime);
 

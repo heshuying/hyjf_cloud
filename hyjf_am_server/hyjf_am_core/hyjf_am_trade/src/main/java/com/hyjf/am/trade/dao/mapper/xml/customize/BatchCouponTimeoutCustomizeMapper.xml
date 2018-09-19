@@ -13,8 +13,8 @@
 			uc.user_id,
 			SUM(c.coupon_quota) coupon_quota
 		FROM
-			hyjf_coupon_user uc
-		LEFT JOIN hyjf_coupon_config c ON uc.coupon_code = c.coupon_code
+			ht_coupon_user uc
+		LEFT JOIN ht_coupon_config c ON uc.coupon_code = c.coupon_code
 		WHERE
 			uc.end_time <![CDATA[>=]]> #{startTime}
 		AND uc.end_time <![CDATA[<]]> #{endTime}

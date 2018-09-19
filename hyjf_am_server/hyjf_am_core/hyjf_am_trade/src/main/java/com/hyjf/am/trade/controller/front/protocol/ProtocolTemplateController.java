@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.protocol;
 
+import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.response.admin.ProtocolLogResponse;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author libin
@@ -54,6 +56,22 @@ public class ProtocolTemplateController extends BaseController {
         AdminProtocolResponse response = new AdminProtocolResponse();
         Integer count = this.protocolTemplateService.countRecord(request);
         response.setCount(count);
+        return response;
+    }
+
+    /**
+     * 统计全部个数
+     *
+     * @return
+     */
+    @RequestMapping("/startuseexistprotocol")
+    public AdminProtocolResponse startUseExistProtocol(@RequestBody AdminProtocolRequest request) {
+        AdminProtocolResponse response = new AdminProtocolResponse();
+        Integer count = this.protocolTemplateService.startUseExistProtocol(request);
+        if(count == 0){
+            response.setRtn(Response.ERROR);
+            response.setMessage(Response.ERROR_MSG);
+        }
         return response;
     }
 
@@ -233,7 +251,7 @@ public class ProtocolTemplateController extends BaseController {
     }
 
     /**
-     * 根据id查询
+     *
      *
      * @return
      */
@@ -244,6 +262,28 @@ public class ProtocolTemplateController extends BaseController {
         int countSize = this.protocolTemplateService.updateProtocolVersionSize(request.getProtocolTemplateVO());
         response.setCount(countSize);
         return response;
+    }
+
+    /**
+     *校验字段是否为唯一
+     *
+     * @return
+     */
+    @RequestMapping("/validatorfieldcheck")
+    public MapResponse validatorFieldCheck(@RequestBody AdminProtocolRequest request) {
+
+        MapResponse mapResponse = new MapResponse();
+        //获取校验参数
+        String protocolName = request.getProtocolName();//协议模板名称
+        String protocolType = request.getProtocolType();//协议类别
+        String versionNumber = request.getVersionNumber();//版本号
+        String displayName = request.getDisplayName();//前台展示名称
+        String protocolUrl = request.getProtocolUrl();//协议上传路径
+        String oldDisplayName = request.getOldDisplayName();//原前台展示名称
+        String flag = request.getFlag();//原前台展示名称
+        Map<String,Object> map = protocolTemplateService.validatorFieldCheck(protocolName,versionNumber,displayName,protocolUrl,protocolType,oldDisplayName,flag);
+        mapResponse.setResultMap(map);
+        return mapResponse;
     }
 
 }

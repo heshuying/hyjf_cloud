@@ -23,15 +23,26 @@ public class DataSourceAop  implements Ordered{
 
     @Before("serviceAspect()")
     public void switchDataSource(JoinPoint point) {
+        // 获取包名
+        String packageStr = point.getTarget().toString();
         // 读操作切换读数据源
         Boolean isQueryMethod = isQueryMethod(point.getSignature().getName());
         if (isQueryMethod) {
-            DynamicDataSourceContextHolder.useSlaveDataSource();
+            if (packageStr.startsWith(PACKAGE_REFIX + "trade")) {
+                DynamicDataSourceContextHolder.useSlaveTradeDataSource();
+            } else if (packageStr.startsWith(PACKAGE_REFIX + "user")) {
+                DynamicDataSourceContextHolder.useSlaveUserDataSource();
+            } else if (packageStr.startsWith(PACKAGE_REFIX + "config")) {
+                DynamicDataSourceContextHolder.useSlaveConfigDataSource();
+            } else if (packageStr.startsWith(PACKAGE_REFIX + "market")) {
+                DynamicDataSourceContextHolder.useSlaveMarketDataSource();
+            }
             return;
+//            DynamicDataSourceContextHolder.useSlaveDataSource();
+//            return;
         }
 
         // 写操作根据包切换不同的写数据源
-        String packageStr = point.getTarget().toString();
         if (packageStr.startsWith(PACKAGE_REFIX + "trade")) {
             DynamicDataSourceContextHolder.useMasterTradeDataSource();
         } else if (packageStr.startsWith(PACKAGE_REFIX + "user")) {

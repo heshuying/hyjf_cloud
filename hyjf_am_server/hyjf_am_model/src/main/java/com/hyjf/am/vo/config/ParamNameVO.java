@@ -4,43 +4,51 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author jun
  * @version ParamName, v0.1 2018/7/5 9:11
  */
+@ApiModel(value = "数据字典返回值参数")
 public class ParamNameVO extends BaseVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+    @ApiModelProperty(value = "字典名称")
     private String name;
-
+    @ApiModelProperty(value = "字典区分")
     private String nameClass;
-
+    @ApiModelProperty(value = "扩展项目1")
     private String other1;
-
+    @ApiModelProperty(value = "扩展项目2")
     private String other2;
-
+    @ApiModelProperty(value = "扩展项目3")
     private String other3;
+    @ApiModelProperty(value = "排序")
+    private Short sort;
 
-    private Integer sort;
+    private Integer delFlag;
 
-    private String delFlag;
+    private Integer createUserId;
 
-    private String createtime;
+    private Integer updateUserId;
 
-    private String updatetime;
+    private Date createTime;
 
-    private String createuser;
-
-    private String updateuser;
-
+    private Date updateTime;
+    @ApiModelProperty(value = "字典编号")
     private String nameCd;
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getNameClass() {
@@ -51,16 +59,12 @@ public class ParamNameVO extends BaseVO implements Serializable {
         this.nameClass = nameClass;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
-
     public String getOther1() {
         return other1;
     }
 
     public void setOther1(String other1) {
-        this.other1 = other1 == null ? null : other1.trim();
+        this.other1 = other1;
     }
 
     public String getOther2() {
@@ -68,7 +72,7 @@ public class ParamNameVO extends BaseVO implements Serializable {
     }
 
     public void setOther2(String other2) {
-        this.other2 = other2 == null ? null : other2.trim();
+        this.other2 = other2;
     }
 
     public String getOther3() {
@@ -76,62 +80,62 @@ public class ParamNameVO extends BaseVO implements Serializable {
     }
 
     public void setOther3(String other3) {
-        this.other3 = other3 == null ? null : other3.trim();
+        this.other3 = other3;
     }
 
-    public Integer getSort() {
+    public Short getSort() {
         return sort;
     }
 
-    public void setSort(Integer sort) {
+    public void setSort(Short sort) {
         this.sort = sort;
     }
 
-    public String getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag == null ? null : delFlag.trim();
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
-    public String getCreatetime() {
-        return createtime;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setCreatetime(String createtime) {
-        this.createtime = createtime == null ? null : createtime.trim();
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
-    public String getUpdatetime() {
-        return updatetime;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public void setUpdatetime(String updatetime) {
-        this.updatetime = updatetime == null ? null : updatetime.trim();
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
-    public String getCreateuser() {
-        return createuser;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreateuser(String createuser) {
-        this.createuser = createuser == null ? null : createuser.trim();
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public String getUpdateuser() {
-        return updateuser;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdateuser(String updateuser) {
-        this.updateuser = updateuser == null ? null : updateuser.trim();
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
-	public String getNameCd() {
-		return nameCd;
-	}
+    public String getNameCd() {
+        return nameCd;
+    }
 
-	public void setNameCd(String nameCd) {
-		this.nameCd = nameCd;
-	}
+    public void setNameCd(String nameCd) {
+        this.nameCd = nameCd;
+    }
 }

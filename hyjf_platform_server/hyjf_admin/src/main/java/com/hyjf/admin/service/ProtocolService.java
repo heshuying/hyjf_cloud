@@ -1,5 +1,6 @@
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
 import com.hyjf.am.resquest.admin.AdminProtocolVersionRequest;
@@ -7,7 +8,9 @@ import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author：yinhui
@@ -63,7 +66,17 @@ public interface ProtocolService {
      */
     void deleteProtocolTemplate(AdminProtocolRequest request,String userId);
 
-    String uploadFile(HttpServletRequest request, HttpServletResponse response);
+    /**
+     * 资料上传
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request, HttpServletResponse response);
 
-    void updateExistAction(AdminProtocolVersionRequest form, String userId);
+
+    AdminProtocolResponse updateExistAction(AdminProtocolVersionRequest form, String userId);
+
+    Map<String,String> validatorFieldCheck(AdminProtocolRequest request,String protocolName, String versionNumber, String displayName, String protocolUrl, String protocolType, String oldDisplayName, String flagT);
 }

@@ -231,23 +231,23 @@
         <where>
             <!-- 项目编号 -->
             <if test="bidNid != null and bidNid != ''">
-                AND bc.bid_nid LIKE CONCAT('%', #{bidNid}, '%')
+                AND bc.bid_nid LIKE CONCAT( #{bidNid}, '%')
             </if>
             <!-- 债转编号 -->
             <if test="creditNid != null and creditNid != ''">
-                AND bc.credit_nid LIKE CONCAT('%', #{creditNid}, '%')
+                AND bc.credit_nid LIKE CONCAT( #{creditNid}, '%')
             </if>
             <!-- 用户名 -->
             <if test="userName != null and userName != ''">
-                AND u.username LIKE CONCAT('%', #{userName}, '%')
+                AND u.username LIKE CONCAT( #{userName}, '%')
             </if>
             <!-- 承接人-->
             <if test="creditUsername != null and creditUsername != ''">
-                AND credit_users.username LIKE CONCAT('%', #{creditUsername}, '%')
+                AND credit_users.username LIKE CONCAT( #{creditUsername}, '%')
             </if>
             <!-- 订单号-->
             <if test="assignNid != null and assignNid != ''">
-                AND ct.assign_nid LIKE CONCAT('%', #{assignNid}, '%')
+                AND ct.assign_nid LIKE CONCAT( #{assignNid}, '%')
             </if>
             <!-- 客户端-->
             <if test="client != null and client != ''">

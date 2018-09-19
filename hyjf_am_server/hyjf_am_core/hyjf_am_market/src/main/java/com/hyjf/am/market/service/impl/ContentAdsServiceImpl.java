@@ -167,6 +167,10 @@ public class ContentAdsServiceImpl implements ContentAdsService {
         Ads record = new Ads();
         BeanUtils.copyProperties(vo, record);
 
+        if(record.getCode() == null){
+            record.setCode("");
+        }
+
         if(record.getIsIndex()==null){
             record.setIsIndex(new Integer("0"));
         }

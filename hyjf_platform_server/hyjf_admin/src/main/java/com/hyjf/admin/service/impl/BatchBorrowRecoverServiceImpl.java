@@ -3,7 +3,7 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.vo.DropDownVO;
-import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.BatchBorrowRecoverService;
@@ -14,12 +14,10 @@ import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.BatchBorrowRepayBankInfoVO;
 import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
-import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -29,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +43,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
 
 
     @Autowired
-    private AmTradeClient amTradeClient;
+    private AmAdminClient amAdminClient;
 
     private SystemConfig systemConfig = new SystemConfig();
 
@@ -59,7 +56,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     public JSONObject queryBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
 
         JSONObject jsonObject = new JSONObject();
-        BatchBorrowRecoverReponse batchBorrowRepayReponse = amTradeClient.getBatchBorrowRecoverList(request);
+        BatchBorrowRecoverReponse batchBorrowRepayReponse = amAdminClient.getBatchBorrowRecoverList(request);
         if (null != batchBorrowRepayReponse) {
             List<BatchBorrowRecoverVo> listAccountDetail = batchBorrowRepayReponse.getResultList();
             Integer recordCount = batchBorrowRepayReponse.getRecordTotal();
@@ -100,6 +97,23 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
         for (BatchBorrowRecoverVo vo:
              listAccountDetail) {
             vo.setStatusStr(paramNameMap.get(vo.getStatus()));
+            if("0".equals(vo.getIncreaseInterestFlag())){//不加息
+                vo.setIncreaseInterestFlag("不加息");
+                vo.setExtraYieldStatus("");
+                vo.setExtraYieldRepayStatus("");
+            }else if("1".equals(vo.getIncreaseInterestFlag())){
+                vo.setIncreaseInterestFlag("加息");
+                if("0".equals(vo.getExtraYieldStatus())){
+                    vo.setExtraYieldStatus("待放款");
+                }else if("1".equals(vo.getExtraYieldStatus())){
+                    vo.setExtraYieldStatus("放款完成");
+                }
+                if("0".equals(vo.getExtraYieldRepayStatus())){
+                    vo.setExtraYieldRepayStatus("待还款");
+                }else if("1".equals(vo.getExtraYieldRepayStatus())){
+                    vo.setExtraYieldRepayStatus("还款完成");
+                }
+            }
         }
     }
 
@@ -110,7 +124,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
      */
     @Override
     public BatchBorrowRecoverVo queryBatchCenterListSum(BatchBorrowRecoverRequest request) {
-        BatchBorrowRecoverReponse reponse = amTradeClient.getBatchBorrowCenterListSum(request);
+        BatchBorrowRecoverReponse reponse = amAdminClient.getBatchBorrowCenterListSum(request);
         if(reponse != null){
             return reponse.getResult();
         }
@@ -124,7 +138,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
      */
     @Override
     public List<BorrowRecoverBankInfoVo> queryBatchBorrowRecoverBankInfoList(String apicronID) {
-        BorrowApicronResponse reponse = amTradeClient.getBorrowApicronByID(apicronID);
+        BorrowApicronResponse reponse = amAdminClient.getBorrowApicronByID(apicronID);
         if(reponse != null){
             BorrowApicronVO apicron = reponse.getResult();
             // 借款人用户ID
@@ -179,7 +193,8 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
      */
     @Override
     public List<BatchBorrowRepayBankInfoVO> queryBatchBorrowRepayBankInfoList(String apicronID) {
-        BorrowApicronResponse reponse = amTradeClient.getBorrowApicronByID(apicronID);
+        BorrowApicronResponse reponse = amAdminClient.getBorrowApicronByID(apicronID);
+        List<BatchBorrowRepayBankInfoVO> bankInfoVOList = new ArrayList<>();
         if(reponse != null){
             BorrowApicronVO apicron = reponse.getResult();
             int txCounts = apicron.getTxCounts();// 总交易笔数
@@ -234,45 +249,12 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                     continue;
                 }
             }
+            logger.info("查询银行result.size():【{}】", results.size());
             if(results.size() > 0){
-                List<BatchBorrowRepayBankInfoVO> bankInfoVOList = getRepayDetailList(results);
+                bankInfoVOList = getRepayDetailList(results);
             }
         }
-        List<BatchBorrowRepayBankInfoVO> detailList = new ArrayList<>();
-        String subPacks;
-        //TODO 银行环境不通，测试数据，环境顺畅后删除
-        subPacks = "[{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211150446498937\"," +
-                "\"productId\":\"HJD180300000017\",\"orderId\":\"15205656009391711616\",\"failMsg\":\"\"," +
-                "\"txState\":\"S\",\"forAccountId\":\"6212461890000751140\",\"txAmount\":\"0\"},{\"accountId\":" +
-                "\"6212461890000001181\",\"authCode\":\"20161211125545497983\",\"productId\":\"HJD180300000017\"," +
-                "\"orderId\":\"15205656009951111618\",\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":" +
-                "\"6212461890000954686\",\"txAmount\":\"0\"},{\"accountId\":\"6212461890000001181\",\"authCode\":" +
-                "\"20161211150447498941\",\"productId\":\"HJD180300000017\",\"orderId\":\"15205656010081711674\"," +
-                "\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000751140\",\"txAmount\":\"0\"}," +
-                "{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211105946497425\",\"productId\":" +
-                "\"HJD180300000017\",\"orderId\":\"15205656010301111941\",\"failMsg\":\"\",\"txState\":\"S\"," +
-                "\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"},{\"accountId\":\"6212461890000001181\"," +
-                "\"authCode\":\"20161211125546497987\",\"productId\":\"HJD180300000017\",\"orderId\":\"15205656011151111709\"," +
-                "\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"}," +
-                "{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211125547497991\"," +
-                "\"productId\":\"HJD180300000017\",\"orderId\":\"15205656012191111568\",\"failMsg\":" +
-                "\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"}]";
-        if (StringUtils.isNotBlank(subPacks)) {
-            JSONArray loanDetails = JSONObject.parseArray(subPacks);
-            for (int j = 0; j < loanDetails.size(); j++) {
-                JSONObject loanDetail = loanDetails.getJSONObject(j);
-                BatchBorrowRepayBankInfoVO info = new BatchBorrowRepayBankInfoVO();
-                info.setAuthCode(loanDetail.getString(BankCallConstant.PARAM_AUTHCODE));// 授权码
-                info.setTxState(loanDetail.getString(BankCallConstant.PARAM_TXSTATE));// 交易状态
-                info.setOrderId(loanDetail.getString(BankCallConstant.PARAM_ORDERID));// 订单号
-                info.setTxAmount(loanDetail.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT));// 操作金额
-                info.setForAccountId(loanDetail.getString(BankCallConstant.PARAM_FORACCOUNTID));// 借款人银行账户
-                info.setProductId(loanDetail.getString(BankCallConstant.PARAM_PRODUCTID));// 标的号
-                info.setFileMsg(loanDetail.getString(BankCallConstant.PARAM_FAILMSG));//错误提示
-                detailList.add(info);
-            }
-        }
-        return detailList;
+        return bankInfoVOList;
     }
 
     /**
@@ -282,7 +264,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
 
-        List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.selectHjhInstConfigList();
+        List<HjhInstConfigVO> hjhInstConfigList = amAdminClient.selectHjhInstConfigList();
         if(hjhInstConfigList != null && hjhInstConfigList.size() > 0){
             return  hjhInstConfigList;
         }
@@ -375,26 +357,6 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
             // 交易状态
             detailLists.setTxState(BankCallConstant.RESPCODE_SUCCESS.equals(resultBeans.getRetCode()) ? "成功" : "失败");
         }
-        //TODO 测试数据，待删除
-        // 借款人电子账户号
-        detailLists.setForAccountId("6212461890000001801");
-        // 借款人姓名
-        detailLists.setName("金子裕");
-        // 响应代码
-        detailLists.setRetCode("00000000");
-        // 错误描述
-        detailLists.setFileMsg("");
-        // 标的编号
-        detailLists.setProductId("WDD180503000007");
-        // 借款人入账金额
-        detailLists.setTxAmount("20000.00");
-        // 手续费金额
-        detailLists.setFeeAmount("160.00");
-        // 风险准备金
-        detailLists.setRiskAmount("0.00");
-        // 交易状态
-        detailLists.setTxState(BankCallConstant.RESPCODE_SUCCESS.equals("00000000") ? "成功" : "失败");
-
         detailList.add(detailLists);
         return detailList;
     }

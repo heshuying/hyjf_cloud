@@ -1,11 +1,20 @@
 package com.hyjf.am.trade.dao.customize;
 
-import com.hyjf.am.trade.dao.auto.AutoMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
+
+import com.hyjf.am.trade.dao.auto.AutoMapper;
+import com.hyjf.am.trade.dao.mapper.customize.batch.BatchAccountCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractEssenceCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractStatusCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractTemplateCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaReceivedPaymentsCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaRepayInfoCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaReportLogCustomizeMapper;
 
 @Service
 public class CustomizeMapper extends AutoMapper {
@@ -172,13 +181,8 @@ public class CustomizeMapper extends AutoMapper {
 	@Autowired
 	protected AdminHjhCommissionMapper adminHjhCommissionMapper;
 
-
-
 	@Autowired
 	protected FundChangeStatisticsCustomizeMapper fundChangeStatisticsCustomizeMapper;
-
-	@Autowired
-	protected BankMerchantAccountListCustomizeMapper bankMerchantAccountListCustomizeMapper;
 
 	@Autowired
 	protected BorrowRepayAgreementCustomizeMapper borrowRepayAgreementCustomizeMapper;
@@ -191,7 +195,42 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AdminBankAccountCheckCustomizeMapper adminBankAccountCheckCustomizeMapper;
+	@Autowired
+	protected ApiProjectListCustomizeMapper apiProjectListCustomizeMapper;
 
 	@Autowired
 	protected HjhPlanRepayCustomizeMapper hjhPlanRepayCustomizeMapper;
+
+	@Autowired
+	protected NifaContractEssenceCustomizeMapper nifaContractEssenceCustomizeMapper;
+
+	@Autowired
+	protected NifaContractTemplateCustomizeMapper nifaContractTemplateCustomizeMapper;
+
+	@Autowired
+	protected NifaRepayInfoCustomizeMapper nifaRepayInfoCustomizeMapper;
+
+	@Autowired
+	protected NifaContractStatusCustomizeMapper nifaContractStatusCustomizeMapper;
+
+	@Autowired
+	protected NifaReceivedPaymentsCustomizeMapper nifaReceivedPaymentsCustomizeMapper;
+
+	@Autowired
+	protected NifaReportLogCustomizeMapper nifaReportLogCustomizeMapper;
+
+	@Autowired
+	protected AccountCustomizeMapper accountCustomizeMapper;
+
+	@Autowired
+	protected ApiTransactionDetailsCustomizeMapper apiTransactionDetailsCustomizeMapper;
+
+	@Autowired
+	protected BatchAccountCustomizeMapper batchAccountCustomizeMapper;
+
+	@Autowired
+	protected WebUserRepayListCustomizeMapper webUserRepayListCustomizeMapper;
+
+	@Autowired
+	protected BorrowRecoverPlanMapper borrowRecoverPlanMapper;
 }

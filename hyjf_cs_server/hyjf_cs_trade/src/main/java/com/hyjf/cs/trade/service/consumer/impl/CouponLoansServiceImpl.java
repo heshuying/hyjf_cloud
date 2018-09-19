@@ -6,7 +6,7 @@ import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -260,7 +260,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     // 收益领取状态（1：未回款，2：未领取，4：转账失败，5：已领取，6：已过期）
                     cr.setReceivedFlg(1);
                     // 还款期数
-                    cr.setRecoverPeriod(j + 1);
+                    cr.setRecoverPeriod(String.valueOf(j + 1));
                     // 估计还款时间
                     cr.setRecoverTime(monthly.getRepayTime());
                     // 应还利息
@@ -306,7 +306,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
             // 收益领取状态（1：未回款，2：未领取，3：转账中,4：转账失败，5：已领取，6：已过期）
             cr.setReceivedFlg(1);
             // 还款期数
-            cr.setRecoverPeriod(recoverPeriod);
+            cr.setRecoverPeriod(String.valueOf(recoverPeriod));
             // 估计还款时间
             cr.setRecoverTime(recoverTime);
             // 应还利息
@@ -445,7 +445,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         String borrowNid = borrowTenderCpn.getBorrowNid();
         /** 标的基本数据 */
         // 取得标的详情
-        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
 
         Map<String, String> msg = null;
         // 借款期数
@@ -597,7 +597,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     // 收益领取状态（1：未回款，2：未领取，4：转账失败，5：已领取，6：已过期）
                     cr.setReceivedFlg(1);
                     // 还款期数
-                    cr.setRecoverPeriod(j + 1);
+                    cr.setRecoverPeriod(String.valueOf(j + 1));
                     // 估计还款时间
                     cr.setRecoverTime(monthly.getRepayTime());
                     // 应还利息
@@ -643,7 +643,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
             // 收益领取状态（1：未回款，2：未领取，3：转账中,4：转账失败，5：已领取，6：已过期）
             cr.setReceivedFlg(1);
             // 还款期数
-            cr.setRecoverPeriod(recoverPeriod);
+            cr.setRecoverPeriod(String.valueOf(recoverPeriod));
             // 估计还款时间
             cr.setRecoverTime(recoverTime);
             // 应还利息

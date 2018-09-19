@@ -136,8 +136,11 @@ public class AppProjectDetailCustomize implements Serializable {
 	private String borrowStyle;
     
 	/* -----网站改版添加end------ */
-	
 
+	/**
+	 * 是否产品加息
+	 */
+	private Integer increaseInterestFlag;
 	public AppProjectDetailCustomize() {
 		super();
 	}
@@ -581,7 +584,12 @@ public class AppProjectDetailCustomize implements Serializable {
 	public void setApplicant(String applicant) {
 		this.applicant = applicant;
 	}
-	
-	
-	
+
+	public Integer getIncreaseInterestFlag() {
+		return increaseInterestFlag;
+	}
+
+	public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
+		this.increaseInterestFlag = increaseInterestFlag;
+	}
 }

@@ -49,7 +49,7 @@
  	<sql id="CreditInfo_Where_Clause">
 		<where>
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND ct.user_name  LIKE CONCAT('%', #{usernameSrch}, '%')
+				AND ct.user_name  LIKE CONCAT( #{usernameSrch}, '%')
 			</if>
 		</where>
 	</sql>

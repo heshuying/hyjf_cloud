@@ -2,15 +2,26 @@ spring:
   application:
     name: BATCH
   cloud:
-          config:
-            uri: http://micoserver:2222/
+    config:
+      uri: http://micoserver:2222/
+      name: batch
+  boot:
+    admin:
+      client:
+        url: http://micoserver:18080
   profiles:
     active: dev
 server:
   port: 9091
-  servlet:
-    jsp:
-      class-name: org.apache.jasper.servlet.JspServlet
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
 
 logging:
   file: batch.log

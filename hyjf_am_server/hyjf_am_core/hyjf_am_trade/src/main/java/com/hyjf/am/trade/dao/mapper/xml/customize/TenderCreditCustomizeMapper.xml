@@ -59,12 +59,13 @@
 			AND hb.borrow_style != 'principal'
 			<!-- AND bi.advance_status != 3 -->
 			AND hbr.delay_days = 0
-			AND hbr.credit_time <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 3)
+			AND UNIX_TIMESTAMP(hbr.create_time) <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 3)
 			AND hbr.recover_capital <![CDATA[>=]]> 1000
 			AND (hbr.recover_capital-credit_amount) <![CDATA[>=]]> 1000
-			AND hbr.create_time <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 30) 
+			AND UNIX_TIMESTAMP(hbr.create_time) <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 30)
 			AND hbr.recover_time <![CDATA[>=]]> (#{nowTime} + 24 * 3600 * 3)
-			AND hbr.create_time <![CDATA[<=]]> (#{nowTime} - 24 * 3600 * 3)
+			<!-- todo 原sql为addtime 现在字段已经删除 条件暂时删除-->
+			<!-- AND hbr.create_time <![CDATA[<=]]> (#{nowTime} - 24 * 3600 * 3) -->
 			AND CAST(IFNULL(hbr.repay_orddate,0) AS SIGNED)  <![CDATA[<]]> FROM_UNIXTIME((#{nowTime} - 24 * 3600 * 3),'%Y%m%d')
 			AND hbr.user_id = #{userId}
 			<!-- 分期标提前还款该月不允许债转 -->
@@ -93,7 +94,7 @@
 	<select id="selectTenderToCreditList" resultMap="selectBorrowRecoverListMap" parameterType="java.util.Map">
 	  SELECT * FROM 
 		(SELECT
-			hb.name AS borrow_name,
+			bi.name AS borrow_name,
 			hb.borrow_nid AS borrow_nid,
 			hb.project_type AS borrow_type,
 			hb.borrow_apr AS borrow_apr,
@@ -111,7 +112,7 @@
 				),
 				FROM_UNIXTIME(hb.recover_last_time, '%Y-%m-%d 00:00:00')
 			)) AS tender_period,
-			FROM_UNIXTIME( IFNULL(ht.addtime,0), '%Y-%m-%d %H:%i:%s' ) AS tender_time,
+			date_format( ht.create_time, '%Y-%m-%d %H:%i:%s' ) AS tender_time,
 			hbr.nid AS tender_nid,
 			hbr.recover_capital AS invest_account,
 			(
@@ -132,6 +133,7 @@
 			ht_borrow_recover hbr
 		LEFT JOIN ht_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
 		LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
+		LEFT JOIN ht_borrow_info bi on bi.borrow_nid = hbr.borrow_nid
 		LEFT JOIN ht_borrow_style bs ON bs.nid = hb.borrow_style
 		<include refid="TenderToCredit_Where_Clause" />
 		) t1 
@@ -216,11 +218,9 @@
 		FROM
 			ht_borrow_credit hbc
 		<where>
+			to_days(hbc.create_time) = to_days(now())
 			<if test="userId != null and userId != '' and userId != 0">
 				AND hbc.credit_user_id = #{userId}
-			</if>
-			<if test="nowDate != null and nowDate != '' and nowDate !=0">
-				AND hbc.create_date = #{nowDate}
 			</if>
 		</where>
 	</select>
@@ -518,12 +518,12 @@
 				''
 			END AS `status`
 	FROM
-		hyjf_hjh_debt_credit hbc
+		ht_hjh_debt_credit hbc
 		
 	LEFT JOIN ht_borrow hb ON hbc.borrow_nid = hb.borrow_nid
 	LEFT JOIN ht_users hu ON hu.user_id = hbc.user_id
 	LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
-	LEFT JOIN hyjf_hjh_debt_credit_tender hdct ON hdct.credit_nid = hbc.credit_nid
+	LEFT JOIN ht_hjh_debt_credit_tender hdct ON hdct.credit_nid = hbc.credit_nid
 	WHERE
 		hbc.credit_nid = #{creditNid}
 		and hdct.assign_order_id=#{assignOrderId}

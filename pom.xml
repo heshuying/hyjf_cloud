@@ -1,204 +1,252 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.hyjf</groupId>
-    <artifactId>hyjf_cloud</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+	<groupId>com.hyjf</groupId>
+	<artifactId>hyjf_cloud</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 
-    <packaging>pom</packaging>
+	<packaging>pom</packaging>
 
-    <name>hyjf_cloud</name>
-    <description>Demo project for Spring Boot</description>
+	<name>hyjf_cloud</name>
+	<description>Demo project for Spring Boot</description>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.1.RELEASE</version>
-        <relativePath/>
-    </parent>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.4.RELEASE</version>
+		<relativePath />
+	</parent>
 
-    <modules>
-        <module>hyjf_base</module>
-        <module>hyjf_cloud_server</module>
-        <module>hyjf_cs_server</module>
-        <module>hyjf_am_server</module>
-        <module>hyjf_platform_server</module>
-    </modules>
+	<modules>
+		<module>hyjf_base</module>
+		<module>hyjf_cloud_server</module>
+		<module>hyjf_cs_server</module>
+		<module>hyjf_am_server</module>
+		<module>hyjf_platform_server</module>
+	</modules>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-        <spring.cloud.version>Finchley.M9</spring.cloud.version>
-        <spring.cloud.sleuth.version>2.0.0.RC2</spring.cloud.sleuth.version>
-        <spring.boot.admin.vesion>2.0.0</spring.boot.admin.vesion>
-        <spring.mybatis.vesion>1.3.2</spring.mybatis.vesion>
-        <druid.version>1.1.1</druid.version>
-        <fastjson.version>1.2.47</fastjson.version>
-        <rocketmq.version>4.3.0</rocketmq.version>
-        <common.pool2.version>2.4.2</common.pool2.version>
-        <commons.lang.version>2.4</commons.lang.version>
-        <commons.lang3.version>3.7</commons.lang3.version>
-        <commons.io.version>2.6</commons.io.version>
-        <jwt.version>3.3.0</jwt.version>
-        <google.coll.version>1.0-rc2</google.coll.version>
-        <springfox.swagger.version>2.7.0</springfox.swagger.version>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-        </dependency>
+		<spring.cloud.version>Finchley.SR1</spring.cloud.version>
+		<spring.cloud.sleuth.version>2.0.1.RELEASE</spring.cloud.sleuth.version>
+		<spring.boot.admin.vesion>2.0.2</spring.boot.admin.vesion>
+		<spring.mybatis.vesion>1.3.2</spring.mybatis.vesion>
+		<springfox.swagger.version>2.9.2</springfox.swagger.version>
 
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>${commons.lang.version}</version>
-        </dependency>
+		<druid.version>1.1.10</druid.version>
+		<fastjson.version>1.2.47</fastjson.version>
+		<rocketmq.version>4.3.0</rocketmq.version>
+		<jetcache.version>2.5.7</jetcache.version>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons.lang3.version}</version>
-        </dependency>
+		<common.pool2.version>2.4.2</common.pool2.version>
+		<commons.lang.version>2.4</commons.lang.version>
+		<commons.lang3.version>3.7</commons.lang3.version>
+		<commons.io.version>2.6</commons.io.version>
+		<commons.validator.version>1.6</commons.validator.version>
+		<httpclient.version>4.5.5</httpclient.version>
+		<httpmime.version>4.5</httpmime.version>
+		<org.jsoup.version>1.11.3</org.jsoup.version>
 
-        <!--swagger-->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox.swagger.version}</version>
-        </dependency>
+		<jwt.version>3.3.0</jwt.version>
+		<guava.version>23.0</guava.version>
+		<redis.version>2.9.0</redis.version>
+		<ip2region.version>1.7</ip2region.version>
 
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox.swagger.version}</version>
-        </dependency>
+	</properties>
 
-    </dependencies>
+	<dependencies>
+	</dependencies>
 
-    <dependencyManagement>
-        <dependencies>
-            <!-- sping cloud -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring.cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+	<dependencyManagement>
+		<dependencies>
+			<!-- sping cloud -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring.cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-sleuth</artifactId>
-                <version>${spring.cloud.sleuth.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-sleuth</artifactId>
+				<version>${spring.cloud.sleuth.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 
-            <dependency>
-                <groupId>de.codecentric</groupId>
-                <artifactId>spring-boot-admin-starter-client</artifactId>
-                <version>${spring.boot.admin.vesion}</version>
-            </dependency>
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-starter-client</artifactId>
+				<version>${spring.boot.admin.vesion}</version>
+			</dependency>
 
-            <!-- sping mybatis -->
-            <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${spring.mybatis.vesion}</version>
-            </dependency>
+			<!-- sping mybatis -->
+			<dependency>
+				<groupId>org.mybatis.spring.boot</groupId>
+				<artifactId>mybatis-spring-boot-starter</artifactId>
+				<version>${spring.mybatis.vesion}</version>
+			</dependency>
 
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid</artifactId>
-                <version>${druid.version}</version>
-            </dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>${druid.version}</version>
+			</dependency>
 
-            <dependency>
-                <groupId>org.apache.rocketmq</groupId>
-                <artifactId>rocketmq-client</artifactId>
-                <version>${rocketmq.version}</version>
-            </dependency>
+			<dependency>
+				<groupId>org.apache.rocketmq</groupId>
+				<artifactId>rocketmq-client</artifactId>
+				<version>${rocketmq.version}</version>
+			</dependency>
 
-            <!--spring2.0 need common-pool2-->
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-pool2</artifactId>
-                <version>${common.pool2.version}</version>
-            </dependency>
+			<!--spring2.0 need common-pool2 -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-pool2</artifactId>
+				<version>${common.pool2.version}</version>
+			</dependency>
 
-            <!-- gen token -->
-            <dependency>
-                <groupId>com.auth0</groupId>
-                <artifactId>java-jwt</artifactId>
-                <version>${jwt.version}</version>
-            </dependency>
+			<!-- gen token -->
+			<dependency>
+				<groupId>com.auth0</groupId>
+				<artifactId>java-jwt</artifactId>
+				<version>${jwt.version}</version>
+			</dependency>
 
-            <dependency>
-                <groupId>com.google.collections</groupId>
-                <artifactId>google-collections</artifactId>
-                <version>${google.coll.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons.io.version}</version>
-            </dependency>
-
-        </dependencies>
-    </dependencyManagement>
-
-    <repositories>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/libs-milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>nexus</id>
-            <name>Local Repo</name>
-            <url>http://10.10.2.100:18080/nexus-2.9.0/content/groups/public/</url>
-            <!--上海使用外网连接nexus私服，青岛使用内网-->
-            <!--<url>http://219.147.28.242:18080/nexus-2.9.0/content/groups/public/</url>-->
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
 
 
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <url>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons.io.version}</version>
+			</dependency>
+
+
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>${fastjson.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>${commons.lang.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons.lang3.version}</version>
+			</dependency>
+
+			<!--swagger -->
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger2</artifactId>
+				<version>${springfox.swagger.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger-ui</artifactId>
+				<version>${springfox.swagger.version}</version>
+			</dependency>
+
+			<!-- redis -->
+			<dependency>
+				<groupId>redis.clients</groupId>
+				<artifactId>jedis</artifactId>
+				<version>${redis.version}</version>
+				<type>jar</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jsoup</groupId>
+				<artifactId>jsoup</artifactId>
+				<version>${org.jsoup.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-validator</groupId>
+				<artifactId>commons-validator</artifactId>
+				<version>${commons.validator.version}</version>
+			</dependency>
+
+			<!-- jetCache -->
+			<dependency>
+				<groupId>com.alicp.jetcache</groupId>
+				<artifactId>jetcache-starter-redis</artifactId>
+				<version>${jetcache.version}</version>
+			</dependency>
+			
+            <!-- https://gitee.com/lionsoul/ip2region -->
+			<dependency>
+				<groupId>org.lionsoul</groupId>
+				<artifactId>ip2region</artifactId>
+				<version>${ip2region.version}</version>
+			</dependency>
+			
+		</dependencies>
+	</dependencyManagement>
+
+	<repositories>
+		<repository>
+			<id>nexus-aliyun</id>
+			<name>Nexus aliyun</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>nexus</id>
+			<name>Local Repo</name>
+			<url>http://10.10.2.100:18080/nexus-2.9.0/content/groups/public/</url>
+			<!--上海使用外网连接nexus私服，青岛使用内网 -->
+			<!--<url>http://219.147.28.242:18080/nexus-2.9.0/content/groups/public/</url> -->
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<url>
                 http://10.10.2.100:18080/nexus-2.9.0/content/repositories/releases/
             </url>
 
-            <!--上海使用外网连接nexus私服，青岛使用内网-->
-            <!--<url>-->
-                <!--http://219.147.28.242:18080/nexus-2.9.0/content/repositories/releases/-->
-            <!--</url>-->
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>
+			<!--上海使用外网连接nexus私服，青岛使用内网 -->
+			<!--<url> -->
+			<!--http://219.147.28.242:18080/nexus-2.9.0/content/repositories/releases/ -->
+			<!--</url> -->
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>
                 http://10.10.2.100:18080/nexus-2.9.0/content/repositories/snapshots/
             </url>
 
-            <!--上海使用外网连接nexus私服，青岛使用内网-->
-            <!--<url>-->
-                <!--http://219.147.28.242:18080/nexus-2.9.0/content/repositories/snapshots/-->
-            <!--</url>-->
-        </snapshotRepository>
-    </distributionManagement>
+			<!--上海使用外网连接nexus私服，青岛使用内网 -->
+			<!--<url> -->
+			<!--http://219.147.28.242:18080/nexus-2.9.0/content/repositories/snapshots/ -->
+			<!--</url> -->
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>

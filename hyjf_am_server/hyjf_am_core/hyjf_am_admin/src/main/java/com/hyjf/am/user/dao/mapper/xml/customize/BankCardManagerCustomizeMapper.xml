@@ -72,10 +72,10 @@
             </if>
             <!-- 是否是默认卡 -->
             <if test="cardType != null and cardType !='' ">
-                <if test="cardType == '1'.toString() ">
+                <if test="cardType == '0'.toString() ">
                     AND (hyduab.card_type = 1 OR hyduab.card_type = 2)
                 </if>
-                <if test="cardType == '0'.toString() ">
+                <if test="cardType == '1'.toString() ">
                     AND hyduab.card_type = 0
                 </if>
             </if>
@@ -90,7 +90,7 @@
     <!-- *****************************************查找江西银行卡信息记录***************************************** -->
     <resultMap id="BankCardListNewPOMap" type="com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize">
         <id column="user_id" property="userId" jdbcType="INTEGER" />
-        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="username" property="userName" jdbcType="VARCHAR" />
         <result column="mobile" property="mobile" jdbcType="VARCHAR" />
         <result column="bank_mobile" property="bankMobile" jdbcType="VARCHAR" />
         <result column="real_name" property  ="realName" jdbcType="VARCHAR" />

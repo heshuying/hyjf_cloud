@@ -84,6 +84,21 @@ public class SiteSettingServiceImpl implements SiteSettingService {
 		}
 	}
 
+	/**
+	 * 通过网站设置获取公司信息 add by liushouyi
+	 *
+	 * @return
+	 */
+	@Override
+	public SiteSetting selectSiteSetting() {
+		SiteSettingExample example = new SiteSettingExample();
+		List<SiteSetting> siteSettingList = this.siteSettingMapper.selectByExample(example);
+		if(null != siteSettingList && siteSettingList.size()>0){
+			return siteSettingList.get(0);
+		}
+		return null;
+	}
+
 	/*public void updateTest2() {
         SiteSettingExample example = new SiteSettingExample();
         

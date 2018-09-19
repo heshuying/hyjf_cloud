@@ -12,6 +12,7 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankOpenRecordService;
+import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankAccountRecordResponse;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
@@ -47,6 +48,8 @@ import java.util.List;
 public class BankOpenRecordController extends BaseController {
     @Autowired
     private BankOpenRecordService bankOpenRecordService;
+    @Autowired
+    private UserCenterService userCenterService;
 
     @ApiOperation(value = "开户记录页面初始化", notes = "开户记录页面初始化")
     @PostMapping(value = "/bankOpenRecordInit")
@@ -165,9 +168,9 @@ public class BankOpenRecordController extends BaseController {
                         cell.setCellValue(this.getAge(user.getBirthday()));
                     } else if (celLength == 5) {// 生日
                         cell.setCellValue(user.getBirthday());
-                    } /*else if (celLength == 6) {// 户籍所在地
-                        cell.setCellValue(accountService.getAreaByIdCard(user.getIdcard()));
-                    }*/ else if (celLength == 7) {// 身份证号码
+                    } else if (celLength == 6) {// 户籍所在地
+                        cell.setCellValue(userCenterService.getAreaByIdCard(user.getIdcard()));
+                    } else if (celLength == 7) {// 身份证号码
                         cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getIdCard(), 3,7));
                     }else if (celLength == 8) {// 开户状态
                         cell.setCellValue(user.getAccountStatusName());

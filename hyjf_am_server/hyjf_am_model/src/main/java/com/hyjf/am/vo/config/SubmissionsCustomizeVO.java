@@ -5,7 +5,11 @@ package com.hyjf.am.vo.config;
  * @version SubmissionsCustomizeVO, v0.1 2018/7/13 17:03
  */
 
-public class SubmissionsCustomizeVO {
+public class SubmissionsCustomizeVO  {
+
+    private String img;
+
+    private String reply;
 
 
     private String submissionsId;
@@ -57,12 +61,52 @@ public class SubmissionsCustomizeVO {
 
     private String status;
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getReply() {
+        return reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
+    }
+
+    public String getSubmissionsId() {
+        return submissionsId;
+    }
+
+    public void setSubmissionsId(String submissionsId) {
+        this.submissionsId = submissionsId;
+    }
+
     public String getUserName() {
         return userName;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getSysType() {
+        return sysType;
+    }
+
+    public void setSysType(String sysType) {
+        this.sysType = sysType;
+    }
+
+    public String getSysVersion() {
+        return sysVersion;
+    }
+
+    public void setSysVersion(String sysVersion) {
+        this.sysVersion = sysVersion;
     }
 
     public String getPlatformVersion() {
@@ -89,14 +133,6 @@ public class SubmissionsCustomizeVO {
         this.content = content;
     }
 
-    public String getSysType() {
-        return sysType;
-    }
-
-    public void setSysType(String sysType) {
-        this.sysType = sysType;
-    }
-
     public String getAddTime() {
         return addTime;
     }
@@ -111,22 +147,6 @@ public class SubmissionsCustomizeVO {
 
     public void setSubState(String subState) {
         this.subState = subState;
-    }
-
-    public String getSubmissionsId() {
-        return submissionsId;
-    }
-
-    public void setSubmissionsId(String submissionsId) {
-        this.submissionsId = submissionsId;
-    }
-
-    public String getSysVersion() {
-        return sysVersion;
-    }
-
-    public void setSysVersion(String sysVersion) {
-        this.sysVersion = sysVersion;
     }
 
     public Integer getUserId() {

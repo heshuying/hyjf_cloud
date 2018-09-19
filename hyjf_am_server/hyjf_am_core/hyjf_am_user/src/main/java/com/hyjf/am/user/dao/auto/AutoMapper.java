@@ -227,7 +227,5 @@ public class AutoMapper {
     @Autowired
     protected MspBlackdataMapper mspBlackDataMapper;
 
-
-
 }
 
