@@ -322,7 +322,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		bean.setMobile(rechargeBean.getMobile());
 		bean.setForgotPwdUrl(rechargeBean.getForgotPwdUrl());
 		bean.setUserIP(rechargeBean.getIp());
-		bean.setRetUrl(rechargeBean.getRetUrl()+"&status=99&statusDesc=充值失败&logOrdId="+logOrderId);
+		bean.setRetUrl(rechargeBean.getRetUrl()+"?status=99&statusDesc=充值失败&logOrdId="+logOrderId);
 		bean.setNotifyUrl(rechargeBean.getNotifyUrl());
 		bean.setLogOrderId(logOrderId);
 		bean.setLogOrderDate(orderDate);
@@ -331,7 +331,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		bean.setLogRemark("充值页面");
 		bean.setLogClient(Integer.parseInt(rechargeBean.getPlatform()));
 		// 充值成功后跳转的url
-		bean.setSuccessfulUrl(rechargeBean.getSuccessfulUrl()+"&isSuccess=1&logOrdId="+bean.getLogOrderId()+"&status=000&statusDesc=");
+		bean.setSuccessfulUrl(rechargeBean.getSuccessfulUrl()+"?isSuccess=1&logOrdId="+bean.getLogOrderId()+"&status=000&statusDesc=");
 		// 页面调用必须传的
 		bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_DIRECT_RECHARGE_PAGE);
 		// 插入充值记录
