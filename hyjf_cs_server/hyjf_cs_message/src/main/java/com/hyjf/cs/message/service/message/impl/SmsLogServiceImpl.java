@@ -78,8 +78,8 @@ public class SmsLogServiceImpl implements SmsLogService {
 			criteria.and("mobile").is(mobile);
 		}
 		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
-			Integer begin = GetDate.dateString2Timestamp(postTimeBegin);
-			Integer end = GetDate.dateString2Timestamp(postTimeEnd);
+			Integer begin = GetDate.dateString2Timestamp(postTimeBegin + " 00:00:00");
+			Integer end = GetDate.dateString2Timestamp(postTimeEnd + " 23:59:59");
 			criteria.and("posttime").gte(begin).lte(end);
 		}
 
@@ -108,14 +108,14 @@ public class SmsLogServiceImpl implements SmsLogService {
 		Query query = new Query();
 		Criteria criteria = new Criteria();
 		if (StringUtils.isNotBlank(mobile)) {
-			criteria.and("mobile").regex(mobile);
+			criteria.and("mobile").is(mobile);
 		}
 		if (StringUtils.isNotBlank(type)) {
 			criteria.and("type").is(type);
 		}
 		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
-			Integer begin = GetDate.dateString2Timestamp(postTimeBegin);
-			Integer end = GetDate.dateString2Timestamp(postTimeEnd);
+			Integer begin = GetDate.dateString2Timestamp(postTimeBegin + " 00:00:00");
+			Integer end = GetDate.dateString2Timestamp(postTimeEnd + " 23:59:59");
 			criteria.and("posttime").gte(begin).lte(end);
 		}
 		if (status != null && status != 2) {

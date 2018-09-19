@@ -95,7 +95,6 @@ public class BankCardManagerServiceImpl implements BankCardManagerService {
      */
     @Override
     public BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request){
-        Map<String, String> bankcardProperty = CacheUtil.getParamNameMap("BANKCARD_PROPERTY");
         BankCardLogResponse response =  bankCardManagerClient.selectBankCardLogByExample(request);
         return response;
     }
