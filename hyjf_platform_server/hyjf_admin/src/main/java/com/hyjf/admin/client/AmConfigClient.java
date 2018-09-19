@@ -1420,4 +1420,12 @@ public interface AmConfigClient {
 	AdminUserResponse adminUserResetPwdAction(AdminRequest adminRequest);
 	
 	AdminUserResponse adminUsercCheckAction(AdminRequest adminRequest);
+
+	/**
+	 * 获取版本管理详情
+	 * @param request
+	 * @return
+	 */
+	SubmissionsVO getSubmissionsRecord(SubmissionsRequest request);
+
 }

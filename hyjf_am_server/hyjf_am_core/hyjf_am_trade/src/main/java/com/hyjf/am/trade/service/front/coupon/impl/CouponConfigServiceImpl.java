@@ -25,6 +25,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CreateUUID;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -219,6 +220,12 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 
 	@Override
 	public Integer insertCouponRecover(CouponRecoverVO cr) {
+		CouponRecover couponRecover=CommonUtils.convertBean(cr,CouponRecover.class);
+		Integer recoverPeriod = null;
+		if (!"null".equals(cr.getRecoverPeriod()) && StringUtils.isNotBlank(cr.getRecoverPeriod())){
+			recoverPeriod = Integer.parseInt(cr.getRecoverPeriod());
+		}
+		couponRecover.setRecoverPeriod(recoverPeriod);
 		return  couponRecoverMapper.insertSelective(CommonUtils.convertBean(cr,CouponRecover.class));
 	}
 
@@ -238,6 +245,12 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 
     @Override
     public void updateCouponRecover(CouponRecoverVO cr) {
+		CouponRecover couponRecover=CommonUtils.convertBean(cr,CouponRecover.class);
+		Integer recoverPeriod = null;
+		if (!"null".equals(cr.getRecoverPeriod()) && StringUtils.isNotBlank(cr.getRecoverPeriod())){
+			recoverPeriod = Integer.parseInt(cr.getRecoverPeriod());
+		}
+		couponRecover.setRecoverPeriod(recoverPeriod);
 		couponRecoverMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(cr,CouponRecover.class));
     }
 

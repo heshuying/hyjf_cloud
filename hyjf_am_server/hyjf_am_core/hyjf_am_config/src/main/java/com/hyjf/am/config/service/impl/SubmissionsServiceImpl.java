@@ -161,4 +161,9 @@ public class SubmissionsServiceImpl implements SubmissionsService {
     public int addSubmission(Submissions submissions) {
         return submissionsMapper.insertSelective(submissions);
     }
+
+    @Override
+    public Submissions queryRecordById(Integer id) {
+        return submissionsMapper.selectByPrimaryKey(id);
+    }
 }

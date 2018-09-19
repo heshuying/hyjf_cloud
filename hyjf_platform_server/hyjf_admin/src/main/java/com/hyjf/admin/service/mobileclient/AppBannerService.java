@@ -17,14 +17,46 @@ import java.util.List;
  */
 
 public interface AppBannerService {
+     /**
+      * 查询广告列表
+      * @param request
+      * @return
+      */
      AppBannerResponse getRecordList(AppBannerRequest request);
 
+     /**
+      * 获取广告根据id
+      * @param request
+      * @return
+      */
+     AppBannerResponse getRecordById(AppBannerRequest request);
+
+     /**
+      * 新增广告
+      * @param adsWithBLOBsVo
+      * @return
+      */
      AppBannerResponse insertRecord(AdsWithBLOBsVO adsWithBLOBsVo);
 
+     /**
+      * 修改广告
+      * @param adsWithBLOBsVo
+      * @return
+      */
      AppBannerResponse updateRecord(AdsWithBLOBsVO adsWithBLOBsVo);
 
+     /**
+      * 修改状态
+      * @param adsWithBLOBsVo
+      * @return
+      */
      AppBannerResponse updateStatus(AdsWithBLOBsVO adsWithBLOBsVo);
 
+     /**
+      * 删除广告
+      * @param adsWithBLOBsVo
+      * @return
+      */
      AppBannerResponse deleteAppBanner(AdsWithBLOBsVO adsWithBLOBsVo);
 
 

@@ -8,6 +8,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -57,9 +58,8 @@ public class WebBankWithdrawController extends BaseTradeController {
     @PostMapping("/toWithdraw")
     public WebResult<Object> toWithdraw(@RequestHeader(value = "userId") int userId) {
         WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
-        if(null==user||!user.isBankOpenAccount()){
-            return new WebResult<>();
-        }
+        CheckUtil.check(null!=user,MsgEnum.ERR_OBJECT_GET,"用户信息");
+        CheckUtil.check(user.isBankOpenAccount(),MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         WebResult<Object> objectWebResult=bankWithdrawService.toWithdraw(user);
         return objectWebResult;
     }

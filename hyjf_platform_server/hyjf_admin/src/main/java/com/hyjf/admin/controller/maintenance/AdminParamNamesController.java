@@ -10,6 +10,8 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.maintenance.AdminParamNamesService;
 import com.hyjf.am.resquest.admin.AdminParamNameRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.ReturnMessageException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,5 +99,21 @@ public class AdminParamNamesController extends BaseController {
         }else{
             return new AdminResult(BaseResult.FAIL,BaseResult.FAIL_DESC);
         }
+    }
+
+    /**
+     * 根据联合主键查询一条数据
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "根据联合主键查询一条数据",notes = "根据联合主键查询一条数据")
+    @PostMapping(value = "/selectparamname")
+    public AdminResult selectParamName(@RequestBody ParamNameVO paramNameVO){
+        ParamNameVO result = adminParamNamesService.selectParamName(paramNameVO);
+        if(result == null){
+            throw new ReturnMessageException(MsgEnum.ERR_DATA_NOT_EXISTS);
+        }
+        return new AdminResult(result);
     }
 }
