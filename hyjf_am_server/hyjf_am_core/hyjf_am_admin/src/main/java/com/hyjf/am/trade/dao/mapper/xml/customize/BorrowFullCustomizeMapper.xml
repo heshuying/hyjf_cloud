@@ -10,10 +10,10 @@
 			)
 				AND (habt.auto_record != 1 OR habt.auto_record IS NULL)
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
-				AND b.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+				AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND b.borrow_user_name LIKE CONCAT('%', #{usernameSrch}, '%')
+				AND b.borrow_user_name LIKE CONCAT( #{usernameSrch}, '%')
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
 				AND b.create_time <![CDATA[>=]]> STR_TO_DATE(#{timeStartSrch}, '%Y-%m-%d %H:%i:%s')

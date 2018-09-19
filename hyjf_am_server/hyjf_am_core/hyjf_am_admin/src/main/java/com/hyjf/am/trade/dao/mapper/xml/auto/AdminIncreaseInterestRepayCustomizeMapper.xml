@@ -6,11 +6,11 @@
 		<where>
 			<!-- 借款编号 -->
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
-				AND b.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+				AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
 			<!-- 用户名 -->
 			<if test="userNameSrch != null and userNameSrch != ''">
-				AND hiil.user_name LIKE CONCAT('%', #{userNameSrch},'%')
+				AND hiil.user_name LIKE CONCAT( #{userNameSrch},'%')
 			</if>
 			<!-- 应还款时间-->
 			<if test="timeStartSrch != null and timeStartSrch != ''">
@@ -21,7 +21,7 @@
 			</if>
 			<!-- 还款状态 -->
 			<if test="repayStatus != null and repayStatus != ''">
-				AND hiil.repay_status LIKE CONCAT('%', #{repayStatus},'%')
+				AND hiil.repay_status LIKE CONCAT( #{repayStatus},'%')
 			</if>
 		</where>
 	</sql>
@@ -105,11 +105,11 @@
 		1=1
 		<!-- 借款编号 -->
 		<if test="borrowNidSrch != null and borrowNidSrch != ''">
-			AND hiild.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+			AND hiild.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 		</if>
 		<!-- 投资人 -->
 		<if test="userNameSrch != null and userNameSrch != ''">
-			AND hiild.user_name LIKE CONCAT('%', #{userNameSrch},'%')
+			AND hiild.user_name LIKE CONCAT( #{userNameSrch},'%')
 		</if>
 		<!-- 投资Id -->
 		<if test="investIdSrch != null and investIdSrch != ''">
@@ -172,11 +172,11 @@
 		1=1
 		<!-- 借款编号 -->
 		<if test="borrowNidSrch != null and borrowNidSrch != ''">
-			AND hiild.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+			AND hiild.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 		</if>
 		<!-- 投资人 -->
 		<if test="userNameSrch != null and userNameSrch != ''">
-			AND hiild.user_name LIKE CONCAT('%', #{userNameSrch},'%')
+			AND hiild.user_name LIKE CONCAT( #{userNameSrch},'%')
 		</if>
 		<!-- 投资Id -->
 		<if test="investIdSrch != null and investIdSrch != ''">
@@ -219,11 +219,11 @@
 		1=1
 		<!-- 借款编号 -->
 		<if test="borrowNidSrch != null and borrowNidSrch != ''">
-			AND hiild.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+			AND hiild.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 		</if>
 		<!-- 投资人 -->
 		<if test="userNameSrch != null and userNameSrch != ''">
-			AND hiild.user_name LIKE CONCAT('%', #{userNameSrch},'%')
+			AND hiild.user_name LIKE CONCAT( #{userNameSrch},'%')
 		</if>
 		<!-- 投资Id -->
 		<if test="investIdSrch != null and investIdSrch != ''">
