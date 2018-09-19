@@ -526,7 +526,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhAccedeVO getHjhAccedeByAccedeOrderId(String accedeOrderId) {
-        String url = urlBase + "hjhAccede/getHjhAccedeListByAccedeOrderId/" + accedeOrderId;
+        String url = urlBase + "hjhAccede/getHjhAccedeByAccedeOrderId/" + accedeOrderId;
         HjhAccedeResponse response = restTemplate.getForEntity(url, HjhAccedeResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return null;
@@ -582,8 +582,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @author liubin
      */
     @Override
-    public int updateHjhPlanBorrowTmpByPK(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO) {
-        String url = urlBase + "hjhPlanBorrowTmpController/updateHjhPlanBorrowTmpByPK";
+    public int updateHjhPlanBorrowTmp(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO) {
+        String url = urlBase + "hjhPlanBorrowTmpController/updateHjhPlanBorrowTmp";
         IntegerResponse response = restTemplate.postForEntity(url, hjhPlanBorrowTmpVO, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
