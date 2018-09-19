@@ -49,7 +49,7 @@ public class MessagePushMsgDao extends BaseMongoDao<MessagePush> {
 			criteria.and("sendTime").gte(startTime);
 		}
 		if (endTime != null) {
-			criteria.and("endTime").lte(endTime);
+			criteria.and("sendTime").lte(endTime);
 		}
 		query.addCriteria(criteria);
 		return mongoTemplate.find(query, getEntityClass());
