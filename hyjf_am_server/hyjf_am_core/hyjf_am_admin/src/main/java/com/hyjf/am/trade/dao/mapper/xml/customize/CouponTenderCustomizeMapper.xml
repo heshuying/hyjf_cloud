@@ -1185,23 +1185,23 @@
 
 			<!-- 订单号 -->
 			<if test="nid != null and nid != ''">
-				AND hbt.nid LIKE CONCAT('%', #{nid}, '%')
+				AND hbt.nid LIKE CONCAT( #{nid}, '%')
 			</if>
 			<!-- 用户名 -->
 			<if test="username != null and username != ''">
-				AND hu.username LIKE CONCAT('%', #{username}, '%')
+				AND hu.username LIKE CONCAT( #{username}, '%')
 			</if>
 			<!-- 优惠券id -->
 			<if test="couponUserCode != null and couponUserCode != ''">
-				AND hcu.coupon_user_code LIKE CONCAT('%', #{couponUserCode}, '%')
+				AND hcu.coupon_user_code LIKE CONCAT( #{couponUserCode}, '%')
 			</if>
 			<!-- 优惠券编号 -->
 			<if test="couponCode != null and couponCode != ''">
-				AND hcc.coupon_code LIKE CONCAT('%', #{couponCode}, '%')
+				AND hcc.coupon_code LIKE CONCAT( #{couponCode}, '%')
 			</if>
 			<!-- 项目编号 -->
 			<if test="borrowNid != null and borrowNid != ''">
-				AND hbt.borrow_nid LIKE CONCAT('%', #{borrowNid}, '%')
+				AND hbt.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 			</if>
 			<!-- 状态 -->
 			<if test="receivedFlg != null and receivedFlg != ''">

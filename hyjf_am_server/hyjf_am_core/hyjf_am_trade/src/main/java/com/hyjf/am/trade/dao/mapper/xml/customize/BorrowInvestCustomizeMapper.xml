@@ -6,7 +6,7 @@
 		<where>
 			<!-- 借款编号 -->
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
-				AND bt.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+				AND bt.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
 			<!-- 借款期限 -->
 			<if test="borrowPeriod != null and borrowPeriod != ''">
@@ -14,11 +14,11 @@
 			</if>
 			<!-- 用户名 -->
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND bt.user_name LIKE CONCAT('%', #{usernameSrch}, '%')
+				AND bt.user_name LIKE CONCAT( #{usernameSrch}, '%')
 			</if>
 			<!-- 推荐人 -->
 			<if test="referrerNameSrch != null and referrerNameSrch != ''">
-				AND bt.invite_user_name LIKE CONCAT('%', #{referrerNameSrch}, '%')
+				AND bt.invite_user_name LIKE CONCAT( #{referrerNameSrch}, '%')
 			</if>
 			<!-- 还款方式 -->
 			<if test="borrowStyleSrch != null and borrowStyleSrch != ''">

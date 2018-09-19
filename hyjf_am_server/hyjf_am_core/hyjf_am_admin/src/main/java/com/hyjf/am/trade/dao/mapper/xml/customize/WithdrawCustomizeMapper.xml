@@ -40,10 +40,10 @@
 	<sql id="Withdraw_Where_Clause" >
 	    <where>
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND u.username like CONCAT('%', #{usernameSrch}, '%')
+				AND u.username LIKE CONCAT( #{usernameSrch}, '%')
 			</if>
 			<if test="ordidSrch != null and ordidSrch != ''">
-				AND a.nid like CONCAT('%', #{ordidSrch}, '%')
+				AND a.nid LIKE CONCAT( #{ordidSrch}, '%')
 			</if>
 			<if test="clientSrch != null and clientSrch != ''">
 				AND a.client = #{clientSrch}

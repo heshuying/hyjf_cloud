@@ -78,19 +78,19 @@
 			</if>
 			<!-- 项目编号 -->
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
-				AND hpa.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+				AND hpa.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
 			<!-- 计划编号 -->
 			<if test="planNidSrch != null and planNidSrch != ''">
-				AND hpa.plan_nid LIKE CONCAT('%', #{planNidSrch}, '%')
+				AND hpa.plan_nid LIKE CONCAT( #{planNidSrch}, '%')
 			</if>
 			<!-- 用户名 -->
 			<if test="userNameSrch != null and userNameSrch != ''">
-				AND hpa.user_name LIKE CONCAT('%', #{userNameSrch}, '%')
+				AND hpa.user_name LIKE CONCAT( #{userNameSrch}, '%')
 			</if>
 			<!-- 标的名称 -->
 			<if test="labelNameSrch != null and labelNameSrch != ''">
-				AND hpa.label_name LIKE CONCAT('%', #{labelNameSrch}, '%')
+				AND hpa.label_name LIKE CONCAT( #{labelNameSrch}, '%')
 			</if>
 			<!-- 开户状态 -->
 			<if test="bankOpenAccountSrch != null and bankOpenAccountSrch != ''">

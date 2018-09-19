@@ -7,13 +7,13 @@
 		    b.`status` = 1
 		    AND (habt.auto_record != 1 OR habt.auto_record IS NULL)
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
-				AND b.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+				AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
 			<if test="borrowPeriod != null and borrowPeriod != ''">
 				AND b.borrow_period=#{borrowPeriod}
 			</if>
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND ( u.truename LIKE CONCAT('%', #{usernameSrch}, '%') OR u.username LIKE CONCAT('%', #{usernameSrch}, '%') )
+				AND ( u.truename LIKE CONCAT( #{usernameSrch}, '%') OR u.username LIKE CONCAT( #{usernameSrch}, '%') )
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
 				AND b.create_time <![CDATA[>=]]> STR_TO_DATE(#{timeStartSrch}, '%Y-%m-%d %H:%i:%s')

@@ -6,7 +6,7 @@
 		<where>
 			<!-- 借款编号 -->
 			<!-- <if test="borrowNid != null and borrowNid != ''">
-				AND b.borrow_nid LIKE CONCAT('%', #{borrowNid}, '%')
+				AND b.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 			</if> -->
 			<!-- 资产编号 -->
 			<if test="assetId != null and assetId != ''">

@@ -23,10 +23,10 @@
         <where>
             <!--  -->
             <if test="userNameSrch != null and userNameSrch != ''">
-                AND c.username LIKE CONCAT('%', #{userNameSrch}, '%')
+                AND c.username LIKE CONCAT( #{userNameSrch}, '%')
             </if>
             <if test="trueNameSrch != null and trueNameSrch != ''">
-                AND c.truename LIKE CONCAT('%', #{trueNameSrch}, '%')
+                AND c.truename LIKE CONCAT( #{trueNameSrch}, '%')
             </if>
             <if test="roleNameSrch != null and roleNameSrch != ''">
                 AND c.role_name = #{roleNameSrch}
@@ -36,7 +36,7 @@
                 AND c.user_type = #{userTypeSrch}
             </if>
             <if test="accountSrch != null and accountSrch != ''">
-                AND c.account LIKE CONCAT('%', #{accountSrch}, '%')
+                AND c.account LIKE CONCAT( #{accountSrch}, '%')
             </if>
             <if test="statusSrch != null and statusSrch != ''">
                 AND c.status = #{statusSrch}

@@ -11,16 +11,16 @@
 				AND s.sys_type = #{sysType}
 			</if>
 			<if test="sysVersion != null and sysVersion != ''">
-				AND	s.sys_version like concat('%',#{sysVersion},'%') 
+				AND	s.sys_version LIKE CONCAT(#{sysVersion},'%')
 			</if>
 			<if test="platformVersion != null and platformVersion != ''">
-				AND	s.platform_version like concat('%',#{platformVersion},'%') 
+				AND	s.platform_version LIKE CONCAT(#{platformVersion},'%')
 			</if>
 			<if test="phoneType != null and phoneType != ''">
-				AND s.phone_type like concat('%',#{phoneType},'%') 
+				AND s.phone_type LIKE CONCAT(#{phoneType},'%')
 			</if>
 			<if test="content != null and content != ''">
-				AND s.content like concat('%',#{content},'%') 
+				AND s.content LIKE CONCAT(#{content},'%')
 			</if>
 		    <if test="addTimeStart != null and addTimeStart != ''">
 				AND s.create_time <![CDATA[>=]]> unix_timestamp(#{addTimeStart,jdbcType=VARCHAR})

@@ -23,7 +23,7 @@
 			<!-- 借款编号 -->
 			<if test="borrowNid != null and borrowNid != ''">
 				<if test="serchFlag == 0">
-					AND b.borrow_nid LIKE CONCAT('%', #{borrowNid}, '%')
+					AND b.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 				</if>
 				<if test="serchFlag == 1">
 					AND b.borrow_nid = #{borrowNid}
@@ -35,16 +35,16 @@
 			</if>
 			<!-- 借款标题 -->
 			<if test="borrowNameSrch != null and borrowNameSrch != ''">
-				AND binfo.name LIKE CONCAT('%', #{borrowNameSrch}, '%')
+				AND binfo.name LIKE CONCAT( #{borrowNameSrch}, '%')
 			</if>
 			<!-- 借款人 -->
 			<if test="borrowUserName != null and borrowUserName != ''">
-				AND b.borrow_user_name LIKE CONCAT('%', #{borrowUserName},
+				AND b.borrow_user_name LIKE CONCAT( #{borrowUserName},
 				'%')
 			</if>
 			<!-- 投资人 -->
 			<if test="recoverUserName != null and recoverUserName != ''">
-				AND t.user_name LIKE CONCAT('%', #{recoverUserName},
+				AND t.user_name LIKE CONCAT( #{recoverUserName},
 				'%')
 			</if>
 			<!-- 还款状态 -->
@@ -53,7 +53,7 @@
 			</if>
 			<!-- 还款批次号 -->
 			<if test="repayBatchNo != null and repayBatchNo != ''">
-				AND br.repay_batch_no LIKE CONCAT('%', #{repayBatchNo}, '%')
+				AND br.repay_batch_no LIKE CONCAT( #{repayBatchNo}, '%')
 			</if>
 			<!-- 最后还款日 -->
 			<if test="recoverTimeStartSrch != null and recoverTimeStartSrch != ''">
