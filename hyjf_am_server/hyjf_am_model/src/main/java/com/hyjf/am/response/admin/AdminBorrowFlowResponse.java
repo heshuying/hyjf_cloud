@@ -13,6 +13,7 @@ import java.util.List;
  * @author by xiehuili on 2018/7/30.
  */
 public class AdminBorrowFlowResponse extends Response<HjhAssetBorrowTypeVO> {
+    private int total;
     // 项目列表
     List<BorrowProjectTypeVO> borrowProjectTypeList;
     // 资金来源
@@ -52,5 +53,13 @@ public class AdminBorrowFlowResponse extends Response<HjhAssetBorrowTypeVO> {
 
     public void setStatusList(List<ParamNameVO> statusList) {
         this.statusList = statusList;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 }

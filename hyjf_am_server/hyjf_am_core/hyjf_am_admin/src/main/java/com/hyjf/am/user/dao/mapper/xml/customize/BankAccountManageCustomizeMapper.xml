@@ -36,7 +36,7 @@
 
     <sql id="where-all-page-condition">
         <if test="username != null and username != ''">
-            AND t.username LIKE CONCAT('%', #{username}, '%')
+            AND t.username LIKE CONCAT( #{username}, '%')
         </if>
         <if test="combotreeListSrch != null and combotreeListSrch != ''">
             AND od.id in
@@ -78,7 +78,7 @@
         where
         1=1
         <if test="accountSrch != null and accountSrch != ''">
-            AND hboa.account LIKE CONCAT('%', #{accountSrch}, '%')
+            AND hboa.account LIKE CONCAT( #{accountSrch}, '%')
         </if>
         <if test="vipSrch != null and vipSrch != ''">
             AND vip.id =  #{vipSrch}
@@ -165,7 +165,7 @@
         where
         1=1
         <if test="accountSrch != null and accountSrch != ''">
-            AND hboa.account LIKE CONCAT('%', #{accountSrch}, '%')
+            AND hboa.account LIKE CONCAT( #{accountSrch}, '%')
         </if>
         <if test="vipSrch != null and vipSrch != ''">
             AND vip.id =  #{vipSrch}

@@ -20,11 +20,11 @@
 			(b.`status` = 4 OR b.`status` = 5 OR (b.`status`= 3 AND b.reverify_status <![CDATA[<>]]> 0))
 			<!-- 借款编号 -->
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
-				AND bt.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+				AND bt.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
 			<!-- 借款标题 -->
 			<if test="borrowNameSrch != null and borrowNameSrch != ''">
-				AND binfo.`name` LIKE CONCAT('%', #{borrowNameSrch}, '%')
+				AND binfo.`name` LIKE CONCAT( #{borrowNameSrch}, '%')
 			</if>
 			<!-- add by LSY START -->
 			<!-- 资产来源 -->
@@ -42,7 +42,7 @@
 			</if>
 			<!-- 投资人 -->
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND bt.tender_user_name LIKE CONCAT('%', #{usernameSrch}, '%')
+				AND bt.tender_user_name LIKE CONCAT( #{usernameSrch}, '%')
 			</if>
 			<!-- 合作机构编号 -->
 			<if test="instCodeOrgSrch != null and instCodeOrgSrch != ''">
@@ -54,7 +54,7 @@
 			</if>
 			<!-- 放款批次号 -->
 			<if test="loanBatchNo != null and loanBatchNo != ''">
-				AND br.loan_batch_no LIKE CONCAT('%', #{loanBatchNo}, '%')
+				AND br.loan_batch_no LIKE CONCAT( #{loanBatchNo}, '%')
 			</if>
 			<!-- 投资时间 -->
 			<if test="timeRecoverStartSrch != null and timeRecoverStartSrch != ''">

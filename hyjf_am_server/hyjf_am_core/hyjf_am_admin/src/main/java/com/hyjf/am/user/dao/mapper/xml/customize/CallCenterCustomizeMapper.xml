@@ -84,9 +84,9 @@
 		SELECT
 		  	tender.user_id
 		FROM
-			hyjf_trade.ht_borrow_tender tender
+			ht_trade.ht_borrow_tender tender
 		JOIN
-			hyjf_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
+			ht_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
 		JOIN
 		  	ht_user  hydu ON tender.user_id = hydu.user_id
 		WHERE  borrow.`status` = 4
@@ -107,7 +107,7 @@
 		<!-- #关联用户信息 -->
 		JOIN ht_user_info info ON hydu.user_id = info.user_id 
 		<!-- #关联用户账户的信息 -->
-		JOIN hyjf_trade.ht_account  account ON account.user_id = hydu.user_id
+		JOIN ht_trade.ht_account  account ON account.user_id = hydu.user_id
 		WHERE
 			NOT EXISTS (
 				SELECT
@@ -127,9 +127,9 @@
 	    SELECT
 	      tender.user_id
 	    FROM
-			hyjf_trade.ht_borrow_tender tender
+			ht_trade.ht_borrow_tender tender
 		JOIN
-			hyjf_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
+			ht_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
 		JOIN
 		  	ht_user  hydu ON tender.user_id = hydu.user_id
 	    WHERE  borrow.`status` = 4
@@ -139,7 +139,7 @@
 			SELECT
 				SUM(t.account)
 			FROM
-				hyjf_trade.ht_borrow_tender t
+				ht_trade.ht_borrow_tender t
 			WHERE
 				t.user_id = hydu.user_id
 		) <![CDATA[>=]]> 5000

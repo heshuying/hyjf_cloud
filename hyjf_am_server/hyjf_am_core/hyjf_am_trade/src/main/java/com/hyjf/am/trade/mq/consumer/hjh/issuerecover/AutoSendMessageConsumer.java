@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * 汇计划自动发标修复
+ * 自动录标
  * @author walter.limeng
  * @version AutoSendMessageConsumer, v0.1 2018/7/11 10:30
  */

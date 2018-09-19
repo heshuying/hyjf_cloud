@@ -12,8 +12,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,13 +35,13 @@ public class BankAccountManageController extends BaseController {
      * @Desc :查询列表数据
      */
     @ApiOperation(value = "银行账户管理查询列表")
-    @PostMapping("/get_bank_open_account")
+    @GetMapping("/get_bank_open_account/{userId}")
     public BankOpenAccountResponse getBankOpenAccount(@PathVariable Integer userId) {
         BankOpenAccountResponse response = new BankOpenAccountResponse();
         BankOpenAccount bankOpenAccount = bankAccountManageService.getBankOpenAccount(userId);
         if (null!=bankOpenAccount) {
             BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
-            BeanUtils.copyProperties(bankOpenAccountVO,bankOpenAccount);
+            BeanUtils.copyProperties(bankOpenAccount,bankOpenAccountVO);
             response.setResult(bankOpenAccountVO);
         }
         return response;

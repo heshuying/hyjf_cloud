@@ -162,21 +162,21 @@
 		FROM ht_account_recharge r
 		<!-- <if test="usernameSearch != null and usernameSearch != ''">
 			LEFT JOIN
-			huiyingdai_users u ON r.user_id= u.user_id
+			ht_users u ON r.user_id= u.user_id
 		</if>
 		<if test="roleIdSearch != null and roleIdSearch != 0">
 			LEFT JOIN
-			huiyingdai_users_info ui ON r.user_id= ui.user_id
+			ht_users_info ui ON r.user_id= ui.user_id
 		</if>
 		<if test="userProperty != null and userProperty != ''">
 			LEFT JOIN
-			huiyingdai_users_info ui ON r.user_id= ui.user_id
+			ht_users_info ui ON r.user_id= ui.user_id
 		</if> -->
 		<!-- LEFT JOIN
-		huiyingdai_fee_config p ON r.payment= p.bank_code -->
+		ht_fee_config p ON r.payment= p.bank_code -->
 		<!-- <if test="bankCodeSearch != null and bankCodeSearch != ''">
 			LEFT JOIN
-			huiyingdai_bank_config b ON r.payment= b.code
+			ht_bank_config b ON r.payment= b.code
 		</if> -->
 
 		WHERE 1=1

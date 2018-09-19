@@ -175,6 +175,23 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	}
 
 	@Override
+	public User findUserByRecommendName(String reffer) {
+		UserExample usersExample = new UserExample();
+		UserExample.Criteria criteria = usersExample.createCriteria();
+		if (Validator.isMobile(reffer)) {
+			criteria.andMobileEqualTo(reffer);
+		} else {
+			criteria.andUserIdEqualTo(Integer.valueOf(reffer));
+		}
+		List<User> usersList = userMapper.selectByExample(usersExample);
+		if (!CollectionUtils.isEmpty(usersList)) {
+			return usersList.get(0);
+		}
+		return null;
+	}
+
+
+	@Override
 	public User findReffer(Integer userId) {
 		//查推荐人ID
 		SpreadsUserExample spreadsUsersExample = new SpreadsUserExample();

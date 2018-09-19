@@ -30,7 +30,7 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 
 	@Override
 	public SmsTemplate findSmsTemplateByCode(String tplCode) {
-		SmsTemplate smsTemplate = RedisUtils.getObj(RedisConstants.SMS_TEMPLATE, SmsTemplate.class);
+		SmsTemplate smsTemplate = RedisUtils.getObj(RedisConstants.SMS_TEMPLATE + tplCode, SmsTemplate.class);
 		if (smsTemplate == null) {
 			SmsTemplateExample example = new SmsTemplateExample();
 			SmsTemplateExample.Criteria criteria = example.createCriteria();
@@ -38,7 +38,7 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 			List<SmsTemplate> smsTemplateList = smsTemplateMapper.selectByExample(example);
 			if (!CollectionUtils.isEmpty(smsTemplateList)) {
 				smsTemplate = smsTemplateList.get(0);
-				RedisUtils.setObjEx(RedisConstants.SMS_TEMPLATE, smsTemplate, 24 * 60 * 60);
+				RedisUtils.setObjEx(RedisConstants.SMS_TEMPLATE + tplCode, smsTemplate, 24 * 60 * 60);
 				return smsTemplate;
 			}
 		}

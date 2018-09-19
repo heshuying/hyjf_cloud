@@ -23,7 +23,7 @@ public class BorrowCreditExpiresJob  extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BorrowCreditExpiresJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        restTemplate.getForEntity("http://AM-TRADE/batch/borrowCredit/expires", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/batch/borrowCredit/expires", String.class);
 
         logger.info("BorrowCreditExpiresJob execute end...");
     }

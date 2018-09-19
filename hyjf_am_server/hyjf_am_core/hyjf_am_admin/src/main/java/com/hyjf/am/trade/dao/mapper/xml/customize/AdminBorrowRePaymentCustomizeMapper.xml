@@ -6,7 +6,7 @@
 		<where>
 			<!-- 借款编号 -->
 			<if test="borrowNid != null and borrowNid != ''">
-				AND b.borrow_nid LIKE CONCAT('%', #{borrowNid}, '%')
+				AND b.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 			</if>
 			<!-- 资产来源 -->
 			<if test="instCodeSrch != null and instCodeSrch != ''">
@@ -18,7 +18,7 @@
 			</if>
 			<!-- 借款人 -->
 			<if test="borrowUserName != null and borrowUserName != ''">
-				AND b.borrow_user_name LIKE CONCAT('%', #{borrowUserName}, '%')
+				AND b.borrow_user_name LIKE CONCAT( #{borrowUserName}, '%')
 			</if>
 
 			<!-- 还款方式 -->
@@ -553,7 +553,7 @@
 			b.borrow_nid,
 			b.user_id,
 			binfo.`name` AS borrow_name,
-			b.borrow_user_name,
+			b.borrow_user_name username,
 			FORMAT(b.account, 2) AS account,
 			b.borrow_style,
 			bs.`name` AS borrow_style_name,

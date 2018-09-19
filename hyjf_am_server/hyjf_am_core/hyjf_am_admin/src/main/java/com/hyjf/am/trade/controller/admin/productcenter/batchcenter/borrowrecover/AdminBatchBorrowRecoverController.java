@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -89,7 +90,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
 
         BorrowApicronResponse reponse = new BorrowApicronResponse();
         BorrowApicron apicron = batchBorrowRecoverService.getRecoverApicronByID(id);
-        BorrowApicronVO result = (BorrowApicronVO) ConvertUtils.convert(apicron, BorrowApicronVO.class);
+        BorrowApicronVO result = CommonUtils.convertBean(apicron, BorrowApicronVO.class);
         reponse.setResult(result);
         reponse.setRtn(Response.SUCCESS);
         return reponse;

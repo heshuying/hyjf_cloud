@@ -58,16 +58,16 @@
         <where>
             1=1
             <if test="planOrderId != null and planOrderId != ''">
-                AND hhr.accede_order_id LIKE CONCAT('%', #{planOrderId}, '%')
+                AND hhr.accede_order_id LIKE CONCAT( #{planOrderId}, '%')
             </if>
             <if test="planNidSrch != null and planNidSrch != ''">
-                AND hhr.plan_nid LIKE CONCAT('%', #{planNidSrch}, '%')
+                AND hhr.plan_nid LIKE CONCAT( #{planNidSrch}, '%')
             </if>
             <if test="userName != null and userName != ''">
-                AND hhr.user_name LIKE CONCAT('%', #{userName}, '%')
+                AND hhr.user_name LIKE CONCAT( #{userName}, '%')
             </if>
             <if test="refereeNameSrch != null and refereeNameSrch != ''">
-                AND hha.invite_user_name LIKE CONCAT('%', #{refereeNameSrch}, '%')
+                AND hha.invite_user_name LIKE CONCAT( #{refereeNameSrch}, '%')
             </if>
             <if test="debtLockPeriodSrch != null and debtLockPeriodSrch != ''">
                 AND hhr.lock_period = #{debtLockPeriodSrch}
@@ -102,13 +102,13 @@
         FROM
         ht_hjh_repay hhr
         LEFT JOIN ht_hjh_accede hha ON hha.accede_order_id = hhr.accede_order_id
-        --         LEFT JOIN huiyingdai_spreads_users hydsu ON hhr.user_id = hydsu.user_id
+        --         LEFT JOIN ht_spreads_users hydsu ON hhr.user_id = hydsu.user_id
         --         LEFT JOIN ht_r_users hu ON hydsu.spreads_userid = hu.user_id
-        --         LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hu.user_id
+        --         LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
         LEFT JOIN ht_hjh_plan hhp ON hhp.plan_nid = hhr.plan_nid
-        --         LEFT JOIN hyjf_param_name pna ON cast(hhr.user_attribute AS CHAR) = pna.name_cd
+        --         LEFT JOIN ht_param_name pna ON cast(hhr.user_attribute AS CHAR) = pna.name_cd
         --         AND pna.name_class = 'USER_PROPERTY'
-        --         LEFT JOIN hyjf_param_name pna_tender ON cast(hha.invite_user_attribute AS CHAR) = pna_tender.name_cd
+        --         LEFT JOIN ht_param_name pna_tender ON cast(hha.invite_user_attribute AS CHAR) = pna_tender.name_cd
         --         AND pna_tender.name_class = 'USER_PROPERTY'
         <include refid="Where_Clause_Repay" />
     </select>
@@ -181,13 +181,13 @@
         FROM
         ht_hjh_repay hhr
         LEFT JOIN ht_hjh_accede hha ON hha.accede_order_id = hhr.accede_order_id
---         LEFT JOIN huiyingdai_spreads_users hydsu ON hhr.user_id = hydsu.user_id
+--         LEFT JOIN ht_spreads_users hydsu ON hhr.user_id = hydsu.user_id
 --         LEFT JOIN ht_r_users hu ON hydsu.spreads_userid = hu.user_id
---         LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hu.user_id
+--         LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
         LEFT JOIN ht_hjh_plan hhp ON hhp.plan_nid = hhr.plan_nid
---         LEFT JOIN hyjf_param_name pna ON cast(hhr.user_attribute AS CHAR) = pna.name_cd
+--         LEFT JOIN ht_param_name pna ON cast(hhr.user_attribute AS CHAR) = pna.name_cd
 --         AND pna.name_class = 'USER_PROPERTY'
---         LEFT JOIN hyjf_param_name pna_tender ON cast(hha.invite_user_attribute AS CHAR) = pna_tender.name_cd
+--         LEFT JOIN ht_param_name pna_tender ON cast(hha.invite_user_attribute AS CHAR) = pna_tender.name_cd
 --         AND pna_tender.name_class = 'USER_PROPERTY'
         <include refid="Where_Clause_Repay" />
         ORDER BY repay_should_time ASC

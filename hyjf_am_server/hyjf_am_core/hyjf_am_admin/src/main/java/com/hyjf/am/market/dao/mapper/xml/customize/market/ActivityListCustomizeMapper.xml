@@ -6,7 +6,7 @@
 		<where>
 				AND 1=1
 			<if test="title != null">
-				AND title LIKE CONCAT('%', #{title}, '%')
+				AND title LIKE CONCAT( #{title}, '%')
 			</if>
 			<if test="endTime != 0">
 				AND time_start <![CDATA[<=]]> #{endTime}
@@ -28,7 +28,7 @@
 
 	<select id="selectActivityList" resultMap="BaseResultMap"
 		parameterType="com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize">
-		SELECT * FROM huiyingdai_activity_list
+		SELECT * FROM ht_activity_list
 		<include refid="Where_Clause" />
 	</select>
 
@@ -51,7 +51,7 @@
 
 	<sql id="where-all-page-condition">
 		<if test="title != null and title != ''">
-			AND title LIKE CONCAT('%', #{title}, '%')
+			AND title LIKE CONCAT( #{title}, '%')
 		</if>
 		<if test="endTime != null and endTime != 0">
 			AND time_start <![CDATA[<=]]>
@@ -62,7 +62,7 @@
 			#{startTime}
 		</if>
 		<if test="platform != null and platform != ''">
-			AND platform like  CONCAT('%', #{platform}, '%')
+			AND platform LIKE CONCAT( #{platform}, '%')
 		</if>
 	</sql>
 	

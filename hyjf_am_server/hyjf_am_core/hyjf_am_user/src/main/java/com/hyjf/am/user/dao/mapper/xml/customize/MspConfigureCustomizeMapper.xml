@@ -40,15 +40,15 @@
 			</if>
 			<!-- 担保类型查询-->
 			<if test="sourceTypeSrch != null and sourceTypeSrch != ''">
-				AND hfml.guarantee_type LIKE CONCAT('%', #{sourceTypeSrch}, '%')
+				AND hfml.guarantee_type LIKE CONCAT( #{sourceTypeSrch}, '%')
 			</if>
 			<!-- 借款城市-->
 			<if test="creditAddress != null and creditAddress != ''">
-				AND hfml.credit_address in (SELECT region_id FROM ht_msp_region WHERE region_name LIKE CONCAT('%', #{creditAddress}, '%'))
+				AND hfml.credit_address in (SELECT region_id FROM ht_msp_region WHERE region_name LIKE CONCAT( #{creditAddress}, '%'))
 			</if>
 			<!-- 借款金额 -->
 			<if test="loanMoney != null and loanMoney != ''">
-				AND hfml.loan_money LIKE CONCAT('%', #{loanMoney}, '%')
+				AND hfml.loan_money LIKE CONCAT( #{loanMoney}, '%')
 			</if>
 		</where>
 	</sql>

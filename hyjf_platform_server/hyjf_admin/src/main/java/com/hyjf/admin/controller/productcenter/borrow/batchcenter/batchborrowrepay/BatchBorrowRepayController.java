@@ -91,6 +91,7 @@ public class BatchBorrowRepayController extends BaseController{
 
         JSONObject jsonObject;
         String apicronID = map.get("apicronID").toString();
+        logger.info("批次还款页面查询交易批次明细,apicronID:[{}]",apicronID);
         List<BatchBorrowRepayBankInfoVO> resultList = batchBorrowRecoverService.queryBatchBorrowRepayBankInfoList(apicronID);
         if (null != resultList) {
             jsonObject = this.success(String.valueOf(resultList.size()), resultList);

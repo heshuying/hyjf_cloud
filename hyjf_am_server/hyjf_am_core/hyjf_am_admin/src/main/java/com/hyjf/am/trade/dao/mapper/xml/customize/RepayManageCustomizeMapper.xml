@@ -181,7 +181,7 @@
 			</if>
 
 			<if test="borrowNid != null and borrowNid !=''">
-				AND hydbr.borrow_nid like CONCAT('%', #{borrowNid}, '%')
+				AND hydbr.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 			</if>
 		</where>
 	</sql>
@@ -364,7 +364,7 @@
 			</if>
 
 			<if test="borrowNid != null and borrowNid !=''">
-				AND hydbr.borrow_nid like CONCAT('%', #{borrowNid}, '%')
+				AND hydbr.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 			</if>
 		</where>
 	</sql>
