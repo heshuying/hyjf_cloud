@@ -194,12 +194,10 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
      */
     @Override
     public List<BatchBorrowRepayBankInfoVO> queryBatchBorrowRepayBankInfoList(String apicronID) {
-        logger.info("获取批次还款的批次交易明细service entry");
         BorrowApicronResponse reponse = amAdminClient.getBorrowApicronByID(apicronID);
         List<BatchBorrowRepayBankInfoVO> bankInfoVOList = new ArrayList<>();
         if(reponse != null){
             BorrowApicronVO apicron = reponse.getResult();
-            logger.info("queryBatchBorrowRepayBankInfoList::::::apicron ====[{}]",JSON.toJSONString(apicron));
             int txCounts = apicron.getTxCounts();// 总交易笔数
             String batchTxDate = String.valueOf(apicron.getTxDate());
             int status  = apicron.getStatus();
@@ -241,7 +239,6 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                 loanBean.setLogClient(0);
                 // 调用放款接口
                 BankCallBean loanResult = BankCallUtils.callApiBg(loanBean);
-                logger.info("查询银行报文:【{}】", JSON.toJSONString(loanResult));
                 if (Validator.isNotNull(loanResult)) {
                     String retCode = StringUtils.isNotBlank(loanResult.getRetCode()) ? loanResult.getRetCode() : "";
                     if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
@@ -253,7 +250,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                     continue;
                 }
             }
-            logger.info("查询银行result:【{}】", JSON.toJSONString(results));
+            logger.info("查询银行result.size():【{}】", results.size());
             if(results.size() > 0){
                 bankInfoVOList = getRepayDetailList(results);
             }
