@@ -47,7 +47,7 @@
 		END borrow_period,
 		FORMAT(bt.account, 2) AS amount,
 		bs.`name` AS borrow_style_name,
-		-- 去redis中查找hyjf_param_name对应的KEY和Value（hyjf_param_name迁移时表已删除）
+		-- 去redis中查找ht_param_name对应的KEY和Value（ht_param_name迁移时表已删除）
 		-- pnai.`name` AS investType,
 		bt.invest_type AS invest_type_rds,
 		FROM_UNIXTIME(bt.create_time, '%Y-%m-%d %H:%i:%s') AS ADDTIME,
@@ -74,10 +74,10 @@
 		bt.invite_branch_id AS invite_branch_id,
 		bt.invite_department_name AS invite_department_name,
 		bt.invite_department_id AS invite_department_id,
-		-- 去redis中查找hyjf_param_name对应的KEY和Value（hyjf_param_name迁移时表已删除）
+		-- 去redis中查找ht_param_name对应的KEY和Value（ht_param_name迁移时表已删除）
 		-- pa_tender.`name` AS tender_user_attribute,
 		bt.tender_user_attribute AS tender_user_attribute_rds,
-		-- 去redis中查找hyjf_param_name对应的KEY和Value（hyjf_param_name迁移时表已删除）
+		-- 去redis中查找ht_param_name对应的KEY和Value（ht_param_name迁移时表已删除）
 		-- pa_invite.`name` AS invite_user_attribute,
 		bt.invite_user_attribute AS invite_user_attribute_rds,
 		bpt.borrow_class AS project_type,
@@ -90,13 +90,13 @@
 		INNER JOIN ht_borrow_info o ON bt.borrow_nid = o.borrow_nid
 		LEFT JOIN ht_increase_interest_invest iii ON iii.tender_nid = bt.nid
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-		-- LEFT JOIN hyjf_param_name pnai ON CAST(bt.invest_type AS CHAR) = pnai.name_cd AND pnai.name_class = 'INVEST_TYPE'
-		-- LEFT JOIN hyjf_hjh_inst_config hic ON hic.inst_code = b.inst_code
+		-- LEFT JOIN ht_param_name pnai ON CAST(bt.invest_type AS CHAR) = pnai.name_cd AND pnai.name_class = 'INVEST_TYPE'
+		-- LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 		LEFT JOIN ht_borrow_recover re ON bt.id = re.tender_id
-		-- LEFT JOIN hyjf_bank_open_account ac ON bt.user_id = ac.user_id
-		-- LEFT JOIN hyjf_param_name pa_tender ON pa_tender.name_class = 'USER_PROPERTY' AND pa_tender.name_cd = bt.tender_user_attribute
-		-- LEFT JOIN hyjf_param_name pa_invite ON pa_invite.name_class = 'USER_PROPERTY' AND pa_invite.name_cd = bt.invite_user_attribute
+		-- LEFT JOIN ht_bank_open_account ac ON bt.user_id = ac.user_id
+		-- LEFT JOIN ht_param_name pa_tender ON pa_tender.name_class = 'USER_PROPERTY' AND pa_tender.name_cd = bt.tender_user_attribute
+		-- LEFT JOIN ht_param_name pa_invite ON pa_invite.name_class = 'USER_PROPERTY' AND pa_invite.name_cd = bt.invite_user_attribute
 		WHERE 1=1
 		  <if test="instCode != null and instCode !=null" >
 			    AND o.inst_code = #{instCode}

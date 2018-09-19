@@ -38,6 +38,7 @@ import java.util.UUID;
  * @Auther: walter.limeng
  * @Date: 2018/7/11 18:52
  * @Description: AutoBailMessageConsumer
+ * 保证金审核
  */
 @Component
 public class AutoBailMessageConsumer extends Consumer {

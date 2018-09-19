@@ -43,23 +43,23 @@
 			ht_admin admin
 			LEFT JOIN ht_admin_and_role aar ON aar.user_id = admin.id
 			LEFT JOIN ht_admin_role role ON aar.role_id = role.id 
-			LEFT JOIN hyjf_user.ht_r_oa_department dep ON admin.department_id = dep.id
+			LEFT JOIN ht_user.ht_r_oa_department dep ON admin.department_id = dep.id
 		WHERE
 			1=1
 			<if test="id != null and id != ''">
 				AND admin.id = #{id}
 			</if>
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND admin.username like CONCAT('%', #{usernameSrch}, '%')
+				AND admin.username LIKE CONCAT( #{usernameSrch}, '%')
 			</if>
 			<if test="truenameSrch != null and truenameSrch != ''">
-				AND admin.truename like CONCAT('%', #{truenameSrch}, '%')
+				AND admin.truename LIKE CONCAT( #{truenameSrch}, '%')
 			</if>
 			<if test="mobileSrch != null and mobileSrch != ''">
 				AND admin.mobile = #{mobileSrch}
 			</if>
 			<if test="departmentSrch != null and departmentSrch != ''">
-				AND dep.`name` like CONCAT('%', #{departmentSrch}, '%')
+				AND dep.`name` LIKE CONCAT( #{departmentSrch}, '%')
 			</if>
           	<if test="stateSrchOn != null and stateSrchOn != '' and stateSrchOff != null and stateSrchOff != ''" >
           		AND (admin.state = #{stateSrchOn} or admin.state = #{stateSrchOff})

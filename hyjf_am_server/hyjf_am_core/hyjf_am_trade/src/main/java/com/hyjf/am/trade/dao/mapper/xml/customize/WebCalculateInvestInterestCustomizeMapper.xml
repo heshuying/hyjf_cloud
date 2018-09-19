@@ -21,7 +21,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <update id="updateCalculateInvestByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest" >
-    update hyjf_calculate_invest_interest
+    update ht_calculate_invest_interest
     <set >
       <if test="tenderSum != null" >
         tender_sum = tender_sum + #{tenderSum,jdbcType=DECIMAL},
@@ -79,7 +79,7 @@
   </update>
   
   <update id="updateCalculateInvestSubByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest" >
-    update hyjf_calculate_invest_interest
+    update ht_calculate_invest_interest
     <set >
       <if test="tenderSum != null" >
         tender_sum = tender_sum - #{tenderSum,jdbcType=DECIMAL},
@@ -93,7 +93,7 @@
   
   
   <update id="updateRecordTruncate" >
-	  UPDATE huiyingdai_users
+	  UPDATE ht_users
 	SET recod_total = 0,
 	 recod_truncate_time = NOW()
 	WHERE

@@ -118,9 +118,9 @@
 			 IFNULL(hydbt.remark, '') remark,
 			 hydbt.addtime create_time
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		INNER JOIN huiyingdai_borrow_tender hydbt ON hydbt.borrow_nid = hydb.borrow_nid
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		INNER JOIN ht_borrow_tender hydbt ON hydbt.borrow_nid = hydb.borrow_nid
 		<if test="status != null and status != ''">
 			<if test="status == '12'.toString()">
 				<if test="startDate != null and startDate != ''">
@@ -139,7 +139,7 @@
 				</if>
 			</if>
 		</if>
-		LEFT JOIN huiyingdai_borrow_recover hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+		LEFT JOIN ht_borrow_recover hydbr ON hydbr.borrow_nid = hydb.borrow_nid
 		AND hydbt.user_id = hydbr.user_id AND hydbr.nid = hydbt.nid
 		<if test="status != null and status != ''">
 			<if test="status == '14'.toString()">
@@ -216,9 +216,9 @@
 		IFNULL(hydbt.remark, '') remark,
 		hydbt.addtime create_time
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		INNER JOIN hyjf_borrow_tender_cpn hydbt ON hydbt.borrow_nid = hydb.borrow_nid
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		INNER JOIN ht_borrow_tender_cpn hydbt ON hydbt.borrow_nid = hydb.borrow_nid
 		<if test="status != null and status != ''">
 			<if test="status == '12'.toString()">
 				<if test="startDate != null and startDate != ''">
@@ -237,7 +237,7 @@
 				</if>
 			</if>
 		</if>
-		LEFT JOIN hyjf_coupon_recover hydbr ON hydbr.tender_id = hydbt.nid
+		LEFT JOIN ht_coupon_recover hydbr ON hydbr.tender_id = hydbt.nid
 		<if test="status != null and status != ''">
 			<if test="status == '14'.toString()">
 				<if test="startDate != null and startDate != ''">
@@ -248,9 +248,9 @@
 				</if>
 			</if>
 		</if>
-		LEFT JOIN hyjf_coupon_tender hct ON hct.order_id = hydbt.nid
-		LEFT JOIN hyjf_coupon_user hcu ON hcu.id = hct.coupon_grant_id
-		LEFT JOIN hyjf_coupon_config hcc ON hcc.coupon_code = hcu.coupon_code
+		LEFT JOIN ht_coupon_tender hct ON hct.order_id = hydbt.nid
+		LEFT JOIN ht_coupon_user hcu ON hcu.id = hct.coupon_grant_id
+		LEFT JOIN ht_coupon_config hcc ON hcc.coupon_code = hcu.coupon_code
 		WHERE
 			(
 				hydbpt.borrow_project_type = 'HZT'
@@ -266,8 +266,8 @@
 			SELECT
 				hcr2.id
 			FROM
-				hyjf_coupon_recover hcr2
-			INNER JOIN hyjf_borrow_tender_cpn hbt2 ON hcr2.tender_id = hbt2.nid
+				ht_coupon_recover hcr2
+			INNER JOIN ht_borrow_tender_cpn hbt2 ON hcr2.tender_id = hbt2.nid
 			WHERE
 				hbt2.borrow_nid = hydb.borrow_nid
 			AND hcr2.tender_id = hydbr.tender_id
@@ -282,8 +282,8 @@
 			SELECT
 				hcr2.id
 			FROM
-				hyjf_coupon_recover hcr2
-			INNER JOIN hyjf_borrow_tender_cpn hbt2 ON hcr2.tender_id = hbt2.nid
+				ht_coupon_recover hcr2
+			INNER JOIN ht_borrow_tender_cpn hbt2 ON hcr2.tender_id = hbt2.nid
 			WHERE
 				hbt2.borrow_nid = hydb.borrow_nid
 			AND hcr2.tender_id = hydbr.tender_id
@@ -356,9 +356,9 @@ UNION
 		IFNULL(hiii.remark, '') remark,
 		hiii.create_time
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		INNER JOIN hyjf_increase_interest_invest hiii ON hiii.borrow_nid = hydb.borrow_nid
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		INNER JOIN ht_increase_interest_invest hiii ON hiii.borrow_nid = hydb.borrow_nid
 		<if test="status != null and status != ''">
 			<if test="status == '12'.toString()">
 				<if test="startDate != null and startDate != ''">
@@ -377,7 +377,7 @@ UNION
 				</if>
 			</if>
 		</if>
-		LEFT JOIN hyjf_increase_interest_loan hiil ON hiil.invest_order_id = hiii.order_id
+		LEFT JOIN ht_increase_interest_loan hiil ON hiil.invest_order_id = hiii.order_id
 		<if test="status != null and status != ''">
 			<if test="status == '14'.toString()">
 				<if test="startDate != null and startDate != ''">
@@ -426,9 +426,9 @@ UNION
 		(SELECT
 			hydbt.nid
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		INNER JOIN huiyingdai_borrow_tender hydbt ON hydbt.borrow_nid = hydb.borrow_nid
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		INNER JOIN ht_borrow_tender hydbt ON hydbt.borrow_nid = hydb.borrow_nid
 		<if test="status != null and status != ''">
 			<if test="status == '12'.toString()">
 				<if test="startDate != null and startDate != ''">
@@ -447,7 +447,7 @@ UNION
 				</if>
 			</if>
 		</if>
-		LEFT JOIN huiyingdai_borrow_recover hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+		LEFT JOIN ht_borrow_recover hydbr ON hydbr.borrow_nid = hydb.borrow_nid
 		AND hydbt.user_id = hydbr.user_id AND hydbr.nid = hydbt.nid
 		<if test="status != null and status != ''">
 			<if test="status == '14'.toString()">
@@ -466,9 +466,9 @@ UNION
 		SELECT
 			hydbt.nid
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		INNER JOIN hyjf_borrow_tender_cpn hydbt ON hydbt.borrow_nid = hydb.borrow_nid
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		INNER JOIN ht_borrow_tender_cpn hydbt ON hydbt.borrow_nid = hydb.borrow_nid
 		<if test="status != null and status != ''">
 			<if test="status == '12'.toString()">
 				<if test="startDate != null and startDate != ''">
@@ -487,7 +487,7 @@ UNION
 				</if>
 			</if>
 		</if>
-		LEFT JOIN hyjf_coupon_recover hydbr ON hydbr.tender_id = hydbt.nid
+		LEFT JOIN ht_coupon_recover hydbr ON hydbr.tender_id = hydbt.nid
 		<if test="status != null and status != ''">
 			<if test="status == '14'.toString()">
 				<if test="startDate != null and startDate != ''">
@@ -513,8 +513,8 @@ UNION
 			SELECT
 				hcr2.id
 			FROM
-				hyjf_coupon_recover hcr2
-			INNER JOIN hyjf_borrow_tender_cpn hbt2 ON hcr2.tender_id = hbt2.nid
+				ht_coupon_recover hcr2
+			INNER JOIN ht_borrow_tender_cpn hbt2 ON hcr2.tender_id = hbt2.nid
 			WHERE
 				hbt2.borrow_nid = hydb.borrow_nid
 			AND hcr2.tender_id = hydbr.tender_id
@@ -529,8 +529,8 @@ UNION
 			SELECT
 				hcr2.id
 			FROM
-				hyjf_coupon_recover hcr2
-			INNER JOIN hyjf_borrow_tender_cpn hbt2 ON hcr2.tender_id = hbt2.nid
+				ht_coupon_recover hcr2
+			INNER JOIN ht_borrow_tender_cpn hbt2 ON hcr2.tender_id = hbt2.nid
 			WHERE
 				hbt2.borrow_nid = hydb.borrow_nid
 			AND hcr2.tender_id = hydbr.tender_id
@@ -543,9 +543,9 @@ UNION
 		SELECT
 			hiii.order_id nid
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		INNER JOIN hyjf_increase_interest_invest hiii ON hiii.borrow_nid = hydb.borrow_nid
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		INNER JOIN ht_increase_interest_invest hiii ON hiii.borrow_nid = hydb.borrow_nid
 		<if test="status != null and status != ''">
 			<if test="status == '12'.toString()">
 				<if test="startDate != null and startDate != ''">
@@ -564,7 +564,7 @@ UNION
 				</if>
 			</if>
 		</if>
-		LEFT JOIN hyjf_increase_interest_loan hiil ON hiil.invest_order_id = hiii.order_id
+		LEFT JOIN ht_increase_interest_loan hiil ON hiil.invest_order_id = hiii.order_id
 		<if test="status != null and status != ''">
 			<if test="status == '14'.toString()">
 				<if test="startDate != null and startDate != ''">
@@ -639,11 +639,11 @@ UNION
 			hydb.borrow_measures_mea AS measures_mea,
 			hydb.files
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		LEFT JOIN huiyingdai_borrow_users yhdbu ON hydb.borrow_nid = yhdbu.`borrow_nid`
-		LEFT JOIN huiyingdai_links hydl ON hydb.borrow_measures_instit = hydl.webname
-		LEFT JOIN huiyingdai_borrow_maninfo hydbm ON hydbm.borrow_nid = hydb.borrow_nid
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_borrow_users yhdbu ON hydb.borrow_nid = yhdbu.`borrow_nid`
+		LEFT JOIN ht_links hydl ON hydb.borrow_measures_instit = hydl.webname
+		LEFT JOIN ht_borrow_maninfo hydbm ON hydbm.borrow_nid = hydb.borrow_nid
 		WHERE hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		AND hydb.company_or_personal=2
 	</select>
@@ -692,11 +692,11 @@ UNION
 			hydb.borrow_measures_mea AS measures_mea,
 			hydb.files
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		LEFT JOIN huiyingdai_borrow_users yhdbu ON hydb.borrow_nid = yhdbu.`borrow_nid`
-		LEFT JOIN huiyingdai_links hydl ON hydb.borrow_measures_instit = hydl.webname
-		LEFT JOIN huiyingdai_borrow_users hydbu ON hydb.borrow_nid = hydbu.borrow_nid
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_borrow_users yhdbu ON hydb.borrow_nid = yhdbu.`borrow_nid`
+		LEFT JOIN ht_links hydl ON hydb.borrow_measures_instit = hydl.webname
+		LEFT JOIN ht_borrow_users hydbu ON hydb.borrow_nid = hydbu.borrow_nid
 		WHERE hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		AND hydb.company_or_personal=1
 	</select>
@@ -727,10 +727,10 @@ UNION
 					hydbt.addtime,
 					'%Y-%m-%d %H:%i:%s'
 				) AS invest_time
-			FROM huiyingdai_borrow_tender hydbt
-			LEFT JOIN huiyingdai_users hydu ON hydbt.user_id = hydu.user_id
-			LEFT JOIN hyjf_param_name pnrp ON cast(hydbt.client AS CHAR) = pnrp.name_cd AND pnrp.name_class = 'CLIENT'
-			LEFT JOIN huiyingdai_users_info hydui ON hydu.user_id=hydui.user_id
+			FROM ht_borrow_tender hydbt
+			LEFT JOIN ht_users hydu ON hydbt.user_id = hydu.user_id
+			LEFT JOIN ht_param_name pnrp ON cast(hydbt.client AS CHAR) = pnrp.name_cd AND pnrp.name_class = 'CLIENT'
+			LEFT JOIN ht_users_info hydui ON hydu.user_id=hydui.user_id
 		<include refid="Where_Clause_Project_Invest_List" />
 		ORDER BY hydbt.addtime DESC
 		<if test="limitStart != null and limitEnd !=null" >
@@ -740,8 +740,8 @@ UNION
 	<select id="countProjectInvestRecordTotal" resultType="java.lang.Integer" parameterType="Map">
 		SELECT 
 			COUNT(hydbt.id)
-			FROM huiyingdai_borrow_tender hydbt
-			LEFT JOIN huiyingdai_users hydu ON hydbt.user_id = hydu.user_id
+			FROM ht_borrow_tender hydbt
+			LEFT JOIN ht_users hydu ON hydbt.user_id = hydu.user_id
 		<include refid="Where_Clause_Project_Invest_List" />
 	</select>
 	
@@ -766,8 +766,8 @@ UNION
 			hydcl.ident AS id_card,
 			hydcl.credit_amount AS account
 		FROM
-			huiyingdai_consume_list hydcl
-			LEFT JOIN huiyingdai_borrow hydb ON hydb.consume_id= hydcl.consume_id
+			ht_consume_list hydcl
+			LEFT JOIN ht_borrow hydb ON hydb.consume_id= hydcl.consume_id
 		<include refid="Where_Clause_Project_Consume_List" />
 		<if test="limitStart != null and limitEnd !=null" >
 	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
@@ -777,8 +777,8 @@ UNION
 		SELECT
 			COUNT(hydcl.id)
 		FROM
-			huiyingdai_consume_list hydcl
-			LEFT JOIN huiyingdai_borrow hydb ON hydb.consume_id= hydcl.consume_id
+			ht_consume_list hydcl
+			LEFT JOIN ht_borrow hydb ON hydb.consume_id= hydcl.consume_id
 		<include refid="Where_Clause_Project_Consume_List" />
 	</select>
 
@@ -932,11 +932,11 @@ UNION
 		hydat.nid,
 		hydat.user_id
 		FROM
-		huiyingdai_borrow_tender hydat
-		INNER JOIN huiyingdai_borrow hydb ON hydb.borrow_nid = hydat.borrow_nid
-		INNER JOIN huiyingdai_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
-		INNER JOIN huiyingdai_users_info hydui ON hydui.user_id = hydat.user_id
-		INNER JOIN huiyingdai_users hydu ON hydu.user_id = hydat.user_id
+		ht_borrow_tender hydat
+		INNER JOIN ht_borrow hydb ON hydb.borrow_nid = hydat.borrow_nid
+		INNER JOIN ht_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
+		INNER JOIN ht_users_info hydui ON hydui.user_id = hydat.user_id
+		INNER JOIN ht_users hydu ON hydu.user_id = hydat.user_id
 		where hydat.accede_order_id = #{accedeOrderId,jdbcType=VARCHAR}
 		and hydat.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		<if test="limitStart != null and limitEnd !=null" >
@@ -948,11 +948,11 @@ UNION
 		SELECT
 			COUNT(1)
 		FROM
-				hyjf_debt_invest hdi
-		INNER JOIN hyjf_debt_borrow hydb ON hydb.borrow_nid = hdi.borrow_nid
-		INNER JOIN huiyingdai_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
-		INNER JOIN huiyingdai_users_info hydui ON hydui.user_id = hdi.user_id
-		INNER JOIN huiyingdai_users hydu ON hydu.user_id = hdi.user_id
+				ht_debt_invest hdi
+		INNER JOIN ht_debt_borrow hydb ON hydb.borrow_nid = hdi.borrow_nid
+		INNER JOIN ht_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
+		INNER JOIN ht_users_info hydui ON hydui.user_id = hdi.user_id
+		INNER JOIN ht_users hydu ON hydu.user_id = hdi.user_id
 		<include refid="Where_Clause_User_Debt_Invest_List" />
 	</select>
 	<select id="selectUserDebtInvestList" resultMap="UserInvestListMap" parameterType="Map">
@@ -996,11 +996,11 @@ UNION
 		 hydbs.`name` AS repay_method,
 		 hdi.repay_account AS total
 		FROM
-			hyjf_debt_invest hdi
-		INNER JOIN hyjf_debt_borrow hydb ON hydb.borrow_nid = hdi.borrow_nid
-		INNER JOIN huiyingdai_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
-		INNER JOIN huiyingdai_users_info hydui ON hydui.user_id = hdi.user_id
-		INNER JOIN huiyingdai_users hydu ON hydu.user_id = hdi.user_id
+			ht_debt_invest hdi
+		INNER JOIN ht_debt_borrow hydb ON hydb.borrow_nid = hdi.borrow_nid
+		INNER JOIN ht_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
+		INNER JOIN ht_users_info hydui ON hydui.user_id = hdi.user_id
+		INNER JOIN ht_users hydu ON hydu.user_id = hdi.user_id
 		<include refid="Where_Clause_User_Debt_Invest_List" />
 		<if test="limitStart != null and limitEnd !=null" >
 	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
@@ -1010,10 +1010,10 @@ UNION
 		SELECT
 			COUNT(hydat.id)
 		FROM
-			huiyingdai_borrow_tender hydat
-		INNER JOIN huiyingdai_borrow hydb ON hydb.borrow_nid = hydat.borrow_nid
-		INNER JOIN huiyingdai_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
-		INNER JOIN huiyingdai_users_info hydui ON hydui.user_id = hydat.user_id
+			ht_borrow_tender hydat
+		INNER JOIN ht_borrow hydb ON hydb.borrow_nid = hydat.borrow_nid
+		INNER JOIN ht_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
+		INNER JOIN ht_users_info hydui ON hydui.user_id = hydat.user_id
 		<include refid="Where_Clause_User_Invest_List" />
 	</select>
 	
@@ -1061,14 +1061,14 @@ UNION
 			hydbr.late_interest,
 			hydbr.delay_interest
 		FROM
-			huiyingdai_borrow_recover hydbr
+			ht_borrow_recover hydbr
 		<include refid="Where_Clause_Project_Repay_List" />
 	</select>
 	<select id="countProjectRepayRecordTotal" resultType="java.lang.Integer" parameterType="Map">
 		SELECT
 			COUNT(hydbr.id)
 		FROM
-			huiyingdai_borrow_recover hydbr
+			ht_borrow_recover hydbr
 		<include refid="Where_Clause_Project_Repay_List" />
 	</select>
 	
@@ -1128,7 +1128,7 @@ UNION
 			hdld.late_interest,
 			hdld.delay_interest
 		FROM
-			hyjf_debt_loan_detail hdld
+			ht_debt_loan_detail hdld
 		<include refid="Where_Clause_Debt_Loan_Detail_List" />
 		ORDER BY hdld.repay_period ASC
 	</select>
@@ -1181,7 +1181,7 @@ UNION
 			hdld.late_interest,
 			hdld.delay_interest
 		FROM
-			hyjf_debt_loan_detail hdld
+			ht_debt_loan_detail hdld
 		<include refid="Where_Clause_Debt_Loan_Detail_List" />
 		ORDER BY hdld.repay_period ASC
 	</select>
@@ -1198,7 +1198,7 @@ UNION
 		SELECT
 			COUNT(hydbrp.id)
 		FROM
-			hyjf_debt_loan_detail hydbrp
+			ht_debt_loan_detail hydbrp
 		<include refid="Where_Clause_Project_Loan_Detail_List" />
 	</select>
 	
@@ -1207,7 +1207,7 @@ UNION
 		SELECT
 			COUNT(hdld.id)
 		FROM
-			hyjf_debt_loan_detail hdld
+			ht_debt_loan_detail hdld
 		<include refid="Where_Clause_Debt_Loan_Detail_List" />
 	</select>
 	<select id="selectCouponProjectRepayPlanList" resultMap="ProjectRepayListMap" parameterType="Map">
@@ -1228,8 +1228,8 @@ UNION
 			'0' late_interest,
 			'0' delay_interest
 		FROM
-			hyjf_coupon_recover hcr
-		INNER JOIN hyjf_borrow_tender_cpn hbt ON hcr.tender_id = hbt.nid
+			ht_coupon_recover hcr
+		INNER JOIN ht_borrow_tender_cpn hbt ON hcr.tender_id = hbt.nid
 		WHERE 
 		hbt.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		AND hbt.user_id = #{userId,jdbcType=VARCHAR}
@@ -1240,8 +1240,8 @@ UNION
 		SELECT
 			COUNT(1)
 		FROM
-			hyjf_coupon_recover hcr
-		INNER JOIN hyjf_borrow_tender_cpn hbt ON hcr.tender_id = hbt.nid
+			ht_coupon_recover hcr
+		INNER JOIN ht_borrow_tender_cpn hbt ON hcr.tender_id = hbt.nid
 		WHERE 
 		hbt.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		AND hbt.user_id = #{userId,jdbcType=VARCHAR}
@@ -1253,28 +1253,28 @@ UNION
 					SELECT
 						COUNT(id)
 					FROM
-						huiyingdai_borrow_tender
+						ht_borrow_tender
 					WHERE
 						user_id = #{value}
 				) + (
 					SELECT
 						COUNT(assign_id)
 					FROM
-						huiyingdai_credit_tender
+						ht_credit_tender
 					WHERE
 						user_id = #{value}
 				) + (
 					SELECT
 						COUNT(id)
 					FROM
-						huiyingdai_product_list
+						ht_product_list
 					WHERE
 						user_id = #{value}
 				)+ (
 					SELECT
 						COUNT(id)
 					FROM
-						hyjf_debt_plan_accede
+						ht_debt_plan_accede
 					WHERE
 						user_id = #{value}
 				) AS count
@@ -1286,11 +1286,11 @@ UNION
 			SELECT
 				investFlag 
 			FROM
-				huiyingdai_users
+				ht_users
 				where user_id=#{value} and status=0 limit 1
 	</select>
 	<update id="updateUserInvestFlag" parameterType="java.lang.Integer">
-				UPDATE huiyingdai_users
+				UPDATE ht_users
 			SET investFlag = 1
 			WHERE
 				user_id = #{value}
@@ -1298,7 +1298,7 @@ UNION
 			AND investFlag = 0
 	</update>
 	<update id="updateUserInvestFlagZero" parameterType="java.lang.Integer">
-				UPDATE huiyingdai_users
+				UPDATE ht_users
 			SET investFlag = 0
 			WHERE
 				user_id = #{value}
@@ -1308,21 +1308,21 @@ UNION
 					SELECT
 						COUNT(id)
 					FROM
-						huiyingdai_borrow_tender
+						ht_borrow_tender
 					WHERE
 						user_id = #{value}
 				) + (
 					SELECT
 						COUNT(assign_id)
 					FROM
-						huiyingdai_credit_tender
+						ht_credit_tender
 					WHERE
 						user_id = #{value}
 				) + (
 					SELECT
 						COUNT(id)
 					FROM
-						huiyingdai_product_list
+						ht_product_list
 					WHERE
 						user_id = #{value}
 				)=0
@@ -1331,7 +1331,7 @@ UNION
 		SELECT
 		COUNT(id)
 	FROM
-		huiyingdai_borrow_tender
+		ht_borrow_tender
 	WHERE
 		nid = #{nid}
 	and user_id=#{userId}
@@ -1346,7 +1346,7 @@ UNION
 		recod_time recodTime,
 		recod_truncate_time recodTruncateTime
 	FROM
-		huiyingdai_users
+		ht_users
 	WHERE user_id=#{value} 
 		and status=0
 	</select>

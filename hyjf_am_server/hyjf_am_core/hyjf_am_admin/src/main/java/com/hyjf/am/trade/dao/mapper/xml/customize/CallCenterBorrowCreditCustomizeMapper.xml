@@ -24,7 +24,7 @@
 		<where>
 			<!-- 用户名 -->
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND info.borrow_user_name LIKE CONCAT('%', #{usernameSrch}, '%')
+				AND info.borrow_user_name LIKE CONCAT( #{usernameSrch}, '%')
 			</if>	
 		</where>
 	</sql>

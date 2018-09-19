@@ -21,7 +21,7 @@
 		<where>
 			AND u.open_account=1 and c.chinapnr_usrcustid!=0
 			<if test="usernameSearch != null and usernameSearch != ''">
-				AND u.username LIKE CONCAT('%', #{usernameSearch}, '%')
+				AND u.username LIKE CONCAT( #{usernameSearch}, '%')
 			</if>
 			<if test="bankSearch != null and bankSearch != ''">
 				AND b.bank = #{bankSearch}

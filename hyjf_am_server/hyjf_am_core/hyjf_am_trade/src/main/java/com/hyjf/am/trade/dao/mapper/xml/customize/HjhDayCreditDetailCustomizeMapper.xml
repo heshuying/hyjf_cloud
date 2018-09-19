@@ -108,7 +108,7 @@
             </if>
             <!-- 出让人计划订单号 -->
             <if test="planOrderId != null and planOrderId != ''">
-                AND dc.plan_order_id like  concat( '%', #{planOrderId} , '%')
+                AND dc.plan_order_id LIKE CONCAT( #{planOrderId} , '%')
             </if>
             <!-- 清算后计划编号 -->
             <if test="planNidNew != null and planNidNew != ''">
@@ -124,7 +124,7 @@
             </if>
             <!-- 用户名 -->
             <if test="userName != null and userName != ''">
-                AND dc.user_name like concat('%' , #{userName} , '%')
+                AND dc.user_name LIKE CONCAT( #{userName} , '%')
             </if>
             <!-- 还款方式 -->
             <if test="repayStyle != null and repayStyle != ''">
@@ -175,7 +175,7 @@
                 AND dc.actual_apr <![CDATA[ <= ]]> #{actualAprEndSrch}
             </if>
             <if test="labelName != null and labelName != ''">
-                AND dc.label_name  like concat('%',#{labelName},'%')
+                AND dc.label_name  LIKE CONCAT(#{labelName},'%')
             </if>
         </where>
     </sql>
@@ -188,9 +188,9 @@
         INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
         INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
         LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
---         LEFT JOIN hyjf_param_name pa ON pa.name_cd = dc.credit_status
+--         LEFT JOIN ht_param_name pa ON pa.name_cd = dc.credit_status
 --         AND pa.name_class ='HJH_DEBT_CREDIT_STATUS'
---         LEFT JOIN hyjf_param_name par ON par.name_cd = dc.repay_status
+--         LEFT JOIN ht_param_name par ON par.name_cd = dc.repay_status
 --         AND par.name_class = 'HJH_DEBT_REPAY_STATUS'
         <include refid="Where_Clause_New" />
     </select>

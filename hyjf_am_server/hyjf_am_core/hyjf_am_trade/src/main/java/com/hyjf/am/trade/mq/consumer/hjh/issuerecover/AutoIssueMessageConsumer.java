@@ -40,6 +40,7 @@ import static com.hyjf.am.trade.service.task.issuerecover.impl.AutoIssueRecoverS
  * @Auther: walter.limeng
  * @Date: 2018/7/12 10:56
  * @Description: AutoIssueMessageConsumer
+ * 关联计划
  */
 @Component
 public class AutoIssueMessageConsumer extends Consumer {

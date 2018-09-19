@@ -36,7 +36,7 @@ import java.util.UUID;
 /**
  * @Auther: walter.limeng
  * @Date: 2018/7/11 19:24
- * 自动初审消息监听器
+ * 自动初审
  * @Description: autoPreAuditMessageConsumer
  */
 @Component

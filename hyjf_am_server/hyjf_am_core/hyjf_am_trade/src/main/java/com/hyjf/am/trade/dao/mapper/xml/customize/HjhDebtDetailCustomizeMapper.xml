@@ -83,14 +83,14 @@
 	    t.remark, t.create_time, t.create_user_id, t.create_user_name, t.update_time, t.update_user_id, t.source_type,
 	    t.update_user_name,t.credit_times
 	    FROM
-		hyjf_hjh_debt_detail t
+		ht_hjh_debt_detail t
 		WHERE t.status=1
 		AND plan_order_id = #{accedeOrderId}
 		AND t.repay_period = (
 			SELECT
 				min(repay_period)
 			FROM
-				hyjf_hjh_debt_detail
+				ht_hjh_debt_detail
 			WHERE
 			repay_status = 0
 			AND status=1	
@@ -102,7 +102,7 @@
 	    select 
 	    <include refid="Base_Column_List" />
 	    FROM
-			hyjf_hjh_debt_detail
+			ht_hjh_debt_detail
 		WHERE
 			order_id = #{orderId}
 		AND repay_status = 1
@@ -116,7 +116,7 @@
 	    select 
 	    <include refid="Base_Column_List" />
 	    FROM
-			hyjf_hjh_debt_detail
+			ht_hjh_debt_detail
 		WHERE
 			order_id = #{orderId}
 		AND UNIX_TIMESTAMP(FROM_UNIXTIME(repay_time,'%Y-%m-%d')) - UNIX_TIMESTAMP(DATE_FORMAT(now(),'%Y-%m-%d')) >= 0
@@ -132,7 +132,7 @@
 		select
 		<include refid="Base_Column_List" />
 		FROM
-		hyjf_hjh_debt_detail
+		ht_hjh_debt_detail
 		WHERE
 		order_id = #{orderId}
 		AND UNIX_TIMESTAMP(FROM_UNIXTIME(repay_time,'%Y-%m-%d')) - UNIX_TIMESTAMP(DATE_FORMAT(now(),'%Y-%m-%d')) >= 0
@@ -146,7 +146,7 @@
 	    select 
 	    <include refid="Base_Column_List" />
 	    FROM
-			hyjf_hjh_debt_detail
+			ht_hjh_debt_detail
 		WHERE
 			order_id = #{orderId}
 		AND repay_period = #{repayPeriod}
@@ -158,7 +158,7 @@
 	    select 
 	    <include refid="Base_Column_List" />
 	    FROM
-			hyjf_hjh_debt_detail
+			ht_hjh_debt_detail
 		WHERE
 			order_id = #{orderId}
 		AND repay_status = 0
@@ -166,7 +166,7 @@
   </select>
   
   <update id="updateDetailDelFlagToOne">
-	  	UPDATE hyjf_hjh_debt_detail
+	  	UPDATE ht_hjh_debt_detail
 			SET del_flag = 1,
 			loan_capital = repay_capital_wait,
 			loan_interest = repay_interest_wait
@@ -175,7 +175,7 @@
   </update>
   <!--清算时,更新计划订单的公允价值等 -->
   <update id="updateLiquidationHjhAccede" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
-	  UPDATE hyjf_hjh_accede
+	  UPDATE ht_hjh_accede
         SET
 			 fair_value = #{fairValue,jdbcType=DECIMAL},
 			 lqd_service_apr = #{lqdServiceApr,jdbcType=DECIMAL},
@@ -187,7 +187,7 @@
 
 	<!--计算时,更新计划订单的公允价值等 -->
 	<update id="updateCalculateHjhAccede" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
-		UPDATE hyjf_hjh_accede
+		UPDATE ht_hjh_accede
 		SET
 			fair_value = #{fairValue,jdbcType=DECIMAL},
 			lqd_service_apr = #{lqdServiceApr,jdbcType=DECIMAL},
