@@ -28,7 +28,7 @@
 
 	<select id="selectActivityList" resultMap="BaseResultMap"
 		parameterType="com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize">
-		SELECT * FROM huiyingdai_activity_list
+		SELECT * FROM ht_activity_list
 		<include refid="Where_Clause" />
 	</select>
 

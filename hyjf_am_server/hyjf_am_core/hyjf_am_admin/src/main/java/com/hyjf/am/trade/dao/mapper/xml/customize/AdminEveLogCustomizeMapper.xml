@@ -33,7 +33,7 @@
 	<select id="countRecord" resultType="java.lang.Integer"
 			parameterType="Map">
 		SELECT COUNT(1)
-		FROM hyjf_eve_log
+		FROM ht_eve_log
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
 	</select>
@@ -46,7 +46,7 @@
 		) AS 'cendtString',
 		<include refid="Base_Column_List" />
 		FROM
-		hyjf_eve_log
+		ht_eve_log
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
 		ORDER BY cendt DESC

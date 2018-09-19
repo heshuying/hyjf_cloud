@@ -52,11 +52,11 @@
 					<!--t.recover_account_capital_wait AS recoverAccountCapitalWait,-->
 					<!--t.recover_account_interest_wait AS recoverAccountInterestWait,-->
 					<!--t.recover_account_wait AS recoverAaccountWait-->
-				<!--FROM hyjf_borrow_tender_cpn t-->
-				<!--LEFT JOIN hyjf_coupon_tender a ON a.order_id = t.nid-->
-				<!--LEFT JOIN hyjf_coupon_user b ON a.coupon_grant_id = b.id-->
-				<!--LEFT JOIN hyjf_coupon_config c ON c.coupon_code = b.coupon_code-->
-				<!--LEFT JOIN hyjf_coupon_real_tender d ON d.coupon_tender_id = t.nid-->
+				<!--FROM ht_borrow_tender_cpn t-->
+				<!--LEFT JOIN ht_coupon_tender a ON a.order_id = t.nid-->
+				<!--LEFT JOIN ht_coupon_user b ON a.coupon_grant_id = b.id-->
+				<!--LEFT JOIN ht_coupon_config c ON c.coupon_code = b.coupon_code-->
+				<!--LEFT JOIN ht_coupon_real_tender d ON d.coupon_tender_id = t.nid-->
 					<!--WHERE 2 = 2-->
 			<!--<if test="userId != null" >-->
 				<!--AND t.user_id = #{userId}-->
@@ -102,7 +102,7 @@
 	</select>
 	
 	<select id="selectCouponPublishedCount" resultType="java.lang.Integer" parameterType="java.lang.String">
-	     SELECT COUNT(1) FROM hyjf_coupon_user a WHERE a.coupon_code = #{couponCode} and a.del_flag = 0
+	     SELECT COUNT(1) FROM ht_coupon_user a WHERE a.coupon_code = #{couponCode} and a.del_flag = 0
 	</select>
 	
     <select id="countCouponConfig" resultType="java.lang.Integer" parameterType="Map">
@@ -144,7 +144,7 @@
 							<!--ELSE c.coupon_quota -->
 							<!--END AS coupon_quota,-->
 			<!--c.coupon_quantity,-->
-			<!--(SELECT COUNT(1) FROM hyjf_coupon_user a WHERE a.coupon_code = c.coupon_code and a.used_flag in (0,1,4) and a.del_flag = 0) AS issue_number,-->
+			<!--(SELECT COUNT(1) FROM ht_coupon_user a WHERE a.coupon_code = c.coupon_code and a.used_flag in (0,1,4) and a.del_flag = 0) AS issue_number,-->
 			<!--CASE c.expiration_type -->
 							<!--WHEN 1 THEN  FROM_UNIXTIME(c.expiration_date,'%Y-%m-%d')-->
 							<!--WHEN 2 THEN  concat(c.expiration_length , '个月')-->
@@ -209,7 +209,7 @@
 							<!--END  AS status,-->
 			<!--FROM_UNIXTIME(c.add_time,'%Y-%m-%d %H:%i:%s') AS add_time,-->
 			<!--c.coupon_code-->
-			<!--from hyjf_coupon_config c-->
+			<!--from ht_coupon_config c-->
 			<!--<include refid="Where_Clause" />-->
 			<!--ORDER BY c.status,c.add_time DESC	-->
 			<!---->
@@ -294,8 +294,8 @@
 			<!--hcc.add_flg add_flg,-->
 			<!--hcc.coupon_profit_time coupon_profit_time-->
 		<!--FROM-->
-			<!--hyjf_coupon_user hcu-->
-		<!--LEFT JOIN hyjf_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code-->
+			<!--ht_coupon_user hcu-->
+		<!--LEFT JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code-->
 		<!--WHERE-->
 			<!--hcu.user_id = #{userId}-->
 		<!--AND hcu.used_flag = 0-->
@@ -345,8 +345,8 @@
 			<!--hcc.add_flg add_flg,-->
 			<!--hcc.coupon_profit_time coupon_profit_time-->
 		<!--FROM-->
-			<!--hyjf_coupon_user hcu-->
-		<!--LEFT JOIN hyjf_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code-->
+			<!--ht_coupon_user hcu-->
+		<!--LEFT JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code-->
 		<!--WHERE-->
 			<!--hcu.id=#{couponId}-->
 			<!--AND hcu.used_flag = 0-->

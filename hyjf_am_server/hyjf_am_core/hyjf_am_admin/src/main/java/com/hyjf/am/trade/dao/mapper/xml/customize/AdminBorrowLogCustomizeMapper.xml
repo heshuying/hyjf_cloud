@@ -89,7 +89,7 @@
 		FROM_UNIXTIME( b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
 		b.del_flag
 		FROM
-		hyjf_borrow_log b
+		ht_borrow_log b
 		<include refid="Where_Clause" />
 		ORDER BY
 		<if test="col != null and col != '' and sort != null and sort != ''">

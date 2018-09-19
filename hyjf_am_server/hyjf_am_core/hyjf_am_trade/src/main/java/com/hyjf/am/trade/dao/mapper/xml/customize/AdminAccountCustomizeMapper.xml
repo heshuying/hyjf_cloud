@@ -566,7 +566,7 @@
 		SELECT
 		COUNT(hydu.user_id)
 		FROM
-		huiyingdai_users hydu
+		ht_users hydu
 		LEFT JOIN ht_users_info hydui ON hydu.user_id =
 		hydui.user_id
 		INNER JOIN ht_bank_open_account hboa ON hboa.user_id =

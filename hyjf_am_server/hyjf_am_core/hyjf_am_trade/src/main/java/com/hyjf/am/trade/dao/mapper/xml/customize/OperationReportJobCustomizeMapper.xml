@@ -117,7 +117,7 @@
 	
 	<!-- 	统计投资人总数，截至日期为上个月的最后一天 -->
 	<select id="getTenderCount"  parameterType="java.util.Date" resultType="int">
-<!-- 		select count(*) from huiyingdai_users where reg_time &lt;= unix_timestamp(#{date}) -->
+<!-- 		select count(*) from ht_users where reg_time &lt;= unix_timestamp(#{date}) -->
 		select count(*) from(
 			SELECT user_id FROM ht_borrow_tender where create_time &lt;=#{date}
 			UNION

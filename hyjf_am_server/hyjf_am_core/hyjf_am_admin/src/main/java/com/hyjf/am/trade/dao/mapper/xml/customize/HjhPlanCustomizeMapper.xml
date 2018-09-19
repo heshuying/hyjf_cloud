@@ -635,7 +635,7 @@ ORDER BY
 		FROM
 		ht_hjh_accede dpa
 		LEFT JOIN ht_r_user hui ON hui.user_id = dpa.user_id
-		-- LEFT JOIN hyjf_param_name hpn ON dpa.client=hpn.name_cd AND hpn.name_class='CLIENT'
+		-- LEFT JOIN ht_param_name hpn ON dpa.client=hpn.name_cd AND hpn.name_class='CLIENT'
 		WHERE dpa.plan_nid=#{planNid}
 		ORDER BY
 		dpa.create_time DESC

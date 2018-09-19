@@ -48,12 +48,12 @@
 	<select id="queryUserInfoByEmployeeName" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,ui.attribute,
 		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
-		FROM huiyingdai_users u
-		LEFT JOIN huiyingdai_users_info ui ON u.user_id= ui.user_id
-		INNER JOIN hyjf_crm.oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-		LEFT JOIN hyjf_crm.oa_department od ON od.id = ou.departmentid
-		LEFT JOIN hyjf_crm.oa_department od2 ON od2.id = od.parentid
-		LEFT JOIN hyjf_crm.oa_department od3 on od3.id = od2.parentid
+		FROM ht_users u
+		LEFT JOIN ht_users_info ui ON u.user_id= ui.user_id
+		INNER JOIN ht_crm.oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN ht_crm.oa_department od ON od.id = ou.departmentid
+		LEFT JOIN ht_crm.oa_department od2 ON od2.id = od.parentid
+		LEFT JOIN ht_crm.oa_department od3 on od3.id = od2.parentid
 		WHERE 1=1
 	    <if test="employeeName != null and employeeName != ''">
 			AND u.username= #{employeeName}
@@ -64,13 +64,13 @@
 	<select id="queryUserInfoByName" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,ui.attribute,
 		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
-		FROM huiyingdai_users u
-		LEFT JOIN huiyingdai_users_info ui ON u.user_id= ui.user_id
-		LEFT JOIN huiyingdai_spreads_users su ON u.user_id= su.user_id
-		LEFT JOIN hyjf_crm.oa_users ou ON su.spreads_userid= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-		LEFT JOIN hyjf_crm.oa_department od ON od.id = ou.departmentid
-		LEFT JOIN hyjf_crm.oa_department od2 ON od2.id = od.parentid
-		LEFT JOIN hyjf_crm.oa_department od3 on od3.id = od2.parentid
+		FROM ht_users u
+		LEFT JOIN ht_users_info ui ON u.user_id= ui.user_id
+		LEFT JOIN ht_spreads_users su ON u.user_id= su.user_id
+		LEFT JOIN ht_crm.oa_users ou ON su.spreads_userid= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN ht_crm.oa_department od ON od.id = ou.departmentid
+		LEFT JOIN ht_crm.oa_department od2 ON od2.id = od.parentid
+		LEFT JOIN ht_crm.oa_department od3 on od3.id = od2.parentid
 		WHERE 1=1
 	    <if test="userName != null and userName != ''">
 			AND u.username= #{userName}
@@ -99,12 +99,12 @@
 	<select id="queryUserDepartmentInfoByUserName" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.attribute,
 		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
-		FROM huiyingdai_users u
-		LEFT JOIN huiyingdai_users_info ui ON u.user_id= ui.user_id
-		LEFT JOIN hyjf_crm.oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-		LEFT JOIN hyjf_crm.oa_department od ON od.id = ou.departmentid
-		LEFT JOIN hyjf_crm.oa_department od2 ON od2.id = od.parentid
-		LEFT JOIN hyjf_crm.oa_department od3 on od3.id = od2.parentid
+		FROM ht_users u
+		LEFT JOIN ht_users_info ui ON u.user_id= ui.user_id
+		LEFT JOIN ht_crm.oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN ht_crm.oa_department od ON od.id = ou.departmentid
+		LEFT JOIN ht_crm.oa_department od2 ON od2.id = od.parentid
+		LEFT JOIN ht_crm.oa_department od3 on od3.id = od2.parentid
 		WHERE 1=1
 	    <if test="userName != null">
 			AND u.username= #{userName}
@@ -115,8 +115,8 @@
 	<!-- 根据员工user_id 查询员工信息  -->
 	<select id="selectUserInfoByUserId" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.sex
-		FROM huiyingdai_users u
-		LEFT JOIN huiyingdai_users_info ui ON u.user_id= ui.user_id
+		FROM ht_users u
+		LEFT JOIN ht_users_info ui ON u.user_id= ui.user_id
 		WHERE 1=1
 	    <if test="user_id != null">
 			AND u.user_id= #{user_id}
@@ -206,7 +206,7 @@
 			position_category,
 			listorder
 		FROM
-			hyjf_crm.oa_department
+			ht_crm.oa_department
 	</select>
 
 	<!-- 查询用户画像记录数 -->
@@ -214,8 +214,8 @@
 		SELECT
 		COUNT(hup.user_id)
 		FROM
-		hyjf_users_portrait hup
-		LEFT JOIN huiyingdai_users hydur ON hydur.user_id = hup.user_id
+		ht_users_portrait hup
+		LEFT JOIN ht_users hydur ON hydur.user_id = hup.user_id
 		<include refid="Where_Clause_UserPortrait"/>
 	</select>
 
@@ -240,7 +240,7 @@
 		invest_platform,invest_age,trade_number,current_owner,add_wechat,invest_process,customer_complaint,invite_customer,remark,
 		INSERT(hup.mobile, 3, 5, '****') as mobile
 		FROM
-		hyjf_users_portrait hup
+		ht_users_portrait hup
 
 		<include refid="Where_Clause_UserPortrait"/>
 
