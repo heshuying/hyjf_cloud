@@ -27,10 +27,10 @@
 			el.del_flag = 0
 			AND el.`status` <![CDATA[<>]]> 0
 			<if test="orderId != null and orderId != ''">
-				AND el.order_id LIKE CONCAT('%', #{orderId}, '%')
+				AND el.order_id LIKE CONCAT( #{orderId}, '%')
 			</if>
 			<if test="username != null and username != ''">
-				AND u.username LIKE CONCAT('%', #{username}, '%')
+				AND u.username LIKE CONCAT( #{username}, '%')
 			</if>
 			<if test="type != null and type != ''">
 				AND el.`type` = #{type}

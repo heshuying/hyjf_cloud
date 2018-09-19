@@ -20,11 +20,11 @@
 			hwpc.delete_status = 0
 			<!-- 投资订单号 -->
 			<if test="utmName != null and utmName != ''">
-				AND utm.utm_source LIKE CONCAT('%', #{utmName}, '%')
+				AND utm.utm_source LIKE CONCAT( #{utmName}, '%')
 			</if>
 			<!-- 用户名 -->
 			<if test="referrerName != null and referrerName != ''">
-				AND hu.username LIKE CONCAT('%', #{referrerName}, '%')
+				AND hu.username LIKE CONCAT( #{referrerName}, '%')
 			</if>
 		</where>
 	</sql>

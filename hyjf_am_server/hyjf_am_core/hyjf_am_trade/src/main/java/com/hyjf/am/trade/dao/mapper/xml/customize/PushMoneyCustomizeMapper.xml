@@ -68,7 +68,7 @@
                 AND b.borrow_nid = #{borrowNid}
             </if>
             <if test="borrowName != null and borrowName !='' ">
-                AND b.`name` LIKE CONCAT('%', #{borrowName}, '%')
+                AND b.`name` LIKE CONCAT( #{borrowName}, '%')
             </if>
             <if test="recoverLastTimeStart != null and recoverLastTimeStart !='' ">
                 AND FROM_UNIXTIME( b.recover_last_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{recoverLastTimeStart}
@@ -167,7 +167,7 @@
             AND tc.status = #{statusSearch}
         </if>
         <if test="borrowName != null and borrowName != ''">
-            AND b.`name` LIKE CONCAT('%', #{borrowName}, '%')
+            AND b.`name` LIKE CONCAT( #{borrowName}, '%')
         </if>
         <if test="recoverDateStart != null and recoverDateStart != ''">
             AND FROM_UNIXTIME(b.recover_last_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{recoverDateStart},'00:00:00'

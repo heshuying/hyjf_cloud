@@ -239,6 +239,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                 loanBean.setLogClient(0);
                 // 调用放款接口
                 BankCallBean loanResult = BankCallUtils.callApiBg(loanBean);
+                logger.info("查询银行报文:【{}】", JSON.toJSONString(loanResult));
                 if (Validator.isNotNull(loanResult)) {
                     String retCode = StringUtils.isNotBlank(loanResult.getRetCode()) ? loanResult.getRetCode() : "";
                     if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {

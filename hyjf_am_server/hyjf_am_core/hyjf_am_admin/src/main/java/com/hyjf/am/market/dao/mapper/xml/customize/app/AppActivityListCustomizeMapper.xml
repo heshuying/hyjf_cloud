@@ -41,7 +41,7 @@
 
 	<sql id="where-all-page-condition">
 		<if test="title != null and title != ''">
-			AND title LIKE CONCAT('', #{title}, '%')
+			AND title LIKE CONCAT( #{title}, '%')
 		</if>
 		<if test="endTime != null and endTime != 0">
 			AND time_start <![CDATA[<=]]>
@@ -52,7 +52,7 @@
 			#{startTime}
 		</if>
 		<if test="platform != null and platform != ''">
-			AND platform like  CONCAT('', #{platform}, '%')
+			AND platform LIKE CONCAT( #{platform}, '%')
 		</if>
 	</sql>
 

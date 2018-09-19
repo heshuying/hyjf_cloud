@@ -181,7 +181,7 @@
 			</if>
 
 			<if test="borrowNid != null and borrowNid !=''">
-				AND hydbr.borrow_nid like CONCAT('%', #{borrowNid}, '%')
+				AND hydbr.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 			</if>
 		</where>
 	</sql>
@@ -364,13 +364,13 @@
 			</if>
 
 			<if test="borrowNid != null and borrowNid !=''">
-				AND hydbr.borrow_nid like CONCAT('%', #{borrowNid}, '%')
+				AND hydbr.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 			</if>
 		</where>
 	</sql>
 	<select id="selectUserRepayFeeWaitTotal" resultType="java.math.BigDecimal" parameterType="Map">
 		SELECT
-		SUM(IFNULL(hydbr.repay_fee,0)) AS all_repay_fee
+		IFNULL(SUM(IFNULL(hydbr.repay_fee,0)),0) AS all_repay_fee
 		FROM
 		ht_borrow hydb
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type

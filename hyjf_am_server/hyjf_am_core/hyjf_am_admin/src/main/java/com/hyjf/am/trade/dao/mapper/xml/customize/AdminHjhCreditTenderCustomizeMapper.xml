@@ -16,31 +16,31 @@
 		<where>
 			<!-- 承接人用户名 -->
 			<if test="assignUserName != null and assignUserName != ''">
-				AND ct.user_name LIKE CONCAT('%', #{assignUserName}, '%')
+				AND ct.user_name LIKE CONCAT( #{assignUserName}, '%')
 			</if>
 			<!-- 承接人计划编号 -->
 			<if test="assignPlanNid != null and assignPlanNid != ''">
-				AND ct.assign_plan_nid LIKE CONCAT('%', #{assignPlanNid}, '%')
+				AND ct.assign_plan_nid LIKE CONCAT( #{assignPlanNid}, '%')
 			</if>
 			<!-- 承接人计划订单号 -->
 			<if test="assignPlanOrderId != null and assignPlanOrderId != ''">
-				AND ct.assign_plan_order_id LIKE CONCAT('%', #{assignPlanOrderId}, '%')
+				AND ct.assign_plan_order_id LIKE CONCAT( #{assignPlanOrderId}, '%')
 			</if>
 			<!-- 用户名 -->
 			<if test="creditUserName != null and creditUserName != ''">
-				AND ct.credit_user_name LIKE CONCAT('%', #{creditUserName}, '%')
+				AND ct.credit_user_name LIKE CONCAT( #{creditUserName}, '%')
 			</if>
 			<!-- 债转编号 -->
 			<if test="creditNid != null and creditNid != ''">
-				AND ct.credit_nid LIKE CONCAT('%', #{creditNid}, '%')
+				AND ct.credit_nid LIKE CONCAT( #{creditNid}, '%')
 			</if>
 			<!-- 原始项目编号 -->
 			<if test="borrowNid != null and borrowNid != ''">
-				AND ct.borrow_nid LIKE CONCAT('%', #{borrowNid}, '%')
+				AND ct.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 			</if>
 			<!-- 承接类型 0 自动承接 1手动承接 -->
 			<if test="assignType != null and assignType != ''">
-				AND ct.assign_type LIKE CONCAT('%', #{assignType}, '%')
+				AND ct.assign_type LIKE CONCAT( #{assignType}, '%')
 			</if>
 			<!-- 原始项目编号 -->
 			<if test="repayStyle != null and repayStyle != ''">

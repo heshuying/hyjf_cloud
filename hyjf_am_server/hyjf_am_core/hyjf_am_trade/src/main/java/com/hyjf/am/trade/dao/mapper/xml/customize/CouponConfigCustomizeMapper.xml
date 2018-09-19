@@ -21,7 +21,7 @@
 		    c.del_flag = 0
 			<!-- 优惠券名称 -->
 			<if test="couponName != null and couponName != ''">
-				AND c.coupon_name LIKE CONCAT('%', #{couponName}, '%')
+				AND c.coupon_name LIKE CONCAT( #{couponName}, '%')
 			</if>
 			<if test="couponCode != null and couponCode != ''">
 				AND c.coupon_code = #{couponCode}

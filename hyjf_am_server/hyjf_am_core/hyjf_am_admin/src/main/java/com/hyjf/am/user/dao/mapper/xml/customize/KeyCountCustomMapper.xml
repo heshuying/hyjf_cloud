@@ -44,7 +44,7 @@
                 AND utm.utm_source = #{sourceIdSrch}
             </if>
             <if test="keyWordSrch != null and keyWordSrch != ''">
-                AND utm.utm_term LIKE CONCAT('%', #{keyWordSrch}, '%')
+                AND utm.utm_term LIKE CONCAT( #{keyWordSrch}, '%')
             </if>
         </where>
         ) a
@@ -57,7 +57,7 @@
                 AND utm_source = #{sourceIdSrch}
             </if>
             <if test="keyWordSrch != null and keyWordSrch != ''">
-                AND utm_term LIKE CONCAT('%', #{keyWordSrch}, '%')
+                AND utm_term LIKE CONCAT( #{keyWordSrch}, '%')
             </if>
         </where>
     </select>
