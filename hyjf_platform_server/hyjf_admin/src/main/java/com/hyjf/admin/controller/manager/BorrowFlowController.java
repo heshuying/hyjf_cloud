@@ -215,10 +215,13 @@ public class BorrowFlowController extends BaseController {
      */
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "下拉联动")
     @PostMapping("/assetTypeAction")
-    public AdminResult assetTypeAction(@RequestParam(value="instCode") String instCode) {
+    public AdminResult assetTypeAction(@RequestBody AdminBorrowFlowRequest request) {
         List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        if(StringUtils.isBlank(request.getInstCode())){
+            return new AdminResult<>(Response.FAIL,"instCode不能为空！") ;
+        }
         // 根据资金来源取得产品类型
-        List<HjhAssetTypeVO> hjhAssetTypeList = this.borrowFlowService.hjhAssetTypeList(instCode);
+        List<HjhAssetTypeVO> hjhAssetTypeList = this.borrowFlowService.hjhAssetTypeList(request.getInstCode());
         if (hjhAssetTypeList != null && hjhAssetTypeList.size() > 0) {
             for (HjhAssetTypeVO hjhAssetBorrowType : hjhAssetTypeList) {
                 Map<String, Object> mapTemp = new HashMap<String, Object>();
