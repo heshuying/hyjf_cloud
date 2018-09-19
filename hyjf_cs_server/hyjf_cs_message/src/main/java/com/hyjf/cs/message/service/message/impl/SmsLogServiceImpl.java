@@ -35,6 +35,7 @@ public class SmsLogServiceImpl implements SmsLogService {
 	@Override
 	public List<SmsLog> findSmsLog(SmsLogRequest request) {
 		String mobile = request.getMobile();
+		String type = request.getType();
 		String postTimeBegin = request.getPostTimeBegin();
 		String postTimeEnd = request.getPostTimeEnd();
 		Integer status = request.getStatus();
@@ -43,9 +44,12 @@ public class SmsLogServiceImpl implements SmsLogService {
 		if (StringUtils.isNotBlank(mobile)) {
 			criteria.and("mobile").is(mobile);
 		}
+		if (StringUtils.isNotBlank(type)) {
+			criteria.and("type").is(type);
+		}
 		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
-			Integer begin = GetDate.dateString2Timestamp(postTimeBegin);
-			Integer end = GetDate.dateString2Timestamp(postTimeEnd);
+			Integer begin = GetDate.dateString2Timestamp(postTimeBegin + " 00:00:00");
+			Integer end = GetDate.dateString2Timestamp(postTimeEnd + " 23:59:59");
 			criteria.and("posttime").gte(begin).lte(end);
 		}
 		if (status != null) {
@@ -56,8 +60,7 @@ public class SmsLogServiceImpl implements SmsLogService {
 		int pageSize = request.getPageSize();
 		if (currPage > 0) {
 			int limitStart = (currPage - 1) * pageSize;
-			int limitEnd = limitStart + pageSize;
-			query.skip(limitStart).limit(limitEnd);
+			query.skip(limitStart).limit(pageSize);
 		}
 		query.with(new Sort(Sort.Direction.DESC, "posttime"));
 		return smsLogDao.find(query);
@@ -98,6 +101,7 @@ public class SmsLogServiceImpl implements SmsLogService {
 	@Override
 	public Integer queryLogCount(SmsLogRequest request) {
 		String mobile = request.getMobile();
+		String type = request.getType();
 		String postTimeBegin = request.getPostTimeBegin();
 		String postTimeEnd = request.getPostTimeEnd();
 		Integer status = request.getStatus();
@@ -105,6 +109,9 @@ public class SmsLogServiceImpl implements SmsLogService {
 		Criteria criteria = new Criteria();
 		if (StringUtils.isNotBlank(mobile)) {
 			criteria.and("mobile").regex(mobile);
+		}
+		if (StringUtils.isNotBlank(type)) {
+			criteria.and("type").is(type);
 		}
 		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
 			Integer begin = GetDate.dateString2Timestamp(postTimeBegin);
