@@ -105,6 +105,7 @@ public class BorrowFlowController {
         AdminBorrowFlowResponse response = new AdminBorrowFlowResponse();
         int total = this.borrowFlowService.countRecord(adminRequest);
         if (total > 0) {
+            response.setTotal(total);
             Paginator paginator = new Paginator(adminRequest.getCurrPage(), total,adminRequest.getPageSize() == 0?10:adminRequest.getPageSize());
             List<HjhAssetBorrowtype> recordList =
                     this.borrowFlowService.getRecordList(adminRequest, paginator.getOffset(), paginator.getLimit());
@@ -112,11 +113,9 @@ public class BorrowFlowController {
                 List<HjhAssetBorrowTypeVO>  hjhAssetBorrowTypeVOS = CommonUtils.convertBeanList(recordList,HjhAssetBorrowTypeVO.class);
                 response.setResultList(hjhAssetBorrowTypeVOS);
                 response.setRtn(Response.SUCCESS);
-                return response;
             }
-            return null;
         }
-        return null;
+        return response;
     }
     /**
      *详情
@@ -136,7 +135,7 @@ public class BorrowFlowController {
                 result.setRtn(Response.SUCCESS);
                 return result;
             }
-            return null;
+            return result;
         }
         return null;
     }

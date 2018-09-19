@@ -11,6 +11,8 @@ public class BankCardLogRequestBean extends BasePage implements Serializable {
     private String userName;
     @ApiModelProperty(value = "所属银行code")
     private String bankCode;
+    @ApiModelProperty(value = "所属银行名")
+    private String bankName;
     /**
      * 操作时间
      */
@@ -49,5 +51,13 @@ public class BankCardLogRequestBean extends BasePage implements Serializable {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

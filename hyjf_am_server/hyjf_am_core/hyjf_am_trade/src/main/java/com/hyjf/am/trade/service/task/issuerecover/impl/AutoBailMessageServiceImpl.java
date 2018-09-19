@@ -50,8 +50,15 @@ public class AutoBailMessageServiceImpl implements AutoBailMessageService {
     }
 
     @Override
-    public BorrowInfo getById(Integer id) {
-        return borrowInfoMapper.selectByPrimaryKey(id);
+    public BorrowInfo getByBorrowNid(String borrowNid) {
+        BorrowInfoExample example = new BorrowInfoExample();
+        BorrowInfoExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<BorrowInfo> list = borrowInfoMapper.selectByExample(example);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override

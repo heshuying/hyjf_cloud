@@ -63,7 +63,7 @@ public class AutoIssueMessageConsumer extends Consumer {
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.ROCKETMQ_BORROW_PREAUDIT_GROUP);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.ROCKETMQ_BORROW_ISSUE_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
         defaultMQPushConsumer.subscribe(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
@@ -99,7 +99,7 @@ public class AutoIssueMessageConsumer extends Consumer {
                 // --> 消息处理
 
                 Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
-                BorrowInfo borrowInfo = autoBailMessageService.getById(borrow.getId());
+                BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
 
                 // 原始标的情况
                 if(StringUtils.isNotBlank(autoIssuerecoverVO.getBorrowNid())){

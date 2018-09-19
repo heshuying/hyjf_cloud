@@ -41,7 +41,7 @@ public class BankAccountManageController extends BaseController {
         BankOpenAccount bankOpenAccount = bankAccountManageService.getBankOpenAccount(userId);
         if (null!=bankOpenAccount) {
             BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
-            BeanUtils.copyProperties(bankOpenAccountVO,bankOpenAccount);
+            BeanUtils.copyProperties(bankOpenAccount,bankOpenAccountVO);
             response.setResult(bankOpenAccountVO);
         }
         return response;
