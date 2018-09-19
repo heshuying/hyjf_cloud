@@ -13,7 +13,10 @@ public class FddGenerateContractConstant {
     /**合同标题——居间服务协议*/
     public static final String CONTRACT_DOC_TITLE = "汇盈金服互联网金融服务平台居间服务借款协议";
     /**合同标题——计划加入协议*/
-    public static final String CONTRACT_DOC_TITLE_PLAN = "汇盈金服互联网金融服务平台汇计划投资服务协议";
+    // mod by nxl 汇计划投资服务协议->智投服务协议
+//    public static final String CONTRACT_DOC_TITLE_PLAN = "汇盈金服互联网金融服务平台汇计划投资服务协议";
+    public static final String CONTRACT_DOC_TITLE_PLAN = "汇盈金服互联网金融服务平台智投服务协议";
+
     /**合同标题——债转协议*/
     public static final String CONTRACT_DOC_TITLE_CREDIT = "汇盈金服互联网金融服务平台债权转让协议";
 

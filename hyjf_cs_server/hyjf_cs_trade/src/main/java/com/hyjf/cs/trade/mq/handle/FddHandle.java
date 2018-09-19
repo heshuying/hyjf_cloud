@@ -1669,7 +1669,10 @@ public class FddHandle {
 				String[] emails = { email };
 				//先用EMAILPARAM_TPL_LOANS测试，后期改成EMAITPL_EMAIL_LOCK_REPAY
 				logger.info("sendMail***************************下载法大大协议--投资filePath:"+filePath + fileName);
-				MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "汇计划投资服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
+				// mod by nxl 汇计划投资服务协议->智投服务协议
+				/*MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "汇计划投资服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
+						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);*/
+				MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "智投服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
 						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 				// 发送邮件
 				mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
