@@ -4,9 +4,14 @@ import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.service.mobileclient.AppBannerService;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.vo.market.AdsTypeVO;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lisheng
@@ -20,6 +25,11 @@ public class AppBannerServiceImpl  implements AppBannerService {
     @Override
     public AppBannerResponse getRecordList(AppBannerRequest request) {
         return amMarketClient.findAppBannerList(request);
+    }
+
+    @Override
+    public AppBannerResponse getRecordById(AppBannerRequest request) {
+        return amMarketClient.getRecordById(request);
     }
 
     @Override
@@ -41,5 +51,6 @@ public class AppBannerServiceImpl  implements AppBannerService {
     public AppBannerResponse deleteAppBanner(AdsWithBLOBsVO adsWithBLOBsVo) {
         return amMarketClient.deleteAppBanner(adsWithBLOBsVo);
     }
+
 
 }

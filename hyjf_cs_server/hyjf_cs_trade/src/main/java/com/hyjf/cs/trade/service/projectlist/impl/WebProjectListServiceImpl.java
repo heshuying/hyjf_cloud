@@ -683,7 +683,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         boolean flag = amTradeClient.updateRightBorrowByBorrowNid(borrow);
         if (flag) {
             // 写入redis
-            RedisUtils.set(borrow.getBorrowNid(), borrow.getBorrowAccountWait().toString());
+            RedisUtils.set(RedisConstants.BORROW_NID + borrow.getBorrowNid(), borrow.getBorrowAccountWait().toString());
             // 发送发标短信
             Map<String, String> params = new HashMap<String, String>();
             params.put("val_title", borrow.getBorrowNid());

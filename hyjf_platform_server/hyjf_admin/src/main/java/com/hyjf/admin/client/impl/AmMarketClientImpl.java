@@ -304,4 +304,15 @@ public class AmMarketClientImpl implements AmMarketClient {
 				.getBody();
 		return response;
     }
+
+	@Override
+	public AppBannerResponse getRecordById(AppBannerRequest request) {
+		AppBannerResponse response = restTemplate
+				.postForEntity("http://AM-MARKET/am-market/appconfig/getRecordById" ,request,
+						AppBannerResponse.class)
+				.getBody();
+
+		return response;
+	}
+
 }

@@ -21,10 +21,11 @@ import java.util.Map;
  * @version QianleController, v0.1 2018/8/30 16:01
  */
 @RestController
-@RequestMapping("/am-admin/qianle")
+@RequestMapping("/am-admin1/qianle")
 public class QianleController {
     @Autowired
-    QianleService qianleService;
+    QianleService qianleDataSearchService;
+
     /**
      * 查询散标列表
      * @param dataSearchRequest
@@ -33,14 +34,14 @@ public class QianleController {
     @RequestMapping(value = "/querysanlist")
     public DataSearchCustomizeResponse querySanList(@RequestBody DataSearchRequest dataSearchRequest){
         DataSearchCustomizeResponse response = new DataSearchCustomizeResponse();
-        Integer total = qianleService.querySanCount(dataSearchRequest);
+        Integer total = qianleDataSearchService.querySanCount(dataSearchRequest);
         if (total > 0) {
             Paginator paginator = new Paginator(dataSearchRequest.getCurrPage(), total, dataSearchRequest.getPageSize());
-            List<DataSearchCustomizeVO> dataSearchCustomizes = qianleService.querySanList(dataSearchRequest,paginator.getOffset(),paginator.getLimit());
+            List<DataSearchCustomizeVO> dataSearchCustomizes = qianleDataSearchService.querySanList(dataSearchRequest,paginator.getOffset(),paginator.getLimit());
             if (dataSearchCustomizes!=null&&!dataSearchCustomizes.isEmpty()){
                 for (DataSearchCustomizeVO map : dataSearchCustomizes) {
                     Integer userId = map.getUserId();
-                    Map<String, Object> stringObjectMap = qianleService.queryFirstTender(userId);
+                    Map<String, Object> stringObjectMap = qianleDataSearchService.queryFirstTender(userId);
                     String nid = stringObjectMap.get("nid") + "";
                     if (StringUtils.equals(map.getNid(), nid)) {
                         map.setFirst("是");
@@ -64,14 +65,14 @@ public class QianleController {
     @RequestMapping(value = "queryPlanList")
     public DataSearchCustomizeResponse queryPlanList(@RequestBody DataSearchRequest dataSearchRequest){
         DataSearchCustomizeResponse response = new DataSearchCustomizeResponse();
-        Integer total = qianleService.queryPlanCount(dataSearchRequest);
+        Integer total = qianleDataSearchService.queryPlanCount(dataSearchRequest);
         if (total > 0) {
             Paginator paginator = new Paginator(dataSearchRequest.getCurrPage(), total, dataSearchRequest.getPageSize());
-            List<DataSearchCustomizeVO> dataSearchCustomizes = qianleService.queryPlanList(dataSearchRequest, paginator.getOffset(), paginator.getLimit());
+            List<DataSearchCustomizeVO> dataSearchCustomizes = qianleDataSearchService.queryPlanList(dataSearchRequest, paginator.getOffset(), paginator.getLimit());
             if (dataSearchCustomizes!=null&&!dataSearchCustomizes.isEmpty()){
                 for (DataSearchCustomizeVO map : dataSearchCustomizes) {
                     Integer userId = map.getUserId();
-                    Map<String, Object> stringObjectMap = qianleService.queryFirstTender(userId);
+                    Map<String, Object> stringObjectMap = qianleDataSearchService.queryFirstTender(userId);
                     String nid = stringObjectMap.get("nid") + "";
                     if (StringUtils.equals(map.getNid(), nid)) {
                         map.setFirst("是");
@@ -96,14 +97,14 @@ public class QianleController {
     @RequestMapping(value = "queryList")
     public DataSearchCustomizeResponse queryList(@RequestBody DataSearchRequest dataSearchRequest){
         DataSearchCustomizeResponse response = new DataSearchCustomizeResponse();
-        Integer total = qianleService.queryCount(dataSearchRequest);
+        Integer total = qianleDataSearchService.queryCount(dataSearchRequest);
         if (total > 0) {
             Paginator paginator = new Paginator(dataSearchRequest.getCurrPage(), total, dataSearchRequest.getPageSize());
-            List<DataSearchCustomizeVO> dataSearchCustomizes = qianleService.queryList(dataSearchRequest, paginator.getOffset(), paginator.getLimit());
+            List<DataSearchCustomizeVO> dataSearchCustomizes = qianleDataSearchService.queryList(dataSearchRequest, paginator.getOffset(), paginator.getLimit());
             if (dataSearchCustomizes!=null&&!dataSearchCustomizes.isEmpty()){
                 for (DataSearchCustomizeVO map : dataSearchCustomizes) {
                     Integer userId = map.getUserId();
-                    Map<String, Object> stringObjectMap = qianleService.queryFirstTender(userId);
+                    Map<String, Object> stringObjectMap = qianleDataSearchService.queryFirstTender(userId);
                     String nid = stringObjectMap.get("nid") + "";
                     if (StringUtils.equals(map.getNid(), nid)) {
                         map.setFirst("是");
@@ -118,6 +119,31 @@ public class QianleController {
         }
         return response;
     }
+
+    /**
+     * 查询散标金额
+     * @return
+     */
+    @RequestMapping(value = "querySanMoney")
+    public DataSearchCustomizeResponse querySanMoney(@RequestBody DataSearchRequest dataSearchRequest) {
+        DataSearchCustomizeResponse response = new DataSearchCustomizeResponse();
+        Map<String, Object> money = qianleDataSearchService.querySanMoney(dataSearchRequest);
+        response.setMoney(money);
+        return response;
+    }
+
+    /**
+     * 查询计划金额
+     * @return
+     */
+    @RequestMapping(value = "queryPlanMoney")
+    public DataSearchCustomizeResponse queryPlanMoney(@RequestBody DataSearchRequest dataSearchRequest) {
+        DataSearchCustomizeResponse response = new DataSearchCustomizeResponse();
+        Map<String, Object> money = qianleDataSearchService.queryPlanMoney(dataSearchRequest);
+        response.setMoney(money);
+        return response;
+    }
+
 
     /**
      * 查詢千乐金额数据
@@ -139,8 +165,8 @@ public class QianleController {
         BigDecimal commission1 = new BigDecimal(0);
 
         if (StringUtils.equals(type,"1")) {
-            maps =qianleService.querySanMoney(dataSearchRequest);
-            maps2 =qianleService.queryPlanMoney(dataSearchRequest);
+            maps =qianleDataSearchService.querySanMoney(dataSearchRequest);
+            maps2 =qianleDataSearchService.queryPlanMoney(dataSearchRequest);
             if (maps != null) {
                 summoney = (BigDecimal) (maps.get("summoney"));
                 yearmoney = (BigDecimal) maps.get("yearmoney");
@@ -159,9 +185,9 @@ public class QianleController {
             res.put("commission", com);
 
         }else  if (StringUtils.equals(type,"2")) {
-            res =qianleService.queryPlanMoney(dataSearchRequest);
+            res =qianleDataSearchService.queryPlanMoney(dataSearchRequest);
         }else  if (StringUtils.equals(type,"3")) {
-            res =qianleService.querySanMoney(dataSearchRequest);
+            res =qianleDataSearchService.querySanMoney(dataSearchRequest);
         }
         if (res == null) {
             res=new HashMap<>();

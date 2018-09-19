@@ -376,7 +376,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         if (null!=userRecommends && userRecommends.size()==1) {
             logger.info("===============userRecommends size:"+userRecommends.size());
             User user = userRecommends.get(0);
-            logger.info("===============userId:"+userId+"recommendUserId"+user.getUserId()+" ====================");
+            logger.info("===============userId:"+userId+"&&recommendUserId"+user.getUserId()+" ====================");
             if (user.getUserId() == userId) {
                 return 2;
             } else {
@@ -624,10 +624,14 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             // 根据主键查询用户信息
             User user = this.selectUserByUserId(Integer.parseInt(userId));
             SpreadsUser spreadsUserOld = this.selectSpreadsUsersByUserId(user.getUserId());
-            User spreadsOld = this.selectUserByUserId(spreadsUserOld.getUserId());
-            oldRecommendUser = spreadsOld.getUsername();
+            int spreadsUserId = 0;
+            if(null!=spreadsUserOld){
+                User spreadsOld = this.selectUserByUserId(spreadsUserOld.getUserId());
+                oldRecommendUser = spreadsOld.getUsername();
+                spreadsUserId = spreadsUserOld.getSpreadsUserId();
+            }
             // 更新userInfo的主单与非主单信息
-            updateUserParam(user.getUserId(), spreadsUserOld.getSpreadsUserId());
+            updateUserParam(user.getUserId(), spreadsUserId);
 
             SpreadsUser spreadsUser = this.selectSpreadsUsersByUserId(Integer.parseInt(userId));
             Integer oldSpreadUserId = null;
@@ -662,6 +666,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             } else {
                 SpreadsUser spreadUser = new SpreadsUser();
                 spreadUser.setUserId(Integer.parseInt(request.getUserId()));
+                spreadUser.setSpreadsUserId(userRecommendNew.getUserId());
                 spreadUser.setCreateIp(request.getIp());
                 spreadUser.setCreateTime(new Date());
                 spreadUser.setType("web");
@@ -801,7 +806,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
 
                 // 更新attribute
                 if (userInfo.getAttribute() != 2 && userInfo.getAttribute() != 3) {
-                    if (Validator.isNotNull(speadUserId)) {
+                    if (Validator.isNotNull(speadUserId)&&speadUserId!=0) {
                         UserInfoExample puie = new UserInfoExample();
                         UserInfoExample.Criteria puipec = puie.createCriteria();
                         puipec.andUserIdEqualTo(speadUserId);

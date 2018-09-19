@@ -4,7 +4,10 @@
 package com.hyjf.am.user.service.admin.content.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -18,7 +21,10 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author tanyy
@@ -26,6 +32,7 @@ import java.util.List;
  */
 @Service
 public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements WhereaboutsPageService {
+
 
 	@Override
 	public WhereaboutsPageResponse searchAction(WhereaboutsPageRequest request) {
@@ -124,7 +131,70 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		record.setUpdateTime(GetDate.getDate());
 		whereaboutsPageConfigMapper.updateByPrimaryKey(record);
 	}
+	@Override
+	public WhereaboutsPageResponse  getWhereaboutsPageConfigById(WhereaboutsPageRequest form){
+		WhereaboutsPageResponse response = new WhereaboutsPageResponse();
+		WhereaboutsPageConfig whereaboutsPageConfig=whereaboutsPageConfigMapper.selectByPrimaryKey(form.getId());
+		if(whereaboutsPageConfig!=null&&whereaboutsPageConfig.getId()!=0){
+			WhereaboutsPagePictureExample example=new WhereaboutsPagePictureExample();
+			example.createCriteria().andWhereaboutsIdEqualTo(form.getId());
+			List<WhereaboutsPagePicture> list=whereaboutsPagePictureMapper.selectByExample(example);
 
+			List<BorrowCommonImage> pictureTypeList1=new ArrayList<BorrowCommonImage>();
+			List<BorrowCommonImage> pictureTypeList2=new ArrayList<BorrowCommonImage>();
+			List<BorrowCommonImage> pictureTypeList3=new ArrayList<BorrowCommonImage>();
+			for (WhereaboutsPagePicture whereaboutsPagePicture : list) {
+				if(whereaboutsPagePicture.getPictureType()==1){
+					pictureTypeList1.add(createBorrowCommonImage(whereaboutsPagePicture,form.getDomain()));
+				}
+				if(whereaboutsPagePicture.getPictureType()==2){
+					pictureTypeList2.add(createBorrowCommonImage(whereaboutsPagePicture,form.getDomain()));
+				}
+				if(whereaboutsPagePicture.getPictureType()==3){
+					pictureTypeList3.add(createBorrowCommonImage(whereaboutsPagePicture,form.getDomain()));
+				}
+			}
+
+			form.setWhereaboutsPagePictures1(pictureTypeList1);
+			form.setWhereaboutsPagePictures2(pictureTypeList2);
+			form.setWhereaboutsPagePictures3(pictureTypeList3);
+
+			createWhereaboutsPageBean(form,whereaboutsPageConfig);
+		}
+		response.setForm(form);
+		return response;
+	}
+	private void createWhereaboutsPageBean(WhereaboutsPageRequest form, WhereaboutsPageConfig whereaboutsPageConfig) {
+		form.setTitle(whereaboutsPageConfig.getTitle());
+		form.setUtmId(whereaboutsPageConfig.getUtmId());
+
+		if(whereaboutsPageConfig.getReferrer()!=null&&!"".equals(whereaboutsPageConfig.getReferrer())){
+			UserExample example=new UserExample();
+			example.createCriteria().andUserIdEqualTo(whereaboutsPageConfig.getReferrer());
+			List<User> list=usersMapper.selectByExample(example);
+			if(list!=null&&list.size()!=0){
+				form.setReferrerName(list.get(0).getUsername());
+			}
+		}
+		form.setStyle(whereaboutsPageConfig.getStyle());
+		form.setTopButton(StringUtils.isNotEmpty(whereaboutsPageConfig.getTopButton()) ? whereaboutsPageConfig.getTopButton() : "");
+		form.setJumpPath(StringUtils.isNotEmpty(whereaboutsPageConfig.getJumpPath()) ? whereaboutsPageConfig.getJumpPath() : "");
+		form.setBottomButtonStatus(whereaboutsPageConfig.getBottomButtonStatus());
+		form.setBottomButton(StringUtils.isNotEmpty(whereaboutsPageConfig.getBottomButton()) ? whereaboutsPageConfig.getBottomButton() : "");
+		form.setDownloadPath(whereaboutsPageConfig.getDownloadPath());
+		form.setDescribe(whereaboutsPageConfig.getDescribe());
+		form.setStatusOn(whereaboutsPageConfig.getStatusOn());
+	}
+	private BorrowCommonImage createBorrowCommonImage(WhereaboutsPagePicture whereaboutsPagePicture,String fileDomainUrl) {
+		BorrowCommonImage whereaboutsPageImage=new BorrowCommonImage();
+		whereaboutsPageImage.setImageName(whereaboutsPagePicture.getPictureName());
+		whereaboutsPageImage.setImagePath(whereaboutsPagePicture.getPictureUrl());
+		whereaboutsPageImage.setImageSort(whereaboutsPagePicture.getSort()+"");
+		whereaboutsPageImage.setImageRealName(fileDomainUrl+whereaboutsPagePicture.getPictureUrl());
+		whereaboutsPageImage.setImageSrc(fileDomainUrl+whereaboutsPagePicture.getPictureUrl());
+
+		return whereaboutsPageImage;
+	}
 	private WhereaboutsPagePicture createWhereaboutsPagePicture(WhereaboutsPagePicture whereaboutsPageImage,int pictureType,int whereaboutsId) {
 		WhereaboutsPagePicture whereaboutsPagePicture = new WhereaboutsPagePicture();
 		whereaboutsPagePicture.setPictureName(whereaboutsPageImage.getPictureName());
@@ -170,4 +240,54 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		whereaboutsPageConfig.setCreateTime(GetDate.getDate());
 		return whereaboutsPageConfig;
 	}
+
+	@Override
+	public StringResponse checkUtmId(Integer utmId) {
+		StringResponse response = new StringResponse();
+		JSONObject ret = new JSONObject();
+		if(utmId==null || "".equals(utmId)){
+			ret.put("success", "渠道不能为空");
+			response.setResult(ret);
+			return response;
+		}
+		Pattern pattern = Pattern.compile("[0-9]+");
+		Matcher matcher = pattern.matcher((CharSequence) String.valueOf(utmId));
+		if(!matcher.matches()){
+			ret.put("success", "请输入正确的渠道格式");
+			response.setResult(ret);
+			return response;
+		}
+		Utm utm =utmMapper.selectByPrimaryKey(utmId);
+		if(utm!=null&&utm.getUtmId()!=null){
+			ret.put("success", "y");
+			response.setResult(ret);
+			return response;
+		}
+		ret.put("success", "渠道不存在");
+		response.setResult(ret);
+		return response;
+	}
+
+	@Override
+	public StringResponse checkReferrer(String referrer) {
+		StringResponse response = new StringResponse();
+		JSONObject ret = new JSONObject();
+		if(StringUtils.isBlank(referrer)){
+			ret.put("success", "推荐人不能为空");
+			response.setResult(ret);
+			return response;
+		}
+		UserExample example=new UserExample();
+		example.createCriteria().andUsernameEqualTo(referrer);
+		List<User> list=usersMapper.selectByExample(example);
+		if(list!=null&&list.size()>0){
+			ret.put("success", "y");
+			response.setResult(ret);
+			return response;
+		}
+		ret.put("success", "推荐人不存在");
+		response.setResult(ret);
+		return response;
+	}
+
 }

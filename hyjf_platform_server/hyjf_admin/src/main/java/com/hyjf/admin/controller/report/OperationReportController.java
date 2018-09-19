@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.report;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -320,11 +322,9 @@ public class OperationReportController extends BaseController {
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping("/uploadFile")
     public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String files = whereaboutsPageService.uploadFile(request, response);
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(files)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+        AdminResult adminResult = new AdminResult();
+        LinkedList<BorrowCommonImage> borrowCommonImages = operationReportService.uploadFile(request, response);
+        adminResult.setData(borrowCommonImages);
+        return adminResult;
     }
 }

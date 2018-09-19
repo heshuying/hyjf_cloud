@@ -513,8 +513,13 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 creditTender.setAssignCapital(creditTenderLog.getAssignCapital());
                 // 用户名称
                 creditTender.setUserId(userId);
+                // 用户名
+                creditTender.setUserName(creditTenderLog.getUserName());
                 // 出让人id
                 creditTender.setCreditUserId(sellerUserId);
+                creditTender.setCreditUserName(creditTenderLog.getCreditUserName());
+                creditTender.setBorrowUserId(creditTenderLog.getBorrowUserId());
+                creditTender.setBorrowUserName(creditTenderLog.getBorrowUserName());
                 // 状态
                 creditTender.setStatus(0);
                 // 原标标号
@@ -797,6 +802,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         creditRepay.setManageFee(perManage);
                         // 授权码
                         creditRepay.setAuthCode(authCode);
+                        creditRepay.setUserName(creditTenderLog.getUserName());
+                        creditRepay.setCreditUserName(creditTender.getCreditUserName());
                         creditTenderBg.setCreditRepayVO(creditRepay);
                         // 插入
                     } else {
@@ -970,6 +977,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     creditTenderBg.setBorrowRecover(borrowRecover);
                     creditTenderBg.setSellerBankAccount(sellerBankAccount);
                     // 保存债转主数据
+                    logger.info("保存债转主数据  {}" , JSONObject.toJSONString(creditTenderBg));
                     this.amTradeClient.saveCreditBgData(creditTenderBg);
 
                     //----------------------------------准备开始操作运营数据等  用mq----------------------------------

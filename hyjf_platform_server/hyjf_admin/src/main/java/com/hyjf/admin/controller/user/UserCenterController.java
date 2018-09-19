@@ -380,7 +380,9 @@ public class UserCenterController extends BaseController {
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
 
-        String[] titles = new String[] { "序号", "分公司", "分部", "团队", "用户来源", "用户名", "姓名", "性别", "年龄", "生日","身份证号", "户籍所在地", "手机号码", "会员类型", "用户角色", "用户属性", "推荐人", "51老用户", "用户状态","银行开户状态","银行开户时间","汇付开户状态", "注册平台", "注册时间", "注册所在地" };
+        String[] titles = new String[] { "序号", "分公司", "分部", "团队", "用户来源", "用户名", "姓名", "性别", "年龄",
+                "生日","身份证号", "户籍所在地", "手机号码",  "用户角色", "用户属性", "推荐人", "用户状态","银行开户状态",
+                "银行开户时间","汇付开户状态", "注册平台", "注册时间", "注册所在地" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
@@ -437,33 +439,28 @@ public class UserCenterController extends BaseController {
                         } else if (celLength == 10) {// 身份证号
                             cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getIdcard(),7));
                         } else if (celLength == 11) {// 户籍所在地
-                            // 户籍所在地表 hyjf_idcard_area 不存在
                             cell.setCellValue(userCenterService.getAreaByIdCard(user.getIdcard()));
                         } else if (celLength == 12) {// 手机号码
                             cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getMobile(),3));
-                        } else if (celLength == 13) {// 会员类型
-//                            cell.setCellValue(user.getVipType());
-                        } else if (celLength == 14) {// 用户角色
+                        } else if (celLength == 13) {// 用户角色
                             cell.setCellValue(user.getUserRole());
-                        } else if (celLength == 15) {// 用户属性
+                        } else if (celLength == 14) {// 用户属性
                             cell.setCellValue(user.getUserProperty());
-                        } else if (celLength == 16) {// 推荐人
+                        } else if (celLength == 15) {// 推荐人
                             cell.setCellValue(user.getRecommendName());
-                        } else if (celLength == 17) {// 51老用户
-//                            cell.setCellValue(user.getIs51());
-                        } else if (celLength == 18) {// 用户状态
+                        }  else if (celLength == 16) {// 用户状态
                             cell.setCellValue(user.getUserStatus());
-                        } else if (celLength == 19) {// 银行开户状态
+                        } else if (celLength == 17) {// 银行开户状态
                             cell.setCellValue("1".equals(user.getBankOpenAccount())?"已开户":"未开户");
-                        } else if (celLength == 20) {// 银行开户时间
+                        } else if (celLength == 18) {// 银行开户时间
                             cell.setCellValue(user.getBankOpenTime());
-                        } else if (celLength == 21) {// 开户状态
+                        } else if (celLength == 19) {// 开户状态
                             cell.setCellValue("1".equals(user.getOpenAccount())?"已开户":"未开户");
-                        } else if (celLength == 22) {// 注册平台
+                        } else if (celLength == 20) {// 注册平台
                             cell.setCellValue(user.getRegistPlat());
-                        } else if (celLength == 23) {// 注册时间
+                        } else if (celLength == 21) {// 注册时间
                             cell.setCellValue(user.getRegTime());
-                        } else if (celLength == 24) {// 注册所在地
+                        } else if (celLength == 22) {// 注册所在地
                             cell.setCellValue(user.getRegistArea());
                         }
                     }
@@ -526,8 +523,8 @@ public class UserCenterController extends BaseController {
     @ResponseBody
     @PostMapping(value = "/serchCompanyInfo")
     @ApiOperation(value = "查询企业开户信息", notes = "查询企业开户信息")
-    public AdminResult<SearchCompanyInfoResponseBean> serchCompanyInfo(HttpServletRequest request,@RequestBody String accountId) {
-        String userId = getUser(request).getId();
+    public AdminResult<SearchCompanyInfoResponseBean> serchCompanyInfo(@RequestParam(value = "userId") String userId,@RequestParam(value = "accountId") String accountId) {
+//        String userId = getUser(request).getId();
         SearchCompanyInfoResponseBean  searchCompanyInfoResponseBean = new  SearchCompanyInfoResponseBean();
         if (StringUtils.isBlank(userId)) {
             return new AdminResult<>(FAIL, "请先选择用户再进行操作!");
@@ -536,26 +533,24 @@ public class UserCenterController extends BaseController {
             return new AdminResult<>(FAIL, "请输入正确的电子账号!");
         }
         //根据accountid调用接口查找企业信息
-        if (StringUtils.isNotEmpty(userId)) {
-            int intUserId = Integer.parseInt(userId);
-            CompanyInfoSearchResponseBean companyInfoSearchResponseBean = userCenterService.queryCompanyInfoByAccoutnId(intUserId, accountId);
-            CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
-            if(null!=companyInfoSearchResponseBean&& "00".equals(companyInfoSearchResponseBean.getReturnCode())){
-                //代表成功
-                CompanyInfoVO infoVO = companyInfoSearchResponseBean.getCompanyInfoVO();
-                if(null==infoVO){
-                    return new AdminResult<>(FAIL, "请输入正确的电子账号!");
-                }
-                BeanUtils.copyProperties(infoVO,companyInfoCompanyInfoVO);
-                searchCompanyInfoResponseBean.setCompany(companyInfoCompanyInfoVO);
-                UserVO userVO = userCenterService.selectUserByUserId(userId);
-                Integer bankFlag = userVO.getBankOpenAccount();
-                searchCompanyInfoResponseBean.setIsOpenAccount(bankFlag);
-                return new AdminResult<SearchCompanyInfoResponseBean>(searchCompanyInfoResponseBean);
+        int intUserId = Integer.parseInt(userId);
+        CompanyInfoSearchResponseBean companyInfoSearchResponseBean = userCenterService.queryCompanyInfoByAccoutnId(intUserId, accountId);
+        CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
+        if(null!=companyInfoSearchResponseBean&& "00".equals(companyInfoSearchResponseBean.getReturnCode())){
+            //代表成功
+            CompanyInfoVO infoVO = companyInfoSearchResponseBean.getCompanyInfoVO();
+            if(null==infoVO){
+                return new AdminResult<>(FAIL, "请输入正确的电子账号!");
             }
-            if(null!=companyInfoSearchResponseBean&& "99".equals(companyInfoSearchResponseBean.getReturnCode())){
-                return new AdminResult<>(FAIL, companyInfoSearchResponseBean.getReturnMsg());
-            }
+            BeanUtils.copyProperties(infoVO,companyInfoCompanyInfoVO);
+            searchCompanyInfoResponseBean.setCompany(companyInfoCompanyInfoVO);
+            UserVO userVO = userCenterService.selectUserByUserId(userId);
+            Integer bankFlag = userVO.getBankOpenAccount();
+            searchCompanyInfoResponseBean.setIsOpenAccount(bankFlag);
+            return new AdminResult<SearchCompanyInfoResponseBean>(searchCompanyInfoResponseBean);
+        }
+        if(null!=companyInfoSearchResponseBean&& "99".equals(companyInfoSearchResponseBean.getReturnCode())){
+            return new AdminResult<>(FAIL, companyInfoSearchResponseBean.getReturnMsg());
         }
         return new AdminResult<>(FAIL, "请输入正确的电子账号!");
     }

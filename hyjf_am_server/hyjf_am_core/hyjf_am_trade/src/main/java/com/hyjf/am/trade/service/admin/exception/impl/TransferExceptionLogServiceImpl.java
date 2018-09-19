@@ -160,7 +160,11 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
 
         boolean isMonth = false;
         // 当前期数
-        Integer periodNow = recover.getRecoverPeriod();
+        String periodNow = recover.getRecoverPeriod();
+        if ("null".equals(periodNow) || StringUtils.isBlank(periodNow)){
+            throw new Exception("未查询到对应的优惠券分期还款的期数，[tender_nid：" + recover.getTenderId() + "]");
+        }
+
         // 剩余还款期数
         Integer periodNext = null;
         if(borrowTender.getTenderType() != 3){
@@ -173,7 +177,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
             // 还款期数
             Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
             // 剩余还款期数
-            periodNext = borrowPeriod - periodNow;
+            periodNext = borrowPeriod - Integer.parseInt(periodNow);
             String borrowStyle = borrow.getBorrowStyle();
 
             // 是否分期(true:月标, false:天标)
@@ -183,7 +187,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
 
         // 当前还款
         CouponRecoverCustomize currentRecover = null;
-        currentRecover = this.getCurrentCouponRecover(recover.getTenderId(),periodNow);
+        currentRecover = this.getCurrentCouponRecover(recover.getTenderId(),Integer.parseInt(periodNow));
         if (currentRecover == null) {
             throw new Exception("优惠券还款数据不存在。[借款编号：" + borrowTender.getBorrowNid() + "]，" + "[优惠券投资编号：" + recover.getTenderId() + "]");
         }
@@ -377,7 +381,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
             accountWebList.setOrdid(borrowTender.getNid() + "_" + periodNow);// 订单号
             if(periodNext !=null &&  periodNext > 0){
                 // 更新还款期
-                crRecoverPeriod(recover.getTenderId(),periodNow+1);
+                crRecoverPeriod(recover.getTenderId(),Integer.parseInt(periodNow)+1);
             }
         }
 

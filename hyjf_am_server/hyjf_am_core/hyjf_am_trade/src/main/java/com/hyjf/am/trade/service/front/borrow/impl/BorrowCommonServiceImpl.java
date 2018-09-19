@@ -756,6 +756,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		borrow.setPublishInstCode(borrowBean.getPublishInstCode());
 		borrow.setIsMonth(borrowBean.getIsMonth());
+		if(StringUtils.isNotBlank(borrowBean.getIsEngineUsed()) && "1".equals(borrowBean.getIsEngineUsed())){
+			borrow.setLabelId(borrowBean.getLabelId());
+		}
 		this.borrowMapper.insertSelective(borrow);
 		
 		BorrowInfoWithBLOBs borrowinfo=new BorrowInfoWithBLOBs();

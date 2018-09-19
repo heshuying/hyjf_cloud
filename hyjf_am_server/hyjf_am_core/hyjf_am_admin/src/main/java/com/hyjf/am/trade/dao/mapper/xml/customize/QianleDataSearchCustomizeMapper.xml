@@ -8,10 +8,10 @@
         t1.accede_order_id AS nid,
         t1.user_id userId,
         CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/365)*0.07,2) END money,
-        FROM_UNIXTIME(t2.create_time,'%Y-%m-%d %H:%i') create_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'计划' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
+        t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'计划' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
         CASE WHEN t4.is_month = 1 THEN CONCAT(t4.lock_period, '个月') ELSE CONCAT(t4.lock_period, '天') END borrow_period,
         CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/365),2) END yearAccount,
-        t5.truename reffername,INSERT(t5.mobile, 4, 4, '****') reffermobile,FROM_UNIXTIME(t1.create_time,'%Y-%m-%d %H:%i') addtimes
+        t5.truename reffername,INSERT(t5.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
         FROM ht_hjh_accede t1
         LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_hjh_plan t4 ON t1.plan_nid = t4.plan_nid
@@ -33,7 +33,7 @@
         t1.nid,
         t1.user_id userId,
         CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
-        FROM_UNIXTIME(t2.create_time,'%Y-%m-%d %H:%i') reg_time,t2.username username,t2.truename truename,
+        t2.create_time reg_time,t2.username username,t2.truename truename,
         INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,
         i.name,
         t1.account,
@@ -41,7 +41,7 @@
         CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
         t5.truename reffername,
         INSERT(t5.mobile, 4, 4, '****') reffermobile,
-        FROM_UNIXTIME(t1.create_time,'%Y-%m-%d %H:%i') addtimes
+        t1.create_time addtimes
         FROM ht_borrow_tender t1
         LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_borrow t4 ON t1.borrow_nid = t4.borrow_nid
@@ -59,7 +59,7 @@
         <if test="addTimeStart != null and addTimeEnd != null">
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
-        order by create_time DESC
+        order by addtimes DESC
         <if test="limitStart != null and limitEnd!=null and limitStart >= 0" >
             limit #{limitStart} , #{limitEnd}
         </if>

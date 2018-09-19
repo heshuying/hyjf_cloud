@@ -47,6 +47,18 @@ public class SubmissionsController {
     }
 
     /**
+     * 查询列表数据
+     *
+     * @return
+     */
+    @PostMapping("/getSubmissionsRecord")
+    public SubmissionsVO getSubmissionsRecord(@RequestBody SubmissionsRequest form) {
+        SubmissionsResponse response = new SubmissionsResponse();
+        Submissions record = submissionsService.queryRecordById(Integer.valueOf(form.getSubmissionsId()));
+        SubmissionsVO submissionsVO = CommonUtils.convertBean(record, SubmissionsVO.class);
+        return submissionsVO;
+    }
+    /**
      * 查询导出数据
      *
      * @return

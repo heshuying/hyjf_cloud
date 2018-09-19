@@ -57,6 +57,7 @@ public class WhereaboutsPageRequest extends BasePage {
      */
     private List<BorrowCommonImage> whereaboutsPagePictures3 = new ArrayList<BorrowCommonImage>();
 
+    private  String domain;
 
     /**
      * 图片
@@ -83,6 +84,8 @@ public class WhereaboutsPageRequest extends BasePage {
      * 检索条件 订单id
      */
     private String referrerName;
+
+    private Integer referrer;
     /**
      * 更新状态
      */
@@ -318,5 +321,21 @@ public class WhereaboutsPageRequest extends BasePage {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public Integer getReferrer() {
+        return referrer;
+    }
+
+    public void setReferrer(Integer referrer) {
+        this.referrer = referrer;
     }
 }

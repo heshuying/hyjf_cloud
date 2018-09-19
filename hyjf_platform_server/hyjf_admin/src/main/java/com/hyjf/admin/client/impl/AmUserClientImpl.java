@@ -6,12 +6,15 @@ import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -1335,6 +1338,14 @@ public class AmUserClientImpl implements AmUserClient {
 		return  amUserResponse;
 
 	}
+	@Override
+	public WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form){
+		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/getwhereaboutspageconfig",
+				form, WhereaboutsPageResponse.class);
+		return  amUserResponse;
+	}
+
+
 
 	@Override
 	public WhereaboutsPageResponse insertAction(WhereaboutsPageRequestBean requestBean) {
@@ -1368,7 +1379,19 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+	@Override
+	public StringResponse checkUtmId(Integer utmId){
+		String url = "http://AM-USER/am-user/content/whereaboutspage/checkutmid/" + utmId;
+		StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+		return response;
+	}
 
+	@Override
+	public StringResponse checkReferrer(String referrer){
+		String url = "http://AM-USER/am-user/content/whereaboutspage/checkreferrer/" + referrer;
+		StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+		return response;
+	}
 	@Override
 	public ChangeLogResponse getChangeLogList(ChangeLogRequest clr) {
 		ChangeLogResponse response = restTemplate

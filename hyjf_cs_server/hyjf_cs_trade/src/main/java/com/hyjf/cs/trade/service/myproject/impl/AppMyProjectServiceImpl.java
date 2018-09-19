@@ -662,14 +662,14 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         result.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
         Integer creditNid = null;
         // 检查是否能债转
-        String resultUrl = systemConfig.getAppFrontHost() + "/transfer/{borrowNid}/result/{state}?status={status}&statusDesc={statusDesc}&endTime={endTime}&price={price}&account={account}";
+        String resultUrl = systemConfig.getAppFrontHost() + "/user/borrow/{borrowNid}/transfer/result/{state}?status={status}&statusDesc={statusDesc}&endTime={endTime}&price={price}&account={account}";
         try {
             try{
                 checkCanCredit(request,userId);
                 checkTenderToCreditParam(request,userId);
                 // 债转保存
                 creditNid = insertTenderToCredit(userId, request);
-                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}","success").replace("{status}",CustomConstants.APP_STATUS_SUCCESS).replace("{statusDesc}",CustomConstants.APP_STATUS_DESC_SUCCESS).replace(accountStr,request.getCreditCapital()).replace(priceStr,request.getCreditPrice()).replace(endTimeStr,String.valueOf(request.getCreditEndTime()));
+                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}","success").replace("{status}",CustomConstants.APP_STATUS_SUCCESS).replace("{statusDesc}",CustomConstants.APP_STATUS_DESC_SUCCESS).replace(accountStr,request.getCreditCapital()).replace(priceStr,request.getCreditPrice()).replace(endTimeStr, GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getCreditEndTime()));
                 // 业务手动抛出的异常
             }catch (CheckException e){
                 result.put(CustomConstants.APP_STATUS, e.getCode());
@@ -882,6 +882,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	    // 还款状态 0还款中、1已还款、2还款失败
 	    borrowCredit.setRepayStatus(0);
 	    // 给前端展示用
+        request.setCreditCapital(DF_COM_VIEW.format(borrowCredit.getCreditPrice().setScale(2, BigDecimal.ROUND_DOWN)));
 	    request.setCreditEndTime(borrowCredit.getEndTime());
 	    request.setCreditPrice(DF_COM_VIEW.format(borrowCredit.getCreditPrice().setScale(2, BigDecimal.ROUND_DOWN)));
 	    if (borrow != null) {
