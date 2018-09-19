@@ -65,7 +65,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_DATA_MAX("ETY000202","单次检索记录时间不能超过{0}天"),
 
 	ERR_DATA_VERIFICATION("EDT000101","数据验证失败"),
-
+	ERR_DATA_NOT_EXISTS("EDT000102","查无数据"),
 
 	ERR_IP_VISIT_TOO_MANNY("ETY000301", "IP访问次数超限"),
 	ERR_INSTCODE("ETY000401","机构编号错误"),
