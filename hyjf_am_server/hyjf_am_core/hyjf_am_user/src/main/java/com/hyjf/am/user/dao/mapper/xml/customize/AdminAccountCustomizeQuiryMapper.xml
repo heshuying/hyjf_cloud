@@ -12,7 +12,7 @@
     </resultMap>
     <select id="accountEnquiry" parameterType="com.hyjf.am.resquest.user.BankOpenAccountLogRequest" resultMap="BaseResultMap" >
         SELECT user_id,reg_esb account,bank_open_account accounts,mobile,username,(SELECT create_time FROM hyjf_bank_open_account WHERE user_id=users.user_id) accounttime FROM huiyingdai_users users WHERE 1=1
-        <if test="phone != null" >
+        <if test="mobile != null" >
             and mobile =#{phone}
         </if>
         <if test="idcard != null" >

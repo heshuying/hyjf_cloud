@@ -1,6 +1,7 @@
 package com.hyjf.common.validator;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.GetSessionOrRequestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;

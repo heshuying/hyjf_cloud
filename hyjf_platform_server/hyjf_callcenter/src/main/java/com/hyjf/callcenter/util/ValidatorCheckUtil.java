@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.validator.CheckUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.servlet.support.RequestContext;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -354,6 +356,7 @@ public class ValidatorCheckUtil {
 		if (retValue && !StringUtils.isEmpty(value)) {
 //			String reg = "^[0-9\\-]*$";
 			if (!Validator.isMobile(value)) {
+
 				CustomErrors.add(info, itemname, key, getErrorMessage(MOBILE));
 				retValue = false;
 			}
@@ -1003,7 +1006,7 @@ public class ValidatorCheckUtil {
 			try {
 				retValue = GenericValidator.isInRange(value.length(), minlength, maxlength);
 				if (!retValue) {
-					CustomErrors.add(info, itemname, key, getErrorMessage(RANGE, minlength, maxlength));
+                   	CustomErrors.add(info, itemname, key, getErrorMessage(RANGE, minlength, maxlength));
 					retValue = false;
 				}
 			} catch (Exception e) {

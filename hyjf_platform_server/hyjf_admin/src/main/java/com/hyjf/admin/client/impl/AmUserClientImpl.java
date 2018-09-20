@@ -2163,9 +2163,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @date 2018/8/21 13:54
 	 **/
 	@Override
-	public List<BankOpenAccountLogVO> bankOpenAccountLogSelect(String mobile,String idcard ) {
-		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/bankOpenAccountLogSelect/"+mobile + "/" +idcard;
-		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
+	public List<BankOpenAccountLogVO> bankOpenAccountLogSelect(BankOpenAccountLogRequest request) {
+		String url = "http://AM-USER/am-user/borrowOpenaccountenquiryException/bankOpenAccountLogSelect";
+		BankOpenAccountLogResponse response = restTemplate.postForEntity(url,request,BankOpenAccountLogResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -2182,7 +2182,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 **/
 	@Override
 	public OpenAccountEnquiryCustomizeVO searchAccountEnquiry(BankOpenAccountLogRequest request) {
-		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/searchAccountEnquiry";
+		String url = "http://AM-USER/am-user/borrowOpenaccountenquiryException/searchAccountEnquiry";
 		OpenAccountEnquiryResponse response = restTemplate.postForEntity(url,request, OpenAccountEnquiryResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -2200,7 +2200,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 **/
 	@Override
 	public BankOpenAccountLogVO selectBankOpenAccountLogByOrderId(String orderId) {
-		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/selectBankOpenAccountLogByOrderId/"+orderId;
+		String url = "http://AM-USER/am-user/borrowOpenaccountenquiryException/selectBankOpenAccountLogByOrderId/"+orderId;
 		BankOpenAccountLogResponse response = restTemplate.getForEntity(url, BankOpenAccountLogResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -2218,7 +2218,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 **/
 	@Override
 	public Boolean deleteBankOpenAccountLogByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/deleteBankOpenAccountLogByUserId/"+userId;
+		String url = "http://AM-USER/am-user/borrowOpenaccountenquiryException/deleteBankOpenAccountLogByUserId/"+userId;
 		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.isDeleteFlag();
@@ -2236,7 +2236,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 **/
 	@Override
 	public Boolean checkAccountByAccountId(String accountId) {
-		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/checkAccountByAccountId/"+accountId;
+		String url = "http://AM-USER/am-user/borrowOpenaccountenquiryException/checkAccountByAccountId/"+accountId;
 		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.isDeleteFlag();

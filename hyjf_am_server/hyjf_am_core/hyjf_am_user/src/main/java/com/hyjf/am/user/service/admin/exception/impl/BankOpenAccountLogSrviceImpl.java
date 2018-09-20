@@ -54,10 +54,10 @@ public class BankOpenAccountLogSrviceImpl  extends BaseServiceImpl implements Ba
         BankOpenAccountLogExample openAccoutLogExample = new BankOpenAccountLogExample();
         BankOpenAccountLogExample.Criteria crt = openAccoutLogExample.createCriteria();
         if(StringUtils.isNoneEmpty(idcard)){
-            crt.andOrderIdEqualTo(idcard);
+            crt.andIdNoEqualTo(idcard);
         }
         if(StringUtils.isNoneEmpty(mobile)){
-            crt.andOrderIdEqualTo(mobile);
+            crt.andMobileEqualTo(mobile);
         }
         List<BankOpenAccountLog> openAccountLogs = this.bankOpenAccountLogMapper.selectByExample(openAccoutLogExample);
         if (openAccountLogs != null && openAccountLogs.size()> 0) {
