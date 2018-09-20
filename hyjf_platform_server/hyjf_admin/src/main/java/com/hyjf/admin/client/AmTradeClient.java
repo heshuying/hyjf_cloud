@@ -2092,21 +2092,21 @@ public interface AmTradeClient {
      * @param adminRequest
      * @return
      */
-    void insertRecord(AdminBorrowFlowRequest adminRequest);
+    AdminBorrowFlowResponse insertRecord(AdminBorrowFlowRequest adminRequest);
 
     /**
      * 修改
      * @param adminRequest
      * @return
      */
-    void updateRecord(AdminBorrowFlowRequest adminRequest);
+    AdminBorrowFlowResponse updateRecord(AdminBorrowFlowRequest adminRequest);
 
     /**
      * 删除
      * @param adminRequest
      * @return
      */
-    void deleteRecord(AdminBorrowFlowRequest adminRequest);
+    AdminBorrowFlowResponse deleteRecord(AdminBorrowFlowRequest adminRequest);
 
     /**
      * 删除配置信息

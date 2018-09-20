@@ -6,6 +6,7 @@ import java.util.List;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.message.FindAliasesForMsgPushRequest;
 import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,8 +102,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<UserAliasVO> findAliasesByMobiles(final List<String> mobiles) {
+		FindAliasesForMsgPushRequest request = new FindAliasesForMsgPushRequest();
+		request.setMobiles(mobiles);
 		UserAliasResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findAliasesByMobiles/" + mobiles, UserAliasResponse.class)
+				.postForEntity("http://AM-USER/am-user/userAlias/findAliasesByMobiles",request, UserAliasResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResultList();

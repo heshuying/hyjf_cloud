@@ -23,7 +23,7 @@ public interface AccountRechargeCustomizeMapper {
 
     /**
      * 资金中心 - 充值管理
-     * @param params
+     * @param request
      * @return
      * @Author : huanghui
      */
