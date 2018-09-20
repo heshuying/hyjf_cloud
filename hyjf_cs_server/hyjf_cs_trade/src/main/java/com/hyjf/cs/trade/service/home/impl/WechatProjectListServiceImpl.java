@@ -110,6 +110,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             UserVO users = amUserClient.findUserById(userId);
             if (users != null) {
                 //判断是否开户
+                isLogined = true;
                 if (users.getBankOpenAccount() != null && users.getBankOpenAccount() == 1) {
                     isOpened = true;
                 }
@@ -209,7 +210,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             borrowProjectInfoBean.setBorrowExtraYield(borrow.getBorrowExtraYield());
             borrowProjectInfoBean.setOnAccrual((borrow.getRecoverLastTime() == null ? "放款成功立即计息" : borrow.getRecoverLastTime()));
             //0：备案中 1：初审中 2：投资中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
-            borrowProjectInfoBean.setStatus(borrow.getStatus());
+            borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功
             borrowProjectInfoBean.setBorrowProgressStatus(String.valueOf(borrow.getProjectStatus()));
 
