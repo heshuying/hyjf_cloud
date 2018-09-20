@@ -95,5 +95,9 @@ public interface AmConfigClient {
 
 	EventVO selectPercentage(int percentage, int begin, int end, int userId);
 
-
+	/**
+	 *获取标签类型
+	 * @return
+	 */
+	List<MessagePushTagVO> getPushTags();
 }
