@@ -54,7 +54,9 @@ public class BorrowCommonBean implements Serializable {
 	 */
 	private String publishInstCode;
 	//add by xiashuing 20171129 end
-
+	// add by liushouyi 20180911 start
+	private String isRegistFlg;
+	// add by liushouyi 20180911 end
 
     // 达飞金融用
 	/**
@@ -3541,5 +3543,12 @@ public class BorrowCommonBean implements Serializable {
 	public void setLabelId(Integer labelId) {
 		this.labelId = labelId;
 	}
-	
+
+	public String getIsRegistFlg() {
+		return isRegistFlg;
+	}
+
+	public void setIsRegistFlg(String isRegistFlg) {
+		this.isRegistFlg = isRegistFlg;
+	}
 }

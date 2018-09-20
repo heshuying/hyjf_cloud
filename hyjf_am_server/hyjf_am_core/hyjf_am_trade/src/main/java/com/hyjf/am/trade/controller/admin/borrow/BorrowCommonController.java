@@ -1,30 +1,16 @@
 package com.hyjf.am.trade.controller.admin.borrow;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.BorrowCommonResponse;
+import com.hyjf.am.resquest.admin.BorrowCommonRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhLabelService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.hyjf.am.response.admin.BorrowCommonResponse;
-import com.hyjf.am.resquest.admin.BorrowCommonRequest;
-import com.hyjf.am.trade.bean.BorrowWithBLOBs;
-import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
+import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.config.InstConfigService;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonNameAccountVO;
@@ -34,9 +20,20 @@ import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author GOGTZ-Z
@@ -61,6 +58,8 @@ public class BorrowCommonController extends BaseController {
 	@Autowired
 	private AdminHjhLabelService adminHjhLabelService;
 
+	@Autowired
+	BorrowService borrowService;
 	/**
      * 迁移到详细画面
      *
@@ -148,6 +147,13 @@ public class BorrowCommonController extends BaseController {
         form.setBorrowIncreaseMoney(bo.getBorrowIncreaseMoney());
         form.setBorrowInterestCoupon(bo.getBorrowInterestCoupon());
         form.setBorrowTasteMoney(bo.getBorrowTasteMoney());
+		// add by liushouyi 20180911 start
+		// 备案中的标的返回备案flg
+		if(null != bo.getStatus() && bo.getStatus() == 0){
+			form.setIsRegistFlg("BORROW_REGIST");
+			form.setIsEngineUsed(bo.getIsEngineUsed().toString());
+		}
+		//  add by liushouyi 20180911 end
         //EntrustedFlg() DB 默认为0
         if(bo.getEntrustedFlg()!= null){
         	form.setEntrustedFlg(bo.getEntrustedFlg().toString());
@@ -269,6 +275,37 @@ public class BorrowCommonController extends BaseController {
 				return bcr;
 			}
 			form.setLabelId(label.getId());
+		}else if (isExistsRecord){
+			// 备案状态的标的修改时重新匹配标签
+			Borrow borrow = borrowService.getBorrow(form.getBorrowNid());
+			BorrowInfo borrowInfo =borrowService.getBorrowInfoByNid(form.getBorrowNid());
+			if (null != borrow && borrow.getStatus()==0) {
+				// 备案的页面需要给前台返回flg
+				form.setIsRegistFlg("BORROW_REGIST");
+				if( StringUtils.isNotBlank(form.getIsEngineUsed()) && "1".equals(form.getIsEngineUsed())) {
+					borrow.setBorrowStyle(form.getBorrowStyle());
+					// 借款期限长度不能超过3位，且必须为数字
+					borrow.setBorrowPeriod(Integer.valueOf(form.getBorrowPeriod()));
+					// 不大于30的最多带两位小数点的数字
+                    borrow.setBorrowApr(new BigDecimal(form.getBorrowApr()));
+					// JSP输入校验：只能是100倍数的数字
+                    borrow.setAccount(new BigDecimal(form.getAccount()));
+                    borrowInfo.setInstCode(form.getInstCode());
+					// 录标页面没有该字段输入
+                    borrowInfo.setAssetType(Integer.valueOf(borrowInfo.getAssetType()));
+					// 项目类型添加时borrowCd只能填写100以内的数字
+                    borrow.setProjectType(Integer.valueOf(form.getProjectType()));
+					// 进计划的散标点击提交保存时验证该标的是否有相应的标签
+					// 获取标签id
+					HjhLabel label = adminHjhLabelService.getBestLabel(borrow,borrowInfo, null);
+					if (label == null || label.getId() == null) {
+						// 加载错误信息到页面
+						bcr.setRtn(Response.FAIL);
+						bcr.setMessage("该标的信息未能匹配到相应的标签，无法使用引擎进计划！");
+						return bcr;
+					}
+				}
+			}
 		}
 
 		// 初审的时候未打上标签的不允许再进计划
