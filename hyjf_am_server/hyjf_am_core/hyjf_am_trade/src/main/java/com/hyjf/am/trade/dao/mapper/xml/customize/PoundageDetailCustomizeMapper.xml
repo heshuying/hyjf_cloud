@@ -35,7 +35,7 @@
 							b.`status` in (4,5)
 							OR (
 								b.`status` = 3
-								AND b.reverify_status &lt;> 0
+								AND b.reverify_status &lt; 0
 							)
 						)
 					AND br.create_time >= date_sub(curdate(),interval 1 day)
