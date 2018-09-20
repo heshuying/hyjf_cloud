@@ -3,10 +3,12 @@
  */
 package com.hyjf.cs.message.service.msgpush;
 
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.cs.message.bean.mc.MessagePush;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,4 +80,27 @@ public interface MsgPushService {
 	 * @param messagePush
 	 */
 	void insertMessagePush(MessagePush messagePush);
+
+	/**
+	 * 获取标签类型
+	 * @return
+	 */
+    List<MessagePushTagVO> getPushTags();
+
+	/**
+	 * 根据标签类型,获取时间范围内所有的msghistory
+	 * @param messagePushTagVO
+	 * @param todayStart
+	 * @param todayEnd
+	 * @return
+	 */
+	List<MessagePushMsgHistory> getMessagePushMsgHistorys(MessagePushTagVO messagePushTagVO, Date todayStart, Date todayEnd);
+
+	/**
+	 * 根据msg和msghistory插入当天统计信息
+	 * @param messagePushTagVO
+	 * @param msgHistoryList
+	 * @param today
+	 */
+	void insertPushPlatStatics(MessagePushTagVO messagePushTagVO, List<MessagePushMsgHistory> msgHistoryList, Date today);
 }
