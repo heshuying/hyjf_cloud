@@ -10,6 +10,7 @@ import com.hyjf.cs.trade.service.batch.AutoTenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
  * @version AutoTenderController, v0.1 2018/6/28 13:59
  */
 @ApiIgnore
-@Controller
+@RestController
 @RequestMapping(value = "/batch/tender")
 public class AutoTenderController extends BaseTradeController {
     @Autowired
