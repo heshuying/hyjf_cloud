@@ -114,8 +114,8 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      * @return
      */
     @Override
-    public void insertRecord(AdminBorrowFlowRequest adminRequest){
-        amTradeClient.insertRecord(adminRequest);
+    public AdminBorrowFlowResponse insertRecord(AdminBorrowFlowRequest adminRequest){
+        return amTradeClient.insertRecord(adminRequest);
     }
     /**
      * 修改
@@ -123,8 +123,8 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      * @return
      */
     @Override
-    public void updateRecord(AdminBorrowFlowRequest adminRequest){
-        amTradeClient.updateRecord(adminRequest);
+    public AdminBorrowFlowResponse updateRecord(AdminBorrowFlowRequest adminRequest){
+        return amTradeClient.updateRecord(adminRequest);
     }
     /**
      * 删除
@@ -132,8 +132,8 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      * @return
      */
     @Override
-   public void deleteRecord(AdminBorrowFlowRequest adminRequest){
-        amTradeClient.deleteRecord(adminRequest);
+   public AdminBorrowFlowResponse deleteRecord(AdminBorrowFlowRequest adminRequest){
+        return amTradeClient.deleteRecord(adminRequest);
     }
 
 }
