@@ -98,9 +98,9 @@
 		<if test="usernameSearch != null and usernameSearch != ''">
 			AND r.username = #{usernameSearch}
 		</if>
-		<!--<if test="statusSearch != null and statusSearch != ''">
+		<if test="statusSearch != null and statusSearch != ''">
 			AND r.`status` = #{statusSearch}
-		</if>-->
+		</if>
 		<if test="typeSearch != null and typeSearch != '' ">
 			AND r.gate_type = #{typeSearch}
 		</if>
@@ -116,43 +116,24 @@
 		<if test="seqNoSearch != null and seqNoSearch != ''">
 			AND r.`bank_seq_no` = #{seqNoSearch}
 		</if>
-		<!--<if test="getfeefromSearch != null and getfeefromSearch != ''">
-			<if test='getfeefromSearch=="0"'>
-				AND r.fee_from = #{getfeefromSearch} or r.fee_from is
-				null
-			</if>
-			<if test='getfeefromSearch=="1"'>
-				AND r.fee_from = #{getfeefromSearch}
-			</if>
-		</if>-->
 		<if test="bankCodeSearch != null and bankCodeSearch != ''">
 			AND r.payment = #{bankCodeSearch}
 		</if>
 		<if test="startDate != null and startDate != ''">
-
-			AND FROM_UNIXTIME(r.create_time, '%Y-%m-%d %H:%i:%S')
-			&gt;= STR_TO_DATE(CONCAT(#{startDate},'00:00:00'
-			),'%Y-%m-%d
-			%H:%i:%s')
+			AND r.create_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{startDate},'00:00:00'),'%Y-%m-%d %H:%i:%s')
 		</if>
 		<if test="endDate != null and endDate != ''">
-
-			AND FROM_UNIXTIME(r.create_time, '%Y-%m-%d %H:%i:%S')
-			&lt;= STR_TO_DATE(CONCAT(#{endDate},'23:59:59'
-			),'%Y-%m-%d %H:%i:%s')
+			AND r.create_time  <![CDATA[<>]]> STR_TO_DATE(CONCAT(#{endDate},'23:59:59'),'%Y-%m-%d %H:%i:%s')
 		</if>
 		<if test="clientTypeSearch != null and clientTypeSearch != ''">
 			AND r.client = #{clientTypeSearch}
 		</if>
 		<!--<if test="userProperty != null and userProperty != ''">
 			AND ui.attribute = #{userProperty,jdbcType=INTEGER}
-		</if>
-		<if test="roleId != null and roleId != ''">
-			AND ui.role_id = #{roleId}
 		</if>-->
-		<!--<if test="roleIdSearch != null and roleIdSearch != 0">
+		<if test="roleIdSearch != null and roleIdSearch != 0">
 			AND ui.role_id = #{roleIdSearch}
-		</if>-->
+		</if>
 	</sql>
 
 
@@ -160,25 +141,18 @@
 		SELECT COUNT(1)
 
 		FROM ht_account_recharge r
-		<!-- <if test="usernameSearch != null and usernameSearch != ''">
-			LEFT JOIN
-			ht_users u ON r.user_id= u.user_id
+		<if test="usernameSearch != null and usernameSearch != ''">
+			LEFT JOIN ht_r_user ui ON r.user_id= ui.user_id
 		</if>
 		<if test="roleIdSearch != null and roleIdSearch != 0">
-			LEFT JOIN
-			ht_users_info ui ON r.user_id= ui.user_id
+			LEFT JOIN ht_r_user ui ON r.user_id= ui.user_id
 		</if>
-		<if test="userProperty != null and userProperty != ''">
-			LEFT JOIN
-			ht_users_info ui ON r.user_id= ui.user_id
-		</if> -->
 		<!-- LEFT JOIN
-		ht_fee_config p ON r.payment= p.bank_code -->
-		<!-- <if test="bankCodeSearch != null and bankCodeSearch != ''">
+		ht_fee_config p ON r.payment= p.bank_code-->
+		<!--<if test="bankCodeSearch != null and bankCodeSearch != ''">
 			LEFT JOIN
 			ht_bank_config b ON r.payment= b.code
 		</if> -->
-
 		WHERE 1=1
 		<include refid="where-all-page-condition" />
 		ORDER BY r.id DESC
@@ -222,6 +196,8 @@
 		'投资人'
 		WHEN 2 THEN
 		'借款人'
+		WHEN 3 THEN
+		'垫付机构'
 		END AS roleid,
 		u.attribute AS user_attribute,
 		CASE

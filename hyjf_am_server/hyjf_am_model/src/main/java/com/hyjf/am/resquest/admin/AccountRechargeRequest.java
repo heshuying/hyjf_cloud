@@ -8,31 +8,75 @@ import java.io.Serializable;
  */
 public class AccountRechargeRequest extends BasePage implements Serializable {
 
-    private String startDate; // 创建时间 起始
+    /**
+     * 创建时间 起始
+     */
+    private String startDate;
 
-    private String endDate; // 创建时间 结束
+    /**
+     * 创建时间 结束
+     */
+    private String endDate;
 
-    private String accountIdSearch; // 电子账号
-    private String isBankSearch;// 资金托管平台
-    private String seqNoSearch;// 流水号
-    private String clientTypeSearch; // 客户端类型
+    /**
+     * 电子账号
+     */
+    private String accountIdSearch;
 
-    private String usernameSearch; //
-    private String userProperty;//用户属性
+    /**
+     * 资金托管平台
+     */
+    private String isBankSearch;
 
-    private String nidSearch;// 订单号
+    /**
+     * 流水号
+     */
+    private String seqNoSearch;
 
-    private String statusSearch; // 充值状态
+    /**
+     * 客户端类型
+     */
+    private String clientTypeSearch;
 
-    private String bankCodeSearch; // 银行号
+    /**
+     * 用户名
+     */
+    private String usernameSearch;
 
-    private String typeSearch;// 充值渠道
+    /**
+     * 用户属性
+     */
+    private String userProperty;
 
-    private String getfeefromSearch;// 充值手续费收取方式,0向用户收取,1向商户收取
+    /**
+     * 订单号
+     */
+    private String nidSearch;
 
-    private String roleIdSearch;// 充值手续费收取方式,0向用户收取,1向商户收取
+    /**
+     * 充值状态
+     */
+    private String statusSearch;
 
-    private Integer outtime;// 当前时间-充值时间，结果是秒数
+    /**
+     * 银行号
+     */
+    private String bankCodeSearch;
+
+    /**
+     * 充值渠道
+     */
+    private String typeSearch;
+
+    /**
+     * 用户角色
+     */
+    private String roleIdSearch;
+
+    /**
+     * 当前时间-充值时间，结果是秒数
+     */
+    private Integer outtime;
 
     private String txDate;
 
@@ -40,13 +84,19 @@ public class AccountRechargeRequest extends BasePage implements Serializable {
 
     private String bankSeqNo;
 
-    //订单编号
+    /**
+     * 标的NID
+     */
     private String nid;
 
-    //用户ID
+    /**
+     * 用户ID
+     */
     private Integer userId;
 
-    //订单状态
+    /**
+     * 订单状态
+     */
     private String status;
 
     /**
@@ -149,14 +199,6 @@ public class AccountRechargeRequest extends BasePage implements Serializable {
 
     public void setTypeSearch(String typeSearch) {
         this.typeSearch = typeSearch;
-    }
-
-    public String getGetfeefromSearch() {
-        return getfeefromSearch;
-    }
-
-    public void setGetfeefromSearch(String getfeefromSearch) {
-        this.getfeefromSearch = getfeefromSearch;
     }
 
     public String getRoleIdSearch() {
