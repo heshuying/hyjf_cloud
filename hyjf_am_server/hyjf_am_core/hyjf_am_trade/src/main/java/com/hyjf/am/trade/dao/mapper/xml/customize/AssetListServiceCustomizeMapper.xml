@@ -178,7 +178,7 @@
 		SELECT
 		  COUNT(1)
 		FROM ht_hjh_plan_asset hpa 
-		LEFT JOIN ht_user.ht_user u on hpa.user_id = u.user_id
+		LEFT JOIN hyjf_user.ht_user u on hpa.user_id = u.user_id
 		<include refid="Where_Clause" />
 	</select>
 	
@@ -186,8 +186,8 @@
 		  SELECT
 		    SUM(hpa.account)
 		  FROM
-			ht_hjh_plan_asset hpa 
-		  LEFT JOIN ht_user.ht_user u on hpa.user_id = u.user_id
+			ht_hjh_plan_asset hpa
+		  LEFT JOIN hyjf_user.ht_user u on hpa.user_id = u.user_id
 		<include refid="Where_Clause" />
 	</select>
 </mapper>
