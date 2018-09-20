@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -133,6 +134,11 @@ public class AppRechargeController extends BaseTradeController{
 		String retUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/failed";
 		String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
         bgRetUrl=splicingParam(bgRetUrl,request);
+        if(null==money||money.isEmpty()){
+        	money="0";
+		}
+		DecimalFormat df = new DecimalFormat("#,##0.00");
+		money = df.format(money);
 		String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/success?money="+money;
 		retUrl += "?token=1&sign=" +sign;
 		successfulUrl += "&token=1&sign=" +sign;
