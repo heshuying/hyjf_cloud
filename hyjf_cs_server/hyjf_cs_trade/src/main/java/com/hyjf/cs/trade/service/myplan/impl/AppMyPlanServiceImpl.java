@@ -406,7 +406,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         customize.getPlanPeriod();
         projectIntr.setBorrowPeriod(customize.getPlanPeriod());
         // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 end
-        projectIntr.setBorrowApr(customize.getPlanApr());
+        projectIntr.setBorrowApr(StringUtils.isBlank(customize.getPlanApr()) ? "" :customize.getPlanApr().replace("%",""));
         projectIntr.setBorrowPeriod(customize.getPlanPeriod());
         projectIntr.setBorrowPeriodUnit(CommonUtils.getPeriodUnitByRepayStyle(customize.getRepayStyle()));
         projectIntr.setRepayStyle(customize.getRepayMethod());
