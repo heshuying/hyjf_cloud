@@ -1344,7 +1344,7 @@ public interface AmConfigClient {
 	 * @return
 	 * @Author : huanghui
 	 */
-	List<BanksConfigVO> getBankcardList();
+	List<JxBankConfigVO> getBankcardList();
 
 	/**
 	 * 添加消息模板
