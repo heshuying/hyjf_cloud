@@ -4,6 +4,7 @@
 package com.hyjf.cs.market.client;
 
 import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
+import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 
 import java.math.BigDecimal;
 
@@ -41,5 +42,12 @@ public interface CsMessageClient {
      * @return
      */
     int selectTotalTenderSum();
+
+    /**
+     * 统计前一个月的数据
+     * @param i 时间戳
+     * @return
+     */
+    OperationReportEntityVO getOperationReport(int i);
 
 }

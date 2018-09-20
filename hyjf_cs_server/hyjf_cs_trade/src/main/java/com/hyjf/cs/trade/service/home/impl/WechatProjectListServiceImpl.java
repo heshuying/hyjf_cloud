@@ -298,7 +298,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             projectDetailList = this.dealDetail(projectDetailList, credTableData, "credTableData", null);
             projectDetailList = this.dealDetail(projectDetailList, reviewTableData, "reviewTableData", null);
             // 信批需求新增(放款后才显示)
-            if (Integer.parseInt(borrow.getStatus()) >= 4) {
+            if (Integer.parseInt(borrow.getBorrowStatus()) >= 4) {
                 //其他信息
                 String updateTime = ProjectConstant.getUpdateTime(GetDate.getTime10(borrowRepay.getCreateTime()), borrowRepay.getRepayYestime());
                 projectDetailList = this.dealDetail(projectDetailList, otherTableData, "otherTableData", updateTime);
@@ -321,7 +321,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                     borrowRepayPlanBean.setTime(borrowRepayPlan.getRepayTime());
                 }
                 borrowRepayPlanBean.setNumber("第1期");
-                borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(borrowRepayPlan.getRepayTotal()));
+                borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(new BigDecimal(borrowRepayPlan.getRepayTotal())));
                 repayPlanList.add(borrowRepayPlanBean);
             } else {
                 List<BorrowRepayPlanCsVO> repayPlanLists = repayPlanService.getRepayPlan(borrowNid);

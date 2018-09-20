@@ -68,7 +68,7 @@ public class HjhAccedeController extends BaseController {
      * @return
      */
     @GetMapping("/getHjhAccedeByAccedeOrderId/{accedeOrderId}")
-    public HjhAccedeResponse getHjhAccedeListByAccedeOrderId(@PathVariable String accedeOrderId){
+    public HjhAccedeResponse getHjhAccedeByAccedeOrderId(@PathVariable String accedeOrderId){
         HjhAccedeResponse response = new HjhAccedeResponse();
         HjhAccede hjhAccede=hjhAccedeService.getHjhAccedeByAccedeOrderId(accedeOrderId);
         if (Validator.isNotNull(hjhAccede)){

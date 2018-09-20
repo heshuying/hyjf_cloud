@@ -100,7 +100,7 @@ public class HjhAccedeServiceImpl extends BaseServiceImpl implements HjhAccedeSe
 
     @Override
     public int updateHjhAccedeByPrimaryKey(HjhAccede hjhAccede) {
-        return this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
+        return this.hjhAccedeMapper.updateByPrimaryKeySelective(hjhAccede);
     }
 
     /**

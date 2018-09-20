@@ -1,11 +1,9 @@
 package com.hyjf.cs.message.service.report;
 
 import com.hyjf.cs.common.service.BaseService;
-import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
 import com.hyjf.cs.message.bean.ic.CalculateInvestInterest;
 import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
 import com.hyjf.cs.message.bean.ic.OperationReportEntity;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -59,4 +57,5 @@ public interface PlatDataStatisticsService extends BaseService {
      */
     List<OperationReportEntity> findOperationReportEntityList();
 
+    OperationReportEntity findOneOperationMongDaoByMonth(int month);
 }

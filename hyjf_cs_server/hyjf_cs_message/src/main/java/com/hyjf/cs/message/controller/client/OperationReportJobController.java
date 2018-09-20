@@ -4,13 +4,22 @@
 package com.hyjf.cs.message.controller.client;
 
 import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.response.message.BorrowUserStatisticResponse;
+import com.hyjf.am.response.message.OperationReportEntityResponse;
+import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
+import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
+import com.hyjf.cs.message.bean.ic.OperationReportEntity;
 import com.hyjf.cs.message.service.report.OperationReportJobService;
+import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -30,6 +39,9 @@ public class OperationReportJobController extends BaseController {
 
 	@Autowired
 	private OperationReportJobService operationReportJobService;
+
+	@Autowired
+	private PlatDataStatisticsService platDataStatisticsService;
 
 	@ApiOperation(value = "统计报表-根据当前时间要获取到上个月的数据", notes = "根据当前时间要获取到上个月的数据")
 	@RequestMapping("/countOperationReport")
@@ -109,5 +121,31 @@ public class OperationReportJobController extends BaseController {
 		//输出上个月的日期
 		int lastMonth = Integer.valueOf(sdf.format( calendar.getTime()));
 		return lastMonth;
+	}
+
+	@RequestMapping("/getBorrowUserStatistic")
+	public BorrowUserStatisticResponse getBorrowUserStatistic() {
+		BorrowUserStatisticResponse response = new BorrowUserStatisticResponse();
+		BorrowUserStatisticVO vo = new BorrowUserStatisticVO();
+		BorrowUserStatistic borrowUserStatistic = operationReportJobService.selectBorrowUserStatistic();
+		if(borrowUserStatistic != null){
+
+			BeanUtils.copyProperties(borrowUserStatistic,vo);
+		}
+		response.setResult(vo);
+		return response;
+	}
+
+	@RequestMapping("/findOneOperationMongDaoByMonth/{month}")
+	public OperationReportEntityResponse getBorrowUserStatistic(@PathVariable Integer month) {
+		OperationReportEntityResponse response = new OperationReportEntityResponse();
+		OperationReportEntityVO vo = new OperationReportEntityVO();
+		OperationReportEntity operationReportEntity = platDataStatisticsService.findOneOperationMongDaoByMonth(month);
+		if(operationReportEntity != null){
+
+			BeanUtils.copyProperties(operationReportEntity,vo);
+		}
+		response.setResult(vo);
+		return response;
 	}
 }

@@ -13,12 +13,16 @@ import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,22 +78,28 @@ public class BorrowFlowController extends BaseController {
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult selectBorrowFlowInfo(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
+        HjhAssetBorrowTypeVO record = new HjhAssetBorrowTypeVO();
         AdminBorrowFlowResponse resList= null;
         if(adminRequest.getId() != null){
             resList=borrowFlowService.selectBorrowFlowInfo(adminRequest);
+            if(Response.isSuccess(resList)){
+                record=resList.getResult();
+            }else{
+                resList=new AdminBorrowFlowResponse();
+                resList.setRtn(Response.FAIL);
+                resList.setMessage(Response.FAIL_MSG);
+            }
         }
-        if (!Response.isSuccess(resList)) {
-            // 项目列表
-            List<BorrowProjectTypeVO> borrowProjectTypeList = this.borrowFlowService.borrowProjectTypeList("HZT");
-            resList.setBorrowProjectTypeList(borrowProjectTypeList);
-            // 资金来源
-            List<HjhInstConfigVO> hjhInstConfigList = this.borrowFlowService.hjhInstConfigList("");
-            resList.setHjhInstConfigList(hjhInstConfigList);
-            // 产品类型
-            List<HjhAssetTypeVO> assetTypeList = this.borrowFlowService.hjhAssetTypeList(adminRequest.getInstCodeSrch());
-            resList.setAssetTypeList(assetTypeList);
-            return new AdminResult<AdminBorrowFlowResponse>(resList) ;
-        }
+        // 项目列表
+        List<BorrowProjectTypeVO> borrowProjectTypeList = this.borrowFlowService.borrowProjectTypeList("HZT");
+        resList.setBorrowProjectTypeList(borrowProjectTypeList);
+        // 资金来源
+
+         List<HjhInstConfigVO> hjhInstConfigList = this.borrowFlowService.hjhInstConfigList("");
+        resList.setHjhInstConfigList(hjhInstConfigList);
+        // 产品类型
+        List<HjhAssetTypeVO> assetTypeList = this.borrowFlowService.hjhAssetTypeList(record.getInstCode());
+        resList.setAssetTypeList(assetTypeList);
         return new AdminResult<AdminBorrowFlowResponse>(resList) ;
     }
     @ApiOperation(value = "添加流程配置", notes = "添加流程配置")
@@ -215,10 +225,13 @@ public class BorrowFlowController extends BaseController {
      */
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "下拉联动")
     @PostMapping("/assetTypeAction")
-    public AdminResult assetTypeAction(@RequestParam(value="instCode") String instCode) {
+    public AdminResult assetTypeAction(@RequestBody AdminBorrowFlowRequest request) {
         List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        if(StringUtils.isBlank(request.getInstCode())){
+            return new AdminResult<>(Response.FAIL,"instCode不能为空！") ;
+        }
         // 根据资金来源取得产品类型
-        List<HjhAssetTypeVO> hjhAssetTypeList = this.borrowFlowService.hjhAssetTypeList(instCode);
+        List<HjhAssetTypeVO> hjhAssetTypeList = this.borrowFlowService.hjhAssetTypeList(request.getInstCode());
         if (hjhAssetTypeList != null && hjhAssetTypeList.size() > 0) {
             for (HjhAssetTypeVO hjhAssetBorrowType : hjhAssetTypeList) {
                 Map<String, Object> mapTemp = new HashMap<String, Object>();

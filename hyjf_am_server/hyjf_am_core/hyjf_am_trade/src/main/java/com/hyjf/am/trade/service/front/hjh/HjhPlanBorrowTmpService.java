@@ -17,4 +17,6 @@ public interface HjhPlanBorrowTmpService extends BaseService {
     int deleteHjhPlanBorrowTmp(HjhPlanBorrowTmp hjhPlanBorrowTmp);
 
     int updateHjhPlanBorrowTmpByPK(HjhPlanBorrowTmp hjhPlanBorrowTmp);
+
+    int updateHjhPlanBorrowTmp(HjhPlanBorrowTmp hjhPlanBorrowTmp);
 }

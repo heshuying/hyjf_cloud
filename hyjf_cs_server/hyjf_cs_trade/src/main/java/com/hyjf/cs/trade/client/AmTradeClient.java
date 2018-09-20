@@ -214,7 +214,7 @@ public interface AmTradeClient {
      * @param hjhPlanBorrowTmpVO
      * @return
      */
-    int updateHjhPlanBorrowTmpByPK(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO);
+    int updateHjhPlanBorrowTmp(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO);
 
     /**
      * APP获取我的优惠券分页数据
