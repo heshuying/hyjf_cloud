@@ -3,15 +3,13 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * @author fuqiang
@@ -26,8 +24,7 @@ public interface BorrowTenderCustomizeMapper {
 	 * @param type
 	 * @return
 	 */
-	Integer getUtmTenderNum(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
-			@Param("dayEnd") String dayEnd, @Param("type") String type);
+	Integer getUtmTenderNum(@Param("list") List<Integer> list, @Param("dayStart") String dayStart, @Param("dayEnd") String dayEnd, @Param("type") String type);
 
 	/**
 	 * 获取utm注册用户HZT投资额
@@ -37,7 +34,7 @@ public interface BorrowTenderCustomizeMapper {
 	 * @return
 	 */
 	BigDecimal getHztTenderPrice(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
-			@Param("dayStart") String dayEnd);
+			@Param("dayEnd") String dayEnd);
 
 	/**
 	 * 获取utm注册用户HXF投资额
@@ -47,7 +44,7 @@ public interface BorrowTenderCustomizeMapper {
 	 * @return
 	 */
 	BigDecimal getHxfTenderPrice(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
-			@Param("dayStart") String dayEnd);
+			@Param("dayEnd") String dayEnd);
 
 	/**
 	 * 获取utm注册用户HXF投资额
@@ -57,7 +54,7 @@ public interface BorrowTenderCustomizeMapper {
 	 * @return
 	 */
 	BigDecimal getRtbTenderPrice(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
-			@Param("dayStart") String dayEnd);
+			@Param("dayEnd") String dayEnd);
 
 	/**
 	 * @Author walter.limeng

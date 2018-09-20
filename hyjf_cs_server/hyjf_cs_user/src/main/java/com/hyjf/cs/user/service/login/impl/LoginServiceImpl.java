@@ -680,6 +680,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					result.setEvalationScore(userEvalationResult.getScoreCount() + "");
 				}
 			} else {
+				result.setAnswerStatus("0");
 				result.setAnswerResult("点击测评");
 				result.setFengxianDesc("未测评");
 				// 活动有效期校验

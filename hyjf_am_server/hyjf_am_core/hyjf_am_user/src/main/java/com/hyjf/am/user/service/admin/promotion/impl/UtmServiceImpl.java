@@ -45,7 +45,8 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     @Override
     public List<UtmPlatVO> getUtmPlat(String sourceId) {
         Map<String, Object> map = new HashMap<>();
-        if (StringUtils.isNotBlank(sourceId)) {
+        //兼容不传递sourceId restful风格null 会变成null字符串
+        if (StringUtils.isNotBlank(sourceId)&&!"null".equals(sourceId)) {
             map.put("sourceId",sourceId);
         }
         map.put("delFlag",CustomConstants.FLAG_NORMAL);

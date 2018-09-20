@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.beans.response;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -37,6 +38,8 @@ public class UserManagerInitResponseBean {
     //
     @ApiModelProperty(value = "机构配置")
     private List<DropDownVO> listHjhInstConfig;
+    @ApiModelProperty(value = "部门树形列表")
+    private JSONObject deptList;
 
     public List<DropDownVO> getUserRoles() {
         return userRoles;
@@ -100,5 +103,13 @@ public class UserManagerInitResponseBean {
 
     public void setListHjhInstConfig(List<DropDownVO> listHjhInstConfig) {
         this.listHjhInstConfig = listHjhInstConfig;
+    }
+
+    public JSONObject getDeptList() {
+        return deptList;
+    }
+
+    public void setDeptList(JSONObject deptList) {
+        this.deptList = deptList;
     }
 }

@@ -226,6 +226,9 @@ public class CustomizeMapper extends AutoMapper {
 	protected BatchAccountCustomizeMapper batchAccountCustomizeMapper;
 
 	@Autowired
+	protected ApiRepayListCustomizeMapper apiRepayListCustomizeMapper;
+
+	@Autowired
 	protected WebUserRepayListCustomizeMapper webUserRepayListCustomizeMapper;
 
 	@Autowired
