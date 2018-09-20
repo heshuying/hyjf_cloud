@@ -184,9 +184,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
         // add 主库读取修改后异常处理问题修正 liubin 20180906 start
         // OrderStatus = 0 or 80 or 90 变更成 0
+        logger.info("前OrderStatus："+hjhAccede.getOrderStatus());
         hjhAccede.setOrderStatus(hjhAccede.getOrderStatus() % 10);
+        logger.info("后OrderStatus："+hjhAccede.getOrderStatus());
         // add 主库读取修改后异常处理问题修正 liubin 20180906 end
-
         String txAmount = bean.getTxAmount();// 借款金额
         BigDecimal accountDecimal = new BigDecimal(txAmount);// 冻结前验证
 

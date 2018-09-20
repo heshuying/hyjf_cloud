@@ -7,13 +7,11 @@ import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
-import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -91,46 +89,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public int getTenderAgeByRange(Date date, int firstAge, int endAge) {
 		return 0;
-	}
-
-	@Override
-	public OperationReportEntityVO getOperationReport(int i) {
-		return null;
-	}
-
-	@Override
-	public BigDecimal getAccountByMonth(Date firstDay, Date lastDay) {
-		return null;
-	}
-
-	@Override
-	public int getTradeCountByMonth(Date firstDay, Date lastDay) {
-		return 0;
-	}
-
-	@Override
-	public int getLoanNum(Date lastDay) {
-		return 0;
-	}
-
-	@Override
-	public double getInvestLastDate(Date lastDay) {
-		return 0;
-	}
-
-	@Override
-	public int getTenderCount(Date lastDay) {
-		return 0;
-	}
-
-	@Override
-	public float getFullBillAverageTime(Date lastDay) {
-		return 0;
-	}
-
-	@Override
-	public BigDecimal getRepayTotal(Date lastDay) {
-		return null;
 	}
 
 	@Override

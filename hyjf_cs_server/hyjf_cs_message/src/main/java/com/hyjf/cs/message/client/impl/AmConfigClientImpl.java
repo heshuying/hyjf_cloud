@@ -179,6 +179,17 @@ public class AmConfigClientImpl implements AmConfigClient {
 				.getBody();
 		return response;
 	}
+
+	@Override
+	public List<MessagePushTagVO> getPushTags() {
+		MessagePushTagResponse response = restTemplate.postForObject(
+				"http://AM-CONFIG/am-config/messagePushTag/searchList", null, MessagePushTagResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
 	@Override
 	public IntegerResponse updateAppNewsConfig(UserVO users) {
 		IntegerResponse response = restTemplate.postForEntity("http://AM-USER/am-user/user/updateByUserId", users, IntegerResponse.class).getBody();

@@ -29,9 +29,8 @@ public class StatisticsOperationReportController extends BaseController {
     @RequestMapping("/insertoperationgroupdata")
     public String insertOperationGroupData() {
         Calendar cal = Calendar.getInstance();
-        statisticsService.insertOperationGroupData(cal);
-        //TODO 放后再测 yinhui
-//        statisticsService.insertOperationData(cal);
+//        statisticsService.insertOperationGroupData(cal);
+        statisticsService.insertOperationData(cal);
         return "success";
     }
 
