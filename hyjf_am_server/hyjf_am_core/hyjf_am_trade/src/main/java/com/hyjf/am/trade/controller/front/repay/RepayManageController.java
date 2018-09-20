@@ -5,7 +5,6 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
-import com.hyjf.am.response.trade.RepayBeanResponse;
 import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
@@ -46,9 +45,11 @@ public class RepayManageController extends BaseController {
      */
     @RequestMapping(value = "/feewait_total_user/{userId}")
     public Response<BigDecimal> userRepayFeeWaitTotal(@PathVariable Integer userId) {
+        logger.info("普通借款人管理费总待还feewait_total_user，userId：" + userId);
         Response<BigDecimal> response = new Response<>();
         BigDecimal waitTotal = repayManageService.selectUserRepayFeeWaitTotal(userId);
         response.setResult(waitTotal);
+        logger.info("response: {}", JSON.toJSONString(response));
         return response;
     }
 
@@ -60,6 +61,9 @@ public class RepayManageController extends BaseController {
     public Response<BigDecimal> orgRepayFeeWaitTotal(@PathVariable Integer userId) {
         Response<BigDecimal> response = new Response<>();
         BigDecimal waitTotal = repayManageService.selectOrgRepayFeeWaitTotal(userId);
+        if(null==waitTotal){
+            response.setResult(new BigDecimal(0));
+        }
         response.setResult(waitTotal);
         return response;
     }

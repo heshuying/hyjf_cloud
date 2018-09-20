@@ -56,6 +56,12 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
                         customize.setData("");
                     }
                 }
+                //判断type是否为4（4加息），将couponType设置为4
+                if("4".equals(customize.getType())){
+                    customize.setCouponType("4");
+                    //将"borrowExtraYield": 替换为 "data":
+                    customize.setData(customize.getBorrowExtraYield());
+                }
             }
             vo.getLstProject().addAll(lst);
         }
@@ -78,6 +84,11 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
                 customize.setAccount(CommonUtils.formatAmount(account));
                 customize.setInterest(CommonUtils.formatAmount(interest));
                 customize.setRecoverTime( GetDate.times10toStrYYYYMMDD(Integer.valueOf(customize.getRecoverTime())));
+                //判断invest_type是否为3（3加息），将couponType设置为4
+                if("3".equals(customize.getInvestType())){
+                    customize.setCouponType("4");
+                    customize.setLabel(customize.getBorrowExtraYield());
+                }
             }
             vo.getLstProject().addAll(lst);
 

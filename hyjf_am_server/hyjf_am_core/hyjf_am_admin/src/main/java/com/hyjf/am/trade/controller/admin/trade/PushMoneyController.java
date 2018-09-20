@@ -3,14 +3,6 @@
  */
 package com.hyjf.am.trade.controller.admin.trade;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
@@ -18,7 +10,15 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.PushMoney;
 import com.hyjf.am.trade.service.admin.PushMoneyService;
 import com.hyjf.am.vo.trade.PushMoneyVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -36,12 +36,18 @@ public class PushMoneyController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/getrecordlist")
-	public PushMoneyResponse getRecordList() {
+	public PushMoneyResponse getRecordList(PushMoneyRequest requestBean) {
 		PushMoneyResponse response = new PushMoneyResponse();
 		List<PushMoney> list = pushMoneyService.getRecordList();
-		if (!CollectionUtils.isEmpty(list)) {
-			List<PushMoneyVO> voList = CommonUtils.convertBeanList(list, PushMoneyVO.class);
-			response.setResultList(voList);
+		response.setCount(list.size());
+		if (list != null) {
+			Paginator paginator = new Paginator(requestBean.getCurrPage(), list.size(), requestBean.getPageSize() == 0 ? 10 : requestBean.getPageSize());
+			List<PushMoney> pushMoneyList = this.pushMoneyService.getRecordList(paginator.getOffset(),paginator.getLimit());
+			if (!CollectionUtils.isEmpty(pushMoneyList)) {
+				List<PushMoneyVO> voList = CommonUtils.convertBeanList(pushMoneyList, PushMoneyVO.class);
+				response.setPaginator(paginator);
+				response.setResultList(voList);
+			}
 		}
 		return response;
 	}

@@ -72,7 +72,7 @@ public class WeChatBankOpenController extends BaseUserController {
     @ApiOperation(value = "微信端用户开户", notes = "微信端用户开户")
     @PostMapping(value = "/open")
     @ResponseBody
-    public WeChatResult openBankAccount(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public WeChatResult openBankAccount(@RequestHeader(value = "userId") Integer userId,  @RequestHeader(value = "sign") String sign,@RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         WeChatResult reuslt = new WeChatResult();
         bankOpenVO.setUserId(userId);
@@ -100,7 +100,7 @@ public class WeChatBankOpenController extends BaseUserController {
         openBean.setPlatform(ClientConstants.WECHAT_CLIENT+"");
         // 组装调用江西银行的MV
         logger.info("组装调用江西银行的MV");
-        Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean,null);
+        Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean,sign);
         reuslt.setObject(data);
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), CustomConstants.CLIENT_WECHAT, openBean.getTrueName(), openBean.getIdNo(), "");

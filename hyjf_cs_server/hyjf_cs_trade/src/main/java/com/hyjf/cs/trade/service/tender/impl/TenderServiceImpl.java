@@ -13,7 +13,7 @@ import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -200,7 +200,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 		}
 		
 		/*原Borrow borrow = this.getBorrowByNid(borrowNid);*/
-		BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+		BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
 		
 		// 判断借款信息是否存在
 		if (borrow == null || borrow.getId() == null) {
@@ -577,7 +577,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 	}
 
 	@Override
-	public JSONObject userAutoTender(BorrowVO borrow, BankCallBean bean,String couponGrantId) throws Exception {
+	public JSONObject userAutoTender(BorrowAndInfoVO borrow, BankCallBean bean,String couponGrantId) throws Exception {
 		// 1.获取封装的信息
 		Integer userId = Integer.parseInt(bean.getLogUserId());// 投资人id
 		String txAmount = bean.getTxAmount();// 借款金额
@@ -685,7 +685,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
      * @param borrow
      * @param bean
      */
-    private JSONObject borrowTender(BorrowVO borrow, BankCallBean bean) {
+    private JSONObject borrowTender(BorrowAndInfoVO borrow, BankCallBean bean) {
     	/*1.用于返回成功失败消息*/
     	JSONObject msg = new JSONObject();
     	/*2.准备borrowtender表实体，因为表中涉及到user信息提前准备*/
@@ -827,7 +827,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
         return msg;
     }
     
-    private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowVO borrow) {
+    private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowAndInfoVO borrow) {
         //更新汇计划列表成功的前提下
         // 更新渠道统计用户累计投资
         // 投资人信息

@@ -460,11 +460,12 @@ public class OperationReportServiceImpl  implements OperationReportService {
 				if (yearOperationReportEntity != null ) {
 					YearOperationReportVO yearOperationReport = new YearOperationReportVO();
 					BeanUtils.copyProperties(yearOperationReportEntity,yearOperationReport);
-					BigDecimal appProportion =yearOperationReport.getYearAppAmountProportion();
+					BigDecimal appProportion =yearOperationReport.getYearAppAmountProportion()==null?new BigDecimal(0):yearOperationReport.getYearAppAmountProportion();
 					appProportion = appProportion.setScale(2, BigDecimal.ROUND_DOWN);
 					yearOperationReport.setYearAppAmountProportion(appProportion);
-					yearOperationReport.setYearWechatAmountProportion(yearOperationReport.getYearWechatAmountProportion().setScale(2, BigDecimal.ROUND_DOWN));
-					BigDecimal pc=new BigDecimal(100.00).subtract(appProportion).subtract(yearOperationReport.getYearWechatAmountProportion());
+					BigDecimal yearWechatAmountProportion = yearOperationReport.getYearWechatAmountProportion()==null?new BigDecimal(0):yearOperationReport.getYearWechatAmountProportion();
+					yearOperationReport.setYearWechatAmountProportion(yearWechatAmountProportion.setScale(2, BigDecimal.ROUND_DOWN));
+					BigDecimal pc=new BigDecimal(100.00).subtract(appProportion).subtract(yearWechatAmountProportion);
 					yearOperationReport.setYearPcAmountProportion(pc);
 					response.setYearOperationReport(yearOperationReport);
 				}

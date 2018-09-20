@@ -1,14 +1,15 @@
 package com.hyjf.cs.market.client;
 
-import com.hyjf.am.vo.trade.TenderCityCountVO;
-import com.hyjf.am.vo.trade.TenderSexCountVO;
-
-import java.util.Date;
-import java.util.List;
 import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.admin.SmsConfigRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
+import com.hyjf.am.vo.trade.TenderCityCountVO;
+import com.hyjf.am.vo.trade.TenderSexCountVO;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author：yinhui
@@ -65,5 +66,25 @@ public interface AmAdminClient {
      * @author xiehuili
      */
      SmsConfigResponse initSmsConfig(SmsConfigRequest request);
+
+    /**
+     * 月交易金额
+     * @param firstDay 月第一天
+     * @param lastDay 月最后一天
+     * @return
+     */
+    BigDecimal getAccountByMonth(Date firstDay, Date lastDay);
+
+    Integer getTradeCountByMonth(Date firstDay, Date lastDay);
+
+    Integer getLoanNum(Date date);
+
+    BigDecimal getInvestLastDate(Date date);
+
+    Integer getTenderCount(Date date);
+
+    float getFullBillAverageTime(Date date);
+
+    BigDecimal getRepayTotal(Date date);
 
 }

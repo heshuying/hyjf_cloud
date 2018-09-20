@@ -87,12 +87,6 @@ public interface AdminUserService  {
     public void resetPwdAction(List<Integer> recordList,int adminId);
     
 	/**
-	 * 获取部门列表
-	 *
-	 * @return
-	 */
-	public List<ROaDepartment> getDepartmentList();
-	/**
 	 * 获取角色列表
 	 *
 	 * @return

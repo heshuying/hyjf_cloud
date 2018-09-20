@@ -71,7 +71,9 @@ public class AllocationEngineRuquest extends BasePage implements Serializable{
 	private String investProgressSort;
 	//投资进度排序 0：从小到大 1：从大到小
 	private String investProgressSortPriority;
-	
+	// 添加或者修改  0 添加；1修改
+	private String addOrModify;
+
 	public int limit;
 	
 	public int getPaginatorPage() {
@@ -223,5 +225,11 @@ public class AllocationEngineRuquest extends BasePage implements Serializable{
 	}
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+	public String getAddOrModify() {
+		return addOrModify;
+	}
+	public void setAddOrModify(String addOrModify) {
+		this.addOrModify = addOrModify;
 	}
 }

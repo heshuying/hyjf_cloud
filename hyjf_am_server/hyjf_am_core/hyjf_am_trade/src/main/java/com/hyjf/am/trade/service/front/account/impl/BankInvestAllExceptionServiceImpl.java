@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomizeV2;
 import com.hyjf.am.trade.dao.model.customize.CouponUserCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.account.BankInvestAllService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -26,6 +27,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.util.calculate.FinancingServiceChargeUtils;
@@ -41,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -65,6 +68,9 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 
 	@Autowired
 	private SystemConfig systemConfig;
+
+	@Autowired
+	private CalculateInvestInterestProducer calculateInvestInterestProducer;
 
 
 	private Borrow getBorrowByNid(String borrowNid) {
@@ -990,6 +996,18 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				}
 				logger.info("用户:" + userId + "***********************************插入borrowTender，订单号：" + orderId);
 
+
+				// 插入产品加息
+				if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow1.getBorrowExtraYield())) {
+					boolean increaseFlag = insertIncreaseInterest(borrow,bean,borrowTender) > 0;
+					if (!increaseFlag) {
+						result.put("message", "投资失败！");
+						result.put("status", 0);
+						throw new Exception("插入产品加息表失败！");
+					}
+					logger.info("用户:" + userId + "***********************************插入产品加息，订单号：" + orderId);
+				}
+
 				// 更新用户账户余额表
 				Account accountBean = new Account();
 				accountBean.setUserId(userId);
@@ -1075,15 +1093,10 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 					result.put("status", 0);
 					throw new Exception("borrow表更新失败");
 				}
-				System.out.println("用户:" + userId + "***********************************更新borrow表，订单号：" + orderId);
-				List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
-				if (calculates != null && calculates.size() > 0) {
-					CalculateInvestInterest calculateNew = new CalculateInvestInterest();
-					calculateNew.setTenderSum(accountDecimal);
-					calculateNew.setId(calculates.get(0).getId());
-					calculateNew.setCreateTime(GetDate.getDate(nowTime));
-					this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
-				}
+				logger.info("用户:" + userId + "***********************************更新borrow表，订单号：" + orderId);
+
+				// 投资成功累加统计数据
+				calculateInvestTotal(accountDecimal, orderId);
 
 				// 计算此时的剩余可投资金额
 				Borrow waitBorrow = this.getBorrowByNid(borrowNid);
@@ -1152,6 +1165,109 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		return result;
 	}
 
+	/**
+	 *
+	 * @param accountDecimal 投资金额
+	 * @param orderId  订单号
+	 */
+	private void calculateInvestTotal(BigDecimal accountDecimal, String orderId) {
+		// 投资成功累加统计数据
+		logger.info("投资成功累加统计数据...");
+		JSONObject params = new JSONObject();
+		params.put("tenderSum", accountDecimal);
+		try {
+			calculateInvestInterestProducer
+					.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC,
+							MQConstant.STATISTICS_CALCULATE_INVEST_SUM_TAG, UUID.randomUUID().toString(),
+							JSON.toJSONBytes(params)));
+		} catch (MQException e) {
+			logger.error("投资成功累加统计数据失败,投资订单号:" + orderId, e);
+		}
+	}
+
+	private Integer insertIncreaseInterest(Borrow borrow, BankCallBean bean , BorrowTender tender) {
+		BorrowInfoExample borrowInfoExample = new BorrowInfoExample();
+		borrowInfoExample.createCriteria().andBorrowNidEqualTo(borrow.getBorrowNid());
+		List<BorrowInfo> borrowInfoList = borrowInfoMapper.selectByExample(borrowInfoExample);
+		BorrowInfo borrowInfo = new BorrowInfo();
+		if(!CollectionUtils.isEmpty(borrowInfoList)){
+			borrowInfo = borrowInfoList.get(0);
+		}
+
+		if (!Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+			logger.error("不需要插入产品加息,投资订单号:" + bean.getOrderId());
+			return 0;
+		}
+
+
+
+		// 操作ip
+		String ip = bean.getLogIp();
+		// 操作平台
+		int client = bean.getLogClient() != 0 ? bean.getLogClient() : 0;
+		// 投资人id
+		Integer userId = Integer.parseInt(bean.getLogUserId());
+		// 借款金额
+		String account = bean.getTxAmount();
+		// 订单id
+		String tenderOrderId = bean.getOrderId();
+		// 项目编号
+		String borrowNid = borrow.getBorrowNid();
+		// 项目的还款方式
+		String borrowStyle = borrow.getBorrowStyle();
+		BorrowStyle borrowStyleMain = this.getborrowStyleByNid(borrowStyle);
+		String borrowStyleName = borrowStyleMain.getName();
+		// 借款期数
+		Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
+		//Users users = this.getUsers(userId);
+		// 生成额外利息订单
+		String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
+		if (tender != null) {
+			IncreaseInterestInvest increaseInterestInvest = new IncreaseInterestInvest();
+			increaseInterestInvest.setUserId(userId);
+			increaseInterestInvest.setInvestUserName(tender.getUserName());
+			increaseInterestInvest.setTenderId(tender.getId());
+			increaseInterestInvest.setTenderNid(tenderOrderId);
+			increaseInterestInvest.setBorrowNid(borrowNid);
+			increaseInterestInvest.setBorrowApr(borrow.getBorrowApr());
+			increaseInterestInvest.setBorrowExtraYield(borrowInfo.getBorrowExtraYield());
+			increaseInterestInvest.setBorrowPeriod(borrowPeriod);
+			increaseInterestInvest.setBorrowStyle(borrowStyle);
+			increaseInterestInvest.setBorrowStyleName(borrowStyleName);
+			increaseInterestInvest.setOrderId(orderId);
+			increaseInterestInvest.setOrderDate(GetDate.getServerDateTime(10, new Date()));
+			increaseInterestInvest.setAccount(new BigDecimal(account));
+			increaseInterestInvest.setStatus(0);
+			increaseInterestInvest.setWeb(0);
+			increaseInterestInvest.setClient(client);
+			increaseInterestInvest.setAddIp(ip);
+			increaseInterestInvest.setRemark("加息收益");
+			increaseInterestInvest.setInvestType(0);
+			increaseInterestInvest.setCreateTime(GetDate.getNowTime());
+			increaseInterestInvest.setCreateUserId(userId);
+			increaseInterestInvest.setCreateUserName(tender.getUserName());
+
+			// 设置推荐人之类的
+			increaseInterestInvest.setTenderUserAttribute(tender.getTenderUserAttribute());
+			increaseInterestInvest.setInviteRegionId(tender.getInviteRegionId());
+			increaseInterestInvest.setInviteRegionName(tender.getInviteRegionName());
+			increaseInterestInvest.setInviteBranchId(tender.getInviteBranchId());
+			increaseInterestInvest.setInviteBranchName(tender.getInviteBranchName());
+			increaseInterestInvest.setInviteDepartmentId(tender.getInviteDepartmentId());
+			increaseInterestInvest.setInviteDepartmentName(tender.getInviteDepartmentName());
+			increaseInterestInvest.setInviteUserId(tender.getInviteUserId());
+			increaseInterestInvest.setInviteUserName(tender.getInviteUserName());
+
+			boolean incinvflag = increaseInterestInvestMapper.insertSelective(increaseInterestInvest) > 0 ? true : false;
+			if (!incinvflag) {
+				logger.error("产品加息投资额外利息投资失败，插入额外投资信息失败,投资订单号:" + tenderOrderId);
+				throw new RuntimeException("产品加息投资额外利息投资失败，插入额外投资信息失败,投资订单号:" + tenderOrderId);
+			}
+			return 1;
+		} else {
+			throw new RuntimeException("产品加息投资额外利息投资失败，borrowtender为空，投资订单号:" + tenderOrderId);
+		}
+	}
 	
 	private boolean redisRecover(int userId, String borrowNid, String account) {
 		JedisPool pool = RedisUtils.getPool();

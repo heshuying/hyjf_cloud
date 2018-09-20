@@ -195,7 +195,8 @@
 		<result column="credit_tender_nid" property="creditTenderNid" />
 
 		<result column="creditUserId" property="creditUserId" />
-
+		<!-- 产品加息收益率 -->
+		<result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<select id="selectCurrentHoldObligatoryRightList" resultMap="currentHoldObligatoryRightMap" parameterType="java.util.Map">
@@ -259,7 +260,13 @@
 		)
 		) total_wait,
 		'' credit_nid,
-		'' credit_tender_nid
+		'' credit_tender_nid,
+		case when borrowInfo.borrow_extra_yield=0 then
+		''
+		else
+		CONCAT('加息',borrowInfo.borrow_extra_yield, '%')
+		end
+		borrow_extra_yield
 		FROM
 		ht_borrow_tender ten
 		LEFT JOIN ht_borrow_recover rec
@@ -322,7 +329,13 @@
 		)
 		) total_wait,
 		ten.credit_nid credit_nid,
-		ten.credit_tender_nid credit_tender_nid
+		ten.credit_tender_nid credit_tender_nid,
+		case when borrowInfo.borrow_extra_yield=0 then
+		''
+		else
+		CONCAT('加息',borrowInfo.borrow_extra_yield, '%')
+		end
+		borrow_extra_yield
 		FROM
 		ht_credit_tender ten
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.bid_nid
@@ -381,7 +394,13 @@
 		hcc.coupon_type coupon_type,
 		IFNULL(SUM(hcr.recover_account)-SUM(hcr.recover_account_yes),0) total_wait,
 		'' credit_nid,
-		'' credit_tender_nid
+		'' credit_tender_nid,
+		case when borrowInfo.borrow_extra_yield=0 then
+		''
+		else
+		CONCAT('加息',borrowInfo.borrow_extra_yield, '%')
+		end
+		borrow_extra_yield
 		FROM
 		ht_borrow_tender_cpn hbtc
 		INNER JOIN ht_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
@@ -429,7 +448,13 @@
 		0 coupon_type,
 		IF(borrow.`status` = 4,hiii.repay_interest_wait,'--') AS total_wait,
 		'' credit_nid,
-		'' credit_tender_nid
+		'' credit_tender_nid,
+		case when borrowInfo.borrow_extra_yield=0 then
+		''
+		else
+		CONCAT('加息',borrowInfo.borrow_extra_yield, '%')
+		end
+		borrow_extra_yield
 		FROM
 		ht_increase_interest_invest hiii
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
@@ -896,9 +921,25 @@
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = hiil.borrow_nid
 		INNER JOIN ht_borrow_info borrowinfo ON borrow.borrow_nid = borrowinfo.borrow_nid
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrowinfo.project_type
+		LEFT JOIN(
+		SELECT
+		*
+		FROM
+		ht_increase_interest_loan_detail
+		WHERE
+		user_id = #{userId}
+		) hiild ON hiild.invest_order_id = hiil.invest_order_id
 		WHERE borrow.`status` = 5
 		AND hiil.user_id= #{userId}
 		AND borrow.plan_nid IS NULL
+		AND
+			CASE
+				WHEN borrow.borrow_style = 'end'
+				OR borrow.borrow_style = 'endday' THEN
+				hiil.repay_status = 1
+			ELSE
+				hiild.repay_status = 1
+			END
 		) t
 		<if test="orderByFlag ==null||orderByFlag==''" >
 			ORDER BY t.orderby_repay_orddate desc,t.account
@@ -2477,7 +2518,7 @@
 		4 AS type,
 		0 coupon_type,
 		hiii.repay_interest_wait AS total_wait,
-		'' AS coupon_name,
+		'加息收益' AS coupon_name,
 		CASE WHEN borrow.borrow_style = 'endday' THEN CONCAT(borrow.borrow_period, '天')
 		ELSE CONCAT(borrow.borrow_period, '个月') END borrow_period,
 		hiii.tender_nid as order_id,

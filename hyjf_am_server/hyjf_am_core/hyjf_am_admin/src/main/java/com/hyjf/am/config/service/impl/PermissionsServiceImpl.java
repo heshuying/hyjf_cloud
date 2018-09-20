@@ -135,7 +135,7 @@ public class PermissionsServiceImpl implements PermissionsService {
             criteria.andPermissionLike("%"+request.getPermissionSrch()+"%");
         }
         if(StringUtils.isNotBlank(request.getPermissionNameSrch())){
-            criteria.andPermissionLike("%"+request.getPermissionNameSrch()+"%");
+            criteria.andPermissionNameLike("%"+request.getPermissionNameSrch()+"%");
         }
         example.setOrderByClause("create_time desc");
         if (request.getLimitStart() != -1) {

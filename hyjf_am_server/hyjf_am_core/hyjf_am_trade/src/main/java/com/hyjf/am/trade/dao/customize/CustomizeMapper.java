@@ -91,9 +91,6 @@ public class CustomizeMapper extends AutoMapper {
 	protected TenderCreditCustomizeMapper tenderCreditCustomizeMapper;
 
 	@Autowired
-	protected WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
-
-	@Autowired
 	protected HjhReInvestDetailCustomizeMapper hjhReInvestDetailCustomizeMapper;
 
 	@Autowired
@@ -194,6 +191,8 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AdminBankAccountCheckCustomizeMapper adminBankAccountCheckCustomizeMapper;
+	@Autowired
+	protected ApiProjectListCustomizeMapper apiProjectListCustomizeMapper;
 
 	@Autowired
 	protected HjhPlanRepayCustomizeMapper hjhPlanRepayCustomizeMapper;
@@ -227,4 +226,10 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected ApiRepayListCustomizeMapper apiRepayListCustomizeMapper;
+
+	@Autowired
+	protected WebUserRepayListCustomizeMapper webUserRepayListCustomizeMapper;
+
+	@Autowired
+	protected BorrowRecoverPlanMapper borrowRecoverPlanMapper;
 }

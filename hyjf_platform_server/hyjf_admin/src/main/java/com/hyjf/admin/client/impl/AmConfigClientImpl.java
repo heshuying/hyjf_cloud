@@ -1002,6 +1002,16 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+    @Override
+    public CategoryResponse getZhiChiInit(ContentHelpBeanRequest contentHelpBeanRequest) {
+        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/getzhichiinit", contentHelpBeanRequest,
+                CategoryResponse.class).getBody();
+        if (null != response) {
+            return response;
+        }
+        return null;
+    }
+
 
     @Override
     public ContentEnvironmentResponse searchAction(ContentEnvironmentRequestBean requestBean) {
@@ -1772,7 +1782,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail", idCardCustomize, IdCardCustomize.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/content/idcard/idcarddetail", idCardCustomize, IdCardCustomize.class).getBody();
     }
 
     /**
@@ -2029,8 +2039,8 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @Author : huanghui
      */
     @Override
-    public List<BanksConfigVO> getBankcardList() {
-        BanksConfigResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/config/selectBankConfigList", BanksConfigResponse.class).getBody();
+    public List<JxBankConfigVO> getBankcardList() {
+        JxBankConfigResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/config/JxBank/selectBankConfigList", JxBankConfigResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResultList();
         }
@@ -2128,7 +2138,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
    	@Override
    	public AdminUserResponse adminUserMoveToInfoAction(AdminRequest adminRequest) {
-           String url = "http://AM-ADMIN/am-config/admin/moveToInfoAction";
+           String url = "http://AM-ADMIN/am-config/admin/infoAction";
            AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
            if (response != null) {
                return response;
@@ -2158,7 +2168,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
    	@Override
    	public AdminUserResponse adminUserDeleteRecordAction(AdminRequest adminRequest) {
-           String url = "http://AM-ADMIN/am-config/admin/deleteRecordAction";
+           String url = "http://AM-ADMIN/am-config/admin/deleteAction";
            AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
            if (response != null) {
                return response;
@@ -2185,4 +2195,11 @@ public class AmConfigClientImpl implements AmConfigClient {
            }
            return null;
    	}
+
+    @Override
+    public SubmissionsVO getSubmissionsRecord(SubmissionsRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getSubmissionsRecord", request,
+                SubmissionsVO.class);
+
+    }
 }

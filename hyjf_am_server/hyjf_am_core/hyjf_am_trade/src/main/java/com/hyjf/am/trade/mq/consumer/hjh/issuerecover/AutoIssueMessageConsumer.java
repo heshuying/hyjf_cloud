@@ -40,6 +40,7 @@ import static com.hyjf.am.trade.service.task.issuerecover.impl.AutoIssueRecoverS
  * @Auther: walter.limeng
  * @Date: 2018/7/12 10:56
  * @Description: AutoIssueMessageConsumer
+ * 关联计划
  */
 @Component
 public class AutoIssueMessageConsumer extends Consumer {
@@ -62,9 +63,9 @@ public class AutoIssueMessageConsumer extends Consumer {
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.ROCKETMQ_BORROW_PREAUDIT_GROUP);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.ROCKETMQ_BORROW_ISSUE_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
-        defaultMQPushConsumer.subscribe(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, "*");
+        defaultMQPushConsumer.subscribe(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
@@ -98,7 +99,7 @@ public class AutoIssueMessageConsumer extends Consumer {
                 // --> 消息处理
 
                 Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
-                BorrowInfo borrowInfo = autoBailMessageService.getById(borrow.getId());
+                BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
 
                 // 原始标的情况
                 if(StringUtils.isNotBlank(autoIssuerecoverVO.getBorrowNid())){

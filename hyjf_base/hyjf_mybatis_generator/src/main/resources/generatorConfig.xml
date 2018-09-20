@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_config.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -498,6 +498,7 @@
             <columnOverride column="repay_full_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="late_free_days" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="project_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="increase_interest_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_apicron" domainObjectName="BorrowApicron">
@@ -731,10 +732,6 @@
             <columnOverride column="is_purchase_contract" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_calculate_invest_interest" domainObjectName="CalculateInvestInterest">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-
         <table tableName="ht_chinapnr_exclusive_log" domainObjectName="ChinapnrExclusiveLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="client" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -778,7 +775,6 @@
         </table>
 
         <table tableName="ht_coupon_operation_history" domainObjectName="CouponOperationHistory">
-            <generatedKey column="uuid" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="operation_code" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1488,7 +1484,7 @@
         </table>
 
         <table tableName="ht_admin_permissions" domainObjectName="AdminPermissions">
-            <generatedKey column="permission_uuid" sqlStatement="MySql" type="post" identity="true" />
+            <!--<generatedKey column="permission_uuid" sqlStatement="MySql" type="post" identity="true" />-->
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 

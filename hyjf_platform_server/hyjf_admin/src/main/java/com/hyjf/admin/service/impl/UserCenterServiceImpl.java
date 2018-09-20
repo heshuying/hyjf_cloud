@@ -237,13 +237,12 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     /**
      * 校验手机号
      *
-     * @param userId
      * @param mobile
      * @return
      */
     @Override
-    public int countUserByMobile(int userId, String mobile) {
-        int checkFlg = userCenterClient.countUserByMobile(userId, mobile);
+    public int countUserByMobile(String mobile) {
+        int checkFlg = userCenterClient.countByMobile(mobile);
         return checkFlg;
     }
 
@@ -354,10 +353,12 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
             if(null!=corpOpenAccountRecordVO){
                 String idType = null;
                 Integer cardType = corpOpenAccountRecordVO.getCardType();
-                if (20 == cardType) {//组织机构代码
-                    idType = "组织机构代码";
-                } else if (25 == cardType) {
-                    idType = "社会信用号";
+                if(null!=cardType){
+                    if (20 == cardType) {//组织机构代码
+                        idType = "组织机构代码";
+                    } else if (25 == cardType) {
+                        idType = "社会信用号";
+                    }
                 }
                 info.setCardType(cardType + "");
                 info.setIdType(idType);

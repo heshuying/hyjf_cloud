@@ -103,8 +103,8 @@
 		SELECT
 		sum(credit_amount) as credit_amount,
 		sum(credit_interest_amount) as credit_interest_amount
-		FROM huiyingdai_borrow_recover r
-		LEFT JOIN huiyingdai_borrow b ON b.borrow_nid = r.borrow_nid
+		FROM ht_borrow_recover r
+		LEFT JOIN ht_borrow b ON b.borrow_nid = r.borrow_nid
 		WHERE r.user_id= #{userId}
 		AND r.recover_status=0
 	</select> -->
@@ -216,7 +216,7 @@
 				user_id = #{userId}
 	</update>
 	<insert id="insertAppointmentAuthLog" parameterType="java.util.HashMap" >
-		INSERT INTO hyjf_appointment_auth_log (
+		INSERT INTO ht_appointment_auth_log (
 			user_id,
 			auth_type,
 			auth_status,

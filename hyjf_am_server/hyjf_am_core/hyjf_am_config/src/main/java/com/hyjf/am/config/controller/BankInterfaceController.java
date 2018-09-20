@@ -75,10 +75,8 @@ public class BankInterfaceController extends BaseConfigController{
                 response.setFlag(recordCount);
                 response.setResultList(bankInterfaceVO);
                 response.setRtn(Response.SUCCESS);
-//                modelAndView.addObject("pageUrl", request.getRequestURL()+"?"+request.getQueryString());
+                return response;
             }
-        }else{
-            response.setRtn(Response.FAIL);
         }
         return response;
     }
@@ -105,8 +103,7 @@ public class BankInterfaceController extends BaseConfigController{
             }
             response.setResult(bankInterfaceVO);
             response.setRtn(Response.SUCCESS);
-        } else {
-            response.setRtn(Response.FAIL);
+            return response;
         }
         return response;
     }
@@ -124,6 +121,7 @@ public class BankInterfaceController extends BaseConfigController{
             response.setRtn(Response.SUCCESS);
         }catch (Exception e){
             response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
         }
         return response;
     }
@@ -140,6 +138,7 @@ public class BankInterfaceController extends BaseConfigController{
             response.setRtn(Response.SUCCESS);
         }catch (Exception e){
             response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
         }
         return response;
     }

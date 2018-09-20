@@ -868,7 +868,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 e.printStackTrace();
             }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -1072,10 +1072,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_DEBT);
             }
         }
-        // 服务费授权校验
-        if (userAuth.getAutoPaymentStatus() == 0) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
-        }
+        // TODO: 2018/9/19  服务费授权校验
+//        if (userAuth.getAutoPaymentStatus() == 0) {
+//            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
+//        }
         // 风险测评校验
         this.checkEvaluation(user);
     }

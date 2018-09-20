@@ -31,7 +31,7 @@ public class CouponRepayMonitorVO extends BaseVO implements Serializable {
 
     private Integer updateUser;
 
-    private Integer delFlg;
+    private Integer delFlag;
 
     private static final long serialVersionUID = 1L;
 
@@ -107,11 +107,11 @@ public class CouponRepayMonitorVO extends BaseVO implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 }

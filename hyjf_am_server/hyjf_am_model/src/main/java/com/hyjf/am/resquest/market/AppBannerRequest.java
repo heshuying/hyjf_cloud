@@ -13,10 +13,7 @@ public class AppBannerRequest extends BasePage {
      */
     private static final long serialVersionUID = 3803722754627032581L;
 
-    /**
-     * 前台时间接收
-     */
-
+    private Integer id;
 
     //广告名称
     private String name;
@@ -29,52 +26,18 @@ public class AppBannerRequest extends BasePage {
 
     private String endCreate;
 
-    /*
+    /**
+     * 平台类型
+     */
+    private Integer platformType;
 
-    //创建时间
-    private Integer createTime;
-    private String ids;
+    public Integer getId() {
+        return id;
+    }
 
-    private String content;
-
-    private String shareContent;
-
-    private Short id;
-
-    private String url;
-
-    private String code;
-
-    private String image;
-
-    private Short order;
-
-    private Integer hits;
-
-    private String shareUrl;
-
-    private String shareImage;
-
-    private Short isIndex;
-
-    private Integer updateTime;
-
-    private String startTime;
-
-    private String endTime;
-
-    private Integer isEnd;
-
-    private String shareTitle;
-
-    private String activitiImage;
-
-    private String activitiDesc;
-
-    private Integer clientType;
-
-    private Integer newuserShow;*/
-
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -118,5 +81,13 @@ public class AppBannerRequest extends BasePage {
 
     public void setEndCreate(String endCreate) {
         this.endCreate = endCreate;
+    }
+
+    public Integer getPlatformType() {
+        return platformType;
+    }
+
+    public void setPlatformType(Integer platformType) {
+        this.platformType = platformType;
     }
 }

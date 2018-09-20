@@ -200,8 +200,8 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
             couponTenderHztVo.setRecoverInterest(recoverInterest);
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
-            response.setCouponTenderVo(couponTenderHztVo);
         }
+        response.setCouponTenderVo(couponTenderHztVo);
         return response;
     }
 
@@ -234,8 +234,8 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
 
-            response.setCouponTenderVo(couponTenderHztVo);
         }
+        response.setCouponTenderVo(couponTenderHztVo);
         return response;
     }
 
@@ -267,8 +267,8 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
 
-            response.setCouponTenderVo(couponTenderHztVo);
         }
+        response.setCouponTenderVo(couponTenderHztVo);
         return response;
     }
 
@@ -300,8 +300,8 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
 
-            response.setCouponTenderVo(couponTenderHztVo);
         }
+        response.setCouponTenderVo(couponTenderHztVo);
         return response;
     }
 
@@ -333,8 +333,8 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
 
-            response.setCouponTenderVo(couponTenderHztVo);
         }
+        response.setCouponTenderVo(couponTenderHztVo);
         return response;
     }
 
@@ -366,8 +366,8 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
 
-            response.setCouponTenderVo(couponTenderHztVo);
         }
+        response.setCouponTenderVo(couponTenderHztVo);
         return response;
     }
 

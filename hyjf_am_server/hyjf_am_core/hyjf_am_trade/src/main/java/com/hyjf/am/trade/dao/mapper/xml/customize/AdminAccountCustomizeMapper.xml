@@ -7,21 +7,21 @@
 		<where>
 			hydu.open_account = 1
 			<if test="userName != null and userName !='' ">
-				AND hydu.username LIKE CONCAT('%',
+				AND hydu.username LIKE CONCAT(
 				#{userName,jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="account != null and account !='' ">
 				AND hydac.chinapnr_usrid = #{account,jdbcType=VARCHAR}
 			</if>
 			<if test="idCard != null and idCard !='' ">
-				AND hydui.idcard LIKE CONCAT('%',
+				AND hydui.idcard LIKE CONCAT(
 				#{idCard,jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="userProperty != null and userProperty != ''">
 				AND hydui.attribute = #{userProperty,jdbcType=INTEGER}
 			</if>
 			<if test="realName != null and realName !='' ">
-				AND hydui.truename LIKE CONCAT('%',
+				AND hydui.truename LIKE CONCAT(
 				#{realName,jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="openAccountPlat != null and openAccountPlat !='' ">
@@ -459,28 +459,42 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
+	<!-- 计划退出时更新相关计划金额-->
+	<update id="updateHjhPlanForQuit" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlan">
+		UPDATE ht_hjh_plan
+		SET repay_wait_all = IFNULL(repay_wait_all , 0) - #{repayWaitAll,jdbcType=DECIMAL},
+		plan_wait_captical = IFNULL(plan_wait_captical , 0) - #{planWaitCaptical,jdbcType=DECIMAL},
+		plan_wait_interest = IFNULL(plan_wait_interest , 0) - #{planWaitInterest,jdbcType=DECIMAL},
+		repay_total = IFNULL(repay_total , 0) + #{repayTotal,jdbcType=DECIMAL},
+		plan_repay_capital = IFNULL(plan_repay_capital , 0) + #{planRepayCapital,jdbcType=DECIMAL},
+		plan_repay_interest = IFNULL(plan_repay_interest , 0) + #{planRepayInterest,jdbcType=DECIMAL}
+		WHERE
+		plan_nid = #{planNid,jdbcType=VARCHAR}
+
+	</update>
+
 	<!-- *****************************************银行存管****************************************************** -->
 
 	<sql id="Bank_Where_Clause">
 		<where>
 			hydu.bank_open_account = 1
 			<if test="userName != null and userName !='' ">
-				AND hydu.username LIKE CONCAT('%',
+				AND hydu.username LIKE CONCAT(
 				#{userName,jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="mobile != null and mobile !='' ">
-				AND hydu.mobile LIKE CONCAT('%',
+				AND hydu.mobile LIKE CONCAT(
 				#{mobile,jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="customerAccount != null and customerAccount !='' ">
 				AND hboa.account = #{customerAccount,jdbcType=VARCHAR}
 			</if>
 			<if test="idCard != null and idCard !='' ">
-				AND hydui.idcard LIKE CONCAT('%',
+				AND hydui.idcard LIKE CONCAT(
 				#{idCard,jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="realName != null and realName !='' ">
-				AND hydui.truename LIKE CONCAT('%',
+				AND hydui.truename LIKE CONCAT(
 				#{realName,jdbcType=VARCHAR}, '%')
 			</if>
 			<if test="openAccountPlat != null and openAccountPlat !='' ">
@@ -552,7 +566,7 @@
 		SELECT
 		COUNT(hydu.user_id)
 		FROM
-		huiyingdai_users hydu
+		ht_users hydu
 		LEFT JOIN ht_users_info hydui ON hydu.user_id =
 		hydui.user_id
 		INNER JOIN ht_bank_open_account hboa ON hboa.user_id =

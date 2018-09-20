@@ -310,7 +310,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             hjhPlan.setRepayTotal(hjhPlan.getRepayTotal().add(repayTotal));
             hjhPlan.setPlanRepayCapital(hjhPlan.getPlanRepayCapital().add(repayCapital));
             hjhPlan.setPlanRepayInterest(hjhPlan.getPlanRepayInterest().add(repayInterest));
-            int count = this.hjhPlanMapper.updateByPrimaryKey(hjhPlan);
+            int count = this.adminAccountCustomizeMapper.updateHjhPlanForQuit(hjhPlan);
+//            int count = this.hjhPlanMapper.updateByPrimaryKey(hjhPlan);
             if (count > 0) {
                 logger.info("===============计划加入订单:" + hjhAccede.getAccedeOrderId() + "  对应的计划:" + planNid + "  相关待还应收金额维护成功!待还减少:" + waitTotal + ",应收增加:" + repayTotal);
             }
@@ -461,13 +462,17 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             }
 
         }
-        // 累计为用户赚取
-        List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
-        if (calculates != null && calculates.size() > 0) {
-            CalculateInvestInterest calculateNew = new CalculateInvestInterest();
-            calculateNew.setInterestSum(repayTotal.subtract(waitCaptical));
-            calculateNew.setId(calculates.get(0).getId());
-            this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
+        // 退出计划累加统计数据
+        logger.info("退出计划累加统计数据...");
+        JSONObject params1 = new JSONObject();
+        params1.put("interestSum", accountInterest);
+        try {
+            calculateInvestInterestProducer
+                    .messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC,
+                            MQConstant.STATISTICS_CALCULATE_INTEREST_SUM_TAG, UUID.randomUUID().toString(),
+                            JSON.toJSONBytes(params1)));
+        } catch (MQException e) {
+            logger.error("退出计划累加统计数", e);
         }
         // 更新运营数据计划收益
         logger.info("退出计划更新运营数据计划收益...");

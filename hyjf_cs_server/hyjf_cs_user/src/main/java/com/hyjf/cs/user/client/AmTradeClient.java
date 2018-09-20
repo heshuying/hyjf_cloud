@@ -17,7 +17,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
@@ -250,7 +250,7 @@ public interface AmTradeClient {
 
     CouponConfigVO getCouponConfig(String nid);
 
-    BorrowVO selectBorrowByBorrowNid(String borrowNid);
+    BorrowAndInfoVO selectBorrowByBorrowNid(String borrowNid);
 
     BorrowStyleVO selectBorrowStyleByStyle(String borrowStyle);
 

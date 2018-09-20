@@ -7,6 +7,7 @@ import com.hyjf.am.trade.mq.base.Consumer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoIssueRecoverProducer;
 import com.hyjf.am.trade.service.task.issuerecover.AutoIssueRecoverService;
+import com.hyjf.am.trade.service.task.issuerecover.AutoPreAuditMessageService;
 import com.hyjf.am.vo.trade.hjh.issuerecover.AutoIssuerecoverVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * 汇计划自动发标修复
+ * 自动录标
  * @author walter.limeng
  * @version AutoSendMessageConsumer, v0.1 2018/7/11 10:30
  */
@@ -39,6 +40,8 @@ public class AutoSendMessageConsumer extends Consumer {
     private AutoIssueRecoverService autoIssueRecoverService;
     @Autowired
     private AutoIssueRecoverProducer autoIssueRecoverProducer;
+    @Autowired
+    private AutoPreAuditMessageService autoPreAuditMessageService;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -71,15 +74,17 @@ public class AutoSendMessageConsumer extends Consumer {
                 AutoIssuerecoverVO autoIssuerecoverVO = JSONObject.parseObject(msg.getBody(), AutoIssuerecoverVO.class);
                 // 计划加入号
                 planId = autoIssuerecoverVO.getPlanId();
-                // 计划加入号为空
-                if (null == planId) {
-                    logger.error("计划加入号为空");
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                }
 
                 // --> 消息处理
 
-                HjhPlanAsset mqHjhPlanAsset = autoIssueRecoverService.getHjhPlanAssetById(planId);
+                HjhPlanAsset mqHjhPlanAsset = null;
+                if (null != planId) {
+                    // 汇计划自动发标修复
+                    mqHjhPlanAsset = autoIssueRecoverService.getHjhPlanAssetById(planId);
+                } else {
+                    // 资产推送
+                    mqHjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(autoIssuerecoverVO.getAssetId(), autoIssuerecoverVO.getInstCode());
+                }
                 try {
 
                     // 资产自动录标

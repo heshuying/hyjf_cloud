@@ -20,7 +20,7 @@
 	<sql id="Where_Clause">
 		<where>
 			<if test="title != null and title != ''">
-				AND title LIKE CONCAT('%', #{title}, '%')
+				AND title LIKE CONCAT( #{title}, '%')
 			</if>
 			<if test="status != 3">
 				AND status = #{status}

@@ -34,7 +34,7 @@ public interface NifaContractEssenceMessageService extends BaseService {
      * @param borrowNid
      * @return
      */
-    BorrowVO selectBorrowByBorrowNid(String borrowNid);
+    BorrowAndInfoVO selectBorrowByBorrowNid(String borrowNid);
 
     /**
      * 获取标的借款详情明细

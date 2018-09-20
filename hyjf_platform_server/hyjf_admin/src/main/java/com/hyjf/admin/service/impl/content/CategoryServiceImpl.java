@@ -114,4 +114,10 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse getOftenInitPage(ContentHelpBeanRequest contentHelpBeanRequest) {
         return amConfigClient.getOftenInitPage(contentHelpBeanRequest);
     }
+    @Override
+    public CategoryResponse getZhiChiInit(ContentHelpBeanRequest contentHelpBeanRequest){
+        return amConfigClient.getZhiChiInit(contentHelpBeanRequest);
+
+    }
+
 }

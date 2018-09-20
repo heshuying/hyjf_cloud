@@ -171,6 +171,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 						accountRecharge.setTxAmount(bean.getTxAmount());
 						accountRecharge.setTxDate(Integer.parseInt(null==bean.getTxDate()?"0":bean.getTxDate()));
 						accountRecharge.setTxTime(Integer.parseInt(null==bean.getTxTime()?"0":bean.getTxTime()));
+						accountRecharge.setSeqNo(seqNo);
 						BankAccountBeanRequest bankAccountBeanRequest = new BankAccountBeanRequest();
 						bankAccountBeanRequest.setAccountRecharge(accountRecharge);
 						bankAccountBeanRequest.setIp(ip);
@@ -321,7 +322,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		bean.setMobile(rechargeBean.getMobile());
 		bean.setForgotPwdUrl(rechargeBean.getForgotPwdUrl());
 		bean.setUserIP(rechargeBean.getIp());
-		bean.setRetUrl(rechargeBean.getRetUrl()+"&status=99&statusDesc=充值失败&logOrdId="+logOrderId);
+		bean.setRetUrl(rechargeBean.getRetUrl()+"?status=99&statusDesc=充值失败&logOrdId="+logOrderId);
 		bean.setNotifyUrl(rechargeBean.getNotifyUrl());
 		bean.setLogOrderId(logOrderId);
 		bean.setLogOrderDate(orderDate);
@@ -387,6 +388,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		}
 		// 银行卡号
 		String cardNo = "";
+		// 银行
+		String bank ="";
 		// 银行卡Id
 		String cardId = "";
 		// 用户是否绑卡: 0:未绑卡,1:已绑卡
@@ -397,6 +400,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		String singleCardQuota = "";
 		// 单卡单月限额
 		String monthCardQuota = "";
+		//单笔、单日，单月 合并
+		String concatAllQuota = ",";
 		// 根据用户Id查询用户银行卡号
 		// 查询页面上可以挂载的银行列表
 		BankCardVO bankCard = bindCardClient.selectBankCardByUserId(userId);
@@ -404,6 +409,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		if (bankCard != null) {
 			cardNo = BankCardUtil.getCardNo(bankCard.getCardNo());
 			cardId = String.valueOf(bankCard.getId());
+			bank = bankCard.getBank();
 			isBundCardFlag = 1;
 
 			Integer bankId = bankCard.getBankId();
@@ -411,18 +417,21 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			if (banksConfig != null && banksConfig.getQuickPayment() == 1 && banksConfig.getSingleQuota() != null && banksConfig.getSingleCardQuota() != null) {
 				if(banksConfig.getSingleQuota().compareTo(BigDecimal.ZERO) > 0){
 					singleQuota = CommonUtils.formatBigDecimal(banksConfig.getSingleQuota().divide(new BigDecimal(10000))) + "万";
+					concatAllQuota =" 单笔"+singleQuota;
 				}else{
 					singleQuota = "不限";
 				}
 
 				if(banksConfig.getSingleCardQuota().compareTo(BigDecimal.ZERO) > 0){
 					singleCardQuota = CommonUtils.formatBigDecimal(banksConfig.getSingleCardQuota().divide(new BigDecimal(10000))) + "万";
+					concatAllQuota+=", 单日"+singleCardQuota;
 				}else{
 					singleCardQuota = "不限";
 				}
 
 				if(banksConfig.getMonthCardQuota().compareTo(BigDecimal.ZERO) > 0){
 					monthCardQuota = CommonUtils.formatBigDecimal(banksConfig.getMonthCardQuota().divide(new BigDecimal(10000))) + "万";
+					concatAllQuota+=", 单月"+monthCardQuota;
 				}else{
 					monthCardQuota = "不限";
 				}
@@ -430,6 +439,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		}
 		// 用户是否绑卡
 		ret.put("isBundCardFlag", isBundCardFlag);
+		//银行
+		ret.put("bank",bank);
 		// 卡号
 		ret.put("cardNo", cardNo);
 		// 银行卡Id
@@ -437,6 +448,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		ret.put("singleQuota", singleQuota);
 		ret.put("singleCardQuota", singleCardQuota);
 		ret.put("monthCardQuota", monthCardQuota);
+		ret.put("concatAllQuota", concatAllQuota.substring(1));
 		AccountVO account = this.bindCardClient.getAccount(userId);
 		// 可用余额
 		ret.put("userBalance", account.getBankBalance());
@@ -453,9 +465,12 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		// 姓名
 		ret.put("trueName", trueName);
 		// 缴费授权
-		//modelAndView.addObject("paymentAuthStatus", users.getPaymentAuthStatus());
-		//update by jijun 2018/04/09 合规接口改造一期
-		ret.put("paymentAuthStatus", "");
+		HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+		// 是否开启服务费授权 0未开启  1已开启
+		ret.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
+		// 是否开启服务费授权 0未开启  1已开启
+		//ret.put("paymentAuthOn", CommonUtils.getAuthConfigFromCache(CommonUtils.KEY_PAYMENT_AUTH).getEnabledStatus());
+		ret.put("paymentAuthOn","");
 
 		// 是否设置交易密码
 		ret.put("isSetPassword", user.getIsSetPassword());

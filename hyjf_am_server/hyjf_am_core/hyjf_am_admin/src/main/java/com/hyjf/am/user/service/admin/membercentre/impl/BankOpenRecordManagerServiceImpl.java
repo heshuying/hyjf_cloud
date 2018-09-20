@@ -66,7 +66,7 @@ public class BankOpenRecordManagerServiceImpl extends BaseServiceImpl implements
             Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
             Map<String, String> userproperty = CacheUtil.getParamNameMap("USER_PROPERTY");
             for (BankOpenAccountRecordCustomize bankOpenAccountRecordCustomize : listBankAccountRecord) {
-                bankOpenAccountRecordCustomize.setAccountStatus(accountStatus.getOrDefault(bankOpenAccountRecordCustomize.getAccountStatus(),null));
+                bankOpenAccountRecordCustomize.setAccountStatusName(accountStatus.getOrDefault(bankOpenAccountRecordCustomize.getAccountStatusName(),null));
                 bankOpenAccountRecordCustomize.setOpenAccountPlat(client.getOrDefault(bankOpenAccountRecordCustomize.getOpenAccountPlat(),null));
                 bankOpenAccountRecordCustomize.setUserProperty(userproperty.getOrDefault(bankOpenAccountRecordCustomize.getUserProperty(),null));
             }

@@ -6,7 +6,7 @@
         <where>
             hybi.`is_delete` = 0
             <if test="interfaceName != null and interfaceName !='' ">
-                AND hybi.interface_name LIKE CONCAT('%', #{interfaceName}, '%')
+                AND hybi.interface_name LIKE CONCAT( #{interfaceName}, '%')
             </if>
         </where>
     </sql>

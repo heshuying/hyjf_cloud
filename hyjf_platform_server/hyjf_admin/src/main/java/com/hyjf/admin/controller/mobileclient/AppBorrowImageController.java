@@ -31,7 +31,7 @@ import java.util.LinkedList;
  * @author lisheng
  * @version AppBorrowImageController, v0.1 2018/7/11 11:26
  */
-@Api(tags = "admin移动客户端-产品图片")
+@Api(tags = "移动客户端-产品图片")
 @RestController
 @RequestMapping("/hyjf-admin/app/maintenance/borrowimage")
 public class AppBorrowImageController extends BaseController {

@@ -10,6 +10,9 @@ import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
@@ -250,6 +253,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         int userId = Integer.parseInt(bean.getLogUserId());
         // 银行返回响应代码
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
+
         // 开户失败
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
             // 开户失败   将开户记录状态改为4
@@ -272,6 +276,11 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             result.setMessage("开户失败,保存用户开户信息失败");
             return result;
         }
+        // 更新redis里面的值
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
+        user.setBankOpenAccount(true);
+        RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
+
         // 查询银行卡绑定信息
         Integer saveBankCardFlag = saveCardNoToBank(bean);
         if (saveBankCardFlag.intValue() != 1) {

@@ -8,7 +8,7 @@
       count(hu.user_id) registNumber,
       count(hb.user_id)accountNumber
       FROM
-          ht_users hu
+          ht_user hu
       LEFT JOIN ht_bank_open_account hb on hu.user_id = hb.user_id
       <where>
 			<if test="startTime != null and endTime != ''">

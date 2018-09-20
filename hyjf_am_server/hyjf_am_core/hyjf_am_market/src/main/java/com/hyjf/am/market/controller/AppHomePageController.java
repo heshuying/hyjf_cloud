@@ -5,7 +5,6 @@ package com.hyjf.am.market.controller;
 
 import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
 import com.hyjf.am.market.service.AppHomePageService;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +42,6 @@ public class AppHomePageController {
             response.setResultList(voList);
             return response;
         }
-        response.setRtn(Response.FAIL);
-        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 }

@@ -190,10 +190,10 @@
     <sql id="Where_hjh_Clause">
 		<where>
 			<if test="planNidSrch != null and planNidSrch !='' ">
-				AND plan.plan_nid LIKE CONCAT('%', #{planNidSrch}, '%')
+				AND plan.plan_nid LIKE CONCAT( #{planNidSrch}, '%')
 			</if>
 			<if test="planNameSrch != null and planNameSrch !='' ">
-				AND plan.plan_name LIKE CONCAT('%', #{planNameSrch}, '%')
+				AND plan.plan_name LIKE CONCAT( #{planNameSrch}, '%')
 			</if>
 			<if test="lockPeriodSrch != null and lockPeriodSrch !=''">
 				AND plan.lock_period = #{lockPeriodSrch}
@@ -452,7 +452,7 @@ ORDER BY
 		))t
 		) AS t
 	</select>
-    <resultMap id="planBorrowList" type="com.hyjf.am.vo.trade.borrow.BorrowVO">
+    <resultMap id="planBorrowList" type="com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO">
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="borrow_user_name" property="borrowUserName" jdbcType="VARCHAR" />
 		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
@@ -635,7 +635,7 @@ ORDER BY
 		FROM
 		ht_hjh_accede dpa
 		LEFT JOIN ht_r_user hui ON hui.user_id = dpa.user_id
-		-- LEFT JOIN hyjf_param_name hpn ON dpa.client=hpn.name_cd AND hpn.name_class='CLIENT'
+		-- LEFT JOIN ht_param_name hpn ON dpa.client=hpn.name_cd AND hpn.name_class='CLIENT'
 		WHERE dpa.plan_nid=#{planNid}
 		ORDER BY
 		dpa.create_time DESC

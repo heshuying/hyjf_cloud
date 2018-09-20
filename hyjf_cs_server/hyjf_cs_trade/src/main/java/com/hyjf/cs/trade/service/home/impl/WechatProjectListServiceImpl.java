@@ -110,6 +110,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             UserVO users = amUserClient.findUserById(userId);
             if (users != null) {
                 //判断是否开户
+                isLogined = true;
                 if (users.getBankOpenAccount() != null && users.getBankOpenAccount() == 1) {
                     isOpened = true;
                 }
@@ -206,9 +207,10 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             borrowProjectInfoBean.setAccount(borrow.getBorrowAccount());
             borrowProjectInfoBean.setBorrowApr(borrow.getBorrowApr());
             borrowProjectInfoBean.setBorrowId(borrowNid);
+            borrowProjectInfoBean.setBorrowExtraYield(borrow.getBorrowExtraYield());
             borrowProjectInfoBean.setOnAccrual((borrow.getRecoverLastTime() == null ? "放款成功立即计息" : borrow.getRecoverLastTime()));
             //0：备案中 1：初审中 2：投资中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
-            borrowProjectInfoBean.setStatus(borrow.getStatus());
+            borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功
             borrowProjectInfoBean.setBorrowProgressStatus(String.valueOf(borrow.getProjectStatus()));
 
@@ -273,18 +275,17 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             //项目介绍
             intrTableData = ProjectConstant.packDetail(borrow, 3, borrowType, borrow.getBorrowLevel());
 
-            // TODO: 2018/7/2  后期处理 // 风控信息
-            /*AppRiskControlCustomize riskControl = wxBorrowService.selectRiskControl(borrowNid);
-            if(riskControl==null){
-                riskControl = new AppRiskControlCustomize();
-                riskControl.setControlMeasures("");
-                riskControl.setControlMort("");
-            }else {
-                riskControl.setControlMeasures(riskControl.getControlMeasures()==null?"":riskControl.getControlMeasures().replace("\r\n", ""));
-                riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
+
+            BorrowInfoWithBLOBsVO borrowInfoWithBLOBsVO = amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
+            Map<String,String> riskControl = new HashMap<>();
+            if (borrowInfoWithBLOBsVO != null){
+                riskControl.put("controlMeasures", StringUtils.isBlank(borrowInfoWithBLOBsVO.getBorrowMeasuresMea())? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMea().replace("\r\n",""));
+                riskControl.put("controlMort", StringUtils.isBlank(borrowInfoWithBLOBsVO.getBorrowMeasuresMort()) ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMort().replace("\r\n",""));
+            }else{
+                riskControl.put("controlMeasures", "");
+                riskControl.put("controlMort","");
             }
-            //风控信息对象返回给前端
-            borrowDetailResultBean.setAppRiskControlCustomize(riskControl); */
+            borrowDetailResultBean.put("appRiskControlCustomize", riskControl);
 
             //处理借款信息
             List<BorrowProjectDetailBean> projectDetailList = new ArrayList<>();
@@ -297,9 +298,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             projectDetailList = this.dealDetail(projectDetailList, credTableData, "credTableData", null);
             projectDetailList = this.dealDetail(projectDetailList, reviewTableData, "reviewTableData", null);
             // 信批需求新增(放款后才显示)
-            if (Integer.parseInt(borrow.getStatus()) >= 4) {
+            if (Integer.parseInt(borrow.getBorrowStatus()) >= 4) {
                 //其他信息
-                String updateTime = ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime());
+                String updateTime = ProjectConstant.getUpdateTime(GetDate.getTime10(borrowRepay.getCreateTime()), borrowRepay.getRepayYestime());
                 projectDetailList = this.dealDetail(projectDetailList, otherTableData, "otherTableData", updateTime);
             }
 
@@ -320,7 +321,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                     borrowRepayPlanBean.setTime(borrowRepayPlan.getRepayTime());
                 }
                 borrowRepayPlanBean.setNumber("第1期");
-                borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(borrowRepayPlan.getRepayTotal()));
+                borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(new BigDecimal(borrowRepayPlan.getRepayTotal())));
                 repayPlanList.add(borrowRepayPlanBean);
             } else {
                 List<BorrowRepayPlanCsVO> repayPlanLists = repayPlanService.getRepayPlan(borrowNid);
@@ -1040,7 +1041,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     private boolean isTenderBorrow(Integer userId, String borrowNid,
                                    String borrowType) {
         //根据borrowNid查询borrow表
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         if (borrow.getPlanNid() != null && borrow.getPlanNid().length() > 1) {
             return true;
         }
@@ -1198,6 +1199,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 customize.setBorrowApr(project.getBorrowApr());
                 customize.setBorrowPeriod(project.getBorrowPeriodInt() + "");
                 customize.setBorrowPeriodType(project.getBorrowPeriodType());
+                customize.setBorrowExtraYield(project.getBorrowExtraYield());
                 if ("0".equals(project.getOnTime()) || "".equals(project.getOnTime())) {
                     switch (project.getStatus()) {
                         case "10":

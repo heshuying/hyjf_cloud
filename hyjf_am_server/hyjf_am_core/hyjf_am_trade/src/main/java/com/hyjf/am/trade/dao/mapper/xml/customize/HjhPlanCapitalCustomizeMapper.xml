@@ -117,9 +117,9 @@
 					<!--0 c_account,-->
 					<!--1 flag-->
 				<!--FROM-->
-					<!--huiyingdai_borrow_tender bt-->
-				<!--JOIN hyjf_hjh_accede ha ON bt.accede_order_id = ha.accede_order_id-->
-				<!--JOIN hyjf_hjh_plan hp ON ha.plan_nid = hp.plan_nid-->
+					<!--ht_borrow_tender bt-->
+				<!--JOIN ht_hjh_accede ha ON bt.accede_order_id = ha.accede_order_id-->
+				<!--JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid-->
 				<!--WHERE-->
 					<!--bt.addtime BETWEEN UNIX_TIMESTAMP(#{date})-->
 				<!--AND UNIX_TIMESTAMP(#{date}) + 86399-->
@@ -139,8 +139,8 @@
 						<!--0 c_account,-->
 						<!--2 flag-->
 					<!--FROM-->
-						<!--hyjf_hjh_debt_credit_tender hdct-->
-					<!--JOIN hyjf_hjh_plan hp ON hp.plan_nid = hdct.assign_plan_nid-->
+						<!--ht_hjh_debt_credit_tender hdct-->
+					<!--JOIN ht_hjh_plan hp ON hp.plan_nid = hdct.assign_plan_nid-->
 					<!--WHERE-->
 						<!--hdct.create_time BETWEEN UNIX_TIMESTAMP(#{date})-->
 					<!--AND UNIX_TIMESTAMP(#{date}) + 86399-->
@@ -160,8 +160,8 @@
 							<!--hdct.liquidation_fair_value c_account,-->
 							<!--3 flag-->
 						<!--FROM-->
-							<!--hyjf_hjh_debt_credit hdct-->
-						<!--JOIN hyjf_hjh_plan hp ON hp.plan_nid = hdct.plan_nid-->
+							<!--ht_hjh_debt_credit hdct-->
+						<!--JOIN ht_hjh_plan hp ON hp.plan_nid = hdct.plan_nid-->
 						<!--WHERE-->
 							<!--hdct.create_time BETWEEN UNIX_TIMESTAMP(#{date})-->
 						<!--AND UNIX_TIMESTAMP(#{date}) + 86399-->

@@ -11,19 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.base.BaseController;
 import com.hyjf.pay.bean.AnRongCallDefine;
-import com.hyjf.pay.call.BankCallApi;
 import com.hyjf.pay.config.SystemConfig;
 import com.hyjf.pay.lib.anrong.AnRongCallApi;
-import com.hyjf.pay.lib.anrong.AnRongCallApiImpl;
 import com.hyjf.pay.lib.anrong.bean.AnRongBean;
 import com.hyjf.pay.lib.anrong.util.AnRongParamConstant;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.config.PaySystemConfig;
 
 /**
  * 

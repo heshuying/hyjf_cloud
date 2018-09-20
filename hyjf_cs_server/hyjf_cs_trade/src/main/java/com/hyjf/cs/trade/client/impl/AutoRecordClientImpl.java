@@ -7,7 +7,7 @@ import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.cs.trade.client.AutoRecordClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class AutoRecordClientImpl implements AutoRecordClient {
     private RestTemplate restTemplate;
 
     @Override
-    public BorrowVO selectBorrowByNid(String borrowNid) {
+    public BorrowAndInfoVO selectBorrowByNid(String borrowNid) {
         BorrowResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/trade/selectBorrowByNid/" + borrowNid, BorrowResponse.class).getBody();
         if (response != null) {
             return response.getResult();

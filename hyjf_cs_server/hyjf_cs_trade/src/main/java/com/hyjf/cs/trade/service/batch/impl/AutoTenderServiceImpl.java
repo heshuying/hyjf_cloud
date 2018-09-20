@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.service.batch.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
@@ -446,7 +446,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
                     /** 5.2. 获取标的详情	 */
                     //根据borrowNid查询borrow表
-                    BorrowVO borrow = amTradeClient.selectBorrowByNid(redisBorrow.getBorrowNid());
+                    BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(redisBorrow.getBorrowNid());
                     if (borrow == null) {
                         logger.error("[" + accedeOrderId + "]" + "标的号不存在 " + redisBorrow.getBorrowNid());
                         return false;
@@ -655,7 +655,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      * 调用同步银行接口（投资）
      * @return
      */
-    private BankCallBean autotenderApi(BorrowVO borrow, HjhAccedeVO hjhAccede, HjhUserAuthVO hjhUserAuth, BigDecimal account, String tenderUsrcustid, boolean isLast) {
+    private BankCallBean autotenderApi(BorrowAndInfoVO borrow, HjhAccedeVO hjhAccede, HjhUserAuthVO hjhUserAuth, BigDecimal account, String tenderUsrcustid, boolean isLast) {
         BankCallBean bankResult = null;
 
         Integer userId = hjhAccede.getUserId();
@@ -679,7 +679,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             bankResult = BankCallUtils.callApiBg(bean);
 
             // 更新 自动投资临时表
-            boolean updResult = updateBorrowTmp(idKey, bankResult);
+            boolean updResult = updateBorrowTmp(hjhAccede.getAccedeOrderId(), borrow.getBorrowNid(), bankResult);
             if (!updResult) {
                 logger.error("更新自动投资临时表失败 idKey=" + idKey);
             }
@@ -729,7 +729,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             bankResult = BankCallUtils.callApiBg(bean);
 
             // 更新 自动投资临时表
-            boolean updResult = updateBorrowTmp(idKey, bankResult);
+            boolean updResult = updateBorrowTmp(hjhAccede.getAccedeOrderId(), credit.getCreditNid(), bankResult);
             if (!updResult) {
                 logger.error("更新自动投资临时表失败 idKey=" + idKey);
             }
@@ -748,7 +748,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      * @param hjhUserAuth
      * @return
      */
-    private Integer insertBorrowTmp(BorrowVO borrow, HjhDebtCreditVO credit, HjhAccedeVO hjhAccede,
+    private Integer insertBorrowTmp(BorrowAndInfoVO borrow, HjhDebtCreditVO credit, HjhAccedeVO hjhAccede,
                                     BigDecimal ketouplanAmoust, HjhUserAuthVO hjhUserAuth,
                                     BankCallBean bean, String borrowFlag, int isLast) {
 
@@ -802,9 +802,10 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      * @param bankResult
      * @return
      */
-    private boolean updateBorrowTmp(int idKey, BankCallBean bankResult) {
+    private boolean updateBorrowTmp(String accedeOrderId, String borrowNid, BankCallBean bankResult) {
         HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO = new HjhPlanBorrowTmpVO();
-        hjhPlanBorrowTmpVO.setId(idKey);
+        hjhPlanBorrowTmpVO.setAccedeOrderId(accedeOrderId);
+        hjhPlanBorrowTmpVO.setBorrowNid(borrowNid);
         hjhPlanBorrowTmpVO.setStatus(1);
         if (bankResult == null) {
             hjhPlanBorrowTmpVO.setRespCode("");
@@ -814,6 +815,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             hjhPlanBorrowTmpVO.setRespDesc(bankResult.getRetMsg());
         }
         hjhPlanBorrowTmpVO.setUpdateTime(GetDate.getDate());
-        return this.amTradeClient.updateHjhPlanBorrowTmpByPK(hjhPlanBorrowTmpVO) > 0 ? true : false;
+        return this.amTradeClient.updateHjhPlanBorrowTmp(hjhPlanBorrowTmpVO) > 0 ? true : false;
     }
 }

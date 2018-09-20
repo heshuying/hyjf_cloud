@@ -135,7 +135,7 @@ public class AppRechargeController extends BaseTradeController{
         bgRetUrl=splicingParam(bgRetUrl,request);
 		String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/success?money="+money;
 		retUrl += "?token=1&sign=" +sign;
-		successfulUrl += "?token=1&sign=" +sign;
+		successfulUrl += "&token=1&sign=" +sign;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);

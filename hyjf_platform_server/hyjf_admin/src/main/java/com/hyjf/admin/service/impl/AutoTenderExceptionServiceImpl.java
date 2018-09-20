@@ -15,7 +15,7 @@ import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
 import com.hyjf.am.resquest.admin.AutoTenderExceptionRequest;
 import com.hyjf.am.resquest.admin.TenderExceptionSolveRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.bean.RedisBorrow;
@@ -171,7 +171,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      * @return
      */
     @Override
-    public BorrowVO selectBorrowByNid(String borrowNid){
+    public BorrowAndInfoVO selectBorrowByNid(String borrowNid){
         return amTradeClient.selectBorrowByNid(borrowNid);
     }
     /**
@@ -181,7 +181,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      * @author nxl
      */
     @Override
-    public boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean){
+    public boolean updateBorrowForAutoTender(BorrowAndInfoVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean){
         return amTradeClient.updateBorrowForAutoTender(borrow.getBorrowNid(), hjhAccede.getAccedeOrderId(),bean);
     }
     /**
@@ -268,7 +268,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
             hjhAccede.setOrderStatus(orderStatus);
             // 原始标投资
             if(hjhPlanBorrowTmp.getBorrowType() == 0){
-                BorrowVO borrow = selectBorrowByNid(hjhPlanBorrowTmp.getBorrowNid());
+                BorrowAndInfoVO borrow = selectBorrowByNid(hjhPlanBorrowTmp.getBorrowNid());
                 if (borrow == null) {
                     logger.error("[" + hjhPlanBorrowTmp.getBorrowNid() + "]" + "标的号不存在 ");
                     return planOrderId+" 标的号不存在 "+hjhPlanBorrowTmp.getBorrowNid();
@@ -351,8 +351,11 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     logger.error("[" + hjhPlanBorrowTmp.getAccedeOrderId() + "]" + "债转号不存在 "+hjhPlanBorrowTmp.getBorrowNid());
                     return planOrderId+" 债转号不存在 "+hjhPlanBorrowTmp.getBorrowNid();
                 }
-
-                BankCallBean bean = creditStatusQuery(userIdint, borrowUserAccountId, hjhPlanBorrowTmp.getOrderId());
+                //BankCallBean bean = creditStatusQuery(userIdint, borrowUserAccountId, hjhPlanBorrowTmp.getOrderId());
+                // 为了即信同步银行的结果，先调用下“投资人投标申请查询”接口，返回的txAmount不带承接利息
+                BankCallBean bean = debtStatusQuery(userIdint, borrowUserAccountId,hjhPlanBorrowTmp.getOrderId());
+                // 调用下“投资人购买债权查询”接口，返回的txAmount带承接利息
+                bean = creditStatusQuery(userIdint, borrowUserAccountId, hjhPlanBorrowTmp.getOrderId());
                 String queryRetCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
                 if(BankCallConstant.RESPCODE_SUCCESS.equals(queryRetCode)){
                     logger.info("查询银行记录成功:" + userId);

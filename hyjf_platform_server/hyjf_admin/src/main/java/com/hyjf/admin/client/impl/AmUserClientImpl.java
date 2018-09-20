@@ -6,6 +6,7 @@ import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
@@ -1282,10 +1283,10 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public CertificateAuthorityResponse updateUserCAMQ(int userId) {
-		String url = "http://AM-ADMIN/am-user/certificate/modifyAction/";
+	public CertificateAuthorityResponse updateUserCAMQ(String userId) {
+		String url = "http://AM-ADMIN/am-user/certificate/modifyAction/"+userId;
 		CertificateAuthorityResponse response = restTemplate
-				.postForEntity(url, userId, CertificateAuthorityResponse.class).getBody();
+				.getForEntity(url, CertificateAuthorityResponse.class).getBody();
 		if (response != null) {
 			return response;
 		}
@@ -1335,6 +1336,14 @@ public class AmUserClientImpl implements AmUserClient {
 		return  amUserResponse;
 
 	}
+	@Override
+	public WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form){
+		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/getwhereaboutspageconfig",
+				form, WhereaboutsPageResponse.class);
+		return  amUserResponse;
+	}
+
+
 
 	@Override
 	public WhereaboutsPageResponse insertAction(WhereaboutsPageRequestBean requestBean) {
@@ -1361,14 +1370,26 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public BankOpenAccountVO getBankOpenAccount(Integer userId) {
-		String url = "http://AM-USER/am-user/bank_account_manage/get_bank_open_account/" + userId;
+		String url = "http://AM-ADMIN/am-user/bank_account_manage/get_bank_open_account/" + userId;
 		BankOpenAccountResponse response = restTemplate.getForEntity(url,BankOpenAccountResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
 	}
+	@Override
+	public StringResponse checkUtmId(Integer utmId){
+		String url = "http://AM-USER/am-user/content/whereaboutspage/checkutmid/" + utmId;
+		StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+		return response;
+	}
 
+	@Override
+	public StringResponse checkReferrer(String referrer){
+		String url = "http://AM-USER/am-user/content/whereaboutspage/checkreferrer/" + referrer;
+		StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+		return response;
+	}
 	@Override
 	public ChangeLogResponse getChangeLogList(ChangeLogRequest clr) {
 		ChangeLogResponse response = restTemplate
@@ -2304,6 +2325,18 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	/**
+	 * 校验手机号
+	 * @auther: nxl
+	 * @param mobile
+	 * @return
+	 */
+	@Override
+	public int countByMobile(String mobile){
+		int checkFlg = restTemplate.
+				getForEntity("http://AM-ADMIN/am-user/userManager/countByMobileList/"+ mobile, Integer.class).
+				getBody();
+		return checkFlg;
+	}
 
 }

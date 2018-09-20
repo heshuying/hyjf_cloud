@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.resquest.admin;
 
-import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.PushMoneyVO;
@@ -88,6 +87,10 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 
 	@ApiModelProperty(value = "提成id(发提成用)")
 	private Integer id;
+
+	@ApiModelProperty(value = "ids(支持批量删除)")
+	private String ids;
+
 	@ApiModelProperty(value = "登录用户id(后台用)")
 	private Integer loginUserId;
 	@ApiModelProperty(value = "登录用户名(后台用)")
@@ -113,6 +116,14 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	 */
 	@ApiModelProperty(value = "当前页条数")
 	private int pageSize = 10;
+
+	public String getIds() {
+		return ids;
+	}
+
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
 
 	public int getCurrPage() {
 		return currPage;
@@ -408,7 +419,7 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	/**
 	 * 列表画面自定义标签上的用翻页对象：paginator
 	 */
-	private com.hyjf.common.paginator.Paginator paginator;
+	private Paginator paginator;
 
 	public int getPaginatorPage() {
 		if (paginatorPage == 0) {
@@ -420,4 +431,5 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	public void setPaginatorPage(int paginatorPage) {
 		this.paginatorPage = paginatorPage;
 	}
+
 }

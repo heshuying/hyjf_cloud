@@ -124,7 +124,7 @@ public class AdminPermissionsServiceImpl extends BaseAdminServiceImpl implements
      */
     private void checkUpdateParams(AdminPermissionsVO adminPermissionsVO){
         if(StringUtils.isBlank(adminPermissionsVO.getPermissionUuid())){
-            throw new CheckException("99","添加权限必须传入permissionUuid");
+            throw new CheckException("99","修改权限必须传入permissionUuid");
         }
         CheckUtil.check(StringUtils.isNotBlank(adminPermissionsVO.getPermission()),MsgEnum.ERR_OBJECT_REQUIRED,"权限");
         CheckUtil.check(StringUtils.isNotBlank(adminPermissionsVO.getPermissionName()),MsgEnum.ERR_OBJECT_REQUIRED,"权限名称");

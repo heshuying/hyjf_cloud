@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.trade.service.admin;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.trade.dao.model.auto.PushMoney;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -19,6 +19,13 @@ public interface PushMoneyService {
 	 * @return
 	 */
 	List<PushMoney> getRecordList();
+
+	/**
+	 * 获取提成列表(分页)
+	 *
+	 * @return
+	 */
+	List<PushMoney> getRecordList(int limitStart, int limitEnd);
 
 	/**
 	 * 添加提成配置
@@ -40,4 +47,11 @@ public interface PushMoneyService {
 	 * @return
 	 */
 	PushMoney getRecordById(Integer id);
+
+	/**
+	 * 修改校验
+	 *
+	 * @return
+	 */
+	void deleteRecord(List<Integer> ids);
 }

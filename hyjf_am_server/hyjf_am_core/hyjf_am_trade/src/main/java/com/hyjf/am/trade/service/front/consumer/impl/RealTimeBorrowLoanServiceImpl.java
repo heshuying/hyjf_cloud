@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.trade.mq.producer.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,18 +42,10 @@ import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
-import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest;
 import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterestExample;
 import com.hyjf.am.trade.dao.model.auto.FreezeList;
 import com.hyjf.am.trade.dao.model.auto.FreezeListExample;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.mq.producer.AmTradeProducer;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.CouponLoansMessageProducer;
-import com.hyjf.am.trade.mq.producer.FddProducer;
-import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.consumer.RealTimeBorrowLoanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
@@ -90,7 +84,11 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 
 	@Autowired
 	private AppMessageProducer appMessageProducer;
-	
+
+	@Autowired
+	private CalculateInvestInterestProducer calculateInvestInterestProducer;
+
+
 	/** 项目标号 */
 	private static final String VAL_TITLE = "val_title";
 
@@ -496,18 +494,12 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 							throw new Exception("标的号:" + borrowNid + ",放款完成保存还款计划失败!");
 						}
 
-						//双十二气球活动   
-			           // actBalloonTender(borrowTender);
-						
 						//crm投资推送 //确认CRM 队列更新
 						try {
 							amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowTender)));
 						} catch (Exception e) {
 							logger.error("发送CRM消息失败:" + e.getMessage());
 						}
-						
-//				        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME,
-//				                RabbitMQConstants.ROUTINGKEY_POSTINTERFACE_CRM, JSON.toJSONString(borrowTender));
 
 					}
 				} catch (Exception e) {
@@ -515,20 +507,32 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 					continue;
 				}
 			}
-			
-			List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
-			if (calculates != null && calculates.size() > 0) {
-				CalculateInvestInterest calculateNew = new CalculateInvestInterest();
-				calculateNew.setInterestSum(recoverInterestSum);
-				calculateNew.setId(calculates.get(0).getId());
-				this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
-			}
-			//上市活动  //微服务后没有了暂时注释
-//			CommonSoaUtils.listBorrow(borrow.getBorrowNid());
+
+			calculateInvestTotal(recoverInterestSum);
+
 			return true;
 		} else {
 			logger.info("未查询到相应的投资记录，项目编号:" + borrowNid + "]");
 			return true;
+		}
+	}
+
+	/**
+	 *
+	 * @param accountDecimal 投资金额
+	 * @param orderId  订单号
+	 */
+	private void calculateInvestTotal(BigDecimal interestSum){
+		logger.info("放款成功累加统计数据...");
+		JSONObject params1 = new JSONObject();
+		params1.put("interestSum", interestSum);
+		try {
+			calculateInvestInterestProducer
+					.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC,
+							MQConstant.STATISTICS_CALCULATE_INTEREST_SUM_TAG, UUID.randomUUID().toString(),
+							JSON.toJSONBytes(params1)));
+		} catch (MQException e) {
+			logger.error("放款成功累加统计数", e);
 		}
 	}
 

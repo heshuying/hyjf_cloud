@@ -67,5 +67,12 @@ public interface BaseService {
      */
     BankOpenAccount selectByExample(BankOpenAccountExample example);
 
+    /**
+     * 获取开户信息
+     * @param example
+     * @return
+     */
+    List<BankOpenAccount> selectByListExample(List<Integer> user);
+
     User getUserByAccountId(String accountId);
 }

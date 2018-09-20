@@ -190,6 +190,27 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		return null;
 	}
 
+
+	@Override
+	public User findReffer(Integer userId) {
+		//查推荐人ID
+		SpreadsUserExample spreadsUsersExample = new SpreadsUserExample();
+		SpreadsUserExample.Criteria spreadsUsersExampleCriteria = spreadsUsersExample.createCriteria();
+		spreadsUsersExampleCriteria.andUserIdEqualTo(userId);
+		List<SpreadsUser> sList = spreadsUserMapper.selectByExample(spreadsUsersExample);
+		//根据推荐人ID查用户
+		if(!CollectionUtils.isEmpty(sList)){
+			UserExample usersExample = new UserExample();
+			UserExample.Criteria criteria = usersExample.createCriteria();
+			criteria.andUserIdEqualTo(Integer.valueOf(sList.get(0).getSpreadsUserId()));
+			List<User> usersList = userMapper.selectByExample(usersExample);
+			if (!CollectionUtils.isEmpty(usersList)) {
+				return usersList.get(0);
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public void updateLoginUser(int userId, String ip) {
 		UserLoginLog userLoginLog = findUserLoginLogByUserId(userId);

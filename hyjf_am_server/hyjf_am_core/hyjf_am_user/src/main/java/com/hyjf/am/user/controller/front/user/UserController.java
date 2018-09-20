@@ -173,12 +173,31 @@ public class UserController extends BaseController {
     }
 
     /**
+     * 根据userId 查询推荐人
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/findReffer/{userId}")
+    public UserResponse findReffer(@PathVariable Integer userId) {
+        logger.info("findReffer run...userId is :{}", userId);
+        UserResponse response = new UserResponse();
+        User user = userService.findReffer(userId);
+        if (user != null) {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user, userVO);
+            response.setResult(userVO);
+        }
+        return response;
+    }
+
+    /**
      * 根据推荐人手机号或userId 查询推荐人
      *
      * @param reffer
      * @return
      */
-    @RequestMapping("/findReffer/{reffer}")
+    @RequestMapping("/findUserByRecommendName/{reffer}")
     public UserResponse findUserByRecommendName(@PathVariable String reffer) {
         logger.info("findUserByRecommendName run...reffer is :{}", reffer);
         UserResponse response = new UserResponse();

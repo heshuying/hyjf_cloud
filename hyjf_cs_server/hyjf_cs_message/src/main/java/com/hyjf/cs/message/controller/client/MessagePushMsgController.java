@@ -6,13 +6,14 @@ package com.hyjf.cs.message.controller.client;
 import com.hyjf.am.response.admin.MessagePushMsgResponse;
 import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.MessagePush;
 import com.hyjf.cs.message.bean.mc.MessagePushMsg;
+import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
-import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.service.msgpush.MessagePushMsgService;
 import com.hyjf.cs.message.service.msgpush.MsgPushService;
 import com.hyjf.cs.message.service.msgpushstatics.MsgPushStaticsService;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,6 +80,37 @@ public class MessagePushMsgController extends BaseController {
 		// 更新统计数据
 		for (int i = 0; i < templateStaticsList.size(); i++) {
 			this.msgPushStaticsService.updatemsgPushStatics(templateStaticsList.get(i),startTime,endTime);
+		}
+	}
+
+	@RequestMapping("/push_plat_statics")
+	public void messagePlatPushStatics() {
+		try {
+			int N = 7;// 更新或插入7天之内的数据
+			Date today = GetDate.stringToDate(GetDate.dateToString2(new Date()) + " 00:00:00");
+			Date todayStart = GetDate.stringToDate(GetDate.dateToString2(today) + " 00:00:00");
+			Date todayEnd = GetDate.stringToDate(GetDate.dateToString2(today) + " 23:59:59");
+			today = GetDate.getSomeDayBeforeOrAfter(today, 1);
+			todayStart = GetDate.getSomeDayBeforeOrAfter(todayStart, 1);
+			todayEnd = GetDate.getSomeDayBeforeOrAfter(todayEnd, 1);
+			// 获取标签类型
+			List<MessagePushTagVO> tags = msgPushService.getPushTags();
+			for (int i = 0; i < N; i++) {
+				today = GetDate.getSomeDayBeforeOrAfter(today, -1);
+				todayStart = GetDate.getSomeDayBeforeOrAfter(todayStart, -1);
+				todayEnd = GetDate.getSomeDayBeforeOrAfter(todayEnd, -1);
+				if (tags != null && tags.size() != 0) {
+					for (int j = 0; j < tags.size(); j++) {
+						// 根据标签类型,获取时间范围内所有的msghistory
+						List<MessagePushMsgHistory> msgHistoryList = msgPushService.getMessagePushMsgHistorys(tags.get(j), todayStart, todayEnd);
+						// 根据msg和msghistory插入当天统计信息
+						msgPushService.insertPushPlatStatics(tags.get(j), msgHistoryList, today);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 

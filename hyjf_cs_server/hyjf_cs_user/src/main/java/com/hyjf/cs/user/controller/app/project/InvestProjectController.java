@@ -49,7 +49,7 @@ import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.MyProjectVo;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.util.CommonUtils;
@@ -270,7 +270,7 @@ public class InvestProjectController extends BaseUserController {
 			return info;
 		}
 		// add liuyang 债转还款计划 end
-		BorrowVO borrow = this.investProjectService.selectBorrowByBorrowNid(form.getBorrowNid());
+		BorrowAndInfoVO borrow = this.investProjectService.selectBorrowByBorrowNid(form.getBorrowNid());
 		if (borrow == null) {
 			info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
 			info.put(CustomConstants.APP_STATUS_DESC, "未查询到相应的项目的信息");
@@ -556,7 +556,7 @@ public class InvestProjectController extends BaseUserController {
 			// 获取原标标号
 			String bidNid = borrowCredit.getBidNid();
 			ret.put("borrowNid", bidNid);
-			BorrowVO borrow = this.investProjectService.selectBorrowByBorrowNid(bidNid);
+			BorrowAndInfoVO borrow = this.investProjectService.selectBorrowByBorrowNid(bidNid);
 			if (borrow == null) {
 				// 债转获取失败
 				ret.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);

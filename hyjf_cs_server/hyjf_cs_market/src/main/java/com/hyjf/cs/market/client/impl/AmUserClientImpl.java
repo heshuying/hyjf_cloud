@@ -417,7 +417,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
     public List<Integer> getQianleUser() {
-		return restTemplate.getForObject("http://AM-USER/am-user/user/getQianleUser", List.class);
+		return restTemplate.getForObject("http://AM-ADMIN/am-user/user/getQianleUser", List.class);
     }
     /**
 	 * 获取渠道用户userid集合
@@ -425,8 +425,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	private List<Integer> geUtmRegUserIdtList(Integer sourceId, String type) {
-		UtmResponse response = restTemplate.getForObject(
-				"http://AM-USER/am-user/promotion/utmreg/getutmreglist/" + sourceId + "/" + type, UtmResponse.class);
+		UtmRegResponse response = restTemplate.getForObject(
+				"http://AM-USER/am-user/promotion/utmreg/getutmreglist/" + sourceId + "/" + type, UtmRegResponse.class);
 		List<Integer> userIdList = new ArrayList<>();
 		if (response != null) {
 			List<UtmRegVO> list = response.getResultList();

@@ -21,7 +21,7 @@
 		    c.del_flag = 0
 			<!-- 优惠券名称 -->
 			<if test="couponName != null and couponName != ''">
-				AND c.coupon_name LIKE CONCAT('%', #{couponName}, '%')
+				AND c.coupon_name LIKE CONCAT( #{couponName}, '%')
 			</if>
 			<if test="couponCode != null and couponCode != ''">
 				AND c.coupon_code = #{couponCode}
@@ -52,11 +52,11 @@
 					<!--t.recover_account_capital_wait AS recoverAccountCapitalWait,-->
 					<!--t.recover_account_interest_wait AS recoverAccountInterestWait,-->
 					<!--t.recover_account_wait AS recoverAaccountWait-->
-				<!--FROM hyjf_borrow_tender_cpn t-->
-				<!--LEFT JOIN hyjf_coupon_tender a ON a.order_id = t.nid-->
-				<!--LEFT JOIN hyjf_coupon_user b ON a.coupon_grant_id = b.id-->
-				<!--LEFT JOIN hyjf_coupon_config c ON c.coupon_code = b.coupon_code-->
-				<!--LEFT JOIN hyjf_coupon_real_tender d ON d.coupon_tender_id = t.nid-->
+				<!--FROM ht_borrow_tender_cpn t-->
+				<!--LEFT JOIN ht_coupon_tender a ON a.order_id = t.nid-->
+				<!--LEFT JOIN ht_coupon_user b ON a.coupon_grant_id = b.id-->
+				<!--LEFT JOIN ht_coupon_config c ON c.coupon_code = b.coupon_code-->
+				<!--LEFT JOIN ht_coupon_real_tender d ON d.coupon_tender_id = t.nid-->
 					<!--WHERE 2 = 2-->
 			<!--<if test="userId != null" >-->
 				<!--AND t.user_id = #{userId}-->
@@ -115,105 +115,98 @@
 	
 	
 	
-	<!--<resultMap id="exportCouponConfigMap" type="com.hyjf.mybatis.model.customize.coupon.CouponConfigExoportCustomize">-->
-		<!--&lt;!&ndash; <result column="id" property="id" jdbcType="INTEGER" /> &ndash;&gt;-->
-		<!--<result column="coupon_name" property="couponName" jdbcType="VARCHAR" />-->
-		<!--<result column="coupon_type" property="couponType" jdbcType="VARCHAR" />-->
-		<!--<result column="coupon_quota" property="couponQuota" jdbcType="VARCHAR" />-->
-		<!--<result column="coupon_quantity" property="couponQuantity" jdbcType="VARCHAR" />-->
-		<!--<result column="issue_number" property="issueNumber" jdbcType="VARCHAR" />-->
-		<!--<result column="expiration_date" property="expirationDate" jdbcType="VARCHAR" />-->
-		<!--<result column="coupon_system" property="couponSystem" jdbcType="VARCHAR" />-->
-		<!--<result column="project_type" property="projectType" jdbcType="VARCHAR" />-->
-		<!--<result column="tender_quota" property="tenderQuota" jdbcType="VARCHAR" />-->
-		<!--<result column="project_expiration_type" property="projectExpirationType" jdbcType="VARCHAR" />-->
-		<!--<result column="status" property="status" jdbcType="VARCHAR" />-->
-		<!--<result column="add_time" property="addTime" jdbcType="VARCHAR" />-->
-		<!--<result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />-->
-	<!--</resultMap>	-->
-	<!--<select id="exportCouponConfigList" resultMap="exportCouponConfigMap" parameterType="com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize">-->
-			<!--SELECT -->
-			<!--c.coupon_name,-->
-			<!--CASE c.coupon_type -->
-							<!--WHEN 1 THEN '体验金' -->
-							<!--WHEN 2 THEN '加息券' -->
-							<!--WHEN 3 THEN '代金券'-->
-							<!--END AS coupon_type,				-->
-							<!--CASE c.coupon_type -->
-							<!--WHEN 1 THEN FORMAT(c.coupon_quota, 2) -->
-							<!--ELSE c.coupon_quota -->
-							<!--END AS coupon_quota,-->
-			<!--c.coupon_quantity,-->
-			<!--(SELECT COUNT(1) FROM hyjf_coupon_user a WHERE a.coupon_code = c.coupon_code and a.used_flag in (0,1,4) and a.del_flag = 0) AS issue_number,-->
-			<!--CASE c.expiration_type -->
-							<!--WHEN 1 THEN  FROM_UNIXTIME(c.expiration_date,'%Y-%m-%d')-->
-							<!--WHEN 2 THEN  concat(c.expiration_length , '个月')-->
-							<!--WHEN 3 THEN  concat(c.expiration_length_day , '天')-->
-							<!--END  AS expiration_date,-->
-			<!--c.coupon_system coupon_system,-->
-						 <!--c.project_type project_type,-->
-						 <!--CASE-->
-						<!--WHEN c.tender_quota_type = 0 THEN-->
-							<!--'投资金额不限'-->
-						<!--WHEN c.tender_quota_type = 1 THEN-->
-							<!--CONCAT(-->
-								<!--c.tender_quota_min,-->
-								<!--'元~',-->
-								<!--c.tender_quota_max,-->
-								<!--'元'-->
-							<!--)-->
-						<!--WHEN c.tender_quota_type = 2 THEN-->
-							<!--CONCAT(-->
-								<!--'大于等于',-->
-								<!--c.tender_quota,-->
-								<!--'元'-->
-							<!--)-->
-						<!--ELSE-->
-							<!--'投资金额不限'-->
-						<!--END tender_quota,-->
-						 <!--CASE-->
-						<!--WHEN c.project_expiration_type = 0 THEN-->
-							<!--'投资期限不限'-->
-						<!--WHEN c.project_expiration_type = 1 THEN-->
-							<!--CONCAT(-->
-								<!--'等于',-->
-								<!--c.project_expiration_length,-->
-								<!--'月'-->
-							<!--)-->
-						<!--WHEN c.project_expiration_type = 2 THEN-->
-							<!--CONCAT(-->
-								<!--c.project_expiration_length_min,-->
-								<!--'月~',-->
-								<!--c.project_expiration_length_max,-->
-								<!--'月'-->
-							<!--)-->
-						<!--WHEN c.project_expiration_type = 3 THEN-->
-							<!--CONCAT(-->
-								<!--'大于等于',-->
-								<!--c.project_expiration_length,-->
-								<!--'月'-->
-							<!--)-->
-						<!--WHEN c.project_expiration_type = 4 THEN-->
-							<!--CONCAT(-->
-								<!--'小于等于',-->
-								<!--c.project_expiration_length,-->
-								<!--'月'-->
-							<!--)-->
-						<!--ELSE-->
-							<!--'项目期限不限'-->
-						<!--END project_expiration_type,-->
-			<!--CASE c.status-->
-							<!--WHEN 1 THEN  '待审核'-->
-							<!--WHEN 2 THEN  '已发行'-->
-							<!--WHEN 3 THEN  '审核不通过'-->
-							<!--END  AS status,-->
-			<!--FROM_UNIXTIME(c.add_time,'%Y-%m-%d %H:%i:%s') AS add_time,-->
-			<!--c.coupon_code-->
-			<!--from hyjf_coupon_config c-->
-			<!--<include refid="Where_Clause" />-->
-			<!--ORDER BY c.status,c.add_time DESC	-->
-			<!---->
-	<!--</select>-->
+	<resultMap id="exportCouponConfigMap" type="com.hyjf.am.trade.dao.model.customize.CouponConfigExportCustomize">
+		<!-- <result column="id" property="id" jdbcType="INTEGER" /> -->
+		<result column="coupon_name" property="couponName" jdbcType="VARCHAR" />
+		<result column="coupon_type" property="couponType" jdbcType="VARCHAR" />
+		<result column="coupon_quota" property="couponQuota" jdbcType="VARCHAR" />
+		<result column="coupon_quantity" property="couponQuantity" jdbcType="VARCHAR" />
+		<result column="issue_number" property="issueNumber" jdbcType="VARCHAR" />
+		<result column="expiration_date" property="expirationDate" jdbcType="VARCHAR" />
+		<result column="coupon_system" property="couponSystem" jdbcType="VARCHAR" />
+		<result column="project_type" property="projectType" jdbcType="VARCHAR" />
+		<result column="tender_quota" property="tenderQuota" jdbcType="VARCHAR" />
+		<result column="project_expiration_type" property="projectExpirationType" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="VARCHAR" />
+		<result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="exportCouponConfigList" resultMap="exportCouponConfigMap" parameterType="com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize">
+			SELECT
+			c.coupon_name,
+			c.coupon_type,
+			c.coupon_quota,
+			c.coupon_quantity,
+			(SELECT COUNT(1) FROM ht_coupon_user a WHERE a.coupon_code = c.coupon_code and a.used_flag in (0,1,4) and a.del_flag = 0) AS issue_number,
+			CASE c.expiration_type
+							WHEN 1 THEN  FROM_UNIXTIME(c.expiration_date,'%Y-%m-%d')
+							WHEN 2 THEN  concat(c.expiration_length , '个月')
+							WHEN 3 THEN  concat(c.expiration_length_day , '天')
+							END  AS expiration_date,
+			c.coupon_system coupon_system,
+						 c.project_type project_type,
+						 CASE
+						WHEN c.tender_quota_type = 0 THEN
+							'投资金额不限'
+						WHEN c.tender_quota_type = 1 THEN
+							CONCAT(
+								c.tender_quota_min,
+								'元~',
+								c.tender_quota_max,
+								'元'
+							)
+						WHEN c.tender_quota_type = 2 THEN
+							CONCAT(
+								'大于等于',
+								c.tender_quota,
+								'元'
+							)
+						ELSE
+							'投资金额不限'
+						END tender_quota,
+						 CASE
+						WHEN c.project_expiration_type = 0 THEN
+							'投资期限不限'
+						WHEN c.project_expiration_type = 1 THEN
+							CONCAT(
+								'等于',
+								c.project_expiration_length,
+								'月'
+							)
+						WHEN c.project_expiration_type = 2 THEN
+							CONCAT(
+								c.project_expiration_length_min,
+								'月~',
+								c.project_expiration_length_max,
+								'月'
+							)
+						WHEN c.project_expiration_type = 3 THEN
+							CONCAT(
+								'大于等于',
+								c.project_expiration_length,
+								'月'
+							)
+						WHEN c.project_expiration_type = 4 THEN
+							CONCAT(
+								'小于等于',
+								c.project_expiration_length,
+								'月'
+							)
+						ELSE
+							'项目期限不限'
+						END project_expiration_type,
+			CASE c.status
+							WHEN 1 THEN  '待审核'
+							WHEN 2 THEN  '已发行'
+							WHEN 3 THEN  '审核不通过'
+							END  AS status,
+		DATE_FORMAT(c.create_time,'%Y-%m-%d %H:%i:%s') AS add_time,
+			c.coupon_code
+			from ht_coupon_config c
+			<include refid="Where_Clause" />
+			ORDER BY c.status,c.create_time DESC
+
+	</select>
 	
 	
 	<!--<resultMap id="UserCouponConfigMap" type="com.hyjf.mybatis.model.customize.coupon.UserCouponConfigCustomize" >-->
@@ -294,8 +287,8 @@
 			<!--hcc.add_flg add_flg,-->
 			<!--hcc.coupon_profit_time coupon_profit_time-->
 		<!--FROM-->
-			<!--hyjf_coupon_user hcu-->
-		<!--LEFT JOIN hyjf_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code-->
+			<!--ht_coupon_user hcu-->
+		<!--LEFT JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code-->
 		<!--WHERE-->
 			<!--hcu.user_id = #{userId}-->
 		<!--AND hcu.used_flag = 0-->
@@ -345,8 +338,8 @@
 			<!--hcc.add_flg add_flg,-->
 			<!--hcc.coupon_profit_time coupon_profit_time-->
 		<!--FROM-->
-			<!--hyjf_coupon_user hcu-->
-		<!--LEFT JOIN hyjf_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code-->
+			<!--ht_coupon_user hcu-->
+		<!--LEFT JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code-->
 		<!--WHERE-->
 			<!--hcu.id=#{couponId}-->
 			<!--AND hcu.used_flag = 0-->

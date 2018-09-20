@@ -21,8 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.mq.handle.UtmRegHandle;
 import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.mq.handle.UtmRegHandle;
 
 /**
  * @Description 更新huiyingdai_utm_reg的首投信息
@@ -31,7 +31,7 @@ import com.hyjf.cs.trade.mq.base.Consumer;
  */
 public class UtmRegConsumer extends Consumer  {
 
-    private static final Logger logger = LoggerFactory.getLogger(AutoPreAuditConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(UtmRegConsumer.class);
 
     @Autowired
     UtmRegHandle utmRegHandle;

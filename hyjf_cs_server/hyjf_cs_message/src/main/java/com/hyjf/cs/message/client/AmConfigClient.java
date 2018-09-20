@@ -3,8 +3,9 @@ package com.hyjf.cs.message.client;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.EventResponse;
+import com.hyjf.am.vo.admin.ContentHelpCustomizeVO;
+import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.config.*;
-import com.hyjf.am.vo.market.EventsVO;
 import com.hyjf.am.vo.user.UserVO;
 
 import java.util.List;
@@ -55,6 +56,19 @@ public interface AmConfigClient {
 	SiteSettingsVO findSiteSetting();
 
 	/**
+	 * 智齿客服常见问题列表
+	 *
+	 * @return
+	 */
+	List<ContentHelpCustomizeVO> queryContentCustomize();
+
+	/**
+	 * 智齿客服常见问题答案
+	 *
+	 * @return
+	 */
+	ContentHelpVO help(Integer id);
+	/**
 	 * 在筛选条件下查询出用户
 	 * 
 	 * @param params
@@ -80,4 +94,10 @@ public interface AmConfigClient {
 	EventResponse getEvents(int userId, int begin, int end);
 
 	EventVO selectPercentage(int percentage, int begin, int end, int userId);
+
+	/**
+	 *获取标签类型
+	 * @return
+	 */
+	List<MessagePushTagVO> getPushTags();
 }

@@ -26,16 +26,16 @@
 			AND l.user_id = #{userId}
 		</if>
 		<if test="username != null and username != ''">
-			AND l.username LIKE CONCAT('%', #{username}, '%')
+			AND l.username LIKE CONCAT( #{username}, '%')
 		</if>
 		<if test="realName != null and realName != ''">
-			AND l.real_name LIKE CONCAT('%', #{realName}, '%')
+			AND l.real_name LIKE CONCAT( #{realName}, '%')
 		</if>
 		<if test="mobile != null and mobile != ''">
-			AND l.mobile LIKE CONCAT('%', #{mobile}, '%')
+			AND l.mobile LIKE CONCAT( #{mobile}, '%')
 		</if>
 		<if test="recommendUser != null and recommendUser != ''">
-			AND l.recommend_user LIKE CONCAT('%', #{recommendUser}, '%')
+			AND l.recommend_user LIKE CONCAT( #{recommendUser}, '%')
 		</if>
 		<if test="attribute != null and attribute != ''">
 			AND l.attribute = #{attribute}

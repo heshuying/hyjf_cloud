@@ -7,7 +7,7 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.service.front.hjh.HjhPlanBorrowTmpService;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,23 +28,30 @@ public class HjhPlanBorrowTmpController extends BaseController {
     private HjhPlanBorrowTmpService hjhPlanBorrowTmpService;
 
     @RequestMapping("/insertHjhPlanBorrowTmp")
-    public IntegerResponse insertHjhPlanBorrowTmp(@RequestBody HjhDebtCreditVO hjhDebtCreditVO) {
+    public IntegerResponse insertHjhPlanBorrowTmp(@RequestBody HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO) {
         HjhPlanBorrowTmp hjhPlanBorrowTmp = new HjhPlanBorrowTmp();
-        BeanUtils.copyProperties(hjhDebtCreditVO, hjhPlanBorrowTmp);
+        BeanUtils.copyProperties(hjhPlanBorrowTmpVO, hjhPlanBorrowTmp);
         return new IntegerResponse(this.hjhPlanBorrowTmpService.insertHjhPlanBorrowTmp(hjhPlanBorrowTmp));
     }
 
     @RequestMapping("/deleteHjhPlanBorrowTmp")
-    public IntegerResponse deleteHjhPlanBorrowTmp(@RequestBody HjhDebtCreditVO hjhDebtCreditVO) {
+    public IntegerResponse deleteHjhPlanBorrowTmp(@RequestBody HjhPlanBorrowTmpVO hjhDebtCreditVO) {
         HjhPlanBorrowTmp hjhPlanBorrowTmp = new HjhPlanBorrowTmp();
         BeanUtils.copyProperties(hjhDebtCreditVO, hjhPlanBorrowTmp);
         return new IntegerResponse(this.hjhPlanBorrowTmpService.deleteHjhPlanBorrowTmp(hjhPlanBorrowTmp));
     }
 
     @RequestMapping("/updateHjhPlanBorrowTmpByPK")
-    public IntegerResponse updateHjhPlanBorrowTmpByPK(@RequestBody HjhDebtCreditVO hjhDebtCreditVO) {
+    public IntegerResponse updateHjhPlanBorrowTmpByPK(@RequestBody HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO) {
         HjhPlanBorrowTmp hjhPlanBorrowTmp = new HjhPlanBorrowTmp();
-        BeanUtils.copyProperties(hjhDebtCreditVO, hjhPlanBorrowTmp);
+        BeanUtils.copyProperties(hjhPlanBorrowTmpVO, hjhPlanBorrowTmp);
         return new IntegerResponse(this.hjhPlanBorrowTmpService.updateHjhPlanBorrowTmpByPK(hjhPlanBorrowTmp));
+    }
+
+    @RequestMapping("/updateHjhPlanBorrowTmp")
+    public IntegerResponse updateHjhPlanBorrowTmp(@RequestBody HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO) {
+        HjhPlanBorrowTmp hjhPlanBorrowTmp = new HjhPlanBorrowTmp();
+        BeanUtils.copyProperties(hjhPlanBorrowTmpVO, hjhPlanBorrowTmp);
+        return new IntegerResponse(this.hjhPlanBorrowTmpService.updateHjhPlanBorrowTmp(hjhPlanBorrowTmp));
     }
 }

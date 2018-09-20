@@ -4,14 +4,14 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.resquest.Request;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 
 /**
  * @author fuqiang
  * @version BorrowRegistRequest, v0.1 2018/6/14 12:01
  */
 public class BorrowRegistRequest extends Request {
-    private BorrowVO borrowVO;
+    private BorrowAndInfoVO borrowVO;
 
     private int status;
 
@@ -20,17 +20,17 @@ public class BorrowRegistRequest extends Request {
     public BorrowRegistRequest() {
     }
 
-    public BorrowRegistRequest(BorrowVO borrowVO, int status, int registStatus) {
+    public BorrowRegistRequest(BorrowAndInfoVO borrowVO, int status, int registStatus) {
         this.borrowVO = borrowVO;
         this.status = status;
         this.registStatus = registStatus;
     }
 
-    public BorrowVO getBorrowVO() {
+    public BorrowAndInfoVO getBorrowVO() {
         return borrowVO;
     }
 
-    public void setBorrowVO(BorrowVO borrowVO) {
+    public void setBorrowVO(BorrowAndInfoVO borrowVO) {
         this.borrowVO = borrowVO;
     }
 

@@ -370,13 +370,13 @@
     SELECT
     IFNULL(SUM(a),0)
     FROM (
-      SELECT COUNT(*) a FROM huiyingdai_borrow_tender WHERE user_id = #{userId}
+      SELECT COUNT(*) a FROM ht_borrow_tender WHERE user_id = #{userId}
         UNION ALL
-      SELECT COUNT(*) a FROM huiyingdai_credit_tender WHERE user_id = #{userId}
+      SELECT COUNT(*) a FROM ht_credit_tender WHERE user_id = #{userId}
         UNION ALL
-      SELECT COUNT(*) a FROM hyjf_borrow_tender_cpn WHERE user_id = #{userId}
+      SELECT COUNT(*) a FROM ht_borrow_tender_cpn WHERE user_id = #{userId}
         UNION ALL
-      SELECT COUNT(*) a FROM hyjf_hjh_accede WHERE user_id =  #{userId}
+      SELECT COUNT(*) a FROM ht_hjh_accede WHERE user_id =  #{userId}
      ) b
   </select>
     <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.UserChangeLog" >
