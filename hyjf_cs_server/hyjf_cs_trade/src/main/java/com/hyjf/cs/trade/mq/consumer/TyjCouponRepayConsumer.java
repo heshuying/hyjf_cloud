@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * @author yaoyong
  * @version TyjCouponRepayConsumer, v0.1 2018/8/13 11:30
- *
+ * <p>
  * 体验金按收益期限还款 使用
  */
 @Component
@@ -65,13 +65,12 @@ public class TyjCouponRepayConsumer extends Consumer {
             String msgBody = new String(messageExt.getBody());
             map = JSONObject.parseObject(msgBody, Map.class);
             JSONObject result = new JSONObject();
-            try{
+            try {
                 List<String> recoverNidList = (List<String>) map.get("nidList");
-                String timestamp = (String) map.get("timestamp");
                 for (String recoverNid : recoverNidList) {
                     tyjCouponRepayService.updateCouponOnlyRecover(recoverNid);
                 }
-            }catch (Exception e) {
+            } catch (Exception e) {
 
             }
             return null;

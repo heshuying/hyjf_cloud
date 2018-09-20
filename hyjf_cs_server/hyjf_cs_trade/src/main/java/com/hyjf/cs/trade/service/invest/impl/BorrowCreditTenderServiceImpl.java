@@ -1283,6 +1283,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         creditTenderLog.setUserId(user.getUserId());
         creditTenderLog.setCreditUserId(borrowCredit.getCreditUserId());
         creditTenderLog.setStatus(0);
+        creditTenderLog.setBorrowUserName(borrow.getBorrowUserName());
+        creditTenderLog.setBorrowUserId(borrow.getUserId());
         // 因为标的号必须六位之内 所以用id  去掉 setBorrowId
         creditTenderLog.setBidNid(borrowCredit.getBidNid());
         creditTenderLog.setCreditNid(String.valueOf(borrowCredit.getCreditNid()));
@@ -1314,6 +1316,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         } else {
             creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.005)));
         }
+        creditTenderLog.setUserName(user.getUsername());
+        creditTenderLog.setCreditUserName(borrowCredit.getCreditUserName());
         creditTenderLog.setAddIp(request.getIp());
         return creditTenderLog;
     }

@@ -425,8 +425,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	private List<Integer> geUtmRegUserIdtList(Integer sourceId, String type) {
-		UtmResponse response = restTemplate.getForObject(
-				"http://AM-USER/am-user/promotion/utmreg/getutmreglist/" + sourceId + "/" + type, UtmResponse.class);
+		UtmRegResponse response = restTemplate.getForObject(
+				"http://AM-USER/am-user/promotion/utmreg/getutmreglist/" + sourceId + "/" + type, UtmRegResponse.class);
 		List<Integer> userIdList = new ArrayList<>();
 		if (response != null) {
 			List<UtmRegVO> list = response.getResultList();

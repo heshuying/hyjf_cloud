@@ -6,9 +6,9 @@ package com.hyjf.am.user.service.impl;
 import com.hyjf.am.user.dao.customize.CustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.BaseService;
+import com.hyjf.common.util.GetDate;
 import org.springframework.util.CollectionUtils;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.List;
 
@@ -68,7 +68,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         cra.andBankOpenAccountEqualTo(1);
         cra.andIsCaFlagEqualTo(0);
         //法大大上线时间2018-03-14 00:00:00
-        cra.andRegTimeGreaterThanOrEqualTo(DateFormat.getDateTimeInstance().parse("2018/3/14"));
+        cra.andRegTimeGreaterThanOrEqualTo(GetDate.stringToDate("2018-03-14 00:00:00"));
         return userMapper.selectByExample(usersExample);
     }
 

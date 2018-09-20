@@ -156,12 +156,9 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 						// 放款成功,更新mongo运营数据
 						logger.info("放款成功更新运营数据...");
 						JSONObject params = new JSONObject();
-						params.put("type", 1);// 散标
+						// 散标
+						params.put("type", 1);
 						params.put("money", borrowApicron.getBorrowAccount());
-						
-						// 运营数据的统计队列，暂时不加
-//						rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON,
-//								RabbitMQConstants.ROUTINGKEY_OPERATION_DATA, JSONObject.toJSONString(params));
 				        //运营数据队列
 				        try {
 				            calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.WebHomePageCustomizeMapper">
+	<resultMap id="TotalStatisticsMap" type="com.hyjf.am.trade.dao.model.customize.WebHomePageStatisticsCustomize">
+		<id column="total_sum" property="totalSum" jdbcType="VARCHAR" />
+		<result column="total_interest" property="totalInterest" jdbcType="VARCHAR" />
+		<result column="bail_total" property="bailTotal" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="countTotalStatistics" resultMap="TotalStatisticsMap" parameterType="Map">
+			SELECT
+		FORMAT(
+			(
+				SELECT
+					IFNULL(SUM(account),0) + 	IFNULL((
+						SELECT
+							SUM(hydpl.amount)
+						FROM
+							ht_product_list hydpl
+						WHERE
+							hydpl.invest_status = 0
+					),0) + IFNULL((
+						SELECT
+							sum(assign_account)
+						FROM
+							ht_credit_tender
+					),0)
+				FROM
+					ht_borrow_tender
+			),
+			0
+		) AS total_sum,
+		FORMAT(
+			(
+				SELECT
+					IFNULL(SUM(recover_account_interest),0) + IFNULL((
+						SELECT
+							SUM(hydpi.interest)
+						FROM
+							ht_product_interest hydpi
+					),0) + IFNULL((
+						SELECT
+							sum(assign_interest)
+						FROM
+							ht_credit_tender
+					),0)
+				FROM
+					ht_borrow_tender
+			),
+			0
+		) AS total_interest,
+		FORMAT(
+			(
+				SELECT
+					IFNULL(SUM(br.recover_capital),0) * 0.03
+				FROM
+					ht_borrow_recover br
+				WHERE
+					br.recover_status = 0
+			),
+			0
+		) AS bail_total
+	</select>
+</mapper>

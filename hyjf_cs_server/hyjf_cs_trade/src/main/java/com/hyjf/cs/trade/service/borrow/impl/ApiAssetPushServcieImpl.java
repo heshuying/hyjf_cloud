@@ -7,8 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
@@ -24,7 +24,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.assetpush.PushBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
-import com.hyjf.cs.trade.client.ApiAssetClient;
 import com.hyjf.cs.trade.client.AutoSendClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AutoSendProducer;
@@ -57,9 +56,6 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
     private static final Long MAX_ASSET_MONEY = 1000000L;
 
     @Autowired
-    private ApiAssetClient apiAssetClient;
-
-    @Autowired
     private AutoSendClient autoSendClient;
 
     @Autowired
@@ -72,7 +68,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         params.put("assetId", hjhPlanAsset.getAssetId());
         params.put("instCode", hjhPlanAsset.getInstCode());
         try {
-            autoSendProducer.messageSend(new MessageContent(MQConstant.BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+            autoSendProducer.messageSend(new MessageContent(MQConstant.HJH_AUTO_ISSUERECOVER_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             logger.error("自动录标发送消息失败...", e);
         }

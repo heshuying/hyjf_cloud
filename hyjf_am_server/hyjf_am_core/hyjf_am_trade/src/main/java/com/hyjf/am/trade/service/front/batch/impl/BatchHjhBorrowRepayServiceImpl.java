@@ -40,9 +40,6 @@ public class BatchHjhBorrowRepayServiceImpl implements BatchHjhBorrowRepayServic
     HjhRepayMapper hjhRepayMapper;
 
     @Autowired
-    CalculateInvestInterestMapper calculateInvestInterestMapper;
-
-    @Autowired
     BatchHjhBorrowRepayCustomizeMapper batchHjhBorrowRepayCustomizeMapper;
 
     @Override
@@ -131,19 +128,5 @@ public class BatchHjhBorrowRepayServiceImpl implements BatchHjhBorrowRepayServic
     public HjhRepay selectHjhRepayListById(Integer id) {
         return hjhRepayMapper.selectByPrimaryKey(id);
     }
-
-    @Override
-    public List<CalculateInvestInterest> selectCalculateInvestInterest() {
-        return this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
-    }
-
-    @Override
-    public Integer updateCalculateInvestByPrimaryKey(CalculateInvestInterestVO calculateInvestInterestVO) {
-        CalculateInvestInterest calculateInvestInterest = new CalculateInvestInterest();
-        BeanUtils.copyProperties(calculateInvestInterestVO,calculateInvestInterest);
-        boolean result =  this.batchHjhBorrowRepayCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateInvestInterest) >0 ? true:false;
-        return result?1:0;
-    }
-
 
 }

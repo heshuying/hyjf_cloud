@@ -127,8 +127,43 @@ public class MsgPushServiceImpl implements MsgPushService {
 	}
 
 	@Override
-	public void insertMessagePush(MessagePush messagePush) {
-		messagePushMsgDao.insert(messagePush);
+	public void insertMessagePush(MessagePush msg) {
+		MessagePushTemplateStatics msgSta = new MessagePushTemplateStatics();
+		msgSta.setMsgId(msg.getId());
+		msgSta.setMsgCode(msg.getMsgCode());
+		msgSta.setMsgTitle(msg.getMsgTitle());
+		msgSta.setTagId(msg.getTagId());
+		msgSta.setSendTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(msg.getSendTime()));
+		msgSta.setAndroidDestinationCount(0);
+		msgSta.setIosDestinationCount(0);
+		msgSta.setAndroidReadCount(0);
+		msgSta.setAndroidSendCount(0);
+		msgSta.setIosReadCount(0);
+		msgSta.setIosSendCount(0);
+		msgSta.setCreateTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(GetDate.getNowTime10()));
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		criteria.and("msgCode").is(msgSta.getMsgCode());
+		List<MessagePushTemplateStatics> list = msgStaticsDao.find(query);
+		if (list == null || list.size() == 0) {
+			this.msgStaticsDao.insert(msgSta);
+		}
+		if (list.size() > 0) {
+			Update update = new Update();
+			update.set("msgId", msg.getId());
+			update.set("mgCode", msg.getMsgCode());
+			update.set("mgTitle", msg.getMsgTitle());
+			update.set("tagId", msg.getTagId());
+			update.set("sendTime", GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(msg.getSendTime()));
+			update.set("androidDestinationCount", 0);
+			update.set("iosDestinationCount", 0);
+			update.set("androidReadCount", 0);
+			update.set("androidSendCount", 0);
+			update.set("iosReadCount", 0);
+			update.set("iosSendCount", 0);
+			update.set("createTime", GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(GetDate.getNowTime10()));
+			this.msgStaticsDao.update(query, update);
+		}
 	}
 
 	@Override
@@ -340,7 +375,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 			return;
 		}
 		MessagePushTemplateStatics msgSta = new MessagePushTemplateStatics();
-		msgSta.setMsgId(template.getId());
+		msgSta.setMsgId(template.getId().toString());
 		msgSta.setMsgCode(template.getTemplateCode());
 		msgSta.setMsgTitle(template.getTemplateTitle());
 		msgSta.setTagId(template.getTagId());

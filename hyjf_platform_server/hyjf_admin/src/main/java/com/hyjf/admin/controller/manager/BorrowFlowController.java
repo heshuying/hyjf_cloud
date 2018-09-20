@@ -84,6 +84,7 @@ public class BorrowFlowController extends BaseController {
             resList=borrowFlowService.selectBorrowFlowInfo(adminRequest);
             if(Response.isSuccess(resList)){
                 record=resList.getResult();
+                record.setBorrowCdCd(String.valueOf(record.getBorrowCd()));
             }else{
                 resList=new AdminBorrowFlowResponse();
                 resList.setRtn(Response.FAIL);
@@ -99,18 +100,31 @@ public class BorrowFlowController extends BaseController {
         resList.setHjhInstConfigList(hjhInstConfigList);
         // 产品类型
         List<HjhAssetTypeVO> assetTypeList = this.borrowFlowService.hjhAssetTypeList(record.getInstCode());
-        resList.setAssetTypeList(assetTypeList);
+        List<Map<String, Object>> assetTypeListMap = new ArrayList<Map<String, Object>>();
+        if (assetTypeList != null && assetTypeList.size() > 0) {
+            for (HjhAssetTypeVO hjhAssetBorrowType : assetTypeList) {
+                Map<String, Object> mapTemp = new HashMap<String, Object>();
+                mapTemp.put("id", hjhAssetBorrowType.getAssetType());
+                mapTemp.put("text", hjhAssetBorrowType.getAssetTypeName());
+                assetTypeListMap.add(mapTemp);
+            }
+        }
+        resList.setAssetTypeListMap(assetTypeListMap);
         return new AdminResult<AdminBorrowFlowResponse>(resList) ;
     }
     @ApiOperation(value = "添加流程配置", notes = "添加流程配置")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
-        AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
+        if(StringUtils.isNotBlank(adminRequest.getBorrowCdCd())){
+            adminRequest.setBorrowCd(Integer.valueOf(adminRequest.getBorrowCdCd()));
+        }
+        AdminBorrowFlowResponse resList=null;
         ModelAndView modelAndView = new ModelAndView();
         // 表单校验
         String message=this.validatorFieldCheck(modelAndView, adminRequest);
         if (StringUtils.isNotBlank(message)) {
+            resList=new AdminBorrowFlowResponse();
             // 项目列表
             List<BorrowProjectTypeVO> borrowProjectTypeList = this.borrowFlowService.borrowProjectTypeList("HZT");
             resList.setBorrowProjectTypeList(borrowProjectTypeList);
@@ -125,16 +139,16 @@ public class BorrowFlowController extends BaseController {
             return new AdminResult<AdminBorrowFlowResponse>(resList) ;
         }
         AdminSystemVO user = getUser(request);
-        if(org.apache.commons.lang.StringUtils.isNotBlank(user.getId())){
-            adminRequest.setCreateUser(Integer.parseInt(user.getId()));
-            adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
-        }else{
-            adminRequest.setCreateUser(3);//为了接口测试用
-            adminRequest.setUpdateUser(3);
-        }
+        adminRequest.setCreateUser(Integer.parseInt(user.getId()));
+        adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
         // 插入
-        this.borrowFlowService.insertRecord(adminRequest);
-        resList.setRtn(Response.SUCCESS);
+        resList = this.borrowFlowService.insertRecord(adminRequest);
+        if (resList == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(resList)) {
+            return new AdminResult<>(FAIL, resList.getMessage());
+        }
         return new AdminResult<AdminBorrowFlowResponse>(resList) ;
     }
 
@@ -142,26 +156,36 @@ public class BorrowFlowController extends BaseController {
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminResult updateBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
-        AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
-        AdminSystemVO user = getUser(request);
-        if(org.apache.commons.lang.StringUtils.isNotBlank(user.getId())){
-            adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
-        }else{
-            adminRequest.setUpdateUser(3);
+        if(adminRequest.getId() == null){
+            return new AdminResult<>(FAIL, "id不能为空");
         }
+        if(StringUtils.isNotBlank(adminRequest.getBorrowCdCd())){
+            adminRequest.setBorrowCd(Integer.valueOf(adminRequest.getBorrowCdCd()));
+        }
+        AdminSystemVO user = getUser(request);
+        adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
         // 数据更新
-        this.borrowFlowService.updateRecord(adminRequest);
-        resList.setRtn(Response.SUCCESS);
+        AdminBorrowFlowResponse resList=this.borrowFlowService.updateRecord(adminRequest);
+        if (resList == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(resList)) {
+            return new AdminResult<>(FAIL, resList.getMessage());
+        }
         return new AdminResult<AdminBorrowFlowResponse>(resList) ;
     }
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "删除流程配置")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
-        AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
         // 数据更新
-        this.borrowFlowService.deleteRecord(adminRequest);
-        resList.setRtn(Response.SUCCESS);
+        AdminBorrowFlowResponse resList=this.borrowFlowService.deleteRecord(adminRequest);
+        if (resList == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(resList)) {
+            return new AdminResult<>(FAIL, resList.getMessage());
+        }
         return new AdminResult<AdminBorrowFlowResponse>(resList) ;
     }
 

@@ -43,8 +43,4 @@ public interface BatchHjhBorrowRepayService{
 
     HjhRepay selectHjhRepayListById(Integer id);
 
-    List<CalculateInvestInterest> selectCalculateInvestInterest();
-
-    Integer updateCalculateInvestByPrimaryKey(CalculateInvestInterestVO calculateInvestInterestVO);
-
 }
