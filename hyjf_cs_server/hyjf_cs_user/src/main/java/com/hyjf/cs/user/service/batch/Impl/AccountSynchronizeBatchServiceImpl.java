@@ -188,7 +188,7 @@ public class AccountSynchronizeBatchServiceImpl implements AccountSynchronizeBat
                 }
             }
         } catch (Exception e) {
-            logger.error("更新用户银行卡信息失败----userId:" + userId);
+            logger.error("更新用户银行卡信息失败----userId:" + userId, e);
         }
         return false;
     }
