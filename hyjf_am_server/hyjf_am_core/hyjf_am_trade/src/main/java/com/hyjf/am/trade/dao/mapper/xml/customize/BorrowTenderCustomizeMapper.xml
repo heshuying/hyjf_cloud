@@ -15,7 +15,7 @@
 				<if test="type != null and type != ''">
 					AND a.client=#{type}
 				</if>
-				<if test="list != null">
+				<if test="list != null and list.size() > 0">
 					and a.user_id in
 					<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
 						#{item}
@@ -36,8 +36,8 @@
 		<where>
 			hb.project_type <![CDATA[<>]]> 8
 			AND hb.project_type <![CDATA[<>]]> 13
-			<if test="list != null">
-				and hbt.user_id in
+			<if test="list != null and list.size() > 0">
+			and hbt.user_id in
 				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
 					#{item}
 				</foreach>
@@ -55,7 +55,7 @@
 		select sum(hbt.account) from ht_borrow_tender hbt left join ht_borrow hb on hbt.borrow_nid = hb.user_id
 		<where>
 			hb.project_type = 8
-			<if test="list != null">
+			<if test="list != null and list.size() > 0">
 				and hbt.user_id in
 				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
 					#{item}
@@ -74,7 +74,7 @@
 	select sum(hbt.account) from ht_borrow_tender hbt left join ht_borrow hb on hbt.borrow_nid = hb.user_id
 		<where>
 			hb.project_type = 13
-			<if test="list != null">
+			<if test="list != null and list.size() > 0">
 				and hbt.user_id in
 				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
 					#{item}
