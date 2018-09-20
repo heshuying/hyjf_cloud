@@ -85,7 +85,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserAliasVO findAliasByMobile(final String mobile) {
 		UserAliasResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findAliasByMobile/" + mobile, UserAliasResponse.class)
+				.getForEntity("http://AM-USER/am-user/userAlias/findAliasByMobile/" + mobile, UserAliasResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResult();

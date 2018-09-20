@@ -20,6 +20,8 @@ public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
     private Integer assetType;
 
     private Integer borrowCd;
+    //string類型的borrowCd
+    private String borrowCdCd;
 
     private Integer isOpen;
 
@@ -227,6 +229,14 @@ public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getBorrowCdCd() {
+        return borrowCdCd;
+    }
+
+    public void setBorrowCdCd(String borrowCdCd) {
+        this.borrowCdCd = borrowCdCd;
     }
 
     @Override

@@ -102,56 +102,44 @@ public class StatisticsOperationReportServiceImpl extends BaseMarketServiceImpl 
 		// 要统计前一个月的数据，所以月份要减一
 		cal.add(Calendar.MONTH, -1);
 		sdf = new SimpleDateFormat("yyyyMM");
-		OperationReportEntityVO oe = amTradeClient.getOperationReport(transferDateToInt(cal, sdf));
+		OperationReportEntityVO oe = amDataCollect.getOperationReport(transferDateToInt(cal, sdf));
 		if (oe == null) {
 			oe = new OperationReportEntityVO();
 		}
 		oe.setInsertDate(transferDateToInt(cal, sdf));
 
 		oe.setStatisticsMonth(transferDateToInt(cal, sdf));
-//		System.out.println(sdf.format(cal.getTime()));
 		// 月交易金额
-		oe.setAccountMonth(amTradeClient.getAccountByMonth(getFirstDay(cal), getLastDay(cal)));
-//		System.out.println(sdf.format(cal.getTime()));
+		oe.setAccountMonth(amAdminClient.getAccountByMonth(getFirstDay(cal), getLastDay(cal)));
 		// 月交易笔数
-		oe.setTradeCountMonth(amTradeClient.getTradeCountByMonth(getFirstDay(cal), getLastDay(cal)));
-//		System.out.println(sdf.format(cal.getTime()));
-		// 累计交易笔数
-//		oe.setTradeCount(operationReportCustomizeMapper.getTradeCount());
-//		System.out.println(sdf.format(cal.getTime()));
-		//累计交易金额
-//		oe.setTotalCount(operationReportCustomizeMapper.getTotalCount());
-		//累计收益
-//		oe.setTotalInterest(operationReportCustomizeMapper.getIotalInterest());
+		oe.setTradeCountMonth(amAdminClient.getTradeCountByMonth(getFirstDay(cal), getLastDay(cal)));
 		//借贷笔数
-		oe.setLoanNum(amTradeClient.getLoanNum(getLastDay(cal)));
+		oe.setLoanNum(amAdminClient.getLoanNum(getLastDay(cal)));
 		//人均投资金额
-		double bb=amTradeClient.getInvestLastDate(getLastDay(cal));
-		int aa=amTradeClient.getTenderCount(getLastDay(cal));
-//		System.out.println(bb);
-//		System.out.println(aa);
-//		System.out.println(bb/aa);
+		double bb=amAdminClient.getInvestLastDate(getLastDay(cal)).doubleValue();
+		int aa=amAdminClient.getTenderCount(getLastDay(cal));
 		oe.setPerInvest((int)Math.ceil(bb/aa));
 		//平均满标时间
-		oe.setFullBillTimeCurrentMonth(amTradeClient.getFullBillAverageTime(getLastDay(cal)));
-//		System.out.println(sdf.format(cal.getTime()));
+		oe.setFullBillTimeCurrentMonth(amAdminClient.getFullBillAverageTime(getLastDay(cal)));
 		//投资人总数
-		oe.setTenderCount(amTradeClient.getTenderCount(getLastDay(cal)));
-//		System.out.println(sdf.format(cal.getTime()));
+		oe.setTenderCount(amAdminClient.getTenderCount(getLastDay(cal)));
 		//代偿金额
-		oe.setWillPayMoney(amTradeClient.getRepayTotal(getLastDay(cal)));
+		oe.setWillPayMoney(amAdminClient.getRepayTotal(getLastDay(cal)));
 
 		BorrowUserStatisticVO borrowUserStatistic = this.selectBorrowUserStatistic();
-		// 累计借款人
-		oe.setBorrowuserCountTotal(borrowUserStatistic.getBorrowuserCountTotal());
-		// 当前投资人
-		oe.setBorrowuserCountCurrent(borrowUserStatistic.getBorrowuserCountCurrent());
-		// 当前投资人
-		oe.setTenderuserCountCurrent(borrowUserStatistic.getTenderuserCountCurrent());
-		// 最大单一借款人待还金额占比
-		oe.setBorrowuserMoneyTopone(borrowUserStatistic.getBorrowuserMoneyTopone().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2,BigDecimal.ROUND_HALF_UP));
-		// 前十大借款人待还金额占比
-		oe.setBorrowuserMoneyTopten(borrowUserStatistic.getBorrowuserMoneyTopten().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2,BigDecimal.ROUND_HALF_UP));
+		if(borrowUserStatistic != null){
+
+			// 累计借款人
+			oe.setBorrowuserCountTotal(borrowUserStatistic.getBorrowuserCountTotal());
+			// 当前投资人
+			oe.setBorrowuserCountCurrent(borrowUserStatistic.getBorrowuserCountCurrent());
+			// 当前投资人
+			oe.setTenderuserCountCurrent(borrowUserStatistic.getTenderuserCountCurrent());
+			// 最大单一借款人待还金额占比
+			oe.setBorrowuserMoneyTopone(borrowUserStatistic.getBorrowuserMoneyTopone().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2,BigDecimal.ROUND_HALF_UP));
+			// 前十大借款人待还金额占比
+			oe.setBorrowuserMoneyTopten(borrowUserStatistic.getBorrowuserMoneyTopten().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2,BigDecimal.ROUND_HALF_UP));
+		}
 
 	}
 

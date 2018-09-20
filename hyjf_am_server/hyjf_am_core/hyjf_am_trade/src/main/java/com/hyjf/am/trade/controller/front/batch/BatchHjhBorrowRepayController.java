@@ -113,17 +113,6 @@ public class BatchHjhBorrowRepayController extends BaseController {
         return response;
     }
 
-    @GetMapping("/selectCalculateInvestInterest/{accedeOrderId}")
-    public CalculateInvestInterestResponse selectCalculateInvestInterest() {
-        CalculateInvestInterestResponse response = new CalculateInvestInterestResponse();
-        List<CalculateInvestInterest> calculateInvestInterests = batchHjhBorrowRepayService.selectCalculateInvestInterest();
-        if (calculateInvestInterests != null) {
-            List<CalculateInvestInterestVO> calculateInvestInterestVOS = CommonUtils.convertBeanList(calculateInvestInterests,CalculateInvestInterestVO.class);
-            response.setResultList(calculateInvestInterestVOS);
-        }
-        return response;
-    }
-
     @RequestMapping("/updateHjhBorrowRepayInterest")
     public Integer updateHjhBorrowRepayInterest(@RequestBody @Valid HjhAccedeVO hjhAccedeVO) {
         return this.batchHjhBorrowRepayService.updateHjhBorrowRepayInterest(hjhAccedeVO);
@@ -148,10 +137,4 @@ public class BatchHjhBorrowRepayController extends BaseController {
     public Integer updateHjhRepayByPrimaryKey(@RequestBody @Valid HjhRepayVO hjhRepayVO) {
         return this.batchHjhBorrowRepayService.updateHjhRepayByPrimaryKey(hjhRepayVO);
     }
-
-    @RequestMapping("/updateCalculateInvestByPrimaryKey")
-    public Integer updateCalculateInvestByPrimaryKey(@RequestBody @Valid CalculateInvestInterestVO calculateInvestInterestVO) {
-        return this.batchHjhBorrowRepayService.updateCalculateInvestByPrimaryKey(calculateInvestInterestVO);
-    }
-
 }
