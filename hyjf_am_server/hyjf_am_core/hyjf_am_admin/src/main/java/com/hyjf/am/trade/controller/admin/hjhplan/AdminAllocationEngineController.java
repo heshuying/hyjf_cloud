@@ -331,7 +331,7 @@ public class AdminAllocationEngineController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/getPlanBorrowStyle/{planNid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/getPlanBorrowStyle/{planNid}", method = RequestMethod.GET)
     public StringResponse getPlanBorrowStyle(@PathVariable String planNid) {
     	String borrowStyle = adminAllocationEngineService.getPlanBorrowStyle(planNid);
     	return new StringResponse(borrowStyle);

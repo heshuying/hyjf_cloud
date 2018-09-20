@@ -2726,7 +2726,10 @@ public class AmTradeClientImpl implements AmTradeClient {
     public String getPlanBorrowStyle(String planNid) {
         String url = "http://AM-ADMIN/am-trade/allocation/getPlanBorrowStyle/" + planNid;
         StringResponse borrowStyle = restTemplate.getForEntity(url, StringResponse.class).getBody();
-        return borrowStyle.getResult().toString();
+        if(borrowStyle.getResult()!=null) {
+        	borrowStyle.getResult().toString();
+        }
+        return null;
     }
 
     @Override
