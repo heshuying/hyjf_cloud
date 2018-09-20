@@ -25,22 +25,22 @@
 		LEFT JOIN ht_r_oa_department odx3 ON odx3.id = odx2.parentid
 		<where>
 			<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
-				AND hdp.plan_nid LIKE CONCAT('%', #{debtPlanNidSrch}, '%')
+				AND hdp.plan_nid LIKE CONCAT( #{debtPlanNidSrch}, '%')
 			</if>
 			<if test="accedeOrderIdSrch != null and accedeOrderIdSrch != ''">
 				AND hdpa.accede_order_id = #{accedeOrderIdSrch} 
 			</if>
 			<if test="userNameSrch != null and userNameSrch != ''">
-				AND hdpa.user_name LIKE CONCAT('%', #{userNameSrch},'%')
+				AND hdpa.user_name LIKE CONCAT( #{userNameSrch},'%')
 			</if>
 			<if test="debtLockPeriodSrch != null and debtLockPeriodSrch != ''">
 				AND hdpa.lock_period = #{debtLockPeriodSrch}
 			</if>
 			<if test="refereeNameSrch != null and refereeNameSrch != ''">
-				AND hydui.username LIKE CONCAT('%', #{refereeNameSrch},'%')
+				AND hydui.username LIKE CONCAT( #{refereeNameSrch},'%')
 			</if>
 			<if test="orderStatus != null and orderStatus != ''">
-				AND hdpa.order_status LIKE CONCAT('%', #{orderStatus},'%')
+				AND hdpa.order_status LIKE CONCAT( #{orderStatus},'%')
 			</if>
 			<if test="platformSrch != null and platformSrch != ''">
 				AND hdpa.client = #{platformSrch}
@@ -292,22 +292,22 @@
 			LEFT JOIN ht_r_oa_department odx3 ON odx3.id = odx2.parentid
 			<where>
 				<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
-					AND hdp.plan_nid LIKE CONCAT('%', #{debtPlanNidSrch}, '%')
+					AND hdp.plan_nid LIKE CONCAT( #{debtPlanNidSrch}, '%')
 				</if>
 				<if test="accedeOrderIdSrch != null and accedeOrderIdSrch != ''">
 					AND hdpa.accede_order_id = #{accedeOrderIdSrch}                       
 				</if>
 				<if test="userNameSrch != null and userNameSrch != ''">
-					AND hdpa.user_name LIKE CONCAT('%', #{userNameSrch},'%')
+					AND hdpa.user_name LIKE CONCAT( #{userNameSrch},'%')
 				</if>
 				<if test="debtLockPeriodSrch != null and debtLockPeriodSrch != ''">
 					AND hdpa.lock_period = #{debtLockPeriodSrch}
 				</if>
 				<if test="refereeNameSrch != null and refereeNameSrch != ''">
-					AND hydui.username LIKE CONCAT('%', #{refereeNameSrch},'%')
+					AND hydui.username LIKE CONCAT( #{refereeNameSrch},'%')
 				</if>
 				<if test="orderStatus != null and orderStatus != ''">
-					AND hdpa.order_status LIKE CONCAT('%', #{orderStatus},'%')
+					AND hdpa.order_status LIKE CONCAT( #{orderStatus},'%')
 				</if>
 				<if test="platformSrch != null and platformSrch != ''">
 					AND hdpa.client = #{platformSrch}
@@ -393,19 +393,19 @@
 			LEFT JOIN ht_r_oa_department odx3 ON odx3.id = odx2.parentid
 			<where>
 				<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
-					AND hdp.plan_nid LIKE CONCAT('%', #{debtPlanNidSrch}, '%')
+					AND hdp.plan_nid LIKE CONCAT( #{debtPlanNidSrch}, '%')
 				</if>
 				<if test="accedeOrderIdSrch != null and accedeOrderIdSrch != ''">
 					AND hdpa.accede_order_id = #{accedeOrderIdSrch} 
 				</if>
 				<if test="userNameSrch != null and userNameSrch != ''">
-					AND hdpa.user_name LIKE CONCAT('%', #{userNameSrch},'%')
+					AND hdpa.user_name LIKE CONCAT( #{userNameSrch},'%')
 				</if>
 				<if test="refereeNameSrch != null and refereeNameSrch != ''">
-					AND hydui.username LIKE CONCAT('%', #{refereeNameSrch},'%')
+					AND hydui.username LIKE CONCAT( #{refereeNameSrch},'%')
 				</if>
 				<if test="orderStatus != null and orderStatus != ''">
-					AND hdpa.order_status LIKE CONCAT('%', #{orderStatus},'%')
+					AND hdpa.order_status LIKE CONCAT( #{orderStatus},'%')
 				</if>
 				<if test="platformSrch != null and platformSrch != ''">
 					AND hdpa.client = #{platformSrch}

@@ -113,7 +113,7 @@
     <!--CASE state WHEN 1 THEN '启用' WHEN 0 THEN '禁用' ELSE '' END state_name,-->
      <!--createtime, `createuser`, updatetime, -->
     <!--updateuser, del_flg, approval_name, FROM_UNIXTIME( approval_time, '%Y-%m-%d' ) AS approval_time, remark, instCode, instName-->
-    <!--from hyjf_stzh_white_list-->
+    <!--from ht_stzh_white_list-->
     <!--<if test="_parameter != null" >-->
       <!--<include refid="Example_Where_Clause" />-->
     <!--</if>-->
@@ -131,15 +131,15 @@
     <!--st_accountid, st_mobile, st_customer_name, `state`,-->
      <!--createtime, `createuser`, updatetime, -->
     <!--updateuser, del_flg, approval_name, FROM_UNIXTIME( approval_time, '%Y-%m-%d' ) AS approval_time, remark, instCode, instName-->
-    <!--from hyjf_stzh_white_list-->
+    <!--from ht_stzh_white_list-->
     <!--where id = #{id,jdbcType=INTEGER}-->
   <!--</select>-->
   <!--<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >-->
-    <!--delete from hyjf_stzh_white_list-->
+    <!--delete from ht_stzh_white_list-->
     <!--where id = #{id,jdbcType=INTEGER}-->
   <!--</delete>-->
   <!--<delete id="deleteByExample" parameterType="com.hyjf.mybatis.model.customize.STZHWhiteListCustomizeExample" >-->
-    <!--delete from hyjf_stzh_white_list-->
+    <!--delete from ht_stzh_white_list-->
     <!--<if test="_parameter != null" >-->
       <!--<include refid="Example_Where_Clause" />-->
     <!--</if>-->
@@ -148,7 +148,7 @@
     <!--<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >-->
       <!--SELECT LAST_INSERT_ID()-->
     <!--</selectKey>-->
-    <!--insert into hyjf_stzh_white_list (user_id, user_name, accountid, -->
+    <!--insert into ht_stzh_white_list (user_id, user_name, accountid, -->
       <!--mobile, customer_name, st_user_id, -->
       <!--st_user_name, st_accountid, st_mobile, -->
       <!--st_customer_name, `state`, createtime, -->
@@ -167,7 +167,7 @@
     <!--<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >-->
       <!--SELECT LAST_INSERT_ID()-->
     <!--</selectKey>-->
-    <!--insert into hyjf_stzh_white_list-->
+    <!--insert into ht_stzh_white_list-->
     <!--<trim prefix="(" suffix=")" suffixOverrides="," >-->
       <!--<if test="userId != null" >-->
         <!--user_id,-->
@@ -300,13 +300,13 @@
     <!--</trim>-->
   <!--</insert>-->
   <!--<select id="countByExample" parameterType="com.hyjf.mybatis.model.customize.STZHWhiteListCustomizeExample" resultType="java.lang.Integer" >-->
-    <!--select count(*) from hyjf_stzh_white_list-->
+    <!--select count(*) from ht_stzh_white_list-->
     <!--<if test="_parameter != null" >-->
       <!--<include refid="Example_Where_Clause" />-->
     <!--</if>-->
   <!--</select>-->
   <!--<update id="updateByExampleSelective" parameterType="map" >-->
-    <!--update hyjf_stzh_white_list-->
+    <!--update ht_stzh_white_list-->
     <!--<set >-->
       <!--<if test="record.id != null" >-->
         <!--id = #{record.id,jdbcType=INTEGER},-->
@@ -380,7 +380,7 @@
     <!--</if>-->
   <!--</update>-->
   <!--<update id="updateByExample" parameterType="map" >-->
-    <!--update hyjf_stzh_white_list-->
+    <!--update ht_stzh_white_list-->
     <!--set id = #{record.id,jdbcType=INTEGER},-->
       <!--user_id = #{record.userId,jdbcType=INTEGER},-->
       <!--user_name = #{record.userName,jdbcType=VARCHAR},-->
@@ -408,7 +408,7 @@
     <!--</if>-->
   <!--</update>-->
   <!--<update id="updateByPrimaryKeySelective" parameterType="com.hyjf.mybatis.model.customize.STZHWhiteListCustomize" >-->
-    <!--update hyjf_stzh_white_list-->
+    <!--update ht_stzh_white_list-->
     <!--<set >-->
       <!--<if test="userId != null" >-->
         <!--user_id = #{userId,jdbcType=INTEGER},-->
@@ -477,7 +477,7 @@
     <!--where id = #{id,jdbcType=INTEGER}-->
   <!--</update>-->
   <!--<update id="updateByPrimaryKey" parameterType="com.hyjf.mybatis.model.customize.STZHWhiteListCustomize" >-->
-    <!--update hyjf_stzh_white_list-->
+    <!--update ht_stzh_white_list-->
     <!--set user_id = #{userId,jdbcType=INTEGER},-->
       <!--user_name = #{userName,jdbcType=VARCHAR},-->
       <!--accountid = #{accountid,jdbcType=VARCHAR},-->
@@ -536,7 +536,7 @@
     <!--select -->
     <!--id, inst_code, inst_name, inst_type, capital_toplimit, remark, create_user, create_time, -->
     <!--update_user, update_time, del_flg-->
-    <!--from hyjf_hjh_inst_config-->
+    <!--from ht_hjh_inst_config-->
     <!--where inst_code = #{instCode,jdbcType=VARCHAR}-->
   <!--</select>-->
 </mapper>

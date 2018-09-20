@@ -64,7 +64,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int countUserByRecommendName(String reffer) {
 		UserResponse response = restTemplate
-				.getForEntity(userService+"/user/findReffer/" + reffer, UserResponse.class).getBody();
+				.getForEntity(userService+"/user/findUserByRecommendName/" + reffer, UserResponse.class).getBody();
 		if (response != null  && response.getResult() != null) {
 			return 1;
 		}

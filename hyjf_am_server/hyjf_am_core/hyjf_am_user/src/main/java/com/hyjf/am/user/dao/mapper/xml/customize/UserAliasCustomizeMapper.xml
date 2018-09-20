@@ -4,7 +4,7 @@
 
 <select id="findAliasByMobiles" parameterType="java.util.List" resultType="com.hyjf.am.vo.user.UserAliasVO">
     select id, user_id, sign, alias, client, package_code
-    from hyjf_user_alias
+    from ht_user_alias
     where package_code in
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
         #{item}

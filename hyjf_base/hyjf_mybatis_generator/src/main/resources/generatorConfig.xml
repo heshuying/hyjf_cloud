@@ -732,10 +732,6 @@
             <columnOverride column="is_purchase_contract" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_calculate_invest_interest" domainObjectName="CalculateInvestInterest">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-
         <table tableName="ht_chinapnr_exclusive_log" domainObjectName="ChinapnrExclusiveLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="client" javaType="java.lang.Integer" jdbcType="TINYINT" />

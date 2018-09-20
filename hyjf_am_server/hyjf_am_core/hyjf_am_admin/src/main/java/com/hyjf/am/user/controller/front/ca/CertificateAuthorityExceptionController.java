@@ -89,17 +89,17 @@ public class CertificateAuthorityExceptionController extends BaseController {
      * @throws ParseException
      * @throws NumberFormatException
      */
-    @PostMapping("/modifyAction")
-    public CertificateAuthorityResponse modifyAction(@RequestBody CertificateAuthorityExceptionRequest form) throws NumberFormatException, ParseException, MQException {
+    @GetMapping("/modifyAction/{userId}")
+    public CertificateAuthorityResponse modifyAction(@PathVariable String userId) throws NumberFormatException, ParseException, MQException {
         CertificateAuthorityResponse cr = new CertificateAuthorityResponse();
         // 用户ID
-        if (Validator.isNull(form.getUserId())) {
+        if (Validator.isNull(userId)) {
             cr.setRtn(AdminResponse.FAIL);
             cr.setMessage("用户ID为空");
             return cr;
         }
         // 发送CA认证MQ
-        this.certificateAuthorityExceptionService.updateUserCAMQ(Integer.valueOf(form.getUserId()));
+        this.certificateAuthorityExceptionService.updateUserCAMQ(Integer.valueOf(userId));
         return cr;
     }
 

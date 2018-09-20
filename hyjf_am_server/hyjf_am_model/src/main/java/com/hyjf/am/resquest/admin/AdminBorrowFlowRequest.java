@@ -27,6 +27,8 @@ public class AdminBorrowFlowRequest extends BasePage implements Serializable{
 
     private Integer borrowCd;
 
+    private String borrowCdCd;
+
     private Integer isOpen;
 
     private Integer autoAdd;
@@ -293,5 +295,13 @@ public class AdminBorrowFlowRequest extends BasePage implements Serializable{
 
     public void setParamNameVOS(List<ParamNameVO> paramNameVOS) {
         this.paramNameVOS = paramNameVOS;
+    }
+
+    public String getBorrowCdCd() {
+        return borrowCdCd;
+    }
+
+    public void setBorrowCdCd(String borrowCdCd) {
+        this.borrowCdCd = borrowCdCd;
     }
 }

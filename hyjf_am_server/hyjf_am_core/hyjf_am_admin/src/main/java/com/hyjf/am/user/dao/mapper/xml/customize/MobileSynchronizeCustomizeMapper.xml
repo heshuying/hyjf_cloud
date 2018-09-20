@@ -11,15 +11,15 @@
 		<where>
 			<!-- 用户名 -->
 			<if test="userNameSrch != null and userNameSrch != ''">
-				hu.username LIKE CONCAT('%', #{userNameSrch}, '%')
+				hu.username LIKE CONCAT( #{userNameSrch}, '%')
 			</if>
 			<!-- 电子账户号 -->
 			<if test="accountIdSrch != null and accountIdSrch != ''">
-				AND hboa.`account` LIKE CONCAT('%', #{accountIdSrch}, '%')
+				AND hboa.`account` LIKE CONCAT( #{accountIdSrch}, '%')
 			</if>
 			<!-- 手机号 -->
 			<if test="mobileSrch!=null and mobileSrch != ''">
-				hu.mobile LIKE CONCAT('%',#{mobileSrch},'%')
+				hu.mobile LIKE CONCAT(#{mobileSrch},'%')
 			</if>
 		</where>
 	</sql>

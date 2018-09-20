@@ -8,16 +8,16 @@
 				AND hp.id = #{id}
 			</if>
 			<if test="mobile != null and mobile !='' ">
-				AND hp.mobile LIKE CONCAT('%', #{mobile}, '%')
+				AND hp.mobile LIKE CONCAT( #{mobile}, '%')
 			</if>
 			<if test="referrer != null and referrer !='' ">
-				AND hu.username LIKE CONCAT('%', #{referrer}, '%')
+				AND hu.username LIKE CONCAT( #{referrer}, '%')
 			</if>
 			<if test="source != null and source !='' ">
-				AND hutmp.source_name LIKE CONCAT('%', #{source}, '%')
+				AND hutmp.source_name LIKE CONCAT( #{source}, '%')
 			</if>
 			<if test="registFlag != null and registFlag !='' ">
-				AND hp.regist_flag LIKE CONCAT('%', #{registFlag}, '%')
+				AND hp.regist_flag LIKE CONCAT( #{registFlag}, '%')
 			</if>
 			<if test="preRegTimeStart != null and preRegTimeStart !='' ">
 				AND FROM_UNIXTIME( hp.pre_regist_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{preRegTimeStart}

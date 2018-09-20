@@ -82,7 +82,6 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
 
         logger.info("request params: orderId is: {}, couponType is: {}", orderId, couponType);
         result.setAccedeOrderId(orderId);
-        String sign = request.getParameter("sign");
         // 检查参数正确性
         if ( Validator.isNull(couponType) || Validator.isNull(type)
                 || Validator.isNull(orderId)) {
@@ -425,7 +424,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
     private void copyPlanCapitalInfoToResult(MyPlanDetailResultBean result, UserHjhInvistDetailCustomizeVO customize, String type) {
         MyPlanDetailResultBean.InvestIntr investIntr = result.getInvestIntr();
         investIntr.setAddDate(customize.getAddTime());
-        investIntr.setCapital(DF_FOR_VIEW.format(new BigDecimal(customize.getAccedeAccount())));
+        investIntr.setCapital(DF_FOR_VIEW.format(new BigDecimal(customize.getAccedeAccount().replaceAll(",",""))));
         investIntr.setCapitalInterest(customize.getReceivedTotal());
 
         // 计划处于投资中状态

@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomizeV2;
 import com.hyjf.am.trade.dao.model.customize.CouponUserCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.account.BankInvestAllService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -26,6 +27,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.util.calculate.FinancingServiceChargeUtils;
@@ -66,6 +68,9 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 
 	@Autowired
 	private SystemConfig systemConfig;
+
+	@Autowired
+	private CalculateInvestInterestProducer calculateInvestInterestProducer;
 
 
 	private Borrow getBorrowByNid(String borrowNid) {
@@ -1088,15 +1093,10 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 					result.put("status", 0);
 					throw new Exception("borrow表更新失败");
 				}
-				System.out.println("用户:" + userId + "***********************************更新borrow表，订单号：" + orderId);
-				List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
-				if (calculates != null && calculates.size() > 0) {
-					CalculateInvestInterest calculateNew = new CalculateInvestInterest();
-					calculateNew.setTenderSum(accountDecimal);
-					calculateNew.setId(calculates.get(0).getId());
-					calculateNew.setCreateTime(GetDate.getDate(nowTime));
-					this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
-				}
+				logger.info("用户:" + userId + "***********************************更新borrow表，订单号：" + orderId);
+
+				// 投资成功累加统计数据
+				calculateInvestTotal(accountDecimal, orderId);
 
 				// 计算此时的剩余可投资金额
 				Borrow waitBorrow = this.getBorrowByNid(borrowNid);
@@ -1163,6 +1163,26 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 			}
 		}
 		return result;
+	}
+
+	/**
+	 *
+	 * @param accountDecimal 投资金额
+	 * @param orderId  订单号
+	 */
+	private void calculateInvestTotal(BigDecimal accountDecimal, String orderId) {
+		// 投资成功累加统计数据
+		logger.info("投资成功累加统计数据...");
+		JSONObject params = new JSONObject();
+		params.put("tenderSum", accountDecimal);
+		try {
+			calculateInvestInterestProducer
+					.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC,
+							MQConstant.STATISTICS_CALCULATE_INVEST_SUM_TAG, UUID.randomUUID().toString(),
+							JSON.toJSONBytes(params)));
+		} catch (MQException e) {
+			logger.error("投资成功累加统计数据失败,投资订单号:" + orderId, e);
+		}
 	}
 
 	private Integer insertIncreaseInterest(Borrow borrow, BankCallBean bean , BorrowTender tender) {

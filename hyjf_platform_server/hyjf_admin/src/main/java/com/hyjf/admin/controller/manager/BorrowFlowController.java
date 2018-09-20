@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.manager;
 
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -12,12 +13,16 @@ import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,8 +51,14 @@ public class BorrowFlowController extends BaseController {
     @ApiOperation(value = "查询流程配置", notes = "查询流程配置")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminBorrowFlowResponse selectBorrowFlowList(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
+    public AdminResult selectBorrowFlowList(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         AdminBorrowFlowResponse resList=borrowFlowService.selectBorrowFlowList(adminRequest);
+        if(resList==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(resList)) {
+            return new AdminResult<>(FAIL, resList.getMessage());
+        }
         // 项目列表
         List<BorrowProjectTypeVO> borrowProjectTypeList = this.borrowFlowService.borrowProjectTypeList("HZT");
         resList.setBorrowProjectTypeList(borrowProjectTypeList);
@@ -60,40 +71,60 @@ public class BorrowFlowController extends BaseController {
         // 状态
         List<ParamNameVO> statusList = this.borrowProjectTypeService.getParamNameList("FLOW_STATUS");
         resList.setStatusList(statusList);
-        return resList ;
+        return new AdminResult<AdminBorrowFlowResponse>(resList) ;
     }
 
     @ApiOperation(value = "查询流程配置详情页面", notes = "查询流程配置详情页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
-    public AdminBorrowFlowResponse selectBorrowFlowInfo(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
+    public AdminResult selectBorrowFlowInfo(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
+        HjhAssetBorrowTypeVO record = new HjhAssetBorrowTypeVO();
         AdminBorrowFlowResponse resList= null;
         if(adminRequest.getId() != null){
             resList=borrowFlowService.selectBorrowFlowInfo(adminRequest);
+            if(Response.isSuccess(resList)){
+                record=resList.getResult();
+                record.setBorrowCdCd(String.valueOf(record.getBorrowCd()));
+            }else{
+                resList=new AdminBorrowFlowResponse();
+                resList.setRtn(Response.FAIL);
+                resList.setMessage(Response.FAIL_MSG);
+            }
         }
-        if (!Response.isSuccess(resList)) {
-            // 项目列表
-            List<BorrowProjectTypeVO> borrowProjectTypeList = this.borrowFlowService.borrowProjectTypeList("HZT");
-            resList.setBorrowProjectTypeList(borrowProjectTypeList);
-            // 资金来源
-            List<HjhInstConfigVO> hjhInstConfigList = this.borrowFlowService.hjhInstConfigList("");
-            resList.setHjhInstConfigList(hjhInstConfigList);
-            // 产品类型
-            List<HjhAssetTypeVO> assetTypeList = this.borrowFlowService.hjhAssetTypeList(adminRequest.getInstCodeSrch());
-            resList.setAssetTypeList(assetTypeList);
-            return resList;
+        // 项目列表
+        List<BorrowProjectTypeVO> borrowProjectTypeList = this.borrowFlowService.borrowProjectTypeList("HZT");
+        resList.setBorrowProjectTypeList(borrowProjectTypeList);
+        // 资金来源
+
+         List<HjhInstConfigVO> hjhInstConfigList = this.borrowFlowService.hjhInstConfigList("");
+        resList.setHjhInstConfigList(hjhInstConfigList);
+        // 产品类型
+        List<HjhAssetTypeVO> assetTypeList = this.borrowFlowService.hjhAssetTypeList(record.getInstCode());
+        List<Map<String, Object>> assetTypeListMap = new ArrayList<Map<String, Object>>();
+        if (assetTypeList != null && assetTypeList.size() > 0) {
+            for (HjhAssetTypeVO hjhAssetBorrowType : assetTypeList) {
+                Map<String, Object> mapTemp = new HashMap<String, Object>();
+                mapTemp.put("id", hjhAssetBorrowType.getAssetType());
+                mapTemp.put("text", hjhAssetBorrowType.getAssetTypeName());
+                assetTypeListMap.add(mapTemp);
+            }
         }
-        return resList;
+        resList.setAssetTypeListMap(assetTypeListMap);
+        return new AdminResult<AdminBorrowFlowResponse>(resList) ;
     }
     @ApiOperation(value = "添加流程配置", notes = "添加流程配置")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public AdminBorrowFlowResponse insertBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
-        AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
+    public AdminResult insertBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
+        if(StringUtils.isNotBlank(adminRequest.getBorrowCdCd())){
+            adminRequest.setBorrowCd(Integer.valueOf(adminRequest.getBorrowCdCd()));
+        }
+        AdminBorrowFlowResponse resList=null;
         ModelAndView modelAndView = new ModelAndView();
         // 表单校验
         String message=this.validatorFieldCheck(modelAndView, adminRequest);
         if (StringUtils.isNotBlank(message)) {
+            resList=new AdminBorrowFlowResponse();
             // 项目列表
             List<BorrowProjectTypeVO> borrowProjectTypeList = this.borrowFlowService.borrowProjectTypeList("HZT");
             resList.setBorrowProjectTypeList(borrowProjectTypeList);
@@ -105,50 +136,57 @@ public class BorrowFlowController extends BaseController {
             resList.setAssetTypeList(assetTypeList);
             resList.setRtn(Response.FAIL);
             resList.setMessage(message);
-            return resList;
+            return new AdminResult<AdminBorrowFlowResponse>(resList) ;
         }
-        // todo 联调时需要放开 todo-------------------------------------------
         AdminSystemVO user = getUser(request);
-        if(org.apache.commons.lang.StringUtils.isNotBlank(user.getId())){
-            adminRequest.setCreateUser(Integer.parseInt(user.getId()));
-            adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
-        }else{
-            adminRequest.setCreateUser(3);//为了接口测试用
-            adminRequest.setUpdateUser(3);
-        }
+        adminRequest.setCreateUser(Integer.parseInt(user.getId()));
+        adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
         // 插入
-        this.borrowFlowService.insertRecord(adminRequest);
-        resList.setRtn(Response.SUCCESS);
-        return resList ;
+        resList = this.borrowFlowService.insertRecord(adminRequest);
+        if (resList == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(resList)) {
+            return new AdminResult<>(FAIL, resList.getMessage());
+        }
+        return new AdminResult<AdminBorrowFlowResponse>(resList) ;
     }
 
     @ApiOperation(value = "修改流程配置", notes = "修改流程配置")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-    public AdminBorrowFlowResponse updateBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
-        AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
-        // todo 联调时需要放开 todo-------------------------------------------
-        AdminSystemVO user = getUser(request);
-        if(org.apache.commons.lang.StringUtils.isNotBlank(user.getId())){
-            adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
-        }else{
-            adminRequest.setUpdateUser(3);
+    public AdminResult updateBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
+        if(adminRequest.getId() == null){
+            return new AdminResult<>(FAIL, "id不能为空");
         }
+        if(StringUtils.isNotBlank(adminRequest.getBorrowCdCd())){
+            adminRequest.setBorrowCd(Integer.valueOf(adminRequest.getBorrowCdCd()));
+        }
+        AdminSystemVO user = getUser(request);
+        adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
         // 数据更新
-        this.borrowFlowService.updateRecord(adminRequest);
-        resList.setRtn(Response.SUCCESS);
-        return resList ;
+        AdminBorrowFlowResponse resList=this.borrowFlowService.updateRecord(adminRequest);
+        if (resList == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(resList)) {
+            return new AdminResult<>(FAIL, resList.getMessage());
+        }
+        return new AdminResult<AdminBorrowFlowResponse>(resList) ;
     }
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "删除流程配置")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminBorrowFlowResponse deleteBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
-        AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
+    public AdminResult deleteBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         // 数据更新
-        this.borrowFlowService.deleteRecord(adminRequest);
-        resList.setRtn(Response.SUCCESS);
-//        return "redirect:" + "/manager/config/borrowflow/init";
-        return resList;
+        AdminBorrowFlowResponse resList=this.borrowFlowService.deleteRecord(adminRequest);
+        if (resList == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(resList)) {
+            return new AdminResult<>(FAIL, resList.getMessage());
+        }
+        return new AdminResult<AdminBorrowFlowResponse>(resList) ;
     }
 
     /**
@@ -211,10 +249,13 @@ public class BorrowFlowController extends BaseController {
      */
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "下拉联动")
     @PostMapping("/assetTypeAction")
-    public List<Map<String, Object>> assetTypeAction(@RequestParam(value="instCode") String instCode) {
+    public AdminResult assetTypeAction(@RequestBody AdminBorrowFlowRequest request) {
         List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        if(StringUtils.isBlank(request.getInstCode())){
+            return new AdminResult<>(Response.FAIL,"instCode不能为空！") ;
+        }
         // 根据资金来源取得产品类型
-        List<HjhAssetTypeVO> hjhAssetTypeList = this.borrowFlowService.hjhAssetTypeList(instCode);
+        List<HjhAssetTypeVO> hjhAssetTypeList = this.borrowFlowService.hjhAssetTypeList(request.getInstCode());
         if (hjhAssetTypeList != null && hjhAssetTypeList.size() > 0) {
             for (HjhAssetTypeVO hjhAssetBorrowType : hjhAssetTypeList) {
                 Map<String, Object> mapTemp = new HashMap<String, Object>();
@@ -223,7 +264,7 @@ public class BorrowFlowController extends BaseController {
                 resultList.add(mapTemp);
             }
         }
-        return resultList;
+        return new AdminResult<List<Map<String, Object>>>(resultList) ;
     }
 
 }

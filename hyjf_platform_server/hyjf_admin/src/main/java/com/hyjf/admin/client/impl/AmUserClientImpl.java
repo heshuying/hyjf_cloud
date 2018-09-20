@@ -9,12 +9,10 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
-import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -1285,10 +1283,10 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public CertificateAuthorityResponse updateUserCAMQ(int userId) {
-		String url = "http://AM-ADMIN/am-user/certificate/modifyAction/";
+	public CertificateAuthorityResponse updateUserCAMQ(String userId) {
+		String url = "http://AM-ADMIN/am-user/certificate/modifyAction/"+userId;
 		CertificateAuthorityResponse response = restTemplate
-				.postForEntity(url, userId, CertificateAuthorityResponse.class).getBody();
+				.getForEntity(url, CertificateAuthorityResponse.class).getBody();
 		if (response != null) {
 			return response;
 		}
@@ -1372,7 +1370,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public BankOpenAccountVO getBankOpenAccount(Integer userId) {
-		String url = "http://AM-USER/am-user/bank_account_manage/get_bank_open_account/" + userId;
+		String url = "http://AM-ADMIN/am-user/bank_account_manage/get_bank_open_account/" + userId;
 		BankOpenAccountResponse response = restTemplate.getForEntity(url,BankOpenAccountResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();

@@ -38,7 +38,6 @@ import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
-import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest;
 import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterestExample;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
@@ -2515,13 +2514,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			accountList.setBalance(BigDecimal.ZERO); // 投资人银行可用金额
 			accountList.setFrost(account.getFrost()); // 投资人冻结金额
 			accountList.setAwait(account.getAwait()); // 投资人待收金额
-//			accountList.setCreateTime(GetDate.getNowTime10()); // 创建时间
-//			accountList.setBaseUpdate(GetDate.getNowTime10()); // 更新时间
 			accountList.setOperator(CustomConstants.OPERATOR_AUTO_LOANS); // 操作者
 			accountList.setRemark("计划结束");
-//			accountList.setIsUpdate(0);
-//			accountList.setBaseUpdate(0); 
-//			accountList.setInterest(BigDecimal.ZERO); // 利息
 			accountList.setPlanBalance(detailPlanBalance);
 			accountList.setPlanFrost(detailPlanFrost);
 			accountList.setWeb(0); // PC
@@ -2531,22 +2525,25 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			}
 			
 		}
-		// 累计为用户赚取
-		List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
-		if (calculates != null && calculates.size() > 0) {
-			CalculateInvestInterest calculateNew = new CalculateInvestInterest();
-			calculateNew.setInterestSum(repayTotal.subtract(waitCaptical));
-			calculateNew.setId(calculates.get(0).getId());
-			this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
+
+		// 退出计划累加统计数据
+		logger.info("退出计划累加统计数据...");
+		JSONObject params1 = new JSONObject();
+		params1.put("interestSum", accountInterest);
+		try {
+			calculateInvestInterestProducer
+					.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC,
+							MQConstant.STATISTICS_CALCULATE_INTEREST_SUM_TAG, UUID.randomUUID().toString(),
+							JSON.toJSONBytes(params1)));
+		} catch (MQException e) {
+			logger.error("退出计划累加统计数", e);
 		}
+
 		// 更新运营数据计划收益
 		logger.info("退出计划更新运营数据计划收益...");
 		JSONObject params = new JSONObject();
 		params.put("type", 2);// 计划收益
 		params.put("recoverInterestAmount", accountInterest);
-		//运营数据更新
-//		rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_OPERATION_DATA,
-//				JSONObject.toJSONString(params));
         try {
             calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
         }catch (MQException e){
@@ -2735,7 +2732,6 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			GetDate.dateToString(hjhAccede.getEndDate());
 		}
 		logger.info("---------------------还款标的:" + borrowNid + ",承接订单号："+ creditRepay.getCreditNid() +"订单号:" + assignPlanOrderId + ",结束时间:" + dateStr + "-----------");
-//		logger.info("---------------------还款标的:" + borrowNid + ",承接订单号："+ creditRepay.getCreditNid() +"订单号:" + assignPlanOrderId + ",是否冻结:" + isForstTime(hjhAccede.getEndDate()) + "-----------");
 		if (hjhAccede.getEndDate() != null && isForstTime(hjhAccede.getEndDate())) {
 			logger.info("---------------------还款标的:" + borrowNid + ",承接订单号："+ creditRepay.getCreditNid() +"订单号:" + assignPlanOrderId + ",开始增加冻结金额,原冻结金额:"+ hjhAccede.getFrostAccount() +",增加金额:" + repayAccount + "-----------");
 			HjhRepayExample repayExample = new HjhRepayExample();
@@ -2834,8 +2830,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		accountList.setPlanBalance(assignUserAccount.getPlanBalance());// 汇添金可用金额
 		accountList.setFrost(assignUserAccount.getFrost()); // 投资人冻结金额
 		accountList.setAwait(assignUserAccount.getAwait()); // 投资人待收金额
-//		accountList.setCreateTime(nowTime); // 创建时间
-//		accountList.setBaseUpdate(nowTime); // 更新时间
+
 		accountList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY); // 操作者
 		accountList.setRemark(borrowNid);
 		accountList.setIp(borrow.getAddIp()); // 操作IP

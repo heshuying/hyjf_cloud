@@ -34,6 +34,11 @@ public class SmsLogRequest extends BasePage implements Serializable {
 	 */
 	private String postTimeEnd;
 
+	/**
+	 * 短信类型
+	 */
+	private String type;
+
 	public String getMobile() {
 		return mobile;
 	}
@@ -64,5 +69,13 @@ public class SmsLogRequest extends BasePage implements Serializable {
 
 	public void setPostTimeEnd(String postTimeEnd) {
 		this.postTimeEnd = postTimeEnd;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

@@ -156,6 +156,15 @@ public class ProjectCustomeDetailVO  extends BaseVO {
     // add by nxl 20180730 是否为产品加息
     private  String isIncrease;
 
+    private String borrowStatus;
+
+    public String getBorrowStatus() {
+        return borrowStatus;
+    }
+
+    public void setBorrowStatus(String borrowStatus) {
+        this.borrowStatus = borrowStatus;
+    }
 
     public ProjectCustomeDetailVO() {
         super();

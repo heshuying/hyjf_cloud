@@ -139,7 +139,7 @@ public class UserParamExceptionController extends BaseController {
     @ApiOperation(value = "投资数据修复", notes = "投资数据修复")
     @PostMapping(value = "/tenderRepairAction")
     @ResponseBody
-    public AdminResult tenderRepairAction(@RequestParam String repairStartDate, @RequestParam String repairEndDate) {
+    public AdminResult tenderRepairAction(@RequestParam (value = "repairStartDate")  String repairStartDate, @RequestParam (value = "repairStartDate")  String repairEndDate) {
         List<BorrowTenderVO> borrowTenderVOList = userParamExceptionService.selectBorrowTenderListByDate(repairStartDate, repairEndDate);
         if (null != borrowTenderVOList && borrowTenderVOList.size() > 0) {
             for (BorrowTenderVO borrowTenderVO : borrowTenderVOList) {

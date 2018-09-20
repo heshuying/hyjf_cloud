@@ -18,6 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -87,7 +88,7 @@ public class BatchBorrowRecoverController extends BaseController{
         JSONObject jsonObject;
         String apicronID = map.get("apicronID").toString();
         List<BorrowRecoverBankInfoVo> resultList= batchBorrowRecoverService.queryBatchBorrowRecoverBankInfoList(apicronID);
-        if (null != resultList) {
+        if (!CollectionUtils.isEmpty(resultList)) {
             jsonObject = this.success(String.valueOf(resultList.size()), resultList);
         } else {
             jsonObject = this.fail("暂无符合条件数据");

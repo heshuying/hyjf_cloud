@@ -5,7 +5,6 @@ package com.hyjf.cs.trade.service.batch.impl;
 
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
-import com.hyjf.am.vo.trade.HolidaysConfigVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmConfigClient;
@@ -86,7 +85,7 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
                 monitor.setAddUser(CustomConstants.USERID_ADMIN);
                 monitor.setUpdateTime(GetDate.getNowTime10());
                 monitor.setUpdateUser(CustomConstants.USERID_ADMIN);
-                monitor.setDelFlg(0);
+                monitor.setDelFlag(0);
                 result = couponRepayMonitorClient.insertCouponRepayMonitor(monitor);
             }else {
                 //更新
@@ -191,7 +190,9 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
             Calendar recoverTimeC = Calendar.getInstance();
             recoverTimeC.setTime(GetDate.stringToDate3(recoverTime, DATE_FORMAT_2));
             if(this.checkIsHoliday(recoverTimeC)){
-                result = result.add(new BigDecimal(interestMap.getRecoverInterest()));
+                if (interestMap.getRecoverInterest() != null) {
+                    result = result.add(new BigDecimal(interestMap.getRecoverInterest()));
+                }
             }
         }
 

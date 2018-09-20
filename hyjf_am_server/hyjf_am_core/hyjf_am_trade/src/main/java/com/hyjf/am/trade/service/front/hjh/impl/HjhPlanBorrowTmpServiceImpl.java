@@ -34,4 +34,13 @@ public class HjhPlanBorrowTmpServiceImpl extends BaseServiceImpl implements HjhP
     public int updateHjhPlanBorrowTmpByPK(HjhPlanBorrowTmp hjhPlanBorrowTmp) {
         return this.hjhPlanBorrowTmpMapper.updateByPrimaryKeySelective(hjhPlanBorrowTmp);
     }
+
+    @Override
+    public int updateHjhPlanBorrowTmp(HjhPlanBorrowTmp hjhPlanBorrowTmp) {
+        HjhPlanBorrowTmpExample example = new HjhPlanBorrowTmpExample();
+        HjhPlanBorrowTmpExample.Criteria crt = example.createCriteria();
+        crt.andAccedeOrderIdEqualTo(hjhPlanBorrowTmp.getAccedeOrderId());
+        crt.andBorrowNidEqualTo(hjhPlanBorrowTmp.getBorrowNid());
+        return this.hjhPlanBorrowTmpMapper.updateByExampleSelective(hjhPlanBorrowTmp, example);
+    }
 }

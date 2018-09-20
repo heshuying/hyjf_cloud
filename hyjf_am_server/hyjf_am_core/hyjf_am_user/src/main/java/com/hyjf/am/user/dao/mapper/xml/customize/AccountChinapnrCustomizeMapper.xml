@@ -4,7 +4,7 @@
   
   <select id="selectUserIdByUsrcustid" resultType="java.lang.Integer" parameterType="java.lang.Long" >
     SELECT hac.user_id
-	FROM huiyingdai_account_chinapnr hac
+	FROM ht_account_chinapnr hac
 	WHERE hac.chinapnr_usrcustid = #{chinapnrUsrcustid}
   </select>
   

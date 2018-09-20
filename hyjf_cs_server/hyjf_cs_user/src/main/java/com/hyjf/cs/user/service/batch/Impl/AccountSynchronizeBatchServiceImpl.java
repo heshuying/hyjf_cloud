@@ -71,7 +71,7 @@ public class AccountSynchronizeBatchServiceImpl implements AccountSynchronizeBat
                 this.bankCardSynchronize(accountMobileSynchVO);
             }
         }catch(Exception e){
-            throw new RuntimeException("查询同步银行卡号异常");
+            logger.error("查询同步银行卡号异常", e);
         }
     }
 
@@ -188,7 +188,7 @@ public class AccountSynchronizeBatchServiceImpl implements AccountSynchronizeBat
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("更新用户银行卡信息失败:" + userId);
+            logger.error("更新用户银行卡信息失败----userId:" + userId, e);
         }
         return false;
     }

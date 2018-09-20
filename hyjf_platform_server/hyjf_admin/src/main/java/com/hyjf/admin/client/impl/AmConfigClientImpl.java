@@ -1782,7 +1782,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail", idCardCustomize, IdCardCustomize.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/content/idcard/idcarddetail", idCardCustomize, IdCardCustomize.class).getBody();
     }
 
     /**
@@ -2039,8 +2039,8 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @Author : huanghui
      */
     @Override
-    public List<BanksConfigVO> getBankcardList() {
-        BanksConfigResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/config/selectBankConfigList", BanksConfigResponse.class).getBody();
+    public List<JxBankConfigVO> getBankcardList() {
+        JxBankConfigResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/config/JxBank/selectBankConfigList", JxBankConfigResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResultList();
         }

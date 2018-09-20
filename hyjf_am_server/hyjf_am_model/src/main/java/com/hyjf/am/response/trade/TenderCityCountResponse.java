@@ -4,6 +4,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -15,6 +16,9 @@ public class TenderCityCountResponse  extends Response {
     private List<TenderCityCountVO> listTenderCityCountVO;
     private List<TenderSexCountVO> listTenderSexCountVO;
     private Integer age;
+    private BigDecimal accountMonth;
+    private Integer count;
+    private float aFloat;
 
     public List<TenderCityCountVO> getListTenderCityCountVO() {
         return listTenderCityCountVO;
@@ -38,5 +42,29 @@ public class TenderCityCountResponse  extends Response {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public BigDecimal getAccountMonth() {
+        return accountMonth;
+    }
+
+    public void setAccountMonth(BigDecimal accountMonth) {
+        this.accountMonth = accountMonth;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public float getaFloat() {
+        return aFloat;
+    }
+
+    public void setaFloat(float aFloat) {
+        this.aFloat = aFloat;
     }
 }

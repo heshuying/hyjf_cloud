@@ -2,6 +2,7 @@ package com.hyjf.cs.message.mongo.mc;
 
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
@@ -12,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -315,5 +317,25 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 
 	public void updateByPrimaryKeySelective(MessagePushMsgHistory record) {
 		mongoTemplate.save(record);
+	}
+
+	/**
+	 * 根据标签类型,获取时间范围内所有的msghistory
+	 * @param messagePushTagVO
+	 * @param todayStart
+	 * @param todayEnd
+	 * @return
+	 */
+	public List<MessagePushMsgHistory> getMessagePushMsgHistorys(MessagePushTagVO messagePushTagVO, Date todayStart, Date todayEnd) {
+		Integer tagId = messagePushTagVO.getId();
+		// 开始时间
+		Integer beginTime = (int)(todayStart.getTime() / 1000L);
+		// 结束时间
+		Integer endTime = (int)(todayEnd.getTime() / 1000L);
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		criteria.and("tagId").is(tagId).and("sendTime").gte(beginTime).lte(endTime);
+		query.addCriteria(criteria);
+		return mongoTemplate.find(query, MessagePushMsgHistory.class);
 	}
 }

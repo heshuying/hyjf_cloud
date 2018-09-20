@@ -45,9 +45,11 @@ public class RepayManageController extends BaseController {
      */
     @RequestMapping(value = "/feewait_total_user/{userId}")
     public Response<BigDecimal> userRepayFeeWaitTotal(@PathVariable Integer userId) {
+        logger.info("普通借款人管理费总待还feewait_total_user，userId：" + userId);
         Response<BigDecimal> response = new Response<>();
         BigDecimal waitTotal = repayManageService.selectUserRepayFeeWaitTotal(userId);
         response.setResult(waitTotal);
+        logger.info("response: {}", JSON.toJSONString(response));
         return response;
     }
 

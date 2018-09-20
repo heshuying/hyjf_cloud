@@ -1,11 +1,9 @@
 package com.hyjf.cs.message.service.report;
 
 import com.hyjf.cs.common.service.BaseService;
-import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
 import com.hyjf.cs.message.bean.ic.CalculateInvestInterest;
 import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
 import com.hyjf.cs.message.bean.ic.OperationReportEntity;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,13 +16,6 @@ import java.util.List;
  */
 @Service
 public interface PlatDataStatisticsService extends BaseService {
-
-    /**
-     * 获取累计收益累计投资
-     * @return
-     */
-    CalculateInvestInterest selectCalculateInvestInterest();
-
 
     /**
      * 查询累计投资
@@ -59,4 +50,5 @@ public interface PlatDataStatisticsService extends BaseService {
      */
     List<OperationReportEntity> findOperationReportEntityList();
 
+    OperationReportEntity findOneOperationMongDaoByMonth(int month);
 }

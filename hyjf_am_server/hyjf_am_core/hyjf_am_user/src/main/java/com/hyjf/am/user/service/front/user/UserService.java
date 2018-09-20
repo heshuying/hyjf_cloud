@@ -48,7 +48,14 @@ public interface UserService extends BaseService {
 	 */
 	User findUserByUsernameOrMobile(String condition);
 
-	/**
+    /**
+     * 查询推荐人是否存在
+     * @param reffer
+     * @return
+     */
+    User findUserByRecommendName(String reffer);
+
+    /**
 	 * 根据userId 查询推荐人
 	 *
 	 * @param userId

@@ -119,21 +119,21 @@
 		FROM ht_account_recharge r
 		<!-- <if test="usernameSearch != null and usernameSearch != ''">
 			LEFT JOIN
-			huiyingdai_users u ON r.user_id= u.user_id
+			ht_users u ON r.user_id= u.user_id
 		</if>
 		<if test="roleIdSearch != null and roleIdSearch != 0">
 			LEFT JOIN
-			huiyingdai_users_info ui ON r.user_id= ui.user_id
+			ht_users_info ui ON r.user_id= ui.user_id
 		</if>
 		<if test="userProperty != null and userProperty != ''">
 			LEFT JOIN
-			huiyingdai_users_info ui ON r.user_id= ui.user_id
+			ht_users_info ui ON r.user_id= ui.user_id
 		</if> -->
 		<!-- LEFT JOIN
-		huiyingdai_fee_config p ON r.payment= p.bank_code -->
+		ht_fee_config p ON r.payment= p.bank_code -->
 		<!-- <if test="bankCodeSearch != null and bankCodeSearch != ''">
 			LEFT JOIN
-			huiyingdai_bank_config b ON r.payment= b.code
+			ht_bank_config b ON r.payment= b.code
 		</if> -->
 
 		WHERE 1=1
@@ -297,14 +297,14 @@
 		ht_account_recharge r
 		<!--<if test="roleIdSearch != null and roleIdSearch != 0">-->
 			<!--LEFT JOIN-->
-			<!--huiyingdai_users_info ui ON r.user_id= ui.user_id-->
+			<!--ht_users_info ui ON r.user_id= ui.user_id-->
 		<!--</if>-->
 		<!--<if test="userProperty != null and userProperty != ''">-->
 			<!--LEFT JOIN-->
-			<!--huiyingdai_users_info ui ON r.user_id= ui.user_id-->
+			<!--ht_users_info ui ON r.user_id= ui.user_id-->
 		<!--</if>-->
--- 		LEFT JOIN hyjf_param_name pna1 ON r.`status` = pna1.name_cd AND pna1.name_class = 'RECHARGE_STATUS'
--- 		LEFT JOIN hyjf_param_name pna2 ON r.`is_bank` = pna2.name_cd AND pna2.name_class = 'BANK_TYPE'
+-- 		LEFT JOIN ht_param_name pna1 ON r.`status` = pna1.name_cd AND pna1.name_class = 'RECHARGE_STATUS'
+-- 		LEFT JOIN ht_param_name pna2 ON r.`is_bank` = pna2.name_cd AND pna2.name_class = 'BANK_TYPE'
 		WHERE
 		1=1
 		<include refid="where-all-page-condition" />
@@ -312,20 +312,20 @@
 		<if test="limitStart >= 0">
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>) t
--- 		LEFT JOIN huiyingdai_users u ON t.user_id= u.user_id
--- 		LEFT JOIN huiyingdai_users_info ui ON t.user_id=ui.user_id
--- 		LEFT JOIN huiyingdai_spreads_users su ON su.user_id = u.user_id
--- 		LEFT JOIN huiyingdai_users spu ON spu.user_id = su.spreads_userid
--- 		LEFT JOIN huiyingdai_users_info ui2 ON ui2.user_id = su.spreads_userid
--- 		LEFT JOIN hyjf_param_name pna ON cast(ui.attribute AS CHAR) = pna.name_cd AND pna.name_class = 'USER_PROPERTY'
--- 		LEFT JOIN `hyjf_crm`.`oa_users` `ou` ON `ou`.hyd_id = u.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
--- 		LEFT JOIN `hyjf_crm`.`oa_department` `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
--- 		LEFT JOIN `hyjf_crm`.`oa_department` `od2` ON `od2`.`id` = `od`.`parentid`
--- 		LEFT JOIN `hyjf_crm`.`oa_department` `od3` ON `od3`.`id` = `od2`.`parentid`
--- 		LEFT JOIN `hyjf_crm`.`oa_users` `ou1` ON `ou1`.hyd_id = su.spreads_userid AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
--- 		LEFT JOIN `hyjf_crm`.`oa_department` `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
--- 		LEFT JOIN `hyjf_crm`.`oa_department` `od5` ON `od5`.`id` = `od4`.`parentid`
--- 		LEFT JOIN `hyjf_crm`.`oa_department` `od6` ON `od6`.`id` = `od5`.`parentid`
+-- 		LEFT JOIN ht_users u ON t.user_id= u.user_id
+-- 		LEFT JOIN ht_users_info ui ON t.user_id=ui.user_id
+-- 		LEFT JOIN ht_spreads_users su ON su.user_id = u.user_id
+-- 		LEFT JOIN ht_users spu ON spu.user_id = su.spreads_userid
+-- 		LEFT JOIN ht_users_info ui2 ON ui2.user_id = su.spreads_userid
+-- 		LEFT JOIN ht_param_name pna ON cast(ui.attribute AS CHAR) = pna.name_cd AND pna.name_class = 'USER_PROPERTY'
+-- 		LEFT JOIN `ht_crm`.`oa_users` `ou` ON `ou`.hyd_id = u.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+-- 		LEFT JOIN `ht_crm`.`oa_department` `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+-- 		LEFT JOIN `ht_crm`.`oa_department` `od2` ON `od2`.`id` = `od`.`parentid`
+-- 		LEFT JOIN `ht_crm`.`oa_department` `od3` ON `od3`.`id` = `od2`.`parentid`
+-- 		LEFT JOIN `ht_crm`.`oa_users` `ou1` ON `ou1`.hyd_id = su.spreads_userid AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+-- 		LEFT JOIN `ht_crm`.`oa_department` `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
+-- 		LEFT JOIN `ht_crm`.`oa_department` `od5` ON `od5`.`id` = `od4`.`parentid`
+-- 		LEFT JOIN `ht_crm`.`oa_department` `od6` ON `od6`.`id` = `od5`.`parentid`
 	</select>
 
 </mapper>

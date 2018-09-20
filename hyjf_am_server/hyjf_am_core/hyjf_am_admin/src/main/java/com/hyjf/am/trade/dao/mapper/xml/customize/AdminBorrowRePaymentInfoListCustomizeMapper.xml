@@ -21,11 +21,11 @@
 			<if test='actfrom == null or actfrom != "0"'>
 				<!-- 借款编号 -->
 				<if test="borrowNid != null and borrowNid != ''">
-					AND brp.borrow_nid LIKE CONCAT('%', #{borrowNid}, '%')
+					AND brp.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 				</if>
 				<!-- 加入订单号 -->
 				<if test="accedeOrderId != null and accedeOrderId != ''">
-					AND brp.accede_order_id LIKE CONCAT('%', #{accedeOrderId}, '%')
+					AND brp.accede_order_id LIKE CONCAT( #{accedeOrderId}, '%')
 				</if>
 			</if>
 			<!-- 资产来源 -->
@@ -38,7 +38,7 @@
 			</if>
 			<!-- 投资人 -->
 			<if test="recoverUserName != null and recoverUserName != ''">
-				AND brp.invite_user_name LIKE CONCAT('%', #{recoverUserName}, '%')
+				AND brp.invite_user_name LIKE CONCAT( #{recoverUserName}, '%')
 			</if>
 			<!-- 还款状态 -->
 			<if test="status != null and status != ''">

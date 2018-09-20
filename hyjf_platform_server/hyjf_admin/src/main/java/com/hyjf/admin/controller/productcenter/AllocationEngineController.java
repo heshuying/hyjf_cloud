@@ -558,12 +558,12 @@ public class AllocationEngineController extends BaseController{
 		}
 		hjhLabelRequest.setLabelNameSrch(labelName);
 		List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
-		hjhLabel = list.get(0);
-		if(hjhLabel == null){
+		if(list==null){
 			jsonObject.put("info", "标签数据不存在，请先查看标签列表是否已经添加");
 			jsonObject.put("status", "99");
 			return jsonObject;
 		} else {
+			hjhLabel = list.get(0);
 			//校验
 			if(hjhLabel.getLabelState() == 0){
 				jsonObject.put("info", "标签已停用，请先启用");

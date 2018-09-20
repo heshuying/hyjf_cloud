@@ -679,7 +679,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             bankResult = BankCallUtils.callApiBg(bean);
 
             // 更新 自动投资临时表
-            boolean updResult = updateBorrowTmp(idKey, bankResult);
+            boolean updResult = updateBorrowTmp(hjhAccede.getAccedeOrderId(), borrow.getBorrowNid(), bankResult);
             if (!updResult) {
                 logger.error("更新自动投资临时表失败 idKey=" + idKey);
             }
@@ -729,7 +729,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             bankResult = BankCallUtils.callApiBg(bean);
 
             // 更新 自动投资临时表
-            boolean updResult = updateBorrowTmp(idKey, bankResult);
+            boolean updResult = updateBorrowTmp(hjhAccede.getAccedeOrderId(), credit.getCreditNid(), bankResult);
             if (!updResult) {
                 logger.error("更新自动投资临时表失败 idKey=" + idKey);
             }
@@ -802,9 +802,10 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      * @param bankResult
      * @return
      */
-    private boolean updateBorrowTmp(int idKey, BankCallBean bankResult) {
+    private boolean updateBorrowTmp(String accedeOrderId, String borrowNid, BankCallBean bankResult) {
         HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO = new HjhPlanBorrowTmpVO();
-        hjhPlanBorrowTmpVO.setId(idKey);
+        hjhPlanBorrowTmpVO.setAccedeOrderId(accedeOrderId);
+        hjhPlanBorrowTmpVO.setBorrowNid(borrowNid);
         hjhPlanBorrowTmpVO.setStatus(1);
         if (bankResult == null) {
             hjhPlanBorrowTmpVO.setRespCode("");
@@ -814,6 +815,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             hjhPlanBorrowTmpVO.setRespDesc(bankResult.getRetMsg());
         }
         hjhPlanBorrowTmpVO.setUpdateTime(GetDate.getDate());
-        return this.amTradeClient.updateHjhPlanBorrowTmpByPK(hjhPlanBorrowTmpVO) > 0 ? true : false;
+        return this.amTradeClient.updateHjhPlanBorrowTmp(hjhPlanBorrowTmpVO) > 0 ? true : false;
     }
 }

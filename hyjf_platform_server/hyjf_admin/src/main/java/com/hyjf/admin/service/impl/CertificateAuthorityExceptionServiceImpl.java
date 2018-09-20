@@ -23,7 +23,7 @@ public class CertificateAuthorityExceptionServiceImpl implements CertificateAuth
 	@Override
 	public CertificateAuthorityResponse updateUserCAMQ(String userId) {
 
-		return certificateAuthorityExceptionClient.updateUserCAMQ(Integer.valueOf(userId));
+		return certificateAuthorityExceptionClient.updateUserCAMQ(userId);
 	}
 
 	/**
