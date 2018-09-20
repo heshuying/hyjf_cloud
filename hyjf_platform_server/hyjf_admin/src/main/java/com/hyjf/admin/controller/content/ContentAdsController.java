@@ -9,12 +9,14 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ContentAdsResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.vo.admin.AdsTypeVO;
+import com.hyjf.am.vo.config.ContentAdsBeanVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -34,6 +36,7 @@ public class ContentAdsController extends BaseController {
     @PostMapping("/searchaction")
     public AdminResult searchAction(@RequestBody  ContentAdsRequest request){
         logger.info("查询内容中心-广告管理-条件列表查询开始......");
+        AdminResult adResult = new AdminResult();
         ContentAdsResponse response = contentAdsService.searchAction(request);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -41,7 +44,14 @@ public class ContentAdsController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<>(ListResult.build(response.getResult().getRecordList(), response.getCount()));
+
+        ContentAdsBeanVO vo = response.getResult();
+        if(vo == null){
+            return new AdminResult<>(ListResult.build(new ArrayList(), response.getCount()));
+        }else{
+            return new AdminResult<>(ListResult.build(response.getResult().getRecordList(), response.getCount()));
+        }
+
     }
 
     @ApiOperation(value = "获取广告类型下拉列表", notes = "获取广告类型下拉列表")
@@ -55,7 +65,13 @@ public class ContentAdsController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<>(ListResult.build(response.getResult().getAdsTypeList(), response.getCount()));
+        ContentAdsBeanVO vo = response.getResult();
+        if(vo == null){
+            return new AdminResult<>(ListResult.build(new ArrayList(), response.getCount()));
+        }else{
+            return new AdminResult<>(ListResult.build(response.getResult().getAdsTypeList(), response.getCount()));
+        }
+
     }
 
     @ApiOperation(value = "添加", notes = "添加")
@@ -88,7 +104,12 @@ public class ContentAdsController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<>(response.getResult().getRecordList().get(0));
+        ContentAdsBeanVO vo = response.getResult();
+        if(vo == null){
+            return new AdminResult<>();
+        }else{
+            return new AdminResult<>(response.getResult().getRecordList().get(0));
+        }
     }
 
     @ApiOperation(value = "修改", notes = "修改")
