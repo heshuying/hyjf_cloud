@@ -174,10 +174,10 @@
 			</if>
 
 			<if test="startDate != null and startDate != ''">
-				AND hydbr.repay_time <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
+				AND hydbr.repay_time <![CDATA[>=]]> unix_timestamp(CONCAT(#{startDate,jdbcType=VARCHAR},' 0:0:0'))
 			</if>
 			<if test="endDate != null and endDate != ''">
-				AND hydbr.repay_time <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
+				AND hydbr.repay_time <![CDATA[<=]]> unix_timestamp(CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59'))
 			</if>
 
 			<if test="borrowNid != null and borrowNid !=''">
@@ -353,10 +353,10 @@
 				</if>
 			</if>
 			<if test="startDate != null and startDate != ''">
-				AND hydbr.repay_time <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
+				AND hydbr.repay_time <![CDATA[>=]]> unix_timestamp(CONCAT(#{startDate,jdbcType=VARCHAR},' 0:0:0'))
 			</if>
 			<if test="endDate != null and endDate != ''">
-				AND hydbr.repay_time <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
+				AND hydbr.repay_time <![CDATA[<=]]> unix_timestamp(CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
 			</if>
 
 			<if test="repayStatus != null and repayStatus != ''">

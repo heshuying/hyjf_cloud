@@ -565,11 +565,13 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     @Override
     public List<UserChangeLog> queryChangeLogList(Map<String, Object> mapParam) {
         UserChangeLogExample example = new UserChangeLogExample();
+        UserChangeLogExample.Criteria criteria =  example.createCriteria();
         if(null!=mapParam.get("userId")){
-            example.createCriteria().andUserIdEqualTo((int)mapParam.get("userId"));
+            criteria.andUserIdEqualTo((int)mapParam.get("userId"));
         }
         if(null!=mapParam.get("changeType")){
-            example.createCriteria().andUpdateTypeEqualTo((int)mapParam.get("changeType"));
+            String changeType = mapParam.get("changeType").toString();
+            criteria.andUpdateTypeEqualTo(Integer.parseInt(changeType));
         }
         List<UserChangeLog> userChangeLogs =userChangeLogMapper.selectByExample(example);
         return userChangeLogs;
