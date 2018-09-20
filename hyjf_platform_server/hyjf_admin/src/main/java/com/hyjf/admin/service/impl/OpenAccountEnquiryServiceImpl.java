@@ -19,10 +19,12 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.IdCard15To18;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -66,7 +68,8 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     public OpenAccountEnquiryDefineResultBean openAccountEnquiry(AdminSystemVO currUser, OpenAccountEnquiryDefineRequestBean requestBean) {
         OpenAccountEnquiryDefineResultBean resultBean= new OpenAccountEnquiryDefineResultBean();
 
-        String userId = currUser.getId();
+        //String userId = currUser.getId();
+        String userId = "1";
         //选择1为手机号查询，2为身份证号查询
         String num = requestBean.getNum();
         String phone =null;
@@ -104,19 +107,13 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         selectbean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         selectbean.setLogClient(0);
         //通过手机号和身份证查询掉单信息
-        List<BankOpenAccountLogVO> bankOpenAccountLogs=amUserClient.bankOpenAccountLogSelect(phone,idcard);
+        List<BankOpenAccountLogVO> bankOpenAccountLogs=amUserClient.bankOpenAccountLogSelect(bankOpenAccountLog);
         // 返回参数
         BankCallBean retBean = null;
         if (Integer.parseInt(num)==1) {//手机号查询
 
             //手机号格式check
-            JSONObject errjson = new JSONObject();
-            ValidatorCheckUtil.validateMobile(errjson, "手机号", "statusDesc", phone, 11, false);
-            if (ValidatorCheckUtil.hasValidateError(errjson)) {
-                resultBean.setResult("输入验证失败！");
-                resultBean.setMobile(phone);
-                return resultBean;
-            }
+            CheckUtil.check(Validator.isNotNull(phone) && Validator.isMobile(phone), MsgEnum.ERR_FMT_MOBILE);
             OpenAccountEnquiryCustomizeVO accountMap=this.amUserClient.searchAccountEnquiry(bankOpenAccountLog);
             if (accountMap==null) {
                 resultBean.setResult("该用户不存在！");
@@ -182,16 +179,8 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         if (Integer.parseInt(num)==2) {//身份证号查询
             // 画面验证
             // 身份证号码格式以及长度的校验
-
-            //手机号格式check
-            JSONObject errjson = new JSONObject();
-            ValidatorCheckUtil.validateMobile(errjson, "手机号", "statusDesc", phone, 11, false);
-            if (ValidatorCheckUtil.hasValidateError(errjson)) {
-                resultBean.setResult("输入验证失败！");
-                resultBean.setMobile(phone);
-                return resultBean;
-            }
-            ValidatorCheckUtil.validateIdCard(errjson, "idcard", idcard, "statusDesc", phone,18, 18, true);
+            CheckUtil.check(Validator.isNotNull(idcard) && Validator.isIdcard(idcard), MsgEnum.ERR_FMT_IDCARDNO);
+            //ValidatorCheckUtil.validateIdCard(errjson, "idcard", idcard, "statusDesc", phone,18, 18, true);
             boolean booleans=ValidatorFieldCheckUtil.isIDCard(idcard);
             if (!booleans) {
                 resultBean.setResult("输入验证失败！");

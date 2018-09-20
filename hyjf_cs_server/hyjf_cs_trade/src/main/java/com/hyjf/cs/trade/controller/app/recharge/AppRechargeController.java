@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -136,9 +137,9 @@ public class AppRechargeController extends BaseTradeController{
         if(null==money||money.isEmpty()){
         	money="0";
 		}
-		/*DecimalFormat df = new DecimalFormat("#,##0.00");
-		money = df.format(money);*/
-		String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/success?money="+money;
+		BigDecimal recharge = new BigDecimal(money);
+		recharge = recharge.setScale(2, BigDecimal.ROUND_HALF_UP);
+		String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/success?money="+recharge;
 		retUrl += "?token=1&sign=" +sign;
 		successfulUrl += "&token=1&sign=" +sign;
 		directRechargeBean.setRetUrl(retUrl);
