@@ -631,7 +631,7 @@ public interface AmUserClient {
 
     CertificateAuthorityResponse getRecordList(CertificateAuthorityExceptionRequest aprlr);
 
-    CertificateAuthorityResponse updateUserCAMQ(int userId);
+    CertificateAuthorityResponse updateUserCAMQ(String userId);
 
     /**
      * 获取预注册数据列表
