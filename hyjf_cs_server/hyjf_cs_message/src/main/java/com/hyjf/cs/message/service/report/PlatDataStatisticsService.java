@@ -18,13 +18,6 @@ import java.util.List;
 public interface PlatDataStatisticsService extends BaseService {
 
     /**
-     * 获取累计收益累计投资
-     * @return
-     */
-    CalculateInvestInterest selectCalculateInvestInterest();
-
-
-    /**
      * 查询累计投资
      * @return
      */

@@ -84,6 +84,7 @@ public class BorrowFlowController extends BaseController {
             resList=borrowFlowService.selectBorrowFlowInfo(adminRequest);
             if(Response.isSuccess(resList)){
                 record=resList.getResult();
+                record.setBorrowCdCd(String.valueOf(record.getBorrowCd()));
             }else{
                 resList=new AdminBorrowFlowResponse();
                 resList.setRtn(Response.FAIL);
@@ -99,7 +100,16 @@ public class BorrowFlowController extends BaseController {
         resList.setHjhInstConfigList(hjhInstConfigList);
         // 产品类型
         List<HjhAssetTypeVO> assetTypeList = this.borrowFlowService.hjhAssetTypeList(record.getInstCode());
-        resList.setAssetTypeList(assetTypeList);
+        List<Map<String, Object>> assetTypeListMap = new ArrayList<Map<String, Object>>();
+        if (assetTypeList != null && assetTypeList.size() > 0) {
+            for (HjhAssetTypeVO hjhAssetBorrowType : assetTypeList) {
+                Map<String, Object> mapTemp = new HashMap<String, Object>();
+                mapTemp.put("id", hjhAssetBorrowType.getAssetType());
+                mapTemp.put("text", hjhAssetBorrowType.getAssetTypeName());
+                assetTypeListMap.add(mapTemp);
+            }
+        }
+        resList.setAssetTypeListMap(assetTypeListMap);
         return new AdminResult<AdminBorrowFlowResponse>(resList) ;
     }
     @ApiOperation(value = "添加流程配置", notes = "添加流程配置")
@@ -132,6 +142,9 @@ public class BorrowFlowController extends BaseController {
             adminRequest.setCreateUser(3);//为了接口测试用
             adminRequest.setUpdateUser(3);
         }
+        if(StringUtils.isNotBlank(adminRequest.getBorrowCdCd())){
+            adminRequest.setBorrowCd(Integer.valueOf(adminRequest.getBorrowCdCd()));
+        }
         // 插入
         this.borrowFlowService.insertRecord(adminRequest);
         resList.setRtn(Response.SUCCESS);
@@ -148,6 +161,9 @@ public class BorrowFlowController extends BaseController {
             adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
         }else{
             adminRequest.setUpdateUser(3);
+        }
+        if(StringUtils.isNotBlank(adminRequest.getBorrowCdCd())){
+            adminRequest.setBorrowCd(Integer.valueOf(adminRequest.getBorrowCdCd()));
         }
         // 数据更新
         this.borrowFlowService.updateRecord(adminRequest);

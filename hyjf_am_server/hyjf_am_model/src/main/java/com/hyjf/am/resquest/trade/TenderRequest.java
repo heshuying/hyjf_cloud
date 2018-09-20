@@ -68,6 +68,9 @@ public class TenderRequest extends BaseVO {
     @ApiModelProperty(value = "token")
     private String token;
 
+    @ApiModelProperty(value = "请求类型")
+    private String borrowType;
+
     // 内部操作用
     private BankOpenAccountVO bankOpenAccount;
 
@@ -298,5 +301,13 @@ public class TenderRequest extends BaseVO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getBorrowType() {
+        return borrowType;
+    }
+
+    public void setBorrowType(String borrowType) {
+        this.borrowType = borrowType;
     }
 }

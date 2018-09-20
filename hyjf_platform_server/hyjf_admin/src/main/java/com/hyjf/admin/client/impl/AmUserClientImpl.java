@@ -1283,10 +1283,10 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public CertificateAuthorityResponse updateUserCAMQ(int userId) {
-		String url = "http://AM-ADMIN/am-user/certificate/modifyAction/";
+	public CertificateAuthorityResponse updateUserCAMQ(String userId) {
+		String url = "http://AM-ADMIN/am-user/certificate/modifyAction/"+userId;
 		CertificateAuthorityResponse response = restTemplate
-				.postForEntity(url, userId, CertificateAuthorityResponse.class).getBody();
+				.getForEntity(url, CertificateAuthorityResponse.class).getBody();
 		if (response != null) {
 			return response;
 		}

@@ -25,6 +25,8 @@ public class CalculateInvestInterest implements Serializable {
 
     private BigDecimal sevenDayInterestSum;
 
+    private Integer borrowZeroOne;
+
     private Integer borrowOneThree;
 
     private Integer borrowThreeSix;
@@ -89,6 +91,14 @@ public class CalculateInvestInterest implements Serializable {
 
     public void setSevenDayInterestSum(BigDecimal sevenDayInterestSum) {
         this.sevenDayInterestSum = sevenDayInterestSum;
+    }
+
+    public Integer getBorrowZeroOne() {
+        return borrowZeroOne;
+    }
+
+    public void setBorrowZeroOne(Integer borrowZeroOne) {
+        this.borrowZeroOne = borrowZeroOne;
     }
 
     public Integer getBorrowOneThree() {

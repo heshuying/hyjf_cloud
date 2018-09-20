@@ -8,6 +8,7 @@ import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author by xiehuili on 2018/7/30.
@@ -22,6 +23,8 @@ public class AdminBorrowFlowResponse extends Response<HjhAssetBorrowTypeVO> {
     List<HjhAssetTypeVO> assetTypeList;
     // 状态
     List<ParamNameVO> statusList;
+    //產品類型  infoAction接口用
+    List<Map<String, Object>> assetTypeListMap;
 
     public List<BorrowProjectTypeVO> getBorrowProjectTypeList() {
         return borrowProjectTypeList;
@@ -61,5 +64,13 @@ public class AdminBorrowFlowResponse extends Response<HjhAssetBorrowTypeVO> {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+
+    public List<Map<String, Object>> getAssetTypeListMap() {
+        return assetTypeListMap;
+    }
+
+    public void setAssetTypeListMap(List<Map<String, Object>> assetTypeListMap) {
+        this.assetTypeListMap = assetTypeListMap;
     }
 }

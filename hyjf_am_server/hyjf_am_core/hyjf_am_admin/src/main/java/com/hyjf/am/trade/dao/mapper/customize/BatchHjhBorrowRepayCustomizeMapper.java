@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 
 /**
@@ -18,12 +17,5 @@ public interface BatchHjhBorrowRepayCustomizeMapper {
     Integer updateHjhBorrowRepayInterest(HjhAccede hjhAccede);
 
     Integer updateBankTotalForLockPlan(Account account);
-
-    /**
-     * 累计为用户赚取
-     * @param calculateInvestInterest
-     * @return
-     */
-    Integer updateCalculateInvestByPrimaryKey(CalculateInvestInterest calculateInvestInterest);
 
 }
