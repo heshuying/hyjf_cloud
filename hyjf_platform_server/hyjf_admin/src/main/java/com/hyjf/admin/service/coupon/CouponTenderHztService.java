@@ -47,4 +47,13 @@ public interface CouponTenderHztService {
      * @return List<CouponRecoverVo>
      */
     List<CouponRecoverVO> getCouponRecoverCustomize(Map<String,Object> paramMap);
+
+    /**
+     * @Author walter.limeng
+     * @Description  导出汇直投优惠券使用功能
+     * @Date 15:53 2018/9/20
+     * @Param couponTenderRequest
+     * @return
+     */
+    List<CouponTenderCustomize> exoportRecordList(CouponTenderRequest couponTenderRequest);
 }
