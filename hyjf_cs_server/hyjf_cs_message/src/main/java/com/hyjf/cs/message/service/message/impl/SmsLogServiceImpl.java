@@ -91,8 +91,7 @@ public class SmsLogServiceImpl implements SmsLogService {
 		int pageSize = request.getPageSize();
 		if (currPage > 0) {
 			int limitStart = (currPage - 1) * pageSize;
-			int limitEnd = limitStart + pageSize;
-			query.skip(limitStart).limit(limitEnd);
+			query.skip(limitStart).limit(pageSize);
 		}
 		query.with(new Sort(Sort.Direction.DESC, "posttime"));
 		return smsOntimeMongoDao.find(query);
