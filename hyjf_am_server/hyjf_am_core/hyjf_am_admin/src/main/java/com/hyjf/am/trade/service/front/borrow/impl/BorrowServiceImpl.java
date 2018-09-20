@@ -22,7 +22,6 @@ import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.mapper.customize.AccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.WebCalculateInvestInterestCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountBorrow;
 import com.hyjf.am.trade.dao.model.auto.AccountBorrowExample;
@@ -76,13 +75,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     private SmsProducer smsProducer;
     @Autowired
     private AccountCustomizeMapper accountCustomizeMapper;
-
     @Autowired
     private AccountService accountService;
-
-    @Autowired
-    private WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
-
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {

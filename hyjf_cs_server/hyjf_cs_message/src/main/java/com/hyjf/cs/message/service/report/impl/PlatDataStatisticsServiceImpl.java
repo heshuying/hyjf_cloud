@@ -31,16 +31,6 @@ public class PlatDataStatisticsServiceImpl extends BaseServiceImpl implements Pl
     @Autowired
     private OperationMongDao operationMongDao;
 
-    /**
-     * 获取累计投资累计收益
-     *
-     * @return
-     */
-    @Override
-    public CalculateInvestInterest selectCalculateInvestInterest() {
-        return  null;
-    }
-    
 
     @Override
     public BigDecimal selectTotalInvest() {

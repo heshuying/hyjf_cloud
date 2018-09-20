@@ -32,7 +32,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
 
 /**
- * @Description 网站累计投资追加    修改mongodb运营数据
+ * @Description 网站累计投资追加 、  修改mongodb运营数据
  * @Author sunss
  * @Date 2018/7/7 15:16
  */
@@ -60,7 +60,7 @@ public class CalculateInvestInterestConsumer extends Consumer {
         defaultMQPushConsumer.registerMessageListener(new CalculateInvestInterestConsumer.MessageListener());
         // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
         defaultMQPushConsumer.start();
-        logger.info("====AppChannelStatisticsConsumer consumer=====");
+        logger.info("====CalculateInvestInterestConsumer start=====");
     }
 
     public class MessageListener implements MessageListenerConcurrently {
@@ -70,71 +70,87 @@ public class CalculateInvestInterestConsumer extends Consumer {
 
             for (MessageExt msg : msgs) {
                 JSONObject data = JSONObject.parseObject(msg.getBody(), JSONObject.class);
-                BigDecimal tenderSum = (BigDecimal) data.get("tenderSum");
-                Integer nowTime = (Integer) data.get("nowTime");
-                Query query = new Query();
-                Update update = new Update();
-                update.inc("tenderSum", tenderSum).set("updateTime", nowTime);
-                calculateInvestInterestDao.update(query, update);
 
-                if(data.containsKey("money")){
-                    BigDecimal money = (BigDecimal) data.get("money");
-                    // 已收利息
-                    BigDecimal recoverInterestAmount = (BigDecimal) data.get("recoverInterestAmount");
-                    Integer type = (Integer) data.get("type");
-                    if (type == null) {
-                        logger.error("传入参数错误！type为空！");
-                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                    }
-                    // 投资增加交易总额
-                    if (type.equals(1)) {
-                        TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
-                        // 第一次插入
-                        if (entity == null) {
-                            entity = new TotalInvestAndInterestEntity();
-                        }
-                        entity.setTotalInvestAmount(entity.getTotalInvestAmount().add(money == null?BigDecimal.ZERO:money));
-                        entity.setTotalInvestNum(entity.getTotalInvestNum() + 1);
-                        logger.info("运营数据type=1, entity is :{}", entity);
-                        // save没有插入，有则更新
-                        totalInvestAndInterestMongoDao.save(entity);
-                    } else if (type.equals(2)) {
-                        // 还款添加收益
-                        // 累计收益(实时)
-                        //BigDecimal totalInterestAmount = operationDataService.countTotalInterestAmount();
-                        BigDecimal totalInterestAmount = recoverInterestAmount == null ? BigDecimal.ZERO : recoverInterestAmount;
-                        logger.info("已收收益： {}", totalInterestAmount.toString());
+                // 网站累计投资累加
+                if(MQConstant.STATISTICS_CALCULATE_INVEST_SUM_TAG.equals(msg.getTags())){
+                    BigDecimal tenderSum = (BigDecimal) data.get("tenderSum");
+                    Integer nowTime = (Integer) data.get("nowTime");
+                    Query query = new Query();
+                    Update update = new Update();
+                    update.inc("tenderSum", tenderSum).set("updateTime", nowTime);
+                    calculateInvestInterestDao.update(query, update);
+                }
+                // 网站累计收益累加
+                else if (MQConstant.STATISTICS_CALCULATE_INTEREST_SUM_TAG.equals(msg.getTags())){
+                    BigDecimal interestSum = (BigDecimal) data.get("interestSum");
+                    Integer nowTime = (Integer) data.get("nowTime");
+                    Query query = new Query();
+                    Update update = new Update();
+                    update.inc("interestSum", interestSum).set("updateTime", nowTime);
+                    calculateInvestInterestDao.update(query, update);
+                }
 
-                        // TODO: 2018/7/7 这里需要查询   没用到  先放
-                        //operationDataService.searchPlanStatisticData();
-                        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-                        TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
-                        // 第一次插入
-                        if (entity == null) {
-                            entity = new TotalInvestAndInterestEntity();
+                // 更新t_total_invest_and_interest- 运营数据用，考虑和上面的表合并（）  todo xiasq
+                else{
+                    if(data.containsKey("money")){
+                        BigDecimal money = (BigDecimal) data.get("money");
+                        // 已收利息
+                        BigDecimal recoverInterestAmount = (BigDecimal) data.get("recoverInterestAmount");
+                        Integer type = (Integer) data.get("type");
+                        if (type == null) {
+                            logger.error("传入参数错误！type为空！");
+                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                         }
-                        entity.setTotalInterestAmount(entity.getTotalInterestAmount().add(totalInterestAmount));
-                        if (!CollectionUtils.isEmpty(list)) {
-                            Map<String, Object> map = list.get(0);
-                            BigDecimal interestTotal = (BigDecimal) map.get("interest_total");
-                            entity.setHjhTotalInterestAmount(interestTotal);
+                        // 投资增加交易总额
+                        if (type.equals(1)) {
+                            TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
+                            // 第一次插入
+                            if (entity == null) {
+                                entity = new TotalInvestAndInterestEntity();
+                            }
+                            entity.setTotalInvestAmount(entity.getTotalInvestAmount().add(money == null?BigDecimal.ZERO:money));
+                            entity.setTotalInvestNum(entity.getTotalInvestNum() + 1);
+                            logger.info("运营数据type=1, entity is :{}", entity);
+                            // save没有插入，有则更新
+                            totalInvestAndInterestMongoDao.save(entity);
+                        } else if (type.equals(2)) {
+                            // 还款添加收益
+                            // 累计收益(实时)
+                            //BigDecimal totalInterestAmount = operationDataService.countTotalInterestAmount();
+                            BigDecimal totalInterestAmount = recoverInterestAmount == null ? BigDecimal.ZERO : recoverInterestAmount;
+                            logger.info("已收收益： {}", totalInterestAmount.toString());
+
+                            // TODO: 2018/7/7 这里需要查询   没用到  先放
+                            //operationDataService.searchPlanStatisticData();
+                            List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+                            TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
+                            // 第一次插入
+                            if (entity == null) {
+                                entity = new TotalInvestAndInterestEntity();
+                            }
+                            entity.setTotalInterestAmount(entity.getTotalInterestAmount().add(totalInterestAmount));
+                            if (!CollectionUtils.isEmpty(list)) {
+                                Map<String, Object> map = list.get(0);
+                                BigDecimal interestTotal = (BigDecimal) map.get("interest_total");
+                                entity.setHjhTotalInterestAmount(interestTotal);
+                            }
+                            logger.info("运营数据type=2, entity is :{}", entity);
+                            // save没有插入，有则更新
+                            totalInvestAndInterestMongoDao.save(entity);
+                        } else if (type.equals(3)) {  // 计划
+                            // 查询计划数据
+                            TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
+                            if (entity == null) {
+                                entity = new TotalInvestAndInterestEntity();
+                            }
+                            entity.setTotalInvestAmount(entity.getTotalInvestAmount().add(money == null ? BigDecimal.ZERO : money));
+                            entity.setTotalInvestNum(entity.getTotalInvestNum() + 1);
+                            entity.setHjhTotalInvestAmount(entity.getHjhTotalInvestAmount().add(money == null ? BigDecimal.ZERO : money.divide(new BigDecimal(10000))));
+                            entity.setHjhTotalInvestNum(entity.getHjhTotalInvestNum() + 1);
+                            logger.info("运营数据type=3, entity is :{}", entity);
+                            // save没有插入，有则更新
+                            totalInvestAndInterestMongoDao.save(entity);
                         }
-                        logger.info("运营数据type=2, entity is :{}", entity);
-                        // save没有插入，有则更新
-                        totalInvestAndInterestMongoDao.save(entity);
-                    } else if (type.equals(3)) {  // 计划
-                        // 查询计划数据
-                        TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
-                        if (entity == null) {
-                            entity = new TotalInvestAndInterestEntity();
-                        }
-                        entity.setTotalInvestAmount(entity.getTotalInvestAmount().add(money == null ? BigDecimal.ZERO : money));
-                        entity.setTotalInvestNum(entity.getTotalInvestNum() + 1);
-                        entity.setHjhTotalInvestAmount(entity.getHjhTotalInvestAmount().add(money == null ? BigDecimal.ZERO : money.divide(new BigDecimal(10000))));
-                        entity.setHjhTotalInvestNum(entity.getHjhTotalInvestNum() + 1);
-                        logger.info("运营数据type=3, entity is :{}", entity);
-                        // save没有插入，有则更新
-                        totalInvestAndInterestMongoDao.save(entity);
                     }
                 }
             }
