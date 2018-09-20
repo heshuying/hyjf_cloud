@@ -3,13 +3,16 @@
  */
 package com.hyjf.am.user.controller.front.user;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserAliasResponse;
+import com.hyjf.am.resquest.message.FindAliasesForMsgPushRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.UserAlias;
 import com.hyjf.am.user.service.front.user.UserAliasService;
 import com.hyjf.am.vo.user.UserAliasVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -51,20 +54,20 @@ public class UserAliasController extends BaseController {
 	/**
 	 * 根据手机号查询推送别名 - 批量
 	 *
-	 * @param mobiles
+	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/findAliasesByMobiles")
-	public List<UserAliasResponse> findAliasesByMobiles(List<String> mobiles) {
+	public UserAliasResponse findAliasesByMobiles(@RequestBody FindAliasesForMsgPushRequest request) {
+		List<String> mobiles = request.getMobiles();
 		logger.info("根据手机号查询推送别名 - 批量开始... mobiles is :{}", mobiles);
-		List<UserAliasResponse> list = new ArrayList<>();
+		UserAliasResponse response = new UserAliasResponse();
 		List<UserAliasVO> userAliasVOList = userAliasService.findAliasByMobiles(mobiles);
-		for (UserAliasVO userAliasVO : userAliasVOList) {
-			UserAliasResponse response = new UserAliasResponse();
-			response.setResult(userAliasVO);
-			list.add(response);
+		if(!CollectionUtils.isEmpty(userAliasVOList)){
+			response.setResultList(userAliasVOList);
+			response.setRtn(Response.SUCCESS);
 		}
-		return list;
+		return response;
 	}
 
 	@GetMapping("/findAliasesByUserId/{userId}")

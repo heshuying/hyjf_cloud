@@ -81,23 +81,34 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     @Autowired
     private AccountWebListProducer accountWebListProducer;
 
-    /** 用户ID */
+    /**
+     * 用户ID
+     */
     private static final String USERID = "userId";
-    /** 还款金额(优惠券用) */
+    /**
+     * 还款金额(优惠券用)
+     */
     private static final String VAL_AMOUNT = "val_amount";
-    /** 优惠券类型 */
+    /**
+     * 优惠券类型
+     */
     private static final String VAL_COUPON_TYPE = "val_coupon_type";
-    /** 优惠券还款类别 1：直投类 */
+    /**
+     * 优惠券还款类别 1：直投类
+     */
     private static final Integer RECOVER_TYPE_HZT = 1;
-    /** 优惠券还款类别 2：汇添金 */
+    /**
+     * 优惠券还款类别 2：汇添金
+     */
     private static final Integer RECOVER_TYPE_HTJ = 2;
+
     @Override
     public List<CouponTenderCustomizeVO> getCouponTenderListHjh(String orderId) {
         return couponConfigClient.getCouponTenderListHjh(orderId);
     }
 
     @Override
-    public void updateCouponRecoverHjh(String planNid, CouponTenderCustomizeVO ct) throws Exception{
+    public void updateCouponRecoverHjh(String planNid, CouponTenderCustomizeVO ct) throws Exception {
         String methodName = "updateCouponRecoverHtj";
         List<Map<String, String>> retMsgList = new ArrayList<Map<String, String>>();
         Map<String, String> msg = new HashMap<String, String>();
@@ -139,7 +150,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         String seqNo = GetOrderIdUtils.getSeqNo(6);
         BankCallBean resultBean = null;
         BankCallBean bean = new BankCallBean();
-        if(new BigDecimal(recoverAccountStr).compareTo(BigDecimal.ZERO) != 0){
+        if (new BigDecimal(recoverAccountStr).compareTo(BigDecimal.ZERO) != 0) {
             String merrpAccount = systemConfig.getBANK_MERRP_ACCOUNT();
 
             bean.setVersion(BankCallConstant.VERSION_10);// 版本号
@@ -163,7 +174,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                 resultBean = BankCallUtils.callApiBg(bean);
                 if (resultBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
                     // 转账失败
-                    logger.info("转账失败..."+"[优惠券投资编号：" + couponTenderNid + "]");
+                    logger.info("转账失败..." + "[优惠券投资编号：" + couponTenderNid + "]");
                     cr.setReceivedFlg(4);
                     this.couponConfigClient.updateByPrimaryKeySelective(cr);
                     String errorMsg = StringUtils.EMPTY;
@@ -171,7 +182,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                     if (currentRecover.getCouponType() == 1) {
                         errorMsg = "体验金收益自动领取失败";
                         type = 0;
-                    }else if (currentRecover.getCouponType() == 2) {
+                    } else if (currentRecover.getCouponType() == 2) {
                         errorMsg = "加息券收益自动领取失败";
                     } else if (currentRecover.getCouponType() == 3) {
                         errorMsg = "代金券收益自动领取失败";
@@ -179,11 +190,11 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                     }
 
 
-                    if(resultBean != null && Validator.isNotNull(resultBean.getRetMsg())){
+                    if (resultBean != null && Validator.isNotNull(resultBean.getRetMsg())) {
                         errorMsg = resultBean.getRetMsg();
                     }
 
-                    if(resultBean != null && (BankCallConstant.RETCODE_BIDAPPLY_YUE_FAIL.equals(resultBean.getRetCode()) || BankCallConstant.RETCODE_YUE_FAIL.equals(resultBean.getRetCode()))){
+                    if (resultBean != null && (BankCallConstant.RETCODE_BIDAPPLY_YUE_FAIL.equals(resultBean.getRetCode()) || BankCallConstant.RETCODE_YUE_FAIL.equals(resultBean.getRetCode()))) {
                         errorMsg = "商户子账户余额不足，请先充值或向该子账户转账";
                         sendSmsFail(currentRecover.getCouponType());
                     }
@@ -192,7 +203,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                     // 插入转账异常
                     this.insertTransferExceptionLog(bean, resultBean, tenderUserId, recoverAccount, bankOpenAccountInfo.getAccount(), cr.getId(), transferStatus,
                             errorMsg, type);
-                    logger.error(methodName, new Exception("转账失败！失败数据已插入转账异常表。errormsg:"+errorMsg));
+                    logger.error(methodName, new Exception("转账失败！失败数据已插入转账异常表。errormsg:" + errorMsg));
                     return;
 
                 }
@@ -229,7 +240,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                 throw new RuntimeException("投资人账户信息不存在。[投资人ID：" + borrowTenderCpn.getUserId() + "]，" + "[优惠券投资编号：" + couponTenderNid + "]");
             }
             // 写入收支明细
-            AccountListVO accountList = dealAccountList(orderId, tenderUserId, account, bankOpenAccountInfo,seqNo, bean, recoverAccount, currentRecover,ct);
+            AccountListVO accountList = dealAccountList(orderId, tenderUserId, account, bankOpenAccountInfo, seqNo, bean, recoverAccount, currentRecover, ct);
             int accountListCnt = insertAccountList(accountList);
             if (accountListCnt == 0) {
                 throw new RuntimeException("收支明细(huiyingdai_account_list)写入失败！" + "[优惠券投资编号：" + couponTenderNid + "]");
@@ -325,7 +336,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
 
         // 更新红包账户信息
         int updateCount = this.updateBankMerchantAccount(nowBankMerchantAccount);
-        if(updateCount > 0){
+        if (updateCount > 0) {
             UserInfoCustomizeVO userInfoCustomize = this.queryUserInfoByUserId(tenderUserId);
 
             // 添加红包明细
@@ -442,7 +453,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         String seqNo = GetOrderIdUtils.getSeqNo(6);
         BankCallBean resultBean = null;
         BankCallBean bean = new BankCallBean();
-        if(new BigDecimal(recoverAccountStr).compareTo(BigDecimal.ZERO) != 0){
+        if (new BigDecimal(recoverAccountStr).compareTo(BigDecimal.ZERO) != 0) {
 
             String merrpAccount = systemConfig.getBANK_MERRP_ACCOUNT();
 
@@ -466,7 +477,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             try {
                 resultBean = BankCallUtils.callApiBg(bean);
                 if (resultBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
-                    logger.info("转账失败..."+"[优惠券投资编号：" + couponTenderNid + "]");
+                    logger.info("转账失败..." + "[优惠券投资编号：" + couponTenderNid + "]");
                     cr.setReceivedFlg(4);
                     this.couponConfigClient.updateByPrimaryKeySelective(cr);
                     String errorMsg = StringUtils.EMPTY;
@@ -474,19 +485,19 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                     if (currentRecover.getCouponType() == 1) {
                         errorMsg = "体验金收益自动领取失败";
                         type = 0;
-                    }else if (currentRecover.getCouponType() == 2) {
+                    } else if (currentRecover.getCouponType() == 2) {
                         errorMsg = "加息券收益自动领取失败";
                     } else if (currentRecover.getCouponType() == 3) {
                         errorMsg = "代金券收益自动领取失败";
                         type = 2;
                     }
 
-                    if(resultBean != null && Validator.isNotNull(resultBean.getRetMsg())){
+                    if (resultBean != null && Validator.isNotNull(resultBean.getRetMsg())) {
                         errorMsg = resultBean.getRetMsg();
 
                     }
 
-                    if(resultBean != null && (BankCallConstant.RETCODE_BIDAPPLY_YUE_FAIL.equals(resultBean.getRetCode()) || BankCallConstant.RETCODE_YUE_FAIL.equals(resultBean.getRetCode()))){
+                    if (resultBean != null && (BankCallConstant.RETCODE_BIDAPPLY_YUE_FAIL.equals(resultBean.getRetCode()) || BankCallConstant.RETCODE_YUE_FAIL.equals(resultBean.getRetCode()))) {
                         errorMsg = "商户子账户余额不足，请先充值或向该子账户转账";
                         sendSmsFail(currentRecover.getCouponType());
                     }
@@ -495,13 +506,13 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                     // 插入转账异常
                     this.insertTransferExceptionLog(bean, resultBean, tenderUserId, recoverAccount, bankOpenAccountInfo.getAccount(), cr.getId(), transferStatus,
                             errorMsg, type);
-                    logger.error( methodName, new Exception("转账失败！失败数据已插入转账异常表。errormsg:"+errorMsg));
+                    logger.error(methodName, new Exception("转账失败！失败数据已插入转账异常表。errormsg:" + errorMsg));
                     return;
                 }
                 // 转账失败
 
             } catch (Exception e) {
-                logger.error( methodName, "系统发生异常，更新异常转账表失败,事物回滚", e);
+                logger.error(methodName, "系统发生异常，更新异常转账表失败,事物回滚", e);
                 throw new RuntimeException("系统发生异常，更新异常转账表失败,事物回滚!" + "[优惠券投资编号：" + couponTenderNid + "]");
             }
         }
@@ -708,7 +719,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
 
         // 更新红包账户信息
         int updateCount = this.updateBankMerchantAccount(nowBankMerchantAccount);
-        if(updateCount > 0){
+        if (updateCount > 0) {
             UserInfoCustomizeVO userInfoCustomize = this.queryUserInfoByUserId(tenderUserId);
 
             // 添加红包明细
@@ -759,10 +770,8 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     /**
      * 更新还款期
      *
-     * @param tenderNid
-     *            投资订单编号
-     * @param period
-     *            期数
+     * @param tenderNid 投资订单编号
+     * @param period    期数
      */
     private void crRecoverPeriod(String tenderNid, int period) {
 
@@ -770,34 +779,34 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         paramMapCurrent.put("currentRecoverFlg", 1);
         paramMapCurrent.put("tenderNid", tenderNid);
         paramMapCurrent.put("period", period);
-        this.couponConfigClient.crRecoverPeriod(tenderNid,period);
+        this.couponConfigClient.crRecoverPeriod(tenderNid, period);
 
     }
 
     /**
+     * @return
      * @Author walter.limeng
-     * @Description  根据用户ID查询用户信息
+     * @Description 根据用户ID查询用户信息
      * @Date 14:24 2018/7/18
      * @Param userId
-     * @return
      */
     public UserInfoCustomizeVO queryUserInfoByUserId(Integer userId) {
         return amUserClient.queryUserInfoCustomizeByUserId(userId);
     }
 
     /**
-     *
      * 更新红包账户
+     *
      * @param account
      * @return
      */
-    public int updateBankMerchantAccount(BankMerchantAccountVO account){
+    public int updateBankMerchantAccount(BankMerchantAccountVO account) {
         return accountClient.updateBankMerchatAccount(account);
     }
 
     /**
-     *
      * 加载红包账户
+     *
      * @param accountCode
      * @return
      */
@@ -812,16 +821,16 @@ public class CouponRepayServiceImpl implements CouponRepayService {
      * @param accountWebList
      * @return
      */
-	private int insertAccountWebList(AccountWebListVO accountWebList) {
-		try {
-			accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC,
-					UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
-		} catch (MQException e) {
-			logger.error("更新网站收支明细失败！");
-		}
-		return 0;
-	}
-    
+    private int insertAccountWebList(AccountWebListVO accountWebList) {
+        try {
+            accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC,
+                    UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+        } catch (MQException e) {
+            logger.error("更新网站收支明细失败！");
+        }
+        return 0;
+    }
+
     /**
      * 写入收支明细
      *
@@ -835,11 +844,12 @@ public class CouponRepayServiceImpl implements CouponRepayService {
 
     /**
      * 判断该收支明细是否存在(加息券)
+     *
      * @param nid
      * @return
      */
     private int countAccountListByNidCoupon(String nid) {
-        return this.accountListClient.countByNidAndTrade(nid,"increase_interest_profit");
+        return this.accountListClient.countByNidAndTrade(nid, "increase_interest_profit");
     }
 
     /**
@@ -970,17 +980,17 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             }
         }
     }
-    
+
     /**
-     * @Author walter.limeng
-     * @Description  处理accountList
-     * @Date 18:28 2018/7/17
-     * @Param 
      * @return AccountListVO
+     * @Author walter.limeng
+     * @Description 处理accountList
+     * @Date 18:28 2018/7/17
+     * @Param
      */
-    public AccountListVO dealAccountList(String orderId,Integer tenderUserId,AccountVO account,BankOpenAccountVO bankOpenAccountInfo,
-                                         String seqNo,BankCallBean bean,BigDecimal recoverAccount,CouponRecoverCustomizeVO currentRecover,
-                                         CouponTenderCustomizeVO ct){
+    public AccountListVO dealAccountList(String orderId, Integer tenderUserId, AccountVO account, BankOpenAccountVO bankOpenAccountInfo,
+                                         String seqNo, BankCallBean bean, BigDecimal recoverAccount, CouponRecoverCustomizeVO currentRecover,
+                                         CouponTenderCustomizeVO ct) {
         AccountListVO accountList = new AccountListVO();
         // 转账订单编号
         accountList.setNid(orderId);
@@ -1064,11 +1074,11 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     }
 
     /**
+     * @return
      * @Author walter.limeng
-     * @Description  根据用户ID获取用户开户信息
+     * @Description 根据用户ID获取用户开户信息
      * @Date 17:29 2018/7/17
      * @Param userId
-     * @return
      */
     public BankOpenAccountVO getBankOpenAccount(Integer userId) {
         return bankOpenClient.selectById(userId);
@@ -1082,12 +1092,13 @@ public class CouponRepayServiceImpl implements CouponRepayService {
      * @return
      */
     private CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow) {
-        return this.borrowTenderClient.getCurrentCouponRecover(couponTenderNid,periodNow);
+        return this.borrowTenderClient.getCurrentCouponRecover(couponTenderNid, periodNow);
 
     }
 
     /**
      * 优惠券单独投资放款
+     *
      * @return
      */
     @Override
@@ -1097,22 +1108,20 @@ public class CouponRepayServiceImpl implements CouponRepayService {
 
     /**
      * 体验金按收益期限还款
+     *
      * @param recoverNidList
      */
     @Override
     public void couponOnlyRepay(List<String> recoverNidList) {
         try {
             String timestamp = String.valueOf(GetDate.getNowTime10());
-//        String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + timestamp + SOA_INTERFACE_KEY));
             Map<String, String> params = new HashMap<String, String>();
             // 借款项目编号
             params.put("nidList", JSONObject.toJSONString(recoverNidList));
             // 时间戳
             params.put("timestamp", timestamp);
-            // 签名
-//        params.put("chkValue", chkValue);
-            couponRepayProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
-        }catch (MQException e) {
+            couponRepayProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        } catch (MQException e) {
             e.printStackTrace();
             logger.info("体验金按收益期限还款消息队列 失败");
         }
