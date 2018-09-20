@@ -2,9 +2,7 @@ package com.hyjf.cs.market.client;
 
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
-import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
-import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 
@@ -63,63 +61,6 @@ public interface AmTradeClient {
 	 */
 	int getTenderAgeByRange(Date date,int firstAge,int endAge);
 
-	/**
-	 * 统计前一个月的数据
-	 * @param i 时间戳
-	 * @return
-	 */
-	OperationReportEntityVO getOperationReport(int i);
-
-	/**
-	 * 月交易金额
-	 * @param firstDay 月第一天
-	 * @param lastDay 月最后一天
-	 * @return
-	 */
-	BigDecimal getAccountByMonth(Date firstDay, Date lastDay);
-
-	/**
-	 * 月交易笔数
-	 * @param firstDay 月第一天
-	 * @param lastDay 月最后一天
-	 * @return
-	 */
-	int getTradeCountByMonth(Date firstDay, Date lastDay);
-
-	/**
-	 * 借贷笔数
-	 * @param lastDay
-	 * @return
-	 */
-	int getLoanNum(Date lastDay);
-
-	/**
-	 * 总投资金额
-	 * @param lastDay 月最后一天
-	 * @return
-	 */
-	double getInvestLastDate(Date lastDay);
-
-	/**
-	 * 总投资人数
-	 * @param lastDay 月最后一天
-	 * @return
-	 */
-	int getTenderCount(Date lastDay);
-
-	/**
-	 * 平均满标时间
-	 * @param lastDay 月最后一天
-	 * @return
-	 */
-	float getFullBillAverageTime(Date lastDay);
-
-	/**
-	 * 代偿金额
-	 * @param lastDay 月最后一天
-	 * @return
-	 */
-	BigDecimal getRepayTotal(Date lastDay);
 
 	/**
 	 * 累计借款人（定义：系统累计到现在进行过发表的底层借款人数量）
