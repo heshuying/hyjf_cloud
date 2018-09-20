@@ -135,7 +135,7 @@
 	<update id="updateMatchDates" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
 		UPDATE ht_hjh_accede
 		SET
-		match_dates = IF(datediff(now(),FROM_UNIXTIME(add_time)) >= 99,99,datediff(now(),FROM_UNIXTIME(add_time)))
+		match_dates = IF(datediff(now(),create_time) >= 99,99,datediff(now(),create_time))
 		WHERE
 		order_status <![CDATA[<]]> 3;
 	</update>

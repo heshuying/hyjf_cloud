@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.DataCustomizeMapper">
+
+
+	<select id="selectDataInfo" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT
+				ceil(IFNULL(
+					(
+						SELECT
+							sum(account)
+						FROM
+							ht_borrow_tender
+						WHERE
+						DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(addtime)) 
+					),
+					0
+				) +IFNULL(
+					(
+						SELECT
+							sum(assign_account)
+						FROM
+							ht_credit_tender
+						WHERE
+							 DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(add_time)) 
+					),
+					0
+				) + IFNULL(
+					(
+						SELECT
+							sum(amount)
+						FROM
+							ht_product_list
+						WHERE
+							invest_status = 0
+							AND DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(invest_time)) 
+						),
+					0
+				)+ IFNULL(
+					(
+						SELECT
+							sum(account)
+						FROM
+							ht_debt_invest
+						WHERE  DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(create_time)) 
+						),
+					0
+				)+ IFNULL(
+					(
+						SELECT
+							sum(assign_capital)
+						FROM
+							ht_debt_credit_tender
+						WHERE del_flag=1 
+						AND DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(create_time)) 
+						),
+					0
+				))  tenderMoney,
+				ceil(IFNULL(
+					(
+						SELECT
+							sum(recover_account_interest)
+						FROM
+							ht_borrow_tender
+						WHERE
+								DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(addtime)) 
+					),
+					0
+				)+IFNULL(
+					(
+						SELECT
+							sum(assign_interest)
+						FROM
+							ht_credit_tender
+						WHERE
+								DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(add_time)) 
+					),
+					0
+				)+IFNULL(
+					(
+						SELECT
+							sum(interest)
+						FROM
+							ht_product_interest
+						WHERE DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(interest_time)) 
+					),
+					0
+					)+ IFNULL(
+					(
+						SELECT
+							sum(repay_interest)
+						FROM
+							ht_debt_invest
+						WHERE  DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(create_time)) 
+						),
+					0
+				)+ IFNULL(
+					(
+						SELECT
+							sum(assign_interest)
+						FROM
+							ht_debt_credit_tender
+						WHERE del_flag=1 
+						AND DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(create_time)) 
+						),
+					0
+				))  recoverInterest
+			FROM
+				DUAL
+	</select>
+	<select id="selectDataTenderInfo"  resultType="java.util.HashMap">
+	
+			SELECT
+			ceil((SUM(account)/10000)) money,
+			FROM_UNIXTIME(addtime, '%Y-%m') time
+		FROM
+			ht_borrow_tender
+		WHERE
+				 DATE_SUB(DATE_FORMAT(CURDATE(),'%Y-%m-01'), INTERVAL 1 YEAR) <![CDATA[<=]]> DATE(FROM_UNIXTIME(addtime)) 
+				 and DATE(FROM_UNIXTIME(addtime)) <![CDATA[<]]> DATE(DATE_FORMAT(CURDATE(),'%Y-%m-01'))
+					
+		GROUP BY
+			time ASC
+	</select>
+	<select id="selectDataCreditInfo"  resultType="java.util.HashMap">
+			SELECT
+			ceil(sum(assign_pay)/10000) money,
+			FROM_UNIXTIME(add_time, '%Y-%m') time
+		FROM
+			ht_credit_tender
+		WHERE
+			 DATE_SUB(DATE_FORMAT(CURDATE(),'%Y-%m-01'), INTERVAL 1 YEAR) <![CDATA[<=]]> DATE(FROM_UNIXTIME(add_time)) 
+			  and DATE(FROM_UNIXTIME(add_time)) <![CDATA[<]]> DATE(DATE_FORMAT(CURDATE(),'%Y-%m-01'))
+		GROUP BY
+			time ASC
+	</select>
+	<select id="selectPeriodInfo"  resultType="java.util.HashMap">
+				SELECT (SELECT COUNT(hbt.id)
+							FROM ht_borrow_tender hbt
+							LEFT JOIN  ht_borrow hb
+				ON hb.borrow_nid = hbt.borrow_nid
+				WHERE
+					hb.borrow_period <![CDATA[>]]> 0
+				AND hb.borrow_period <![CDATA[<=]]> 1
+				) zeroone,
+				 (
+					SELECT
+						COUNT(hbt.id)
+					FROM
+						ht_borrow_tender hbt
+					LEFT JOIN ht_borrow hb ON hb.borrow_nid = hbt.borrow_nid
+					WHERE
+						hb.borrow_period <![CDATA[>]]> 1
+					AND hb.borrow_period <![CDATA[<=]]> 3
+				) onethree,
+				 (
+					SELECT
+						COUNT(hbt.id)
+					FROM
+						ht_borrow_tender hbt
+					LEFT JOIN ht_borrow hb ON hb.borrow_nid = hbt.borrow_nid
+					WHERE
+						hb.borrow_period <![CDATA[>]]> 3
+					AND hb.borrow_period <![CDATA[<=]]> 6
+				) threesex,
+				 (
+					SELECT
+						COUNT(hbt.id)
+					FROM
+						ht_borrow_tender hbt
+					LEFT JOIN ht_borrow hb ON hb.borrow_nid = hbt.borrow_nid
+					WHERE
+						hb.borrow_period <![CDATA[>]]> 6
+					AND hb.borrow_period <![CDATA[<=]]> 12
+				) sextw,
+				 (
+					SELECT
+						COUNT(hbt.id)
+					FROM
+						ht_borrow_tender hbt
+					LEFT JOIN ht_borrow hb ON hb.borrow_nid = hbt.borrow_nid
+					WHERE
+						hb.borrow_period <![CDATA[>]]> 12
+				) tw
+				FROM
+					DUAL
+	</select>
+
+
+	<select id="selectTendMoneyInfo"  resultType="java.util.HashMap">
+		SELECT
+	(
+		SELECT
+			count(id) 
+		FROM
+			ht_borrow_tender
+		WHERE
+			account <![CDATA[>]]> 0
+		AND account <![CDATA[<=]]> 10000
+	) zeroone,
+	(
+		SELECT
+			count(id) 
+		FROM
+			ht_borrow_tender
+		WHERE
+			account <![CDATA[>]]> 10000
+		AND account <![CDATA[<=]]> 50000
+	) onefive,
+	(
+		SELECT
+			count(id)
+		FROM
+			ht_borrow_tender
+		WHERE
+			account <![CDATA[>]]> 50000
+		AND account <![CDATA[<=]]> 100000
+	) fiveten,
+	(
+		SELECT
+			count(id) 
+		FROM
+			ht_borrow_tender
+		WHERE
+			account <![CDATA[>]]> 100000
+		AND account <![CDATA[<=]]> 500000
+	) tenfive,
+	(
+		SELECT
+			count(id) 
+		FROM
+			ht_borrow_tender
+		WHERE account <![CDATA[>]]> 500000
+	) five
+FROM
+	DUAL
+	</select>
+	<select id="selectData"  resultType="java.util.HashMap">
+	SELECT id,
+	tender_sum,
+	interest_sum,
+	seven_day_tender_sum,
+	seven_day_interest_sum,
+	borrow_zero_one,
+	borrow_one_three,
+	borrow_three_six,
+	borrow_six_twelve,
+	borrow_twelve_up,
+	invest_one_down,
+	invest_one_five,
+	invest_five_ten,
+	invest_ten_fifth,
+	invest_fifth_up,
+	bail_money,
+	update_time,
+	create_time
+	FROM
+		ht_calculate_invest_interest
+	ORDER BY
+		id DESC
+	LIMIT 1
+	</select>
+
+	<select id="selectTenderListMap" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+			SELECT
+				tender_money money,
+				tender_time time
+			FROM
+				ht_tender_monthinfo
+			WHERE
+				tender_type = #{value}
+			AND STR_TO_DATE(tender_time, '%Y-%m') <![CDATA[>]]> DATE_SUB(
+				DATE_FORMAT(NOW(), '%Y-%m-01'),
+				INTERVAL 13 MONTH
+			)
+			ORDER BY
+				tender_time ASC
+			LIMIT 12
+	</select>
+	<insert id="insertHyjfTenderMonthInfo">
+		insert into ht_tender_monthinfo (tender_money,tender_type,tender_time,addtime)
+	SELECT
+				ceil((SUM(account)/10000)) money,0,
+				FROM_UNIXTIME(addtime, '%Y-%m') time,NOW()
+			FROM
+				ht_borrow_tender
+			WHERE
+					 DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-01'), INTERVAL 1 MONTH) <![CDATA[<=]]> DATE(FROM_UNIXTIME(addtime))
+				AND DATE_FORMAT(NOW(),'%Y-%m-01') <![CDATA[>]]> FROM_UNIXTIME(addtime)
+						
+			GROUP BY
+				time ASC
+	UNION
+	SELECT
+				ceil((SUM(assign_pay)/10000)) money,1,
+				FROM_UNIXTIME(add_time, '%Y-%m') time,NOW()
+			FROM
+				ht_credit_tender
+			WHERE
+					 DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-01'), INTERVAL 1 MONTH) <![CDATA[<=]]> DATE(FROM_UNIXTIME(add_time))
+				AND DATE_FORMAT(NOW(),'%Y-%m-01') <![CDATA[>]]> FROM_UNIXTIME(add_time)
+						
+			GROUP BY
+				time ASC
+	UNION
+	SELECT
+		ceil(
+			(
+				SUM(account)/10000 + IFNULL(
+					(
+						SELECT
+							SUM(assign_capital)
+						FROM
+							ht_debt_credit_tender
+						WHERE
+							del_flag = 1
+						AND DATE_SUB(
+							DATE_FORMAT(NOW(), '%Y-%m-01'),
+							INTERVAL 1 MONTH
+						) <![CDATA[<=]]> DATE(FROM_UNIXTIME(create_time))
+						AND DATE_FORMAT(NOW(), '%Y-%m-01') <![CDATA[>]]> FROM_UNIXTIME(create_time)
+					),
+					0
+				) / 10000
+			)
+		) money,
+		2,
+		FROM_UNIXTIME(create_time, '%Y-%m') time,
+		NOW()
+	FROM
+		hyjf_debt_invest
+	WHERE
+		DATE_SUB(
+			DATE_FORMAT(NOW(), '%Y-%m-01'),
+			INTERVAL 1 MONTH
+		) <![CDATA[<=]]> DATE(FROM_UNIXTIME(create_time))
+	AND DATE_FORMAT(NOW(), '%Y-%m-01') <![CDATA[>]]> FROM_UNIXTIME(create_time)
+	GROUP BY
+		time ASC
+	</insert>
+	<select id="selectDebtBorrowWaitMoney"  resultType="java.math.BigDecimal">
+			SELECT
+			SUM(hydb.borrow_account_wait) money
+		FROM
+			ht_debt_borrow hydb
+		WHERE  ( hydb.`status` = 0 AND ( hydb.verify_status = 1 ) AND ( EXISTS ( SELECT 1 FROM hyjf_debt_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+				or ( hydb.`status` = 1 AND hydb.borrow_status = 1 AND hydb.borrow_account_yes <![CDATA[<]]> hydb.account AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+	</select>
+	<select id="selectDebtCreditWaitMoney"  resultType="java.math.BigDecimal">
+			SELECT
+			SUM(hdc.credit_capital+hdc.credit_interest_advance) money
+		FROM
+			ht_debt_credit hdc
+		WHERE  
+			hdc.credit_status=0
+			AND hdc.repay_status = 0
+		</select>
+	<select id="selectDebtDetailYesCount"  resultType="java.lang.Long" parameterType="java.lang.Integer">
+			SELECT
+			COUNT(1)
+			from ht_debt_detail
+			WHERE order_type=#{value} AND `status`=1
+				AND repay_status=0
+				AND repay_period=1
+	</select>
+	<select id="selectDebtDetailRepayMoney"  resultType="java.math.BigDecimal" parameterType="java.lang.Integer">
+		SELECT
+		<if test="value != null and value == 0">
+			sum(repay_capital_wait+repay_interest_wait)
+		</if>
+		<if test="value != null and value == 1">
+			sum(repay_capital_yes+repay_interest_yes)
+		</if>
+		from ht_debt_detail
+		WHERE `status`=1 AND repay_status=#{value}
+	</select>
+
+
+	<select id="selectDebtBorrowPeriodInfo"  resultType="java.util.HashMap">
+		SELECT (SELECT COUNT(1)
+							FROM  ht_debt_borrow hydb
+				WHERE
+					hydb.borrow_period <![CDATA[>]]> 0
+				AND hydb.borrow_period <![CDATA[<=]]> 1
+				AND ( ( hydb.`status` = 0 AND ( hydb.verify_status = 1 ) AND ( EXISTS ( SELECT 1 FROM hyjf_debt_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+				or ( hydb.`status` = 1 AND hydb.borrow_status = 1 AND hydb.borrow_account_yes <![CDATA[<]]> hydb.account AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+				)) one,
+				 (SELECT COUNT(1)
+							FROM  ht_debt_borrow hydb
+				WHERE
+					hydb.borrow_period <![CDATA[>=]]> 2
+				AND hydb.borrow_period <![CDATA[<=]]> 4
+				AND  (( hydb.`status` = 0 AND ( hydb.verify_status = 1 ) AND ( EXISTS ( SELECT 1 FROM hyjf_debt_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+				or ( hydb.`status` = 1 AND hydb.borrow_status = 1 AND hydb.borrow_account_yes <![CDATA[<]]> hydb.account AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+				)) twoFour,
+				 (
+					SELECT COUNT(1)
+							FROM  ht_debt_borrow hydb
+				WHERE
+					hydb.borrow_period <![CDATA[>=]]> 5
+				AND hydb.borrow_period <![CDATA[<=]]> 8
+				AND ( ( hydb.`status` = 0 AND ( hydb.verify_status = 1 ) AND ( EXISTS ( SELECT 1 FROM hyjf_debt_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+				or ( hydb.`status` = 1 AND hydb.borrow_status = 1 AND hydb.borrow_account_yes <![CDATA[<]]> hydb.account AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+				)) fiveEight,
+				 (
+						SELECT COUNT(1)
+							FROM  ht_debt_borrow hydb
+				WHERE
+					hydb.borrow_period <![CDATA[>=]]> 9
+				AND hydb.borrow_period <![CDATA[<=]]> 12
+				AND ( ( hydb.`status` = 0 AND ( hydb.verify_status = 1 ) AND ( EXISTS ( SELECT 1 FROM hyjf_debt_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+				or ( hydb.`status` = 1 AND hydb.borrow_status = 1 AND hydb.borrow_account_yes <![CDATA[<]]> hydb.account AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+				)) nineTwel,
+				 (
+						SELECT COUNT(1)
+							FROM  ht_debt_borrow hydb
+				WHERE
+					hydb.borrow_period <![CDATA[>]]> 12
+				AND hydb.borrow_period <![CDATA[<=]]> 24
+				AND ( ( hydb.`status` = 0 AND ( hydb.verify_status = 1 ) AND ( EXISTS ( SELECT 1 FROM hyjf_debt_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+				or ( hydb.`status` = 1 AND hydb.borrow_status = 1 AND hydb.borrow_account_yes <![CDATA[<]]> hydb.account AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+				)) twelTf,
+				(
+						SELECT COUNT(1)
+							FROM  ht_debt_borrow hydb
+				WHERE
+					hydb.borrow_period <![CDATA[>]]> 24
+				AND ( ( hydb.`status` = 0 AND ( hydb.verify_status = 1 ) AND ( EXISTS ( SELECT 1 FROM hyjf_debt_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+				or ( hydb.`status` = 1 AND hydb.borrow_status = 1 AND hydb.borrow_account_yes <![CDATA[<]]> hydb.account AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+				)) tf
+				FROM
+					DUAL
+	</select>
+
+	<select id="selectDebtCreditPeriodInfo"  resultType="java.util.HashMap">
+		SELECT (SELECT COUNT(1)
+							FROM  ht_debt_credit hdc
+				WHERE credit_status=0
+				AND	hdc.credit_term/30 <![CDATA[>]]> 0
+				AND hdc.credit_term/30 <![CDATA[<=]]> 1
+				) one,
+				 (SELECT COUNT(1)
+							FROM  ht_debt_credit hdc
+				WHERE credit_status=0
+				AND	hdc.credit_term/30 <![CDATA[>=]]> 2
+				AND hdc.credit_term/30 <![CDATA[<=]]> 4
+				) twoFour,
+				 (
+					SELECT COUNT(1)
+							FROM  ht_debt_credit hdc
+				WHERE credit_status=0
+				AND	hdc.credit_term/30 <![CDATA[>=]]> 5
+				AND hdc.credit_term/30 <![CDATA[<=]]> 8
+				) fiveEight,
+				 (
+					SELECT COUNT(1)
+							FROM  ht_debt_credit hdc
+				WHERE credit_status=0
+				AND	hdc.credit_term/30 <![CDATA[>=]]> 9
+				AND hdc.credit_term/30 <![CDATA[<=]]> 12
+				) nineTwel,
+				 (
+					SELECT COUNT(1)
+							FROM  ht_debt_credit hdc
+				WHERE credit_status=0
+				AND	hdc.credit_term/30 <![CDATA[>]]> 12
+				AND hdc.credit_term/30 <![CDATA[<=]]> 24
+				) twelTf,
+				(
+					SELECT COUNT(1)
+							FROM  ht_debt_credit hdc
+				WHERE credit_status=0
+				AND	hdc.credit_term/30 <![CDATA[>]]> 24
+				) tf
+				FROM
+					DUAL
+	</select>
+
+	<!-- 计划的应还款总额 -->
+	<select id="selectPlanRepayWait"  resultType="java.math.BigDecimal">
+			SELECT
+				sum(repay_account_all)
+			from ht_debt_plan
+			WHERE debt_plan_status in (5,6,7,8,9,10)
+	</select>
+	<!-- 计划的已还款总额 -->
+	<select id="selectPlanRepayYes"  resultType="java.math.BigDecimal">
+			SELECT
+				sum(repay_account_all)
+			from ht_debt_plan
+			WHERE debt_plan_status = 11
+	</select>
+
+	<!-- 计划的已还款总额 -->
+	<select id="selectPlanAccedeAll" resultType="java.math.BigDecimal">
+			SELECT
+				sum(accede_account)
+			from ht_debt_plan_accede
+			where UNIX_TIMESTAMP(FROM_UNIXTIME(create_time,'%Y-%m-%d')) = UNIX_TIMESTAMP(FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d'))
+	</select>
+	<!-- 锁定中计划的到期公允价值 -->
+	<select id="selectPlanExpireFairValue" resultType="java.math.BigDecimal">
+			SELECT
+				sum(expire_fair_value)
+			from ht_debt_detail hdd
+			left join ht_debt_plan hdp on hdd.plan_nid = hdp.debt_plan_nid
+			where hdp.debt_plan_status = 5
+			and hdd.del_flag = 0 
+	</select>
+
+	<!-- 查询加入分布 -->
+	<select id="selectPlanInfoStaticCount" resultType="java.lang.Integer">
+			SELECT
+				count(1)
+			from ht_debt_plan_info_static_count
+	</select>
+	<insert id="insertPlanInfoStaticCount" >
+	INSERT INTO ht_debt_plan_info_static_count
+(accede_money_one,accede_money_two,accede_money_three,accede_money_four,accede_money_five,accede_money_five_up,accede_money_count_one,accede_money_count_two,
+	accede_money_count_three,accede_money_count_four,accede_money_count_five,accede_money_count_five_up,accede_count_one,accede_count_two_four,accede_count_five_egiht,
+accede_count_nine_fifteen,accede_count_sixteen_thirty,accede_count_thirtyfirst_up,accede_client_money_pc,accede_client_money_wei,accede_client_money_ios,accede_client_money_android,
+accede_client_count_pc,accede_client_count_wei,accede_client_count_ios,accede_client_count_android,create_time,update_time)
+SELECT IFNULL(TRUNCATE((SELECT
+			SUM(accede_account)
+		FROM		ht_debt_plan_accede
+		WHERE accede_account<![CDATA[<=]]>10000)/10000,2),0) one,
+		IFNULL(TRUNCATE((SELECT
+			SUM(accede_account)
+		FROM		ht_debt_plan_accede
+		WHERE accede_account<![CDATA[>]]>10000 AND accede_account<![CDATA[<=]]>20000 )/10000,2),0) two,
+	IFNULL(TRUNCATE((SELECT
+				SUM(accede_account)
+			FROM		ht_debt_plan_accede
+			WHERE accede_account<![CDATA[>]]>20000 AND accede_account<![CDATA[<=]]>30000)/10000,2),0) three,
+	IFNULL(TRUNCATE((SELECT
+				SUM(accede_account)
+			FROM		ht_debt_plan_accede
+			WHERE accede_account<![CDATA[>]]>30000 AND accede_account<![CDATA[<=]]>40000)/10000,2),0) four,
+	IFNULL(TRUNCATE((SELECT
+				SUM(accede_account)
+			FROM		ht_debt_plan_accede
+			WHERE accede_account<![CDATA[>]]>40000 AND accede_account<![CDATA[<=]]>50000)/10000,2),0) five,
+	IFNULL(TRUNCATE((SELECT
+					SUM(accede_account)
+				FROM		ht_debt_plan_accede
+				WHERE accede_account<![CDATA[>]]>50000)/10000,2),0) fiveup,
+		(SELECT
+			count(1)
+		FROM		ht_debt_plan_accede
+		WHERE accede_account<![CDATA[<=]]>10000) onecount,
+		(SELECT
+			count(1)
+		FROM		ht_debt_plan_accede
+		WHERE accede_account<![CDATA[>]]>10000 AND accede_account<![CDATA[<=]]>20000 ) twocount,
+	(SELECT
+				count(1)
+			FROM		ht_debt_plan_accede
+			WHERE accede_account<![CDATA[>]]>20000 AND accede_account<![CDATA[<=]]>30000) threecount,
+	(SELECT
+				count(1)
+			FROM		ht_debt_plan_accede
+			WHERE accede_account<![CDATA[>]]>30000 AND accede_account<![CDATA[<=]]>40000) fourcount,
+	(SELECT
+				count(1)
+			FROM		ht_debt_plan_accede
+			WHERE accede_account<![CDATA[>]]>40000 AND accede_account<![CDATA[<=]]>50000) fivecount,
+	(SELECT
+					count(1)
+				FROM		ht_debt_plan_accede
+				WHERE accede_account<![CDATA[>]]>50000) fiveupcount,
+	(SELECT count(1) FROM (SELECT
+					count(1) count
+				FROM		ht_debt_plan_accede
+				GROUP BY user_id ) tmp WHERE tmp.count=1 ) oneuser,
+	(SELECT count(1) FROM (SELECT
+					count(1) count
+				FROM		ht_debt_plan_accede
+				GROUP BY user_id ) tmp WHERE tmp.count<![CDATA[>=]]>2 AND tmp.count<![CDATA[<=]]>4) twouserfour,
+	(SELECT count(1) FROM (SELECT
+					count(1) count
+				FROM		ht_debt_plan_accede
+				GROUP BY user_id ) tmp WHERE tmp.count<![CDATA[>=]]>5 AND tmp.count<![CDATA[<=]]>8) fiveusereight,
+	(SELECT count(1) FROM (SELECT
+					count(1) count
+				FROM		ht_debt_plan_accede
+				GROUP BY user_id ) tmp WHERE tmp.count<![CDATA[>=]]>9 AND tmp.count<![CDATA[<=]]>15) nineuserfifteen,
+(SELECT count(1) FROM (SELECT
+					count(1) count
+				FROM		ht_debt_plan_accede
+				GROUP BY user_id ) tmp WHERE tmp.count<![CDATA[>=]]>16 AND tmp.count<![CDATA[<=]]>30) sixteenuserthirtieth,
+(SELECT count(1) FROM (SELECT
+					count(1) count
+				FROM		ht_debt_plan_accede
+				GROUP BY user_id ) tmp WHERE tmp.count<![CDATA[>=]]>31 ) thirtyuserfirst,
+IFNULL(TRUNCATE((SELECT
+			SUM(accede_account)
+		FROM		ht_debt_plan_accede
+		WHERE client=0)/10000,2),0) moneypc,
+		IFNULL(TRUNCATE((SELECT
+			SUM(accede_account)
+		FROM		ht_debt_plan_accede
+		WHERE client=1 )/10000,2),0) moneywei,
+	IFNULL(TRUNCATE((SELECT
+				SUM(accede_account)
+			FROM		ht_debt_plan_accede
+			WHERE client=3)/10000,2),0) moneyios,
+	IFNULL(TRUNCATE((SELECT
+				SUM(accede_account)
+			FROM		ht_debt_plan_accede
+			WHERE client=2 )/10000,2),0) moneyandroid,
+	(SELECT
+			count(1)
+		FROM		ht_debt_plan_accede
+		WHERE client=0) countpc,
+		(SELECT
+			count(1)
+		FROM		ht_debt_plan_accede
+		WHERE client=1 ) countwei,
+	(SELECT
+				count(1)
+			FROM		ht_debt_plan_accede
+			WHERE client=3) countios,
+	(SELECT
+				count(1)
+			FROM		ht_debt_plan_accede
+			WHERE client=2) countandroid,
+		UNIX_TIMESTAMP(NOW()) createtime,
+		UNIX_TIMESTAMP(NOW()) updatetime
+FROM DUAL
+	</insert>
+	<delete id="detelePlanInfoStaticCount">
+	TRUNCATE TABLE ht_debt_plan_info_static_count
+	</delete>
+	<!--汇直投交易笔数 -->
+	<select id="selectHztTenderCount" resultType="java.lang.Integer">
+		SELECT count(*) FROM ht_borrow_tender
+	</select>
+	<!-- 汇添金投资总数 -->
+	<select id="selectHtjTenderCount" resultType="java.lang.Integer">
+		SELECT count(*) FROM ht_debt_plan_accede
+	</select>
+	<!-- 汇转让投资总数 -->
+	<select id="selectHzrTenderCount" resultType="java.lang.Integer">
+		SELECT count(*) FROM ht_credit_tender
+	</select>
+	<!-- 平台累计注册人数-->
+	<select id="selectUserRegistCount" resultType="java.lang.Integer">
+		SELECT count(*) FROM ht_user where bank_open_account = 1
+	</select>
+
+	<!-- 平台累计注册人数(包含未开户的人数) -->
+	<select id="selectAllUserRegistCount" resultType="java.lang.Integer">
+		SELECT count(*) FROM ht_user
+	</select>
+
+	<!-- 待还总额-->
+	<select id="selectRepayTotal" resultType="java.math.BigDecimal">
+		SELECT sum(bank_wait_repay) FROM ht_account
+	</select>
+</mapper>
