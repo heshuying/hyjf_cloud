@@ -239,7 +239,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param borrowRecover
      * @param agreements
      */
-    private void convertAndSendPlan(BorrowVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecoverP, BorrowRecoverPlanVO borrowRecover,int agreements){
+    private void convertAndSendPlan(BorrowAndInfoVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecoverP, BorrowRecoverPlanVO borrowRecover,int agreements){
         String borrow_nid = borrow.getBorrowNid();
         //承接人都是垫付机构
         int repayOrgUserId = borrowInfo.getRepayOrgUserId();//垫付机构用户ID
@@ -303,7 +303,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param borrowRecover
      * @param agreements
      */
-    private void convertAndSend(BorrowVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecover, int agreements){
+    private void convertAndSend(BorrowAndInfoVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecover, int agreements){
         String borrow_nid = borrow.getBorrowNid();
         //承接人都是垫付机构
         int repayOrgUserId = borrowInfo.getRepayOrgUserId();//垫付机构用户ID
@@ -392,8 +392,6 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     }
 
     /**非转让债转参数集合-分期*/
-    private JSONObject getNocreditParamterPlan(BorrowRecoverPlanVO borrowRecover,FddGenerateContractBean bean,BorrowVO borrow) {
-    /**转让债转参数集合*/
     private JSONObject getNocreditParamterPlan(BorrowRecoverPlanVO borrowRecover,FddGenerateContractBean bean,BorrowAndInfoVO borrow) {
         JSONObject paramter = new JSONObject();
 
@@ -531,7 +529,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         return paramter;
     }
     /**非转让债转参数集合-不分期*/
-    public JSONObject getNocreditParamter(BorrowRecoverVO borrowRecover,FddGenerateContractBean bean,BorrowVO borrow) {
+    public JSONObject getNocreditParamter(BorrowRecoverVO borrowRecover,FddGenerateContractBean bean,BorrowAndInfoVO borrow) {
         JSONObject paramter = new JSONObject();
        /* paramter.put("assignCapital",borrowRecover.getRecoverCapital());
         paramter.put("assignPay",borrowRecover.getCreditAmount());*/
