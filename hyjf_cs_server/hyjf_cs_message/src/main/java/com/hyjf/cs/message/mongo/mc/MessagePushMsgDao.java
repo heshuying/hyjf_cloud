@@ -45,12 +45,15 @@ public class MessagePushMsgDao extends BaseMongoDao<MessagePush> {
 	public List<MessagePush> getMsgStaticsListByTime(Integer startTime, Integer endTime) {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("msgSendStatus").is(CustomConstants.MSG_PUSH_MSG_STATUS_1);
-		if (startTime != null) {
-			criteria.and("sendTime").gte(startTime);
-		}
-		if (endTime != null) {
+
+		if(startTime == null && endTime != null){
 			criteria.and("sendTime").lte(endTime);
+		}else if(startTime != null && endTime == null){
+			criteria.and("sendTime").gte(startTime);
+		}else if (startTime != null && endTime != null) {
+			criteria.and("sendTime").gte(startTime).lte(endTime);
 		}
+
 		query.addCriteria(criteria);
 		return mongoTemplate.find(query, getEntityClass());
 	}
