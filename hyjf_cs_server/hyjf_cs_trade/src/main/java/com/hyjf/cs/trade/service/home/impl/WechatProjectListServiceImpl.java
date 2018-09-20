@@ -275,18 +275,17 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             //项目介绍
             intrTableData = ProjectConstant.packDetail(borrow, 3, borrowType, borrow.getBorrowLevel());
 
-            // TODO: 2018/7/2  后期处理 // 风控信息
-            /*AppRiskControlCustomize riskControl = wxBorrowService.selectRiskControl(borrowNid);
-            if(riskControl==null){
-                riskControl = new AppRiskControlCustomize();
-                riskControl.setControlMeasures("");
-                riskControl.setControlMort("");
-            }else {
-                riskControl.setControlMeasures(riskControl.getControlMeasures()==null?"":riskControl.getControlMeasures().replace("\r\n", ""));
-                riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
+
+            BorrowInfoWithBLOBsVO borrowInfoWithBLOBsVO = amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
+            Map<String,String> riskControl = new HashMap<>();
+            if (borrowInfoWithBLOBsVO != null){
+                riskControl.put("controlMeasures", StringUtils.isBlank(borrowInfoWithBLOBsVO.getBorrowMeasuresMea())? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMea().replace("\r\n",""));
+                riskControl.put("controlMort", StringUtils.isBlank(borrowInfoWithBLOBsVO.getBorrowMeasuresMort()) ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMort().replace("\r\n",""));
+            }else{
+                riskControl.put("controlMeasures", "");
+                riskControl.put("controlMort","");
             }
-            //风控信息对象返回给前端
-            borrowDetailResultBean.setAppRiskControlCustomize(riskControl); */
+            borrowDetailResultBean.put("appRiskControlCustomize", riskControl);
 
             //处理借款信息
             List<BorrowProjectDetailBean> projectDetailList = new ArrayList<>();
