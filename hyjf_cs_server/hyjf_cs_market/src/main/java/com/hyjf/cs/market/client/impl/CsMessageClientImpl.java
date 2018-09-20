@@ -5,12 +5,14 @@ package com.hyjf.cs.market.client.impl;
 
 import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.message.BorrowUserStatisticResponse;
+import com.hyjf.am.response.message.OperationReportEntityResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
+import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
+import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
+import com.hyjf.cs.market.client.CsMessageClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
-import com.hyjf.cs.market.client.CsMessageClient;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -27,8 +29,10 @@ public class CsMessageClientImpl implements CsMessageClient {
 
     @Override
     public BorrowUserStatisticVO selectBorrowUserStatistic() {
-        //todo fuqiang
-        return null;
+        BorrowUserStatisticResponse response = restTemplate.getForObject(
+                "http://CS-MESSAGE/cs-message/operation_report_job/getBorrowUserStatistic",
+                BorrowUserStatisticResponse.class);
+        return response.getResult();
     }
 
     @Override
@@ -79,5 +83,12 @@ public class CsMessageClientImpl implements CsMessageClient {
             return totalTenderSum.getResultInt();
         }
 
+    @Override
+    public OperationReportEntityVO getOperationReport(int month) {
+        OperationReportEntityResponse response = restTemplate.getForObject(
+                "http://CS-MESSAGE/cs-message/operation_report_job/findOneOperationMongDaoByMonth/"+month,
+                OperationReportEntityResponse.class);
+        return response.getResult();
+    }
 
 }

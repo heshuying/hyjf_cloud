@@ -10,6 +10,7 @@ import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +48,48 @@ public class TenderCityCountServiceImpl implements TenderCityCountService {
     @Override
     public int getTenderAgeByRange(Date date, int firstAge, int endAge) {
         Integer i = tenderCityCountCustomizeMapper.getTenderAgeByRange(date,firstAge,endAge);
+        return i;
+    }
+
+    @Override
+    public BigDecimal getAccountByMonth(Date beginDate, Date endDate) {
+        BigDecimal bigDecimal = tenderCityCountCustomizeMapper.getAccountByMonth(beginDate,endDate);
+        return bigDecimal;
+    }
+
+    @Override
+    public int getTradeCountByMonth(Date beginDate, Date endDate) {
+        int i = tenderCityCountCustomizeMapper.getTradeCountByMonth(beginDate,endDate);
+        return i;
+    }
+
+    @Override
+    public int getLoanNum(Date date) {
+        Integer i = tenderCityCountCustomizeMapper.getLoanNum(date);
+        return i;
+    }
+
+    @Override
+    public BigDecimal getInvestLastDate(Date date) {
+        BigDecimal i = tenderCityCountCustomizeMapper.getInvestLastDate(date);
+        return i;
+    }
+
+    @Override
+    public int getTenderCount(Date date) {
+        Integer i = tenderCityCountCustomizeMapper.getTenderCount(date);
+        return i;
+    }
+
+    @Override
+    public float getFullBillAverageTime(Date date) {
+        float i = tenderCityCountCustomizeMapper.getFullBillAverageTime(date);
+        return i;
+    }
+
+    @Override
+    public BigDecimal getRepayTotal(Date date) {
+        BigDecimal i = tenderCityCountCustomizeMapper.getRepayTotal(date);
         return i;
     }
 }
