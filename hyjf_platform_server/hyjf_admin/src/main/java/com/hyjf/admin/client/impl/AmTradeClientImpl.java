@@ -3952,8 +3952,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public void insertRecord(AdminBorrowFlowRequest adminRequest) {
-        restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/insertRecord", adminRequest, AdminBorrowFlowResponse.class)
+    public AdminBorrowFlowResponse insertRecord(AdminBorrowFlowRequest adminRequest) {
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/insertRecord", adminRequest, AdminBorrowFlowResponse.class)
                 .getBody();
     }
 
@@ -3964,8 +3964,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public void updateRecord(AdminBorrowFlowRequest adminRequest) {
-        restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/updateRecord", adminRequest, AdminBorrowFlowResponse.class)
+    public AdminBorrowFlowResponse updateRecord(AdminBorrowFlowRequest adminRequest) {
+       return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/updateRecord", adminRequest, AdminBorrowFlowResponse.class)
                 .getBody();
     }
 
@@ -3976,8 +3976,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public void deleteRecord(AdminBorrowFlowRequest adminRequest) {
-        restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/deleteRecord", adminRequest, AdminBorrowFlowResponse.class)
+    public AdminBorrowFlowResponse deleteRecord(AdminBorrowFlowRequest adminRequest) {
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/deleteRecord", adminRequest, AdminBorrowFlowResponse.class)
                 .getBody();
     }
 
