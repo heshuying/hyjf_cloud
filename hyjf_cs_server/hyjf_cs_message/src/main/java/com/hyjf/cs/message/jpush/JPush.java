@@ -24,9 +24,11 @@ import org.springframework.beans.factory.annotation.Value;
 public class JPush {
     protected static final Logger logger = LoggerFactory.getLogger(JPush.class);
 
-    private static final String appKey = "";//"da091acf1579e500b6d68642";
+	@Value("${hyjf.jpush.appkey}")
+    private static String appKey;//"da091acf1579e500b6d68642";
 
-    private static final String masterSecret = "";//"5fab0eee768aa594d4acc999";
+	@Value("${hyjf.jpush.master.secret}")
+    private static String masterSecret;//"5fab0eee768aa594d4acc999";
 
     private static final String ANDROID_TITLE = "汇盈金服";
 
