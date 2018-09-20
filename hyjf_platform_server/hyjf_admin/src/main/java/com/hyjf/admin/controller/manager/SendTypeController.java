@@ -72,7 +72,7 @@ public class SendTypeController extends BaseController {
         BorrowSendTypeResponse response =new BorrowSendTypeResponse();
         // 表单校验(双表校验)
         // 编号
-        boolean sendCdFlag = StringUtils.isBlank(adminRequest.getSendCd())||(StringUtils.isNotBlank(adminRequest.getSendCd())&&adminRequest.getSendCd().length()>50);
+        boolean sendCdFlag = StringUtils.isNotBlank(adminRequest.getSendCd())&&adminRequest.getSendCd().length()<=50;
         if (sendCdFlag) {
             BorrowSendTypeVO borrowSendTypeVO = sendTypeService.getBorrowSendInfo(adminRequest.getSendCd());
             if (borrowSendTypeVO != null && StringUtils.isNotEmpty(borrowSendTypeVO.getSendCd())) {
