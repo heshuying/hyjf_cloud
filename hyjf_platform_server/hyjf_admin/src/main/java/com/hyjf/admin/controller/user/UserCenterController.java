@@ -569,11 +569,11 @@ public class UserCenterController extends BaseController {
         Response response = userCenterService.saveCompanyInfo(updCompanyRequest);
         return new AdminResult<Response>(response);
     }
-
-    /**
+/*
+    *//**
      * 获取部门信息
      * @return
-     */
+     *//*
     @ResponseBody
     @PostMapping(value = "/getDepartmentList")
     @ApiOperation(value = "获取部门信息", notes = "获取部门信息")
@@ -582,13 +582,13 @@ public class UserCenterController extends BaseController {
         // 部门
         String[] list = new String[] {};
         //ids 刷新时可用,暂不删除 保留
-        /*if (Validator.isNotNull(deptIds)) {
+        *//*if (Validator.isNotNull(deptIds)) {
             if (deptIds.contains(StringPool.COMMA)) {
                 list = deptIds.split(StringPool.COMMA);
             } else {
                 list = new String[] { deptIds};
             }
-        }*/
+        }*//*
         JSONArray ja = smsCountService.getCrmDepartmentList(list);
         if (ja != null) {
             //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
@@ -606,7 +606,7 @@ public class UserCenterController extends BaseController {
             return ret;
         }
         return jsonObject;
-    }
+    }*/
 
     public UserManagerInitResponseBean initUserManaget(){
         UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();
@@ -634,6 +634,26 @@ public class UserCenterController extends BaseController {
 
         List<HjhInstConfigVO> listHjhInstConfig =  userCenterService.selectInstConfigAll();
         List<DropDownVO> dropDownVOList = com.hyjf.admin.utils.ConvertUtils.convertListToDropDown(listHjhInstConfig,"instCode","instName");
+        //部门树形列表
+        // 部门
+        String[] list = new String[] {};
+        JSONArray ja = smsCountService.getCrmDepartmentList(list);
+        JSONObject ret= new JSONObject();
+        if (ja != null) {
+            //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
+            JSONObject jo = new JSONObject();
+            jo.put("value", "-10086");
+            jo.put("title", "其他");
+            JSONArray array = new JSONArray();
+            jo.put("key", UUID.randomUUID());
+            jo.put("children", array);
+            ja.add(jo);
+            //
+            ret.put("data", ja);
+            ret.put("status", "000");
+            ret.put("statusDesc", "成功");
+        }
+        userManagerInitResponseBean.setDeptList(ret);
         userManagerInitResponseBean.setUserRoles(listUserRoles);
         userManagerInitResponseBean.setUserPropertys(listUserPropertys);
         userManagerInitResponseBean.setAccountStatus(listAccountStatus);
