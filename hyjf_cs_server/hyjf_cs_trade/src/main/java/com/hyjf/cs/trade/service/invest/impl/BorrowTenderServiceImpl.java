@@ -1108,10 +1108,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         tender.setPlatform((tender.getPlatform() == null || "".equals(tender.getPlatform()))?"2":tender.getPlatform());
         String borrowType = tender.getBorrowType();
         String requestType = CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
+        String baseUrl = super.getFrontHost(systemConfig,tender.getPlatform());
+        String requestMapping = "/public/formsubmit?requestType=";
         if ("HJH".equalsIgnoreCase(borrowType)){
             requestType = "9";
+            requestMapping = "/join/plan?requestType=";
         }
-        String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/public/formsubmit?requestType="+requestType;
+        String url = baseUrl + requestMapping + requestType;
         //String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/hyjf-app/user/invest/tender?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
         logger.info("url:[{}]",url);
