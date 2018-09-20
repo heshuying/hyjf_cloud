@@ -73,13 +73,15 @@ public class SendTypeController extends BaseController {
         // 表单校验(双表校验)
         // 编号
         boolean sendCdFlag = StringUtils.isNotBlank(adminRequest.getSendCd())&&adminRequest.getSendCd().length()<=50;
-        if (sendCdFlag) {
-            BorrowSendTypeVO borrowSendTypeVO = sendTypeService.getBorrowSendInfo(adminRequest.getSendCd());
-            if (borrowSendTypeVO != null && StringUtils.isNotEmpty(borrowSendTypeVO.getSendCd())) {
-                response.setRtn(Response.FAIL);
-                response.setMessage("sendCd 重复了！");
-                return new AdminResult<BorrowSendTypeResponse>(response);
-            }
+        if (!sendCdFlag) {
+            return new AdminResult<>(Response.FAIL,"borrowCd不能为空且长度小于或等于50！");
+        }
+        //校验sendCd是否存在
+        BorrowSendTypeVO borrowSendTypeVO = sendTypeService.getBorrowSendInfo(adminRequest.getSendCd());
+        if (borrowSendTypeVO != null && StringUtils.isNotEmpty(borrowSendTypeVO.getSendCd())) {
+            response.setRtn(Response.FAIL);
+            response.setMessage("sendCd 重复了！");
+            return new AdminResult<BorrowSendTypeResponse>(response);
         }
         // 画面验证
         String message =this.validatorFieldCheck(adminRequest);
@@ -153,13 +155,13 @@ public class SendTypeController extends BaseController {
         if(StringUtils.isBlank(form.getAfterTime())||(StringUtils.isNotBlank(form.getAfterTime())&&form.getAfterTime().length()>4)){
             String value=form.getAfterTime();
             if(!GenericValidator.isInt(value) || !NumberUtils.isNumber(value) || Integer.valueOf(value) < 0){
-                return "sendName 不能为空且长度小于4位的正整数！";
+                return "afterTime 不能为空且长度小于4位的正整数！";
             }
-            return "sendName 不能为空且长度不能超过4！";
+            return "afterTime 不能为空且长度不能超过4！";
         }
         // 备注说明
         if(StringUtils.isBlank(form.getRemark())||(StringUtils.isNotBlank(form.getRemark())&&form.getRemark().length()>50)){
-            return "sendName 不能为空且长度不能超过4！";
+            return "remark 不能为空且长度不能超过4！";
         }
         return "";
     }
