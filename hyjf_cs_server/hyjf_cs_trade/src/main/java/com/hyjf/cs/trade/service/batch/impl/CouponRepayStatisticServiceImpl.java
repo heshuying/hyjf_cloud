@@ -5,7 +5,6 @@ package com.hyjf.cs.trade.service.batch.impl;
 
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
-import com.hyjf.am.vo.trade.HolidaysConfigVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmConfigClient;
