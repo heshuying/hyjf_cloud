@@ -11,10 +11,7 @@ import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -54,6 +51,23 @@ public class JxBankConfigController {
         if(!CollectionUtils.isEmpty(jxBankConfigList)){
             JxBankConfigVO jxBankConfigVO = CommonUtils.convertBean(jxBankConfigList.get(0),JxBankConfigVO.class);
             response.setResult(jxBankConfigVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 获取充值银行列表
+     * @Author : huanghui
+     */
+    @RequestMapping(value = "/JxBank/selectBankConfigList", method = RequestMethod.GET)
+    public JxBankConfigResponse selectBankConfigList(){
+        JxBankConfigResponse response = new JxBankConfigResponse();
+        List<JxBankConfig> listBankConfig = jxBankConfigService.selectBankConfigList();
+        if(null!=listBankConfig&&listBankConfig.size()>0){
+            List<JxBankConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, JxBankConfigVO.class);
+            response.setResultList(listBanksConfig);
+            //代表成功
             response.setRtn(Response.SUCCESS);
         }
         return response;

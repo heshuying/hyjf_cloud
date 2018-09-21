@@ -3,15 +3,10 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.beans.request.ContentJobRequestBean;
 import com.hyjf.admin.beans.request.ContentLandingPageRequestBean;
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.service.ContentJobService;
 import com.hyjf.admin.service.ContentLandingPageService;
-import com.hyjf.am.response.config.JobResponse;
 import com.hyjf.am.response.config.LandingPageResponse;
-import com.hyjf.am.vo.config.JobsVo;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,4 +39,10 @@ public class ContentLandingPageServiceImpl implements ContentLandingPageService 
 	public LandingPageResponse deleteById(Integer id) {
 		return amConfigClient.deleteLandingPageById(id);
 	}
+
+	@Override
+	public LandingPageResponse getRecord(Integer id){
+		return amConfigClient.getLandingPageRecord(id);
+	}
+
 }

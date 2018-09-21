@@ -49,14 +49,9 @@ public class SendTypeController {
             if(!CollectionUtils.isEmpty(recordList)){
                 List<BorrowSendTypeVO> configList = CommonUtils.convertBeanList(recordList, BorrowSendTypeVO.class);
                 result.setResultList(configList);
-                result.setRtn(Response.SUCCESS);
-                return result;
             }
-            result.setRtn(Response.SUCCESS);
-            result.setMessage("查询的数据为空！");
-            return result;
         }
-        return null;
+        return result;
     }
     /**
      * 查询发标复标详情
@@ -72,9 +67,8 @@ public class SendTypeController {
         if (null != borrowSendType) {
             BeanUtils.copyProperties(borrowSendType,borrowSendTypeVO);
             response.setResult(borrowSendTypeVO);
-            return response;
         }
-        return null;
+        return response;
     }
     /**
      * 添加发标复标

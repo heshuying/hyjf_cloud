@@ -121,7 +121,7 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
      * @return
      */
     @ApiIgnore
-    @RequestMapping("return")
+    @RequestMapping("/return")
     public ModelAndView cashReturn(HttpServletRequest request, ChinapnrBean bean) {
         logger.info("[交易完成后,回调开始]");
         ModelAndView modelAndView = new ModelAndView(WITHDRAW_SUCCESS);

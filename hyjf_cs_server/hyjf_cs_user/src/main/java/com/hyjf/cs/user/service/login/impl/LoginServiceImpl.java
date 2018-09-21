@@ -381,12 +381,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		{
 			AccountVO account = amTradeClient.getAccount(userId);
 			BigDecimal balance = BigDecimal.ZERO;
-			BigDecimal frost = BigDecimal.ZERO;
 			BigDecimal planInterestWait = BigDecimal.ZERO;
 			BigDecimal planCapitalWait = BigDecimal.ZERO;
-			BigDecimal planAccountWait = BigDecimal.ZERO;
-			BigDecimal bankWait = BigDecimal.ZERO;
-			BigDecimal awaitTotal = BigDecimal.ZERO;
 			if (account != null) {
 				if (account.getBalance() == null) {
 					result.setBalance("0.00");
@@ -431,13 +427,13 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 						}
 					}
 					balance = account.getBankBalance();
-					if (balance == null) {
+					/*if (balance == null) {
 						balance = BigDecimal.ZERO;
-					}
+					}*/
 				}
-				if (account.getFrost() != null) {
+				/*if (account.getFrost() != null) {
 					frost = account.getFrost();
-				}
+				}*/
 				if (account.getPlanCapitalWait() != null) {
 					planCapitalWait = account.getPlanCapitalWait();
 				}
@@ -666,11 +662,13 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
 				Long lNow = GetDate.countDate(new Date(), 5, 1).getTime();
 				if (lCreate <= lNow) {
+					logger.info("已过期需要重新评测");
 					// 已过期需要重新评测
 					result.setAnswerStatus("2");
 					result.setAnswerResult("点击测评");
 					result.setFengxianDesc("已过期");
 				} else {
+					logger.info("进行过风险测评");
 					// 进行过风险测评
 					result.setAnswerStatus("1");
 					result.setAnswerResult(userEvalationResult.getEvalType());
@@ -680,6 +678,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					result.setEvalationScore(userEvalationResult.getScoreCount() + "");
 				}
 			} else {
+				logger.info("未测评");
+				result.setAnswerStatus("0");
 				result.setAnswerResult("点击测评");
 				result.setFengxianDesc("未测评");
 				// 活动有效期校验

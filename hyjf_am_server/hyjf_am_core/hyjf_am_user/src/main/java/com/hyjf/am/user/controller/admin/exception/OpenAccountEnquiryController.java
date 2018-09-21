@@ -26,7 +26,7 @@ import java.util.List;
  * @Author: Zha Daojian
  */
 @RestController
-@RequestMapping("/am-user/borrow_openaccountenquiry_exception")
+@RequestMapping("/am-user/borrowOpenaccountenquiryException")
 @Api(value = "异常中心-开户掉单",tags ="异常中心-开户掉单")
 public class OpenAccountEnquiryController {
 
@@ -37,12 +37,14 @@ public class OpenAccountEnquiryController {
      * 通过手机号和身份证查询掉单信息
     * @author Zha Daojian
     * @date 2018/8/21 15:29
-    * @param mobile,idcard
+    * @param reqest
     * @return com.hyjf.am.response.user.BankOpenAccountLogResponse
     **/
     @ApiOperation(value = "通过手机号和身份证查询掉单信息", notes = "通过手机号和身份证查询掉单信息")
-    @GetMapping(value = "/bankOpenAccountLogSelect/{mobile}/{idcard}")
-    public BankOpenAccountLogResponse bankOpenAccountLogSelect(@PathVariable String mobile,String idcard){
+    @PostMapping(value = "/bankOpenAccountLogSelect")
+    public BankOpenAccountLogResponse bankOpenAccountLogSelect(@RequestBody BankOpenAccountLogRequest reqest){
+        String mobile = reqest.getMobile();
+        String idcard = reqest.getIdcard();
         BankOpenAccountLogResponse response = new BankOpenAccountLogResponse();
         List<BankOpenAccountLog> bankOpenAccountLogList = bankOpenAccountLogSrvice.bankOpenAccountLogSelect(mobile,idcard);
         JSON.toJSONString(bankOpenAccountLogList);
@@ -79,7 +81,7 @@ public class OpenAccountEnquiryController {
      * @return com.hyjf.am.response.user.BankOpenAccountLogResponse
      **/
     @ApiOperation(value = "通过手机号和身份证查询用户信息", notes = "通过手机号和身份证查询用户信息")
-    @GetMapping(value = "/searchAccountEnquiry")
+    @PostMapping(value = "/searchAccountEnquiry")
     public OpenAccountEnquiryResponse searchAccountEnquiry(@RequestBody BankOpenAccountLogRequest reqest){
         OpenAccountEnquiryResponse response = new OpenAccountEnquiryResponse();
         OpenAccountEnquiryCustomize openAccountEnquiryCustomize = bankOpenAccountLogSrvice.accountEnquiry(reqest);

@@ -84,7 +84,6 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 
 	@Override
 	public int insertSelective(BankRequest bankRequest){
-		int nowTime = GetDate.getNowTime10();
 		String cardNo = bankRequest.getCardNo();
 		BigDecimal money = new BigDecimal(bankRequest.getTxAmount());
 		AccountRecharge record = new AccountRecharge();

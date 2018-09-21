@@ -43,7 +43,7 @@
 			ht_admin admin
 			LEFT JOIN ht_admin_and_role aar ON aar.user_id = admin.id
 			LEFT JOIN ht_admin_role role ON aar.role_id = role.id 
-			LEFT JOIN ht_user.ht_r_oa_department dep ON admin.department_id = dep.id
+			LEFT JOIN hyjf_user.ht_r_oa_department dep ON admin.department_id = dep.id
 		WHERE
 			1=1
 			<if test="id != null and id != ''">

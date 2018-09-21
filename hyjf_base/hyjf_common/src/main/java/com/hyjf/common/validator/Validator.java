@@ -1029,6 +1029,28 @@ public class Validator {
             b = m.matches();
             return b;
         }
+        /**
+         * 我国公民的身份证号码特点如下
+         * 1.长度18位
+         * 2.第1-17号只能为数字
+         * 3.第18位只能是数字或者x
+         * 4.第7-14位表示特有人的年月日信息
+         * 请实现身份证号码合法性判断的函数，函数返回值：
+         * 1.如果身份证合法返回0
+         * 2.如果身份证长度不合法返回1
+         * 3.如果第1-17位含有非数字的字符返回2
+         * 4.如果第18位不是数字也不是x返回3
+         * 5.如果身份证号的出生日期非法返回4
+         * @author Zha Daojian
+         * @date 2018/9/20 11:53
+         * @param id
+         * @return boolean
+         **/
+        public static  boolean isIdcard(String id) {
+            String isIDCard2 ="^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])((\\d{4})|\\d{3}[A-Z])$";
+            Pattern pattern = Pattern.compile(isIDCard2);
+            return pattern.matcher(id).matches();
+        }
 
     /**
      *
@@ -1077,6 +1099,10 @@ public class Validator {
                 + "((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\." + "((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])" + "\\b");
         private static Pattern _urlPattern = Pattern.compile("(http://|ftp://|https://|www){0,1}[^\u4e00-\u9fa5\\s]*?\\.(com|net|cn|me|tw|fr)[^\u4e00-\u9fa5\\s]*");
         private static Pattern _variableNamePattern = Pattern.compile("[_a-zA-Z]+[_a-zA-Z0-9]*");
+
+        public static void main(String[] args) {
+            System.out.println("args = " + isIdcard("340822198810200917"));
+        }
 
     }
 
