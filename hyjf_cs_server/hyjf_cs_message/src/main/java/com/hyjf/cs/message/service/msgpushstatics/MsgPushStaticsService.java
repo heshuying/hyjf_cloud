@@ -28,5 +28,5 @@ public interface MsgPushStaticsService {
 	 * @param endTime
 	 * @return
 	 */
-    List<MessagePushTemplateStatics> getTemplateStaticsListByTime(Integer startTime, Integer endTime);
+    List<MessagePushTemplateStatics> getTemplateStaticsListByTime(String startTime, String endTime);
 }
