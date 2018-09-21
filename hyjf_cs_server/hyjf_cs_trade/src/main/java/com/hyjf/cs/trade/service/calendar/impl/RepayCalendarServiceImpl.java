@@ -6,7 +6,7 @@ package com.hyjf.cs.trade.service.calendar.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.hyjf.cs.trade.client.RepayCalendarClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.calendar.RepayCalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 public class RepayCalendarServiceImpl implements RepayCalendarService {
 
     @Autowired
-    private RepayCalendarClient repayCalendarClient;
+    private AmTradeClient repayCalendarClient;
 
     /**
      * 查询回款日历总数

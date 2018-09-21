@@ -3,13 +3,8 @@
  */
 package com.hyjf.cs.trade.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.CertificateAuthorityVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.mq.handle.FddUserInfoChangeMessageHandle;
-import com.hyjf.cs.trade.mq.base.Consumer;
+import java.util.List;
+
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -23,7 +18,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.CertificateAuthorityVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.mq.handle.FddUserInfoChangeMessageHandle;
 
 /**
  * @author: sunpeikai

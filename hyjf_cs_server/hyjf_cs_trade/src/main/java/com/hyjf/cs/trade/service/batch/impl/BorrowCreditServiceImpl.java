@@ -5,8 +5,8 @@ package com.hyjf.cs.trade.service.batch.impl;
 
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BorrowCreditClient;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.batch.BorrowCreditService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.util.List;
 public class BorrowCreditServiceImpl extends BaseTradeServiceImpl implements BorrowCreditService {
 
     @Autowired
-    private BorrowCreditClient borrowCreditClient;
+    private AmTradeClient borrowCreditClient;
     @Autowired
     private AmUserClient amUserClient;
 

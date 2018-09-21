@@ -230,7 +230,6 @@ public class AppLoginController extends BaseUserController {
                 if (StringUtils.isBlank(userParameters.getIdcard()) || userParameters.getIdcard().length() < 15) {
                     userParameters.setIdcard("000000000000000000");
                 }
-                logger.info("风险测评结果："+userParameters.getAnswerStatus());
                 ret.put("status", "0");
                 ret.put("params", userParameters);
                 ret.put("statusDesc", "获取用户相关数据成功");

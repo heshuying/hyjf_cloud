@@ -23,9 +23,9 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
+import com.hyjf.cs.trade.client.AmConfigClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BankInterfaceClient;
-import com.hyjf.cs.trade.client.BindCardClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
@@ -62,7 +62,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 
 
 	@Autowired
-	BindCardClient bindCardClient;
+	AmTradeClient bindCardClient;
 
 	@Autowired
 	SystemConfig systemConfig;
@@ -70,14 +70,14 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	@Autowired
 	AmUserClient amUserClient;
 
-	@Autowired
-	BankInterfaceClient bankInterfaceClient;
 
 	@Autowired
 	AppMessageProducer appMessageProducer;
 
 	@Autowired
 	SmsProducer smsProducer;
+	@Autowired
+	AmConfigClient amConfigClient;
 
 	// 充值状态:充值中
 	private static final int RECHARGE_STATUS_WAIT = 1;
@@ -404,7 +404,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		String concatAllQuota = ",";
 		// 根据用户Id查询用户银行卡号
 		// 查询页面上可以挂载的银行列表
-		BankCardVO bankCard = bindCardClient.selectBankCardByUserId(userId);
+		BankCardVO bankCard = amUserClient.selectBankCardByUserId(userId);
 
 		if (bankCard != null) {
 			cardNo = BankCardUtil.getCardNo(bankCard.getCardNo());
@@ -413,7 +413,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			isBundCardFlag = 1;
 
 			Integer bankId = bankCard.getBankId();
-			BanksConfigVO banksConfig = bindCardClient.getBanksConfigByBankId(bankId + "");
+			BanksConfigVO banksConfig = amConfigClient.getBanksConfigByBankId(bankId + "");
 			if (banksConfig != null && banksConfig.getQuickPayment() == 1 && banksConfig.getSingleQuota() != null && banksConfig.getSingleCardQuota() != null) {
 				if(banksConfig.getSingleQuota().compareTo(BigDecimal.ZERO) > 0){
 					singleQuota = CommonUtils.formatBigDecimal(banksConfig.getSingleQuota().divide(new BigDecimal(10000))) + "万";
@@ -488,7 +488,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		//ret.put("bindCardUrl", RechargeDefine.HOST+BindCardPageDefine.REQUEST_MAPPING+BindCardPageDefine.REQUEST_BINDCARDPAGE+".do");
 		ret.put("bindCardUrl", "");
 		// 江西银行绑卡接口修改 update by wj 2018-5-17 start
-		ret.put("bindType",this.bankInterfaceClient.getBankInterfaceFlagByType("BIND_CARD"));
+		ret.put("bindType",this.amConfigClient.getBankInterfaceFlagByType("BIND_CARD"));
 		// 江西银行绑卡接口修改 update by wj 2018-5-17 end
 
 		result.setData(ret);
