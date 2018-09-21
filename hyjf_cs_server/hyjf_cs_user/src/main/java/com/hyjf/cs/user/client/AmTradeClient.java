@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.client;
 
+import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
@@ -376,4 +377,11 @@ public interface AmTradeClient {
      * @return
      */
     Integer updateAccountNumberByUserId(int userId, String accountId);
+
+    /**
+     *根据机构编号检索机构信息
+     * @param instcode
+     * @return
+     */
+    HjhInstConfigVO selectHjhInstConfig(String instcode);
 }

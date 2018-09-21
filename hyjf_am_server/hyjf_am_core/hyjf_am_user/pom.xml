@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hyjf_am_user</artifactId>
+    <name>hyjf_am_user</name>
+    <description>hyjf am user project</description>
 
     <dependencies>
         <!-- spring cloud eureka client -->
