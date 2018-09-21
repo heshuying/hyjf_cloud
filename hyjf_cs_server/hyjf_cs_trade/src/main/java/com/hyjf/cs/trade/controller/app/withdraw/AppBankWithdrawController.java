@@ -426,7 +426,6 @@ public class AppBankWithdrawController extends BaseTradeController {
         logger.info("web端提现接口, userId is :{}", userId);
         AppResult<Object> result = new AppResult<Object>();
         String transAmt = request.getParameter("total");// 交易金额
-        logger.info("交易金额"+transAmt);
         String cardNo = request.getParameter("cardNo");// 提现银行卡号
         String payAllianceCode = request.getParameter("openCardBankCode");// 银联行号
         // 平台
