@@ -95,7 +95,7 @@
 		<result column="transfer_id" property="transferId" jdbcType="VARCHAR" />
 		<result column="received_flg" property="receivedFlg" jdbcType="VARCHAR" />
 		<result column="received_flg_origin" property="receivedFlgOrigin" jdbcType="VARCHAR" />
-		<result column="recover_status" property="recoverStatus" jdbcType="VARCHAR" />
+		<result column="recover_status" property="recoverStatus" jdbcType="INTEGER" />
 	</resultMap>
 
 	<select id="countRecord" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.CouponTenderRequest">
@@ -216,6 +216,7 @@
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
 	</select>
+
 
 	<select id="selectCouponTenderDetailCustomize" resultMap="selectCouponTenderDetailMap" parameterType="java.util.Map">
 		SELECT
@@ -422,12 +423,7 @@
 		'%Y-%m-%d'
 		) exp_time,
 		hcr.transfer_id transfer_id,
-		CASE
-		WHEN hcr.recover_status = 0 THEN
-		'未还款'
-		WHEN hcr.recover_status = 1 THEN
-		'已还款'
-		END recover_status,
+        hcr.recover_status  recover_status,
 		hcr.received_flg AS received_flg_origin
 		FROM
 		ht_coupon_user hcu
@@ -500,10 +496,10 @@
 			</if>
 			<!-- 时间 -->
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND hct.add_time <![CDATA[>=]]> #{timeStartSrch}
+				AND hct.create_time <![CDATA[>=]]> #{timeStartSrch}
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND hct.add_time <![CDATA[<=]]> #{timeEndSrch}
+				AND hct.create_time <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 		</where>
 	</sql>

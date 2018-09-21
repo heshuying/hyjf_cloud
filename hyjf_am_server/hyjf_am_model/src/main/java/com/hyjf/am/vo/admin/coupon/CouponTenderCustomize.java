@@ -39,6 +39,12 @@ public class CouponTenderCustomize extends BaseVO {
     private String userId;
     //主键id
     private Integer id;
+    //优惠券类型
+    private String couponType;
+    //使用时间
+    private String couponFrom;
+    //使用时间
+    private String couponContent;
 
     public String getOrderId() {
         return orderId;
@@ -166,5 +172,29 @@ public class CouponTenderCustomize extends BaseVO {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(String couponType) {
+        this.couponType = couponType;
+    }
+
+    public String getCouponFrom() {
+        return couponFrom;
+    }
+
+    public void setCouponFrom(String couponFrom) {
+        this.couponFrom = couponFrom;
+    }
+
+    public String getCouponContent() {
+        return couponContent;
+    }
+
+    public void setCouponContent(String couponContent) {
+        this.couponContent = couponContent;
     }
 }
