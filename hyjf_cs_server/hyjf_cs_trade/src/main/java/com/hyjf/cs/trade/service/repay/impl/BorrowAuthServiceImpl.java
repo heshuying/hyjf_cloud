@@ -14,7 +14,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.cs.trade.client.AmBorrowClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.repay.BorrowAuthService;
@@ -38,7 +38,7 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
     @Autowired
     SystemConfig systemConfig;
     @Autowired
-    AmBorrowClient amBorrowClient;
+    AmTradeClient amBorrowClient;
 
     /**
      * 授权列表请求参数校验

@@ -1,5 +1,8 @@
 package com.hyjf.cs.trade.client;
 
+import java.util.Date;
+import java.util.List;
+
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
@@ -9,9 +12,6 @@ import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * 配置中心请求
@@ -82,4 +82,6 @@ public interface AmConfigClient {
 	 * @return
 	 */
     SiteSettingsVO selectSiteSetting();
+	BanksConfigVO getBanksConfigByBankId(String bankId);
+	Integer getBankInterfaceFlagByType(String type);
 }

@@ -99,9 +99,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     @Autowired
     private SmsProducer smsProducer;
 
-    @Autowired
-    private WebProjectListClient webProjectListClient;
-
 
     /**
      * 获取Web端项目列表
