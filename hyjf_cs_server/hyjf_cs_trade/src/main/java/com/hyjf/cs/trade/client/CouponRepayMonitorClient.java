@@ -3,9 +3,9 @@
  */
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
-
 import java.util.List;
+
+import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 
 /**
  * @author yaoy

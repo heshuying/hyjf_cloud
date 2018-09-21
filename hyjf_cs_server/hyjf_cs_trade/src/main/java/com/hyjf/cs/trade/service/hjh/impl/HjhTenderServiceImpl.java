@@ -32,9 +32,9 @@ import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
-import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
@@ -79,13 +79,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
-    private AmMongoClient amMongoClient;
-    @Autowired
     private CouponService couponService;
     @Autowired
     private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
-    @Autowired
-    private UtmRegProducer utmRegProducer;
     @Autowired
     private HjhCouponTenderProducer hjhCouponTenderProducer;
     @Autowired

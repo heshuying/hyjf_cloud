@@ -1,8 +1,8 @@
 package com.hyjf.cs.trade.service.home;
 
-import com.hyjf.cs.common.bean.result.WebResult;
-
 import javax.servlet.http.HttpServletResponse;
+
+import com.hyjf.cs.common.bean.result.WebResult;
 
 /**
  * Web首页service

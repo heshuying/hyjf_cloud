@@ -3,12 +3,13 @@
  */
 package com.hyjf.cs.trade.mq.producer;
 
+import org.springframework.stereotype.Component;
+
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.base.Producer;
 import com.hyjf.cs.trade.mq.base.ProducerFieldsWrapper;
-import org.springframework.stereotype.Component;
 
 /**
  * 体验金按收益期限还款 mq producer

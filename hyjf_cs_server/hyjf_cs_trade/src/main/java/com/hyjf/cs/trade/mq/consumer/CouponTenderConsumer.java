@@ -3,13 +3,10 @@
  */
 package com.hyjf.cs.trade.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.client.BorrowClient;
-import com.hyjf.cs.trade.mq.base.Consumer;
-import com.hyjf.cs.trade.service.consumer.CouponService;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -23,9 +20,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.service.consumer.CouponService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 /**
  * @Description 优惠券使用
@@ -39,7 +40,7 @@ public class CouponTenderConsumer extends Consumer {
     @Autowired
     private CouponService couponService;
     @Autowired
-    private BorrowClient borrowClient;
+    private AmTradeClient borrowClient;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {

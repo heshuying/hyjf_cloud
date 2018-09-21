@@ -6,7 +6,7 @@ import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.InterestInfo;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.BorrowRepayPlanCsVO;
-import com.hyjf.cs.trade.client.BorrowClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.List;
 public class RepayPlanServiceImpl implements RepayPlanService {
 
     @Autowired
-    private BorrowClient borrowClient;
+    private AmTradeClient borrowClient;
 
     @Override
     public List<BorrowRepayPlanCsVO> getRepayPlan(String borrowNid) {

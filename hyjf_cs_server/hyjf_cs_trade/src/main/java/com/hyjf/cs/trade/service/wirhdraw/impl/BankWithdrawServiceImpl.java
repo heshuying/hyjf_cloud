@@ -63,13 +63,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     AmConfigClient amConfigClient;
     
     @Autowired
-    BankOpenClient bankOpenClient;
+    AmTradeClient amTradeClient;
 
-    @Autowired
-    BindCardClient bindCardClient;
 
-    @Autowired
-    AccountListClient accountListClient;
 
 
     @Autowired
@@ -162,7 +158,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 查询账户信息
         //AccountVO account = this.bindCardClient.getAccount(userId);
         // 根据用户ID查询用户银行卡信息
-        BankCardVO bankCard = this.bindCardClient.selectBankCardByUserId(userId);
+        BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(userId);
         String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
         // 银联行号
         String payAllianceCode = bean.getLogAcqResBean() == null ? "" : bean.getLogAcqResBean().getPayAllianceCode();
@@ -180,7 +176,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     return jsonMessage("提现成功", "0");
                 } else {
                     // 查询是否已经处理过
-                    int accountlistCnt = this.accountListClient.countAccountListByOrdId(ordId,"cash_success");
+                    int accountlistCnt = this.amTradeClient.countAccountListByOrdId(ordId,"cash_success");
                     // 未被处理
                     if (accountlistCnt == 0) {
                         try {
@@ -192,7 +188,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                                 updateBankCardVO.setId(bankCard.getId());
                                 updateBankCardVO.setPayAllianceCode(payAllianceCode);
                                 try {
-                                    boolean isBankCardUpdateFlag = this.bindCardClient.updateBankCardPayAllianceCode(updateBankCardVO) > 0 ? true : false;
+                                    boolean isBankCardUpdateFlag = this.amUserClient.updateBankCardPayAllianceCode(updateBankCardVO) > 0 ? true : false;
                                     if (!isBankCardUpdateFlag) {
                                         throw new Exception("大额提现成功后,更新用户银行卡的银联行号失败~~~!" + bankCard.getId());
                                     }
@@ -304,7 +300,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         Integer userId = user.getUserId();
         DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
         // 取得用户当前余额
-        AccountVO account = this.bindCardClient.getAccount(userId);
+        AccountVO account = this.amUserClient.getAccount(userId);
         if (account == null) {
             result.setStatus(MsgEnum.ERR_USER_UNUSUAL.getCode());
             result.setStatusDesc(MsgEnum.ERR_USER_UNUSUAL.getMsg());
@@ -317,7 +313,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             return result;
         }
         // 查询页面上可以挂载的银行列表
-        BankCardVO banks = bindCardClient.selectBankCardByUserId(userId);
+        BankCardVO banks = amUserClient.selectBankCardByUserId(userId);
         if (banks == null) {
             // 用户未绑卡
             result.setStatus(MsgEnum.ERR_CARD_NOT_BIND.getCode());
@@ -368,7 +364,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             bankcards.add(bankCardBean);
 
             Integer bankId = banks.getBankId();
-            BanksConfigVO banksConfig = bindCardClient.getBanksConfigByBankId(bankId + "");
+            BanksConfigVO banksConfig = amConfigClient.getBanksConfigByBankId(bankId + "");
             if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankName())) {
                 bankCardBean.setBank(banksConfig.getBankName()==null?"":banksConfig.getBankName());
                 bankCardBean.setBankCode(banksConfig.getBankCode()==null?"":banksConfig.getBankCode());
@@ -692,7 +688,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED);
         }
 
-        BankCardVO bankCard = this.bindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
+        BankCardVO bankCard = this.amUserClient.queryUserCardValid(user.getUserId()+"", cardNo);
         if (bankCard == null || Validator.isNull(bankCard.getCardNo())) {
             throw new ReturnMessageException(MsgEnum.ERR_CARD_NOT_BIND);
         }
@@ -732,7 +728,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         String cardNo = params.get("cardNo"); // 银行卡号
         String bank = null;
         // 取得银行信息
-        BankCardVO bankCard = this.bindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
+        BankCardVO bankCard = this.amUserClient.queryUserCardValid(user.getUserId()+"", cardNo);
         if (bankCard != null) {
             bank = bankCard.getBank();
         }
@@ -784,9 +780,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      */
     private BankCallBean getCommonBankCallBean(UserVO user, String platform, String channel, String transAmt, String cardNo, String payAllianceCode, String fee, String retUrl, String bgRetUrl, String successfulUrl) {
         String orderId=GetOrderIdUtils.getOrderId2(user.getUserId());
-        BankCardVO bankCard = this.bindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
+        BankCardVO bankCard = this.amUserClient.queryUserCardValid(user.getUserId()+"", cardNo);
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
-        BankOpenAccountVO bankOpenAccountVO=bankOpenClient.selectById(user.getUserId());
+        BankOpenAccountVO bankOpenAccountVO=amUserClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
         retUrl = retUrl+"?logOrdId="+orderId;
         if(platform.equals(ClientConstants.WEB_CLIENT)){
@@ -862,12 +858,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             return feetmp;
         }
 
-        BankCardVO bankCard = this.bindCardClient.queryUserCardValid(userId+"", cardNo);
+        BankCardVO bankCard = this.amUserClient.queryUserCardValid(userId+"", cardNo);
 
         if (bankCard != null) {
             Integer bankId = bankCard.getBankId();
             // 取得费率
-            BanksConfigVO banksConfig = bindCardClient.getBanksConfigByBankId(bankId+"");
+            BanksConfigVO banksConfig = amConfigClient.getBanksConfigByBankId(bankId+"");
             if (banksConfig != null) {
                 if (Validator.isNotNull(banksConfig.getFeeWithdraw())) {
                     return banksConfig.getFeeWithdraw().toString();

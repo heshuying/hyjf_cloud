@@ -43,15 +43,12 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
     @Resource
     private AmUserClient amUserClient;
     @Resource
-    private CouponConfigClient couponConfigClient;
-    @Resource
-    private CouponUserClient couponUserClient;
-    @Resource
-    private VipAuthClient vipAuthClient;
+    private AmTradeClient couponConfigClient;
+
     @Resource
     private AppMessageProducer appMessageProducer;
     @Resource
-    private InvitePrizeConfigClient invitePrizeConfigClient;
+    private AmMarketClient invitePrizeConfigClient;
     @Resource
     private SystemConfig systemConfig;
 
@@ -101,7 +98,7 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
                 // VIP礼包发券
                 int vipId = paramBean.getVipId();
                 // 取得相应vip的优惠券配置信息
-                List<VipAuthVO> vipAuthList = this.vipAuthClient.getVipAuthList(vipId);
+                List<VipAuthVO> vipAuthList = this.amUserClient.getVipAuthList(vipId);
                 if (vipAuthList != null && vipAuthList.size() > 0) {
                     // VipAuth vipAuth = vipAuthList.get(0);
                     for (VipAuthVO vipAuth : vipAuthList) {
@@ -213,7 +210,7 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
         couponUserRequest.setCouponCodeList(couponCodeList);
         couponUserRequest.setUserId(userId);
         couponUserRequest.setActivityId(activityId);
-        return couponUserClient.getSendRepeat(couponUserRequest);
+        return couponConfigClient.getSendRepeat(couponUserRequest);
     }
 
     /**
@@ -293,7 +290,7 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
                 couponUser.setChannel(channelName);
                 couponUser.setAttribute(userInfo.getAttribute());
                 couponUser.setContent(StringUtils.isEmpty(content)?"":content);
-                couponUserClient.insertCouponUser(couponUser);
+                couponConfigClient.insertCouponUser(couponUser);
                 // 需要返回的用户优惠券编号
                 retCouponUserCodes.add(couponUser.getCouponUserCode());
             }
@@ -375,7 +372,7 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
                 couponUser.setChannel(channelName);
                 couponUser.setAttribute(userInfo.getAttribute());
                 couponUser.setContent(StringUtils.isEmpty(content)?"":content);
-                couponUserClient.insertCouponUser(couponUser);
+                couponConfigClient.insertCouponUser(couponUser);
                 couponCount++;
             }
             logger.info("发放优惠券成功，发放张数：" + couponCount);

@@ -1,6 +1,8 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -8,15 +10,18 @@ import java.util.Date;
 /**
  * @author by xiehuili on 2018/8/1.
  */
+@ApiModel(value = "发标复审")
 public class BorrowSendTypeVO extends BaseVO implements Serializable {
+
+    @ApiModelProperty(value = "唯一标识")
     private String sendCd;
-
+    @ApiModelProperty(value = "名称(自动发标时间间隔,自动复审时间间隔)")
     private String sendName;
-
+    @ApiModelProperty(value = "发表时间")
     private Integer afterTime;
-
+    @ApiModelProperty(value = "备注说明")
     private String remark;
-
+    @ApiModelProperty(value = "删除状态")
     private Integer delFlag;
 
     private Date createTime;

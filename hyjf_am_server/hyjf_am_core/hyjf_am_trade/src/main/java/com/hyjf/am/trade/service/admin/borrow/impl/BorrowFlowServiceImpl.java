@@ -167,8 +167,8 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
         BeanUtils.copyProperties(adminRequest, record);
         //自动复审时，自动发标时间间隔和自动复审时间间隔清空
         if(adminRequest.getAutoReview() != null&&adminRequest.getAutoReview().intValue() == 1){
-            record.setAutoSendMinutes(null);
-            record.setAutoReviewMinutes(null);
+            record.setAutoSendMinutes(0);
+            record.setAutoReviewMinutes(0);
         }
         // 更新时间
         record.setUpdateTime(new Date());
