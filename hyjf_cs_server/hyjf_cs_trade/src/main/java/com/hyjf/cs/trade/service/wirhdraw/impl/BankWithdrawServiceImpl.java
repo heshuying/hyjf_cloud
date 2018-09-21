@@ -100,7 +100,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         String fee = this.getWithdrawFee(user.getUserId(), cardNo);
         // 组装发往江西银行参数
         BankCallBean bean = getCommonBankCallBean(users, platform, channel, transAmt, cardNo, payAllianceCode, fee,retUrl,bgRetUrl,successfulUrl);
-        logger.info("bean"+bean);
+        logger.debug("提现返回bean"+bean);
         // 插值用参数
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", String.valueOf(user.getUserId()));
