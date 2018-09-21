@@ -80,7 +80,7 @@ public class SmsLogServiceImpl implements SmsLogService {
 		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
 			Integer begin = GetDate.dateString2Timestamp(postTimeBegin + " 00:00:00");
 			Integer end = GetDate.dateString2Timestamp(postTimeEnd + " 23:59:59");
-			criteria.and("posttime").gte(begin).lte(end);
+			criteria.and("createTime").gte(begin).lte(end);
 		}
 
 		if (status != null && status != 2) {
@@ -91,8 +91,7 @@ public class SmsLogServiceImpl implements SmsLogService {
 		int pageSize = request.getPageSize();
 		if (currPage > 0) {
 			int limitStart = (currPage - 1) * pageSize;
-			int limitEnd = limitStart + pageSize;
-			query.skip(limitStart).limit(limitEnd);
+			query.skip(limitStart).limit(pageSize);
 		}
 		query.with(new Sort(Sort.Direction.DESC, "posttime"));
 		return smsOntimeMongoDao.find(query);

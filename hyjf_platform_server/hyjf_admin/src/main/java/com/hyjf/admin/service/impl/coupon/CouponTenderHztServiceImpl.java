@@ -97,4 +97,15 @@ public class CouponTenderHztServiceImpl implements CouponTenderHztService {
         }
         return null;
     }
+
+    @Override
+    public List<CouponTenderCustomize> exoportRecordList(CouponTenderRequest couponTenderRequest) {
+        couponTenderRequest.setLimitStart(null);
+        couponTenderRequest.setLimitEnd(null);
+        CouponTenderResponse couponTenderResponse = amTradeClient.getRecordListHzt(couponTenderRequest);
+        if(null != couponTenderResponse){
+            return couponTenderResponse.getResultList();
+        }
+        return null;
+    }
 }
