@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * @author by xiehuili on 2018/8/1.
  */
-@ApiModel(value="发标/复审",description="发标/复审")
+@ApiModel(value="发标/复审")
 public class BorrowSendTypeRequest extends BasePage implements Serializable {
     /**
      * serialVersionUID
