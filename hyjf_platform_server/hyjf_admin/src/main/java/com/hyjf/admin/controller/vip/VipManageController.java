@@ -3,12 +3,15 @@
  */
 package com.hyjf.admin.controller.vip;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.BankAccountManageService;
 import com.hyjf.admin.service.VipManageService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.VipDetailListResponse;
@@ -56,6 +59,8 @@ public class VipManageController extends BaseController {
 
     @Autowired
     private VipManageService vipManageService;
+    @Autowired
+    private BankAccountManageService bankAccountManageService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @PostMapping("/vipManageList")
@@ -72,15 +77,29 @@ public class VipManageController extends BaseController {
         List<ParamNameVO> userStatus = this.vipManageService.getParamNameList("USER_STATUS");
         // 注册平台
         List<ParamNameVO> registPlat = this.vipManageService.getParamNameList("CLIENT");
-        // 部门
-        List<OADepartmentCustomizeVO> departmentList = vipManageService.getCrmDepartmentList();
+        //部门
+        String[] list = new String[]{};
 
+        JSONArray ja = this.bankAccountManageService.getCrmDepartmentList(list);
+        JSONObject ret = new JSONObject();
+        if (ja != null) {
+            //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
+            JSONObject jo = new JSONObject();
+            jo.put("value", "-10086");
+            jo.put("title", "其他");
+            JSONArray array = new JSONArray();
+            jo.put("key", UUID.randomUUID());
+            jo.put("children", array);
+            ja.add(jo);
+            ret = new JSONObject();
+            ret.put("data", ja);
+        }
         response.setUserRoles(userRoles);
         response.setUserPropertys(userPropertys);
         response.setAccountStatus(accountStatus);
         response.setUserStatus(userStatus);
         response.setRegistPlat(registPlat);
-        response.setDepartmentList(departmentList);
+        response.setDepartmentList(ret);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
