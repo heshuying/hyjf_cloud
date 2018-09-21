@@ -423,7 +423,7 @@ public class AppBankWithdrawController extends BaseTradeController {
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
     public AppResult<Object> userBankWithdraw(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
-        logger.info("web端提现接口, userId is :{}", userId);
+        logger.info("app端提现接口, userId is :{}", userId);
         AppResult<Object> result = new AppResult<Object>();
         String transAmt = request.getParameter("total");// 交易金额
         logger.info("交易金额"+transAmt);
