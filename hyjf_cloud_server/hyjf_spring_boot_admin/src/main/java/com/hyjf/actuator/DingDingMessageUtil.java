@@ -13,11 +13,11 @@ import java.net.URL;
  * 钉钉机器人发送消息
  * https://oapi.dingtalk.com/robot/send?access_token=4d0c8dc2f499ed3ae3df411e6341d66b21e87d846c0a0f2de8fea8cc164389eb
  * https://open-doc.dingtalk.com/docs/doc.htm?spm=a219a.7629140.0.0.karFPe&treeId=257&articleId=105735&docType=1
-
+https://oapi.dingtalk.com/robot/send?access_token=a032a81f62766780d77cadb81dfa016feb605e43881b442f16078d7c2d34ade0
  */
 public class DingDingMessageUtil {
 
-	public static String access_token = "4d0c8dc2f499ed3ae3df411e6341d66b21e87d846c0a0f2de8fea8cc164389eb";
+	public static String access_token = "a032a81f62766780d77cadb81dfa016feb605e43881b442f16078d7c2d34ade0";
 
 	public static void sendTextMessage(String msg) {
 		try {

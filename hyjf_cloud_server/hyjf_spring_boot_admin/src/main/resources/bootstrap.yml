@@ -37,8 +37,8 @@ spring:
   profiles: secure
   security:
     user:
-      name: hyjf
-      password: hyjf1234
+      name: "hyjf"
+      password: "hyjf1234"
 eureka:
   instance:
     metadata-map:

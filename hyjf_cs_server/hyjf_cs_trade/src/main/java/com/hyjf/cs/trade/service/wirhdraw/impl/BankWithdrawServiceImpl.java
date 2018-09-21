@@ -160,7 +160,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 用户ID
         int userId = Integer.parseInt(params.get("userId"));
         // 查询账户信息
-        AccountVO account = this.bindCardClient.getAccount(userId);
+        //AccountVO account = this.bindCardClient.getAccount(userId);
         // 根据用户ID查询用户银行卡信息
         BankCardVO bankCard = this.bindCardClient.selectBankCardByUserId(userId);
         String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
@@ -817,7 +817,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         bean.setName(usersInfo.getTruename());// 姓名
         bean.setMobile(user.getMobile());// 手机号
         bean.setCardNo(bankCard.getCardNo());// 银行卡号
-        bean.setTxAmount(CustomUtil.formatAmount(transAmt));
+        bean.setTxAmount(CustomUtil.formatAmount(new BigDecimal(transAmt).subtract(new BigDecimal(fee)).toString()));
         bean.setTxFee(fee);
         // 成功跳转的url
         bean.setSuccessfulUrl(successfulUrl);

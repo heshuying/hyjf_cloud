@@ -13,6 +13,7 @@
 	<packaging>jar</packaging>
 
 	<name>hyjf_admin Maven Webapp</name>
+	<description>hyjf admin project</description>
 	<url>http://www.example.com</url>
 
 	<properties>

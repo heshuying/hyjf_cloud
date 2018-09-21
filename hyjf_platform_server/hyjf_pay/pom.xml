@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 
 	<name>hyjf_pay</name>
-	<description>Demo project for Spring Boot</description>
+	<description>hyjf pay project</description>
 
 
 	<parent>
