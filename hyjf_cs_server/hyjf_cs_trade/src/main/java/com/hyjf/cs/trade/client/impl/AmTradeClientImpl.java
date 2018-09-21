@@ -12,14 +12,11 @@ import com.hyjf.am.response.config.AppReapyCalendarResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
-import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.*;
+import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
-import com.hyjf.am.response.user.BankOpenAccountResponse;
-import com.hyjf.am.response.user.BankOpenAccountListResponse;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.user.HjhPlanResponse;
-import com.hyjf.am.response.user.HjhUserAuthResponse;
-import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
@@ -48,12 +45,8 @@ import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
-import com.hyjf.am.vo.trade.account.AccountListVO;
+import com.hyjf.am.vo.trade.account.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
@@ -74,7 +67,6 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.ApiRepayListRequestBean;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
@@ -1032,9 +1024,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw) {
-        BooleanResponse result = restTemplate
-                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, BooleanResponse.class).getBody();
-        return result.getResultBoolean();
+        IntegerResponse result = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, IntegerResponse.class).getBody();
+        return result.getResultInt()>0?true:false;
     }
     /**
      * 提现后续操作

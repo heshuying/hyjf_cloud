@@ -790,7 +790,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         }else {
             successfulUrl = successfulUrl+"?amount=" + transAmt+ "&charge=" + fee;
         }
-
+        logger.info("交易金额"+transAmt+"successfulUrl:"+successfulUrl);
         // 路由代码
         String routeCode = "";
         // 调用汇付接口(4.2.2 用户绑卡接口)
@@ -814,6 +814,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         bean.setMobile(user.getMobile());// 手机号
         bean.setCardNo(bankCard.getCardNo());// 银行卡号
         bean.setTxAmount(CustomUtil.formatAmount(new BigDecimal(transAmt).subtract(new BigDecimal(fee)).toString()));
+        logger.info("银行"+bean.getTxAmount());
         bean.setTxFee(fee);
         // 成功跳转的url
         bean.setSuccessfulUrl(successfulUrl);
