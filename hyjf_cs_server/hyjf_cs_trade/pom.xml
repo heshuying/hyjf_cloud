@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>hyjf_cs_trade</name>
-	<description>Demo project for Spring Boot</description>
+	<description>hyjf cs trade project</description>
 
 	<parent>
 		<groupId>com.hyjf</groupId>
