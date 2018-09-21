@@ -80,7 +80,7 @@ public class SmsLogServiceImpl implements SmsLogService {
 		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
 			Integer begin = GetDate.dateString2Timestamp(postTimeBegin + " 00:00:00");
 			Integer end = GetDate.dateString2Timestamp(postTimeEnd + " 23:59:59");
-			criteria.and("posttime").gte(begin).lte(end);
+			criteria.and("createTime").gte(begin).lte(end);
 		}
 
 		if (status != null && status != 2) {
