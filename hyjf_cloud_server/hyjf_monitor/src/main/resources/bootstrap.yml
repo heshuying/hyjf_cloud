@@ -1,6 +1,6 @@
 spring:
   application:
-    name: SPRING-BOOT-ADMIN
+    name: MONOTOR-SERVER
   profiles:
     active: secure
 
@@ -8,7 +8,7 @@ eureka:
   instance:
     preferIpAddress: true
     leaseRenewalIntervalInSeconds: 10
-    health-check-url-path: /actuator/health
+    #health-check-url-path: /monitor/health
   client:
     registryFetchIntervalSeconds: 5
     serviceUrl:
@@ -16,6 +16,8 @@ eureka:
 
 server:
   port: 18080
+  #servlet:
+  #  context-path: /monitor
 
 management:
   endpoints:

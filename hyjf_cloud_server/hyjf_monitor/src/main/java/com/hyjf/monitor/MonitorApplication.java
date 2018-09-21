@@ -1,5 +1,6 @@
-package com.hyjf.actuator;
+package com.hyjf.monitor;
 
+import com.hyjf.monitor.filter.DingDingNotifier;
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import de.codecentric.boot.admin.server.domain.entities.InstanceRepository;
 import org.springframework.boot.SpringApplication;
@@ -17,16 +18,16 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 /**
  * @author xiasq
- * @version SpringBootAdminApplication, v0.1 2018/6/4 17:38
+ * @version MonitorApplication, v0.1 2018/6/4 17:38
  */
 @Configuration
 @EnableAutoConfiguration
 @EnableAdminServer
 @EnableDiscoveryClient
-public class SpringBootAdminApplication {
+public class MonitorApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBootAdminApplication.class, args);
+		SpringApplication.run(MonitorApplication.class, args);
 	}
 
 	@Configuration
@@ -50,7 +51,7 @@ public class SpringBootAdminApplication {
 		protected void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests().anyRequest().permitAll().and().csrf()
 					.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-					.ignoringAntMatchers(adminContextPath + "/instances", adminContextPath + "/actuator/**");
+					.ignoringAntMatchers(adminContextPath + "/instances", adminContextPath + "/monitor/**");
 		}
 	}
 
@@ -75,7 +76,7 @@ public class SpringBootAdminApplication {
 					.loginPage(adminContextPath + "/login").successHandler(successHandler).and().logout()
 					.logoutUrl(adminContextPath + "/logout").and().httpBasic().and().csrf()
 					.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-					.ignoringAntMatchers(adminContextPath + "/instances", adminContextPath + "/actuator/**");
+					.ignoringAntMatchers(adminContextPath + "/instances", adminContextPath + "/monitor/**");
 			// @formatter:on
 		}
 	}
