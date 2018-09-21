@@ -119,7 +119,7 @@ public class ServerController extends BaseUserController {
 				}
 			} else {
 				resultBean.setStatus("1");
-				resultBean.setStatus("安全码错误");
+				resultBean.setStatusDesc("安全码错误");
 			}
 		} catch (Exception e) {
 			resultBean.setStatus("1");
