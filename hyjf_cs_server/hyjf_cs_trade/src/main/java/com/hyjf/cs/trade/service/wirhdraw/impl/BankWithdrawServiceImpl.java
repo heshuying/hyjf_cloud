@@ -100,6 +100,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         String fee = this.getWithdrawFee(user.getUserId(), cardNo);
         // 组装发往江西银行参数
         BankCallBean bean = getCommonBankCallBean(users, platform, channel, transAmt, cardNo, payAllianceCode, fee,retUrl,bgRetUrl,successfulUrl);
+        logger.info("bean"+bean);
         // 插值用参数
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", String.valueOf(user.getUserId()));
@@ -711,7 +712,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * @param client
      */
     public void updateWithdrawBeforeCash(UserVO user, BankCallBean bean, String client,Map<String, String> params) {
-        int ret = 0;
         String ordId = bean.getLogOrderId() == null ? bean.get("OrdId") : bean.getLogOrderId(); // 订单号
         List<AccountWithdrawVO> listAccountWithdraw = this.amTradeClient.selectAccountWithdrawByOrdId(ordId);
         if (listAccountWithdraw != null && listAccountWithdraw.size() > 0) {
@@ -790,7 +790,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         }else {
             successfulUrl = successfulUrl+"?amount=" + transAmt+ "&charge=" + fee;
         }
-        logger.info("交易金额"+transAmt+"successfulUrl:"+successfulUrl);
         // 路由代码
         String routeCode = "";
         // 调用汇付接口(4.2.2 用户绑卡接口)
@@ -811,10 +810,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);// 证件类型01身份证
         bean.setIdNo(usersInfo.getIdcard());// 证件号
         bean.setName(usersInfo.getTruename());// 姓名
-        bean.setMobile(user.getMobile());// 手机号
+        bean.setMobile(user.getMobile());// 手机号s
         bean.setCardNo(bankCard.getCardNo());// 银行卡号
-        bean.setTxAmount(CustomUtil.formatAmount(new BigDecimal(transAmt).subtract(new BigDecimal(fee)).toString()));
-        logger.info("银行"+bean.getTxAmount());
+        bean.setTxAmount(CommonUtils.formatAmount(new BigDecimal(transAmt).subtract(new BigDecimal(fee)).toString()));
         bean.setTxFee(fee);
         // 成功跳转的url
         bean.setSuccessfulUrl(successfulUrl);
@@ -843,8 +841,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         bean.setForgotPwdUrl(systemConfig.getForgetPassword());
         bean.setRetUrl(retUrl);// 商户前台台应答地址(必须)
         bean.setNotifyUrl(bgRetUrl); // 商户后台应答地址(必须)
-        System.out.println("提现前台回调函数：\n" + bean.getRetUrl());
-        System.out.println("提现后台回调函数：\n" + bean.getNotifyUrl());
+        logger.info("提现前台回调函数：\n" + bean.getRetUrl());
+        logger.info("提现后台回调函数：\n" + bean.getNotifyUrl());
 
         return bean;
     }
