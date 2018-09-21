@@ -662,13 +662,11 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
 				Long lNow = GetDate.countDate(new Date(), 5, 1).getTime();
 				if (lCreate <= lNow) {
-					logger.info("已过期需要重新评测");
 					// 已过期需要重新评测
 					result.setAnswerStatus("2");
 					result.setAnswerResult("点击测评");
 					result.setFengxianDesc("已过期");
 				} else {
-					logger.info("进行过风险测评");
 					// 进行过风险测评
 					result.setAnswerStatus("1");
 					result.setAnswerResult(userEvalationResult.getEvalType());
@@ -678,7 +676,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					result.setEvalationScore(userEvalationResult.getScoreCount() + "");
 				}
 			} else {
-				logger.info("未测评");
 				result.setAnswerStatus("0");
 				result.setAnswerResult("点击测评");
 				result.setFengxianDesc("未测评");
