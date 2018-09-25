@@ -76,7 +76,7 @@ public class SendTypeController extends BaseController {
         // 编号
         boolean sendCdFlag = StringUtils.isNotBlank(adminRequest.getSendCd())&&adminRequest.getSendCd().length()<=50;
         if (!sendCdFlag) {
-            return new AdminResult<>(Response.FAIL,"borrowCd不能为空且长度小于或等于50！");
+            return new AdminResult<>(Response.FAIL,"sendCd不能为空且长度小于或等于50！");
         }
         //校验sendCd是否存在
         BorrowSendTypeVO borrowSendTypeVO = sendTypeService.getBorrowSendInfo(adminRequest.getSendCd());
@@ -157,7 +157,7 @@ public class SendTypeController extends BaseController {
         // 编号
         boolean sendCdFlag = StringUtils.isNotBlank(adminRequest.getSendCd())&&adminRequest.getSendCd().length()<=50;
         if (!sendCdFlag) {
-            return new AdminResult<>(Response.FAIL,"borrowCd不能为空且长度小于或等于50！");
+            return new AdminResult<>(Response.FAIL,"sendCd不能为空且长度小于或等于50！");
         }
         //校验sendCd是否存在
         BorrowSendTypeVO borrowSendTypeVO = sendTypeService.getBorrowSendInfo(adminRequest.getSendCd());
