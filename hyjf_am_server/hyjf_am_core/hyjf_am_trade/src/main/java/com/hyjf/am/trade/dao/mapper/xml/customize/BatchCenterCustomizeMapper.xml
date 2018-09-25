@@ -45,13 +45,13 @@
         </if>
         <if test="submitTimeStartSrch != null and submitTimeStartSrch != ''">
 
-            AND FROM_UNIXTIME(hba.create_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{submitTimeStartSrch},'00:00:00'
-            ),'%Y-%m-%d %H:%i:%s')
+            <!-- 优化sql(字段类型转换) timestamp-->
+            AND hba.create_time >= STR_TO_DATE(#{submitTimeStartSrch},'%Y-%m-%d %H:%i:%s')
         </if>
         <if test="submitTimeEndSrch != null and submitTimeEndSrch != ''">
 
-            AND FROM_UNIXTIME(hba.create_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{submitTimeEndSrch},'23:59:59'
-            ),'%Y-%m-%d %H:%i:%s')
+            <!-- 优化sql(字段类型转换) timestamp-->
+            AND hba.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{submitTimeEndSrch},'23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
     </sql>
 

@@ -285,10 +285,10 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
                     companyInfoVO.setBusId(resultBean.getBusId());
                     companyInfoVO.setIdType(resultBean.getIdType());
                     companyInfoVO.setIdNo(resultBean.getIdNo());
-                    if(StringUtils.isNotBlank(resultBean.getIdNo())){
-                        if (resultBean.getIdNo().equals("20")) {//组织机构代码
+                    if(StringUtils.isNotBlank(resultBean.getIdType())){
+                        if (resultBean.getIdType().equals("20")) {//组织机构代码
                             companyInfoVO.setCardType("组织机构代码");
-                        } else if (resultBean.getIdNo().equals("25")) {
+                        } else if (resultBean.getIdType().equals("25")) {
                             companyInfoVO.setCardType("社会信用号");
                         }
                     }

@@ -43,10 +43,12 @@
             </if>
             <!-- 时间 -->
             <if test="recieveTimeStartSrch != null and recieveTimeStartSrch != ''">
-                AND FROM_UNIXTIME( c.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{recieveTimeStartSrch}
+                <!-- 优化sql(字段类型转换) timestamp-->
+                AND c.create_time >= STR_TO_DATE(#{recieveTimeStartSrch},'%Y-%m-%d %H:%i:%s')
             </if>
             <if test="recieveTimeEndSrch != null and recieveTimeEndSrch != ''">
-                AND FROM_UNIXTIME( c.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{recieveTimeEndSrch}
+                <!-- 优化sql(字段类型转换) timestamp-->
+                AND c.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{recieveTimeEndSrch},'23:59:59'),'%Y-%m-%d %H:%i:%s')
             </if>
 
         </where>
