@@ -166,13 +166,19 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
      * 根据证件号码查找借款主体CA认证记录表
      */
     @Override
-    public LoanSubjectCertificateAuthority selectIsExistsRecordByIdNo(String record) {
+    public LoanSubjectCertificateAuthority selectIsExistsRecordByIdNo(String record,String userName) {
         LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = new LoanSubjectCertificateAuthority();
         if (record == null) {
             return null;
         }
         LoanSubjectCertificateAuthorityExample example = new LoanSubjectCertificateAuthorityExample();
-        example.createCriteria().andIdEqualTo(Integer.parseInt(record));
+        if(StringUtils.isNotBlank(record)&&StringUtils.isNotBlank(userName)){
+            example.createCriteria().andIdNoEqualTo(record.trim());
+            example.createCriteria().andNameEqualTo(userName);
+        }
+        if(StringUtils.isNotBlank(userName)){
+            example.createCriteria().andNameEqualTo(userName);
+        }
         List<LoanSubjectCertificateAuthority> lll = loanSubjectCertificateAuthorityMapper.selectByExample(example);
         if(null!=lll&&lll.size()>0) {
             loanSubjectCertificateAuthority = lll.get(0);
@@ -221,7 +227,6 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
 
     /**
      * 根据证件号码和姓名查找用户CA认证记录表
-     * @param idno
      * @param tureName
      * @return
      */

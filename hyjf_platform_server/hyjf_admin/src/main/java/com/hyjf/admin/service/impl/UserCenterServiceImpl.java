@@ -4,8 +4,8 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
-import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
@@ -21,7 +21,6 @@ import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetCode;
@@ -241,8 +240,8 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
      * @return
      */
     @Override
-    public int countUserByMobile(String mobile) {
-        int checkFlg = userCenterClient.countByMobile(mobile);
+    public int countUserByMobile(String mobile,int userId) {
+        int checkFlg = userCenterClient.countUserByMobile(userId,mobile);
         return checkFlg;
     }
 
@@ -275,8 +274,10 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         bean.setAccountId(accountId);// 电子账号
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+        logger.info("====根据accountid调用接口查找企业信息====参数为:"+bean);
         try {
             BankCallBean resultBean = BankCallUtils.callApiBg(bean);
+            logger.info("====调用银行接口返回值为:"+ JSONObject.toJSON(resultBean)+"===========");
             if (resultBean != null) {
                 if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
                     CompanyInfoVO companyInfoVO  = new CompanyInfoVO();

@@ -45,7 +45,7 @@ public class ApplyAgreementController  extends BaseController {
     @PostMapping("/generateContract")
     @ResponseBody
     public AdminResult generateContract(@RequestBody BorrowRepayAgreementRequest request){
-        AdminResult result =  applyAgreementService.getAddApplyAgreementListDetail(request);
+        AdminResult result =  applyAgreementService.generateContract(request);
         return result;
     }
 }

@@ -7,7 +7,6 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.OperationReportService;
-import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
@@ -48,8 +47,6 @@ public class OperationReportController extends BaseController {
     private OperationReportService operationReportService;
     @Autowired
     SystemConfig  systemConfig;
-    @Autowired
-    private WhereaboutsPageService whereaboutsPageService;
 
     @ApiOperation(value = "列表初始化", notes = "运营报告列表查询")
     @PostMapping("/list")

@@ -1335,7 +1335,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         BankOpenAccountVO accountChinapnrCrediter = amUserClient.selectBankAccountById(creditTenderLog.getCreditUserId());
         bean.setAccountId(bankOpenAccount.getAccount());
         // 实付金额 承接本金*（1-折价率）+应垫付利息
-        bean.setTxAmount(creditAssign.getAssignPay());
+        bean.setTxAmount(creditAssign.getAssignPay().replaceAll(",",""));
         bean.setTxFee(creditTenderLog.getCreditFee() != null ? DF_COM_VIEW.format(creditTenderLog.getCreditFee()) : "0.01");
         bean.setTsfAmount(DF_COM_VIEW.format(creditTenderLog.getAssignCapital()));
         // 对手电子账号:卖出方账号
@@ -1349,7 +1349,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         //错误页
         String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
         //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestSuccess?logOrdId="+bean.getLogOrderId();
 
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + "/tender/credit/bgReturn?platform="+request.getPlatform();

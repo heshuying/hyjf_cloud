@@ -8,12 +8,10 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.app.*;
-import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
-import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponseForCoupon;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
@@ -30,16 +28,16 @@ import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmTradeClient;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -815,6 +813,26 @@ public class AmTradeClientImpl implements AmTradeClient {
         HjhInstConfigResponse response = restTemplate.getForObject(
                 "http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigByInstCode/" + instcode,
                 HjhInstConfigResponse.class);
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+	@Override
+	public List<WrbBorrowListCustomizeVO> searchBorrowListByNid(String borrowNid) {
+		WrbBorrowListResponse response = restTemplate
+				.getForObject("http://AM-TRADE/am-trade/wrb/borrow_list/" + borrowNid, WrbBorrowListResponse.class);
+		if (response != null) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+    @Override
+    public CouponConfigVO getCouponByCouponCode(String couponCode) {
+        String url = "http://AM-TRADE/am-trade/couponConfig/selectCouponConfig/" + couponCode;
+        CouponConfigResponse response = restTemplate.getForEntity(url, CouponConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

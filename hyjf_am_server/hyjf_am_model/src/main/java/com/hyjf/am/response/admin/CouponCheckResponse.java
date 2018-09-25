@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.response.admin;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.config.CouponCheckVO;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -18,9 +19,13 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
 
     private boolean bool;
 
-    private List<String> couponStatus;
+    private JSONArray couponStatus;
 
     private List<ParamNameVO> couponType;
+
+    private String filePath;
+
+    private String fileName;
 
     public int getRecordTotal() {
         return recordTotal;
@@ -38,11 +43,11 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
         this.bool = bool;
     }
 
-    public List<String> getCouponStatus() {
+    public JSONArray getCouponStatus() {
         return couponStatus;
     }
 
-    public void setCouponStatus(List<String> couponStatus) {
+    public void setCouponStatus(JSONArray couponStatus) {
         this.couponStatus = couponStatus;
     }
 
@@ -52,5 +57,21 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
 
     public void setCouponType(List<ParamNameVO> couponType) {
         this.couponType = couponType;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }
