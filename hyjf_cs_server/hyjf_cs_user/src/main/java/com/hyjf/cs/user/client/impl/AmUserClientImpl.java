@@ -22,12 +22,14 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -1158,4 +1160,29 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return null;
     }
+
+	/**
+	 * 更新用户信息表
+	 *
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int updateUserInfoByUserInfo(UserInfoVO userInfoVO) {
+		UserInfoRequest request = new UserInfoRequest();
+		BeanUtils.copyProperties(userInfoVO, request);
+		IntegerResponse result = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserInfoByUserInfo", request, IntegerResponse.class)
+				.getBody();
+		if (result == null || !Response.isSuccess(result)) {
+			return 0;
+		}
+		return result.getResultInt().intValue();
+	}
+
+	@Override
+	public Integer insertUserAction(String mobile, String instCode, HttpServletRequest request, Integer instType, UtmPlatVO utmPlat, String platform) {
+		return null;
+	}
+
 }

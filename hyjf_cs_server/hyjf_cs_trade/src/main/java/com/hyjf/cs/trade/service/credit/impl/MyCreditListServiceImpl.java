@@ -36,9 +36,9 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.CreditResultBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
-import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
@@ -77,7 +77,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     @Autowired
     private AmUserClient amUserClient;
     @Autowired
-    private AmMongoClient amMongoClient;
+    private CsMessageClient amMongoClient;
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired

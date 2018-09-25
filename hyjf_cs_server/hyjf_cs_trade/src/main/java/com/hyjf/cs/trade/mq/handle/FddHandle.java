@@ -1,15 +1,50 @@
 package com.hyjf.cs.trade.mq.handle;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddDessenesitizationBean;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
-import com.hyjf.am.resquest.trade.*;
+import com.hyjf.am.resquest.trade.BorrowCreditRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.message.MailMessage;
-import com.hyjf.am.vo.trade.*;
-import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.FddTempletVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -30,7 +65,8 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.CreditAssignedBean;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.FddProducer;
@@ -38,20 +74,6 @@ import com.hyjf.cs.trade.mq.producer.MailProducer;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
 import com.hyjf.pay.lib.fadada.util.DzqzConstant;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.*;
 
 /**
  * 法大大 handle
@@ -69,25 +91,10 @@ public class FddHandle {
 	private static final String VAL_NAME = "val_name";
 	/** 性别 */
 	private static final String VAL_SEX = "val_sex";
-
-	@Autowired
-	private AmBorrowClient amBorrowClient;
 	@Autowired
 	private AmUserClient amUserClient;
 	@Autowired
 	private AmTradeClient amTradeClient;
-	@Autowired
-	private BorrowManinfoClient borrowManinfoClient;
-	@Autowired
-	private BorrowUserClient borrowUserClient;
-	@Autowired
-	private BorrowTenderClient borrowTenderClient;
-	@Autowired
-	private BorrowCreditClient borrowCreditClient;
-	@Autowired
-	private HjhDebtCreditClient hjhDebtCreditClient;
-	@Autowired
-	private HjhAccedeClient hjhAccedeClient;
 	@Autowired
 	private SystemConfig systemConfig;
 
@@ -124,7 +131,7 @@ public class FddHandle {
 			throw new Exception("标的编号为空.");
 		}
 		// 借款详情
-		BorrowAndInfoVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
+		BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
 		if (borrow == null) {
 			throw new Exception("根据标的编号检索借款详情失败,借款编号:[" + borrowNid + "].");
 		}
@@ -170,7 +177,7 @@ public class FddHandle {
 		} else {
 			if ("1".equals(borrow.getCompanyOrPersonal())) {
 				// 借款主体为企业借款
-				BorrowUserVO borrowUsers = this.borrowUserClient.getBorrowUser(borrowNid);
+				BorrowUserVO borrowUsers = this.amTradeClient.getBorrowUser(borrowNid);
 				if (borrowUsers == null) {
 					throw new Exception("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:[" + borrowNid + "]");
 				}
@@ -184,7 +191,7 @@ public class FddHandle {
 				}
 			} else if ("2".equals(borrow.getCompanyOrPersonal())) {
 				// 借款主体为个人借款
-				BorrowManinfoVO borrowManinfo = this.borrowManinfoClient.getBorrowManinfo(borrowNid);
+				BorrowManinfoVO borrowManinfo = this.amTradeClient.getBorrowManinfo(borrowNid);
 				if (borrowManinfo == null) {
 					throw new Exception("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
 				}
@@ -214,7 +221,7 @@ public class FddHandle {
 		btRequest.setTenderUserId(tenderUserId);
 		btRequest.setBorrowNid(borrowNid);
 		btRequest.setTenderNid(tenderNid);
-		BorrowTenderVO borrowTender = this.borrowTenderClient.selectBorrowTender(btRequest);
+		BorrowTenderVO borrowTender = this.amTradeClient.selectBorrowTender(btRequest);
 		if (borrowTender == null) {
 			throw new Exception(
 					"投资记录不存在,投资订单号:[" + tenderNid + "],投资人用户ID:[" + tenderUserId + "],标的编号:[" + borrowNid + "].");
@@ -268,7 +275,7 @@ public class FddHandle {
 		} else {
 			String paramStr = paramter.toJSONString();
 
-            List<FddTempletVO> fddTemplets = this.borrowTenderClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER);
+            List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER);
             if (fddTemplets != null && fddTemplets.size() == 1) {
                 FddTempletVO fddTemplet = fddTemplets.get(0);
                 String templetId = fddTemplet.getTempletId();
@@ -323,7 +330,7 @@ public class FddHandle {
         info.setCreateTime(GetDate.getDate(nowTime));
         info.setCreateUserId(bean.getTenderUserId());
         info.setCreateUserName(bean.getTenderUserName());
-        int flag = this.borrowTenderClient.saveTenderAgreement(info);
+        int flag = this.amTradeClient.saveTenderAgreement(info);
         if (flag == 0) {
             logger.info("--------------存储居间协议失败-订单号：" + bean.getOrdid());
         }
@@ -455,7 +462,7 @@ public class FddHandle {
 	 * @return
 	 */
 	private String getBorrowStyle(String borrowStyle) {
-		BorrowStyleVO borrowStyleVO = this.amBorrowClient.getBorrowStyle(borrowStyle);
+		BorrowStyleVO borrowStyleVO = this.amTradeClient.getBorrowStyle(borrowStyle);
 		if (Validator.isNotNull(borrowStyleVO)) {
 			return borrowStyleVO.getName();
 		} else {
@@ -548,7 +555,7 @@ public class FddHandle {
             tenderAgreement.setUpdateUserId(tenderAgreement.getCreateUserId());
             tenderAgreement.setUpdateUserName(tenderAgreement.getUserName());
             tenderAgreement.setStatus(2);//签署成功
-            int update = this.borrowTenderClient.updateTenderAgreement(tenderAgreement);
+            int update = this.amTradeClient.updateTenderAgreement(tenderAgreement);
             if (update > 0) {
                 String savePath = null;
                 String path = "/pdf_tem/";
@@ -654,7 +661,7 @@ public class FddHandle {
 	        if (isSign){//单独走签署接口
 	            updateSignContract(bean);
 	        }else {  
-	            List<FddTempletVO> fddTemplets = this.borrowTenderClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN);
+	            List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN);
 	            if (fddTemplets != null && fddTemplets.size() == 1) {
 	            	FddTempletVO fddTemplet = fddTemplets.get(0);
 	                String templetId = fddTemplet.getTempletId();
@@ -694,7 +701,7 @@ public class FddHandle {
 	 * @return
 	 */
 	private UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params) {
-		return this.amBorrowClient.selectUserHjhInvistDetail(params);
+		return this.amTradeClient.selectUserHjhInvistDetail(params);
 	}
 
 	/**
@@ -771,7 +778,7 @@ public class FddHandle {
 
 
             // 获取借款标的信息
-            BorrowAndInfoVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
+            BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
             if (borrow == null) {
                 logger.info("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
                 throw new Exception("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
@@ -786,7 +793,7 @@ public class FddHandle {
 			request1.setBidNid(borrowNid);
 			request1.setTenderNid(creditTenderNid);
 
-			List<BorrowCreditVO> borrowCredit=this.borrowCreditClient.getBorrowCreditList(request1);
+			List<BorrowCreditVO> borrowCredit=this.amTradeClient.getBorrowCreditList(request1);
 
             if (borrowCredit == null || borrowCredit.size() != 1) {
                 throw new Exception("根据债转编号查询债转信息失败,债转编号:[" + creditNid + "].");
@@ -907,7 +914,7 @@ public class FddHandle {
             if (isSign){//单独走签署接口
                 updateSignContract(bean);
             }else {
-				List<FddTempletVO> fddTemplets = this.borrowTenderClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT);
+				List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT);
 
                 if (fddTemplets != null && fddTemplets.size() == 1) {
                     FddTempletVO fddTemplet = fddTemplets.get(0);
@@ -967,7 +974,7 @@ public class FddHandle {
 		}
 		Map<String, Object> resultMap = null;
 		List<HjhDebtCreditTenderVO> hjhCreditTenderList =
-				this.hjhDebtCreditClient.selectHjhCreditTenderListByAssignOrderId(bean.getAssignNid());
+				this.amTradeClient.selectHjhCreditTenderListByAssignOrderId(bean.getAssignNid());
 
 		String signTime = null;
 		JSONObject paramter = new JSONObject();
@@ -1082,7 +1089,7 @@ public class FddHandle {
 			updateSignContract(bean);
 		}else {
 
-			List<FddTempletVO> fddTemplets = this.borrowTenderClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT);
+			List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT);
 			if (fddTemplets != null && fddTemplets.size() == 1) {
 				FddTempletVO fddTemplet = fddTemplets.get(0);
 				String templetId = fddTemplet.getTempletId();
@@ -1157,14 +1164,14 @@ public class FddHandle {
 
 
 			// 获取借款标的信息
-			BorrowAndInfoVO borrow=this.amBorrowClient.getBorrowByNid(creditTender.getBorrowNid());
+			BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(creditTender.getBorrowNid());
 
 			// 获取债转信息(新表)
 			HjhDebtCreditRequest request1 = new HjhDebtCreditRequest();
 			request1.setBorrowNid(tenderCreditAssignedBean.getBidNid());
 			request1.setCreditNid(tenderCreditAssignedBean.getCreditNid());
 			request1.setInvestOrderId(tenderCreditAssignedBean.getCreditTenderNid());
-			List<HjhDebtCreditVO> borrowCredit=this.hjhDebtCreditClient.getHjhDebtCreditList(request1);
+			List<HjhDebtCreditVO> borrowCredit=this.amTradeClient.getHjhDebtCreditList(request1);
 
 			// 获取承接人身份信息
 			UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(creditTender.getUserId());
@@ -1272,12 +1279,12 @@ public class FddHandle {
 		String borrowerCustomerID = null;
 
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType){//居间服务协议
-			List<BorrowTenderVO> tenderList = this.borrowTenderClient.getBorrowTenderListByNid(contract_id);
+			List<BorrowTenderVO> tenderList = this.amTradeClient.getBorrowTenderListByNid(contract_id);
 			if (tenderList != null && tenderList.size() > 0) {
 				BorrowTenderVO borrowTender = tenderList.get(0);
 				userId = borrowTender.getUserId(); //投资人
 				borrowNid = borrowTender.getBorrowNid();//标的号
-				BorrowAndInfoVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
+				BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
 				instCode = borrow.getInstCode();//机构编号
 				//判断是否为企业借款
 				boolean result = this.isCompanyUser(borrow);
@@ -1292,7 +1299,7 @@ public class FddHandle {
 						}
 					}else{
 						// 借款主体为企业借款
-						BorrowUserVO borrowUsers=this.borrowUserClient.getBorrowUser(borrowNid);
+						BorrowUserVO borrowUsers=this.amTradeClient.getBorrowUser(borrowNid);
 						if (borrowUsers == null){
 							logger.info("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:["+borrowNid+"]");
 						}
@@ -1311,7 +1318,7 @@ public class FddHandle {
 						}
 					}else {
 						// 借款主体为个人借款
-						BorrowManinfoVO borrowManinfo=this.borrowManinfoClient.getBorrowManinfo(borrowNid);
+						BorrowManinfoVO borrowManinfo=this.amTradeClient.getBorrowManinfo(borrowNid);
 						if (borrowManinfo == null) {
 							logger.info("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
 						}
@@ -1324,7 +1331,7 @@ public class FddHandle {
 				}
 			}
 		}else if(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN == transType){//计划加入协议
-			HjhAccedeVO hjhAccede=this.hjhAccedeClient.getHjhAccedeByAccedeOrderId(contract_id);
+			HjhAccedeVO hjhAccede=this.amTradeClient.getHjhAccedeByAccedeOrderId(contract_id);
 			if(Validator.isNotNull(hjhAccede)){
 				userId = hjhAccede.getUserId();
 				instCode = hjhAccede.getPlanNid();
@@ -1335,19 +1342,19 @@ public class FddHandle {
 				CreditTenderVO creditTender = creditTenderList.get(0);
 				userId = creditTender.getUserId();// 承接人
 				borrowNid = creditTender.getBidNid();// 原标的号
-				BorrowAndInfoVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
+				BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(borrowNid);
 				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = creditTender.getCreditUserId();// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
 			}
 		}else if(FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType){// 计划债转服务协议
-			List<HjhDebtCreditTenderVO> hjhCreditTenderList = this.hjhDebtCreditClient.selectHjhCreditTenderListByAssignOrderId(contract_id);
+			List<HjhDebtCreditTenderVO> hjhCreditTenderList = this.amTradeClient.selectHjhCreditTenderListByAssignOrderId(contract_id);
 			//hyjf_hjh_debt_credit_tender
 			if(hjhCreditTenderList!=null && hjhCreditTenderList.size()>0) {
 				HjhDebtCreditTenderVO hjhCreditTender = hjhCreditTenderList.get(0);
 				userId = hjhCreditTender.getUserId();// 承接人
 				borrowNid = hjhCreditTender.getBorrowNid();// 标的号
-				BorrowAndInfoVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
+				BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(borrowNid);
 				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = hjhCreditTender.getCreditUserId();// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
@@ -1519,7 +1526,7 @@ public class FddHandle {
 			TenderAgreementVO tenderAgrementInfo = this.amTradeClient.getTenderAgreementInfoByPrimaryKey(tenderAgreementID);
 			String borrowNid = tenderAgrementInfo.getBorrowNid();
 			if(StringUtils.isNotBlank(borrowNid)){
-				BorrowAndInfoVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
+				BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(borrowNid);
 				String planNid = borrow.getPlanNid();
 				if(StringUtils.isNotBlank(planNid)){//计划标的
 					Integer borrowUserId = borrow.getUserId();
@@ -1585,7 +1592,7 @@ public class FddHandle {
 							this.sendMail(recover);
 						}
 					}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_PLAN){
-						HjhAccedeVO hjhAccede = this.hjhAccedeClient.getHjhAccedeByAccedeOrderId(tenderAgrementInfo.getTenderNid());
+						HjhAccedeVO hjhAccede = this.amTradeClient.getHjhAccedeByAccedeOrderId(tenderAgrementInfo.getTenderNid());
 						this.sendPlanMail(hjhAccede);
 					}
 				}else{

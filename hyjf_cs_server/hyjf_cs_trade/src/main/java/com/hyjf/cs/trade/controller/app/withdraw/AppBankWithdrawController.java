@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.controller.app.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -33,8 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -422,7 +423,7 @@ public class AppBankWithdrawController extends BaseTradeController {
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
     public AppResult<Object> userBankWithdraw(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
-        logger.info("web端提现接口, userId is :{}", userId);
+        logger.info("app端提现接口, userId is :{}", userId);
         AppResult<Object> result = new AppResult<Object>();
         String transAmt = request.getParameter("total");// 交易金额
         String cardNo = request.getParameter("cardNo");// 提现银行卡号

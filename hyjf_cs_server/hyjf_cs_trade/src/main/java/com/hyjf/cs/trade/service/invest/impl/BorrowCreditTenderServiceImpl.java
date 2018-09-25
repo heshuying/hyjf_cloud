@@ -34,9 +34,9 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.client.AmConfigClient;
-import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.*;
@@ -69,8 +69,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
-    private AmMongoClient amMongoClient;
-    @Autowired
     SystemConfig systemConfig;
     @Autowired
     private AmConfigClient amConfigClient;
@@ -83,8 +81,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private SmsProducer smsProducer;
     @Autowired
     private AccountWebListProducer accountWebListProducer;
-    @Autowired
-    private UtmRegProducer utmRegProducer;
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
 

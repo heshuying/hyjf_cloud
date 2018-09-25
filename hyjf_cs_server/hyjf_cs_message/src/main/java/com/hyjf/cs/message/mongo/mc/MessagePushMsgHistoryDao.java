@@ -26,7 +26,8 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	public List<MessagePushMsgHistory> getMsgHistoryListByMsgCode(String msgCode, Integer startTime, Integer endTime) {
 		Query query = new Query();
 		// 发送成功
-		Criteria criteria = Criteria.where("msgSendStatus").is(CustomConstants.MSG_PUSH_SEND_STATUS_1);
+		Criteria criteria = new Criteria();
+		criteria.and("msgSendStatus").is(CustomConstants.MSG_PUSH_SEND_STATUS_1);
 		if (StringUtils.isNoneEmpty(msgCode)) {
 			criteria.and("msgCode").is(msgCode);
 		}
@@ -40,7 +41,6 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 				criteria.and("sendTime").lte(endTime);
 			}
 		}
-
 		query.addCriteria(criteria);
 		return mongoTemplate.find(query, MessagePushMsgHistory.class);
 	}

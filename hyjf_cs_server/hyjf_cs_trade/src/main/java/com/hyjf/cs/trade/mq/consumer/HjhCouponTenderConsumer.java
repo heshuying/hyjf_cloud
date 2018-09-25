@@ -3,15 +3,10 @@
  */
 package com.hyjf.cs.trade.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.client.AmBorrowClient;
-import com.hyjf.cs.trade.client.CouponClient;
-import com.hyjf.cs.trade.mq.base.Consumer;
-import com.hyjf.cs.trade.service.consumer.CouponService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.collections.MapUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -26,9 +21,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.service.consumer.CouponService;
 
 /**
  * @Description 计划类优惠券使用
@@ -42,9 +42,7 @@ public class HjhCouponTenderConsumer extends Consumer {
     @Autowired
     private CouponService couponService;
     @Autowired
-    private AmBorrowClient borrowClient;
-    @Autowired
-    private CouponClient couponClient;
+    private AmTradeClient borrowClient;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -94,7 +92,7 @@ public class HjhCouponTenderConsumer extends Consumer {
                 if (MapUtils.isEmpty(validateMap)) {
                     // 校验通过 进行优惠券投资投资
                     logger.info("优惠券投资校验成功,userId{},券为:{}", userId, couponGrantId);
-                    CouponUserVO cuc = couponClient.getCouponUser(couponGrantId, userId);
+                    CouponUserVO cuc = borrowClient.getCouponUser(couponGrantId, userId);
                     logger.info("优惠券投资开始,userId{},平台{},券为:{}", userId, platform, couponGrantId);
                     TenderRequest request = new TenderRequest();
                     request.setIp(ip);

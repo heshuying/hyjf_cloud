@@ -1,5 +1,7 @@
 package com.hyjf.cs.user.client;
 
+import com.hyjf.am.response.config.MessagePushTemplateResponse;
+import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -164,4 +166,12 @@ public interface AmConfigClient {
      * @return
      */
     BankRechargeConfigVo getBankRechargeConfigByBankId(Integer bankId);
+
+
+    /**
+     *查询平台的公告信息
+     * @param request
+     * @return
+     */
+    List<MessagePushTemplateVO> searchList(MsgPushTemplateRequest request);
 }

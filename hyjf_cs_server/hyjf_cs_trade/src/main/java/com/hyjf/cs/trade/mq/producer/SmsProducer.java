@@ -1,7 +1,5 @@
 package com.hyjf.cs.trade.mq.producer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.hyjf.common.constants.MQConstant;

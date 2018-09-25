@@ -15,9 +15,9 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.FddProducer;
@@ -57,7 +57,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
     @Autowired
     private FddProducer fddProducer;
     @Autowired
-    private AmMongoClient amMongoClient;
+    private CsMessageClient amMongoClient;
     @Autowired
     private AppChannelStatisticsDetailProducer appChannelStatisticsDetailProducer;
     @Autowired

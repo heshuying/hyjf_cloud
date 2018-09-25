@@ -19,10 +19,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.cs.trade.client.AmBorrowClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.client.BorrowTenderClient;
-import com.hyjf.cs.trade.client.CouponUserClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
 
@@ -37,14 +35,10 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
     @Autowired
     private AmTradeClient amTradeClient;
     
-    @Autowired
-    private AmBorrowClient amBorrowClient;
+
     
     @Autowired
-    private BorrowTenderClient borrowTenderClient;
-    
-    @Autowired
-    private CouponUserClient couponUserClient;	
+    private AmUserClient couponUserClient;	
 	/**
 	 * 获取债转承接信息
 	 * @param nid
@@ -89,7 +83,7 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	@Override
 	public BorrowAndInfoVO getBorrowByNid(String borrowNid) {
 		// 借款详情
-		BorrowAndInfoVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
+		BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
         if (borrow != null) {
             return borrow;
         }
@@ -139,7 +133,7 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	 */
 	@Override
 	public List<BorrowTenderVO> getBorrowTenderListByNid(String tenderNid) {
-		List<BorrowTenderVO> tenderList = this.borrowTenderClient.getBorrowTenderListByNid(tenderNid);
+		List<BorrowTenderVO> tenderList = this.amTradeClient.getBorrowTenderListByNid(tenderNid);
 		return tenderList;
 	}
 

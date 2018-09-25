@@ -10,7 +10,6 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.trade.client.AccountClient;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -40,8 +39,6 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     @Autowired
     public AmConfigClient amConfigClient;
 
-    @Autowired
-    AccountClient accountClient;
 
     /**
      * @Description 根据token查询user
@@ -165,7 +162,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
      */
     @Override
     public AccountVO getAccountByUserId(Integer userId){
-        return accountClient.getAccountByUserId(userId);
+        return amTradeClient.getAccountByUserId(userId);
     }
 
     @Override

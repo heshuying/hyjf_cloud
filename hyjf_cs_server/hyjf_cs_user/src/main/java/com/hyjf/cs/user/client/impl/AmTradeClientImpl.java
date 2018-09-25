@@ -809,4 +809,15 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return 0;
     }
+
+    @Override
+    public HjhInstConfigVO selectHjhInstConfig(String instcode) {
+        HjhInstConfigResponse response = restTemplate.getForObject(
+                "http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigByInstCode/" + instcode,
+                HjhInstConfigResponse.class);
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
 }
