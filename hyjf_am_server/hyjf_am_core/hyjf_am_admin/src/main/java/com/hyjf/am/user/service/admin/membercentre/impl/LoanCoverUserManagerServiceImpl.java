@@ -232,7 +232,7 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
     public CertificateAuthority selectCertificateAuthorityByIdNoName(String tureName) {
         CertificateAuthorityExample example=new CertificateAuthorityExample();
         CertificateAuthorityExample.Criteria criteria = example.createCriteria();
-        criteria.andTrueNameEqualTo(tureName);
+        criteria.andTrueNameEqualTo(tureName.trim());
         List<CertificateAuthority> cam = certificateAuthorityMapper.selectByExample(example);
     	CertificateAuthority certificateAuthority = null;
     	if(cam!=null && cam.size() >0 ){
