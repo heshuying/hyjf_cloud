@@ -196,6 +196,21 @@ public class CreditTenderController extends BaseController {
     }
 
     /**
+     * 获取assignNId查询债转还款列表
+     * @param assignNid
+     * @return
+     */
+    @GetMapping("/select_credit_repay_list_by_assignNid/{assignNid}")
+    public CreditRepayResponse selectCreditRepayListByAssignNid( @PathVariable String assignNid) {
+        CreditRepayResponse response = new CreditRepayResponse();
+        List<CreditRepay> list = bankCreditTenderService.selectCreditRepayListByAssignNid(assignNid);
+        if (list != null) {
+            response.setResultList(CommonUtils.convertBeanList(list, CreditRepayVO.class));
+        }
+        return response;
+    }
+
+    /**
      * 获取债转还款列表
      * @param tenderNid
      * @return

@@ -1150,6 +1150,15 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		return this.creditRepayMapper.selectByExample(example);
 	}
 
+
+	@Override
+	public List<CreditRepay> selectCreditRepayListByAssignNid(String assignNid) {
+		CreditRepayExample example = new CreditRepayExample();
+		CreditRepayExample.Criteria cra = example.createCriteria();
+		cra.andAssignNidEqualTo(assignNid);
+		return this.creditRepayMapper.selectByExample(example);
+	}
+
 	@Override
 	public List<CreditRepay> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, Integer status) {
 		CreditRepayExample example = new CreditRepayExample();
