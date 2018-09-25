@@ -26,5 +26,5 @@ public interface OpenAccountEnquiryService {
     * @param requestBean
     * @return com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean
     **/
-    OpenAccountEnquiryDefineResultBean openAccountEnquiryUpdate(AdminSystemVO currUser,OpenAccountEnquiryDefineRequestBean requestBean);
+    OpenAccountEnquiryDefineResultBean openAccountEnquiryUpdate(OpenAccountEnquiryDefineRequestBean requestBean);
 }

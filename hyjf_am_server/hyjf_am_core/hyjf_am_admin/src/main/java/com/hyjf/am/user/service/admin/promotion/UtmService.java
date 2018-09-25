@@ -1,15 +1,17 @@
 package com.hyjf.am.user.service.admin.promotion;
 
-import java.util.List;
-import java.util.Map;
-
+import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
 import com.hyjf.am.user.dao.model.auto.Utm;
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author walter.limeng
@@ -123,4 +125,60 @@ public interface UtmService extends BaseService {
      * @return
      */
     Integer getOpenAccountNumber(Integer sourceId, String type);
+
+    /**
+     * 查询pc统计明细散标
+     * @param request
+     * @return
+     */
+    List<ChannelReconciliationVO> selectPcChannelReconciliationRecord(ChannelReconciliationRequest request);
+
+    /**
+     * 查询pc统计明细计划
+     * @param request
+     * @return
+     */
+    List<ChannelReconciliationVO> selectPcChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
+
+    /**
+     * 查询pc统计明细散标数量
+     * @param request
+     * @return
+     */
+    int selectPcChannelReconciliationCount(ChannelReconciliationRequest request);
+
+    /**
+     * 查询pc统计明细计划数量
+     * @param request
+     * @return
+     */
+    int selectPcChannelReconciliationHjhCount(ChannelReconciliationRequest request);
+
+    /**
+     * 查询app统计明细散标数量
+     * @param request
+     * @return
+     */
+    int selectAppChannelReconciliationCount(ChannelReconciliationRequest request);
+
+    /**
+     * 查询app统计明细计划数量
+     * @param request
+     * @return
+     */
+    int selectAppChannelReconciliationHjhCount(ChannelReconciliationRequest request);
+
+    /**
+     * 查询app统计明细散标
+     * @param request
+     * @return
+     */
+    List<ChannelReconciliationVO> selectAppChannelReconciliationRecord(ChannelReconciliationRequest request);
+
+    /**
+     * 查询app统计明细计划
+     * @param request
+     * @return
+     */
+    List<ChannelReconciliationVO> selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
 }

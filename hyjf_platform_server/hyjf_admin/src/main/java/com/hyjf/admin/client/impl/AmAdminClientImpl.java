@@ -8,6 +8,7 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
@@ -610,5 +611,33 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response;
         }
         return null;
+    }
+
+    @Override
+	public ChannelReconciliationResponse selectPcChannelReconciliationRecord(ChannelReconciliationRequest request) {
+		return restTemplate.postForObject(
+				"http://AM-ADMIN/am-user/promotion/utm/select_pc_channel_reconciliation_record", request,
+				ChannelReconciliationResponse.class);
+	}
+
+    @Override
+    public ChannelReconciliationResponse selectPcChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_pc_channel_reconciliation_record_hjh", request,
+                ChannelReconciliationResponse.class);
+    }
+
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecord(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record", request,
+                ChannelReconciliationResponse.class);
+    }
+
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record_hjh", request,
+                ChannelReconciliationResponse.class);
     }
 }

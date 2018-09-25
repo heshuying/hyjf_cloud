@@ -38,7 +38,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 
 	@Autowired
 	protected BankReturnCodeConfigMapper bankReturnCodeConfigMapper;
-	
+
 	@Autowired
 	protected CardBinMapper cardBinMapper;
 
@@ -94,7 +94,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 根据银行卡号获取bankId
 	 * @param cardNo
@@ -163,7 +163,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 		}
 		return bankId;
 	}
-	
+
 	private String getBankId(int cardBinLength, String cardBin) {
 		CardBinExample example = new CardBinExample();
 		CardBinExample.Criteria cra = example.createCriteria();
@@ -284,7 +284,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 		BankConfig record =new BankConfig();
 		BeanUtils.copyProperties(adminBankConfigRequest,record);
 		record.setUpdateTime(new Date());
-		return bankConfigMapper.insertSelective(record);
+		return bankConfigMapper.updateByPrimaryKeySelective(record);
 
 	}
 
@@ -293,10 +293,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 	 */
 	@Override
 	public void deleteBankConfigById(Integer id){
-		BankConfig record = new BankConfig();
-		record.setId(id);
-//		record.setStatus(1);
-		bankConfigMapper.updateByPrimaryKeySelective(record);
+		bankConfigMapper.deleteByPrimaryKey(id);
 	}
 
 	/**
