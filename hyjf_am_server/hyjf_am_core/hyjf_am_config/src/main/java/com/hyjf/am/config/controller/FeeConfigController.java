@@ -61,13 +61,9 @@ public class FeeConfigController extends BaseConfigController{
                 response.setResultList(hicv);
                 response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
-                return response;
             }
-            response.setRtn(Response.SUCCESS);
-            response.setMessage("查询的数据为空！");
-            return response;
         }
-        return null;
+        return response;
     }
 
     /**
@@ -83,9 +79,8 @@ public class FeeConfigController extends BaseConfigController{
             FeeConfigVO feeConfigVO = CommonUtils.convertBean(record, FeeConfigVO.class);
             response.setResult(feeConfigVO);
             response.setRtn(Response.SUCCESS);
-            return response;
         }
-        return null;
+        return response;
     }
 
     /**

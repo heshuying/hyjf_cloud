@@ -4,6 +4,7 @@ import com.hyjf.am.config.dao.mapper.auto.BankRechargeConfigMapper;
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfig;
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfigExample;
 import com.hyjf.am.config.service.BankRechargeService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
@@ -98,6 +99,24 @@ public class BankRechargeServiceImpl implements BankRechargeService {
         // 条件查询
         example.setOrderByClause("create_time");
         return bankRechargeLimitConfigMapper.selectByExample(example);
+    }
+    /**
+     * 检查银行卡是否重复
+     * @return
+     */
+    @Override
+    public int bankIsExists(AdminBankRechargeConfigRequest adminRequest){
+        BankRechargeConfigExample example = new BankRechargeConfigExample();
+        BankRechargeConfigExample.Criteria criteria = example.createCriteria();
+        criteria.andBankIdEqualTo(adminRequest.getBankId());
+        if (adminRequest.getBankId() != null && adminRequest.getBankId() != 0) {
+            criteria.andIdNotEqualTo(adminRequest.getBankId());
+        }
+        BankRechargeConfig config= bankRechargeConfigMapper.selectByExample(example).get(0);
+        if (config != null ) {
+            return 1;
+        }
+        return 0;
     }
     /**
      * 根据bankId查询BankRechargeConfig
