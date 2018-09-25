@@ -1021,9 +1021,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo) {
+	public LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo,String userName) {
 		LoanCoverUserResponse response = restTemplate
-				.getForEntity("http://AM-ADMIN/am-user/loanCoverUser/selectIsExistsRecordByIdNo/" + strIdNo,
+				.getForEntity("http://AM-ADMIN/am-user/loanCoverUser/selectIsExistsRecordByIdNo/" + strIdNo+"/"+userName,
 						LoanCoverUserResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {

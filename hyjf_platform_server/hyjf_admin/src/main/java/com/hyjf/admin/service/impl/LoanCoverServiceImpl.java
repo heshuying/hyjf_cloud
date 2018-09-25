@@ -68,8 +68,8 @@ public class LoanCoverServiceImpl implements LoanCoverService {
      * 根据id查找记录是否存在
      */
     @Override
-    public boolean selectIsExistsRecordByIdNo(String strIdNo){
-        LoanCoverUserVO loanCoverUserVO = loanCoverClient.selectIsExistsRecordByIdNo(strIdNo);
+    public boolean selectIsExistsRecordByIdNo(String strIdNo,String userName){
+        LoanCoverUserVO loanCoverUserVO = loanCoverClient.selectIsExistsRecordByIdNo(strIdNo,userName);
         if(null!=loanCoverUserVO){
             return false;
         }
@@ -80,7 +80,7 @@ public class LoanCoverServiceImpl implements LoanCoverService {
      */
     @Override
     public LoanCoverUserVO selectRecordByIdNo(String strIdNo){
-        LoanCoverUserVO loanCoverUserVO = loanCoverClient.selectIsExistsRecordByIdNo(strIdNo);
+        LoanCoverUserVO loanCoverUserVO = loanCoverClient.selectIsExistsRecordByIdNo(strIdNo,null);
         if(null!=loanCoverUserVO){
             return loanCoverUserVO;
         }
