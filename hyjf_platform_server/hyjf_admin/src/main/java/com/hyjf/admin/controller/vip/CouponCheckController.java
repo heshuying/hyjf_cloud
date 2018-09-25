@@ -54,7 +54,7 @@ public class CouponCheckController extends BaseController {
         list.add("待审核");
         list.add("已发行");
         list.add("审核不通过");
-        String couponStatus = JSONObject.toJSONString(list,true);
+        String couponStatus = JSONObject.toJSONString(list, true);
         List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
         ccr.setCouponStatus(couponStatus);
         ccr.setCouponType(couponType);
@@ -106,8 +106,15 @@ public class CouponCheckController extends BaseController {
     @ApiOperation(value = "下载文件", notes = "下载文件")
     @GetMapping("/downloadAction/{id}")
     public AdminResult downloadFile(HttpServletResponse response, @PathVariable String id) {
-        couponCheckService.downloadFile(id, response);
-        return new AdminResult<>();
+        CouponCheckResponse checkResponse = new CouponCheckResponse();
+        CouponCheckVO couponCheckVO = couponCheckService.downloadFile(id, response);
+        if (couponCheckVO != null) {
+            checkResponse.setFileName(couponCheckVO.getFileName());
+            checkResponse.setFilePath(couponCheckVO.getFilePath());
+        } else {
+            return new AdminResult(FAIL, FAIL_DESC);
+        }
+        return new AdminResult<>(checkResponse);
     }
 
     @ApiOperation(value = "审核优惠券", notes = "审核优惠券")
@@ -138,13 +145,13 @@ public class CouponCheckController extends BaseController {
                 if (flag) {
                     checkRequest.setStatus(2);
                     results = couponCheckService.updateCoupon(checkRequest);
-                }else {
+                } else {
                     ccr.setMessage("审核异常，请检查上传的Excel文件！");
-                    return new AdminResult<>(FAIL,ccr.getMessage());
+                    return new AdminResult<>(FAIL, ccr.getMessage());
                 }
-            }else {
+            } else {
                 ccr.setMessage("请勿重复审核！");
-                return new AdminResult<>(FAIL,ccr.getMessage());
+                return new AdminResult<>(FAIL, ccr.getMessage());
             }
             //审核不通过需要填写备注,备注20字以内
         } else if (StringUtils.isNotBlank(remark) && remark.length() <= 20) {
@@ -156,9 +163,9 @@ public class CouponCheckController extends BaseController {
         if (results) {
             ccr.setMessage("审核成功,正在发放优惠券");
             return new AdminResult<>(SUCCESS, ccr.getMessage());
-        }else {
+        } else {
             ccr.setMessage("审核失败");
-            return new AdminResult<>(FAIL,ccr.getMessage());
+            return new AdminResult<>(FAIL, ccr.getMessage());
         }
     }
 
