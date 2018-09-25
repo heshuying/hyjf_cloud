@@ -4,12 +4,11 @@
 package com.hyjf.am.user.controller.admin.content;
 
 
+import com.hyjf.am.response.StringResponse;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
@@ -27,7 +26,7 @@ import io.swagger.annotations.Api;
  */
 @Api(value = "移动端着陆页管理")
 @RestController
-@RequestMapping("/am-user/content/whereaboutspage")
+@RequestMapping("/am-admin/content/whereaboutspage")
 public class WhereaboutsPageController extends BaseController {
 	@Autowired
 	private WhereaboutsPageService whereaboutsPageService;
@@ -113,6 +112,42 @@ public class WhereaboutsPageController extends BaseController {
 		WhereaboutsPageResponse response = new WhereaboutsPageResponse();
 		whereaboutsPageService.deleteById(id);
 		response.setRtn(AdminResponse.SUCCESS);
+		return response;
+	}
+
+	/**
+	 * 检查渠道
+	 *
+	 * @param utmId
+	 * @return
+	 */
+	@ApiOperation(value = "检查渠道", notes = "检查渠道")
+	@GetMapping("/checkutmid/{utmId}")
+	public StringResponse checkUtmId(@PathVariable Integer utmId) {
+		StringResponse msg = this.whereaboutsPageService.checkUtmId(utmId);
+		return msg;
+	}
+	/**
+	 * 检查推广人
+	 *
+	 * @param referrer
+	 * @return
+	 */
+	@ApiOperation(value = "检查推广人", notes = "检查推广人")
+	@GetMapping("/checkreferrer/{referrer}")
+	public StringResponse checkReferrer(@PathVariable String referrer) {
+		StringResponse msg = this.whereaboutsPageService.checkReferrer(referrer);
+		return msg;
+	}
+	/**
+	 * 修改详情
+	 *
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getwhereaboutspageconfig")
+	public WhereaboutsPageResponse getWhereaboutsPageConfigById(@RequestBody WhereaboutsPageRequest request) {
+		WhereaboutsPageResponse response = whereaboutsPageService.getWhereaboutsPageConfigById(request);
 		return response;
 	}
 

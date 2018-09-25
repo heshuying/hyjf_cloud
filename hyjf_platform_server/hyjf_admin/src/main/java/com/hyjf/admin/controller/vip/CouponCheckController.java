@@ -3,11 +3,8 @@
  */
 package com.hyjf.admin.controller.vip;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.CouponCheckRequestBean;
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -21,13 +18,11 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,13 +45,12 @@ public class CouponCheckController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult couponInit(@RequestBody AdminCouponCheckRequest request) {
         CouponCheckResponse ccr = couponCheckService.serchCouponList(request);
-        List<String> list = new ArrayList<>();
-        list.add("待审核");
-        list.add("已发行");
-        list.add("审核不通过");
-        String couponStatus = JSONObject.toJSONString(list, true);
+        JSONArray ja = new JSONArray();
+        ja.add("待审核");
+        ja.add("已发行");
+        ja.add("审核不通过");
         List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
-        ccr.setCouponStatus(couponStatus);
+        ccr.setCouponStatus(ja);
         ccr.setCouponType(couponType);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -92,7 +86,7 @@ public class CouponCheckController extends BaseController {
 
     @ApiOperation(value = "上传文件", notes = "上传文件")
     @PostMapping("/uploadAction")
-    public AdminResult<CouponCheckVO> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
         CouponCheckResponse checkResponse = couponCheckService.uploadFile(request, response);
         if (checkResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -100,7 +94,7 @@ public class CouponCheckController extends BaseController {
         if (!Response.isSuccess(checkResponse)) {
             return new AdminResult<>(FAIL, checkResponse.getMessage());
         }
-        return new AdminResult<CouponCheckVO>(checkResponse.getResult());
+        return new AdminResult<>(checkResponse.getResult());
     }
 
     @ApiOperation(value = "下载文件", notes = "下载文件")
