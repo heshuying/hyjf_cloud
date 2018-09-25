@@ -64,11 +64,11 @@
 			<if test="borrowNid != null and borrowNid !=''">
 				AND mm.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 			</if>
-			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND mm.invest_time <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
+			<if test="investStartTime != null and investStartTime != ''">
+				AND mm.invest_time <![CDATA[>=]]> unix_timestamp(#{investStartTime})
 			</if>
-			<if test="timeEndSrch != null and timeEndSrch !=''">
-				AND mm.invest_time <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})
+			<if test="investEndTime != null and investEndTime !=''">
+				AND mm.invest_time <![CDATA[<=]]> unix_timestamp(#{investEndTime})
 			</if>
 			<!--<if test="utmIds != null and utmIds != ''">
 				AND a.utm_id = #{utmIds}
@@ -79,8 +79,8 @@
 					#{utmName}
 				</foreach>
 			</if>
-			<if test="isFirst != null ">
-				AND is_first = #{isFirst,jdbcType=INTEGER}
+			<if test="firstFlag != null ">
+				AND is_first = #{firstFlag,jdbcType=INTEGER}
 			</if>
 			<!--<if test="regStartTime != null and regStartTime != ''">-->
 			<!--AND reg_time <![CDATA[>=]]> unix_timestamp(#{regStartTime})-->
@@ -257,8 +257,8 @@
 		a.borrow_nid,
 		a.borrow_period,
 		a.invest_amount,
-		a.invest_time,
-		a.reg_time,
+		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
+		DATE_FORMAT(a.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
 		CASE
 		WHEN ifnull(
 		(
@@ -290,7 +290,7 @@
 		hyjf_trade.ht_borrow_tender_cpn bc
 		WHERE
 		bc.user_id = a.user_id
-		AND bc.addtime <![CDATA[<]]> a.invest_time
+		AND bc.create_time <![CDATA[<]]> a.invest_time
 		),
 		0
 		) + ifnull(
@@ -298,10 +298,10 @@
 		SELECT
 		count(id)
 		FROM
-		hyjf_hjh_accede ha
+		hyjf_trade.ht_hjh_accede ha
 		WHERE
 		ha.user_id = a.user_id
-		AND ha.add_time <![CDATA[<]]> a.invest_time
+		AND ha.create_time <![CDATA[<]]> a.invest_time
 		),
 		0
 		) = 0 THEN
@@ -331,15 +331,15 @@
 		ht_utm_reg t
 		INNER JOIN ht_utm utm ON t.utm_id = utm.utm_id
 		INNER JOIN ht_user u ON t.user_id = u.user_id
-		INNER JOIN ht_borrow_tender ten ON t.user_id = ten.user_id
+		INNER JOIN hyjf_trade.ht_borrow_tender ten ON t.user_id = ten.user_id
 		AND ten.accede_order_id IS NULL
-		INNER JOIN ht_borrow b ON ten.borrow_nid = b.borrow_nid
+		INNER JOIN hyjf_trade.ht_borrow b ON ten.borrow_nid = b.borrow_nid
 		where 1=1
-		<if test="regStartTime != null and regStartTime != ''">
-			AND reg_time <![CDATA[>=]]> unix_timestamp(#{regStartTime})
+		<if test="registStartTime != null and registStartTime != ''">
+			AND reg_time <![CDATA[>=]]> unix_timestamp(#{registStartTime})
 		</if>
-		<if test="regEndTime != null and regEndTime !=''">
-			AND reg_time <![CDATA[<=]]> unix_timestamp(#{regEndTime})
+		<if test="registEndTime != null and registEndTime !=''">
+			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
 		UNION ALL
 		SELECT
@@ -357,17 +357,17 @@
 		ten.accede_account AS invest_amount,
 		ten.create_time AS invest_time
 		FROM
-		huiyingdai_utm_reg t
+		ht_utm_reg t
 		INNER JOIN ht_utm utm ON t.utm_id = utm.utm_id
 		INNER JOIN ht_user u ON t.user_id = u.user_id
 		INNER JOIN hyjf_trade.ht_debt_plan_accede ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_debt_plan b ON ten.plan_nid = b.debt_plan_nid
 		where 1=1
-		<if test="regStartTime != null and regStartTime != ''">
-			AND reg_time <![CDATA[>=]]> unix_timestamp(#{regStartTime})
+		<if test="registStartTime != null and registStartTime != ''">
+			AND reg_time <![CDATA[>=]]> unix_timestamp(#{registStartTime})
 		</if>
-		<if test="regEndTime != null and regEndTime !=''">
-			AND reg_time <![CDATA[<=]]> unix_timestamp(#{regEndTime})
+		<if test="registEndTime != null and registEndTime !=''">
+			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
 		UNION ALL
 		SELECT
@@ -388,11 +388,11 @@
 		INNER JOIN hyjf_trade.ht_credit_tender ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
 		where 1=1
-		<if test="regStartTime != null and regStartTime != ''">
-			AND reg_time <![CDATA[>=]]> unix_timestamp(#{regStartTime})
+		<if test="registStartTime != null and registStartTime != ''">
+			AND reg_time <![CDATA[>=]]> unix_timestamp(#{registStartTime})
 		</if>
-		<if test="regEndTime != null and regEndTime !=''">
-			AND reg_time <![CDATA[<=]]> unix_timestamp(#{regEndTime})
+		<if test="registEndTime != null and registEndTime !=''">
+			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
 		) AS a
 		LEFT JOIN ht_user u ON a.utm_id = u.user_id
@@ -423,10 +423,10 @@
 			<if test="investEndTime != null and investEndTime !=''">
 				AND mm.invest_time <![CDATA[<=]]> unix_timestamp(#{investEndTime})
 			</if>
-			<if test="utmIdsSrch != null and utmIdsSrch != ''">
-				AND mm.utm_id in
-				<foreach collection="utmIdsSrch" open="(" close=")" separator="," item="utmId">
-					#{utmId}
+			<if test="utmPlat != null and utmPlat != ''">
+				AND mm.mm.utm_name in
+				<foreach collection="utmIdsSrch" open="(" close=")" separator="," item="utmName">
+					#{utmName}
 				</foreach>
 			</if>
 			<if test="firstFlag != null ">
@@ -455,8 +455,8 @@
 		a.borrow_nid,
 		a.borrow_period,
 		a.invest_amount,
-		a.invest_time,
-		a.reg_time,
+		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
+		DATE_FORMAT(a.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
 		CASE
 		WHEN ifnull(
 		(
@@ -466,7 +466,7 @@
 		hyjf_trade.ht_borrow_tender bt
 		WHERE
 		bt.user_id = a.user_id
-		AND bt.addtime <![CDATA[<]]> a.invest_time
+		AND bt.create_time <![CDATA[<]]> a.invest_time
 		),
 		0
 		) + ifnull(
@@ -488,7 +488,7 @@
 		hyjf_trade.ht_borrow_tender_cpn bc
 		WHERE
 		bc.user_id = a.user_id
-		AND bc.addtime <![CDATA[<]]> a.invest_time
+		AND bc.create_time <![CDATA[<]]> a.invest_time
 		),
 		0
 		) + ifnull(
@@ -532,11 +532,11 @@
 		INNER JOIN hyjf_trade.ht_hjh_accede ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_hjh_plan hhp ON ten.plan_nid = hhp.plan_nid
 		where 1=1
-		<if test="regStartTime != null and regStartTime != ''">
-			AND reg_time <![CDATA[>=]]> unix_timestamp(#{regStartTime})
+		<if test="registStartTime != null and registStartTime != ''">
+			AND reg_time <![CDATA[>=]]> unix_timestamp(#{registStartTime})
 		</if>
-		<if test="regEndTime != null and regEndTime !=''">
-			AND reg_time <![CDATA[<=]]> unix_timestamp(#{regEndTime})
+		<if test="registEndTime != null and registEndTime !=''">
+			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
 		) AS a
 		LEFT JOIN ht_user u ON a.utm_id = u.user_id
@@ -563,8 +563,8 @@
 		a.borrow_nid,
 		a.borrow_period,
 		a.invest_amount,
-		a.invest_time,
-		a.reg_time,
+		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
+		DATE_FORMAT(a.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
 		CASE
 		WHEN ifnull(
 		(
@@ -574,7 +574,7 @@
 		hyjf_trade.ht_borrow_tender bt
 		WHERE
 		bt.user_id = a.user_id
-		AND bt.addtime <![CDATA[<]]> a.invest_time
+		AND bt.create_time <![CDATA[<]]> a.invest_time
 		),
 		0
 		) + ifnull(
@@ -596,7 +596,7 @@
 		hyjf_trade.ht_borrow_tender_cpn bc
 		WHERE
 		bc.user_id = a.user_id
-		AND bc.addtime <![CDATA[<]]> a.invest_time
+		AND bc.create_time <![CDATA[<]]> a.invest_time
 		),
 		0
 		) + ifnull(
@@ -640,11 +640,11 @@
 		INNER JOIN hyjf_trade.ht_hjh_accede ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_hjh_plan hhp ON ten.plan_nid = hhp.plan_nid
 		where 1=1
-		<if test="regStartTime != null and regStartTime != ''">
-			AND reg_time <![CDATA[>=]]> unix_timestamp(#{regStartTime})
+		<if test="registStartTime != null and registStartTime != ''">
+			AND reg_time <![CDATA[>=]]> unix_timestamp(#{registStartTime})
 		</if>
-		<if test="regEndTime != null and regEndTime !=''">
-			AND reg_time <![CDATA[<=]]> unix_timestamp(#{regEndTime})
+		<if test="registEndTime != null and registEndTime !=''">
+			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
 		) AS a
 		LEFT JOIN ht_user u ON a.utm_id = u.user_id
@@ -671,8 +671,8 @@
 		a.borrow_nid,
 		a.borrow_period,
 		a.invest_amount,
-		a.invest_time,
-		a.reg_time,
+		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
+		DATE_FORMAT(a.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
 		CASE
 		WHEN ifnull(
 		(
@@ -682,7 +682,7 @@
 		hyjf_trade.ht_borrow_tender bt
 		WHERE
 		bt.user_id = a.user_id
-		AND bt.addtime <![CDATA[<]]> a.invest_time
+		AND bt.create_time <![CDATA[<]]> a.invest_time
 		),
 		0
 		) + ifnull(
@@ -704,7 +704,7 @@
 		hyjf_trade.ht_borrow_tender_cpn bc
 		WHERE
 		bc.user_id = a.user_id
-		AND bc.addtime <![CDATA[<]]> a.invest_time
+		AND bc.create_time <![CDATA[<]]> a.invest_time
 		),
 		0
 		) + ifnull(
@@ -748,11 +748,11 @@
 		INNER JOIN hyjf_trade.ht_hjh_accede ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_hjh_plan hhp ON ten.plan_nid = hhp.plan_nid
 		where 1=1
-		<if test="regStartTime != null and regStartTime != ''">
-			AND reg_time <![CDATA[>=]]> unix_timestamp(#{regStartTime})
+		<if test="registStartTime != null and registStartTime != ''">
+			AND reg_time <![CDATA[>=]]> unix_timestamp(#{registStartTime})
 		</if>
-		<if test="regEndTime != null and regEndTime !=''">
-			AND reg_time <![CDATA[<=]]> unix_timestamp(#{regEndTime})
+		<if test="registEndTime != null and registEndTime !=''">
+			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
 		) AS a
 		LEFT JOIN ht_user u ON a.utm_id = u.user_id

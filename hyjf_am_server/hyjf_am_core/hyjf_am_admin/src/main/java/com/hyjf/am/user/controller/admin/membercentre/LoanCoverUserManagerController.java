@@ -103,9 +103,9 @@ public class LoanCoverUserManagerController extends BaseController {
     /**
      * 根据证件号码查找借款主体CA认证记录表
      */
-    @RequestMapping("/selectIsExistsRecordByIdNo/{strIdNo}")
-    public LoanCoverUserResponse selectIsExistsRecordByIdNo(@PathVariable String strIdNo){
-        LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = loanCoverUserManagerService.selectIsExistsRecordByIdNo(strIdNo);
+    @RequestMapping("/selectIsExistsRecordByIdNo/{strIdNo}/{userName}")
+    public LoanCoverUserResponse selectIsExistsRecordByIdNo(@PathVariable String strIdNo,@PathVariable String userName){
+        LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = loanCoverUserManagerService.selectIsExistsRecordByIdNo(strIdNo,userName);
         LoanCoverUserResponse response = new LoanCoverUserResponse();
         String status = Response.FAIL;
         if(null!=loanSubjectCertificateAuthority){

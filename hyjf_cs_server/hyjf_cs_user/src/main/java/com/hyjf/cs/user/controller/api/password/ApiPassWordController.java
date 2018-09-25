@@ -94,7 +94,6 @@ public class ApiPassWordController extends BaseController {
         repwdResult.setCallBackAction(request.getParameter("callback").replace("*-*-*","#"));
         bean.convert();
         int userId = Integer.parseInt(bean.getLogUserId());
-        UserVO user = passWordService.getUsersById(userId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 调用查询电子账户密码是否设置
         BankCallBean selectbean = new BankCallBean();

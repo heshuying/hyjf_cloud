@@ -98,6 +98,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/getUserdetail")
     @ResponseBody
     public  AdminResult<UserDetailInfoResponseBean>  getUserdetail(@RequestBody String userId) {
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         UserDetailInfoResponseBean userDetailInfoResponseBean = new UserDetailInfoResponseBean();
         UserManagerDetailVO userManagerDetailVO = userCenterService.selectUserDetail(userId);
         UserManagerDetailCustomizeVO userManagerDetailCustomizeVO = new UserManagerDetailCustomizeVO();
@@ -121,7 +122,9 @@ public class UserCenterController extends BaseController {
             } else {
                 userDetailInfoResponseBean.setIsEvalation("1");
             }
+            String strDate = smp.format(userEvalationResultInfo.getCreateTime());
             BeanUtils.copyProperties(userEvalationResultInfo, userEvalationResultShowVO);
+            userEvalationResultShowVO.setCreateTime(strDate);
         }
         userDetailInfoResponseBean.setUserEvalationResultInfo(userEvalationResultShowVO);
         //用户开户信息
