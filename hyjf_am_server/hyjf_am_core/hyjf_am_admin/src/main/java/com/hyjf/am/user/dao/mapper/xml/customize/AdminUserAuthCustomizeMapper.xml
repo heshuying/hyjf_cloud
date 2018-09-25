@@ -69,17 +69,21 @@
       </if>
 
       <if test="invesAddTimeStart != null and invesAddTimeStart != '' ">
-        AND FROM_UNIXTIME( hydua.auto_create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{invesAddTimeStart}
+        <!-- 优化sql(字段类型转换) -->
+        AND hydua.auto_create_time >= UNIX_TIMESTAMP(CONCAT(#{invesAddTimeStart}))
       </if>
       <if test="invesAddTimeEnd != null and invesAddTimeEnd != ''">
-        AND FROM_UNIXTIME( hydua.auto_create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{invesAddTimeEnd}
+        <!-- 优化sql(字段类型转换) -->
+        AND hydua.auto_create_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{invesAddTimeEnd},' 23:59:59'))
       </if>
 
       <if test="invesEndTimeStart != null and invesEndTimeStart != '' ">
-        AND FROM_UNIXTIME( hydua.auto_bid_end_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{invesEndTimeStart}
+        <!-- 优化sql(字段类型转换) -->
+        AND hydua.auto_bid_end_time >= FROM_UNIXTIME(UNIX_TIMESTAMP(CONCAT(#{invesEndTimeStart})), '%Y%m%d')
       </if>
       <if test="invesEndTimeEnd != null and invesEndTimeEnd != ''">
-        AND FROM_UNIXTIME( hydua.auto_bid_end_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{invesEndTimeEnd}
+        <!-- 优化sql(字段类型转换) -->
+        AND hydua.auto_bid_end_time <![CDATA[<=]]> FROM_UNIXTIME(UNIX_TIMESTAMP(CONCAT(#{invesEndTimeEnd},' 23:59:59')), '%Y%m%d')
       </if>
     </where>
   </sql>
@@ -97,10 +101,12 @@
         AND hydual.order_id LIKE CONCAT( #{orderId}, '%')
       </if>
       <if test="addTimeStart != null and addTimeStart != '' ">
-        AND FROM_UNIXTIME( hydual.auth_create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{addTimeStart}
+        <!-- 优化sql(字段类型转换) -->
+        AND hydual.auth_create_time >= UNIX_TIMESTAMP(CONCAT(#{addTimeStart}))
       </if>
       <if test="addTimeEnd != null and addTimeEnd != ''">
-        AND FROM_UNIXTIME( hydual.auth_create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{addTimeEnd}
+        <!-- 优化sql(字段类型转换) -->
+        AND hydual.auth_create_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{addTimeEnd},' 23:59:59'))
       </if>
       <if test="orderStatus != null and orderStatus != ''">
         AND hydual.order_status = #{orderStatus,jdbcType=INTEGER}

@@ -27,13 +27,11 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.bean.newagreement.NewAgreementBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
-import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -41,7 +39,6 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.CouponTenderProducer;
-import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -1110,15 +1107,24 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String requestType = CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         String baseUrl = super.getFrontHost(systemConfig,tender.getPlatform());
         String requestMapping = "/public/formsubmit?requestType=";
-        if ("HJH".equalsIgnoreCase(borrowType)){
+        String url = "";
+        // 计划不需要跳转江西银行, 不能使用前端投资的统一页面，所以针对计划单独跳转前端处理页面
+        if (CommonConstant.TENDER_TYPE_HJH.equalsIgnoreCase(borrowType)){
             requestType = "9";
             requestMapping = "/join/plan?requestType=";
+        }else if (CommonConstant.TENDER_TYPE_CREDIT.equalsIgnoreCase(borrowType)){
+            requestType = "10";
+            url = baseUrl + requestMapping + requestType;
+            String creditNid = (StringUtils.isNotBlank(tender.getBorrowNid()) && tender.getBorrowNid().length() >3) ? tender.getBorrowNid().substring(3) : "";
+            String couponGrantId = (tender.getCouponGrantId() != null ? tender.getCouponGrantId().toString() : "");
+            url += "&couponGrantId="+couponGrantId+"&creditNid="+creditNid+"&platform="+tender.getPlatform()+"&assignCapital="+tender.getAccount();
+            logger.info("url:[{}]",url);
+            return url;
         }
-        String url = baseUrl + requestMapping + requestType;
+        url = baseUrl + requestMapping + requestType;
         //String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/hyjf-app/user/invest/tender?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
         logger.info("url:[{}]",url);
-        //ModelAndView mv = new ModelAndView("redirect:"+url);
         return url;
     }
 

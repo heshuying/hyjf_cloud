@@ -74,9 +74,9 @@ public class MessagePushMsgController extends BaseController {
 
 		// 查询7天统计数据
 		String yesDate = GetDate.getCountDate(5, -6);
-		startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(yesDate));
-		endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(curDate));
-		List<MessagePushTemplateStatics> templateStaticsList = this.msgPushStaticsService.getTemplateStaticsListByTime(startTime, endTime);
+		String startTime1 = GetDate.getDayStart(yesDate);
+		String endTime1 =GetDate.getDayEnd(curDate);
+		List<MessagePushTemplateStatics> templateStaticsList = this.msgPushStaticsService.getTemplateStaticsListByTime(startTime1, endTime1);
 		// 更新统计数据
 		for (int i = 0; i < templateStaticsList.size(); i++) {
 			this.msgPushStaticsService.updatemsgPushStatics(templateStaticsList.get(i),startTime,endTime);

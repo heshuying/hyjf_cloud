@@ -137,7 +137,7 @@ public class MsgPushStaticsServiceImpl implements MsgPushStaticsService {
 	}
 
 	@Override
-	public List<MessagePushTemplateStatics> getTemplateStaticsListByTime(Integer startTime, Integer endTime) {
+	public List<MessagePushTemplateStatics> getTemplateStaticsListByTime(String startTime, String endTime) {
 		return staticsDao.getTemplateStaticsListByTime(startTime, endTime);
 	}
 }

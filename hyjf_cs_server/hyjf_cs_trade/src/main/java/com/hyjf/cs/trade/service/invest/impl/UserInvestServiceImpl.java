@@ -5,6 +5,7 @@ import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.invest.UserInvestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @version UserInvestServiceImpl, v0.1 2018/9/1 13:18
  * @Author: Zha Daojian
  */
+@Service
 public class UserInvestServiceImpl implements UserInvestService {
 
     @Autowired

@@ -23,7 +23,6 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.*;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.CouponClient;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;

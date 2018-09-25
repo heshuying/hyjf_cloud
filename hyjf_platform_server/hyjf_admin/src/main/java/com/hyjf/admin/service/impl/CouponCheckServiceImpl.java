@@ -117,7 +117,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             Integer createTime = Integer.valueOf(fileRealName);
             String originalFilename = multipartFile.getOriginalFilename();
             String suffix = UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-            if (StringUtils.equals(suffix, ".csv")) {
+            if(StringUtils.equals(suffix,".xls") || StringUtils.equals(suffix,".xlsx")){
                 fileRealName = fileRealName + suffix;
                 try {
                     errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
@@ -133,17 +133,22 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                     accr.setStatus(1);
                     checkResponse = amConfigClient.insert(accr);
                     checkResponse.getMessage();
+                    if (checkResponse.getRecordTotal() > 0) {
+                        checkResponse.setMessage(errorMessage);
+                    }else {
+                        checkResponse.setMessage("插入数据异常失败");
+                    }
                 }
             } else {
                 checkResponse.setRtn(Response.FAIL);
-                checkResponse.setMessage("上传失败，文件后缀必须为CSV");
+                checkResponse.setMessage("上传失败，请上传Excel文件");
             }
         }
         return checkResponse;
     }
 
     @Override
-    public void downloadFile(String id, HttpServletResponse response) {
+    public CouponCheckVO downloadFile(String id, HttpServletResponse response) {
         CouponCheckVO couponCheck = amConfigClient.selectCoupon(Integer.valueOf(id));
         String fileP = "";
         String fileN = "";
@@ -181,6 +186,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 e.printStackTrace();
             }
         }
+        return couponCheck;
     }
 
     @Override

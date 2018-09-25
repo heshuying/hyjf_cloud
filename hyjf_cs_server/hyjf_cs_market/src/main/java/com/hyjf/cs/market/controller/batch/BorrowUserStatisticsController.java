@@ -18,7 +18,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-market/statisticsoperationreports")
+@RequestMapping("/cs-market/operation_report")
 public class BorrowUserStatisticsController extends BaseMarketController {
     @Autowired
     private BorrowUserStatisticsService statisticsService;

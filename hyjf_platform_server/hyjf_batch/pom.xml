@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>hyjf_batch</name>
-	<description>Demo project for Spring Boot</description>
+	<description>hyjf batch project</description>
 
 	<parent>
 		<groupId>com.hyjf</groupId>

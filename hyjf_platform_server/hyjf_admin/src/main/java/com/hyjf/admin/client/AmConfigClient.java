@@ -654,6 +654,8 @@ public interface AmConfigClient {
 	 */
 	LandingPageResponse deleteLandingPageById(Integer id);
 
+
+
 	/**
 	 * 根据条件查询公司管理-合作伙伴
 	 *
@@ -725,6 +727,14 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	ContentQualifyVO getContentQualifyRecord(Integer id);
+
+	/**
+	 * 通过ID获取着陆页
+	 *
+	 * @param id
+	 * @return
+	 */
+	LandingPageResponse getLandingPageRecord(Integer id);
 
 	/**
 	 * 删除公司管理-资质荣誉状态

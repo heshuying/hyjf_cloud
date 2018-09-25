@@ -45,7 +45,7 @@ public class MessagePushTemplateStaticsDao extends BaseMongoDao<MessagePushTempl
 	 * @param endTime
 	 * @return
 	 */
-	public List<MessagePushTemplateStatics> getTemplateStaticsListByTime(Integer startTime, Integer endTime) {
+	public List<MessagePushTemplateStatics> getTemplateStaticsListByTime(String startTime, String endTime) {
 		Query query = new Query();
 		Criteria criteria = new Criteria();
 		if (startTime != null) {

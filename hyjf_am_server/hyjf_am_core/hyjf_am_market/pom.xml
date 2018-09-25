@@ -10,6 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hyjf_am_market</artifactId>
+    <name>hyjf_am_market</name>
+    <description>hyjf am market project</description>
 
     <dependencies>
         <!-- spring cloud eureka client -->

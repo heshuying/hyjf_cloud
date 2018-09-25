@@ -381,12 +381,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		{
 			AccountVO account = amTradeClient.getAccount(userId);
 			BigDecimal balance = BigDecimal.ZERO;
-			BigDecimal frost = BigDecimal.ZERO;
 			BigDecimal planInterestWait = BigDecimal.ZERO;
 			BigDecimal planCapitalWait = BigDecimal.ZERO;
-			BigDecimal planAccountWait = BigDecimal.ZERO;
-			BigDecimal bankWait = BigDecimal.ZERO;
-			BigDecimal awaitTotal = BigDecimal.ZERO;
 			if (account != null) {
 				if (account.getBalance() == null) {
 					result.setBalance("0.00");
@@ -431,13 +427,13 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 						}
 					}
 					balance = account.getBankBalance();
-					if (balance == null) {
+					/*if (balance == null) {
 						balance = BigDecimal.ZERO;
-					}
+					}*/
 				}
-				if (account.getFrost() != null) {
+				/*if (account.getFrost() != null) {
 					frost = account.getFrost();
-				}
+				}*/
 				if (account.getPlanCapitalWait() != null) {
 					planCapitalWait = account.getPlanCapitalWait();
 				}
@@ -680,6 +676,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					result.setEvalationScore(userEvalationResult.getScoreCount() + "");
 				}
 			} else {
+				result.setAnswerStatus("0");
 				result.setAnswerResult("点击测评");
 				result.setFengxianDesc("未测评");
 				// 活动有效期校验

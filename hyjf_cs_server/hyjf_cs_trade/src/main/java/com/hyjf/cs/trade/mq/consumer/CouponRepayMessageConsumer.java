@@ -1,13 +1,7 @@
 package com.hyjf.cs.trade.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.CouponRepayBean;
-import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.mq.base.Consumer;
-import com.hyjf.cs.trade.service.consumer.CouponRepayService;
+import java.util.List;
+
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -22,7 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.CouponRepayBean;
+import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.service.consumer.CouponRepayService;
 
 /**
  * @Auther: walter.limeng

@@ -224,13 +224,13 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	@Override
 	public Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception {
         // 回调路径
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim();
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/bindCardError?bind=false&unbind=true&msg=";
         // 交易成功跳转链接
-        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim();
+        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/bindCardSuccess?bind=false&unbind=true&msg=";
 		// 商户后台应答地址(必须)
 		String notifyUrl = systemConfig.getWebHost().trim() + "/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
-        String forgotPwdUrl = systemConfig.getWebHost().trim();
+        String forgotPwdUrl = systemConfig.getForgetpassword();
 
 		// 调用开户接口
 		BankCallBean bindCardBean = new BankCallBean();
@@ -486,6 +486,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bankCardLogRequest.setUserId(userId);
 		bankCardLogRequest.setUserName(userVO.getUsername());
 		bankCardLogRequest.setBankCode(String.valueOf(bankId));
+		bankCardLogRequest.setCardNo(cardNo);
 		if(bankConfig != null){
 			bankCardLogRequest.setBankName(bankConfig.getBankName());
 		}

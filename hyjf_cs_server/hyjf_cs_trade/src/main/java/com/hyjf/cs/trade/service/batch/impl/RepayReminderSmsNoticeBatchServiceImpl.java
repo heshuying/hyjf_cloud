@@ -26,9 +26,7 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.client.AmBorrowClient;
-import com.hyjf.cs.trade.client.AmBorrowRepayClient;
-import com.hyjf.cs.trade.client.AmBorrowRepayPlanClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
@@ -53,11 +51,9 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
 
 
     @Autowired
-    AmBorrowClient amBorrowClient;
+    AmTradeClient amBorrowClient;
     @Autowired
-    AmBorrowRepayClient amBorrowRepayClient;
-    @Autowired
-    AmBorrowRepayPlanClient amBorrowRepayPlanClient;
+    AmTradeClient amBorrowRepayClient;
     @Autowired
     AmUserClient userClient;
     @Autowired
@@ -70,7 +66,7 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
 
     @Override
     public List<BorrowRepayPlanVO> selectBorrowRepayPlan(String borrowNid, Integer repaySmsReminder) {
-        return this.amBorrowRepayPlanClient.selectBorrowRepayPlan(borrowNid,repaySmsReminder);
+        return this.amBorrowRepayClient.selectBorrowRepayPlan(borrowNid,repaySmsReminder);
     }
 
     @Override
@@ -146,7 +142,7 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
     @Override
     public Integer updateBorrowRepayPlan(BorrowRepayPlanVO borrowRepayPlanVO, Integer repaySmsReminder) {
         borrowRepayPlanVO.setRepaySmsReminder(repaySmsReminder);
-        return this.amBorrowRepayPlanClient.updateBorrowRepayPlan(borrowRepayPlanVO);
+        return this.amBorrowRepayClient.updateBorrowRepayPlan(borrowRepayPlanVO);
     }
 
 }
