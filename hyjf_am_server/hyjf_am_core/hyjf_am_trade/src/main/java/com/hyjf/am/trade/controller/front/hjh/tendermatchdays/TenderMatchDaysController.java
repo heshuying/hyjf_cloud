@@ -34,7 +34,7 @@ public class TenderMatchDaysController extends BaseController {
                 // 更新未进入锁定期的计划订单的匹配期hjhaccede
                 if (!this.hjhAccedeService.updateMatchDays()) {
                     logger.error("计算自动投资的匹配期(每日)任务 失败。 ");
-                };
+                }
             } catch (Exception e) {
                 logger.error("计算自动投资的匹配期(每日)任务 异常。 ");
                 e.printStackTrace();

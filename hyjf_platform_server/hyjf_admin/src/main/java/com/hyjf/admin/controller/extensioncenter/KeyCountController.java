@@ -7,23 +7,18 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.service.AdminUtmReadPermissionsService;
 import com.hyjf.admin.service.KeyCountService;
+import com.hyjf.admin.service.promotion.channel.ChannelService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
-import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.KeyCountResponse;
-import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
-import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.user.KeyCountRequest;
-import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
 import com.hyjf.am.vo.user.KeyCountVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -50,7 +45,8 @@ public class KeyCountController extends BaseController {
 	private Logger logger = LoggerFactory.getLogger(KeyCountController.class);
 	@Resource
 	private KeyCountService keyCountService;
-
+	@Resource
+	private ChannelService channelService;
 	@ApiOperation(value = "关键词设计", notes = "关键词设计列表")
 	@PostMapping("/searchaction")
 	public AdminResult searchAction(@RequestBody KeyCountRequest request) {
@@ -65,7 +61,15 @@ public class KeyCountController extends BaseController {
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 
 	}
+	@ApiOperation(value = "关键词设计获取渠道", notes = "关键词设计获取渠道")
+	@GetMapping("/channels")
+	public AdminResult getChannels() {
+		AdminResult adminResult = new AdminResult();
+		List<UtmPlatVO>  list = channelService.getUtmPlat(null);
+		adminResult.setData(list);
+		return adminResult;
 
+	}
 	@ApiOperation(value = "数据导出--关键词设计", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/exportAction")
 	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody KeyCountRequest form) throws Exception {

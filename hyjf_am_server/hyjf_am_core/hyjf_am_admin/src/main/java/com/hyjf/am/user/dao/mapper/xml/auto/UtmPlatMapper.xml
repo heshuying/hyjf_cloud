@@ -84,7 +84,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from ht_utm_plat
+    from hyjf_user.ht_utm_plat
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>

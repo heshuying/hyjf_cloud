@@ -15,6 +15,9 @@
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
+    <name>hyjf_am_core</name>
+    <description>hyjf am core project</description>
+
     <modules>
         <module>hyjf_am_config</module>
         <module>hyjf_am_market</module>

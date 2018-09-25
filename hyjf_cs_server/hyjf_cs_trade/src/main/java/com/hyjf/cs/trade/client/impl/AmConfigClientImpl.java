@@ -7,6 +7,7 @@ import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.FeeConfigResponse;
 import com.hyjf.am.response.config.SiteSettingsResponse;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
@@ -208,4 +209,22 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
 		return null;
 	}
+	@Override
+	public BanksConfigVO getBanksConfigByBankId(String bankId) {
+		BanksConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+    @Override
+    public Integer getBankInterfaceFlagByType(String type) {
+        BankInterfaceResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
+        if (response != null) {
+            return response.getFlag();
+        }
+        return null;
+    }
 }

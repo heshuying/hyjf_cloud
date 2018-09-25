@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 
 	<name>hyjf_cloud_server</name>
-	<description>Demo project for Spring Boot</description>
+	<description>hyjf cloud server project</description>
 
 	<parent>
 		<groupId>com.hyjf</groupId>
@@ -22,7 +22,7 @@
 		<module>hyjf_config</module>
 		<module>hyjf_eureka</module>
 		<module>hyjf_zuul</module>
-        <module>hyjf_spring_boot_admin</module>
+        <module>hyjf_monitor</module>
     </modules>
 
 </project>

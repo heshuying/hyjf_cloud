@@ -4,28 +4,18 @@
 package com.hyjf.am.config.controller.admin.content;
 
 import com.hyjf.am.config.controller.BaseConfigController;
-import com.hyjf.am.config.dao.model.auto.Job;
 import com.hyjf.am.config.dao.model.auto.LandingPage;
-import com.hyjf.am.config.service.JobService;
 import com.hyjf.am.config.service.LandingPageService;
 import com.hyjf.am.response.AdminResponse;
-import com.hyjf.am.response.admin.ContentEnvironmentResponse;
-import com.hyjf.am.response.config.JobResponse;
 import com.hyjf.am.response.config.LandingPageResponse;
-import com.hyjf.am.resquest.admin.JobRequest;
 import com.hyjf.am.resquest.admin.LandingPageRequest;
-import com.hyjf.am.vo.config.JobsVo;
 import com.hyjf.am.vo.config.LandingPageVo;
-import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author tanyy
@@ -91,6 +81,7 @@ public class ContentLandingPageController extends BaseConfigController {
 		if (landingPage != null) {
 			LandingPageVo vo = new LandingPageVo();
 			BeanUtils.copyProperties(landingPage, vo);
+			response.setResult(vo);
 		}
 		return response;
 	}

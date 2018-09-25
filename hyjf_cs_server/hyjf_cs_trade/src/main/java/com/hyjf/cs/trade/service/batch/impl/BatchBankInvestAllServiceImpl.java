@@ -33,9 +33,9 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
@@ -62,7 +62,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 	@Autowired
 	private AmTradeClient amTradeClient;
 	@Autowired
-	private AmMongoClient amMongoClient;
+	private CsMessageClient amMongoClient;
 	/**
 	 * mq生产端
 	 */

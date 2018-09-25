@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.repay.impl;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.service.repay.RepayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayProjectListBean;
-import com.hyjf.cs.trade.client.BorrowClient;
 import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
@@ -29,7 +29,7 @@ public class RepayServiceImpl implements RepayService {
     AmTradeClient amTradeClient;
 
 	@Autowired
-	BorrowClient borrowClient;
+	AmUserClient borrowClient;
     /**
      * 获取批次放款列表
      *
@@ -98,7 +98,7 @@ public class RepayServiceImpl implements RepayService {
 		List<WebUserRepayProjectListCustomizeVO> list = null;
 		if (roleId != null && "3".equals(roleId)) {
 			// 垫付机构
-            list = borrowClient.selectOrgRepayProjectList(params);
+            list = amTradeClient.selectOrgRepayProjectList(params);
 			if (list!=null) {
 				for (int i = 0; i < list.size(); i++) {
 					WebUserRepayProjectListCustomizeVO info = list.get(i);
@@ -140,7 +140,7 @@ public class RepayServiceImpl implements RepayService {
 				}
 			}
 		} else {
-            list = borrowClient.selectUserRepayProjectList(params);
+            list = amTradeClient.selectUserRepayProjectList(params);
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 //					BigDecimal accountTotal = BigDecimal.ZERO;
@@ -184,7 +184,7 @@ public class RepayServiceImpl implements RepayService {
      */
     @Override
     public ProjectBean searchRepayProjectDetail(ProjectBean form) {
-        return borrowClient.searchRepayProjectDetail(form);
+        return amTradeClient.searchRepayProjectDetail(form);
     }
 
 

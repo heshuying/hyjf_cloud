@@ -1,0 +1,7 @@
+spring:
+  boot:
+    admin:
+      notify:
+        dingding:
+          switch_on : true
+          access_token: a032a81f62766780d77cadb81dfa016feb605e43881b442f16078d7c2d34ade0

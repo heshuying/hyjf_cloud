@@ -8,22 +8,22 @@ import com.hyjf.am.response.app.AppNewAgreementResponse;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
 import com.hyjf.am.response.app.AppTenderCreditInvestListCustomizeResponse;
+import com.hyjf.am.response.config.AppReapyCalendarResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
-import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.*;
+import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
-import com.hyjf.am.response.user.BankOpenAccountResponse;
-import com.hyjf.am.response.user.BankOpenAccountListResponse;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.user.HjhPlanResponse;
-import com.hyjf.am.response.user.HjhUserAuthResponse;
-import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
@@ -34,19 +34,19 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
+import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
+import com.hyjf.am.vo.trade.account.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
@@ -56,6 +56,7 @@ import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -66,6 +67,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
@@ -78,8 +80,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
-import com.hyjf.am.vo.trade.InvestListCustomizeVO;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -1022,9 +1024,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw) {
-        BooleanResponse result = restTemplate
-                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, BooleanResponse.class).getBody();
-        return result.getResultBoolean();
+        IntegerResponse result = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, IntegerResponse.class).getBody();
+        return result.getResultInt()>0?true:false;
     }
     /**
      * 提现后续操作
@@ -4266,6 +4268,24 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 获取回款记录信息
+     *
+     * @param request
+     * @return List<RepayListCustomize>
+     * @author Zha Daojian
+     * @date 2018/9/1 13:20
+     **/
+    @Override
+    public List<ApiRepayListCustomizeVO> searchRepayList(ApiRepayListRequest request) {
+        String url = "http://AM-TRADE/am-trade/invest/searchRepayList";
+        ApiRepayListResponse response = restTemplate.postForEntity(url,request,ApiRepayListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      * 更新资产表 upd by liushouyi
      *
      * @param hjhPlanAssetnewVO
@@ -4754,4 +4774,341 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+
+    @Override
+    public ProjectBean searchRepayProjectDetail(ProjectBean form)  {
+        ProjectBean result =  restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/borrow/searchRepayProjectDetail/", form,
+                ProjectBean.class).getBody();
+        if (result != null) {
+            return result.getResult();
+        }
+        return null;
+    }
+    @Override
+    public List<WebUserRepayProjectListCustomizeVO> selectUserRepayProjectList(Map<String, Object> params){
+        WebUserRepayProjectListCustomizeResponse result =  restTemplate.postForEntity(
+            "http://AM-TRADE/am-trade/borrow/selectUserRepayProjectList/", params,
+                WebUserRepayProjectListCustomizeResponse.class).getBody();
+        if (result != null) {
+            return result.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<WebUserRepayProjectListCustomizeVO> selectOrgRepayProjectList(Map<String, Object> params){
+        WebUserRepayProjectListCustomizeResponse result =  restTemplate.postForEntity(
+            "http://AM-TRADE/am-trade/borrow/selectOrgRepayProjectList/", params,
+                WebUserRepayProjectListCustomizeResponse.class).getBody();
+        if (result != null) {
+            return result.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public Long countBatchCenter (BatchCenterCustomize batchCenterCustomize){
+        Long result =  restTemplate.postForEntity(
+        "http://AM-TRADE/am-trade/borrow/countBatchCenter/", batchCenterCustomize,
+                Long.class).getBody();
+        if (result != null) {
+            return result;
+        }
+        return null;
+    }
+
+    @Override
+    public List<BatchCenterCustomizeVO> selectBatchCenterList (BatchCenterCustomize batchCenterCustomize){
+        BatchCenterCustomizeResponse result =  restTemplate.postForEntity(
+        "http://AM-TRADE/am-trade/borrow/selectBatchCenterList/", batchCenterCustomize,
+                BatchCenterCustomizeResponse.class).getBody();
+        if (result != null) {
+            return result.getResultList();
+        }
+        return null;
+        }
+
+    @Override
+    public String getborrowIdByProductId (Map<String, Object> params){
+        String result =  restTemplate.postForEntity(
+        "http://AM-TRADE/am-trade/borrow/getborrowIdByProductId/", params,
+                String.class).getBody();
+        if (result != null) {
+        return result;
+        }
+        return null;
+    }
+    @Override
+    public List<BorrowCreditVO> getBorrowCreditList(BorrowCreditRequest request1) {
+        String url = "http://AM-TRADE/am-trade/borrowCredit/getBorrowCreditList";
+        BorrowCreditResponse response=restTemplate.postForEntity(url,request1,BorrowCreditResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<BorrowCreditVO> selectBorrowCreditList() {
+        BorrowCreditResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/borrowCredit/selectBorrowCreditList/",
+                BorrowCreditResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer updateBorrowCredit(BorrowCreditVO borrowCreditVO) {
+        Integer result =  restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/borrowCredit/updateBorrowCredit/", borrowCreditVO,
+                Integer.class).getBody();
+        if (result == null) {
+            return 0;
+        }
+        return result;
+    }
+    @Override
+    public List<CouponUserVO> selectCouponUser(int nowBeginDate, int nowEndDate) {
+        CouponUserResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponUser/selectCouponUser/" + nowBeginDate + "/" + nowEndDate, CouponUserResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<BatchCouponTimeoutCommonCustomizeVO> selectCouponQuota(int threeBeginDate, int threeEndDate) {
+        String url = "http://AM-TRADE/am-trade/couponRepay/selectCouponQuota/" + threeBeginDate + "/" + threeEndDate;
+        BatchCouponTimeoutCommonResponse response = restTemplate.getForEntity(url, BatchCouponTimeoutCommonResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<HjhLabelVO> seleHjhLabel(String borrowStyle) {
+        HjhLabelResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhPlan/seleHjhLabel/" + borrowStyle, HjhLabelResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public HjhPlanVO getHjhPlan(String planNid) {
+        com.hyjf.am.response.user.HjhPlanResponse response = restTemplate.getForEntity("http://AM-TRADE//am-trade/hjhPlan/gethjhplan/"+planNid,
+                com.hyjf.am.response.user.HjhPlanResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public HjhAccedeVO getHjhAccede(String orderId) {
+        HjhAccedeResponse response = restTemplate.getForEntity("http://AM-TRADE//am-trade/hjhPlan/gethjhaccede/"+orderId,HjhAccedeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowTenderCpnVO> getBorrowTenderCpnList(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/coupon/getborrowtendercpnlist/"+borrowNid;
+        BorrowTenderCpnResponse response = restTemplate.getForEntity(url,BorrowTenderCpnResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public int updateOfLoansTender(AccountVO account) {
+        AccountResponse result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/account/updateofloanstender",account,
+                AccountResponse.class).getBody();
+        if (result == null) {
+            return result.getUpdateFlag();
+        }
+        return 0;
+    }
+    @Override
+    public boolean getSendRepeat(CouponUserSearchRequest couponUserRequest) {
+        String url = "http://AM-TRADE/am-trade/couponUser/getsendrepeat";
+        CouponUserResponse response = restTemplate.postForEntity(url,couponUserRequest,CouponUserResponse.class).getBody();
+        return response.getIsSend();
+    }
+    @Override
+    public Integer insertCouponUser(CouponUserVO couponUser) {
+        String url = "http://AM-TRADE/am-trade/couponUser/insertCouponUser";
+        CouponUserResponse response = restTemplate.postForEntity(url,couponUser,CouponUserResponse.class).getBody();
+        return response.getCount();
+    }
+    /**
+     * 查询回款日历总数
+     * @param params
+     * @return
+     */
+    @Override
+    public Integer countRepaymentCalendar(Map<String, Object> params) {
+        AppReapyCalendarResponse response = restTemplate.postForObject(
+                "http://AM-TRADE/am-trade/user/repayCalendar/countBorrowRepayment",
+                params, AppReapyCalendarResponse.class);
+        if (response != null) {
+            return response.getCount();
+        }
+        return null;
+    }
+
+    /**
+     * 查询回款日历明细
+     * @param params
+     * @return
+     */
+    @Override
+    public List<AppReapyCalendarResultVO> searchRepaymentCalendar(Map<String, Object> params) {
+        AppReapyCalendarResponse response = restTemplate.postForObject(
+                "http://AM-TRADE/am-trade/user/repayCalendar/searchRepaymentCalendar", params, AppReapyCalendarResponse.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 返回用户最近回款时间戳-秒
+     * @param params
+     * @return
+     */
+    @Override
+    public Integer searchNearlyRepaymentTime(Map<String, Object> params) {
+        AppReapyCalendarResponse response = restTemplate.postForObject(
+                "http://AM-TRADE/am-trade/user/repayCalendar/searchNearlyRepaymentTime", params, AppReapyCalendarResponse.class);
+        if (response != null) {
+            return response.getCount();
+        }
+        return null;
+    }
+    @Override
+    public int countAccountListByOrdId(String ordId, String type) {
+        AccountListResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/accountList/selectAccountListByOrdId/" + ordId+"/"+type, AccountListResponse.class).getBody();
+        if (response != null  && response.getResult() != null) {
+            return 1;
+        }
+        return 0;
+    }
+
+
+    @Override
+    public Integer insertAccountListSelective(AccountListVO accountListVO) {
+        Integer result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/accountList/insertAccountListSelective/", accountListVO,
+                Integer.class).getBody();
+        if (result == null) {
+            return 0;
+        }
+        return result;
+
+    }
+
+    @Override
+    public int countByNidAndTrade(String nid, String trade) {
+        String url = "http://AM-TRADE/am-trade/accountList/countbynidandtrade/"+nid+"/"+trade;
+        AccountListResponse response = restTemplate.getForEntity(url,AccountListResponse.class).getBody();
+        if (response != null && response.getResult() != null) {
+            return response.getTotalRecord();
+        }
+        return 1;
+    }
+    @Override
+    public int updateOfRepayCouponHjh(AccountVO account) {
+        AccountResponse result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/account/updateofrepaycouponhjh/", account,
+                AccountResponse.class).getBody();
+        if (result == null) {
+            return result.getUpdateFlag();
+        }
+        return 0;
+    }
+
+    @Override
+    public BankMerchantAccountVO getBankMerchantAccount(String accountCode) {
+        BankMerchantAccountResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/account/getbankmerchantaccount/"+accountCode,
+                BankMerchantAccountResponse.class).getBody();
+        if (response == null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public int updateBankMerchatAccount(BankMerchantAccountVO account) {
+        BankMerchantAccountResponse result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/account/updatebankmerchantaccount",account,
+                BankMerchantAccountResponse.class).getBody();
+        if (result == null) {
+            return result.getRecordTotal();
+        }
+        return 0;
+    }
+
+    @Override
+    public int insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountList) {
+        BankMerchantAccountListResponse result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/account/insertbankmerchantaccount",bankMerchantAccountList,
+                BankMerchantAccountListResponse.class).getBody();
+        if (result == null) {
+            return result.getFlag();
+        }
+        return 0;
+    }
+
+    @Override
+    public int updateOfRepayTender(AccountVO account) {
+        AccountResponse result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/account/updateofrepaytender",account,
+                AccountResponse.class).getBody();
+        if (result == null) {
+            return result.getUpdateFlag();
+        }
+        return 0;
+    }
+    @Override
+    public List<CouponTenderCustomizeVO> getCouponTenderList(String borrowNid) {
+        CouponTenderCustomizeResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/getcoupontenderlist/"+borrowNid , CouponTenderCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer crRecoverPeriod(String tenderNid, int period) {
+        CouponRecoverResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/updaterecoverperiod/"+tenderNid + "/" + period ,CouponRecoverResponse.class).getBody();
+        if (response != null) {
+            return response.getRecordTotal();
+        }
+        return null;
+    }
+	@Override
+	public List<String> selectNidForCouponOnly(CouponRepayRequest couponRepayRequest) {
+		String url = "http://AM-TRADE/am-trade/couponperiodrepay/selectnidforcoupononly";
+		List<String> recoverNidList = restTemplate.postForEntity(url,couponRepayRequest,List.class).getBody();
+		if (!CollectionUtils.isEmpty(recoverNidList)) {
+			return recoverNidList;
+		}
+		return null;
+	}
+	@Override
+	public CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow) {
+		String url = "http://AM-TRADE/am-trade/borrowTender/getcurrentcouponrecover/"+couponTenderNid+"/"+periodNow;
+		CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url,CouponRecoverCustomizeResponse.class).getBody();
+		if(Validator.isNotNull(response)) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

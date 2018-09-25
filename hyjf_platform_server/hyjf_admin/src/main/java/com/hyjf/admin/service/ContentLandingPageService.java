@@ -3,9 +3,7 @@
  */
 package com.hyjf.admin.service;
 
-import com.hyjf.admin.beans.request.ContentJobRequestBean;
 import com.hyjf.admin.beans.request.ContentLandingPageRequestBean;
-import com.hyjf.am.response.config.JobResponse;
 import com.hyjf.am.response.config.LandingPageResponse;
 
 /**
@@ -44,4 +42,11 @@ public interface ContentLandingPageService {
 	 * @return
 	 */
 	LandingPageResponse deleteById(Integer id);
+	/**
+	 * 根据id获取对象
+	 *
+	 * @param id
+	 * @return
+	 */
+	LandingPageResponse getRecord(Integer id);
 }

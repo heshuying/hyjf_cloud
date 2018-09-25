@@ -24,7 +24,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.assetpush.PushBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
-import com.hyjf.cs.trade.client.AutoSendClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AutoSendProducer;
 import com.hyjf.cs.trade.service.borrow.ApiAssetPushService;
@@ -56,7 +56,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
     private static final Long MAX_ASSET_MONEY = 1000000L;
 
     @Autowired
-    private AutoSendClient autoSendClient;
+    private AmTradeClient autoSendClient;
 
     @Autowired
     private AutoSendProducer autoSendProducer;

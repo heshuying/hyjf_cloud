@@ -1,4 +1,9 @@
 package com.hyjf.cs.trade.client;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
@@ -6,39 +11,163 @@ import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.resquest.market.AdsRequest;
-import com.hyjf.am.resquest.trade.*;
+import com.hyjf.am.resquest.trade.ApiBorrowRepaymentInfoRequest;
+import com.hyjf.am.resquest.trade.ApiCronUpdateRequest;
+import com.hyjf.am.resquest.trade.AppProjectListRequest;
+import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.resquest.trade.BankRepayFreezeLogRequest;
+import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
+import com.hyjf.am.resquest.trade.BatchRepayDataRequest;
+import com.hyjf.am.resquest.trade.BorrowAuthRequest;
+import com.hyjf.am.resquest.trade.BorrowCreditRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
+import com.hyjf.am.resquest.trade.ChinaPnrWithdrawRequest;
+import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
+import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
+import com.hyjf.am.resquest.trade.CreditListRequest;
+import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.DebtCreditRequest;
+import com.hyjf.am.resquest.trade.HjhAccedeRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
+import com.hyjf.am.resquest.trade.HjhPlanRequest;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
+import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
+import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
+import com.hyjf.am.resquest.trade.TenderCancelRequest;
+import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
+import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
+import com.hyjf.am.vo.admin.BankMerchantAccountVO;
+import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
+import com.hyjf.am.vo.admin.NifaContractTemplateVO;
+import com.hyjf.am.vo.admin.NifaFieldDefinitionVO;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
+import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
+import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.ApiBorrowRepaymentInfoCustomizeVO;
+import com.hyjf.am.vo.trade.ApiTransactionDetailsCustomizeVO;
+import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
+import com.hyjf.am.vo.trade.BatchCouponTimeoutCommonCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
+import com.hyjf.am.vo.trade.ChinapnrExclusiveLogWithBLOBsVO;
+import com.hyjf.am.vo.trade.ChinapnrLogVO;
+import com.hyjf.am.vo.trade.CreditPageVO;
+import com.hyjf.am.vo.trade.CreditRepayVO;
+import com.hyjf.am.vo.trade.CreditTenderBgVO;
+import com.hyjf.am.vo.trade.CreditTenderLogVO;
+import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
+import com.hyjf.am.vo.trade.FddTempletVO;
+import com.hyjf.am.vo.trade.HjhLockVo;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
+import com.hyjf.am.vo.trade.InvestListCustomizeVO;
+import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
+import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.ProtocolTemplateVO;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
+import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.TenderToCreditAssignCustomizeVO;
+import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.*;
-import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.am.vo.trade.coupon.*;
-import com.hyjf.am.vo.trade.hjh.*;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;
+import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BatchCenterCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowCarinfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowConfigVO;
+import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoWithBLOBsVO;
+import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
+import com.hyjf.am.vo.trade.borrow.DebtPlanBorrowCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.ProjectUndertakeListVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
+import com.hyjf.am.vo.trade.borrow.TenderBgVO;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.BorrowBailVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -48,17 +177,13 @@ import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author xiasq
@@ -1892,6 +2017,15 @@ public interface AmTradeClient {
      * @date 2018/8/30 10:51
      */
     public List<BorrowCreditVO> getBorrowCreditListByCreditNid(String creditNid);
+    /**
+     * 获取回款记录信息
+     *
+     * @param request
+     * @return List<RepayListCustomize>
+     * @author Zha Daojian
+     * @date 2018/9/1 13:20
+     **/
+    List<ApiRepayListCustomizeVO> searchRepayList(ApiRepayListRequest request);
 
     /**
      * 获取逾期的标的
@@ -2093,4 +2227,71 @@ public interface AmTradeClient {
      * @return
      */
     IncreaseInterestInvestVO getIncreaseInterestInvestByTenderNid(String tenderNid);
+
+	ProjectBean searchRepayProjectDetail(ProjectBean form);
+
+	List<WebUserRepayProjectListCustomizeVO> selectUserRepayProjectList(Map<String, Object> params);
+
+	String getborrowIdByProductId(Map<String, Object> params);
+
+	Long countBatchCenter(BatchCenterCustomize batchCenterCustomize);
+
+	List<BatchCenterCustomizeVO> selectBatchCenterList(BatchCenterCustomize batchCenterCustomize);
+
+	List<WebUserRepayProjectListCustomizeVO> selectOrgRepayProjectList(Map<String, Object> params);
+
+	List<BorrowCreditVO> getBorrowCreditList(BorrowCreditRequest request1);
+
+	Integer updateBorrowCredit(BorrowCreditVO borrowCreditVO);
+
+	List<BorrowCreditVO> selectBorrowCreditList();
+
+	List<CouponUserVO> selectCouponUser(int nowBeginDate, int nowEndDate);
+
+	List<BatchCouponTimeoutCommonCustomizeVO> selectCouponQuota(int threeBeginDate, int threeEndDate);
+
+	List<HjhLabelVO> seleHjhLabel(String borrowStyle);
+
+	HjhAccedeVO getHjhAccede(String orderId);
+
+	HjhPlanVO getHjhPlan(String planNid);
+
+	List<BorrowTenderCpnVO> getBorrowTenderCpnList(String borrowNid);
+
+	int updateOfLoansTender(AccountVO account);
+
+	boolean getSendRepeat(CouponUserSearchRequest couponUserRequest);
+
+	Integer insertCouponUser(CouponUserVO couponUser);
+
+	Integer searchNearlyRepaymentTime(Map<String, Object> params);
+
+	List<AppReapyCalendarResultVO> searchRepaymentCalendar(Map<String, Object> params);
+
+	Integer countRepaymentCalendar(Map<String, Object> params);
+
+	int countAccountListByOrdId(String ordId, String type);
+
+	Integer insertAccountListSelective(AccountListVO accountListVO);
+
+	int countByNidAndTrade(String nid, String trade);
+
+	int updateOfRepayCouponHjh(AccountVO account);
+
+	BankMerchantAccountVO getBankMerchantAccount(String accountCode);
+
+	int updateBankMerchatAccount(BankMerchantAccountVO account);
+
+	int insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountList);
+
+	int updateOfRepayTender(AccountVO account);
+
+	Integer crRecoverPeriod(String tenderNid, int period);
+
+	List<CouponTenderCustomizeVO> getCouponTenderList(String borrowNid);
+
+	List<String> selectNidForCouponOnly(CouponRepayRequest couponRepayRequest);
+
+	CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow);
+	
 }

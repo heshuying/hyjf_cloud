@@ -8,6 +8,7 @@ import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.NewAppQuestionCustomizeResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
+import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -294,4 +295,16 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+
+    @Override
+    public List<MessagePushTemplateVO> searchList(MsgPushTemplateRequest request) {
+        MessagePushTemplateResponse response = restTemplate.postForObject(
+                "http://AM-CONFIG/am-config/messagePushTemplate/searchList",request ,MessagePushTemplateResponse.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
 }

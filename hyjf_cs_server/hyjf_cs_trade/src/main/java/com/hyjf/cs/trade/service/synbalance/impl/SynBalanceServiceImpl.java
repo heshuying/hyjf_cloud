@@ -9,9 +9,8 @@ import com.hyjf.am.vo.trade.account.SynBalanceVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BankOpenClient;
-import com.hyjf.cs.trade.client.BindCardClient;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.synbalance.SynBalanceService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -30,13 +29,11 @@ import java.util.List;
 @Service
 public class SynBalanceServiceImpl extends BaseTradeServiceImpl implements SynBalanceService {
     @Autowired
-    BankOpenClient bankOpenClient;
+    AmTradeClient amTradeClient;
 
     @Autowired
     AmUserClient amUserClient;
 
-    @Autowired
-    BindCardClient bindCardClient;
 
     /**
      * @Description 获取用户开户信息
@@ -46,7 +43,7 @@ public class SynBalanceServiceImpl extends BaseTradeServiceImpl implements SynBa
      */
     @Override
     public BankOpenAccountVO getBankOpenAccount(String accountId) {
-        return bankOpenClient.selectByAccountId(accountId);
+        return amUserClient.selectByAccountId(accountId);
     }
     /**
      * @Description 获取用户信息
@@ -66,7 +63,7 @@ public class SynBalanceServiceImpl extends BaseTradeServiceImpl implements SynBa
      */
     @Override
     public AccountVO getAccount(Integer userId) {
-        return bindCardClient.getAccount(userId);
+        return amUserClient.getAccount(userId);
     }
     /**
      * @Description
