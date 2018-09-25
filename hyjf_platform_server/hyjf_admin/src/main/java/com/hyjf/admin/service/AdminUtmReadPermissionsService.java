@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
+import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 
 /**
  * @author tanyy
@@ -44,4 +45,10 @@ public interface AdminUtmReadPermissionsService {
 	 */
 	AdminUtmReadPermissionsResponse deleteById(Integer id);
 
+	/**
+	 * 根据用户Id查询渠道账号管理
+	 * @param userId
+	 * @return
+	 */
+    AdminUtmReadPermissionsVO selectAdminUtmReadPermissions(String userId);
 }

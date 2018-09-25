@@ -290,6 +290,7 @@ public class LoanCoverController extends BaseController {
             logger.info("法大大返回报文" + resultt.toString());
             if (null!=resultt) {
                 logger.info("CA认证成功:用户ID:[" + ma.getName() + "].");
+                logger.info("CA认证成功返回结果为:"+resultt);
                 if ("success".equals(resultt.getResult())) {
                     ma.setCode(resultt.getCode());
                     ma.setCustomerId(resultt.getCustomer_id());

@@ -180,6 +180,9 @@
 			<if test="userType != null and userType != ''">
 				AND hydu.user_type = #{userType,jdbcType=INTEGER}
 			</if>
+            <if test="customerId != null and customerId != ''">
+                AND hca.customer_id = #{customerId}
+            </if>
         </where>
     </sql>
 

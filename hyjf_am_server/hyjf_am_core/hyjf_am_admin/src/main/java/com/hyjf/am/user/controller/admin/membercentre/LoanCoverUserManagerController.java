@@ -60,8 +60,8 @@ public class LoanCoverUserManagerController extends BaseController {
         Date dateEnd = null;
         if (StringUtils.isNotBlank(request.getStartCreate()) || StringUtils.isNotBlank(request.getStartCreate())) {
             try {
-                dateStart = smp.parse(request.getStartCreate());
-                dateEnd = smp.parse(request.getStartCreate());
+                dateStart = smp.parse(request.getStartCreate()+" 00:00:00");
+                dateEnd = smp.parse(request.getEndCreate()+" 23:59:59");
             }catch (ParseException e) {
                 e.printStackTrace();
             }

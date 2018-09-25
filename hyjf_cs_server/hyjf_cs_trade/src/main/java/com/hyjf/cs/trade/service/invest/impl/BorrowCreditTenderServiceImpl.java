@@ -1349,7 +1349,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         //错误页
         String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
         //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestSuccess?logOrdId="+bean.getLogOrderId();
 
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + "/tender/credit/bgReturn?platform="+request.getPlatform();
