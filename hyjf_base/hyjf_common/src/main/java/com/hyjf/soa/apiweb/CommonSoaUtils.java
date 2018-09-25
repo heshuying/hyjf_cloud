@@ -26,13 +26,13 @@ public class CommonSoaUtils {
 
 	private static final String COUPON_SEND_USER = "userCouponServer/userCouponSend.json";
 
-	private static final String BANK_SYNBALANCE = "synbalance/synbalance.json";
+	private static final String BANK_SYNBALANCE = "/server/synbalance/synbalance.do";
 
 	// 优惠券投资接口
 	private static final String COUPON_INVEST = "/invest/couponTender.json";
 
 	// 优惠券投资接口
-	private static final String  SYNBALANCE= "/hyjf-api/synbalance/synbalance.json";
+	private static final String  SYNBALANCE= "/hyjf-api/server/synbalance/synbalance.do";
 
 	/** 权限 CONTROLLOR @RequestMapping值 */
 	public static final String REQUEST_MAPPING = "/bank/merchant/account";
