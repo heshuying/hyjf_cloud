@@ -62,7 +62,23 @@ public class ChannelStatisticsDetailServiceImpl extends BaseServiceImpl implemen
 		}
 		response.setResultList(toList);
 		return response;
-
 	}
 
+	@Override
+	public UtmPlatResponse selectAppUtmList(){
+		UtmPlatResponse response = new UtmPlatResponse();
+		UtmPlatExample utmPlat = new UtmPlatExample();
+		UtmPlatExample.Criteria cra = utmPlat.createCriteria();
+		// app渠道类别
+		cra.andSourceTypeEqualTo(1);
+		List<UtmPlatVO> toList = new ArrayList<>();
+		List<UtmPlat> list = utmPlatMapper.selectByExample(utmPlat);
+		for(UtmPlat utm:list){
+			UtmPlatVO vo = new UtmPlatVO();
+			BeanUtils.copyProperties(utm,vo);
+			toList.add(vo);
+		}
+		response.setResultList(toList);
+		return response;
+	}
 }

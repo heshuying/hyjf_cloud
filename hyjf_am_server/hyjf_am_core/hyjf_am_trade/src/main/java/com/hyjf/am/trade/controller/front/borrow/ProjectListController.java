@@ -105,7 +105,7 @@ public class ProjectListController extends BaseController {
             int intFlg = Integer.parseInt(StringUtils.isNotBlank(vo.getIncreaseInterestFlag())?vo.getIncreaseInterestFlag():"0");
             BigDecimal dbYield = new BigDecimal(StringUtils.isNotBlank(vo.getBorrowExtraYield())?vo.getBorrowExtraYield():"0");
             boolean booleanVal = Validator.isIncrease(intFlg, dbYield);
-            vo.setIncrease(String.valueOf(booleanVal));
+            vo.setIsIncrease(String.valueOf(booleanVal));
         }
         // add by nxl 判断是否为产品加息 end
         response.setResult(vo);
