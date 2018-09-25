@@ -80,10 +80,9 @@ public class AdminCouponCheckController extends BaseConfigController {
         couponCheck.setDeFlag(0);
         couponCheck.setStatus(1);
         int count = checkService.insertCoupon(couponCheck);
-        response.setMessage(Response.FAIL_MSG);
-        response.setRecordTotal(count);
         if (count > 0) {
             response.setMessage(Response.SUCCESS_MSG);
+            response.setRecordTotal(count);
         }
         return response;
     }
