@@ -21,20 +21,13 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.hyjf.cs.trade.bean.BaseBean;
-import com.hyjf.cs.trade.bean.BaseResultBean;
-import com.hyjf.cs.trade.bean.BatchCenterCustomize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
 
 /**
  * @version RepayController, v0.1 2018/8/27 14:39
@@ -126,7 +119,7 @@ public class RepayController extends BaseController {
      * @return
      */
     @ApiOperation(value = "api端-还款计划查询", notes = "api端-还款计划查询")
-    @PostMapping(value = "/getrepayinfo", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getrepayinfo.do", produces = "application/json; charset=utf-8")
     @ResponseBody
     public BaseResultBean getRepayPlanInfo(@RequestBody RepayParamBean repaybean) {
         UserRepayProjectBean resultBean = new UserRepayProjectBean();

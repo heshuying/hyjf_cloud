@@ -45,7 +45,10 @@ public class ChannelReconciliationRequest extends BasePage {
     private int limitEnd;
 
     public int getLimitStart() {
-        return (getCurrPage() - 1) * getPageSize();
+        if (getCurrPage() > 0) {
+            return (getCurrPage() - 1) * getPageSize();
+        }
+        return 0;
     }
 
     public void setLimitStart(int limitStart) {

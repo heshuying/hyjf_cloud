@@ -29,10 +29,16 @@ public interface ChannelStatisticsDetailService {
 	IntegerResponse countList(ChannelStatisticsDetailRequest request);
 
 	/**
-	 * 获取app渠道列表
+	 * 获取pc渠道列表
 	 *
 	 * @param
 	 * @return
 	 */
 	UtmPlatResponse selectPcutmList();
+
+	/**
+	 * 获取app 渠道列表
+	 * @return
+	 */
+	UtmPlatResponse selectAppUtmList();
 }

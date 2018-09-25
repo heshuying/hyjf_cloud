@@ -4,21 +4,16 @@
 package com.hyjf.am.trade.controller.admin.extensioncenter;
 
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
-import com.hyjf.am.response.user.UtmRegResponse;
-import com.hyjf.am.user.service.admin.promotion.UtmService;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.service.admin.extensioncenter.ChannelStatisticsDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
-import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.admin.extensioncenter.ChannelStatisticsDetailService;
-
-import java.util.Map;
 
 /**
  * @author tanyy
@@ -55,10 +50,18 @@ public class ChannelStatisticsDetailController extends BaseController {
 	}
 
 	/**
-	 * 获取app渠道列表
+	 * 获取pc渠道列表
 	 */
 	@PostMapping("/pcutm_list")
 	public UtmPlatResponse pcutmList() {
 		return channelStatisticsDetailService.selectPcutmList();
 	}
+	/**
+	 * 获取app渠道列表
+	 */
+	@PostMapping("/app_utm_list")
+	public UtmPlatResponse selectAppUtmList() {
+		return channelStatisticsDetailService.selectAppUtmList();
+	}
+
 }
