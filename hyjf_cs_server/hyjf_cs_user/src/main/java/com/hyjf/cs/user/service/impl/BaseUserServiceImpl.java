@@ -716,7 +716,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	@Autowired
 	private RestTemplate restTemplate;
 	// 同步余额接口
-	private static final String  SYNBALANCE= "/hyjf-api/synbalance/synbalance.json";
+	private static final String  SYNBALANCE= "/hyjf-api/server/synbalance/synbalance.do";
 	@Override
 	public JSONObject synBalance(String account, String instcode, String webHost, String aopAccesskey) {
 		SynBalanceRequestBean balanceRequestBean=new SynBalanceRequestBean();
