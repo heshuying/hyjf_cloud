@@ -13,6 +13,7 @@ import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -2178,7 +2179,7 @@ public class AmUserClientImpl implements AmUserClient {
 	/**
 	 * 通过手机号和身份证查询掉单信息
 	 *
-	 * @param mobile,idcard
+	 * @param request,idcard
 	 * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
 	 * @author Zha Daojian
 	 * @date 2018/8/21 13:54

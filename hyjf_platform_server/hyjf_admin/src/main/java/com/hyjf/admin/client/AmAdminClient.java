@@ -341,4 +341,10 @@ public interface AmAdminClient {
      * @return
      */
     ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
+
+    /**
+     * 获取app渠道列表
+     * @return
+     */
+    List<UtmPlatVO> getAppUtm();
 }
