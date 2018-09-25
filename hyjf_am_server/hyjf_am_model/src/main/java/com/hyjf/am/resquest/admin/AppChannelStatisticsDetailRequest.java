@@ -21,6 +21,8 @@ public class AppChannelStatisticsDetailRequest  extends BasePage implements Seri
      */
     private String userNameSrch;
 
+
+
     public String getSourceIdSrch() {
         return sourceIdSrch;
     }
