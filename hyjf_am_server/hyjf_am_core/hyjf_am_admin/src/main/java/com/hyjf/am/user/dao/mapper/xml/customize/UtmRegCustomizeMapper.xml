@@ -563,8 +563,8 @@
 		a.borrow_nid,
 		a.borrow_period,
 		a.invest_amount,
-		a.invest_time,
-		a.reg_time,
+		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
+		DATE_FORMAT(a.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
 		CASE
 		WHEN ifnull(
 		(
@@ -671,8 +671,8 @@
 		a.borrow_nid,
 		a.borrow_period,
 		a.invest_amount,
-		a.invest_time,
-		a.reg_time,
+		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
+		DATE_FORMAT(a.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
 		CASE
 		WHEN ifnull(
 		(
