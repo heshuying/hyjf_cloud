@@ -1520,7 +1520,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	public CreditTenderVO getCreditTenderByUserIdOrdId(String logOrderId, String logUserId) {
 		CreditTenderExample example = new CreditTenderExample();
 		CreditTenderExample.Criteria cra = example.createCriteria();
-		cra.andCreditTenderNidEqualTo(logOrderId).andUserIdEqualTo(Integer.parseInt(logUserId));
+		cra.andAssignNidEqualTo(logOrderId).andUserIdEqualTo(Integer.parseInt(logUserId));
 		List<CreditTender> list = this.creditTenderMapper.selectByExample(example);
 		if (!CollectionUtils.isEmpty(list)) {
 			return CommonUtils.convertBean(list.get(0), CreditTenderVO.class);
