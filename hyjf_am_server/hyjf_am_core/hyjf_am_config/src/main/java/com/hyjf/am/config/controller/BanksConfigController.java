@@ -13,7 +13,6 @@ import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.NewAppQuestionCustomizeResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
-import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -21,7 +20,6 @@ import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -242,147 +240,6 @@ public class BanksConfigController extends BaseConfigController{
             response.setRtn(Response.SUCCESS);
         }
         return response;
-    }
-
-    /**
-     * 分页查询银行配置列表
-     */
-    @RequestMapping("/selectBankConfigListByPage")
-    public AdminBankConfigResponse selectBankConfigListByPage(@RequestBody AdminBankConfigRequest adminRequest){
-        AdminBankConfigResponse response=new AdminBankConfigResponse();
-
-        BankConfigVO vo = new BankConfigVO();
-        BankConfig co = new BankConfig();
-        BeanUtils.copyProperties(co,vo);
-        //查询保证金配置条数
-        List<BankConfig> listBankConfig = bankConfigService.selectBankConfigListByPage(vo,-1,-1);
-        if(!CollectionUtils.isEmpty(listBankConfig)){
-            int total=listBankConfig.size();
-//            BeanUtils.copyProperties(listBankConfig,listRes);
-//            for(BanksConfigVO banksConfig : listRes) {
-//                // 不支持快捷支付
-//                if (0 == banksConfig.getQuickPayment()) {
-//                    banksConfig.setMonthCardQuota(new BigDecimal(0));
-//                }
-//            }
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(),listBankConfig.size(),adminRequest.getPageSize() == 0 ?10:adminRequest.getPageSize() );
-//            BanksConfigVO bc=new BanksConfigVO();
-//            bc.setBankName(adminRequest.getBankName());
-//            bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
-            listBankConfig = bankConfigService.selectBankConfigListByPage(vo, paginator.getOffset(), paginator.getLimit());
-            if(!CollectionUtils.isEmpty(listBankConfig)){
-                List<BankConfigVO> banksConfigVOList =CommonUtils.convertBeanList(listBankConfig,BankConfigVO.class);
-                response.setResultList(banksConfigVOList);
-                response.setRecordTotal(total);
-                response.setRtn(Response.SUCCESS);
-                return response;
-            }
-            return null;
-        }
-        return null;
-    }
-    /**
-     * 根据bankName查询银行配置
-     * @param bankName
-     * @return
-     */
-    @RequestMapping("/selectBankConfigByBankName/{bankName}")
-    public AdminBankConfigResponse selectBankConfigByBankName(@PathVariable String bankName){
-        AdminBankConfigResponse response = new AdminBankConfigResponse();
-        BankConfigVO bankConfig = new BankConfigVO();
-        bankConfig.setName(bankName);
-        List<BankConfig> list = bankConfigService.selectBankConfigByBankName(bankConfig,-1,-1);
-        if(!CollectionUtils.isEmpty(list)){
-            List<BankConfigVO> res=CommonUtils.convertBeanList(list,BankConfigVO.class);
-            response.setResultList(res);
-            response.setRecordTotal(res.size());
-            return response;
-        }
-        return null;
-    }
-
-    /**
-     * 添加银行配置
-     * @param adminBankConfigRequest
-     * @return
-     */
-    @RequestMapping("/insertBankConfig")
-    public AdminBankConfigResponse insertBankConfig(@RequestBody AdminBankConfigRequest adminBankConfigRequest){
-        AdminBankConfigResponse res =new AdminBankConfigResponse();
-        int result = bankConfigService.insertBankConfig(adminBankConfigRequest);
-        if(result >0){
-            res.setRtn(Response.SUCCESS);
-            return res;
-        }
-        res.setRtn(Response.FAIL);
-        res.setMessage(Response.FAIL_MSG);
-        return res;
-    }
-
-    /**
-     * 添加银行配置
-     * @param adminBankConfigRequest
-     * @return
-     */
-    @RequestMapping("/updadteBankConfig")
-    public AdminBankConfigResponse updadteBankConfig(@RequestBody AdminBankConfigRequest adminBankConfigRequest){
-        AdminBankConfigResponse res =new AdminBankConfigResponse();
-        int result = bankConfigService.updadteBankConfig(adminBankConfigRequest);
-        if(result >0){
-            res.setRtn(Response.SUCCESS);
-            return res;
-        }
-        res.setRtn(Response.FAIL);
-        res.setMessage(Response.FAIL_MSG);
-        return res;
-    }
-    /**
-     * 删除银行配置
-     * @param id
-     */
-    @RequestMapping("/deleteBankConfigById")
-    public AdminBankConfigResponse deleteBankConfigById(@RequestBody Integer id) {
-        AdminBankConfigResponse res =new AdminBankConfigResponse();
-        try{
-            this.bankConfigService.deleteBankConfigById(id);
-            res.setRtn(Response.SUCCESS);
-        }catch (Exception e){
-            res.setRtn(Response.FAIL);
-        }
-        return  res;
-    }
-
-    /**
-     * 保存银行配置之前的字段校验
-     * @param adminBankConfigRequest
-     */
-    @RequestMapping("/validateFeildBeforeSave")
-    public AdminBankConfigResponse validateFeildBeforeSave(@RequestBody AdminBankConfigRequest adminBankConfigRequest) {
-        AdminBankConfigResponse res =new AdminBankConfigResponse();
-        BankConfigVO bankConfig = new BankConfigVO();
-        BeanUtils.copyProperties(adminBankConfigRequest,bankConfig);
-        List<BankConfig> list = this.bankConfigService.selectBankConfigByBankName(bankConfig,-1,-1);
-        if(!CollectionUtils.isEmpty(list)){
-            if (bankConfig.getId() != null) {
-                Boolean hasnot = true;
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).getId().equals(bankConfig.getId())) {
-                        hasnot = false;
-                        break;
-                    }
-                }
-                if (hasnot) {
-                    res.setRtn(Response.FAIL);
-                    res.setMessage("银行名称或银行代码不可重复添加");
-                } else {
-                    res.setRtn(Response.SUCCESS);
-                }
-            } else {
-                res.setRtn(Response.FAIL);
-                res.setMessage("银行名称或银行代码不可重复添加");
-            }
-        }
-        return  res;
     }
 
     /**

@@ -38,8 +38,7 @@ public class OpenAccountEnquiryController extends BaseController {
     @PostMapping("/openaccountenquiryAction")
    // @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<OpenAccountEnquiryDefineResultBean> getList(HttpServletRequest request, @RequestBody OpenAccountEnquiryDefineRequestBean requestBean) {
-        //AdminSystemVO currUser = getUser(request);
-        AdminSystemVO currUser = new AdminSystemVO();
+        AdminSystemVO currUser = getUser(request);
         if(currUser == null){
             return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
         }
@@ -55,7 +54,7 @@ public class OpenAccountEnquiryController extends BaseController {
         if(currUser == null){
             return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
         }
-        OpenAccountEnquiryDefineResultBean resultBean = openAccountEnquiryService.openAccountEnquiryUpdate(currUser,requestBean);
+        OpenAccountEnquiryDefineResultBean resultBean = openAccountEnquiryService.openAccountEnquiryUpdate(requestBean);
         return new AdminResult<>(resultBean);
     }
 }
