@@ -25,7 +25,7 @@ import java.util.List;
 @Api(tags = "推广中心-APP渠道对账")
 @RestController
 @RequestMapping("/hyjf-admin/app_channelreconciliation")
-public class AppChannelReconciliationController extends BaseController {
+public class AppChannelReconciliationRecordController extends BaseController {
     @Autowired
     private ChannelReconciliationService channelService;
 
