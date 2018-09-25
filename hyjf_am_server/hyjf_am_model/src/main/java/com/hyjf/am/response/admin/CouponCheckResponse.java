@@ -18,7 +18,7 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
 
     private boolean bool;
 
-    private String status;
+    private String couponStatus;
 
     private List<ParamNameVO> couponType;
 
@@ -38,12 +38,12 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
         this.bool = bool;
     }
 
-    public String getStatus() {
-        return status;
+    public String getCouponStatus() {
+        return couponStatus;
     }
 
-    public void setStatus(String Status) {
-        this.status = status;
+    public void setCouponStatus(String Status) {
+        this.couponStatus = couponStatus;
     }
 
     public List<ParamNameVO> getCouponType() {

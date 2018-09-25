@@ -70,7 +70,7 @@ public class AdminCouponCheckController extends BaseConfigController {
 
 
     @PostMapping("/insertCoupon")
-    public CouponCheckResponse insertCoupon(@RequestBody @Valid AdminCouponCheckRequest request) {
+    public CouponCheckResponse insertCoupon(@RequestBody AdminCouponCheckRequest request) {
         logger.info("插入优惠券信息..." + JSONObject.toJSON(request));
         CouponCheckResponse response = new CouponCheckResponse();
         CouponCheck couponCheck = new CouponCheck();
