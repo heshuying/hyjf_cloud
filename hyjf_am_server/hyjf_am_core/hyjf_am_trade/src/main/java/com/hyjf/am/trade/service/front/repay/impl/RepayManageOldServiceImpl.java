@@ -1850,8 +1850,8 @@ public class RepayManageOldServiceImpl extends BaseServiceImpl implements RepayM
                 // 计算用户逾期利息
                 userOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(userAccount, lateDays);
                 if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                    BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                    userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, planRate);
+                    //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                    userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, borrow.getLateInterestRate());
                 }
                 // 计算用户延期利息
                 userDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(userCapital, borrow.getBorrowApr(), delayDays);
@@ -1894,8 +1894,8 @@ public class RepayManageOldServiceImpl extends BaseServiceImpl implements RepayM
                                     // 计算用户逾期利息
                                     assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(assignAccount, lateDays);
                                     if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                        BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                        userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, planRate);
+                                        //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                                        userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, borrow.getLateInterestRate());
                                     }
                                     // 计算用户延期利息
                                     assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
@@ -1975,8 +1975,8 @@ public class RepayManageOldServiceImpl extends BaseServiceImpl implements RepayM
                                     // 计算用户逾期利息
                                     assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(assignAccount, lateDays);
                                     if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                        BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                        userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, planRate);
+                                        //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                                        userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, borrow.getLateInterestRate());
                                     }
                                     // 计算用户延期利息
                                     assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
@@ -2845,8 +2845,8 @@ public class RepayManageOldServiceImpl extends BaseServiceImpl implements RepayM
                         // 计算用户逾期利息
                         userOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(userAccount, lateDays);
                         if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                            BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                            userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, planRate);
+                            //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                            userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, borrow.getLateInterestRate());
                         }
                         // 计算用户延期利息
                         userDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(userCapital, borrow.getBorrowApr(), delayDays);
@@ -2909,8 +2909,8 @@ public class RepayManageOldServiceImpl extends BaseServiceImpl implements RepayM
                                                 // 计算用户逾期利息
                                                 assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(assignAccount, lateDays);
                                                 if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                                    BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                                    userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, planRate);
+                                                    //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                                                    userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, borrow.getLateInterestRate());
                                                 }
                                                 // 计算用户延期利息
                                                 assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
@@ -3016,8 +3016,8 @@ public class RepayManageOldServiceImpl extends BaseServiceImpl implements RepayM
                                                 // 计算用户逾期利息
                                                 assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(oldAssignAccount, lateDays);
                                                 if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                                    BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                                    assignOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(oldAssignAccount, lateDays, planRate);
+                                                    //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                                                    assignOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(oldAssignAccount, lateDays, borrow.getLateInterestRate());
                                                 }
                                                 // 计算用户延期利息
                                                 assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, borrow.getBorrowApr(), delayDays);

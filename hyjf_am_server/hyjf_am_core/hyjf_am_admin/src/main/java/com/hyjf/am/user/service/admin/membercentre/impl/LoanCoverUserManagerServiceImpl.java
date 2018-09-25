@@ -21,6 +21,7 @@ import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthorityExample;
 import com.hyjf.am.user.service.admin.membercentre.LoanCoverUserManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author nxl
@@ -176,11 +177,8 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
             example.createCriteria().andIdNoEqualTo(record.trim());
             example.createCriteria().andNameEqualTo(userName);
         }
-        if(StringUtils.isNotBlank(userName)){
-            example.createCriteria().andNameEqualTo(userName);
-        }
         List<LoanSubjectCertificateAuthority> lll = loanSubjectCertificateAuthorityMapper.selectByExample(example);
-        if(null!=lll&&lll.size()>0) {
+        if (!CollectionUtils.isEmpty(lll))  {
             loanSubjectCertificateAuthority = lll.get(0);
             return loanSubjectCertificateAuthority;
         }
@@ -234,7 +232,7 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
     public CertificateAuthority selectCertificateAuthorityByIdNoName(String tureName) {
         CertificateAuthorityExample example=new CertificateAuthorityExample();
         CertificateAuthorityExample.Criteria criteria = example.createCriteria();
-        criteria.andTrueNameEqualTo(tureName);
+        criteria.andTrueNameEqualTo(tureName.trim());
         List<CertificateAuthority> cam = certificateAuthorityMapper.selectByExample(example);
     	CertificateAuthority certificateAuthority = null;
     	if(cam!=null && cam.size() >0 ){

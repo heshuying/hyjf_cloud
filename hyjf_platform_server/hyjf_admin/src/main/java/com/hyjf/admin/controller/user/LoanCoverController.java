@@ -223,10 +223,12 @@ public class LoanCoverController extends BaseController {
                     } else if (celLength == 6) {
                         cell.setCellValue(pInfo.getCustomerId());
                     } else if (celLength == 7) {
-                        if ("success".equals(pInfo.getStatus())) {
-                            cell.setCellValue("成功");
+                        if(pInfo.getStatus() ==null){
+                            cell.setCellValue("未认证");
+                        } else if ("success".equals(pInfo.getStatus())) {
+                            cell.setCellValue("认证成功");
                         } else if ("error".equals(pInfo.getStatus())) {
-                            cell.setCellValue("失败");
+                            cell.setCellValue("认证失败");
                         } else {
                             cell.setCellValue(pInfo.getStatus());
                         }

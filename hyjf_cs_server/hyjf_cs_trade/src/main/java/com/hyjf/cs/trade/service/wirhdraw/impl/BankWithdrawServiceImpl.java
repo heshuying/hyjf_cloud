@@ -17,6 +17,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -343,6 +344,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         }
 
         ret.put("total", CustomConstants.DF_FOR_VIEW.format(account.getBankBalance()));// 可提现金额
+        ret.put("unformattedTotal", account.getBankBalance());// 可提现金额
         List<BankCardBean> bankcards = new ArrayList<BankCardBean>();
         // 银行联号
         String payAllianceCode = "";
@@ -785,7 +787,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         BankOpenAccountVO bankOpenAccountVO=amUserClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
         retUrl = retUrl+"?logOrdId="+orderId;
-        if(platform.equals(ClientConstants.WEB_CLIENT)){
+        if(platform.equals(CommonConstant.CLIENT_PC)){
             successfulUrl = successfulUrl+"?withdrawmoney=" + transAmt+ "&wifee=" + fee;
         }else {
             successfulUrl = successfulUrl+"?amount=" + transAmt+ "&charge=" + fee;

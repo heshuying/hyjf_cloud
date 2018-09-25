@@ -43,7 +43,7 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setUserId(userId);
-        tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
+        //tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
 
         WebResult<Map<String,Object>> result = null;
         try{
