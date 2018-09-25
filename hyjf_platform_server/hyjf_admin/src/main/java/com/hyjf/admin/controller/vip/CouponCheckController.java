@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.controller.vip;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.CouponCheckRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -52,8 +54,9 @@ public class CouponCheckController extends BaseController {
         couponStatus.add("待审核");
         couponStatus.add("已发行");
         couponStatus.add("审核不通过");
+        String status = JSONObject.toJSONString(couponStatus,true);
         List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
-        ccr.setCouponStatus(couponStatus);
+        ccr.setStatus(status);
         ccr.setCouponType(couponType);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
