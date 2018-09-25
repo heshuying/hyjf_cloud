@@ -20,6 +20,7 @@ import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.borrow.BorrowStyleService;
 import com.hyjf.am.trade.service.front.hjh.HjhInstConfigService;
+import com.hyjf.am.vo.trade.ProjectBeanVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
@@ -469,18 +470,18 @@ public class BorrowController extends BaseController {
 		return response;
 	}
 
-	@PostMapping("/searchRepayProjectDetail")
-	public ProjectBean searchRepayProjectDetail(@RequestBody ProjectBean form) {
-		ProjectBean projectbean = null;
+	@PostMapping("/getRepayProjectDetail")
+	public ProjectBeanResponse getRepayProjectDetail(@RequestBody ProjectBeanVO form) {
+		ProjectBeanResponse response = new ProjectBeanResponse();
 		try {
-			projectbean = borrowService.searchRepayProjectDetail(form);
-			if (Validator.isNotNull(projectbean)){
-				return projectbean;
+			ProjectBeanVO beanVO = borrowService.searchRepayProjectDetail(form);
+			if (Validator.isNotNull(beanVO)){
+				response.setResult(beanVO);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return response;
 	}
 
 }

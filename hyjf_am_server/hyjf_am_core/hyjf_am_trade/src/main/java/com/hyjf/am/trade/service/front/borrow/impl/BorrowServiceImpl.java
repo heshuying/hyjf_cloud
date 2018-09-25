@@ -9,8 +9,6 @@ import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.bean.repay.*;
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
@@ -21,9 +19,7 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
-import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
@@ -683,8 +679,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     @Override
-    public ProjectBean searchRepayProjectDetail(ProjectBean form) throws Exception {
-        boolean isAllRepay = form.isAllRepay();
+    public ProjectBeanVO searchRepayProjectDetail(ProjectBeanVO form) throws Exception {
+        boolean isAllRepay = form.isBlAllRepay();
         String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
         String borrowNid = StringUtils.isNotEmpty(form.getBorrowNid()) ? form.getBorrowNid() : null;
         //BorrowExample example = new BorrowExample();
@@ -801,7 +797,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param repayByTerm
      * @throws ParseException
      */
-    private void setRecoverPlanDetail(ProjectBean form, boolean isAllRepay, String userId,BorrowCustomizeVO borrow,RepayBean repayByTerm) throws ParseException {
+    private void setRecoverPlanDetail(ProjectBeanVO form, boolean isAllRepay, String userId,BorrowCustomizeVO borrow,RepayBean repayByTerm) throws ParseException {
 
         String borrowNid = borrow.getBorrowNid();
         // 还款总期数
@@ -837,13 +833,13 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         // 获取统计的用户还款计划列表
         List<RepayDetailBean> userRepayPlans = repayByTerm.getRepayPlanList();
         if (userRepayPlans != null && userRepayPlans.size() > 0) {
-            List<ProjectRepayBean> recoverList = new ArrayList<ProjectRepayBean>();
+            List<ProjectRepayVO> recoverList = new ArrayList<ProjectRepayVO>();
             // 遍历计划还款信息，拼接数据
             for (int i = 0; i < userRepayPlans.size(); i++) {
                 // 获取用户的还款信息
                 RepayDetailBean userRepayPlan = userRepayPlans.get(i);
                 // 声明需拼接数据的实体
-                ProjectRepayBean userRepayBean = new ProjectRepayBean();
+                ProjectRepayVO userRepayBean = new ProjectRepayVO();
                 // 如果本期已经还款完成
                 if (userRepayPlan.getRepayStatus() == 1) {
                     // 获取本期的用户已还款总额
@@ -887,7 +883,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     form.setLateInterest(userRepayPlan.getLateInterest().toString());
                 }
                 List<RepayRecoverPlanBean> userRecoversDetails = userRepayPlan.getRecoverPlanList();
-                List<ProjectRepayDetailBean> userRepayDetails = new ArrayList<ProjectRepayDetailBean>();
+                List<ProjectRepayDetailVO> userRepayDetails = new ArrayList<ProjectRepayDetailVO>();
                 for (int j = 0; j < userRecoversDetails.size(); j++) {
                     RepayRecoverPlanBean userRecoverPlan = userRecoversDetails.get(j);
                     BigDecimal recoverAccount = userRecoverPlan.getRecoverAccountOld();
@@ -898,7 +894,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                         // 循环遍历添加记录
                         for (int k = 0; k < creditRepays.size(); k++) {
                             RepayCreditRepayBean creditRepay = creditRepays.get(k);
-                            ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                            ProjectRepayDetailVO userRepayDetail = new ProjectRepayDetailVO();
                             userRepayDetail.setRepayAccount(creditRepay.getAssignAccount().toString());
                             userRepayDetail.setRepayCapital(creditRepay.getAssignCapital().toString());
                             userRepayDetail.setRepayInterest(creditRepay.getAssignInterest().toString());
@@ -937,7 +933,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                         hjhFlag = 1;
                         for (int k = 0; k < hjhCreditRepayList.size(); k++) {
                             HjhDebtCreditRepayBean creditRepay = hjhCreditRepayList.get(k);
-                            ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                            ProjectRepayDetailVO userRepayDetail = new ProjectRepayDetailVO();
                             sumAccount = sumAccount.add(creditRepay.getRepayAccount());
                             userRepayDetail.setRepayAccount(creditRepay.getRepayAccount().toString());
                             userRepayDetail.setRepayCapital(creditRepay.getRepayCapital().toString());
@@ -977,7 +973,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                         }
                     }
                     if (overFlag) {
-                        ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                        ProjectRepayDetailVO userRepayDetail = new ProjectRepayDetailVO();
                         userRepayDetail.setRepayAccount(userRecoverPlan.getRecoverAccount().toString());
                         userRepayDetail.setRepayCapital(userRecoverPlan.getRecoverCapital().toString());
                         userRepayDetail.setRepayInterest(userRecoverPlan.getRecoverInterest().toString());
@@ -1103,7 +1099,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param repayByTerm
      * @throws ParseException
      */
-    private void setRecoverPlanAllDetail(ProjectBean form, boolean isAllRepay, String userId,BorrowCustomizeVO borrow,RepayBean repayByTerm) throws ParseException {
+    private void setRecoverPlanAllDetail(ProjectBeanVO form, boolean isAllRepay, String userId,BorrowCustomizeVO borrow,RepayBean repayByTerm) throws ParseException {
 
         String borrowNid = borrow.getBorrowNid();
         // 还款总期数
@@ -1120,13 +1116,13 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         // 获取统计的用户还款计划列表
         List<RepayDetailBean> userRepayPlans = repayByTerm.getRepayPlanList();
         if (userRepayPlans != null && userRepayPlans.size() > 0) {
-            List<ProjectRepayBean> recoverList = new ArrayList<ProjectRepayBean>();
+            List<ProjectRepayVO> recoverList = new ArrayList<ProjectRepayVO>();
             // 遍历计划还款信息，拼接数据
             for (int i = 0; i < userRepayPlans.size(); i++) {
                 // 获取用户的还款信息
                 RepayDetailBean userRepayPlan = userRepayPlans.get(i);
                 // 声明需拼接数据的实体
-                ProjectRepayBean userRepayBean = new ProjectRepayBean();
+                ProjectRepayVO userRepayBean = new ProjectRepayVO();
                 // 如果本期已经还款完成
                 if (userRepayPlan.getRepayStatus() == 1) {
                     // 获取本期的用户已还款总额
@@ -1157,7 +1153,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 userRepayBean.setLateDays(userRepayPlan.getLateDays().toString());
                 userRepayBean.setLateInterest(userRepayPlan.getLateInterest().toString());
                 List<RepayRecoverPlanBean> userRecoversDetails = userRepayPlan.getRecoverPlanList();
-                List<ProjectRepayDetailBean> userRepayDetails = new ArrayList<ProjectRepayDetailBean>();
+                List<ProjectRepayDetailVO> userRepayDetails = new ArrayList<ProjectRepayDetailVO>();
                 for (int j = 0; j < userRecoversDetails.size(); j++) {
                     RepayRecoverPlanBean userRecoverPlan = userRecoversDetails.get(j);
                     Integer id = userRecoverPlan.getId();
@@ -1171,7 +1167,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                         // 循环遍历添加记录
                         for (int k = 0; k < creditRepays.size(); k++) {
                             RepayCreditRepayBean creditRepay = creditRepays.get(k);
-                            ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                            ProjectRepayDetailVO userRepayDetail = new ProjectRepayDetailVO();
                             userRepayDetail.setRepayAccount(creditRepay.getAssignAccount().toString());
                             userRepayDetail.setRepayCapital(creditRepay.getAssignCapital().toString());
                             userRepayDetail.setRepayInterest(creditRepay.getAssignInterest().toString());
@@ -1209,7 +1205,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                         hjhFlag = 1;
                         for (int k = 0; k < hjhCreditRepayList.size(); k++) {
                             HjhDebtCreditRepayBean creditRepay = hjhCreditRepayList.get(k);
-                            ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                            ProjectRepayDetailVO userRepayDetail = new ProjectRepayDetailVO();
                             sumAccount = sumAccount.add(creditRepay.getRepayAccount());
                             userRepayDetail.setRepayAccount(creditRepay.getRepayAccount().toString());
                             userRepayDetail.setRepayCapital(creditRepay.getRepayCapital().toString());
@@ -1250,7 +1246,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                         }
                     }
                     if (overFlag) {
-                        ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                        ProjectRepayDetailVO userRepayDetail = new ProjectRepayDetailVO();
                         userRepayDetail.setRepayAccount(userRecoverPlan.getRecoverAccount().toString());
                         userRepayDetail.setRepayCapital(userRecoverPlan.getRecoverCapital().toString());
                         userRepayDetail.setRepayInterest(userRecoverPlan.getRecoverInterest().toString());
@@ -1980,8 +1976,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                         // 计算用户逾期利息
                         userOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(userAccount, lateDays);
                         if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                            BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                            userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, planRate);
+                            //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                            userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, borrow.getLateInterestRate());
                         }
                         // 计算用户延期利息
                         userDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(userCapital, new BigDecimal(borrow.getBorrowApr()), delayDays);
@@ -2055,8 +2051,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                                 // 计算用户逾期利息
                                                 assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(assignAccount, lateDays);
                                                 if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                                    BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                                    userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, planRate);
+                                                    //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                                                    userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, borrow.getLateInterestRate());
                                                 }
                                                 // 计算用户延期利息
                                                 assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, new BigDecimal(borrow.getBorrowApr()), delayDays);
@@ -2162,8 +2158,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                                 // 计算用户逾期利息
                                                 assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(oldAssignAccount, lateDays);
                                                 if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                                    BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                                    assignOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(oldAssignAccount, lateDays, planRate);
+                                                    //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                                                    assignOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(oldAssignAccount, lateDays, borrow.getLateInterestRate());
                                                 }
                                                 // 计算用户延期利息
                                                 assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, new BigDecimal(borrow.getBorrowApr()), delayDays);
@@ -3086,7 +3082,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param borrow
      * @throws ParseException
      */
-    private void setRecoverDetail(ProjectBean form, String userId, BorrowCustomizeVO borrow,RepayBean repay)
+    private void setRecoverDetail(ProjectBeanVO form, String userId, BorrowCustomizeVO borrow,RepayBean repay)
             throws ParseException {
 
         String borrowNid = borrow.getBorrowNid();
@@ -3109,8 +3105,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         form.setDelayInterest(repay.getDelayInterest().toString());
         form.setLateDays(repay.getLateDays().toString());
         form.setLateInterest(repay.getLateInterest().toString());
-        List<ProjectRepayBean> userRepayList = new ArrayList<ProjectRepayBean>();
-        ProjectRepayBean userRepayBean = new ProjectRepayBean();
+        List<ProjectRepayVO> userRepayList = new ArrayList<ProjectRepayVO>();
+        ProjectRepayVO userRepayBean = new ProjectRepayVO();
         // 此处是本息和
         userRepayBean.setRepayTotal(repay.getRepayAccountAll().toString());
         userRepayBean.setRepayAccount(repay.getRepayAccount().add(repay.getChargeInterest()).add(repay.getDelayInterest()).add(repay.getLateInterest()).toString());
@@ -3133,7 +3129,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         userRepayBean.setAdvanceStatus(repay.getAdvanceStatus().toString());
         List<RepayRecoverBean> userRecovers = repay.getRecoverList();
         if (userRecovers != null && userRecovers.size() > 0) {
-            List<ProjectRepayDetailBean> userRepayDetails = new ArrayList<ProjectRepayDetailBean>();
+            List<ProjectRepayDetailVO> userRepayDetails = new ArrayList<ProjectRepayDetailVO>();
             for (int i = 0; i < userRecovers.size(); i++) {
                 RepayRecoverBean userRecover = userRecovers.get(i);
                 // 如果发生债转
@@ -3142,7 +3138,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     // 循环遍历添加记录
                     for (int j = 0; j < creditRepays.size(); j++) {
                         RepayCreditRepayBean creditRepay = creditRepays.get(j);
-                        ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                        ProjectRepayDetailVO userRepayDetail = new ProjectRepayDetailVO();
                         userRepayDetail.setRepayAccount(creditRepay.getAssignAccount().toString());
                         userRepayDetail.setRepayCapital(creditRepay.getAssignCapital().toString());
                         userRepayDetail.setRepayInterest(creditRepay.getAssignInterest().toString());
@@ -3179,7 +3175,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 if (hjhCreditRepayList != null && hjhCreditRepayList.size() > 0) {
                     for (int k = 0; k < hjhCreditRepayList.size(); k++) {
                         HjhDebtCreditRepayBean creditRepay = hjhCreditRepayList.get(k);
-                        ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                        ProjectRepayDetailVO userRepayDetail = new ProjectRepayDetailVO();
                         userRepayDetail.setRepayAccount(creditRepay.getRepayAccount().toString());
                         userRepayDetail.setRepayCapital(creditRepay.getRepayCapital().toString());
                         userRepayDetail.setRepayInterest(creditRepay.getRepayInterest().toString());
@@ -3213,7 +3209,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
                 boolean overFlag = isOverUndertake(userRecover,null,null,false,0);
                 if (overFlag) {
-                    ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                    ProjectRepayDetailVO userRepayDetail = new ProjectRepayDetailVO();
                     userRepayDetail.setRepayAccount(userRecover.getRecoverAccount().toString());
                     userRepayDetail.setRepayCapital(userRecover.getRecoverCapital().toString());
                     userRepayDetail.setRepayInterest(userRecover.getRecoverInterest().toString());
@@ -3252,8 +3248,12 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     private String searchUserNameById(Integer userId) {
+        //HT_USER 和 HT_R_USER 数据应该同步
         RUser user = rUserMapper.selectByPrimaryKey(userId);
-        return user.getUsername();
+        if(user != null){
+            return user.getUsername();
+        }
+        return "   ";
     }
 
     /**
@@ -3988,8 +3988,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 // 计算用户逾期利息
                 userOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(userAccount, lateDays);
                 if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                    BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                    userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, planRate);
+                    //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                    userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, borrow.getLateInterestRate());
                 }
                 // 计算用户延期利息
                 userDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(userCapital, new BigDecimal(borrow.getBorrowApr()), delayDays);
@@ -4036,8 +4036,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     // 计算用户逾期利息
                                     assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(assignAccount, lateDays);
                                     if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                        BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                        userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, planRate);
+                                        //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                                        userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, borrow.getLateInterestRate());
                                     }
                                     // 计算用户延期利息
                                     assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, new BigDecimal(borrow.getBorrowApr()), delayDays);
@@ -4117,8 +4117,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     // 计算用户逾期利息
                                     assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(assignAccount, lateDays);
                                     if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                        BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                        userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, planRate);
+                                        //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
+                                        userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, borrow.getLateInterestRate());
                                     }
                                     // 计算用户延期利息
                                     assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, new BigDecimal(borrow.getBorrowApr()), delayDays);

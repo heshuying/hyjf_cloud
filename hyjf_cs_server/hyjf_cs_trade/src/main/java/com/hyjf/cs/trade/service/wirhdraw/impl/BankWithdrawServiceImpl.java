@@ -344,6 +344,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         }
 
         ret.put("total", CustomConstants.DF_FOR_VIEW.format(account.getBankBalance()));// 可提现金额
+        ret.put("unformattedTotal", account.getBankBalance());// 可提现金额
         List<BankCardBean> bankcards = new ArrayList<BankCardBean>();
         // 银行联号
         String payAllianceCode = "";
