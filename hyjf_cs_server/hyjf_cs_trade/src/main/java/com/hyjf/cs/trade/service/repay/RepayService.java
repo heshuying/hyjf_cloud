@@ -2,10 +2,10 @@ package com.hyjf.cs.trade.service.repay;
 
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
+import com.hyjf.am.vo.trade.ProjectBeanVO;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.cs.common.service.BaseService;
-import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayProjectListBean;
 
 import java.text.ParseException;
@@ -55,7 +55,7 @@ public interface RepayService extends BaseService {
 	 * @throws ParseException
 	 * @throws NumberFormatException
 	 */
-	ProjectBean searchRepayProjectDetail(ProjectBean form) throws Exception;
+	ProjectBeanVO getRepayProjectDetail(ProjectBeanVO form) throws Exception;
 
 	/**
 	 * 获取开户信息

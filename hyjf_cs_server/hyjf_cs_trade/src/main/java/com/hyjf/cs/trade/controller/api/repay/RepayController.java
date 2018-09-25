@@ -2,6 +2,8 @@ package com.hyjf.cs.trade.controller.api.repay;
 
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
+import com.hyjf.am.vo.trade.ProjectBeanVO;
+import com.hyjf.am.vo.trade.ProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BatchCenterCustomizeVO;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -119,7 +121,7 @@ public class RepayController extends BaseController {
      * @return
      */
     @ApiOperation(value = "api端-还款计划查询", notes = "api端-还款计划查询")
-    @PostMapping(value = "/getrepayinfo.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getrepayinfo", produces = "application/json; charset=utf-8")
     @ResponseBody
     public BaseResultBean getRepayPlanInfo(@RequestBody RepayParamBean repaybean) {
         UserRepayProjectBean resultBean = new UserRepayProjectBean();
@@ -161,15 +163,15 @@ public class RepayController extends BaseController {
                 resultBean.setBorrowTotal(repayInfo.getBorrowTotal());
                 if ("0".equals(repayType)) {//待还款
                     //获取还款计划
-                    ProjectBean form = new ProjectBean();
+                    ProjectBeanVO form = new ProjectBeanVO();
                     form.setUserId(openAccount.getUserId() + "");
                     form.setUsername(openAccount.getUserName());
                     form.setRoleId("0");
                     form.setBorrowNid(borrowNid);
-                    form.setAllRepay(false);
+                    form.setBlAllRepay(false);
                     // 查询用户的还款详情
                     try {
-                        ProjectBean repayProject = repayService.searchRepayProjectDetail(form);
+                        ProjectBeanVO repayProject = repayService.getRepayProjectDetail(form);
                         List<ProjectRepayListBean> list = getRepayDetailList(repayProject.getUserRepayList());
                         resultBean.setDetailList(list);
                         resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
@@ -203,12 +205,12 @@ public class RepayController extends BaseController {
      * @param userRepayList
      * @return
      */
-    private List<ProjectRepayListBean> getRepayDetailList(List<ProjectRepayBean> userRepayList) {
+    private List<ProjectRepayListBean> getRepayDetailList(List<ProjectRepayVO> userRepayList) {
         List<ProjectRepayListBean> list = new ArrayList<>();
         if (userRepayList != null) {
             for (int i = 0; i < userRepayList.size(); i++) {
                 BigDecimal planRepay = new BigDecimal(0);
-                ProjectRepayBean resultInfo = userRepayList.get(i);
+                ProjectRepayVO resultInfo = userRepayList.get(i);
                 BigDecimal capital = new BigDecimal(resultInfo.getRepayCapital());
                 BigDecimal interest = new BigDecimal(resultInfo.getRepayInterest());
                 BigDecimal detailRepayAccount = capital.add(interest);
