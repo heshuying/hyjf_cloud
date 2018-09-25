@@ -3,12 +3,14 @@ package com.hyjf.admin.controller.assetcenter;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AssetListViewRequest;
 import com.hyjf.admin.beans.vo.AdminAssetListCustomizeVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.AssetListService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AssetListCustomizeResponse;
@@ -49,6 +51,8 @@ public class AssetListController extends BaseController {
 
 	@Autowired
 	private AssetListService assetListService;
+    @Autowired
+    private AdminCommonService adminCommonService;
 	// 开户状态
 	private static final  String ACCOUNT_STATUS = "ACCOUNT_STATUS";
 	// 审核状态
@@ -72,7 +76,8 @@ public class AssetListController extends BaseController {
 		JSONObject jsonObject = new JSONObject();
 		// 初始化下拉菜单
 		// 1.资产来源(可复用)
-		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
+/*		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();*/
+        List<DropDownVO> hjhInstConfigList = adminCommonService.selectHjhInstConfigList();
 		// 2.产品类型(请求下拉联动接口-可复用)
 		// List<HjhAssetTypeVO> assetTypeList = this.assetListService.hjhAssetTypeList(map.get("instCodeSrch").toString());
 		// jsonObject.put("assetTypeList", assetTypeList);

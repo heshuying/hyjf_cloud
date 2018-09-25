@@ -355,7 +355,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public AdminBankConfigResponse bankConfigInit(AdminBankConfigRequest adminRequest) {
         return restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/config/selectBankConfigListByPage", adminRequest, AdminBankConfigResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-config/config/selectBankConfigListByPage", adminRequest, AdminBankConfigResponse.class).getBody();
     }
 
     /**
@@ -368,7 +368,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public AdminBankConfigResponse selectBankConfigById(Integer bankId) {
         AdminBankConfigResponse res = new AdminBankConfigResponse();
         com.hyjf.am.response.config.BankConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/getBankConfigByBankId/" + bankId, com.hyjf.am.response.config.BankConfigResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-config/config/getBankConfigByBankId/" + bankId, com.hyjf.am.response.config.BankConfigResponse.class).getBody();
         if (response != null) {
             BankConfigVO vo = response.getResult();
             if (vo != null) {
@@ -389,7 +389,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<BankConfigVO> getBankConfigRecordList(String bankName) {
         AdminBankConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByBankName/"+bankName,  AdminBankConfigResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-config/config/selectBankConfigByBankName/"+bankName,  AdminBankConfigResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -405,7 +405,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public AdminBankConfigResponse insertBankConfigRecord(AdminBankConfigRequest adminRequest) {
         return restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/config/insertBankConfig", adminRequest, AdminBankConfigResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-config/config/insertBankConfig", adminRequest, AdminBankConfigResponse.class).getBody();
     }
 
     /**
@@ -417,7 +417,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public AdminBankConfigResponse updateBankConfigRecord(AdminBankConfigRequest adminRequest) {
         return restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/config/updadteBankConfig", adminRequest, AdminBankConfigResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-config/config/updadteBankConfig", adminRequest, AdminBankConfigResponse.class).getBody();
     }
 
     /**
@@ -429,7 +429,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public AdminBankConfigResponse deleteBankConfigById(Integer id) {
         AdminBankConfigResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/config/deleteBankConfigById", id, AdminBankConfigResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-config/config/deleteBankConfigById", id, AdminBankConfigResponse.class).getBody();
         return response;
     }
 
@@ -443,7 +443,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public AdminBankConfigResponse uploadFile(HttpServletRequest request, HttpServletResponse response) {
         return restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/config/deleteBankConfigById", request, AdminBankConfigResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-config/config/deleteBankConfigById", request, AdminBankConfigResponse.class).getBody();
     }
 
     /**
@@ -455,7 +455,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public AdminBankConfigResponse validateBeforeAction(AdminBankConfigRequest adminBankConfigRequest) {
         return restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/config/validateFeildBeforeSave", adminBankConfigRequest, AdminBankConfigResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-config/config/validateFeildBeforeSave", adminBankConfigRequest, AdminBankConfigResponse.class).getBody();
     }
 
     /**
