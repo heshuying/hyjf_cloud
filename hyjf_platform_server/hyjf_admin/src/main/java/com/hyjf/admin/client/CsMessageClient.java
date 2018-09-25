@@ -5,7 +5,9 @@ package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.app.AppChannelStatisticsResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
@@ -274,4 +276,18 @@ public interface CsMessageClient {
      * @return
      */
     MessagePushMsgResponse deleteMessagePushMsg(MessagePushMsgRequest request);
+
+    /**
+     * 获取app渠道统计列表
+     * @param statisticsRequest
+     * @return
+     */
+    AppChannelStatisticsResponse searchList(AppChannelStatisticsRequest statisticsRequest);
+
+    /**
+     * 导出app渠道统计报表
+     * @param statisticsRequest
+     * @return
+     */
+    AppChannelStatisticsResponse exportList(AppChannelStatisticsRequest statisticsRequest);
 }

@@ -1,4 +1,4 @@
-package com.hyjf.am.admin.content;
+package com.hyjf.am.config.controller.admin.content;
 
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.customize.IdCardCustomize;

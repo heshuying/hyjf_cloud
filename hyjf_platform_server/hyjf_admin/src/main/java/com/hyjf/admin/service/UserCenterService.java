@@ -95,7 +95,7 @@ public interface UserCenterService {
      * @param mobile
      * @return
      */
-    int countUserByMobile(String mobile);
+    int countUserByMobile(String mobile,int userId);
 
     /**
      * 校验推荐人

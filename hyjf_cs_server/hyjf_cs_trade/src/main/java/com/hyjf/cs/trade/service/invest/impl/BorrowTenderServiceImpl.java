@@ -1107,15 +1107,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String requestType = CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         String baseUrl = super.getFrontHost(systemConfig,tender.getPlatform());
         String requestMapping = "/public/formsubmit?requestType=";
-        if ("HJH".equalsIgnoreCase(borrowType)){
+        // 计划不需要跳转江西银行, 不能使用前端投资的统一页面，所以针对计划单独跳转前端处理页面
+        if (CommonConstant.TENDER_TYPE_HJH.equalsIgnoreCase(borrowType)){
             requestType = "9";
             requestMapping = "/join/plan?requestType=";
+        }else if (CommonConstant.TENDER_TYPE_CREDIT.equalsIgnoreCase(borrowType)){
+            requestType = "10";
         }
         String url = baseUrl + requestMapping + requestType;
         //String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/hyjf-app/user/invest/tender?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
         logger.info("url:[{}]",url);
-        //ModelAndView mv = new ModelAndView("redirect:"+url);
         return url;
     }
 

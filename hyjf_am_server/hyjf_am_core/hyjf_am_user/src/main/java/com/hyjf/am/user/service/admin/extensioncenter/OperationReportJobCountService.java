@@ -3,9 +3,7 @@
  */
 package com.hyjf.am.user.service.admin.extensioncenter;
 
-import com.hyjf.am.response.user.KeyCountResponse;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
-import com.hyjf.am.resquest.user.KeyCountRequest;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 
@@ -14,17 +12,10 @@ import java.util.List;
 
 /**
  * @author tanyy
- * @version KeyCountService.java, v0.1 2018年7月17日 下午3:04:29
+ * @version OperationReportJobCountService.java, v0.1 2018年7月17日 下午3:04:29
  */
-public interface KeyCountService extends BaseService {
+public interface OperationReportJobCountService extends BaseService {
 
-	/**
-	 * 根据条件查询列表
-	 *
-	 * @param request
-	 * @return
-	 */
-	KeyCountResponse searchAction(KeyCountRequest request);
 
 	/**
 	 * 通过时间统计平台注册人数
