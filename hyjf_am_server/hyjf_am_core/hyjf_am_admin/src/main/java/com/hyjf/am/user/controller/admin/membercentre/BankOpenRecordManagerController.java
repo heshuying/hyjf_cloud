@@ -85,8 +85,14 @@ public class BankOpenRecordManagerController extends BaseController {
         int countRecordTotal = bankOpenRecordService.countRecordTotal(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), countRecordTotal,request.getPageSize());
         response.setCount(countRecordTotal);
+        int intStart = paginator.getOffset();
+        int intEnd = paginator.getLimit();
+        if(request.isLimitFlg()){
+            intStart = 0;
+            intEnd = 0;
+        }
         if (countRecordTotal > 0) {
-            List<BankOpenAccountRecordCustomize> accountList = bankOpenRecordService.selectAccountList(mapParam,paginator.getOffset(), paginator.getLimit());
+            List<BankOpenAccountRecordCustomize> accountList = bankOpenRecordService.selectAccountList(mapParam,intStart, intEnd);
             if (!CollectionUtils.isEmpty(accountList)) {
                 List<BankOpenAccountRecordVO> bankOpenAccountRecordList = CommonUtils.convertBeanList(accountList, BankOpenAccountRecordVO.class);
                 response.setResultList(bankOpenAccountRecordList);
