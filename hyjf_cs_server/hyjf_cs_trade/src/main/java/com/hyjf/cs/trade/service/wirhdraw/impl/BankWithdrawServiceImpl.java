@@ -812,7 +812,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         bean.setName(usersInfo.getTruename());// 姓名
         bean.setMobile(user.getMobile());// 手机号s
         bean.setCardNo(bankCard.getCardNo());// 银行卡号
-        bean.setTxAmount(CommonUtils.formatAmount(new BigDecimal(transAmt).subtract(new BigDecimal(fee)).toString()));
+        bean.setTxAmount(CommonUtils.formatNumber(new BigDecimal(transAmt).subtract(new BigDecimal(fee)).toString()));
         bean.setTxFee(fee);
         // 成功跳转的url
         bean.setSuccessfulUrl(successfulUrl);
