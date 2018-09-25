@@ -83,6 +83,8 @@ public class AdminCouponCheckController extends BaseConfigController {
         if (count > 0) {
             response.setMessage(Response.SUCCESS_MSG);
             response.setRecordTotal(count);
+        }else {
+            response.setRecordTotal(0);
         }
         return response;
     }
