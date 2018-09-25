@@ -1285,14 +1285,14 @@
         ht_borrow_tender  br
         INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
         WHERE
-        b.recover_last_time  &lt;=  unix_timestamp(#{0})
+        b.recover_last_time  &lt;=  unix_timestamp(#{date})
         UNION
         SELECT
         user_id as userId
         FROM
         ht_credit_tender
         WHERE
-        create_time  &lt;= #{0}
+        create_time  &lt;= #{date}
 
         UNION
         SELECT
@@ -1301,14 +1301,14 @@
         ht_debt_plan_accede hdpa
         left join ht_debt_plan hdp on hdpa.plan_nid=hdp. debt_plan_nid
         WHERE
-        hdp.plan_lock_time  &lt;=  unix_timestamp(#{0})
+        hdp.plan_lock_time  &lt;=  unix_timestamp(#{date})
         UNION
         SELECT
         user_id as userId
         FROM
         ht_product_list
         WHERE
-        invest_time  &lt;=  unix_timestamp(#{0})
+        invest_time  &lt;=  unix_timestamp(#{date})
         And  invest_status = 0
     </select>
 

@@ -83,7 +83,6 @@ public class BankCardManagerController extends BaseController {
     @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
     public AdminResult<ListResult<BankcardManagerCustomizeVO>> bankOpenRecordAccount(HttpServletRequest request, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
-        JSONObject jsonObject = new JSONObject();
         BankCardManagerRequest bankCardManagerRequest = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, bankCardManagerRequest);
         BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectBankCardList(bankCardManagerRequest);

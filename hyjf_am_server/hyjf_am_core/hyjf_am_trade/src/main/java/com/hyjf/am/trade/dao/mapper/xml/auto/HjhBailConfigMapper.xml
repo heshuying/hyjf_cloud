@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhBailConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhBailConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+    <result column="bail_tatol" property="bailTatol" jdbcType="DECIMAL" />
+    <result column="bail_rate" property="bailRate" jdbcType="INTEGER" />
+    <result column="timeStart" property="timestart" jdbcType="VARCHAR" />
+    <result column="timeEnd" property="timeend" jdbcType="VARCHAR" />
+    <result column="new_credit_line" property="newCreditLine" jdbcType="DECIMAL" />
+    <result column="loan_credit_line" property="loanCreditLine" jdbcType="DECIMAL" />
+    <result column="day_mark_line" property="dayMarkLine" jdbcType="DECIMAL" />
+    <result column="month_mark_line" property="monthMarkLine" jdbcType="DECIMAL" />
+    <result column="push_mark_line" property="pushMarkLine" jdbcType="DECIMAL" />
+    <result column="loan_mark_line" property="loanMarkLine" jdbcType="DECIMAL" />
+    <result column="remain_mark_line" property="remainMarkLine" jdbcType="DECIMAL" />
+    <result column="repayed_capital" property="repayedCapital" jdbcType="DECIMAL" />
+    <result column="his_loan_total" property="hisLoanTotal" jdbcType="DECIMAL" />
+    <result column="cyc_loan_total" property="cycLoanTotal" jdbcType="DECIMAL" />
+    <result column="loan_balance" property="loanBalance" jdbcType="DECIMAL" />
+    <result column="is_accumulate" property="isAccumulate" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, inst_code, bail_tatol, bail_rate, timeStart, timeEnd, new_credit_line, loan_credit_line, 
+    day_mark_line, month_mark_line, push_mark_line, loan_mark_line, remain_mark_line, 
+    repayed_capital, his_loan_total, cyc_loan_total, loan_balance, is_accumulate, remark, 
+    create_user_id, update_user_id, create_time, update_time, del_flg
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhBailConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_hjh_bail_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_hjh_bail_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_hjh_bail_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhBailConfigExample" >
+    delete from ht_hjh_bail_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhBailConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_bail_config (inst_code, bail_tatol, bail_rate, 
+      timeStart, timeEnd, new_credit_line, 
+      loan_credit_line, day_mark_line, month_mark_line, 
+      push_mark_line, loan_mark_line, remain_mark_line, 
+      repayed_capital, his_loan_total, cyc_loan_total, 
+      loan_balance, is_accumulate, remark, 
+      create_user_id, update_user_id, create_time, 
+      update_time, del_flg)
+    values (#{instCode,jdbcType=VARCHAR}, #{bailTatol,jdbcType=DECIMAL}, #{bailRate,jdbcType=INTEGER}, 
+      #{timestart,jdbcType=VARCHAR}, #{timeend,jdbcType=VARCHAR}, #{newCreditLine,jdbcType=DECIMAL}, 
+      #{loanCreditLine,jdbcType=DECIMAL}, #{dayMarkLine,jdbcType=DECIMAL}, #{monthMarkLine,jdbcType=DECIMAL}, 
+      #{pushMarkLine,jdbcType=DECIMAL}, #{loanMarkLine,jdbcType=DECIMAL}, #{remainMarkLine,jdbcType=DECIMAL}, 
+      #{repayedCapital,jdbcType=DECIMAL}, #{hisLoanTotal,jdbcType=DECIMAL}, #{cycLoanTotal,jdbcType=DECIMAL}, 
+      #{loanBalance,jdbcType=DECIMAL}, #{isAccumulate,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlg,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhBailConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_bail_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="instCode != null" >
+        inst_code,
+      </if>
+      <if test="bailTatol != null" >
+        bail_tatol,
+      </if>
+      <if test="bailRate != null" >
+        bail_rate,
+      </if>
+      <if test="timestart != null" >
+        timeStart,
+      </if>
+      <if test="timeend != null" >
+        timeEnd,
+      </if>
+      <if test="newCreditLine != null" >
+        new_credit_line,
+      </if>
+      <if test="loanCreditLine != null" >
+        loan_credit_line,
+      </if>
+      <if test="dayMarkLine != null" >
+        day_mark_line,
+      </if>
+      <if test="monthMarkLine != null" >
+        month_mark_line,
+      </if>
+      <if test="pushMarkLine != null" >
+        push_mark_line,
+      </if>
+      <if test="loanMarkLine != null" >
+        loan_mark_line,
+      </if>
+      <if test="remainMarkLine != null" >
+        remain_mark_line,
+      </if>
+      <if test="repayedCapital != null" >
+        repayed_capital,
+      </if>
+      <if test="hisLoanTotal != null" >
+        his_loan_total,
+      </if>
+      <if test="cycLoanTotal != null" >
+        cyc_loan_total,
+      </if>
+      <if test="loanBalance != null" >
+        loan_balance,
+      </if>
+      <if test="isAccumulate != null" >
+        is_accumulate,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="delFlg != null" >
+        del_flg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="instCode != null" >
+        #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bailTatol != null" >
+        #{bailTatol,jdbcType=DECIMAL},
+      </if>
+      <if test="bailRate != null" >
+        #{bailRate,jdbcType=INTEGER},
+      </if>
+      <if test="timestart != null" >
+        #{timestart,jdbcType=VARCHAR},
+      </if>
+      <if test="timeend != null" >
+        #{timeend,jdbcType=VARCHAR},
+      </if>
+      <if test="newCreditLine != null" >
+        #{newCreditLine,jdbcType=DECIMAL},
+      </if>
+      <if test="loanCreditLine != null" >
+        #{loanCreditLine,jdbcType=DECIMAL},
+      </if>
+      <if test="dayMarkLine != null" >
+        #{dayMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="monthMarkLine != null" >
+        #{monthMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="pushMarkLine != null" >
+        #{pushMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="loanMarkLine != null" >
+        #{loanMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="remainMarkLine != null" >
+        #{remainMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="repayedCapital != null" >
+        #{repayedCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="hisLoanTotal != null" >
+        #{hisLoanTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="cycLoanTotal != null" >
+        #{cycLoanTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="loanBalance != null" >
+        #{loanBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="isAccumulate != null" >
+        #{isAccumulate,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlg != null" >
+        #{delFlg,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhBailConfigExample" resultType="java.lang.Integer" >
+    select count(*) from ht_hjh_bail_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_hjh_bail_config
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.instCode != null" >
+        inst_code = #{record.instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bailTatol != null" >
+        bail_tatol = #{record.bailTatol,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bailRate != null" >
+        bail_rate = #{record.bailRate,jdbcType=INTEGER},
+      </if>
+      <if test="record.timestart != null" >
+        timeStart = #{record.timestart,jdbcType=VARCHAR},
+      </if>
+      <if test="record.timeend != null" >
+        timeEnd = #{record.timeend,jdbcType=VARCHAR},
+      </if>
+      <if test="record.newCreditLine != null" >
+        new_credit_line = #{record.newCreditLine,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loanCreditLine != null" >
+        loan_credit_line = #{record.loanCreditLine,jdbcType=DECIMAL},
+      </if>
+      <if test="record.dayMarkLine != null" >
+        day_mark_line = #{record.dayMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="record.monthMarkLine != null" >
+        month_mark_line = #{record.monthMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="record.pushMarkLine != null" >
+        push_mark_line = #{record.pushMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loanMarkLine != null" >
+        loan_mark_line = #{record.loanMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remainMarkLine != null" >
+        remain_mark_line = #{record.remainMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayedCapital != null" >
+        repayed_capital = #{record.repayedCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.hisLoanTotal != null" >
+        his_loan_total = #{record.hisLoanTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.cycLoanTotal != null" >
+        cyc_loan_total = #{record.cycLoanTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loanBalance != null" >
+        loan_balance = #{record.loanBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.isAccumulate != null" >
+        is_accumulate = #{record.isAccumulate,jdbcType=TINYINT},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlg != null" >
+        del_flg = #{record.delFlg,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_hjh_bail_config
+    set id = #{record.id,jdbcType=INTEGER},
+      inst_code = #{record.instCode,jdbcType=VARCHAR},
+      bail_tatol = #{record.bailTatol,jdbcType=DECIMAL},
+      bail_rate = #{record.bailRate,jdbcType=INTEGER},
+      timeStart = #{record.timestart,jdbcType=VARCHAR},
+      timeEnd = #{record.timeend,jdbcType=VARCHAR},
+      new_credit_line = #{record.newCreditLine,jdbcType=DECIMAL},
+      loan_credit_line = #{record.loanCreditLine,jdbcType=DECIMAL},
+      day_mark_line = #{record.dayMarkLine,jdbcType=DECIMAL},
+      month_mark_line = #{record.monthMarkLine,jdbcType=DECIMAL},
+      push_mark_line = #{record.pushMarkLine,jdbcType=DECIMAL},
+      loan_mark_line = #{record.loanMarkLine,jdbcType=DECIMAL},
+      remain_mark_line = #{record.remainMarkLine,jdbcType=DECIMAL},
+      repayed_capital = #{record.repayedCapital,jdbcType=DECIMAL},
+      his_loan_total = #{record.hisLoanTotal,jdbcType=DECIMAL},
+      cyc_loan_total = #{record.cycLoanTotal,jdbcType=DECIMAL},
+      loan_balance = #{record.loanBalance,jdbcType=DECIMAL},
+      is_accumulate = #{record.isAccumulate,jdbcType=TINYINT},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      del_flg = #{record.delFlg,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhBailConfig" >
+    update ht_hjh_bail_config
+    <set >
+      <if test="instCode != null" >
+        inst_code = #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bailTatol != null" >
+        bail_tatol = #{bailTatol,jdbcType=DECIMAL},
+      </if>
+      <if test="bailRate != null" >
+        bail_rate = #{bailRate,jdbcType=INTEGER},
+      </if>
+      <if test="timestart != null" >
+        timeStart = #{timestart,jdbcType=VARCHAR},
+      </if>
+      <if test="timeend != null" >
+        timeEnd = #{timeend,jdbcType=VARCHAR},
+      </if>
+      <if test="newCreditLine != null" >
+        new_credit_line = #{newCreditLine,jdbcType=DECIMAL},
+      </if>
+      <if test="loanCreditLine != null" >
+        loan_credit_line = #{loanCreditLine,jdbcType=DECIMAL},
+      </if>
+      <if test="dayMarkLine != null" >
+        day_mark_line = #{dayMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="monthMarkLine != null" >
+        month_mark_line = #{monthMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="pushMarkLine != null" >
+        push_mark_line = #{pushMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="loanMarkLine != null" >
+        loan_mark_line = #{loanMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="remainMarkLine != null" >
+        remain_mark_line = #{remainMarkLine,jdbcType=DECIMAL},
+      </if>
+      <if test="repayedCapital != null" >
+        repayed_capital = #{repayedCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="hisLoanTotal != null" >
+        his_loan_total = #{hisLoanTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="cycLoanTotal != null" >
+        cyc_loan_total = #{cycLoanTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="loanBalance != null" >
+        loan_balance = #{loanBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="isAccumulate != null" >
+        is_accumulate = #{isAccumulate,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlg != null" >
+        del_flg = #{delFlg,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhBailConfig" >
+    update ht_hjh_bail_config
+    set inst_code = #{instCode,jdbcType=VARCHAR},
+      bail_tatol = #{bailTatol,jdbcType=DECIMAL},
+      bail_rate = #{bailRate,jdbcType=INTEGER},
+      timeStart = #{timestart,jdbcType=VARCHAR},
+      timeEnd = #{timeend,jdbcType=VARCHAR},
+      new_credit_line = #{newCreditLine,jdbcType=DECIMAL},
+      loan_credit_line = #{loanCreditLine,jdbcType=DECIMAL},
+      day_mark_line = #{dayMarkLine,jdbcType=DECIMAL},
+      month_mark_line = #{monthMarkLine,jdbcType=DECIMAL},
+      push_mark_line = #{pushMarkLine,jdbcType=DECIMAL},
+      loan_mark_line = #{loanMarkLine,jdbcType=DECIMAL},
+      remain_mark_line = #{remainMarkLine,jdbcType=DECIMAL},
+      repayed_capital = #{repayedCapital,jdbcType=DECIMAL},
+      his_loan_total = #{hisLoanTotal,jdbcType=DECIMAL},
+      cyc_loan_total = #{cycLoanTotal,jdbcType=DECIMAL},
+      loan_balance = #{loanBalance,jdbcType=DECIMAL},
+      is_accumulate = #{isAccumulate,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flg = #{delFlg,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

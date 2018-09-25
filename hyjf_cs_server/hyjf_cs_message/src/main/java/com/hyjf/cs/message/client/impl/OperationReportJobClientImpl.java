@@ -82,8 +82,12 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 		request.setFirstAge(firstAge);
 		request.setEndAge(endAge);
 		request.setOperationReportJobVOList(ageRangeUserIds);
-		int count = restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/tenderagebyrange",request, int.class).getBody();
-		return count;
+		OperationReportJobResponse response = restTemplate.postForObject("http://AM-USER/am-user/batch/operation_report_job/tenderagebyrange",
+				request, OperationReportJobResponse.class);
+		if(response != null ){
+			return response.getCount();
+		}
+		return 0;
 	}
 	@Override
 	public List<OperationReportJobVO>  getTenderAgeByRangeList(Date date,int firstAge,int endAge){

@@ -1,11 +1,14 @@
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
 import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
+import com.hyjf.admin.mq.SmsProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.OpenAccountEnquiryService;
 import com.hyjf.admin.utils.BankUtil;
 import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
@@ -17,13 +20,15 @@ import com.hyjf.am.vo.admin.BankOpenAccountLogVO;
 import com.hyjf.am.vo.admin.OpenAccountEnquiryCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.message.AppMsMessage;
+import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.IdCard15To18;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
@@ -42,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @version OpenAccountEnquiryServiceImpl, v0.1 2018/8/20 16:36
@@ -56,6 +62,9 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     @Autowired
     AmUserClient amUserClient;
 
+    @Autowired
+    private SmsProducer smsProducer;
+
     /**
      * 用户按照手机号和身份证号查询开户掉单
      *
@@ -68,8 +77,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     public OpenAccountEnquiryDefineResultBean openAccountEnquiry(AdminSystemVO currUser, OpenAccountEnquiryDefineRequestBean requestBean) {
         OpenAccountEnquiryDefineResultBean resultBean= new OpenAccountEnquiryDefineResultBean();
 
-        //String userId = currUser.getId();
-        String userId = "1";
+        String userId = currUser.getId();
         //选择1为手机号查询，2为身份证号查询
         String num = requestBean.getNum();
         String phone =null;
@@ -263,7 +271,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
      * @date 2018/8/20 16:35
      **/
     @Override
-    public OpenAccountEnquiryDefineResultBean openAccountEnquiryUpdate(AdminSystemVO currUser, OpenAccountEnquiryDefineRequestBean requestBean) {
+    public OpenAccountEnquiryDefineResultBean openAccountEnquiryUpdate(OpenAccountEnquiryDefineRequestBean requestBean) {
         OpenAccountEnquiryDefineResultBean resultBean= new OpenAccountEnquiryDefineResultBean();
         String ordeidString =requestBean.getOrdeidString().trim();
         String userid = requestBean.getUserid().trim();
@@ -386,6 +394,14 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         Map<String, String> params = new HashMap<String, String>();
         params.put("mqMsgId", GetCode.getRandomCode(10));
         params.put("userId", String.valueOf(userId));
+        try {
+            SmsMessage smsMessage = new SmsMessage(userId, params, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_CHONGZHI_SUCCESS,
+                    CustomConstants.CHANNEL_TYPE_NORMAL);
+            smsProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+
+        } catch (Exception e) {
+            logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]",userId);
+        }
         //rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_CERTIFICATE_AUTHORITY, JSONObject.toJSONString(params));
         // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  end
         return true;

@@ -74,7 +74,7 @@ public class BorrowCreditTenderController extends BaseTradeController {
     @PostMapping(value = "/getResult", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") int userId,
                                                                @RequestParam String logOrdId) {
-        logger.info("web端债转投资获取投资结果，logOrdId{}",logOrdId);
+        logger.info("web端债转投资获取投资失败结果，logOrdId{}",logOrdId);
         return  borrowTenderService.getFaileResult(userId,logOrdId);
     }
 
@@ -82,7 +82,7 @@ public class BorrowCreditTenderController extends BaseTradeController {
     @PostMapping(value = "/getSuccessResult", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> getSuccessResult(@RequestHeader(value = "userId") int userId,
                                                                @RequestParam String logOrdId) {
-        logger.info("web端债转投资获取投资结果，logOrdId{}",logOrdId);
+        logger.info("web端债转投资获取投资成功结果，logOrdId{}",logOrdId);
         return  borrowTenderService.getSuccessResult(userId,logOrdId);
     }
 

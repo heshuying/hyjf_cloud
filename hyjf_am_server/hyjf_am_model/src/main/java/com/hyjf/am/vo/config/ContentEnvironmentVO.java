@@ -3,10 +3,11 @@
  */
 package com.hyjf.am.vo.config;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import com.hyjf.am.vo.BaseVO;
 
 /**
  * @author fuqiang
@@ -30,9 +31,9 @@ public class ContentEnvironmentVO extends BaseVO implements Serializable {
 	private Integer createUserId;
 
 	private Integer updateUserId;
-
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;
-
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date updateTime;
 
 	private static final long serialVersionUID = 1L;
