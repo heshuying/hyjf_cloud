@@ -488,7 +488,7 @@ public class CouponConfigController extends BaseController {
         CouponConfigCustomizeResponse response = new CouponConfigCustomizeResponse();
         //加载优惠券配置列表
         CouponConfigCustomize configCustomize = new CouponConfigCustomize();
-        configCustomize.setStatus(request.getStatus());
+        configCustomize.setStatus(2);
         configCustomize.setLimitStart(-1);
         configCustomize.setLimitEnd(-1);
         List<CouponConfigCustomize> couponConfigCustomizes = couponConfigService.getCouponConfigList(request);
