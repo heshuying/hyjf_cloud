@@ -170,6 +170,7 @@ public class BankOpenRecordController extends BaseController {
                         cell.setCellValue(user.getBirthday());
                     } else if (celLength == 6) {// 户籍所在地
                         String area = userCenterService.getAreaByIdCard(user.getIdcard());
+                        logger.info("==导出开户记录,户籍所在地为:"+area);
                         cell.setCellValue(area);
                     } else if (celLength == 7) {// 身份证号码
                         cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getIdCard(), 3,7));
