@@ -13,6 +13,7 @@ import com.hyjf.am.vo.config.ContentQualifyVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,8 @@ import java.util.List;
 public class ContentQualifyController extends BaseConfigController {
 	@Autowired
 	private ContentQualifyService contentQualifyService;
+    @Value("${file.domain.url}")
+    private String fileUrl;
 
 	/**
 	 * 根据条件查询公司管理-资质荣誉
@@ -46,6 +49,7 @@ public class ContentQualifyController extends BaseConfigController {
 		List<ContentQualify> list = contentQualifyService.searchAction(request);
 		if (!CollectionUtils.isEmpty(list)) {
 			List<ContentQualifyVO> voList = CommonUtils.convertBeanList(list, ContentQualifyVO.class);
+			voList.stream().forEach(e-> e.setImgurl(fileUrl + e.getImgurl()));
 			response.setResultList(voList);
 		}
 		// 查询符合条件的条数

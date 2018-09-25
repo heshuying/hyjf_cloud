@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.WrbQueryCustomizeMapper">
+
+	<sql id="Where_Clause_New">
+		<where>
+			<if test="borrowNid != null and borrowNid != ''">
+				hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+			</if>
+			<if test="projectType != null and projectType != ''">
+				AND hydbpt.borrow_project_type = #{projectType,jdbcType=VARCHAR}
+			</if>
+			<if test="borrowClass != null and borrowClass != ''">
+				AND hydbpt.borrow_class = #{borrowClass,jdbcType=VARCHAR}
+			</if>
+			<if test="borrowClass == null or borrowClass == ''">
+				<!-- 第三方接口拉取排除  新手汇 员工贷 现金贷 -->
+				<!-- 新手汇  -->
+				AND hydbpt.borrow_class <![CDATA[<>]]> 'NEW'
+				<!--员工贷 -->
+				AND hydbpt.borrow_cd <![CDATA[<>]]> '14'
+				<!--现金贷 -->
+				AND hydbpt.borrow_cd <![CDATA[<>]]> '15'
+				<!-- 尊享汇  -->
+				<!-- AND hydbpt.borrow_class <![CDATA[<>]]> 'ZXH' -->
+				<!-- 融通宝  -->
+				<!-- AND hydbpt.borrow_class <![CDATA[<>]]> 'RTB' -->
+				<!--   AND hydb.project_type <![CDATA[<>]]> '12'  -->
+				<!-- 汇直投列表数据过滤:只显示有效的项目 -->
+				<if test="projectType == 'HZT'">
+					AND CASE
+					WHEN ( hydb.`status` = 1 AND hydb.verify_status = 3)
+						THEN
+							hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+						ELSE
+							hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+					END
+				</if>
+			</if>
+			<if test="status == null or status == ''">
+				AND
+		        (
+		           ( hydb.`status` = 1 AND hydb.verify_status = 3 )
+					OR ( hydb.`status` = 2 AND hydb.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+					OR ( hydb.`status` = 3 )
+					OR ( hydb.`status` = 4 )
+		        )
+			</if>
+			<!-- 第三方接口拉取排除  汇计划标的 -->
+			AND plan_nid IS NULL
+			
+			<if test="status != null and status != ''">
+				<!-- 获取 等待投资中 -->
+				<if test="status == '1'.toString()">
+				AND ( hydb.`status` = 1 AND hydb.verify_status = 3 )
+				</if>
+				<!-- 获取 投资中 -->
+				<if test="status == '2'.toString()">
+				AND ( hydb.`status` = 2 AND hydb.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+				</if>
+				<!-- 获取 投标结束 -->
+				<if test="status == '3'.toString()">
+				AND (hydb.`status` = 3)
+				</if>
+				<!-- 获取 还款中 -->
+				<if test="status == '4'.toString()">
+				AND ( hydb.`status` = 4)
+				</if>
+				<!-- 已还款 -->
+				<if test="status == '5'.toString()">
+				AND ( hydb.`status` = 5)
+				</if>
+			</if>
+			AND hydb.is_show <![CDATA[<>]]> 1
+		</where>
+	</sql>
+
+<select id="searchBorrowListByNid">
+		SELECT
+			hydb.borrow_nid invest_id,
+			hydb.`name` AS invest_title,
+            CONCAT('/borrow/',  hydb.borrow_nid) invest_url,
+			CASE WHEN hydb.borrow_style = 'endday' THEN hydb.borrow_period ELSE hydb.borrow_period*30 END AS time_limit,
+			CASE WHEN hydb.borrow_style = 'endday' THEN CONCAT(hydb.borrow_period,'天') ELSE CONCAT(hydb.borrow_period, '个月') END time_limit_desc ,
+			hydb.tender_account_max buy_limit,
+			hydb.tender_account_min buy_unit,
+			hydb.borrow_account_yes invested_amount,
+			hydb.account total_amount,
+			hydb.borrow_apr rate,
+			hydb.borrow_account_scale progress,
+			CASE
+			WHEN hydb.`status` = 1 AND hydb.verify_status =3
+				THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d %H:%i:%s' )
+			ELSE ''
+			END AS start_time,
+			hydbs.`name` AS payback_way,
+			hydbpt.borrow_name AS invest_condition,
+		    hydb.borrow_contents AS project_description,
+			'0' lose_invest,
+			hydb.status borrow_status
+		FROM
+			huiyingdai_borrow hydb
+		INNER JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN huiyingdai_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
+		LEFT JOIN hyjf_param_name pn ON CAST(hydb.`status` AS CHAR) = pn.name_cd AND pn.name_class = 'BORROW_STATUS'
+		<include refid="Where_Clause_New" />
+		ORDER BY
+			hydb.`status` ASC,
+			CASE
+				WHEN hydb.`status` = '1' AND hydb.verify_status = 3 AND hydb.ontime IS NOT NULL AND LENGTH(trim(hydb.ontime)) <![CDATA[>]]> 1
+				THEN
+					hydb.ontime
+			END ASC,
+			CASE
+				WHEN hydb.`status` = '2'
+				THEN hydb.borrow_account_scale
+			END DESC,
+			CASE
+				WHEN hydb.`status` = '2'
+				THEN hydb.verify_time
+			END DESC,
+			CASE
+				WHEN hydb.`status` = '3'
+				THEN hydb.borrow_full_time
+			END DESC,
+			CASE
+				WHEN hydb.`status` = '4'
+				THEN hydb.borrow_full_time
+			END DESC
+			
+			limit 0,100
+</select>
+
+
+</mapper>
