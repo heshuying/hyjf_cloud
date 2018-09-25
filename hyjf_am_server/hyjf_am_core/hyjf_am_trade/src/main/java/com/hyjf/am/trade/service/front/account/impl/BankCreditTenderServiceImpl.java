@@ -1269,7 +1269,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							tenderToCreditAssign.setCreditNid(String.valueOf(borrowCredit.getCreditNid()));
 							tenderToCreditAssign.setTenderNid(borrowCredit.getTenderNid());
 							tenderToCreditAssign.setCreditCapital(DF_FOR_VIEW.format(borrowCredit.getCreditCapital()));
-							tenderToCreditAssign.setAssignCapital(assignCapital);
+							tenderToCreditAssign.setAssignCapital(sellerCapitalWait.toString());
 							tenderToCreditAssign.setCreditDiscount(DF_FOR_VIEW.format(borrowCredit.getCreditDiscount()));
 							tenderToCreditAssign.setAssignPrice(DF_FOR_VIEW.format(assignPrice));
 							tenderToCreditAssign.setAssignPay(DF_FOR_VIEW.format(assignPay));
