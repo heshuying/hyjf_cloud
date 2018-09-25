@@ -2,9 +2,9 @@ package com.hyjf.am.user.dao.mapper.customize;
 
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.resquest.user.KeyCountRequest;
-import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.user.KeyCountVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ public interface KeyCountCustomMapper {
      * @param list 多个用户id
      * @return
      */
-    List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list);
+    List<OperationReportJobVO> getUserNames(@Param("list")  List<OperationReportJobVO> list);
     /**
      * 通过用户ID查询 用户年龄，用户地区
      *

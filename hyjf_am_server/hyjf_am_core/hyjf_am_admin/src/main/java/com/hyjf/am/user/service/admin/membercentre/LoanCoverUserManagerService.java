@@ -49,7 +49,7 @@ public interface LoanCoverUserManagerService extends BaseService {
     /**
      * 根据证件号码查找借款主体CA认证记录表
      */
-    LoanSubjectCertificateAuthority selectIsExistsRecordByIdNo(String record);
+    LoanSubjectCertificateAuthority selectIsExistsRecordByIdNo(String record,String userName);
     /**
      * 更新借款盖章用户
      *

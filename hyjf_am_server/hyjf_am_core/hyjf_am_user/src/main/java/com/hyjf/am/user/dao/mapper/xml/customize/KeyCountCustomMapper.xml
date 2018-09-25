@@ -190,7 +190,7 @@
         ht_user  u
         WHERE
         u.user_id in
-        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+        <foreach collection="list" index="index" item="item" open=" (" separator="," close=") ">
             #{item.userId}
         </foreach>
     </select>
