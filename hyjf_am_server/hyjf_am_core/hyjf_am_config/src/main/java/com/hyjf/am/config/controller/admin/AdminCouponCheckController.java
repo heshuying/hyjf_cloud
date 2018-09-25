@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,7 @@ public class AdminCouponCheckController extends BaseConfigController {
         CouponCheckResponse response = new CouponCheckResponse();
         CouponCheck couponCheck = new CouponCheck();
         couponCheck.setFileName(request.getFileName());
-        couponCheck.setCreateTime(GetDate.str2Timestamp(request.getCreateTime()));
+        couponCheck.setCreateTime(new Date());
         couponCheck.setFilePath(request.getFilePath());
         couponCheck.setDeFlag(0);
         couponCheck.setStatus(1);

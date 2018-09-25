@@ -478,7 +478,7 @@ public class UserManagerController extends BaseController {
         mapParam.put("userProperty", userRequest.getUserProperty());
         mapParam.put("accountStatus", userRequest.getAccountStatus());
         mapParam.put("userStatus", userRequest.getUserStatus());
-        if(userRequest.getCombotreeListSrch().length>0){
+        if(null!=userRequest.getCombotreeListSrch()&&userRequest.getCombotreeListSrch().length!=0){
             mapParam.put("combotreeListSrch", userRequest.getCombotreeListSrch());
         }
         mapParam.put("customerId", userRequest.getCustomerId());
