@@ -562,6 +562,16 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     /**
+     * 检查银行卡是否重复
+     * @return
+     */
+    @Override
+    public IntegerResponse bankIsExists(AdminBankRechargeConfigRequest adminRequest){
+        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/bankrecharge/bankIsExists", adminRequest, IntegerResponse.class)
+                .getBody();
+    }
+
+    /**
      * 查询快捷充值限额列表
      *
      * @param adminRequest
