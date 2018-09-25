@@ -172,7 +172,7 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
             return null;
         }
         LoanSubjectCertificateAuthorityExample example = new LoanSubjectCertificateAuthorityExample();
-        example.createCriteria().andIdEqualTo(Integer.parseInt(record));
+        example.createCriteria().andIdNoEqualTo(record.trim());
         List<LoanSubjectCertificateAuthority> lll = loanSubjectCertificateAuthorityMapper.selectByExample(example);
         if(null!=lll&&lll.size()>0) {
             loanSubjectCertificateAuthority = lll.get(0);
@@ -221,7 +221,6 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
 
     /**
      * 根据证件号码和姓名查找用户CA认证记录表
-     * @param idno
      * @param tureName
      * @return
      */

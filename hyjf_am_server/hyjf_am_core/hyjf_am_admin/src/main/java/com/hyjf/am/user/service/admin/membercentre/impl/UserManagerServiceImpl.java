@@ -7,6 +7,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.trade.dao.mapper.auto.ROaDepartmentMapper;
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserLogMapper;
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserChangeLogMapper;
@@ -52,6 +53,8 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     private SpreadsUserMapper spreadsUserMapper;
     @Autowired
     private UserChangeLogMapper userChangeLogMapper;
+    @Autowired
+    private ROaDepartmentMapper rOaDepartmentMapper;
 
     /**
      * 根据筛选条件查找会员列表
@@ -344,6 +347,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int countUserByMobile(int userId, String mobile) {
         UserExample example = new UserExample();
         UserExample.Criteria criteria = example.createCriteria();
+        if (Validator.isNotNull(userId)) {
+            criteria.andUserIdNotEqualTo(userId);
+        }
         criteria.andMobileEqualTo(mobile);
         int cnt = userMapper.countByExample(example);
         return cnt;
