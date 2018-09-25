@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.manager;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
@@ -69,6 +70,7 @@ public class SendTypeController extends BaseController {
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {
+        AdminResult result= new AdminResult();
         BorrowSendTypeResponse response =new BorrowSendTypeResponse();
         // 表单校验(双表校验)
         // 编号
@@ -81,7 +83,10 @@ public class SendTypeController extends BaseController {
         if (borrowSendTypeVO != null && StringUtils.isNotEmpty(borrowSendTypeVO.getSendCd())) {
             response.setRtn(Response.FAIL);
             response.setMessage("sendCd 重复了！");
-            return new AdminResult<BorrowSendTypeResponse>(response);
+            result.setStatus(BaseResult.FAIL);
+            result.setStatusDesc("sendCd 重复了！");
+            result.setData(response);
+            return result ;
         }
         // 画面验证
         String message =this.validatorFieldCheck(adminRequest);
@@ -140,6 +145,31 @@ public class SendTypeController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         return new AdminResult<>();
+    }
+
+    @ApiOperation(value = "校验发标/复审", notes = "添加 发标/复审")
+    @PostMapping("/checkAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
+    public AdminResult checkAction( @RequestBody BorrowSendTypeRequest adminRequest) {
+        AdminResult result= new AdminResult();
+        BorrowSendTypeResponse response =new BorrowSendTypeResponse();
+        // 表单校验(双表校验)
+        // 编号
+        boolean sendCdFlag = StringUtils.isNotBlank(adminRequest.getSendCd())&&adminRequest.getSendCd().length()<=50;
+        if (!sendCdFlag) {
+            return new AdminResult<>(Response.FAIL,"borrowCd不能为空且长度小于或等于50！");
+        }
+        //校验sendCd是否存在
+        BorrowSendTypeVO borrowSendTypeVO = sendTypeService.getBorrowSendInfo(adminRequest.getSendCd());
+        if (borrowSendTypeVO != null && StringUtils.isNotEmpty(borrowSendTypeVO.getSendCd())) {
+            response.setRtn(Response.FAIL);
+            response.setMessage("sendCd 重复了！");
+            result.setStatus(BaseResult.FAIL);
+            result.setStatusDesc("sendCd 重复了！");
+            result.setData(response);
+            return result ;
+        }
+        return result;
     }
     /**
      * 画面校验
