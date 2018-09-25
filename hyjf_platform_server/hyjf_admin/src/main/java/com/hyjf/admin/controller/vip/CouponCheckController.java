@@ -50,13 +50,13 @@ public class CouponCheckController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult couponInit(@RequestBody AdminCouponCheckRequest request) {
         CouponCheckResponse ccr = couponCheckService.serchCouponList(request);
-        List<String> couponStatus = new ArrayList<>();
-        couponStatus.add("待审核");
-        couponStatus.add("已发行");
-        couponStatus.add("审核不通过");
-        String status = JSONObject.toJSONString(couponStatus,true);
+        List<String> list = new ArrayList<>();
+        list.add("待审核");
+        list.add("已发行");
+        list.add("审核不通过");
+        String couponStatus = JSONObject.toJSONString(list,true);
         List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
-        ccr.setStatus(status);
+        ccr.setCouponStatus(couponStatus);
         ccr.setCouponType(couponType);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
