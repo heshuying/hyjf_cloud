@@ -38,7 +38,7 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
 
     @ApiOperation(value = "APP端散标债转投资", notes = "APP端散标债转投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端请求债转投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
