@@ -1212,7 +1212,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String tureName) {
 		CertificateAuthorityResponse response = restTemplate.getForEntity(
-				"http://AM-USER/am-user/loanCoverUser/selectCertificateAuthorityByIdNoName/" + tureName,
+				"http://AM-ADMIN/am-user/loanCoverUser/selectCertificateAuthorityByIdNoName/" + tureName,
 				CertificateAuthorityResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
