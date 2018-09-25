@@ -145,6 +145,8 @@ public class Borrow implements Serializable {
 
     private Integer increaseInterestFlag;
 
+    private Integer repayCapitalType;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -705,5 +707,13 @@ public class Borrow implements Serializable {
 
     public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
         this.increaseInterestFlag = increaseInterestFlag;
+    }
+
+    public Integer getRepayCapitalType() {
+        return repayCapitalType;
+    }
+
+    public void setRepayCapitalType(Integer repayCapitalType) {
+        this.repayCapitalType = repayCapitalType;
     }
 }

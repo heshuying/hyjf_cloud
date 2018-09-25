@@ -10,10 +10,7 @@ import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,8 +33,8 @@ public class ApiBorrowRepaymentInfoController extends BaseController {
     * @param request
     * @return com.hyjf.am.response.trade.HjhAssetBorrowTypeResponse
     **/
-    @GetMapping("/selectBorrowRepaymentInfoList")
-    public ApiBorrowRepaymentInfoResponse selectAssetBorrowType(@PathVariable ApiBorrowRepaymentInfoRequest request) {
+    @PostMapping("/selectBorrowRepaymentInfoList")
+    public ApiBorrowRepaymentInfoResponse selectAssetBorrowType(@RequestBody ApiBorrowRepaymentInfoRequest request) {
         ApiBorrowRepaymentInfoResponse response = new ApiBorrowRepaymentInfoResponse();
         List<ApiBorrowRepaymentInfoCustomize> list = borrowRepaymentInfoService.selectBorrowRepaymentInfoList(request);
         if (CollectionUtils.isNotEmpty(list)){

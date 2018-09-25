@@ -12,9 +12,11 @@ import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +88,10 @@ public class BankConfigController extends BaseController {
     @ApiOperation(value = "银行配置添加", notes = "银行配置添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public AdminResult  insertBankConfig(@RequestBody BankConfigRequestBean bankConfigRequestBean) {
+    public AdminResult  insertBankConfig(@RequestBody BankConfigRequestBean bankConfigRequestBean ,HttpServletRequest res) {
+        AdminSystemVO user = getUser(res);
+        bankConfigRequestBean.setCreateUserId(Integer.valueOf(user.getId()));
+        bankConfigRequestBean.setUpdateUserId(Integer.valueOf(user.getId()));
         AdminBankConfigRequest request = new AdminBankConfigRequest();
         BeanUtils.copyProperties(bankConfigRequestBean,request);
         AdminBankConfigResponse prs =null;
@@ -99,11 +104,13 @@ public class BankConfigController extends BaseController {
         BankConfigVO bank = new BankConfigVO();
         bank.setName(bankConfigRequestBean.getName());
         List<BankConfigVO> banks = bankConfigService.getBankConfigRecordList(bank);
-        if (banks == null||banks.size() == 0) {
+        if (CollectionUtils.isEmpty(banks)) {
             //可以直接使用
             BeanUtils.copyProperties(bankConfigRequestBean, request);
             // 数据插入
             prs = bankConfigService.insertBankConfigRecord(request);
+        }else{
+            return new AdminResult<>(FAIL,"名称已经存在");
         }
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -118,7 +125,9 @@ public class BankConfigController extends BaseController {
     @ApiOperation(value = "修改银行配置", notes = "修改银行配置")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult updateBankConfig(@RequestBody BankConfigRequestBean bankConfigRequestBean) {
+    public AdminResult updateBankConfig(@RequestBody BankConfigRequestBean bankConfigRequestBean,HttpServletRequest res) {
+        AdminSystemVO user = getUser(res);
+        bankConfigRequestBean.setUpdateUserId(Integer.valueOf(user.getId()));
         AdminBankConfigRequest request = new AdminBankConfigRequest();
         BeanUtils.copyProperties(bankConfigRequestBean,request);
         //表单字段校验

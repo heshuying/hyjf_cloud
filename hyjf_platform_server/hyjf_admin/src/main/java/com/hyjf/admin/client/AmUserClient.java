@@ -531,7 +531,7 @@ public interface AmUserClient {
      * @return
      * @author nxl
      */
-    LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo);
+    LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo,String userName);
 
     /**
      * 更新记录

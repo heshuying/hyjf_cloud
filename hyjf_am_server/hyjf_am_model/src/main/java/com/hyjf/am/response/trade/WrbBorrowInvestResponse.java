@@ -26,7 +26,7 @@ public class WrbBorrowInvestResponse extends WrbResponse {
     // 标的已投金额
     private BigDecimal invest_all_money = BigDecimal.ZERO;
     // 标的投资情况
-    private List<InvestInfo> invest_list = new ArrayList();
+    private List<InvestInfo> invest_list = new ArrayList<InvestInfo>();
 
     public static final class InvestInfo{
         // 记录流水号

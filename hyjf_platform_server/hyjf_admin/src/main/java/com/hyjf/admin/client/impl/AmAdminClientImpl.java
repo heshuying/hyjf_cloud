@@ -68,6 +68,15 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+    @Override
+    public List<UtmPlatVO> getAppUtm(){
+        UtmPlatResponse response =  restTemplate.
+                postForEntity("http://AM-ADMIN/am-admin/extensioncenter/channelstatisticsdetail/app_utm_list", null, UtmPlatResponse.class).getBody();
+        if (UtmPlatResponse.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 
     @Override
     public STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean) {

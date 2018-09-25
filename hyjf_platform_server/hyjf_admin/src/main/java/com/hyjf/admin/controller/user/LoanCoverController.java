@@ -87,11 +87,14 @@ public class LoanCoverController extends BaseController {
     @PostMapping(value = "/updateLoancoverInit")
     @ResponseBody
     public AdminResult<LoanCoverUserCustomizeVO> updateLoancoverInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String id) {
-        LoanCoverUserVO loanCoverUserResponse = loanCoverService.selectRecordByIdNo(id);
-        LoanCoverUserCustomizeVO loanCoverUserCustomizeVO = new LoanCoverUserCustomizeVO();
+        LoanCoverUserResponse loanCoverUserResponse = loanCoverService.getLoanCoverUserById(id);
         if (null != loanCoverUserResponse) {
-            BeanUtils.copyProperties(loanCoverUserResponse,loanCoverUserCustomizeVO);
-            return new AdminResult<LoanCoverUserCustomizeVO>(loanCoverUserCustomizeVO);
+            LoanCoverUserVO loanCoverUserVO = loanCoverUserResponse.getResult();
+            LoanCoverUserCustomizeVO loanCoverUserCustomizeVO = new LoanCoverUserCustomizeVO();
+            if (null != loanCoverUserVO) {
+                BeanUtils.copyProperties(loanCoverUserVO, loanCoverUserCustomizeVO);
+                return new AdminResult<LoanCoverUserCustomizeVO>(loanCoverUserCustomizeVO);
+            }
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
     }
@@ -117,7 +120,7 @@ public class LoanCoverController extends BaseController {
             // 失败返回
             return new AdminResult<>(FAIL, "参数错误");
         }
-        if (!loanCoverService.selectIsExistsRecordByIdNo(loanCoverUserRequest.getIdNo())) {
+        if (!loanCoverService.selectIsExistsRecordByIdNo(loanCoverUserRequest.getIdNo(),loanCoverUserRequest.getName())) {
             return new AdminResult<>(FAIL, "该输入统一社会信用代码或身份证已存在");
         }
         loanCoverUserRequest.setCreateTime(new Date());
