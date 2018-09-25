@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.user.service.admin.extensioncenter.OperationReportJobCountService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,9 @@ public class OperationReportJobCountServiceImpl extends BaseServiceImpl implemen
     }
 	@Override
 	public List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list){
+    	if(CollectionUtils.isEmpty(list)){
+    		return null;
+		}
 		return keyCountCustomMapper.getUserNames(list);
 	}
 	@Override

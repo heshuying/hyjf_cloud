@@ -1482,4 +1482,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
      * 用户类型
      */
     public static final String USER_PROPERTY = "USER_PROPERTY";
+
+    /** 汇添金+汇天利交易笔数 */
+    public static final Integer HTJ_HTL_COUNT = 47083;
 }
