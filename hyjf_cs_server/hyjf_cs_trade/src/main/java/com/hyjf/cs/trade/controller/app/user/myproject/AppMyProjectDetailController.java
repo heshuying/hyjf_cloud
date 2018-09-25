@@ -34,7 +34,7 @@ public class AppMyProjectDetailController extends BaseTradeController {
      */
     @ApiOperation(value = "App端:获取我的散标详情", notes = "App端:获取我的散标详情")
     @GetMapping(value = "/{borrowId}", produces = "application/json; charset=utf-8")
-    public Object MyProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "userId",required = false) String userId){
+    public Object MyProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "userId") String userId){
        JSONObject result = appMyProjectService.getMyProjectDetail(borrowId,request,userId);
        return result;
     }
