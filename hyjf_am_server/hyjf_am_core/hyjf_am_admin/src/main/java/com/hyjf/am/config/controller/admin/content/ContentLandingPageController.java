@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version ContentLandingPageController, v0.1 2018/7/16 14:32
  */
 @RestController
-@RequestMapping("/am-config/content/contentlandingpage")
+@RequestMapping("/am-admin/content/contentlandingpage")
 public class ContentLandingPageController extends BaseConfigController {
 	@Autowired
 	private LandingPageService landingPageService;

@@ -232,14 +232,14 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
     public CertificateAuthority selectCertificateAuthorityByIdNoName(String tureName) {
         CertificateAuthorityExample example=new CertificateAuthorityExample();
         CertificateAuthorityExample.Criteria criteria = example.createCriteria();
-        criteria.andTrueNameEqualTo(tureName);
+        criteria.andTrueNameEqualTo(tureName.trim());
         List<CertificateAuthority> cam = certificateAuthorityMapper.selectByExample(example);
-    	CertificateAuthority certificateAuthority = null;
+    	CertificateAuthority certificateAuthority = new CertificateAuthority();
     	if(cam!=null && cam.size() >0 ){
 			certificateAuthority = cam.get(0);
 		}
-        
-		LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = null;
+
+		/*LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = null;
 		LoanSubjectCertificateAuthorityExample example2 = new LoanSubjectCertificateAuthorityExample();
 		LoanSubjectCertificateAuthorityExample.Criteria cra = example2.createCriteria();
 		cra.andNameEqualTo(tureName);
@@ -247,11 +247,11 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
 		if (loanSubjectlist != null && loanSubjectlist.size()>0){
 			loanSubjectCertificateAuthority  = loanSubjectlist.get(0);
 		}
-		
+
 		if (certificateAuthority == null && loanSubjectCertificateAuthority == null){
 			return null;
-		}
-            return new CertificateAuthority();
+		}*/
+        return  certificateAuthority;
  
     }
   	/**

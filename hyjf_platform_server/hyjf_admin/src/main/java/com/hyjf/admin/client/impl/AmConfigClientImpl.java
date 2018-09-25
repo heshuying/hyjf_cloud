@@ -562,6 +562,16 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     /**
+     * 检查银行卡是否重复
+     * @return
+     */
+    @Override
+    public IntegerResponse bankIsExists(AdminBankRechargeConfigRequest adminRequest){
+        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/bankrecharge/bankIsExists", adminRequest, IntegerResponse.class)
+                .getBody();
+    }
+
+    /**
      * 查询快捷充值限额列表
      *
      * @param adminRequest
@@ -1048,32 +1058,32 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public LandingPageResponse searchAction(ContentLandingPageRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlandingpage/searchaction",
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/content/contentlandingpage/searchaction",
                 requestBean, LandingPageResponse.class);
     }
 
     @Override
     public LandingPageResponse insertAction(ContentLandingPageRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlandingpage/insert",
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/content/contentlandingpage/insert",
                 requestBean, LandingPageResponse.class);
     }
 
     @Override
     public LandingPageResponse updateAction(ContentLandingPageRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlandingpage/update",
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/content/contentlandingpage/update",
                 requestBean, LandingPageResponse.class);
     }
 
 
     @Override
     public LandingPageResponse deleteLandingPageById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentenvironment/delete/" + id,
+        return restTemplate.getForObject("http://AM-ADMIN/am-admin/content/contentlandingpage/delete/" + id,
                 LandingPageResponse.class);
     }
     @Override
     public LandingPageResponse getLandingPageRecord(Integer id) {
         LandingPageResponse response = restTemplate.getForObject(
-                "http://AM-CONFIG/am-config/content/contentlandingpage/getrecord/" + id, LandingPageResponse.class);
+                "http://AM-ADMIN/am-admin/content/contentlandingpage/getrecord/" + id, LandingPageResponse.class);
         return response;
     }
     @Override

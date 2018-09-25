@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.SmsLogVO;
 import com.hyjf.am.vo.admin.SmsOntimeVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.SmsLog;
 import com.hyjf.cs.message.bean.mc.SmsOntime;
@@ -79,6 +80,8 @@ public class SmsLogController extends BaseController {
 		List<SmsOntime> list = smsLogService.queryTime(request);
 		if (!CollectionUtils.isEmpty(list)) {
 			List<SmsOntimeVO> voList = CommonUtils.convertBeanList(list, SmsOntimeVO.class);
+			voList.stream().forEach(e -> e.setPostString(
+					e.getEndtime() == null ? null : GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(e.getEndtime())));
 			response.setResultList(voList);
 		}
 		int count = smsLogService.queryOntimeCount(request);

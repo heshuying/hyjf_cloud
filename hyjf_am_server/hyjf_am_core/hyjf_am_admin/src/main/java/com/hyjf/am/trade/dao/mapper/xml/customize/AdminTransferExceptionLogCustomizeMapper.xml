@@ -36,10 +36,12 @@
 				AND el.`type` = #{type}
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( el.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND el.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( el.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND el.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},'23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>
