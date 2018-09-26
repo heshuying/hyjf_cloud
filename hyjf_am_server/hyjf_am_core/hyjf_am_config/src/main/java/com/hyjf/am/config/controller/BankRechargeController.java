@@ -3,6 +3,7 @@ package com.hyjf.am.config.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfig;
 import com.hyjf.am.config.service.BankRechargeService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankRechargeConfigResponse;
 import com.hyjf.am.response.config.BankRechargeConfigResponse;
@@ -47,13 +48,9 @@ public class BankRechargeController  extends BaseConfigController{
                 response.setResultList(bankRechargeLimitConfigVO);
                 response.setRecordTotal(count);
                 response.setRtn(Response.SUCCESS);
-                return response;
             }
-            response.setRtn(Response.SUCCESS);
-            response.setMessage("查询的数据为空！");
-            return response;
         }
-        return null;
+        return response;
     }
 
     /**
@@ -69,9 +66,6 @@ public class BankRechargeController  extends BaseConfigController{
             BankRechargeLimitConfigVO feeConfigVO = CommonUtils.convertBean(record, BankRechargeLimitConfigVO.class);
             response.setResult(feeConfigVO);
             response.setRtn(Response.SUCCESS);
-        }else{
-            response.setRtn(Response.FAIL);
-            response.setMessage("查询的数据为空！");
         }
         return response;
     }
@@ -144,11 +138,21 @@ public class BankRechargeController  extends BaseConfigController{
         if(!CollectionUtils.isEmpty(bankRechargeConfigs)){
             list = CommonUtils.convertBeanList(bankRechargeConfigs,BankRechargeLimitConfigVO.class);
             response.setResultList(list);
-            return response;
         }
-        return  null;
+        return response;
     }
 
+    /**
+     * 检查银行卡是否重复
+     * @return
+     */
+    @RequestMapping("/bankIsExists")
+    public IntegerResponse bankIsExists(@RequestBody AdminBankRechargeConfigRequest adminRequest){
+        IntegerResponse res= new  IntegerResponse();
+        int cou= bankRechargeService.bankIsExists(adminRequest);
+        res.setResultInt(cou);
+        return res;
+    }
     /**
      * 根据bankId查询BankRechargeConfig
      * @auth sunpeikai

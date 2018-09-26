@@ -31,8 +31,7 @@ public class BankRechargeLimitConfigVO extends BaseVO implements Serializable {
     private Integer updateBy;
 
     private Date updateTime;
-//    获取银行列表（快捷卡）
-    private List<BankConfigVO> bankConfigs;
+
 
     private static final long serialVersionUID = 1L;
 
@@ -124,11 +123,4 @@ public class BankRechargeLimitConfigVO extends BaseVO implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public List<BankConfigVO> getBankConfigs() {
-        return bankConfigs;
-    }
-
-    public void setBankConfigs(List<BankConfigVO> bankConfigs) {
-        this.bankConfigs = bankConfigs;
-    }
 }
