@@ -1727,7 +1727,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     result.setIsEnd(false);
                 }
                 result.setIsEnd(true);
-                result.setList(recordList);
+                if (!CollectionUtils.isEmpty(recordList)){
+                    result.setList(recordList);
+                }else{
+                    result.setList(new ArrayList<>());
+                }
             } else {
                 result.setAccount("0");
                 result.setUserCount("0");

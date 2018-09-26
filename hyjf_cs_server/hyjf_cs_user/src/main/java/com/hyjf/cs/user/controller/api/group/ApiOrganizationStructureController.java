@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Api(tags = "api端-集团组织机构查询")
 @RestController
-@RequestMapping("/server/company")
+@RequestMapping("/hyjf-api/server/company")
 public class ApiOrganizationStructureController extends BaseUserController {
 
     @Autowired

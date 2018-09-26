@@ -343,7 +343,7 @@ public class ProjectListController extends BaseController {
 
     }
 
-    @GetMapping("/selectBorrowCreditByNid/{transferId}")
+    @GetMapping("/app/selectBorrowCreditByNid/{transferId}")
     public BorrowCreditResponse selectBorrowCreditByNid(@PathVariable String transferId){
         BorrowCreditResponse response = new BorrowCreditResponse();
         List<BorrowCredit> list = projectListService.selectBorrowCreditByNid(transferId);

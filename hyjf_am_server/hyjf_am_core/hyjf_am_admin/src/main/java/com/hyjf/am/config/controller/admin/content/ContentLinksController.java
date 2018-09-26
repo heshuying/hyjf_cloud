@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
+ * 内容中心-友情链接
  * @author fuqiang
  * @version ContentLinksController, v0.1 2018/7/14 14:12
  */

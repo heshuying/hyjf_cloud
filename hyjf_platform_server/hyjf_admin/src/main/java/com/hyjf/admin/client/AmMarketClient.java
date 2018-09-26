@@ -11,7 +11,7 @@ import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.am.vo.market.AdsWithBLOBsVO;
+import com.hyjf.am.vo.market.AdsVO;
 
 import java.util.List;
 
@@ -61,13 +61,13 @@ public interface AmMarketClient {
 
      AppBannerResponse findAppBannerList(AppBannerRequest request);
 
-     AppBannerResponse insertAppBannerList(AdsWithBLOBsVO ads);
+     AppBannerResponse insertAppBannerList(AdsVO adsVO);
 
-     AppBannerResponse updateAppBannerList(AdsWithBLOBsVO ads);
+     AppBannerResponse updateAppBannerList(AdsVO adsVO);
 
-     AppBannerResponse updateAppBannerStatus(AdsWithBLOBsVO ads);
+     AppBannerResponse updateAppBannerStatus(AdsVO adsVO);
 
-     AppBannerResponse deleteAppBanner(AdsWithBLOBsVO ads);
+     AppBannerResponse deleteAppBanner(AdsVO adsVO);
 
     ContentAdsResponse searchAction(ContentAdsRequest request);
 
@@ -150,8 +150,8 @@ public interface AmMarketClient {
 
     /**
      * 根据id获取广告
-     * @param request
+     * @param adsVO
      * @return
      */
-    AppBannerResponse getRecordById(AppBannerRequest request);
+    AppBannerResponse getRecordById(AdsVO adsVO);
 }

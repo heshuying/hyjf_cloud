@@ -3,16 +3,24 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.resquest.admin.ContentLinksRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
  * @version ContentLinksService, v0.1 2018/7/14 14:30
  */
 public interface ContentLinksService {
+
+    /**
+     * 获取文章列表列表
+     *
+     * @return
+     */
+    List<Link> getRecordList(ContentLinksRequest bean, int limitStart, int limitEnd);
+
     /**
      * 根据条件查询友情链接
      *
@@ -50,5 +58,5 @@ public interface ContentLinksService {
      */
     void deleteById(Integer id);
 
-	List<Link> getLinks();
+    List<Link> getLinks();
 }
