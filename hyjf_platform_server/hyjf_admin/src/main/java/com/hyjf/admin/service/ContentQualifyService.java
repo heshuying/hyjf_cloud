@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.ContentQualifyRequestBean;
 import com.hyjf.am.response.admin.ContentQualifyResponse;
+import com.hyjf.am.vo.config.ContentQualifyVO;
 
 /**
  * 内容管理 -资质荣誉
@@ -52,4 +53,12 @@ public interface ContentQualifyService {
 	 * @return
 	 */
 	int deleteById(Integer id);
+
+	/**
+	 * 根据id查询
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	ContentQualifyVO selectById(ContentQualifyRequestBean requestBean);
 }

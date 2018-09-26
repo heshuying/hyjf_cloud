@@ -148,7 +148,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     }
 
     @Override
-    public CouponCheckVO downloadFile(String id, HttpServletResponse response) {
+    public void downloadFile(String id, HttpServletResponse response) {
         CouponCheckVO couponCheck = amConfigClient.selectCoupon(Integer.valueOf(id));
         String fileP = "";
         String fileN = "";
@@ -158,9 +158,11 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         }
 
         OutputStream out = null;
-        try (FileInputStream in = new FileInputStream(fileP)) {
+        try {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
+            response.setContentType("multipart/form-data");
+            FileInputStream in = new FileInputStream(fileP);
 
             // 创建输出流
             out = response.getOutputStream();
@@ -186,7 +188,6 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 e.printStackTrace();
             }
         }
-        return couponCheck;
     }
 
     @Override

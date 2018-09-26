@@ -169,7 +169,7 @@ public class BankOpenRecordController extends BaseController {
                     } else if (celLength == 5) {// 生日
                         cell.setCellValue(user.getBirthday());
                     } else if (celLength == 6) {// 户籍所在地
-                        String area = userCenterService.getAreaByIdCard(user.getIdcard());
+                        String area = userCenterService.getAreaByIdCard(user.getIdCard());
                         cell.setCellValue(area);
                     } else if (celLength == 7) {// 身份证号码
                         cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getIdCard(), 3,7));

@@ -53,4 +53,9 @@ public class ContentQualifyServiceImpl implements ContentQualifyService {
 	public int deleteById(Integer id) {
 		return amConfigClient.deleteContentQualifyById(id);
 	}
+
+	@Override
+	public ContentQualifyVO selectById(ContentQualifyRequestBean requestBean) {
+		return amConfigClient.getContentQualifyRecord(requestBean.getId());
+	}
 }

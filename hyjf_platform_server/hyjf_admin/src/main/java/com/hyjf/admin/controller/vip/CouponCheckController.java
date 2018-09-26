@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.vip;
 
-import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
@@ -23,7 +22,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoyong
@@ -45,12 +46,12 @@ public class CouponCheckController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult couponInit(@RequestBody AdminCouponCheckRequest request) {
         CouponCheckResponse ccr = couponCheckService.serchCouponList(request);
-        JSONArray ja = new JSONArray();
-        ja.add("待审核");
-        ja.add("已发行");
-        ja.add("审核不通过");
+        Map<String, String> map = new HashMap<>();
+        map.put("couponStatus1","待审核");
+        map.put("couponStatus2","已发行");
+        map.put("couponStatus3","审核不通过");
         List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
-        ccr.setCouponStatus(ja);
+        ccr.setCouponStatus(map);
         ccr.setCouponType(couponType);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -99,16 +100,8 @@ public class CouponCheckController extends BaseController {
 
     @ApiOperation(value = "下载文件", notes = "下载文件")
     @GetMapping("/downloadAction/{id}")
-    public AdminResult downloadFile(HttpServletResponse response, @PathVariable String id) {
-        CouponCheckResponse checkResponse = new CouponCheckResponse();
-        CouponCheckVO couponCheckVO = couponCheckService.downloadFile(id, response);
-        if (couponCheckVO != null) {
-            checkResponse.setFileName(couponCheckVO.getFileName());
-            checkResponse.setFilePath(couponCheckVO.getFilePath());
-        } else {
-            return new AdminResult(FAIL, FAIL_DESC);
-        }
-        return new AdminResult<>(checkResponse);
+    public void downloadFile(HttpServletResponse response, @PathVariable String id) {
+        couponCheckService.downloadFile(id, response);
     }
 
     @ApiOperation(value = "审核优惠券", notes = "审核优惠券")

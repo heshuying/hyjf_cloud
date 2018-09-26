@@ -9,10 +9,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.resquest.admin.BindLogListRequest;
-import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
 import com.hyjf.am.resquest.message.MessagePushMsgRequest;
@@ -445,6 +442,16 @@ public class CsMessageClientImpl implements CsMessageClient {
             return response;
         }
         return null;
+    }
+
+    @Override
+    public AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
+        AppChannelStatisticsDetailResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/search/getstatisticsList", request, AppChannelStatisticsDetailResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+
     }
 
     @Override

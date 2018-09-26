@@ -149,9 +149,11 @@ public class LoanCoverServiceImpl implements LoanCoverService {
                             return new AdminResult<>("99", "更新失败");
                         }
                     }
-                    loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
-                    return new AdminResult<>();
+                    /*loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
+                    return new AdminResult<>();*/
                 }
+                loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
+                return new AdminResult<>();
             }
 
         }else{
