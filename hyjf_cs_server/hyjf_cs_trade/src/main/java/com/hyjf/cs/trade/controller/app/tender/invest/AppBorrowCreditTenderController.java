@@ -76,9 +76,14 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
         logger.info("APP端债转投资获取投资结果，logOrdId{}",logOrdId);
         WebResult<Map<String,Object>> webResult = borrowTenderService.getFaileResult(userId,logOrdId);
         AppResult<Map<String,Object>> result  = new AppResult<Map<String,Object>>();
+        Map<String,Object> data = webResult.getData();
+        if(data!=null && data.containsKey("errorMsg")){
+            data.put("error",data.get("errorMsg"));
+            data.remove("errorMsg");
+        }
         result.setStatusDesc(webResult.getStatusDesc());
         result.setStatus(webResult.getStatus());
-        result.setData(webResult.getData());
+        result.setData(data);
         return result;
     }
 
@@ -93,6 +98,8 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
         if(data.containsKey("assignCapital")){
             data.put("account",data.get("assignCapital"));
             data.put("income",data.get("assignInterest"));
+            data.remove("assignCapital");
+            data.remove("assignInterest");
         }
         result.setStatusDesc(webResult.getStatusDesc());
         result.setStatus(webResult.getStatus());

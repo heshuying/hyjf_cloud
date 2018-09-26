@@ -72,7 +72,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public List<ParamNameVO> getParamNameList(String nameClass) {
-        String url = "http://AM-CONFIG/am-config/config/getParamNameList/" + nameClass;
+        String url = "http://AM-ADMIN/am-config/config/getParamNameList/" + nameClass;
         ParamNameResponse response = restTemplate.getForEntity(url, ParamNameResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResultList();

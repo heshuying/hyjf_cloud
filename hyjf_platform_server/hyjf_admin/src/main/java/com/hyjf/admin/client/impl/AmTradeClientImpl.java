@@ -3383,7 +3383,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest) {
         BorrowCommonResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/infoAction", borrowCommonRequest, BorrowCommonResponse.class)
+                .postForEntity("http://AM-ADMIN/am-trade/borrowcommon/infoAction", borrowCommonRequest, BorrowCommonResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3394,7 +3394,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BorrowCommonResponse insertAction(BorrowCommonRequest borrowCommonRequest) throws Exception {
         BorrowCommonResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/insertAction", borrowCommonRequest, BorrowCommonResponse.class)
+                .postForEntity("http://AM-ADMIN/am-trade/borrowcommon/insertAction", borrowCommonRequest, BorrowCommonResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3406,7 +3406,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int isExistsUser(String userId) {
         int response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/isExistsUser/" + userId, Integer.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/isExistsUser/" + userId, Integer.class)
                 .getBody();
         return response;
     }
@@ -3415,7 +3415,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public String getBorrowPreNid() {
         String response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/getBorrowPreNid", String.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/getBorrowPreNid", String.class)
                 .getBody();
         return response;
     }
@@ -3423,7 +3423,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public String getXJDBorrowPreNid() {
         String response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/getXJDBorrowPreNid", String.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/getXJDBorrowPreNid", String.class)
                 .getBody();
         return response;
     }
@@ -3431,7 +3431,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public boolean isExistsBorrowPreNidRecord(String borrowPreNid) {
         boolean response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/isExistsBorrowPreNidRecord/" + borrowPreNid, boolean.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/isExistsBorrowPreNidRecord/" + borrowPreNid, boolean.class)
                 .getBody();
         return response;
     }
@@ -3439,7 +3439,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest) {
     	BorrowCommonVO response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/getBorrowServiceScale", borrowCommonRequest, BorrowCommonVO.class)
+                .postForEntity("http://AM-ADMIN/am-trade/borrowcommon/getBorrowServiceScale", borrowCommonRequest, BorrowCommonVO.class)
                 .getBody();
         return response;
     }
@@ -3447,7 +3447,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BorrowCommonResponse getProductTypeAction(String instCode) {
         BorrowCommonResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/getProductTypeAction/" + instCode, BorrowCommonResponse.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/getProductTypeAction/" + instCode, BorrowCommonResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3458,7 +3458,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int isEntrustedExistsUser(String userName) {
         int response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/isEntrustedExistsUser/" + userName, int.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/isEntrustedExistsUser/" + userName, int.class)
                 .getBody();
         return response;
     }
@@ -5357,7 +5357,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 	@Override
 	public BorrowCustomizeResponse selectBorrowAllList(BorrowBeanRequest form) {
-        String url = "http://AM-TRADE/am-trade/borrow/selectBorrowStyleList";
+        String url = "http://AM-ADMIN/am-trade/borrow/selectBorrowStyleList";
         BorrowCustomizeResponse response = restTemplate.postForEntity(url,form,BorrowCustomizeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5942,7 +5942,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 	@Override
 	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/exportBorrowList", borrowCommonCustomize, BorrowCustomizeResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrow/exportBorrowList", borrowCommonCustomize, BorrowCustomizeResponse.class)
                 .getBody().getBorrowCommonCustomizeList();
 	}
 
