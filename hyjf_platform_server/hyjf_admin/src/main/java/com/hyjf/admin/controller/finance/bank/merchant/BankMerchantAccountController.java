@@ -58,9 +58,9 @@ public class BankMerchantAccountController extends BaseController {
 
     private static final String WITHDRAW_METHOD_NAME = "/withdrawCallback";
 
-    private static final String OPT_SUCCESS_URL = "/onSuccess.jsp";  // TODO: 2018/8/8 后期确定操作成功页面地址 zyk
+    private static final String OPT_SUCCESS_URL = "/result/success";
 
-    private static final String OPT_ERROR_URL = "/onError.jsp";  // TODO: 2018/8/8 后期确定操作失败页面地址 zyk
+    private static final String OPT_ERROR_URL = "/result/fail";
 
     private static final String REQUEST_MAPPING = "/hyjf-admin/bank/merchant/account";
 

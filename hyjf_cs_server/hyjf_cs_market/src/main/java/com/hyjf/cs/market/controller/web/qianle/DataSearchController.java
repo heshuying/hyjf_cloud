@@ -102,11 +102,10 @@ public class DataSearchController {
 
     }
 
-
-
     @ApiOperation(value = "获取验证码", notes = "获取验证码")
-    @PostMapping("/sendsms/{mobile}")
-    public WebResult sendsms(@PathVariable String mobile, HttpServletRequest request) {
+    @PostMapping("/sendsms")
+    public WebResult sendsms(@RequestBody DataSearchBean form, HttpServletRequest request) {
+        String mobile = form.getMobile();
         WebResult webResult = new WebResult();
         JSONObject jo = new JSONObject();
         if (!dataSearchService.checkMobile(mobile)) {

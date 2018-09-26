@@ -41,6 +41,9 @@ public class AppConfigServiceImpl implements AppConfigService {
         if (bean.getTypeid() != null) {
             criteria.andTypeIdEqualTo(bean.getTypeid());
         }
+        if (bean.getPlatformType() != null) {
+            criteria.andPlatformTypeEqualTo(bean.getPlatformType());
+        }
         if (StringUtils.isNotEmpty(bean.getName())) {
             criteria.andNameLike("%" + bean.getName() + "%");
         }
@@ -74,13 +77,16 @@ public class AppConfigServiceImpl implements AppConfigService {
      * @author Michael
      */
     @Override
-    public Integer countRecordList(AppBannerRequest bean) {
+    public Integer  countRecordList(AppBannerRequest bean) {
         AdsExample example = new AdsExample();
         AdsExample.Criteria criteria = example.createCriteria();
         criteria.andClientTypeEqualTo(1);//手机端广告
         // 条件查询
         if (bean.getTypeid() != null) {
             criteria.andTypeIdEqualTo(bean.getTypeid());
+        }
+        if (bean.getPlatformType() != null) {
+            criteria.andPlatformTypeEqualTo(bean.getPlatformType());
         }
         if (StringUtils.isNotEmpty(bean.getName())) {
             criteria.andNameLike("%" + bean.getName() + "%");
