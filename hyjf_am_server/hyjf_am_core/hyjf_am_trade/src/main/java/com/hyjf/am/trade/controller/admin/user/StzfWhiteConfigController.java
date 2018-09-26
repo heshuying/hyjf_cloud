@@ -78,21 +78,5 @@ public class StzfWhiteConfigController extends BaseController {
 		return response;
 	}
 
-	/**
-	 * 根据id查询受托支付白名单详情
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping("/selectSTZHWhiteById/{id}")
-	public STZHWhiteListResponse selectSTZHWhiteById(@PathVariable Integer id) {
-		STZHWhiteListResponse response = new STZHWhiteListResponse();
-		StzhWhiteList stzhWhiteList = stzfWhiteConfigService.selectStzfWhiteById(id);
-		if (stzhWhiteList != null) {
-			STZHWhiteListVO stzhWhiteListVO = new STZHWhiteListVO();
-			BeanUtils.copyProperties(stzhWhiteList,stzhWhiteListVO);
-			stzhWhiteListVO.setApprovalTime(GetDate.times10toStrYYYYMMDD(Integer.parseInt(stzhWhiteList.getApprovalTime())));
-			response.setResult(stzhWhiteListVO);
-		}
-		return response;
-	}
+
 }

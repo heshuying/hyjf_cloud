@@ -56,4 +56,10 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
     public STZHWhiteListCustomize selectInfo(STZHWhiteListCustomize request) {
         return stzhWhiteListCustomizeMapper.selectInfo(request);
     }
+
+	@Override
+	public StzhWhiteList selectStzfWhiteById(Integer id) {
+		StzhWhiteList pushMoney = stzhWhiteListMapper.selectByPrimaryKey(id);
+		return pushMoney;
+	}
 }
