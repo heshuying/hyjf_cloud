@@ -1525,6 +1525,7 @@ public interface AmTradeClient {
      */
     List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName);
 
+    List<ProtocolTemplateVO> getNewInfo();
     /**
      * 统计相应的计划总数
      * @param params
