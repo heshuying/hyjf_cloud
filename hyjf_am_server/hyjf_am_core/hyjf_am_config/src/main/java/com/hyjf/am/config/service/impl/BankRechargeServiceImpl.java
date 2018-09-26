@@ -7,6 +7,7 @@ import com.hyjf.am.config.service.BankRechargeService;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,8 +113,8 @@ public class BankRechargeServiceImpl implements BankRechargeService {
         if (adminRequest.getBankId() != null && adminRequest.getBankId() != 0) {
             criteria.andIdNotEqualTo(adminRequest.getBankId());
         }
-        BankRechargeConfig config= bankRechargeConfigMapper.selectByExample(example).get(0);
-        if (config != null ) {
+        List<BankRechargeConfig> config= bankRechargeConfigMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(config)&&config.get(0)!=null) {
             return 1;
         }
         return 0;

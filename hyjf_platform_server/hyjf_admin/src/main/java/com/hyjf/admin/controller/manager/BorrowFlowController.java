@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.manager;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -116,6 +117,7 @@ public class BorrowFlowController extends BaseController {
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
+        AdminResult result= new AdminResult();
         if(StringUtils.isNotBlank(adminRequest.getBorrowCdCd())){
             adminRequest.setBorrowCd(Integer.valueOf(adminRequest.getBorrowCdCd()));
         }
@@ -134,9 +136,10 @@ public class BorrowFlowController extends BaseController {
             // 产品类型
             List<HjhAssetTypeVO> assetTypeList = this.borrowFlowService.hjhAssetTypeList(adminRequest.getInstCode());
             resList.setAssetTypeList(assetTypeList);
-            resList.setRtn(Response.FAIL);
-            resList.setMessage(message);
-            return new AdminResult<AdminBorrowFlowResponse>(resList) ;
+            result.setStatus(BaseResult.FAIL);
+            result.setStatusDesc(message);
+            result.setData(resList);
+            return result ;
         }
         AdminSystemVO user = getUser(request);
         adminRequest.setCreateUser(Integer.parseInt(user.getId()));
