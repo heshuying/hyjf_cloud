@@ -460,7 +460,7 @@ public class AccessFilter extends ZuulFilter {
 				}
 			}
 		}
-		logger.info(originalRequestPath + " : secureVisitFlag" + secureVisitFlag);
+		logger.info(originalRequestPath + " : secureVisitFlag：" + secureVisitFlag);
 		return secureVisitFlag;
 	}
 
