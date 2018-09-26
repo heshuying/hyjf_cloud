@@ -1814,6 +1814,66 @@ public class AdsExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andPlatformTypeIsNull() {
+            addCriterion("platform_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeIsNotNull() {
+            addCriterion("platform_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeEqualTo(Integer value) {
+            addCriterion("platform_type =", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeNotEqualTo(Integer value) {
+            addCriterion("platform_type <>", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeGreaterThan(Integer value) {
+            addCriterion("platform_type >", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("platform_type >=", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeLessThan(Integer value) {
+            addCriterion("platform_type <", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("platform_type <=", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeIn(List<Integer> values) {
+            addCriterion("platform_type in", values, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeNotIn(List<Integer> values) {
+            addCriterion("platform_type not in", values, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeBetween(Integer value1, Integer value2) {
+            addCriterion("platform_type between", value1, value2, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("platform_type not between", value1, value2, "platformType");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

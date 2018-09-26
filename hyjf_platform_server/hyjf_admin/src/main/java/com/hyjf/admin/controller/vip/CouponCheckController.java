@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.vip;
 
-import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
@@ -45,12 +44,7 @@ public class CouponCheckController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult couponInit(@RequestBody AdminCouponCheckRequest request) {
         CouponCheckResponse ccr = couponCheckService.serchCouponList(request);
-        JSONArray ja = new JSONArray();
-        ja.add("待审核");
-        ja.add("已发行");
-        ja.add("审核不通过");
         List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
-        ccr.setCouponStatus(ja);
         ccr.setCouponType(couponType);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -99,9 +93,8 @@ public class CouponCheckController extends BaseController {
 
     @ApiOperation(value = "下载文件", notes = "下载文件")
     @GetMapping("/downloadAction/{id}")
-    public AdminResult downloadFile(HttpServletResponse response, @PathVariable String id) {
+    public void downloadFile(HttpServletResponse response, @PathVariable String id) {
         couponCheckService.downloadFile(id, response);
-        return new AdminResult<>();
     }
 
     @ApiOperation(value = "审核优惠券", notes = "审核优惠券")

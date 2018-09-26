@@ -28,4 +28,12 @@ public interface SiteSettingService {
      * @return
      */
     void update(SitesettingRequest request);
+
+    /**
+     * 获取网站设置
+     *
+     * @return
+     */
+    SiteSetting selectSiteSetting();
+
 }
