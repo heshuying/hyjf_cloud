@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yaoyong
@@ -46,12 +44,7 @@ public class CouponCheckController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult couponInit(@RequestBody AdminCouponCheckRequest request) {
         CouponCheckResponse ccr = couponCheckService.serchCouponList(request);
-        Map<String, String> map = new HashMap<>();
-        map.put("couponStatus1","待审核");
-        map.put("couponStatus2","已发行");
-        map.put("couponStatus3","审核不通过");
         List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
-        ccr.setCouponStatus(map);
         ccr.setCouponType(couponType);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
