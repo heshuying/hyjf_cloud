@@ -23,6 +23,8 @@ import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 /**
@@ -298,12 +300,19 @@ public class AccessFilter extends ZuulFilter {
 		ctx.setResponseStatusCode(200);
 		JSONObject result = new JSONObject();
 
+		String loginPromptStr="";
+		try {
+			loginPromptStr = URLEncoder.encode("请先登录！", "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
 		if (APP_CHANNEL.equals(channel)) {
 			result.put("status", "708");
-			result.put("statusDesc", "请先登录！");
+			result.put("statusDesc", loginPromptStr);
 		} else {
 			result.put("status", "999");
-			result.put("statusDesc", "请先登录！");
+			result.put("statusDesc", loginPromptStr);
 		}
 		ctx.setResponseBody(result.toJSONString());
 		return ctx;
