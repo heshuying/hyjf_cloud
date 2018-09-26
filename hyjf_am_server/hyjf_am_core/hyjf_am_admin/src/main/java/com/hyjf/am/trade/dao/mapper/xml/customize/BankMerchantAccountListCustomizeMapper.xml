@@ -92,7 +92,7 @@
     id, order_id, borrow_nid, region_name, branch_name, department_name, hbmal.user_id, account_id,
     amount, bank_account_type, bank_account_code, bank_account_balance, bank_account_frost,
     trans_type, `type`, `status`, seq_no, tx_date, tx_time, hbmal.create_time, create_user_id,
-    create_user_name, hbmal.update_time, update_user_id, update_user_name, remark
+    create_user_name, hbmal.update_time, update_user_id, update_user_name, remark,username
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample" >
     select

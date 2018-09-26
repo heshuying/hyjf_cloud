@@ -58,10 +58,12 @@
 				AND a.`status` in (0, 1)
 			</if>
 			<if test="addtimeStartSrch != null and addtimeStartSrch != ''">
-				AND FROM_UNIXTIME( a.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{addtimeStartSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND a.create_time >= STR_TO_DATE(#{addtimeStartSrch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="addtimeEndSrch != null and addtimeEndSrch != ''">
-				AND FROM_UNIXTIME( a.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{addtimeEndSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND a.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{addtimeEndSrch},'23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="bankFlagSrch != null and bankFlagSrch != ''">
 				AND a.bank_flag = #{bankFlagSrch}

@@ -7,6 +7,7 @@ import com.hyjf.am.response.admin.BindLogResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
@@ -20,8 +21,10 @@ import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.*;
 import com.hyjf.cs.message.mongo.ic.*;
 import com.hyjf.cs.message.service.bank.BankReturnConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -106,7 +109,41 @@ public class MongoSeachController extends BaseController {
         }
         return response;
     }
-
+    /**
+     * 分页查询所有渠道投资信息
+     *
+     * @return
+     */
+    @RequestMapping("/getstatisticsList")
+    public AppChannelStatisticsDetailResponse selectAppChannelStatistics2(@RequestBody  AppChannelStatisticsDetailRequest request) {
+        AppChannelStatisticsDetailResponse response = new AppChannelStatisticsDetailResponse();
+        Query query = new Query();
+        String userNameSrch = request.getUserNameSrch();
+        String sourceIdSrch = request.getSourceIdSrch();
+        Criteria criteria = new Criteria();
+        if (StringUtils.isNotEmpty(userNameSrch)) {
+            criteria.and("userName").is(userNameSrch);
+        }
+        if (StringUtils.isNotEmpty(sourceIdSrch)) {
+            criteria.and("sourceId").is(sourceIdSrch);
+        }
+        Long count = appChannelStatisticsDetailDao.count(query);
+        if (count>0) {
+            query.addCriteria(criteria);
+            int currPage = request.getCurrPage();
+            int pageSize = request.getPageSize();
+            int limitStart = currPage * pageSize;
+            int limitEnd = limitStart + pageSize;
+            query.skip(limitStart).limit(limitEnd);
+            List<AppChannelStatisticsDetail> list = appChannelStatisticsDetailDao.find(query);
+            if (!CollectionUtils.isEmpty(list)) {
+                List<AppChannelStatisticsDetailVO> voList = CommonUtils.convertBeanList(list, AppChannelStatisticsDetailVO.class);
+                response.setResultList(voList);
+            }
+        }
+        response.setCount(count);
+        return response;
+    }
     /**
      * 企业用户是否已绑定用户
      *

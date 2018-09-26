@@ -422,7 +422,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      * @param
      */
     private void setCreditRepayPlanByStagesToResult(JSONObject result, String assignNid) {
-        List<CreditRepayVO> creditRepays = amTradeClient.selectCreditRepayList(Integer.valueOf(assignNid));
+        List<CreditRepayVO> creditRepays = amTradeClient.selectCreditRepayListByAssignNid(assignNid);
         JSONArray jsonArray = new JSONArray();
         if (!CollectionUtils.isEmpty(creditRepays)) {
             for (CreditRepayVO creditRepay : creditRepays) {
@@ -448,7 +448,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      */
     private void setCreditTenderInfoToResult(List<BorrowProjectDetailBean> detailBeansList, CreditTenderVO creditTender) {
         // 2. 投资信息(本金投资)
-        CreditRepayVO creditRepay = amTradeClient.selectCreditRepayList(Integer.valueOf(creditTender.getAssignNid())).get(0);
+        CreditRepayVO creditRepay = amTradeClient.selectCreditRepayListByAssignNid(creditTender.getAssignNid()).get(0);
         if (creditTender != null) {
             List<BorrowDetailBean> borrowBeansList1 = new ArrayList<>();
             preckCredit(borrowBeansList1, "投资本金", CommonUtils.formatAmount(creditTender.getAssignCapital()) + "元");

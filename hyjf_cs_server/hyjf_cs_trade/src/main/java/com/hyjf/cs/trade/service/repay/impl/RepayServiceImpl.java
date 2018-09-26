@@ -2,8 +2,10 @@ package com.hyjf.cs.trade.service.repay.impl;
 
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
+import com.hyjf.am.vo.trade.ProjectBeanVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.BorrowClient;
 import com.hyjf.cs.trade.service.repay.RepayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,11 @@ public class RepayServiceImpl implements RepayService {
     AmTradeClient amTradeClient;
 
 	@Autowired
-	AmUserClient borrowClient;
+	AmUserClient amUserClient;
+
+	@Autowired
+	BorrowClient borrowClient;
+
     /**
      * 获取批次放款列表
      *
@@ -183,8 +189,8 @@ public class RepayServiceImpl implements RepayService {
      * 查询用户的还款详情
      */
     @Override
-    public ProjectBean searchRepayProjectDetail(ProjectBean form) {
-        return amTradeClient.searchRepayProjectDetail(form);
+    public ProjectBeanVO getRepayProjectDetail(ProjectBeanVO form) {
+        return borrowClient.getRepayProjectDetail(form);
     }
 
 
@@ -193,6 +199,6 @@ public class RepayServiceImpl implements RepayService {
      */
     @Override
     public BankOpenAccountVO getBankOpenAccount(String accountId) {
-        return borrowClient.getBankOpenAccount(accountId);
+        return amUserClient.getBankOpenAccount(accountId);
     }
 }

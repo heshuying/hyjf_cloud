@@ -197,6 +197,7 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
     public void insertAsset(BorrowProjectTypeRequest form) {
         HjhAssetType record = new HjhAssetType();
         record.setCreateUser(Integer.parseInt(form.getCreateUserId()));
+        record.setUpdateUser(Integer.parseInt(form.getCreateUserId()));
         //汇赢金服的类型
         record.setInstCode(CustomConstants.INST_CODE_HYJF);
         //项目类型里编号存放string类型、tinyint类型最大值存放127

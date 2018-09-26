@@ -1397,6 +1397,13 @@ public interface AmTradeClient {
      */
     List<CreditRepayVO> selectCreditRepayList(Integer tenderId);
 
+    /**
+     * 根据assignNid查询还款信息
+     * @author zhangyk
+     * @date 2018/9/25 17:29
+     */
+    List<CreditRepayVO> selectCreditRepayListByAssignNid(String assignNid);
+
     List<CreditRepayVO> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, Integer status);
 
     /**

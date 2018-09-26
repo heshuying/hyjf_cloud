@@ -52,14 +52,14 @@ import java.util.List;
  */
 @Api(value = "api端-同步余额信息接口",tags = "api端-同步余额信息接口")
 @Controller
-@RequestMapping("/hyjf-api/synbalance")
+@RequestMapping("/hyjf-api/server/synbalance")
 public class SynBalanceController extends BaseTradeController {
     @Autowired
     private SynBalanceService synBalanceService;
     @Autowired
     SystemConfig systemConfig;
     @ApiOperation(value = "第三方同步余额", notes = "同步余额")
-    @PostMapping(value = "/synbalance.json", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/synbalance.do")
     @ResponseBody
     public SynBalanceResultBean synBalance(@RequestBody SynBalanceRequestBean synBalanceRequestBean, HttpServletRequest request) {
         logger.info(synBalanceRequestBean.getAccountId()+"第三方同步余额开始-----------------------------");

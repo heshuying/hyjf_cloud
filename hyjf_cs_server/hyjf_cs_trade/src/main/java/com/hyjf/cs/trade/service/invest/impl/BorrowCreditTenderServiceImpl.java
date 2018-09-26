@@ -22,10 +22,7 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
@@ -1346,10 +1343,19 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 忘记密码的跳转URL
         bean.setForgotPwdUrl(systemConfig.getForgetpassword());
 
-        //错误页
-        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
-        //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestSuccess?logOrdId="+bean.getLogOrderId();
+        String retUrl = "";
+        String successUrl = "";
+        if((ClientConstants.APP_CLIENT_IOS+"").equals(request.getPlatform())|| (ClientConstants.APP_CLIENT+"").equals(request.getPlatform())){
+            //错误页
+            retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/"+request.getCreditNid()+"/result/failed?logOrdId="+bean.getLogOrderId()+"&sign="+request.getSign()+"&token="+request.getSign();
+            //成功页
+            successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/"+request.getCreditNid()+"/result/success?logOrdId="+bean.getLogOrderId()+"&sign="+request.getSign()+"&token="+request.getSign();
+        }else{
+            //错误页
+            retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
+            //成功页
+            successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestSuccess?logOrdId="+bean.getLogOrderId();
+        }
 
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + "/tender/credit/bgReturn?platform="+request.getPlatform();
