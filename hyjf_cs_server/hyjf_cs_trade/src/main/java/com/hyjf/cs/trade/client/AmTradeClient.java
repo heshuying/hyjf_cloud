@@ -1751,7 +1751,7 @@ public interface AmTradeClient {
      * @param assetId
      * @return
      */
-    HjhPlanAssetVO checkDuplicateAssetId(String assetId);
+    List<HjhPlanAssetVO> checkDuplicateAssetId(String assetId);
 
     /**
      * 录标时添加企业资产
