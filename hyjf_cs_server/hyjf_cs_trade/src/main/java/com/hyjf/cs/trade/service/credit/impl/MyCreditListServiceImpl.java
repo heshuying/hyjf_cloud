@@ -293,6 +293,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             data.put("creditPrice",request.getCreditPrice());
             // 转让本金
             data.put("creditCapital",request.getCreditCapital());
+            // web的转让本金
+            data.put("assignCapital",request.getCreditCapital());
             result.setData(data);
         }catch (Exception e){
         	e.printStackTrace();
@@ -493,6 +495,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                 }
             }
         }
+        borrowCredit.setBorrowUserId(borrow.getUserId());
+        borrowCredit.setBorrowUserName(borrow.getBorrowUserName());
         // 原标nid
         borrowCredit.setBidNid(tenderToCreditDetail.getBorrowNid());
         // 原标年化利率
