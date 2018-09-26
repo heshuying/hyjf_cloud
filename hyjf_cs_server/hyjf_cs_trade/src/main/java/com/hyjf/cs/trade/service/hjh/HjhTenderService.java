@@ -37,4 +37,10 @@ public interface HjhTenderService extends BaseTradeService {
      * @return
      */
     AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender);
+
+    /**
+     * 检查计划投资的参数
+     * @param tender
+     */
+    void checkPlan(TenderRequest tender);
 }
