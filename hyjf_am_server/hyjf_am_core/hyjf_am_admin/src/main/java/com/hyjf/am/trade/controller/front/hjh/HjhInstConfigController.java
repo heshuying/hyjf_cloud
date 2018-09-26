@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Api(value = "根据机构编号检索机构信息")
 @RestController
-@RequestMapping("/am-trade/hjhInstConfig")
+@RequestMapping("/am-admin/hjhInstConfig")
 public class HjhInstConfigController extends BaseController {
 
 	@Autowired
