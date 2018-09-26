@@ -391,7 +391,10 @@
         CASE
         WHEN hydb.`status` = 1 AND hydb.verify_status = 3
         THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d %H:%i:%s' )
-        ELSE ''
+        ELSE FROM_UNIXTIME(
+        hydb.verify_time,
+        '%Y-%m-%d %H:%i'
+        )
         END AS on_time,
 
         CASE

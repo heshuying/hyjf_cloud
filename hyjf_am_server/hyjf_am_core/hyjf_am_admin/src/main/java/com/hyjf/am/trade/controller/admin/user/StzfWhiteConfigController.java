@@ -6,9 +6,11 @@ package com.hyjf.am.trade.controller.admin.user;
 import java.util.List;
 
 import com.hyjf.am.trade.dao.model.customize.STZHWhiteListCustomize;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +29,7 @@ import com.hyjf.common.util.CommonUtils;
  * @version StzfWhiteConfigController, v0.1 2018/7/10 15:19
  */
 @RestController
-@RequestMapping("/am-trade/stzfwhiteconfig")
+@RequestMapping("/am-admin/stzfwhiteconfig")
 public class StzfWhiteConfigController extends BaseController {
 	@Autowired
 	private StzfWhiteConfigService stzfWhiteConfigService;
@@ -90,6 +92,24 @@ public class StzfWhiteConfigController extends BaseController {
 		if (whiteListCustomize != null) {
 			STZHWhiteListVO stzhWhiteListVO = new STZHWhiteListVO();
 			BeanUtils.copyProperties(whiteListCustomize,stzhWhiteListVO);
+			response.setResult(stzhWhiteListVO);
+		}
+		return response;
+	}
+
+	/**
+	 * 根据id查询受托支付白名单详情
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/selectSTZHWhiteById/{id}")
+	public STZHWhiteListResponse selectSTZHWhiteById(@PathVariable Integer id) {
+		STZHWhiteListResponse response = new STZHWhiteListResponse();
+		StzhWhiteList stzhWhiteList = stzfWhiteConfigService.selectStzfWhiteById(id);
+		if (stzhWhiteList != null) {
+			STZHWhiteListVO stzhWhiteListVO = new STZHWhiteListVO();
+			BeanUtils.copyProperties(stzhWhiteList,stzhWhiteListVO);
+			stzhWhiteListVO.setApprovalTime(GetDate.times10toStrYYYYMMDD(Integer.parseInt(stzhWhiteList.getApprovalTime())));
 			response.setResult(stzhWhiteListVO);
 		}
 		return response;

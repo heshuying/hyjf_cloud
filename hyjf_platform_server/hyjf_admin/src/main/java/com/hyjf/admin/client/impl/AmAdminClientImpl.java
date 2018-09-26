@@ -83,7 +83,7 @@ public class AmAdminClientImpl implements AmAdminClient {
 
     @Override
     public STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean) {
-        String url = "http://AM-ADMIN/am-trade/stzfwhiteconfig/getUserByUserName";
+        String url = "http://AM-ADMIN/am-admin/stzfwhiteconfig/getUserByUserName";
         STZHWhiteListResponse response = restTemplate.postForEntity(url,requestBean,STZHWhiteListResponse.class).getBody();
         if (STZHWhiteListResponse.isSuccess(response)) {
             return response;
