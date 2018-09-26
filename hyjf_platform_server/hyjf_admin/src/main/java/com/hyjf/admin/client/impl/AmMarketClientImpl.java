@@ -140,36 +140,36 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ContentAdsResponse searchAction(ContentAdsRequest request) {
-		return restTemplate.postForEntity("http://AM-MARKET/am-market/content/contentads/searchaction",
+		return restTemplate.postForEntity("http://AM-ADMIN/am-market/content/contentads/searchaction",
 				request, ContentAdsResponse.class).getBody();
 	}
 
 	@Override
 	public ContentAdsResponse inserAction(ContentAdsRequest request) {
-		return restTemplate.postForObject("http://AM-MARKET/am-market/content/contentads/inseraction",
+		return restTemplate.postForObject("http://AM-ADMIN/am-market/content/contentads/inseraction",
 				request, ContentAdsResponse.class);
 	}
 
 	@Override
 	public ContentAdsResponse infoaction(Integer id) {
-		return restTemplate.getForObject("http://AM-MARKET/am-market/content/contentads/infoaction/"+
+		return restTemplate.getForObject("http://AM-ADMIN/am-market/content/contentads/infoaction/"+
 				id, ContentAdsResponse.class);
 	}
 
 	@Override
 	public ContentAdsResponse updateAction(ContentAdsRequest request) {
-		return restTemplate.postForObject("http://AM-MARKET/am-market/content/contentads/updateaction",
+		return restTemplate.postForObject("http://AM-ADMIN/am-market/content/contentads/updateaction",
 				request, ContentAdsResponse.class);
 	}
 
 	@Override
 	public ContentAdsResponse deleteById(Integer id) {
-		return restTemplate.getForObject("http://AM-MARKET/am-market/content/contentads/delete/" + id, ContentAdsResponse.class);
+		return restTemplate.getForObject("http://AM-ADMIN/am-market/content/contentads/delete/" + id, ContentAdsResponse.class);
 	}
 
 	@Override
 	public ContentAdsResponse getAdsTypeList() {
-		return restTemplate.postForObject("http://AM-MARKET/am-market/content/contentads/getadstypelist",
+		return restTemplate.postForObject("http://AM-ADMIN/am-market/content/contentads/getadstypelist",
 				null, ContentAdsResponse.class);
 	}
 

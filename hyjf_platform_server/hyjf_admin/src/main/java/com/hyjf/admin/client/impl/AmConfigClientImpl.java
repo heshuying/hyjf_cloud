@@ -219,7 +219,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public LinkResponse getLinks() {
         LinkResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/content/contentlinks/getLinks", LinkResponse.class)
+                .getForEntity("http://AM-ADMIN/am-config/content/contentlinks/getLinks", LinkResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -794,31 +794,31 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public ContentArticleResponse searchAction(ContentArticleRequest contentArticleRequestBean) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/content/contentarticle/searchaction",
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/content/contentarticle/searchaction",
                 contentArticleRequestBean, ContentArticleResponse.class).getBody();
 
     }
 
     @Override
     public ContentArticleResponse inserAction(ContentArticleRequest contentArticleRequestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentarticle/insertaction",
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentarticle/insertaction",
                 contentArticleRequestBean, ContentArticleResponse.class);
     }
 
     @Override
     public ContentArticleResponse findById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentarticle/findbyId/" + id, ContentArticleResponse.class);
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentarticle/findbyId/" + id, ContentArticleResponse.class);
     }
 
     @Override
     public ContentArticleResponse updateAction(ContentArticleRequest contentArticleRequestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentarticle/updateaction",
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentarticle/updateaction",
                 contentArticleRequestBean, ContentArticleResponse.class);
     }
 
     @Override
     public ContentArticleResponse deleteContentArticleById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentarticle/delete/" + id, ContentArticleResponse.class);
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentarticle/delete/" + id, ContentArticleResponse.class);
     }
 
     @Override
@@ -1749,7 +1749,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public List<LinkVO> searchActions(ContentLinksRequest requestBean) {
-        LinkResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/searchaction", requestBean,
+        LinkResponse response = restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentlinks/searchaction", requestBean,
                 LinkResponse.class);
         response.getResultList();
 
@@ -1758,19 +1758,19 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public LinkResponse insertActions(ContentLinksRequest requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/insertaction", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentlinks/insertaction", requestBean,
                 LinkResponse.class);
     }
 
     @Override
     public LinkResponse infoInfoAction(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG//am-config/content/contentlinks/getrecord/" + id,
+        return restTemplate.getForObject("http://AM-ADMIN//am-config/content/contentlinks/getrecord/" + id,
                 LinkResponse.class);
     }
 
     @Override
     public LinkResponse updateActions(ContentLinksRequest requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/updateaction", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentlinks/updateaction", requestBean,
                 LinkResponse.class);
     }
 

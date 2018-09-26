@@ -47,7 +47,7 @@ public class ProtocolTemplateController extends BaseController {
     }
 
     /**
-     * 统计全部个数
+     * 分页查询统计全部个数
      *
      * @return
      */
