@@ -1,13 +1,10 @@
 package com.hyjf.am.config.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.config.dao.model.auto.FeerateModifyLog;
 import com.hyjf.am.config.service.OperationLogService;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminOperationLogResponse;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,23 +38,17 @@ public class OperationLogController extends BaseConfigController {
         if (recordTotal > 0) {
             Paginator paginator = new Paginator((int)map.get("currPage"), recordTotal,(int)map.get("pageSize"));
             //查询记录
-            List<FeerateModifyLog> recordList =operationLogService.selectOperationLogListByPage(map,paginator.getOffset(), paginator.getLimit());
+            List<FeerateModifyLogVO> recordList =operationLogService.selectOperationLogListByPage(map,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
-                List<FeerateModifyLogVO> feerateModifyLogVOList = CommonUtils.convertBeanList(recordList, FeerateModifyLogVO.class);
-                for (int i = 0; i < feerateModifyLogVOList.size(); i++) {
-                    feerateModifyLogVOList.get(i).setModifyTypeSrch(accountEsbStates(recordList.get(i).getModifyType()));
-                    feerateModifyLogVOList.get(i).setStatusName(nameStates(recordList.get(i).getStatus()));
+                for (int i = 0; i < recordList.size(); i++) {
+                    recordList.get(i).setModifyTypeSrch(accountEsbStates(recordList.get(i).getModifyType()));
+                    recordList.get(i).setStatusName(nameStates(recordList.get(i).getStatus()));
                 }
-                response.setResultList(feerateModifyLogVOList);
+                response.setResultList(recordList);
                 response.setRecordTotal(recordTotal);
-                response.setRtn(Response.SUCCESS);
-                return response;
             }
-            response.setRtn(Response.SUCCESS);
-            response.setMessage("查询的数据为空！");
-            return response;
         }
-        return null;
+        return response;
     }
 //
 //    /**
