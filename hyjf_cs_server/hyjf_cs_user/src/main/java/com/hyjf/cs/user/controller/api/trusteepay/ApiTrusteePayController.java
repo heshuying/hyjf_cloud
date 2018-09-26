@@ -30,7 +30,7 @@ public class ApiTrusteePayController extends BaseController {
      * @return
      */
     @ApiOperation(value = "借款人受托支付申请", notes = "借款人受托支付申请")
-    @RequestMapping(value = "/page")
+    @RequestMapping(value = "/page.do")
     public ModelAndView trusteePay(HttpServletRequest request, @RequestBody TrusteePayRequestBean payRequestBean) {
         return trusteePayService.trusteePayApply(request, payRequestBean);
     }
@@ -68,7 +68,7 @@ public class ApiTrusteePayController extends BaseController {
      */
     @ApiOperation(value = "受托支付申请状态查询", notes = "受托支付申请状态查询")
     @ResponseBody
-    @RequestMapping(value = "/trusteePayQuery", method = RequestMethod.POST)
+    @RequestMapping(value = "/trusteePayQuery.do", method = RequestMethod.POST)
     public JSONObject trusteePayQuery(@RequestBody TrusteePayRequestBean payRequestBean) {
         return trusteePayService.trusteePayQuery(payRequestBean);
     }

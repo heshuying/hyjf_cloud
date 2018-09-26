@@ -3,14 +3,6 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-import java.util.Random;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.config.dao.mapper.auto.SiteSettingMapper;
 import com.hyjf.am.config.dao.model.auto.SiteSetting;
 import com.hyjf.am.config.dao.model.auto.SiteSettingExample;
@@ -18,6 +10,13 @@ import com.hyjf.am.config.service.SiteSettingService;
 import com.hyjf.am.resquest.admin.SitesettingRequest;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author fuqiang
@@ -27,6 +26,7 @@ import com.hyjf.common.cache.RedisUtils;
 public class SiteSettingServiceImpl implements SiteSettingService {
 	@Autowired
 	private SiteSettingMapper siteSettingMapper;
+
 
 	@Override
 	public SiteSetting findOne() {
@@ -42,78 +42,62 @@ public class SiteSettingServiceImpl implements SiteSettingService {
 		}
 		return siteSetting;
 	}
-	
-	
+
+
 	/**
 	 * 用来测试事务的方法。
 	 */
 	@Override
 	public void updateTest1() throws Exception {
-	    SiteSettingExample example = new SiteSettingExample();
-	    
+		SiteSettingExample example = new SiteSettingExample();
+
 //	    example.createCriteria();
 //	    example.createCriteria().andIdEqualTo(2);
-	    
-	    SiteSettingExample.Criteria criteria = example.createCriteria();
-        criteria.andIdEqualTo(2);
-	    
-	    
-	    SiteSetting setting = new SiteSetting();
-	    setting.setSiteDomain("CXXXXX");
-        setting.setCompany("XXXX");
-	    int res = siteSettingMapper.updateByExampleSelective(setting, example);
-	    System.out.println("更新结果："+res);
-	
 
-            Random r = new Random();
-            int num = r.nextInt(10);
-            
-            Thread.sleep(num*1000);
-            
-           // updateTest2();
-	    
-	    
+		SiteSettingExample.Criteria criteria = example.createCriteria();
+		criteria.andIdEqualTo(2);
+
+
+		SiteSetting setting = new SiteSetting();
+		setting.setSiteDomain("CXXXXX");
+		setting.setCompany("XXXX");
+		int res = siteSettingMapper.updateByExampleSelective(setting, example);
+		System.out.println("更新结果："+res);
+
+
+		Random r = new Random();
+		int num = r.nextInt(10);
+
+		Thread.sleep(num*1000);
+
+		// updateTest2();
+
+
 	}
 
 	@Override
 	public void update(SitesettingRequest request) {
 		SiteSetting siteSetting = new SiteSetting();
 		BeanUtils.copyProperties(request, siteSetting);
-		int result = siteSettingMapper.updateByPrimaryKey(siteSetting);
+		int result = siteSettingMapper.updateByPrimaryKeySelective(siteSetting);
 		if (result > 0) {
 			RedisUtils.setObjEx(RedisConstants.SITE_SETTINGS, siteSetting, 24 * 60 * 60);
 		}
 	}
 
-	/*public void updateTest2() {
-        SiteSettingExample example = new SiteSettingExample();
-        
-//      example.createCriteria();
-//      example.createCriteria().andIdEqualTo(2);
-        
-        SiteSettingExample.Criteria criteria = example.createCriteria();
-        criteria.andIdEqualTo(2);
-        
-        
-        SiteSetting setting = new SiteSetting();
-        setting.setSiteDomain("XXXXX");
-        setting.setSiteName("再次测试事务。。");
-        int res = siteSettingMapper.updateByExampleSelective(setting, example);
-        System.out.println("更新结果："+res);
-        
-    
-            Random r = new Random();
-            int num = r.nextInt(10);
-            
-            try {
-                Thread.sleep(num*1000);
-            } catch (InterruptedException e) {
-                 e.printStackTrace();
-            }
+	/**
+	 * 通过网站设置获取公司信息 add by liushouyi
+	 *
+	 * @return
+	 */
+	@Override
+	public SiteSetting selectSiteSetting() {
+		SiteSettingExample example = new SiteSettingExample();
+		List<SiteSetting> siteSettingList = this.siteSettingMapper.selectByExample(example);
+		if(null != siteSettingList && siteSettingList.size()>0){
+			return siteSettingList.get(0);
+		}
+		return null;
+	}
 
-		*//*if (1 == 1) {
-//                throw new RuntimeException("测试异常", 12);
-			throw new RuntimeException("测试异常");
-		}*//*
-    }*/
 }

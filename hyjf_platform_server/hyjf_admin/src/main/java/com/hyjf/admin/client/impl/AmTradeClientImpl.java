@@ -3845,7 +3845,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer updateAccountManage(AccountVO accountVO) {
-        String url = tradeService + "/bank_account_manage/update_account";
+        String url = "http://AM-ADMIN/am-trade/bank_account_manage/update_account";
         IntegerResponse response = restTemplate.postForEntity(url, accountVO, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
@@ -3866,7 +3866,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         adminBankAccountCheckCustomizeVO.setUserId(userId);
         adminBankAccountCheckCustomizeVO.setStartDate(startTime);
         adminBankAccountCheckCustomizeVO.setEndDate(endTime);
-        String url = tradeService + "/bank_account_manage/update_account_check/";
+        String url = "http://AM-ADMIN/am-trade/bank_account_manage/update_account_check/";
         StringResponse response = restTemplate.postForEntity(url, adminBankAccountCheckCustomizeVO, StringResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return null;
@@ -5766,7 +5766,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
-        String url = tradeService + "/bank_account_manage/query_account_count";
+        String url = "http://AM-ADMIN/am-trade/bank_account_manage/query_account_count";
         IntegerResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
@@ -5782,7 +5782,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
-        String url = tradeService + "/bank_account_manage/query_account_infos";
+        String url = "http://AM-ADMIN/am-trade/bank_account_manage/query_account_infos";
         BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -5798,7 +5798,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest) {
-        String url = tradeService + "/bank_account_manage/query_account_infos";
+        String url = "http://AM-ADMIN/am-trade/bank_account_manage/query_account_infos";
         BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();

@@ -7,10 +7,7 @@ import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.resquest.admin.BindLogListRequest;
-import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
 import com.hyjf.am.resquest.message.MessagePushMsgRequest;
@@ -19,7 +16,6 @@ import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
 import java.util.List;
 
@@ -290,4 +286,14 @@ public interface CsMessageClient {
      * @return
      */
     AppChannelStatisticsResponse exportList(AppChannelStatisticsRequest statisticsRequest);
+
+    /**
+     *分页查询所有渠道投资信息
+     * @param request
+     * @return
+     */
+    AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
+
+
+
 }

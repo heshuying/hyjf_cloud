@@ -466,7 +466,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankInterfaceResponse bankInterfaceInit(BankInterfaceRequest adminRequest) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/bankInterface/list", adminRequest, BankInterfaceResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/bankInterface/list", adminRequest, BankInterfaceResponse.class)
                 .getBody();
     }
 
@@ -478,7 +478,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankInterfaceResponse bankInterfaceInfo(BankInterfaceRequest adminRequest) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/bankInterface/info", adminRequest, BankInterfaceResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/bankInterface/info", adminRequest, BankInterfaceResponse.class)
                 .getBody();
     }
 
@@ -489,7 +489,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankInterfaceResponse updateBankIntefaceAction(BankInterfaceVO req) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/bankInterface/update", req, BankInterfaceResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/bankInterface/update", req, BankInterfaceResponse.class)
                 .getBody();
     }
 
@@ -500,7 +500,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankInterfaceResponse deleteBankInterfaceConfig(BankInterfaceVO req) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/bankInterface/delete", req, BankInterfaceResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/bankInterface/delete", req, BankInterfaceResponse.class)
                 .getBody();
     }
 
@@ -1432,12 +1432,12 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public SiteSettingsResponse selectSiteSetting() {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/siteSettings/findOne", SiteSettingsResponse.class);
+        return restTemplate.getForObject("http://AM-ADMIN/am-admin/siteSettings/findOne", SiteSettingsResponse.class);
     }
 
     @Override
     public SiteSettingsResponse updateAction(SiteSettingRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/siteSettings/update", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/siteSettings/update", requestBean,
                 SiteSettingsResponse.class);
     }
 

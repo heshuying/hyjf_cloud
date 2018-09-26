@@ -6,6 +6,7 @@ import com.hyjf.admin.beans.vo.LoanCoverUserCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.LoanCoverService;
 import com.hyjf.am.response.Response;
@@ -122,7 +123,7 @@ public class LoanCoverController extends BaseController {
             return new AdminResult<>(FAIL, "参数错误");
         }
         if (!loanCoverService.selectIsExistsRecordByIdNo(loanCoverUserRequest.getIdNo(),loanCoverUserRequest.getName())) {
-            return new AdminResult<>(FAIL, "该输入统一社会信用代码或身份证已存在");
+            return new AdminResult<>(FAIL, "数据重复,请检查后提交");
         }
         loanCoverUserRequest.setCreateTime(new Date());
         int intFlg = loanCoverService.insertLoanCoverUser(loanCoverUserRequest);
@@ -156,6 +157,10 @@ public class LoanCoverController extends BaseController {
         AdminSystemVO adminSystemVO = this.getUser(request);
         int loginUserId = Integer.parseInt(adminSystemVO.getId());
         String loginUserName = adminSystemVO.getUsername();
+        //修改判断是否重复
+        if (!loanCoverService.selectIsExistsRecordByIdNo(loanCoverUserRequestBean.getIdNo(),loanCoverUserRequestBean.getName())) {
+            return new AdminResult<>(FAIL, "数据重复,请检查后提交");
+        }
         return loanCoverService.updateLoanCoverUser(loanCoverUserRequestBean,loginUserId,loginUserName);
     }
 
@@ -293,10 +298,9 @@ public class LoanCoverController extends BaseController {
             }
             // 调用接口
             DzqzCallBean resultt = DzqzCallUtil.callApiBg(bean);
-            logger.info("法大大返回报文" + resultt.toString());
+            logger.info("法大大返回报文" + JSONObject.toJSON(resultt));
             if (null!=resultt) {
                 logger.info("CA认证成功:用户ID:[" + ma.getName() + "].");
-                logger.info("CA认证成功返回结果为:"+ JSONObject.toJSON(resultt));
                 if ("success".equals(resultt.getResult())) {
                     ma.setCode(resultt.getCode());
                     ma.setCustomerId(resultt.getCustomer_id());
@@ -313,7 +317,8 @@ public class LoanCoverController extends BaseController {
                     return new AdminResult<>(FAIL, resultt.getMsg());
                 }
             }
+            return new AdminResult<>(FAIL, "请求法大大失败");
         }
-        return new AdminResult<>(FAIL, "请求法大大失败");
+        return new AdminResult<>(FAIL, "没有查找到借款盖章用户");
     }
 }

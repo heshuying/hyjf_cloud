@@ -1,13 +1,13 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.dao.model.customize;
+package com.hyjf.am.trade.dao.model.customize;
 
 import java.math.BigDecimal;
 
 /**
  * @author PC-LIUSHOUYI
- * @version BankAccountManageCustomize, v0.1 2018/6/29 13:58
+ * @version BankAccountManageCustomize, v0.1 2018/9/26 10:29
  */
 public class BankAccountManageCustomize {
 
