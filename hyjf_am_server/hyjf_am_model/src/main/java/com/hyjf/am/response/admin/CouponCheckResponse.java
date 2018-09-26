@@ -8,7 +8,6 @@ import com.hyjf.am.vo.config.CouponCheckVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yaoyong
@@ -18,8 +17,6 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
     private int recordTotal;
 
     private boolean bool;
-
-    private Map couponStatus;
 
     private List<ParamNameVO> couponType;
 
@@ -41,14 +38,6 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
 
     public void setBool(boolean bool) {
         this.bool = bool;
-    }
-
-    public Map getCouponStatus() {
-        return couponStatus;
-    }
-
-    public void setCouponStatus(Map couponStatus) {
-        this.couponStatus = couponStatus;
     }
 
     public List<ParamNameVO> getCouponType() {
