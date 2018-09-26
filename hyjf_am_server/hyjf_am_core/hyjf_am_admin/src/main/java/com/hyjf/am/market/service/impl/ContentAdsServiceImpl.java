@@ -1,14 +1,5 @@
 package com.hyjf.am.market.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.market.dao.mapper.auto.AdsMapper;
 import com.hyjf.am.market.dao.mapper.auto.AdsTypeMapper;
 import com.hyjf.am.market.dao.model.auto.Ads;
@@ -19,11 +10,20 @@ import com.hyjf.am.market.service.ContentAdsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ContentAdsResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
+import com.hyjf.am.vo.admin.AdsTypeVO;
 import com.hyjf.am.vo.admin.AdsVO;
 import com.hyjf.am.vo.config.ContentAdsBeanVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 内容中心-广告管理
@@ -51,9 +51,22 @@ public class ContentAdsServiceImpl implements ContentAdsService {
         int count = countRecordList(request);
         response.setCount(count);
         if(count > 0){
-            Paginator paginator = new Paginator(request.getPaginatorPage(), count);
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
             List<Ads> asdList = getRecordList(request,paginator.getOffset(), paginator.getLimit());
+            // 获取广告类型列表
+            List<AdsType> adsTypeList = getAdsTypeList();
             List<AdsVO> recordList = CommonUtils.convertBeanList(asdList, AdsVO.class);
+
+            for(AdsVO dto : recordList){
+
+                for(AdsType adsType : adsTypeList){
+
+                    if(dto.getTypeId().intValue() == adsType.getTypeId().intValue()){
+                        dto.setTypeName(adsType.getTypeName());
+                    }
+                }
+            }
+
             contentAdsBeanVO.setRecordList(recordList);
 
 //            List<AdsTypeVO> towList = CommonUtils.convertBeanList(asdList, AdsTypeVO.class);
@@ -153,6 +166,10 @@ public class ContentAdsServiceImpl implements ContentAdsService {
         }
         Ads record = new Ads();
         BeanUtils.copyProperties(vo, record);
+
+        if(record.getCode() == null){
+            record.setCode("");
+        }
 
         if(record.getIsIndex()==null){
             record.setIsIndex(new Integer("0"));

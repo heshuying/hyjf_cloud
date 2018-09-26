@@ -3253,7 +3253,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         if(user != null){
             return user.getUsername();
         }
-        return "   ";
+        return "***";
     }
 
     /**

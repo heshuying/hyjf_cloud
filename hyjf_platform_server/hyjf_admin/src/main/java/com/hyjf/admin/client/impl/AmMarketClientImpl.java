@@ -12,7 +12,7 @@ import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.am.vo.market.AdsWithBLOBsVO;
+import com.hyjf.am.vo.market.AdsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,36 +103,36 @@ public class AmMarketClientImpl implements AmMarketClient {
 	}
 
 	@Override
-	public AppBannerResponse insertAppBannerList(AdsWithBLOBsVO ads) {
+	public AppBannerResponse insertAppBannerList(AdsVO adsVO) {
 		AppBannerResponse response = restTemplate
-				.postForEntity("http://AM-MARKET/am-market/appconfig/insertRecord" ,ads,
+				.postForEntity("http://AM-MARKET/am-market/appconfig/insertRecord" ,adsVO,
 						AppBannerResponse.class)
 				.getBody();
 		return response;
 	}
 
 	@Override
-	public AppBannerResponse updateAppBannerList(AdsWithBLOBsVO ads) {
+	public AppBannerResponse updateAppBannerList(AdsVO adsVO) {
 		AppBannerResponse response = restTemplate
-				.postForEntity("http://AM-MARKET/am-market/appconfig/updateRecord" ,ads,
+				.postForEntity("http://AM-MARKET/am-market/appconfig/updateRecord" ,adsVO,
 						AppBannerResponse.class)
 				.getBody();
 		return response;
 	}
 
 	@Override
-	public AppBannerResponse updateAppBannerStatus(AdsWithBLOBsVO ads) {
+	public AppBannerResponse updateAppBannerStatus(AdsVO adsVO) {
 		AppBannerResponse response = restTemplate
-				.postForEntity("http://AM-MARKET/am-market/appconfig/updateStatus" ,ads,
+				.postForEntity("http://AM-MARKET/am-market/appconfig/updateStatus" ,adsVO,
 						AppBannerResponse.class)
 				.getBody();
 		return response;
 	}
 
 	@Override
-	public AppBannerResponse deleteAppBanner(AdsWithBLOBsVO ads) {
+	public AppBannerResponse deleteAppBanner(AdsVO adsVO) {
 		AppBannerResponse response = restTemplate
-				.postForEntity("http://AM-MARKET/am-market/appconfig/deleteAppBanner" ,ads,
+				.postForEntity("http://AM-MARKET/am-market/appconfig/deleteAppBanner" ,adsVO,
 						AppBannerResponse.class)
 				.getBody();
 		return response;
@@ -140,36 +140,36 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ContentAdsResponse searchAction(ContentAdsRequest request) {
-		return restTemplate.postForEntity("http://AM-MARKET/am-market/content/contentads/searchaction",
+		return restTemplate.postForEntity("http://AM-ADMIN/am-market/content/contentads/searchaction",
 				request, ContentAdsResponse.class).getBody();
 	}
 
 	@Override
 	public ContentAdsResponse inserAction(ContentAdsRequest request) {
-		return restTemplate.postForObject("http://AM-MARKET/am-market/content/contentads/inseraction",
+		return restTemplate.postForObject("http://AM-ADMIN/am-market/content/contentads/inseraction",
 				request, ContentAdsResponse.class);
 	}
 
 	@Override
 	public ContentAdsResponse infoaction(Integer id) {
-		return restTemplate.getForObject("http://AM-MARKET/am-market/content/contentads/infoaction/"+
+		return restTemplate.getForObject("http://AM-ADMIN/am-market/content/contentads/infoaction/"+
 				id, ContentAdsResponse.class);
 	}
 
 	@Override
 	public ContentAdsResponse updateAction(ContentAdsRequest request) {
-		return restTemplate.postForObject("http://AM-MARKET/am-market/content/contentads/updateaction",
+		return restTemplate.postForObject("http://AM-ADMIN/am-market/content/contentads/updateaction",
 				request, ContentAdsResponse.class);
 	}
 
 	@Override
 	public ContentAdsResponse deleteById(Integer id) {
-		return restTemplate.getForObject("http://AM-MARKET/am-market/content/contentads/delete/" + id, ContentAdsResponse.class);
+		return restTemplate.getForObject("http://AM-ADMIN/am-market/content/contentads/delete/" + id, ContentAdsResponse.class);
 	}
 
 	@Override
 	public ContentAdsResponse getAdsTypeList() {
-		return restTemplate.postForObject("http://AM-MARKET/am-market/content/contentads/getadstypelist",
+		return restTemplate.postForObject("http://AM-ADMIN/am-market/content/contentads/getadstypelist",
 				null, ContentAdsResponse.class);
 	}
 
@@ -306,9 +306,9 @@ public class AmMarketClientImpl implements AmMarketClient {
     }
 
 	@Override
-	public AppBannerResponse getRecordById(AppBannerRequest request) {
+	public AppBannerResponse getRecordById(AdsVO adsVO) {
 		AppBannerResponse response = restTemplate
-				.postForEntity("http://AM-MARKET/am-market/appconfig/getRecordById" ,request,
+				.postForEntity("http://AM-MARKET/am-market/appconfig/getRecordById" ,adsVO,
 						AppBannerResponse.class)
 				.getBody();
 

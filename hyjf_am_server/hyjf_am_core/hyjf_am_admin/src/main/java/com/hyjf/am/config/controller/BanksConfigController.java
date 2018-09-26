@@ -196,14 +196,13 @@ public class BanksConfigController extends BaseConfigController{
     public AdminBankConfigResponse getBankConfigListByStatus(BankConfigVO bankConfigVO){
         AdminBankConfigResponse response=new AdminBankConfigResponse();
         List<BankConfig> listBankConfig = bankConfigService.getBankConfigListByStatus(bankConfigVO);
-        if(null!=listBankConfig&&listBankConfig.size()>0){
+        if(!CollectionUtils.isEmpty(listBankConfig)){
             List<BankConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
             response.setResultList(listBanksConfig);
             //代表成功
             response.setRtn(Response.SUCCESS);
-            return response;
         }
-        return null;
+        return response;
     }
 
     /**

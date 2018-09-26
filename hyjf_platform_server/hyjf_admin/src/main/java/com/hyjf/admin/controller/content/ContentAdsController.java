@@ -36,7 +36,6 @@ public class ContentAdsController extends BaseController {
     @PostMapping("/searchaction")
     public AdminResult searchAction(@RequestBody  ContentAdsRequest request){
         logger.info("查询内容中心-广告管理-条件列表查询开始......");
-        AdminResult adResult = new AdminResult();
         ContentAdsResponse response = contentAdsService.searchAction(request);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

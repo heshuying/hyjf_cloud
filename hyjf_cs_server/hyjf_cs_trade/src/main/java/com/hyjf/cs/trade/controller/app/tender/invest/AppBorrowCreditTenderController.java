@@ -8,6 +8,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
@@ -70,19 +71,40 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
 
     @ApiOperation(value = "APP端债转投资获取投资结果  失败", notes = "APP端债转投资获取投资结果  失败")
     @PostMapping(value = "/getResult", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId", required = true) Integer userId,
+    public AppResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId", required = true) Integer userId,
                                                                @RequestParam String logOrdId) {
         logger.info("APP端债转投资获取投资结果，logOrdId{}",logOrdId);
-        return  borrowTenderService.getFaileResult(userId,logOrdId);
+        WebResult<Map<String,Object>> webResult = borrowTenderService.getFaileResult(userId,logOrdId);
+        AppResult<Map<String,Object>> result  = new AppResult<Map<String,Object>>();
+        Map<String,Object> data = webResult.getData();
+        if(data!=null && data.containsKey("errorMsg")){
+            data.put("error",data.get("errorMsg"));
+            data.remove("error");
+        }
+        result.setStatusDesc(webResult.getStatusDesc());
+        result.setStatus(webResult.getStatus());
+        result.setData(data);
+        return result;
     }
 
     @ApiOperation(value = "APP端债转投资获取投资结果  成功", notes = "APP端债转投资获取投资结果  成功")
     @PostMapping(value = "/getSuccessResult", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getSuccessResult(@RequestHeader(value = "userId", required = true) Integer userId,
-                                                               @RequestParam String logOrdId) {
+    public AppResult<Map<String,Object>> getSuccessResult(@RequestHeader(value = "userId", required = true) Integer userId,
+                                                          @RequestParam String logOrdId) {
         logger.info("APP端债转投资获取投资结果，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
-        return  borrowTenderService.getSuccessResult(userVO.getUserId(),logOrdId);
+        WebResult<Map<String,Object>> webResult = borrowTenderService.getSuccessResult(userId,logOrdId);
+        AppResult<Map<String,Object>> result  = new AppResult<Map<String,Object>>();
+        Map<String,Object> data = webResult.getData();
+        if(data.containsKey("assignCapital")){
+            data.put("account",data.get("assignCapital"));
+            data.put("income",data.get("assignInterest"));
+            data.remove("assignCapital");
+            data.remove("assignInterest");
+        }
+        result.setStatusDesc(webResult.getStatusDesc());
+        result.setStatus(webResult.getStatus());
+        result.setData(data);
+        return result;
     }
 
 }

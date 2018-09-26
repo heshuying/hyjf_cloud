@@ -4,14 +4,9 @@ import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.service.mobileclient.AppBannerService;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.market.AppBannerRequest;
-import com.hyjf.am.vo.market.AdsTypeVO;
-import com.hyjf.am.vo.market.AdsWithBLOBsVO;
-import org.apache.commons.collections.CollectionUtils;
+import com.hyjf.am.vo.market.AdsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author lisheng
@@ -28,28 +23,28 @@ public class AppBannerServiceImpl  implements AppBannerService {
     }
 
     @Override
-    public AppBannerResponse getRecordById(AppBannerRequest request) {
-        return amMarketClient.getRecordById(request);
+    public AppBannerResponse getRecordById(AdsVO adsVO) {
+        return amMarketClient.getRecordById(adsVO);
     }
 
     @Override
-    public AppBannerResponse insertRecord(AdsWithBLOBsVO adsWithBLOBsVo) {
-        return amMarketClient.insertAppBannerList(adsWithBLOBsVo);
+    public AppBannerResponse insertRecord(AdsVO adsVO) {
+        return amMarketClient.insertAppBannerList(adsVO);
     }
 
     @Override
-    public AppBannerResponse updateRecord(AdsWithBLOBsVO adsWithBLOBsVo) {
-        return amMarketClient.updateAppBannerList(adsWithBLOBsVo);
+    public AppBannerResponse updateRecord(AdsVO adsVO) {
+        return amMarketClient.updateAppBannerList(adsVO);
     }
 
     @Override
-    public AppBannerResponse updateStatus(AdsWithBLOBsVO adsWithBLOBsVo) {
-        return amMarketClient.updateAppBannerStatus(adsWithBLOBsVo);
+    public AppBannerResponse updateStatus(AdsVO adsVO) {
+        return amMarketClient.updateAppBannerStatus(adsVO);
     }
 
     @Override
-    public AppBannerResponse deleteAppBanner(AdsWithBLOBsVO adsWithBLOBsVo) {
-        return amMarketClient.deleteAppBanner(adsWithBLOBsVo);
+    public AppBannerResponse deleteAppBanner(AdsVO adsVO) {
+        return amMarketClient.deleteAppBanner(adsVO);
     }
 
 

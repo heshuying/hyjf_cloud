@@ -3,10 +3,12 @@
  */
 package com.hyjf.cs.message.service.channel;
 
-import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
-import com.hyjf.cs.message.bean.ic.AppChannelStatistics;
-
 import java.util.List;
+
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.resquest.admin.PcChannelStatisticsRequest;
+import com.hyjf.cs.message.bean.ic.AppChannelStatistics;
+import com.hyjf.cs.message.bean.ic.PcChannelStatistics;
 
 /**
  * @author yaoyong
@@ -33,4 +35,18 @@ public interface ChannelStatisticsService {
      * @return
      */
     List<AppChannelStatistics> exportList(AppChannelStatisticsRequest request);
+
+    /**
+     * 查找PC渠道统计
+     * @param request
+     * @return
+     */
+    List<PcChannelStatistics> searchPcChannelStatisticsList(PcChannelStatisticsRequest request);
+
+    /**
+     * 查询PC渠道统计符合条件的数量
+     * @param request
+     * @return
+     */
+    int selectCount(PcChannelStatisticsRequest request);
 }
