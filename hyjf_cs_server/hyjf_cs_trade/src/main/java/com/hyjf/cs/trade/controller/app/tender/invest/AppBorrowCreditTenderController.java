@@ -79,7 +79,7 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
         Map<String,Object> data = webResult.getData();
         if(data!=null && data.containsKey("errorMsg")){
             data.put("error",data.get("errorMsg"));
-            data.remove("error");
+            data.remove("errorMsg");
         }
         result.setStatusDesc(webResult.getStatusDesc());
         result.setStatus(webResult.getStatus());
