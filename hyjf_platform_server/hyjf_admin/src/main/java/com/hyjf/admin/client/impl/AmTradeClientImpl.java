@@ -2167,7 +2167,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
         HjhInstConfigResponse response = restTemplate.
-                getForEntity("http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
+                getForEntity("http://AM-ADMIN/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -5171,7 +5171,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<FeerateModifyLogVO> selectInstAndAssertType(AdminOperationLogRequest adminRequest){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/operationlog/selectInstAndAssertType", adminRequest, AdminOperationLogResponse.class).getBody().getResultList();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/operationlog/selectInstAndAssertType", adminRequest, AdminOperationLogResponse.class).getBody().getResultList();
     }
     /**
      * 产品类型   asset_type  asset_type_name资产类型名称
@@ -5181,7 +5181,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhAssetTypeVO> getHjhAssetType(){
-        String url = "http://AM-TRADE/am-trade/config/operationlog/getHjhAssetType";
+        String url = "http://AM-ADMIN/am-admin/config/operationlog/getHjhAssetType";
         AdminOperationLogResponse response =restTemplate.getForEntity(url,AdminOperationLogResponse.class).getBody();
         if(response != null){
             return response.getHjhAssetTypes();

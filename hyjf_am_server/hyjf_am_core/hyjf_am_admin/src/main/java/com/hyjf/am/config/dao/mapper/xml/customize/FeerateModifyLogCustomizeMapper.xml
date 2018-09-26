@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.config.dao.mapper.customize.FeerateModifyLogCustomizeMapper">
-    <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.FeerateModifyLog" >
+    <resultMap id="BaseResultMap" type="com.hyjf.am.vo.admin.FeerateModifyLogVO" >
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
         <result column="asset_type" property="assetType" jdbcType="TINYINT" />
@@ -25,7 +25,7 @@
         <!-- 资产来源 -->
         <!--<result column="inst_name" property="instName" jdbcType="VARCHAR" />-->
         <!--<result column="asset_type_name" property="assetTypeName" jdbcType="VARCHAR" />-->
-        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="true_name" property="name" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Where_Clause">
         <where>
@@ -51,11 +51,11 @@
             </if>
             <!-- 操作时间 -->
             <if test="recieveTimeStartSrch != null and recieveTimeStartSrch != ''">
-                AND hfml.create_time<![CDATA[>=]]>unix_timestamp(#{recieveTimeStartSrch})
+                AND hfml.create_time<![CDATA[>=]]>str_to_date(#{recieveTimeStartSrch},'%Y-%m-%d %H:%i:%s')
             </if>
             <!-- 操作时间 -->
             <if test="recieveTimeEndSrch != null and recieveTimeEndSrch != ''">
-                AND hfml.create_time<![CDATA[<=]]>unix_timestamp(#{recieveTimeEndSrch})+86399
+                AND hfml.create_time<![CDATA[<=]]>str_to_date(#{recieveTimeEndSrch},'%Y-%m-%d %H:%i:%s')
             </if>
         </where>
     </sql>
@@ -98,10 +98,10 @@
         SELECT DISTINCT
         truename
         FROM
-        ht_admin hui
+        hyjf_config.ht_r_user hui
         WHERE
-        hfml.create_user_id = hui.id
-        ) NAME,
+        hfml.create_user_id = hui.user_id
+        ) true_name,
         FROM_UNIXTIME(
         hfml.create_time,
         '%Y-%m-%d %H:%i:%s'
