@@ -80,6 +80,7 @@ public class WebBindCardPageController extends BaseUserController{
      */
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
     @PostMapping(value = "/bgReturn")
+    @ResponseBody
     public BankCallResult bindCardBgReturn(@RequestBody BankCallBean bean, HttpServletRequest request) {
 
         BankCallResult result = new BankCallResult();
