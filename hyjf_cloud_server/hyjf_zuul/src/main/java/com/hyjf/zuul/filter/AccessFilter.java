@@ -464,6 +464,7 @@ public class AccessFilter extends ZuulFilter {
 			if (originalRequestPath.startsWith(key)) {
 				// 判断是否是安全访问
 				GatewayApiConfigVO vo = JSONObject.parseObject(map.get(key).toString(), GatewayApiConfigVO.class);
+				logger.info("vo: {}", vo);
 				if (vo.getSecureVisitFlag() == 1) {
 					secureVisitFlag = true;
 				}
