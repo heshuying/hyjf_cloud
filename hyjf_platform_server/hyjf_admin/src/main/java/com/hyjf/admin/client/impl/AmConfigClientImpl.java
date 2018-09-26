@@ -232,7 +232,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public ParamNameResponse getNameCd(String code) {
-        ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-CONFIG/am-config/accountconfig/getNameCd/" + "FLOW_STATUS", ParamNameResponse.class)
+        ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-ADMIN/am-admin/paramname/getNameCd/" + "FLOW_STATUS", ParamNameResponse.class)
                 .getBody();
         if (amResponse != null && Response.SUCCESS.equals(amResponse.getRtn())) {
             return amResponse;
