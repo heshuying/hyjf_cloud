@@ -100,15 +100,8 @@ public class CouponCheckController extends BaseController {
     @ApiOperation(value = "下载文件", notes = "下载文件")
     @GetMapping("/downloadAction/{id}")
     public AdminResult downloadFile(HttpServletResponse response, @PathVariable String id) {
-        CouponCheckResponse checkResponse = new CouponCheckResponse();
-        CouponCheckVO couponCheckVO = couponCheckService.downloadFile(id, response);
-        if (couponCheckVO != null) {
-            checkResponse.setFileName(couponCheckVO.getFileName());
-            checkResponse.setFilePath(couponCheckVO.getFilePath());
-        } else {
-            return new AdminResult(FAIL, FAIL_DESC);
-        }
-        return new AdminResult<>(checkResponse);
+        couponCheckService.downloadFile(id, response);
+        return new AdminResult<>();
     }
 
     @ApiOperation(value = "审核优惠券", notes = "审核优惠券")
