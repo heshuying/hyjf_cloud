@@ -6,7 +6,6 @@ import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.config.service.QuestionService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
@@ -184,38 +183,6 @@ public class BanksConfigController extends BaseConfigController{
         //代表成功
         response.setRtn(Response.SUCCESS);
         return response;
-    }
-    /**
-     * 获取status=1的银行列表
-     */
-    @RequestMapping("/getBankConfigListByStatus")
-    public AdminBankConfigResponse getBankConfigListByStatus(BankConfigVO bankConfigVO){
-        AdminBankConfigResponse response=new AdminBankConfigResponse();
-        List<BankConfig> listBankConfig = bankConfigService.getBankConfigListByStatus(bankConfigVO);
-        if(null!=listBankConfig&&listBankConfig.size()>0){
-            List<BankConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
-            response.setResultList(listBanksConfig);
-            //代表成功
-            response.setRtn(Response.SUCCESS);
-            return response;
-        }
-        return null;
-    }
-
-    /**
-     * 获取银行列表(快捷支付卡)
-     */
-    @RequestMapping("/getBankRecordListByQuickPayment")
-    public BankConfigResponse getBankRecordListByQuickPayment(BankConfigVO bankConfigVO){
-        BankConfigResponse response = new BankConfigResponse();
-        List<BankConfigVO> listBanksConfig=null;
-        List<BankConfig> listBankConfig = bankConfigService.getBankRecordListByQuickPayment(bankConfigVO);
-        if(!CollectionUtils.isEmpty(listBankConfig)){
-            listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
-            response.setResultList(listBanksConfig);
-            return response;
-        }
-        return null;
     }
 
     @GetMapping("/getParamNameList/{nameClass}")

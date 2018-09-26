@@ -199,7 +199,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public Integer getBankInterfaceFlagByType(String type) {
         BankInterfaceResponse response = restTemplate
-                .getForEntity(configService+"/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-admin/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
         if (response != null) {
             return response.getFlag();
         }
@@ -282,14 +282,13 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     /**
      * 根据bankId查询BankRechargeConfig
-     * @auth sunpeikai
      * @param bankId
      * @return
      */
     @Override
     public BankRechargeConfigVo getBankRechargeConfigByBankId(Integer bankId) {
         BankRechargeConfigResponse response = restTemplate
-                .getForEntity(configService+"/config/bankrecharge/getBankRechargeConfigByBankId/" + bankId, BankRechargeConfigResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-admin/config/bankrecharge/getBankRechargeConfigByBankId/" + bankId, BankRechargeConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

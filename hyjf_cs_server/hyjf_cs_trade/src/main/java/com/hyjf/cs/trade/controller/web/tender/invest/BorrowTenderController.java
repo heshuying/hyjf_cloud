@@ -66,6 +66,26 @@ public class BorrowTenderController extends BaseTradeController {
         return result;
     }
 
+    @ApiOperation(value = "散标投资校验", notes = "web端散标投资校验")
+    @PostMapping(value = "/investCheck", produces = "application/json; charset=utf-8")
+    public WebResult<Map<String,Object>> investCheck(@RequestHeader(value = "userId", required = false) Integer userId,
+                                                      @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+        logger.info("web端请求投资校验接口");
+        String ip = CustomUtil.getIpAddr(request);
+        tender.setIp(ip);
+        tender.setUserId(userId);
+        tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
+        WebResult<Map<String,Object>> result = null;
+        try{
+            result =  borrowTenderService.borrowTenderCheck(tender,null,null,null,null);
+        }catch (CheckException e){
+            throw e;
+        }finally {
+            RedisUtils.del(RedisConstants.BORROW_TENDER_REPEAT + tender.getUser().getUserId());
+        }
+        return result;
+    }
+
     /**
      * web端散标异步处理
      * @param bean

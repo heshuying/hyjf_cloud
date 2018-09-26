@@ -1,14 +1,16 @@
 package com.hyjf.am.config.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
-import com.hyjf.am.config.dao.model.customize.ContentArticleCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
+import com.hyjf.am.config.dao.model.customize.ContentArticleCustomize;
 import com.hyjf.am.response.admin.ContentArticleResponse;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
+
+
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 内容管理 - 文章管理 - 公司动态
@@ -121,7 +123,7 @@ public interface ContentArticleService {
      * 查询文章条数
      * @return
      */
-    Integer countContentArticleByType(Map<String, Object> params);
+    Integer countContentArticleByType();
 
     /**
      * 查询文章列表
@@ -145,4 +147,20 @@ public interface ContentArticleService {
      * @Author : huanghui
      */
     List<ContentArticle> getContentArticListByType(String type);
+
+    /**
+     * 获取公司公告件数
+     * @param noticeType
+     * @return
+     */
+    int getNoticeListCount(String noticeType);
+
+    /**
+     * 分页查询公司公告
+     * @param noticeType
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<ContentArticle> searchNoticeList(String noticeType, int offset, int limit);
 }

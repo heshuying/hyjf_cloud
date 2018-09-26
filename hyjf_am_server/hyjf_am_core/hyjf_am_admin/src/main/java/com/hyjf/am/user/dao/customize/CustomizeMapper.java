@@ -9,7 +9,6 @@ import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.AdminPreRegistCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.AdminUserAuthCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.BankAccountManageCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.BankCardManagerCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.BankOpenRecordCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.CallCenterAccountHuifuMapper;
@@ -70,9 +69,6 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected UserCustomizeMapper userCustomizeMapper;
-
-    @Autowired
-    protected BankAccountManageCustomizeMapper bankAccountManageCustomizeMapper;
 
     @Autowired
     protected BankCardManagerCustomizeMapper bankCardManagerCustomizeMapper;
