@@ -1783,7 +1783,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminOperationLogResponse selectOperationLogList(Map<String, Object> map) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/operationlog/list", map, AdminOperationLogResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/operationlog/list", map, AdminOperationLogResponse.class).getBody();
     }
 
     /**
