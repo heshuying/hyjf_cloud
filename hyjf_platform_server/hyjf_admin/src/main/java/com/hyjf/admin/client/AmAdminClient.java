@@ -8,6 +8,7 @@ import com.hyjf.am.response.admin.AdminSubConfigResponse;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
+import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
@@ -312,4 +313,38 @@ public interface AmAdminClient {
 
 
     PlatformUserCountCustomizeResponse searchRegistAcount(PlatformCountRequestBean requestBean);
+
+    /**
+     * PC统计明细散标列表查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectPcChannelReconciliationRecord(ChannelReconciliationRequest request);
+
+    /**
+     * PC统计明细计划列表查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectPcChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
+
+    /**
+     * APP统计明细散标列表查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectAppChannelReconciliationRecord(ChannelReconciliationRequest request);
+
+    /**
+     * APP统计明细计划列表查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
+
+    /**
+     * 获取app渠道列表
+     * @return
+     */
+    List<UtmPlatVO> getAppUtm();
 }

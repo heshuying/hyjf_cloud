@@ -282,12 +282,15 @@ public class UnnormalRepayUtils {
 	 * @return
 	 */
 	public static BigDecimal overduePlanRepayOverdueInterest(BigDecimal termShouldPrincipalInterest, int overdueDays,
-			BigDecimal planRate) {
+			String planRate) {
+		BigDecimal planRateStr;
 		if (planRate == null || planRate.equals(new BigDecimal(0))) {
-			planRate = new BigDecimal("0.0006");
+			planRateStr = new BigDecimal("0.0006");
+		}else{
+			planRateStr = new BigDecimal(planRate);
 		}
 		// 逾期罚息总额
-		BigDecimal overdueInterest = termShouldPrincipalInterest.multiply(new BigDecimal(overdueDays)).multiply(planRate);
+		BigDecimal overdueInterest = termShouldPrincipalInterest.multiply(new BigDecimal(overdueDays)).multiply(planRateStr);
 		overdueInterest = overdueInterest.setScale(2, BigDecimal.ROUND_DOWN);
 		return overdueInterest;
 	}

@@ -114,7 +114,7 @@ public class AccessFilter extends ZuulFilter {
 		String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
 		String fullRequestUrl = request.getRequestURL().toString();
 		String requestUri = request.getRequestURI().toString();
-
+		logger.info("原始请求地址fullRequestUrl:" + fullRequestUrl);
 		// 访问url是不是需要判断登录
 		boolean secureVisitFlag;
 		Map<String, Object> map = RedisUtils.getObj(RedisConstants.ZUUL_ROUTER_CONFIG_KEY, Map.class);
@@ -165,8 +165,7 @@ public class AccessFilter extends ZuulFilter {
 			ctx = this.setUserIdByToken(request, ctx, secureVisitFlag, WEB_CHANNEL);
 			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(API_CHANNEL)) {
-			//prefix = API_VISIT_URL;
-			//to do nothing
+			prefix = API_VISIT_URL;
 		} else {
 			logger.error("error channel...");
 			// 不对其进行路由
@@ -301,10 +300,10 @@ public class AccessFilter extends ZuulFilter {
 
 		if (APP_CHANNEL.equals(channel)) {
 			result.put("status", "708");
-			result.put("statusDesc", "need login");
+			result.put("statusDesc", "请先登录！");
 		} else {
 			result.put("status", "999");
-			result.put("statusDesc", "need login");
+			result.put("statusDesc", "请先登录！");
 		}
 		ctx.setResponseBody(result.toJSONString());
 		return ctx;
@@ -461,6 +460,7 @@ public class AccessFilter extends ZuulFilter {
 				}
 			}
 		}
+		logger.info(originalRequestPath + " : secureVisitFlag：" + secureVisitFlag);
 		return secureVisitFlag;
 	}
 

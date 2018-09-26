@@ -1,6 +1,7 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.*;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
@@ -272,6 +273,12 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	public AdminBankRechargeConfigResponse deleteBankRechargeConfig(AdminBankRechargeConfigRequest req);
+
+	/**
+	 * 检查银行卡是否重复
+	 * @return
+	 */
+	public IntegerResponse bankIsExists(AdminBankRechargeConfigRequest adminRequest);
 	/**
 	 * 查询快捷充值限额列表--导出
 	 * @param adminRequest

@@ -8,6 +8,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
@@ -18,6 +19,7 @@ import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +69,7 @@ public class WebBindCardPageController extends BaseUserController{
             result.setStatus(WebResult.ERROR);
             result.setStatusDesc(WebResult.ERROR_DESC);
             logger.error("请求银行接口异常", e);
+            return result;
         }
 
         return result;
@@ -76,7 +79,7 @@ public class WebBindCardPageController extends BaseUserController{
      * 绑卡异步回调
      */
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
-    @PostMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/bgReturn")
     public BankCallResult bindCardBgReturn(@RequestBody BankCallBean bean, HttpServletRequest request) {
 
         BankCallResult result = new BankCallResult();
@@ -84,6 +87,8 @@ public class WebBindCardPageController extends BaseUserController{
         logger.info("页面绑卡异步回调start");
         bean.setMobile(phone);
         bean.convert();
+//        bean.setAccountId("6212461890000753401");
+//        bean.setLogUserId("5490");
         int userId = Integer.parseInt(bean.getLogUserId());
 
         // 绑卡后处理
@@ -122,12 +127,14 @@ public class WebBindCardPageController extends BaseUserController{
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求解绑卡接口发生异常", e);
+            return result;
         }
 
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
             logger.error("请求解绑卡接口失败");
+            return result;
         }
 
         WebViewUserVO user = bindCardService.getUserFromCache(userId);
@@ -140,13 +147,33 @@ public class WebBindCardPageController extends BaseUserController{
                 result.setStatus(ApiResult.FAIL);
                 result.setStatusDesc("更新银行卡失败");
                 logger.error("更新银行卡失败");
+                return result;
             }
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_CARD_SAVE.getMsg());
             logger.error("解绑卡后处理异常", e);
+            return result;
         }
 
+        return result;
+    }
+
+    /**
+     * @Description 调用银行失败原因
+     * @Author
+     */
+    @ApiOperation(value = "调用银行失败原因", notes = "查询调用银行失败原因")
+    @PostMapping("/searchFiledMess")
+    @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
+    @ResponseBody
+    public WebResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
+        logger.info("调用银行失败原因start,logOrdId:{}", param);
+        WebResult<Object> result = new WebResult<Object>();
+        String retMsg = bindCardService.getFailedMess(param.get("logOrdId"));
+        Map<String,String> map = new HashedMap();
+        map.put("error",retMsg);
+        result.setData(map);
         return result;
     }
 

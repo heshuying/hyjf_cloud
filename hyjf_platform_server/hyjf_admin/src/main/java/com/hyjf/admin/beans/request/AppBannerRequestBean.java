@@ -1,9 +1,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
-import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 
 import java.io.Serializable;
 
@@ -25,6 +23,10 @@ public class AppBannerRequestBean  extends BaseRequest implements Serializable {
     private Integer typeId;
     @ApiModelProperty(value = "创建时间")
     private Integer createTime;
+    @ApiModelProperty(value = "创建时间start")
+    private String startCreate;
+    @ApiModelProperty(value = "创建时间end")
+    private String endCreate;
     @ApiModelProperty(value = "广告状态")
     private Integer status;
     @ApiModelProperty(value = "调用代码")
@@ -98,5 +100,21 @@ public class AppBannerRequestBean  extends BaseRequest implements Serializable {
 
     public void setPlatformType(Integer platformType) {
         this.platformType = platformType;
+    }
+
+    public String getStartCreate() {
+        return startCreate;
+    }
+
+    public void setStartCreate(String startCreate) {
+        this.startCreate = startCreate;
+    }
+
+    public String getEndCreate() {
+        return endCreate;
+    }
+
+    public void setEndCreate(String endCreate) {
+        this.endCreate = endCreate;
     }
 }

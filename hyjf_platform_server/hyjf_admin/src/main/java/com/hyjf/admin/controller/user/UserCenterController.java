@@ -98,6 +98,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/getUserdetail")
     @ResponseBody
     public  AdminResult<UserDetailInfoResponseBean>  getUserdetail(@RequestBody String userId) {
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         UserDetailInfoResponseBean userDetailInfoResponseBean = new UserDetailInfoResponseBean();
         UserManagerDetailVO userManagerDetailVO = userCenterService.selectUserDetail(userId);
         UserManagerDetailCustomizeVO userManagerDetailCustomizeVO = new UserManagerDetailCustomizeVO();
@@ -121,7 +122,9 @@ public class UserCenterController extends BaseController {
             } else {
                 userDetailInfoResponseBean.setIsEvalation("1");
             }
+            String strDate = smp.format(userEvalationResultInfo.getCreateTime());
             BeanUtils.copyProperties(userEvalationResultInfo, userEvalationResultShowVO);
+            userEvalationResultShowVO.setCreateTime(strDate);
         }
         userDetailInfoResponseBean.setUserEvalationResultInfo(userEvalationResultShowVO);
         //用户开户信息
@@ -353,12 +356,16 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkAction")
     @ResponseBody
     @ApiOperation(value = "校验手机号", notes = "校验手机号")
-    public AdminResult checkAction(@RequestBody String mobile) {
-        logger.info("===========mobile : "+mobile+"===========");
+    public AdminResult checkAction(@RequestParam(value = "userId") String userId,@RequestParam(value = "mobile") String mobile) {
         // 检查手机号码唯一性
-        int cnt = userCenterService.countUserByMobile(mobile);
-        if (cnt > 0) {
-            return new AdminResult<>(FAIL, "手机号已经存在！");
+        if(StringUtils.isNotBlank(userId)){
+            int userrIdInt = Integer.parseInt(userId);
+            int cnt = userCenterService.countUserByMobile(mobile,userrIdInt);
+            if (cnt > 0) {
+                return new AdminResult<>(FAIL, "手机号已经存在！");
+            }
+        }else{
+            return new AdminResult<>(FAIL, "用户id不能为空！");
         }
         return new AdminResult<>();
     }

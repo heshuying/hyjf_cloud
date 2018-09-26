@@ -32,7 +32,7 @@ public interface LoanCoverService {
     /**
      * 根据id查找记录是否存在
      */
-    boolean selectIsExistsRecordByIdNo(String strIdNo);
+    boolean selectIsExistsRecordByIdNo(String strIdNo,String userName);
     /**
      * 根据证件号码查找记录
      */

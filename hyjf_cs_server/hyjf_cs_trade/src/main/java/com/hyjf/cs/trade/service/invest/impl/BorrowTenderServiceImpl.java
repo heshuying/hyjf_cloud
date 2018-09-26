@@ -126,32 +126,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 查询散标是否存在
         BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
         BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(request.getBorrowNid());
-        borrow.setTenderAccountMin(borrowInfoVO.getTenderAccountMin());
-        borrow.setTenderAccountMax(borrowInfoVO.getTenderAccountMax());
-        borrow.setCanTransactionAndroid(borrowInfoVO.getCanTransactionAndroid());
-        borrow.setCanTransactionIos(borrowInfoVO.getCanTransactionIos());
-        borrow.setCanTransactionPc(borrowInfoVO.getCanTransactionPc());
-        borrow.setCanTransactionWei(borrowInfoVO.getCanTransactionWei());
-        borrow.setBorrowIncreaseMoney(borrowInfoVO.getBorrowIncreaseMoney());
         if (borrow == null) {
             throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
         }
-        logger.info("散标投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
-        UserVO user = amUserClient.findUserById(request.getUser().getUserId());
-        UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
-        // 检查用户状态  角色  授权状态等  是否允许投资
-        checkUser(user, userInfo);
-        // 检查江西银行账户
         BankOpenAccountVO account = amUserClient.selectBankAccountById(userId);
-        if (account == null || user.getBankOpenAccount() == 0 || StringUtils.isEmpty(account.getAccount())) {
-            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
-        }
-        // 查询用户账户表-投资账户
-        AccountVO tenderAccount = amTradeClient.getAccount(userId);
-        // 投资检查参数
-        this.checkParam(request, borrow, account, userInfo ,borrowInfoVO);
-        // 检查金额
-        this.checkTenderMoney(request, borrow, cuc, tenderAccount );
+        logger.info("散标投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
+        borrowTenderCheck(request,borrow,borrowInfoVO,cuc,account);
         logger.info("所有参数都已检查通过!");
         // 开始真正的投资逻辑
         return tender(request, borrow, account, cuc);
@@ -1107,15 +1087,24 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String requestType = CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         String baseUrl = super.getFrontHost(systemConfig,tender.getPlatform());
         String requestMapping = "/public/formsubmit?requestType=";
-        if ("HJH".equalsIgnoreCase(borrowType)){
+        String url = "";
+        // 计划不需要跳转江西银行, 不能使用前端投资的统一页面，所以针对计划单独跳转前端处理页面
+        if (CommonConstant.TENDER_TYPE_HJH.equalsIgnoreCase(borrowType)){
             requestType = "9";
             requestMapping = "/join/plan?requestType=";
+        }else if (CommonConstant.TENDER_TYPE_CREDIT.equalsIgnoreCase(borrowType)){
+            requestType = "10";
+            url = baseUrl + requestMapping + requestType;
+            String creditNid = (StringUtils.isNotBlank(tender.getBorrowNid()) && tender.getBorrowNid().length() >3) ? tender.getBorrowNid().substring(3) : "";
+            String couponGrantId = (tender.getCouponGrantId() != null ? tender.getCouponGrantId().toString() : "");
+            url += "&couponGrantId="+couponGrantId+"&creditNid="+creditNid+"&platform="+tender.getPlatform()+"&assignCapital="+tender.getAccount();
+            logger.info("url:[{}]",url);
+            return url;
         }
-        String url = baseUrl + requestMapping + requestType;
+        url = baseUrl + requestMapping + requestType;
         //String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/hyjf-app/user/invest/tender?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
         logger.info("url:[{}]",url);
-        //ModelAndView mv = new ModelAndView("redirect:"+url);
         return url;
     }
 
@@ -1242,6 +1231,61 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         vo.setBorrowAccountWait(borrow.getBorrowAccountWait().intValue()+"");
         return vo;
+    }
+
+    /**
+     * web散标投资校验
+     * @param request
+     * @param borrow
+     * @param borrowInfoVO
+     * @param cuc
+     * @param account
+     * @return
+     */
+    @Override
+    public WebResult<Map<String, Object>> borrowTenderCheck(TenderRequest request,BorrowAndInfoVO borrow, BorrowInfoVO borrowInfoVO ,CouponUserVO cuc ,BankOpenAccountVO account) {
+        // 查询散标是否存在
+        Integer userId = request.getUserId();
+        if(borrow ==null){
+            borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
+        }
+        if(borrowInfoVO ==null){
+            borrowInfoVO = amTradeClient.getBorrowInfoByNid(request.getBorrowNid());
+        }
+        borrow.setTenderAccountMin(borrowInfoVO.getTenderAccountMin());
+        borrow.setTenderAccountMax(borrowInfoVO.getTenderAccountMax());
+        borrow.setCanTransactionAndroid(borrowInfoVO.getCanTransactionAndroid());
+        borrow.setCanTransactionIos(borrowInfoVO.getCanTransactionIos());
+        borrow.setCanTransactionPc(borrowInfoVO.getCanTransactionPc());
+        borrow.setCanTransactionWei(borrowInfoVO.getCanTransactionWei());
+        borrow.setBorrowIncreaseMoney(borrowInfoVO.getBorrowIncreaseMoney());
+        if (borrow == null) {
+            throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
+        }
+        logger.info("散标投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
+        UserVO user = amUserClient.findUserById(request.getUser().getUserId());
+        UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
+        // 检查用户状态  角色  授权状态等  是否允许投资
+        checkUser(user, userInfo);
+        // 检查江西银行账户
+        if(account ==null){
+            account = amUserClient.selectBankAccountById(userId);
+        }
+        if (account == null || user.getBankOpenAccount() == 0 || StringUtils.isEmpty(account.getAccount())) {
+            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        }
+        // 查询用户账户表-投资账户
+        AccountVO tenderAccount = amTradeClient.getAccount(userId);
+        // 投资检查参数
+        this.checkParam(request, borrow, account, userInfo ,borrowInfoVO);
+        // 查询选择的优惠券
+        if (request.getCouponGrantId() != null && request.getCouponGrantId() > 0) {
+            cuc = amTradeClient.getCouponUser(request.getCouponGrantId(), userId);
+        }
+        // 检查金额
+        this.checkTenderMoney(request, borrow, cuc, tenderAccount );
+        logger.info("所有参数都已检查通过!");
+        return null;
     }
 
     /**

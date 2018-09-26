@@ -1,7 +1,9 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfig;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -51,6 +53,12 @@ public interface BankRechargeService {
      * @return
      */
     List<BankRechargeConfig> selectExportRecordList(AdminBankRechargeConfigRequest adminRequest);
+
+    /**
+     * 检查银行卡是否重复
+     * @return
+     */
+    public int bankIsExists(AdminBankRechargeConfigRequest adminRequest);
     /**
      * 根据bankId查询BankRechargeConfig
      * @auth sunpeikai

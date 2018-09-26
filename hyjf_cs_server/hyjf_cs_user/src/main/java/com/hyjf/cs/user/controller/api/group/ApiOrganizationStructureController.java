@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Api(tags = "api端-集团组织机构查询")
 @RestController
-@RequestMapping("/hyjf-api/user")
+@RequestMapping("/hyjf-api/server/company")
 public class ApiOrganizationStructureController extends BaseUserController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class ApiOrganizationStructureController extends BaseUserController {
      * @Return: * @Return List<OrganizationStructureVO>
      */
     @ApiOperation(value = "集团组织机构查询", notes = "集团组织机构查询")
-    @PostMapping(value = "/sync_company_info", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/syncCompanyInfo", produces = "application/json; charset=utf-8")
     public ApiResult<List<OrganizationStructureVO>> queryInfo(@RequestBody @Valid OrganizationStructureRequestBean bean){
         ApiResult<List<OrganizationStructureVO>> result = new ApiResult<>();
 

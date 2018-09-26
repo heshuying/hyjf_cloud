@@ -7,6 +7,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankRechargeService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankRechargeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
@@ -75,11 +76,8 @@ public class BankRechargeController extends BaseController {
         if(StringUtils.isNotBlank(adminRequest.getIds())){
             adminRequest.setId(Integer.valueOf(adminRequest.getIds()));
             response=bankRechargeService.selectBankRechargeConfigInfo(adminRequest);
-            List<BankConfigVO> bankConfigVOS = bankRechargeService.getBankRecordList();
-            if(!CollectionUtils.isEmpty(bankConfigVOS)&&response.getResult() != null){
-                //设置银行列表（快捷卡）
-                response.getResult().setBankConfigs(bankConfigVOS);
-            }
+        }else{
+            response=new AdminBankRechargeConfigResponse();
         }
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -87,7 +85,12 @@ public class BankRechargeController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<BankRechargeLimitConfigVO>(response.getResult()) ;
+        List<BankConfigVO> bankConfigVOS = bankRechargeService.getBankRecordList();
+        if(!CollectionUtils.isEmpty(bankConfigVOS)){
+            //设置银行列表（快捷卡）
+            response.setBankConfigs(bankConfigVOS);
+        }
+        return new AdminResult<AdminBankRechargeConfigResponse>(response) ;
     }
 
     @ApiOperation(value = "快捷充值限额添加", notes = "快捷充值限额添加")
@@ -150,6 +153,28 @@ public class BankRechargeController extends BaseController {
 
         }
         return new AdminResult<>();
+    }
+
+    @ApiOperation(value = "快捷充值限额校验", notes = "快捷充值限额校验")
+    @PostMapping("/checkAction")
+    public AdminResult checkAction(@RequestBody AdminBankRechargeConfigRequest adminRequest)  {
+        String message="";
+        // // 检查银行卡是否重复
+        IntegerResponse response = this.bankRechargeService.bankIsExists(adminRequest);
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        if (response.getResultInt()  > 0) {
+            message= "银行已经存在，请重新输入。";
+        }
+        // 没有错误时,返回y
+        if (StringUtils.isBlank(message)) {
+            message= "ok";
+        }
+        return new AdminResult<String>(message) ;
     }
 
     /**
@@ -263,10 +288,10 @@ public class BankRechargeController extends BaseController {
     private String validatorFieldCheck(AdminBankRechargeConfigRequest form) {
         // 字段校验(非空判断和长度判断)
         if (null == form.getBankId()||(StringUtils.isNotBlank(String.valueOf(form.getBankId()))&&String.valueOf(form.getBankId()).length()>11)) {
-            return "bankId 不能为空且长度不能超过11位！";
+            return "银行不能为空且长度不能超过11位！";
         }
         if (null == form.getSingleQuota()||(StringUtils.isNotBlank(String.valueOf(form.getSingleQuota()))&&String.valueOf(form.getSingleQuota()).length()>13)) {
-            return "singleQuota 不能为空且长度不能超过13位！";
+            return "单笔充值限额不能为空且长度不能超过13位！";
         }
         return "";
     }

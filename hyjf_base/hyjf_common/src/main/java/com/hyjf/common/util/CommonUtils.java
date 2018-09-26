@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -249,7 +250,7 @@ public class CommonUtils {
 	 * 金额格式化 10，000.00
 	 *
 	 * @param version
-	 * @param amount
+	 * @param
 	 * @return
 	 */
 	public static String formatAmount(String version, String money) {
@@ -269,13 +270,36 @@ public class CommonUtils {
 
 	/**
 	 * 支持不带版本的格式化
-	 * @param amount
+	 * @param
 	 * @return
 	 */
 	public static String formatAmount(String money) {
 		return formatAmount("", money);
 	}
+	/**
+	 * 格式化金额
+	 *
+	 * @param number
+	 * @return
+	 */
+	public static String formatNumber(String number) {
+		String ret = "0.00";
+		if (Validator.isNull(number)) {
+			return ret;
+		}
+		if (!NumberUtils.isNumber(number)) {
+			return ret;
+		}
 
+		try {
+			BigDecimal b = new BigDecimal(number);
+			ret = new DecimalFormat("############0.00").format(b.doubleValue());
+		} catch (Exception e) {
+			logger.error(CustomUtil.class.getName(), "formatAm", e);
+		}
+
+		return ret;
+	}
 
 	/**
 	 * 金额格式化不保留小数点后"0"

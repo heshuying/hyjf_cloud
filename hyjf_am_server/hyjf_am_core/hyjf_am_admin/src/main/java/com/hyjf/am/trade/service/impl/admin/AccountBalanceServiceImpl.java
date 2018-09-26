@@ -1,15 +1,14 @@
 package com.hyjf.am.trade.service.impl.admin;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.admin.HjhAccountBalanceRequest;
 import com.hyjf.am.trade.dao.mapper.customize.HjhInfoAccountBalanceCustomizeMapper;
 import com.hyjf.am.trade.service.admin.AccountBalanceService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author：yinhui

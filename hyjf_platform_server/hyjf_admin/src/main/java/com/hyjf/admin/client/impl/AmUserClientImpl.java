@@ -13,6 +13,7 @@ import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -1021,9 +1022,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo) {
+	public LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo,String userName) {
 		LoanCoverUserResponse response = restTemplate
-				.getForEntity("http://AM-ADMIN/am-user/loanCoverUser/selectIsExistsRecordByIdNo/" + strIdNo,
+				.getForEntity("http://AM-ADMIN/am-user/loanCoverUser/selectIsExistsRecordByIdNo/" + strIdNo+"/"+userName,
 						LoanCoverUserResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1211,7 +1212,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String tureName) {
 		CertificateAuthorityResponse response = restTemplate.getForEntity(
-				"http://AM-USER/am-user/loanCoverUser/selectCertificateAuthorityByIdNoName/" + tureName,
+				"http://AM-ADMIN/am-user/loanCoverUser/selectCertificateAuthorityByIdNoName/" + tureName,
 				CertificateAuthorityResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -1331,14 +1332,14 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public WhereaboutsPageResponse searchAction(WhereaboutsPageRequestBean requestBean) {
-		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/searchaction",
+		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/searchaction",
 				requestBean, WhereaboutsPageResponse.class);
 		return  amUserResponse;
 
 	}
 	@Override
 	public WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form){
-		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/getwhereaboutspageconfig",
+		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/getwhereaboutspageconfig",
 				form, WhereaboutsPageResponse.class);
 		return  amUserResponse;
 	}
@@ -1347,24 +1348,24 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public WhereaboutsPageResponse insertAction(WhereaboutsPageRequestBean requestBean) {
-		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/insert",
+		return restTemplate.postForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/insert",
 				requestBean, WhereaboutsPageResponse.class);
 	}
 
 	@Override
 	public WhereaboutsPageResponse updateAction(WhereaboutsPageRequestBean requestBean) {
-		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/update",
+		return restTemplate.postForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/update",
 				requestBean, WhereaboutsPageResponse.class);
 	}
 	@Override
 	public WhereaboutsPageResponse updateStatus(WhereaboutsPageRequestBean requestBean){
-		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/updatestatus",
+		return restTemplate.postForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/updatestatus",
 				requestBean, WhereaboutsPageResponse.class);
 	}
 
 	@Override
 	public WhereaboutsPageResponse deleteById(Integer id) {
-		return restTemplate.getForObject("http://AM-USER/am-user/content/whereaboutspage/delete/" + id,
+		return restTemplate.getForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/delete/" + id,
 				WhereaboutsPageResponse.class);
 	}
 
@@ -1379,14 +1380,14 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 	@Override
 	public StringResponse checkUtmId(Integer utmId){
-		String url = "http://AM-USER/am-user/content/whereaboutspage/checkutmid/" + utmId;
+		String url = "http://AM-ADMIN/am-admin/content/whereaboutspage/checkutmid/" + utmId;
 		StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
 		return response;
 	}
 
 	@Override
 	public StringResponse checkReferrer(String referrer){
-		String url = "http://AM-USER/am-user/content/whereaboutspage/checkreferrer/" + referrer;
+		String url = "http://AM-ADMIN/am-admin/content/whereaboutspage/checkreferrer/" + referrer;
 		StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
 		return response;
 	}
@@ -2178,7 +2179,7 @@ public class AmUserClientImpl implements AmUserClient {
 	/**
 	 * 通过手机号和身份证查询掉单信息
 	 *
-	 * @param mobile,idcard
+	 * @param request,idcard
 	 * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
 	 * @author Zha Daojian
 	 * @date 2018/8/21 13:54

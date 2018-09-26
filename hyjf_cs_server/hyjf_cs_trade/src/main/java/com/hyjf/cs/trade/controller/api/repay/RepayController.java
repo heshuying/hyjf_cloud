@@ -2,6 +2,8 @@ package com.hyjf.cs.trade.controller.api.repay;
 
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
+import com.hyjf.am.vo.trade.ProjectBeanVO;
+import com.hyjf.am.vo.trade.ProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BatchCenterCustomizeVO;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -21,20 +23,13 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.hyjf.cs.trade.bean.BaseBean;
-import com.hyjf.cs.trade.bean.BaseResultBean;
-import com.hyjf.cs.trade.bean.BatchCenterCustomize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
 
 /**
  * @version RepayController, v0.1 2018/8/27 14:39
@@ -168,15 +163,15 @@ public class RepayController extends BaseController {
                 resultBean.setBorrowTotal(repayInfo.getBorrowTotal());
                 if ("0".equals(repayType)) {//待还款
                     //获取还款计划
-                    ProjectBean form = new ProjectBean();
+                    ProjectBeanVO form = new ProjectBeanVO();
                     form.setUserId(openAccount.getUserId() + "");
                     form.setUsername(openAccount.getUserName());
                     form.setRoleId("0");
                     form.setBorrowNid(borrowNid);
-                    form.setAllRepay(false);
+                    form.setBlAllRepay(false);
                     // 查询用户的还款详情
                     try {
-                        ProjectBean repayProject = repayService.searchRepayProjectDetail(form);
+                        ProjectBeanVO repayProject = repayService.getRepayProjectDetail(form);
                         List<ProjectRepayListBean> list = getRepayDetailList(repayProject.getUserRepayList());
                         resultBean.setDetailList(list);
                         resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
@@ -210,12 +205,12 @@ public class RepayController extends BaseController {
      * @param userRepayList
      * @return
      */
-    private List<ProjectRepayListBean> getRepayDetailList(List<ProjectRepayBean> userRepayList) {
+    private List<ProjectRepayListBean> getRepayDetailList(List<ProjectRepayVO> userRepayList) {
         List<ProjectRepayListBean> list = new ArrayList<>();
         if (userRepayList != null) {
             for (int i = 0; i < userRepayList.size(); i++) {
                 BigDecimal planRepay = new BigDecimal(0);
-                ProjectRepayBean resultInfo = userRepayList.get(i);
+                ProjectRepayVO resultInfo = userRepayList.get(i);
                 BigDecimal capital = new BigDecimal(resultInfo.getRepayCapital());
                 BigDecimal interest = new BigDecimal(resultInfo.getRepayInterest());
                 BigDecimal detailRepayAccount = capital.add(interest);

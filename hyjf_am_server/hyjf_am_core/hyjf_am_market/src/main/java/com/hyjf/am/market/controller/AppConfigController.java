@@ -1,6 +1,5 @@
 package com.hyjf.am.market.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.market.config.constant.AdsTypeEnum;
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.auto.AdsType;
@@ -10,8 +9,6 @@ import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.vo.market.AdsTypeVO;
 import com.hyjf.am.vo.market.AdsVO;
-import com.hyjf.am.vo.market.AdsWithBLOBsVO;
-import com.hyjf.am.vo.market.AppBannerVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -20,9 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,17 +62,17 @@ public class AppConfigController {
     /**
      * 根据id查询广告
      *
-     * @param request
+     * @param ads
      * @return
      */
     @PostMapping("/getRecordById")
-    public AppBannerResponse getRecordById(@RequestBody AppBannerRequest request) {
+    public AppBannerResponse getRecordById(@RequestBody AdsVO ads) {
         AppBannerResponse appBannerResponse = new AppBannerResponse();
-        Ads ads = appConfigService.getRecordById(request.getId());
-        AdsVO adsVO = CommonUtils.convertBean(ads, AdsVO.class);
+        Ads a = appConfigService.getRecordById(ads.getId());
+        AdsVO adsVO = CommonUtils.convertBean(a, AdsVO.class);
         List<AdsType> adsTypeList = appConfigService.getAdsTypeList();
         List<AdsTypeVO> adsTypeVOS = CommonUtils.convertBeanList(adsTypeList, AdsTypeVO.class);
-        List<AdsTypeVO> adsType = getAdsType(request.getPlatformType(), adsTypeVOS);
+        List<AdsTypeVO> adsType = getAdsType(ads.getPlatformType(), adsTypeVOS);
         appBannerResponse.setAdsTypeList(adsType);
         appBannerResponse.setResult(adsVO);
         return appBannerResponse;
@@ -81,14 +80,14 @@ public class AppConfigController {
     /**
      * 插入广告列表
      *
-     * @param request
+     * @param adsVO
      * @return
      */
     @PostMapping("/insertRecord")
-    public AppBannerResponse insertBannerData(@RequestBody AdsWithBLOBsVO request) {
+    public AppBannerResponse insertBannerData(@RequestBody AdsVO adsVO) {
         AppBannerResponse appBannerResponse = new AppBannerResponse();
         Ads ads = new Ads();
-        BeanUtils.copyProperties(request, ads);
+        BeanUtils.copyProperties(adsVO, ads);
         Boolean result = appConfigService.insertRecord(ads);
         if(result){
             appBannerResponse.setRtn(Response.SUCCESS);
@@ -103,14 +102,14 @@ public class AppConfigController {
     /**
      * 修改活动维护信息
      *
-     * @param form
+     * @param adsVO
      * @return
      */
     @PostMapping("/updateRecord")
-    public AppBannerResponse updateAction(@RequestBody AdsWithBLOBsVO form) {
+    public AppBannerResponse updateAction(@RequestBody AdsVO adsVO) {
         AppBannerResponse appBannerResponse = new AppBannerResponse();
         // 更新
-        Boolean result = appConfigService.updateRecord(form);
+        Boolean result = appConfigService.updateRecord(adsVO);
         if(result){
             appBannerResponse.setRtn(Response.SUCCESS);
             appBannerResponse.setMessage(Response.SUCCESS_MSG);
@@ -124,22 +123,22 @@ public class AppConfigController {
     /**
      * 修改状态
      *
-     * @param form
+     * @param adsVO
      * @return
      */
     @PostMapping("/updateStatus")
-    public AppBannerResponse updateStatus(@RequestBody AdsWithBLOBsVO form) {
+    public AppBannerResponse updateStatus(@RequestBody AdsVO adsVO) {
         AppBannerResponse appBannerResponse = new AppBannerResponse();
         // 修改状态
-        if (StringUtils.isNotEmpty(form.getIds())) {
-            Integer id = Integer.valueOf(form.getIds());
+        if (StringUtils.isNotEmpty(adsVO.getIds())) {
+            Integer id = Integer.valueOf(adsVO.getIds());
             Ads record = appConfigService.getRecord(id);
             if (record.getStatus() == 1) {
-                form.setStatus(0);
+                adsVO.setStatus(0);
             } else {
-                form.setStatus(1);
+                adsVO.setStatus(1);
             }
-            Boolean result = appConfigService.updateRecord(form);
+            Boolean result = appConfigService.updateRecord(adsVO);
             if(result){
                 appBannerResponse.setRtn(Response.SUCCESS);
                 appBannerResponse.setMessage(Response.SUCCESS_MSG);
@@ -156,10 +155,10 @@ public class AppConfigController {
      * @return
      */
     @RequestMapping("deleteAppBanner")
-    public AppBannerResponse deleteRecordAction(@RequestBody AdsWithBLOBsVO form) {
+    public AppBannerResponse deleteRecordAction(@RequestBody AdsVO adsVO) {
         AppBannerResponse appBannerResponse = new AppBannerResponse();
         // 解析json字符串
-        Integer id = Integer.valueOf(form.getIds());
+        Integer id = Integer.valueOf(adsVO.getIds());
         boolean result = appConfigService.deleteRecord(id);
         if(result){
             appBannerResponse.setRtn(Response.SUCCESS);

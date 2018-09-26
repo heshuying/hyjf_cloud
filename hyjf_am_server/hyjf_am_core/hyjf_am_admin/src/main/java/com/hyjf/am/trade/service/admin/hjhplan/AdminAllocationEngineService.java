@@ -112,4 +112,10 @@ public interface AdminAllocationEngineService {
     * @date 2018/7/18 10:18
     */
    String getPlanNidByLable(Integer labelId);
+   
+   /**
+	 * 根据 label_id 查询引擎表
+	 * @return
+	*/ 
+   List<HjhAllocationEngineVO> selectHjhAllocationEngineListByLabelId(Integer LabelId); 
 }
