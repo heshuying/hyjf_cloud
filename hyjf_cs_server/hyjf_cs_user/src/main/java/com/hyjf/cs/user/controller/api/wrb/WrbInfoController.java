@@ -2,9 +2,11 @@ package com.hyjf.cs.user.controller.api.wrb;
 
 import com.hyjf.am.response.WrbResponse;
 import com.hyjf.am.response.trade.WrbBorrowInvestResponse;
+import com.hyjf.am.response.trade.WrbInvestResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.trade.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
@@ -12,10 +14,7 @@ import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.WrbParseParamUtil;
-import com.hyjf.cs.user.WrbBorrowInvestRequest;
-import com.hyjf.cs.user.bean.WrbBorrowReturnBean;
-import com.hyjf.cs.user.bean.WrbNoticeinfoRequest;
-import com.hyjf.cs.user.bean.WrbNoticeinfoResponse;
+import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.bean.WrbNoticeinfoResponse.NoticeinfoDetail;
 import com.hyjf.cs.user.service.wrb.WrbInfoServcie;
 import org.slf4j.Logger;
@@ -211,6 +210,89 @@ public class WrbInfoController {
 
         return response;
     }
+
+    /**
+     * 获取某天投资情况
+     * @return
+     */
+    @RequestMapping("/day_invest_list")
+    public WrbInvestResponse getInvestDetail(@RequestParam String param,
+                                                   @RequestParam(value = "sign", required = false) String sign) {
+
+        logger.info("获取某天投资情况, param is :{}, sign is :{}", param, sign);
+
+        WrbInvestResponse response = new WrbInvestResponse();
+
+        WrbInvestRequest request = null;
+        try {
+            request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbInvestRequest.class);
+        } catch (Exception e) {
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        } finally {
+            if (request == null) {
+                response.setRetcode(WrbResponse.FAIL_RETCODE);
+                response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+                return response;
+            }
+        }
+
+        Date invest_date = null;
+        try {
+            invest_date = GetDate.stringToDate2(request.getInvest_date());
+        } catch (Exception e) {
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        }
+        if(invest_date == null){
+            logger.error("日期参数有误");
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        }
+        Integer limit = request.getLimit();
+        Integer page = request.getPage();
+
+        if (limit == null || page == null) {
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        }
+
+        // 查询投资情况
+        List<BorrowTenderVO> borrowTenderList = wrbInvestServcie.getInvestDetail(invest_date, limit, page);
+
+        WrbInvestResponse wrbInvestResponse = new WrbInvestResponse();
+        List<WrbInvestResponse.InvestDetail> detailList = new ArrayList();
+        if (!CollectionUtils.isEmpty(borrowTenderList)) {
+            for (BorrowTenderVO borrowTender : borrowTenderList) {
+                WrbInvestResponse.InvestDetail investDetail = new WrbInvestResponse.InvestDetail();
+                investDetail.setIndex(borrowTender.getNid());// 订单号
+                String borrowNid = borrowTender.getBorrowNid();
+                BorrowVO borrow = wrbInvestServcie.selectBorrowByBorrowNid(borrowNid);
+                if (borrow != null) {
+                    investDetail.setBorrow_id(String.valueOf(borrow.getUserId()));// 借款人ID
+                }
+                String userName = borrowTender.getUserName();
+                if (userName != null) {
+                    userName = userName.substring(0, 1).concat("**");
+                }
+                investDetail.setInvest_user(userName);
+                Integer addtime = borrowTender.getAddTime();
+                investDetail.setInvest_time(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(addtime));
+                investDetail.setInvest_money(borrowTender.getAccount());
+                investDetail.setBid_id(borrowNid);
+                detailList.add(investDetail);
+            }
+            wrbInvestResponse.setInvest_list(detailList);
+        }
+        return wrbInvestResponse;
+    }
+
+
 
     /**
      * 格式化优惠券信息
