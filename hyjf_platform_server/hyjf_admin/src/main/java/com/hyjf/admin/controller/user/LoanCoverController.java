@@ -6,6 +6,7 @@ import com.hyjf.admin.beans.vo.LoanCoverUserCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.LoanCoverService;
 import com.hyjf.am.response.Response;
@@ -156,6 +157,10 @@ public class LoanCoverController extends BaseController {
         AdminSystemVO adminSystemVO = this.getUser(request);
         int loginUserId = Integer.parseInt(adminSystemVO.getId());
         String loginUserName = adminSystemVO.getUsername();
+        //修改判断是否重复
+        if (!loanCoverService.selectIsExistsRecordByIdNo(loanCoverUserRequestBean.getIdNo(),loanCoverUserRequestBean.getName())) {
+            return new AdminResult<>(FAIL, "数据重复,请检查后提交");
+        }
         return loanCoverService.updateLoanCoverUser(loanCoverUserRequestBean,loginUserId,loginUserName);
     }
 
