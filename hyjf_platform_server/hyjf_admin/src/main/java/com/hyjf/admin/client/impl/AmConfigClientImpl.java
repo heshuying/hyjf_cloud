@@ -494,7 +494,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     /**
-     * 删除快捷充值限额
+     * 删除 接口切换
      *
      * @return
      */
@@ -512,7 +512,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminBankRechargeConfigResponse bankRechargeInit(AdminBankRechargeConfigRequest adminRequest) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/bankrecharge/list", adminRequest, AdminBankRechargeConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/bankrecharge/list", adminRequest, AdminBankRechargeConfigResponse.class)
                 .getBody();
     }
 
@@ -524,7 +524,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminBankRechargeConfigResponse selectBankRechargeConfigInfo(AdminBankRechargeConfigRequest adminRequest) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/bankrecharge/info", adminRequest, AdminBankRechargeConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/bankrecharge/info", adminRequest, AdminBankRechargeConfigResponse.class)
                 .getBody();
     }
 
@@ -535,7 +535,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminBankRechargeConfigResponse saveBankRechargeConfig(AdminBankRechargeConfigRequest req) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/bankrecharge/insert", req, AdminBankRechargeConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/bankrecharge/insert", req, AdminBankRechargeConfigResponse.class)
                 .getBody();
     }
 
@@ -546,7 +546,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminBankRechargeConfigResponse updateBankRechargeConfig(AdminBankRechargeConfigRequest req) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/bankrecharge/update", req, AdminBankRechargeConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/bankrecharge/update", req, AdminBankRechargeConfigResponse.class)
                 .getBody();
     }
 
@@ -557,7 +557,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminBankRechargeConfigResponse deleteBankRechargeConfig(AdminBankRechargeConfigRequest req) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/bankrecharge/delete", req, AdminBankRechargeConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/bankrecharge/delete", req, AdminBankRechargeConfigResponse.class)
                 .getBody();
     }
 
@@ -567,19 +567,19 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public IntegerResponse bankIsExists(AdminBankRechargeConfigRequest adminRequest){
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/bankrecharge/bankIsExists", adminRequest, IntegerResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/bankrecharge/bankIsExists", adminRequest, IntegerResponse.class)
                 .getBody();
     }
 
     /**
-     * 查询快捷充值限额列表
+     * 导出查询快捷充值限额列表
      *
      * @param adminRequest
      * @return
      */
     @Override
     public List<BankRechargeLimitConfigVO> exportRecordList(BankRechargeLimitConfigVO adminRequest) {
-        AdminBankRechargeConfigResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/config/bankrecharge/exportRecordList", adminRequest, AdminBankRechargeConfigResponse.class)
+        AdminBankRechargeConfigResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/bankrecharge/exportRecordList", adminRequest, AdminBankRechargeConfigResponse.class)
                 .getBody();
          if(response != null){
              return response.getResultList();
@@ -595,7 +595,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<BankConfigVO> getBankRecordList() {
         BankConfigVO bank = new BankConfigVO();
-        BankConfigResponse response= restTemplate.postForEntity("http://AM-CONFIG/am-config/config/getBankRecordListByQuickPayment", bank, BankConfigResponse.class)
+        BankConfigResponse response= restTemplate.postForEntity("http://AM-ADMIN/am-config/config/getBankRecordListByQuickPayment", bank, BankConfigResponse.class)
                 .getBody();
         if(response != null){
             return response.getResultList();
@@ -1253,7 +1253,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminFeeConfigResponse selectFeeConfigList(AdminFeeConfigRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeConfig/list",
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/feeConfig/list",
                 request, AdminFeeConfigResponse.class);
     }
 
@@ -1265,7 +1265,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<BankConfigVO> getBankConfigList(BankConfigVO bank) {
-        AdminBankConfigResponse response= restTemplate.postForObject("http://AM-CONFIG/am-config/config/getBankConfigListByStatus",
+        AdminBankConfigResponse response= restTemplate.postForObject("http://AM-ADMIN/am-config/config/getBankConfigListByStatus",
                 bank, AdminBankConfigResponse.class);
         if(response != null){
             return response.getResultList();
@@ -1282,7 +1282,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<BankConfigVO> getBankConfigRecordList(BankConfigVO bank, int limitStart, int limitEnd) {
         //查詢所有
-        AdminBankConfigResponse response= restTemplate.getForObject("http://AM-CONFIG/am-config/config/selectBankConfigByBankName/"+bank.getName(),
+        AdminBankConfigResponse response= restTemplate.getForObject("http://AM-ADMIN/am-config/config/selectBankConfigByBankName/"+bank.getName(),
                  AdminBankConfigResponse.class);
         if(response != null){
             return response.getResultList();
@@ -1298,7 +1298,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminFeeConfigResponse selectFeeConfigInfo(AdminFeeConfigRequest adminRequest) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeConfig/info",
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/feeConfig/info",
                 adminRequest, AdminFeeConfigResponse.class);
     }
 
@@ -1309,7 +1309,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminFeeConfigResponse insertBankConfigRecord(AdminFeeConfigRequest req) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeConfig/insert",
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/feeConfig/insert",
                 req, AdminFeeConfigResponse.class);
     }
 
@@ -1320,7 +1320,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminFeeConfigResponse updateBankConfigRecord(AdminFeeConfigRequest req) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeConfig/update",
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/feeConfig/update",
                 req, AdminFeeConfigResponse.class);
     }
 
@@ -1331,7 +1331,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminFeeConfigResponse deleteFeeConfig(AdminFeeConfigRequest req) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeConfig/delete",
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/feeConfig/delete",
                 req, AdminFeeConfigResponse.class);
     }
 
