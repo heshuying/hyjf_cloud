@@ -465,6 +465,15 @@ public class CsMessageClientImpl implements CsMessageClient {
     }
 
     @Override
+    public AppChannelStatisticsDetailResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
+        AppChannelStatisticsDetailResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/search/exportStatisticsList", request, AppChannelStatisticsDetailResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+
+    }
+    @Override
     public SmsOntimeResponse queryTime(SmsLogRequest request) {
         SmsOntimeResponse response = restTemplate
                 .postForEntity("http://CS-MESSAGE/cs-message/sms_log/query_time",
