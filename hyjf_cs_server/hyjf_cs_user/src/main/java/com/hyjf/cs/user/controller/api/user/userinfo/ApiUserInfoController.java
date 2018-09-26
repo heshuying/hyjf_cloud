@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(value = "api端-第三方用户信息查询",tags = "api端-第三方用户信息查询")
 @RestController
-@RequestMapping(value = "/server/user")
+@RequestMapping(value = "/hyjf-api/server/user")
 public class ApiUserInfoController extends BaseUserController {
 
     @Autowired
