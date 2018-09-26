@@ -29,12 +29,14 @@ public class AppChannelStatisticsDetailController {
 
     @ApiOperation(value = "app渠道统计明细-画面初始化", notes = "app渠道统计明细-画面初始化")
     @PostMapping("/init")
-    public AppChannelStatisticsDetailResponse init(@RequestBody AppChannelStatisticsDetailRequest form, @RequestHeader(value="userId")Integer userId){
+    public AppChannelStatisticsDetailResponse init(@RequestBody AppChannelStatisticsDetailRequest request, @RequestHeader(value="userId")Integer userId){
         AppChannelStatisticsDetailResponse response = new AppChannelStatisticsDetailResponse();
         AdminUtmReadPermissionsVO adminUtmReadPermissions = this.appChannelReconciliationService.selectAdminUtmReadPermissions(userId);
-        /*if (adminUtmReadPermissions != null) {
+        if (adminUtmReadPermissions != null) {
             //form.setUtmIds(adminUtmReadPermissions.getUtmIds());// 封装到页面
-        }*/
+        }
+        AppChannelStatisticsDetailResponse appChannelStatisticsDetailResponse = appChannelStatisticsDetailService.getstatisticsList(request);
+
         List<UtmPlatVO> appUtm = appChannelStatisticsDetailService.getAppUtm();
         return response;
     }
