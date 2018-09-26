@@ -300,10 +300,10 @@ public class AccessFilter extends ZuulFilter {
 
 		if (APP_CHANNEL.equals(channel)) {
 			result.put("status", "708");
-			result.put("statusDesc", "need login");
+			result.put("statusDesc", "请先登录！");
 		} else {
 			result.put("status", "999");
-			result.put("statusDesc", "need login");
+			result.put("statusDesc", "请先登录！");
 		}
 		ctx.setResponseBody(result.toJSONString());
 		return ctx;
