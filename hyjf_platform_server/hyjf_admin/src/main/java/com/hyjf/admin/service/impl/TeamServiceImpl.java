@@ -50,4 +50,9 @@ public class TeamServiceImpl implements TeamService {
 	public int deleteById(Integer id) {
 		return amConfigClient.deleteTeamById(id);
 	}
+
+	@Override
+	public TeamVO selectById(TeamRequestBean requestBean) {
+		return amConfigClient.getTeamRecord(requestBean.getId());
+	}
 }

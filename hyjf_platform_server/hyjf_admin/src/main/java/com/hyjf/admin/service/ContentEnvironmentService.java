@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.ContentEnvironmentRequestBean;
 import com.hyjf.am.response.admin.ContentEnvironmentResponse;
+import com.hyjf.am.vo.config.ContentEnvironmentVO;
 
 /**
  * @author fuqiang
@@ -50,4 +51,11 @@ public interface ContentEnvironmentService {
 	 * @return
 	 */
     int deleteById(Integer id);
+
+	/**
+	 * 公司管理-办公环境初始化
+	 * @param requestBean
+	 * @return
+	 */
+	ContentEnvironmentVO selectById(ContentEnvironmentRequestBean requestBean);
 }
