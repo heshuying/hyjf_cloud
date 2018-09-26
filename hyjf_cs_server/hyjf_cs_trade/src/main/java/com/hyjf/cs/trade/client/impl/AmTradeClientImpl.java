@@ -3879,11 +3879,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public HjhPlanAssetVO checkDuplicateAssetId(String assetId) {
+    public List<HjhPlanAssetVO> checkDuplicateAssetId(String assetId) {
         String url = "http://AM-TRADE/am-trade/assetPush/checkDuplicateAssetId/" + assetId;
         HjhPlanAssetResponse response = restTemplate.getForEntity(url, HjhPlanAssetResponse.class).getBody();
         if (response != null) {
-            return response.getResult();
+            return response.getResultList();
         }
         return null;
     }

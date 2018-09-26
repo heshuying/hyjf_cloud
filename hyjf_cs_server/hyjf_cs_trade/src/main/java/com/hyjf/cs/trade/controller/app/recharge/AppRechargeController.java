@@ -8,6 +8,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.DES;
@@ -139,7 +140,7 @@ public class AppRechargeController extends BaseTradeController{
 		}
 		BigDecimal recharge = new BigDecimal(money);
 		recharge = recharge.setScale(2, BigDecimal.ROUND_HALF_UP);
-		String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/success?money="+recharge;
+		String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/success?money="+ CommonUtils.formatAmount(recharge);
 		retUrl += "?token=1&sign=" +sign;
 		successfulUrl += "&token=1&sign=" +sign;
 		directRechargeBean.setRetUrl(retUrl);

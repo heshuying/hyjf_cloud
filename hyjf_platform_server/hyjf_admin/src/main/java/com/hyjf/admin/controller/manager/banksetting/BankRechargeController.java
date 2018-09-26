@@ -168,7 +168,7 @@ public class BankRechargeController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         if (response.getResultInt()  > 0) {
-            message= "{label}银行重复了";
+            message= "银行重复了";
         }
         // 没有错误时,返回y
         if (StringUtils.isBlank(message)) {
@@ -288,10 +288,10 @@ public class BankRechargeController extends BaseController {
     private String validatorFieldCheck(AdminBankRechargeConfigRequest form) {
         // 字段校验(非空判断和长度判断)
         if (null == form.getBankId()||(StringUtils.isNotBlank(String.valueOf(form.getBankId()))&&String.valueOf(form.getBankId()).length()>11)) {
-            return "bankId 不能为空且长度不能超过11位！";
+            return "银行 不能为空且长度不能超过11位！";
         }
         if (null == form.getSingleQuota()||(StringUtils.isNotBlank(String.valueOf(form.getSingleQuota()))&&String.valueOf(form.getSingleQuota()).length()>13)) {
-            return "singleQuota 不能为空且长度不能超过13位！";
+            return "单笔充值限额 不能为空且长度不能超过13位！";
         }
         return "";
     }

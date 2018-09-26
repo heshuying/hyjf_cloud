@@ -1754,6 +1754,7 @@
             <columnOverride column="is_end" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="new_user_show" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="platform_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_ads_type" domainObjectName="AdsType">
