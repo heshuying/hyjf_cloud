@@ -128,6 +128,9 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 		if (request.getStatus() != null) {
 			criteria.andStatusEqualTo(request.getStatus());
 		}
+		if (request.getTemplateAction() != null) {
+			criteria.andTemplateActionEqualTo(request.getTemplateAction());
+		}
 		example.setOrderByClause("create_time DESC");
 		return this.templateMapper.selectByExample(example);
 	}
