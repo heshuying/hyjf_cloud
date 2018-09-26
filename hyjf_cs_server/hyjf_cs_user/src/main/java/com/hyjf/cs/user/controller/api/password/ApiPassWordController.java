@@ -143,7 +143,7 @@ public class ApiPassWordController extends BaseController {
      * @return
      */
     @ApiOperation(value = " 设置交易密码异步回调",notes = " 设置交易密码异步回调")
-    @PostMapping(value = "/passwordReturn")
+    @PostMapping(value = "/passwordBgreturn")
     public BankCallResult passwordBgreturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
         logger.info("api 交易密码异步回调start");
         // 返回值  9-22修改
