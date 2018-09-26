@@ -3401,7 +3401,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				// 借款人用户名必须已在银行开户
 				return 2;
 			}
-			if(user.getRoleId()==1) {
+			if(user.getRoleId()!=2) {
 				return 4;
 			}
 //
