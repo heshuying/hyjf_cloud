@@ -122,7 +122,7 @@ public class LoanCoverController extends BaseController {
             return new AdminResult<>(FAIL, "参数错误");
         }
         if (!loanCoverService.selectIsExistsRecordByIdNo(loanCoverUserRequest.getIdNo(),loanCoverUserRequest.getName())) {
-            return new AdminResult<>(FAIL, "该输入统一社会信用代码或身份证已存在");
+            return new AdminResult<>(FAIL, "数据重复,请检查后提交");
         }
         loanCoverUserRequest.setCreateTime(new Date());
         int intFlg = loanCoverService.insertLoanCoverUser(loanCoverUserRequest);
@@ -312,7 +312,8 @@ public class LoanCoverController extends BaseController {
                     return new AdminResult<>(FAIL, resultt.getMsg());
                 }
             }
+            return new AdminResult<>(FAIL, "请求法大大失败");
         }
-        return new AdminResult<>(FAIL, "请求法大大失败");
+        return new AdminResult<>(FAIL, "没有查找到借款盖章用户");
     }
 }
