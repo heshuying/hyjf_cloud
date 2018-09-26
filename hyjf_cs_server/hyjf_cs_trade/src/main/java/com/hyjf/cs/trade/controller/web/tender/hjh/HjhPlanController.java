@@ -68,4 +68,14 @@ public class HjhPlanController extends BaseTradeController {
         return  hjhTenderService.getInvestInfo(tender);
     }
 
+    @ApiOperation(value = "web计划投资校验", notes = "web计划投资校验")
+    @PostMapping(value = "/planCheck", produces = "application/json; charset=utf-8")
+    public WebResult<TenderInfoResult> planCheck(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody TenderRequest tender) {
+        tender.setUserId(userId);
+        tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
+        hjhTenderService.checkPlan(tender);
+        WebResult<TenderInfoResult> resultWebResult = new WebResult();
+        return resultWebResult;
+    }
+
 }
