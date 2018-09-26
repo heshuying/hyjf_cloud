@@ -84,11 +84,13 @@ public class DataSearchController {
     }
 
     @ApiOperation(value = "登录", notes = "登录")
-    @PostMapping("/login/{mobile}/{code}")
-    public WebResult login(@PathVariable String mobile,@PathVariable String code){
+    @PostMapping("/login")
+    public WebResult login(@RequestBody DataSearchBean request){
+        String code = request.getCode();
+        String mobile = request.getMobile();
         WebResult webResult = new WebResult();
         if(!dataSearchService.checkMobile(mobile)){
-            return webResult;
+            return new WebResult("111", "手机号校验失败");
         }
         int result = dataSearchService.checkMobileCode(mobile, code);
         if(result>0){

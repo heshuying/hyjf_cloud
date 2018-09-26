@@ -1432,12 +1432,12 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public SiteSettingsResponse selectSiteSetting() {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/siteSettings/findOne", SiteSettingsResponse.class);
+        return restTemplate.getForObject("http://AM-ADMIN/am-admin/siteSettings/findOne", SiteSettingsResponse.class);
     }
 
     @Override
     public SiteSettingsResponse updateAction(SiteSettingRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/siteSettings/update", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/siteSettings/update", requestBean,
                 SiteSettingsResponse.class);
     }
 
