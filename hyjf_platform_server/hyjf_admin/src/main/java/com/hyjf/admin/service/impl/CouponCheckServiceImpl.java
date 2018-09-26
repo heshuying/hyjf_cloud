@@ -148,7 +148,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     }
 
     @Override
-    public CouponCheckVO downloadFile(String id, HttpServletResponse response) {
+    public void downloadFile(String id, HttpServletResponse response) {
         CouponCheckVO couponCheck = amConfigClient.selectCoupon(Integer.valueOf(id));
         String fileP = "";
         String fileN = "";
@@ -186,7 +186,6 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 e.printStackTrace();
             }
         }
-        return couponCheck;
     }
 
     @Override
