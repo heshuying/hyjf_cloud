@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.EventRequestBean;
 import com.hyjf.am.response.config.EventResponse;
+import com.hyjf.am.vo.config.EventVO;
 
 /**
  * @author fuqiang
@@ -50,4 +51,11 @@ public interface EventService {
 	 * @return
 	 */
     int deleteById(Integer id);
+
+	/**
+	 * 获取公司记事
+	 * @param requestBean
+	 * @return
+	 */
+	EventVO selectById(EventRequestBean requestBean);
 }

@@ -53,4 +53,9 @@ public class ContentJobServiceImpl implements ContentJobService {
 	public int deleteById(Integer id) {
 		return amConfigClient.deleteJobById(id);
 	}
+
+	@Override
+	public JobsVo selectById(ContentJobRequestBean requestBean) {
+		return amConfigClient.getJobsRecord(requestBean.getId());
+	}
 }

@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.ContentJobRequestBean;
 import com.hyjf.am.response.config.JobResponse;
+import com.hyjf.am.vo.config.JobsVo;
 
 /**
  * @author fuqiang
@@ -50,4 +51,11 @@ public interface ContentJobService {
 	 * @return
 	 */
     int deleteById(Integer id);
+
+	/**
+	 * 查询招贤纳士
+	 * @param requestBean
+	 * @return
+	 */
+	JobsVo selectById(ContentJobRequestBean requestBean);
 }

@@ -10,6 +10,7 @@ import com.hyjf.admin.service.TeamService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.TeamResponse;
+import com.hyjf.am.vo.config.TeamVO;
 import com.hyjf.common.file.UploadFileUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -96,6 +97,13 @@ public class TeamController extends BaseController {
 		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
+	@ApiOperation(value = "公司管理-团队介绍初始化", notes = "公司管理-团队介绍初始化")
+	@PostMapping("/select_by_id")
+	public AdminResult selectById(@RequestBody TeamRequestBean requestBean) {
+		TeamVO vo = teamService.selectById(requestBean);
+		return new AdminResult(vo);
+	}
+
 	/**
 	 * 资料上传
 	 *
@@ -123,32 +131,36 @@ public class TeamController extends BaseController {
 		Iterator<String> itr = multipartRequest.getFileNames();
 		MultipartFile multipartFile = null;
 
-		while (itr.hasNext()) {
-			multipartFile = multipartRequest.getFile(itr.next());
-			String fileRealName = String.valueOf(System.currentTimeMillis());
-			String originalFilename = multipartFile.getOriginalFilename();
-			fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
+		try {
+			while (itr.hasNext()) {
+				multipartFile = multipartRequest.getFile(itr.next());
+				String fileRealName = String.valueOf(System.currentTimeMillis());
+				String originalFilename = multipartFile.getOriginalFilename();
+				fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
 
-			// 文件大小
-			String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
+				// 文件大小
+				String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
 
-			fileMeta = new BorrowCommonImage();
-			int index = originalFilename.lastIndexOf(".");
-			if (index != -1) {
-				fileMeta.setImageName(originalFilename.substring(0, index));
-			} else {
-				fileMeta.setImageName(originalFilename);
+				fileMeta = new BorrowCommonImage();
+				int index = originalFilename.lastIndexOf(".");
+				if (index != -1) {
+					fileMeta.setImageName(originalFilename.substring(0, index));
+				} else {
+					fileMeta.setImageName(originalFilename);
+				}
+
+				fileMeta.setImageRealName(fileRealName);
+				fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
+				fileMeta.setImageType(multipartFile.getContentType());
+				fileMeta.setErrorMessage(errorMessage);
+				// 获取文件路径
+				fileMeta.setImagePath(fileUploadTempPath + fileRealName);
+				fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
+				files.add(fileMeta);
 			}
-
-			fileMeta.setImageRealName(fileRealName);
-			fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
-			fileMeta.setImageType(multipartFile.getContentType());
-			fileMeta.setErrorMessage(errorMessage);
-			// 获取文件路径
-			fileMeta.setImagePath(fileUploadTempPath + fileRealName);
-			fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
-			files.add(fileMeta);
+			return new AdminResult<LinkedList<BorrowCommonImage>>(files);
+		} catch (Exception e) {
+			return new AdminResult<>(FAIL, "上传图片失败");
 		}
-		return new AdminResult<LinkedList<BorrowCommonImage>>(files);
 	}
 }
