@@ -70,6 +70,7 @@ public class ChangeLogController extends BaseController {
 		clr.setEndTime(map.get("endTime"));
 		clr.setCurrPage(Integer.valueOf(map.get("currPage")));
 		clr.setPageSize(Integer.valueOf(map.get("pageSize")));
+		clr.setAttribute(map.get("attribute"));
 		ChangeLogResponse prs=changeLogService.getChangeLogList(clr);
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -99,6 +100,7 @@ public class ChangeLogController extends BaseController {
 		clr.setRecommendUser(map.get("recommendUser"));
 		clr.setStartTime(map.get("startTime"));
 		clr.setEndTime(map.get("endTime"));
+		clr.setAttribute(map.get("attribute"));
 		clr.setCurrPage(-1);
 		clr.setPageSize(-1);
 		ChangeLogResponse prs=changeLogService.getChangeLogList(clr);
