@@ -72,7 +72,7 @@ public class BankInterfaceController extends BaseController {
     @PostMapping("/useAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult updateUseAction(@RequestBody  BankInterfaceRequest adminRequest, HttpServletRequest request)  {
-//        AdminSystemVO user = getUser(request);
+        AdminSystemVO user = getUser(request);
         BankInterfaceVO bankInterface = new BankInterfaceVO();
         BankInterfaceResponse prs =null;
         if(adminRequest.getId() != null){
@@ -81,8 +81,8 @@ public class BankInterfaceController extends BaseController {
                 bankInterface.setIsUsable(adminRequest.getIsUsable());
             }
             bankInterface.setUpdateTime(new Date());
-            bankInterface.setUpdateUserName("3");
-            bankInterface.setUpdateUserId(3);
+            bankInterface.setUpdateUserName(user.getUsername());
+            bankInterface.setUpdateUserId(Integer.valueOf(user.getId()));
             prs = bankInterfaceService.updateBankIntefaceAction(bankInterface);
         }
         if(prs==null) {
@@ -98,14 +98,14 @@ public class BankInterfaceController extends BaseController {
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankRechargeConfig(@RequestBody  BankInterfaceRequest adminRequest, HttpServletRequest request)  {
-//        AdminSystemVO user = getUser(request);
+        AdminSystemVO user = getUser(request);
         BankInterfaceResponse prs = null;
         BankInterfaceVO bankInterfaceVO = new BankInterfaceVO();
         if(adminRequest.getId() != null) {
             BeanUtils.copyProperties(adminRequest,bankInterfaceVO);
             bankInterfaceVO.setUpdateTime(new Date());
-            bankInterfaceVO.setUpdateUserName("3");
-            bankInterfaceVO.setUpdateUserId(3);
+            bankInterfaceVO.setUpdateUserName(user.getUsername());
+            bankInterfaceVO.setUpdateUserId(Integer.valueOf(user.getId()));
             prs = bankInterfaceService.updateBankIntefaceAction(bankInterfaceVO);
         }
         if(prs==null) {
