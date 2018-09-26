@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Api(value = "api端-用户充值(页面调用)",tags = "api端-用户充值(页面调用)")
 @Controller
-@RequestMapping(value = "/server/user/directRechargePage")
+@RequestMapping(value = "/hyjf-api/server/user/directRechargePage")
 public class UserDirectRechargeController extends BaseUserController {
 
     @Autowired

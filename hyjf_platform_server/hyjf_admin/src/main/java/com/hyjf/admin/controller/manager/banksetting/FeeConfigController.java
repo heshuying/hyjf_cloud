@@ -67,9 +67,8 @@ public class FeeConfigController extends BaseController {
             request.setId(id);
             //手续费配置详情查詢
             response = this.feeConfigService.selectFeeConfigInfo(request);
-            // 设置银行列表
-            List<BankConfigVO> bankConfigVOS = feeConfigService.getBankConfigList(new BankConfigVO());
-            response.setBankConfig(bankConfigVOS);
+        }else{
+            response=new AdminFeeConfigResponse();
         }
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -77,6 +76,9 @@ public class FeeConfigController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
+        // 设置银行列表
+        List<BankConfigVO> bankConfigVOS = feeConfigService.getBankConfigList(new BankConfigVO());
+        response.setBankConfig(bankConfigVOS);
         return new AdminResult<AdminFeeConfigResponse>(response) ;
     }
     @ApiOperation(value = "手续费配置添加", notes = "手续费配置添加")
@@ -170,25 +172,25 @@ public class FeeConfigController extends BaseController {
     private String validatorFieldCheck(AdminFeeConfigRequest form) {
         // 字段校验(非空判断和长度判断)
         if (StringUtils.isBlank(form.getName())||(StringUtils.isNotBlank(form.getName())&&form.getName().length()>50)) {
-            return "name不能为空且长度不能超过50！";
+            return "银行名称不能为空且长度不能超过50,请重新操作。";
         }
         if (StringUtils.isBlank(form.getPersonalCredit())||(StringUtils.isNotBlank(form.getPersonalCredit())&&form.getPersonalCredit().length()>10)) {
-            return "personalCredit不能为空且长度不能超过10！";
+            return "个人网银充值不能为空且长度不能超过10,请重新操作。";
         }
         if (StringUtils.isBlank(form.getEnterpriseCredit())||(StringUtils.isNotBlank(form.getEnterpriseCredit())&&form.getEnterpriseCredit().length()>10)) {
-            return "enterpriseCredit不能为空且长度不能超过10！";
+            return "企业网银充值不能为空且长度不能超过10,请重新操作。";
         }
         if (StringUtils.isBlank(form.getQuickPayment())||(StringUtils.isNotBlank(form.getQuickPayment())&&form.getQuickPayment().length()>10)) {
-            return "quickPayment不能为空且长度不能超过10！";
+            return "快捷支付充值不能为空且长度不能超过10,请重新操作。";
         }
         if (StringUtils.isBlank(form.getDirectTakeout())||(StringUtils.isNotBlank(form.getDirectTakeout())&&form.getDirectTakeout().length()>10)) {
-            return "directTakeout不能为空且长度不能超过10！";
+            return "即时提现不能为空且长度不能超过10,请重新操作。";
         }
         if (StringUtils.isBlank(form.getQuickTakeout())||(StringUtils.isNotBlank(form.getQuickTakeout())&&form.getQuickTakeout().length()>10)) {
-            return "quickTakeout不能为空且长度不能超过10！";
+            return "快速提现不能为空且长度不能超过10,请重新操作。";
         }
         if (StringUtils.isBlank(form.getNormalTakeout())||(StringUtils.isNotBlank(form.getNormalTakeout())&&form.getNormalTakeout().length()>10)) {
-            return "normalTakeout不能为空且长度不能超过10！";
+            return "普通提现不能为空且长度不能超过10,请重新操作。";
         }
         return "";
     }

@@ -2916,6 +2916,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 根据assignNid查询还款信息
+     * @author zhangyk
+     * @date 2018/9/25 17:30
+     */
+    @Override
+    public List<CreditRepayVO> selectCreditRepayListByAssignNid(String assignNid) {
+        CreditRepayResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/creditTender/select_credit_repay_list_by_assignNid/" + assignNid , CreditRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
     @Override
     public List<CreditRepayVO> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, Integer status) {
         String url = "http://AM-TRADE/am-trade/creditTender/select_credit_repay_list/" + borrowNid + "/" + tenderOrderId + "/" + periodNow + "/" + status;
@@ -3865,11 +3879,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public HjhPlanAssetVO checkDuplicateAssetId(String assetId) {
+    public List<HjhPlanAssetVO> checkDuplicateAssetId(String assetId) {
         String url = "http://AM-TRADE/am-trade/assetPush/checkDuplicateAssetId/" + assetId;
         HjhPlanAssetResponse response = restTemplate.getForEntity(url, HjhPlanAssetResponse.class).getBody();
         if (response != null) {
-            return response.getResult();
+            return response.getResultList();
         }
         return null;
     }

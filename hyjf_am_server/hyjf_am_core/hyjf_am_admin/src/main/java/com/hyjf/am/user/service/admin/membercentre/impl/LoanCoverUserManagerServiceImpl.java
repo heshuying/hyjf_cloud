@@ -21,6 +21,7 @@ import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthorityExample;
 import com.hyjf.am.user.service.admin.membercentre.LoanCoverUserManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author nxl
@@ -172,15 +173,13 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
             return null;
         }
         LoanSubjectCertificateAuthorityExample example = new LoanSubjectCertificateAuthorityExample();
+        LoanSubjectCertificateAuthorityExample.Criteria criteria = example.createCriteria();
         if(StringUtils.isNotBlank(record)&&StringUtils.isNotBlank(userName)){
-            example.createCriteria().andIdNoEqualTo(record.trim());
-            example.createCriteria().andNameEqualTo(userName);
-        }
-        if(StringUtils.isNotBlank(userName)){
-            example.createCriteria().andNameEqualTo(userName);
+            criteria.andIdNoEqualTo(record.trim());
+            criteria.andNameEqualTo(userName);
         }
         List<LoanSubjectCertificateAuthority> lll = loanSubjectCertificateAuthorityMapper.selectByExample(example);
-        if(null!=lll&&lll.size()>0) {
+        if (!CollectionUtils.isEmpty(lll))  {
             loanSubjectCertificateAuthority = lll.get(0);
             return loanSubjectCertificateAuthority;
         }
@@ -234,14 +233,15 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
     public CertificateAuthority selectCertificateAuthorityByIdNoName(String tureName) {
         CertificateAuthorityExample example=new CertificateAuthorityExample();
         CertificateAuthorityExample.Criteria criteria = example.createCriteria();
-        criteria.andTrueNameEqualTo(tureName);
+        criteria.andTrueNameEqualTo(tureName.trim());
         List<CertificateAuthority> cam = certificateAuthorityMapper.selectByExample(example);
-    	CertificateAuthority certificateAuthority = null;
+    	CertificateAuthority certificateAuthority =null;
     	if(cam!=null && cam.size() >0 ){
+            certificateAuthority = new CertificateAuthority();
 			certificateAuthority = cam.get(0);
 		}
-        
-		LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = null;
+
+		/*LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = null;
 		LoanSubjectCertificateAuthorityExample example2 = new LoanSubjectCertificateAuthorityExample();
 		LoanSubjectCertificateAuthorityExample.Criteria cra = example2.createCriteria();
 		cra.andNameEqualTo(tureName);
@@ -249,11 +249,11 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
 		if (loanSubjectlist != null && loanSubjectlist.size()>0){
 			loanSubjectCertificateAuthority  = loanSubjectlist.get(0);
 		}
-		
+
 		if (certificateAuthority == null && loanSubjectCertificateAuthority == null){
 			return null;
-		}
-            return new CertificateAuthority();
+		}*/
+        return  certificateAuthority;
  
     }
   	/**

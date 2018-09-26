@@ -56,7 +56,7 @@
                 AND hydu.username LIKE CONCAT(#{userName}, '%')
             </if>
             <if test="bank != null and bank !='' ">
-                AND hyduab.bank = #{bank,jdbcType=INTEGER}
+                AND hyduab.bank = #{bank,jdbcType=VARCHAR}
             </if>
             <if test="account != null and account !='' ">
                 AND hyduab.account LIKE CONCAT(#{account}, '%')

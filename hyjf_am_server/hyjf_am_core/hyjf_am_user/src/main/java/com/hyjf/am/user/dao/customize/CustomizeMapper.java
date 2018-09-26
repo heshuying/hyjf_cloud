@@ -97,9 +97,6 @@ public class CustomizeMapper extends AutoMapper {
     protected VipUpdateGradeListCustomizeMapper vipUpdateGradeListCustomizeMapper;
 
     @Autowired
-    protected WhereaboutsPageConfigCustomizeMapper whereaboutsPageConfigCustomizeMapper;
-
-    @Autowired
     protected AdminPreRegistCustomizeMapper adminPreRegistCustomizeMapper;
 
     @Autowired

@@ -3,20 +3,19 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.LinkMapper;
 import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.config.dao.model.auto.LinkExample;
 import com.hyjf.am.config.service.ContentLinksService;
 import com.hyjf.am.resquest.admin.ContentLinksRequest;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -26,6 +25,38 @@ import com.hyjf.common.util.GetDate;
 public class ContentLinksServiceImpl implements ContentLinksService {
     @Autowired
     private LinkMapper linkMapper;
+
+    /**
+     * 获取文章列表列表
+     *
+     * @return
+     */
+    @Override
+    public List<Link> getRecordList(ContentLinksRequest bean, int limitStart, int limitEnd) {
+        LinkExample example = new LinkExample();
+
+        if (limitStart != -1) {
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+        LinkExample.Criteria criteria = example.createCriteria();
+        criteria.andTypeEqualTo(bean.getType());
+        // 条件查询
+        if (StringUtils.isNotEmpty(bean.getSearchWebname())) {
+            criteria.andWebnameLike("%" + bean.getSearchWebname() + "%");
+        }
+        if (bean.getStatus() != null) {
+            criteria.andStatusEqualTo(bean.getStatus());
+        }
+        if (StringUtils.isNotEmpty(bean.getStartCreate())) {
+            criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Timestamp(bean.getStartCreate()));
+        }
+        if (StringUtils.isNotEmpty(bean.getEndCreate())) {
+            criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Timestamp(bean.getEndCreate()));
+        }
+        example.setOrderByClause("`partner_type` ASC,`order` Asc,`create_time` Desc");
+        return linkMapper.selectByExample(example);
+    }
 
     @Override
     public List<Link> searchAction(ContentLinksRequest request) {
@@ -56,8 +87,8 @@ public class ContentLinksServiceImpl implements ContentLinksService {
         BeanUtils.copyProperties(request, record);
         // 友情链接1
         record.setType(1);
-        record.setOrder(record.getOrder().intValue());
-        record.setStatus(record.getStatus().intValue());
+        record.setOrder(request.getOrder().intValue());
+        record.setStatus(request.getStatus().intValue());
         record.setCreateTime(new Date());
         record.setUpdateTime(new Date());
         fillEmpty(record);
@@ -70,8 +101,6 @@ public class ContentLinksServiceImpl implements ContentLinksService {
         BeanUtils.copyProperties(request, record);
         // 友情链接1
         record.setType(1);
-        record.setOrder(record.getOrder().intValue());
-        record.setStatus(record.getStatus().intValue());
         record.setUpdateTime(new Date());
         fillEmpty(record);
         linkMapper.updateByPrimaryKey(record);
@@ -115,22 +144,22 @@ public class ContentLinksServiceImpl implements ContentLinksService {
             record.setIsindex(0);
         }
     }
-	/**
-	 * 合作机构
-	 * @return
-	 */
-	@Override
-	public List<Link> getLinks() {
-		LinkExample example = new LinkExample();
-		LinkExample.Criteria cra = example.createCriteria();
-		cra.andTypeEqualTo(2);
-		cra.andPartnerTypeEqualTo(7);
+    /**
+     * 合作机构
+     * @return
+     */
+    @Override
+    public List<Link> getLinks() {
+        LinkExample example = new LinkExample();
+        LinkExample.Criteria cra = example.createCriteria();
+        cra.andTypeEqualTo(2);
+        cra.andPartnerTypeEqualTo(7);
 
-		List<Link> links = linkMapper.selectByExample(example);
+        List<Link> links = linkMapper.selectByExample(example);
 
-		if (links != null && links.size() > 0) {
-			return links;
-		}
-		return null;
-	}
+        if (links != null && links.size() > 0) {
+            return links;
+        }
+        return null;
+    }
 }

@@ -13,6 +13,7 @@ import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
+import com.hyjf.am.vo.trade.ProjectBeanVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
@@ -224,6 +225,6 @@ public interface BorrowService extends BaseService {
      * @param form
      * @return
      */
-	public ProjectBean searchRepayProjectDetail(ProjectBean form) throws Exception;
+	public ProjectBeanVO searchRepayProjectDetail(ProjectBeanVO form) throws Exception;
 
 }

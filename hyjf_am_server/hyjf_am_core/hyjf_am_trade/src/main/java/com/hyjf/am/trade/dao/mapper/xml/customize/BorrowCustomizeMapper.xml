@@ -284,7 +284,7 @@ WHERE
 	</select>
 
 	<select id="getTotalInverestCount" resultType="int"
-		parameterType="String">
+		parameterType="int">
 		SELECT (
 		(SELECT COUNT(*) a FROM ht_borrow_tender htbt WHERE user_id = #{userId} )
 		+

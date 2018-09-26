@@ -53,27 +53,23 @@
                 AND Poundage.quantity = #{quantitySer}
             </if>
             <if test="poundageTimeStart != null and poundageTimeStart != ''">
-                AND FROM_UNIXTIME(Poundage.poundage_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]>
-                STR_TO_DATE(CONCAT(#{poundageTimeStart},'00:00:00'
-                ),'%Y-%m-%d %H:%i:%s')
+                <!-- 优化sql(字段类型转换) varchar-->
+                AND Poundage.poundage_time >= CONCAT(UNIX_TIMESTAMP(#{poundageTimeStart}))
             </if>
             <if test="poundageTimeEnd != null and poundageTimeEnd != ''">
-                AND FROM_UNIXTIME(Poundage.poundage_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]>
-                STR_TO_DATE(CONCAT(#{poundageTimeEnd},'23:59:59'
-                ),'%Y-%m-%d %H:%i:%s')
+                <!-- 优化sql(字段类型转换) varchar-->
+                AND Poundage.poundage_time <![CDATA[<=]]> CONCAT(UNIX_TIMESTAMP(CONCAT(#{poundageTimeEnd},' 23:59:59')))
             </if>
             <if test="statusSer != null">
                 AND Poundage.status = #{statusSer}
             </if>
             <if test="addTimeStart != null and addTimeStart != ''">
-                AND FROM_UNIXTIME(Poundage.add_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]>
-                STR_TO_DATE(CONCAT(#{addTimeStart},'00:00:00'
-                ),'%Y-%m-%d %H:%i:%s')
+                <!-- 优化sql(字段类型转换) int-->
+                AND Poundage.add_time >= UNIX_TIMESTAMP(#{addTimeStart})
             </if>
             <if test="addTimeEnd != null and addTimeEnd != ''">
-                AND FROM_UNIXTIME(Poundage.add_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]>
-                STR_TO_DATE(CONCAT(#{addTimeEnd},'23:59:59'
-                ),'%Y-%m-%d %H:%i:%s')
+                <!-- 优化sql(字段类型转换) int-->
+                AND Poundage.add_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{addTimeEnd},' 23:59:59'))
             </if>
             <if test="nidSer != null and nidSer != ''">
                 AND Poundage.nid LIKE CONCAT( #{nidSer}, '%')

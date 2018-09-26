@@ -3,6 +3,7 @@ package com.hyjf.am.market.service;
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.auto.AdsType;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public interface AppConfigService {
      *
      * @param record
      */
-     boolean updateRecord(AdsWithBLOBsVO record);
+     boolean updateRecord(AdsVO adsVO);
 
 
     /**
