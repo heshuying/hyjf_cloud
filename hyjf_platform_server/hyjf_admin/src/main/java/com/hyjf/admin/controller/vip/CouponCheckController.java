@@ -100,9 +100,8 @@ public class CouponCheckController extends BaseController {
 
     @ApiOperation(value = "下载文件", notes = "下载文件")
     @GetMapping("/downloadAction/{id}")
-    public AdminResult downloadFile(HttpServletResponse response, @PathVariable String id) {
+    public void downloadFile(HttpServletResponse response, @PathVariable String id) {
         couponCheckService.downloadFile(id, response);
-        return new AdminResult<>();
     }
 
     @ApiOperation(value = "审核优惠券", notes = "审核优惠券")
