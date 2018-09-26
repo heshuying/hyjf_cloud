@@ -6052,7 +6052,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
     @Override
     public int getHjhAccountBalanceMonthCountNew(HjhAccountBalanceRequest request){
-        String url = "http://AM-TRADE/am-trade/manager/statis/getHjhAccountBalanceMonthCountNew";
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalanceMonthCountNew";
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url,request,HjhInfoAccountBalanceResponse.class).getBody();
         if(response != null){
             return response.getCount();
@@ -6062,7 +6062,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int getHjhAccountBalanceMonthCount(HjhAccountBalanceRequest request){
-        String url = "http://AM-TRADE/am-trade/manager/statis/getHjhAccountBalanceMonthCount";
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalanceMonthCount";
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url,request,HjhInfoAccountBalanceResponse.class).getBody();
         if(response != null){
             return response.getCount();
@@ -6072,7 +6072,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<HjhAccountBalanceVO> getHjhAccountBalanceMonthList(HjhAccountBalanceRequest request){
-        String url = "http://AM-TRADE/am-trade/manager/statis/getHjhAccountBalanceMonthList";
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalanceMonthList";
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url,request,HjhInfoAccountBalanceResponse.class).getBody();
         if(response != null){
             return response.getResultList();
@@ -6082,7 +6082,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int getHjhAccountBalancecountByDay (HjhAccountBalanceRequest request) {
-        String url = "http://AM-TRADE/am-trade/manager/statis/getHjhAccountBalancecountByDay";
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalancecountByDay";
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url, request, HjhInfoAccountBalanceResponse.class).getBody();
         if (response != null) {
             return response.getCount();
@@ -6092,7 +6092,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<HjhAccountBalanceVO> getHjhAccountBalanceListByDay(HjhAccountBalanceRequest request){
-        String url = "http://AM-TRADE/am-trade/manager/statis/getHjhAccountBalanceListByDay";
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalanceListByDay";
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url,request,HjhInfoAccountBalanceResponse.class).getBody();
         if(response != null){
             return response.getResultList();
