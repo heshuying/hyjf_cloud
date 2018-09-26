@@ -194,7 +194,8 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	 */
 	@Override
 	public List<ProtocolTemplateVO> getdisplayNameDynamic() {
-		List<ProtocolTemplateVO> volist = amTradeClient.getNewInfo();
+		//List<ProtocolTemplateVO> volist = amTradeClient.getNewInfo();  todo yinhui
+		List<ProtocolTemplateVO> volist = null ;
 		return volist;
 	}
 
