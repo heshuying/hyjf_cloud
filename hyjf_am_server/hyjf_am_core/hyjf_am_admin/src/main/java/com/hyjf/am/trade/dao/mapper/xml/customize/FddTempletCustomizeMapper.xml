@@ -48,4 +48,15 @@
         WHERE
         fdd.templet_id NOT IN (SELECT DISTINCT (contract.templet_nid) FROM ht_nifa_contract_template contract)
     </select>
+
+    <select id="getMaxTempletId" resultType="String" parameterType="Integer">
+         SELECT
+            max(ft.templet_id) templet_id
+        FROM
+            ht_fdd_templet ft
+        GROUP BY
+            ft.protocol_type
+        HAVING
+            ft.protocol_type = #{protocolType}
+    </select>
 </mapper>

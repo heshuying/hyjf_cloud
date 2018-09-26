@@ -176,7 +176,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 	@Override
 	public CouponTenderResponse getActivityById(Integer activityId) {
 
-		String url = "http://AM-MARKET/am-market/activity/hztgetactivitytitle/" + activityId;
+		String url = "http://AM-ADMIN/am-admin/activity/hztgetactivitytitle/" + activityId;
 		CouponTenderResponse response = restTemplate.getForEntity(url, CouponTenderResponse.class).getBody();
 		if (response != null) {
 			return response;

@@ -72,7 +72,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public List<ParamNameVO> getParamNameList(String nameClass) {
-        String url = "http://AM-CONFIG/am-config/config/getParamNameList/" + nameClass;
+        String url = "http://AM-ADMIN/am-config/config/getParamNameList/" + nameClass;
         ParamNameResponse response = restTemplate.getForEntity(url, ParamNameResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResultList();
@@ -686,7 +686,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminBankSettingResponse selectBankSettingList(AdminBankSettingRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/banksetting/list",
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/banksetting/list",
                 request, AdminBankSettingResponse.class);
     }
 
@@ -698,7 +698,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminBankSettingResponse getRecord(AdminBankSettingRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/banksetting/info",
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/banksetting/info",
                 request, AdminBankSettingResponse.class);
     }
 
@@ -712,7 +712,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<JxBankConfigVO> getRecordList(JxBankConfigVO bank, int limitStart, int limitEnd) {
-        AdminBankSettingResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/banksetting/searchForInsert",
+        AdminBankSettingResponse response = restTemplate.postForObject("http://AM-ADMIN/am-config/banksetting/searchForInsert",
                 bank, AdminBankSettingResponse.class);
 
         return response.getResultList();
@@ -726,7 +726,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminBankSettingResponse insertRecord(AdminBankSettingRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/banksetting/insert",
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/banksetting/insert",
                 request, AdminBankSettingResponse.class);
     }
 
@@ -738,7 +738,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminBankSettingResponse updateRecord(AdminBankSettingRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/banksetting/update",
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/banksetting/update",
                 request, AdminBankSettingResponse.class);
     }
 
@@ -750,7 +750,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminBankSettingResponse deleteRecord(AdminBankSettingRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/banksetting/delete",
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/banksetting/delete",
                 request, AdminBankSettingResponse.class);
     }
 
@@ -1192,7 +1192,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CouponTenderResponse getAdminUserByUserId(String userId) {
-        String url = "http://AM-CONFIG/am-config/adminSystem/hztgetusername/" + userId;
+        String url = "http://AM-ADMIN/am-config/adminSystem/hztgetusername/" + userId;
         CouponTenderResponse response = restTemplate.getForEntity(url, CouponTenderResponse.class).getBody();
         if (response != null) {
             return response;

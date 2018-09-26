@@ -5,8 +5,12 @@ package com.hyjf.am.trade.controller.admin.config;
 
 import java.util.List;
 
+import com.hyjf.am.response.StringResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -73,4 +77,35 @@ public class ProtocolsController extends BaseController {
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
+
+	/**
+	 * 取得新规的模板编号
+	 * @param protocolType
+	 * @return
+	 */
+	@GetMapping("/getNewTempletId/{protocolType}")
+	public StringResponse getNewTempletId(@PathVariable Integer protocolType) {
+		String tmpId = protocolsService.getNewTempletId(protocolType);
+		if (StringUtils.isNotBlank(tmpId)){
+			return new StringResponse(tmpId);
+		}
+		return null;
+	}
+
+    /**
+     * 协议管理-画面迁移
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/getRecordInfoById/{id}")
+    public FddTempletCustomizeResponse getRecordInfoById(@PathVariable Integer id) {
+        FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
+        FddTempletCustomize fddTemplet = protocolsService.getRecordInfoById(id);
+        if (fddTemplet != null) {
+            FddTempletCustomizeVO voList = CommonUtils.convertBean(fddTemplet, FddTempletCustomizeVO.class);
+            response.setResult(voList);
+        }
+        return response;
+    }
 }
