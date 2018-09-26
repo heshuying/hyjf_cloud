@@ -348,4 +348,29 @@ public class RedisConstants {
      * 还款申请防并发key
      */
     public static final String CONCURRENCE_REPAY_REQUEST = "repay_borrow_nid:";
+
+    /**
+     * 日推标累计额度前缀
+     */
+    public static final String DAY_MARK_ACCUMULATE = "bail_day_mark_accumulate:";
+
+    /**
+     * 日发标已用
+     */
+    public static final String DAY_USED = "bail_day_used:";
+
+    /**
+     * 日推标上限额度前缀
+     */
+    public static final String DAY_MARK_LINE = "bail_day_mark_line:";
+
+    /**
+     * 月发标已用
+     */
+    public static final String MONTH_USED = "bail_month_used:";
+
+    /**
+     * 月推标上限额度前缀
+     */
+    public static final String MONTH_MARK_LINE = "bail_month_mark_line:";
 }

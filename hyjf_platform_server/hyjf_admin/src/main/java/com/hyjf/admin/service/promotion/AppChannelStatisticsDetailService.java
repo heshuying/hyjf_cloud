@@ -1,5 +1,7 @@
 package com.hyjf.admin.service.promotion;
 
+import com.hyjf.am.response.admin.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
 import java.util.List;
@@ -16,5 +18,13 @@ public interface AppChannelStatisticsDetailService {
      * @return
      */
     List<UtmPlatVO> getAppUtm();
+
+    /**
+     * 分页查询所有渠道投资信息
+     * @param request
+     * @return
+     */
+    AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
+
 
 }

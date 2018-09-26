@@ -1,11 +1,11 @@
 package com.hyjf.cs.message.mongo.ic;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+
+import java.util.List;
 
 
 /**
@@ -73,6 +73,10 @@ public abstract class BaseMongoDao<T> {
 		for(int i=0;i<list.size();i++){
 			this.mongoTemplate.remove(list.get(i));
 		}
+	}
+
+	public Long count(Query query){
+		return this.mongoTemplate.count(query,getEntityClass());
 	}
 
 }
