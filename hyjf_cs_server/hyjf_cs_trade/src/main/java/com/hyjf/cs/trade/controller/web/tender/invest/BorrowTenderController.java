@@ -4,7 +4,6 @@
 package com.hyjf.cs.trade.controller.web.tender.invest;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.CheckException;
