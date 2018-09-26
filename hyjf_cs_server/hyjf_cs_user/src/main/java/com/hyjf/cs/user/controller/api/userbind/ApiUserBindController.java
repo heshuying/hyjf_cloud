@@ -50,7 +50,7 @@ import java.util.Map;
  */
 @Api(value = "风车理财第三方登录",tags = "api端-风车理财第三方登录")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/hyjf-api/api/user")
 public class ApiUserBindController extends BaseUserController {
 	@Autowired
 	SystemConfig systemConfig;

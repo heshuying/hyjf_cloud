@@ -117,9 +117,9 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
         // 页面异步返回URL(必须)
         bean.setNotifyUrl(bgRetUrl);
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+     /*   LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(40);
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(40));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDSET);

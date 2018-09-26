@@ -37,6 +37,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -774,8 +775,8 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 }
                 logger.info(pushRequestBean.getInstCode()+" 审核完成，开始推送资产 ");
                 //检查是否存在重复资产
-                HjhPlanAssetVO duplicateAssetId = amTradeClient.checkDuplicateAssetId(pushBean.getAssetId());
-                if (duplicateAssetId != null){
+                List<HjhPlanAssetVO> duplicateAssetId = amTradeClient.checkDuplicateAssetId(pushBean.getAssetId());
+                if (!CollectionUtils.isEmpty(duplicateAssetId)){
                     logger.error("【assetId】重复，请更换");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
                     pushBean.setRetMsg("【assetId】重复，请更换！");
@@ -868,13 +869,12 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
      * @return
      */
     private boolean checkCompanyPushInfo(PushBean pushBean){
-        if(pushBean.getBorrowCompanyName() == null || pushBean.getBorrowCompanyName().equals("") || pushBean.getAssetId() == null ||
-                pushBean.getAssetId().equals("") || pushBean.getBorrowPeriod() == null || pushBean.getBorrowPeriod().equals("") || pushBean.getIsMonth() == null ||
-                pushBean.getIsMonth().equals("") || pushBean.getBorrowStyle() == null || pushBean.getBorrowStyle().equals("") || pushBean.getUserName() == null || pushBean.getUserName().equals("") ||
-                pushBean.getAccount() == null || pushBean.getAccount().equals("") || pushBean.getUseage() == null  || pushBean.getUseage().equals("") || pushBean.getFinancialSituation() == null ||
-                pushBean.getFinancialSituation().equals("") || pushBean.getLegalPerson() == null || pushBean.getLegalPerson().equals("") || pushBean.getUnifiedSocialCreditCode() == null ||
-                pushBean.getUnifiedSocialCreditCode().equals("") || pushBean.getIndustryInvolved() == null || pushBean.getIndustryInvolved().equals("") || pushBean.getOverdueTimes() == null ||
-                pushBean.getOverdueTimes().equals("") ||pushBean.getOverdueAmount() == null || pushBean.getOverdueAmount().equals("")){
+        if(StringUtils.isBlank(pushBean.getBorrowCompanyName()) || StringUtils.isBlank(pushBean.getAssetId()) || pushBean.getBorrowPeriod() == null ||
+           pushBean.getIsMonth() == null || StringUtils.isBlank(pushBean.getBorrowStyle()) || StringUtils.isBlank(pushBean.getUserName()) ||
+           StringUtils.isBlank(pushBean.getIndustryInvolved()) || StringUtils.isBlank(pushBean.getOverdueTimes()) ||
+           pushBean.getAccount() == null || StringUtils.isBlank(pushBean.getUnifiedSocialCreditCode()) ||
+           StringUtils.isBlank(pushBean.getOverdueAmount())){
+
             return false;
         }
         return true;

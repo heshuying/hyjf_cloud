@@ -187,6 +187,9 @@ public class CustomizeMapper extends AutoMapper {
 	@Autowired
 	protected AdminHjhCommissionMapper adminHjhCommissionMapper;
 
+	@Autowired
+	protected AdminBankAccountCheckCustomizeMapper adminBankAccountCheckCustomizeMapper;
 
-
+	@Autowired
+	protected AdminBankAccountManageCustomizeMapper adminBankAccountManageCustomizeMapper;
 }

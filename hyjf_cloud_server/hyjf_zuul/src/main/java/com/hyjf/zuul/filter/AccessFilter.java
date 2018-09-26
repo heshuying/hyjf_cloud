@@ -114,7 +114,7 @@ public class AccessFilter extends ZuulFilter {
 		String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
 		String fullRequestUrl = request.getRequestURL().toString();
 		String requestUri = request.getRequestURI().toString();
-
+		logger.info("原始请求地址fullRequestUrl:" + fullRequestUrl);
 		// 访问url是不是需要判断登录
 		boolean secureVisitFlag;
 		Map<String, Object> map = RedisUtils.getObj(RedisConstants.ZUUL_ROUTER_CONFIG_KEY, Map.class);
@@ -460,6 +460,7 @@ public class AccessFilter extends ZuulFilter {
 				}
 			}
 		}
+		logger.info(originalRequestPath + " : secureVisitFlag: " + secureVisitFlag);
 		return secureVisitFlag;
 	}
 

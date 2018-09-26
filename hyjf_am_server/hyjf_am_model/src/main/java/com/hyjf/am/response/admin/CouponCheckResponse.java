@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.response.admin;
 
-import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.config.CouponCheckVO;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -18,8 +17,6 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
     private int recordTotal;
 
     private boolean bool;
-
-    private JSONArray couponStatus;
 
     private List<ParamNameVO> couponType;
 
@@ -41,14 +38,6 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
 
     public void setBool(boolean bool) {
         this.bool = bool;
-    }
-
-    public JSONArray getCouponStatus() {
-        return couponStatus;
-    }
-
-    public void setCouponStatus(JSONArray couponStatus) {
-        this.couponStatus = couponStatus;
     }
 
     public List<ParamNameVO> getCouponType() {

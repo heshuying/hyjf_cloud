@@ -201,46 +201,46 @@ public class BorrowFlowController extends BaseController {
     private String validatorFieldCheck(ModelAndView modelAndView, AdminBorrowFlowRequest form) {
         //标的类型
         if(null == form.getBorrowCd()){
-            return "borrowCd 不能为空！";
+            return "项目类型不能为空，请重新操作！";
         }
         //机构编号
         if(StringUtils.isBlank(form.getInstCode())){
-            return "instCode 不能为空！";
+            return "资产来源不能为空，请重新操作！";
         }
         //资产类型
         if(null == form.getAssetType()){
-            return "assetType 不能为空！";
+            return "产品类型不能为空，请重新操作！";
         }
 //    	是否关联计划
 //    	ValidatorFieldCheckUtil.validateRequired(modelAndView, "isAssociatePlan", form.getIsAssociatePlan().toString());
         //自动录标
         if(null == form.getAutoAdd()){
-            return "autoAdd 不能为空！";
+            return "自动录标不能为空，请重新操作！";
         }
         //自动备案
         if(null == form.getAutoRecord()){
-            return "autoRecord 不能为空！";
+            return "自动备案不能为空，请重新操作！";
         }
         //自动保证金
         if(null == form.getAutoBail()){
-            return "autoBail 不能为空！";
+            return "自动保证金不能为空，请重新操作！";
         }
         //自动初审
         if(null == form.getAutoAudit()){
-            return "iautoAudit 不能为空！";
+            return "自动初审不能为空，请重新操作！";
         }
         //自动复审
         if(null == form.getAutoReview()){
-            return "autoReview 不能为空！";
+            return "自动复审不能为空，请重新操作！";
         }
         //是否开启
         if(null == form.getIsOpen()){
-            return "isOpen 不能为空！";
+            return "是否开启不能为空，请重新操作！";
         }
         // 检查唯一性
         int cnt = this.borrowFlowService.countRecordByPK(form.getInstCode(), form.getAssetType());
         if (cnt > 0) {
-            return "instCode 重复了！";
+            return "相同资产来源，产品类型的流程配置已经存在，请重新操作！";
         }
         return "";
     }
@@ -255,7 +255,7 @@ public class BorrowFlowController extends BaseController {
     public AdminResult assetTypeAction(@RequestBody AdminBorrowFlowRequest request) {
         List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
         if(StringUtils.isBlank(request.getInstCode())){
-            return new AdminResult<>(Response.FAIL,"instCode不能为空！") ;
+            return new AdminResult<>(Response.FAIL,"资产来源不能为空，请重新操作！") ;
         }
         // 根据资金来源取得产品类型
         List<HjhAssetTypeVO> hjhAssetTypeList = this.borrowFlowService.hjhAssetTypeList(request.getInstCode());
