@@ -293,7 +293,7 @@ public class LoanCoverController extends BaseController {
             }
             // 调用接口
             DzqzCallBean resultt = DzqzCallUtil.callApiBg(bean);
-            logger.info("法大大返回报文" + resultt.toString());
+            logger.info("法大大返回报文" + JSONObject.toJSON(resultt));
             if (null!=resultt) {
                 logger.info("CA认证成功:用户ID:[" + ma.getName() + "].");
                 if ("success".equals(resultt.getResult())) {
