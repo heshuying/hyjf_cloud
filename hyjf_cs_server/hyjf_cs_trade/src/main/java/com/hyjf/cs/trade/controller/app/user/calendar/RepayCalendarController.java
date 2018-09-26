@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(tags = "app端-app日历")
 @RestController
-@RequestMapping(value = "/hyjf-app/user")
+@RequestMapping(value = "/hyjf-app/user/repayCalendar")
 public class RepayCalendarController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(RepayCalendarController.class);
     @Autowired
@@ -34,14 +34,13 @@ public class RepayCalendarController extends BaseTradeController {
 
     @ResponseBody
     @ApiOperation(value = "日历", httpMethod = "POST", notes = "日历")
-    @PostMapping(value = "/repayCalendar/getRepayCalendar")
+    @PostMapping(value = "/getRepayCalendar")
     public JSONObject getRepayCalendar(@RequestParam(required = false) String year,
                                        @RequestParam(required = false) String month,
-                                       //请求头消息获取
-                                       @RequestHeader(value = "page") String page,
-                                       @RequestHeader(value = "sign") String sign,
-                                       @RequestHeader(value = "userId") Integer userId,
-                                       @RequestHeader(value = "pageSize") String pageSize) {
+                                       @RequestParam(value = "page") String page,
+                                       @RequestParam(value = "pageSize") String pageSize,
+                                       @RequestHeader(value = "userId") Integer userId
+                                       ) {
         logger.info(RepayCalendarController.class.toString(), "startLog -- /hyjf-app/user/repayCalendar/getRepayCalendar");
         logger.info("getRepayCalendar start, year is :{}, month is :{}", year, month);
         JSONObject info = new JSONObject();
@@ -49,7 +48,6 @@ public class RepayCalendarController extends BaseTradeController {
         info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
         logger.info("page is :{}, pageSize is :{}", page, pageSize);
         // 唯一标识
-        logger.info("sign is :{}", sign);
         logger.debug("userId is :{}", userId);
         // 构造查询参数列表
         Map<String, Object> params = new HashMap<>();
