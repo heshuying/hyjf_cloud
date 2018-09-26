@@ -235,8 +235,9 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
         CertificateAuthorityExample.Criteria criteria = example.createCriteria();
         criteria.andTrueNameEqualTo(tureName.trim());
         List<CertificateAuthority> cam = certificateAuthorityMapper.selectByExample(example);
-    	CertificateAuthority certificateAuthority = new CertificateAuthority();
+    	CertificateAuthority certificateAuthority =null;
     	if(cam!=null && cam.size() >0 ){
+            certificateAuthority = new CertificateAuthority();
 			certificateAuthority = cam.get(0);
 		}
 
