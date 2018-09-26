@@ -34,4 +34,20 @@ public interface ProtocolsService {
 	 * @param request
 	 */
 	void updateAction(ProtocolsRequest request);
+
+	/**
+	 * 取得新规的模板编号
+	 * @param protocolType
+	 * @return
+	 */
+	String getNewTempletId(Integer protocolType);
+
+	/**
+	 * @Author walter.limeng
+	 * @Description  协议管理-画面迁移
+	 * @Date 16:09 2018/9/26
+	 * @Param id
+	 * @return
+	 */
+	FddTempletCustomize getRecordInfoById(Integer id);
 }

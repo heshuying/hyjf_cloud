@@ -333,7 +333,7 @@ public class ProjectListController extends BaseController {
      * @return
      */
     @PostMapping("/app/searchTenderCreditInvestList")
-    public AppTenderCreditInvestListCustomizeResponse searchTenderCreditInvestList(Map<String, Object> params){
+    public AppTenderCreditInvestListCustomizeResponse searchTenderCreditInvestList(@RequestBody Map<String, Object> params){
         AppTenderCreditInvestListCustomizeResponse response = new AppTenderCreditInvestListCustomizeResponse();
         List<AppTenderCreditInvestListCustomize> list=projectListService.searchTenderCreditInvestList(params);
         if (CollectionUtils.isNotEmpty(list)){

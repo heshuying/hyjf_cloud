@@ -151,13 +151,13 @@ public class BorrowCommonController extends BaseController {
 
 		int usersFlag=this.borrowCommonService.isExistsUser(name.get("userName"));
 		if (usersFlag == 1) {
-			return new AdminResult<>(FAIL, "用户名不存在");
+			return new AdminResult<>(FAIL, "该用户不存在");
 		} else if (usersFlag == 2) {
-			return new AdminResult<>(FAIL, "用户没有账号");
+			return new AdminResult<>(FAIL, "用户未开户");
 		} else if (usersFlag == 3) {
-			return new AdminResult<>(FAIL, "用户被禁用");
+			return new AdminResult<>(FAIL, "该用户已被禁用");
 		} else if (usersFlag == 4) {
-			return new AdminResult<>(FAIL, "借款人用户名必须是借款人账户");
+			return new AdminResult<>(FAIL, "该用户不是借款人");
 		}
 		return new AdminResult();
 	}

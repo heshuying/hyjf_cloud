@@ -1,6 +1,7 @@
 package com.hyjf.cs.message.handle;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.config.SmsTemplateRequest;
 import com.hyjf.am.vo.config.SmsNoticeConfigVO;
 import com.hyjf.am.vo.config.SmsTemplateVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -309,7 +310,14 @@ public class SmsHandle {
 	public Integer sendMessages(String mobile, String tplCode, Map<String, String> replaceStrs, String channelType) {
 		int status = -1;
 		try {
-			SmsTemplateVO smsTemplate = amConfigClient.findSmsTemplateByCode(tplCode);
+			SmsTemplateRequest request = new SmsTemplateRequest();
+			// 只查询开启状态模板
+			request.setStatus(1);
+			request.setTplCode(tplCode);
+			SmsTemplateVO smsTemplate = amConfigClient.findSmsTemplate(request);
+			if (smsTemplate == null) {
+				throw new RuntimeException("无可用短信模板...");
+			}
 			String messageStr = smsTemplate.getTplContent();
 			if (Validator.isNotNull(messageStr)) {
 				if (replaceStrs != null && replaceStrs.size() > 0) {

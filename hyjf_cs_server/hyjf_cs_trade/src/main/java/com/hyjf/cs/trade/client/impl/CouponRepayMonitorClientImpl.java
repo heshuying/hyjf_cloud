@@ -24,7 +24,7 @@ public class CouponRepayMonitorClientImpl implements CouponRepayMonitorClient {
 
     @Override
     public List<CouponRepayMonitorVO> selectCouponRepayMonitor(String nowDay) {
-        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/selectCouponRepayMonitor/"+nowDay;
+        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/selectCouponRepayMonitor/"+nowDay;
         CouponRepayMonitorResponse response = restTemplate.getForEntity(url,CouponRepayMonitorResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -34,7 +34,7 @@ public class CouponRepayMonitorClientImpl implements CouponRepayMonitorClient {
 
     @Override
     public int insertCouponRepayMonitor(CouponRepayMonitorVO monitor) {
-        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/insertCouponRepayMonitor";
+        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/insertCouponRepayMonitor";
         CouponRepayMonitorResponse response = restTemplate.postForEntity(url,monitor, CouponRepayMonitorResponse.class).getBody();
         if (response != null) {
             return response.getInsertFlag();
@@ -44,7 +44,7 @@ public class CouponRepayMonitorClientImpl implements CouponRepayMonitorClient {
 
     @Override
     public int updateCouponRepayMonitor(CouponRepayMonitorVO monitor) {
-        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/updateCouponRepayMonitor";
+        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/updateCouponRepayMonitor";
         CouponRepayMonitorResponse response = restTemplate.postForEntity(url,monitor,CouponRepayMonitorResponse.class).getBody();
         if (response != null) {
             return response.getUpdateFlag();

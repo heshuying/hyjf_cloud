@@ -18,10 +18,7 @@ import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -153,6 +150,22 @@ public class ParamNameController extends BaseConfigController {
         int count = paramNameService.deleteParamName(paramNameVO);
         response.setCount(count);
         response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+    /**
+     * @return
+     */
+    @RequestMapping("/getNameCd/{code}")
+    public ParamNameResponse  getNameCd(@PathVariable String code){
+        ParamNameResponse response = new ParamNameResponse();
+        List<ParamName> paramNames=paramNameService.getNameCd(code);
+        if(!CollectionUtils.isEmpty(paramNames)){
+            List<ParamNameVO> paramName= CommonUtils.convertBeanList(paramNames,ParamNameVO.class);
+            response.setResultList(paramName);
+            return response;
+        }
+        response.setRtn(Response.FAIL);
         return response;
     }
 }
