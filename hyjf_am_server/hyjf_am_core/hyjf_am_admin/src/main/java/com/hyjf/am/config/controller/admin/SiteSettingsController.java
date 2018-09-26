@@ -1,9 +1,15 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.config.controller;
+package com.hyjf.am.config.controller.admin;
 
+import com.hyjf.am.config.controller.BaseConfigController;
+import com.hyjf.am.config.dao.model.auto.SiteSetting;
+import com.hyjf.am.config.service.SiteSettingService;
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.config.SiteSettingsResponse;
+import com.hyjf.am.resquest.admin.SitesettingRequest;
+import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.config.dao.model.auto.SiteSetting;
-import com.hyjf.am.config.service.SiteSettingService;
-import com.hyjf.am.response.config.SiteSettingsResponse;
-import com.hyjf.am.resquest.admin.SitesettingRequest;
-import com.hyjf.am.vo.config.SiteSettingsVO;
-
 /**
  * @author fuqiang
  * @version SiteSettingsController, v0.1 2018/5/7 16:35
  */
 @RestController
-@RequestMapping("/am-config/siteSettings")
+@RequestMapping("/am-admin/siteSettings")
 public class SiteSettingsController extends BaseConfigController{
     
     @Autowired

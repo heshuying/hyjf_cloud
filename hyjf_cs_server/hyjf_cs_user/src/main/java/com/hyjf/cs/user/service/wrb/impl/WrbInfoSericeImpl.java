@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.wrb.impl;
 
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
@@ -55,6 +56,11 @@ public class WrbInfoSericeImpl implements WrbInfoServcie {
 
     @Override
     public WrbBorrowTenderSumCustomizeVO searchBorrowTenderSumByNidAndTime(String borrowNid, Date investTime) {
+        return null;
+    }
+
+    @Override
+    public List<BorrowTenderVO> getInvestDetail(Date invest_date, Integer limit, Integer page) {
         return null;
     }
 

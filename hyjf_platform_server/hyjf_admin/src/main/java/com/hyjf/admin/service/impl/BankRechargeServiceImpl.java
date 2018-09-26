@@ -2,6 +2,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.BankRechargeService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminBankRechargeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
 import com.hyjf.am.vo.config.BankRechargeLimitConfigVO;
@@ -75,6 +76,14 @@ public class BankRechargeServiceImpl implements BankRechargeService {
     @Override
     public AdminBankRechargeConfigResponse deleteBankRechargeConfig(AdminBankRechargeConfigRequest req){
         return amConfigClient.deleteBankRechargeConfig(req);
+    }
+    /**
+     * 检查银行卡是否重复
+     * @return
+     */
+    @Override
+    public IntegerResponse bankIsExists(AdminBankRechargeConfigRequest adminRequest){
+        return amConfigClient.bankIsExists(adminRequest);
     }
     /**
      * 查询快捷充值限额列表

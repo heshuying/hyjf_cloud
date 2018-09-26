@@ -10,6 +10,7 @@ import com.hyjf.admin.service.ContentQualifyService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ContentQualifyResponse;
+import com.hyjf.am.vo.config.ContentQualifyVO;
 import com.hyjf.common.file.UploadFileUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,6 +65,13 @@ public class ContentQualifyController extends BaseController {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
 		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+	}
+
+	@ApiOperation(value = "资质荣誉-根据id查询", notes = "资质荣誉-根据id查询")
+	@PostMapping("/select_by_id")
+	public AdminResult selectById(@RequestBody ContentQualifyRequestBean requestBean) {
+		ContentQualifyVO vo  = contentQualifyService.selectById(requestBean);
+		return new AdminResult(vo);
 	}
 
 	@ApiOperation(value = "修改公司管理-资质荣誉", notes = "修改公司管理-资质荣誉")

@@ -1150,6 +1150,15 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		return this.creditRepayMapper.selectByExample(example);
 	}
 
+
+	@Override
+	public List<CreditRepay> selectCreditRepayListByAssignNid(String assignNid) {
+		CreditRepayExample example = new CreditRepayExample();
+		CreditRepayExample.Criteria cra = example.createCriteria();
+		cra.andAssignNidEqualTo(assignNid);
+		return this.creditRepayMapper.selectByExample(example);
+	}
+
 	@Override
 	public List<CreditRepay> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, Integer status) {
 		CreditRepayExample example = new CreditRepayExample();
@@ -1260,7 +1269,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							tenderToCreditAssign.setCreditNid(String.valueOf(borrowCredit.getCreditNid()));
 							tenderToCreditAssign.setTenderNid(borrowCredit.getTenderNid());
 							tenderToCreditAssign.setCreditCapital(DF_FOR_VIEW.format(borrowCredit.getCreditCapital()));
-							tenderToCreditAssign.setAssignCapital(assignCapital);
+							tenderToCreditAssign.setAssignCapital(sellerCapitalWait.toString());
 							tenderToCreditAssign.setCreditDiscount(DF_FOR_VIEW.format(borrowCredit.getCreditDiscount()));
 							tenderToCreditAssign.setAssignPrice(DF_FOR_VIEW.format(assignPrice));
 							tenderToCreditAssign.setAssignPay(DF_FOR_VIEW.format(assignPay));
@@ -1287,7 +1296,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							tenderToCreditAssign.setCreditNid(String.valueOf(borrowCredit.getCreditNid()));
 							tenderToCreditAssign.setTenderNid(borrowCredit.getTenderNid());
 							tenderToCreditAssign.setCreditCapital(DF_FOR_VIEW.format(borrowCredit.getCreditCapital().setScale(2, BigDecimal.ROUND_DOWN)));
-							tenderToCreditAssign.setAssignCapital(assignCapital);
+							tenderToCreditAssign.setAssignCapital(sellerCapitalWait.toString());
 							tenderToCreditAssign.setCreditDiscount(DF_FOR_VIEW.format(borrowCredit.getCreditDiscount().setScale(2, BigDecimal.ROUND_DOWN)));
 							tenderToCreditAssign.setAssignPrice(DF_FOR_VIEW.format(assignPrice.setScale(2, BigDecimal.ROUND_DOWN)));
 							tenderToCreditAssign.setAssignPay(DF_FOR_VIEW.format(assignPay.setScale(2, BigDecimal.ROUND_DOWN)));
@@ -1356,7 +1365,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 						tenderToCreditAssign.setCreditNid(String.valueOf(borrowCredit.getCreditNid()));
 						tenderToCreditAssign.setTenderNid(borrowCredit.getTenderNid());
 						tenderToCreditAssign.setCreditCapital(DF_FOR_VIEW.format(borrowCredit.getCreditCapital().setScale(2, BigDecimal.ROUND_DOWN)));
-						tenderToCreditAssign.setAssignCapital(assignCapital);
+						tenderToCreditAssign.setAssignCapital(sellerCapitalWait.toString());
 						tenderToCreditAssign.setCreditDiscount(DF_FOR_VIEW.format(borrowCredit.getCreditDiscount().setScale(2, BigDecimal.ROUND_DOWN)));
 						tenderToCreditAssign.setAssignPrice(DF_FOR_VIEW.format(assignPrice.setScale(2, BigDecimal.ROUND_DOWN)));
 						tenderToCreditAssign.setAssignPay(DF_FOR_VIEW.format(assignPay.setScale(2, BigDecimal.ROUND_DOWN)));

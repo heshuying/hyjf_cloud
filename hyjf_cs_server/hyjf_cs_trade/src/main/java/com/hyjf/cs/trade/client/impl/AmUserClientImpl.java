@@ -685,16 +685,18 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return 0;
 	}
+
     @Override
     public BankOpenAccountVO getBankOpenAccount(String accountId) {
-        BankOpenAccountVO response = restTemplate.getForEntity(
+        BankOpenAccountResponse response = restTemplate.getForEntity(
                 "http://AM-USER/am-user/bankopen/getBankOpenAccountByAccountId/" + accountId,
-                BankOpenAccountVO.class).getBody();
+				BankOpenAccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
         return null;
     }
+
 	/**
 	 * 获取用户account信息
 	 * @param userId
@@ -709,6 +711,7 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return null;
     }
+
     @Override
     public List<VipAuthVO> getVipAuthList(int vipId) {
         String url = urlBase + "vipauth/getvipauthlist/" + vipId;
@@ -718,6 +721,7 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return null;
     }
+
 	@Override
 	public BankOpenAccountVO selectById(int userId) {
 		BankOpenAccountResponse response = restTemplate
@@ -737,6 +741,7 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
     @Override
     public UserVO getUser(String userName) {
         UserResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user/findByCondition/"+userName,UserResponse.class).getBody();
@@ -745,6 +750,7 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return null;
     }
+
     @Override
     public UserInfoVO getUserInfo(Integer userId) {
         UserInfoResponse response = restTemplate.getForEntity("http://AM-USER/am-user/userInfo/findById/"+userId,UserInfoResponse.class).getBody();
@@ -753,6 +759,7 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return null;
     }
+
 	@Override
 	public int updateBankCardPayAllianceCode(BankCardVO updateBankCard) {
 		// TODO  待实现
@@ -760,6 +767,7 @@ public class AmUserClientImpl implements AmUserClient {
 				.postForEntity("http://AM-USER/am-user/card/updateBankCardPayAllianceCode", updateBankCard, Integer.class).getBody();
 		return result;
 	}
+
 	/**
 	 * 查询用户已绑定的有效卡
 	 * @param userId

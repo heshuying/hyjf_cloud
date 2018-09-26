@@ -274,10 +274,8 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         bean.setAccountId(accountId);// 电子账号
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
-        logger.info("====根据accountid调用接口查找企业信息====参数为:"+bean);
         try {
             BankCallBean resultBean = BankCallUtils.callApiBg(bean);
-            logger.info("====调用银行接口返回值为:"+ JSONObject.toJSON(resultBean)+"===========");
             if (resultBean != null) {
                 if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
                     CompanyInfoVO companyInfoVO  = new CompanyInfoVO();
@@ -285,6 +283,13 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
                     companyInfoVO.setBusId(resultBean.getBusId());
                     companyInfoVO.setIdType(resultBean.getIdType());
                     companyInfoVO.setIdNo(resultBean.getIdNo());
+                    if(StringUtils.isNotBlank(resultBean.getIdType())){
+                        if (resultBean.getIdType().equals("20")) {//组织机构代码
+                            companyInfoVO.setCardType("组织机构代码");
+                        } else if (resultBean.getIdType().equals("25")) {
+                            companyInfoVO.setCardType("社会信用号");
+                        }
+                    }
                     companyInfoVO.setMobile(resultBean.getMobile());
                     companyInfoVO.setName(resultBean.getName());
                     companyInfoVO.setTaxId(resultBean.getTaxId());

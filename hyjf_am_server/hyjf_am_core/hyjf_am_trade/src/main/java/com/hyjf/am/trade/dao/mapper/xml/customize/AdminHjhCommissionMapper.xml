@@ -122,35 +122,35 @@
 		</if> -->
 		<if test="startDate != null and startDate != ''">
 
-			AND FROM_UNIXTIME(tc.tender_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{startDate},'00:00:00'
-			),'%Y-%m-%d %H:%i:%s')
+			<!-- 优化sql(字段类型转换) int-->
+			AND tc.tender_time &gt;= UNIX_TIMESTAMP(#{startDate})
 		</if>
 		<if test="endDate != null and endDate != ''">
 
-			AND FROM_UNIXTIME(tc.tender_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{endDate},'23:59:59'
-			),'%Y-%m-%d %H:%i:%s')
+			<!-- 优化sql(字段类型转换) int-->
+			AND tc.tender_time &lt;= UNIX_TIMESTAMP(CONCAT(#{endDate},' 23:59:59'))
 		</if>
 		<if test="startDateSend != null and startDateSend != ''">
 
-			AND FROM_UNIXTIME(tc.send_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{startDateSend},'00:00:00'
-			),'%Y-%m-%d %H:%i:%s')
+			<!-- 优化sql(字段类型转换) int-->
+			AND tc.send_time &gt;= UNIX_TIMESTAMP(#{startDateSend})
 		</if>
 		<if test="endDateSend != null and endDateSend != ''">
 
-			AND FROM_UNIXTIME(tc.send_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{endDateSend},'23:59:59'
-			),'%Y-%m-%d %H:%i:%s')
+			<!-- 优化sql(字段类型转换) int-->
+			AND tc.send_time &lt;= UNIX_TIMESTAMP(CONCAT(#{endDateSend},' 23:59:59'))
 		</if>
  		<!-- add 汇计划三期 添加检索条件"计划订单锁定时间" wxh 20180517 start -->
 		
 		<if test="startDatePlan != null and startDatePlan != ''">
 
-			AND FROM_UNIXTIME(hha.count_interest_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{startDatePlan},'00:00:00'
-			),'%Y-%m-%d %H:%i:%s')
+			<!-- 优化sql(字段类型转换) int-->
+			AND hha.count_interest_time &gt;= UNIX_TIMESTAMP(#{startDatePlan})
 		</if>
 		<if test="endDatePlan != null and endDatePlan != ''">
 
-			AND FROM_UNIXTIME(hha.count_interest_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{endDatePlan},'23:59:59'
-			),'%Y-%m-%d %H:%i:%s')
+			<!-- 优化sql(字段类型转换) int-->
+			AND hha.count_interest_time &lt;= UNIX_TIMESTAMP(CONCAT(#{endDatePlan},' 23:59:59'))
 		</if>
 		
 		<!-- add 汇计划三期 添加检索条件"计划订单锁定时间" wxh 20180517 end -->
@@ -162,12 +162,12 @@
 			AND b.`name` LIKE CONCAT( #{borrowNameSearch}, '%')
 		</if>
 		<if test="recoverDateStart != null and recoverDateStart != ''">
-			AND FROM_UNIXTIME(b.recover_last_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{recoverDateStart},'00:00:00'
-			),'%Y-%m-%d %H:%i:%s')
+			<!-- 优化sql(字段类型转换) int-->
+			AND b.recover_last_time >= UNIX_TIMESTAMP(#{recoverDateStart})
 		</if>
 		<if test="recoverDateEnd != null and recoverDateEnd != ''">
-			AND FROM_UNIXTIME(b.recover_last_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{recoverDateEnd},'23:59:59'
-			),'%Y-%m-%d %H:%i:%s')
+			<!-- 优化sql(字段类型转换) int-->
+			AND b.recover_last_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{recoverDateEnd},' 23:59:59'))
 		</if>
 		<if test="combotreeListSrch != null and combotreeListSrch != ''">
 			AND tc.department_id in

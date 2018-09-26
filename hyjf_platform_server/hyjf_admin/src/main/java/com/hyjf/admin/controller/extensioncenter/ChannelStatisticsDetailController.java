@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
@@ -48,10 +49,10 @@ public class ChannelStatisticsDetailController extends BaseController {
 
     @ApiOperation(value = "PC统计明细", notes = "PC统计明细列表")
     @PostMapping("/searchaction")
-    public AdminResult searchAction(@RequestBody ChannelStatisticsDetailRequest channelStatisticsDetailRequest) {
+    public AdminResult searchAction(@RequestBody ChannelStatisticsDetailRequest channelStatisticsDetailRequest, HttpServletRequest request) {
         logger.info("PC统计明细查询开始......");
         AdminResult adminResult = new AdminResult();
-        AdminSystemVO user =null;
+        AdminSystemVO user = getUser(request);
         // 根据用户Id查询渠道账号管理
         AdminUtmReadPermissionsVO adminUtmReadPermissions = null;
         if(user!=null&&StringUtils.isNotEmpty(user.getId())){

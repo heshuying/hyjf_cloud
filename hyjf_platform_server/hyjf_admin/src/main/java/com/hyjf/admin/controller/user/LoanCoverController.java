@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.user;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
 import com.hyjf.admin.beans.vo.LoanCoverUserCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -223,10 +224,12 @@ public class LoanCoverController extends BaseController {
                     } else if (celLength == 6) {
                         cell.setCellValue(pInfo.getCustomerId());
                     } else if (celLength == 7) {
-                        if ("success".equals(pInfo.getStatus())) {
-                            cell.setCellValue("成功");
+                        if(pInfo.getStatus() ==null){
+                            cell.setCellValue("未认证");
+                        } else if ("success".equals(pInfo.getStatus())) {
+                            cell.setCellValue("认证成功");
                         } else if ("error".equals(pInfo.getStatus())) {
-                            cell.setCellValue("失败");
+                            cell.setCellValue("认证失败");
                         } else {
                             cell.setCellValue(pInfo.getStatus());
                         }
@@ -290,10 +293,9 @@ public class LoanCoverController extends BaseController {
             }
             // 调用接口
             DzqzCallBean resultt = DzqzCallUtil.callApiBg(bean);
-            logger.info("法大大返回报文" + resultt.toString());
+            logger.info("法大大返回报文" + JSONObject.toJSON(resultt));
             if (null!=resultt) {
                 logger.info("CA认证成功:用户ID:[" + ma.getName() + "].");
-                logger.info("CA认证成功返回结果为:"+resultt);
                 if ("success".equals(resultt.getResult())) {
                     ma.setCode(resultt.getCode());
                     ma.setCustomerId(resultt.getCustomer_id());

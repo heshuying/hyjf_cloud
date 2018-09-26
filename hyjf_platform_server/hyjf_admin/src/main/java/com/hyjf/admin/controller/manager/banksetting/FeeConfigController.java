@@ -67,9 +67,8 @@ public class FeeConfigController extends BaseController {
             request.setId(id);
             //手续费配置详情查詢
             response = this.feeConfigService.selectFeeConfigInfo(request);
-            // 设置银行列表
-            List<BankConfigVO> bankConfigVOS = feeConfigService.getBankConfigList(new BankConfigVO());
-            response.setBankConfig(bankConfigVOS);
+        }else{
+            response=new AdminFeeConfigResponse();
         }
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -77,6 +76,9 @@ public class FeeConfigController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
+        // 设置银行列表
+        List<BankConfigVO> bankConfigVOS = feeConfigService.getBankConfigList(new BankConfigVO());
+        response.setBankConfig(bankConfigVOS);
         return new AdminResult<AdminFeeConfigResponse>(response) ;
     }
     @ApiOperation(value = "手续费配置添加", notes = "手续费配置添加")
