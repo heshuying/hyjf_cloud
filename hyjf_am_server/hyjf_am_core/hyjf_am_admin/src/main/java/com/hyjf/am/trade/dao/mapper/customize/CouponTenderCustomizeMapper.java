@@ -32,7 +32,7 @@ public interface CouponTenderCustomizeMapper {
      * @param request 查询条件对象
      * @return List<CouponTenderCustomize>
      */
-    List<CouponTenderCustomize> getRecordList(CouponTenderRequest request);
+    List<CouponTenderCustomize> selectCouponTenderList(CouponTenderRequest request);
 
     /**
      * 汇直投根据条件查询优惠券使用详情
@@ -191,4 +191,6 @@ public interface CouponTenderCustomizeMapper {
      * @return List<CouponBackMoneyCustomize>
      */
     List<CouponBackMoneyCustomize> getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderDetailVo selectCouponTenderDetailCustomize(Map<String, Object> paramMap);
 }

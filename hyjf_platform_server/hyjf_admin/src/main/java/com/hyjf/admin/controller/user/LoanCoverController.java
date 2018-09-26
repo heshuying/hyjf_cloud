@@ -54,6 +54,8 @@ public class LoanCoverController extends BaseController {
 
     @Autowired
     private LoanCoverService loanCoverService;
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 获取借款盖章用户列表
@@ -282,14 +284,18 @@ public class LoanCoverController extends BaseController {
             DzqzCallBean bean = new DzqzCallBean();
             bean.setUserId(0);
             bean.setLogordid("0");
-            bean.setApp_id(DzqzConstant.HYJF_FDD_APP_ID);
-            bean.setV(DzqzConstant.HYJF_FDD_VERSION);
+            /*bean.setApp_id(DzqzConstant.HYJF_FDD_APP_ID);
+            bean.setV(DzqzConstant.HYJF_FDD_VERSION);*/
+            bean.setApp_id(systemConfig.getFaaAppUrl());
+            bean.setV(systemConfig.getFddVersion());
+            bean.setSecret(systemConfig.getFddSecret());
+            bean.setUrl(systemConfig.getFddUrl());
+
             bean.setTimestamp(GetDate.getDate("yyyyMMddHHmmss"));
             bean.setCustomer_name(ma.getName());// 客户姓名
             bean.setEmail(ma.getEmail());// 电子邮箱
             bean.setIdCard(ma.getIdNo());// 组织机构代码
             bean.setMobile(ma.getMobile());// 手机号
-
             if (ma.getIdType() == 0) {
                 bean.setIdent_type("0");// 证件类型
                 bean.setTxCode("syncPerson_auto");

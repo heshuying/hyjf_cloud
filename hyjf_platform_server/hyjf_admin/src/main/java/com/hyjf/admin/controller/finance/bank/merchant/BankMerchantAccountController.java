@@ -292,7 +292,7 @@ public class BankMerchantAccountController extends BaseController {
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(0));
         String errorUrl = systemConfig.getAdminFrontHost()+ OPT_ERROR_URL;
         String successUrl = systemConfig.getAdminFrontHost() + OPT_SUCCESS_URL ;
-        String notifyUrl = systemConfig.getAdminHost() + REQUEST_MAPPING + RECHARGE_METHOD_NAME;
+        String notifyUrl = systemConfig.getAdminHost() + REQUEST_MAPPING + RECHARGE_METHOD_NAME + "?cardNO=" + accountCode;
 
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
         bean.setLogUserId("0");
@@ -320,7 +320,7 @@ public class BankMerchantAccountController extends BaseController {
         LogAcqResBean logAcq = new LogAcqResBean();
 
         logAcq.setCardNo(accountCode);
-        bean.setLogAcqResBean(logAcq);
+        //bean.setLogAcqResBean(logAcq);
         // 插值用参数
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", userId);
@@ -467,7 +467,7 @@ public class BankMerchantAccountController extends BaseController {
 
         // 调用汇付接口(提现)
         String errorUrl = systemConfig.getAdminFrontHost()  + OPT_ERROR_URL;
-        String notifyUrl = systemConfig.getAdminHost() + REQUEST_MAPPING + "/withDrawCallback";
+        String notifyUrl = systemConfig.getAdminHost() + REQUEST_MAPPING + "/withDrawCallback?cardNO=" + accountCode;
         String successUrl = systemConfig.getAdminFrontHost() + OPT_SUCCESS_URL;
 
         // 调用汇付接口(4.2.2 用户绑卡接口)
@@ -505,7 +505,7 @@ public class BankMerchantAccountController extends BaseController {
 
         logAcq.setCardNo(accountCode);
         logAcq.setFee("0");
-        bean.setLogAcqResBean(logAcq);
+        //bean.setLogAcqResBean(logAcq);
         // 插值用参数
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", userId);

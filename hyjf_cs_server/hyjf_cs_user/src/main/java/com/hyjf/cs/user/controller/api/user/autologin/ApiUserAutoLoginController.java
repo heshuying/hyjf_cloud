@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.user.controller.api.user.autologin;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.security.util.SignUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.user.bean.ApiResultPageBean;
@@ -18,6 +20,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
+import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -35,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Api(value = "api端-第三方用户自动登录",tags = "api端-第三方用户自动登录")
 @Controller
-@RequestMapping(value = "/api/user")
+@RequestMapping(value = "/hyjf-api/api/user")
 public class ApiUserAutoLoginController extends BaseUserController {
 
     @Autowired
@@ -74,6 +78,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
      */
     @RequestMapping(value = "/thirdLogin")
     public ModelAndView thirdLogin(HttpServletRequest request, HttpServletResponse response, @ModelAttribute ApiUserPostBean bean){
+        logger.info("请求进来啦:【{}】", JSON.toJSONString(bean));
         // 验证
         checkPostBeanOfWeb(bean);
         // 验签
@@ -83,20 +88,21 @@ public class ApiUserAutoLoginController extends BaseUserController {
         int bindUniqueId = bindUniqueIdDecrypt(bean);
         // 查询Userid
         Integer userId = loginService.getUserIdByBind(bindUniqueId, bean.getPid());
-
+        //Integer userId = bean.getUserId();
         // 登陆
-        WebViewUserVO userVO = loginService.getWebViewUserByUserId(userId);
-        loginService.setToken(userVO);
+        UserVO userVO = loginService.getUsersById(userId);
+        loginService.login(userVO.getUsername(),userVO.getPassword(),GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC);
+
 /*        WebViewUser webUser = loginService.getWebViewUserByUserId(userId);
         WebUtils.sessionLogin(request, response, webUser);*/
 
-        // 返回
+        // 返回到hyjf的系统
         return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/user/pandect");
     }
 
-    @ApiOperation(value = "获取登录参数",notes = "获取登录参数")
+    @ApiOperation(value = "纳觅财富自动登录",notes = "纳觅财富自动登录")
     @PostMapping(value = "/nmcfThirdLogin")
-    public ModelAndView nmcfThirdLogin(@RequestBody NmcfLoginRequestBean request){
+    public ModelAndView nmcfThirdLogin(HttpServletRequest httpServletRequest,@RequestBody NmcfLoginRequestBean request){
 
         // 验证
         this.checkNmcfPostBean(request);
@@ -121,11 +127,10 @@ public class ApiUserAutoLoginController extends BaseUserController {
         }
 
         // 登陆
+        UserVO userVO = loginService.getUsersById(userId);
+        loginService.login(userVO.getUsername(),userVO.getPassword(),GetCilentIP.getIpAddr(httpServletRequest), BankCallConstant.CHANNEL_PC);
         //WebViewUser webUser = loginService.getWebViewUserByUserId(userId);
         //WebUtils.sessionLogin(request, response, webUser);
-        //loginService.login();
-        WebViewUserVO userVO = loginService.getWebViewUserByUserId(userId);
-        loginService.setToken(userVO);
 
         // 先跳转纳觅传过来的url
         if (request.getRetUrl() != null) {
@@ -135,7 +140,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
             if (request.getBorrowNid() == null) {
                 return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/user/pandect");
             } else {
-                // TODO:这里传参有问题
+                // 跳转到前端的标的详情
                 return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/projectlist/getBorrowDetail?borrowNid=" + request.getBorrowNid());
             }
         }
@@ -167,7 +172,6 @@ public class ApiUserAutoLoginController extends BaseUserController {
         CheckUtil.check(Validator.isNotNull(bean.getPid()), MsgEnum.ERR_OBJECT_REQUIRED, "pid");
         CheckUtil.check(Validator.isNotNull(bean.getRetUrl()), MsgEnum.ERR_OBJECT_REQUIRED, "retUrl");
         CheckUtil.check(Validator.isNotNull(bean.getTimestamp()), MsgEnum.ERR_OBJECT_REQUIRED, "timestamp");
-        CheckUtil.check(Validator.isNotNull(bean.getChkValue()), MsgEnum.ERR_OBJECT_REQUIRED, "chkValue");
     }
     /**
      * 请求参数校验

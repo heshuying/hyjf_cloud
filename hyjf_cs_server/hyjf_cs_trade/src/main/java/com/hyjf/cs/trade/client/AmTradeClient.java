@@ -30,6 +30,22 @@ import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
+import com.hyjf.am.vo.trade.InvestListCustomizeVO;
+import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
+import com.hyjf.am.vo.trade.ProjectBeanVO;
+import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.ProtocolTemplateVO;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
+import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.TenderToCreditAssignCustomizeVO;
+import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
@@ -1509,8 +1525,6 @@ public interface AmTradeClient {
      */
     List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName);
 
-    List<ProtocolTemplateVO> getNewInfo();
-
     /**
      * 统计相应的计划总数
      * @param params
@@ -2181,5 +2195,7 @@ public interface AmTradeClient {
 	List<String> selectNidForCouponOnly(CouponRepayRequest couponRepayRequest);
 
 	CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow);
-	
+
+	ProjectBeanVO getRepayProjectDetail(ProjectBeanVO form);
+
 }

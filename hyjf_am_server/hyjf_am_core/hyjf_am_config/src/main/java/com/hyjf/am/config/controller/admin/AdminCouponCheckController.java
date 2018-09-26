@@ -40,13 +40,12 @@ public class AdminCouponCheckController extends BaseConfigController {
     public CouponCheckResponse getCheckList(@RequestBody @Valid AdminCouponCheckRequest request) {
         logger.info("优惠券列表..." + JSONObject.toJSON(request));
         CouponCheckResponse response = new CouponCheckResponse();
-        Map<String, Object> mapParam = paramSet(request);
-        int count = checkService.countCouponCheck(mapParam);
+        int count = checkService.countCouponCheck(request);
         Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
         if (request.getLimit() == 0) {
             paginator = new Paginator(request.getPaginatorPage(), count);
         }
-        List<CouponCheck> couponChecks = checkService.searchCouponCheck(mapParam, paginator.getOffset(), paginator.getLimit());
+        List<CouponCheck> couponChecks = checkService.searchCouponCheck(request, paginator.getOffset(), paginator.getLimit());
         if (count > 0) {
             if (!CollectionUtils.isEmpty(couponChecks)) {
                 List<CouponCheckVO> couponCheckVOS = CommonUtils.convertBeanList(couponChecks, CouponCheckVO.class);

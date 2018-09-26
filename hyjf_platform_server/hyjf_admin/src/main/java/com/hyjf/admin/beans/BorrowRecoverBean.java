@@ -18,7 +18,7 @@ public class BorrowRecoverBean  {
     private List<BorrowRecoverCustomizeVO> recordList;
     private Integer total;
 
-    public Object getLoanStarusList() {
+    public List<DropDownVO> getLoanStarusList() {
         return loanStarusList;
     }
 
@@ -28,6 +28,9 @@ public class BorrowRecoverBean  {
 
     public void setHjhInstConfigList(List<HjhInstConfigVO> hjhInstConfigList) {
         this.hjhInstConfigList = hjhInstConfigList;
+    }
+    public List<HjhInstConfigVO> getHjhInstConfigList() {
+        return this.hjhInstConfigList ;
     }
 
     public BorrowRecoverCustomizeVO getSumAccount() {
