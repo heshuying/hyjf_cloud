@@ -1806,7 +1806,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public MessagePushTagResponse getMessagePushTagList(MessagePushTagRequest request) {
-        String url = "http://AM-CONFIG/am-config/messagePushTag/searchList";
+        String url = "http://AM-ADMIN/am-admin/messagePushTag/searchList";
         MessagePushTagResponse response = restTemplate.postForEntity(url, request, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1816,7 +1816,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse getMessagePushTag(Integer id) {
-        String url = "http://AM-CONFIG/am-config/messagePushTag/getRecord/" + id;
+        String url = "http://AM-ADMIN/am-admin/messagePushTag/getRecord/" + id;
         MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1826,7 +1826,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse insretMessagePushTag(MessagePushTagRequest request) {
-        String url = "http://AM-CONFIG/am-config/messagePushTag/insertMessagePushTag";
+        String url = "http://AM-ADMIN/am-admin/messagePushTag/insertMessagePushTag";
         MessagePushTagResponse response = restTemplate.postForEntity(url, request, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1836,7 +1836,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse updateMessagePushTag(MessagePushTagRequest tagRequest) {
-        String url = "http://AM-CONFIG/am-config/messagePushTag/updateMessagePushTag";
+        String url = "http://AM-ADMIN/am-admin/messagePushTag/updateMessagePushTag";
         MessagePushTagResponse response = restTemplate.postForEntity(url, tagRequest, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1846,7 +1846,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse deleteMessagePushTag(Integer id) {
-        String url = "http://AM-CONFIG/am-config/messagePushTag/deleteMessagePushTag/" + id;
+        String url = "http://AM-ADMIN/am-admin/messagePushTag/deleteMessagePushTag/" + id;
         MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1856,7 +1856,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse updatePushTag(MessagePushTagVO record) {
-        String url = "http://AM-CONFIG/am-config/messagePushTag/updatePushTag";
+        String url = "http://AM-ADMIN/am-admin/messagePushTag/updatePushTag";
         MessagePushTagResponse response = restTemplate.postForEntity(url, record, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1866,7 +1866,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse countByTagCode(Integer id, String tagCode) {
-        String url = "http://AM-CONFIG/am-config/messagePushTag/countByTagCode/" + id + "/" + tagCode;
+        String url = "http://AM-ADMIN/am-admin/messagePushTag/countByTagCode/" + id + "/" + tagCode;
         MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1876,7 +1876,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse getMessagePushTemplateList(MsgPushTemplateRequest request) {
-        String url = "http://AM-CONFIG/am-config/messagePushTemplate/searchList";
+        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/searchList";
         MessagePushTemplateResponse response = restTemplate.postForEntity(url, request, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1886,7 +1886,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public List<MessagePushTagVO> getAllPushTagList() {
-        String url = "http://AM-CONFIG/am-config/messagePushTag/getAllPushTagList";
+        String url = "http://AM-ADMIN/am-admin/messagePushTag/getAllPushTagList";
         MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -1896,7 +1896,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse findMsgPushTemplateById(Integer id) {
-        String url = "http://AM-CONFIG/am-config/messagePushTemplate/findMsgPushTemplateById/" + id;
+        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/findMsgPushTemplateById/" + id;
         MessagePushTemplateResponse response = restTemplate.getForEntity(url, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1906,7 +1906,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public List<MessagePushTagVO> getTagList() {
-        String url = "http://AM-CONFIG/am-config/messagePushTag/getTagList";
+        String url = "http://AM-ADMIN/am-admin/messagePushTag/getTagList";
         MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -2062,7 +2062,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse updateMsgPushTemplate(MsgPushTemplateRequest templateRequest) {
-        String url = "http://AM-CONFIG/am-config/messagePushTemplate/updateAction";
+        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/updateAction";
         MessagePushTemplateResponse response = restTemplate.postForEntity(url, templateRequest, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;
@@ -2072,7 +2072,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse deleteMessagePushTemplate(List<Integer> recordList) {
-        String url = "http://AM-CONFIG/am-config/messagePushTemplate/deleteAction/" + recordList;
+        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/deleteAction/" + recordList;
         MessagePushTemplateResponse response = restTemplate.getForEntity(url, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;
@@ -2082,7 +2082,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse countByTemplateCode(Integer id, String templateCode) {
-        String url = "http://AM-CONFIG/am-config/messagePushTemplate/countByTemplateCode/" + id + "/" + templateCode;
+        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/countByTemplateCode/" + id + "/" + templateCode;
         MessagePushTemplateResponse response = restTemplate.getForEntity(url, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;
@@ -2132,7 +2132,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse insertMessageTemplate(MessagePushTemplateVO templateVO) {
-        String url = "http://AM-CONFIG/am-config/messagePushTemplate/insertMessageTemplate";
+        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/insertMessageTemplate";
         MessagePushTemplateResponse response = restTemplate.postForEntity(url, templateVO, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;
