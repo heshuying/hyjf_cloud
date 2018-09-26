@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Api(value = "api端-第三方用户自动登录",tags = "api端-第三方用户自动登录")
 @Controller
-@RequestMapping(value = "/api/user")
+@RequestMapping(value = "/hyjf-api/api/user")
 public class ApiUserAutoLoginController extends BaseUserController {
 
     @Autowired

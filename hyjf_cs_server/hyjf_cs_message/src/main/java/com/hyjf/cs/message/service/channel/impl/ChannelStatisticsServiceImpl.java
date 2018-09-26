@@ -4,19 +4,25 @@
 package com.hyjf.cs.message.service.channel.impl;
 
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.resquest.admin.PcChannelStatisticsRequest;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.AppChannelStatistics;
+import com.hyjf.cs.message.bean.ic.PcChannelStatistics;
 import com.hyjf.cs.message.mongo.ic.AppChannelStatisticsDao;
+import com.hyjf.cs.message.mongo.ic.PcChannelStatisticsDao;
 import com.hyjf.cs.message.service.channel.ChannelStatisticsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
@@ -31,6 +37,8 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
 
     @Autowired
     private AppChannelStatisticsDao appChannelStatisticsDao;
+    @Autowired
+    private PcChannelStatisticsDao pcChannelStatisticsDao;
 
     @Override
     public List<AppChannelStatistics> findChannelStatistics(AppChannelStatisticsRequest request) {
@@ -87,5 +95,36 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
         AggregationResults<AppChannelStatistics> ar = appChannelStatisticsDao.exportList(aggregation);
         List<AppChannelStatistics> result = ar.getMappedResults();
         return result;
+    }
+
+    @Override
+    public List<PcChannelStatistics> searchPcChannelStatisticsList(PcChannelStatisticsRequest request) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        Date startTime = request.getStartTime();
+        Date endTime = request.getEndTime();
+        if (startTime != null && endTime != null) {
+            criteria.and("addTime").gte(startTime).lte(endTime);
+        }
+        query.addCriteria(criteria);
+        if (request.getCurrPage() > 0) {
+            int currPage = request.getCurrPage();
+            int pageSize = request.getPageSize();
+            int limitStart = (currPage - 1) * pageSize;
+            int limitEnd = limitStart + pageSize;
+            query.skip(limitStart).limit(limitEnd);
+        }
+        query.with(new Sort(Sort.Direction.DESC, "addTime"));
+        return pcChannelStatisticsDao.find(query);
+    }
+
+    @Override
+    public int selectCount(PcChannelStatisticsRequest request) {
+        request.setCurrPage(0);
+        List<PcChannelStatistics> list = searchPcChannelStatisticsList(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.size();
+        }
+        return 0;
     }
 }

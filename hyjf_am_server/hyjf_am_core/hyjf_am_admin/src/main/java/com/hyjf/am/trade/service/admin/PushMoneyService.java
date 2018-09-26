@@ -40,4 +40,18 @@ public interface PushMoneyService {
 	 * @param request
 	 */
 	void updatePushMoney(PushMoneyRequest request);
+
+	/**
+	 * 修改校验
+	 *
+	 * @return
+	 */
+	PushMoney getRecordById(Integer id);
+
+	/**
+	 * 修改校验
+	 *
+	 * @return
+	 */
+	void deleteRecord(List<Integer> ids);
 }

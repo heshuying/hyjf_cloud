@@ -51,4 +51,22 @@ public class PushMoneyServiceImpl implements PushMoneyService {
 		BeanUtils.copyProperties(request, pushMoney);
 		pushMoneyMapper.updateByPrimaryKey(pushMoney);
 	}
+
+    @Override
+    public PushMoney getRecordById(Integer id) {
+		PushMoneyExample example = new PushMoneyExample();
+		example.createCriteria().andIdEqualTo(id);
+		List<PushMoney> pushMonies = pushMoneyMapper.selectByExample(example);
+		if (pushMonies.size() == 0){
+			return null;
+		}
+		return pushMonies.get(0);
+    }
+
+	@Override
+	public void deleteRecord (List<Integer> ids) {
+		for (Integer id : ids) {
+			pushMoneyMapper.deleteByPrimaryKey(id);
+		}
+	}
 }

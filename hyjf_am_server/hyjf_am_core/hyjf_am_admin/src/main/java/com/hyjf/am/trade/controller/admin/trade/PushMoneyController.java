@@ -14,6 +14,7 @@ import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,5 +81,39 @@ public class PushMoneyController extends BaseController {
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
+
+	/**
+	 * 画面迁移(含有id更新，不含有id添加)
+	 *
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/get_info_action/{id}")
+	public PushMoneyResponse getInfoAction(@PathVariable Integer id) {
+		PushMoneyResponse response = new PushMoneyResponse();
+		if(id != null){
+			PushMoney pushMoney = this.pushMoneyService.getRecordById(id);
+			if (pushMoney != null){
+				PushMoneyVO voList = CommonUtils.convertBean(pushMoney, PushMoneyVO.class);
+				response.setResult(voList);
+			}
+		}
+		return response;
+	}
+
+    /**
+     * 删除配置信息
+     *
+     * @param ids
+     * @return
+     */
+    @RequestMapping("/delete_record")
+    public PushMoneyResponse deleteRecord(@RequestBody List<Integer> ids) {
+        PushMoneyResponse response = new PushMoneyResponse();
+        if(!CollectionUtils.isEmpty(ids)){
+            this.pushMoneyService.deleteRecord(ids);
+        }
+        return response;
+    }
 
 }

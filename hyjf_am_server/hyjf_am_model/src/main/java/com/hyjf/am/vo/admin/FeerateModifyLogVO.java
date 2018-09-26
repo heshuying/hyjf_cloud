@@ -50,6 +50,8 @@ public class FeerateModifyLogVO extends BaseVO implements Serializable {
 
     private Date updateTime;
 
+    private String name;
+
     /**
      * 修改类型
      */
@@ -251,5 +253,13 @@ public class FeerateModifyLogVO extends BaseVO implements Serializable {
 
     public void setOperationTime(Date operationTime) {
         this.operationTime = operationTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

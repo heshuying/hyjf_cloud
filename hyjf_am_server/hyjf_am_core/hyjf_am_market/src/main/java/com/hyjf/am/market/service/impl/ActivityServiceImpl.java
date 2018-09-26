@@ -83,6 +83,9 @@ public class ActivityServiceImpl implements ActivityService {
             example.setLimitStart(offset);
             example.setLimitEnd(limit);
         }
+        if (request.getTitle() != null) {
+            example.createCriteria().andTitleEqualTo(request.getTitle());
+        }
         example.setOrderByClause("`create_time` Desc");
         return activityListMapper.selectByExample(example);
     }
