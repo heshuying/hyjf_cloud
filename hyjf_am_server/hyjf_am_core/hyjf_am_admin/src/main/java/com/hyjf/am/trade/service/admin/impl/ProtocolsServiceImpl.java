@@ -30,8 +30,6 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 	@Resource
 	private FddTempletMapper fddTempletMapper;
 	@Resource
-	private FddTempletCustomizeMapper customizeMapper;
-	@Resource
 	private FddTempletCustomizeMapper fddTempletCustomizeMapper;
     private static final String TEMPLET_ID_REFIX = "HYHT";
 
@@ -42,7 +40,7 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 			fddTemplet.setLimitStart(request.getLimitStart());
 			fddTemplet.setLimitEnd(request.getLimitEnd());
 		}
-		return customizeMapper.selectFddTempletList(fddTemplet);
+		return fddTempletCustomizeMapper.selectFddTempletList(fddTemplet);
 	}
 
 	@Override
