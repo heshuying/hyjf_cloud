@@ -2148,7 +2148,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigList() {
-        String url = "http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll";
+        String url = "http://AM-ADMIN/am-admin/hjhInstConfig/selectInstConfigAll";
         HjhInstConfigResponse response = restTemplate.getForEntity(url, HjhInstConfigResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -4860,19 +4860,19 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public STZHWhiteListResponse selectSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/stzfwhiteconfig/selectSTZHWhiteList", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/stzfwhiteconfig/selectSTZHWhiteList", requestBean,
                 STZHWhiteListResponse.class);
     }
 
     @Override
     public STZHWhiteListResponse insertSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/stzfwhiteconfig/insertSTZHWhiteList", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/stzfwhiteconfig/insertSTZHWhiteList", requestBean,
                 STZHWhiteListResponse.class);
     }
 
     @Override
     public STZHWhiteListResponse updateSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/stzfwhiteconfig/updateSTZHWhiteList", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/stzfwhiteconfig/updateSTZHWhiteList", requestBean,
                 STZHWhiteListResponse.class);
     }
 
@@ -4880,7 +4880,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhInstConfigVO selectHjhInstConfig(String instcode) {
         HjhInstConfigResponse response = restTemplate.getForObject(
-                "http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigByInstCode/" + instcode,
+                "http://AM-ADMIN/am-admin/hjhInstConfig/selectInstConfigByInstCode/" + instcode,
                 HjhInstConfigResponse.class);
         if (response != null) {
             return response.getResult();
@@ -5746,7 +5746,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public STZHWhiteListResponse selectSTZHWhiteById(Integer id) {
-        String url = "http://AM-TRADE/am-trade/stzfwhiteconfig/selectSTZHWhiteById/" + id;
+        String url = "http://AM-ADMIN/am-admin/stzfwhiteconfig/selectSTZHWhiteById/" + id;
         STZHWhiteListResponse response = restTemplate.getForEntity(url,STZHWhiteListResponse.class).getBody();
         return response;
     }
