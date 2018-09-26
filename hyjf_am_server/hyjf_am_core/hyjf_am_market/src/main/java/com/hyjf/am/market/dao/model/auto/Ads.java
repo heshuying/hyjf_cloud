@@ -56,6 +56,8 @@ public class Ads implements Serializable {
 
     private Date updateTime;
 
+    private Integer platformType;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -264,5 +266,13 @@ public class Ads implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getPlatformType() {
+        return platformType;
+    }
+
+    public void setPlatformType(Integer platformType) {
+        this.platformType = platformType;
     }
 }
