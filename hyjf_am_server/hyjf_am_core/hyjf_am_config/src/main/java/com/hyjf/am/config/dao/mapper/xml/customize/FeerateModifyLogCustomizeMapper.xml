@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.config.dao.mapper.customize.FeerateModifyLogCustomizeMapper">
-    <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.FeerateModifyLog" >
+    <resultMap id="BaseResultMap" type="com.hyjf.am.vo.admin.FeerateModifyLogVO" >
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
         <result column="asset_type" property="assetType" jdbcType="TINYINT" />
@@ -98,10 +98,10 @@
         SELECT DISTINCT
         truename
         FROM
-        ht_admin hui
+        ht_r_user hui
         WHERE
-        hfml.create_user_id = hui.id
-        ) NAME,
+        hfml.create_user_id = hui.user_id
+        ) name,
         FROM_UNIXTIME(
         hfml.create_time,
         '%Y-%m-%d %H:%i:%s'

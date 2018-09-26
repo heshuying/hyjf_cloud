@@ -121,7 +121,7 @@ public class RepayController extends BaseController {
      * @return
      */
     @ApiOperation(value = "api端-还款计划查询", notes = "api端-还款计划查询")
-    @PostMapping(value = "/getrepayinfo", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getrepayinfo.do", produces = "application/json; charset=utf-8")
     @ResponseBody
     public BaseResultBean getRepayPlanInfo(@RequestBody RepayParamBean repaybean) {
         UserRepayProjectBean resultBean = new UserRepayProjectBean();

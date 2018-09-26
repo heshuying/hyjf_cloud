@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.hyjf.am.user.dao.mapper.auto.LockedUserInfoCustomizeMapper">
+
+    <sql id="Where_Clause">
+        <where>
+            unlocked = 0
+            AND unlock_time <![CDATA[>=]]> NOW()
+            <if test="isFront != null">
+                AND front = #{isFront,jdbcType=INTEGER}
+            </if>
+            <if test="username != null and username !='' ">
+                AND username LIKE CONCAT('%',
+                #{username,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="mobile != null and mobile !='' ">
+                AND mobile LIKE CONCAT('%',
+                #{mobile,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="lockTimeStartStr != null and lockTimeStartStr != ''">
+                AND lock_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{lockTimeStartStr}," 00:00:00"),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="lockTimeEndStr != null and lockTimeEndStr != ''">
+                AND lock_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{lockTimeEndStr}, " 23:59:59"),'%Y-%m-%d %H:%i:%s')
+            </if>
+        </where>
+    </sql>
+
+    <select id="countRecordTotal" resultType="java.lang.Integer"
+            parameterType="Map">
+        select count(id)
+        from ht_user_loginerror_lock
+        <include refid="Where_Clause" />
+    </select>
+
+    <select id="getRecordList" resultType="com.hyjf.am.user.dao.model.auto.LockedUserInfo"
+            parameterType="Map">
+        SELECT
+            id,
+            username,
+            mobile,
+            unlocked,
+            lock_time as lockTime
+        FROM
+          ht_user_loginerror_lock
+        <include refid="Where_Clause" />
+        ORDER BY lock_time DESC
+        <if test="limitStart != null and limitEnd !=null">
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+</mapper>

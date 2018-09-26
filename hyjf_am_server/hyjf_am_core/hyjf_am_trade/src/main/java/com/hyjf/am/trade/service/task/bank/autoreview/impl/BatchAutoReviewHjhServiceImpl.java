@@ -83,7 +83,7 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
         /*--------------upd by liushouyi HJH3 Start----------------*/
         //遍历自动发标的数据原抽出表中所有字段、表关联后仅查借款编号
         Borrow borrow = this.getBorrowByNid(borrows.getBorrowNid());
-        BorrowInfo borrowInfo = borrowInfoMapper.selectByPrimaryKey(borrow.getId());
+        BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrow.getBorrowNid());
         /*--------------upd by liushouyi HJH3 Start----------------*/
         // 获取当前时间
         int nowTime = GetDate.getNowTime10();
@@ -207,6 +207,17 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
         BorrowExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowNidEqualTo(borrowNid);
         List<Borrow> list = borrowMapper.selectByExample(example);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    public BorrowInfo getBorrowInfoByNid(String borrowNid) {
+        BorrowInfoExample example = new BorrowInfoExample();
+        BorrowInfoExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<BorrowInfo> list = borrowInfoMapper.selectByExample(example);
         if (list != null && !list.isEmpty()) {
             return list.get(0);
         }

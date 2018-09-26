@@ -36,12 +36,12 @@ public class CouponTenderServiceImpl implements CouponTenderService {
 
     @Override
     public List<CouponTenderCustomize> getRecordList(CouponTenderRequest request) {
-        return couponTenderCustomizeMapper.getRecordList(request);
+        return couponTenderCustomizeMapper.selectCouponTenderList(request);
     }
 
     @Override
     public CouponTenderDetailVo getCouponTenderDetailCustomize(Map<String, Object> paramMap) {
-        return couponTenderCustomizeMapper.getCouponTenderDetailCustomize(paramMap);
+        return couponTenderCustomizeMapper.selectCouponTenderDetailCustomize(paramMap);
     }
 
     @Override
