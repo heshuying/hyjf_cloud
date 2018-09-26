@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -47,14 +48,14 @@ public class PcChannelStatisticsController extends BaseController {
     }
 
     @ApiOperation(value = "导出功能", notes = "导出功能")
-    public void export(@RequestBody PcChannelStatisticsRequest request, HttpServletResponse response) {
+    public void export(@RequestBody PcChannelStatisticsRequest request, HttpServletResponse response) throws Exception {
         // 表格sheet名称
         String sheetName = "渠道统计";
 
         PcChannelStatisticsResponse pcChannelStatisticsResponse = this.pcChannelStatisticsService.searchPcChannelStatistics(request);
         if (pcChannelStatisticsResponse != null) {
             List<PcChannelStatisticsVO> recordList = pcChannelStatisticsResponse.getResultList();
-            String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+            String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
             String[] titles = new String[] { "序号", "渠道", "访问数", "注册数", "开户数", "投资人数", "累计充值", "累计投资", "汇直投投资金额", "汇消费投资金额", "汇天利投资金额", "汇添金投资金额", "汇金理财投资金额", "汇转让投资金额" };
             // 声明一个工作薄
