@@ -161,7 +161,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         try {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
-            response.setContentType("application/msexcel;utf-8");
+            response.setContentType("application/vnd.ms-excel;utf-8");
             FileInputStream in = new FileInputStream(fileP);
 
             // 创建输出流
