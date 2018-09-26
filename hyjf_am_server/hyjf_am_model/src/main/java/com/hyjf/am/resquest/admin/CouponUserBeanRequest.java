@@ -125,16 +125,6 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
 
     private Integer amount;
 
-//    public int limit;
-//
-//    private int paginatorPage = 1;
-//    public int getPaginatorPage() {
-//        if (paginatorPage == 0) {
-//            paginatorPage = 1;
-//        }
-//        return paginatorPage;
-//    }
-
     public Integer getId() {
         return id;
     }
