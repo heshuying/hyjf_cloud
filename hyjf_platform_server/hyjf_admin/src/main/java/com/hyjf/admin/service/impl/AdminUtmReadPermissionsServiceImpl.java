@@ -7,6 +7,7 @@ import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,5 +34,10 @@ public class AdminUtmReadPermissionsServiceImpl implements AdminUtmReadPermissio
 	@Override
 	public AdminUtmReadPermissionsResponse deleteById(Integer id) {
 		return amConfigClient.deleteById(id);
+	}
+
+	@Override
+	public AdminUtmReadPermissionsVO selectAdminUtmReadPermissions(String userId) {
+		return amConfigClient.selectAdminUtmReadPermissions(Integer.parseInt(userId));
 	}
 }

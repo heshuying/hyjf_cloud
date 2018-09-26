@@ -41,45 +41,67 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 			for (UtmVO vo : voList) {
 				Integer sourceId = vo.getSourceId();
 				// 访问数
-				Integer accessNumber = amUserClient.getAccessNumber(sourceId, "pc") == null ? 0
-						: amUserClient.getAccessNumber(sourceId, "pc");
+				Integer accessNumber = amUserClient.getAccessNumber(sourceId, "pc");
+				if(accessNumber==null){
+					accessNumber=0;
+				}
 				// 注册数
-				Integer registNumber = amUserClient.getRegistNumber(sourceId, "pc") == null ? 0
-						: amUserClient.getRegistNumber(sourceId, "pc");
+				Integer registNumber = amUserClient.getRegistNumber(sourceId, "pc");
+				if(registNumber==null){
+					registNumber=0;
+				}
 				// 开户数
-				Integer openaccountnumber = amUserClient.getOpenAccountNumber(sourceId, "pc") == null ? 0
-						: amUserClient.getOpenAccountNumber(sourceId, "pc");
+				Integer openaccountnumber = amUserClient.getOpenAccountNumber(sourceId, "pc");
+				if(openaccountnumber==null){
+					openaccountnumber=0;
+				}
 				// 投资人数
-				Integer tenderNumber = amUserClient.getTenderNumber(sourceId, "pc") == null ? 0
-						: amUserClient.getTenderNumber(sourceId, "pc");
+				Integer tenderNumber = amUserClient.getTenderNumber(sourceId, "pc");
+				if(tenderNumber==null){
+					tenderNumber=0;
+				}
 				// 累计充值
-				BigDecimal cumulativeRecharge = amUserClient.getCumulativeRecharge(sourceId, "pc") == null
-						? BigDecimal.ZERO
-						: amUserClient.getCumulativeRecharge(sourceId, "pc");
+				BigDecimal cumulativeRecharge = amUserClient.getCumulativeRecharge(sourceId, "pc");
+				if(cumulativeRecharge==null){
+					cumulativeRecharge=BigDecimal.ZERO;
+				}
 				// 汇直投投资金额
-				BigDecimal hztTenderPrice = amUserClient.getHztTenderPrice(sourceId, "pc") == null ? BigDecimal.ZERO
-						: amUserClient.getHztTenderPrice(sourceId, "pc");
+				BigDecimal hztTenderPrice = amUserClient.getHztTenderPrice(sourceId, "pc");
+				if(hztTenderPrice==null){
+					hztTenderPrice=BigDecimal.ZERO;
+				}
 				// 汇消费投资金额
-				BigDecimal hxfTenderPrice = amUserClient.getHxfTenderPrice(sourceId, "pc") == null ? BigDecimal.ZERO
-						: amUserClient.getHxfTenderPrice(sourceId, "pc");
+				BigDecimal hxfTenderPrice = amUserClient.getHxfTenderPrice(sourceId, "pc");
+				if(hxfTenderPrice==null){
+					hxfTenderPrice=BigDecimal.ZERO;
+				}
 				// 汇天利投资金额
-				BigDecimal htlTenderPrice = amUserClient.getHtlTenderPrice(sourceId, "pc") == null ? BigDecimal.ZERO
-						: amUserClient.getHtlTenderPrice(sourceId, "pc");
+				BigDecimal htlTenderPrice = amUserClient.getHtlTenderPrice(sourceId, "pc");
+				if(htlTenderPrice==null){
+					htlTenderPrice=BigDecimal.ZERO;
+				}
 				// 汇添金投资金额
-				BigDecimal htjTenderPrice = amUserClient.getHtjTenderPrice(sourceId, "pc") == null ? BigDecimal.ZERO
-						: amUserClient.getHtjTenderPrice(sourceId, "pc");
+				BigDecimal htjTenderPrice = amUserClient.getHtjTenderPrice(sourceId, "pc");
+				if(htjTenderPrice==null){
+					htjTenderPrice=BigDecimal.ZERO;
+				}
 				// 汇金理财投资金额
-				BigDecimal rtbTenderPrice = amUserClient.getRtbTenderPrice(sourceId, "pc") == null ? BigDecimal.ZERO
-						: amUserClient.getRtbTenderPrice(sourceId, "pc");
-				// 汇转让投资金额
-				BigDecimal hzrTenderPrice = amUserClient.getHzrTenderPrice(sourceId, "pc") == null ? BigDecimal.ZERO
-						: amUserClient.getHzrTenderPrice(sourceId, "pc");
+				BigDecimal rtbTenderPrice = amUserClient.getRtbTenderPrice(sourceId, "pc");
+				if(rtbTenderPrice==null){
+					rtbTenderPrice=BigDecimal.ZERO;
+				}
+				// 汇转让投资金额//
+				BigDecimal hzrTenderPrice = amUserClient.getHzrTenderPrice(sourceId, "pc");
+				if(hzrTenderPrice==null){
+					hzrTenderPrice=BigDecimal.ZERO;
+				}
 				PcChannelStatisticsVO statisticsVO = new PcChannelStatisticsVO(sourceId, vo.getSourceName(),
 						accessNumber, registNumber, openaccountnumber, tenderNumber, cumulativeRecharge, hztTenderPrice,
 						hxfTenderPrice, htlTenderPrice, htjTenderPrice, rtbTenderPrice, hzrTenderPrice, new Date());
 				statisticsVO.setCumulativeInvestment(hztTenderPrice.add(hxfTenderPrice).add(htlTenderPrice)
 						.add(htjTenderPrice).add(rtbTenderPrice).add(hzrTenderPrice));
 				try {
+					//  对应INSERT
 					producer.messageSend(new MessageContent(MQConstant.PC_CHANNEL_STATISTICS_TOPIC,
 							System.currentTimeMillis() + "", JSONObject.toJSONBytes(statisticsVO)));
 				} catch (MQException e) {

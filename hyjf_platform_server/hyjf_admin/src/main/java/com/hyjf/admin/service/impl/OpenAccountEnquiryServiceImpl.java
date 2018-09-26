@@ -1,11 +1,14 @@
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
 import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
+import com.hyjf.admin.mq.SmsProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.OpenAccountEnquiryService;
 import com.hyjf.admin.utils.BankUtil;
 import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
@@ -17,12 +20,16 @@ import com.hyjf.am.vo.admin.BankOpenAccountLogVO;
 import com.hyjf.am.vo.admin.OpenAccountEnquiryCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.message.AppMsMessage;
+import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.IdCard15To18;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.*;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -40,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @version OpenAccountEnquiryServiceImpl, v0.1 2018/8/20 16:36
@@ -53,6 +61,9 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     private SystemConfig systemConfig;
     @Autowired
     AmUserClient amUserClient;
+
+    @Autowired
+    private SmsProducer smsProducer;
 
     /**
      * 用户按照手机号和身份证号查询开户掉单
@@ -104,19 +115,13 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         selectbean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         selectbean.setLogClient(0);
         //通过手机号和身份证查询掉单信息
-        List<BankOpenAccountLogVO> bankOpenAccountLogs=amUserClient.bankOpenAccountLogSelect(phone,idcard);
+        List<BankOpenAccountLogVO> bankOpenAccountLogs=amUserClient.bankOpenAccountLogSelect(bankOpenAccountLog);
         // 返回参数
         BankCallBean retBean = null;
         if (Integer.parseInt(num)==1) {//手机号查询
 
             //手机号格式check
-            JSONObject errjson = new JSONObject();
-            ValidatorCheckUtil.validateMobile(errjson, "手机号", "statusDesc", phone, 11, false);
-            if (ValidatorCheckUtil.hasValidateError(errjson)) {
-                resultBean.setResult("输入验证失败！");
-                resultBean.setMobile(phone);
-                return resultBean;
-            }
+            CheckUtil.check(Validator.isNotNull(phone) && Validator.isMobile(phone), MsgEnum.ERR_FMT_MOBILE);
             OpenAccountEnquiryCustomizeVO accountMap=this.amUserClient.searchAccountEnquiry(bankOpenAccountLog);
             if (accountMap==null) {
                 resultBean.setResult("该用户不存在！");
@@ -182,16 +187,8 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         if (Integer.parseInt(num)==2) {//身份证号查询
             // 画面验证
             // 身份证号码格式以及长度的校验
-
-            //手机号格式check
-            JSONObject errjson = new JSONObject();
-            ValidatorCheckUtil.validateMobile(errjson, "手机号", "statusDesc", phone, 11, false);
-            if (ValidatorCheckUtil.hasValidateError(errjson)) {
-                resultBean.setResult("输入验证失败！");
-                resultBean.setMobile(phone);
-                return resultBean;
-            }
-            ValidatorCheckUtil.validateIdCard(errjson, "idcard", idcard, "statusDesc", phone,18, 18, true);
+            CheckUtil.check(Validator.isNotNull(idcard) && Validator.isIdcard(idcard), MsgEnum.ERR_FMT_IDCARDNO);
+            //ValidatorCheckUtil.validateIdCard(errjson, "idcard", idcard, "statusDesc", phone,18, 18, true);
             boolean booleans=ValidatorFieldCheckUtil.isIDCard(idcard);
             if (!booleans) {
                 resultBean.setResult("输入验证失败！");
@@ -274,7 +271,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
      * @date 2018/8/20 16:35
      **/
     @Override
-    public OpenAccountEnquiryDefineResultBean openAccountEnquiryUpdate(AdminSystemVO currUser, OpenAccountEnquiryDefineRequestBean requestBean) {
+    public OpenAccountEnquiryDefineResultBean openAccountEnquiryUpdate(OpenAccountEnquiryDefineRequestBean requestBean) {
         OpenAccountEnquiryDefineResultBean resultBean= new OpenAccountEnquiryDefineResultBean();
         String ordeidString =requestBean.getOrdeidString().trim();
         String userid = requestBean.getUserid().trim();
@@ -397,6 +394,14 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         Map<String, String> params = new HashMap<String, String>();
         params.put("mqMsgId", GetCode.getRandomCode(10));
         params.put("userId", String.valueOf(userId));
+        try {
+            SmsMessage smsMessage = new SmsMessage(userId, params, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_CHONGZHI_SUCCESS,
+                    CustomConstants.CHANNEL_TYPE_NORMAL);
+            smsProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+
+        } catch (Exception e) {
+            logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]",userId);
+        }
         //rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_CERTIFICATE_AUTHORITY, JSONObject.toJSONString(params));
         // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  end
         return true;

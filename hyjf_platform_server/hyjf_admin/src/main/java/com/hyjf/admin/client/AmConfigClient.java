@@ -1,6 +1,7 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.*;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
@@ -272,6 +273,12 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	public AdminBankRechargeConfigResponse deleteBankRechargeConfig(AdminBankRechargeConfigRequest req);
+
+	/**
+	 * 检查银行卡是否重复
+	 * @return
+	 */
+	public IntegerResponse bankIsExists(AdminBankRechargeConfigRequest adminRequest);
 	/**
 	 * 查询快捷充值限额列表--导出
 	 * @param adminRequest
@@ -654,6 +661,8 @@ public interface AmConfigClient {
 	 */
 	LandingPageResponse deleteLandingPageById(Integer id);
 
+
+
 	/**
 	 * 根据条件查询公司管理-合作伙伴
 	 *
@@ -725,6 +734,14 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	ContentQualifyVO getContentQualifyRecord(Integer id);
+
+	/**
+	 * 通过ID获取着陆页
+	 *
+	 * @param id
+	 * @return
+	 */
+	LandingPageResponse getLandingPageRecord(Integer id);
 
 	/**
 	 * 删除公司管理-资质荣誉状态

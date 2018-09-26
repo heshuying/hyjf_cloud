@@ -9,8 +9,8 @@
 
     <packaging>pom</packaging>
 
-    <name>hyjf_cloud_server</name>
-    <description>Demo project for Spring Boot</description>
+    <name>hyjf_cs_server</name>
+    <description>hyjf cs server project</description>
 
     <parent>
         <groupId>com.hyjf</groupId>

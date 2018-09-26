@@ -22,7 +22,9 @@ import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.resquest.admin.HjhLabelInfoRequest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
+import com.hyjf.am.trade.service.admin.hjhplan.AdminAllocationEngineService;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhLabelService;
+import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
@@ -42,6 +44,9 @@ public class AdminHjhLabelController {
 	
 	@Autowired
 	AdminHjhLabelService adminHjhLabelService;
+	
+	@Autowired
+	AdminAllocationEngineService adminAllocationEngineService;
 	
 	/**
 	 * @Author: libin
@@ -96,6 +101,15 @@ public class AdminHjhLabelController {
 		List<HjhLabelCustomizeVO> list = adminHjhLabelService.selectHjhLabelList(request,paginator.getOffset(), paginator.getLimit());
         if(count > 0){
             if (!CollectionUtils.isEmpty(list)) {
+            	for(HjhLabelCustomizeVO vo:list){
+            		List<HjhAllocationEngineVO> alist = adminAllocationEngineService.selectHjhAllocationEngineListByLabelId(vo.getId());
+            		//如果通过标签表中的标签编号去查询引擎表发现可以在引擎表查到记录，则说明此标签已经在引擎中使用
+            		if(alist.size() > 0){
+            			vo.setLabelisUsed("1");//已使用
+            		} else {
+            			vo.setLabelisUsed("0");//未使用
+            		}
+            	}
                 response.setResultList(list);
                 response.setCount(count);
                 response.setRtn(Response.SUCCESS);//代表成功

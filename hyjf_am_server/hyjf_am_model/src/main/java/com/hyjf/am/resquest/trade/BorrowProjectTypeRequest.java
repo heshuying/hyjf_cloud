@@ -56,6 +56,8 @@ public class BorrowProjectTypeRequest  extends BasePage implements Serializable 
     private Date updateTime;
 
     private Long increaseMoney;
+
+    private Integer increaseInterestFlag;
     @ApiModelProperty(value = "优惠券")
     private Integer interestCoupon;
 
@@ -247,5 +249,13 @@ public class BorrowProjectTypeRequest  extends BasePage implements Serializable 
 
     public void setCoupon(String coupon) {
         Coupon = coupon;
+    }
+
+    public Integer getIncreaseInterestFlag() {
+        return increaseInterestFlag;
+    }
+
+    public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
+        this.increaseInterestFlag = increaseInterestFlag;
     }
 }

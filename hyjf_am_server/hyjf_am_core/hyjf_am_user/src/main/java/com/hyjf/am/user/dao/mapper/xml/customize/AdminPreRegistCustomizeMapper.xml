@@ -20,10 +20,12 @@
 				AND hp.regist_flag LIKE CONCAT( #{registFlag}, '%')
 			</if>
 			<if test="preRegTimeStart != null and preRegTimeStart !='' ">
-				AND FROM_UNIXTIME( hp.pre_regist_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{preRegTimeStart}
+				<!-- 优化sql(字段类型转换) -->
+				AND hp.pre_regist_time >= UNIX_TIMESTAMP(#{preRegTimeStart})
 			</if>
 			<if test="preRegTimeEnd != null and preRegTimeEnd !='' ">
-				AND FROM_UNIXTIME( hp.pre_regist_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{preRegTimeEnd}
+				<!-- 优化sql(字段类型转换) -->
+				AND hp.pre_regist_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{preRegTimeEnd},' 23:59:59'))
 			</if>
 		</where>
 	</sql>

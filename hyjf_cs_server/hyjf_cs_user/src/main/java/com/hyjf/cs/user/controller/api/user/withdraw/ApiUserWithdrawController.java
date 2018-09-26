@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Api(value = "api端-用户提现接口",tags = "api端-用户提现接口")
 @Controller
-@RequestMapping(value = "/server/user/withdraw")
+@RequestMapping(value = "/hyjf-api/server/user/withdraw")
 public class ApiUserWithdrawController extends BaseUserController {
 
     @Autowired

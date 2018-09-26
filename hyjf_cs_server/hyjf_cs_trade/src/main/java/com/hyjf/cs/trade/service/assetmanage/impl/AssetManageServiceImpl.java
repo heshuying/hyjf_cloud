@@ -22,7 +22,7 @@ import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
-import com.hyjf.cs.trade.client.BindCardClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.service.assetmanage.AssetManageService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.vo.WebGetRepayMentRequestVO;
@@ -48,7 +48,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
     private static final Logger logger = LoggerFactory.getLogger(AssetManageServiceImpl.class);
 
     @Autowired
-    BindCardClient bindCardClient;
+    AmUserClient bindCardClient;
 
     @Autowired
     private BaseClient baseClient;

@@ -85,7 +85,7 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
                 monitor.setAddUser(CustomConstants.USERID_ADMIN);
                 monitor.setUpdateTime(GetDate.getNowTime10());
                 monitor.setUpdateUser(CustomConstants.USERID_ADMIN);
-                monitor.setDelFlg(0);
+                monitor.setDelFlag(0);
                 result = couponRepayMonitorClient.insertCouponRepayMonitor(monitor);
             }else {
                 //更新

@@ -23,8 +23,8 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.CouponExpiredSmsClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.batch.CouponExpiredSmsService;
@@ -41,7 +41,7 @@ public class CouponExpiredSmsServiceImpl implements CouponExpiredSmsService {
     @Autowired
     private SmsProducer smsProcesser;
     @Autowired
-    private CouponExpiredSmsClient couponExpiredSmsClient;
+    private AmTradeClient couponExpiredSmsClient;
     @Autowired
     private AmUserClient amUserClient;
 

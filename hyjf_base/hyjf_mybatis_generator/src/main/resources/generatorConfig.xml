@@ -499,6 +499,7 @@
             <columnOverride column="late_free_days" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="project_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="increase_interest_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_capital_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_apicron" domainObjectName="BorrowApicron">
@@ -1753,6 +1754,7 @@
             <columnOverride column="is_end" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="client_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="new_user_show" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="platform_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_ads_type" domainObjectName="AdsType">
@@ -1879,6 +1881,30 @@
         <table tableName="ht_user_r_oa_users" domainObjectName="UserROaUsers">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="education" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_hjh_bail_config" domainObjectName="HjhBailConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_accumulate" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_hjh_bail_config_info" domainObjectName="HjhBailConfigInfo">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="is_new_credit" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_loan_credit" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_capital_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flg" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_hjh_bail_config_log" domainObjectName="HjhBailConfigLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <table tableName="ht_borrow_delete" domainObjectName="BorrowDelete">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="exception_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
     </context>

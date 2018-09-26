@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.manager;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
@@ -61,25 +62,31 @@ public class SendTypeController extends BaseController {
                 resList.setResult(borrowSendTypeVO);
                 return new AdminResult<BorrowSendTypeVO>(resList.getResult()) ;
             }
-            return new AdminResult<>(FAIL,adminRequest.getSendCd()+"对应的标的不存在");
+            return new AdminResult<>(FAIL,adminRequest.getSendCd()+"对应的标的不存在,请重新输入。");
         }
-        return new AdminResult<>(FAIL,adminRequest.getSendCd()+"对应的标的不存在");
+        return new AdminResult<>(FAIL,adminRequest.getSendCd()+"对应的标的不存在,请重新输入。");
     }
     @ApiOperation(value = "添加 发标/复审", notes = "添加 发标/复审")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {
+        AdminResult result= new AdminResult();
         BorrowSendTypeResponse response =new BorrowSendTypeResponse();
         // 表单校验(双表校验)
         // 编号
-        boolean sendCdFlag = StringUtils.isBlank(adminRequest.getSendCd())||(StringUtils.isNotBlank(adminRequest.getSendCd())&&adminRequest.getSendCd().length()>50);
-        if (sendCdFlag) {
-            BorrowSendTypeVO borrowSendTypeVO = sendTypeService.getBorrowSendInfo(adminRequest.getSendCd());
-            if (borrowSendTypeVO != null && StringUtils.isNotEmpty(borrowSendTypeVO.getSendCd())) {
-                response.setRtn(Response.FAIL);
-                response.setMessage("sendCd 重复了！");
-                return new AdminResult<BorrowSendTypeResponse>(response);
-            }
+        boolean sendCdFlag = StringUtils.isNotBlank(adminRequest.getSendCd())&&adminRequest.getSendCd().length()<=50;
+        if (!sendCdFlag) {
+            return new AdminResult<>(Response.FAIL,"编号不能为空且长度不能超过50位,请重新输入。");
+        }
+        //校验sendCd是否存在
+        BorrowSendTypeVO borrowSendTypeVO = sendTypeService.getBorrowSendInfo(adminRequest.getSendCd());
+        if (borrowSendTypeVO != null && StringUtils.isNotEmpty(borrowSendTypeVO.getSendCd())) {
+            response.setRtn(Response.FAIL);
+            response.setMessage("编号已经存在,请重新输入。");
+            result.setStatus(BaseResult.FAIL);
+            result.setStatusDesc("编号已经存在,请重新输入。");
+            result.setData(response);
+            return result ;
         }
         // 画面验证
         String message =this.validatorFieldCheck(adminRequest);
@@ -105,7 +112,7 @@ public class SendTypeController extends BaseController {
         // 表单校验(双表校验)
         if(StringUtils.isBlank(adminRequest.getSendCd())){
             response.setRtn(Response.FAIL);
-            response.setMessage("sendCd 不能为空！");
+            response.setMessage("编号已经存在,请重新输入。");
             return new AdminResult<BorrowSendTypeResponse>(response);
         }
         // 画面验证
@@ -139,6 +146,31 @@ public class SendTypeController extends BaseController {
         }
         return new AdminResult<>();
     }
+
+    @ApiOperation(value = "校验发标/复审", notes = "添加 发标/复审")
+    @PostMapping("/checkAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
+    public AdminResult checkAction( @RequestBody BorrowSendTypeRequest adminRequest) {
+        AdminResult result= new AdminResult();
+        BorrowSendTypeResponse response =new BorrowSendTypeResponse();
+        // 表单校验(双表校验)
+        // 编号
+        boolean sendCdFlag = StringUtils.isNotBlank(adminRequest.getSendCd())&&adminRequest.getSendCd().length()<=50;
+        if (!sendCdFlag) {
+            return new AdminResult<>(Response.FAIL,"编号不能为空且长度不能超过50位,请重新输入。");
+        }
+        //校验sendCd是否存在
+        BorrowSendTypeVO borrowSendTypeVO = sendTypeService.getBorrowSendInfo(adminRequest.getSendCd());
+        if (borrowSendTypeVO != null && StringUtils.isNotEmpty(borrowSendTypeVO.getSendCd())) {
+            response.setRtn(Response.FAIL);
+            response.setMessage("编号已经存在,请重新输入。");
+            result.setStatus(BaseResult.FAIL);
+            result.setStatusDesc("编号已经存在,请重新输入。");
+            result.setData(response);
+            return result ;
+        }
+        return result;
+    }
     /**
      * 画面校验
      *
@@ -147,19 +179,19 @@ public class SendTypeController extends BaseController {
     private String validatorFieldCheck(BorrowSendTypeRequest form) {
         // 名称
         if(StringUtils.isBlank(form.getSendName())||(StringUtils.isNotBlank(form.getSendName())&&form.getSendName().length()>50)){
-            return "sendName 不能为空且长度不能超过50！";
+            return "名称不能为空且长度不能超过50位,请重新输入。";
         }
         // 发标时间
         if(StringUtils.isBlank(form.getAfterTime())||(StringUtils.isNotBlank(form.getAfterTime())&&form.getAfterTime().length()>4)){
             String value=form.getAfterTime();
             if(!GenericValidator.isInt(value) || !NumberUtils.isNumber(value) || Integer.valueOf(value) < 0){
-                return "sendName 不能为空且长度小于4位的正整数！";
+                return "发标时间不能为空且长度小于4位的正整数,请重新输入。";
             }
-            return "sendName 不能为空且长度不能超过4！";
+            return "发标时间不能为空且长度不能超过4,请重新输入。";
         }
         // 备注说明
         if(StringUtils.isBlank(form.getRemark())||(StringUtils.isNotBlank(form.getRemark())&&form.getRemark().length()>50)){
-            return "sendName 不能为空且长度不能超过4！";
+            return "备注说明不能为空且长度不能超过4,请重新输入。";
         }
         return "";
     }

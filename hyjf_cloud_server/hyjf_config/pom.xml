@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>hyjf_config</name>
-	<description>Demo project for Spring Boot</description>
+	<description>hyjf config project</description>
 
 	<parent>
 		<groupId>com.hyjf</groupId>

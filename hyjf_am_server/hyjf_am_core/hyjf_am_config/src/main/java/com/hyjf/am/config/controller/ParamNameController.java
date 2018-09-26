@@ -39,21 +39,7 @@ public class ParamNameController extends BaseConfigController {
         response.setRtn(Response.FAIL);
         return response;
     }
-    /**
-     * @return
-     */
-    @RequestMapping("/getNameCd/{code}")
-    public ParamNameResponse  getNameCd(@PathVariable String code){
-        ParamNameResponse response = new ParamNameResponse();
-        List<ParamName> paramNames=paramNameService.getNameCd(code);
-        if(!CollectionUtils.isEmpty(paramNames)){
-            List<ParamNameVO> paramName= CommonUtils.convertBeanList(paramNames,ParamNameVO.class);
-            response.setResultList(paramName);
-            return response;
-        }
-        response.setRtn(Response.FAIL);
-        return response;
-    }
+
     /**
      * （条件）列表查询--其他相关字段
      * @return

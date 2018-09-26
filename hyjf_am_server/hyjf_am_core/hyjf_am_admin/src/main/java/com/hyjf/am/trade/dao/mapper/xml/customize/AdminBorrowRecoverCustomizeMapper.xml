@@ -42,7 +42,7 @@
 			</if>
 			<!-- 投资人 -->
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND bt.tender_user_name LIKE CONCAT( #{usernameSrch}, '%')
+				AND bt.user_name LIKE CONCAT( #{usernameSrch}, '%')
 			</if>
 			<!-- 合作机构编号 -->
 			<if test="instCodeOrgSrch != null and instCodeOrgSrch != ''">

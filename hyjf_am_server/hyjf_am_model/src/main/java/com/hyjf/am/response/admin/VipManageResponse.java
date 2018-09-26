@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.response.admin;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.VipManageVO;
@@ -28,7 +29,7 @@ public class VipManageResponse extends Response<VipManageVO> {
 
     private List<ParamNameVO> registPlat;
 
-    private List<OADepartmentCustomizeVO> departmentList;
+    private JSONObject departmentList;
 
     public Integer getCount() {
         return count;
@@ -78,11 +79,11 @@ public class VipManageResponse extends Response<VipManageVO> {
         this.registPlat = registPlat;
     }
 
-    public List<OADepartmentCustomizeVO> getDepartmentList() {
+    public JSONObject getDepartmentList() {
         return departmentList;
     }
 
-    public void setDepartmentList(List<OADepartmentCustomizeVO> departmentList) {
+    public void setDepartmentList(JSONObject departmentList) {
         this.departmentList = departmentList;
     }
 }

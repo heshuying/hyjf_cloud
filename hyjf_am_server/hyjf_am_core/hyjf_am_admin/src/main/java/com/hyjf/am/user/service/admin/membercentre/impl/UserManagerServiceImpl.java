@@ -7,6 +7,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.trade.dao.mapper.auto.ROaDepartmentMapper;
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserLogMapper;
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserChangeLogMapper;
@@ -52,6 +53,8 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     private SpreadsUserMapper spreadsUserMapper;
     @Autowired
     private UserChangeLogMapper userChangeLogMapper;
+    @Autowired
+    private ROaDepartmentMapper rOaDepartmentMapper;
 
     /**
      * 根据筛选条件查找会员列表
@@ -344,6 +347,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int countUserByMobile(int userId, String mobile) {
         UserExample example = new UserExample();
         UserExample.Criteria criteria = example.createCriteria();
+        if (Validator.isNotNull(userId)) {
+            criteria.andUserIdNotEqualTo(userId);
+        }
         criteria.andMobileEqualTo(mobile);
         int cnt = userMapper.countByExample(example);
         return cnt;
@@ -565,11 +571,13 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     @Override
     public List<UserChangeLog> queryChangeLogList(Map<String, Object> mapParam) {
         UserChangeLogExample example = new UserChangeLogExample();
+        UserChangeLogExample.Criteria criteria =  example.createCriteria();
         if(null!=mapParam.get("userId")){
-            example.createCriteria().andUserIdEqualTo((int)mapParam.get("userId"));
+            criteria.andUserIdEqualTo((int)mapParam.get("userId"));
         }
         if(null!=mapParam.get("changeType")){
-            example.createCriteria().andUpdateTypeEqualTo((int)mapParam.get("changeType"));
+            String changeType = mapParam.get("changeType").toString();
+            criteria.andUpdateTypeEqualTo(Integer.parseInt(changeType));
         }
         List<UserChangeLog> userChangeLogs =userChangeLogMapper.selectByExample(example);
         return userChangeLogs;
@@ -904,7 +912,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         // 插入一条用户信息修改日志
         changeLog.setIdcard(request.getIdCard());
 //        changeLog.setUpdateType(2);//2用户信息修改
-        changeLog.setUpdateType(2);
+        changeLog.setUpdateType(3);
         changeLog.setUpdateUserId(Integer.parseInt(request.getLoginUserId()));
         changeLog.setUpdateUser(request.getLoginUserName());
         changeLog.setRemark(request.getRemark());

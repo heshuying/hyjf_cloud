@@ -3,11 +3,12 @@
  */
 package com.hyjf.cs.user.client;
 
+import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
-import com.hyjf.am.resquest.trade.HandleAccountRechargeRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.resquest.trade.HandleAccountRechargeRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.app.*;
@@ -16,8 +17,8 @@ import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
@@ -376,4 +377,25 @@ public interface AmTradeClient {
      * @return
      */
     Integer updateAccountNumberByUserId(int userId, String accountId);
+
+    /**
+     *根据机构编号检索机构信息
+     * @param instcode
+     * @return
+     */
+    HjhInstConfigVO selectHjhInstConfig(String instcode);
+
+    /**
+     * 根据标的ID查询可投资标的信息
+     * @param borrowNid
+     * @return
+     */
+    List<WrbBorrowListCustomizeVO> searchBorrowListByNid(String borrowNid);
+
+    /**
+     * 根据优惠券编号获取优惠券配置信息
+     * @param couponCode
+     * @return
+     */
+    CouponConfigVO getCouponByCouponCode(String couponCode);
 }

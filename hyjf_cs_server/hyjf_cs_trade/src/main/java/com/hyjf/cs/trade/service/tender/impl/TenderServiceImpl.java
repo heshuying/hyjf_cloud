@@ -22,11 +22,9 @@ import com.hyjf.am.vo.user.UserInfoCrmVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmRegVO;
-import com.hyjf.cs.trade.client.AccountClient;
-import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BankOpenClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
@@ -69,18 +67,15 @@ import redis.clients.jedis.Transaction;
 @Service
 public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderService{
 
-    @Autowired
-    BankOpenClient bankOpenClient;
+
     @Autowired
     AmUserClient amUserClient;
-    @Autowired
-    AccountClient accountClient;
     @Autowired
     AmTradeClient amTradeClient;
     @Autowired
     SystemConfig systemConfig;
     @Autowired
-    private AmMongoClient amMongoClient;
+    private CsMessageClient amMongoClient;
     @Autowired
     private UtmRegProducer utmRegProducer;
     @Autowired
@@ -102,7 +97,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 		 * couponGrantId)){ cuc = this.getCouponUser(couponGrantId); }
 		 */
 		/*原BankOpenAccount accountChinapnrTender = this.getBankOpenAccount(bizAcount);   使用 crt.andAccountEqualTo(bankAccount);*/
-		BankOpenAccountVO accountChinapnrTender = bankOpenClient.selectByAccountId(bizAccount);//原子也是 andAccountEqualTo
+		BankOpenAccountVO accountChinapnrTender = amUserClient.selectByAccountId(bizAccount);//原子也是 andAccountEqualTo
 		
 		// 用户未在平台开户
 		if (accountChinapnrTender == null) {
@@ -374,7 +369,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			
 			// 投资人记录
 			/*原Account tenderAccount = this.getAccount(Integer.parseInt(userId)); criteria.andUserIdEqualTo(userId);*/
-			AccountVO tenderAccount = accountClient.getAccountByUserId(Integer.parseInt(userId));//criteria.andUserIdEqualTo(userId);
+			AccountVO tenderAccount = amUserClient.getAccount(Integer.parseInt(userId));//criteria.andUserIdEqualTo(userId);
 			
 			if (tenderAccount.getBankBalance().compareTo(accountBigDecimal) < 0) {
 				return jsonMessage("余额不足，请充值！", "1");

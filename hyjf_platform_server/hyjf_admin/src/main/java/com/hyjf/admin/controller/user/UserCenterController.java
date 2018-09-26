@@ -98,6 +98,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/getUserdetail")
     @ResponseBody
     public  AdminResult<UserDetailInfoResponseBean>  getUserdetail(@RequestBody String userId) {
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         UserDetailInfoResponseBean userDetailInfoResponseBean = new UserDetailInfoResponseBean();
         UserManagerDetailVO userManagerDetailVO = userCenterService.selectUserDetail(userId);
         UserManagerDetailCustomizeVO userManagerDetailCustomizeVO = new UserManagerDetailCustomizeVO();
@@ -121,7 +122,9 @@ public class UserCenterController extends BaseController {
             } else {
                 userDetailInfoResponseBean.setIsEvalation("1");
             }
+            String strDate = smp.format(userEvalationResultInfo.getCreateTime());
             BeanUtils.copyProperties(userEvalationResultInfo, userEvalationResultShowVO);
+            userEvalationResultShowVO.setCreateTime(strDate);
         }
         userDetailInfoResponseBean.setUserEvalationResultInfo(userEvalationResultShowVO);
         //用户开户信息
@@ -353,12 +356,16 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkAction")
     @ResponseBody
     @ApiOperation(value = "校验手机号", notes = "校验手机号")
-    public AdminResult checkAction(@RequestBody String mobile) {
-        logger.info("===========mobile : "+mobile+"===========");
+    public AdminResult checkAction(@RequestParam(value = "userId") String userId,@RequestParam(value = "mobile") String mobile) {
         // 检查手机号码唯一性
-        int cnt = userCenterService.countUserByMobile(mobile);
-        if (cnt > 0) {
-            return new AdminResult<>(FAIL, "手机号已经存在！");
+        if(StringUtils.isNotBlank(userId)){
+            int userrIdInt = Integer.parseInt(userId);
+            int cnt = userCenterService.countUserByMobile(mobile,userrIdInt);
+            if (cnt > 0) {
+                return new AdminResult<>(FAIL, "手机号已经存在！");
+            }
+        }else{
+            return new AdminResult<>(FAIL, "用户id不能为空！");
         }
         return new AdminResult<>();
     }
@@ -569,11 +576,11 @@ public class UserCenterController extends BaseController {
         Response response = userCenterService.saveCompanyInfo(updCompanyRequest);
         return new AdminResult<Response>(response);
     }
-
-    /**
+/*
+    *//**
      * 获取部门信息
      * @return
-     */
+     *//*
     @ResponseBody
     @PostMapping(value = "/getDepartmentList")
     @ApiOperation(value = "获取部门信息", notes = "获取部门信息")
@@ -582,13 +589,13 @@ public class UserCenterController extends BaseController {
         // 部门
         String[] list = new String[] {};
         //ids 刷新时可用,暂不删除 保留
-        /*if (Validator.isNotNull(deptIds)) {
+        *//*if (Validator.isNotNull(deptIds)) {
             if (deptIds.contains(StringPool.COMMA)) {
                 list = deptIds.split(StringPool.COMMA);
             } else {
                 list = new String[] { deptIds};
             }
-        }*/
+        }*//*
         JSONArray ja = smsCountService.getCrmDepartmentList(list);
         if (ja != null) {
             //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
@@ -606,7 +613,7 @@ public class UserCenterController extends BaseController {
             return ret;
         }
         return jsonObject;
-    }
+    }*/
 
     public UserManagerInitResponseBean initUserManaget(){
         UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();
@@ -634,6 +641,26 @@ public class UserCenterController extends BaseController {
 
         List<HjhInstConfigVO> listHjhInstConfig =  userCenterService.selectInstConfigAll();
         List<DropDownVO> dropDownVOList = com.hyjf.admin.utils.ConvertUtils.convertListToDropDown(listHjhInstConfig,"instCode","instName");
+        //部门树形列表
+        // 部门
+        String[] list = new String[] {};
+        JSONArray ja = smsCountService.getCrmDepartmentList(list);
+        JSONObject ret= new JSONObject();
+        if (ja != null) {
+            //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
+            JSONObject jo = new JSONObject();
+            jo.put("value", "-10086");
+            jo.put("title", "其他");
+            JSONArray array = new JSONArray();
+            jo.put("key", UUID.randomUUID());
+            jo.put("children", array);
+            ja.add(jo);
+            //
+            ret.put("data", ja);
+            ret.put("status", "000");
+            ret.put("statusDesc", "成功");
+        }
+        userManagerInitResponseBean.setDeptList(ret);
         userManagerInitResponseBean.setUserRoles(listUserRoles);
         userManagerInitResponseBean.setUserPropertys(listUserPropertys);
         userManagerInitResponseBean.setAccountStatus(listAccountStatus);

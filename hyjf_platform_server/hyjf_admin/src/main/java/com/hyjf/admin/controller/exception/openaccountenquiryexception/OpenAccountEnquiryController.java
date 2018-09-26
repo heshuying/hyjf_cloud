@@ -36,7 +36,7 @@ public class OpenAccountEnquiryController extends BaseController {
 
     @ApiOperation(value = "用户按照手机号和身份证号查询开户掉单", notes = "用户按照手机号和身份证号查询开户掉单")
     @PostMapping("/openaccountenquiryAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+   // @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<OpenAccountEnquiryDefineResultBean> getList(HttpServletRequest request, @RequestBody OpenAccountEnquiryDefineRequestBean requestBean) {
         AdminSystemVO currUser = getUser(request);
         if(currUser == null){
@@ -48,13 +48,13 @@ public class OpenAccountEnquiryController extends BaseController {
 
     @ApiOperation(value = "用户按照手机号和身份证号查询开户掉单后同步系统掉单信息，更改用户状态", notes = "用户按照手机号和身份证号查询开户掉单后同步系统掉单信息，更改用户状态")
     @PostMapping("/openAccountEnquiryUpdate")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<OpenAccountEnquiryDefineResultBean> enquiryUpdate(HttpServletRequest request,@RequestBody OpenAccountEnquiryDefineRequestBean requestBean) {
         AdminSystemVO currUser = getUser(request);
         if(currUser == null){
             return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
         }
-        OpenAccountEnquiryDefineResultBean resultBean = openAccountEnquiryService.openAccountEnquiryUpdate(currUser,requestBean);
+        OpenAccountEnquiryDefineResultBean resultBean = openAccountEnquiryService.openAccountEnquiryUpdate(requestBean);
         return new AdminResult<>(resultBean);
     }
 }

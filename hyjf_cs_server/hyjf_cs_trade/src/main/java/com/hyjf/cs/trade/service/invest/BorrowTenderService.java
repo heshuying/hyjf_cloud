@@ -1,6 +1,10 @@
 package com.hyjf.cs.trade.service.invest;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -81,4 +85,15 @@ public interface BorrowTenderService extends BaseTradeService {
      * @return
      */
     AppInvestInfoResultVO getInvestInfoWeChat(TenderRequest tender);
+
+    /**
+     * web散标投资校验
+     * @param request
+     * @param borrow
+     * @param borrowInfoVO
+     * @param cuc
+     * @param account
+     * @return
+     */
+    WebResult<Map<String,Object>> borrowTenderCheck(TenderRequest request, BorrowAndInfoVO borrow, BorrowInfoVO borrowInfoVO ,CouponUserVO cuc,BankOpenAccountVO account);
 }

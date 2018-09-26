@@ -7,10 +7,10 @@ import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.resquest.admin.BindLogListRequest;
-import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
 import com.hyjf.am.resquest.message.MessagePushMsgRequest;
@@ -28,11 +28,11 @@ import java.util.List;
 /**
  * @author zhangqingqing
  * @version AmDataCollect, v0.1 2018/6/25 10:26
- *
+ * <p>
  * todo 这个类全部错了，都要改 ！！！！！！！！！！！！！！！！！！！！！！！！
  */
 @Service
-public class  CsMessageClientImpl  implements CsMessageClient {
+public class CsMessageClientImpl implements CsMessageClient {
     @Autowired
     private RestTemplate restTemplate;
 
@@ -62,16 +62,17 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     /**
      * 查询关联记录列表count
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     @Override
     public Integer getAssociatedRecordsCount(AssociatedRecordListRequest request) {
         AssociatedRecordListResponse response = restTemplate
                 .postForEntity("http://CS-MESSAGE/cs-message/search/getassociatedrecordscount", request, AssociatedRecordListResponse.class)
                 .getBody();
-        if(Response.isSuccess(response)){
+        if (Response.isSuccess(response)) {
             String count = String.valueOf(response.getCount());
             return Integer.valueOf(count);
         }
@@ -80,16 +81,17 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     /**
      * 根据筛选条件查询关联记录list
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     @Override
     public List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request) {
         AssociatedRecordListResponse response = restTemplate
                 .postForEntity("http://CS-MESSAGE/cs-message/search/searchassociatedrecordlist", request, AssociatedRecordListResponse.class)
                 .getBody();
-        if(Response.isSuccess(response)){
+        if (Response.isSuccess(response)) {
             return response.getResultList();
         }
         return null;
@@ -97,16 +99,17 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     /**
      * 根据筛选参数从mongo中查询DirectionalTransferAssociatedLog的count
-     * @auth sunpeikai
+     *
      * @param request 前端给传的筛选参数
      * @return
+     * @auth sunpeikai
      */
     @Override
     public Integer getDirectionalTransferLogCount(BindLogListRequest request) {
         BindLogResponse response = restTemplate
                 .postForEntity("http://CS-MESSAGE/cs-message/search/getassociatedlogcount", request, BindLogResponse.class)
                 .getBody();
-        if(Response.isSuccess(response)){
+        if (Response.isSuccess(response)) {
             String count = String.valueOf(response.getCount());
             return Integer.valueOf(count);
         }
@@ -115,16 +118,17 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     /**
      * 根据筛选参数从mongo中查询DirectionalTransferAssociatedLog的list
-     * @auth sunpeikai
+     *
      * @param request 前端给传的筛选参数
      * @return
+     * @auth sunpeikai
      */
     @Override
     public List<BindLogVO> searchDirectionalTransferLogList(BindLogListRequest request) {
         BindLogResponse response = restTemplate
                 .postForEntity("http://CS-MESSAGE/cs-message/search/searchassociatedloglist", request, BindLogResponse.class)
                 .getBody();
-        if(Response.isSuccess(response)){
+        if (Response.isSuccess(response)) {
             return response.getResultList();
         }
         return null;
@@ -132,79 +136,91 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     @Override
     public String getRetCode(String logOrdId) {
-        String response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/search/getRetCode/" + logOrdId,String.class).getBody();
+        String response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/search/getRetCode/" + logOrdId, String.class).getBody();
         return response;
     }
 
     @Override
-    public OperationReportResponse getRecordList(OperationReportRequest request){
-        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/list",request,OperationReportResponse.class).getBody();
+    public OperationReportResponse getRecordList(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/list", request, OperationReportResponse.class).getBody();
         return response;
     }
+
     @Override
-    public OperationReportResponse listByRelease(OperationReportRequest request){
-        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/listbyrelease",request,OperationReportResponse.class).getBody();
+    public OperationReportResponse listByRelease(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/listbyrelease", request, OperationReportResponse.class).getBody();
         return response;
     }
+
     @Override
-    public OperationReportResponse selectOperationreportCommon(String id){
-        OperationReportResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/operation_report/selectdetail/"+id,OperationReportResponse.class);
+    public OperationReportResponse selectOperationreportCommon(String id) {
+        OperationReportResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/operation_report/selectdetail/" + id, OperationReportResponse.class);
         return response;
     }
+
     @Override
-    public OperationReportResponse reportInfo(String id){
-        OperationReportResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/operation_report/reportinfo/"+id,OperationReportResponse.class);
+    public OperationReportResponse reportInfo(String id) {
+        OperationReportResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/operation_report/reportinfo/" + id, OperationReportResponse.class);
         return response;
     }
+
     @Override
-    public OperationReportResponse delete(String id){
-        OperationReportResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/operation_report/delete/"+id,OperationReportResponse.class);
+    public OperationReportResponse delete(String id) {
+        OperationReportResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/operation_report/delete/" + id, OperationReportResponse.class);
         return response;
     }
+
     @Override
-    public OperationReportResponse publish(OperationReportRequest request){
-        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/publish",request,OperationReportResponse.class).getBody();
+    public OperationReportResponse publish(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/publish", request, OperationReportResponse.class).getBody();
         return response;
     }
+
     @Override
-    public OperationReportResponse insertOrUpdateMonthAction(OperationReportRequest request){
-        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/insertmonthaction",request,OperationReportResponse.class).getBody();
+    public OperationReportResponse insertOrUpdateMonthAction(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/insertmonthaction", request, OperationReportResponse.class).getBody();
         return response;
     }
+
     @Override
     public OperationReportResponse insertOrUpdateQuarterAction(OperationReportRequest request) {
-        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/insertquarteraction",request,OperationReportResponse.class).getBody();
-        return response;
-    }
-    @Override
-    public OperationReportResponse insertOrUpdateHalfYearAction(OperationReportRequest request) {
-        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/inserthalfyearaction",request,OperationReportResponse.class).getBody();
-        return response;
-    }
-    @Override
-    public OperationReportResponse insertOrUpdateYearAction(OperationReportRequest request){
-        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/insertyearaction",request,OperationReportResponse.class).getBody();
-        return response;
-    }
-    @Override
-    public OperationReportResponse monthPreview(OperationReportRequest request){
-        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/monthpreview",request,OperationReportResponse.class).getBody();
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/insertquarteraction", request, OperationReportResponse.class).getBody();
         return response;
     }
 
     @Override
-    public OperationReportResponse yearPreview(OperationReportRequest request){
-        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/yearpreview",request,OperationReportResponse.class).getBody();
+    public OperationReportResponse insertOrUpdateHalfYearAction(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/inserthalfyearaction", request, OperationReportResponse.class).getBody();
         return response;
     }
+
     @Override
-    public OperationReportResponse quarterPreview(OperationReportRequest request){
-        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/quarterpreview",request,OperationReportResponse.class).getBody();
+    public OperationReportResponse insertOrUpdateYearAction(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/insertyearaction", request, OperationReportResponse.class).getBody();
         return response;
     }
+
     @Override
-    public OperationReportResponse halfPreview(OperationReportRequest request){
-        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/halfpreview",request,OperationReportResponse.class).getBody();
+    public OperationReportResponse monthPreview(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/monthpreview", request, OperationReportResponse.class).getBody();
+        return response;
+    }
+
+    @Override
+    public OperationReportResponse yearPreview(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/yearpreview", request, OperationReportResponse.class).getBody();
+        return response;
+    }
+
+    @Override
+    public OperationReportResponse quarterPreview(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/quarterpreview", request, OperationReportResponse.class).getBody();
+        return response;
+    }
+
+    @Override
+    public OperationReportResponse halfPreview(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/halfpreview", request, OperationReportResponse.class).getBody();
         return response;
     }
 
@@ -221,6 +237,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     /**
      * 获取汇计划--计划资金列表(从MongoDB读取数据)
+     *
      * @param hjhPlanCapitalRequest
      * @return
      * @Author : huanghui
@@ -229,23 +246,23 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
         HjhPlanCapitalResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjh_plan_capital/getPlanCapitalList",
                 hjhPlanCapitalRequest, HjhPlanCapitalResponse.class).getBody();
-        if (response != null){
+        if (response != null) {
             return response;
         }
         return null;
     }
 
-	@Override
-	public MessagePushTemplateStaticsResponse selectTemplateStatics(MessagePushTemplateStaticsRequest request) {
-		MessagePushTemplateStaticsResponse response = restTemplate
-				.postForEntity("http://CS-MESSAGE/cs-message/messagepush_template_statics/select_template_statics",
-						request, MessagePushTemplateStaticsResponse.class)
-				.getBody();
-		if (response != null) {
-			return response;
-		}
-		return null;
-	}
+    @Override
+    public MessagePushTemplateStaticsResponse selectTemplateStatics(MessagePushTemplateStaticsRequest request) {
+        MessagePushTemplateStaticsResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/messagepush_template_statics/select_template_statics",
+                        request, MessagePushTemplateStaticsResponse.class)
+                .getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
 
     @Override
     public MessagePushPlatStaticsResponse selectPushPlatTemplateStatics(MessagePushPlatStaticsRequest request) {
@@ -295,6 +312,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     /**
      * 数据修改 APP消息推送 异常处理
+     *
      * @param request
      * @return
      */
@@ -343,6 +361,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     /**
      * 推送极光消息
+     *
      * @param msg
      * @return 成功返回消息id  失败返回 error
      * @author Michael
@@ -355,13 +374,14 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     /**
      * 获取手动发放短信列表
+     *
      * @param request
      * @return
      */
     @Override
     public MessagePushMsgResponse selectMessagePushMsg(MessagePushMsgRequest request) {
         MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/selectmessagepushmsg",
-                request,MessagePushMsgResponse.class).getBody();
+                request, MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
         }
@@ -370,7 +390,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     @Override
     public MessagePushMsgResponse getMessagePushMsgById(String id) {
-        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app_message/getmessagepushmsgbyid/"+id,MessagePushMsgResponse.class).getBody();
+        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app_message/getmessagepushmsgbyid/" + id, MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
         }
@@ -380,7 +400,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     @Override
     public MessagePushMsgResponse insertMessagePushMsg(MessagePushMsgVO templateVO) {
         MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/insertmessagepushmsg",
-                templateVO,MessagePushMsgResponse.class).getBody();
+                templateVO, MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
         }
@@ -390,7 +410,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     @Override
     public MessagePushMsgResponse updateMessagePushMsg(MessagePushMsgRequest templateRequest) {
         MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/updatemessagepushmsg",
-                templateRequest,MessagePushMsgResponse.class).getBody();
+                templateRequest, MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
         }
@@ -399,8 +419,45 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     @Override
     public MessagePushMsgResponse deleteMessagePushMsg(MessagePushMsgRequest request) {
-        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/deletemessagepushmsg",request,
+        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/deletemessagepushmsg", request,
                 MessagePushMsgResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public AppChannelStatisticsResponse searchList(AppChannelStatisticsRequest statisticsRequest) {
+        AppChannelStatisticsResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app/channelstatistics", statisticsRequest, AppChannelStatisticsResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public AppChannelStatisticsResponse exportList(AppChannelStatisticsRequest statisticsRequest) {
+        AppChannelStatisticsResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app/export", statisticsRequest, AppChannelStatisticsResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
+        AppChannelStatisticsDetailResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/search/getstatisticsList", request, AppChannelStatisticsDetailResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+
+    }
+
+    @Override
+    public PcChannelStatisticsResponse searchPcChannelStatistics(PcChannelStatisticsRequest request) {
+        PcChannelStatisticsResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/pc_channel_statistics/search", request, PcChannelStatisticsResponse.class).getBody();
         if (response != null) {
             return response;
         }

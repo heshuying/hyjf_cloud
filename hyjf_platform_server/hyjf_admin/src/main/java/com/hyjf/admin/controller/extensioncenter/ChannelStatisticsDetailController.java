@@ -5,12 +5,9 @@ package com.hyjf.admin.controller.extensioncenter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ChannelStatisticsDetailService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
@@ -25,9 +22,10 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +49,7 @@ public class ChannelStatisticsDetailController extends BaseController {
 
     @ApiOperation(value = "PC统计明细", notes = "PC统计明细列表")
     @PostMapping("/searchaction")
-    public AdminResult searchAction(@RequestBody ChannelStatisticsDetailRequest channelStatisticsDetailRequest,HttpServletRequest request) {
+    public AdminResult searchAction(@RequestBody ChannelStatisticsDetailRequest channelStatisticsDetailRequest, HttpServletRequest request) {
         logger.info("PC统计明细查询开始......");
         AdminResult adminResult = new AdminResult();
         AdminSystemVO user = getUser(request);

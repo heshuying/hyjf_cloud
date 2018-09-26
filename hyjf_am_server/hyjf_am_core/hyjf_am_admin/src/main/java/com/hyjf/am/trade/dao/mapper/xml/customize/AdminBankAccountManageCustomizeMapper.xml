@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AdminBankAccountManageCustomizeMapper">
+    <resultMap id="accountInfoMapResult" type="com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize">
+        <result column="id" property="id" />
+        <result column="user_id" property="userId" /> <!-- 用户id -->
+        <result column="bankTotal" property="bankTotal" /> <!-- 资产总额-->
+        <result column="bank_balance" property="bankBalance" /> <!-- 可用金额-->
+        <result column="bank_frost" property="bankFrost" /><!-- 银行冻结金额 -->
+        <result column="bank_wait_repay" property="bankWaitRepay" /><!-- 银行待还金额 -->
+        <result column="bank_await" property="bankAwait"/><!-- 银行待收 -->
+        <result column="bank_balance_cash" property="bankBalanceCash"/><!-- 江西银行可提现金额(银行电子账户余额) -->
+        <result column="bank_frost_cash" property="bankFrostCash"/><!-- 江西银行冻结金额(银行电子账户冻结金额) -->
+        <result column="vip_name" property="vipName" /> <!-- 会员等级 -->
+        <result column="account" property="account" /> <!-- 电子账户 -->
+        <result column="truename" property="truename" /> <!-- 真实姓名 -->
+        <result column="username" property="username" /> <!-- 用户名 -->
+        <result column="mobile" property="mobile" /> <!-- 手机号 -->
+        <result column="user_attribute" property="userAttribute" /> <!-- 用户属性（当前） -->
+        <result column="roleid" property="roleid" /> <!-- 角色 -->
+        <result column="user_region_name" property="userRegionName" /> <!-- 用户所属一级分部（当前）-->
+        <result column="user_branch_name" property="userBranchName" /> <!-- 用户所属二级分部（当前） -->
+        <result column="user_department_name" property="userDepartmentName" /> <!-- 用户所属三级分部（当前） -->
+        <result column="referrer_name" property="referrerName" jdbcType="VARCHAR" /> <!-- 推荐人用户名（当前） -->
+        <result column="referrer_true_name" property="referrerTrueName" jdbcType="VARCHAR" /><!-- 推荐人姓名（当前） -->
+        <result column="referrer_region_name" property="referrerRegionName" jdbcType="VARCHAR" /><!-- 推荐人所属一级分部（当前） -->
+        <result column="referrer_branch_name" property="referrerBranchName" jdbcType="VARCHAR" /><!-- 推荐人所属二级分部（当前） -->
+        <result column="referrer_department_name" property="referrerDepartmentName" jdbcType="VARCHAR" /><!-- 推荐人所属三级分部（当前） -->
+        <result column="regionName" property="regionName" /> <!-- 大区 -->
+        <result column="branchName" property="branchName" /> <!-- 分公司  -->
+        <result column="departmentName" property="departmentName" /> <!-- 部门  -->
+        <result column="plan_balance" property="planBalance" /> <!-- 汇计划真实可用金额  -->
+        <result column="plan_frost" property="planFrost" /> <!-- 汇计划冻结金额  -->
+        <result column="plan_account_wait" property="planAccountWait" /> <!-- 汇计划代收金额  -->
+    </resultMap>
+
+    <sql id="where-all-page-condition">
+        <if test="userNameSrch != null and userNameSrch != ''">
+            AND t.username LIKE CONCAT( #{userNameSrch}, '%')
+        </if>
+        <if test="combotreeListSrch != null and combotreeListSrch != ''">
+            AND od.id in
+            <foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
+                #{dep}
+            </foreach>
+        </if>
+
+    </sql>
+
+
+    <select id="queryAccountCount" resultType="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.BankAccountManageRequest">
+        SELECT
+        COUNT(1)
+        FROM
+        (
+        SELECT
+        a.user_id,
+        u.username,
+        ui.truename,
+        a.bank_balance+a.bank_frost+a.bank_await AS bankTotal,
+        a.account_id,
+        a.bank_balance,
+        a.bank_frost,
+        a.bank_await,
+        a.bank_wait_repay,
+        a.bank_balance_cash,
+        a.bank_frost_cash,
+        a.id,
+        CASE WHEN ui.attribute = 2 OR ui.attribute = 3 THEN a.user_id ELSE su.spreads_user_id END AS hyd_id
+        FROM
+        ht_account a
+        LEFT JOIN ht_r_user u ON a.user_id = u.user_id
+        LEFT JOIN ht_r_user ui ON a.user_id = ui.user_id
+        <!-- LEFT JOIN ht_vip_info vip on vip.id = ui.vip_id-->
+        LEFT JOIN ht_r_user su ON a.user_id = su.user_id
+        where
+        1=1
+        <if test="accountSrch != null and accountSrch != ''">
+            AND a.account_id LIKE CONCAT( #{accountSrch}, '%')
+        </if><!--
+        <if test="vipSrch != null and vipSrch != ''">
+            AND vip.id =  #{vipSrch}
+        </if>-->
+        ) t
+        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = t.hyd_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+        WHERE 1=1
+        <include refid="where-all-page-condition"/>
+    </select>
+
+    <select id="queryAccountInfos" resultMap="accountInfoMapResult"
+            parameterType="com.hyjf.am.resquest.admin.BankAccountManageRequest">
+        select t.*,
+        t.account_id as account,
+        `od3`.`name` AS `regionName`,
+        `od2`.`name` AS `branchName`,
+        `od`.`name` AS `departmentName`,
+        CASE WHEN t.user_attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `user_region_name`,
+        CASE WHEN t.user_attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `user_branch_name`,
+        CASE WHEN t.user_attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `user_department_name`,
+        `od6`.`name` AS `referrer_region_name`,
+        `od5`.`name` AS `referrer_branch_name`,
+        `od4`.`name` AS `referrer_department_name`
+        from (SELECT
+        a.user_id,
+        u.username,
+        ui2.truename AS referrer_true_name,
+        u.mobile,
+        CASE  ui.role_id
+        WHEN 1 THEN '投资人'
+        WHEN 2 THEN '借款人'
+        END AS roleid ,
+        ui.attribute AS user_attribute,
+        ui.truename,
+        spu.username AS referrer_name,
+        a.bank_total AS bankTotal,
+        a.account_id,
+        <!-- vip.vip_name, -->
+        a.bank_balance,
+        a.bank_frost,
+        a.bank_await,
+        a.bank_wait_repay,
+        a.bank_balance_cash,
+        a.bank_frost_cash,
+        a.id,
+        CASE WHEN ui.attribute = 2 OR ui.attribute = 3 THEN a.user_id ELSE su.spreads_user_id END AS hyd_id,
+        su.spreads_user_id,
+        a.plan_balance,
+        a.plan_frost,
+        a.plan_account_wait
+        FROM
+        ht_account a
+        LEFT JOIN ht_r_user u ON a.user_id = u.user_id
+        LEFT JOIN ht_r_user ui ON a.user_id = ui.user_id
+        <!-- LEFT JOIN ht_vip_info vip on vip.id = ui.vip_id -->
+        LEFT JOIN ht_r_user su ON a.user_id = su.user_id
+        LEFT JOIN ht_r_user ui2 ON ui2.user_id = su.spreads_user_id
+        LEFT JOIN ht_r_user spu ON spu.user_id = su.spreads_user_id
+        where
+        1=1
+        <if test="accountSrch != null and accountSrch != ''">
+            AND a.account_id LIKE CONCAT( #{accountSrch}, '%')
+        </if><!--
+        <if test="vipSrch != null and vipSrch != ''">
+            AND vip.id =  #{vipSrch}
+        </if>-->
+        ) t
+        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = t.hyd_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
+        LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
+        LEFT JOIN ht_r_oa_department `od6` ON `od6`.`id` = `od5`.`parentid`
+        WHERE
+        1 = 1
+        <include refid="where-all-page-condition"/>
+        ORDER BY t.user_id DESC
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+</mapper>

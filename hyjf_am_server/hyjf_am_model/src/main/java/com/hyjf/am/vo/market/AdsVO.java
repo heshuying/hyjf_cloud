@@ -9,9 +9,10 @@ import java.util.Date;
  * @version AdsVO, v0.1 2018/5/14 16:13
  */
 public class AdsVO extends BaseVO {
-    private int timeStart;
-    private int timeEnd;
+    private String timeStart;
+    private String timeEnd;
 
+    private String ids;
     private Integer id;
 
     private String name;
@@ -64,19 +65,29 @@ public class AdsVO extends BaseVO {
 
     private Date updateTime;
 
-    public int getTimeStart() {
+    private Integer platformType;
+
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
+
+    public String getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(int timeStart) {
+    public void setTimeStart(String timeStart) {
         this.timeStart = timeStart;
     }
 
-    public int getTimeEnd() {
+    public String getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(int timeEnd) {
+    public void setTimeEnd(String timeEnd) {
         this.timeEnd = timeEnd;
     }
 
@@ -286,5 +297,13 @@ public class AdsVO extends BaseVO {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getPlatformType() {
+        return platformType;
+    }
+
+    public void setPlatformType(Integer platformType) {
+        this.platformType = platformType;
     }
 }

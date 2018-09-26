@@ -3,7 +3,7 @@ package com.hyjf.cs.trade.service.repay.impl;
 import com.hyjf.am.vo.trade.borrow.BatchCenterCustomizeVO;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
-import com.hyjf.cs.trade.client.BorrowClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.repay.BatchHjhBorrowRepayApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class BatchHjhBorrowRepayApiServiceImpl extends BaseServiceImpl implements BatchHjhBorrowRepayApiService {
 
 	@Autowired
-	private BorrowClient borrowClient;
+	private AmTradeClient borrowClient;
 
 	/**
 	 * countBatchCenter

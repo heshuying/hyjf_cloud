@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 
 	<name>hyjf_am_server</name>
-	<description>Demo project for Spring Boot</description>
+	<description>hyjf am server project</description>
 
 	<parent>
 		<groupId>com.hyjf</groupId>

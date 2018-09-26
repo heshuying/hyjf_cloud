@@ -531,7 +531,7 @@ public interface AmUserClient {
      * @return
      * @author nxl
      */
-    LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo);
+    LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo,String userName);
 
     /**
      * 更新记录
@@ -1069,10 +1069,9 @@ public interface AmUserClient {
      * 通过手机号和身份证查询掉单信息
      * @author Zha Daojian
      * @date 2018/8/21 13:54
-     * @param mobile，idcard
      * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
      **/
-    List<BankOpenAccountLogVO> bankOpenAccountLogSelect(String mobile,String idcard );
+    List<BankOpenAccountLogVO> bankOpenAccountLogSelect(BankOpenAccountLogRequest request);
 
     /**
      * 通过手机号和身份证查询用户信息

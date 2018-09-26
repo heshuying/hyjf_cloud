@@ -84,16 +84,20 @@
 				AND hct.status = #{status}
 			</if>
 			<if test="assignRepayNextTimeStart != null and assignRepayNextTimeStart != ''">
-				AND FROM_UNIXTIME( hct.assign_repay_next_time, '%Y-%m-%d') <![CDATA[>=]]> #{assignRepayNextTimeStart}
+				<!-- 优化sql(字段类型转换) int-->
+				AND hct.assign_repay_next_time &gt;= UNIX_TIMESTAMP(#{assignRepayNextTimeStart})
 			</if>
 			<if test="assignRepayNextTimeEnd != null and assignRepayNextTimeEnd != ''">
-				AND FROM_UNIXTIME( hct.assign_repay_next_time, '%Y-%m-%d') <![CDATA[<=]]> #{assignRepayNextTimeEnd}
+				<!-- 优化sql(字段类型转换) int-->
+				AND hct.assign_repay_next_time &lt;= UNIX_TIMESTAMP(CONCAT(#{assignRepayNextTimeEnd},' 23:59:59'))
 			</if>
 			<if test="addTimeStart != null and addTimeStart != ''">
-				AND hct.create_time <![CDATA[>=]]> CONCAT(#{addTimeStart},' 00:00:00')
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND hct.create_time >= STR_TO_DATE(#{addTimeStart},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="addTimeEnd != null and addTimeEnd != ''">
-				AND  hct.create_time <![CDATA[<=]]> CONCAT(#{addTimeEnd},  ' 23:59:59')
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND hct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{addTimeEnd},'23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>
@@ -222,10 +226,12 @@
 			</if>
 			<!-- 时间 -->
 			<if test="addTimeStart != null and addTimeStart != ''">
-				AND unix_timestamp(ct.create_time) <![CDATA[>=]]> unix_timestamp(#{addTimeStart})
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND ct.create_time >= STR_TO_DATE(#{addTimeStart},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="addTimeEnd != null and addTimeEnd != ''">
-				AND unix_timestamp(ct.create_time) <![CDATA[<=]]> unix_timestamp(#{addTimeEnd})+86399
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND ct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{addTimeEnd},'23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>

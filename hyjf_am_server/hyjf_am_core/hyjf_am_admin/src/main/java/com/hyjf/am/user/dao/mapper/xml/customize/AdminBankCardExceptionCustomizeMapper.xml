@@ -48,10 +48,12 @@
 				</if>
 			</if>
 			<if test="startDateSearch != null and startDateSearch != ''">
-				AND FROM_UNIXTIME( b.create_time, '%Y-%m-%d %H:%i:%s' ) <![CDATA[>=]]>#{startDateSearch}
+				<!-- 优化sql(字段类型转换) -->
+				AND b.create_time >= STR_TO_DATE(#{startDateSearch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="endDateSearch != null and endDateSearch != ''">
-				AND FROM_UNIXTIME( b.create_time, '%Y-%m-%d %H:%i:%s' ) <![CDATA[<=]]>#{endDateSearch}
+				<!-- 优化sql(字段类型转换) -->
+				AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endDateSearch},'23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>

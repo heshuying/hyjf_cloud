@@ -85,7 +85,7 @@
         <if test="addTimeStart != null and addTimeEnd != null">
             AND t1.create_time &gt;= #{addTimeStart} AND t1.create_time &lt;= #{addTimeEnd}
         </if>
-        union
+        union all
         SELECT
         t1.user_id userId
         FROM ht_borrow_tender t1

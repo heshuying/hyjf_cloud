@@ -117,7 +117,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             Integer createTime = Integer.valueOf(fileRealName);
             String originalFilename = multipartFile.getOriginalFilename();
             String suffix = UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-            if (StringUtils.equals(suffix, ".csv")) {
+            if(StringUtils.equals(suffix,".xls") || StringUtils.equals(suffix,".xlsx")){
                 fileRealName = fileRealName + suffix;
                 try {
                     errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
@@ -133,10 +133,15 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                     accr.setStatus(1);
                     checkResponse = amConfigClient.insert(accr);
                     checkResponse.getMessage();
+                    if (checkResponse.getRecordTotal() > 0) {
+                        checkResponse.setMessage(errorMessage);
+                    }else {
+                        checkResponse.setMessage("插入数据异常失败");
+                    }
                 }
             } else {
                 checkResponse.setRtn(Response.FAIL);
-                checkResponse.setMessage("上传失败，文件后缀必须为CSV");
+                checkResponse.setMessage("上传失败，请上传Excel文件");
             }
         }
         return checkResponse;
@@ -153,9 +158,11 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         }
 
         OutputStream out = null;
-        try (FileInputStream in = new FileInputStream(fileP)) {
+        try {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
+            response.setContentType("application/vnd.ms-excel;utf-8");
+            FileInputStream in = new FileInputStream(fileP);
 
             // 创建输出流
             out = response.getOutputStream();

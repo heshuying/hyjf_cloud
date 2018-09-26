@@ -1,14 +1,7 @@
 package com.hyjf.cs.trade.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.bean.fdd.FddDessenesitizationBean;
-import com.hyjf.am.bean.fdd.FddGenerateContractBean;
-import com.hyjf.common.constants.FddGenerateContractConstant;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.mq.handle.FddHandle;
-import com.hyjf.cs.trade.mq.base.Consumer;
-import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -23,7 +16,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.fdd.FddDessenesitizationBean;
+import com.hyjf.am.bean.fdd.FddGenerateContractBean;
+import com.hyjf.common.constants.FddGenerateContractConstant;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.mq.handle.FddHandle;
+import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 
 /**
  * 法大大consumer

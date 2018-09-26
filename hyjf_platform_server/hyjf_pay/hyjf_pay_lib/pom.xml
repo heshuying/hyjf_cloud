@@ -14,7 +14,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<name>hyjf_pay_lib</name>
-	<description>Demo project for Spring Boot</description>
+	<description>hyjf pay lib</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

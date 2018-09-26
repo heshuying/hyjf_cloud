@@ -104,8 +104,9 @@ public class BankCardManagerRecordServiceImpl extends BaseServiceImpl implements
         BankCardLogExample example = new BankCardLogExample();
         BankCardLogExample.Criteria criteria = example.createCriteria();
         // 条件查询
-        if (StringUtils.isNotEmpty(request.getBankCode())) {
-            criteria.andBankCodeEqualTo(request.getBankCode());
+        if (StringUtils.isNotEmpty(request.getBankName())) {
+//            criteria.andBankCodeEqualTo(request.getBankCode());
+            criteria.andBankNameEqualTo(request.getBankName().trim());
         }
         if (StringUtils.isNotEmpty(request.getUserName())) {
             criteria.andUserNameLike("%" + request.getUserName() + "%");

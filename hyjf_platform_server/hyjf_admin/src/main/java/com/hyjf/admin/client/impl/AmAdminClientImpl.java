@@ -8,6 +8,8 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
+import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
@@ -17,6 +19,7 @@ import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.AdminPermissionsVO;
@@ -24,6 +27,7 @@ import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.admin.PoundageDetailVO;
 import com.hyjf.am.vo.admin.PoundageLedgerVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -67,10 +71,19 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+    @Override
+    public List<UtmPlatVO> getAppUtm(){
+        UtmPlatResponse response =  restTemplate.
+                postForEntity("http://AM-ADMIN/am-admin/extensioncenter/channelstatisticsdetail/app_utm_list", null, UtmPlatResponse.class).getBody();
+        if (UtmPlatResponse.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 
     @Override
     public STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean) {
-        String url = "http://AM-ADMIN/am-trade/stzfwhiteconfig/getUserByUserName";
+        String url = "http://AM-ADMIN/am-admin/stzfwhiteconfig/getUserByUserName";
         STZHWhiteListResponse response = restTemplate.postForEntity(url,requestBean,STZHWhiteListResponse.class).getBody();
         if (STZHWhiteListResponse.isSuccess(response)) {
             return response;
@@ -610,5 +623,51 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response;
         }
         return null;
+    }
+
+    @Override
+    public LockedUserMgrResponse getLockedUserList(LockedeUserListRequest request, boolean isFront) {
+        String url="http://AM-ADMIN/am-user/lockeduser/frontlist";
+        if(!isFront){
+            url="http://AM-ADMIN/am-user/lockeduser/adminlist";
+        }
+        return restTemplate.postForObject(url,request,LockedUserMgrResponse.class);
+    }
+
+    @Override
+    public BooleanResponse unlock(LockedUserInfoVO vo, boolean isFront) {
+        String url="http://AM-ADMIN/am-user/lockeduser/frontunlock";
+        if(!isFront){
+            url="http://AM-ADMIN/am-user/lockeduser/adminunlock";
+        }
+        return restTemplate.postForObject(url,vo,BooleanResponse.class);
+    }
+
+    @Override
+	public ChannelReconciliationResponse selectPcChannelReconciliationRecord(ChannelReconciliationRequest request) {
+		return restTemplate.postForObject(
+				"http://AM-ADMIN/am-user/promotion/utm/select_pc_channel_reconciliation_record", request,
+				ChannelReconciliationResponse.class);
+	}
+
+    @Override
+    public ChannelReconciliationResponse selectPcChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_pc_channel_reconciliation_record_hjh", request,
+                ChannelReconciliationResponse.class);
+    }
+
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecord(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record", request,
+                ChannelReconciliationResponse.class);
+    }
+
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record_hjh", request,
+                ChannelReconciliationResponse.class);
     }
 }

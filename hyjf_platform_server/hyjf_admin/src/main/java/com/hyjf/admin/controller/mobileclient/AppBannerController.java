@@ -3,22 +3,16 @@ package com.hyjf.admin.controller.mobileclient;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.AppBannerRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.service.ActivityListService;
 import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.mobileclient.AppBannerService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.market.AppBannerRequest;
-import com.hyjf.am.vo.market.AdsTypeVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
-import com.hyjf.am.vo.market.AppBannerVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -26,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * 广告管理
@@ -51,7 +42,6 @@ public class AppBannerController extends BaseController {
     @PostMapping(value = "/init")
     @ResponseBody
     public AdminResult<AppBannerResponse> init(@RequestBody  AppBannerRequestBean appBannerRequestBean) {
-        try {
             AppBannerRequest aprlr = new AppBannerRequest();
             BeanUtils.copyProperties(appBannerRequestBean, aprlr);
             AppBannerResponse prs = appBannerService.getRecordList(aprlr);
@@ -64,19 +54,15 @@ public class AppBannerController extends BaseController {
             AdminResult adminResult = new AdminResult();
             adminResult.setData(prs);
             return adminResult;
-        } catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+
     }
 
     @ApiOperation(value = "广告管理修改转跳", notes = "广告管理修改转跳")
     @PostMapping(value = "/infoAction")
     @ResponseBody
-    public AdminResult<AppBannerResponse> infoAction(@RequestBody  AppBannerRequestBean appBannerRequestBean) {
+    public AdminResult<AppBannerResponse> infoAction(@RequestBody  AdsVO adsVO) {
         try {
-            AppBannerRequest aprlr = new AppBannerRequest();
-            BeanUtils.copyProperties(appBannerRequestBean, aprlr);
-            AppBannerResponse prs = appBannerService.getRecordById(aprlr);
+            AppBannerResponse prs = appBannerService.getRecordById(adsVO);
             if (prs == null) {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
@@ -94,11 +80,9 @@ public class AppBannerController extends BaseController {
     @ApiOperation(value = "广告管理添加", notes = "广告管理添加")
     @PostMapping(value = "/add")
     @ResponseBody
-    public AdminResult<AdsWithBLOBsVO> add(@RequestBody AppBannerRequestBean form) {
+    public AdminResult<AdsWithBLOBsVO> add(@RequestBody AdsVO adsVO) {
         try {
-            AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
-            BeanUtils.copyProperties(form, adsWithBLOBsVO);
-            AppBannerResponse appBannerResponse = appBannerService.insertRecord(adsWithBLOBsVO);
+            AppBannerResponse appBannerResponse = appBannerService.insertRecord(adsVO);
             if (Response.isSuccess(appBannerResponse)) {
                 return new AdminResult<>(SUCCESS, SUCCESS_DESC);
             } else {
@@ -112,11 +96,9 @@ public class AppBannerController extends BaseController {
     @ApiOperation(value = "广告管理修改", notes = "广告管理修改")
     @PostMapping(value = "/update")
     @ResponseBody
-    public AdminResult<AdsWithBLOBsVO> update(@RequestBody AppBannerRequestBean form) {
+    public AdminResult<AdsWithBLOBsVO> update(@RequestBody AdsVO adsVO) {
         try {
-            AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
-            BeanUtils.copyProperties(form, adsWithBLOBsVO);
-            AppBannerResponse appBannerResponse = appBannerService.updateRecord(adsWithBLOBsVO);
+            AppBannerResponse appBannerResponse = appBannerService.updateRecord(adsVO);
             if (Response.isSuccess(appBannerResponse)) {
                 return new AdminResult<>(SUCCESS, SUCCESS_DESC);
             } else {
@@ -130,11 +112,9 @@ public class AppBannerController extends BaseController {
     @ApiOperation(value = "修改状态", notes = "修改状态")
     @PostMapping(value = "/updateStatus")
     @ResponseBody
-    public AdminResult<AdsWithBLOBsVO> updateStatus(@RequestBody AppBannerRequestBean form) {
+    public AdminResult<AdsWithBLOBsVO> updateStatus(@RequestBody AdsVO adsVO) {
         try {
-            AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
-            BeanUtils.copyProperties(form, adsWithBLOBsVO);
-            AppBannerResponse appBannerResponse = appBannerService.updateStatus(adsWithBLOBsVO);
+            AppBannerResponse appBannerResponse = appBannerService.updateStatus(adsVO);
             if (Response.isSuccess(appBannerResponse)) {
                 return new AdminResult<>(SUCCESS, SUCCESS_DESC);
             } else {
@@ -149,11 +129,9 @@ public class AppBannerController extends BaseController {
     @ApiOperation(value = "删除", notes = "删除")
     @PostMapping(value = "/delete")
     @ResponseBody
-    public AdminResult<AdsWithBLOBsVO> deleteBanner(@RequestBody AppBannerRequestBean form) {
+    public AdminResult<AdsWithBLOBsVO> deleteBanner(@RequestBody AdsVO adsVO) {
         try {
-            AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
-            BeanUtils.copyProperties(form, adsWithBLOBsVO);
-            AppBannerResponse appBannerResponse = appBannerService.deleteAppBanner(adsWithBLOBsVO);
+            AppBannerResponse appBannerResponse = appBannerService.deleteAppBanner(adsVO);
             if (Response.isSuccess(appBannerResponse)) {
                 return new AdminResult<>(SUCCESS, SUCCESS_DESC);
             } else {

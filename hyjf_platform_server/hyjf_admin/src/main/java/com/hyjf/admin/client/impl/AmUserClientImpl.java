@@ -13,6 +13,7 @@ import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -1021,9 +1022,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo) {
+	public LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo,String userName) {
 		LoanCoverUserResponse response = restTemplate
-				.getForEntity("http://AM-ADMIN/am-user/loanCoverUser/selectIsExistsRecordByIdNo/" + strIdNo,
+				.getForEntity("http://AM-ADMIN/am-user/loanCoverUser/selectIsExistsRecordByIdNo/" + strIdNo+"/"+userName,
 						LoanCoverUserResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1211,7 +1212,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String tureName) {
 		CertificateAuthorityResponse response = restTemplate.getForEntity(
-				"http://AM-USER/am-user/loanCoverUser/selectCertificateAuthorityByIdNoName/" + tureName,
+				"http://AM-ADMIN/am-user/loanCoverUser/selectCertificateAuthorityByIdNoName/" + tureName,
 				CertificateAuthorityResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -1331,14 +1332,14 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public WhereaboutsPageResponse searchAction(WhereaboutsPageRequestBean requestBean) {
-		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/searchaction",
+		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/searchaction",
 				requestBean, WhereaboutsPageResponse.class);
 		return  amUserResponse;
 
 	}
 	@Override
 	public WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form){
-		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/getwhereaboutspageconfig",
+		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/getwhereaboutspageconfig",
 				form, WhereaboutsPageResponse.class);
 		return  amUserResponse;
 	}
@@ -1347,24 +1348,24 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public WhereaboutsPageResponse insertAction(WhereaboutsPageRequestBean requestBean) {
-		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/insert",
+		return restTemplate.postForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/insert",
 				requestBean, WhereaboutsPageResponse.class);
 	}
 
 	@Override
 	public WhereaboutsPageResponse updateAction(WhereaboutsPageRequestBean requestBean) {
-		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/update",
+		return restTemplate.postForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/update",
 				requestBean, WhereaboutsPageResponse.class);
 	}
 	@Override
 	public WhereaboutsPageResponse updateStatus(WhereaboutsPageRequestBean requestBean){
-		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/updatestatus",
+		return restTemplate.postForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/updatestatus",
 				requestBean, WhereaboutsPageResponse.class);
 	}
 
 	@Override
 	public WhereaboutsPageResponse deleteById(Integer id) {
-		return restTemplate.getForObject("http://AM-USER/am-user/content/whereaboutspage/delete/" + id,
+		return restTemplate.getForObject("http://AM-ADMIN/am-admin/content/whereaboutspage/delete/" + id,
 				WhereaboutsPageResponse.class);
 	}
 
@@ -1379,14 +1380,14 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 	@Override
 	public StringResponse checkUtmId(Integer utmId){
-		String url = "http://AM-USER/am-user/content/whereaboutspage/checkutmid/" + utmId;
+		String url = "http://AM-ADMIN/am-admin/content/whereaboutspage/checkutmid/" + utmId;
 		StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
 		return response;
 	}
 
 	@Override
 	public StringResponse checkReferrer(String referrer){
-		String url = "http://AM-USER/am-user/content/whereaboutspage/checkreferrer/" + referrer;
+		String url = "http://AM-ADMIN/am-admin/content/whereaboutspage/checkreferrer/" + referrer;
 		StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
 		return response;
 	}
@@ -1468,7 +1469,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
     public UtmResponse getByPageList(Map<String, Object> map) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/getbypagelist", map, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/getbypagelist", map, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
@@ -1478,7 +1479,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UtmResponse getCountByParam(Map<String, Object> map) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/getcount", map, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/getcount", map, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
@@ -1488,7 +1489,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public Integer getChannelCount(ChannelCustomizeVO channelCustomizeVO) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/channel/getchannelcount", channelCustomizeVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/channel/getchannelcount", channelCustomizeVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getRecordTotal();
 		}
@@ -1502,7 +1503,7 @@ public class AmUserClientImpl implements AmUserClient {
 			channelCustomizeVO.setLimitEnd(channelCustomizeVO.getPageSize());
 		}
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/channel/getchannellist", channelCustomizeVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/channel/getchannellist", channelCustomizeVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResultList();
 		}
@@ -1522,7 +1523,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UtmChannelVO getRecord(String utmId) {
 		UtmChannelResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyutmid/"+utmId, UtmChannelResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmbyutmid/"+utmId, UtmChannelResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -1532,7 +1533,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO getUser(String utmReferrer, String userId) {
 		UtmResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/getuser/"+utmReferrer+"/"+userId, UtmResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/user/getuser/"+utmReferrer+"/"+userId, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return (UserVO)response.getResult();
 		}
@@ -1542,7 +1543,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/insertorupdateutm",channelCustomizeVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/insertorupdateutm",channelCustomizeVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return true;
 		}else{
@@ -1553,7 +1554,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean deleteAction(ChannelCustomizeVO channelCustomizeVO) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/deleteutm/",channelCustomizeVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/deleteutm/",channelCustomizeVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return true;
 		}else{
@@ -1564,7 +1565,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UtmPlatVO getDataById(Integer id) {
 		UtmPlatResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyid/"+id, UtmPlatResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmbyid/"+id, UtmPlatResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}else{
@@ -1575,7 +1576,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int sourceNameIsExists(String sourceName, Integer sourceId) {
 		UtmResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/promotion/utm/sourcenameisexists/"+sourceName+"/"+sourceId, UtmResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/sourcenameisexists/"+sourceName+"/"+sourceId, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getRecordTotal();
 		}else{
@@ -1586,7 +1587,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/insertorupdateutmplat/",utmPlatVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/insertorupdateutmplat/",utmPlatVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return true;
 		}else{
@@ -1597,7 +1598,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean utmClientdeleteUtmPlatAction(UtmPlatVO utmPlatVO) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/deleteutmplat/",utmPlatVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/deleteutmplat/",utmPlatVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return true;
 		}else{
@@ -2178,15 +2179,15 @@ public class AmUserClientImpl implements AmUserClient {
 	/**
 	 * 通过手机号和身份证查询掉单信息
 	 *
-	 * @param mobile,idcard
+	 * @param request,idcard
 	 * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
 	 * @author Zha Daojian
 	 * @date 2018/8/21 13:54
 	 **/
 	@Override
-	public List<BankOpenAccountLogVO> bankOpenAccountLogSelect(String mobile,String idcard ) {
-		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/bankOpenAccountLogSelect/"+mobile + "/" +idcard;
-		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
+	public List<BankOpenAccountLogVO> bankOpenAccountLogSelect(BankOpenAccountLogRequest request) {
+		String url = "http://AM-USER/am-user/borrowOpenaccountenquiryException/bankOpenAccountLogSelect";
+		BankOpenAccountLogResponse response = restTemplate.postForEntity(url,request,BankOpenAccountLogResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -2203,7 +2204,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 **/
 	@Override
 	public OpenAccountEnquiryCustomizeVO searchAccountEnquiry(BankOpenAccountLogRequest request) {
-		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/searchAccountEnquiry";
+		String url = "http://AM-USER/am-user/borrowOpenaccountenquiryException/searchAccountEnquiry";
 		OpenAccountEnquiryResponse response = restTemplate.postForEntity(url,request, OpenAccountEnquiryResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -2221,7 +2222,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 **/
 	@Override
 	public BankOpenAccountLogVO selectBankOpenAccountLogByOrderId(String orderId) {
-		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/selectBankOpenAccountLogByOrderId/"+orderId;
+		String url = "http://AM-USER/am-user/borrowOpenaccountenquiryException/selectBankOpenAccountLogByOrderId/"+orderId;
 		BankOpenAccountLogResponse response = restTemplate.getForEntity(url, BankOpenAccountLogResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -2239,7 +2240,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 **/
 	@Override
 	public Boolean deleteBankOpenAccountLogByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/deleteBankOpenAccountLogByUserId/"+userId;
+		String url = "http://AM-USER/am-user/borrowOpenaccountenquiryException/deleteBankOpenAccountLogByUserId/"+userId;
 		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.isDeleteFlag();
@@ -2257,7 +2258,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 **/
 	@Override
 	public Boolean checkAccountByAccountId(String accountId) {
-		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/checkAccountByAccountId/"+accountId;
+		String url = "http://AM-USER/am-user/borrowOpenaccountenquiryException/checkAccountByAccountId/"+accountId;
 		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.isDeleteFlag();

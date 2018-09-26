@@ -3,7 +3,13 @@
  */
 package com.hyjf.cs.user.controller.api.user.autologin;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.security.util.SignUtil;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.user.bean.ApiResultPageBean;
+import com.hyjf.cs.user.bean.ApiSkipFormBean;
+import com.hyjf.cs.user.bean.ApiUserPostBean;
 import com.hyjf.cs.user.bean.NmcfLoginRequestBean;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.enums.MsgEnum;
@@ -14,22 +20,26 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
+import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author: sunpeikai
  * @version: ApiUserAutoLoginController, v0.1 2018/8/23 10:37
  */
 @Api(value = "api端-第三方用户自动登录",tags = "api端-第三方用户自动登录")
-@RestController
-@RequestMapping(value = "/api/user")
+@Controller
+@RequestMapping(value = "/hyjf-api/api/user")
 public class ApiUserAutoLoginController extends BaseUserController {
 
     @Autowired
@@ -37,11 +47,62 @@ public class ApiUserAutoLoginController extends BaseUserController {
     @Autowired
     private SystemConfig systemConfig;
 
-    @ApiOperation(value = "获取登录参数",notes = "获取登录参数")
-    @PostMapping(value = "/nmcfThirdLogin")
-    public JSONObject nmcfThirdLogin(@RequestBody NmcfLoginRequestBean request){
 
-        JSONObject result = new JSONObject();
+    @RequestMapping(value = "/thirdLoginApi")
+    public ModelAndView thirdLoginApi(ApiUserPostBean bean){
+        // 设置接口结果页的信息（返回Url）
+        this.initCheckUtil(bean);
+
+        // 验证
+        checkPostBeanOfWeb(bean);
+
+        ModelAndView modelAndView = new ModelAndView("/bank/bank_send");
+        ApiSkipFormBean apiSkipFormBean = new ApiSkipFormBean();
+        String returl = systemConfig.webHost + "/hyjf-web/api/user/thirdLogin.do";
+
+        apiSkipFormBean.setAction(returl);
+        apiSkipFormBean.set("bindUniqueIdScy", bean.getBindUniqueIdScy());
+        apiSkipFormBean.set("pid", bean.getPid()+"");
+        apiSkipFormBean.set("retUrl", bean.getRetUrl());
+        apiSkipFormBean.set("timestamp", String.valueOf(bean.getTimestamp()));
+        apiSkipFormBean.set("chkValue", bean.getChkValue());
+        modelAndView.addObject("bankForm", apiSkipFormBean);
+        return modelAndView;
+    }
+
+    /**
+     * 第三方登录
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/thirdLogin")
+    public ModelAndView thirdLogin(HttpServletRequest request, HttpServletResponse response, @ModelAttribute ApiUserPostBean bean){
+        logger.info("请求进来啦:【{}】", JSON.toJSONString(bean));
+        // 验证
+        checkPostBeanOfWeb(bean);
+        // 验签
+        //apiCommonService.checkSign(bean);
+        CheckUtil.check(SignUtil.checkSignDefaultKey(bean.getChkValue(), bean.getBindUniqueIdScy(),bean.getPid(),bean.getRetUrl(), bean.getTimestamp()), MsgEnum.ERR_SIGN);
+        // 解密
+        int bindUniqueId = bindUniqueIdDecrypt(bean);
+        // 查询Userid
+        Integer userId = loginService.getUserIdByBind(bindUniqueId, bean.getPid());
+        //Integer userId = bean.getUserId();
+        // 登陆
+        UserVO userVO = loginService.getUsersById(userId);
+        loginService.login(userVO.getUsername(),userVO.getPassword(),GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC);
+
+/*        WebViewUser webUser = loginService.getWebViewUserByUserId(userId);
+        WebUtils.sessionLogin(request, response, webUser);*/
+
+        // 返回到hyjf的系统
+        return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/user/pandect");
+    }
+
+    @ApiOperation(value = "纳觅财富自动登录",notes = "纳觅财富自动登录")
+    @PostMapping(value = "/nmcfThirdLogin")
+    public ModelAndView nmcfThirdLogin(HttpServletRequest httpServletRequest,@RequestBody NmcfLoginRequestBean request){
 
         // 验证
         this.checkNmcfPostBean(request);
@@ -62,48 +123,56 @@ public class ApiUserAutoLoginController extends BaseUserController {
 
         // userid不存在,跳转登录页面
         if(userId == null) {
-            result.put("status","1");
-            result.put("statusDesc","userId不存在");
-            result.put("reUrl",systemConfig.webHost + "/hyjf-web/user/login");
-            return result;
-            //return new ModelAndView("redirect:" + CustomConstants.HOST + LoginDefine.CONTROLLOR_REQUEST_MAPPING + LoginDefine.INIT + ".do");
+            return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/user/login/init.do");
         }
 
         // 登陆
-        //TODO:这里还没做
+        UserVO userVO = loginService.getUsersById(userId);
+        loginService.login(userVO.getUsername(),userVO.getPassword(),GetCilentIP.getIpAddr(httpServletRequest), BankCallConstant.CHANNEL_PC);
         //WebViewUser webUser = loginService.getWebViewUserByUserId(userId);
         //WebUtils.sessionLogin(request, response, webUser);
-        //loginService.login();
-        WebViewUserVO userVO = loginService.getWebViewUserByUserId(userId);
-        loginService.setToken(userVO);
 
         // 先跳转纳觅传过来的url
         if (request.getRetUrl() != null) {
-            result.put("status","000");
-            result.put("statusDesc","成功");
-            result.put("reUrl",request.getRetUrl());
-            return result;
-            //return new ModelAndView("redirect:" + bean.getRetUrl());
+            return new ModelAndView("redirect:" + request.getRetUrl());
         } else {
             // 如果纳觅没传url,有borrowNid,跳标的详情,无borowNid,跳个人中心
             if (request.getBorrowNid() == null) {
-                result.put("status","000");
-                result.put("statusDesc","成功");
-                result.put("reUrl",systemConfig.webHost + "/hyjf-web/user/pandect");
-                return result;
-                //return new ModelAndView("redirect:" + CustomConstants.HOST + PandectDefine.REQUEST_MAPPING + PandectDefine.PANDECT_ACTION + ".do");
+                return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/user/pandect");
             } else {
-                result.put("status","000");
-                result.put("statusDesc","成功");
-                // TODO:这里传参有问题
-                result.put("reUrl",systemConfig.webHost + "/hyjf-web/projectlist/getBorrowDetail?borrowNid=" + request.getBorrowNid());
-                return result;
-                //return new ModelAndView("redirect:" + CustomConstants.HOST + BorrowDefine.REQUEST_MAPPING + BorrowDefine.BORROW_DETAIL_ACTION + ".do?borrowNid=" + bean.getBorrowNid());
+                // 跳转到前端的标的详情
+                return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/projectlist/getBorrowDetail?borrowNid=" + request.getBorrowNid());
             }
         }
 
     }
 
+    /**
+     * 错误页跳转用，初期化结果页数据（错误信息除外）
+     * @return
+     * @author liubin
+     */
+    protected void initCheckUtil(ApiUserPostBean apiUserPostBean) {
+        // 结果页FormBean赋值
+        ApiResultPageBean apiResultPageBean = new ApiResultPageBean();
+        apiResultPageBean.setRetUrl(apiUserPostBean.getRetUrl());
+        apiResultPageBean.setButMes("返回");
+        // 结果页FormBean传入CheckUtil
+        CheckUtil.setData(apiResultPageBean);
+    }
+
+    /**
+     * 传入信息验证,汇晶社自动登录、绑定
+     * @param bean
+     */
+    public void checkPostBeanOfWeb(ApiUserPostBean bean) {
+        //传入信息验证
+        CheckUtil.check(Validator.isNotNull(bean.getBindUniqueIdScy()), MsgEnum.ERR_OBJECT_REQUIRED, "bindUniqueIdScy");
+        CheckUtil.check(Validator.isNotNull(bean.getChkValue()), MsgEnum.ERR_OBJECT_REQUIRED, "chkValue");
+        CheckUtil.check(Validator.isNotNull(bean.getPid()), MsgEnum.ERR_OBJECT_REQUIRED, "pid");
+        CheckUtil.check(Validator.isNotNull(bean.getRetUrl()), MsgEnum.ERR_OBJECT_REQUIRED, "retUrl");
+        CheckUtil.check(Validator.isNotNull(bean.getTimestamp()), MsgEnum.ERR_OBJECT_REQUIRED, "timestamp");
+    }
     /**
      * 请求参数校验
      * @auth sunpeikai
@@ -116,6 +185,21 @@ public class ApiUserAutoLoginController extends BaseUserController {
         CheckUtil.check(Validator.isNotNull(bean.getInstCode()),  MsgEnum.ERR_OBJECT_REQUIRED, "机构编号");
         CheckUtil.check(Validator.isNotNull(bean.getUserId()),  MsgEnum.ERR_OBJECT_REQUIRED, "用户ID");
         CheckUtil.check(Validator.isNotNull(bean.getChkValue()),  MsgEnum.ERR_OBJECT_REQUIRED, "签名");
+    }
+
+    /**
+     * 用户id解密
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    private int bindUniqueIdDecrypt(ApiUserPostBean bean){
+        // RAC解密
+        String str = decrypt(bean.getBindUniqueIdScy());
+        // 解密结果数字验证
+        CheckUtil.check(Validator.isDigit(str), MsgEnum.ERR_OBJECT_DIGIT, "bindUniqueIdScy");
+        // 返回
+        return Integer.parseInt(str);
     }
 
     /**

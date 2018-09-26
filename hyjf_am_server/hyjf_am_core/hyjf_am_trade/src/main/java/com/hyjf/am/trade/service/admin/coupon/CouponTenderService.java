@@ -192,4 +192,5 @@ public interface CouponTenderService {
      * @return List<CouponBackMoneyCustomize>
      */
     List<CouponBackMoneyCustomize> getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
 }

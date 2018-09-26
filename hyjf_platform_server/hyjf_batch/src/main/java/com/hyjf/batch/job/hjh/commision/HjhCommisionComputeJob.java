@@ -18,7 +18,7 @@ public class HjhCommisionComputeJob extends BaseJob implements Job {
         logger.info("HjhCommisionComputeJob: {} execute...", context.getJobDetail().getKey().getName());
 
         restTemplate.getForEntity(
-                "http://hyjf-web/hjh/commision/compute", Boolean.class).getBody();
+                "http://CS-TRADE/hyjf-web/hjh/commision/compute", Boolean.class).getBody();
 
         logger.info("HjhCommisionComputeJob execute end...");
     }

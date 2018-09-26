@@ -1,16 +1,32 @@
 package com.hyjf.cs.trade.client;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
-import com.hyjf.am.vo.user.*;
-
-import java.util.List;
-import java.util.Map;
+import com.hyjf.am.vo.user.AccountBankVO;
+import com.hyjf.am.vo.user.AccountChinapnrVO;
+import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.CertificateAuthorityVO;
+import com.hyjf.am.vo.user.EmployeeCustomizeVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.LoanSubjectCertificateAuthorityVO;
+import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserInfoCrmVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.am.vo.user.UtmRegVO;
+import com.hyjf.am.vo.user.VipAuthVO;
 
 /**
  * @Description 
@@ -334,4 +350,22 @@ public interface AmUserClient {
 	 * @return
 	 */
 	Integer selectUserIdByUsrcustid(Long chinapnrUsrcustid);
+
+	BankOpenAccountVO getBankOpenAccount(String accountId);
+
+	AccountVO getAccount(Integer userId);
+
+	List<VipAuthVO> getVipAuthList(int vipId);
+
+	BankOpenAccountVO selectById(int userId);
+
+	BankOpenAccountVO selectByAccountId(String accountId);
+
+	UserVO getUser(String userName);
+
+	UserInfoVO getUserInfo(Integer userId);
+
+	int updateBankCardPayAllianceCode(BankCardVO updateBankCard);
+
+	BankCardVO queryUserCardValid(String userId, String cardNo);
 }

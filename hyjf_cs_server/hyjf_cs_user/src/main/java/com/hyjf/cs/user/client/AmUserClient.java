@@ -1,6 +1,8 @@
 package com.hyjf.cs.user.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
@@ -10,7 +12,9 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.springframework.beans.BeanUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -562,4 +566,24 @@ public interface AmUserClient {
      * @return
      */
     BankCardVO getBankCardById(Integer id);
+
+	/**
+	 * 更新用户信息表
+	 *
+	 * @auther: nxl
+	 * @return
+	 */
+	 int updateUserInfoByUserInfo(UserInfoVO userInfoVO);
+
+	/**
+	 * 根据手机号密码注册用户
+	 * @param mobile
+	 * @param instCode
+	 * @param request
+	 * @param instType
+	 * @param utmPlat
+	 * @param platform
+	 * @return
+	 */
+	Integer insertUserAction(String mobile, String instCode, HttpServletRequest request, Integer instType, UtmPlatVO utmPlat, String platform);
 }

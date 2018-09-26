@@ -3,9 +3,10 @@
  */
 package com.hyjf.am.vo.config;
 
-import com.hyjf.am.vo.BaseVO;
-
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hyjf.am.vo.BaseVO;
 
 /**
  * @author fuqiang
@@ -33,9 +34,9 @@ public class EventVO extends BaseVO {
     private Integer createUserId;
 
     private Integer updateUserId;
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createTime;
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

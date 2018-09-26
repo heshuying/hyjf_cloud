@@ -22,10 +22,7 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
@@ -34,9 +31,9 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.client.AmConfigClient;
-import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.*;
@@ -69,8 +66,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
-    private AmMongoClient amMongoClient;
-    @Autowired
     SystemConfig systemConfig;
     @Autowired
     private AmConfigClient amConfigClient;
@@ -83,8 +78,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private SmsProducer smsProducer;
     @Autowired
     private AccountWebListProducer accountWebListProducer;
-    @Autowired
-    private UtmRegProducer utmRegProducer;
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
 
@@ -1283,6 +1276,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         creditTenderLog.setUserId(user.getUserId());
         creditTenderLog.setCreditUserId(borrowCredit.getCreditUserId());
         creditTenderLog.setStatus(0);
+        creditTenderLog.setBorrowUserName(borrow.getBorrowUserName());
+        creditTenderLog.setBorrowUserId(borrow.getUserId());
         // 因为标的号必须六位之内 所以用id  去掉 setBorrowId
         creditTenderLog.setBidNid(borrowCredit.getBidNid());
         creditTenderLog.setCreditNid(String.valueOf(borrowCredit.getCreditNid()));
@@ -1314,6 +1309,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         } else {
             creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.005)));
         }
+        creditTenderLog.setUserName(user.getUsername());
+        creditTenderLog.setCreditUserName(borrowCredit.getCreditUserName());
         creditTenderLog.setAddIp(request.getIp());
         return creditTenderLog;
     }
@@ -1335,7 +1332,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         BankOpenAccountVO accountChinapnrCrediter = amUserClient.selectBankAccountById(creditTenderLog.getCreditUserId());
         bean.setAccountId(bankOpenAccount.getAccount());
         // 实付金额 承接本金*（1-折价率）+应垫付利息
-        bean.setTxAmount(creditAssign.getAssignPay());
+        bean.setTxAmount(creditAssign.getAssignPay().replaceAll(",",""));
         bean.setTxFee(creditTenderLog.getCreditFee() != null ? DF_COM_VIEW.format(creditTenderLog.getCreditFee()) : "0.01");
         bean.setTsfAmount(DF_COM_VIEW.format(creditTenderLog.getAssignCapital()));
         // 对手电子账号:卖出方账号
@@ -1346,10 +1343,19 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 忘记密码的跳转URL
         bean.setForgotPwdUrl(systemConfig.getForgetpassword());
 
-        //错误页
-        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
-        //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
+        String retUrl = "";
+        String successUrl = "";
+        if((ClientConstants.APP_CLIENT_IOS+"").equals(request.getPlatform())|| (ClientConstants.APP_CLIENT+"").equals(request.getPlatform())){
+            //错误页
+            retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/"+request.getCreditNid()+"/result/failed?logOrdId="+bean.getLogOrderId()+"&sign="+request.getSign()+"&token="+request.getSign();
+            //成功页
+            successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/"+request.getCreditNid()+"/result/success?logOrdId="+bean.getLogOrderId()+"&sign="+request.getSign()+"&token="+request.getSign();
+        }else{
+            //错误页
+            retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
+            //成功页
+            successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestSuccess?logOrdId="+bean.getLogOrderId();
+        }
 
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + "/tender/credit/bgReturn?platform="+request.getPlatform();

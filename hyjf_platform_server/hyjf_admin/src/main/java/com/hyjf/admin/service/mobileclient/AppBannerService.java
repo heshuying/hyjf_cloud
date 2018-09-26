@@ -2,14 +2,7 @@ package com.hyjf.admin.service.mobileclient;
 
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.market.AppBannerRequest;
-import com.hyjf.am.vo.market.AdsTypeVO;
-import com.hyjf.am.vo.market.AdsWithBLOBsVO;
-import org.apache.commons.collections.CollectionUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
+import com.hyjf.am.vo.market.AdsVO;
 
 /**
  * @author lisheng
@@ -26,38 +19,38 @@ public interface AppBannerService {
 
      /**
       * 获取广告根据id
-      * @param request
+      * @param adsVO
       * @return
       */
-     AppBannerResponse getRecordById(AppBannerRequest request);
+     AppBannerResponse getRecordById(AdsVO adsVO);
 
      /**
       * 新增广告
-      * @param adsWithBLOBsVo
+      * @param adsVO
       * @return
       */
-     AppBannerResponse insertRecord(AdsWithBLOBsVO adsWithBLOBsVo);
+     AppBannerResponse insertRecord(AdsVO adsVO);
 
      /**
       * 修改广告
-      * @param adsWithBLOBsVo
+      * @param adsVO
       * @return
       */
-     AppBannerResponse updateRecord(AdsWithBLOBsVO adsWithBLOBsVo);
+     AppBannerResponse updateRecord(AdsVO adsVO);
 
      /**
       * 修改状态
-      * @param adsWithBLOBsVo
+      * @param adsVO
       * @return
       */
-     AppBannerResponse updateStatus(AdsWithBLOBsVO adsWithBLOBsVo);
+     AppBannerResponse updateStatus(AdsVO adsVO);
 
      /**
       * 删除广告
-      * @param adsWithBLOBsVo
+      * @param adsVO
       * @return
       */
-     AppBannerResponse deleteAppBanner(AdsWithBLOBsVO adsWithBLOBsVo);
+     AppBannerResponse deleteAppBanner(AdsVO adsVO);
 
 
 }

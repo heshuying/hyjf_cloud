@@ -7,6 +7,7 @@ import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.FeeConfigResponse;
 import com.hyjf.am.response.config.SiteSettingsResponse;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
@@ -71,7 +72,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public List<BankConfigVO> getBankConfigRecordList(String bankName){
 		AdminBankConfigResponse response = restTemplate
-				.postForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByBankName" , bankName, AdminBankConfigResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-config/config/selectBankConfigByBankName" , bankName, AdminBankConfigResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -201,11 +202,29 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 */
 	@Override
 	public SiteSettingsVO selectSiteSetting() {
-		String url = "http://AM-CONFIG/am-config/siteSettings/select_site_setting";
+		String url = "http://AM-ADMIN/am-admin/siteSettings/select_site_setting";
 		SiteSettingsResponse response = restTemplate.getForEntity(url,SiteSettingsResponse.class).getBody();
 		if (Response.isSuccess(response)){
 			return response.getResult();
 		}
 		return null;
 	}
+	@Override
+	public BanksConfigVO getBanksConfigByBankId(String bankId) {
+		BanksConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+    @Override
+    public Integer getBankInterfaceFlagByType(String type) {
+        BankInterfaceResponse response = restTemplate
+                .getForEntity("http://AM-ADMIN/am-admin/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
+        if (response != null) {
+            return response.getFlag();
+        }
+        return null;
+    }
 }

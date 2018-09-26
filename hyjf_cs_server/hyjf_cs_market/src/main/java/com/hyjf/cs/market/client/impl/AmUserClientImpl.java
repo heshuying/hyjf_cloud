@@ -7,9 +7,8 @@ import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.market.UtmRegResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
-import com.hyjf.am.response.trade.CreditTenderResponse;
-import com.hyjf.am.response.user.SmsCodeResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
+import com.hyjf.am.response.user.SmsCodeResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.admin.UtmVO;
@@ -123,7 +122,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer getAccessNumber(Integer sourceId, String type) {
-		UtmResponse response = restTemplate.getForObject("http://AM-USER/am-user/promotion/utm/getaccessnumber/" + sourceId,
+		UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getaccessnumber/" + sourceId,
 				UtmResponse.class);
 		if (response != null) {
 			return response.getAccessNumber();
@@ -133,7 +132,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer getRegistNumber(Integer sourceId, String type) {
-		UtmResponse response = restTemplate.getForObject("http://AM-USER/am-user/promotion/utm/getregistnumber/" + sourceId,
+		UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getregistnumber/" + sourceId,
 				UtmResponse.class);
 		if (response != null) {
 			return response.getRegistNumber();
@@ -143,7 +142,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer getOpenAccountNumber(Integer sourceId, String type) {
-		UtmResponse response = restTemplate.getForObject("http://AM-USER/am-user/promotion/utm/getopenaccountnumber/" + sourceId+"/"+type,
+		UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getopenaccountnumber/" + sourceId+"/"+type,
 				UtmResponse.class);
 		if (response != null) {
 			return response.getOpenAccountNumber();
@@ -153,80 +152,78 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer getTenderNumber(Integer sourceId, String type) {
-		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
-		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
-				"http://AM-TRADE/am-trade/borrowTender/getutmtendernum", list, BorrowTenderResponse.class);
-		if (tenderResponse != null) {
-			return tenderResponse.getTenderCount();
-		}
-		return null;
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gettendernumber/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getTenderNumber();
+        }
+        return null;
 	}
 
 	@Override
 	public BigDecimal getCumulativeRecharge(Integer sourceId, String type) {
-		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
-		AccountRechargeResponse response = restTemplate.postForObject(
-				"http://AM-TRADE/am-trade/accountrecharge/getrechargeprice", list, AccountRechargeResponse.class);
+		UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getcumulativerecharge/" + sourceId+"/"+type,
+				UtmResponse.class);
 		if (response != null) {
-			return response.getRechargePrice();
+			return response.getCumulativeRecharge();
 		}
 		return null;
 	}
 
 	@Override
 	public BigDecimal getHztTenderPrice(Integer sourceId, String type) {
-		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
-		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
-				"http://AM-TRADE/am-trade/borrowTender/gethzttenderprice", list, BorrowTenderResponse.class);
-		if (tenderResponse != null) {
-			return tenderResponse.getHztTenderPrice();
+		UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethzttenderprice/" + sourceId+"/"+type,
+				UtmResponse.class);
+		if (response != null) {
+			return response.getHztTenderPrice();
 		}
 		return null;
 	}
 
 	@Override
 	public BigDecimal getHxfTenderPrice(Integer sourceId, String type) {
-		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
-		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
-				"http://AM-TRADE/am-trade/borrowTender/gethxftenderprice", list, BorrowTenderResponse.class);
-		if (tenderResponse != null) {
-			return tenderResponse.getHxfTenderPrice();
+		UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethxftenderprice/" + sourceId+"/"+type,
+				UtmResponse.class);
+		if (response != null) {
+			return response.getHxfTenderPrice();
 		}
 		return null;
 	}
 
 	@Override
 	public BigDecimal getHtlTenderPrice(Integer sourceId, String type) {
-		return null;// todo
+		UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethtltenderprice/" + sourceId+"/"+type,
+				UtmResponse.class);
+		if (response != null) {
+			return response.getHtlTenderPrice();
+		}
+		return null;
 	}
 
 	@Override
 	public BigDecimal getHtjTenderPrice(Integer sourceId, String type) {
-		return null;// todo
+		UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethtjtenderprice/" + sourceId+"/"+type,
+				UtmResponse.class);
+		if (response != null) {
+			return response.getHtjTenderPrice();
+		}
+		return null;
 	}
 
 	@Override
 	public BigDecimal getRtbTenderPrice(Integer sourceId, String type) {
-		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
-		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
-				"http://AM-TRADE/am-trade/borrowTender/getrtbtenderprice", list, BorrowTenderResponse.class);
-		if (tenderResponse != null) {
-			return tenderResponse.getHxfTenderPrice();
+		UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getrtbtenderprice/" + sourceId+"/"+type,
+				UtmResponse.class);
+		if (response != null) {
+			return response.getRtbTenderPrice();
 		}
 		return null;
 	}
 
 	@Override
 	public BigDecimal getHzrTenderPrice(Integer sourceId, String type) {
-		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
-		CreditTenderResponse response = restTemplate.postForObject(
-				"http://AM-TRADE/am-trade/creditTender/gethzrtenderprice", list, CreditTenderResponse.class);
+		UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethzrtenderprice/" + sourceId+"/"+type,
+				UtmResponse.class);
 		if (response != null) {
 			return response.getHzrTenderPrice();
 		}
@@ -425,8 +422,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	private List<Integer> geUtmRegUserIdtList(Integer sourceId, String type) {
-		UtmResponse response = restTemplate.getForObject(
-				"http://AM-USER/am-user/promotion/utmreg/getutmreglist/" + sourceId + "/" + type, UtmResponse.class);
+		UtmRegResponse response = restTemplate.getForObject(
+				"http://AM-USER/am-user/promotion/utmreg/getutmreglist/" + sourceId + "/" + type, UtmRegResponse.class);
 		List<Integer> userIdList = new ArrayList<>();
 		if (response != null) {
 			List<UtmRegVO> list = response.getResultList();
@@ -456,6 +453,7 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return userIdList;
 	}
+
 
 	/**
 	 * 保存验证码

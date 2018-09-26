@@ -7,6 +7,7 @@ import com.hyjf.am.response.trade.BankCardResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.trade.MyBestCouponListResponse;
+import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
@@ -15,6 +16,7 @@ import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.validator.Validator;
@@ -682,5 +684,103 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResultInt();
 		}
 		return 0;
+	}
+
+    @Override
+    public BankOpenAccountVO getBankOpenAccount(String accountId) {
+        BankOpenAccountResponse response = restTemplate.getForEntity(
+                "http://AM-USER/am-user/bankopen/getBankOpenAccountByAccountId/" + accountId,
+				BankOpenAccountResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+	/**
+	 * 获取用户account信息
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public AccountVO getAccount(Integer userId) {
+        AccountResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/trade/getAccount/" + userId, AccountResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public List<VipAuthVO> getVipAuthList(int vipId) {
+        String url = urlBase + "vipauth/getvipauthlist/" + vipId;
+        VipAuthResponse response = restTemplate.getForEntity(url, VipAuthResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+	@Override
+	public BankOpenAccountVO selectById(int userId) {
+		BankOpenAccountResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public BankOpenAccountVO selectByAccountId(String accountId) {
+		BankOpenAccountResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/bankopen/selectByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+    @Override
+    public UserVO getUser(String userName) {
+        UserResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user/findByCondition/"+userName,UserResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public UserInfoVO getUserInfo(Integer userId) {
+        UserInfoResponse response = restTemplate.getForEntity("http://AM-USER/am-user/userInfo/findById/"+userId,UserInfoResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+	@Override
+	public int updateBankCardPayAllianceCode(BankCardVO updateBankCard) {
+		// TODO  待实现
+		int result = restTemplate
+				.postForEntity("http://AM-USER/am-user/card/updateBankCardPayAllianceCode", updateBankCard, Integer.class).getBody();
+		return result;
+	}
+
+	/**
+	 * 查询用户已绑定的有效卡
+	 * @param userId
+	 * @param cardNo
+	 * @return
+	 */
+	@Override
+	public BankCardVO queryUserCardValid(String userId, String cardNo) {
+		BankCardResponse response = restTemplate
+				.getForEntity("http://AM-USER//am-user/card/queryUserCardValid/" + userId + "/" + cardNo, BankCardResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 }
