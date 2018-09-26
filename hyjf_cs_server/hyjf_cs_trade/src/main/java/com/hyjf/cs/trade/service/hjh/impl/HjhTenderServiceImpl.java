@@ -496,6 +496,65 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     }
 
     /**
+     * 检查计划投资的参数
+     *
+     * @param request
+     */
+    @Override
+    public void checkPlan(TenderRequest request) {
+        UserVO loginUser = amUserClient.findUserById(request.getUserId());
+        Integer userId = loginUser.getUserId();
+        request.setUser(loginUser);
+        String key = RedisConstants.HJH_TENDER_REPEAT + userId;
+        boolean checkTender = RedisUtils.tranactionSet(key, RedisConstants.TENDER_OUT_TIME);
+        if (!checkTender) {
+            // 用户正在投资
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
+        }
+        if (StringUtils.isEmpty(request.getBorrowNid())) {
+            // 项目编号不能为空
+            throw new CheckException(MsgEnum.STATUS_CE000013);
+        }
+
+        if (request.getPlatform() == null) {
+            // 投资平台不能为空
+            throw new CheckException(MsgEnum.STATUS_ZC000018);
+        }
+        // 查询选择的优惠券
+        CouponUserVO cuc = null;
+        if (request.getCouponGrantId() != null && request.getCouponGrantId() > 0) {
+            cuc = amTradeClient.getCouponUser(request.getCouponGrantId(), userId);
+        }
+        // 查询计划
+        if (StringUtils.isEmpty(request.getBorrowNid())) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
+        }
+        HjhPlanVO plan = amTradeClient.getPlanByNid(request.getBorrowNid());
+        if (plan == null) {
+            throw new CheckException(MsgEnum.FIND_PLAN_ERROR);
+        }
+        if (plan.getPlanInvestStatus() == 2) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_CLOSE);
+        }
+        logger.info("加入计划投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
+        // 查询用户信息
+        UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
+        UserVO user = amUserClient.findUserById(userId);
+        // 检查用户状态  角色  授权状态等  是否允许投资
+        checkUser(user, userInfo);
+        // 检查江西银行账户
+        BankOpenAccountVO account = amUserClient.selectBankAccountById(userId);
+        if (account == null || user.getBankOpenAccount() == 0 || StringUtils.isEmpty(account.getAccount())) {
+            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        }
+        // 查询用户账户表-投资账户
+        AccountVO tenderAccount = amTradeClient.getAccount(userId);
+        // 检查投资金额
+        checkTenderMoney(request, plan, account, cuc, tenderAccount);
+        logger.info("加入计划投资校验通过userId:{},ip:{},平台{},优惠券为:{}", userId, request.getIp(), request.getPlatform(), request.getCouponGrantId());
+    }
+
+    /**
      * 计算预期收益
      * @param resultVo
      * @param couponConfig
@@ -695,7 +754,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         return result;
 
     }
-
 
     /**
      * @Description 真正开始加入计划
