@@ -20,6 +20,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,13 +42,14 @@ public class PcChannelStatisticsController extends BaseController {
     private PcChannelStatisticsService pcChannelStatisticsService;
 
     @ApiOperation(value = "查询pc渠道统计", notes = "查询pc渠道统计")
-    @RequestMapping("/search")
+    @PostMapping("/search")
     public AdminResult searchAction(@RequestBody PcChannelStatisticsRequest request) {
         PcChannelStatisticsResponse response = pcChannelStatisticsService.searchPcChannelStatistics(request);
         return new AdminResult(response);
     }
 
     @ApiOperation(value = "导出功能", notes = "导出功能")
+    @PostMapping("/export")
     public void export(@RequestBody PcChannelStatisticsRequest request, HttpServletResponse response) throws Exception {
         // 表格sheet名称
         String sheetName = "渠道统计";
