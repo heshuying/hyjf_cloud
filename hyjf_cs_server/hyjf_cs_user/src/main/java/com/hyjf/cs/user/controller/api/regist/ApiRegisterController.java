@@ -19,10 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Api(value = "api端-用户注册接口", tags = "api端-用户注册接口")
 @RestController
-@RequestMapping("/hyjf-api/user")
+@RequestMapping("/hyjf-api/server/user")
 public class ApiRegisterController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(ApiRegisterController.class);
 
@@ -48,7 +45,8 @@ public class ApiRegisterController extends BaseUserController {
      * @Return
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
-    @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/register/register.do")
+    @ResponseBody
     public UserRegisterResultBean register(@RequestBody UserRegisterRequestBean userRegisterRequestBean, HttpServletRequest request) {
         logger.info("api端注册接口, registerVO is :{}", JSONObject.toJSONString(userRegisterRequestBean));
         UserRegisterResultBean result = new UserRegisterResultBean();

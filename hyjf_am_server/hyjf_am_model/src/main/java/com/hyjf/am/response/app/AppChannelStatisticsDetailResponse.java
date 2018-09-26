@@ -12,4 +12,13 @@ import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
  * @Date 2018/6/23 9:59
  */
 public class AppChannelStatisticsDetailResponse extends Response<AppChannelStatisticsDetailVO> {
+    private Long count;
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
 }
