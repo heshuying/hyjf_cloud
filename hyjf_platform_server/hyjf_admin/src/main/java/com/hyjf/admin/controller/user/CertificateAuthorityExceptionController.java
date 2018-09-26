@@ -14,6 +14,7 @@ import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetDateUtils;
 import com.hyjf.common.util.StringPool;
 
 import io.swagger.annotations.Api;
@@ -191,7 +192,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
                     } else if (celLength == 8) {// 状态
                         cell.setCellValue(data.getCode().equals("1000")?"认证成功":"未认证或认证失败");
                     } else if (celLength == 9) {// 申请时间
-                        cell.setCellValue(data.getCreateTime());
+                        cell.setCellValue( GetDateUtils.format(data.getCreateTime()));
                     } else if (celLength == 10) {// 备注
                         cell.setCellValue(data.getRemark());
                     }

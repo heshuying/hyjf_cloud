@@ -91,6 +91,7 @@ import com.hyjf.am.vo.trade.HjhLockVo;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
 import com.hyjf.am.vo.trade.InvestListCustomizeVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
+import com.hyjf.am.vo.trade.ProjectBeanVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
@@ -2300,5 +2301,7 @@ public interface AmTradeClient {
 	List<String> selectNidForCouponOnly(CouponRepayRequest couponRepayRequest);
 
 	CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow);
+
+	ProjectBeanVO getRepayProjectDetail(ProjectBeanVO form);
 	
 }
