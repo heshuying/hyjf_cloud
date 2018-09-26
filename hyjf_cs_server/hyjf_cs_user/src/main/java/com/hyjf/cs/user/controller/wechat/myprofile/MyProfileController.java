@@ -47,7 +47,7 @@ public class MyProfileController extends BaseUserController {
     private SystemConfig systemConfig;
 
     @ApiOperation(value = "查询用户账户信息", notes = "查询用户账户信息")
-    @GetMapping("/profile")
+    @GetMapping("/profile.do")
     public WeChatResult myProfile(@RequestHeader(value = "userId") Integer userId) {
         WeChatResult result = new WeChatResult();
         MyProfileVO myProfileVO = new MyProfileVO();

@@ -199,5 +199,15 @@ public class CommonConstant {
     public static final String[] DATASOURCE_QUERY_PREFIX = {"select","query","count","search","get","find","check"};
     public static final int DATASOURCE_AOP_DS = 1;
     public static final int DATASOURCE_AOP_TRANSACTION = 2;
+
+    /*  ----------------投资类型枚举 开始-------------------*/
+
+    /*计划投资*/
+    public static final String TENDER_TYPE_HJH = "HJH";
+
+    /*债转投资*/
+    public static final String TENDER_TYPE_CREDIT = "HZR";
+
+    /*  ----------------投资类型枚举 结束-------------------*/
     
 }

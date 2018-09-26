@@ -351,10 +351,10 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         if (adsVO == null) {
             return false;
         }
-        if (adsVO.getTimeStart() > GetDate.getNowTime10()) {
+        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeStart()) > GetDate.getNowTime10()) {
             return false;
         }
-        if (adsVO.getTimeEnd() < GetDate.getNowTime10()) {
+        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeEnd()) < GetDate.getNowTime10()) {
             return false;
         }
 

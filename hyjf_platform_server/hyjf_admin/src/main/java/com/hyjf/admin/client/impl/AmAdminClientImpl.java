@@ -9,6 +9,7 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
+import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
@@ -65,6 +66,15 @@ public class AmAdminClientImpl implements AmAdminClient {
     public List<UtmPlatVO> getPCUtm(){
         UtmPlatResponse response =  restTemplate.
                 postForEntity("http://AM-ADMIN/am-admin/extensioncenter/channelstatisticsdetail/pcutm_list", null, UtmPlatResponse.class).getBody();
+        if (UtmPlatResponse.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<UtmPlatVO> getAppUtm(){
+        UtmPlatResponse response =  restTemplate.
+                postForEntity("http://AM-ADMIN/am-admin/extensioncenter/channelstatisticsdetail/app_utm_list", null, UtmPlatResponse.class).getBody();
         if (UtmPlatResponse.isSuccess(response)){
             return response.getResultList();
         }
@@ -631,5 +641,33 @@ public class AmAdminClientImpl implements AmAdminClient {
             url="http://AM-ADMIN/am-user/lockeduser/adminunlock";
         }
         return restTemplate.postForObject(url,vo,BooleanResponse.class);
+    }
+
+    @Override
+	public ChannelReconciliationResponse selectPcChannelReconciliationRecord(ChannelReconciliationRequest request) {
+		return restTemplate.postForObject(
+				"http://AM-ADMIN/am-user/promotion/utm/select_pc_channel_reconciliation_record", request,
+				ChannelReconciliationResponse.class);
+	}
+
+    @Override
+    public ChannelReconciliationResponse selectPcChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_pc_channel_reconciliation_record_hjh", request,
+                ChannelReconciliationResponse.class);
+    }
+
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecord(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record", request,
+                ChannelReconciliationResponse.class);
+    }
+
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record_hjh", request,
+                ChannelReconciliationResponse.class);
     }
 }

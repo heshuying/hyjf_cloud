@@ -9,10 +9,8 @@ import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
-import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.market.bean.DataSearchBean;
@@ -29,9 +27,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,6 +49,8 @@ public class DataSearchController {
     @Autowired
     SmsProducer smsProducer;
     private Logger logger = LoggerFactory.getLogger(DataSearchController.class);
+
+
     /**
      * 千乐数据查询
      * @return
@@ -62,8 +61,13 @@ public class DataSearchController {
         DataSearchRequest dataSearchRequest = CommonUtils.convertBean(request, DataSearchRequest.class);
         DataSearchCustomizeResponse response = dataSearchService.findDataList(dataSearchRequest);
         HashMap<String, Object> result = new HashMap<>();
-        result.put("data", response.getResultList());
-        result.put("money",response.getMoney());
+        if (!CollectionUtils.isEmpty(response.getResultList())) {
+            result.put("data", response.getResultList());
+            result.put("money",response.getMoney());
+        }else{
+            result.put("data", new String [0]);
+            result.put("money",new String [0]);
+        }
         WebResult webResult = new WebResult(result);
         Page page = new Page();
         page.setTotal(response.getCount());
@@ -80,14 +84,15 @@ public class DataSearchController {
     }
 
     @ApiOperation(value = "登录", notes = "登录")
-    @PostMapping("/login/{mobile}/{code}")
-    public WebResult login(@PathVariable String mobile,@PathVariable String code){
+    @PostMapping("/login")
+    public WebResult login(@RequestBody DataSearchBean request){
+        String code = request.getCode();
+        String mobile = request.getMobile();
         WebResult webResult = new WebResult();
         if(!dataSearchService.checkMobile(mobile)){
-            return webResult;
+            return new WebResult("111", "手机号校验失败");
         }
         int result = dataSearchService.checkMobileCode(mobile, code);
-
         if(result>0){
             return webResult;
         }else{
@@ -97,11 +102,10 @@ public class DataSearchController {
 
     }
 
-
-
     @ApiOperation(value = "获取验证码", notes = "获取验证码")
-    @PostMapping("/sendsms/{mobile}")
-    public WebResult sendsms(@PathVariable String mobile, HttpServletRequest request) {
+    @PostMapping("/sendsms")
+    public WebResult sendsms(@RequestBody DataSearchBean form, HttpServletRequest request) {
+        String mobile = form.getMobile();
         WebResult webResult = new WebResult();
         JSONObject jo = new JSONObject();
         if (!dataSearchService.checkMobile(mobile)) {

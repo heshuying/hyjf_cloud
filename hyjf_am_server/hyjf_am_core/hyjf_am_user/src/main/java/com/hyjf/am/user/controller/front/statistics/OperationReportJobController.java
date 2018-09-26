@@ -6,7 +6,7 @@ package com.hyjf.am.user.controller.front.statistics;
 import com.hyjf.am.response.trade.OperationReportJobResponse;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.service.admin.extensioncenter.KeyCountService;
+import com.hyjf.am.user.service.admin.extensioncenter.OperationReportJobCountService;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,12 +26,12 @@ import java.util.List;
 public class OperationReportJobController extends BaseController {
 
 	@Resource
-	private KeyCountService keyCountService;
+	private OperationReportJobCountService operationReportJobCountService;
 
 	@RequestMapping("/countregistuser")
 	public OperationReportJobResponse countRegistUser() {
 		OperationReportJobResponse response = new OperationReportJobResponse();
-		int count = keyCountService.countRegistUser();
+		int count = operationReportJobCountService.countRegistUser();
 		response.setCount(count);
 		return response;
 	}
@@ -39,21 +39,21 @@ public class OperationReportJobController extends BaseController {
 	@RequestMapping("/sexcount")
 	public OperationReportJobResponse sexCount(@RequestBody OperationReportJobRequest request) {
 		OperationReportJobResponse response = new OperationReportJobResponse();
-		List<OperationReportJobVO> list = keyCountService.getSexCount(request.getOperationReportJobVOList());
+		List<OperationReportJobVO> list = operationReportJobCountService.getSexCount(request.getOperationReportJobVOList());
 		response.setResultList(list);
 		return response;
 	}
     @RequestMapping("/agecount")
     public OperationReportJobResponse ageCount(@RequestBody OperationReportJobRequest request) {
         OperationReportJobResponse response = new OperationReportJobResponse();
-        List<OperationReportJobVO> list = keyCountService.getAgeCount(request.getOperationReportJobVOList());
+        List<OperationReportJobVO> list = operationReportJobCountService.getAgeCount(request.getOperationReportJobVOList());
         response.setResultList(list);
         return response;
     }
     @RequestMapping("/usernames")
     public OperationReportJobResponse userNames(@RequestBody OperationReportJobRequest request) {
         OperationReportJobResponse response = new OperationReportJobResponse();
-        List<OperationReportJobVO> list = keyCountService.getUserNames(request.getOperationReportJobVOList());
+        List<OperationReportJobVO> list = operationReportJobCountService.getUserNames(request.getOperationReportJobVOList());
         response.setResultList(list);
         return response;
     }
@@ -61,28 +61,28 @@ public class OperationReportJobController extends BaseController {
 	@RequestMapping("/userageandarea")
 	public OperationReportJobResponse userAgeAndArea(@RequestBody OperationReportJobRequest request) {
 		OperationReportJobResponse response = new OperationReportJobResponse();
-		OperationReportJobVO info = keyCountService.getUserAgeAndArea(request.getUserId());
+		OperationReportJobVO info = operationReportJobCountService.getUserAgeAndArea(request.getUserId());
 		response.setResult(info);
 		return response;
 	}
 	@RequestMapping("/tenderagebyrange")
 	public OperationReportJobResponse tenderAgeByRange(@RequestBody OperationReportJobRequest request) {
 		OperationReportJobResponse response = new OperationReportJobResponse();
-		int count = keyCountService.getTenderAgeByRange(request);
+		int count = operationReportJobCountService.getTenderAgeByRange(request);
 		response.setCount(count);
 		return response;
 	}
 	@RequestMapping("/tendersexgroupby")
 	public OperationReportJobResponse tenderSexGroupBy(@RequestBody OperationReportJobRequest request) {
 		OperationReportJobResponse response = new OperationReportJobResponse();
-		List<OperationReportJobVO> list = keyCountService.getTenderSexGroupBy(request);
+		List<OperationReportJobVO> list = operationReportJobCountService.getTenderSexGroupBy(request);
 		response.setResultList(list);
 		return response;
 	}
 	@RequestMapping("/tendercitygroupbyuserids")
 	public OperationReportJobResponse tenderCityGroupByUserIds(@RequestBody OperationReportJobRequest request) {
 		OperationReportJobResponse response = new OperationReportJobResponse();
-		List<OperationReportJobVO> list = keyCountService.getTenderCityGroupByUserIds(request.getOperationReportJobVOList());
+		List<OperationReportJobVO> list = operationReportJobCountService.getTenderCityGroupByUserIds(request.getOperationReportJobVOList());
 		response.setResultList(list);
 		return response;
 	}

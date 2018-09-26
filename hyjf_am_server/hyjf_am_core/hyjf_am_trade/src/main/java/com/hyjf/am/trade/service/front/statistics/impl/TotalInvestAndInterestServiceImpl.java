@@ -7,6 +7,7 @@ import com.hyjf.am.trade.dao.mapper.customize.HjhPlanCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.OperationReportJobCustomizeMapper;
 import com.hyjf.am.trade.service.front.statistics.TotalInvestAndInterestService;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.common.util.CustomConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -30,11 +31,11 @@ public class TotalInvestAndInterestServiceImpl implements TotalInvestAndInterest
     public TotalInvestAndInterestVO getTotalInvestAndInterest() {
         TotalInvestAndInterestVO vo = new TotalInvestAndInterestVO();
         // 累计交易笔数(实时)
-        int totalInvestNum = customizeMapper.countTotalInvestNum();
+        int totalInvestNum = customizeMapper.getTradeCount()+ CustomConstants.HTJ_HTL_COUNT;
         // 累计交易总额(实时)
-        BigDecimal totalInvestAmount = customizeMapper.countTotalInvestAmount();
+        BigDecimal totalInvestAmount = customizeMapper.getTotalCount();
         // 累计为用户赚取收益(实时)
-        BigDecimal totalInterestAmount = customizeMapper.countTotalInterestAmount();
+        BigDecimal totalInterestAmount = customizeMapper.getTotalInterest();
         vo.setTotalInvestNum(totalInvestNum);
         vo.setTotalInvestAmount(totalInvestAmount);
         vo.setTotalInterestAmount(totalInterestAmount);

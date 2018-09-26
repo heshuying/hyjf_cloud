@@ -132,7 +132,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		// 开户校验
 		CheckUtil.check(this.checkIsOpen(user.getUserId()), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
 		// 交易密码设置校验
-		CheckUtil.check(user.getIsSetPassword() == 1, MsgEnum.STATUS_TP000002);
+//		CheckUtil.check(user.getIsSetPassword() == 1, MsgEnum.STATUS_TP000002);
 		// 已绑卡校验
 		int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
 		CheckUtil.check(count<=0, MsgEnum.STATUS_BC000001);
@@ -223,12 +223,15 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	 */
 	@Override
 	public Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception {
+        // 页面调用必须传的
+        String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
+
         // 回调路径
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/bindCardError?bind=false&unbind=true&msg=";
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/bindCardError?logOrdId=" + orderId + "&bind=true&unbind=false&msg=";
         // 交易成功跳转链接
-        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/bindCardSuccess?bind=false&unbind=true&msg=";
+        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/bindCardSuccess?bind=true&unbind=false&msg=";
 		// 商户后台应答地址(必须)
-		String notifyUrl = systemConfig.getWebHost().trim() + "/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
+		String notifyUrl = systemConfig.getWebHost().trim() + "/user/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
         String forgotPwdUrl = systemConfig.getForgetpassword();
 
@@ -244,8 +247,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bindCardBean.setSuccessfulUrl(successfulUrl);
 		bindCardBean.setForgotPwdUrl(forgotPwdUrl);
 		bindCardBean.setNotifyUrl(notifyUrl);
-		// 页面调用必须传的
-		String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
+
 		bindCardBean.setLogBankDetailUrl(BankCallConstant.BANK_URL_BIND_CARD_PAGE);
 		bindCardBean.setLogOrderId(orderId);
 		bindCardBean.setLogUserId(String.valueOf(user.getUserId()));

@@ -72,7 +72,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public List<BankConfigVO> getBankConfigRecordList(String bankName){
 		AdminBankConfigResponse response = restTemplate
-				.postForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByBankName" , bankName, AdminBankConfigResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-config/config/selectBankConfigByBankName" , bankName, AdminBankConfigResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -202,7 +202,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 */
 	@Override
 	public SiteSettingsVO selectSiteSetting() {
-		String url = "http://AM-CONFIG/am-config/siteSettings/select_site_setting";
+		String url = "http://AM-ADMIN/am-admin/siteSettings/select_site_setting";
 		SiteSettingsResponse response = restTemplate.getForEntity(url,SiteSettingsResponse.class).getBody();
 		if (Response.isSuccess(response)){
 			return response.getResult();
@@ -221,7 +221,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public Integer getBankInterfaceFlagByType(String type) {
         BankInterfaceResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-admin/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
         if (response != null) {
             return response.getFlag();
         }

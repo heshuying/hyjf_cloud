@@ -417,4 +417,15 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
 		BeanUtils.copyProperties(engine, vo);
 		return vo;
 	}
+
+	@Override
+	public List<HjhAllocationEngineVO> selectHjhAllocationEngineListByLabelId(Integer LabelId) {
+		List<HjhAllocationEngine> aList;
+		HjhAllocationEngineExample example = new HjhAllocationEngineExample(); 
+		HjhAllocationEngineExample.Criteria criteria = example.createCriteria();
+		criteria.andLabelIdEqualTo(LabelId);
+		aList = this.hjhAllocationEngineMapper.selectByExample(example);
+		List<HjhAllocationEngineVO> volist = CommonUtils.convertBeanList(aList, HjhAllocationEngineVO.class);
+		return volist;
+	}
 }

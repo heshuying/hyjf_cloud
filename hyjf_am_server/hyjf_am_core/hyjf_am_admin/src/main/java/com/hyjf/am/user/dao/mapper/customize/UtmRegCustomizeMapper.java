@@ -3,16 +3,17 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
+import com.hyjf.am.user.dao.model.auto.UtmReg;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
+import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
+import org.apache.ibatis.annotations.Param;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-
-import com.hyjf.am.user.dao.model.auto.UtmReg;
-import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
 
 /**
  * @Description
@@ -110,4 +111,32 @@ public interface UtmRegCustomizeMapper {
 	 */
 	Integer getAccountNumber(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
 			@Param("dayEnd") String dayEnd, @Param("type") String type);
+
+	/**
+	 * 查询pc统计明细散标
+	 * @param request
+	 * @return
+	 */
+    List<ChannelReconciliationVO> selectPcChannelReconciliationRecord(ChannelReconciliationRequest request);
+
+	/**
+	 * 查询pc统计明细计划
+	 * @param request
+	 * @return
+	 */
+	List<ChannelReconciliationVO> selectPcChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
+
+	/**
+	 * 查询app统计明细散标
+	 * @param request
+	 * @return
+	 */
+    List<ChannelReconciliationVO> selectAppChannelReconciliationRecord(ChannelReconciliationRequest request);
+
+	/**
+	 * 查询app统计明细计划
+	 * @param request
+	 * @return
+	 */
+	List<ChannelReconciliationVO> selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
 }

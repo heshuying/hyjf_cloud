@@ -501,5 +501,8 @@ public class AutoMapper {
 
     @Resource
     protected NifaReceivedPaymentsMapper nifaReceivedPaymentsMapper;
+
+    @Resource
+    protected HjhBailConfigMapper hjhBailConfigMapper;
 }
 

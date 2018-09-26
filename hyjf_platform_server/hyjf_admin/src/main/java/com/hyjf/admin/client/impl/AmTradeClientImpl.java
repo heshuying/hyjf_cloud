@@ -6,7 +6,7 @@ package com.hyjf.admin.client.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.*;
-import com.hyjf.admin.client.*;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.am.response.*;
@@ -1458,7 +1458,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<ParamNameVO> getParamNameList(String code) {
-        ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-CONFIG/am-config/accountconfig/getNameCd/" + CustomConstants.SUB_ACCOUNT_CLASS, ParamNameResponse.class)
+        ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-ADMIN/am-admin/paramname/getNameCd/" + CustomConstants.SUB_ACCOUNT_CLASS, ParamNameResponse.class)
                 .getBody();
         if (amResponse != null && Response.isSuccess(amResponse)) {
             return amResponse.getResultList();
@@ -3383,7 +3383,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest) {
         BorrowCommonResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/infoAction", borrowCommonRequest, BorrowCommonResponse.class)
+                .postForEntity("http://AM-ADMIN/am-trade/borrowcommon/infoAction", borrowCommonRequest, BorrowCommonResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3394,7 +3394,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BorrowCommonResponse insertAction(BorrowCommonRequest borrowCommonRequest) throws Exception {
         BorrowCommonResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/insertAction", borrowCommonRequest, BorrowCommonResponse.class)
+                .postForEntity("http://AM-ADMIN/am-trade/borrowcommon/insertAction", borrowCommonRequest, BorrowCommonResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3406,7 +3406,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int isExistsUser(String userId) {
         int response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/isExistsUser/" + userId, Integer.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/isExistsUser/" + userId, Integer.class)
                 .getBody();
         return response;
     }
@@ -3415,7 +3415,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public String getBorrowPreNid() {
         String response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/getBorrowPreNid", String.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/getBorrowPreNid", String.class)
                 .getBody();
         return response;
     }
@@ -3423,7 +3423,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public String getXJDBorrowPreNid() {
         String response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/getXJDBorrowPreNid", String.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/getXJDBorrowPreNid", String.class)
                 .getBody();
         return response;
     }
@@ -3431,7 +3431,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public boolean isExistsBorrowPreNidRecord(String borrowPreNid) {
         boolean response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/isExistsBorrowPreNidRecord/" + borrowPreNid, boolean.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/isExistsBorrowPreNidRecord/" + borrowPreNid, boolean.class)
                 .getBody();
         return response;
     }
@@ -3439,7 +3439,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest) {
     	BorrowCommonVO response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/getBorrowServiceScale", borrowCommonRequest, BorrowCommonVO.class)
+                .postForEntity("http://AM-ADMIN/am-trade/borrowcommon/getBorrowServiceScale", borrowCommonRequest, BorrowCommonVO.class)
                 .getBody();
         return response;
     }
@@ -3447,7 +3447,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BorrowCommonResponse getProductTypeAction(String instCode) {
         BorrowCommonResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/getProductTypeAction/" + instCode, BorrowCommonResponse.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/getProductTypeAction/" + instCode, BorrowCommonResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3458,7 +3458,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int isEntrustedExistsUser(String userName) {
         int response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/isEntrustedExistsUser/" + userName, int.class)
+                .getForEntity("http://AM-ADMIN/am-trade/borrowcommon/isEntrustedExistsUser/" + userName, int.class)
                 .getBody();
         return response;
     }
@@ -3845,7 +3845,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer updateAccountManage(AccountVO accountVO) {
-        String url = tradeService + "/bank_account_manage/update_account";
+        String url = "http://AM-ADMIN/am-trade/bank_account_manage/update_account";
         IntegerResponse response = restTemplate.postForEntity(url, accountVO, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
@@ -3866,7 +3866,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         adminBankAccountCheckCustomizeVO.setUserId(userId);
         adminBankAccountCheckCustomizeVO.setStartDate(startTime);
         adminBankAccountCheckCustomizeVO.setEndDate(endTime);
-        String url = tradeService + "/bank_account_manage/update_account_check/";
+        String url = "http://AM-ADMIN/am-trade/bank_account_manage/update_account_check/";
         StringResponse response = restTemplate.postForEntity(url, adminBankAccountCheckCustomizeVO, StringResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return null;
@@ -3989,7 +3989,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public PushMoneyResponse deleteRecord(List<Integer> ids) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/delete_record/", ids,
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/pushmoney/delete_record/", ids,
                 PushMoneyResponse.class);
     }
 
@@ -4324,7 +4324,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse countRecordHzt(CouponTenderRequest couponTenderRequest) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/hztcountcoupontender", couponTenderRequest, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/hztcountcoupontender", couponTenderRequest, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4334,7 +4334,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse queryInvestTotalHzt(CouponTenderRequest couponTenderRequest) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/hztquerynvesttotal", couponTenderRequest, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/hztquerynvesttotal", couponTenderRequest, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4344,7 +4344,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getRecordListHzt(CouponTenderRequest couponTenderRequest) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/hztgetrecordlist", couponTenderRequest, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/hztgetrecordlist", couponTenderRequest, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4354,7 +4354,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getCouponTenderDetailCustomize(Map<String, Object> paramMap) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/hztcoupontenderdetail", paramMap, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/hztcoupontenderdetail", paramMap, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4364,7 +4364,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getCouponRecoverCustomize(Map<String, Object> paramMap) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/hztcouponrecover", paramMap, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/hztcouponrecover", paramMap, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4374,7 +4374,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse countRecordHjh(CouponTenderRequest couponTenderRequest) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/hjhcountcoupontender", couponTenderRequest, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/hjhcountcoupontender", couponTenderRequest, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4384,7 +4384,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse queryInvestTotalHjh(CouponTenderRequest couponTenderRequest) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/hjhquerynvesttotal", couponTenderRequest, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/hjhquerynvesttotal", couponTenderRequest, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4394,7 +4394,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getRecordListHjh(CouponTenderRequest couponTenderRequest) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/hjhgetrecordlist", couponTenderRequest, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/hjhgetrecordlist", couponTenderRequest, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4404,7 +4404,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getHjhCouponTenderDetailCustomize(Map<String, Object> paramMap) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/hjhcoupontenderdetail", paramMap, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/hjhcoupontenderdetail", paramMap, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4414,7 +4414,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getHjhCouponRecoverCustomize(Map<String, Object> paramMap) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/hjhcouponrecover", paramMap, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/hjhcouponrecover", paramMap, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4424,7 +4424,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse countRecordHztDJ(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/countrecordhztdj", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/countrecordhztdj", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4434,7 +4434,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getRecordListHztDJ(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/getrecordlisthztdj", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/getrecordlisthztdj", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4444,7 +4444,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse queryHztInvestTotal(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/queryhztinvesttotal", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/queryhztinvesttotal", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4454,7 +4454,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse queryHztRecoverInterestTotle(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/queryhztrecoverinteresttotle", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/queryhztrecoverinteresttotle", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4464,7 +4464,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse countRecordHztTY(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/countrecordhztty", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/countrecordhztty", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4474,7 +4474,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getRecordListHztTY(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/getrecordlisthztty", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/getrecordlisthztty", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4484,7 +4484,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse countRecordHztJX(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/countrecordhztjx", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/countrecordhztjx", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4494,7 +4494,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getRecordListHztJX(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/getrecordlisthztjx", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/getrecordlisthztjx", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4504,7 +4504,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse countRecordHjhDJ(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/countrecordhjhdj", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/countrecordhjhdj", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4514,7 +4514,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getRecordListHjhDJ(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/getrecordlisthjhdj", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/getrecordlisthjhdj", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4524,7 +4524,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse queryHjhInvestTotal(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/queryhjhinvesttotal", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/queryhjhinvesttotal", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4534,7 +4534,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse queryHjhRecoverInterestTotle(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/queryhjhrecoverinteresttotle", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/queryhjhrecoverinteresttotle", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4544,7 +4544,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse countRecordHjhTY(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/countrecordhjhty", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/countrecordhjhty", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4554,7 +4554,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getRecordListHjhTY(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/getrecordlisthjhty", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/getrecordlisthjhty", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4564,7 +4564,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse countRecordHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/countrecordhjhjx", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/countrecordhjhjx", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4574,7 +4574,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public CouponTenderResponse getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/getrecordlisthjhjx", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-admin/coupon/tender/getrecordlisthjhjx", couponBackMoneyCustomize, CouponTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4743,33 +4743,33 @@ public class AmTradeClientImpl implements AmTradeClient {
         ProtocolsRequest requestT = new ProtocolsRequest();
         requestT.setCurrPage(request.getCurrPage());
         requestT.setPageSize(request.getPageSize());
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/selectfddtempletlist", requestT, FddTempletCustomizeResponse.class);
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/selectfddtempletlist", requestT, FddTempletCustomizeResponse.class);
     }
 
     @Override
     public FddTempletCustomizeResponse insertAction(ProtocolsRequestBean requestBean) {
         ProtocolsRequest requestT = new ProtocolsRequest();
         BeanUtils.copyProperties(requestBean, requestT);
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/insertaction", requestT, FddTempletCustomizeResponse.class);
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/insertaction", requestT, FddTempletCustomizeResponse.class);
     }
 
     @Override
     public FddTempletCustomizeResponse updateAction(ProtocolsRequestBean requestBean) {
         ProtocolsRequest requestT = new ProtocolsRequest();
         BeanUtils.copyProperties(requestBean, requestT);
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/updateaction", requestT, FddTempletCustomizeResponse.class);
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/updateaction", requestT, FddTempletCustomizeResponse.class);
     }
 
     @Override
     public PushMoneyResponse getRecordList(PushMoneyRequest requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/getrecordlist", requestBean, PushMoneyResponse.class);
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/pushmoney/getrecordlist", requestBean, PushMoneyResponse.class);
     }
 
     @Override
     public PushMoneyResponse insertPushMoney(PushMoneyRequestBean requestBean) {
         PushMoneyRequest requestT = new PushMoneyRequest();
         BeanUtils.copyProperties(requestBean, requestT);
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/insertpushmoney", requestT,
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/pushmoney/insertpushmoney", requestT,
                 PushMoneyResponse.class);
     }
 
@@ -4777,7 +4777,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public PushMoneyResponse updatePushMoney(PushMoneyRequestBean requestBean) {
         PushMoneyRequest requestT = new PushMoneyRequest();
         BeanUtils.copyProperties(requestBean, requestT);
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/updatepushmoney", requestT,
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/pushmoney/updatepushmoney", requestT,
                 PushMoneyResponse.class);
     }
 
@@ -5357,7 +5357,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 	@Override
 	public BorrowCustomizeResponse selectBorrowAllList(BorrowBeanRequest form) {
-        String url = "http://AM-TRADE/am-trade/borrow/selectBorrowStyleList";
+        String url = "http://AM-ADMIN/am-trade/borrow/selectBorrowStyleList";
         BorrowCustomizeResponse response = restTemplate.postForEntity(url,form,BorrowCustomizeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5766,7 +5766,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
-        String url = tradeService + "/bank_account_manage/query_account_count";
+        String url = "http://AM-ADMIN/am-trade/bank_account_manage/query_account_count";
         IntegerResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
@@ -5782,7 +5782,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
-        String url = tradeService + "/bank_account_manage/query_account_infos";
+        String url = "http://AM-ADMIN/am-trade/bank_account_manage/query_account_infos";
         BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -5798,7 +5798,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest) {
-        String url = tradeService + "/bank_account_manage/query_account_infos";
+        String url = "http://AM-ADMIN/am-trade/bank_account_manage/query_account_infos";
         BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -5942,7 +5942,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 	@Override
 	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/exportBorrowList", borrowCommonCustomize, BorrowCustomizeResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrow/exportBorrowList", borrowCommonCustomize, BorrowCustomizeResponse.class)
                 .getBody().getBorrowCommonCustomizeList();
 	}
 
@@ -6027,7 +6027,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public String getNewTempletId(Integer protocolType) {
-        String url = "http://AM-TRADE/am-trade/protocol/getNewTempletId/" + protocolType;
+        String url = "http://AM-ADMIN/am-trade/protocol/getNewTempletId/" + protocolType;
         StringResponse response = restTemplate.getForObject(url, StringResponse.class);
         if (Response.isSuccess(response)){
             return response.getResultStr();
@@ -6043,7 +6043,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public FddTempletCustomizeResponse getRecordInfoById(Integer id) {
-        String url = "http://AM-TRADE/am-trade/protocol/getRecordInfoById/" + id;
+        String url = "http://AM-ADMIN/am-trade/protocol/getRecordInfoById/" + id;
         FddTempletCustomizeResponse response = restTemplate.getForObject(url, FddTempletCustomizeResponse.class);
         if (response.getResult() != null){
             return response;
@@ -6052,7 +6052,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
     @Override
     public int getHjhAccountBalanceMonthCountNew(HjhAccountBalanceRequest request){
-        String url = "http://AM-TRADE/am-trade/manager/statis/getHjhAccountBalanceMonthCountNew";
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalanceMonthCountNew";
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url,request,HjhInfoAccountBalanceResponse.class).getBody();
         if(response != null){
             return response.getCount();
@@ -6062,7 +6062,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int getHjhAccountBalanceMonthCount(HjhAccountBalanceRequest request){
-        String url = "http://AM-TRADE/am-trade/manager/statis/getHjhAccountBalanceMonthCount";
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalanceMonthCount";
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url,request,HjhInfoAccountBalanceResponse.class).getBody();
         if(response != null){
             return response.getCount();
@@ -6072,7 +6072,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<HjhAccountBalanceVO> getHjhAccountBalanceMonthList(HjhAccountBalanceRequest request){
-        String url = "http://AM-TRADE/am-trade/manager/statis/getHjhAccountBalanceMonthList";
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalanceMonthList";
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url,request,HjhInfoAccountBalanceResponse.class).getBody();
         if(response != null){
             return response.getResultList();
@@ -6082,7 +6082,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int getHjhAccountBalancecountByDay (HjhAccountBalanceRequest request) {
-        String url = "http://AM-TRADE/am-trade/manager/statis/getHjhAccountBalancecountByDay";
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalancecountByDay";
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url, request, HjhInfoAccountBalanceResponse.class).getBody();
         if (response != null) {
             return response.getCount();
@@ -6092,7 +6092,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<HjhAccountBalanceVO> getHjhAccountBalanceListByDay(HjhAccountBalanceRequest request){
-        String url = "http://AM-TRADE/am-trade/manager/statis/getHjhAccountBalanceListByDay";
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalanceListByDay";
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url,request,HjhInfoAccountBalanceResponse.class).getBody();
         if(response != null){
             return response.getResultList();
@@ -6270,7 +6270,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public PushMoneyResponse getInfoAction(Integer id) {
-        return restTemplate.getForObject("http://AM-TRADE/am-trade/pushmoney/get_info_action/" + id,
+        return restTemplate.getForObject("http://AM-ADMIN/am-trade/pushmoney/get_info_action/" + id,
                 PushMoneyResponse.class);
     }
 

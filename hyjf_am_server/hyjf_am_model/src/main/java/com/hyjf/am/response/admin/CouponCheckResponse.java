@@ -18,9 +18,11 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
 
     private boolean bool;
 
-    private String status;
-
     private List<ParamNameVO> couponType;
+
+    private String filePath;
+
+    private String fileName;
 
     public int getRecordTotal() {
         return recordTotal;
@@ -38,19 +40,27 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
         this.bool = bool;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String Status) {
-        this.status = status;
-    }
-
     public List<ParamNameVO> getCouponType() {
         return couponType;
     }
 
     public void setCouponType(List<ParamNameVO> couponType) {
         this.couponType = couponType;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

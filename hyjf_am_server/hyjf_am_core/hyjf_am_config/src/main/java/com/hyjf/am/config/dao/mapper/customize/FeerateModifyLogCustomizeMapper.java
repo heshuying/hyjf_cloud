@@ -1,6 +1,6 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
-import com.hyjf.am.config.dao.model.auto.FeerateModifyLog;
+import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +21,6 @@ public interface FeerateModifyLogCustomizeMapper {
      *  查询操作日志配置列表
      * @return
      */
-    public List<FeerateModifyLog> selectOperationLogListByPage( Map<String, Object> map);
+    public List<FeerateModifyLogVO> selectOperationLogListByPage(Map<String, Object> map);
 
 }

@@ -4,10 +4,14 @@
 package com.hyjf.am.trade.service.admin.finance.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.resquest.admin.BankAccountManageRequest;
+import com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,23 +52,18 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 @Service
 public class BankAccountManageServiceImpl extends BaseServiceImpl implements BankAccountManageService {
 
-    private static Logger logger = LoggerFactory.getLogger(BankAccountManageServiceImpl.class);
-
-    @Value("hyjf.bank.instcode")
+    @Value("${hyjf.bank.instcode}")
     private String bankInstCode;
 
-    @Value("hyjf.bank.bankcode")
+    @Value("${hyjf.bank.bankcode}")
     private String bankBankCode;
 
-    @Autowired
-    AccountMapper accountMapper;
-
-    @Autowired
-    AdminAccountCustomizeMapper adminAccountCustomizeMapper;
-
-    @Autowired
-    AdminBankAccountCheckCustomizeMapper adminBankAccountCheckCustomizeMapper;
-
+    /**
+     * 更新账户余额
+     *
+     * @param accountVO
+     * @return
+     */
     @Override
     public Integer updateAccount(AccountVO accountVO) {
         Account account = new Account();
@@ -83,6 +82,12 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         return result ? 1 : 0;
     }
 
+    /**
+     * 银行账户管理线下对账
+     *
+     * @param adminBankAccountCheckCustomizeVO
+     * @return
+     */
     @Override
     public String updateAccountCheck(AdminBankAccountCheckCustomizeVO adminBankAccountCheckCustomizeVO) {
         // 手动银行对账
@@ -127,7 +132,6 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
     }
 
 
-
     /**
      * 获得接口返回单个用户的所有线下充值明细
      *
@@ -141,12 +145,11 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         int pageNum = 1;
         int pageSize = 10;
 
-        // TODO check 方法之前是共同的、是否需要创建共同方法、创建位置
-        Date checkEndDate = null;// BankAccountCheckUtil.getDateByString(endTime);
-        Date checkStartDate = null;// BankAccountCheckUtil.getDateByString(startTime);
+        Date checkEndDate = getDateByString(endTime);
+        Date checkStartDate = getDateByString(startTime);
 
-        String startDate = null;// BankAccountCheckUtil.getDateString(checkStartDate, BankAccountCheckUtil.DATEFORMAT_TYPE2);
-        String endDate = null;// BankAccountCheckUtil.getDateString(checkEndDate, BankAccountCheckUtil.DATEFORMAT_TYPE2);
+        String startDate = getDateString(checkStartDate, 2);
+        String endDate = getDateString(checkEndDate, 2);
 
         List<ResultBean> recordList = new ArrayList<ResultBean>();
         List<ResultBean> list = new ArrayList<ResultBean>();
@@ -278,7 +281,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
                     AdminBankAccountCheckCustomizeVO customize = null;
                     if (StringUtils.isNotBlank(bankSeqNo) && ("O".equals(orFlage) || "0".equals(orFlage))) {
                         //判断是否是线下充值
-                        boolean isType = isRechargeTransType(bean.getTranType());
+                        boolean isType = getIsRechargeTransType(bean.getTranType());
                         if (isType) {
                             customize = this.adminBankAccountCheckCustomizeMapper.queryAccountDeatilByBankSeqNo(bankSeqNo);
                             if (customize != null) {
@@ -310,7 +313,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
      * @param tranType
      * @return
      */
-    private boolean isRechargeTransType(String tranType) {
+    private boolean isRechargeTransTypeOld(String tranType) {
         if (BankCallConstant.TRANS_TYPE_7610.equals(tranType) || BankCallConstant.TRANS_TYPE_7611.equals(tranType) || BankCallConstant.TRANS_TYPE_7612.equals(tranType)
                 || BankCallConstant.TRANS_TYPE_7613.equals(tranType) || BankCallConstant.TRANS_TYPE_7617.equals(tranType) || BankCallConstant.TRANS_TYPE_7820.equals(tranType)
                 || BankCallConstant.TRANS_TYPE_7821.equals(tranType) || BankCallConstant.TRANS_TYPE_7823.equals(tranType)
@@ -499,5 +502,103 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
             return listAccount.get(0);
         }
         return null;
+    }
+
+
+    @Override
+    public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
+        // 部门
+        if (Validator.isNotNull(bankAccountManageRequest.getCombotreeListSrch())) {
+
+            String[] combotreeListSrch = bankAccountManageRequest.getCombotreeListSrch();
+            if (Arrays.asList(combotreeListSrch).contains("-10086")) {
+
+                //将-10086转换为 0 , 0=部门为 ‘其他’
+                for (int i = 0; i < combotreeListSrch.length; i++) {
+                    String st = combotreeListSrch[i];
+                    if (("-10086").equals(st)) {
+                        combotreeListSrch[i] = "0";
+                    }
+                }
+            }
+            bankAccountManageRequest.setCombotreeListSrch(combotreeListSrch);
+        }
+        Integer accountCount = null;
+
+        // 为了优化检索查询，判断参数是否全为空，为空不进行带join count
+        accountCount = adminBankAccountManageCustomizeMapper.queryAccountCount(bankAccountManageRequest);
+        return accountCount;
+    }
+
+    /**
+     * 账户管理页面查询列表
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
+    @Override
+    public List<BankAccountManageCustomize> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
+        // 部门
+        if (Validator.isNotNull(bankAccountManageRequest.getCombotreeListSrch())) {
+
+            String[] combotreeListSrch = bankAccountManageRequest.getCombotreeListSrch();
+            if (Arrays.asList(combotreeListSrch).contains("-10086")) {
+
+                //将-10086转换为 0 , 0=部门为 ‘其他’
+                for (int i = 0; i < combotreeListSrch.length; i++) {
+                    String st = combotreeListSrch[i];
+                    if (("-10086").equals(st)) {
+                        combotreeListSrch[i] = "0";
+                    }
+                }
+            }
+            bankAccountManageRequest.setCombotreeListSrch(combotreeListSrch);
+        }
+
+        List<BankAccountManageCustomize> accountInfos = adminBankAccountManageCustomizeMapper.queryAccountInfos(bankAccountManageRequest);
+        return accountInfos;
+    }
+
+    /**
+     * add by liushouyi 时间转换工具类
+     * 根据type的类型进行转换
+     * 转换成 对应格式的字符串时间
+     * 1:yyyy-MM-dd 2:yyyyMMdd
+     * @param date
+     * @return
+     */
+    public static String getDateString(Date date,int type){
+        String dateStr = "";
+        if (date != null && type > 0) {
+            SimpleDateFormat format = new SimpleDateFormat();
+            if (1 == type) {
+                format.applyPattern("yyyy-MM-dd");
+            }else if(2 == type){
+                format.applyPattern("yyyyMMdd");
+            }else{
+                return "";
+            }
+            dateStr = format.format(date);
+        }
+        return dateStr;
+    }
+
+    /**
+     * add by liushouyi
+     * 根据yyyy-mm-dd 格式的字符串转换成 date类型的日期
+     * @param date
+     * @return
+     */
+    public static Date getDateByString(String date){
+        Date dated = null;
+        if (date!=null) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                dated = format.parse(date);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return dated;
     }
 }

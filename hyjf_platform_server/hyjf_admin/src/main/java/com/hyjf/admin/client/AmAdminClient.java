@@ -3,26 +3,22 @@ package com.hyjf.admin.client;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
-import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
-import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.AdminPermissionsVO;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.admin.PoundageDetailVO;
 import com.hyjf.am.vo.admin.PoundageLedgerVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
-import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -316,6 +312,40 @@ public interface AmAdminClient {
 
 
     PlatformUserCountCustomizeResponse searchRegistAcount(PlatformCountRequestBean requestBean);
+
+    /**
+     * PC统计明细散标列表查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectPcChannelReconciliationRecord(ChannelReconciliationRequest request);
+
+    /**
+     * PC统计明细计划列表查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectPcChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
+
+    /**
+     * APP统计明细散标列表查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectAppChannelReconciliationRecord(ChannelReconciliationRequest request);
+
+    /**
+     * APP统计明细计划列表查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
+
+    /**
+     * 获取app渠道列表
+     * @return
+     */
+    List<UtmPlatVO> getAppUtm();
 
     /**
      * 获取锁定账户列表

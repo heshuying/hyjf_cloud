@@ -4,8 +4,8 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
-import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
@@ -21,7 +21,6 @@ import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetCode;
@@ -241,8 +240,8 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
      * @return
      */
     @Override
-    public int countUserByMobile(String mobile) {
-        int checkFlg = userCenterClient.countByMobile(mobile);
+    public int countUserByMobile(String mobile,int userId) {
+        int checkFlg = userCenterClient.countUserByMobile(userId,mobile);
         return checkFlg;
     }
 
@@ -284,6 +283,13 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
                     companyInfoVO.setBusId(resultBean.getBusId());
                     companyInfoVO.setIdType(resultBean.getIdType());
                     companyInfoVO.setIdNo(resultBean.getIdNo());
+                    if(StringUtils.isNotBlank(resultBean.getIdType())){
+                        if (resultBean.getIdType().equals("20")) {//组织机构代码
+                            companyInfoVO.setCardType("组织机构代码");
+                        } else if (resultBean.getIdType().equals("25")) {
+                            companyInfoVO.setCardType("社会信用号");
+                        }
+                    }
                     companyInfoVO.setMobile(resultBean.getMobile());
                     companyInfoVO.setName(resultBean.getName());
                     companyInfoVO.setTaxId(resultBean.getTaxId());

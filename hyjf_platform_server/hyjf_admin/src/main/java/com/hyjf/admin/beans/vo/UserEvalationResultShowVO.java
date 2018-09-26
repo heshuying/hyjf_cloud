@@ -31,7 +31,7 @@ public class UserEvalationResultShowVO {
     @ApiModelProperty(value = "备注")
     private String remarks;
     @ApiModelProperty(value = "创建时间")
-    private Date createTime;
+    private String createTime;
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
@@ -109,11 +109,11 @@ public class UserEvalationResultShowVO {
         this.remarks = remarks == null ? null : remarks.trim();
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

@@ -60,8 +60,8 @@ public class LoanCoverUserManagerController extends BaseController {
         Date dateEnd = null;
         if (StringUtils.isNotBlank(request.getStartCreate()) || StringUtils.isNotBlank(request.getStartCreate())) {
             try {
-                dateStart = smp.parse(request.getStartCreate());
-                dateEnd = smp.parse(request.getStartCreate());
+                dateStart = smp.parse(request.getStartCreate()+" 00:00:00");
+                dateEnd = smp.parse(request.getEndCreate()+" 23:59:59");
             }catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -103,9 +103,9 @@ public class LoanCoverUserManagerController extends BaseController {
     /**
      * 根据证件号码查找借款主体CA认证记录表
      */
-    @RequestMapping("/selectIsExistsRecordByIdNo/{strIdNo}")
-    public LoanCoverUserResponse selectIsExistsRecordByIdNo(@PathVariable String strIdNo){
-        LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = loanCoverUserManagerService.selectIsExistsRecordByIdNo(strIdNo);
+    @RequestMapping("/selectIsExistsRecordByIdNo/{strIdNo}/{userName}")
+    public LoanCoverUserResponse selectIsExistsRecordByIdNo(@PathVariable String strIdNo,@PathVariable String userName){
+        LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = loanCoverUserManagerService.selectIsExistsRecordByIdNo(strIdNo,userName);
         LoanCoverUserResponse response = new LoanCoverUserResponse();
         String status = Response.FAIL;
         if(null!=loanSubjectCertificateAuthority){

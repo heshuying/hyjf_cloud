@@ -1,25 +1,27 @@
 package com.hyjf.am.user.controller.admin.promotion;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
+import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.Utm;
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
 import com.hyjf.am.user.service.admin.promotion.UtmService;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author walter.limeng
@@ -238,6 +240,78 @@ public class UtmController extends BaseController {
         }catch (Exception e){
             response.setRtn(UtmResponse.FAIL);
         }
+        return response;
+    }
+
+    /**
+     * 查询pc统计明细散标
+     * @return
+     */
+    @RequestMapping("/select_pc_channel_reconciliation_record")
+    public ChannelReconciliationResponse selectPcChannelReconciliationRecord(@RequestBody ChannelReconciliationRequest request) {
+        ChannelReconciliationResponse response = new ChannelReconciliationResponse();
+        // 查询pc统计明细
+        List<ChannelReconciliationVO> list = utmService.selectPcChannelReconciliationRecord(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
+        // 查询符合条件的数量
+        int count = utmService.selectPcChannelReconciliationCount(request);
+        response.setCount(count);
+        return response;
+    }
+
+    /**
+     * 查询pc统计明细计划
+     * @return
+     */
+    @RequestMapping("/select_pc_channel_reconciliation_record_hjh")
+    public ChannelReconciliationResponse selectPcChannelReconciliationRecordHjh(@RequestBody ChannelReconciliationRequest request) {
+        ChannelReconciliationResponse response = new ChannelReconciliationResponse();
+        // 查询pc统计明细
+        List<ChannelReconciliationVO> list = utmService.selectPcChannelReconciliationRecordHjh(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
+        // 查询符合条件的数量
+        int count = utmService.selectPcChannelReconciliationHjhCount(request);
+        response.setCount(count);
+        return response;
+    }
+
+    /**
+     * 查询app统计明细散标
+     * @return
+     */
+    @RequestMapping("/select_app_channel_reconciliation_record")
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecord(@RequestBody ChannelReconciliationRequest request) {
+        ChannelReconciliationResponse response = new ChannelReconciliationResponse();
+        // 查询app统计明细
+        List<ChannelReconciliationVO> list = utmService.selectAppChannelReconciliationRecord(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
+        // 查询符合条件的数量
+        int count = utmService.selectAppChannelReconciliationCount(request);
+        response.setCount(count);
+        return response;
+    }
+
+    /**
+     * 查询app统计明细计划
+     * @return
+     */
+    @RequestMapping("/select_app_channel_reconciliation_record_hjh")
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(@RequestBody ChannelReconciliationRequest request) {
+        ChannelReconciliationResponse response = new ChannelReconciliationResponse();
+        // 查询app统计明细
+        List<ChannelReconciliationVO> list = utmService.selectAppChannelReconciliationRecordHjh(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
+        // 查询符合条件的数量
+        int count = utmService.selectAppChannelReconciliationHjhCount(request);
+        response.setCount(count);
         return response;
     }
 }

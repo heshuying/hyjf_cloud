@@ -20,6 +20,7 @@ import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
@@ -975,6 +976,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("isUserValid", userVO.getStatus());
                 //update by jijun 2018/04/09 合规接口改造一期
                 result.put("paymentAuthStatus", ""); // 缴费授权
+                UserInfoVO userInfoVO = amUserClient.findUsersInfoById(Integer.valueOf(userId));
+                result.put("roleId",userInfoVO  !=null ? userInfoVO.getRoleId() : "");
 
                 // 获取用户信息
                 AccountVO account = amTradeClient.getAccountByUserId(Integer.valueOf(userId));

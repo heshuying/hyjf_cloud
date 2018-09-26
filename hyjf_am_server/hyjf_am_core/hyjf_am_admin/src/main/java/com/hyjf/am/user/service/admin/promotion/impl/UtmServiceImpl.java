@@ -1,5 +1,20 @@
 package com.hyjf.am.user.service.admin.promotion.impl;
 
+import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.service.admin.promotion.UtmService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
+import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -8,23 +23,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserExample;
-import com.hyjf.am.user.dao.model.auto.Utm;
-import com.hyjf.am.user.dao.model.auto.UtmPlat;
-import com.hyjf.am.user.dao.model.auto.UtmPlatExample;
-import com.hyjf.am.user.service.admin.promotion.UtmService;
-import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
-import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
 
 /**
  * @author walter.limeng
@@ -142,6 +140,66 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
         String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
         return utmRegCustomizeMapper.getOpenAccountNumber(sourceId, dayStart, dayEnd, type);
+    }
+
+    @Override
+    public List<ChannelReconciliationVO> selectPcChannelReconciliationRecord(ChannelReconciliationRequest request) {
+        return utmRegCustomizeMapper.selectPcChannelReconciliationRecord(request);
+    }
+
+    @Override
+    public List<ChannelReconciliationVO> selectPcChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        return utmRegCustomizeMapper.selectPcChannelReconciliationRecordHjh(request);
+    }
+
+    @Override
+    public int selectPcChannelReconciliationCount(ChannelReconciliationRequest request) {
+        request.setCurrPage(0);
+        List<ChannelReconciliationVO> list = selectPcChannelReconciliationRecord(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.size();
+        }
+        return 0;
+    }
+
+    @Override
+    public int selectPcChannelReconciliationHjhCount(ChannelReconciliationRequest request) {
+        request.setCurrPage(0);
+        List<ChannelReconciliationVO> list = selectPcChannelReconciliationRecordHjh(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.size();
+        }
+        return 0;
+    }
+
+    @Override
+    public int selectAppChannelReconciliationCount(ChannelReconciliationRequest request) {
+        request.setCurrPage(0);
+        List<ChannelReconciliationVO> list = selectAppChannelReconciliationRecord(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.size();
+        }
+        return 0;
+    }
+
+    @Override
+    public int selectAppChannelReconciliationHjhCount(ChannelReconciliationRequest request) {
+        request.setCurrPage(0);
+        List<ChannelReconciliationVO> list = selectAppChannelReconciliationRecordHjh(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.size();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<ChannelReconciliationVO> selectAppChannelReconciliationRecord(ChannelReconciliationRequest request) {
+        return utmRegCustomizeMapper.selectAppChannelReconciliationRecord(request);
+    }
+
+    @Override
+    public List<ChannelReconciliationVO> selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        return utmRegCustomizeMapper.selectAppChannelReconciliationRecordHjh(request);
     }
 
     /**
