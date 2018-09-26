@@ -443,6 +443,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         if (recover == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
+        UserVO userVO = amUserClient.findUserById(userId);
         // 债转计算
         Map<String, BigDecimal> creditCreateMap = selectExpectCreditFeeForBigDecimal(borrow, recover,
                 request.getCreditDiscount(), nowTime);
@@ -504,6 +505,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         borrowCredit.setCreditStatus(0);
         // 排序
         borrowCredit.setCreditOrder(0);
+        borrowCredit.setCreditUserName(userVO.getUsername());
         // 债转期限-天
         borrowCredit.setCreditTerm(lastdays);
         borrowCredit.setCreditTermHold(holddays);
