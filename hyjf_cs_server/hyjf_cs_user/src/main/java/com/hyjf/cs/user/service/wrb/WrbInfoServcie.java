@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.wrb;
 
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
@@ -60,4 +61,13 @@ public interface WrbInfoServcie {
      * @return
      */
     WrbBorrowTenderSumCustomizeVO searchBorrowTenderSumByNidAndTime(String borrowNid, Date investTime);
+
+    /**
+     * 获取某天投资情况
+     * @param invest_date 投资日期 格式2015-10-10
+     * @param limit
+     * @param page
+     * @return
+     */
+    List<BorrowTenderVO> getInvestDetail(Date invest_date, Integer limit, Integer page);
 }
