@@ -1,50 +1,20 @@
 package com.hyjf.am.user.dao.customize;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.trade.dao.mapper.auto.ROaDepartmentMapper;
 import com.hyjf.am.user.dao.auto.AutoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.customize.AdminPreRegistCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.AdminUserAuthCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.BankAccountManageCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.BankCardManagerCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.BankOpenRecordCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.CallCenterAccountHuifuMapper;
-import com.hyjf.am.user.dao.mapper.customize.CallCenterCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.ChannelCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.EvaluationManagerCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.KeyCountCustomMapper;
-import com.hyjf.am.user.dao.mapper.customize.MspConfigureCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.MyInviteCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.RegistRecordCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.SubConfigCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.TzjCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserAdminBankAccountCheckCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserAliasCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserCrmInfoCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserEntryCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserInfoCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserLeaveCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserPortraitManagerMapper;
-import com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.VipDetailListCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.VipManageCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.VipUpdateGradeListCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.WhereaboutsPageConfigCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service("amUserCustomizeMapper")
 public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected UtmRegCustomizeMapper utmRegCustomizeMapper;
+    @Autowired
+    protected PcChannelStatisticsJobCustomizeMapper pcChannelStatisticsJobCustomizeMapper;
     @Autowired
     protected UserManagerCustomizeMapper userManagerCustomizeMapper;
     @Autowired
