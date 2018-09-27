@@ -19,6 +19,7 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
@@ -1252,6 +1253,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         if (listNewInvest != null && listNewInvest.size() > 0) {
             for (int i = 0; i < listNewInvest.size(); i++) {
                 AppProjectListCustomizeVO newInvest = listNewInvest.get(i);
+                if(!Validator.isIncrease(newInvest.getIncreaseInterestFlag(), newInvest.getBorrowExtraYieldOld())){
+                    newInvest.setBorrowExtraYield("");
+                }
                 projectList.add(newInvest);
             }
         }
@@ -1260,6 +1264,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             if (listNewOnTime != null && listNewOnTime.size() > 0) {
                 for (int i = 0; i < listNewOnTime.size(); i++) {
                     AppProjectListCustomizeVO newOnTime = listNewOnTime.get(i);
+                    if(!Validator.isIncrease(newOnTime.getIncreaseInterestFlag(), newOnTime.getBorrowExtraYieldOld())){
+                        newOnTime.setBorrowExtraYield("");
+                    }
                     projectList.add(newOnTime);
                 }
             }

@@ -1937,6 +1937,12 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             appProjectType.setBorrowTheSecond(listCustomize.getBorrowPeriod());
             appProjectType.setBorrowTheSecondDesc("项目期限");
             String status = listCustomize.getStatus();
+            // 设置产品加息 显示收益率
+            if (Validator.isIncrease(listCustomize.getIncreaseInterestFlag(), listCustomize.getBorrowExtraYieldOld())) {
+                appProjectType.setBorrowExtraYield(listCustomize.getBorrowExtraYield());
+            }else{
+                appProjectType.setBorrowExtraYield("");
+            }
             String borrowAccountWait = listCustomize.getBorrowAccountWait();
             if (status.equals("10")){
 
