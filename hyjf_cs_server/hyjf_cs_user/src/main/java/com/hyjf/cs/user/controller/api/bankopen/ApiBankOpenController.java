@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @Api(value = "第三方用户开户",tags = "api端-用户开户")
 @Controller
-@RequestMapping("/hyjf-api/user/open")
+@RequestMapping("/hyjf-api/server/user/accountOpenEncryptPage")
 public class ApiBankOpenController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(ApiBankOpenController.class);
 
@@ -44,7 +44,7 @@ public class ApiBankOpenController extends BaseUserController {
     SystemConfig systemConfig;
 
     @ApiOperation(value = "用户开户", notes = "用户开户")
-    @PostMapping(value = "/openBankAccount", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/open.do", produces = "application/json; charset=utf-8")
     public ModelAndView openBankAccount(@RequestBody @Valid ApiBankOpenRequestBean requestBean , HttpServletRequest request) {
         logger.info("第三方请求页面开户, ApiBankOpenRequestBean is :{}", JSONObject.toJSONString(requestBean));
         ModelAndView modelAndView = new ModelAndView();

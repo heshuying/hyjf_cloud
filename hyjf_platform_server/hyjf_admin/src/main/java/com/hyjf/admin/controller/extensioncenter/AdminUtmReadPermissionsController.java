@@ -9,6 +9,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AdminUtmReadPermissionsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,6 +43,28 @@ public class AdminUtmReadPermissionsController extends BaseController {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+
+	}
+
+	@ApiOperation(value = "渠道权限列表转换接口", notes = "渠道权限列表转换接口")
+	@GetMapping("/preparedatas")
+	public AdminResult prepareDatas() {
+		logger.info("渠道权限列表转换接口......");
+		AdminResult adminResult = new AdminResult();
+		UtmPlatResponse response = adminUtmReadPermissionsService.getUtmPlatList();
+		adminResult.setData(response.getResultList());
+		return adminResult;
+
+	}
+
+	@ApiOperation(value = "新增修改详情页", notes = "新增修改详情页")
+	@PostMapping("/info")
+	public AdminResult info(@RequestBody AdminUtmReadPermissionsRequest request) {
+		logger.info("新增修改详情页......");
+		AdminResult adminResult = new AdminResult();
+		AdminUtmReadPermissionsResponse response = adminUtmReadPermissionsService.getRecord(request);
+		adminResult.setData(response.getResult());
+		return adminResult;
 
 	}
 	@ApiOperation(value = "渠道帐号管理", notes = "添加渠道帐号管理")

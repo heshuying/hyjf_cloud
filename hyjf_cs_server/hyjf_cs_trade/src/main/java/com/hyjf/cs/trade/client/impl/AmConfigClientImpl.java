@@ -72,7 +72,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public List<BankConfigVO> getBankConfigRecordList(String bankName){
 		AdminBankConfigResponse response = restTemplate
-				.postForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByBankName" , bankName, AdminBankConfigResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-config/config/selectBankConfigByBankName" , bankName, AdminBankConfigResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -221,7 +221,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public Integer getBankInterfaceFlagByType(String type) {
         BankInterfaceResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-admin/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
         if (response != null) {
             return response.getFlag();
         }

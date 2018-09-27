@@ -4,7 +4,6 @@
 package com.hyjf.cs.trade.controller.web.tender.invest;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.CheckException;
@@ -58,6 +57,26 @@ public class BorrowTenderController extends BaseTradeController {
         WebResult<Map<String,Object>> result = null;
         try{
             result =  borrowTenderService.borrowTender(tender);
+        }catch (CheckException e){
+            throw e;
+        }finally {
+            RedisUtils.del(RedisConstants.BORROW_TENDER_REPEAT + tender.getUser().getUserId());
+        }
+        return result;
+    }
+
+    @ApiOperation(value = "散标投资校验", notes = "web端散标投资校验")
+    @PostMapping(value = "/investCheck", produces = "application/json; charset=utf-8")
+    public WebResult<Map<String,Object>> investCheck(@RequestHeader(value = "userId", required = false) Integer userId,
+                                                      @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+        logger.info("web端请求投资校验接口");
+        String ip = CustomUtil.getIpAddr(request);
+        tender.setIp(ip);
+        tender.setUserId(userId);
+        tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
+        WebResult<Map<String,Object>> result = null;
+        try{
+            result =  borrowTenderService.borrowTenderCheck(tender,null,null,null,null);
         }catch (CheckException e){
             throw e;
         }finally {

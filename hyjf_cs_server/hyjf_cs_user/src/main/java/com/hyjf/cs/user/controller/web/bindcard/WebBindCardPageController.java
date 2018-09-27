@@ -79,8 +79,9 @@ public class WebBindCardPageController extends BaseUserController{
      * 绑卡异步回调
      */
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
-    @PostMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
-    public BankCallResult bindCardBgReturn(@RequestBody BankCallBean bean, HttpServletRequest request) {
+    @PostMapping(value = "/bgReturn")
+    @ResponseBody
+    public BankCallResult bindCardBgReturn(BankCallBean bean, HttpServletRequest request) {
 
         BankCallResult result = new BankCallResult();
         String phone = request.getParameter("phone");

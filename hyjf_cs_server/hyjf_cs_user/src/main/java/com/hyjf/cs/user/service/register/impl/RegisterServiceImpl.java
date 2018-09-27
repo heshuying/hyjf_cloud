@@ -25,6 +25,7 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.UserRegisterRequestBean;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -283,7 +284,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
         registerUserRequest.setInstType(instConfig.getInstType());
         // 验签
-      //  CheckUtil.check(this.verifyRequestSign(userRegisterRequestBean, BaseDefine.METHOD_SERVER_REGISTER), MsgEnum.STATUS_CE000002);
+       CheckUtil.check(this.verifyRequestSign(userRegisterRequestBean, BaseDefine.METHOD_SERVER_REGISTER), MsgEnum.STATUS_CE000002);
         // 根据渠道号检索推广渠道是否存在
         UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatByUtmId(registerRequest.getUtmId());
         CheckUtil.check(null != utmPlat, MsgEnum.STATUS_ZC000020);
@@ -351,10 +352,10 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         if (adsVO == null) {
             return false;
         }
-        if (adsVO.getTimeStart() > GetDate.getNowTime10()) {
+        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeStart()) > GetDate.getNowTime10()) {
             return false;
         }
-        if (adsVO.getTimeEnd() < GetDate.getNowTime10()) {
+        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeEnd()) < GetDate.getNowTime10()) {
             return false;
         }
 

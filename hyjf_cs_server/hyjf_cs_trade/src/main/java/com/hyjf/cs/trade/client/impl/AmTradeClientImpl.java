@@ -79,6 +79,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
@@ -3599,6 +3602,24 @@ public class AmTradeClientImpl implements AmTradeClient {
 	}
 
     /**
+     * 获得最新协议模板数据
+     * @return
+     */
+    @Override
+    public List<ProtocolTemplateVO> getNewInfo() {
+        ResponseEntity<Response<ProtocolTemplateVO>> response =
+                restTemplate.exchange("http://AM-TRADE/am-trade/protocol/getnewinfo", HttpMethod.GET,
+                        null, new ParameterizedTypeReference<Response<ProtocolTemplateVO>>() {});
+
+        List<ProtocolTemplateVO> vo = null;
+        if(response.getBody().getResultList().size() > 0){
+
+            vo =  response.getBody().getResultList();
+        }
+        return vo;
+    }
+
+    /**
      * 统计相应的计划总数
      * @param params
      * @return
@@ -5125,4 +5146,14 @@ public class AmTradeClientImpl implements AmTradeClient {
 		}
 		return null;
 	}
+	  @Override
+	    public ProjectBeanVO getRepayProjectDetail(ProjectBeanVO form)  {
+	        ProjectBeanResponse response =  restTemplate.postForEntity(
+	                "http://AM-TRADE/am-trade/borrow/getRepayProjectDetail/", form,
+	                ProjectBeanResponse.class).getBody();
+	        if (response != null) {
+	            return response.getResult();
+	        }
+	        return null;
+	    }
 }

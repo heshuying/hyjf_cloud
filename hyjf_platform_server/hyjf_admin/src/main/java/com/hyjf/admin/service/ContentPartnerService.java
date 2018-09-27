@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.ContentPartnerRequestBean;
 import com.hyjf.am.response.config.LinkResponse;
+import com.hyjf.am.vo.config.LinkVO;
 
 /**
  * @author fuqiang
@@ -50,4 +51,11 @@ public interface ContentPartnerService {
 	 * @return
 	 */
     int deleteById(Integer id);
+
+	/**
+	 * 查询公司管理-合作伙伴
+	 * @param requestBean
+	 * @return
+	 */
+	LinkVO selectById(ContentPartnerRequestBean requestBean);
 }

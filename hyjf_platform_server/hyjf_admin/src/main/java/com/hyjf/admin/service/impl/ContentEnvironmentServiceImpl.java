@@ -53,4 +53,9 @@ public class ContentEnvironmentServiceImpl implements ContentEnvironmentService 
 	public int deleteById(Integer id) {
 		return amConfigClient.deleteContentEnvironmentById(id);
 	}
+
+	@Override
+	public ContentEnvironmentVO selectById(ContentEnvironmentRequestBean requestBean) {
+		return amConfigClient.getRecord(requestBean.getId());
+	}
 }

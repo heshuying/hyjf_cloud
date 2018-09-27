@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.finance.bank.merchant.poundage;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankPoundageAccountService;
 import com.hyjf.admin.utils.ConvertUtils;
@@ -33,6 +34,9 @@ public class BankPoundageAccountController extends BaseController {
 
     @Autowired
     BankPoundageAccountService bankPoundageAccountService;
+
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * 手续费账户明细
      * @param form
@@ -42,8 +46,10 @@ public class BankPoundageAccountController extends BaseController {
     @PostMapping(value = "init")
     public AdminResult init(@RequestBody BankPoundageAccountListBean form) {
         Map<String,Object> result = new HashMap<>();
+        form.setBankAccountCode(systemConfig.getBANK_MERS_ACCOUNT());
         BankRedPacketAccountListRequest request = new BankRedPacketAccountListRequest();
         BeanUtils.copyProperties(form,request);
+
         // 收支类型
         Map<String, String> type = CacheUtil.getParamNameMap("BANK_MER_TYPE");
         // 交易类型

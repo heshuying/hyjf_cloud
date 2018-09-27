@@ -47,13 +47,11 @@ public class ApiBindCardController extends BaseUserController {
 
     /**
      * 用户绑卡增强发送验证码接口
-     * @param request
-     * @param response
      * @param bankCardRequestBean
      * @return
      */
-    @PostMapping("/sendPlusCode")
-    public BaseResultBean sendPlusCode(HttpServletRequest request, HttpServletResponse response, @RequestBody ThirdPartyBankCardRequestBean bankCardRequestBean) {
+    @PostMapping("/sendPlusCode.do")
+    public BaseResultBean sendPlusCode(@RequestBody ThirdPartyBankCardRequestBean bankCardRequestBean) {
         logger.info(bankCardRequestBean.getMobile()+"用户绑卡增强发送验证码接口-----------------------------");
         logger.info("第三方请求参数："+JSONObject.toJSONString(bankCardRequestBean));
         ThirdPartyBankCardPlusResultBean ret = new ThirdPartyBankCardPlusResultBean();
@@ -133,8 +131,8 @@ public class ApiBindCardController extends BaseUserController {
     /**
      * 用户绑卡
      */
-    @PostMapping("/userBindCardPlus")
-    public BaseResultBean userBindCardPlus(@RequestBody ThirdPartyBankCardRequestBean bankCardRequestBean,HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping("/userBindCardPlus.do")
+    public BaseResultBean userBindCardPlus(@RequestBody ThirdPartyBankCardRequestBean bankCardRequestBean,HttpServletRequest request) {
         //---
         ThirdPartyBankCardPlusResultBean ret = new ThirdPartyBankCardPlusResultBean();
         logger.info(bankCardRequestBean.getAccountId()+"用户绑卡开始-----------------------------");

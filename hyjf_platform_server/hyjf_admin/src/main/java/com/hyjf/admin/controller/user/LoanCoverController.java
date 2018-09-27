@@ -6,6 +6,7 @@ import com.hyjf.admin.beans.vo.LoanCoverUserCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.LoanCoverService;
 import com.hyjf.am.response.Response;
@@ -53,6 +54,8 @@ public class LoanCoverController extends BaseController {
 
     @Autowired
     private LoanCoverService loanCoverService;
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 获取借款盖章用户列表
@@ -122,7 +125,7 @@ public class LoanCoverController extends BaseController {
             return new AdminResult<>(FAIL, "参数错误");
         }
         if (!loanCoverService.selectIsExistsRecordByIdNo(loanCoverUserRequest.getIdNo(),loanCoverUserRequest.getName())) {
-            return new AdminResult<>(FAIL, "该输入统一社会信用代码或身份证已存在");
+            return new AdminResult<>(FAIL, "数据重复,请检查后提交");
         }
         loanCoverUserRequest.setCreateTime(new Date());
         int intFlg = loanCoverService.insertLoanCoverUser(loanCoverUserRequest);
@@ -156,6 +159,10 @@ public class LoanCoverController extends BaseController {
         AdminSystemVO adminSystemVO = this.getUser(request);
         int loginUserId = Integer.parseInt(adminSystemVO.getId());
         String loginUserName = adminSystemVO.getUsername();
+        //修改判断是否重复
+        if (!loanCoverService.selectIsExistsRecordByIdNo(loanCoverUserRequestBean.getIdNo(),loanCoverUserRequestBean.getName())) {
+            return new AdminResult<>(FAIL, "数据重复,请检查后提交");
+        }
         return loanCoverService.updateLoanCoverUser(loanCoverUserRequestBean,loginUserId,loginUserName);
     }
 
@@ -277,14 +284,18 @@ public class LoanCoverController extends BaseController {
             DzqzCallBean bean = new DzqzCallBean();
             bean.setUserId(0);
             bean.setLogordid("0");
-            bean.setApp_id(DzqzConstant.HYJF_FDD_APP_ID);
-            bean.setV(DzqzConstant.HYJF_FDD_VERSION);
+            /*bean.setApp_id(DzqzConstant.HYJF_FDD_APP_ID);
+            bean.setV(DzqzConstant.HYJF_FDD_VERSION);*/
+            bean.setApp_id(systemConfig.getFaaAppUrl());
+            bean.setV(systemConfig.getFddVersion());
+            bean.setSecret(systemConfig.getFddSecret());
+            bean.setUrl(systemConfig.getFddUrl());
+
             bean.setTimestamp(GetDate.getDate("yyyyMMddHHmmss"));
             bean.setCustomer_name(ma.getName());// 客户姓名
             bean.setEmail(ma.getEmail());// 电子邮箱
             bean.setIdCard(ma.getIdNo());// 组织机构代码
             bean.setMobile(ma.getMobile());// 手机号
-
             if (ma.getIdType() == 0) {
                 bean.setIdent_type("0");// 证件类型
                 bean.setTxCode("syncPerson_auto");
@@ -312,7 +323,8 @@ public class LoanCoverController extends BaseController {
                     return new AdminResult<>(FAIL, resultt.getMsg());
                 }
             }
+            return new AdminResult<>(FAIL, "请求法大大失败");
         }
-        return new AdminResult<>(FAIL, "请求法大大失败");
+        return new AdminResult<>(FAIL, "没有查找到借款盖章用户");
     }
 }

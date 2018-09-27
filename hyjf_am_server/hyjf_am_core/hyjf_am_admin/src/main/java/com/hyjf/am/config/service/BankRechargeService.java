@@ -1,9 +1,9 @@
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfig;
 import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
+
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/19.
@@ -51,6 +51,13 @@ public interface BankRechargeService {
      * @return
      */
     List<BankRechargeConfig> selectExportRecordList(AdminBankRechargeConfigRequest adminRequest);
+
+
+    /**
+     * 检查银行卡是否重复
+     * @return
+     */
+    public int bankIsExists(AdminBankRechargeConfigRequest adminRequest);
     /**
      * 根据bankId查询BankRechargeConfig
      * @auth sunpeikai
