@@ -57,7 +57,7 @@ public class AutoPreAuditMessageServiceImpl implements AutoPreAuditMessageServic
         // 插入时间
         int systemNowDateLong = GetDate.getNowTime10();
         Date systemNowDate = GetDate.getDate(systemNowDateLong);
-        if (borrow != null && borrow.getId() == 1) {
+        if (borrow != null && borrow.getId() != null) {
             // 剩余的金额
             borrow.setBorrowAccountWait(borrow.getAccount());
             int time = systemNowDateLong;
