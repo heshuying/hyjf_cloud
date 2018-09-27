@@ -2529,33 +2529,33 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	@Override
 	public List<BorrowProjectRepay> borrowProjectRepayList() {
 
-		HashMap<String, BorrowProjectRepay> map = new HashMap<String, BorrowProjectRepay>();
+//		HashMap<String, BorrowProjectRepay> map = new HashMap<String, BorrowProjectRepay>();
 		BorrowProjectRepayExample example = new BorrowProjectRepayExample();
 		BorrowProjectRepayExample.Criteria cra = example.createCriteria();
 		cra.andDelFlagEqualTo(Integer.valueOf(CustomConstants.FLAG_NORMAL));
 		List<BorrowProjectRepay> borrowProjectRepayList = this.borrowProjectRepayMapper.selectByExample(example);
-		if (borrowProjectRepayList != null && borrowProjectRepayList.size() > 0) {
-			for (BorrowProjectRepay borrowProjectRepay : borrowProjectRepayList) {
-				if (map.containsKey(borrowProjectRepay.getRepayMethod())) {
-					BorrowProjectRepay mapRecord = map.get(borrowProjectRepay.getRepayMethod());
-					String borrowClass = borrowProjectRepay.getBorrowClass();
-				//	String optionAttr = mapRecord.getBorrowClass() + "data-" + borrowClass + "='" + borrowClass + "' ";
-					mapRecord.setBorrowClass(borrowClass);
-					map.put(borrowProjectRepay.getRepayMethod(), mapRecord);
-				} else {
-					String borrowClass = borrowProjectRepay.getBorrowClass();
-				//	String optionAttr = "data-" + borrowClass + "='" + borrowClass + "' ";
-					borrowProjectRepay.setBorrowClass(borrowClass);
-					map.put(borrowProjectRepay.getRepayMethod(), borrowProjectRepay);
-				}
-			}
-		}
-		borrowProjectRepayList = new ArrayList<BorrowProjectRepay>();
-		Iterator<Entry<String, BorrowProjectRepay>> iter = map.entrySet().iterator();
-		while (iter.hasNext()) {
-			Entry<String, BorrowProjectRepay> entry = iter.next();
-			borrowProjectRepayList.add(entry.getValue());
-		}
+//		if (borrowProjectRepayList != null && borrowProjectRepayList.size() > 0) {
+//			for (BorrowProjectRepay borrowProjectRepay : borrowProjectRepayList) {
+//				if (map.containsKey(borrowProjectRepay.getRepayMethod())) {
+//					BorrowProjectRepay mapRecord = map.get(borrowProjectRepay.getRepayMethod());
+//					String borrowClass = borrowProjectRepay.getBorrowClass();
+//				//	String optionAttr = mapRecord.getBorrowClass() + "data-" + borrowClass + "='" + borrowClass + "' ";
+//					mapRecord.setBorrowClass(borrowClass);
+//					map.put(borrowProjectRepay.getRepayMethod(), mapRecord);
+//				} else {
+//					String borrowClass = borrowProjectRepay.getBorrowClass();
+//				//	String optionAttr = "data-" + borrowClass + "='" + borrowClass + "' ";
+//					borrowProjectRepay.setBorrowClass(borrowClass);
+//					map.put(borrowProjectRepay.getRepayMethod(), borrowProjectRepay);
+//				}
+//			}
+//		}
+//		borrowProjectRepayList = new ArrayList<BorrowProjectRepay>();
+//		Iterator<Entry<String, BorrowProjectRepay>> iter = map.entrySet().iterator();
+//		while (iter.hasNext()) {
+//			Entry<String, BorrowProjectRepay> entry = iter.next();
+//			borrowProjectRepayList.add(entry.getValue());
+//		}
 
 		return borrowProjectRepayList;
 	}
