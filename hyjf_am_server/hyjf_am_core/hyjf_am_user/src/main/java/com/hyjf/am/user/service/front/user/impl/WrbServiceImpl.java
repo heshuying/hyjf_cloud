@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,8 +48,6 @@ public class WrbServiceImpl implements WrbService {
    @Autowired
    private SmsProducer smsProcesser;
 
-    @Autowired
-    private UtmRegMapper utmRegMapper;
     @Autowired
     protected UserLogMapper usersLogMapper;
     // 根据电话号码和模版号给某电话发短信
