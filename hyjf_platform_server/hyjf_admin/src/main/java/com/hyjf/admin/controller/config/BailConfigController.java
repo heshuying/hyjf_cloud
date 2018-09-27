@@ -215,4 +215,32 @@ public class BailConfigController extends BaseController {
         RedisUtils.set(RedisConstants.MONTH_MARK_LINE + instCode, bailConfigAddRequest.getMonthMarkLine().toString());
         return new AdminResult<>();
     }
+
+
+    /**
+     * 删除保证金配置
+     *
+     * @param request
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "删除保证金配置", notes = "删除保证金配置")
+    @PostMapping("/delete_bail_config")
+    public AdminResult deleteBailConfig(HttpServletRequest request, Integer id) {
+        BailConfigAddRequest bailConfigAddRequest = new BailConfigAddRequest();
+        bailConfigAddRequest.setId(id);
+        // 获取操作人id
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        String loginUserId = adminSystemVO.getId();
+        if (StringUtils.isNotBlank(loginUserId)) {
+            bailConfigAddRequest.setUpdateUserId(Integer.parseInt(loginUserId));
+        }
+        bailConfigAddRequest.setUpdateTime(new Date());
+        boolean isInset = this.bailConfigService.deleteBailConfig(bailConfigAddRequest);
+        // 删除info表失败
+        if (!isInset) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        return new AdminResult<>();
+    }
 }

@@ -160,4 +160,18 @@ public class BailConfigController extends BaseController {
         response.setRtn(Response.SUCCESS);
         return response;
     }
+
+
+    /**
+     * @Author: liushouyi
+     * @Desc 删除保证金配置
+     */
+    @ApiOperation(value = "删除保证金配置")
+    @PostMapping("/delete_bail_config")
+    public BooleanResponse deleteBailConfig(@RequestBody BailConfigAddRequest bailConfigAddRequest){
+        BooleanResponse response = new BooleanResponse();
+        response.setResultBoolean(bailConfigService.deleteBailConfig(bailConfigAddRequest));
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
 }

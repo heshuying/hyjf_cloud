@@ -80,4 +80,12 @@ public interface BailConfigService extends BaseService {
      * @return
      */
     Boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 删除保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    Boolean deleteBailConfig(BailConfigAddRequest bailConfigAddRequest);
 }
