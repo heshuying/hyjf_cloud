@@ -319,6 +319,7 @@ public class LoanCoverController extends BaseController {
                     ma.setCode(resultt.getCode());
                     ma.setStatus("error");
                     ma.setUpdateTime(new Date());
+                    BeanUtils.copyProperties(ma, loanCoverUserRequest);
                     loanCoverService.updateLoanCoverUserRecord(loanCoverUserRequest);
                     return new AdminResult<>(FAIL, resultt.getMsg());
                 }
