@@ -797,8 +797,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
     /**
      * 更新 自动投资临时表
-     *
-     * @param idKey
+     * @param accedeOrderId
+     * @param borrowNid
      * @param bankResult
      * @return
      */

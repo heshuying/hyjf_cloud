@@ -48,7 +48,7 @@ public class ApiBindCardPageController extends BaseUserController {
      * 用户页面绑卡
      * @return
      */
-    @PostMapping("/bind")
+    @PostMapping("/bind.do")
     @ApiOperation(value = "绑卡", notes = "绑卡")
     public ModelAndView userBindCardPlus(@RequestBody BindCardPageRequestBean bankCardRequestBean, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView modelAndView = new ModelAndView("/bank/user/trusteePay/error");

@@ -18,6 +18,7 @@ import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.util.GetDate;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -67,6 +68,29 @@ public class ActivityListController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         return new AdminResult<ListResult<ActivityListVO>>(ListResult.build(forBack, response.getCount()));
+    }
+
+
+    @ApiOperation(value = "活动详情列表", notes = "活动详情列表")
+    @PostMapping("/infoAction")
+    public AdminResult getInfoList(@RequestBody ActivityListRequest request) {
+        ActivityListResponse response = new ActivityListResponse();
+        List<ParamNameVO> clients = activityListService.getParamNameList("CLIENT");
+        response.setClients(clients);
+        if (request.getId() != null) {
+            response = activityListService.getRecordById(request.getId());
+            // 拆分平台
+            String[] split = response.getResult().getPlatform().split(",");
+            response.setPlatforms(split);
+            response.setFileDomainUrl(fileDomainUrl);
+        }
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult(response);
     }
 
 

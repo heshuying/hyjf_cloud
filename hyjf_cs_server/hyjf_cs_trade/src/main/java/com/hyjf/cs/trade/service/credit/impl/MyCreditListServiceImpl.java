@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.service.credit.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
@@ -275,18 +276,26 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     public WebResult saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId) {
         WebResult result = new WebResult();
         // 检查是否能债转
+        logger.info("检查是否能够进行债转---userId:{}",userId);
         checkCanCredit(request,userId);
+        logger.info("检查是否能够进行债转---userId:{}   通过",userId);
         checkTenderToCreditParam(request,userId);
+        logger.info("检查债转参数结束---userId:{}   通过",userId);
         // 债转保存
         try{
+            logger.info("开始插入债转表---userId:{}  ",userId);
             insertTenderToCredit(userId, request);
+            logger.info("插入债转表结束---userId:{} ",userId);
             Map data = new HashedMap();
             // 结束日期
-            data.put("creditEndTime", request.getCreditEndTime());
+            data.put("creditEndTime", GetDate.timestamptoStrYYYYMMDDHHMMSS(request.getCreditEndTime()));
             // 转让价格
             data.put("creditPrice",request.getCreditPrice());
             // 转让本金
             data.put("creditCapital",request.getCreditCapital());
+            // web的转让本金
+            data.put("assignCapital",request.getCreditCapital());
+            logger.info("债转保存，返回给前端数据 {}", JSONObject.toJSONString(data));
             result.setData(data);
         }catch (Exception e){
         	e.printStackTrace();
@@ -437,6 +446,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         if (recover == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
+        UserVO userVO = amUserClient.findUserById(userId);
         // 债转计算
         Map<String, BigDecimal> creditCreateMap = selectExpectCreditFeeForBigDecimal(borrow, recover,
                 request.getCreditDiscount(), nowTime);
@@ -486,6 +496,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                 }
             }
         }
+        borrowCredit.setBorrowUserId(borrow.getUserId());
+        borrowCredit.setBorrowUserName(borrow.getBorrowUserName());
         // 原标nid
         borrowCredit.setBidNid(tenderToCreditDetail.getBorrowNid());
         // 原标年化利率
@@ -498,6 +510,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         borrowCredit.setCreditStatus(0);
         // 排序
         borrowCredit.setCreditOrder(0);
+        borrowCredit.setCreditUserName(userVO.getUsername());
         // 债转期限-天
         borrowCredit.setCreditTerm(lastdays);
         borrowCredit.setCreditTermHold(holddays);
@@ -556,6 +569,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 给前端展示用
         request.setCreditEndTime(borrowCredit.getEndTime());
         request.setCreditPrice(DF_COM_VIEW.format(borrowCredit.getCreditPrice().setScale(2, BigDecimal.ROUND_DOWN)));
+        request.setCreditCapital(DF_COM_VIEW.format(borrowCredit.getCreditCapital().setScale(2, BigDecimal.ROUND_DOWN)));
         if (borrow != null) {
             if ("endmonth".equals(borrow.getBorrowStyle())) {
                 // 从第几期开始
@@ -568,7 +582,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             // 从第几期开始
             borrowCredit.setRecoverPeriod(0);
         }
-
+        logger.info("开始操作债转表---对象:{}  ",JSONObject.toJSONString(borrowCredit));
         // 操作数据库表
         return amTradeClient.insertCredit(borrowCredit);
     }

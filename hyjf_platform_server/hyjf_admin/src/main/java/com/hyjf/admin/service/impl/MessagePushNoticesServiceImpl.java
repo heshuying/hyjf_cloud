@@ -52,7 +52,6 @@ public class MessagePushNoticesServiceImpl implements MessagePushNoticesService 
      */
     @Override
     public MessagePushNoticesResponse insertRecord(MessagePushNoticesRequest bean) {
-
         return amMarketClient.insertRecord(bean);
     }
 

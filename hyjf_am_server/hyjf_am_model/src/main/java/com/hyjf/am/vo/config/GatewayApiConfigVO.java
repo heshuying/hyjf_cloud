@@ -101,4 +101,19 @@ public class GatewayApiConfigVO extends BaseVO implements Serializable {
     public void setSecureVisitFlag(Integer secureVisitFlag) {
         this.secureVisitFlag = secureVisitFlag;
     }
+
+    @Override
+    public String toString() {
+        return "GatewayApiConfigVO{" +
+                "id='" + id + '\'' +
+                ", path='" + path + '\'' +
+                ", serviceId='" + serviceId + '\'' +
+                ", url='" + url + '\'' +
+                ", retryable=" + retryable +
+                ", enabled=" + enabled +
+                ", stripPrefix=" + stripPrefix +
+                ", apiName='" + apiName + '\'' +
+                ", secureVisitFlag=" + secureVisitFlag +
+                '}';
+    }
 }

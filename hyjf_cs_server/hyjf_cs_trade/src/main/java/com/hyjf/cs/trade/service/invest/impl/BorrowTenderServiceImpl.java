@@ -540,10 +540,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         borrowTenderRequest.setTenderUserId(userId);
         data.put("borrowNid",borrow.getBorrowNid());
         data.put("investDesc","恭喜您，投资成功！");
+        logger.info("获取投资成功结果参数 userId {}  logOrdId {} borrowNid {}",userId,logOrdId,borrowNid);
         BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
         logger.info("获取投资成功结果为:"+borrowTender);
-
-
 
         if(borrowTender!=null){
             BigDecimal earnings = new BigDecimal("0");
@@ -687,6 +686,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             String borrowStyle = borrow.getBorrowStyle();
             // 收益率
             BigDecimal borrowApr = borrow.getBorrowApr();
+            //TODO:开始时这里是有的
 /*            if (borrow.getProjectType() == 13 && borrow.getBorrowExtraYield() != null && borrow.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
                 borrowApr = borrowApr.add(borrow.getBorrowExtraYield());
             }*/

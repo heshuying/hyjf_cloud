@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.locked;
 
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.am.response.BooleanResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 public class LockedConfigController extends BaseController {
 
 	@Autowired
-	private AmConfigClient amConfigClient;
+	private AmAdminClient amAdminClient;
 
 	@ApiOperation(value = "前台锁定配置", notes = "前台锁定配置")
 	@GetMapping(value = "/frontconfig")
@@ -34,7 +35,7 @@ public class LockedConfigController extends BaseController {
 
 		Response<LockedConfig.Config> response = new Response<>();
 
-		response.setResult(amConfigClient.getFrontLockedCfg());
+		response.setResult(amAdminClient.getFrontLockedCfg());
 
 		return response;
 
@@ -47,7 +48,7 @@ public class LockedConfigController extends BaseController {
 
 		Response<LockedConfig.Config> response = new Response<>();
 
-		response.setResult(amConfigClient.getAdminLockedCfg());
+		response.setResult(amAdminClient.getAdminLockedCfg());
 
 		return response;
 
@@ -58,7 +59,7 @@ public class LockedConfigController extends BaseController {
 	@ResponseBody
 	public BooleanResponse saveFrontConfig(@RequestBody LockedConfig.Config webConfig) {
 
-		return amConfigClient.saveFrontConfig(webConfig);
+		return amAdminClient.saveFrontConfig(webConfig);
 
 	}
 
@@ -67,7 +68,7 @@ public class LockedConfigController extends BaseController {
 	@ResponseBody
 	public BooleanResponse saveAdminConfig(@RequestBody LockedConfig.Config adminConfig) {
 
-		return amConfigClient.saveAdminConfig(adminConfig);
+		return amAdminClient.saveAdminConfig(adminConfig);
 
 	}
 }

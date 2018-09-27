@@ -10,6 +10,7 @@ import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
@@ -41,6 +42,20 @@ public interface AmConfigClient {
      */
     AdminSystemVO getUserInfoById(Integer loginUserId);
 
+	/**
+	 * 债转配置初始化查询
+	 * @auth
+	 * @param
+	 * @return
+	 */
+	DebtConfigResponse getDebtConfig();
+	/**
+	 * 债转配置更新
+	 * @auth
+	 * @param
+	 * @return
+	 */
+	DebtConfigResponse updateDebtConfig(DebtConfigRequest request);
     /**
      * 获取数据字典表的下拉列表
      * @param nameClass
@@ -114,6 +129,8 @@ public interface AmConfigClient {
 
 
 	public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request);
+
+	UtmPlatResponse getUtmPlatList();
 	/**
 	 * 添加
 	 *
@@ -121,6 +138,9 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	public AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean);
+
+	AdminUtmReadPermissionsResponse getAdminUtmReadPermissions(AdminUtmReadPermissionsRequest requestBean);
+
 
 	/**
 	 * 修改
@@ -158,47 +178,39 @@ public interface AmConfigClient {
 	 */
 	AppChannelReconciliationResponse getReconciliationPage(AppChannelReconciliationRequest form);
 
-	public AppBorrowImageResponse searchList(AppBorrowImageRequest appBorrowImageRequest);
 
-	public AppBorrowImageResponse searchInfo(AppBorrowImageRequest appBorrowImageRequest);
-
-	public AppBorrowImageResponse insertInfo(AppBorrowImageRequest appBorrowImageRequest);
-
-	public AppBorrowImageResponse updateInfo(AppBorrowImageRequest appBorrowImageRequest);
-
-	public AppBorrowImageResponse deleteInfo(AppBorrowImageRequest appBorrowImageRequest);
 
 	/**
 	 * 查询银行配置列表
 	 * @param adminRequest
 	 * @return
 	 */
-	public AdminBankConfigResponse bankConfigInit(AdminBankConfigRequest adminRequest);
+	 AdminBankConfigResponse bankConfigInit(AdminBankConfigRequest adminRequest);
 	/**
 	 * 根据id查询银行配置
 	 * @param bankId
 	 * @return
 	 */
-	public AdminBankConfigResponse selectBankConfigById(Integer bankId);
+	 AdminBankConfigResponse selectBankConfigById(Integer bankId);
 	/**
 	 * 根据银行名称查询银行配置
 	 * @return
 	 */
-	public List<BankConfigVO> getBankConfigRecordList(String bankName);
+	 List<BankConfigVO> getBankConfigRecordList(String bankName);
 
 	/**
 	 * 添加银行配置
 	 * @param adminRequest
 	 * @return
 	 */
-	public AdminBankConfigResponse insertBankConfigRecord(AdminBankConfigRequest adminRequest);
+	 AdminBankConfigResponse insertBankConfigRecord(AdminBankConfigRequest adminRequest);
 
 	/**
 	 * 修改银行配置
 	 * @param adminRequest
 	 * @return
 	 */
-	public AdminBankConfigResponse updateBankConfigRecord(AdminBankConfigRequest adminRequest);
+	 AdminBankConfigResponse updateBankConfigRecord(AdminBankConfigRequest adminRequest);
 	/**
 	 * 删除银行配置
 	 * @param id
@@ -999,11 +1011,6 @@ public interface AmConfigClient {
 	 */
 	int insertSmsTemplate(SmsTemplateRequest request);
 
-	public SubmissionsResponse findSubmissionsList(SubmissionsRequest form);
-
-	public SubmissionsResponse updateSubmissionsStatus(SubmissionsRequest form);
-
-	public SubmissionsResponse exportSubmissionsList(SubmissionsRequest form);
 
 	/**
 	 * 根据条件查询公司管理-团队介绍列表
@@ -1081,15 +1088,6 @@ public interface AmConfigClient {
 	 */
 	public VersionVO getVersionByCode(Integer vid, Integer type, String version);
 
-	public VersionConfigBeanResponse searchList(VersionConfigBeanRequest request);
-
-	public VersionConfigBeanResponse searchInfo(VersionConfigBeanRequest request);
-
-	public VersionConfigBeanResponse insertInfo(VersionConfigBeanRequest request);
-
-	public VersionConfigBeanResponse updateInfo(VersionConfigBeanRequest request);
-
-	public VersionConfigBeanResponse deleteInfo(VersionConfigBeanRequest request);
 
 	/**
 	 * 获取所有问题
@@ -1440,38 +1438,4 @@ public interface AmConfigClient {
 	
 	AdminUserResponse adminUsercCheckAction(AdminRequest adminRequest);
 
-	/**
-	 * 获取版本管理详情
-	 * @param request
-	 * @return
-	 */
-	SubmissionsVO getSubmissionsRecord(SubmissionsRequest request);
-
-
-	/**
-	 * 前台用户锁定配置
-	 * @return
-	 */
-    LockedConfig.Config getFrontLockedCfg();
-
-	/**
-	 * 后台用户锁定配置
-	 * @return
-	 */
-	LockedConfig.Config getAdminLockedCfg();
-
-	/**
-	 * 保存前台用户锁定配置
-	 * @param webConfig
-	 * @return
-	 */
-	BooleanResponse saveFrontConfig(LockedConfig.Config webConfig);
-
-
-	/**
-	 * 保存后台用户锁定配置
-	 * @param adminConfig
-	 * @return
-	 */
-	BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig);
 }

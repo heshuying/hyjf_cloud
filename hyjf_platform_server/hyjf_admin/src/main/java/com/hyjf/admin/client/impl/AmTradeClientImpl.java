@@ -2148,7 +2148,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigList() {
-        String url = "http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll";
+        String url = "http://AM-ADMIN/am-trade/hjhInstConfig/selectInstConfigAll";
         HjhInstConfigResponse response = restTemplate.getForEntity(url, HjhInstConfigResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -2167,7 +2167,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
         HjhInstConfigResponse response = restTemplate.
-                getForEntity("http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
+                getForEntity("http://AM-ADMIN/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -2184,7 +2184,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhAssetTypeVO> findHjhAssetTypeList(String instCodeSrch) {
         HjhAssetTypeResponse response = restTemplate.
-                getForEntity("http://AM-ADMIN/am-trade/hjhAssetType/selectAssetTypeAll/" + instCodeSrch, HjhAssetTypeResponse.class).
+                getForEntity("http://AM-ADMIN/am-admin/hjhAssetType/selectAssetTypeAll/" + instCodeSrch, HjhAssetTypeResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -4789,7 +4789,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowSendTypeResponse selectBorrowSendList(BorrowSendTypeRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/sendtype/list";
+        String url = "http://AM-ADMIN/am-admin/config/sendtype/list";
         BorrowSendTypeResponse response = restTemplate.postForEntity(url, adminRequest, BorrowSendTypeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4805,7 +4805,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowSendTypeVO getBorrowSendInfo(String sendCd) {
-        String url = "http://AM-TRADE/am-trade/config/sendtype/info/" + sendCd;
+        String url = "http://AM-ADMIN/am-admin/config/sendtype/info/" + sendCd;
         BorrowSendTypeResponse response = restTemplate.getForEntity(url, BorrowSendTypeResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -4820,7 +4820,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowSendTypeResponse insertBorrowSend(BorrowSendTypeRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/sendtype/insert";
+        String url = "http://AM-ADMIN/am-admin/config/sendtype/insert";
         BorrowSendTypeResponse response = restTemplate.postForEntity(url, adminRequest, BorrowSendTypeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4835,7 +4835,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowSendTypeResponse updateBorrowSend(BorrowSendTypeRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/sendtype/update";
+        String url = "http://AM-ADMIN/am-admin/config/sendtype/update";
         BorrowSendTypeResponse response = restTemplate.postForEntity(url, adminRequest, BorrowSendTypeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4850,7 +4850,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowSendTypeResponse daleteBorrowSend(String sendCd) {
-        String url = "http://AM-TRADE/am-trade/config/sendtype/delete/" + sendCd;
+        String url = "http://AM-ADMIN/am-admin/config/sendtype/delete/" + sendCd;
         BorrowSendTypeResponse response = restTemplate.getForEntity(url, BorrowSendTypeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4860,19 +4860,19 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public STZHWhiteListResponse selectSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/stzfwhiteconfig/selectSTZHWhiteList", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/stzfwhiteconfig/selectSTZHWhiteList", requestBean,
                 STZHWhiteListResponse.class);
     }
 
     @Override
     public STZHWhiteListResponse insertSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/stzfwhiteconfig/insertSTZHWhiteList", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/stzfwhiteconfig/insertSTZHWhiteList", requestBean,
                 STZHWhiteListResponse.class);
     }
 
     @Override
     public STZHWhiteListResponse updateSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/stzfwhiteconfig/updateSTZHWhiteList", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/stzfwhiteconfig/updateSTZHWhiteList", requestBean,
                 STZHWhiteListResponse.class);
     }
 
@@ -4880,7 +4880,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhInstConfigVO selectHjhInstConfig(String instcode) {
         HjhInstConfigResponse response = restTemplate.getForObject(
-                "http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigByInstCode/" + instcode,
+                "http://AM-ADMIN/am-trade/hjhInstConfig/selectInstConfigByInstCode/" + instcode,
                 HjhInstConfigResponse.class);
         if (response != null) {
             return response.getResult();
@@ -5121,7 +5121,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse selectSubConfigListByParam(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/list",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/list",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
@@ -5131,7 +5131,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse selectSubConfigInfo(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/info",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/info",request, AdminSubConfigResponse.class)
                 .getBody();
     }
 
@@ -5142,7 +5142,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse insertSubConfig(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/insert",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/insert",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
@@ -5152,7 +5152,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse updateSubConfig(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/update",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/update",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
@@ -5162,7 +5162,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse deleteSubConfig(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/delete",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/delete",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
@@ -5171,7 +5171,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<FeerateModifyLogVO> selectInstAndAssertType(AdminOperationLogRequest adminRequest){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/operationlog/selectInstAndAssertType", adminRequest, AdminOperationLogResponse.class).getBody().getResultList();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/operationlog/selectInstAndAssertType", adminRequest, AdminOperationLogResponse.class).getBody().getResultList();
     }
     /**
      * 产品类型   asset_type  asset_type_name资产类型名称
@@ -5181,7 +5181,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhAssetTypeVO> getHjhAssetType(){
-        String url = "http://AM-TRADE/am-trade/config/operationlog/getHjhAssetType";
+        String url = "http://AM-ADMIN/am-admin/config/operationlog/getHjhAssetType";
         AdminOperationLogResponse response =restTemplate.getForEntity(url,AdminOperationLogResponse.class).getBody();
         if(response != null){
             return response.getHjhAssetTypes();
@@ -5746,7 +5746,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public STZHWhiteListResponse selectSTZHWhiteById(Integer id) {
-        String url = "http://AM-TRADE/am-trade/stzfwhiteconfig/selectSTZHWhiteById/" + id;
+        String url = "http://AM-ADMIN/am-admin/stzfwhiteconfig/selectSTZHWhiteById/" + id;
         STZHWhiteListResponse response = restTemplate.getForEntity(url,STZHWhiteListResponse.class).getBody();
         return response;
     }

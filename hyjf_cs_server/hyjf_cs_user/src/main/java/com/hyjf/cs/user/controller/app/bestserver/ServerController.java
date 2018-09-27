@@ -43,7 +43,7 @@ public class ServerController extends BaseUserController {
 	@Value("${hyjf.app.serverip.test}")
 	private String testServerIp;
 
-	@Value("${hyjf.app.server.host}")
+	@Value("${hyjf.front.app.host}")
 	private String hyjf_app_server_host;
 
 	@Autowired

@@ -1,5 +1,7 @@
 package com.hyjf.cs.user.config;
 
+import com.hyjf.common.file.UploadFileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -27,28 +29,32 @@ public class SystemConfig {
     @Value("{hyjf.web.ui.bindemail}")
     public String webUIBindEmail;
 
-    @Value("${http.hyjf.web.host}")
-    public String httpWebHost;
-
     @Value("${hyjf.bank.instcode}")
     public String bankInstcode;
 
     @Value("${hyjf.bank.bankcode}")
     public String bankCode;
 
-    @Value("${file.domain.head.url}")
-    public String headUrl;
-
+    /**
+     * cds加速文件路径
+     */
     @Value("${file.domain.url}")
     public String fileDomainUrl;
 
     @Value("${file.upload.real.path}")
     public String fileUpload;
 
-    @Value("${file.upload.head.path}")
-    public String uploadHeadPath;
+    /**
+     * 获取文件url前缀
+     * @return
+     */
+    public String getFilePrefixUrl() {
+        String host = UploadFileUtils.getDoPath(this.getFileDomainUrl());
+        String fileUploadRealPath = UploadFileUtils.getDoPath(this.getFileUpload());
+        return host + fileUploadRealPath;
+    }
 
-    @Value("${hyjf.app.server.host}")
+    @Value("${hyjf.front.app.host}")
     public String appServerHost;
 
     /**
@@ -74,9 +80,6 @@ public class SystemConfig {
 
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
-
-    @Value("${file.domain.app.url}")
-    public String domainAppUrl;
 
     @Value("${hyjf.activity.888.id}")
     public Integer activity888Id;
@@ -206,14 +209,6 @@ public class SystemConfig {
         this.activity888Id = activity888Id;
     }
 
-    public String getDomainAppUrl() {
-        return domainAppUrl;
-    }
-
-    public void setDomainAppUrl(String domainAppUrl) {
-        this.domainAppUrl = domainAppUrl;
-    }
-
     public String getAopAccesskey() {
         return aopAccesskey;
     }
@@ -238,10 +233,6 @@ public class SystemConfig {
         this.forgetpassword = forgetpassword;
     }
 
-    public String getUploadHeadPath() {
-        return uploadHeadPath;
-    }
-
     public String getActivityId() {
         return activityId;
     }
@@ -250,24 +241,12 @@ public class SystemConfig {
         this.activityId = activityId;
     }
 
-    public void setUploadHeadPath(String uploadHeadPath) {
-        this.uploadHeadPath = uploadHeadPath;
-    }
-
     public String getWebHost() {
         return webHost;
     }
 
     public void setWebHost(String webHost) {
         this.webHost = webHost;
-    }
-
-    public String getHttpWebHost() {
-        return httpWebHost;
-    }
-
-    public void setHttpWebHost(String httpWebHost) {
-        this.httpWebHost = httpWebHost;
     }
 
     public String getBankInstcode() {
@@ -284,14 +263,6 @@ public class SystemConfig {
 
     public void setBankCode(String bankCode) {
         this.bankCode = bankCode;
-    }
-
-    public String getHeadUrl() {
-        return headUrl;
-    }
-
-    public void setHeadUrl(String headUrl) {
-        this.headUrl = headUrl;
     }
 
     public String getFileDomainUrl() {
