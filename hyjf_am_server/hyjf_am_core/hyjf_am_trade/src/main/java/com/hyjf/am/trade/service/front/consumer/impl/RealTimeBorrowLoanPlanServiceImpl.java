@@ -198,7 +198,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				if (Validator.isNotNull(loanResult)) {
 					String retCode = loanResult.getRetCode();
 					if (StringUtils.isNotBlank(retCode)) {
-						if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)) {
+						if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)
+								|| "CA110629".equals(retCode)) {
 							return loanResult;
 						} else {
 							throw new Exception("实时放款失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "],银行返回retCode = " + retCode);
@@ -291,7 +292,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			if (loanResult != null && StringUtils.isNotBlank(loanResult.getRetCode())) {
 				String retCode = loanResult.getRetCode();
 				logger.info(borrowNid+" 实时放款请求银行返回: " + retCode);
-				if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)) {//放款成功 
+				if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)
+						|| "CA110629".equals(retCode)) {//放款成功 
 					// 更新任务API状态
 					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SUCCESS);
 					if (apicronResultFlag) {
