@@ -110,6 +110,37 @@ public class AmAdminClientImpl implements AmAdminClient {
         return null;
     }
 
+    /**
+     * 根据主键获取保证金配置
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public BailConfigInfoCustomizeVO selectBailConfigById(Integer id) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_bail_config_by_id/" + id;
+        BailConfigInfoCustomizeResponse response = restTemplate.getForEntity(url,BailConfigInfoCustomizeResponse.class).getBody();
+        if (BailConfigInfoCustomizeResponse.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 未配置保证金的机构编号
+     *
+     * @return
+     */
+    @Override
+    public List<HjhInstConfigVO> selectNoUsedInstConfigList() {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_noused_inst_config_list";
+        HjhInstConfigResponse response = restTemplate.getForEntity(url,HjhInstConfigResponse.class).getBody();
+        if (HjhInstConfigResponse.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
     @Override
     public STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean) {
         String url = "http://AM-ADMIN/am-admin/stzfwhiteconfig/getUserByUserName";
