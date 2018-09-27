@@ -483,7 +483,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 生成creditNid
         // 获取当前时间的日期
         String nowDate = (GetDate.yyyyMMdd.format(new Date()) != null && !"".equals(GetDate.yyyyMMdd.format(new Date()))) ? GetDate.yyyyMMdd.format(new Date()) : "0";
-        Integer creditedNum = amTradeClient.tenderAbleToCredit(null);
+        Integer creditedNum = amTradeClient.tenderAbleToCredit(0);
         Integer creditNumToday = (creditedNum == null ? 0 : creditedNum);
         String creditNid = nowDate.substring(2) + String.format("%04d", (creditNumToday + 1));
         // 获取待债转数据
