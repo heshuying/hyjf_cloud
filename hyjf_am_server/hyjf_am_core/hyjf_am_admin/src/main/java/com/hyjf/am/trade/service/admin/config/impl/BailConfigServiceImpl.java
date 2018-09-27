@@ -328,6 +328,17 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
     }
 
     /**
+     * 获取当前机构可用还款方式
+     *
+     * @param instCode
+     * @return
+     */
+    @Override
+    public List<String> selectRepayMethod(String instCode) {
+        return this.hjhBailConfigCustomizeMapper.selectRepayMethod(instCode);
+    }
+
+    /**
      * 保证金校验方式和回滚方式处理
      *
      * @param bailConfigAddRequest

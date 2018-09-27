@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -242,5 +243,47 @@ public class BailConfigController extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>();
+    }
+
+    /**
+     * 下拉联动
+     *
+     * @param instCode
+     * @return
+     */
+    @ApiOperation(value = "下拉联动", notes = "下拉联动")
+    @PostMapping("/instcode_change_action")
+    public BailConfigInfoCustomizeVO instCodeChangeAction(String instCode) {
+
+        BailConfigInfoCustomizeVO hjhBailConfigInfoCustomize = new BailConfigInfoCustomizeVO();
+
+        // 获取当前机构可用还款方式
+        List<String> repayMethodList = this.bailConfigService.selectRepayMethod(instCode);
+        if (repayMethodList != null && repayMethodList.size() > 0) {
+            for (String repayMethod : repayMethodList) {
+                if ("end".equals(repayMethod)) {
+                    hjhBailConfigInfoCustomize.setEndDEL(0);
+                }
+                if ("endday".equals(repayMethod)) {
+                    hjhBailConfigInfoCustomize.setEnddayDEL(0);
+                }
+                if ("month".equals(repayMethod)) {
+                    hjhBailConfigInfoCustomize.setMonthDEL(0);
+                }
+                if ("endmonth".equals(repayMethod)) {
+                    hjhBailConfigInfoCustomize.setEndmonthDEL(0);
+                }
+                if ("principal".equals(repayMethod)) {
+                    hjhBailConfigInfoCustomize.setPrincipalDEL(0);
+                }
+                if ("season".equals(repayMethod)) {
+                    hjhBailConfigInfoCustomize.setSeasonDEL(0);
+                }
+                if ("endmonths".equals(repayMethod)) {
+                    hjhBailConfigInfoCustomize.setEndmonthsDEL(0);
+                }
+            }
+        }
+        return hjhBailConfigInfoCustomize;
     }
 }
