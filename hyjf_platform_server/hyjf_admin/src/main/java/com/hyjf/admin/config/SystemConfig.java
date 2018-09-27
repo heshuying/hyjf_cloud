@@ -12,21 +12,6 @@ public class SystemConfig {
     @Value("${hyjf.admin.host}")
     public String adminHost;
 
-//    @Value("${http.hyjf.web.host}")
-    public String httpWebHost;
-
-//    @Value("${hyjf.web.bank.forgetpassword}")
-    public String forgetPassword;
-
-//    @Value("${hyjf.web.user.host}")
-    public String webUserHost;
-
-//    @Value("${hyjf.front.host}")
-    public String frontHost;
-
-//    @Value("${hyjf.web.bank.forgetpassword}")
-    public String forgetpassword;
-    
     @Value("${hyjf.makepdf.temppath}")
     public String HYJF_MAKEPDF_TEMPPATH;
 
@@ -70,31 +55,6 @@ public class SystemConfig {
     public String fddSecret;
     @Value("${hyjf.fdd.url}")
     public String fddUrl;
-
-    public String getAdminFrontHost() {
-        return adminFrontHost;
-    }
-
-    public void setAdminFrontHost(String adminFrontHost) {
-        this.adminFrontHost = adminFrontHost;
-    }
-
-    public String getBANK_BANKCODE() {
-        return BANK_BANKCODE;
-    }
-
-    public void setBANK_BANKCODE(String BANK_BANKCODE) {
-        this.BANK_BANKCODE = BANK_BANKCODE;
-    }
-
-    public String getBANK_INSTCODE() {
-        return BANK_INSTCODE;
-    }
-
-    public void setBANK_INSTCODE(String BANK_INSTCODE) {
-        this.BANK_INSTCODE = BANK_INSTCODE;
-    }
-
 
     @Value("${hyjf.contract.ftlpath}")
     private String contractFtlPath;
@@ -151,6 +111,31 @@ public class SystemConfig {
     private String sealOperate;
 
 
+    public String getAdminFrontHost() {
+        return adminFrontHost;
+    }
+
+    public void setAdminFrontHost(String adminFrontHost) {
+        this.adminFrontHost = adminFrontHost;
+    }
+
+    public String getBANK_BANKCODE() {
+        return BANK_BANKCODE;
+    }
+
+    public void setBANK_BANKCODE(String BANK_BANKCODE) {
+        this.BANK_BANKCODE = BANK_BANKCODE;
+    }
+
+    public String getBANK_INSTCODE() {
+        return BANK_INSTCODE;
+    }
+
+    public void setBANK_INSTCODE(String BANK_INSTCODE) {
+        this.BANK_INSTCODE = BANK_INSTCODE;
+    }
+
+
     public String getAdminHost() {
         return adminHost;
     }
@@ -191,45 +176,6 @@ public class SystemConfig {
         this.webHost = webHost;
     }
 
-    public String getHttpWebHost() {
-        return httpWebHost;
-    }
-
-    public void setHttpWebHost(String httpWebHost) {
-        this.httpWebHost = httpWebHost;
-    }
-
-    public String getForgetPassword() {
-        return forgetPassword;
-    }
-
-    public void setForgetPassword(String forgetPassword) {
-        this.forgetPassword = forgetPassword;
-    }
-
-    public String getWebUserHost() {
-        return webUserHost;
-    }
-
-    public void setWebUserHost(String webUserHost) {
-        this.webUserHost = webUserHost;
-    }
-
-    public String getFrontHost() {
-        return frontHost;
-    }
-
-    public void setFrontHost(String frontHost) {
-        this.frontHost = frontHost;
-    }
-
-    public String getForgetpassword() {
-        return forgetpassword;
-    }
-
-    public void setForgetpassword(String forgetpassword) {
-        this.forgetpassword = forgetpassword;
-    }
 
 	public String getHYJF_MAKEPDF_TEMPPATH() {
 		return HYJF_MAKEPDF_TEMPPATH;

@@ -52,10 +52,10 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         WebViewUserVO webViewUserVO = new WebViewUserVO();
         BeanUtils.copyProperties(user,webViewUserVO);
         Integer userId = user.getUserId();
-        String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
+        String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
         // 实际物理路径前缀2
-        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
         if(StringUtils.isNotEmpty(user.getIconUrl())){
             user.setIconUrl(imghost + fileUploadTempPath + user.getIconUrl());
         }
