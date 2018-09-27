@@ -1129,7 +1129,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		String nowDate = (GetDate.yyyyMMdd.format(new Date()) != null && !"".equals(GetDate.yyyyMMdd.format(new Date()))) ? GetDate.yyyyMMdd.format(new Date()) : "0";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("nowDate", nowDate);
-		if(userId!=null){
+		if(userId!=null&&userId.intValue()>0){
 			params.put("userId", userId);
 		}
 		Integer creditedNum = tenderCreditCustomizeMapper.tenderAbleToCredit(params);
