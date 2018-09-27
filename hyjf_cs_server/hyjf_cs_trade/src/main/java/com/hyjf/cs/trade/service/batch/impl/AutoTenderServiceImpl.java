@@ -666,7 +666,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         BankCallBean bean = new BankCallBean(orderId, userId, BankCallConstant.TXCODE_BIDAUTO_APPLY, "自动投标申请", hjhAccede.getClient());
         bean.setAccountId(tenderUsrcustid);// 电子账号
         bean.setTxAmount(CustomUtil.formatAmount(account.toString()));// 交易金额
-logger.info("银行接口用bean交易金额TxAmount:"+CustomUtil.formatAmount(account.toString()));
         bean.setProductId(borrow.getBorrowNid());// 标的号
         bean.setFrzFlag(BankCallConstant.DEBT_FRZFLAG_UNFREEZE);// 是否冻结金额
         bean.setContOrderId(hjhUserAuth.getAutoOrderId());// 签约订单号

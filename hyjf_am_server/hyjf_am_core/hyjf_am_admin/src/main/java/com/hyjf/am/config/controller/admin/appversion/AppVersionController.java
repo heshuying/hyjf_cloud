@@ -1,4 +1,4 @@
-package com.hyjf.am.config.controller;
+package com.hyjf.am.config.controller.admin.appversion;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.config.dao.model.auto.Version;

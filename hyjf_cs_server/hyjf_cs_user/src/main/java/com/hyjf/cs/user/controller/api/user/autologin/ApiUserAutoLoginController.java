@@ -91,7 +91,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
         //Integer userId = bean.getUserId();
         // 登陆
         UserVO userVO = loginService.getUsersById(userId);
-        loginService.login(userVO.getUsername(),userVO.getPassword(),GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC);
+        loginService.loginOperationOnly(userVO,userVO.getUsername(),GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP);
 
 /*        WebViewUser webUser = loginService.getWebViewUserByUserId(userId);
         WebUtils.sessionLogin(request, response, webUser);*/
@@ -102,13 +102,13 @@ public class ApiUserAutoLoginController extends BaseUserController {
 
     @ApiOperation(value = "纳觅财富自动登录",notes = "纳觅财富自动登录")
     @PostMapping(value = "/nmcfThirdLogin")
-    public ModelAndView nmcfThirdLogin(HttpServletRequest httpServletRequest,@RequestBody NmcfLoginRequestBean request){
+    public ModelAndView nmcfThirdLogin(HttpServletRequest httpServletRequest,@ModelAttribute NmcfLoginRequestBean request){
 
         // 验证
-        this.checkNmcfPostBean(request);
+        //this.checkNmcfPostBean(request);
         // 验签
-        String sign = request.getInstCode() + request.getUserId() + (request.getBorrowNid()==null?"":request.getBorrowNid()) + request.getTimestamp() + request.getInstCode();
-        CheckUtil.check(ApiSignUtil.verifyByRSA(request.getInstCode(), request.getChkValue(), sign), MsgEnum.ERR_SIGN);
+        //String sign = request.getInstCode() + request.getUserId() + (request.getBorrowNid()==null?"":request.getBorrowNid()) + request.getTimestamp() + request.getInstCode();
+        //CheckUtil.check(ApiSignUtil.verifyByRSA(request.getInstCode(), request.getChkValue(), sign), MsgEnum.ERR_SIGN);
 /*		//注释从这里开始
         // 解密
         String nmUserId = bean.getUserId();
@@ -117,31 +117,37 @@ public class ApiUserAutoLoginController extends BaseUserController {
         //注释到这里
 */
         // userId 解密
-        int nmUserId = this.userIdDecrypt(request);
+        //int nmUserId = this.userIdDecrypt(request);
         // 查询userid
-        Integer userId = loginService.getUserIdByBind(nmUserId, Integer.valueOf(request.getInstCode()));
-
+        //Integer userId = loginService.getUserIdByBind(nmUserId, Integer.valueOf(request.getInstCode()));
+        Integer userId = Integer.valueOf(request.getUserId());
         // userid不存在,跳转登录页面
         if(userId == null) {
             return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/user/login/init.do");
         }
-
+        //TODO:登录以后，前端页面还是未登录状态
         // 登陆
         UserVO userVO = loginService.getUsersById(userId);
-        loginService.login(userVO.getUsername(),userVO.getPassword(),GetCilentIP.getIpAddr(httpServletRequest), BankCallConstant.CHANNEL_PC);
+        logger.info("userId:[{}],userName:[{}],password:[{}]",userId,userVO.getUsername(),userVO.getPassword());
+        loginService.loginOperationOnly(userVO,userVO.getUsername(),GetCilentIP.getIpAddr(httpServletRequest), BankCallConstant.CHANNEL_APP);
         //WebViewUser webUser = loginService.getWebViewUserByUserId(userId);
         //WebUtils.sessionLogin(request, response, webUser);
 
         // 先跳转纳觅传过来的url
         if (request.getRetUrl() != null) {
+            logger.info("retUrl");
             return new ModelAndView("redirect:" + request.getRetUrl());
         } else {
             // 如果纳觅没传url,有borrowNid,跳标的详情,无borowNid,跳个人中心
             if (request.getBorrowNid() == null) {
+                logger.info("pandect");
                 return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/user/pandect");
             } else {
                 // 跳转到前端的标的详情
-                return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/projectlist/getBorrowDetail?borrowNid=" + request.getBorrowNid());
+                logger.info("borrowDetail");
+                //return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/projectlist/getBorrowDetail?borrowNid=" + request.getBorrowNid());
+                return new ModelAndView("redirect:https://frontweb1.hyjf.com/borrow/borrowDetail?borrowNid=" + request.getBorrowNid());
+
             }
         }
 

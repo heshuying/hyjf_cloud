@@ -8,6 +8,7 @@ import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.api.WrbRegisterRequest;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
@@ -29,7 +30,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -1181,8 +1181,11 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public Integer insertUserAction(String mobile, String instCode, HttpServletRequest request, Integer instType, UtmPlatVO utmPlat, String platform) {
-		return null;
+	public Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest) {
+		Integer body = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/wrb/register", wrbRegisterRequest, IntegerResponse.class)
+				.getBody().getResultInt();
+		return body;
 	}
 
 }

@@ -6,14 +6,17 @@ package com.hyjf.am.user.controller.admin.membercentre;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.OADepartmentResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.admin.membercentre.UserManagerService;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.paginator.Paginator;
@@ -802,5 +805,21 @@ public class UserManagerController extends BaseController {
         logger.info("------------mobileCount :  "+mobileCount+"---------");
         return mobileCount;
     }
-
+    /**
+     * 根据部门id查找是否有自级菜单
+     * @param deptId
+     * @return
+     */
+    @RequestMapping("/getDeptInfoByDeptId/{deptId}")
+    public OADepartmentResponse getDeptInfoByDeptId(@PathVariable int deptId){
+        OADepartmentResponse response = new OADepartmentResponse();
+        response.setRtn(Response.FAIL);
+        List<ROaDepartment> rOaDepartmentList = userManagerService.getDeptInfoByDeptId(deptId);
+        if(!CollectionUtils.isEmpty(rOaDepartmentList)){
+            List<OADepartmentCustomizeVO> oaDepartmentCustomizeVOList = CommonUtils.convertBeanList(rOaDepartmentList,OADepartmentCustomizeVO.class);
+            response.setRtn(Response.SUCCESS);
+            response.setResultList(oaDepartmentCustomizeVOList);
+        }
+        return response;
+    }
 }

@@ -1,6 +1,7 @@
 package com.hyjf.am.response.market;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 
@@ -20,6 +21,12 @@ public class ActivityListResponse extends Response<ActivityListVO> {
     private String statusDesc;
 
     private List<ActivityListBeanVO> activityList;
+
+    private String[] platforms;
+
+    private String fileDomainUrl;
+
+    private List<ParamNameVO> clients;
 
     public int getCount() {
         return count;
@@ -69,5 +76,29 @@ public class ActivityListResponse extends Response<ActivityListVO> {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String[] getPlatforms() {
+        return platforms;
+    }
+
+    public void setPlatforms(String[] platforms) {
+        this.platforms = platforms;
+    }
+
+    public String getFileDomainUrl() {
+        return fileDomainUrl;
+    }
+
+    public void setFileDomainUrl(String fileDomainUrl) {
+        this.fileDomainUrl = fileDomainUrl;
+    }
+
+    public List<ParamNameVO> getClients() {
+        return clients;
+    }
+
+    public void setClients(List<ParamNameVO> clients) {
+        this.clients = clients;
     }
 }
