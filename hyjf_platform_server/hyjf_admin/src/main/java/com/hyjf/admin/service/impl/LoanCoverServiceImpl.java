@@ -120,6 +120,13 @@ public class LoanCoverServiceImpl implements LoanCoverService {
             LoanCoverUserResponse loanCoverUserResponse = loanCoverClient.selectIsExistsRecordById(String.valueOf(loanCoverUserRequestBean.getId()));
             if(null!=loanCoverUserResponse){
                 LoanCoverUserVO loanCoverUserVO = loanCoverUserResponse.getResult();
+                //判断是否有修改(修改用户名和身份证)
+                if(!loanCoverUserVO.getIdNo().equals(loanCoverUserRequestBean.getIdNo())|| !loanCoverUserVO.getName().equals(loanCoverUserRequestBean.getName())){
+                    //修改判断是否重复
+                    if (!selectIsExistsRecordByIdNo(loanCoverUserRequestBean.getIdNo(),loanCoverUserRequestBean.getName())) {
+                        return new AdminResult<>("99", "数据重复,请检查后提交");
+                    }
+                }
                 LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
                 BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
                 if (StringUtils.isNotBlank(loanCoverUserVO.getStatus())&& "success".equals(loanCoverUserVO.getStatus())) {
@@ -149,8 +156,6 @@ public class LoanCoverServiceImpl implements LoanCoverService {
                             return new AdminResult<>("99", "更新失败");
                         }
                     }
-                    /*loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
-                    return new AdminResult<>();*/
                 }
                 loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
                 return new AdminResult<>();
