@@ -94,10 +94,13 @@ public class BorrowTenderController extends BaseTradeController {
     @ApiIgnore
     @PostMapping("/bgReturn")
     @ResponseBody
-    public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {
+    public BankCallResult borrowTenderBgReturn(BankCallBean bean ,Integer platform, @RequestParam("couponGrantId") String couponGrantId) {
         logger.info("web端散标投资异步处理start,userId:{}", bean.getLogUserId());
         BankCallResult result ;
         try{
+            if (platform != null && platform.intValue() >= 0) {
+                bean.setLogClient(platform);
+            }
             result = borrowTenderService.borrowTenderBgReturn(bean,couponGrantId);
         }catch (CheckException e){
             throw e;
