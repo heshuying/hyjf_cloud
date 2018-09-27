@@ -79,40 +79,74 @@
 
 
 	<resultMap id="selectBorrowRecoverListMap" type="com.hyjf.am.trade.dao.model.customize.AdminBorrowRecoverCustomize">
-		<!-- 借款标题 -->
-		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
 		<!-- 借款编号 -->
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<!-- add by LSY START -->
 		<!-- 资产来源 -->
 		<result column="inst_name" property="instName" jdbcType="VARCHAR" />
 		<!-- add by LSY END -->
+		<!-- 借款人ID -->
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<!-- 借款人用户名 -->
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<!-- 借款标题 -->
+		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
+		<!-- 项目类型 -->
+		<result column="borrow_project_type_name" property="borrowProjectTypeName" jdbcType="VARCHAR" />
+		<!-- 借款期限 -->
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<!-- 年化收益 -->
+		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+		<!-- 还款方式 -->
+		<result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
 		<!-- 投资订单号 -->
 		<result column="order_num" property="orderNum" jdbcType="VARCHAR" />
+		<!-- 放款订单号 -->
+		<result column="loanOrdid" property="loanOrdid" jdbcType="VARCHAR" />
 		<!-- 合作机构编号 -->
 		<result column="inst_code" property="instCode" jdbcType="VARCHAR" />
-		<!-- 投资人 -->
-		<result column="username" property="username" jdbcType="VARCHAR" />
-		<!-- 投资金额 -->
+		<!-- 投资人用户名 -->
+		<result column="tender_username" property="tenderUsername" jdbcType="VARCHAR" />
+		<!-- 投资人ID -->
+		<result column="tender_user_id" property="tenderUserId" jdbcType="VARCHAR" />
+		<!-- 投资时间 -->
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<!-- 借款金额 -->
 		<result column="account" property="account" jdbcType="VARCHAR" />
+		<!-- 应放款金额 -->
+		<result column="account_yes" property="accountYes" jdbcType="VARCHAR" />
 		<!-- 应收服务费 -->
-		<result column="service_price" property="servicePrice" jdbcType="VARCHAR" />
-		<!-- 应放款 -->
+		<result column="loan_fee" property="loanFee" jdbcType="VARCHAR" />
+		<!-- 实际放款金额 -->
 		<result column="recover_price" property="recoverPrice" jdbcType="VARCHAR" />
-		<!-- 已放款 -->
-		<result column="recover_price_over" property="recoverPriceOver" jdbcType="VARCHAR" />
+		<!-- 实收服务费 -->
+		<result column="service_price" property="servicePrice" jdbcType="VARCHAR" />
 		<!-- 放款状态 -->
 		<result column="is_recover" property="isRecover" jdbcType="VARCHAR" />
 		<!-- 放款时间 -->
-		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
-		<!-- 投资时间 -->
 		<result column="time_recover" property="timeRecover" jdbcType="VARCHAR" />
-		<!-- 放款订单号-->
-		<result column="loanOrdid" property="loanOrdid" jdbcType="VARCHAR" />
-		<!-- 放款订单号-->
-		<result column="loan_batch_no" property="loanBatchNo" jdbcType="VARCHAR" />
-		<!--  计划编号 -->
+		<!-- 计划编号 -->
 		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+
+		<!-- 投资人用户属性（投资时） -->
+		<result column="tender_user_attribute" property="tenderUserAttribute" jdbcType="VARCHAR" />
+		<!-- 推荐人用户属性（投资时） -->
+		<result column="invite_user_attribute" property="inviteUserAttribute" jdbcType="VARCHAR" />
+		<!-- 推荐人（投资时） -->
+		<result column="tender_referrer_username" property="tenderReferrerUsername" jdbcType="VARCHAR" />
+		<!-- 推荐人ID（投资时） -->
+		<result column="tender_referrer_user_id" property="tenderReferrerUserId" jdbcType="VARCHAR" />
+		<!-- 一级分部（投资时） -->
+		<result column="department_level_1_name" property="departmentLevel1Name" jdbcType="VARCHAR" />
+		<!-- 二级分部（投资时） -->
+		<result column="department_level_2_name" property="departmentLevel2Name" jdbcType="VARCHAR" />
+		<!-- 团队（投资时） -->
+		<result column="team_name" property="teamName" jdbcType="VARCHAR" />
+
+		<!-- 受托支付标志 0 否；1是 -->
+		<result column="entrusted_flg" property="entrustedFlg" jdbcType="INTEGER" />
+		<!-- 受托支付用户名 -->
+		<result column="entrusted_user_name" property="entrustedUserName" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectBorrowRecoverList" resultMap="selectBorrowRecoverListMap" parameterType="com.hyjf.am.resquest.admin.BorrowRecoverRequest">
 		SELECT
@@ -130,14 +164,14 @@
 		bt.user_name       AS tender_username,
 		bt.user_id                AS tender_user_id,
 		hic.inst_code 			  AS inst_code,
-		FROM_UNIXTIME( bt.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+		 bt.create_time AS create_time,
 		bt.account                AS account,
 		bt.account - bt.loan_fee  AS account_yes,
 		bt.loan_fee               AS loan_fee,
 		bt.loan_amount AS recover_price,
 		bt.loan_fee AS service_price,
 		bt.`status` AS is_recover,
-		FROM_UNIXTIME( br.create_time, '%Y-%m-%d %H:%i:%s' ) AS time_recover,
+		br.create_time AS time_recover,
 		b.plan_nid,
 		bt.tender_user_attribute AS tender_user_attribute,
 		if(bt.invite_user_id=0 or bt.invite_user_id=null or bt.invite_user_id= '','',bt.invite_user_attribute) AS invite_user_attribute,

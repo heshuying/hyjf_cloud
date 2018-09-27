@@ -29,7 +29,7 @@ import java.util.List;
  * @version MessagePushTemplateController, v0.1 2018/9/26 16:53
  */
 @RestController
-@RequestMapping("/am-admin/messagePushTemplate")
+@RequestMapping("/am-config/messagePushTemplate")
 public class MessagePushTemplateController {
 
     Logger logger = LoggerFactory.getLogger(MessagePushTemplateController.class);
