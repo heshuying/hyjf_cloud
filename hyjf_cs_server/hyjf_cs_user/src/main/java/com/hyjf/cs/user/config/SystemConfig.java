@@ -45,7 +45,7 @@ public class SystemConfig {
     @Value("${file.upload.head.path}")
     public String uploadHeadPath;
 
-    @Value("${hyjf.app.server.host}")
+    @Value("${hyjf.front.app.host}")
     public String appServerHost;
 
     /**
