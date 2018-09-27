@@ -10,6 +10,7 @@ import com.hyjf.am.response.trade.coupon.AppCouponInfoResponse;
 import com.hyjf.am.response.trade.coupon.CouponRepayResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
@@ -1230,7 +1231,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         TenderCreditCustomizeVO appTenderToCreditDetail =amTradeClient.selectTenderToCreditDetail(userId,borrowId,tenderNid);
         //债转费率配置 开始
         // TODO: 2018/9/12  后续处理折让率配置
-        /*List<DebtConfig> config = debtConfigService.selectDebtConfigList();
+        List<DebtConfigVO> config = amConfigClient.getDebtConfigList();
         if(!CollectionUtils.isEmpty(config)){
             projectInfo.put("attornRate",config.get(0).getAttornRate().setScale(2, BigDecimal.ROUND_DOWN));
             projectInfo.put("concessionRateUp",config.get(0).getConcessionRateUp().setScale(2, BigDecimal.ROUND_DOWN));
@@ -1238,7 +1239,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             projectInfo.put("toggle",config.get(0).getToggle());
             projectInfo.put("closeDes",config.get(0).getCloseDes());
             projectInfo.put("serviceRate", config.get(0).getAttornRate().setScale(2, BigDecimal.ROUND_DOWN));//原来逻辑的字段
-        }*/
+        }
         //债转费率配置 开始
         if (appTenderToCreditDetail != null){
 
