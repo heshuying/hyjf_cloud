@@ -1,17 +1,5 @@
 package com.hyjf.am.trade.controller.admin.borrow;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowFlowResponse;
@@ -27,6 +15,17 @@ import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/30.
@@ -62,7 +61,7 @@ public class BorrowFlowController {
         List<HjhInstConfigVO> vo =borrowFlowService.hjhInstConfigList("");
         HjhInstConfigResponse response = new HjhInstConfigResponse();
         if(CollectionUtils.isEmpty(vo)){
-            return null;
+            return response;
         }
         response.setResultList(vo);
         return response;
@@ -87,7 +86,7 @@ public class BorrowFlowController {
         HjhAssetTypeResponse response = new HjhAssetTypeResponse();
         List<HjhAssetTypeVO> hjhAssetTypeVOS = borrowFlowService.hjhAssetTypeList(instCode);
         if(CollectionUtils.isEmpty(hjhAssetTypeVOS)){
-            return null;
+            return response;
         }
         response.setResultList(hjhAssetTypeVOS);
         return response;

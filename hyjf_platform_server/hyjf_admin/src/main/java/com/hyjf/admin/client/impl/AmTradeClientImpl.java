@@ -3881,7 +3881,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowProjectTypeVO> borrowProjectTypeList(String borrowTypeCd) {
-        BorrowProjectTypeResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/borrowProjectTypeList/" + borrowTypeCd, BorrowProjectTypeResponse.class)
+        BorrowProjectTypeResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/config/borrowflow/borrowProjectTypeList/" + borrowTypeCd, BorrowProjectTypeResponse.class)
                 .getBody();
         if(response == null){
             return null;
@@ -3897,7 +3897,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhInstConfigVO> hjhInstConfigList(String instCode) {
-        HjhInstConfigResponse response =restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/hjhInstConfigList",HjhInstConfigResponse.class)
+        HjhInstConfigResponse response =restTemplate.getForEntity("http://AM-ADMIN/am-trade/config/borrowflow/hjhInstConfigList",HjhInstConfigResponse.class)
                 .getBody();
         if(response == null){
             return null;
@@ -3925,7 +3925,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhAssetTypeVO> hjhAssetTypeList(String instCode) {
-        HjhAssetTypeResponse response= restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/hjhAssetTypeList/" + instCode, HjhAssetTypeResponse.class)
+        HjhAssetTypeResponse response= restTemplate.getForEntity("http://AM-ADMIN/am-trade/config/borrowflow/hjhAssetTypeList/" + instCode, HjhAssetTypeResponse.class)
                 .getBody();
         if(response == null  ){
             return null;
@@ -5372,7 +5372,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public FinmanChargeNewResponse selectFinmanChargeList(FinmanChargeNewRequest adminRequest){
-        String url = "http://AM-TRADE/am-trade/config/finmanchargenew/list";
+        String url = "http://AM-ADMIN/am-admin/config/finmanchargenew/list";
         FinmanChargeNewResponse response = restTemplate.postForEntity(url,adminRequest,FinmanChargeNewResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5387,7 +5387,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public FinmanChargeNewResponse getRecordInfo(String manChargeCd){
-        String url = "http://AM-TRADE/am-trade/config/finmanchargenew/getRecordInfo/"+manChargeCd;
+        String url = "http://AM-ADMIN/am-admin/config/finmanchargenew/getRecordInfo/"+manChargeCd;
         FinmanChargeNewResponse response = restTemplate.getForEntity(url,FinmanChargeNewResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5402,10 +5402,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public FinmanChargeNewResponse insertFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest){
-        String url = "http://AM-TRADE/am-trade/config/finmanchargenew/insert";
+        String url = "http://AM-ADMIN/am-admin/config/finmanchargenew/insert";
         FinmanChargeNewResponse response = restTemplate.postForEntity(url,adminRequest,FinmanChargeNewResponse.class).getBody();
         if (response != null) {
-            FinmanChargeNewResponse count =restTemplate.postForEntity("http://AM-CONFIG/am-config/feerateModifyLog/insert",adminRequest,FinmanChargeNewResponse.class).getBody();
+            FinmanChargeNewResponse count =restTemplate.postForEntity("http://AM-ADMIN/am-admin/feerateModifyLog/insert",adminRequest,FinmanChargeNewResponse.class).getBody();
             if(count != null){
                 response.setRtn(Response.SUCCESS);
                 return response;
@@ -5423,10 +5423,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public FinmanChargeNewResponse updateFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest){
-        String url = "http://AM-TRADE/am-trade/config/finmanchargenew/update";
+        String url = "http://AM-ADMIN/am-admin/config/finmanchargenew/update";
         FinmanChargeNewResponse response = restTemplate.postForEntity(url,adminRequest,FinmanChargeNewResponse.class).getBody();
         if (response != null) {
-            FinmanChargeNewResponse count =restTemplate.postForEntity("http://AM-CONFIG/am-config/feerateModifyLog/update",adminRequest,FinmanChargeNewResponse.class).getBody();
+            FinmanChargeNewResponse count =restTemplate.postForEntity("http://AM-ADMIN/am-admin/feerateModifyLog/update",adminRequest,FinmanChargeNewResponse.class).getBody();
             if(count != null){
                 response.setRtn(Response.SUCCESS);
                 return response;
@@ -5446,16 +5446,16 @@ public class AmTradeClientImpl implements AmTradeClient {
     public FinmanChargeNewResponse deleteFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest){
         FinmanChargeNewResponse response = null;
         //根据manChargeCd查询费率配置
-        FinmanChargeNewResponse selectResponse = restTemplate.getForEntity("http://AM-TRADE/am-trade/config/finmanchargenew/getRecordInfo/"+adminRequest.getManChargeCd(),FinmanChargeNewResponse.class)
+        FinmanChargeNewResponse selectResponse = restTemplate.getForEntity("http://AM-ADMIN/am-admin/config/finmanchargenew/getRecordInfo/"+adminRequest.getManChargeCd(),FinmanChargeNewResponse.class)
                 .getBody();
         if (selectResponse != null) {
             BorrowFinmanNewChargeVO vo = selectResponse.getResult();
             adminRequest = CommonUtils.convertBean(vo,FinmanChargeNewRequest.class);
         }
         //此处删除是插入日志，记录新动作而不是修改原动作
-        FinmanChargeNewResponse count =restTemplate.postForEntity("http://AM-CONFIG/am-config/feerateModifyLog/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
+        FinmanChargeNewResponse count =restTemplate.postForEntity("http://AM-ADMIN/am-admin/feerateModifyLog/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
         if(count != null){
-            response = restTemplate.postForEntity("http://AM-TRADE/am-trade/config/finmanchargenew/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
+            response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/finmanchargenew/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
             if (response != null) {
                 response.setRtn(Response.SUCCESS);
                 return response;
@@ -5473,7 +5473,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int countRecordByProjectType(FinmanChargeNewRequest adminRequest){
-        return restTemplate.postForEntity( "http://AM-TRADE/am-trade/config/finmanchargenew/countRecordByProjectType",adminRequest,Integer.class).getBody();
+        return restTemplate.postForEntity( "http://AM-ADMIN/am-admin/config/finmanchargenew/countRecordByProjectType",adminRequest,Integer.class).getBody();
     }
 
     /**
