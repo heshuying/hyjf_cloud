@@ -6,6 +6,8 @@ package com.hyjf.admin.service;
 import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.resquest.admin.BailConfigRequest;
 import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
+import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 import java.util.List;
 
@@ -30,4 +32,19 @@ public interface BailConfigService extends BaseService {
      * @return
      */
     List<BailConfigCustomizeVO> selectRecordList(BailConfigRequest request);
+
+    /**
+     * 根据主键获取保证金配置
+     *
+     * @param id
+     * @return
+     */
+    BailConfigInfoCustomizeVO selectBailConfigById(Integer id);
+
+    /**
+     * 未配置保证金的机构编号
+     *
+     * @return
+     */
+    List<HjhInstConfigVO> selectNoUsedInstConfigList();
 }

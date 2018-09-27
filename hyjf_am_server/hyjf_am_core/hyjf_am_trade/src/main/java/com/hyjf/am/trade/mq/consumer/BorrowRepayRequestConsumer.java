@@ -47,7 +47,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
  * @version BorrowRepayRequestConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
 @Component
-@Profile("test")
+//@Profile("test")
 public class BorrowRepayRequestConsumer extends Consumer{
 	
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRepayRequestConsumer.class);

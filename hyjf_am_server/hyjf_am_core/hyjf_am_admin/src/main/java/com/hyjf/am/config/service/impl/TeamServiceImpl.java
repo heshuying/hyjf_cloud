@@ -66,6 +66,7 @@ public class TeamServiceImpl implements TeamService {
 	public int insertAction(TeamRequest request) {
 		Team team = new Team();
 		BeanUtils.copyProperties(request, team);
+		team.setImgappurl(team.getImgurl());
 		return teamMapper.insertSelective(team);
 	}
 

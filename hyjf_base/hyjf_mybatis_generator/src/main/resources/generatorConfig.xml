@@ -1906,6 +1906,17 @@
             <columnOverride column="exception_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+	    
+	    <table tableName="ht_debt_config" domainObjectName="DebtConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="toggle" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="config_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        
+          <table tableName="ht_debt_config_log" domainObjectName="DebtConfigLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="toggle" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
     </context>
 </generatorConfiguration>

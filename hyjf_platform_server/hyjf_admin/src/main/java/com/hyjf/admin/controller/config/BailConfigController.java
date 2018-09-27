@@ -4,17 +4,28 @@
 package com.hyjf.admin.controller.config;
 
 import com.hyjf.admin.beans.response.BailConfigResponseBean;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.controller.finance.bankaccountmanage.BankAccountManageController;
 import com.hyjf.admin.service.BailConfigService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.Page;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.FddTempletResponse;
+import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.BailConfigRequest;
 import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
+import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
+import com.hyjf.am.vo.trade.FddTempletVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.util.GetterUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,5 +69,43 @@ public class BailConfigController extends BaseController {
             bean.setRecordList(bailConfigCustomizeVOList);
         }
         return new AdminResult(bean);
+    }
+    /**
+     * 画面迁移(含有id更新，不含有id添加)
+     *
+     * @param idStr
+     * @return
+     */
+    @ApiOperation(value = "保证金配置-画面迁移", notes = "保证金配置-画面迁移")
+    @GetMapping("/info/{idStr}")
+    @ResponseBody
+    public AdminResult<BailConfigInfoCustomizeVO> info(@PathVariable String idStr) {
+        // 用户ID
+        Integer id = GetterUtil.getInteger(idStr);
+        if (null == id || 0 ==id) {
+            // 不含id返回下拉框列表数据
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        BailConfigInfoCustomizeVO bailConfigInfoCustomizeVO = bailConfigService.selectBailConfigById(id);
+        if(null == bailConfigInfoCustomizeVO) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        return new AdminResult<>(bailConfigInfoCustomizeVO);
+    }
+    /**
+     * 未配置保证金的机构编号下拉框
+     * @return
+     */
+    @ApiOperation(value = "未配置保证金的机构编号下拉框", notes = "未配置保证金的机构编号下拉框")
+    @GetMapping("/select_noused_inst_config_list")
+    public AdminResult<List<DropDownVO>> selectNoUsedInstConfigList(){
+        List<HjhInstConfigVO> hjhInstConfigVOList = bailConfigService.selectNoUsedInstConfigList();
+        if (null == hjhInstConfigVOList || hjhInstConfigVOList.size() <= 0) {
+            return new AdminResult<>(FAIL, "未查询到未配置保证金的机构");
+        }
+        List<DropDownVO> dropDownVOList = ConvertUtils.convertListToDropDown(hjhInstConfigVOList,"instCode","instName");
+        AdminResult<List<DropDownVO>> result=new AdminResult<List<DropDownVO>> ();
+        result.setData(dropDownVOList);
+        return result ;
     }
 }

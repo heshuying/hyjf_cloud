@@ -29,14 +29,6 @@ public interface MessagePushNoticesService {
      */
     MessagePushNoticesResponse insertRecord(MessagePushNoticesRequest bean);
 
-    /**
-     * 上传文件
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request) throws Exception;
-
 
     /**
      * 根据id查询单个消息
