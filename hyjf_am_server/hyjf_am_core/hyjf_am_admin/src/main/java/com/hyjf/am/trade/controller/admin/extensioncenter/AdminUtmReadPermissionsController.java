@@ -78,11 +78,9 @@ public class AdminUtmReadPermissionsController extends BaseConfigController {
 	 * @return
 	 */
 	@ApiOperation(value = "新增修改详情", notes = "新增修改详情")
-	@PostMapping("/getadminutmreadpermissions")
-	public AdminUtmReadPermissionsResponse getAdminUtmReadPermissions(@RequestBody AdminUtmReadPermissionsRequest request) {
-		AdminUtmReadPermissionsResponse response = new AdminUtmReadPermissionsResponse();
-		adminUtmReadPermissionsService.insertAction(request);
-		response.setRtn(AdminResponse.SUCCESS);
+	@PostMapping("/getrecord")
+	public AdminUtmReadPermissionsResponse getRecord(@RequestBody AdminUtmReadPermissionsRequest request) {
+		AdminUtmReadPermissionsResponse response =adminUtmReadPermissionsService.getAdminUtmReadPermissions(request);
 		return response;
 	}
 	/**
