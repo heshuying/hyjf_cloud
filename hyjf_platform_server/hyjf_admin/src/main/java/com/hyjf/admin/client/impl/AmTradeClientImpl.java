@@ -4123,7 +4123,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminBorrowStyleResponse borrowStyelInit(AdminBorrowStyleRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/borrowstyle/selectBorrowStyleListByPage";
+        String url = "http://AM-ADMIN/am-admin/config/borrowstyle/selectBorrowStyleListByPage";
         return restTemplate.postForEntity(url, adminRequest, AdminBorrowStyleResponse.class).getBody();
     }
 
@@ -4134,7 +4134,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminBorrowStyleResponse searchBorrowStyleInfo(AdminBorrowStyleRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/borrowstyle/searchBorrowStyleInfo";
+        String url = "http://AM-ADMIN/am-admin/config/borrowstyle/searchBorrowStyleInfo";
         return restTemplate.postForEntity(url, adminRequest, AdminBorrowStyleResponse.class).getBody();
     }
 
@@ -4145,7 +4145,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminBorrowStyleResponse insertBorrowStyle(AdminBorrowStyleRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/borrowstyle/insertBorrowStyle";
+        String url = "http://AM-ADMIN/am-admin/config/borrowstyle/insertBorrowStyle";
         return restTemplate.postForEntity(url, adminRequest, AdminBorrowStyleResponse.class).getBody();
     }
 
@@ -4156,7 +4156,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminBorrowStyleResponse updateBorrowStyle(AdminBorrowStyleRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/borrowstyle/updateBorrowStyle";
+        String url = "http://AM-ADMIN/am-admin/config/borrowstyle/updateBorrowStyle";
         return restTemplate.postForEntity(url, adminRequest, AdminBorrowStyleResponse.class).getBody();
     }
 
@@ -4167,7 +4167,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminBorrowStyleResponse deleteBorrowStyle(Integer id) {
-        String url = "http://AM-TRADE/am-trade/config/borrowstyle/deleteBorrowStyle";
+        String url = "http://AM-ADMIN/am-admin/config/borrowstyle/deleteBorrowStyle";
         return restTemplate.postForEntity(url, id, AdminBorrowStyleResponse.class).getBody();
     }
 
@@ -4178,7 +4178,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminBorrowStyleResponse modifyBorrowStyle(Integer id) {
-        String url = "http://AM-TRADE/am-trade/config/borrowstyle/modifyBorrowStyle";
+        String url = "http://AM-ADMIN/am-admin/config/borrowstyle/modifyBorrowStyle";
         return restTemplate.postForEntity(url, id, AdminBorrowStyleResponse.class).getBody();
     }
 
@@ -4189,7 +4189,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean validatorFieldCheck(AdminBorrowStyleRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/borrowstyle/validatorFieldCheck";
+        String url = "http://AM-ADMIN/am-admin/config/borrowstyle/validatorFieldCheck";
         return restTemplate.postForEntity(url, adminRequest, BooleanResponse.class).getBody().getResultBoolean();
     }
 

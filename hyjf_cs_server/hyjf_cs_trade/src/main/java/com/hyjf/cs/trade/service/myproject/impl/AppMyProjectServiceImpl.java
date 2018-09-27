@@ -343,7 +343,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 for (BorrowCreditVO borrowCredit : borrowCreditList) {
                     Integer creditNid = borrowCredit.getCreditNid();
                     JSONObject js = new JSONObject();
-                    js.put("date", GetDate.times10toStrYYYYMMDD(borrowCredit.getAddTime()));
+                    js.put("date", GetDate.date2Str(borrowCredit.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd")));
                     js.put("transferPrice", CommonUtils.formatAmount(borrowCredit.getCreditCapital()));
                     js.put("discount", CommonUtils.formatAmount(borrowCredit.getCreditDiscount()));
                     js.put("remainTime", borrowCredit.getCreditTerm());
@@ -460,7 +460,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             } else {
                 preckCredit(borrowBeansList1, "待收利息", CommonUtils.formatAmount(creditTender.getAssignInterest()) + "元");
             }
-            preckCredit(borrowBeansList1, "投资时间", GetDate.date2Str(creditTender.getAddTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+            preckCredit(borrowBeansList1, "投资时间", GetDate.date2Str(creditTender.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
             preck(detailBeansList, "投资信息", borrowBeansList1);
         } else {
             preck(detailBeansList, "投资信息", new ArrayList<BorrowDetailBean>());
@@ -580,8 +580,8 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 preckCredit(borrowBeansList1, "待收利息", CommonUtils.formatAmount(borrowTender.getRecoverAccountInterestWait()) + "元");
             }
 
-            if (borrowTender.getAddTime() != null) {
-                preckCredit(borrowBeansList1, "投资时间", GetDate.timestamptoStrYYYYMMDDHHMM(String.valueOf(borrowTender.getAddTime())));
+            if (borrowTender.getCreateTime() != null) {
+                preckCredit(borrowBeansList1, "投资时间", GetDate.date2Str(borrowTender.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
             } else {
                 preckCredit(borrowBeansList1, "投资时间", "");
             }
@@ -806,7 +806,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	        List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrow.getBorrowPeriod());
 	        if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
 	            try {
-	                String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getAddTime());
+	                String hodeDate = GetDate.date2Str(recover.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 	                lastdays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(borrowRepayPlans.get(0).getRepayTime()));
 	                holddays = GetDate.daysBetween(hodeDate, GetDate.getDateTimeMyTimeInMillis(nowTime));
 	            } catch (Exception e) {
@@ -1132,8 +1132,8 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             preckCredit(borrowBeansList1, "已收本息", DF_FOR_VIEW.format(borrowTenderVO.getRecoverAccountYes()) + "元");
             preckCredit(borrowBeansList1, "待收本金", DF_FOR_VIEW.format(borrowTenderVO.getRecoverAccountCapitalWait()) + "元");
             preckCredit(borrowBeansList1, "待收本息", DF_FOR_VIEW.format(borrowTenderVO.getRecoverAccountInterestWait()) + "元");
-            if(borrowTenderVO.getAddTime() != null){
-                String strDate = GetDate.timestamptoStrYYYYMMDDHHMM(String.valueOf(borrowTenderVO.getAddTime()));
+            if(borrowTenderVO.getCreateTime() != null){
+                String strDate = GetDate.date2Str(borrowTenderVO.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
                 logger.info("投资时间:"+strDate);
                 preckCredit(borrowBeansList1, "投资时间", strDate);
             }else{
