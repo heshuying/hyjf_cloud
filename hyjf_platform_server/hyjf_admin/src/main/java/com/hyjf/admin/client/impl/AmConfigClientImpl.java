@@ -12,6 +12,7 @@ import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
@@ -264,12 +265,22 @@ public class AmConfigClientImpl implements AmConfigClient {
         return response;
 
     }
-
+    @Override
+    public UtmPlatResponse getUtmPlatList(){
+        UtmPlatResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/preparedatas", UtmPlatResponse.class);
+        return response;
+    }
     @Override
     public AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean) {
         return restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/insert",
                 requestBean, AdminUtmReadPermissionsResponse.class);
     }
+    @Override
+    public AdminUtmReadPermissionsResponse getAdminUtmReadPermissions(AdminUtmReadPermissionsRequest requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/getrecord",
+                requestBean, AdminUtmReadPermissionsResponse.class);
+    }
+
 
     @Override
     public AdminUtmReadPermissionsResponse updateAction(AdminUtmReadPermissionsRequest requestBean) {

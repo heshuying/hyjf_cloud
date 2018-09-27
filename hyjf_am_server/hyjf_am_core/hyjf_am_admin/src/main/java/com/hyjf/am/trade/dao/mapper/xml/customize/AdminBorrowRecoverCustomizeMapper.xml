@@ -116,29 +116,46 @@
 	</resultMap>
 	<select id="selectBorrowRecoverList" resultMap="selectBorrowRecoverListMap" parameterType="com.hyjf.am.resquest.admin.BorrowRecoverRequest">
 		SELECT
-		binfo.`name` AS borrow_name,
-		bt.borrow_nid,
-		<!-- add by LSY START -->
+		b.borrow_nid              AS borrow_nid,
 		hic.inst_name,
-		<!-- add by LSY END -->
-		bt.nid AS order_num,
-		hic.inst_code AS inst_code,
-		bt.user_name AS username,
-		bt.account AS account,
-		bt.loan_fee AS service_price,
-		bt.loan_ordid AS loanOrdid,
+		b.user_id                 AS user_id,
+		b.borrow_user_name        AS username,
+		binfo.`name`                  AS borrow_name,
+		bpt.borrow_name           AS borrow_project_type_name,
+		CASE WHEN borrow_style = 'endday' THEN CONCAT(b.borrow_period, '天') ELSE CONCAT(b.borrow_period, '个月') END borrow_period,
+		CONCAT(b.borrow_apr, '%') AS borrow_apr,
+		bs.`name`                 AS borrow_style_name,
+		bt.nid                    AS order_num,
+		bt.loan_ordid             AS loanOrdid,
+		bt.user_name       AS tender_username,
+		bt.user_id                AS tender_user_id,
+		hic.inst_code 			  AS inst_code,
+		 bt.create_time AS create_time,
+		bt.account                AS account,
+		bt.account - bt.loan_fee  AS account_yes,
+		bt.loan_fee               AS loan_fee,
 		bt.loan_amount AS recover_price,
-		CASE WHEN bt.`status` = 1 THEN bt.loan_amount ELSE '0.00' END AS recover_price_over,
+		bt.loan_fee AS service_price,
 		bt.`status` AS is_recover,
-        DATE_FORMAT(bt.create_time, '%Y-%c-%d %H:%i:%s') AS time_recover,
-		DATE_FORMAT(br.create_time, '%Y-%c-%d %H:%i:%s') AS create_time,
-		br.loan_batch_no AS loan_batch_no,
-		b.plan_nid
+		br.create_time AS time_recover,
+		b.plan_nid,
+		bt.tender_user_attribute AS tender_user_attribute,
+		if(bt.invite_user_id=0 or bt.invite_user_id=null or bt.invite_user_id= '','',bt.invite_user_attribute) AS invite_user_attribute,
+		if(bt.invite_user_id=0 or bt.invite_user_id=null or bt.invite_user_id= '','',bt.invite_user_id) AS tender_referrer_user_id,
+		bt.invite_user_name AS tender_referrer_username,
+		bt.invite_region_name AS department_level_1_name,
+		bt.invite_branch_name AS department_level_2_name,
+		bt.invite_department_name AS team_name,
+		binfo.entrusted_flg AS entrusted_flg,
+		binfo.entrusted_user_name AS entrusted_user_name
 		FROM
 		ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
 		INNER JOIN ht_borrow_info binfo ON b.borrow_nid = binfo.borrow_nid
 		LEFT JOIN ht_borrow_recover br ON br.borrow_nid = bt.borrow_nid AND br.nid = bt.nid
+		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
 		<include refid="Where_Clause" />
 		ORDER BY

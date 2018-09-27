@@ -36,6 +36,8 @@ public interface ChannelStatisticsDetailService {
 	 */
 	UtmPlatResponse selectPcutmList();
 
+	UtmPlatResponse getUtmPlatList();
+
 	/**
 	 * 获取app 渠道列表
 	 * @return
