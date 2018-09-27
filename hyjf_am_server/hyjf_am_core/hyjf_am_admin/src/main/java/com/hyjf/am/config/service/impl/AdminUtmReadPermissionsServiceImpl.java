@@ -3,12 +3,6 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.AdminUtmReadPermissionsMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminUtmReadPermissionsCustomMapper;
 import com.hyjf.am.config.dao.model.auto.AdminUtmReadPermissions;
@@ -19,6 +13,12 @@ import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author tanyy
@@ -59,6 +59,19 @@ public class AdminUtmReadPermissionsServiceImpl implements AdminUtmReadPermissio
 		BeanUtils.copyProperties(request, record);
 		adminUtmReadPermissionsMapper.updateByPrimaryKey(record);
 	}
+	@Override
+	public AdminUtmReadPermissionsResponse getAdminUtmReadPermissions(AdminUtmReadPermissionsRequest request){
+		AdminUtmReadPermissionsResponse response = new AdminUtmReadPermissionsResponse();
+		if(StringUtils.isNotBlank(request.getId())){
+			AdminUtmReadPermissionsVO vo = new AdminUtmReadPermissionsVO();
+			AdminUtmReadPermissions adminUtmReadPermissions = adminUtmReadPermissionsMapper.selectByPrimaryKey(Integer.valueOf(request.getId()));
+			BeanUtils.copyProperties(adminUtmReadPermissions, vo);
+			response.setResult(vo);
+		}
+		return response;
+	}
+
+
 	@Override
 	public void deleteById(Integer id){
 		adminUtmReadPermissionsMapper.deleteByPrimaryKey(id);

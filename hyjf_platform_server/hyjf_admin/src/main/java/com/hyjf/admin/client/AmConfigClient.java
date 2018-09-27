@@ -8,6 +8,7 @@ import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
@@ -112,6 +113,8 @@ public interface AmConfigClient {
 
 
 	public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request);
+
+	UtmPlatResponse getUtmPlatList();
 	/**
 	 * 添加
 	 *
@@ -119,6 +122,9 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	public AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean);
+
+	AdminUtmReadPermissionsResponse getAdminUtmReadPermissions(AdminUtmReadPermissionsRequest requestBean);
+
 
 	/**
 	 * 修改
