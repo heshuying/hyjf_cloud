@@ -2,11 +2,9 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.AdminUtmReadPermissionsService;
-import com.hyjf.admin.service.ChannelStatisticsDetailService;
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
-import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
-import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,10 +17,19 @@ public class AdminUtmReadPermissionsServiceImpl implements AdminUtmReadPermissio
 	public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request){
 		return  amConfigClient.searchAction(request);
 	}
+	@Override
+	public UtmPlatResponse getUtmPlatList(){
+		return  amConfigClient.getUtmPlatList();
 
+	}
 	@Override
 	public AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean) {
 		return amConfigClient.insertAction(requestBean);
+	}
+	@Override
+	public AdminUtmReadPermissionsResponse getRecord(AdminUtmReadPermissionsRequest requestBean){
+		return amConfigClient.getAdminUtmReadPermissions(requestBean);
+
 	}
 
 	@Override

@@ -20,6 +20,8 @@ public interface AdminUtmReadPermissionsService {
 	 */
 	AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request);
 
+	/*UtmPlatResponse getUtmPlatList();*/
+
 	/**
 	 * 添加
 	 *
@@ -34,7 +36,7 @@ public interface AdminUtmReadPermissionsService {
 	 */
 	void updateAction(AdminUtmReadPermissionsRequest request);
 
-
+	AdminUtmReadPermissionsResponse getAdminUtmReadPermissions(AdminUtmReadPermissionsRequest request);
 
     /**
      * 删除
