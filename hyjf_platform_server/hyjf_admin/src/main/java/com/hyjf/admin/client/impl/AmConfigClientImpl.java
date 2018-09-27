@@ -1,5 +1,24 @@
 package com.hyjf.admin.client.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.am.response.BooleanResponse;
@@ -24,23 +43,6 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -1385,7 +1387,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<SmsMailTemplateVO> findMailAll() {
         SmsMailTemplateResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/smsMailTemplate/findAll", SmsMailTemplateResponse.class)
+                .getForEntity("http://AM-ADMIN/am-config/smsMailTemplate/findAll", SmsMailTemplateResponse.class)
                 .getBody();
         if (response != null) {
             return response.getResultList();
@@ -1414,7 +1416,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public MessagePushTemplateResponse findAll() {
         return restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/messagePushTemplate/getAllTemplates",
+                .getForEntity("http://AM-ADMIN/am-config/messagePushTemplate/getAllTemplates",
                         MessagePushTemplateResponse.class)
                 .getBody();
     }
@@ -1434,7 +1436,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public MessagePushTagVO findMsgTagByTagName(String tagName) {
         MessagePushTagVO result = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/messagePushTag/findMsgTagByTagName/" + tagName,
+                .getForEntity("http://AM-ADMIN/am-config/messagePushTag/findMsgTagByTagName/" + tagName,
                         MessagePushTagVO.class)
                 .getBody();
         return result;

@@ -29,7 +29,7 @@ public class AgreementController extends BaseTradeController{
      * @param aliasName
      * @return
      */
-    @ApiOperation(value = "获得协议模板pdf显示地址", httpMethod = "POST", notes = "获得协议模板pdf显示地址")
+    @ApiOperation(value = "获得协议模板pdf显示地址", httpMethod = "GET", notes = "获得协议模板pdf显示地址")
     @PostMapping("/getAgreementPdfOrImg")
     public NewAgreementResultBean gotAgreementPdfOrImg(@RequestParam(value="aliasName",required = true) String aliasName) {
         return agreementService.setProtocolImg(aliasName);
