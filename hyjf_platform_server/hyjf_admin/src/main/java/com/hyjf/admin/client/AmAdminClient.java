@@ -537,4 +537,12 @@ public interface AmAdminClient {
      * @return
      */
     boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 删除保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    boolean deleteBailConfig(BailConfigAddRequest bailConfigAddRequest);
 }

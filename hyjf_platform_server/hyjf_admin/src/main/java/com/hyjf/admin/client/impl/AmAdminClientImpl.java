@@ -209,6 +209,19 @@ public class AmAdminClientImpl implements AmAdminClient {
         return response.getResultBoolean();
     }
 
+    /**
+     * 删除保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public boolean deleteBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/delete_bail_config";
+        BooleanResponse response = restTemplate.postForEntity(url, bailConfigAddRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
     @Override
     public STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean) {
         String url = "http://AM-ADMIN/am-admin/stzfwhiteconfig/getUserByUserName";
