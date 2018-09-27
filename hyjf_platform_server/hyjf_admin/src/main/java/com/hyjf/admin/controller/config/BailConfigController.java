@@ -123,8 +123,8 @@ public class BailConfigController extends BaseController {
      * @return
      */
     @ApiOperation(value = "添加保证金配置", notes = "添加保证金配置")
-    @PostMapping("/insertBailConfig")
-    public AdminResult updateNifaContractTemplate(HttpServletRequest request, @RequestBody BailConfigRequestBean requestBean) {
+    @PostMapping("/insert_bail_config")
+    public AdminResult insertBailConfig(HttpServletRequest request, @RequestBody BailConfigRequestBean requestBean) {
 
         BailConfigAddRequest bailConfigAddRequest = new BailConfigAddRequest();
         BeanUtils.copyProperties(requestBean, bailConfigAddRequest);
@@ -132,12 +132,12 @@ public class BailConfigController extends BaseController {
         String instCode = bailConfigAddRequest.getInstCode();
 
         // 获取操作人id
-//        AdminSystemVO adminSystemVO = this.getUser(request);
-//        String loginUserId = adminSystemVO.getId();
-//        if (StringUtils.isNotBlank(loginUserId)) {
-//            bailConfigAddRequest.setCreateUserId(Integer.parseInt(loginUserId));
-//        }
-//        bailConfigAddRequest.setCreateTime(new Date());
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        String loginUserId = adminSystemVO.getId();
+        if (StringUtils.isNotBlank(loginUserId)) {
+            bailConfigAddRequest.setCreateUserId(Integer.parseInt(loginUserId));
+        }
+        bailConfigAddRequest.setCreateTime(new Date());
 
         // 发标额度上限
         bailConfigAddRequest.setPushMarkLine(bailConfigAddRequest.getBailTatol().multiply(new BigDecimal("100")).divide(new BigDecimal(bailConfigAddRequest.getBailRate()), 2, BigDecimal.ROUND_DOWN));
@@ -174,4 +174,45 @@ public class BailConfigController extends BaseController {
         return new AdminResult<>();
     }
 
+    /**
+     * 更新保证金配置
+     *
+     * @param request
+     * @param requestBean
+     * @return
+     */
+    @ApiOperation(value = "更新保证金配置", notes = "更新保证金配置")
+    @PostMapping("/update_bail_config")
+    public AdminResult updateBailConfig(HttpServletRequest request, @RequestBody BailConfigRequestBean requestBean) {
+
+        BailConfigAddRequest bailConfigAddRequest = new BailConfigAddRequest();
+        BeanUtils.copyProperties(requestBean, bailConfigAddRequest);
+        // 获取当前添加机构的编号
+        String instCode = bailConfigAddRequest.getInstCode();
+
+        // 获取操作人id
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        String loginUserId = adminSystemVO.getId();
+        if (StringUtils.isNotBlank(loginUserId)) {
+            bailConfigAddRequest.setUpdateUserId(Integer.parseInt(loginUserId));
+        }
+        bailConfigAddRequest.setUpdateTime(new Date());
+
+        boolean isInset = bailConfigService.updateBailConfig(bailConfigAddRequest);
+        if (isInset) {
+            // 根据还款方式更新保证金还款方式验证的有效性
+            isInset = this.bailConfigService.updateBailInfoDelFlg(instCode);
+        } else {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        // 更新info表失败
+        if (!isInset) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        // 日推标上限记录到redis
+        RedisUtils.set(RedisConstants.DAY_MARK_LINE + instCode, bailConfigAddRequest.getDayMarkLine().toString());
+        // 月推标上限记录到redis
+        RedisUtils.set(RedisConstants.MONTH_MARK_LINE + instCode, bailConfigAddRequest.getMonthMarkLine().toString());
+        return new AdminResult<>();
+    }
 }

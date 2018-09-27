@@ -196,6 +196,19 @@ public class AmAdminClientImpl implements AmAdminClient {
         return response.getResultBoolean();
     }
 
+    /**
+     * 更新保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/update_bail_config";
+        BooleanResponse response = restTemplate.postForEntity(url, bailConfigAddRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
     @Override
     public STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean) {
         String url = "http://AM-ADMIN/am-admin/stzfwhiteconfig/getUserByUserName";
