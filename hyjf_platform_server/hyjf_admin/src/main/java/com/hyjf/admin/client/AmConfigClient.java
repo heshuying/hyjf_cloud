@@ -1,6 +1,8 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.*;
+import com.hyjf.am.bean.admin.LockedConfig;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
@@ -1445,4 +1447,31 @@ public interface AmConfigClient {
 	 */
 	SubmissionsVO getSubmissionsRecord(SubmissionsRequest request);
 
+
+	/**
+	 * 前台用户锁定配置
+	 * @return
+	 */
+    LockedConfig.Config getFrontLockedCfg();
+
+	/**
+	 * 后台用户锁定配置
+	 * @return
+	 */
+	LockedConfig.Config getAdminLockedCfg();
+
+	/**
+	 * 保存前台用户锁定配置
+	 * @param webConfig
+	 * @return
+	 */
+	BooleanResponse saveFrontConfig(LockedConfig.Config webConfig);
+
+
+	/**
+	 * 保存后台用户锁定配置
+	 * @param adminConfig
+	 * @return
+	 */
+	BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig);
 }

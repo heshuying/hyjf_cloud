@@ -2,6 +2,7 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
@@ -2214,5 +2215,31 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getSubmissionsRecord", request,
                 SubmissionsVO.class);
 
+    }
+
+    @Override
+    public LockedConfig.Config getFrontLockedCfg() {
+
+        Response<LockedConfig.Config> response=restTemplate.getForObject("http://AM-ADMIN/am-config/lockedconfig/webconfig",Response.class);
+
+        return response.getResult();
+    }
+
+    @Override
+    public LockedConfig.Config getAdminLockedCfg() {
+
+        Response<LockedConfig.Config> response=restTemplate.getForObject("http://AM-ADMIN/am-config/lockedconfig/adminconfig",Response.class);
+
+        return response.getResult();
+    }
+
+    @Override
+    public BooleanResponse saveFrontConfig(LockedConfig.Config webConfig) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/lockedconfig/savewebconfig",webConfig,BooleanResponse.class);
+    }
+
+    @Override
+    public BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/lockedconfig/saveadminconfig",adminConfig,BooleanResponse.class);
     }
 }
