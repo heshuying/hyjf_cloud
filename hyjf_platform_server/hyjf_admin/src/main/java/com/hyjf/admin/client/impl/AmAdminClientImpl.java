@@ -9,6 +9,7 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
@@ -903,7 +904,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public LockedConfig.Config getFrontLockedCfg() {
 
-        Response<LockedConfig.Config> response=restTemplate.getForObject("http://AM-ADMIN/am-config/lockedconfig/webconfig",Response.class);
+        LockedConfigResponse response=restTemplate.getForObject("http://AM-ADMIN/am-admin/lockedconfig/webconfig",LockedConfigResponse.class);
 
         return response.getResult();
     }
@@ -911,18 +912,18 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public LockedConfig.Config getAdminLockedCfg() {
 
-        Response<LockedConfig.Config> response=restTemplate.getForObject("http://AM-ADMIN/am-config/lockedconfig/adminconfig",Response.class);
+        LockedConfigResponse response=restTemplate.getForObject("http://AM-ADMIN/am-admin/lockedconfig/adminconfig",LockedConfigResponse.class);
 
         return response.getResult();
     }
 
     @Override
     public BooleanResponse saveFrontConfig(LockedConfig.Config webConfig) {
-        return restTemplate.postForObject("http://AM-ADMIN/am-config/lockedconfig/savewebconfig",webConfig,BooleanResponse.class);
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/lockedconfig/savewebconfig",webConfig,BooleanResponse.class);
     }
 
     @Override
     public BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig) {
-        return restTemplate.postForObject("http://AM-ADMIN/am-config/lockedconfig/saveadminconfig",adminConfig,BooleanResponse.class);
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/lockedconfig/saveadminconfig",adminConfig,BooleanResponse.class);
     }
 }
