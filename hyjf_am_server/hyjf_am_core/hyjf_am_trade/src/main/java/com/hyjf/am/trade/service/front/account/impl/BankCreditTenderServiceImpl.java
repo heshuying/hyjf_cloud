@@ -1198,6 +1198,9 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 			List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(borrowRecoverExample);
 			BorrowRecover borrowRecover = borrowRecoverList.get(0);
 			// 还款表更新债转时间
+			if(borrowRecover!=null){
+				logger.info("修改债转表数据 addtime {} " ,request.getAddTime());
+			}
 			borrowRecover.setCreditTime(request.getAddTime());
 			boolean isUpdateFlag = this.borrowRecoverMapper.updateByPrimaryKey(borrowRecover) > 0 ? true : false;
 			if (!isUpdateFlag) {
