@@ -13,6 +13,8 @@ package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.math.BigDecimal;
+
 /**
  * app 实体
  */
@@ -88,7 +90,10 @@ public class AppProjectListCustomizeVO extends BaseVO {
 
 	private String mark;
 	// add by fuqiang 20171204 end 首页项目展示
-
+	/**是否产品加息*/
+	private Integer increaseInterestFlag;
+	/**产品加息数据库字段*/
+	private BigDecimal borrowExtraYieldOld;
 	/**
 	 * 构造方法
 	 */
@@ -311,5 +316,21 @@ public class AppProjectListCustomizeVO extends BaseVO {
 
 	public void setMark(String mark) {
 		this.mark = mark;
+	}
+
+	public Integer getIncreaseInterestFlag() {
+		return increaseInterestFlag;
+	}
+
+	public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
+		this.increaseInterestFlag = increaseInterestFlag;
+	}
+
+	public BigDecimal getBorrowExtraYieldOld() {
+		return borrowExtraYieldOld;
+	}
+
+	public void setBorrowExtraYieldOld(BigDecimal borrowExtraYieldOld) {
+		this.borrowExtraYieldOld = borrowExtraYieldOld;
 	}
 }

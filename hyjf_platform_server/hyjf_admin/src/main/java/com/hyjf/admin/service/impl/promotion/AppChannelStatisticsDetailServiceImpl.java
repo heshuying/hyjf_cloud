@@ -31,4 +31,8 @@ public class AppChannelStatisticsDetailServiceImpl implements AppChannelStatisti
     public AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
         return csMessageClient.getstatisticsList(request);
     }
+    @Override
+    public AppChannelStatisticsDetailResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
+        return csMessageClient.exportStatisticsList(request);
+    }
 }

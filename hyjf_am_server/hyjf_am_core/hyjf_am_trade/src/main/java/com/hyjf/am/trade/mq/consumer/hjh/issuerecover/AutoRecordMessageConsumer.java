@@ -92,77 +92,131 @@ public class AutoRecordMessageConsumer extends Consumer {
                 HjhPlanAsset mqHjhPlanAsset = autoIssueRecoverService.getHjhPlanAssetById(planId);
                 try {
 
-                    // 资产自动录标
-//                    logger.info(mqHjhPlanAsset.getAssetId()+" 开始自动录标 "+ mqHjhPlanAsset.getInstCode());
-//                    HjhPlanAsset hjhPlanAsset = autoIssueRecoverService.selectPlanAsset(mqHjhPlanAsset.getAssetId(), mqHjhPlanAsset.getInstCode());
-                    if(mqHjhPlanAsset == null){
+                    if(mqHjhPlanAsset != null){
                         logger.info(mqHjhPlanAsset.getAssetId()+" 该资产在表里不存在！！");
-                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                    }
+                        // 原有三方资产推送处理不变
+                        if (StringUtils.isNotBlank(mqHjhPlanAsset.getAssetId())) {
+                            // 资产自动备案
+                            logger.info(mqHjhPlanAsset.getAssetId()+" 开始自动备案 "+ mqHjhPlanAsset.getInstCode());
 
-                    // 手动推送标的
-                    if (StringUtils.isNotBlank(mqHjhPlanAsset.getBorrowNid())) {
-                        logger.info(mqHjhPlanAsset.getBorrowNid()+" 开始自动备案 "+ mqHjhPlanAsset.getInstCode());
-                        // redis 放重复检查
-                        String redisKey = "borrowrecord:" + mqHjhPlanAsset.getInstCode()+mqHjhPlanAsset.getBorrowNid();
-                        boolean result = RedisUtils.tranactionSet(redisKey, 300);
-                        if(!result){
-                            logger.info(mqHjhPlanAsset.getInstCode()+" 正在备案(redis) "+mqHjhPlanAsset.getBorrowNid());
-                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                        }
-                        // 获取当前标的详情
-                        Borrow borrow = autoRecordService.getBorrowByBorrowNid(mqHjhPlanAsset.getBorrowNid());
-                        BorrowInfo borrowInfo = autoRecordService.getBorrowInfoById(borrow.getId());
-                        // 标的状态位判断
-                        if (null == borrow.getStatus() || borrow.getStatus() != 0 ||
-                                null == borrow.getRegistStatus() || borrow.getRegistStatus() != 0) {
-                            logger.info("标的："+borrow.getBorrowNid()+" 不是备案状态");
-                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                        }
+                            // redis 放重复检查
+                            String redisKey = "borrowrecord:" + mqHjhPlanAsset.getInstCode()+mqHjhPlanAsset.getAssetId();
+                            boolean result = RedisUtils.tranactionSet(redisKey, 300);
+                            if(!result){
+                                logger.info(mqHjhPlanAsset.getInstCode()+" 正在备案(redis) "+mqHjhPlanAsset.getAssetId());
+                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                            }
 
-                        //判断该资产是否可以自动备案，是否关联计划
-                        HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
-                        if(hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoRecord() == null || hjhAssetBorrowType.getAutoRecord() != 1){
-                            logger.info(borrow.getBorrowNid()+" 标的不能自动备案,原因自动备案未配置");
-                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                        }
+                            // 业务校验
+                            if(mqHjhPlanAsset.getStatus() != null && mqHjhPlanAsset.getStatus().intValue() != 3 &&
+                                    mqHjhPlanAsset.getVerifyStatus() != null && mqHjhPlanAsset.getVerifyStatus().intValue() == 1){
+                                logger.info(mqHjhPlanAsset.getAssetId()+" 该资产状态不是备案状态");
+                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                            }
 
-                        boolean flag = autoRecordService.updateRecordBorrow(borrow,borrowInfo);
-                        if (!flag) {
-                            logger.error("自动备案失败！" + "[资产/标的借款编号：" + borrow.getBorrowNid() + "]");
-                        }else{
-                            // 成功后到初审队列
-                            if(borrowInfo.getEntrustedFlg() != null && borrowInfo.getEntrustedFlg().intValue() ==1){
-                                logger.info(borrow.getBorrowNid()+"  未推送，等待授权");
+                            //判断该资产是否可以自动备案，是否关联计划
+                            BorrowInfo borrowInfo = new BorrowInfo();
+                            borrowInfo.setInstCode(mqHjhPlanAsset.getInstCode());
+                            borrowInfo.setAssetType(mqHjhPlanAsset.getAssetType());
+                            HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
+                            if(hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoRecord() == null || hjhAssetBorrowType.getAutoRecord() != 1){
+                                logger.info(mqHjhPlanAsset.getAssetId()+" 该资产不能自动备案,原因自动备案未配置");
+                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                            }
+
+                            boolean flag = autoRecordService.updateRecordBorrow(mqHjhPlanAsset, hjhAssetBorrowType);
+                            if (!flag) {
+                                logger.error("自动备案失败！" + "[资产编号：" + mqHjhPlanAsset.getAssetId() + "]");
                             }else{
-                                // 审核保证金的标的发送MQ到消息队列
-                                if (null != hjhAssetBorrowType && null != hjhAssetBorrowType.getAutoBail() && hjhAssetBorrowType.getAutoBail() == 1) {
-                                    // 加入到消息队列
-                                    try {
-                                        JSONObject params = new JSONObject();
-                                        params.put("borrowNid", borrow.getBorrowNid());
-                                        autoBailMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_BAIL_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
-                                    } catch (MQException e) {
-                                        logger.error("发送【审核保证金队列】MQ失败...");
-                                    }
-                                    logger.info(borrow.getBorrowNid()+" 成功发送到审核保证金队列");
+                                // 成功后到初审队列
+                                if(mqHjhPlanAsset.getEntrustedFlg() != null && mqHjhPlanAsset.getEntrustedFlg().intValue() ==1){
+                                    logger.info(mqHjhPlanAsset.getAssetId()+"  未推送，等待授权");
+                                }else{
+                                    JSONObject params = new JSONObject();
+                                    params.put("borrowNid", mqHjhPlanAsset.getBorrowNid());
+                                    autoBailMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+
+                                    logger.info(mqHjhPlanAsset.getAssetId()+" 成功发送到初审队列");
+                                }
+
+                                // 备案成功后随机睡0.2到0.5秒
+                                try {
+                                    Random random = new Random();
+                                    int rand = (random.nextInt(4)+2)*100;
+                                    Thread.sleep(rand);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
                                 }
                             }
-
-                            // 备案成功后随机睡0.2到0.5秒
-                            try {
-                                Random random = new Random();
-                                int rand = (random.nextInt(4)+2)*100;
-                                Thread.sleep(rand);
-                            } catch (InterruptedException e) {
-                                logger.error("备案成功后随机睡异常！",e);
+                            logger.info(mqHjhPlanAsset.getAssetId()+" 结束自动备案");
+                        }
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }else{
+                        // 手动推送标的
+                        if (StringUtils.isNotBlank(autoIssuerecoverVO.getBorrowNid())) {
+                            logger.info(autoIssuerecoverVO.getBorrowNid()+" 开始自动备案 "+ autoIssuerecoverVO.getInstCode());
+                            // redis 放重复检查
+                            String redisKey = "borrowrecord:" + autoIssuerecoverVO.getInstCode()+autoIssuerecoverVO.getBorrowNid();
+                            boolean result = RedisUtils.tranactionSet(redisKey, 300);
+                            if(!result){
+                                logger.info(autoIssuerecoverVO.getInstCode()+" 正在备案(redis) "+autoIssuerecoverVO.getBorrowNid());
+                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                            }
+                            // 获取当前标的详情
+                            Borrow borrow = autoRecordService.getBorrowByBorrowNid(autoIssuerecoverVO.getBorrowNid());
+                            BorrowInfo borrowInfo = autoRecordService.getBorrowInfoById(borrow.getBorrowNid());
+                            // 标的状态位判断
+                            if (null == borrow.getStatus() || borrow.getStatus() != 0 ||
+                                    null == borrow.getRegistStatus() || borrow.getRegistStatus() != 0) {
+                                logger.info("标的："+borrow.getBorrowNid()+" 不是备案状态");
+                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             }
 
+                            //判断该资产是否可以自动备案，是否关联计划
+                            HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
+                            if(hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoRecord() == null || hjhAssetBorrowType.getAutoRecord() != 1){
+                                logger.info(borrow.getBorrowNid()+" 标的不能自动备案,原因自动备案未配置");
+                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                            }
+
+                            boolean flag = autoRecordService.updateRecordBorrow(borrow,borrowInfo);
+                            if (!flag) {
+                                logger.error("自动备案失败！" + "[资产/标的借款编号：" + borrow.getBorrowNid() + "]");
+                            }else{
+                                // 成功后到初审队列
+                                if(borrowInfo.getEntrustedFlg() != null && borrowInfo.getEntrustedFlg().intValue() ==1){
+                                    logger.info(borrow.getBorrowNid()+"  未推送，等待授权");
+                                }else{
+                                    // 审核保证金的标的发送MQ到消息队列
+                                    if (null != hjhAssetBorrowType && null != hjhAssetBorrowType.getAutoBail() && hjhAssetBorrowType.getAutoBail() == 1) {
+                                        // 加入到消息队列
+                                        try {
+                                            JSONObject params = new JSONObject();
+                                            params.put("borrowNid", borrow.getBorrowNid());
+                                            autoBailMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_BAIL_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                                        } catch (MQException e) {
+                                            logger.error("发送【审核保证金队列】MQ失败...");
+                                        }
+                                        logger.info(borrow.getBorrowNid()+" 成功发送到审核保证金队列");
+                                    }
+                                }
+
+                                // 备案成功后随机睡0.2到0.5秒
+                                try {
+                                    Random random = new Random();
+                                    int rand = (random.nextInt(4)+2)*100;
+                                    Thread.sleep(rand);
+                                } catch (InterruptedException e) {
+                                    logger.error("备案成功后随机睡异常！",e);
+                                }
+
+                            }
+
+                            logger.info(borrow.getBorrowNid()+" 结束自动备案");
+
                         }
-
-                        logger.info(borrow.getBorrowNid()+" 结束自动备案");
-
                     }
+
                 } catch (Exception e) {
                     logger.error("自动备案异常！",e);
                 }
