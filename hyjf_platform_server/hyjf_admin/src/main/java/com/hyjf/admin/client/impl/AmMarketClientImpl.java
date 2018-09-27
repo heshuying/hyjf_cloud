@@ -4,15 +4,12 @@ import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.am.resquest.market.ActivityListRequest;
-import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.am.vo.market.AdsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -263,7 +260,8 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 
 
-    @Override
+
+	@Override
     public ActivityListResponse getInfoById(Integer id) {
 		ActivityListResponse response = restTemplate.getForEntity("http://AM-MARKET/am-market/activity/getInfoById/" + id, ActivityListResponse.class).getBody();
         return response;
