@@ -261,4 +261,6 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	int updateHjhUserAuthLog(HjhUserAuthLog hjhUserAuthLog);
+
+	int isExistsUser(String userId);
 }
