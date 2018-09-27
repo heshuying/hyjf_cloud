@@ -233,7 +233,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public ParamNameResponse getNameCd(String code) {
-        ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-CONFIG/am-config/accountconfig/getNameCd/" + "FLOW_STATUS", ParamNameResponse.class)
+        ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-ADMIN/am-admin/paramname/getNameCd/" + "FLOW_STATUS", ParamNameResponse.class)
                 .getBody();
         if (amResponse != null && Response.SUCCESS.equals(amResponse.getRtn())) {
             return amResponse;
@@ -1794,7 +1794,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminOperationLogResponse selectOperationLogList(Map<String, Object> map) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/operationlog/list", map, AdminOperationLogResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/operationlog/list", map, AdminOperationLogResponse.class).getBody();
     }
 
     /**

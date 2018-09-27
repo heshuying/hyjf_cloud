@@ -1,15 +1,15 @@
 package com.hyjf.am.trade.service.admin;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 
+import java.util.List;
+
 /**
  * @author by xiehuili on 2018/7/17.
  */
-public interface OperationLogService {
+public interface TradeOperationLogService {
 
 
     /**
@@ -22,4 +22,5 @@ public interface OperationLogService {
      * @return
      */
     public List<FeerateModifyLogVO> selectInstAndAssertType(AdminOperationLogRequest adminRequest);
+
 }
