@@ -24,7 +24,7 @@ import java.util.List;
  * @version MessagePushTagController, v0.1 2018/9/26 15:51
  */
 @RestController
-@RequestMapping("/am-admin/messagePushTag")
+@RequestMapping("/am-config/messagePushTag")
 public class MessagePushTagController {
 
     @Autowired

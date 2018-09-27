@@ -75,12 +75,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     @Autowired
     private AmMarketClient amMarketClient;
 
-    @Value("${file.domain.head.url}")
-    private String fileHeadUrl;
-    @Value("${file.upload.head.path}")
-    private String fileHeadPath;
-
-
     /**
      * api注册参数校验
      *  @param
@@ -682,9 +676,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     private String assembleIconUrl(UserVO userVO) {
         String iconUrl = userVO.getIconUrl();
         if (StringUtils.isNotBlank(iconUrl)) {
-            String imghost = UploadFileUtils.getDoPath(fileHeadUrl);
+            String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);
-            String fileUploadTempPath = UploadFileUtils.getDoPath(fileHeadPath);
+            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
             return imghost + fileUploadTempPath + iconUrl;
         }
         return "";
