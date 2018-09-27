@@ -9,6 +9,8 @@ import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.BailConfigService;
 import com.hyjf.am.resquest.admin.BailConfigRequest;
 import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
+import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +46,26 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
     @Override
     public List<BailConfigCustomizeVO> selectRecordList(BailConfigRequest request) {
         return amAdminClient.selectBailConfigRecordList(request);
+    }
+
+    /**
+     * 根据主键获取保证金配置
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public BailConfigInfoCustomizeVO selectBailConfigById(Integer id) {
+        return amAdminClient.selectBailConfigById(id);
+    }
+
+    /**
+     * 未配置保证金的机构编号
+     *
+     * @return
+     */
+    @Override
+    public List<HjhInstConfigVO> selectNoUsedInstConfigList() {
+        return amAdminClient.selectNoUsedInstConfigList();
     }
 }

@@ -233,7 +233,8 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 				if (Validator.isNotNull(loanResult)) {
 					String retCode = loanResult.getRetCode();
 					if (StringUtils.isNotBlank(retCode)) {
-						if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)) {
+						if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)
+								|| "CA110629".equals(retCode)) {
 							return loanResult;
 						} else {
 							throw new Exception("实时放款失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "],银行返回retCode = " + retCode);
@@ -326,7 +327,9 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 			if (loanResult != null && StringUtils.isNotBlank(loanResult.getRetCode())) {
 				String retCode = loanResult.getRetCode();
 				logger.info(borrowNid+" 实时放款请求银行返回: " + retCode);
-				if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)) {//放款成功或放款重复
+				// CA110629  不能重复放款 JX900780  该标的已经做过满标自动放款
+				if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)
+						|| "CA110629".equals(retCode)) {//放款成功或放款重复
 					// 更新任务API状态
 					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SUCCESS);
 					if (apicronResultFlag) {

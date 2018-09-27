@@ -19,11 +19,12 @@ public class TeamRequestBean extends BasePage {
 	private String name;
 	@ApiModelProperty(value = "职位")
 	private String position;
-	@ApiModelProperty(value = "状态 0:关闭 1:启用")
+
 	private String imgurl;
 
 	private String imgappurl;
 
+	@ApiModelProperty(value = "状态 0:关闭 1:启用")
 	private Integer status;
 
 	private Integer order;

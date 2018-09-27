@@ -15,6 +15,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample.Criteria;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -857,8 +858,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 						//添加修改日志
 						BorrowLog borrowLog = new BorrowLog();
 						borrowLog.setBorrowNid(borrowNid);
+						Map<String, String> map = CacheUtil.getParamNameMap("BORROW_STATUS");
 						//String statusNameString = getBorrowStatusName(borrowBean.getStatus());
-						//borrowLog.setBorrowStatus(statusNameString);
+						borrowLog.setBorrowStatus(map.get(borrowBean.getStatus()));
 						borrowLog.setBorrowStatusCd(StringUtil.isBlank(borrowBean.getStatus())?0:Integer.valueOf(borrowBean.getStatus()));
 						borrowLog.setType(BORROW_LOG_UPDATE);
 						borrowLog.setCreateTime(new Date());

@@ -1,6 +1,8 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.*;
+import com.hyjf.am.bean.admin.LockedConfig;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
@@ -1437,6 +1439,5 @@ public interface AmConfigClient {
 	AdminUserResponse adminUserResetPwdAction(AdminRequest adminRequest);
 	
 	AdminUserResponse adminUsercCheckAction(AdminRequest adminRequest);
-
 
 }

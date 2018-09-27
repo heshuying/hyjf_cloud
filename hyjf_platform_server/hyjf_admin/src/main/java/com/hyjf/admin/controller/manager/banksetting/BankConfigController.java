@@ -9,6 +9,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankConfigService;
 import com.hyjf.admin.service.MessagePushNoticesService;
+import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
@@ -167,13 +168,16 @@ public class BankConfigController extends BaseController {
         return new AdminResult<>();
     }
 
+    @Autowired
+    private FileUpLoadUtil fileUpLoadUtil;
+
     @ApiOperation(value = "银行配置上传文件", notes = "上传文件")
     @PostMapping("/uploadFile")
 //    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);
             adminResult.setData(borrowCommonImages);
             adminResult.setStatus(SUCCESS);
             adminResult.setStatusDesc(SUCCESS_DESC);
