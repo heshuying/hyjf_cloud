@@ -38,4 +38,15 @@ public class DebtConfigController{
     }
 
 
+    @GetMapping("/getDebtConfigList")
+    public DebtConfigResponse getDebtConfigList(){
+        DebtConfigResponse response = new DebtConfigResponse();
+        List<DebtConfigVO> debtConfigVOList = debtConfigService.getDebtConfig();
+        if(!CollectionUtils.isEmpty(debtConfigVOList)){
+            response.setResultList(debtConfigVOList);
+        }
+        return response;
+    }
+
+
 }

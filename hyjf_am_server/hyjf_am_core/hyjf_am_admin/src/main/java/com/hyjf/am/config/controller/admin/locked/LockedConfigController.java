@@ -9,6 +9,7 @@ import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.config.service.locked.LockedConfigService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,8 @@ import io.swagger.annotations.Api;
  * @author cui
  * @version LockedConfigController, v0.1 2018/9/26 19:10
  */
-@Api(tags = "配置中心-登录失败配置")
 @RestController
-@RequestMapping("/am-config/lockedconfig")
+@RequestMapping(value = "/am-admin/lockedconfig")
 public class LockedConfigController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -30,10 +30,10 @@ public class LockedConfigController {
     @Autowired
     private LockedConfigService lockedConfigService;
 
-    @GetMapping("/webconfig")
-    public Response<LockedConfig.Config> getWebConfig(HttpServletRequest request) {
+    @GetMapping(value = "/webconfig")
+    public LockedConfigResponse getWebConfig(HttpServletRequest request) {
 
-        Response<LockedConfig.Config> Response = new Response<>();
+        LockedConfigResponse Response = new LockedConfigResponse();
 
         Response.setResult(LockedConfigManager.getInstance().getWebConfig());
 
@@ -41,18 +41,18 @@ public class LockedConfigController {
 
     }
 
-    @GetMapping("/adminconfig")
+    @GetMapping(value = "/adminconfig")
     @ResponseBody
-    public Response<LockedConfig.Config> getAdminConfig(HttpServletRequest request) {
+    public LockedConfigResponse getAdminConfig(HttpServletRequest request) {
 
-        Response<LockedConfig.Config> Response = new Response<>();
+        LockedConfigResponse response = new LockedConfigResponse();
 
-        Response.setResult(LockedConfigManager.getInstance().getAdminConfig());
+        response.setResult(LockedConfigManager.getInstance().getAdminConfig());
 
-        return Response;
+        return response;
     }
 
-    @PostMapping("/savewebconfig")
+    @PostMapping(value = "/savewebconfig")
     @ResponseBody
     public BooleanResponse setWebConfig(@RequestBody LockedConfig.Config webConfig) {
 
@@ -62,7 +62,7 @@ public class LockedConfigController {
     }
 
 
-    @PostMapping("/saveadminconfig")
+    @PostMapping(value = "/saveadminconfig")
     @ResponseBody
     public BooleanResponse setAdminConfig(@RequestBody LockedConfig.Config adminConfig) {
 

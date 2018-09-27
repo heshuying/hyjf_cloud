@@ -8,6 +8,7 @@ import com.hyjf.am.config.dao.model.auto.Team;
 import com.hyjf.am.config.dao.model.auto.TeamExample;
 import com.hyjf.am.config.service.TeamService;
 import com.hyjf.am.resquest.admin.TeamRequest;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +51,8 @@ public class TeamServiceImpl implements TeamService {
 			criteria.andStatusEqualTo(request.getStatus());
 		}
 		if (request.getStartTime() != null && request.getEndTime() != null) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
-			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
+			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.getDayStartOfSomeDay(request.getStartTime()));
+			criteria.andCreateTimeLessThanOrEqualTo(GetDate.getDayEndOfSomeDay(request.getEndTime()));
 		}
 		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
 			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());

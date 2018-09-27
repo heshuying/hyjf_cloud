@@ -8,7 +8,9 @@ import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
@@ -150,6 +152,48 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getResultList();
         }
         return null;
+    }
+
+    /**
+     * 添加保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public boolean insertBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/insert_bail_config";
+        BooleanResponse response = restTemplate.postForEntity(url, bailConfigAddRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 周期内发标已发额度
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public String selectSendedAccountByCyc(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_sended_account_by_cyc";
+        StringResponse response = restTemplate.postForEntity(url,bailConfigAddRequest,StringResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 根据该机构可用还款方式更新可用授信方式
+     *
+     * @param instCode
+     * @return
+     */
+    @Override
+    public boolean updateBailInfoDelFlg(String instCode) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/update_bail_info_delflg/" + instCode;
+        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
     }
 
     @Override
@@ -934,7 +978,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public LockedConfig.Config getFrontLockedCfg() {
 
-        Response<LockedConfig.Config> response=restTemplate.getForObject("http://AM-ADMIN/am-config/lockedconfig/webconfig",Response.class);
+        LockedConfigResponse response=restTemplate.getForObject("http://AM-ADMIN/am-admin/lockedconfig/webconfig",LockedConfigResponse.class);
 
         return response.getResult();
     }
@@ -942,18 +986,18 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public LockedConfig.Config getAdminLockedCfg() {
 
-        Response<LockedConfig.Config> response=restTemplate.getForObject("http://AM-ADMIN/am-config/lockedconfig/adminconfig",Response.class);
+        LockedConfigResponse response=restTemplate.getForObject("http://AM-ADMIN/am-admin/lockedconfig/adminconfig",LockedConfigResponse.class);
 
         return response.getResult();
     }
 
     @Override
     public BooleanResponse saveFrontConfig(LockedConfig.Config webConfig) {
-        return restTemplate.postForObject("http://AM-ADMIN/am-config/lockedconfig/savewebconfig",webConfig,BooleanResponse.class);
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/lockedconfig/savewebconfig",webConfig,BooleanResponse.class);
     }
 
     @Override
     public BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig) {
-        return restTemplate.postForObject("http://AM-ADMIN/am-config/lockedconfig/saveadminconfig",adminConfig,BooleanResponse.class);
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/lockedconfig/saveadminconfig",adminConfig,BooleanResponse.class);
     }
 }

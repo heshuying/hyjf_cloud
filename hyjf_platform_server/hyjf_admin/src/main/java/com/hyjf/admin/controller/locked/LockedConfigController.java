@@ -6,6 +6,7 @@ package com.hyjf.admin.controller.locked;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +32,9 @@ public class LockedConfigController extends BaseController {
 	@ApiOperation(value = "前台锁定配置", notes = "前台锁定配置")
 	@GetMapping(value = "/frontconfig")
 	@ResponseBody
-	public Response<LockedConfig.Config> getWebConfig() {
+	public LockedConfigResponse getWebConfig() {
 
-		Response<LockedConfig.Config> response = new Response<>();
+		LockedConfigResponse response = new LockedConfigResponse();
 
 		response.setResult(amAdminClient.getFrontLockedCfg());
 
@@ -44,9 +45,9 @@ public class LockedConfigController extends BaseController {
 	@ApiOperation(value = "后台锁定配置", notes = "后台锁定配置")
 	@GetMapping(value = "/adminconfig")
 	@ResponseBody
-	public Response<LockedConfig.Config> getAdminConfig() {
+	public LockedConfigResponse getAdminConfig() {
 
-		Response<LockedConfig.Config> response = new Response<>();
+		LockedConfigResponse response = new LockedConfigResponse();
 
 		response.setResult(amAdminClient.getAdminLockedCfg());
 

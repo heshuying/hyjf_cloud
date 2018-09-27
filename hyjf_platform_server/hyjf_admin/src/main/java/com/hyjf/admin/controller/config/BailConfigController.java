@@ -3,29 +3,33 @@
  */
 package com.hyjf.admin.controller.config;
 
+import com.hyjf.admin.beans.request.BailConfigRequestBean;
 import com.hyjf.admin.beans.response.BailConfigResponseBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.controller.finance.bankaccountmanage.BankAccountManageController;
 import com.hyjf.admin.service.BailConfigService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.Page;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.FddTempletResponse;
-import com.hyjf.am.response.user.HjhInstConfigResponse;
+import com.hyjf.am.resquest.admin.BailConfigAddRequest;
 import com.hyjf.am.resquest.admin.BailConfigRequest;
 import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
 import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
-import com.hyjf.am.vo.trade.FddTempletVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetterUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,7 +50,7 @@ public class BailConfigController extends BaseController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "保证金配置", notes = "保证金配置")
+    @ApiOperation(value = "保证金配置列表查询", notes = "保证金配置列表查询")
     @PostMapping(value = "/search")
     @ResponseBody
     public AdminResult<BailConfigResponseBean> search(@RequestBody BailConfigRequest request) {
@@ -70,42 +74,104 @@ public class BailConfigController extends BaseController {
         }
         return new AdminResult(bean);
     }
+
     /**
-     * 画面迁移(含有id更新，不含有id添加)
+     * 画面迁移
      *
      * @param idStr
      * @return
      */
-    @ApiOperation(value = "保证金配置-画面迁移", notes = "保证金配置-画面迁移")
+    @ApiOperation(value = "保证金配置详情", notes = "保证金配置详情")
     @GetMapping("/info/{idStr}")
     @ResponseBody
     public AdminResult<BailConfigInfoCustomizeVO> info(@PathVariable String idStr) {
         // 用户ID
         Integer id = GetterUtil.getInteger(idStr);
-        if (null == id || 0 ==id) {
-            // 不含id返回下拉框列表数据
+        if (null == id || 0 == id) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         BailConfigInfoCustomizeVO bailConfigInfoCustomizeVO = bailConfigService.selectBailConfigById(id);
-        if(null == bailConfigInfoCustomizeVO) {
+        if (null == bailConfigInfoCustomizeVO) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>(bailConfigInfoCustomizeVO);
     }
+
     /**
      * 未配置保证金的机构编号下拉框
+     *
      * @return
      */
     @ApiOperation(value = "未配置保证金的机构编号下拉框", notes = "未配置保证金的机构编号下拉框")
     @GetMapping("/select_noused_inst_config_list")
-    public AdminResult<List<DropDownVO>> selectNoUsedInstConfigList(){
+    public AdminResult<List<DropDownVO>> selectNoUsedInstConfigList() {
         List<HjhInstConfigVO> hjhInstConfigVOList = bailConfigService.selectNoUsedInstConfigList();
         if (null == hjhInstConfigVOList || hjhInstConfigVOList.size() <= 0) {
             return new AdminResult<>(FAIL, "未查询到未配置保证金的机构");
         }
-        List<DropDownVO> dropDownVOList = ConvertUtils.convertListToDropDown(hjhInstConfigVOList,"instCode","instName");
-        AdminResult<List<DropDownVO>> result=new AdminResult<List<DropDownVO>> ();
+        List<DropDownVO> dropDownVOList = ConvertUtils.convertListToDropDown(hjhInstConfigVOList, "instCode", "instName");
+        AdminResult<List<DropDownVO>> result = new AdminResult<List<DropDownVO>>();
         result.setData(dropDownVOList);
-        return result ;
+        return result;
     }
+
+    /**
+     * 添加保证金配置
+     *
+     * @param request
+     * @param requestBean
+     * @return
+     */
+    @ApiOperation(value = "添加保证金配置", notes = "添加保证金配置")
+    @PostMapping("/insertBailConfig")
+    public AdminResult updateNifaContractTemplate(HttpServletRequest request, @RequestBody BailConfigRequestBean requestBean) {
+
+        BailConfigAddRequest bailConfigAddRequest = new BailConfigAddRequest();
+        BeanUtils.copyProperties(requestBean, bailConfigAddRequest);
+        // 获取当前添加机构的编号
+        String instCode = bailConfigAddRequest.getInstCode();
+
+        // 获取操作人id
+//        AdminSystemVO adminSystemVO = this.getUser(request);
+//        String loginUserId = adminSystemVO.getId();
+//        if (StringUtils.isNotBlank(loginUserId)) {
+//            bailConfigAddRequest.setCreateUserId(Integer.parseInt(loginUserId));
+//        }
+//        bailConfigAddRequest.setCreateTime(new Date());
+
+        // 发标额度上限
+        bailConfigAddRequest.setPushMarkLine(bailConfigAddRequest.getBailTatol().multiply(new BigDecimal("100")).divide(new BigDecimal(bailConfigAddRequest.getBailRate()), 2, BigDecimal.ROUND_DOWN));
+        // 发标额度余额（默认为上限）
+        bailConfigAddRequest.setRemainMarkLine(bailConfigAddRequest.getPushMarkLine());
+
+        // 查询周期内发标已发额度
+        BigDecimal sendedAccountByCycBD = BigDecimal.ZERO;
+        String sendedAccountByCyc = this.bailConfigService.selectSendedAccountByCyc(bailConfigAddRequest);
+        if (StringUtils.isNotBlank(sendedAccountByCyc)) {
+            sendedAccountByCycBD = new BigDecimal(sendedAccountByCyc);
+        }
+        bailConfigAddRequest.setCycLoanTotal(sendedAccountByCycBD);
+
+        boolean isInset = bailConfigService.insertBailConfig(bailConfigAddRequest);
+        if (isInset) {
+            // 根据还款方式更新保证金还款方式验证的有效性
+            isInset = this.bailConfigService.updateBailInfoDelFlg(instCode);
+        } else {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        // 更新info表失败
+        if (!isInset) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        // 日推标上限记录到redis
+        RedisUtils.set(RedisConstants.DAY_MARK_LINE + instCode, bailConfigAddRequest.getDayMarkLine().toString());
+        // 月推标上限记录到redis
+        RedisUtils.set(RedisConstants.MONTH_MARK_LINE + instCode, bailConfigAddRequest.getMonthMarkLine().toString());
+        // 日额度累计redis(日累计不存再的情况初始化)
+        if (!RedisUtils.exists(RedisConstants.DAY_MARK_ACCUMULATE + instCode)) {
+            RedisUtils.set(RedisConstants.DAY_MARK_ACCUMULATE + instCode, "0");
+        }
+        return new AdminResult<>();
+    }
+
 }

@@ -58,7 +58,7 @@ public class TeamController extends BaseConfigController {
 	 */
 	@RequestMapping("/searchaction")
 	public TeamResponse searchAction(@RequestBody TeamRequest request) {
-		logger.info("查询内容管理-办公环境开始......");
+		logger.info("查询内容管理-团队管理开始......");
 		TeamResponse response = new TeamResponse();
 		List<Team> list = teamService.searchAction(request);
 		if (!CollectionUtils.isEmpty(list)) {
