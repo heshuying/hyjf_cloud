@@ -481,7 +481,9 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogRemark("联行号查询");
         bean.setLogClient(0);
-        return BankCallUtils.callApiBg(bean);
+        BankCallBean callBean =  BankCallUtils.callApiBg(bean);
+        logger.info("========银联号查询结果为:"+JSONObject.toJSON(callBean));
+        return callBean;
     }
 
 
