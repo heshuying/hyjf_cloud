@@ -27,9 +27,6 @@ public class SystemConfig {
     @Value("{hyjf.web.ui.bindemail}")
     public String webUIBindEmail;
 
-    @Value("${http.hyjf.web.host}")
-    public String httpWebHost;
-
     @Value("${hyjf.bank.instcode}")
     public String bankInstcode;
 
@@ -260,14 +257,6 @@ public class SystemConfig {
 
     public void setWebHost(String webHost) {
         this.webHost = webHost;
-    }
-
-    public String getHttpWebHost() {
-        return httpWebHost;
-    }
-
-    public void setHttpWebHost(String httpWebHost) {
-        this.httpWebHost = httpWebHost;
     }
 
     public String getBankInstcode() {
