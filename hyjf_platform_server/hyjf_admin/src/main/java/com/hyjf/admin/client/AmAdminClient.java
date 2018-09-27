@@ -529,4 +529,12 @@ public interface AmAdminClient {
      * @return
      */
     boolean updateBailInfoDelFlg(String instCode);
+
+    /**
+     * 更新保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest);
 }

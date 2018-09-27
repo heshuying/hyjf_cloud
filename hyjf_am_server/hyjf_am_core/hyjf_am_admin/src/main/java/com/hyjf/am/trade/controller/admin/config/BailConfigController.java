@@ -148,4 +148,16 @@ public class BailConfigController extends BaseController {
         return response;
     }
 
+    /**
+     * @Author: liushouyi
+     * @Desc 更新保证金配置
+     */
+    @ApiOperation(value = "更新保证金配置")
+    @PostMapping("/update_bail_config")
+    public BooleanResponse updateBailConfig(@RequestBody BailConfigAddRequest bailConfigAddRequest){
+        BooleanResponse response = new BooleanResponse();
+        response.setResultBoolean(bailConfigService.updateBailConfig(bailConfigAddRequest));
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
 }
