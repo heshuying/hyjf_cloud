@@ -482,5 +482,7 @@ public class AutoMapper {
     @Resource
     protected BorrowDeleteMapper borrowDeleteMapper;
 
+    @Resource
+    protected HjhBailConfigLogMapper hjhBailConfigLogMapper;
 }
 
