@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.SmsNoticeConfig;
 import com.hyjf.am.resquest.config.SmsNoticeConfigRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -50,4 +50,11 @@ public interface SmsNoticeConfigService {
      * @return
      */
     Integer onlyName(String name);
+
+    /**
+     * 根据name查询开启的通知配置
+     * @param name
+     * @return
+     */
+    SmsNoticeConfig findNoticeByName(String name);
 }
