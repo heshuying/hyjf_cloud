@@ -1648,7 +1648,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public UserInfoCustomizeResponse queryUserInfoByUserName(AdminSubConfigRequest request){
-		return restTemplate.postForEntity("http://AM-USER/am-user/config/queryUserInfoByUserName",request, UserInfoCustomizeResponse.class).getBody();
+		return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/queryUserInfoByUserName",request, UserInfoCustomizeResponse.class).getBody();
 	}
 	@Override
 	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest) {

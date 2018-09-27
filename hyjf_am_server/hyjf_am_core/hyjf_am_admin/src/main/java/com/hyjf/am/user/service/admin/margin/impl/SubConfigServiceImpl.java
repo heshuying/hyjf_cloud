@@ -18,7 +18,6 @@ import java.util.Map;
  */
 @Service("amUserSubConfigServiceImpl")
 public class SubConfigServiceImpl extends BaseServiceImpl implements SubConfigService {
-
     /**
      * 保证金配置，根据用户名称查询用户信息
      *
@@ -33,14 +32,29 @@ public class SubConfigServiceImpl extends BaseServiceImpl implements SubConfigSe
             UserInfoCustomizeVO vo = new UserInfoCustomizeVO();
             if (map.get("user_id")!=null) {
                 vo.setUserId(Integer.parseInt(String.valueOf(map.get("user_id"))));
+                vo.setUserName((String)map.get("username"));
+                vo.setTrueName((String)map.get("truename"));
+                vo.setRoleId((Integer)map.get("role_id"));
+                if((Boolean) map.get("user_type")){
+                    vo.setStatus(1);
+                }
+                if(!(Boolean) map.get("user_type")){
+                    vo.setStatus(0);
+                }
+                vo.setCooperateNum((String)map.get("cooperateNum"));
+                vo.setAccount((String)map.get("account"));
                 vo.setOpen((String)map.get("OPEN"));
-                vo.setStatus((Integer)map.get("OPEN"));
+                if((Boolean) map.get("status")){
+                    vo.setStatus(1);
+                }
+                if(!(Boolean) map.get("status")){
+                    vo.setStatus(0);
+                }
                 res.setResult(vo);
-                return res;
+
             }
-            return null;
         }
-        return null;
+        return res;
     }
 
     /**
@@ -56,9 +70,7 @@ public class SubConfigServiceImpl extends BaseServiceImpl implements SubConfigSe
         List<SubCommissionListConfigVo> configVo=this.subConfigCustomizeMapper.selectByExampleUsername(subCommissionListConfigCustomize);
         if(!CollectionUtils.isEmpty(configVo)){
             response.setResultList(configVo);
-            return response;
         }
-        response.setMessage("查询的数据为空！");
         return response;
     }
 }

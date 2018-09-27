@@ -310,7 +310,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public AdminSubConfigResponse subconfig(AdminSubConfigRequest adminRequest){
-        String url = "http://AM-ADMIN/am-admin/config/subconfig";
+        String url = "http://AM-ADMIN/am-admin/config/subconfig/isExist";
         AdminSubConfigResponse response = restTemplate.postForEntity(url,adminRequest, AdminSubConfigResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response;

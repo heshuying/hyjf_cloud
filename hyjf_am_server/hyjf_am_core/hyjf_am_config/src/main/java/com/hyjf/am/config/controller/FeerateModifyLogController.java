@@ -32,7 +32,9 @@ public class FeerateModifyLogController {
             response.setMessage(Response.SUCCESS_MSG);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
     /**
      * 修改费率配置日志
@@ -48,7 +50,9 @@ public class FeerateModifyLogController {
             response.setMessage(Response.SUCCESS_MSG);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
 
     /**
@@ -65,7 +69,9 @@ public class FeerateModifyLogController {
             response.setMessage(Response.SUCCESS_MSG);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
 
 
