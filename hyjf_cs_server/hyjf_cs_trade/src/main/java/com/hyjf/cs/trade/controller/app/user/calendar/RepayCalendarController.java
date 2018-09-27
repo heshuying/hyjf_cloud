@@ -37,8 +37,8 @@ public class RepayCalendarController extends BaseTradeController {
     @PostMapping(value = "/getRepayCalendar")
     public JSONObject getRepayCalendar(@RequestParam(required = false) String year,
                                        @RequestParam(required = false) String month,
-                                       @RequestParam(value = "page") String page,
-                                       @RequestParam(value = "pageSize") String pageSize,
+                                       @RequestParam(value = "page", defaultValue = "1") String page,
+                                       @RequestParam(value = "pageSize", defaultValue = "10") String pageSize,
                                        @RequestHeader(value = "userId") Integer userId
                                        ) {
         logger.info(RepayCalendarController.class.toString(), "startLog -- /hyjf-app/user/repayCalendar/getRepayCalendar");

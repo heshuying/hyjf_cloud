@@ -56,4 +56,9 @@ public class ActivityListServiceImpl implements ActivityListService {
     public List<ParamNameVO> getParamNameList(String client) {
         return amConfigClient.getParamNameList(client);
     }
+
+    @Override
+    public ActivityListResponse getRecordById(Integer id) {
+        return amMarketClient.getInfoById(id);
+    }
 }

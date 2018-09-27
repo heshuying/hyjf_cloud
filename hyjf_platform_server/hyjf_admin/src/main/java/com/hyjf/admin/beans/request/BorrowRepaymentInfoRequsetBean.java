@@ -85,6 +85,8 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
      */
     @ApiModelProperty(value = "列表来源标识 0：还款明细 1：批次还款-查看按钮")
     private  int serchFlag = 0;
+    @ApiModelProperty(value = "资产来源")
+    private String instCodeSrch;
 
     public String getBorrowNidSrch() {
         return borrowNidSrch;
@@ -204,5 +206,13 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
 
     public void setBorrowNid(String borrowNid) {
         this.borrowNid = borrowNid;
+    }
+
+    public String getInstCodeSrch() {
+        return instCodeSrch;
+    }
+
+    public void setInstCodeSrch(String instCodeSrch) {
+        this.instCodeSrch = instCodeSrch;
     }
 }

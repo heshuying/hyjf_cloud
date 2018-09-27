@@ -27,28 +27,22 @@ public class SystemConfig {
     @Value("{hyjf.web.ui.bindemail}")
     public String webUIBindEmail;
 
-    @Value("${http.hyjf.web.host}")
-    public String httpWebHost;
-
     @Value("${hyjf.bank.instcode}")
     public String bankInstcode;
 
     @Value("${hyjf.bank.bankcode}")
     public String bankCode;
 
-    @Value("${file.domain.head.url}")
-    public String headUrl;
-
+    /**
+     * cds加速文件路径
+     */
     @Value("${file.domain.url}")
     public String fileDomainUrl;
 
     @Value("${file.upload.real.path}")
     public String fileUpload;
 
-    @Value("${file.upload.head.path}")
-    public String uploadHeadPath;
-
-    @Value("${hyjf.app.server.host}")
+    @Value("${hyjf.front.app.host}")
     public String appServerHost;
 
     /**
@@ -238,10 +232,6 @@ public class SystemConfig {
         this.forgetpassword = forgetpassword;
     }
 
-    public String getUploadHeadPath() {
-        return uploadHeadPath;
-    }
-
     public String getActivityId() {
         return activityId;
     }
@@ -250,24 +240,12 @@ public class SystemConfig {
         this.activityId = activityId;
     }
 
-    public void setUploadHeadPath(String uploadHeadPath) {
-        this.uploadHeadPath = uploadHeadPath;
-    }
-
     public String getWebHost() {
         return webHost;
     }
 
     public void setWebHost(String webHost) {
         this.webHost = webHost;
-    }
-
-    public String getHttpWebHost() {
-        return httpWebHost;
-    }
-
-    public void setHttpWebHost(String httpWebHost) {
-        this.httpWebHost = httpWebHost;
     }
 
     public String getBankInstcode() {
@@ -284,14 +262,6 @@ public class SystemConfig {
 
     public void setBankCode(String bankCode) {
         this.bankCode = bankCode;
-    }
-
-    public String getHeadUrl() {
-        return headUrl;
-    }
-
-    public void setHeadUrl(String headUrl) {
-        this.headUrl = headUrl;
     }
 
     public String getFileDomainUrl() {

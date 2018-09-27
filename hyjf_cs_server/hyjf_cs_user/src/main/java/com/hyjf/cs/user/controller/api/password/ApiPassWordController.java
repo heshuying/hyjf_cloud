@@ -59,7 +59,7 @@ public class ApiPassWordController extends BaseController {
      * @return
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
-    @PostMapping(value = "/setTeaderPassword")
+    @PostMapping(value = "/setPassword.do")
     public ModelAndView setPassword(@RequestBody ThirdPartyTransPasswordRequestBean transPasswordRequestBean) {
         logger.info("api端设置交易密码 start");
         ModelAndView modelAndView = new ModelAndView();
@@ -143,7 +143,7 @@ public class ApiPassWordController extends BaseController {
      * @return
      */
     @ApiOperation(value = " 设置交易密码异步回调",notes = " 设置交易密码异步回调")
-    @PostMapping(value = "/passwordReturn")
+    @PostMapping(value = "/passwordBgreturn")
     public BankCallResult passwordBgreturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
         logger.info("api 交易密码异步回调start");
         // 返回值  9-22修改
@@ -192,7 +192,7 @@ public class ApiPassWordController extends BaseController {
      * @param transPasswordRequestBean
      * @return
      */
-    @PostMapping(value = "/resetPassword")
+    @PostMapping(value = "/resetPassword.do")
     @ApiOperation(value = "修改交易密码", notes = "修改交易密码")
     public ModelAndView resetPassword(@RequestBody ThirdPartyTransPasswordRequestBean transPasswordRequestBean) {
        ModelAndView modelAndView = new ModelAndView();

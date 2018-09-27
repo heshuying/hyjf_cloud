@@ -8,6 +8,7 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
@@ -18,13 +19,12 @@ import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.vo.admin.AdminPermissionsVO;
-import com.hyjf.am.vo.admin.PoundageCustomizeVO;
-import com.hyjf.am.vo.admin.PoundageDetailVO;
-import com.hyjf.am.vo.admin.PoundageLedgerVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -78,9 +78,41 @@ public class AmAdminClientImpl implements AmAdminClient {
         return null;
     }
 
+    /**
+     * 获取保证金配置总数
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer selectBailConfigCount(BailConfigRequest request) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_bail_config_count";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+    /**
+     * 获取保证金配置列表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<BailConfigCustomizeVO> selectBailConfigRecordList(BailConfigRequest request) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_bail_config_record_list";
+        BailConfigCustomizeResponse response = restTemplate.postForEntity(url,request,BailConfigCustomizeResponse.class).getBody();
+        if (BailConfigCustomizeResponse.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
     @Override
     public STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean) {
-        String url = "http://AM-ADMIN/am-trade/stzfwhiteconfig/getUserByUserName";
+        String url = "http://AM-ADMIN/am-admin/stzfwhiteconfig/getUserByUserName";
         STZHWhiteListResponse response = restTemplate.postForEntity(url,requestBean,STZHWhiteListResponse.class).getBody();
         if (STZHWhiteListResponse.isSuccess(response)) {
             return response;
@@ -278,7 +310,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public AdminSubConfigResponse subconfig(AdminSubConfigRequest adminRequest){
-        String url = "http://AM-ADMIN/am-admin/config/subconfig";
+        String url = "http://AM-ADMIN/am-admin/config/subconfig/isExist";
         AdminSubConfigResponse response = restTemplate.postForEntity(url,adminRequest, AdminSubConfigResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response;
@@ -620,6 +652,24 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response;
         }
         return null;
+    }
+
+    @Override
+    public LockedUserMgrResponse getLockedUserList(LockedeUserListRequest request, boolean isFront) {
+        String url="http://AM-ADMIN/am-user/lockeduser/frontlist";
+        if(!isFront){
+            url="http://AM-ADMIN/am-user/lockeduser/adminlist";
+        }
+        return restTemplate.postForObject(url,request,LockedUserMgrResponse.class);
+    }
+
+    @Override
+    public BooleanResponse unlock(LockedUserInfoVO vo, boolean isFront) {
+        String url="http://AM-ADMIN/am-user/lockeduser/frontunlock";
+        if(!isFront){
+            url="http://AM-ADMIN/am-user/lockeduser/adminunlock";
+        }
+        return restTemplate.postForObject(url,vo,BooleanResponse.class);
     }
 
     @Override

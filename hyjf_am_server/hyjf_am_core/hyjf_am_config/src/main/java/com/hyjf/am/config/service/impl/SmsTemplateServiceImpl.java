@@ -62,6 +62,9 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 			if (StringUtils.isNotBlank(request.getTplName())) {
 				criteria.andTplNameEqualTo(request.getTplName());
 			}
+			if (StringUtils.isNotBlank(request.getTplCode())) {
+				criteria.andTplCodeEqualTo(request.getTplCode());
+			}
 			if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
 				int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
 				int limitEnd = request.getPageSize();

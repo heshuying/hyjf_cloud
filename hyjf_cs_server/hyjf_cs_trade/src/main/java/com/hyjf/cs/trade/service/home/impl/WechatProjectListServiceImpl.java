@@ -9,6 +9,7 @@ import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.WechatProjectListResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
+import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
@@ -16,6 +17,7 @@ import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetDate;
@@ -44,9 +46,6 @@ import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -191,7 +190,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         userValidation.put("isInvested", isInvested);
         //是否缴费授权
         userValidation.put("isPaymentAuth", isPaymentAuth);
-        borrowDetailResultBean.put("userValidation", userValidation);
+
 
         //获取标的信息
         if (borrow == null) {
@@ -344,6 +343,101 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                     }
                 }
             }
+
+            // add 汇计划二期前端优化  针对区分原始标与债转标 nxl 20180424 start
+            /**
+             * 查看标的详情
+             * 原始标：复审中、还款中、已还款状态下 如果当前用户是否投过此标，是：可看，否则不可见
+             * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有投资者和承接者可查看
+             */
+            int count = 0;
+            if (userId != null){
+                count = amTradeClient.countUserInvest(userId, borrowNid);
+            }
+            Boolean viewableFlag = false;
+            String statusDescribe = "";
+            DebtCreditRequest request = new DebtCreditRequest();
+            request.setBorrowNid(borrowNid);
+            List<HjhDebtCreditVO> listHjhDebtCredit = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+            // add by nxl 是否发生过债转
+            Boolean isDept = false;
+            if (null != listHjhDebtCredit && listHjhDebtCredit.size() > 0) {
+                // 部分承接
+                request.setCreditStatus(Arrays.asList(0, 1));
+                List<HjhDebtCreditVO> listHjhDebtCreditOnePlace = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+                if (null != listHjhDebtCreditOnePlace && listHjhDebtCreditOnePlace.size() > 0) {
+                    // 部分债转
+                    viewableFlag = true;
+                } else {
+                    // 完全债转
+                    for (HjhDebtCreditVO deptcredit : listHjhDebtCredit) {
+                        //待承接本金 = 0
+                        if (null != deptcredit.getCreditCapitalWait() && deptcredit.getCreditCapitalWait().intValue() == 0) {
+                            int intCount = 0;
+                            if (userId != null){
+                                Map<String, Object> mapParam = new HashMap<String, Object>();
+                                mapParam.put(ProjectConstant.PARAM_USER_ID, userId);
+                                mapParam.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
+                                amTradeClient.countCreditTenderByBorrowNidAndUserId(mapParam);
+                            }
+                            if (intCount > 0 || count > 0) {
+                                viewableFlag = true;
+                            }
+                        }
+                    }
+                }
+                statusDescribe = "还款中";
+                isDept = true;
+            } else {
+                // 原始标
+                // 复审中，还款中和已还款状态投资者(可看)
+                if ("3".equals(borrow.getStatus()) || "4".equals(borrow.getStatus())
+                        || "5".equals(borrow.getStatus())) {
+                    if (count > 0) {
+                        // 可以查看标的详情
+                        viewableFlag = true;
+                    } else {
+                        // 提示仅投资者可看
+                        viewableFlag = false;
+                    }
+                } else {
+                    viewableFlag = true;
+                }
+                // 原始标根据状态显示
+                switch (borrow.getBorrowStatus()) {
+                    case "0":
+                        statusDescribe = "备案中";
+                        break;
+                    case "1":
+                        statusDescribe = "初审中";
+                        break;
+                    case "2":
+                        statusDescribe = "投资中";
+                        break;
+                    case "3":
+                        statusDescribe = "复审中";
+                        break;
+                    case "4":
+                        statusDescribe = "还款中";
+                        break;
+                    case "5":
+                        statusDescribe = "已还款";
+                        break;
+                    case "6":
+                        statusDescribe = "已流标";
+                        break;
+                    case "7":
+                        statusDescribe = "待授权";
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            userValidation.put("viewableFlag", viewableFlag);
+            userValidation.put("statusDescribe", statusDescribe);
+            userValidation.put("isDept", isDept);
+            borrowDetailResultBean.put("userValidation", userValidation);
             borrowDetailResultBean.put("repayPlan", repayPlanList);
             borrowDetailResultBean.put("borrowMeasuresMea", borrow.getBorrowMeasuresMea());
             borrowDetailResultBean.put(CustomConstants.APP_STATUS, HomePageDefine.WECHAT_STATUS_SUCCESS);
@@ -859,7 +953,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     /**
      * 检查当前访问用户是否登录、是否开户、是否设置交易密码、是否允许使用、是否完成风险测评、是否授权
      *
-     * @param token
+     * @param
      */
     private void setUserValidationInfo(Map<String, Object> resultMap, Integer userId) {
 

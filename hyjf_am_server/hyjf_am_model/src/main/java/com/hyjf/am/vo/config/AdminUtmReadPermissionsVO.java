@@ -4,9 +4,10 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -54,6 +55,11 @@ public class AdminUtmReadPermissionsVO extends BaseVO implements Serializable {
      * 添加时间
      */
     private Date createTime;
+
+    /*
+     * 添加时间
+     */
+    private String createTimeStr;
 
     /*
      * 页码
@@ -143,5 +149,13 @@ public class AdminUtmReadPermissionsVO extends BaseVO implements Serializable {
     }
     public void setTimeEndSrch(String timeEndSrch) {
         this.timeEndSrch = timeEndSrch;
+    }
+
+    public String getCreateTimeStr() {
+        return GetDate.date2Str(getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
     }
 }

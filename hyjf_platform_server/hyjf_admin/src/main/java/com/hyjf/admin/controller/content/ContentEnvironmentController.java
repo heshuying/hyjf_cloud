@@ -10,6 +10,7 @@ import com.hyjf.admin.service.ContentEnvironmentService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ContentEnvironmentResponse;
+import com.hyjf.am.vo.config.ContentEnvironmentVO;
 import com.hyjf.common.file.UploadFileUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +32,7 @@ import java.util.LinkedList;
  * @author fuqiang
  * @version ContentEnvironmentController, v0.1 2018/7/11 11:13
  */
-@Api(tags = "内容管理-办公环境")
+@Api(tags = "公司管理-办公环境")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentenvironment")
 public class ContentEnvironmentController extends BaseController {
@@ -45,7 +46,7 @@ public class ContentEnvironmentController extends BaseController {
 	@Autowired
 	private ContentEnvironmentService contentEnvironmentService;
 
-	@ApiOperation(value = "内容管理-办公环境列表查询", notes = "内容管理-办公环境列表查询")
+	@ApiOperation(value = "公司管理-办公环境列表查询", notes = "公司管理-办公环境列表查询")
 	@PostMapping("/searchaction")
 	public AdminResult searchAction(
 			@RequestBody ContentEnvironmentRequestBean requestBean) {
@@ -59,7 +60,14 @@ public class ContentEnvironmentController extends BaseController {
 		return new AdminResult(response);
 	}
 
-	@ApiOperation(value = "内容管理-办公环境", notes = "内容管理-办公环境")
+	@ApiOperation(value = "公司管理-办公环境初始化", notes = "公司管理-办公环境初始化")
+	@PostMapping("/select_by_id")
+	public AdminResult selectById(@RequestBody ContentEnvironmentRequestBean requestBean) {
+		ContentEnvironmentVO vo = contentEnvironmentService.selectById(requestBean);
+		return new AdminResult(vo);
+	}
+
+	@ApiOperation(value = "公司管理-办公环境", notes = "公司管理-办公环境")
 	@PostMapping("/insert")
 	public AdminResult add(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		int num = contentEnvironmentService.insertAction(requestBean);
@@ -69,7 +77,7 @@ public class ContentEnvironmentController extends BaseController {
 		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
-	@ApiOperation(value = "修改内容管理-办公环境", notes = "修改内容管理-办公环境")
+	@ApiOperation(value = "修改公司管理-办公环境", notes = "修改公司管理-办公环境")
 	@PostMapping("/update")
 	public AdminResult update(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		int num = contentEnvironmentService.updateAction(requestBean);
@@ -79,7 +87,7 @@ public class ContentEnvironmentController extends BaseController {
 		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
-	@ApiOperation(value = "修改内容管理-办公环境状态", notes = "修改内容管理-办公环境状态")
+	@ApiOperation(value = "修改公司管理-办公环境状态", notes = "修改公司管理-办公环境状态")
 	@PostMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		int num = contentEnvironmentService.updateStatus(requestBean);
@@ -89,7 +97,7 @@ public class ContentEnvironmentController extends BaseController {
 		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
-	@ApiOperation(value = "删除内容管理-办公环境", notes = "删除内容管理-办公环境")
+	@ApiOperation(value = "删除公司管理-办公环境", notes = "删除公司管理-办公环境")
 	@GetMapping("/delete/{id}")
 	public AdminResult updatestatus(@PathVariable Integer id) {
 		int num = contentEnvironmentService.deleteById(id);
@@ -126,32 +134,36 @@ public class ContentEnvironmentController extends BaseController {
 		Iterator<String> itr = multipartRequest.getFileNames();
 		MultipartFile multipartFile = null;
 
-		while (itr.hasNext()) {
-			multipartFile = multipartRequest.getFile(itr.next());
-			String fileRealName = String.valueOf(System.currentTimeMillis());
-			String originalFilename = multipartFile.getOriginalFilename();
-			fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
+		try {
+			while (itr.hasNext()) {
+				multipartFile = multipartRequest.getFile(itr.next());
+				String fileRealName = String.valueOf(System.currentTimeMillis());
+				String originalFilename = multipartFile.getOriginalFilename();
+				fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
 
-			// 文件大小
-			String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
+				// 文件大小
+				String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
 
-			fileMeta = new BorrowCommonImage();
-			int index = originalFilename.lastIndexOf(".");
-			if (index != -1) {
-				fileMeta.setImageName(originalFilename.substring(0, index));
-			} else {
-				fileMeta.setImageName(originalFilename);
+				fileMeta = new BorrowCommonImage();
+				int index = originalFilename.lastIndexOf(".");
+				if (index != -1) {
+					fileMeta.setImageName(originalFilename.substring(0, index));
+				} else {
+					fileMeta.setImageName(originalFilename);
+				}
+
+				fileMeta.setImageRealName(fileRealName);
+				fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
+				fileMeta.setImageType(multipartFile.getContentType());
+				fileMeta.setErrorMessage(errorMessage);
+				// 获取文件路径
+				fileMeta.setImagePath(fileUploadTempPath + fileRealName);
+				fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
+				files.add(fileMeta);
 			}
-
-			fileMeta.setImageRealName(fileRealName);
-			fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
-			fileMeta.setImageType(multipartFile.getContentType());
-			fileMeta.setErrorMessage(errorMessage);
-			// 获取文件路径
-			fileMeta.setImagePath(fileUploadTempPath + fileRealName);
-			fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
-			files.add(fileMeta);
+			return new AdminResult<LinkedList<BorrowCommonImage>>(files);
+		} catch (Exception e) {
+			return new AdminResult<>(FAIL, "上传图片失败");
 		}
-		return new AdminResult<LinkedList<BorrowCommonImage>>(files);
 	}
 }

@@ -350,6 +350,16 @@ public class RedisConstants {
     public static final String CONCURRENCE_REPAY_REQUEST = "repay_borrow_nid:";
 
     /**
+     * 记录密码错误次数Redis前缀admin端
+     */
+    public static final String PASSWORD_ERR_COUNT_ADMIN = "password_err_count_admin_";
+
+    /**
+     * 记录密码错误次数Redis前缀.web.app三端共享
+     */
+    public static final String PASSWORD_ERR_COUNT_ALL = "password_err_count_all_";
+
+    /**
      * 日推标累计额度前缀
      */
     public static final String DAY_MARK_ACCUMULATE = "bail_day_mark_accumulate:";

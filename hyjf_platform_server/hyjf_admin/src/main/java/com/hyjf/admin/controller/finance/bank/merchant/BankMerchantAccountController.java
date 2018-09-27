@@ -131,7 +131,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "设置交易密码异步回调")
     @PostMapping(value = "/passwordBgreturn")
-    public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
+    public String passwordBgreturn(BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
         BankMerchantAccountVO bankMerchantAccount = bankMerchantAccountService.getBankMerchantAccount(bean.getAccountId());
@@ -165,7 +165,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "重置交易密码异步回调")
     @PostMapping(value = "/resetPasswordBgreturn")
-    public String resetPasswordBgreturn(@ModelAttribute BankCallBean bean) {
+    public String resetPasswordBgreturn(BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         result.setMessage("交易密码修改成功");
         result.setStatus(true);

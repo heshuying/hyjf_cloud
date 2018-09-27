@@ -5,14 +5,12 @@ package com.hyjf.am.config.controller.admin.maintenance;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.config.controller.BaseConfigController;
-import com.hyjf.am.config.dao.model.auto.AdminPermissions;
 import com.hyjf.am.config.dao.model.auto.ParamName;
 import com.hyjf.am.config.service.ParamNameService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.resquest.admin.AdminParamNameRequest;
-import com.hyjf.am.vo.admin.AdminPermissionsVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -154,6 +152,22 @@ public class ParamNameController extends BaseConfigController {
     }
 
     /**
+     * 子账户类型 查询
+     * @return
+     */
+    @RequestMapping("/getParamNameList/{code}")
+    public ParamNameResponse getParamNameList(@PathVariable String code){
+        ParamNameResponse response = new ParamNameResponse();
+        List<ParamName> paramNames=paramNameService.getParamNameList(code);
+        if(!CollectionUtils.isEmpty(paramNames)){
+            List<ParamNameVO> paramName= CommonUtils.convertBeanList(paramNames,ParamNameVO.class);
+            response.setResultList(paramName);
+            return response;
+        }
+        response.setRtn(Response.FAIL);
+        return response;
+    }
+    /**
      * @return
      */
     @RequestMapping("/getNameCd/{code}")
@@ -163,6 +177,21 @@ public class ParamNameController extends BaseConfigController {
         if(!CollectionUtils.isEmpty(paramNames)){
             List<ParamNameVO> paramName= CommonUtils.convertBeanList(paramNames,ParamNameVO.class);
             response.setResultList(paramName);
+            return response;
+        }
+        response.setRtn(Response.FAIL);
+        return response;
+    }
+    /**
+     * （条件）列表查询--其他相关字段
+     * @return
+     */
+    @RequestMapping("/selectProjectTypeParamList")
+    public ParamNameResponse  selectProjectTypeParamList(){
+        ParamNameResponse response = new ParamNameResponse();
+        List<ParamNameVO> paramNames=paramNameService.selectProjectTypeParamList();
+        if(!CollectionUtils.isEmpty(paramNames)){
+            response.setResultList(paramNames);
             return response;
         }
         response.setRtn(Response.FAIL);

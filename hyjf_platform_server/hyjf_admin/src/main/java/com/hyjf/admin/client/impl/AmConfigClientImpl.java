@@ -1,5 +1,24 @@
 package com.hyjf.admin.client.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.am.response.BooleanResponse;
@@ -12,6 +31,7 @@ import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
@@ -23,23 +43,6 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -232,7 +235,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public ParamNameResponse getNameCd(String code) {
-        ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-CONFIG/am-config/accountconfig/getNameCd/" + "FLOW_STATUS", ParamNameResponse.class)
+        ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-ADMIN/am-admin/paramname/getNameCd/" + "FLOW_STATUS", ParamNameResponse.class)
                 .getBody();
         if (amResponse != null && Response.SUCCESS.equals(amResponse.getRtn())) {
             return amResponse;
@@ -264,12 +267,22 @@ public class AmConfigClientImpl implements AmConfigClient {
         return response;
 
     }
-
+    @Override
+    public UtmPlatResponse getUtmPlatList(){
+        UtmPlatResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/preparedatas", UtmPlatResponse.class);
+        return response;
+    }
     @Override
     public AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean) {
         return restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/insert",
                 requestBean, AdminUtmReadPermissionsResponse.class);
     }
+    @Override
+    public AdminUtmReadPermissionsResponse getAdminUtmReadPermissions(AdminUtmReadPermissionsRequest requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/getrecord",
+                requestBean, AdminUtmReadPermissionsResponse.class);
+    }
+
 
     @Override
     public AdminUtmReadPermissionsResponse updateAction(AdminUtmReadPermissionsRequest requestBean) {
@@ -1374,7 +1387,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<SmsMailTemplateVO> findMailAll() {
         SmsMailTemplateResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/smsMailTemplate/findAll", SmsMailTemplateResponse.class)
+                .getForEntity("http://AM-ADMIN/am-config/smsMailTemplate/findAll", SmsMailTemplateResponse.class)
                 .getBody();
         if (response != null) {
             return response.getResultList();
@@ -1403,7 +1416,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public MessagePushTemplateResponse findAll() {
         return restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/messagePushTemplate/getAllTemplates",
+                .getForEntity("http://AM-ADMIN/am-config/messagePushTemplate/getAllTemplates",
                         MessagePushTemplateResponse.class)
                 .getBody();
     }
@@ -1423,7 +1436,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public MessagePushTagVO findMsgTagByTagName(String tagName) {
         MessagePushTagVO result = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/messagePushTag/findMsgTagByTagName/" + tagName,
+                .getForEntity("http://AM-ADMIN/am-config/messagePushTag/findMsgTagByTagName/" + tagName,
                         MessagePushTagVO.class)
                 .getBody();
         return result;
@@ -1432,12 +1445,12 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public SiteSettingsResponse selectSiteSetting() {
-        return restTemplate.getForObject("http://AM-ADMIN/am-admin/siteSettings/findOne", SiteSettingsResponse.class);
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/siteSettings/findOne", SiteSettingsResponse.class);
     }
 
     @Override
     public SiteSettingsResponse updateAction(SiteSettingRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-ADMIN/am-admin/siteSettings/update", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/siteSettings/update", requestBean,
                 SiteSettingsResponse.class);
     }
 
@@ -1783,7 +1796,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminOperationLogResponse selectOperationLogList(Map<String, Object> map) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/operationlog/list", map, AdminOperationLogResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/operationlog/list", map, AdminOperationLogResponse.class).getBody();
     }
 
     /**
@@ -1806,7 +1819,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public MessagePushTagResponse getMessagePushTagList(MessagePushTagRequest request) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTag/searchList";
+        String url = "http://AM-ADMIN/am-config/messagePushTag/searchList";
         MessagePushTagResponse response = restTemplate.postForEntity(url, request, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1816,7 +1829,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse getMessagePushTag(Integer id) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTag/getRecord/" + id;
+        String url = "http://AM-ADMIN/am-config/messagePushTag/getRecord/" + id;
         MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1826,7 +1839,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse insretMessagePushTag(MessagePushTagRequest request) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTag/insertMessagePushTag";
+        String url = "http://AM-ADMIN/am-config/messagePushTag/insertMessagePushTag";
         MessagePushTagResponse response = restTemplate.postForEntity(url, request, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1836,7 +1849,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse updateMessagePushTag(MessagePushTagRequest tagRequest) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTag/updateMessagePushTag";
+        String url = "http://AM-ADMIN/am-config/messagePushTag/updateMessagePushTag";
         MessagePushTagResponse response = restTemplate.postForEntity(url, tagRequest, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1846,7 +1859,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse deleteMessagePushTag(Integer id) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTag/deleteMessagePushTag/" + id;
+        String url = "http://AM-ADMIN/am-config/messagePushTag/deleteMessagePushTag/" + id;
         MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1856,7 +1869,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse updatePushTag(MessagePushTagVO record) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTag/updatePushTag";
+        String url = "http://AM-ADMIN/am-config/messagePushTag/updatePushTag";
         MessagePushTagResponse response = restTemplate.postForEntity(url, record, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1866,7 +1879,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTagResponse countByTagCode(Integer id, String tagCode) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTag/countByTagCode/" + id + "/" + tagCode;
+        String url = "http://AM-ADMIN/am-config/messagePushTag/countByTagCode/" + id + "/" + tagCode;
         MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1876,7 +1889,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse getMessagePushTemplateList(MsgPushTemplateRequest request) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/searchList";
+        String url = "http://AM-ADMIN/am-config/messagePushTemplate/searchList";
         MessagePushTemplateResponse response = restTemplate.postForEntity(url, request, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1886,7 +1899,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public List<MessagePushTagVO> getAllPushTagList() {
-        String url = "http://AM-ADMIN/am-admin/messagePushTag/getAllPushTagList";
+        String url = "http://AM-ADMIN/am-config/messagePushTag/getAllPushTagList";
         MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -1896,7 +1909,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse findMsgPushTemplateById(Integer id) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/findMsgPushTemplateById/" + id;
+        String url = "http://AM-ADMIN/am-config/messagePushTemplate/findMsgPushTemplateById/" + id;
         MessagePushTemplateResponse response = restTemplate.getForEntity(url, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1906,7 +1919,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public List<MessagePushTagVO> getTagList() {
-        String url = "http://AM-ADMIN/am-admin/messagePushTag/getTagList";
+        String url = "http://AM-ADMIN/am-config/messagePushTag/getTagList";
         MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -2062,7 +2075,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse updateMsgPushTemplate(MsgPushTemplateRequest templateRequest) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/updateAction";
+        String url = "http://AM-ADMIN/am-config/messagePushTemplate/updateAction";
         MessagePushTemplateResponse response = restTemplate.postForEntity(url, templateRequest, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;
@@ -2072,7 +2085,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse deleteMessagePushTemplate(List<Integer> recordList) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/deleteAction/" + recordList;
+        String url = "http://AM-ADMIN/am-config/messagePushTemplate/deleteAction/" + recordList;
         MessagePushTemplateResponse response = restTemplate.getForEntity(url, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;
@@ -2082,7 +2095,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse countByTemplateCode(Integer id, String templateCode) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/countByTemplateCode/" + id + "/" + templateCode;
+        String url = "http://AM-ADMIN/am-config/messagePushTemplate/countByTemplateCode/" + id + "/" + templateCode;
         MessagePushTemplateResponse response = restTemplate.getForEntity(url, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;
@@ -2132,7 +2145,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse insertMessageTemplate(MessagePushTemplateVO templateVO) {
-        String url = "http://AM-ADMIN/am-admin/messagePushTemplate/insertMessageTemplate";
+        String url = "http://AM-ADMIN/am-config/messagePushTemplate/insertMessageTemplate";
         MessagePushTemplateResponse response = restTemplate.postForEntity(url, templateVO, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;

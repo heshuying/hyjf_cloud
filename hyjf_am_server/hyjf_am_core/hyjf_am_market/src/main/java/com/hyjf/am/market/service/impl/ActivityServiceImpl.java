@@ -115,6 +115,17 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
+     * 获取活动详情
+     * @param id
+     * @return
+     */
+    @Override
+    public ActivityList getActivityInfo(Integer id) {
+        ActivityList list = activityListMapper.selectByPrimaryKey(id);
+        return list;
+    }
+
+    /**
      * 添加活动
      *
      * @param activityList

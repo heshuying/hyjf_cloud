@@ -7,7 +7,9 @@ import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.service.AdminUtmReadPermissionsService;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
+import com.hyjf.am.trade.service.admin.extensioncenter.ChannelStatisticsDetailService;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +30,9 @@ public class AdminUtmReadPermissionsController extends BaseConfigController {
 	private Logger logger = LoggerFactory.getLogger(AdminUtmReadPermissionsController.class);
 	@Resource
 	private AdminUtmReadPermissionsService adminUtmReadPermissionsService;
+
+	@Resource
+	private ChannelStatisticsDetailService channelStatisticsDetailService;
 	/**
 	 * 根据条件查询渠道帐号管理
 	 *
@@ -43,6 +48,13 @@ public class AdminUtmReadPermissionsController extends BaseConfigController {
 		return response;
 	}
 
+	@ApiOperation(value = "渠道权限列表转换接口", notes = "渠道权限列表转换接口")
+	@GetMapping("/preparedatas")
+	public UtmPlatResponse prepareDatas() {
+		logger.info("渠道权限列表转换接口......");
+		UtmPlatResponse response = channelStatisticsDetailService.getUtmPlatList();
+		return response;
+	}
 	/**
 	 * 添加渠道帐号管理
 	 *
@@ -58,6 +70,19 @@ public class AdminUtmReadPermissionsController extends BaseConfigController {
 		return response;
 	}
 
+
+	/**
+	 * 新增修改详情
+	 *
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "新增修改详情", notes = "新增修改详情")
+	@PostMapping("/getrecord")
+	public AdminUtmReadPermissionsResponse getRecord(@RequestBody AdminUtmReadPermissionsRequest request) {
+		AdminUtmReadPermissionsResponse response =adminUtmReadPermissionsService.getAdminUtmReadPermissions(request);
+		return response;
+	}
 	/**
 	 * 修改渠道帐号管理
 	 *

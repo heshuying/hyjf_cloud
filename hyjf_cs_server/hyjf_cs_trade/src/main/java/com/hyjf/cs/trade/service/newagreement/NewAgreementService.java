@@ -3,14 +3,15 @@
  */
 package com.hyjf.cs.trade.service.newagreement;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.trade.*;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 import java.util.List;
@@ -109,9 +110,29 @@ public interface NewAgreementService extends BaseTradeService{
 	List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName);
 
 	/**
+	 * 协议名称 动态获得
+	 *
+	 * @return
+	 */
+	List<ProtocolTemplateVO> getdisplayNameDynamic();
+
+	/**
 	 * 获得协议模板图片
 	 * @param aliasName
 	 * @return
 	 */
-	AppNewAgreementVO setProtocolImg(String aliasName);
+	NewAgreementResultBean setProtocolImg(String aliasName);
+
+	/**
+	 * 获得协议模板pdf
+	 * @param aliasName
+	 * @return
+	 */
+	NewAgreementResultBean getAgreementPdf(String aliasName);
+
+	/**
+	 * 协议名称-动态获得
+	 * @return
+	 */
+	JSONObject getdisplayNameDynamicMethod();
 }

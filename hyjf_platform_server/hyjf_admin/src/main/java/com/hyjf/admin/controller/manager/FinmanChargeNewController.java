@@ -22,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,7 +118,9 @@ public class FinmanChargeNewController extends BaseController {
     @ApiOperation(value = "添加费率配置", notes = "添加费率配置")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public AdminResult insertFinmanCharge(@RequestBody FinmanChargeNewRequest adminRequest){
+    public AdminResult insertFinmanCharge(@RequestBody FinmanChargeNewRequest adminRequest,HttpServletRequest request){
+        adminRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
+//        adminRequest.setCreateUserId(3);
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
         // 表单校验(双表校验)
         ModelAndView model = new ModelAndView();
@@ -152,7 +155,9 @@ public class FinmanChargeNewController extends BaseController {
     @ApiOperation(value = "修改费率配置", notes = "修改费率配置")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public AdminResult updateFinmanCharge(@RequestBody FinmanChargeNewRequest adminRequest){
+    public AdminResult updateFinmanCharge(@RequestBody FinmanChargeNewRequest adminRequest,HttpServletRequest request){
+        adminRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
+//        adminRequest.setCreateUserId(3);
         //修改费率 配置（双表）
         FinmanChargeNewResponse response= this.finmanChargeNewService.updateRecord(adminRequest);
         if (response == null) {
@@ -166,7 +171,9 @@ public class FinmanChargeNewController extends BaseController {
     @ApiOperation(value = "删除费率配置", notes = "删除费率配置")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public AdminResult deleteFinmanCharge(@RequestBody FinmanChargeNewRequest adminRequest){
+    public AdminResult deleteFinmanCharge(@RequestBody FinmanChargeNewRequest adminRequest,HttpServletRequest request){
+        adminRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
+//        adminRequest.setCreateUserId(3);
         //删除费率 配置（双表）
         FinmanChargeNewResponse response= this.finmanChargeNewService.deleteRecord(adminRequest);
         if (response == null) {

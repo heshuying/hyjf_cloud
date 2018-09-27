@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.TeamRequestBean;
 import com.hyjf.am.response.config.TeamResponse;
+import com.hyjf.am.vo.config.TeamVO;
 
 /**
  * @author fuqiang
@@ -50,4 +51,11 @@ public interface TeamService {
 	 * @return
 	 */
     int deleteById(Integer id);
+
+	/**
+	 * 公司管理-团队介绍初始化
+	 * @param requestBean
+	 * @return
+	 */
+	TeamVO selectById(TeamRequestBean requestBean);
 }
