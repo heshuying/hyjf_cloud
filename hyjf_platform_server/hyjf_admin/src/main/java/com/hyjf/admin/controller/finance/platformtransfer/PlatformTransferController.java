@@ -209,7 +209,11 @@ public class PlatformTransferController extends BaseController {
                         cell.setCellValue(record.getRemark());
                     }
                     else if (celLength == 9) {
-                        cell.setCellValue(record.getTxDate());
+                        String dateStr = String.valueOf(record.getTxDate());
+                        String year = dateStr.substring(0,4);
+                        String month = dateStr.substring(4,6);
+                        String day = dateStr.substring(6,8);
+                        cell.setCellValue(year + "-" + month + "-" + day);
                     }
                     else if (celLength == 10) {
                         cell.setCellValue(record.getTxTimeStr());
