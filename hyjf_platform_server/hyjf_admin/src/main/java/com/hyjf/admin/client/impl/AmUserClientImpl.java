@@ -2305,7 +2305,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int isExistsUser(String userId) {
         int response = restTemplate
-                .getForEntity("http://AM-USER/am-user/user/isExistsUser/" + userId, Integer.class)
+                .getForEntity("http://AM-ADMIN/am-user/user/isExistsUser/" + userId, Integer.class)
                 .getBody();
         return response;
 	}
