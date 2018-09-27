@@ -55,6 +55,11 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
     @Autowired
     SystemConfig systemConfig;
 
+
+    private static final String OPT_SUCCESS_URL = "/result/success";
+
+    private static final String OPT_ERROR_URL = "/result/fail";
+
     @Override
     public BankMerchantAccountResponse selectBankMerchantAccount(BankMerchantAccountListRequest form) {
         return amTradeClient.selectBankMerchantAccount(form);
@@ -98,8 +103,8 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
         BankCallBean bean = new BankCallBean();
         bean.setLogOrderId(GetOrderIdUtils.getUsrId(40));
         // 同步地址  是否跳转到前端页面
-        String retUrl = systemConfig.getAdminFrontHost() +"/admin/openError"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = systemConfig.getAdminFrontHost() +"/admin/openSuccess";
+        String retUrl = systemConfig.getAdminFrontHost() +OPT_ERROR_URL+"?logOrdId="+bean.getLogOrderId()+"&type=pwd";
+        String successUrl = systemConfig.getAdminFrontHost() +OPT_SUCCESS_URL+"?type=pwd";
         // 异步调用路
         String bgRetUrl = systemConfig.getAdminHost() + CommonSoaUtils.REQUEST_MAPPING
                 + "/passwordBgreturn";
@@ -190,8 +195,8 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
         BankCallBean bean = new BankCallBean();
         bean.setLogOrderId(GetOrderIdUtils.getUsrId(40));
         // 同步地址  是否跳转到前端页面
-        String retUrl = systemConfig.getAdminFrontHost() +"/user/setting/bankPassword/result/failed"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = systemConfig.getAdminFrontHost() +"/user/setting/bankPassword/result/success";
+        String retUrl = systemConfig.getAdminFrontHost() +OPT_ERROR_URL+"?logOrdId="+bean.getLogOrderId()+"&type=pwd";
+        String successUrl = systemConfig.getAdminFrontHost() +OPT_SUCCESS_URL+"?type=pwd";
         // 异步调用路
         String bgRetUrl = systemConfig.getAdminHost() + CommonSoaUtils.REQUEST_MAPPING
                 + "/resetPasswordBgreturn";
