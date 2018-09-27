@@ -4689,7 +4689,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminInstConfigDetailResponse instConfigInit(AdminInstConfigListRequest adminRequest) {
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/instconfig/list", adminRequest, AdminInstConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/instconfig/list", adminRequest, AdminInstConfigDetailResponse.class)
                 .getBody();
     }
 
@@ -4701,7 +4701,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminInstConfigDetailResponse searchInstConfigInfo(AdminInstConfigListRequest adminRequest) {
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/instconfig/info", adminRequest, AdminInstConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/instconfig/info", adminRequest, AdminInstConfigDetailResponse.class)
                 .getBody();
     }
 
@@ -4712,7 +4712,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminInstConfigListResponse saveInstConfig(AdminInstConfigListRequest req) {
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/instconfig/insert", req, AdminInstConfigListResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/instconfig/insert", req, AdminInstConfigListResponse.class)
                 .getBody();
     }
 
@@ -4723,7 +4723,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminInstConfigListResponse updateInstConfig(AdminInstConfigListRequest req) {
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/instconfig/update", req, AdminInstConfigListResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/instconfig/update", req, AdminInstConfigListResponse.class)
                 .getBody();
     }
 
@@ -4734,7 +4734,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminInstConfigListResponse deleteInstConfig(AdminInstConfigListRequest req) {
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/instconfig/delete", req, AdminInstConfigListResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/instconfig/delete", req, AdminInstConfigListResponse.class)
                 .getBody();
     }
 
