@@ -829,4 +829,15 @@ public class UserController extends BaseController {
         BeanUtils.copyProperties(hjhUserAuthLogRequest,hjhUserAuth);
         return userService.updateHjhUserAuthLog(hjhUserAuth);
     }
+    /**
+     * 根据username查询用户
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/isExistsUser/{userId}")
+    public int findUserByUsername(@PathVariable String userId) {
+        logger.info("findUserByCondition run...condition is :{}", userId);
+        return userService.isExistsUser(userId);
+    }
 }

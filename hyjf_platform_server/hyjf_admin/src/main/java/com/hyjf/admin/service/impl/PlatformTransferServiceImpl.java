@@ -45,6 +45,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -103,6 +104,9 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     @Override
     public List<AccountRechargeVO> searchPlatformTransferList(PlatformTransferListRequest request) {
         List<AccountRechargeVO> accountRechargeVOList = amTradeClient.searchPlatformTransferList(request);
+        if(CollectionUtils.isEmpty(accountRechargeVOList)){
+            return new ArrayList<>();
+        }
         String userIds = "";
         for(AccountRechargeVO accountRechargeVO:accountRechargeVOList){
             if(null != accountRechargeVO.getUserId()){
@@ -121,6 +125,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
                 }
             }
         }
+        logger.info("accountRechargeVOList:[{}]",JSON.toJSONString(accountRechargeVOList));
         return accountRechargeVOList;
     }
 

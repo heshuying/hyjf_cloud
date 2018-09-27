@@ -2,10 +2,7 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
-import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.am.vo.config.FeeConfigVO;
-import com.hyjf.am.vo.config.SiteSettingsVO;
-import com.hyjf.am.vo.config.VersionVO;
+import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
@@ -94,4 +91,11 @@ public interface AmConfigClient {
     SiteSettingsVO selectSiteSetting();
 	BanksConfigVO getBanksConfigByBankId(String bankId);
 	Integer getBankInterfaceFlagByType(String type);
+
+	/**
+	 * 查询债转折让率配置列表
+	 * @author zhangyk
+	 * @date 2018/9/27 14:32
+	 */
+	List<DebtConfigVO> getDebtConfigList();
 }

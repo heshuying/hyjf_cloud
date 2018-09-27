@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.resquest.admin.BailConfigAddRequest;
 import com.hyjf.am.resquest.admin.BailConfigRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
@@ -38,4 +39,20 @@ public interface HjhBailConfigCustomizeMapper {
      * @return
      */
     List<HjhInstConfig> hjhNoUsedInstConfigList();
+
+    /**
+     * 周期内发标已发额度
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    String selectSendedAccountByCyc(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 查询该资产可以用的还款方式
+     *
+     * @param instCode
+     * @return
+     */
+    List<String> selectRepayMethod(String instCode);
 }
