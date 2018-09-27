@@ -479,6 +479,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             resultBean.setStatusDesc("短信验证码发送失败，请稍后再试！");
             return resultBean;
         }
+        resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
+        resultBean.setStatusDesc("发送短信验证码成功");
         return resultBean;
     }
 

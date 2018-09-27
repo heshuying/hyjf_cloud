@@ -57,15 +57,13 @@
 			AND hb.repay_last_time <![CDATA[>=]]> (#{nowTime} + 24 * 3600 * 30)
 			AND hb.borrow_style != 'month'
 			AND hb.borrow_style != 'principal'
-			<!-- AND bi.advance_status != 3 -->
+			AND hbr.advance_status != 3
 			AND hbr.delay_days = 0
-			AND UNIX_TIMESTAMP(hbr.create_time) <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 3)
+			AND hbr.credit_time <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 3)
 			AND hbr.recover_capital <![CDATA[>=]]> 1000
 			AND (hbr.recover_capital-credit_amount) <![CDATA[>=]]> 1000
 			AND UNIX_TIMESTAMP(hbr.create_time) <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 30)
 			AND hbr.recover_time <![CDATA[>=]]> (#{nowTime} + 24 * 3600 * 3)
-			<!-- todo 原sql为addtime 现在字段已经删除 条件暂时删除-->
-			<!-- AND hbr.create_time <![CDATA[<=]]> (#{nowTime} - 24 * 3600 * 3) -->
 			AND CAST(IFNULL(hbr.repay_orddate,0) AS SIGNED)  <![CDATA[<]]> FROM_UNIXTIME((#{nowTime} - 24 * 3600 * 3),'%Y%m%d')
 			AND hbr.user_id = #{userId}
 			<!-- 分期标提前还款该月不允许债转 -->
