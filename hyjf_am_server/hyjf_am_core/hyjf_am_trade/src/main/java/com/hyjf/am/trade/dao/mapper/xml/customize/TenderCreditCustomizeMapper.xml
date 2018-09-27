@@ -57,10 +57,9 @@
 			AND hb.repay_last_time <![CDATA[>=]]> (#{nowTime} + 24 * 3600 * 30)
 			AND hb.borrow_style != 'month'
 			AND hb.borrow_style != 'principal'
-			<!-- AND bi.advance_status != 3 -->
+			AND hbr.advance_status != 3
 			AND hbr.delay_days = 0
 			AND hbr.credit_time <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 3)
-			AND UNIX_TIMESTAMP(hbr.create_time) <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 3)
 			AND hbr.recover_capital <![CDATA[>=]]> 1000
 			AND (hbr.recover_capital-credit_amount) <![CDATA[>=]]> 1000
 			AND UNIX_TIMESTAMP(hbr.create_time) <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 30)
