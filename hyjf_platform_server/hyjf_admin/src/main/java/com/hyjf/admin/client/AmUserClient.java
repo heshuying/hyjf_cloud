@@ -1166,4 +1166,11 @@ public interface AmUserClient {
      */
     public StringResponse checkReferrer(String referrer);
 
+    /**
+     * 根据部门id查找是否有自级菜单
+     * @param deptId
+     * @return
+     * @auther: nxl
+     */
+    List<OADepartmentCustomizeVO> getDeptInfoByDeptId(int deptId);
 }

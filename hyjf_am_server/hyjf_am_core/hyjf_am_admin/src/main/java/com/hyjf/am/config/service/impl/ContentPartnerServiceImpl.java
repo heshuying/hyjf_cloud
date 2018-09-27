@@ -8,6 +8,7 @@ import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.config.dao.model.auto.LinkExample;
 import com.hyjf.am.config.service.ContentPartnerService;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,8 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 			criteria.andWebnameEqualTo(request.getWebname());
 		}
 		if (request.getStartTime() != null && request.getEndTime() != null) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
-			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
+			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.getDayStartOfSomeDay(request.getStartTime()));
+			criteria.andCreateTimeLessThanOrEqualTo(GetDate.getDayEndOfSomeDay(request.getEndTime()));
 		}
 		if (request.getStatus() != null) {
 			criteria.andStatusEqualTo(request.getStatus());

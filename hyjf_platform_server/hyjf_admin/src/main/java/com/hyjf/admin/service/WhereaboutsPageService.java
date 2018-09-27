@@ -57,13 +57,6 @@ public interface WhereaboutsPageService extends BaseService{
 	WhereaboutsPageResponse deleteById(Integer id);
 
 	/**
-	 * 附件上传
-	 *
-	 *
-	 */
-	LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-	/**
 	 * 通过条件查询着落页配置
 	 *
 	 *

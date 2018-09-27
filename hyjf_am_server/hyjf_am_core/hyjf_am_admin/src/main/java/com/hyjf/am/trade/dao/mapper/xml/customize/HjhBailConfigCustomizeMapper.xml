@@ -154,4 +154,96 @@
         WHERE hhbc.del_flg = 0 and hhbc.id = #{id,jdbcType=INTEGER}
     </select>
 
+    <resultMap id="HjhInstConfigResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhInstConfig">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="inst_code" property="instCode" jdbcType="VARCHAR"/>
+        <result column="inst_name" property="instName" jdbcType="VARCHAR"/>
+        <result column="inst_type" property="instType" jdbcType="TINYINT"/>
+        <result column="capital_toplimit" property="capitalToplimit" jdbcType="DECIMAL"/>
+        <result column="commission_fee" property="commissionFee" jdbcType="DECIMAL"/>
+        <result column="repay_capital_type" property="repayCapitalType" jdbcType="TINYINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="INTEGER"/>
+        <result column="update_user" property="updateUser" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="INTEGER"/>
+        <result column="del_flag" property="delFlag" jdbcType="TINYINT"/>
+    </resultMap>
+    <select id="hjhNoUsedInstConfigList" resultMap="HjhInstConfigResultMap">
+        SELECT
+            hhic.id,
+            hhic.inst_code,
+            hhic.inst_name,
+            hhic.inst_type,
+            hhic.capital_toplimit,
+            hhic.commission_fee,
+            hhic.repay_capital_type,
+            hhic.remark,
+            hhic.create_user,
+            hhic.create_time,
+            hhic.update_user,
+            hhic.update_time,
+            hhic.del_flag
+        FROM
+            ht_hjh_inst_config hhic
+        WHERE
+            hhic.inst_code NOT IN (
+                SELECT
+                    hhbc.inst_code
+                FROM
+                    ht_hjh_bail_config hhbc
+                WHERE
+                    hhbc.del_flg = 0
+            )
+        AND hhic.del_flag = 0
+    </select>
+
+    <!--周期内发标已发额度-->
+    <select id="selectSendedAccountByCyc" resultType="java.lang.String"
+            parameterType="com.hyjf.am.resquest.admin.BailConfigAddRequest">
+        SELECT
+            sum(hb.account)
+        FROM
+            ht_borrow hb
+        INNER JOIN ht_hjh_plan_asset hhpa ON hhpa.borrow_nid = hb.borrow_nid
+        AND hhpa.inst_code = #{instCode}
+        WHERE
+            hhpa.`status` IN (11, 12, 3, 4, 5, 7, 9)
+        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timestart},'00:00:00'
+        ),'%Y-%m-%d %H:%i:%s')
+        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeend},'23:59:59'
+        ),'%Y-%m-%d %H:%i:%s')
+        AND hb.borrow_nid NOT IN (
+            SELECT
+                hbd.borrow_nid
+            FROM
+                ht_borrow_delete hbd
+        )
+    </select>
+
+    <select id="selectRepayMethod" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT DISTINCT
+            hbpr.repay_method
+        FROM
+            ht_hjh_asset_borrowtype hhab
+        INNER JOIN ht_borrow_project_type hbpt ON hhab.borrow_cd = hbpt.borrow_cd
+        INNER JOIN ht_borrow_project_repay hbpr ON hbpr.borrow_class = hbpt.borrow_class
+        WHERE
+            hhab.inst_code = #{instCode}
+    </select>
+
+    <select id="selectAccountByCyc" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT
+            sum(hb.account)
+        FROM
+            ht_borrow hb
+        INNER JOIN ht_hjh_plan_asset hhpa ON hhpa.borrow_nid = hb.borrow_nid
+        AND hhpa.inst_code = #{instCode}
+        WHERE
+            hhpa.`status` IN (11, 12, 3, 4, 5, 7, 9)
+        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timeStart},'00:00:00'
+        ),'%Y-%m-%d %H:%i:%s')
+        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEnd},'23:59:59'
+        ),'%Y-%m-%d %H:%i:%s')
+    </select>
 </mapper>

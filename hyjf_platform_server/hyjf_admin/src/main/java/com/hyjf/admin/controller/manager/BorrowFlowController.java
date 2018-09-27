@@ -167,6 +167,7 @@ public class BorrowFlowController extends BaseController {
         }
         AdminSystemVO user = getUser(request);
         adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
+//        adminRequest.setUpdateUser(3);
         // 数据更新
         AdminBorrowFlowResponse resList=this.borrowFlowService.updateRecord(adminRequest);
         if (resList == null) {

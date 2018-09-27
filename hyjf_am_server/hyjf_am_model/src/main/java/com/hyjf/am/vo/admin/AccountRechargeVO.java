@@ -33,6 +33,8 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
     private Integer txDate;
     @ApiModelProperty(value = "交易时间")
     private Integer txTime;
+    @ApiModelProperty(value = "交易时间字符串")
+    private String txTimeStr;
     @ApiModelProperty(value = "交易流水号")
     private Integer seqNo;
     @ApiModelProperty(value = "银行流水号(交易日期+交易时间+交易流水号)")
@@ -132,6 +134,14 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
 
     public void setTxTime(Integer txTime) {
         this.txTime = txTime;
+    }
+
+    public String getTxTimeStr() {
+        return txTimeStr;
+    }
+
+    public void setTxTimeStr(String txTimeStr) {
+        this.txTimeStr = txTimeStr;
     }
 
     public Integer getSeqNo() {

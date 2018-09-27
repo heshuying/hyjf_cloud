@@ -45,7 +45,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  * @version BorrowLoanPlanRealTimeConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
 @Component
-@Profile("test")
+//@Profile("test")
 public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 
 	private static final Logger logger = LoggerFactory.getLogger(BorrowLoanPlanRealTimeConsumer.class);

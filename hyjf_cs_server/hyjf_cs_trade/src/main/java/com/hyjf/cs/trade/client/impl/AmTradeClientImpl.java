@@ -2848,6 +2848,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public MyCreditListQueryResponse searchMyCreditList(MyCreditListQueryRequest request) {
+        logger.info("查询可转让列表  参数 : {} ",JSONObject.toJSONString(request));
         MyCreditListQueryResponse response =  restTemplate.postForEntity("http://AM-TRADE/am-trade/creditTender/seachMyCreditList",request,MyCreditListQueryResponse.class).getBody();
         return response;
     }

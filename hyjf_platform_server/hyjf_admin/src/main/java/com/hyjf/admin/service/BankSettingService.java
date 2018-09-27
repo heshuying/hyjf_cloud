@@ -62,10 +62,4 @@ public interface BankSettingService {
      */
     AdminBankSettingResponse deleteRecord(AdminBankSettingRequest request);
 
-    /**
-     * 江西银行 资料上传
-     * @param request
-     * @return
-     */
-    LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request) throws Exception;
 }

@@ -334,7 +334,7 @@ WHERE
 		hb.verify_status AS verify_status
 		FROM
 		ht_borrow hb
-		LEFT JOIN ht_borrow_info info ON info.id = hb.id
+		LEFT JOIN ht_borrow_info info ON info.borrow_nid = hb.borrow_nid
 		INNER JOIN ht_hjh_asset_borrowtype hhab ON info.inst_code = hhab.inst_code
 		AND info.asset_type = hhab.asset_type
 		WHERE
@@ -366,7 +366,7 @@ WHERE
 		timeStartSrch
 		FROM
 		ht_borrow b
-		LEFT JOIN ht_borrow_info inf ON b.id = inf.id
+		LEFT JOIN ht_borrow_info inf ON b.borrow_nid = inf.borrow_nid
 		WHERE
 		( b.`status` = 2 AND b.reverify_time = '0'
 		AND
@@ -390,7 +390,7 @@ WHERE
 		FROM
 		ht_borrow b
 		LEFT
-		JOIN ht_borrow_info inf ON b.id = inf.id
+		JOIN ht_borrow_info inf ON b.borrow_nid = inf.borrow_nid
 		WHERE
 		( b.`status` = 2 AND
 		b.reverify_time = '0'
@@ -420,7 +420,7 @@ WHERE
 		hb.borrow_nid AS borrow_nid
 		FROM
 		ht_borrow hb
-		LEFT JOIN ht_borrow_info inf ON hb.id = inf.id
+		LEFT JOIN ht_borrow_info inf ON hb.borrow_nid = inf.borrow_nid
 		INNER JOIN
 		ht_hjh_asset_borrowtype hhab ON inf.inst_code = hhab.inst_code
 		AND
@@ -438,7 +438,7 @@ WHERE
 		hb.borrow_nid AS borrow_nid
 		FROM
 		ht_borrow hb
-		LEFT JOIN ht_borrow_info inf ON hb.id = inf.id
+		LEFT JOIN ht_borrow_info inf ON hb.borrow_nid = inf.borrow_nid
 		INNER JOIN
 		ht_hjh_asset_borrowtype hhab ON inf.inst_code = hhab.inst_code
 		AND

@@ -2305,7 +2305,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int isExistsUser(String userId) {
         int response = restTemplate
-                .getForEntity("http://AM-USER/am-user/user/isExistsUser/" + userId, Integer.class)
+                .getForEntity("http://AM-ADMIN/am-user/user/isExistsUser/" + userId, Integer.class)
                 .getBody();
         return response;
 	}
@@ -2341,4 +2341,20 @@ public class AmUserClientImpl implements AmUserClient {
 		return checkFlg;
 	}
 
+	/**
+	 * 根据部门id查找是否有自级菜单
+	 * @param deptId
+	 * @return
+	 * @auther: nxl
+	 */
+	@Override
+	public List<OADepartmentCustomizeVO> getDeptInfoByDeptId(int deptId){
+		OADepartmentResponse response = restTemplate.
+				getForEntity("http://AM-ADMIN/am-user/userManager/getDeptInfoByDeptId/"+ deptId, OADepartmentResponse.class).
+				getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }
