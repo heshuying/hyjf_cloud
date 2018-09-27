@@ -574,10 +574,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			result.setMobile(user.getMobile());
 		}
 		if (StringUtils.isNotBlank(user.getIconUrl())) {
-			String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
+			String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
 			// http://cdn.huiyingdai.com/
 			imghost = imghost.substring(0, imghost.length() - 1);
-			String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+			String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
 			if(StringUtils.isNotEmpty(user.getIconUrl())){
 				result.setIconUrl(imghost + fileUploadTempPath + user.getIconUrl());
 			}
