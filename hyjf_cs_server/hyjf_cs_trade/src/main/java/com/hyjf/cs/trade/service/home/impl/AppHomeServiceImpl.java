@@ -116,7 +116,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         } else {
 
             //查询用户是否开户
-            Integer userType = userVO.getUserType();
+            Integer userType = userVO.getBankOpenAccount();
             if (userType == 0) {//未开户
                 info.put("userType", "1");
                 info.put("totalAssets", "0.00");
