@@ -4,16 +4,12 @@
 package com.hyjf.am.config.controller;
 
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
-import com.hyjf.am.config.service.MessagePushTagServcie;
 import com.hyjf.am.config.service.MessagePushTemplateServcie;
 import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.MessagePushTemplateResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -40,9 +36,6 @@ public class MessagePushTemplateController {
 
     @Autowired
     private MessagePushTemplateServcie templateServcie;
-
-    @Autowired
-    private MessagePushTagServcie messagePushTagServcie;
 
     /**
      * 根据tplCode查询消息推送模板
