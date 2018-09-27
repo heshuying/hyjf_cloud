@@ -167,6 +167,7 @@ public class TrusteePayRequestBean extends BaseBean {
         params.put("accountId", accountId);
         params.put("productId", productId);
         params.put("status", status);
+        params.put("state", state);
         params.put("statusDesc", statusDesc);
         params.put("acqRes", getAcqRes());
         BaseResultBean resultBean = new BaseResultBean();
