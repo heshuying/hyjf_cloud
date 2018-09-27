@@ -10,10 +10,7 @@ import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
-import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.am.vo.config.FeeConfigVO;
-import com.hyjf.am.vo.config.SiteSettingsVO;
-import com.hyjf.am.vo.config.VersionVO;
+import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
@@ -230,4 +227,20 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+
+
+    /**
+     * 查询债转折让率配置列表
+     * @author zhangyk
+     * @date 2018/9/27 14:33
+     */
+	@Override
+	public List<DebtConfigVO> getDebtConfigList() {
+		String url = "http://AM-CONFIG/am-config/debtconfig/getDebtConfigList";
+		DebtConfigResponse response = restTemplate.getForEntity(url,DebtConfigResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultList();
+		}
+		return null;
+	}
 }
