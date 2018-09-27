@@ -59,9 +59,6 @@ public class BankSettingController extends BaseController {
     @Autowired
     private BankSettingService bankSettingService;
 
-    @Autowired
-    private MessagePushNoticesServiceImpl messagePushNoticesService;
-
     @Value("${file.domain.url}")
     private String DOMAIN_URL;
 
@@ -249,7 +246,6 @@ public class BankSettingController extends BaseController {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/exportregist");
         // 表格sheet名称
         String sheetName = "银行配置";
-        JxBankConfigVO bankRecharge = new JxBankConfigVO();
         //列表
         List<JxBankConfigVO> resultList  =this.bankSettingService.getRecordList(new JxBankConfigVO(), -1, -1);
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;

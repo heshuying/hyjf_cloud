@@ -206,7 +206,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public String queryBankIdByCardNo(String cardNo) {
         String result = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-config/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
         return result;
     }
 
