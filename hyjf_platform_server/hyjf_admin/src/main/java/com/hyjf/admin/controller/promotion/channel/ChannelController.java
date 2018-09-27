@@ -4,6 +4,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.promotion.channel.ChannelService;
+import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -235,6 +237,8 @@ public class ChannelController extends BaseController {
         return null;
     }
 
+    @Autowired
+    private FileUpLoadUtil fileUpLoadUtil ;
     /**
      * 资料上传
      *
@@ -244,23 +248,21 @@ public class ChannelController extends BaseController {
      */
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @PostMapping("/upload")
-    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public AdminResult uploadFile(HttpServletRequest request) throws Exception {
         logger.info(ChannelController.class.toString(), "startLog -- /hyjf-admin/promotion/channel/upload");
-        String files = this.channelService.uploadFile(request, response);
+        AdminResult adminResult = new AdminResult();
+        adminResult.setData(fileUpLoadUtil.upLoad(request));
+        adminResult.setStatus(SUCCESS);
+        adminResult.setStatusDesc(SUCCESS_DESC);
         logger.info(ChannelController.class.toString(), "endLog -- /hyjf-admin/promotion/channel/upload");
-        if (StringUtils.isNotBlank(files)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+        return adminResult;
     }
 
     /**
      * 导出功能
-     *
      * @param request
-     * @param modelAndView
-     * @param form
+     * @param response
+     * @throws Exception
      */
     @ApiOperation(value = "导出功能", notes = "导出功能")
     @PostMapping("/export")

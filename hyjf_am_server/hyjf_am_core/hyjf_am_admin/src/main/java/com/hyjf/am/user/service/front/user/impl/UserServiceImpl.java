@@ -1532,4 +1532,34 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public int updateHjhUserAuthLog(HjhUserAuthLog hjhUserAuthLog){
 		return hjhUserAuthLogMapper.updateByPrimaryKeySelective(hjhUserAuthLog);
 	}
+
+	@Override
+	public int isExistsUser(String condition) {
+		if (StringUtils.isNotEmpty(condition)) {
+
+			   UserExample example=new UserExample();
+			   example.or().andUsernameEqualTo(condition);
+			List<User> user = userMapper.selectByExample(example);
+			 
+			if (user == null ) {
+				// 借款人用户名不存在。
+				return 1;
+			}
+			if (user.isEmpty() ) {
+				// 借款人用户名不存在。
+				return 1;
+			}
+			if (Validator.isNull(user.get(0).getBankOpenAccount()==0)) {
+				// 借款人用户名必须已在银行开户
+				return 2;
+			}
+			UserInfo info = userInfoMapper.selectByPrimaryKey(user.get(0).getUserId());
+			if(info.getRoleId()!=2) {
+				return 4;
+			}
+
+			return 0;
+		}
+		return 1;
+	}
 }

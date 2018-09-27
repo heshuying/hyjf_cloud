@@ -80,11 +80,4 @@ public interface ChannelService {
      */
     boolean deleteAction(ChannelCustomizeVO channelCustomizeVO);
 
-    /**
-     * 资料上传
-     * @param request
-     * @param response
-     * @return
-     */
-    String uploadFile(HttpServletRequest request, HttpServletResponse response);
 }

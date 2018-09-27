@@ -10,6 +10,7 @@ import com.hyjf.admin.service.ActivityListService;
 import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
+import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.resquest.config.MessagePushTagRequest;
@@ -184,12 +185,15 @@ public class MessagePushTagController extends BaseController {
         return new AdminResult<>(response);
     }
 
+    @Autowired
+    private FileUpLoadUtil fileUpLoadUtil;
+
     @ApiOperation(value = "文件上传", notes = "文件上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);
             adminResult.setData(borrowCommonImages);
             adminResult.setStatus(SUCCESS);
             adminResult.setStatusDesc(SUCCESS_DESC);

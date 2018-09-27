@@ -8,6 +8,7 @@ import com.hyjf.am.config.dao.model.auto.ContentEnvironment;
 import com.hyjf.am.config.dao.model.auto.ContentEnvironmentExample;
 import com.hyjf.am.config.service.ContentEnvironmentService;
 import com.hyjf.am.resquest.admin.ContentEnvironmentRequest;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,8 @@ public class ContentEnvironmentServiceImpl implements ContentEnvironmentService 
 			criteria.andImgTypeEqualTo(request.getImgType());
 		}
 		if (request.getStartTime() != null && request.getEndTime() != null) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
-			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
+			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.getDayStartOfSomeDay(request.getStartTime()));
+			criteria.andCreateTimeLessThanOrEqualTo(GetDate.getDayEndOfSomeDay(request.getEndTime()));
 		}
 		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
 			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());

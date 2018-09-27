@@ -217,64 +217,64 @@ public class FinmanChargeNewController extends BaseController {
         String message ="";
         // 类型
         if(StringUtils.isBlank(form.getManChargeTimeType())){
-            message="chargeTimeType 不能为空！";
+            message="类型不能为空！";
             return message;
         }
         // 期限
         if(null == form.getManChargeTime()){
-            message="manChargeTime 不能为空！";
+            message="期限不能为空！";
             return message;
         }
         //项目类型
         if(StringUtils.isBlank(form.getProjectType())){
-            message="projectType 不能为空！";
+            message="项目类型不能为空！";
             return message;
         }
         //资产来源
         if(StringUtils.isBlank(form.getInstCode())){
-            message="instCode 不能为空！";
+            message="资产来源不能为空！";
             return message;
         }
         //产品类型
         if(null == form.getAssetType()){
-            message="assetType 不能为空！";
+            message="产品类型不能为空！";
             return message;
         }
         //服务费率
         if(StringUtils.isBlank(form.getChargeRate())){
-            message="chargeRate 不能为空！";
+            message="服务费率不能为空！";
             return message;
         }
         // 管理费率
         if(StringUtils.isBlank(form.getManChargeRate())){
-            message="manChargeRate 不能为空！";
+            message="管理费率不能为空！";
             return message;
         }
         // 收益差率
         if(StringUtils.isBlank(form.getReturnRate())){
-            message="returnRate 不能为空！";
+            message="收益差率不能为空！";
             return message;
         }
         // 逾期利率
         if(StringUtils.isBlank(form.getLateInterest())){
-            message="returnRate 不能为空！";
+            message="逾期利率不能为空！";
             return message;
         }
         // 逾期免息天数
         if(null == form.getLateFreeDays()){
-            message="lateFreeDays 不能为空！";
+            message="逾期免息天数不能为空！";
             return message;
         }
         // 状态
         if(null == form.getStatus()){
-            message="status 不能为空！";
+            message="状态不能为空！";
             return message;
         }
         // 检查唯一性
         int cnt = this.finmanChargeNewService.countRecordByProjectType(form.getManChargeTimeType(), form.getManChargeTime(), form.getInstCode(),form.getAssetType());
         if (cnt > 0) {
 //            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "instCode", "mancharge.time.type.repeat");
-            message =  "重复添加";
+            message =  "相同资产来源，产品类型，类型，期限的费率配置已经存错误的Unicode字符串!";
         }
         return message;
     }
