@@ -69,8 +69,8 @@ public class FileUpLoadUtil {
             fileMeta.setImageType(multipartFile.getContentType());
             fileMeta.setErrorMessage(errorMessage);
             // 获取文件路径
-            fileMeta.setImagePath(logoRealPathDir + "/" + fileRealName);
-            fileMeta.setImageSrc(DOMAIN_URL + logoRealPathDir + "/" + fileRealName);
+            fileMeta.setImagePath(fileRealName);
+            fileMeta.setImageSrc(DOMAIN_URL + fileRealName);
             files.add(fileMeta);
         }
 
