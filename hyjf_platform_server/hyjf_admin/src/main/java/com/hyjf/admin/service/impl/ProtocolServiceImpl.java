@@ -113,7 +113,7 @@ public class ProtocolServiceImpl implements ProtocolService {
 
         Integer createUserId = Integer.valueOf(userId);
         //模板存放路径
-        String fileDomainUrl = "";
+        String fileDomainUrl = FILEPHYSICALPATH;
         //年月日，随机数
         Calendar calendar1 = Calendar.getInstance();
         String yearNow = String.valueOf(calendar1.get(Calendar.YEAR)).substring(2);
@@ -245,7 +245,7 @@ public class ProtocolServiceImpl implements ProtocolService {
         List<ProtocolTemplateCommonVO> listLogVO = new ArrayList<>();
         ProtocolTemplateCommonVO protocolTemplateCommonVO = new ProtocolTemplateCommonVO();
         ProtocolTemplateCommonVO logVO = new ProtocolTemplateCommonVO();
-        String fileDomainUrl = "";
+        String fileDomainUrl = FILEPHYSICALPATH;
         Integer updateUserId = Integer.valueOf(userId);
         //1.1修改协议模板
         ProtocolTemplateVO protocolTemplate = request.getProtocolTemplateVO();
