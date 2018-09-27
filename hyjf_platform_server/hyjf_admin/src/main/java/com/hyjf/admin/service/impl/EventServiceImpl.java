@@ -50,4 +50,9 @@ public class EventServiceImpl implements EventService {
 	public int deleteById(Integer id) {
 		return amConfigClient.deleteEventById(id);
 	}
+
+	@Override
+	public EventVO selectById(EventRequestBean requestBean) {
+		return amConfigClient.getEventRecord(requestBean.getId());
+	}
 }

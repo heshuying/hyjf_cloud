@@ -192,4 +192,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AdminBankAccountManageCustomizeMapper adminBankAccountManageCustomizeMapper;
+
+	@Autowired
+	protected HjhBailConfigCustomizeMapper hjhBailConfigCustomizeMapper;
 }

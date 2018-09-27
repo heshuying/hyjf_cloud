@@ -48,11 +48,11 @@
 	<select id="selectBorrowLogList" resultMap="selectBorrowLogListMap" parameterType="com.hyjf.am.resquest.admin.BorrowLogRequset">
 		SELECT
 		b.borrow_nid,
-		b.borrow_status,
+		b.borrow_status borrow_status ,
 		b.type,
 		b.remark,
 		b.create_user_name,
-		FROM_UNIXTIME( b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+		b.create_time AS create_time,
 		b.del_flag
 		FROM
 		ht_borrow_log b
