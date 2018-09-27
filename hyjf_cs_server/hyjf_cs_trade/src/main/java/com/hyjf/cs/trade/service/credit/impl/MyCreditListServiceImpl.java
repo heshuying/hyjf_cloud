@@ -288,13 +288,14 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             logger.info("插入债转表结束---userId:{} ",userId);
             Map data = new HashedMap();
             // 结束日期
-            data.put("creditEndTime", request.getCreditEndTime());
+            data.put("creditEndTime", GetDate.timestamptoStrYYYYMMDDHHMMSS(request.getCreditEndTime()));
             // 转让价格
             data.put("creditPrice",request.getCreditPrice());
             // 转让本金
             data.put("creditCapital",request.getCreditCapital());
             // web的转让本金
             data.put("assignCapital",request.getCreditCapital());
+            logger.info("债转保存，返回给前端数据 {}", JSONObject.toJSONString(data));
             result.setData(data);
         }catch (Exception e){
         	e.printStackTrace();

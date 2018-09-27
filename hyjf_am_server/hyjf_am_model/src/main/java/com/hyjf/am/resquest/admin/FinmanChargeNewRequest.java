@@ -94,7 +94,7 @@ public class FinmanChargeNewRequest extends BasePage {
     private Integer createTime;
 
     private Integer updateTime;
-
+    private Integer createUserId;
 
     /**
      * 列表画面自定义标签上的用翻页对象：paginator
@@ -347,5 +347,13 @@ public class FinmanChargeNewRequest extends BasePage {
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 }

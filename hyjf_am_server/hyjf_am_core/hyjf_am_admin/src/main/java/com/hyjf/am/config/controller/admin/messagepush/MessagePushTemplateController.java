@@ -3,15 +3,8 @@
  */
 package com.hyjf.am.config.controller.admin.messagepush;
 
-import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
-import com.hyjf.am.config.service.MessagePushTemplateServcie;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.config.MessagePushTemplateResponse;
-import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
-import com.hyjf.am.vo.config.MessagePushTemplateVO;
-import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetDate;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -22,7 +15,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
+import com.hyjf.am.config.service.MessagePushTemplateServcie;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.MessagePushTemplateResponse;
+import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
+import com.hyjf.am.vo.config.MessagePushTemplateVO;
+import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 
 /**
  * @author yaoyong
@@ -137,6 +138,18 @@ public class MessagePushTemplateController {
         Integer cnt = templateServcie.countByTemplate(id,templateCode);
         if (cnt > 0) {
             response.setCount(cnt);
+        }
+        return response;
+    }
+
+    @RequestMapping("/getAllTemplates")
+    public MessagePushTemplateResponse getAllTemplates() {
+        logger.info("查询所有消息推送模板开始...");
+        MessagePushTemplateResponse response = new MessagePushTemplateResponse();
+        List<MessagePushTemplate> list = templateServcie.getAllTemplates();
+
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(CommonUtils.convertBeanList(list, MessagePushTemplateVO.class));
         }
         return response;
     }

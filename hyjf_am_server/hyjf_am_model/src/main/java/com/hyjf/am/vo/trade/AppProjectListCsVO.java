@@ -43,7 +43,10 @@ public class AppProjectListCsVO  extends BaseVO implements Serializable {
     private String onTime;
     //标记有空字符串，尊享，优选
     private String mark;
-
+    /**
+     * 产品加息率
+     */
+    private String borrowExtraYield;
     public String getBorrowTheThird() {
         return this.borrowTheThird;
     }
@@ -174,5 +177,13 @@ public class AppProjectListCsVO  extends BaseVO implements Serializable {
 
     public void setMark(String mark) {
         this.mark = mark;
+    }
+
+    public String getBorrowExtraYield() {
+        return borrowExtraYield;
+    }
+
+    public void setBorrowExtraYield(String borrowExtraYield) {
+        this.borrowExtraYield = borrowExtraYield;
     }
 }

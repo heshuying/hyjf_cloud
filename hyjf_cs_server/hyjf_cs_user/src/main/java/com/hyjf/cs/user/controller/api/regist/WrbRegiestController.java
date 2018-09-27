@@ -1,8 +1,12 @@
 package com.hyjf.cs.user.controller.api.regist;
 
 import com.hyjf.am.response.WrbResponse;
-import com.hyjf.am.vo.user.*;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.am.resquest.api.WrbRegisterRequest;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.WrbCommonDateUtil;
 import com.hyjf.common.util.WrbParseParamUtil;
 import com.hyjf.common.validator.Validator;
@@ -21,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -145,7 +148,9 @@ public class WrbRegiestController {
             } else {
                 // 手机号未注册
                 log.info("手机号在平台未注册,手机号:{}",mobile);
-                Integer userId = this.userRegisterService.insertUserAction(mobile, instCode, request, instConfig.getInstType(), utmPlat,platform);
+                String ipAddr = GetCilentIP.getIpAddr(request);
+                WrbRegisterRequest wrbRegisterRequest = new WrbRegisterRequest(mobile, instCode, ipAddr, instConfig.getInstType(), utmPlat,platform);
+                Integer userId = this.userRegisterService.insertUserAction(wrbRegisterRequest);
                 if (userId == null || userId == 0) {
                     log.info("用户注册失败,手机号:{}",mobile);
                     resultBean.setRetcode(RETCODE);

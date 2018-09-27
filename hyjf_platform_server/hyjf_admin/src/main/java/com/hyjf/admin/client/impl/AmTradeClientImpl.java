@@ -5121,7 +5121,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse selectSubConfigListByParam(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/list",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/list",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
@@ -5131,7 +5131,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse selectSubConfigInfo(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/info",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/info",request, AdminSubConfigResponse.class)
                 .getBody();
     }
 
@@ -5142,7 +5142,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse insertSubConfig(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/insert",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/insert",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
@@ -5152,7 +5152,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse updateSubConfig(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/update",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/update",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
@@ -5162,7 +5162,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse deleteSubConfig(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/delete",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/delete",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
