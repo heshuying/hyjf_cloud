@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.service.wrb;
 
 import com.hyjf.am.response.config.MessagePushTemplateResponse;
+import com.hyjf.am.resquest.api.WrbRegisterRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -78,15 +79,8 @@ public interface UserRegisterService {
 
     /**
      * 根据手机号密码注册用户
-     *
-     * @param mobile
-     * @param instCode
-     * @param request
-     * @param instType
-     * @param utmPlat
-     * @param platform
      * @return
      */
-    Integer insertUserAction(String mobile, String instCode, HttpServletRequest request, Integer instType, UtmPlatVO utmPlat, String platform);
+    Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest);
 
 }
