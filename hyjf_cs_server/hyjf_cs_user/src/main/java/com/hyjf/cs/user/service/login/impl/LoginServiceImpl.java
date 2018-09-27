@@ -83,6 +83,42 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	}
 
 	/**
+	 * 通过密码验证后的纯登录操作
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public WebViewUserVO loginOperationOnly(UserVO userVO,String loginUserName,String ip,String channel) {
+		int userId = userVO.getUserId();
+		WebViewUserVO webViewUserVO = new WebViewUserVO();
+		// 是否禁用
+		if (userVO.getStatus() == 1) {
+			throw new ReturnMessageException(MsgEnum.ERR_USER_INVALID);
+		}
+		// 更新登录信息
+		amUserClient.updateLoginUser(userId, ip);
+		updateUserByUserId(userVO);
+		// 1. 登录成功将登陆密码错误次数的key删除
+		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT + loginUserName);
+		webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
+		// 2. 缓存
+		webViewUserVO = setToken(webViewUserVO);
+		BankOpenAccountVO account = this.getBankOpenAccount(userId);
+		String accountId = null;
+		if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
+			accountId = account.getAccount();
+			this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-TRADE",
+					systemConfig.getAopAccesskey());
+		}
+		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
+			String sign = SecretUtil.createToken(userId, loginUserName, accountId);
+			webViewUserVO.setToken(sign);
+		}
+		return webViewUserVO;
+	}
+
+	/**
 	 * 登录处理
 	 *
 	 * @param loginUserName
@@ -93,7 +129,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
-		int userId = userVO.getUserId();
 		String codeSalt = userVO.getSalt();
 		logger.info("salt:"+codeSalt);
 		String passwordDb = userVO.getPassword();
@@ -104,30 +139,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}else {
 			password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
 		}
+		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
 		if (password.equals(passwordDb)) {
-			// 是否禁用
-			if (userVO.getStatus() == 1) {
-				throw new ReturnMessageException(MsgEnum.ERR_USER_INVALID);
-			}
-			// 更新登录信息
-			amUserClient.updateLoginUser(userId, ip);
-			updateUserByUserId(userVO);
-			// 1. 登录成功将登陆密码错误次数的key删除
-			RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT + loginUserName);
-			webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
-			// 2. 缓存
-			webViewUserVO = setToken(webViewUserVO);
-			BankOpenAccountVO account = this.getBankOpenAccount(userId);
-			String accountId = null;
-			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
-				accountId = account.getAccount();
-				this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-TRADE",
-						systemConfig.getAopAccesskey());
-			}
-			if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
-				String sign = SecretUtil.createToken(userId, loginUserName, accountId);
-				webViewUserVO.setToken(sign);
-			}
+			webViewUserVO = loginOperationOnly(userVO,loginUserName,ip,channel);
 		} else {
 			// 密码错误，增加错误次数
 			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT + loginUserName);
@@ -349,7 +363,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 上传文件的CDNURL
 				if (StringUtils.isNotEmpty(iconUrl)) {
 					// 实际物理路径前缀2
-					String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+					String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
 					result.setIconUrl(imghost + fileUploadTempPath + iconUrl);
 				} else {
 					result.setIconUrl(apphost + "/img/" + "icon.png");

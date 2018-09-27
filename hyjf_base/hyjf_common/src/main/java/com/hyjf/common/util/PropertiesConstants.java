@@ -64,8 +64,6 @@ public interface PropertiesConstants {
     String HYJF_WEB_URL = "hyjf.web.host";
     /** Web工程路径 https前缀 */
     String HYJF_WEB_URL_OLD = "hyjf.web.host.old";
-    /** Web工程路径 http前缀 */
-    String HTTP_HYJF_WEB_URL = "http.hyjf.web.host";
     /** Admin工程路径 */
     String HYJF_ADMIN_URL = "hyjf.admin.host";
     /** Admin工程登录路径 */

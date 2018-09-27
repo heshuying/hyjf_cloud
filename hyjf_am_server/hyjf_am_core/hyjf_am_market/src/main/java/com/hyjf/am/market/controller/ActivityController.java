@@ -253,4 +253,18 @@ public class ActivityController {
         activityListResponse.setResultList(activityListVOS);
         return activityListResponse;
     }
+
+    @GetMapping("/getInfoById/{id}")
+    public ActivityListResponse getInfoById(@PathVariable Integer id) {
+        ActivityListResponse response = new ActivityListResponse();
+        ActivityList activityList = activityService.getActivityInfo(id);
+        ActivityListVO activityListVO = new ActivityListVO();
+        if (activityList != null) {
+            BeanUtils.copyProperties(activityList, activityListVO);
+            activityListVO.setAcStartTime(GetDate.getDateTimeMyTime(activityList.getTimeStart()));
+            activityListVO.setAcEndTime(GetDate.getDateTimeMyTime(activityList.getTimeEnd()));
+            response.setResult(activityListVO);
+        }
+        return response;
+    }
 }

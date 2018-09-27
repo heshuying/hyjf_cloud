@@ -25,6 +25,7 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.UserRegisterRequestBean;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -73,12 +74,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     private SystemConfig systemConfig;
     @Autowired
     private AmMarketClient amMarketClient;
-
-    @Value("${file.domain.head.url}")
-    private String fileHeadUrl;
-    @Value("${file.upload.head.path}")
-    private String fileHeadPath;
-
 
     /**
      * api注册参数校验
@@ -283,7 +278,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
         registerUserRequest.setInstType(instConfig.getInstType());
         // 验签
-      //  CheckUtil.check(this.verifyRequestSign(userRegisterRequestBean, BaseDefine.METHOD_SERVER_REGISTER), MsgEnum.STATUS_CE000002);
+       CheckUtil.check(this.verifyRequestSign(userRegisterRequestBean, BaseDefine.METHOD_SERVER_REGISTER), MsgEnum.STATUS_CE000002);
         // 根据渠道号检索推广渠道是否存在
         UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatByUtmId(registerRequest.getUtmId());
         CheckUtil.check(null != utmPlat, MsgEnum.STATUS_ZC000020);
@@ -681,9 +676,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     private String assembleIconUrl(UserVO userVO) {
         String iconUrl = userVO.getIconUrl();
         if (StringUtils.isNotBlank(iconUrl)) {
-            String imghost = UploadFileUtils.getDoPath(fileHeadUrl);
+            String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);
-            String fileUploadTempPath = UploadFileUtils.getDoPath(fileHeadPath);
+            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
             return imghost + fileUploadTempPath + iconUrl;
         }
         return "";

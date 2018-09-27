@@ -28,6 +28,13 @@ public class AdminBorrowRecoverServiceImpl extends BaseServiceImpl implements Ad
         List<AdminBorrowRecoverCustomize> list=this.borrowRecoverCustomizeMapper.selectBorrowRecoverList(request);
         for (AdminBorrowRecoverCustomize customize:list) {
             customize.setIsRecover(CacheUtil.getParamName("LOAN_STATUS",customize.getIsRecover()));
+
+            if(customize.getTenderUserAttribute()!=null){
+                customize.setTenderUserAttribute(CacheUtil.getParamName("USER_PROPERTY",customize.getTenderUserAttribute()));
+            }
+            if(customize.getInviteUserAttribute()!=null){
+                customize.setInviteUserAttribute(CacheUtil.getParamName("USER_PROPERTY",customize.getInviteUserAttribute()));
+            }
         }
         return list;
     }

@@ -234,7 +234,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             borrowProjectInfoBean.setBorrowId(borrowNid);
             borrowProjectInfoBean.setOnAccrual((borrow.getRecoverLastTime() == null ? "放款成功立即计息" : borrow.getRecoverLastTime()));
             //0：备案中 1：初审中 2：投资中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
-            borrowProjectInfoBean.setStatus(borrow.getStatus());
+            borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功
             borrowProjectInfoBean.setBorrowProgressStatus(String.valueOf(borrow.getProjectStatus()));
 
@@ -332,7 +332,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             projectDetailList = dealDetail(projectDetailList, credTableData, "credTableData", null);
             projectDetailList = dealDetail(projectDetailList, reviewTableData, "reviewTableData", null);
             // 信批需求新增(放款后才显示)
-            if (Integer.parseInt(borrow.getStatus()) >= 4 && borrowRepay != null) {
+            if (Integer.parseInt(borrow.getBorrowStatus()) >= 4 && borrowRepay != null) {
                 //其他信息
                 String updateTime = ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime());
                 projectDetailList = dealDetail(projectDetailList, otherTableData, "otherTableData", updateTime);
@@ -412,8 +412,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             } else {
                 // 原始标
                 // 复审中，还款中和已还款状态投资者(可看)
-                if ("3".equals(borrow.getStatus()) || "4".equals(borrow.getStatus())
-                        || "5".equals(borrow.getStatus())) {
+                if ("3".equals(borrow.getBorrowStatus()) || "4".equals(borrow.getBorrowStatus())
+                        || "5".equals(borrow.getBorrowStatus())) {
                     if (count > 0) {
                         // 可以查看标的详情
                         viewableFlag = true;
@@ -425,7 +425,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     viewableFlag = true;
                 }
                 // 原始标根据状态显示
-                switch (borrow.getStatus()) {
+                switch (borrow.getBorrowStatus()) {
                     case "0":
                         statusDescribe = "备案中";
                         break;
@@ -1937,6 +1937,12 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             appProjectType.setBorrowTheSecond(listCustomize.getBorrowPeriod());
             appProjectType.setBorrowTheSecondDesc("项目期限");
             String status = listCustomize.getStatus();
+            // 设置产品加息 显示收益率
+            if (Validator.isIncrease(listCustomize.getIncreaseInterestFlag(), listCustomize.getBorrowExtraYieldOld())) {
+                appProjectType.setBorrowExtraYield(listCustomize.getBorrowExtraYield());
+            }else{
+                appProjectType.setBorrowExtraYield("");
+            }
             String borrowAccountWait = listCustomize.getBorrowAccountWait();
             if (status.equals("10")){
 

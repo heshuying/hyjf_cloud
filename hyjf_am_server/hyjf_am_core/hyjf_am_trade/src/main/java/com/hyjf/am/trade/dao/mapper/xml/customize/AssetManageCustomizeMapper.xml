@@ -444,7 +444,7 @@
 		borrow.repay_last_time,
 		hiii.account AS capital,
 		4 AS type,
-		'产品加息' AS DATA,
+		CONCAT('加息',FORMAT(hiii.borrow_extra_yield, 2),'%') AS DATA,
 		0 coupon_type,
 		IF(borrow.`status` = 4,hiii.repay_interest_wait,'--') AS total_wait,
 		'' credit_nid,
@@ -1028,7 +1028,7 @@
 		<!-- 折让比例 -->
 		hbc.credit_discount,
 		<!-- 债转时间 -->
-		FROM_UNIXTIME(hbc.create_time,'%Y-%m-%d %H:%i') AS add_time,
+		DATE_FORMAT(hbc.create_time,'%Y-%m-%d %H:%i') AS add_time,
 		<!-- 债转时间 -->
 		hbc.create_time AS add_time_int,
 		<!-- 已转让金额 -->
@@ -1043,7 +1043,7 @@
 		hct.credit_tender_nid = hbc.tender_nid
 		AND hbc.credit_nid = hct.credit_nid
 		) AS receivedAccount,
-		FROM_UNIXTIME(hbt.create_time, '%Y-%m-%d %H:%i:%s') AS tenderTime,
+		DATE_FORMAT(hbt.create_time, '%Y-%m-%d %H:%i:%s') AS tenderTime,
 		(DATEDIFF(
 		FROM_UNIXTIME(
 		unix_timestamp(now()),
@@ -1104,7 +1104,7 @@
 		hdpa.user_id user_id,
 		hdpa.accede_account accede_account,
 		hdpa.repay_account_wait repay_account_wait,
-		IFNULL(FROM_UNIXTIME( hdpa.create_time, '%Y-%m-%d' ),'--') AS create_time,
+		IFNULL(DATE_FORMAT( hdpa.create_time, '%Y-%m-%d' ),'--') AS create_time,
 		hdpa.create_time orderby_create_time,
 		IFNULL(FROM_UNIXTIME( hdp.liquidate_should_time, '%Y-%m-%d' ),'--') AS liquidate_should_time,
 		hdp.liquidate_should_time orderby_liquidate_should_time,
@@ -1133,7 +1133,7 @@
 		hha.user_id user_id,
 		hha.accede_account accede_account,
 		IF(hha.wait_total=0,'--',hha.wait_total) wait_total,
-		IFNULL(FROM_UNIXTIME( hha.create_time, '%Y-%m-%d' ),'--') AS add_time,
+		IFNULL(DATE_FORMAT( hha.create_time, '%Y-%m-%d' ),'--') AS add_time,
 		hha.create_time orderby_add_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.quit_time=0,NULL,hha.quit_time), '%Y-%m-%d' ),'--') AS quit_time,
 		hha.quit_time orderby_last_payment_time,
@@ -1165,7 +1165,7 @@
 		hcc.coupon_quota
 		END AS accede_account,
 		IFNULL(SUM(hcr.recover_account)-SUM(hcr.recover_account_yes),0) AS wait_total,
-		FROM_UNIXTIME( hbtc.create_time, '%Y-%m-%d' ) AS addtime,
+		DATE_FORMAT( hbtc.create_time, '%Y-%m-%d' ) AS addtime,
 		hbtc.create_time orderby_add_time,
 		IFNULL(FROM_UNIXTIME( IF(MAX(hcr.recover_time)='',NULL,MAX(hcr.recover_time)), '%Y-%m-%d' ),'--') AS recover_time,
 		hcr.recover_time orderby_quit_time,
@@ -1921,7 +1921,7 @@
 		<!-- 债转编号 -->
 		hbc.bid_nid AS creditNid,
 		<!-- 债转时间 -->
-		FROM_UNIXTIME( hbc.create_time, '%Y-%m-%d %H:%i' ) AS creditTime,
+		DATE_FORMAT( hbc.create_time, '%Y-%m-%d %H:%i' ) AS creditTime,
 		<!-- 债权本金 -->
 		FORMAT(hbc.credit_capital,2) AS creditCapital,
 		<!-- 已认购金额 -->
@@ -2136,7 +2136,7 @@
 			</when>
 		</choose>
 
-		FROM_UNIXTIME(hha.create_time,'%Y-%m-%d') as create_time,
+		DATE_FORMAT(hha.create_time,'%Y-%m-%d') as create_time,
 		hha.create_time as order_by_addtime,
 
 		CASE
@@ -2195,7 +2195,7 @@
 
 		IFNULL(FROM_UNIXTIME( IF(hcr.recover_time='',NULL,hcr.recover_time), '%Y-%m-%d' ),'--') AS last_payment_time,
 
-		FROM_UNIXTIME(hbtc.create_time,'%Y-%m-%d') as create_time,
+		DATE_FORMAT(hbtc.create_time,'%Y-%m-%d') as create_time,
 		hbtc.create_time as order_by_addtime,
 		'' AS statusName,
 		hcc.coupon_type coupon_type,

@@ -21,6 +21,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,21 +43,21 @@ public class PcChannelReconciliationController extends BaseController {
     private ChannelReconciliationService channelService;
 
     @ApiOperation(value = "散标列表查询", notes = "散标列表查询")
-    @RequestMapping("/search")
+    @PostMapping("/search")
     public AdminResult searchAction(@RequestBody ChannelReconciliationRequest request) {
         ChannelReconciliationResponse response = channelService.searchAction(request);
         return new AdminResult(response);
     }
 
     @ApiOperation(value = "计划列表查询", notes = "计划列表查询")
-    @RequestMapping("/search_hjh")
+    @PostMapping("/search_hjh")
     public AdminResult searchHJHAction(@RequestBody ChannelReconciliationRequest request) {
         ChannelReconciliationResponse response = channelService.searchHJHAction(request);
         return new AdminResult(response);
     }
 
     @ApiOperation(value = "查询所有渠道", notes = "查询所有渠道")
-    @RequestMapping("/search_utmlist")
+    @PostMapping("/search_utmlist")
     public AdminResult searchUtmList() {
         // 0:pc
         List<UtmVO> list = channelService.searchUtmList(0);
@@ -71,7 +72,7 @@ public class PcChannelReconciliationController extends BaseController {
      * @param form
      */
     @ApiOperation(value = "导出散标列表", notes = "导出散标列表")
-    @RequestMapping("/export")
+    @PostMapping("/export")
     public void exportAction(@RequestBody ChannelReconciliationRequest request, HttpServletResponse response) throws Exception {
         // 表格sheet名称
         String sheetName = "PC渠道对账-散标";

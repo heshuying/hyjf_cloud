@@ -73,15 +73,15 @@ public class WechatMyProjectController extends BaseTradeController {
 
         switch (type) {
             case CURRENTHOLD_TYPE:
-                myProjectService.selectCurrentHoldObligatoryRightList(userId, currentPage, pageSize, vo);
+                vo =myProjectService.selectCurrentHoldObligatoryRightList(userId, currentPage, pageSize, vo);
                 break;
 
             case REPAYMENT_TYPE:
-                myProjectService.selectRepaymentList(userId, currentPage, pageSize, vo);
+                vo =myProjectService.selectRepaymentList(userId, currentPage, pageSize, vo);
                 break;
 
             case CREDITRECORD_TYPE:
-                myProjectService.selectCreditRecordList(userId, currentPage, pageSize, vo);
+                vo =myProjectService.selectCreditRecordList(userId, currentPage, pageSize, vo);
                 break;
             default:
                 throw new IllegalArgumentException("not support type=" + type);
@@ -124,10 +124,10 @@ public class WechatMyProjectController extends BaseTradeController {
         QueryMyProjectVO vo = new QueryMyProjectVO();
         switch (type) {
             case HOLD_PLAN_TYPE:
-                myProjectService.selectCurrentHoldPlanList(userId, currentPage, pageSize, vo);
+                vo =myProjectService.selectCurrentHoldPlanList(userId, currentPage, pageSize, vo);
                 break;
             case REPAYMENT_PLAN_TYPE:
-                myProjectService.selectRepayMentPlanList(userId, currentPage, pageSize, vo);
+                vo =myProjectService.selectRepayMentPlanList(userId, currentPage, pageSize, vo);
                 break;
             default:
                 throw new IllegalArgumentException("not support type=" + type);

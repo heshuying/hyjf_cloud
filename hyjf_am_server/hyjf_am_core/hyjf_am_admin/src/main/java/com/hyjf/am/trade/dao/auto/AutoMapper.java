@@ -472,6 +472,15 @@ public class AutoMapper {
 
     @Resource
     protected UnderLineRechargeMapper underLineRechargeMapper;
-    
+
+    @Resource
+    protected HjhBailConfigMapper hjhBailConfigMapper;
+
+    @Resource
+    protected HjhBailConfigInfoMapper hjhBailConfigInfoMapper;
+
+    @Resource
+    protected BorrowDeleteMapper borrowDeleteMapper;
+
 }
 

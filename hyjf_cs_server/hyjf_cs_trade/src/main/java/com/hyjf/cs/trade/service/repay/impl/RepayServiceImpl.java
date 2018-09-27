@@ -5,7 +5,6 @@ import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.trade.ProjectBeanVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BorrowClient;
 import com.hyjf.cs.trade.service.repay.RepayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,8 +32,6 @@ public class RepayServiceImpl implements RepayService {
 	@Autowired
 	AmUserClient amUserClient;
 
-	@Autowired
-	BorrowClient borrowClient;
 
     /**
      * 获取批次放款列表
@@ -190,7 +187,7 @@ public class RepayServiceImpl implements RepayService {
      */
     @Override
     public ProjectBeanVO getRepayProjectDetail(ProjectBeanVO form) {
-        return borrowClient.getRepayProjectDetail(form);
+        return amTradeClient.getRepayProjectDetail(form);
     }
 
 

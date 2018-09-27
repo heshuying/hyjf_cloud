@@ -4,6 +4,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 
@@ -21,6 +22,8 @@ public interface AdminUtmReadPermissionsService {
 	 */
 	AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request);
 
+	UtmPlatResponse getUtmPlatList();
+
 	/**
 	 * 添加
 	 *
@@ -28,6 +31,14 @@ public interface AdminUtmReadPermissionsService {
 	 * @return
 	 */
 	AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean);
+
+	/**
+	 * 添加
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	AdminUtmReadPermissionsResponse getRecord(AdminUtmReadPermissionsRequest requestBean);
 
 	/**
 	 * 修改

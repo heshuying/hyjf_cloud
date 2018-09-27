@@ -83,6 +83,9 @@ public class ActivityServiceImpl implements ActivityService {
             example.setLimitStart(offset);
             example.setLimitEnd(limit);
         }
+        if (request.getTitle() != null) {
+            example.createCriteria().andTitleEqualTo(request.getTitle());
+        }
         example.setOrderByClause("`create_time` Desc");
         return activityListMapper.selectByExample(example);
     }
@@ -109,6 +112,17 @@ public class ActivityServiceImpl implements ActivityService {
     public List<ActivityList> getActivityList() {
         ActivityListExample example = new ActivityListExample();
         return activityListMapper.selectByExample(example);
+    }
+
+    /**
+     * 获取活动详情
+     * @param id
+     * @return
+     */
+    @Override
+    public ActivityList getActivityInfo(Integer id) {
+        ActivityList list = activityListMapper.selectByPrimaryKey(id);
+        return list;
     }
 
     /**

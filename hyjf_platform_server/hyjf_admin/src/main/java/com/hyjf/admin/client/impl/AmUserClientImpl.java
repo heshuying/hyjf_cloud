@@ -1,5 +1,17 @@
 package com.hyjf.admin.client.impl;
 
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
@@ -22,17 +34,6 @@ import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -1469,7 +1470,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
     public UtmResponse getByPageList(Map<String, Object> map) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/getbypagelist", map, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/getbypagelist", map, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
@@ -1479,7 +1480,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UtmResponse getCountByParam(Map<String, Object> map) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/getcount", map, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/getcount", map, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
@@ -1489,7 +1490,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public Integer getChannelCount(ChannelCustomizeVO channelCustomizeVO) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/channel/getchannelcount", channelCustomizeVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/channel/getchannelcount", channelCustomizeVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getRecordTotal();
 		}
@@ -1503,7 +1504,7 @@ public class AmUserClientImpl implements AmUserClient {
 			channelCustomizeVO.setLimitEnd(channelCustomizeVO.getPageSize());
 		}
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/channel/getchannellist", channelCustomizeVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/channel/getchannellist", channelCustomizeVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResultList();
 		}
@@ -1523,7 +1524,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UtmChannelVO getRecord(String utmId) {
 		UtmChannelResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyutmid/"+utmId, UtmChannelResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmbyutmid/"+utmId, UtmChannelResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -1533,7 +1534,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO getUser(String utmReferrer, String userId) {
 		UtmResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/getuser/"+utmReferrer+"/"+userId, UtmResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/user/getuser/"+utmReferrer+"/"+userId, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return (UserVO)response.getResult();
 		}
@@ -1543,7 +1544,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/insertorupdateutm",channelCustomizeVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/insertorupdateutm",channelCustomizeVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return true;
 		}else{
@@ -1554,7 +1555,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean deleteAction(ChannelCustomizeVO channelCustomizeVO) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/deleteutm/",channelCustomizeVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/deleteutm/",channelCustomizeVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return true;
 		}else{
@@ -1565,7 +1566,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UtmPlatVO getDataById(Integer id) {
 		UtmPlatResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyid/"+id, UtmPlatResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmbyid/"+id, UtmPlatResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}else{
@@ -1576,7 +1577,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int sourceNameIsExists(String sourceName, Integer sourceId) {
 		UtmResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/promotion/utm/sourcenameisexists/"+sourceName+"/"+sourceId, UtmResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/sourcenameisexists/"+sourceName+"/"+sourceId, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getRecordTotal();
 		}else{
@@ -1587,7 +1588,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/insertorupdateutmplat/",utmPlatVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/insertorupdateutmplat/",utmPlatVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return true;
 		}else{
@@ -1598,7 +1599,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean utmClientdeleteUtmPlatAction(UtmPlatVO utmPlatVO) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/deleteutmplat/",utmPlatVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/deleteutmplat/",utmPlatVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return true;
 		}else{
@@ -1647,7 +1648,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public UserInfoCustomizeResponse queryUserInfoByUserName(AdminSubConfigRequest request){
-		return restTemplate.postForEntity("http://AM-USER/am-user/config/queryUserInfoByUserName",request, UserInfoCustomizeResponse.class).getBody();
+		return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/queryUserInfoByUserName",request, UserInfoCustomizeResponse.class).getBody();
 	}
 	@Override
 	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest) {
@@ -1955,7 +1956,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public UserVO getUserByMobile(String mobile) {
-		UserResponse response = restTemplate.getForObject("http://AM-USER/am-user/findByMobile/" + mobile, UserResponse.class);
+		UserResponse response = restTemplate.getForObject("http://AM-ADMIN/am-user/user/findByMobile/" + mobile, UserResponse.class);
 		if (response != null) {
 			return response.getResult();
 		}
@@ -1980,7 +1981,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request) {
-		return restTemplate.postForObject("http://AM-USER/am-user/sms_count/query_sms_count_list", request, SmsCountCustomizeResponse.class);
+		return restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/query_sms_count_list", request, SmsCountCustomizeResponse.class);
 	}
 
 	@Override
@@ -2001,11 +2002,11 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean) {
-		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/sms_code/query_user",
+		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/sms_code/query_user",
 				requestBean, SmsCodeCustomizeResponse.class);
 		if (response != null) {
 			List<SmsCodeCustomizeVO> list = response.getResultList();
-			SmsCodeCustomizeResponse response1 = restTemplate.postForObject("http://AM-USER/am-user/sms_code/query_user",
+			SmsCodeCustomizeResponse response1 = restTemplate.postForObject("http://AM-ADMIN/am-user/sms_code/query_user",
 					requestBean, SmsCodeCustomizeResponse.class);
 			if (response1 != null) {
 				List<SmsCodeCustomizeVO> list1 = response1.getResultList();
@@ -2340,4 +2341,20 @@ public class AmUserClientImpl implements AmUserClient {
 		return checkFlg;
 	}
 
+	/**
+	 * 根据部门id查找是否有自级菜单
+	 * @param deptId
+	 * @return
+	 * @auther: nxl
+	 */
+	@Override
+	public List<OADepartmentCustomizeVO> getDeptInfoByDeptId(int deptId){
+		OADepartmentResponse response = restTemplate.
+				getForEntity("http://AM-ADMIN/am-user/userManager/getDeptInfoByDeptId/"+ deptId, OADepartmentResponse.class).
+				getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

@@ -3,6 +3,8 @@ package com.hyjf.cs.message.client;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.EventResponse;
+import com.hyjf.am.resquest.config.SmsNoticeConfigRequest;
+import com.hyjf.am.resquest.config.SmsTemplateRequest;
 import com.hyjf.am.vo.admin.ContentHelpCustomizeVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.config.*;
@@ -100,4 +102,18 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	List<MessagePushTagVO> getPushTags();
+
+	/**
+	 * 查询短信模板
+	 * @param tplCode
+	 * @return
+	 */
+    SmsTemplateVO findSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 查询短信模板
+	 * @param request
+	 * @return
+	 */
+	SmsNoticeConfigVO findSmsNotice(SmsNoticeConfigRequest request);
 }

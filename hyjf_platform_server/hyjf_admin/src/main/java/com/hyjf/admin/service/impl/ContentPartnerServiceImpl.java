@@ -50,4 +50,9 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 	public int deleteById(Integer id) {
 		return amConfigClient.deleteLinkById(id);
 	}
+
+	@Override
+	public LinkVO selectById(ContentPartnerRequestBean requestBean) {
+		return amConfigClient.getLinkRecord(requestBean.getId());
+	}
 }
