@@ -19,17 +19,23 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.GetterUtil;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -285,5 +291,194 @@ public class BailConfigController extends BaseController {
             }
         }
         return hjhBailConfigInfoCustomize;
+    }
+
+    /**
+     * 保证金配置列表导出
+     *
+     * @param request
+     * @param response
+     * @param request
+     */
+    @ApiOperation(value = "保证金配置列表导出", notes = "保证金配置列表导出")
+    @PostMapping("/export_account_detail_excel")
+    public void exportAccountsExcel(@RequestBody BailConfigRequest request, HttpServletResponse response) throws Exception {
+        // 表格sheet名称
+        String sheetName = "保证金配置列表";
+
+        List<BailConfigCustomizeVO> recordList = this.bailConfigService.selectRecordList(request);
+        String fileName = null;
+        try {
+            fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            logger.error("转码错误....", e);
+        }
+
+        String[] titles = new String[]{"序号", "资产来源", "日推标额度", "月推标额度", "未用额度是否累计", "授信周期",
+                "保证金比例", "保证金金额", "新增授信额度", "在贷余额额度", "还款授信方式:等额本息", "还款授信方式:按月计息，到期还本还息",
+                "还款授信方式:先息后本", "还款授信方式:按天计息，到期还本息", "还款授信方式:等额本金"};
+
+        // 声明一个工作薄
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        // 生成一个表格
+        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+        if (recordList != null && recordList.size() > 0) {
+
+            int sheetCount = 1;
+            int rowNum = 0;
+
+            for (int i = 0; i < recordList.size(); i++) {
+                rowNum++;
+                if (i != 0 && i % 60000 == 0) {
+                    sheetCount++;
+                    sheet = ExportExcel
+                            .createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+                    rowNum = 1;
+                }
+
+                // 新建一行
+                Row row = sheet.createRow(rowNum);
+                // 循环数据
+                for (int celLength = 0; celLength < titles.length; celLength++) {
+                    BailConfigInfoCustomizeVO record = this.bailConfigService.selectBailConfigById(recordList.get(i).getId());
+                    // 创建相应的单元格
+                    Cell cell = row.createCell(celLength);
+                    // 序号
+                    if (celLength == 0) {
+                        cell.setCellValue(i + 1);
+                    }
+                    // 资产来源
+                    else if (celLength == 1) {
+                        cell.setCellValue(record.getInstName());
+                    }
+                    // 日推标额度
+                    else if (celLength == 2) {
+                        cell.setCellValue(record.getDayMarkLine().toString());
+                    }
+                    // 月推标额度
+                    else if (celLength == 3) {
+                        cell.setCellValue(record.getMonthMarkLine().toString());
+                    }
+                    // 未用额度是否累计
+                    else if (celLength == 4) {
+                        cell.setCellValue(record.getIsAccumulate() == 0 ? "否" : "是");
+                    }
+                    // 授信周期
+                    else if (celLength == 5) {
+                        cell.setCellValue(record.getTimestart() + "至" + record.getTimeend());
+                    }
+                    // 保证金比例
+                    else if (celLength == 6) {
+                        cell.setCellValue(record.getBailRate() + "%");
+                    }
+                    // 保证金金额
+                    else if (celLength == 7) {
+                        cell.setCellValue(record.getBailTatol().toString());
+                    }
+                    // 新增授信额度
+                    else if (celLength == 8) {
+                        cell.setCellValue(record.getNewCreditLine().toString());
+                    }
+                    // 在贷余额额度
+                    else if (celLength == 9) {
+                        cell.setCellValue(record.getLoanCreditLine().toString());
+                    }
+                    // 还款授信方式 等额本息
+                    else if (celLength == 10) {
+                        StringBuffer sb = new StringBuffer();
+                        if (record.getMonthNCL() == 1) {
+                            sb.append("新增授信+");
+                        }
+                        if (record.getMonthLCL() == 1) {
+                            sb.append("在贷授信+");
+                        }
+                        if (record.getMonthRCT() == 0) {
+                            sb.append("到期回滚");
+                        } else if (record.getMonthRCT() == 1) {
+                            sb.append("分期回滚");
+                        } else if (record.getMonthRCT() == 2) {
+                            sb.append("不回滚");
+                        }
+                        cell.setCellValue(sb.toString());
+                    }
+                    // 还款授信方式 按月计息，到期还本还息
+                    else if (celLength == 11) {
+                        StringBuffer sb = new StringBuffer();
+                        if (record.getEndNCL() == 1) {
+                            sb.append("新增授信+");
+                        }
+                        if (record.getEndLCL() == 1) {
+                            sb.append("在贷授信+");
+                        }
+                        if (record.getEndRCT() == 0) {
+                            sb.append("到期回滚");
+                        } else if (record.getEndRCT() == 1) {
+                            sb.append("分期回滚");
+                        } else if (record.getEndRCT() == 2) {
+                            sb.append("不回滚");
+                        }
+                        cell.setCellValue(sb.toString());
+                    }
+                    // 还款授信方式 先息后本
+                    else if (celLength == 12) {
+                        StringBuffer sb = new StringBuffer();
+                        if (record.getEndmonthNCL() == 1) {
+                            sb.append("新增授信+");
+                        }
+                        if (record.getEndmonthLCL() == 1) {
+                            sb.append("在贷授信+");
+                        }
+                        if (record.getEndmonthRCT() == 0) {
+                            sb.append("到期回滚");
+                        } else if (record.getEndmonthRCT() == 1) {
+                            sb.append("分期回滚");
+                        } else if (record.getEndmonthRCT() == 2) {
+                            sb.append("不回滚");
+                        }
+                        cell.setCellValue(sb.toString());
+                    }
+                    // 还款授信方式 按天计息，到期还本息
+                    else if (celLength == 13) {
+                        StringBuffer sb = new StringBuffer();
+                        if (record.getEnddayNCL() == 1) {
+                            sb.append("新增授信+");
+                        }
+                        if (record.getEnddayLCL() == 1) {
+                            sb.append("在贷授信+");
+                        }
+                        if (record.getEnddayRCT() == 0) {
+                            sb.append("到期回滚");
+                        } else if (record.getEnddayRCT() == 1) {
+                            sb.append("分期回滚");
+                        } else if (record.getEnddayRCT() == 2) {
+                            sb.append("不回滚");
+                        }
+                        cell.setCellValue(sb.toString());
+                    }
+                    // 还款授信方式 等额本金
+                    else if (celLength == 14) {
+                        StringBuffer sb = new StringBuffer();
+                        if (record.getPrincipalNCL() == 1) {
+                            sb.append("新增授信+");
+                        }
+                        if (record.getPrincipalLCL() == 1) {
+                            sb.append("在贷授信+");
+                        }
+                        if (record.getPrincipalRCT() == 0) {
+                            sb.append("到期回滚");
+                        } else if (record.getPrincipalRCT() == 1) {
+                            sb.append("分期回滚");
+                        } else if (record.getPrincipalRCT() == 2) {
+                            sb.append("不回滚");
+                        }
+                        cell.setCellValue(sb.toString());
+                    }
+                }
+            }
+        }
+        // 导出
+        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
 }
