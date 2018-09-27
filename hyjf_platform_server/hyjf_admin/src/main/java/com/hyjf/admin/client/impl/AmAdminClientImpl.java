@@ -20,10 +20,7 @@ import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.vo.admin.AdminPermissionsVO;
-import com.hyjf.am.vo.admin.PoundageCustomizeVO;
-import com.hyjf.am.vo.admin.PoundageDetailVO;
-import com.hyjf.am.vo.admin.PoundageLedgerVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
@@ -73,6 +70,38 @@ public class AmAdminClientImpl implements AmAdminClient {
         UtmPlatResponse response =  restTemplate.
                 postForEntity("http://AM-ADMIN/am-admin/extensioncenter/channelstatisticsdetail/app_utm_list", null, UtmPlatResponse.class).getBody();
         if (UtmPlatResponse.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取保证金配置总数
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer selectBailConfigCount(BailConfigRequest request) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_bail_config_count";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+    /**
+     * 获取保证金配置列表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<BailConfigCustomizeVO> selectBailConfigRecordList(BailConfigRequest request) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_bail_config_record_list";
+        BailConfigCustomizeResponse response = restTemplate.postForEntity(url,request,BailConfigCustomizeResponse.class).getBody();
+        if (BailConfigCustomizeResponse.isSuccess(response)) {
             return response.getResultList();
         }
         return null;

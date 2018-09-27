@@ -15,10 +15,7 @@ import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.vo.admin.AdminPermissionsVO;
-import com.hyjf.am.vo.admin.PoundageCustomizeVO;
-import com.hyjf.am.vo.admin.PoundageDetailVO;
-import com.hyjf.am.vo.admin.PoundageLedgerVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
@@ -347,4 +344,20 @@ public interface AmAdminClient {
      * @return
      */
     List<UtmPlatVO> getAppUtm();
+
+    /**
+     * 获取保证金配置总数
+     *
+     * @param request
+     * @return
+     */
+    Integer selectBailConfigCount(BailConfigRequest request);
+
+    /**
+     * 获取保证金配置列表
+     *
+     * @param request
+     * @return
+     */
+    List<BailConfigCustomizeVO> selectBailConfigRecordList(BailConfigRequest request);
 }
