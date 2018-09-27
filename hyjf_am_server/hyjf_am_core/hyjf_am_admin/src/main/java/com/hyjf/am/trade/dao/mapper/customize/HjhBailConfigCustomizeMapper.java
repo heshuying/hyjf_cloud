@@ -10,6 +10,7 @@ import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
 import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author PC-LIUSHOUYI
@@ -55,4 +56,12 @@ public interface HjhBailConfigCustomizeMapper {
      * @return
      */
     List<String> selectRepayMethod(String instCode);
+
+    /**
+     * 获取资产表中某段时间推标总额
+     *
+     * @param param
+     * @return
+     */
+    String selectAccountByCyc(Map<String,String> param);
 }

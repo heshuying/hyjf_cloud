@@ -72,4 +72,12 @@ public interface BailConfigService extends BaseService {
      * @return
      */
     Boolean insertBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 更新保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    Boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest);
 }

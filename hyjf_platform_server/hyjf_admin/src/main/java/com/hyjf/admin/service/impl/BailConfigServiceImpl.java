@@ -101,4 +101,15 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
     public boolean updateBailInfoDelFlg(String instCode) {
         return amAdminClient.updateBailInfoDelFlg(instCode);
     }
+
+    /**
+     * 更新保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        return amAdminClient.updateBailConfig(bailConfigAddRequest);
+    }
 }
