@@ -137,11 +137,10 @@ public interface AutoPlusService extends BaseUserService {
     /**
      * 前导发送短信验证码
      *
-     * @param userId
      * @param autoPlusRequestBean
      * @return
      */
-    ApiAutoPlusResultBean sendCode(Integer userId, AutoPlusRequestBean autoPlusRequestBean);
+    ApiAutoPlusResultBean sendCode(AutoPlusRequestBean autoPlusRequestBean);
 
     /**
      * app组装发往江西银行参数
