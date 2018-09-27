@@ -11,6 +11,8 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankSettingService;
+import com.hyjf.admin.service.impl.MessagePushNoticesServiceImpl;
+import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankSettingResponse;
@@ -56,6 +58,9 @@ public class BankSettingController extends BaseController {
 
     @Autowired
     private BankSettingService bankSettingService;
+
+    @Autowired
+    private MessagePushNoticesServiceImpl messagePushNoticesService;
 
     @Value("${file.domain.url}")
     private String DOMAIN_URL;
@@ -220,16 +225,18 @@ public class BankSettingController extends BaseController {
         return new AdminResult<>();
     }
 
+    @Autowired
+    private FileUpLoadUtil fileUpLoadUtil;
+
     @ApiOperation(value = "资料上传", httpMethod = "POST", notes = "资料上传")
     @PostMapping(value = "/upLoadFile")
     @ResponseBody
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            LinkedList<BorrowCommonImage> borrowCommonImages = bankSettingService.uploadFile(request);
-            adminResult.setData(borrowCommonImages);
             adminResult.setStatus(SUCCESS);
             adminResult.setStatusDesc(SUCCESS_DESC);
+            adminResult.setData(fileUpLoadUtil.upLoad(request));
             return adminResult;
         } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
