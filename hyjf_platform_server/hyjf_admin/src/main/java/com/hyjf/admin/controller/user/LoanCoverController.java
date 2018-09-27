@@ -159,10 +159,6 @@ public class LoanCoverController extends BaseController {
         AdminSystemVO adminSystemVO = this.getUser(request);
         int loginUserId = Integer.parseInt(adminSystemVO.getId());
         String loginUserName = adminSystemVO.getUsername();
-        //修改判断是否重复
-        if (!loanCoverService.selectIsExistsRecordByIdNo(loanCoverUserRequestBean.getIdNo(),loanCoverUserRequestBean.getName())) {
-            return new AdminResult<>(FAIL, "数据重复,请检查后提交");
-        }
         return loanCoverService.updateLoanCoverUser(loanCoverUserRequestBean,loginUserId,loginUserName);
     }
 
