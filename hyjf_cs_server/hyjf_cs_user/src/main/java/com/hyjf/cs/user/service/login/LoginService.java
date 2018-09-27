@@ -28,6 +28,14 @@ public interface LoginService extends BaseUserService {
     WebViewUserVO login(String loginUserName, String loginPassword, String ip,String channel);
 
     /**
+     * 通过密码验证后的纯登录操作
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    WebViewUserVO loginOperationOnly(UserVO userVO,String loginUserName,String ip,String channel);
+
+    /**
      * app登录参数检查
      * @param version
      * @param platform

@@ -1,24 +1,5 @@
 package com.hyjf.admin.client.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.am.response.BooleanResponse;
@@ -43,6 +24,23 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -71,6 +69,18 @@ public class AmConfigClientImpl implements AmConfigClient {
             return response.getResult();
         }
         return null;
+    }
+    @Override
+    public DebtConfigResponse getDebtConfig(){
+        String url = "http://AM-ADMIN/am-admin/debtconfig/init" ;
+        DebtConfigResponse response = restTemplate.getForEntity(url, DebtConfigResponse.class).getBody();
+        return response;
+    }
+    @Override
+    public DebtConfigResponse updateDebtConfig(DebtConfigRequest request){
+        String url = "http://AM-ADMIN/am-admin/debtconfig/update" ;
+        DebtConfigResponse response = restTemplate.postForEntity(url,request,DebtConfigResponse.class).getBody();
+        return response;
     }
 
     @Override
@@ -314,50 +324,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
-    @Override
-    public AppBorrowImageResponse searchList(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/getRecordList", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
 
-    @Override
-    public AppBorrowImageResponse searchInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/infoAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
-
-    @Override
-    public AppBorrowImageResponse insertInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/insertAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
-
-    @Override
-    public AppBorrowImageResponse updateInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/updateAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
-
-    @Override
-    public AppBorrowImageResponse deleteInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/deleteAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
 
     /**
      * 查询银行配置列表
@@ -1478,41 +1445,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForObject("http://AM-ADMIN/am-config/smsTemplate/insertTemplate", request, IntegerResponse.class).getResultInt();
     }
 
-    /**
-     * 查询列表数据
-     *
-     * @param form
-     * @return
-     */
-    @Override
-    public SubmissionsResponse findSubmissionsList(SubmissionsRequest form) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getRecordList", form,
-                SubmissionsResponse.class);
-    }
 
-    /**
-     * 查询导出数据
-     *
-     * @param form
-     * @return
-     */
-    @Override
-    public SubmissionsResponse exportSubmissionsList(SubmissionsRequest form) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getExportRecordList", form,
-                SubmissionsResponse.class);
-    }
-
-    /**
-     * 更新状态
-     *
-     * @param form
-     * @return
-     */
-    @Override
-    public SubmissionsResponse updateSubmissionsStatus(SubmissionsRequest form) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/updateSubmissionsStatus", form,
-                SubmissionsResponse.class);
-    }
 
     @Override
     public TeamResponse searchAction(TeamRequestBean requestBean) {
@@ -1645,53 +1578,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
-    @Override
-    public VersionConfigBeanResponse searchList(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/getRecordList", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-    }
 
-    @Override
-    public VersionConfigBeanResponse searchInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/infoAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-
-    }
-
-    @Override
-    public VersionConfigBeanResponse insertInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/insertAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-
-    }
-
-    @Override
-    public VersionConfigBeanResponse updateInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/updateAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-
-    }
-
-    @Override
-    public VersionConfigBeanResponse deleteInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/deleteAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-    }
 
 
     /**
@@ -2222,10 +2109,5 @@ public class AmConfigClientImpl implements AmConfigClient {
            return null;
    	}
 
-    @Override
-    public SubmissionsVO getSubmissionsRecord(SubmissionsRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getSubmissionsRecord", request,
-                SubmissionsVO.class);
 
-    }
 }

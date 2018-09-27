@@ -475,7 +475,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		}
 		if (StringUtils.isNotBlank(user.getIconUrl())) {
 			String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
-			// http://cdn.huiyingdai.com/
 			imghost = imghost.substring(0, imghost.length() - 1);
 			String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
 			if(StringUtils.isNotEmpty(user.getIconUrl())){

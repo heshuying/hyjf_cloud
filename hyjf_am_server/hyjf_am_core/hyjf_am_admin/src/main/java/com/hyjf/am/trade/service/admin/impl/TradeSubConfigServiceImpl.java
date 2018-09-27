@@ -1,23 +1,22 @@
 package com.hyjf.am.trade.service.admin.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
+import com.hyjf.am.trade.dao.mapper.customize.SubCommissionListConfigCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig;
+import com.hyjf.am.trade.service.admin.TradeSubConfigService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
-import com.hyjf.am.trade.dao.mapper.customize.SubCommissionListConfigCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig;
-import com.hyjf.am.trade.service.admin.SubConfigService;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author by xiehuili on 2018/7/9.
  */
 @Service
-public class SubConfigServiceImpl implements SubConfigService {
+public class TradeSubConfigServiceImpl implements TradeSubConfigService {
     @Autowired
     private SubCommissionListConfigCustomizeMapper subCommissionListConfigCustomizeMapper;
     /*

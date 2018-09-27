@@ -526,7 +526,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 保存到数据库
         amUserClient.updateUserById(userVO);
         // 测试环境要加 + request.getContextPath().replace("//", "");
-        String imghost = UploadFileUtils.getDoPath(systemConfig.getDomainAppUrl());
+        String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
         iconUrl = imghost + fileUploadTempPath + fileRealName;
         return iconUrl;
