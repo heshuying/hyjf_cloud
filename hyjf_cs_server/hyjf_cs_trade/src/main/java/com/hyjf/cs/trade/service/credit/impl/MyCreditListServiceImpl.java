@@ -6,19 +6,20 @@ package com.hyjf.cs.trade.service.credit.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
+import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
-import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -30,13 +31,12 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
-import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.CreditResultBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
+import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
@@ -49,6 +49,7 @@ import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -85,7 +86,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     private SmsProducer smsProducer;
     @Autowired
     private SystemConfig systemConfig;
-
+    @Autowired
+    private AmConfigClient amConfigClient;
 
     /**
      * 我要债转列表页 获取参数
@@ -171,6 +173,19 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         CreditResultBean creditResultBean = new CreditResultBean();
         WebResult webResult = new WebResult();
         UserVO user = amUserClient.findUserById(userId);
+        DebtConfigResponse response = amConfigClient.getDebtConfig();
+        List<DebtConfigVO> config = response.getResultList();
+        if(!CollectionUtils.isEmpty(config)){
+            DebtConfigVO configVO = config.get(0);
+            creditResultBean.setDebtConfigVO(configVO);
+        }else{
+            logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "配置表无数据请配置");
+            creditResultBean.setResultFlag(CustomConstants.RESULT_FAIL);
+            creditResultBean.setMsg("配置表无数据请配置");
+            creditResultBean.setData(null);
+            webResult.setData(creditResultBean);
+            return webResult;
+        }
         creditResultBean.setMobile(user.getMobile());
         Integer nowTime = GetDate.getNowTime10();
         if (StringUtils.isEmpty(request.getBorrowNid()) || StringUtils.isEmpty(request.getTenderNid())) {
@@ -399,21 +414,35 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      */
     private void checkTenderToCreditParam(TenderBorrowCreditCustomize request, Integer userId) {
         // 验证折让率
-        if (StringUtils.isEmpty(request.getCreditDiscount())) {
+        //新增配置表校验add tanyy2018-9-27
+        List<DebtConfigVO> config = amConfigClient.getDebtConfig().getResultList();
+        if (org.apache.commons.lang.StringUtils.isEmpty(request.getCreditDiscount())||CollectionUtils.isEmpty(config)) {
             // 折让率不能为空
             throw  new CheckException(MsgEnum.ERROR_CREDIT_CREDIT_DISCOUNT_NULL);
         } else {
-            if (request.getCreditDiscount().matches(regex)) {
-                float creditDiscount = Float.parseFloat(request.getCreditDiscount());
-                if (creditDiscount > creditDiscountEnd || creditDiscount < creditDiscountStart) {
-                    // 折让率范围错误
-                    throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);
-                }
-            } else {
-                // 折让率格式错误
-                throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_FORMAT_ERROR);
+            float creditDiscount = Float.parseFloat(request.getCreditDiscount());
+            DebtConfigVO debtConfig = config.get(0);
+            if (creditDiscount > debtConfig.getConcessionRateUp().floatValue() || creditDiscount < debtConfig.getConcessionRateDown().floatValue()) {
+                // 折让率范围错误
+                throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);
             }
+
         }
+//        if (StringUtils.isEmpty(request.getCreditDiscount())) {
+//            // 折让率不能为空
+//            throw  new CheckException(MsgEnum.ERROR_CREDIT_CREDIT_DISCOUNT_NULL);
+//        } else {
+//            if (request.getCreditDiscount().matches(regex)) {
+//                float creditDiscount = Float.parseFloat(request.getCreditDiscount());
+//                if (creditDiscount > creditDiscountEnd || creditDiscount < creditDiscountStart) {
+//                    // 折让率范围错误
+//                    throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);
+//                }
+//            } else {
+//                // 折让率格式错误
+//                throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_FORMAT_ERROR);
+//            }
+//        }
         // 验证手机验证码
 //        if (StringUtils.isEmpty(request.getTelcode())) {
 //            // 手机验证码不能为空

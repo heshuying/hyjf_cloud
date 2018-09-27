@@ -47,6 +47,8 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	DebtConfigResponse getDebtConfig();
+
+
 	/**
 	 * 债转配置更新
 	 * @auth
