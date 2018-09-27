@@ -26,10 +26,7 @@ import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.vo.admin.AdminPermissionsVO;
-import com.hyjf.am.vo.admin.PoundageCustomizeVO;
-import com.hyjf.am.vo.admin.PoundageDetailVO;
-import com.hyjf.am.vo.admin.PoundageLedgerVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -432,6 +429,22 @@ public interface AmAdminClient {
      */
     AppBannerResponse getRecordById(AdsVO adsVO);
 
+
+    /**
+     * 获取保证金配置总数
+     *
+     * @param request
+     * @return
+     */
+    Integer selectBailConfigCount(BailConfigRequest request);
+
+    /**
+     * 获取保证金配置列表
+     *
+     * @param request
+     * @return
+     */
+    List<BailConfigCustomizeVO> selectBailConfigRecordList(BailConfigRequest request);
 
     /**
      * 获取锁定账户列表

@@ -11,6 +11,8 @@
 
 package com.hyjf.am.trade.dao.model.customize;
 
+import java.math.BigDecimal;
+
 /**
  * app 实体
  */
@@ -84,6 +86,11 @@ public class AppProjectListCustomize {
 	// 计划状态名字描述
 	private String statusNameDesc;
 	// add by fuqiang 20171204 end 首页项目展示
+
+	/**是否产品加息*/
+	private Integer increaseInterestFlag;
+	/**产品加息数据库字段*/
+	private BigDecimal borrowExtraYieldOld;
 
 	/**
 	 * 构造方法
@@ -299,5 +306,21 @@ public class AppProjectListCustomize {
 
 	public void setBorrowPeriodInt(Integer borrowPeriodInt) {
 		this.borrowPeriodInt = borrowPeriodInt;
+	}
+
+	public Integer getIncreaseInterestFlag() {
+		return increaseInterestFlag;
+	}
+
+	public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
+		this.increaseInterestFlag = increaseInterestFlag;
+	}
+
+	public BigDecimal getBorrowExtraYieldOld() {
+		return borrowExtraYieldOld;
+	}
+
+	public void setBorrowExtraYieldOld(BigDecimal borrowExtraYieldOld) {
+		this.borrowExtraYieldOld = borrowExtraYieldOld;
 	}
 }

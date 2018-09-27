@@ -263,4 +263,10 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 
 
+    @Override
+    public ActivityListResponse getInfoById(Integer id) {
+		ActivityListResponse response = restTemplate.getForEntity("http://AM-MARKET/am-market/activity/getInfoById/" + id, ActivityListResponse.class).getBody();
+        return response;
+    }
+
 }

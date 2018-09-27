@@ -140,4 +140,17 @@ public interface AmMarketClient {
      */
     MessagePushTagResponse getTagList();
 
+    /**
+     * 根据id获取广告
+     * @param adsVO
+     * @return
+     */
+    AppBannerResponse getRecordById(AdsVO adsVO);
+
+    /**
+     * 获取活动详情
+     * @param id
+     * @return
+     */
+    ActivityListResponse getInfoById(Integer id);
 }

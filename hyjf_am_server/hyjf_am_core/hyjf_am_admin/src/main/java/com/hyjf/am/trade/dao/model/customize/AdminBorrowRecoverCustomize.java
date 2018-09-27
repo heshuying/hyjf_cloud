@@ -169,382 +169,137 @@ public class AdminBorrowRecoverCustomize {
      */
     private int limitEnd = -1;
 
-    /**
-     * accountYes
-     *
-     * @return the accountYes
-     */
-
-    public String getAccountYes() {
-        return accountYes;
-    }
-
-    /**
-     * @param accountYes
-     *            the accountYes to set
-     */
-
-    public void setAccountYes(String accountYes) {
-        this.accountYes = accountYes;
-    }
-
-    /**
-     * accountPrice
-     *
-     * @return the accountPrice
-     */
-
-    public String getAccountPrice() {
-        return accountPrice;
-    }
-
-    /**
-     * @param accountPrice
-     *            the accountPrice to set
-     */
-
-    public void setAccountPrice(String accountPrice) {
-        this.accountPrice = accountPrice;
-    }
-
-    /**
-     * loanFee
-     *
-     * @return the loanFee
-     */
-
-    public String getLoanFee() {
-        return loanFee;
-    }
-
-    /**
-     * @param loanFee
-     *            the loanFee to set
-     */
-
-    public void setLoanFee(String loanFee) {
-        this.loanFee = loanFee;
-    }
-
-    /**
-     * userId
-     *
-     * @return the userId
-     */
-
-    public String getUserId() {
-        return userId;
-    }
-
-    /**
-     * @param userId
-     *            the userId to set
-     */
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    /**
-     * borrowProjectTypeName
-     *
-     * @return the borrowProjectTypeName
-     */
-
-    public String getBorrowProjectTypeName() {
-        return borrowProjectTypeName;
-    }
-
-    /**
-     * @param borrowProjectTypeName
-     *            the borrowProjectTypeName to set
-     */
-
-    public void setBorrowProjectTypeName(String borrowProjectTypeName) {
-        this.borrowProjectTypeName = borrowProjectTypeName;
-    }
-
-    /**
-     * borrowPeriod
-     *
-     * @return the borrowPeriod
-     */
-
-    public String getBorrowPeriod() {
-        return borrowPeriod;
-    }
-
-    /**
-     * @param borrowPeriod
-     *            the borrowPeriod to set
-     */
-
-    public void setBorrowPeriod(String borrowPeriod) {
-        this.borrowPeriod = borrowPeriod;
-    }
-
-    /**
-     * borrowApr
-     *
-     * @return the borrowApr
-     */
-
-    public String getBorrowApr() {
-        return borrowApr;
-    }
-
-    /**
-     * @param borrowApr
-     *            the borrowApr to set
-     */
-
-    public void setBorrowApr(String borrowApr) {
-        this.borrowApr = borrowApr;
-    }
-
-    /**
-     * borrowStyleName
-     *
-     * @return the borrowStyleName
-     */
-
-    public String getBorrowStyleName() {
-        return borrowStyleName;
-    }
-
-    /**
-     * @param borrowStyleName
-     *            the borrowStyleName to set
-     */
-
-    public void setBorrowStyleName(String borrowStyleName) {
-        this.borrowStyleName = borrowStyleName;
-    }
-
-    /**
-     * tenderUsername
-     *
-     * @return the tenderUsername
-     */
-
-    public String getTenderUsername() {
-        return tenderUsername;
-    }
-
-    /**
-     * @param tenderUsername
-     *            the tenderUsername to set
-     */
-
-    public void setTenderUsername(String tenderUsername) {
-        this.tenderUsername = tenderUsername;
-    }
-
-    /**
-     * tenderUserId
-     *
-     * @return the tenderUserId
-     */
-
-    public String getTenderUserId() {
-        return tenderUserId;
-    }
-
-    /**
-     * @param tenderUserId
-     *            the tenderUserId to set
-     */
-
-    public void setTenderUserId(String tenderUserId) {
-        this.tenderUserId = tenderUserId;
-    }
-
-
-    /**
-     * borrowName
-     *
-     * @return the borrowName
-     */
-
     public String getBorrowName() {
         return borrowName;
     }
-
-    /**
-     * @param borrowName
-     *            the borrowName to set
-     */
 
     public void setBorrowName(String borrowName) {
         this.borrowName = borrowName;
     }
 
-    /**
-     * borrowNid
-     *
-     * @return the borrowNid
-     */
+    public String getInstName() {
+        return instName;
+    }
+
+    public void setInstName(String instName) {
+        this.instName = instName;
+    }
 
     public String getBorrowNid() {
         return borrowNid;
     }
 
-    /**
-     * @param borrowNid
-     *            the borrowNid to set
-     */
-
     public void setBorrowNid(String borrowNid) {
         this.borrowNid = borrowNid;
     }
 
-    /**
-     * orderNum
-     *
-     * @return the orderNum
-     */
+    public String getPlanNid() {
+        return planNid;
+    }
+
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
+    }
 
     public String getOrderNum() {
         return orderNum;
     }
 
-    /**
-     * @param orderNum
-     *            the orderNum to set
-     */
-
     public void setOrderNum(String orderNum) {
         this.orderNum = orderNum;
     }
-
-    /**
-     * username
-     *
-     * @return the username
-     */
 
     public String getUsername() {
         return username;
     }
 
-    /**
-     * @param username
-     *            the username to set
-     */
-
     public void setUsername(String username) {
         this.username = username;
     }
-
-    /**
-     * account
-     *
-     * @return the account
-     */
 
     public String getAccount() {
         return account;
     }
 
-    /**
-     * @param account
-     *            the account to set
-     */
-
     public void setAccount(String account) {
         this.account = account;
     }
 
-    /**
-     * servicePrice
-     *
-     * @return the servicePrice
-     */
+    public String getAccountYes() {
+        return accountYes;
+    }
+
+    public void setAccountYes(String accountYes) {
+        this.accountYes = accountYes;
+    }
+
+    public String getAccountPrice() {
+        return accountPrice;
+    }
+
+    public void setAccountPrice(String accountPrice) {
+        this.accountPrice = accountPrice;
+    }
+
+    public String getLoanFee() {
+        return loanFee;
+    }
+
+    public void setLoanFee(String loanFee) {
+        this.loanFee = loanFee;
+    }
+
+    public String getLoanOrdid() {
+        return loanOrdid;
+    }
+
+    public void setLoanOrdid(String loanOrdid) {
+        this.loanOrdid = loanOrdid;
+    }
+
+    public String getInstCode() {
+        return instCode;
+    }
+
+    public void setInstCode(String instCode) {
+        this.instCode = instCode;
+    }
 
     public String getServicePrice() {
         return servicePrice;
     }
 
-    /**
-     * @param servicePrice
-     *            the servicePrice to set
-     */
-
     public void setServicePrice(String servicePrice) {
         this.servicePrice = servicePrice;
     }
-
-    /**
-     * recoverPrice
-     *
-     * @return the recoverPrice
-     */
 
     public String getRecoverPrice() {
         return recoverPrice;
     }
 
-    /**
-     * @param recoverPrice
-     *            the recoverPrice to set
-     */
-
     public void setRecoverPrice(String recoverPrice) {
         this.recoverPrice = recoverPrice;
     }
-
-    /**
-     * recoverPriceOver
-     *
-     * @return the recoverPriceOver
-     */
 
     public String getRecoverPriceOver() {
         return recoverPriceOver;
     }
 
-    /**
-     * @param recoverPriceOver
-     *            the recoverPriceOver to set
-     */
-
     public void setRecoverPriceOver(String recoverPriceOver) {
         this.recoverPriceOver = recoverPriceOver;
     }
-
-    /**
-     * isRecover
-     *
-     * @return the isRecover
-     */
 
     public String getIsRecover() {
         return isRecover;
     }
 
-    /**
-     * @param isRecover
-     *            the isRecover to set
-     */
-
     public void setIsRecover(String isRecover) {
         this.isRecover = isRecover;
     }
 
-    /**
-     * timeRecover
-     *
-     * @return the timeRecover
-     */
-
     public String getTimeRecover() {
         return timeRecover;
     }
-
-    /**
-     * @param timeRecover
-     *            the timeRecover to set
-     */
 
     public void setTimeRecover(String timeRecover) {
         this.timeRecover = timeRecover;
@@ -558,50 +313,60 @@ public class AdminBorrowRecoverCustomize {
         this.createTime = createTime;
     }
 
-    /**
-     * limitStart
-     *
-     * @return the limitStart
-     */
-
-    public int getLimitStart() {
-        return limitStart;
+    public String getUserId() {
+        return userId;
     }
 
-    /**
-     * @param limitStart
-     *            the limitStart to set
-     */
-
-    public void setLimitStart(int limitStart) {
-        this.limitStart = limitStart;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    /**
-     * limitEnd
-     *
-     * @return the limitEnd
-     */
-
-    public int getLimitEnd() {
-        return limitEnd;
+    public String getBorrowProjectTypeName() {
+        return borrowProjectTypeName;
     }
 
-    /**
-     * @param limitEnd
-     *            the limitEnd to set
-     */
-
-    public void setLimitEnd(int limitEnd) {
-        this.limitEnd = limitEnd;
+    public void setBorrowProjectTypeName(String borrowProjectTypeName) {
+        this.borrowProjectTypeName = borrowProjectTypeName;
     }
 
-    public String getLoanOrdid() {
-        return loanOrdid;
+    public String getBorrowPeriod() {
+        return borrowPeriod;
     }
 
-    public void setLoanOrdid(String loanOrdid) {
-        this.loanOrdid = loanOrdid;
+    public void setBorrowPeriod(String borrowPeriod) {
+        this.borrowPeriod = borrowPeriod;
+    }
+
+    public String getBorrowApr() {
+        return borrowApr;
+    }
+
+    public void setBorrowApr(String borrowApr) {
+        this.borrowApr = borrowApr;
+    }
+
+    public String getBorrowStyleName() {
+        return borrowStyleName;
+    }
+
+    public void setBorrowStyleName(String borrowStyleName) {
+        this.borrowStyleName = borrowStyleName;
+    }
+
+    public String getTenderUsername() {
+        return tenderUsername;
+    }
+
+    public void setTenderUsername(String tenderUsername) {
+        this.tenderUsername = tenderUsername;
+    }
+
+    public String getTenderUserId() {
+        return tenderUserId;
+    }
+
+    public void setTenderUserId(String tenderUserId) {
+        this.tenderUserId = tenderUserId;
     }
 
     public String getLoanBatchNo() {
@@ -610,11 +375,6 @@ public class AdminBorrowRecoverCustomize {
 
     public void setLoanBatchNo(String loanBatchNo) {
         this.loanBatchNo = loanBatchNo;
-    }
-
-
-    public String getPlanNid() {
-        return planNid;
     }
 
     public String getTenderReferrerUserId() {
@@ -673,10 +433,6 @@ public class AdminBorrowRecoverCustomize {
         this.teamName = teamName;
     }
 
-    public void setPlanNid(String planNid) {
-        this.planNid = planNid;
-    }
-
     public Integer getEntrustedFlg() {
         return entrustedFlg;
     }
@@ -693,31 +449,19 @@ public class AdminBorrowRecoverCustomize {
         this.entrustedUserName = entrustedUserName;
     }
 
-
-    /**
-     * instName
-     * @return the instName
-     */
-
-    public String getInstName() {
-        return instName;
-
+    public int getLimitStart() {
+        return limitStart;
     }
 
-    /**
-     * @param instName the instName to set
-     */
-
-    public void setInstName(String instName) {
-        this.instName = instName;
-
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
     }
 
-    public String getInstCode() {
-        return instCode;
+    public int getLimitEnd() {
+        return limitEnd;
     }
 
-    public void setInstCode(String instCode) {
-        this.instCode = instCode;
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }
