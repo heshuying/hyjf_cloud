@@ -72,6 +72,8 @@ public class LinkVO extends BaseVO {
 
     private Integer updateUserId;
 
+    private String partnerName;
+
     @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createTime;
@@ -304,5 +306,13 @@ public class LinkVO extends BaseVO {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getPartnerName() {
+        return partnerName;
+    }
+
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
     }
 }

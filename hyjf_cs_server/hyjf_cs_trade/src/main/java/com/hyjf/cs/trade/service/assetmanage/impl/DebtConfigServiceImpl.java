@@ -7,8 +7,6 @@ import com.hyjf.cs.trade.service.assetmanage.DebtConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class DebtConfigServiceImpl implements DebtConfigService {
 
@@ -24,8 +22,8 @@ public class DebtConfigServiceImpl implements DebtConfigService {
      * @param
      */
     @Override
-    public List<DebtConfigVO> getDebtConfig() {
+    public DebtConfigVO getDebtConfig() {
         DebtConfigResponse response = amConfigClient.getDebtConfig();
-        return response.getResultList();
+        return response.getResult();
     }
 }

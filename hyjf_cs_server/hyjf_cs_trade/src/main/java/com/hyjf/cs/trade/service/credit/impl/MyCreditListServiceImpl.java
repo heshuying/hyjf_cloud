@@ -174,10 +174,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         WebResult webResult = new WebResult();
         UserVO user = amUserClient.findUserById(userId);
         DebtConfigResponse response = amConfigClient.getDebtConfig();
-        List<DebtConfigVO> config = response.getResultList();
-        if(!CollectionUtils.isEmpty(config)){
-            DebtConfigVO configVO = config.get(0);
-            creditResultBean.setDebtConfigVO(configVO);
+        DebtConfigVO config = response.getResult();
+        if(config!=null){
+            creditResultBean.setDebtConfigVO(config);
         }else{
             logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "配置表无数据请配置");
             creditResultBean.setResultFlag(CustomConstants.RESULT_FAIL);
