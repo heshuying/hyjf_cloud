@@ -12,7 +12,7 @@
 package com.hyjf.cs.user.bean;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.cs.common.util.ApiSignUtil;
 
 import java.io.Serializable;
 
