@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version SiteSettingsController, v0.1 2018/5/7 16:35
  */
 @RestController
-@RequestMapping("/am-admin/siteSettings")
+@RequestMapping("/am-config/siteSettings")
 public class SiteSettingsController extends BaseConfigController{
     
     @Autowired

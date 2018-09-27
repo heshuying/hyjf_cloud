@@ -211,4 +211,12 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	public static final String TXCODE_CREDIT_FOR_UNLOAD_PAGE = "creditForUnloadPage";
 
 
+	/**
+	 * 密码重置，页面浏览器方式（合规改造）
+	 * add by yangchangwei 20180816
+	 * 地址：https://xxxx.credit2go.cn/escrow/p2p/page/passwordResetPage
+	 */
+	public static final String TXCODE_PASSWORD_RESET_PAGE = "passwordResetPage";
+
+	public static final String BANK_URL_PASSWORDRESETPAGE = "/p2p/page/passwordResetPage";
 }

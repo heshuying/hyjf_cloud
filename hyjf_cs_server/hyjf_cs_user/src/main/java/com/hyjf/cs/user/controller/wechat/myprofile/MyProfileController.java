@@ -74,11 +74,11 @@ public class MyProfileController extends BaseUserController {
 
     private void getIconUrl(Integer userId, MyProfileVO myProfileVO) {
         UserVO user = myProfileService.getUsersById(userId);
-        String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
+        String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         String imagePath="";
         if (StringUtils.isNotEmpty(user.getIconUrl())) {
             // 实际物理路径前缀
-            String fileUploadRealPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+            String fileUploadRealPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
             imagePath = imghost + fileUploadRealPath + user.getIconUrl();
         }
         myProfileVO.getUserAccountInfo().setIconUrl(imagePath);

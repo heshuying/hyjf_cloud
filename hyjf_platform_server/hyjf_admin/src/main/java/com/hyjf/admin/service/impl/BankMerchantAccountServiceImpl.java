@@ -16,7 +16,6 @@ import com.hyjf.am.vo.admin.BankMerchantAccountInfoVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CustomConstants;
@@ -54,6 +53,11 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
 
     @Autowired
     SystemConfig systemConfig;
+
+
+    private static final String OPT_SUCCESS_URL = "/result/success";
+
+    private static final String OPT_ERROR_URL = "/result/fail";
 
     @Override
     public BankMerchantAccountResponse selectBankMerchantAccount(BankMerchantAccountListRequest form) {
@@ -96,14 +100,21 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
         }
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
+        bean.setLogOrderId(GetOrderIdUtils.getUsrId(40));
         // 同步地址  是否跳转到前端页面
-        String retUrl = systemConfig.getAdminFrontHost() +"/admin/openError"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = systemConfig.getAdminFrontHost() +"/admin/openSuccess";
+        String retUrl = systemConfig.getAdminFrontHost() +OPT_ERROR_URL+"?logOrdId="+bean.getLogOrderId()+"&type=pwd";
+        String successUrl = systemConfig.getAdminFrontHost() +OPT_SUCCESS_URL+"?type=pwd";
         // 异步调用路
         String bgRetUrl = systemConfig.getAdminHost() + CommonSoaUtils.REQUEST_MAPPING
                 + "/passwordBgreturn";
         // 消息类型
-        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET);
+        bean.setVersion(BankCallConstant.VERSION_10);
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
+        bean.setInstCode(systemConfig.getBANK_INSTCODE());// 机构代码
+        bean.setBankCode(systemConfig.getBANK_BANKCODE());
+        bean.setTxDate(GetOrderIdUtils.getTxDate());
+        bean.setTxTime(GetOrderIdUtils.getTxTime());
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
         bean.setChannel(BankCallConstant.CHANNEL_PC);
         bean.setIdType(idType);
         bean.setIdNo(idNo);
@@ -116,14 +127,9 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
         bean.setSuccessfulUrl(successUrl);
         // 页面异步返回URL(必须)
         bean.setNotifyUrl(bgRetUrl);
-        // 商户私有域，存放开户平台,用户userId
-     /*   LogAcqResBean acqRes = new LogAcqResBean();
-        acqRes.setUserId(40);
-        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(40));
-        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDSET);
-        bean.setLogOrderId(GetOrderIdUtils.getUsrId(40));
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
         // 跳转到江西银行画面
         Map<String, Object> map = new HashMap<>();
         try {
@@ -186,15 +192,22 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
         }
      // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
+        bean.setLogOrderId(GetOrderIdUtils.getUsrId(40));
         // 同步地址  是否跳转到前端页面
-        String retUrl = systemConfig.getAdminFrontHost() +"/user/setting/bankPassword/result/failed"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = systemConfig.getAdminFrontHost() +"/user/setting/bankPassword/result/success";
+        String retUrl = systemConfig.getAdminFrontHost() +OPT_ERROR_URL+"?logOrdId="+bean.getLogOrderId()+"&type=pwd";
+        String successUrl = systemConfig.getAdminFrontHost() +OPT_SUCCESS_URL+"?type=pwd";
         // 异步调用路
         String bgRetUrl = systemConfig.getAdminHost() + CommonSoaUtils.REQUEST_MAPPING
                 + "/resetPasswordBgreturn";
         // 消息类型(用户开户)
-        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET);
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
+        bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
         bean.setChannel(BankCallConstant.CHANNEL_PC);
+        bean.setInstCode(systemConfig.getBANK_INSTCODE());// 机构代码
+        bean.setBankCode(systemConfig.getBANK_BANKCODE());
+        bean.setTxDate(GetOrderIdUtils.getTxDate());
+        bean.setTxTime(GetOrderIdUtils.getTxTime());
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
         bean.setIdType(idType);
         bean.setIdNo(idNo);
         bean.setName(userName);
@@ -207,13 +220,13 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
         // 页面异步返回URL(必须)
         bean.setNotifyUrl(bgRetUrl);
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+/*        LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(40);
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(40));
-        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
-        bean.setLogOrderId(GetOrderIdUtils.getUsrId(40));
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
+
         // 跳转到江西银行画面
         Map<String, Object> map = new HashMap<>();
         try {

@@ -69,7 +69,7 @@ public class PaymentAuthPageController extends BaseController {
     public static final String RETURL_ASY_ACTION = "/paymentauthBgreturn";
 
 
-    @PostMapping("/page")
+    @PostMapping("/page.do")
     @ResponseBody
     @ApiOperation(value = "用户缴费授权", notes = "用户缴费授权")
     public ModelAndView openAccont(@RequestBody PaymentAuthPageRequestBean requestBean, HttpServletRequest request, HttpServletResponse response) {
