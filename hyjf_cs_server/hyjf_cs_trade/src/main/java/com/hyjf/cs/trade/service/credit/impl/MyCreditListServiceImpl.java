@@ -415,7 +415,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 验证折让率
         //新增配置表校验add tanyy2018-9-27
         DebtConfigVO config = amConfigClient.getDebtConfig().getResult();
-        if (org.apache.commons.lang.StringUtils.isEmpty(request.getCreditDiscount())||config!=null) {
+        if (org.apache.commons.lang.StringUtils.isEmpty(request.getCreditDiscount())||config==null) {
             // 折让率不能为空
             throw  new CheckException(MsgEnum.ERROR_CREDIT_CREDIT_DISCOUNT_NULL);
         } else {
