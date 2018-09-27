@@ -124,8 +124,8 @@ public class BorrowStyleController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "保证金配置删除", notes = "保证金配置删除")
-    @PostMapping("/deleteAction}")
+    @ApiOperation(value = "还款方式删除", notes = "还款方式删除")
+    @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBorrowStyle(@RequestBody BorrowStyleRequestBean from) {
         AdminBorrowStyleResponse prs =new AdminBorrowStyleResponse();
