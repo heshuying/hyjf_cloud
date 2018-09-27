@@ -7,6 +7,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.BaseService;
@@ -279,4 +280,10 @@ public interface UserManagerService extends BaseService {
      * @return
      */
    int countByMobileList(String mobile);
+    /**
+     * 根据部门id查找是否有自级菜单
+     * @param deptId
+     * @return
+     */
+    List<ROaDepartment> getDeptInfoByDeptId(int deptId);
 }

@@ -4,6 +4,7 @@ import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
+import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
@@ -897,5 +898,31 @@ public class AmAdminClientImpl implements AmAdminClient {
                         AppBannerResponse.class)
                 .getBody();
         return response;
+    }
+
+    @Override
+    public LockedConfig.Config getFrontLockedCfg() {
+
+        Response<LockedConfig.Config> response=restTemplate.getForObject("http://AM-ADMIN/am-config/lockedconfig/webconfig",Response.class);
+
+        return response.getResult();
+    }
+
+    @Override
+    public LockedConfig.Config getAdminLockedCfg() {
+
+        Response<LockedConfig.Config> response=restTemplate.getForObject("http://AM-ADMIN/am-config/lockedconfig/adminconfig",Response.class);
+
+        return response.getResult();
+    }
+
+    @Override
+    public BooleanResponse saveFrontConfig(LockedConfig.Config webConfig) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/lockedconfig/savewebconfig",webConfig,BooleanResponse.class);
+    }
+
+    @Override
+    public BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/lockedconfig/saveadminconfig",adminConfig,BooleanResponse.class);
     }
 }
