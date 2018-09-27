@@ -197,4 +197,38 @@
             )
         AND hhic.del_flag = 0
     </select>
+
+    <!--周期内发标已发额度-->
+    <select id="selectSendedAccountByCyc" resultType="java.lang.String"
+            parameterType="com.hyjf.am.resquest.admin.BailConfigAddRequest">
+        SELECT
+            sum(hb.account)
+        FROM
+            ht_borrow hb
+        INNER JOIN ht_hjh_plan_asset hhpa ON hhpa.borrow_nid = hb.borrow_nid
+        AND hhpa.inst_code = #{instCode}
+        WHERE
+            hhpa.`status` IN (11, 12, 3, 4, 5, 7, 9)
+        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timestart},'00:00:00'
+        ),'%Y-%m-%d %H:%i:%s')
+        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeend},'23:59:59'
+        ),'%Y-%m-%d %H:%i:%s')
+        AND hb.borrow_nid NOT IN (
+            SELECT
+                hbd.borrow_nid
+            FROM
+                ht_borrow_delete hbd
+        )
+    </select>
+
+    <select id="selectRepayMethod" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT DISTINCT
+            hbpr.repay_method
+        FROM
+            ht_hjh_asset_borrowtype hhab
+        INNER JOIN ht_borrow_project_type hbpt ON hhab.borrow_cd = hbpt.borrow_cd
+        INNER JOIN ht_borrow_project_repay hbpr ON hbpr.borrow_class = hbpt.borrow_class
+        WHERE
+            hhab.inst_code = #{instCode}
+    </select>
 </mapper>

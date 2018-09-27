@@ -505,4 +505,28 @@ public interface AmAdminClient {
      * @return
      */
     List<HjhInstConfigVO> selectNoUsedInstConfigList();
+
+    /**
+     * 添加保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    boolean insertBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 周期内发标已发额度
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    String selectSendedAccountByCyc(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 根据该机构可用还款方式更新可用授信方式
+     *
+     * @param instCode
+     * @return
+     */
+    boolean updateBailInfoDelFlg(String instCode);
 }
