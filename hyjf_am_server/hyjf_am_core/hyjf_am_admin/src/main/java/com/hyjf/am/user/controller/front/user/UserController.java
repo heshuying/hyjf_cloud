@@ -553,7 +553,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/saveUserEvaluation")
-    public int saveUserEvaluation(UserEvalationResult userEvalationResult) {
+    public int saveUserEvaluation(@RequestBody UserEvalationResult userEvalationResult) {
         int cnt = userService.saveUserEvaluation(userEvalationResult);
         return cnt;
     }
@@ -571,7 +571,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/updateUserEvalationBehavior")
-    public Integer updateUserEvalationBehavior(UserEvalationBehavior userEvalationBehavior) {
+    public Integer updateUserEvalationBehavior(@RequestBody UserEvalationBehavior userEvalationBehavior) {
         int cnt = userService.updateUserEvalationBehavior(userEvalationBehavior);
         return cnt;
     }
