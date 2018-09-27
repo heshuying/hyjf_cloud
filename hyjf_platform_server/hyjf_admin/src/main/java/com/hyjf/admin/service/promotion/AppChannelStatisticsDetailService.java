@@ -26,5 +26,10 @@ public interface AppChannelStatisticsDetailService {
      */
     AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
 
-
+    /**
+     *导出app渠道统计明细
+     * @param request
+     * @return
+     */
+    AppChannelStatisticsDetailResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 }

@@ -444,7 +444,7 @@
 		borrow.repay_last_time,
 		hiii.account AS capital,
 		4 AS type,
-		'产品加息' AS DATA,
+		CONCAT('加息',FORMAT(hiii.borrow_extra_yield, 2),'%') AS DATA,
 		0 coupon_type,
 		IF(borrow.`status` = 4,hiii.repay_interest_wait,'--') AS total_wait,
 		'' credit_nid,

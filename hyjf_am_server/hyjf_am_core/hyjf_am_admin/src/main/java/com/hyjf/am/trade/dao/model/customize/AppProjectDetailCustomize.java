@@ -12,6 +12,7 @@
 package com.hyjf.am.trade.dao.model.customize;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @author 王坤
@@ -141,6 +142,11 @@ public class AppProjectDetailCustomize implements Serializable {
 	 * 是否产品加息
 	 */
 	private Integer increaseInterestFlag;
+	/**
+	 * 产品加息率数据库字段
+	 */
+	private BigDecimal borrowExtraYieldOld;
+
 	public AppProjectDetailCustomize() {
 		super();
 	}
@@ -591,5 +597,13 @@ public class AppProjectDetailCustomize implements Serializable {
 
 	public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
 		this.increaseInterestFlag = increaseInterestFlag;
+	}
+
+	public BigDecimal getBorrowExtraYieldOld() {
+		return borrowExtraYieldOld;
+	}
+
+	public void setBorrowExtraYieldOld(BigDecimal borrowExtraYieldOld) {
+		this.borrowExtraYieldOld = borrowExtraYieldOld;
 	}
 }

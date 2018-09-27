@@ -8,6 +8,8 @@ import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.trade.dao.mapper.auto.ROaDepartmentMapper;
+import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
+import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserLogMapper;
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserChangeLogMapper;
@@ -30,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -1275,6 +1278,21 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         logger.info("========no mobile size======== ");
         return 0;
+    }
+
+    /**
+     * 根据部门id查找是否有自级菜单
+     * @param deptId
+     * @return
+     */
+    @Override
+    public List<ROaDepartment> getDeptInfoByDeptId(int deptId){
+        List<ROaDepartment> rOaDepartmentList = new ArrayList<ROaDepartment>();
+        ROaDepartmentExample example = new ROaDepartmentExample();
+        ROaDepartmentExample.Criteria criteria = example.createCriteria();
+        criteria.andParentidEqualTo(deptId);
+        rOaDepartmentList=rOaDepartmentMapper.selectByExample(example);
+        return rOaDepartmentList;
     }
 
 }

@@ -644,7 +644,7 @@ public class UserCenterController extends BaseController {
         //部门树形列表
         // 部门
         String[] list = new String[] {};
-        JSONArray ja = smsCountService.getCrmDepartmentList(list);
+        JSONArray ja = userCenterService.getCrmDepartmentList(list);
         JSONObject ret= new JSONObject();
         if (ja != null) {
             //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他

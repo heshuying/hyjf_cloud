@@ -157,7 +157,7 @@ public class WeChatRegistController extends BaseUserController {
             AdsRequest adsRequest = new AdsRequest();
             adsRequest.setLimitStart(0);
             adsRequest.setLimitEnd(1);
-            adsRequest.setHost(systemConfig.getDomainAppUrl());
+            adsRequest.setHost(systemConfig.getFileDomainUrl());
             adsRequest.setCode("registpop");
             AppAdsCustomizeVO record = registService.searchBanner(adsRequest);
             // 注册成功发券提示

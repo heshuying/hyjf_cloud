@@ -1,4 +1,4 @@
-package com.hyjf.am.config.controller;
+package com.hyjf.am.config.controller.admin.appimage;
 
 import com.hyjf.am.config.dao.model.auto.AppBorrowImage;
 import com.hyjf.am.config.service.AppBorrowImageService;
@@ -7,7 +7,6 @@ import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.vo.config.AppBorrowImageVO;
-import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

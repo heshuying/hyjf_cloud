@@ -18,7 +18,7 @@ public class AppBannerRequest extends BasePage {
     //广告名称
     private String name;
     // 广告类型
-    private Integer typeid;
+    private Integer typeId;
     //广告状态
     private Integer status;
 
@@ -51,13 +51,6 @@ public class AppBannerRequest extends BasePage {
         this.name = name;
     }
 
-    public Integer getTypeid() {
-        return typeid;
-    }
-
-    public void setTypeid(Integer typeid) {
-        this.typeid = typeid;
-    }
 
     public Integer getStatus() {
         return status;
@@ -89,5 +82,13 @@ public class AppBannerRequest extends BasePage {
 
     public void setPlatformType(Integer platformType) {
         this.platformType = platformType;
+    }
+
+    public Integer getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
     }
 }

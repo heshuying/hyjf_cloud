@@ -420,7 +420,7 @@ WHERE
 		hb.borrow_nid AS borrow_nid
 		FROM
 		ht_borrow hb
-		LEFT JOIN ht_borrow_info inf ON hb.id = inf.id
+		LEFT JOIN ht_borrow_info inf ON hb.borrow_nid = inf.borrow_nid
 		INNER JOIN
 		ht_hjh_asset_borrowtype hhab ON inf.inst_code = hhab.inst_code
 		AND
@@ -438,7 +438,7 @@ WHERE
 		hb.borrow_nid AS borrow_nid
 		FROM
 		ht_borrow hb
-		LEFT JOIN ht_borrow_info inf ON hb.id = inf.id
+		LEFT JOIN ht_borrow_info inf ON hb.borrow_nid = inf.borrow_nid
 		INNER JOIN
 		ht_hjh_asset_borrowtype hhab ON inf.inst_code = hhab.inst_code
 		AND

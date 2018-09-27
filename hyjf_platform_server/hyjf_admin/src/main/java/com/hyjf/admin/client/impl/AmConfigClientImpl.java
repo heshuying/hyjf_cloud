@@ -1,24 +1,5 @@
 package com.hyjf.admin.client.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.am.response.BooleanResponse;
@@ -43,6 +24,23 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -71,6 +69,18 @@ public class AmConfigClientImpl implements AmConfigClient {
             return response.getResult();
         }
         return null;
+    }
+    @Override
+    public DebtConfigResponse getDebtConfig(){
+        String url = "http://AM-ADMIN/am-admin/debtconfig/init" ;
+        DebtConfigResponse response = restTemplate.getForEntity(url, DebtConfigResponse.class).getBody();
+        return response;
+    }
+    @Override
+    public DebtConfigResponse updateDebtConfig(DebtConfigRequest request){
+        String url = "http://AM-ADMIN/am-admin/debtconfig/update" ;
+        DebtConfigResponse response = restTemplate.postForEntity(url,request,DebtConfigResponse.class).getBody();
+        return response;
     }
 
     @Override
@@ -314,50 +324,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
-    @Override
-    public AppBorrowImageResponse searchList(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/getRecordList", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
 
-    @Override
-    public AppBorrowImageResponse searchInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/infoAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
-
-    @Override
-    public AppBorrowImageResponse insertInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/insertAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
-
-    @Override
-    public AppBorrowImageResponse updateInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/updateAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
-
-    @Override
-    public AppBorrowImageResponse deleteInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/deleteAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
 
     /**
      * 查询银行配置列表
@@ -594,9 +561,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     public List<BankRechargeLimitConfigVO> exportRecordList(BankRechargeLimitConfigVO adminRequest) {
         AdminBankRechargeConfigResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/bankrecharge/exportRecordList", adminRequest, AdminBankRechargeConfigResponse.class)
                 .getBody();
-         if(response != null){
-             return response.getResultList();
-         }
+        if(response != null){
+            return response.getResultList();
+        }
         return null;
     }
 
@@ -855,22 +822,22 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-	public CategoryResponse infoTypeAction(Integer id) {
-		/*
-		 * ResponseEntity<List<ProtocolTemplateVO>> response =
-		 * restTemplate.exchange("http://AM-TRADE/am-trade/protocol/getnewinfo",
-		 * HttpMethod.GET, null, new
-		 * ParameterizedTypeReference<CategoryResponse<CategoryVO>>() {});
-		 */
-		ResponseEntity<CategoryResponse<CategoryVO>> response = restTemplate.exchange(
-				"http://AM-CONFIG/am-config/content/help/infotypeaction/" + id, HttpMethod.GET, null,
-				new ParameterizedTypeReference<CategoryResponse<CategoryVO>>() {
-				});
-		if (null != response) {
-			return response.getBody();
-		}
-		return null;
-	}
+    public CategoryResponse infoTypeAction(Integer id) {
+        /*
+         * ResponseEntity<List<ProtocolTemplateVO>> response =
+         * restTemplate.exchange("http://AM-TRADE/am-trade/protocol/getnewinfo",
+         * HttpMethod.GET, null, new
+         * ParameterizedTypeReference<CategoryResponse<CategoryVO>>() {});
+         */
+        ResponseEntity<CategoryResponse<CategoryVO>> response = restTemplate.exchange(
+                "http://AM-CONFIG/am-config/content/help/infotypeaction/" + id, HttpMethod.GET, null,
+                new ParameterizedTypeReference<CategoryResponse<CategoryVO>>() {
+                });
+        if (null != response) {
+            return response.getBody();
+        }
+        return null;
+    }
 
     @Override
     public CategoryResponse infoSubTypeAction(CategoryBeanRequest categoryBeanRequest) {
@@ -927,11 +894,11 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public List<ContentHelpVO> getListByPcateIdAndcateId(CategoryVO categoryVO) {
-            ParameterizedTypeReference<CategoryResponse<ContentHelpVO>> typeRef = new ParameterizedTypeReference<CategoryResponse<ContentHelpVO>>() {
-            };
-            ResponseEntity<CategoryResponse<ContentHelpVO>> responseEntity = restTemplate.exchange("http://AM-CONFIG/am-config/content/help/getlistbypcateidandcateid", HttpMethod.POST, new HttpEntity<>(categoryVO), typeRef);
-            CategoryResponse<ContentHelpVO> responseBean = responseEntity.getBody();
-            return responseBean.getRecordList();
+        ParameterizedTypeReference<CategoryResponse<ContentHelpVO>> typeRef = new ParameterizedTypeReference<CategoryResponse<ContentHelpVO>>() {
+        };
+        ResponseEntity<CategoryResponse<ContentHelpVO>> responseEntity = restTemplate.exchange("http://AM-CONFIG/am-config/content/help/getlistbypcateidandcateid", HttpMethod.POST, new HttpEntity<>(categoryVO), typeRef);
+        CategoryResponse<ContentHelpVO> responseBean = responseEntity.getBody();
+        return responseBean.getRecordList();
     }
 
     @Override
@@ -1296,7 +1263,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public List<BankConfigVO> getBankConfigRecordList(BankConfigVO bank, int limitStart, int limitEnd) {
         //查詢所有
         AdminBankConfigResponse response= restTemplate.getForObject("http://AM-ADMIN/am-config/config/selectBankConfigByBankName/"+bank.getName(),
-                 AdminBankConfigResponse.class);
+                AdminBankConfigResponse.class);
         if(response != null){
             return response.getResultList();
         }
@@ -1396,10 +1363,10 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-	public SmsMailTemplateResponse findMailTemplate(MailTemplateRequest request) {
-		return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/findMailTemplate", request,
-				SmsMailTemplateResponse.class);
-	}
+    public SmsMailTemplateResponse findMailTemplate(MailTemplateRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/findMailTemplate", request,
+                SmsMailTemplateResponse.class);
+    }
 
     @Override
     public int insertMailTemplate(MailTemplateRequest request) {
@@ -1422,10 +1389,10 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-	public MessagePushTemplateResponse findMsgPushTemplate(MsgPushTemplateRequest request) {
-		return restTemplate.postForEntity("http://AM-CONFIG/am-config/messagePushTemplate/findMsgPushTemplate", request,
-				MessagePushTemplateResponse.class).getBody();
-	}
+    public MessagePushTemplateResponse findMsgPushTemplate(MsgPushTemplateRequest request) {
+        return restTemplate.postForEntity("http://AM-CONFIG/am-config/messagePushTemplate/findMsgPushTemplate", request,
+                MessagePushTemplateResponse.class).getBody();
+    }
 
     @Override
     public void insertMsgPushTemplate(MsgPushTemplateRequest request) {
@@ -1478,41 +1445,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForObject("http://AM-ADMIN/am-config/smsTemplate/insertTemplate", request, IntegerResponse.class).getResultInt();
     }
 
-    /**
-     * 查询列表数据
-     *
-     * @param form
-     * @return
-     */
-    @Override
-    public SubmissionsResponse findSubmissionsList(SubmissionsRequest form) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getRecordList", form,
-                SubmissionsResponse.class);
-    }
 
-    /**
-     * 查询导出数据
-     *
-     * @param form
-     * @return
-     */
-    @Override
-    public SubmissionsResponse exportSubmissionsList(SubmissionsRequest form) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getExportRecordList", form,
-                SubmissionsResponse.class);
-    }
-
-    /**
-     * 更新状态
-     *
-     * @param form
-     * @return
-     */
-    @Override
-    public SubmissionsResponse updateSubmissionsStatus(SubmissionsRequest form) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/updateSubmissionsStatus", form,
-                SubmissionsResponse.class);
-    }
 
     @Override
     public TeamResponse searchAction(TeamRequestBean requestBean) {
@@ -1645,53 +1578,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
-    @Override
-    public VersionConfigBeanResponse searchList(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/getRecordList", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-    }
 
-    @Override
-    public VersionConfigBeanResponse searchInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/infoAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-
-    }
-
-    @Override
-    public VersionConfigBeanResponse insertInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/insertAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-
-    }
-
-    @Override
-    public VersionConfigBeanResponse updateInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/updateAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-
-    }
-
-    @Override
-    public VersionConfigBeanResponse deleteInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/deleteAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-    }
 
 
     /**
@@ -2153,79 +2040,74 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
     @Override
-   	public AdminUserResponse adminUserSearch(AdminRequest adminRequest) {
-           String url = "http://AM-ADMIN/am-config/admin/searchAction";
-           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
-           if (response != null) {
-               return response;
-           }
-           return null;
-   	}
-
-   	@Override
-   	public AdminUserResponse adminUserMoveToInfoAction(AdminRequest adminRequest) {
-           String url = "http://AM-ADMIN/am-config/admin/infoAction";
-           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
-           if (response != null) {
-               return response;
-           }
-           return null;
-   	}
-
-   	@Override
-   	public AdminUserResponse adminUserInsertAction(AdminRequest adminRequest) {
-           String url = "http://AM-ADMIN/am-config/admin/insertAction";
-           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
-           if (response != null) {
-               return response;
-           }
-           return null;
-   	}
-
-   	@Override
-   	public AdminUserResponse adminUserUpdateAction(AdminRequest adminRequest) {
-           String url = "http://AM-ADMIN/am-config/admin/updateAction";
-           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
-           if (response != null) {
-               return response;
-           }
-           return null;
-   	}
-
-   	@Override
-   	public AdminUserResponse adminUserDeleteRecordAction(AdminRequest adminRequest) {
-           String url = "http://AM-ADMIN/am-config/admin/deleteAction";
-           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
-           if (response != null) {
-               return response;
-           }
-           return null;
-   	}
-
-   	@Override
-   	public AdminUserResponse adminUserResetPwdAction(AdminRequest adminRequest) {
-           String url = "http://AM-ADMIN/am-config/admin/resetPwdAction";
-           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
-           if (response != null) {
-               return response;
-           }
-           return null;
-   	}
-
-   	@Override
-   	public AdminUserResponse adminUsercCheckAction(AdminRequest adminRequest) {
-           String url = "http://AM-ADMIN/am-config/admin/checkAction";
-           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
-           if (response != null) {
-               return response;
-           }
-           return null;
-   	}
+    public AdminUserResponse adminUserSearch(AdminRequest adminRequest) {
+        String url = "http://AM-ADMIN/am-config/admin/searchAction";
+        AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
 
     @Override
-    public SubmissionsVO getSubmissionsRecord(SubmissionsRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getSubmissionsRecord", request,
-                SubmissionsVO.class);
-
+    public AdminUserResponse adminUserMoveToInfoAction(AdminRequest adminRequest) {
+        String url = "http://AM-ADMIN/am-config/admin/infoAction";
+        AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
     }
+
+    @Override
+    public AdminUserResponse adminUserInsertAction(AdminRequest adminRequest) {
+        String url = "http://AM-ADMIN/am-config/admin/insertAction";
+        AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public AdminUserResponse adminUserUpdateAction(AdminRequest adminRequest) {
+        String url = "http://AM-ADMIN/am-config/admin/updateAction";
+        AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public AdminUserResponse adminUserDeleteRecordAction(AdminRequest adminRequest) {
+        String url = "http://AM-ADMIN/am-config/admin/deleteAction";
+        AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public AdminUserResponse adminUserResetPwdAction(AdminRequest adminRequest) {
+        String url = "http://AM-ADMIN/am-config/admin/resetPwdAction";
+        AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public AdminUserResponse adminUsercCheckAction(AdminRequest adminRequest) {
+        String url = "http://AM-ADMIN/am-config/admin/checkAction";
+        AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+
 }
