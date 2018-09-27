@@ -5,6 +5,7 @@ import java.util.List;
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.auto.AdsType;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
 
 /**
@@ -17,29 +18,36 @@ public interface AppConfigService {
      * 获取列表
      * @return
      */
-    public List<Ads> getRecordList(AppBannerRequest bean, int limitStart, int limitEnd);
+    List<Ads> getRecordList(AppBannerRequest bean, int limitStart, int limitEnd);
 
-    public Integer countRecordList(AppBannerRequest bean);
+    /**
+     * 根据id查询广告
+     * @param id
+     * @return
+     */
+    Ads  getRecordById(Integer id);
+
+    Integer countRecordList(AppBannerRequest bean);
 
     /**
      * 获取广告类型（手机端）
      * @return
      */
-    public List<AdsType> getAdsTypeList();
+    List<AdsType> getAdsTypeList();
 
     /**
      * 活动列表插入
      *
      * @param record
      */
-    public boolean insertRecord(Ads record);
+    boolean insertRecord(Ads record);
 
     /**
      * 活动列表更新
      *
      * @param record
      */
-    public boolean updateRecord(AdsWithBLOBsVO record);
+    boolean updateRecord(AdsVO adsVO);
 
 
     /**
@@ -47,12 +55,12 @@ public interface AppConfigService {
      *
      * @return
      */
-    public Ads getRecord(Integer record);
+    Ads getRecord(Integer record);
 
     /**
      * 活动列表删除
      */
-    public boolean deleteRecord(Integer id);
+    boolean deleteRecord(Integer id);
 
 
 

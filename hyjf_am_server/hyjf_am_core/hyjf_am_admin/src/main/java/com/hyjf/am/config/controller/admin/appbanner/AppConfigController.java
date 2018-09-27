@@ -1,6 +1,6 @@
-package com.hyjf.am.market.controller;
+package com.hyjf.am.config.controller.admin.appbanner;
 
-import com.hyjf.am.market.config.constant.AdsTypeEnum;
+import com.hyjf.am.config.constant.AdsTypeEnum;
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.auto.AdsType;
 import com.hyjf.am.market.service.AppConfigService;

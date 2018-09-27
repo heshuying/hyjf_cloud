@@ -11,7 +11,11 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
+import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
+import com.hyjf.am.response.config.SubmissionsResponse;
+import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
@@ -19,6 +23,10 @@ import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.AppBorrowImageRequest;
+import com.hyjf.am.resquest.config.SubmissionsRequest;
+import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
+import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
@@ -26,6 +34,8 @@ import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.config.SubmissionsVO;
+import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -698,5 +708,194 @@ public class AmAdminClientImpl implements AmAdminClient {
         return restTemplate.postForObject(
                 "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record_hjh", request,
                 ChannelReconciliationResponse.class);
+    }
+
+    @Override
+    public SubmissionsVO getSubmissionsRecord(SubmissionsRequest request) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/submission/getSubmissionsRecord", request,
+                SubmissionsVO.class);
+    }
+    /**
+     * 查询列表数据
+     *
+     * @param form
+     * @return
+     */
+    @Override
+    public SubmissionsResponse findSubmissionsList(SubmissionsRequest form) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/submission/getRecordList", form,
+                SubmissionsResponse.class);
+    }
+
+    /**
+     * 查询导出数据
+     *
+     * @param form
+     * @return
+     */
+    @Override
+    public SubmissionsResponse exportSubmissionsList(SubmissionsRequest form) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/submission/getExportRecordList", form,
+                SubmissionsResponse.class);
+    }
+
+    /**
+     * 更新状态
+     *
+     * @param form
+     * @return
+     */
+    @Override
+    public SubmissionsResponse updateSubmissionsStatus(SubmissionsRequest form) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/submission/updateSubmissionsStatus", form,
+                SubmissionsResponse.class);
+    }
+
+
+
+    @Override
+    public VersionConfigBeanResponse searchList(VersionConfigBeanRequest request) {
+        VersionConfigBeanResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/appversion/getRecordList", request,
+                        VersionConfigBeanResponse.class)
+                .getBody();
+        return response;
+    }
+
+    @Override
+    public VersionConfigBeanResponse searchInfo(VersionConfigBeanRequest request) {
+        VersionConfigBeanResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/appversion/infoAction", request,
+                        VersionConfigBeanResponse.class)
+                .getBody();
+        return response;
+
+    }
+
+    @Override
+    public VersionConfigBeanResponse insertInfo(VersionConfigBeanRequest request) {
+        VersionConfigBeanResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/appversion/insertAction", request,
+                        VersionConfigBeanResponse.class)
+                .getBody();
+        return response;
+
+    }
+
+    @Override
+    public VersionConfigBeanResponse updateInfo(VersionConfigBeanRequest request) {
+        VersionConfigBeanResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/appversion/updateAction", request,
+                        VersionConfigBeanResponse.class)
+                .getBody();
+        return response;
+
+    }
+
+    @Override
+    public VersionConfigBeanResponse deleteInfo(VersionConfigBeanRequest request) {
+        VersionConfigBeanResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/appversion/deleteAction", request,
+                        VersionConfigBeanResponse.class)
+                .getBody();
+        return response;
+    }
+
+    @Override
+    public AppBorrowImageResponse searchList(AppBorrowImageRequest appBorrowImageRequest) {
+        AppBorrowImageResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/appborrow/getRecordList", appBorrowImageRequest,
+                        AppBorrowImageResponse.class)
+                .getBody();
+        return response;
+    }
+
+    @Override
+    public AppBorrowImageResponse searchInfo(AppBorrowImageRequest appBorrowImageRequest) {
+        AppBorrowImageResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/appborrow/infoAction", appBorrowImageRequest,
+                        AppBorrowImageResponse.class)
+                .getBody();
+        return response;
+    }
+
+    @Override
+    public AppBorrowImageResponse insertInfo(AppBorrowImageRequest appBorrowImageRequest) {
+        AppBorrowImageResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/appborrow/insertAction", appBorrowImageRequest,
+                        AppBorrowImageResponse.class)
+                .getBody();
+        return response;
+    }
+
+    @Override
+    public AppBorrowImageResponse updateInfo(AppBorrowImageRequest appBorrowImageRequest) {
+        AppBorrowImageResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/appborrow/updateAction", appBorrowImageRequest,
+                        AppBorrowImageResponse.class)
+                .getBody();
+        return response;
+    }
+
+    @Override
+    public AppBorrowImageResponse deleteInfo(AppBorrowImageRequest appBorrowImageRequest) {
+        AppBorrowImageResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/appborrow/deleteAction", appBorrowImageRequest,
+                        AppBorrowImageResponse.class)
+                .getBody();
+        return response;
+    }
+    @Override
+    public AppBannerResponse getRecordById(AdsVO adsVO) {
+        AppBannerResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-market/appconfig/getRecordById" ,adsVO,
+                        AppBannerResponse.class)
+                .getBody();
+
+        return response;
+    }
+    @Override
+    public AppBannerResponse findAppBannerList(AppBannerRequest request) {
+        AppBannerResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-market/appconfig/getRecordList" ,request,
+                        AppBannerResponse.class)
+                .getBody();
+        return response;
+    }
+
+    @Override
+    public AppBannerResponse insertAppBannerList(AdsVO adsVO) {
+        AppBannerResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-market/appconfig/insertRecord" ,adsVO,
+                        AppBannerResponse.class)
+                .getBody();
+        return response;
+    }
+
+    @Override
+    public AppBannerResponse updateAppBannerList(AdsVO adsVO) {
+        AppBannerResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-market/appconfig/updateRecord" ,adsVO,
+                        AppBannerResponse.class)
+                .getBody();
+        return response;
+    }
+
+    @Override
+    public AppBannerResponse updateAppBannerStatus(AdsVO adsVO) {
+        AppBannerResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-market/appconfig/updateStatus" ,adsVO,
+                        AppBannerResponse.class)
+                .getBody();
+        return response;
+    }
+
+    @Override
+    public AppBannerResponse deleteAppBanner(AdsVO adsVO) {
+        AppBannerResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-market/appconfig/deleteAppBanner" ,adsVO,
+                        AppBannerResponse.class)
+                .getBody();
+        return response;
     }
 }

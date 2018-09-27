@@ -115,7 +115,7 @@ public class MongoSeachController extends BaseController {
      * @return
      */
     @RequestMapping("/getstatisticsList")
-    public AppChannelStatisticsDetailResponse selectAppChannelStatistics2(@RequestBody  AppChannelStatisticsDetailRequest request) {
+    public AppChannelStatisticsDetailResponse getstatisticsList(@RequestBody  AppChannelStatisticsDetailRequest request) {
         AppChannelStatisticsDetailResponse response = new AppChannelStatisticsDetailResponse();
         Query query = new Query();
         String userNameSrch = request.getUserNameSrch();
@@ -142,6 +142,32 @@ public class MongoSeachController extends BaseController {
             }
         }
         response.setCount(count);
+        return response;
+    }
+
+    /**
+     * 分页查询所有渠道投资信息
+     *
+     * @return
+     */
+    @RequestMapping("/exportStatisticsList")
+    public AppChannelStatisticsDetailResponse exportStatisticsList(@RequestBody  AppChannelStatisticsDetailRequest request) {
+        AppChannelStatisticsDetailResponse response = new AppChannelStatisticsDetailResponse();
+        Query query = new Query();
+        String userNameSrch = request.getUserNameSrch();
+        String sourceIdSrch = request.getSourceIdSrch();
+        Criteria criteria = new Criteria();
+        if (StringUtils.isNotEmpty(userNameSrch)) {
+            criteria.and("userName").is(userNameSrch);
+        }
+        if (StringUtils.isNotEmpty(sourceIdSrch)) {
+            criteria.and("sourceId").is(sourceIdSrch);
+        }
+            List<AppChannelStatisticsDetail> list = appChannelStatisticsDetailDao.find(query);
+            if (!CollectionUtils.isEmpty(list)) {
+                List<AppChannelStatisticsDetailVO> voList = CommonUtils.convertBeanList(list, AppChannelStatisticsDetailVO.class);
+                response.setResultList(voList);
+            }
         return response;
     }
     /**

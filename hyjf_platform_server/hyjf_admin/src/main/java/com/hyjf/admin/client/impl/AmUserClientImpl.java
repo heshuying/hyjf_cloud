@@ -2341,4 +2341,20 @@ public class AmUserClientImpl implements AmUserClient {
 		return checkFlg;
 	}
 
+	/**
+	 * 根据部门id查找是否有自级菜单
+	 * @param deptId
+	 * @return
+	 * @auther: nxl
+	 */
+	@Override
+	public List<OADepartmentCustomizeVO> getDeptInfoByDeptId(int deptId){
+		OADepartmentResponse response = restTemplate.
+				getForEntity("http://AM-ADMIN/am-user/userManager/getDeptInfoByDeptId/"+ deptId, OADepartmentResponse.class).
+				getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

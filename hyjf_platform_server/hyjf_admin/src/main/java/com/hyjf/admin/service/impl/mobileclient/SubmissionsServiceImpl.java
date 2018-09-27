@@ -1,18 +1,15 @@
 package com.hyjf.admin.service.impl.mobileclient;
 
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.mobileclient.SubmissionsService;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
-import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.SubmissionsVO;
-import com.hyjf.common.util.CustomConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author lisheng
@@ -24,6 +21,8 @@ public class SubmissionsServiceImpl implements SubmissionsService {
     AmUserClient amUserClient;
     @Autowired
     AmConfigClient amConfigClient;
+    @Autowired
+    AmAdminClient amAdminClient;
 
     @Override
     public UserResponse getUserIdByUserName(String userName) {
@@ -37,21 +36,21 @@ public class SubmissionsServiceImpl implements SubmissionsService {
 
     @Override
     public SubmissionsResponse getSubmissionList(SubmissionsRequest form) {
-        return amConfigClient.findSubmissionsList(form);
+        return amAdminClient.findSubmissionsList(form);
     }
 
     @Override
     public SubmissionsResponse updateSubmissionStatus(SubmissionsRequest form) {
-        return amConfigClient.updateSubmissionsStatus(form);
+        return amAdminClient.updateSubmissionsStatus(form);
     }
 
     @Override
     public SubmissionsResponse getExportSubmissionList(SubmissionsRequest form) {
-        return amConfigClient.exportSubmissionsList(form);
+        return amAdminClient.exportSubmissionsList(form);
     }
 
     @Override
     public SubmissionsVO getRecord(SubmissionsRequest request) {
-        return amConfigClient.getSubmissionsRecord(request);
+        return amAdminClient.getSubmissionsRecord(request);
     }
 }

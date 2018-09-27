@@ -16,20 +16,20 @@ public interface AppBorrowImageService {
      *
      * @return
      */
-    public List<AppBorrowImage> getRecordList(AppBorrowImage config, int limitStart, int limitEnd);
+    List<AppBorrowImage> getRecordList(AppBorrowImage config, int limitStart, int limitEnd);
 
     /**
      * 获取单个
      * @return
      */
-    public AppBorrowImage getRecord(Integer id);
+    AppBorrowImage getRecord(Integer id);
 
     /**
      * 插入
      *
      * @param record
      */
-    public void insertRecord(AppBorrowImage record) throws Exception;
+    void insertRecord(AppBorrowImage record) throws Exception;
 
 
     /**
@@ -37,11 +37,11 @@ public interface AppBorrowImageService {
      *
      * @param record
      */
-    public void updateRecord(AppBorrowImage record) throws Exception;
+    void updateRecord(AppBorrowImage record) throws Exception;
 
     /**
      * 删除
      *
      */
-    public boolean deleteRecord(Integer id);
+    boolean deleteRecord(Integer id);
 }
