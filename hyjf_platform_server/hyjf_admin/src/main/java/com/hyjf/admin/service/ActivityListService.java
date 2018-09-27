@@ -59,4 +59,11 @@ public interface ActivityListService {
      * @return
      */
     List<ParamNameVO> getParamNameList(String client);
+
+    /**
+     * 根据活动id查询活动详情列表
+     * @param id
+     * @return
+     */
+    ActivityListResponse getRecordById(Integer id);
 }

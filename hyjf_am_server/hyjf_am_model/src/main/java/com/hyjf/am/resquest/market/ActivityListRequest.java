@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class ActivityListRequest extends BasePage{
 
-    private int id;
+    private Integer id;
 
     @ApiModelProperty(value = "活动名称")
     private String title;
@@ -153,11 +153,11 @@ public class ActivityListRequest extends BasePage{
         this.status = status;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

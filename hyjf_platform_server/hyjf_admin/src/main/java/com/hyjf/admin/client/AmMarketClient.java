@@ -154,4 +154,11 @@ public interface AmMarketClient {
      * @return
      */
     AppBannerResponse getRecordById(AdsVO adsVO);
+
+    /**
+     * 获取活动详情
+     * @param id
+     * @return
+     */
+    ActivityListResponse getInfoById(Integer id);
 }
