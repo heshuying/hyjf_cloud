@@ -3,10 +3,7 @@ package com.hyjf.cs.trade.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
-import com.hyjf.am.response.config.BankConfigResponse;
-import com.hyjf.am.response.config.FeeConfigResponse;
-import com.hyjf.am.response.config.SiteSettingsResponse;
-import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
@@ -92,6 +89,12 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+	@Override
+	public DebtConfigResponse getDebtConfig(){
+		String url = "http://AM-CONFIG/am-config/debtconfig/init" ;
+		DebtConfigResponse response = restTemplate.getForEntity(url, DebtConfigResponse.class).getBody();
+		return response;
+	}
 
 
     /**
