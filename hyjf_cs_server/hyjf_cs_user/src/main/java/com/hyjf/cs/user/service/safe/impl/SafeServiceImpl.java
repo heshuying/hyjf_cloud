@@ -169,10 +169,10 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
         // 获得是否授权
         // 获取用户上传头像
-        String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
+        String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
         // 实际物理路径前缀2
-        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
         if (StringUtils.isNotEmpty(user.getIconUrl())) {
             resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconUrl());
         }
@@ -439,7 +439,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
         String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
         // 实际物理路径前缀2
-        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
         // 如果文件夹(前缀+后缀)不存在,则新建文件夹
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
         File logoSaveFile = new File(logoRealPathDir);
@@ -504,7 +504,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 实际物理路径前缀1
         String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
         // 实际物理路径前缀2
-        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
         // 如果文件夹(前缀+后缀)不存在,则新建文件夹
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
         File logoSaveFile = new File(logoRealPathDir);

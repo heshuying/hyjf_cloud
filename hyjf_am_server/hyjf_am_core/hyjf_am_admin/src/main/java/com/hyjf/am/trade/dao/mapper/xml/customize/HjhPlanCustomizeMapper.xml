@@ -50,7 +50,7 @@
 		<result column="repay_method" property="repayMethod" jdbcType="VARCHAR" />
 		<result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
 		<result column="repay_actual_time" property="repayActualTime" jdbcType="VARCHAR" />
-		<result column="wait_capital" property="waitCapital" jdbcType="VARCHAR" />
+		<result column="wait_captical" property="waitCaptical" jdbcType="VARCHAR" />
 		<result column="repay_style" property="repayStyle" jdbcType="VARCHAR" />
 	</resultMap>
 
