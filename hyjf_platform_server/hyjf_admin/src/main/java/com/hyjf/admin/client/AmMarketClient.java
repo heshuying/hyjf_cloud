@@ -59,15 +59,7 @@ public interface AmMarketClient {
      */
     ActivityListResponse deleteActivity(ActivityListRequest request);
 
-     AppBannerResponse findAppBannerList(AppBannerRequest request);
 
-     AppBannerResponse insertAppBannerList(AdsVO adsVO);
-
-     AppBannerResponse updateAppBannerList(AdsVO adsVO);
-
-     AppBannerResponse updateAppBannerStatus(AdsVO adsVO);
-
-     AppBannerResponse deleteAppBanner(AdsVO adsVO);
 
     ContentAdsResponse searchAction(ContentAdsRequest request);
 
@@ -148,10 +140,4 @@ public interface AmMarketClient {
      */
     MessagePushTagResponse getTagList();
 
-    /**
-     * 根据id获取广告
-     * @param adsVO
-     * @return
-     */
-    AppBannerResponse getRecordById(AdsVO adsVO);
 }

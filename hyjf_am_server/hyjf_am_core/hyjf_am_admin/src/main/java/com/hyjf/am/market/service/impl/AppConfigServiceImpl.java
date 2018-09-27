@@ -1,13 +1,5 @@
 package com.hyjf.am.market.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.market.dao.mapper.auto.AdsMapper;
 import com.hyjf.am.market.dao.mapper.auto.AdsTypeMapper;
 import com.hyjf.am.market.dao.model.auto.Ads;
@@ -16,8 +8,15 @@ import com.hyjf.am.market.dao.model.auto.AdsType;
 import com.hyjf.am.market.dao.model.auto.AdsTypeExample;
 import com.hyjf.am.market.service.AppConfigService;
 import com.hyjf.am.resquest.market.AppBannerRequest;
-import com.hyjf.am.vo.market.AdsWithBLOBsVO;
+import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author lisheng
@@ -42,6 +41,9 @@ public class AppConfigServiceImpl implements AppConfigService {
         if (bean.getTypeid() != null) {
             criteria.andTypeIdEqualTo(bean.getTypeid());
         }
+        if (bean.getPlatformType() != null) {
+            criteria.andPlatformTypeEqualTo(bean.getPlatformType());
+        }
         if (StringUtils.isNotEmpty(bean.getName())) {
             criteria.andNameLike("%" + bean.getName() + "%");
         }
@@ -62,6 +64,11 @@ public class AppConfigServiceImpl implements AppConfigService {
         return adsMapper.selectByExample(example);
     }
 
+    @Override
+    public Ads getRecordById(Integer id) {
+        return adsMapper.selectByPrimaryKey(id);
+    }
+
 
     /**
      * 获取列表数
@@ -70,13 +77,16 @@ public class AppConfigServiceImpl implements AppConfigService {
      * @author Michael
      */
     @Override
-    public Integer countRecordList(AppBannerRequest bean) {
+    public Integer  countRecordList(AppBannerRequest bean) {
         AdsExample example = new AdsExample();
         AdsExample.Criteria criteria = example.createCriteria();
         criteria.andClientTypeEqualTo(1);//手机端广告
         // 条件查询
         if (bean.getTypeid() != null) {
             criteria.andTypeIdEqualTo(bean.getTypeid());
+        }
+        if (bean.getPlatformType() != null) {
+            criteria.andPlatformTypeEqualTo(bean.getPlatformType());
         }
         if (StringUtils.isNotEmpty(bean.getName())) {
             criteria.andNameLike("%" + bean.getName() + "%");
@@ -125,16 +135,17 @@ public class AppConfigServiceImpl implements AppConfigService {
     /**
      * 广告维护更新
      *
-     * @param record
+     * @param adsVO
      */
     @Override
-    public boolean updateRecord(AdsWithBLOBsVO record) {
+    public boolean updateRecord(AdsVO adsVO ) {
         Ads ads = new Ads();
-        BeanUtils.copyProperties(record, ads);
+        BeanUtils.copyProperties(adsVO, ads);
         if(ads.getIsIndex()==null){
             ads.setIsIndex(0);
         }
         ads.setUpdateTime(new Date());
+        ads.setCreateTime(null);
         return adsMapper.updateByPrimaryKeySelective(ads)>0?true:false;
     }
 
@@ -145,7 +156,7 @@ public class AppConfigServiceImpl implements AppConfigService {
 
     /**
      * 根据主键删除环境
-     * @param recordList
+     * @param id
      */
     @Override
     public boolean deleteRecord(Integer id) {

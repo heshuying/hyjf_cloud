@@ -12,10 +12,18 @@ import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
+import com.hyjf.am.response.config.AppBorrowImageResponse;
+import com.hyjf.am.response.config.SubmissionsResponse;
+import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.AppBorrowImageRequest;
+import com.hyjf.am.resquest.config.SubmissionsRequest;
+import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
+import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.AdminPermissionsVO;
@@ -25,6 +33,8 @@ import com.hyjf.am.vo.admin.PoundageLedgerVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.config.SubmissionsVO;
+import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -351,6 +361,77 @@ public interface AmAdminClient {
      * @return
      */
     List<UtmPlatVO> getAppUtm();
+
+    /**
+     * 获取版本管理详情
+     * @param request
+     * @return
+     */
+    SubmissionsVO getSubmissionsRecord(SubmissionsRequest request);
+
+     SubmissionsResponse findSubmissionsList(SubmissionsRequest form);
+
+     SubmissionsResponse updateSubmissionsStatus(SubmissionsRequest form);
+
+     SubmissionsResponse exportSubmissionsList(SubmissionsRequest form);
+
+
+     VersionConfigBeanResponse searchList(VersionConfigBeanRequest request);
+
+     VersionConfigBeanResponse searchInfo(VersionConfigBeanRequest request);
+
+     VersionConfigBeanResponse insertInfo(VersionConfigBeanRequest request);
+
+     VersionConfigBeanResponse updateInfo(VersionConfigBeanRequest request);
+
+     VersionConfigBeanResponse deleteInfo(VersionConfigBeanRequest request);
+    /**
+     * 获取广告管理列表数据
+     * @param appBorrowImageRequest
+     * @return
+     */
+    AppBorrowImageResponse searchList(AppBorrowImageRequest appBorrowImageRequest);
+    /**
+     *获取广告管理列表获取详情
+     * @param appBorrowImageRequest
+     * @return
+     */
+    AppBorrowImageResponse searchInfo(AppBorrowImageRequest appBorrowImageRequest);
+    /**
+     *插入广告管理列表
+     * @param appBorrowImageRequest
+     * @return
+     */
+    AppBorrowImageResponse insertInfo(AppBorrowImageRequest appBorrowImageRequest);
+    /**
+     *修改广告管理列表
+     * @param appBorrowImageRequest
+     * @return
+     */
+    AppBorrowImageResponse updateInfo(AppBorrowImageRequest appBorrowImageRequest);
+    /**
+     *删除广告管理列表
+     * @param appBorrowImageRequest
+     * @return
+     */
+    AppBorrowImageResponse deleteInfo(AppBorrowImageRequest appBorrowImageRequest);
+
+    AppBannerResponse findAppBannerList(AppBannerRequest request);
+
+    AppBannerResponse insertAppBannerList(AdsVO adsVO);
+
+    AppBannerResponse updateAppBannerList(AdsVO adsVO);
+
+    AppBannerResponse updateAppBannerStatus(AdsVO adsVO);
+
+    AppBannerResponse deleteAppBanner(AdsVO adsVO);
+    /**
+     * 根据id获取广告
+     * @param adsVO
+     * @return
+     */
+    AppBannerResponse getRecordById(AdsVO adsVO);
+
 
     /**
      * 获取锁定账户列表
