@@ -490,4 +490,19 @@ public interface AmAdminClient {
      * @return
      */
     BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig);
+
+    /**
+     * 根据主键获取保证金配置
+     *
+     * @param id
+     * @return
+     */
+    BailConfigInfoCustomizeVO selectBailConfigById(Integer id);
+
+    /**
+     * 未配置保证金的机构编号
+     *
+     * @return
+     */
+    List<HjhInstConfigVO> selectNoUsedInstConfigList();
 }
