@@ -13,40 +13,40 @@ import org.springframework.stereotype.Service;
 @Service
 public class WechatMyProjectServiceImpl extends BaseTradeServiceImpl implements WechatMyProjectService {
     @Override
-    public void selectCurrentHoldObligatoryRightList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
+    public QueryMyProjectVO selectCurrentHoldObligatoryRightList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
         WechatMyProjectRequest request=createWechatMyProjectRequest(userId,currentPage,pageSize);
         request.setOrderByFlag("2");
         request.setSortBy("DESC");
-        vo=amTradeClient.selectWechatCurrentHoldObligatoryRightList(request);
+        return amTradeClient.selectWechatCurrentHoldObligatoryRightList(request);
     }
 
     @Override
-    public void selectRepaymentList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
+    public QueryMyProjectVO selectRepaymentList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
         WechatMyProjectRequest request=createWechatMyProjectRequest(userId,currentPage,pageSize);
-        vo=amTradeClient.selectWechatRepaymentList(request);
+        return amTradeClient.selectWechatRepaymentList(request);
     }
 
     @Override
-    public void selectCreditRecordList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
+    public QueryMyProjectVO selectCreditRecordList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
         WechatMyProjectRequest request=createWechatMyProjectRequest(userId,currentPage,pageSize);
-        vo=amTradeClient.selectWechatCreditRecordList(request);
+        return amTradeClient.selectWechatCreditRecordList(request);
     }
 
     @Override
-    public void selectCurrentHoldPlanList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
+    public QueryMyProjectVO selectCurrentHoldPlanList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
         WechatMyProjectRequest request=createWechatMyProjectRequest(userId,currentPage,pageSize);
         request.setOrderByFlag("2");
         request.setSortBy("DESC");
-        vo=amTradeClient.selectWechatCurrentHoldPlanList(request);
+        return amTradeClient.selectWechatCurrentHoldPlanList(request);
     }
 
     @Override
-    public void selectRepayMentPlanList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
+    public QueryMyProjectVO selectRepayMentPlanList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
         WechatMyProjectRequest request=createWechatMyProjectRequest(userId,currentPage,pageSize);
 
         request.setOrderByFlag("3");
         request.setSortBy("DESC");
-        vo=amTradeClient.selectWechatRepayMentPlanList(request);
+        return amTradeClient.selectWechatRepayMentPlanList(request);
     }
 
 
