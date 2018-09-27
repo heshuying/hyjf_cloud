@@ -414,13 +414,13 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     private void checkTenderToCreditParam(TenderBorrowCreditCustomize request, Integer userId) {
         // 验证折让率
         //新增配置表校验add tanyy2018-9-27
-        List<DebtConfigVO> config = amConfigClient.getDebtConfig().getResultList();
-        if (org.apache.commons.lang.StringUtils.isEmpty(request.getCreditDiscount())||CollectionUtils.isEmpty(config)) {
+        DebtConfigVO config = amConfigClient.getDebtConfig().getResult();
+        if (org.apache.commons.lang.StringUtils.isEmpty(request.getCreditDiscount())||config==null) {
             // 折让率不能为空
             throw  new CheckException(MsgEnum.ERROR_CREDIT_CREDIT_DISCOUNT_NULL);
         } else {
             float creditDiscount = Float.parseFloat(request.getCreditDiscount());
-            DebtConfigVO debtConfig = config.get(0);
+            DebtConfigVO debtConfig = config;
             if (creditDiscount > debtConfig.getConcessionRateUp().floatValue() || creditDiscount < debtConfig.getConcessionRateDown().floatValue()) {
                 // 折让率范围错误
                 throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);
