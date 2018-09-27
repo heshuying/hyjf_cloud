@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankCardResponse;
+import com.hyjf.am.resquest.api.WrbRegisterRequest;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
@@ -577,13 +578,7 @@ public interface AmUserClient {
 
 	/**
 	 * 根据手机号密码注册用户
-	 * @param mobile
-	 * @param instCode
-	 * @param request
-	 * @param instType
-	 * @param utmPlat
-	 * @param platform
 	 * @return
 	 */
-	Integer insertUserAction(String mobile, String instCode, HttpServletRequest request, Integer instType, UtmPlatVO utmPlat, String platform);
+	Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest);
 }

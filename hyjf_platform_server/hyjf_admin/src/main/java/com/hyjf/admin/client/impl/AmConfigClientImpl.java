@@ -324,50 +324,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
-    @Override
-    public AppBorrowImageResponse searchList(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/getRecordList", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
 
-    @Override
-    public AppBorrowImageResponse searchInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/infoAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
-
-    @Override
-    public AppBorrowImageResponse insertInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/insertAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
-
-    @Override
-    public AppBorrowImageResponse updateInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/updateAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
-
-    @Override
-    public AppBorrowImageResponse deleteInfo(AppBorrowImageRequest appBorrowImageRequest) {
-        AppBorrowImageResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appborrow/deleteAction", appBorrowImageRequest,
-                        AppBorrowImageResponse.class)
-                .getBody();
-        return response;
-    }
 
     /**
      * 查询银行配置列表
@@ -1488,41 +1445,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForObject("http://AM-ADMIN/am-config/smsTemplate/insertTemplate", request, IntegerResponse.class).getResultInt();
     }
 
-    /**
-     * 查询列表数据
-     *
-     * @param form
-     * @return
-     */
-    @Override
-    public SubmissionsResponse findSubmissionsList(SubmissionsRequest form) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getRecordList", form,
-                SubmissionsResponse.class);
-    }
 
-    /**
-     * 查询导出数据
-     *
-     * @param form
-     * @return
-     */
-    @Override
-    public SubmissionsResponse exportSubmissionsList(SubmissionsRequest form) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getExportRecordList", form,
-                SubmissionsResponse.class);
-    }
-
-    /**
-     * 更新状态
-     *
-     * @param form
-     * @return
-     */
-    @Override
-    public SubmissionsResponse updateSubmissionsStatus(SubmissionsRequest form) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/updateSubmissionsStatus", form,
-                SubmissionsResponse.class);
-    }
 
     @Override
     public TeamResponse searchAction(TeamRequestBean requestBean) {
@@ -1655,53 +1578,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
-    @Override
-    public VersionConfigBeanResponse searchList(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/getRecordList", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-    }
 
-    @Override
-    public VersionConfigBeanResponse searchInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/infoAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-
-    }
-
-    @Override
-    public VersionConfigBeanResponse insertInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/insertAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-
-    }
-
-    @Override
-    public VersionConfigBeanResponse updateInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/updateAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-
-    }
-
-    @Override
-    public VersionConfigBeanResponse deleteInfo(VersionConfigBeanRequest request) {
-        VersionConfigBeanResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/appversion/deleteAction", request,
-                        VersionConfigBeanResponse.class)
-                .getBody();
-        return response;
-    }
 
 
     /**
@@ -2232,10 +2109,5 @@ public class AmConfigClientImpl implements AmConfigClient {
            return null;
    	}
 
-    @Override
-    public SubmissionsVO getSubmissionsRecord(SubmissionsRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getSubmissionsRecord", request,
-                SubmissionsVO.class);
 
-    }
 }

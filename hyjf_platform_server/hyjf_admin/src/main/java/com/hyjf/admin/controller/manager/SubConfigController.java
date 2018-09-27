@@ -15,9 +15,9 @@ import com.hyjf.am.vo.trade.SubCommissionListConfigVo;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -85,8 +85,8 @@ public class SubConfigController extends BaseController {
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertSubConfig(HttpServletRequest request, @RequestBody AdminSubConfigRequest adminRequest) {
-        //todo  测试联调时放开
          adminRequest.setUserId(Integer.valueOf(this.getUser(request).getId()));
+//        adminRequest.setUserId(3);
         // 表单校验(双表校验)
         JSONObject json =new JSONObject();
         //表单字段校验
@@ -107,8 +107,8 @@ public class SubConfigController extends BaseController {
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateSubConfig(HttpServletRequest request, @RequestBody AdminSubConfigRequest adminRequest) {
-        //todo  测试联调时放开
         adminRequest.setUserId(Integer.valueOf(this.getUser(request).getId()));
+//        adminRequest.setUserId(3);
         AdminSubConfigResponse result= subConfigService.updateSubConfig(adminRequest);
         if (result == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -121,7 +121,8 @@ public class SubConfigController extends BaseController {
     @ApiOperation(value = "分账名单配置删除", notes = "分账名单配置删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteSubConfig(@RequestBody AdminSubConfigRequest adminRequest) {
+    public AdminResult deleteSubConfig(HttpServletRequest request, @RequestBody AdminSubConfigRequest adminRequest) {
+        adminRequest.setUserId(Integer.valueOf(this.getUser(request).getId()));
         AdminSubConfigResponse result=null;
         if(adminRequest.getId() != null){
             result= subConfigService.deleteSubConfig(adminRequest);
@@ -141,26 +142,32 @@ public class SubConfigController extends BaseController {
     public Map<String, Object>  updateSelectAction(HttpServletRequest request,@RequestBody AdminSubConfigRequest adminRequest) {
         Map<String, Object> userMapNullMap=new HashMap();
         UserInfoCustomizeResponse userMap=subConfigService.userMap(adminRequest);
-        if (userMap!=null) {
+        if (userMap!=null&&Response.isSuccess(userMap)) {
             UserInfoCustomizeVO user =userMap.getResult();
-            if (StringUtils.isNotBlank(user.getOpen())) {
-                if ("未开户".equals((String)user.getOpen().toString().trim())) {
-                    userMapNullMap.put("info", "无法获取用户信息");
-                    userMapNullMap.put("status", "n");
-                    return userMapNullMap;
+            if (user == null) {
+                userMapNullMap.put("info", "您输入的用户名无对应信息，请重新输入");
+                userMapNullMap.put("status", "n");
+                return userMapNullMap;
+            }else {
+                if (StringUtils.isNotBlank(user.getOpen())) {
+                    if ("未开户".equals((String)user.getOpen().toString().trim())) {
+                        userMapNullMap.put("info", "无法获取用户信息");
+                        userMapNullMap.put("status", "n");
+                        return userMapNullMap;
+                    }
                 }
-            }
-            if (user.getStatus() != null) {
-                if (user.getStatus().intValue() ==1) {
-                    userMapNullMap.put("info", "该用户已被禁用");
-                    userMapNullMap.put("status", "n");
-                    return userMapNullMap;
+                if (user.getStatus() != null) {
+                    if (user.getStatus().intValue() ==1) {
+                        userMapNullMap.put("info", "该用户已被禁用");
+                        userMapNullMap.put("status", "n");
+                        return userMapNullMap;
+                    }
                 }
             }
             userMapNullMap.put("status", "y");
             return userMapNullMap;
         }else {
-            userMapNullMap.put("info", "您输入的用户名无对应信息，请重新输入");
+            userMapNullMap.put("info", "异常！");
             userMapNullMap.put("status", "n");
             return userMapNullMap;
         }
@@ -175,32 +182,37 @@ public class SubConfigController extends BaseController {
         AdminSubConfigResponse res=subConfigService.subconfig(adminRequest);
         if (userMap!=null&&Response.isSuccess(userMap)) {
             UserInfoCustomizeVO user =userMap.getResult();
-            if (!CollectionUtils.isEmpty(res.getResultList())) {
-                userMapNullMap.put("info", "该用户白名单信息已经存在");
+            if(user != null){
+                if (Response.isSuccess(res)&&!CollectionUtils.isEmpty(res.getResultList())) {
+                    userMapNullMap.put("info", "该用户白名单信息已经存在");
+                    userMapNullMap.put("status", "n");
+                    return new AdminResult<Map>(userMapNullMap);
+                }else {
+                    if (StringUtils.isNotBlank(user.getOpen())) {
+                        if ("未开户".equals((String)user.getOpen().toString().trim())) {
+                            userMapNullMap.put("info", "无法获取用户信息");
+                            userMapNullMap.put("status", "n");
+                            return new AdminResult<Map>(userMapNullMap);
+                        }
+                    }
+                    if (user.getStatus() != null) {
+                        if (user.getStatus().intValue() ==1) {
+                            userMapNullMap.put("info", "该用户已被禁用");
+                            userMapNullMap.put("status", "n");
+                            return new AdminResult<Map>(userMapNullMap);
+                        }
+                    }
+                    userMapNullMap.put("status", "y");
+                    userMapNullMap.put("user",userMap);
+                    return new AdminResult<Map>(userMapNullMap);
+                }
+            }else{
+                userMapNullMap.put("info", "您输入的用户名无对应信息，请重新输入");
                 userMapNullMap.put("status", "n");
                 return new AdminResult<Map>(userMapNullMap);
-            }else {
-                if (StringUtils.isNotBlank(user.getOpen())) {
-                    if ("未开户".equals((String)user.getOpen().toString().trim())) {
-                        userMapNullMap.put("info", "无法获取用户信息");
-                        userMapNullMap.put("status", "n");
-                        return new AdminResult<Map>(userMapNullMap);
-                    }
-                }
-                if (user.getStatus() != null) {
-                    if (user.getStatus().intValue() ==1) {
-                        userMapNullMap.put("info", "该用户已被禁用");
-                        userMapNullMap.put("status", "n");
-                        return new AdminResult<Map>(userMapNullMap);
-                    }
-                }
-                userMapNullMap.put("status", "y");
-                userMapNullMap.put("user",userMap);
-                return new AdminResult<Map>(userMapNullMap);
             }
-
         }else {
-            userMapNullMap.put("info", "您输入的用户名无对应信息，请重新输入");
+            userMapNullMap.put("info", "异常！");
             userMapNullMap.put("status", "n");
             return new AdminResult<Map>(userMapNullMap);
         }
@@ -216,37 +228,37 @@ public class SubConfigController extends BaseController {
     private JSONObject validatorFieldCheck(JSONObject jsonObject, AdminSubConfigRequest form) {
         // 用户名
         if(StringUtils.isBlank(form.getUsername())){
-            jsonObject.put("userName","userName不能为空！");
+            jsonObject.put("用户名","用户名不能为空！");
             return jsonObject;
         }
         //姓名
         if(StringUtils.isBlank(form.getTruename())){
-            jsonObject.put("truename","truename不能为空！");
+            jsonObject.put("姓名","姓名不能为空！");
             return jsonObject;
         }
         //用户角色
         if(StringUtils.isBlank(form.getRoleName())){
-            jsonObject.put("roleName","roleName不能为空！");
+            jsonObject.put("用户角色","用户角色不能为空！");
             return jsonObject;
         }
         //用户类型
         if(StringUtils.isBlank(form.getUserType())){
-            jsonObject.put("userType","userType不能为空");
+            jsonObject.put("用户类型","用户类型不能为空");
             return jsonObject;
         }
         //银行开户状态
         if(StringUtils.isBlank(form.getBankOpenAccount())){
-            jsonObject.put("bankOpenAccount","bankOpenAccount不能为空");
+            jsonObject.put("银行开户状态","银行开户状态不能为空");
             return jsonObject;
         }
         //江西银行电子账号
         if(StringUtils.isBlank(form.getAccount())){
-            jsonObject.put("account","account不能为空");
+            jsonObject.put("江西银行电子账号","江西银行电子账号不能为空");
             return jsonObject;
         }
         // 用户状态
         if(StringUtils.isBlank(String.valueOf(form.getStatus()))){
-            jsonObject.put("status","status不能为空");
+            jsonObject.put("用户状态","用户状态不能为空");
             return jsonObject;
         }
         return jsonObject;

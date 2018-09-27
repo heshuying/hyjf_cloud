@@ -3,15 +3,12 @@ package com.hyjf.admin.client;
 
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.am.resquest.market.ActivityListRequest;
-import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.am.vo.market.AdsVO;
 
 import java.util.List;
 
@@ -59,15 +56,7 @@ public interface AmMarketClient {
      */
     ActivityListResponse deleteActivity(ActivityListRequest request);
 
-     AppBannerResponse findAppBannerList(AppBannerRequest request);
 
-     AppBannerResponse insertAppBannerList(AdsVO adsVO);
-
-     AppBannerResponse updateAppBannerList(AdsVO adsVO);
-
-     AppBannerResponse updateAppBannerStatus(AdsVO adsVO);
-
-     AppBannerResponse deleteAppBanner(AdsVO adsVO);
 
     ContentAdsResponse searchAction(ContentAdsRequest request);
 
@@ -148,12 +137,6 @@ public interface AmMarketClient {
      */
     MessagePushTagResponse getTagList();
 
-    /**
-     * 根据id获取广告
-     * @param adsVO
-     * @return
-     */
-    AppBannerResponse getRecordById(AdsVO adsVO);
 
     /**
      * 获取活动详情

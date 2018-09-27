@@ -46,11 +46,9 @@ public class FinmanChargeNewController extends BaseController {
                 response=new FinmanChargeNewResponse();
                 response.setResultList(recordList);
                 response.setRecordTotal(total);
-                return response;
             }
-            return response;
         }
-        return null;
+        return response;
     }
 
     /**
@@ -68,11 +66,9 @@ public class FinmanChargeNewController extends BaseController {
                 BorrowFinmanNewChargeVO chargeVO = CommonUtils.convertBean(charge, BorrowFinmanNewChargeVO.class);
                 response.setResult(chargeVO);
                 response.setRtn(Response.SUCCESS);
-                return response;
             }
-            return response;
         }
-        return null;
+        return response;
     }
 
     /**
@@ -89,7 +85,9 @@ public class FinmanChargeNewController extends BaseController {
             response.setRtn(Response.SUCCESS);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
 
     /**
@@ -106,7 +104,9 @@ public class FinmanChargeNewController extends BaseController {
             response.setRtn(Response.SUCCESS);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
 
     /**
@@ -123,7 +123,9 @@ public class FinmanChargeNewController extends BaseController {
             response.setRtn(Response.SUCCESS);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
 
     /**

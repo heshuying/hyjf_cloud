@@ -4789,7 +4789,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowSendTypeResponse selectBorrowSendList(BorrowSendTypeRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/sendtype/list";
+        String url = "http://AM-ADMIN/am-admin/config/sendtype/list";
         BorrowSendTypeResponse response = restTemplate.postForEntity(url, adminRequest, BorrowSendTypeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4805,7 +4805,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowSendTypeVO getBorrowSendInfo(String sendCd) {
-        String url = "http://AM-TRADE/am-trade/config/sendtype/info/" + sendCd;
+        String url = "http://AM-ADMIN/am-admin/config/sendtype/info/" + sendCd;
         BorrowSendTypeResponse response = restTemplate.getForEntity(url, BorrowSendTypeResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -4820,7 +4820,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowSendTypeResponse insertBorrowSend(BorrowSendTypeRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/sendtype/insert";
+        String url = "http://AM-ADMIN/am-admin/config/sendtype/insert";
         BorrowSendTypeResponse response = restTemplate.postForEntity(url, adminRequest, BorrowSendTypeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4835,7 +4835,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowSendTypeResponse updateBorrowSend(BorrowSendTypeRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/sendtype/update";
+        String url = "http://AM-ADMIN/am-admin/config/sendtype/update";
         BorrowSendTypeResponse response = restTemplate.postForEntity(url, adminRequest, BorrowSendTypeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4850,7 +4850,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowSendTypeResponse daleteBorrowSend(String sendCd) {
-        String url = "http://AM-TRADE/am-trade/config/sendtype/delete/" + sendCd;
+        String url = "http://AM-ADMIN/am-admin/config/sendtype/delete/" + sendCd;
         BorrowSendTypeResponse response = restTemplate.getForEntity(url, BorrowSendTypeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5121,7 +5121,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse selectSubConfigListByParam(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/list",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/list",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
@@ -5131,7 +5131,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse selectSubConfigInfo(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/info",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/info",request, AdminSubConfigResponse.class)
                 .getBody();
     }
 
@@ -5142,7 +5142,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse insertSubConfig(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/insert",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/insert",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
@@ -5152,7 +5152,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse updateSubConfig(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/update",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/update",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
@@ -5162,7 +5162,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminSubConfigResponse deleteSubConfig(AdminSubConfigRequest request){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/delete",request, AdminSubConfigResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/subconfig/delete",request, AdminSubConfigResponse.class)
                 .getBody();
     }
     /**
