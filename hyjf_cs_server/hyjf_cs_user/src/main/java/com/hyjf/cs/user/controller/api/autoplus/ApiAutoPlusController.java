@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -34,7 +35,7 @@ import java.util.Map;
  */
 
 @Api(tags = "api端-用户授权自动投资自动授权接口")
-@RestController
+@Controller
 @RequestMapping("/hyjf-api/server/autoPlus")
 public class ApiAutoPlusController extends BaseUserController {
 
@@ -56,9 +57,9 @@ public class ApiAutoPlusController extends BaseUserController {
     @ResponseBody
     @PostMapping(value = "/sendcode.do", produces = "application/json; charset=utf-8")
     @ApiOperation(value = "前导发送短信验证码",notes = "前导发送短信验证码")
-    public ApiAutoPlusResultBean sendCode(@RequestHeader(value = "userId") Integer userId,@RequestBody AutoPlusRequestBean autoPlusRequestBean) {
+    public ApiAutoPlusResultBean sendCode(@RequestBody AutoPlusRequestBean autoPlusRequestBean) {
         logger.info("api端授权申请发送短信验证码第三方请求参数：" + JSONObject.toJSONString(autoPlusRequestBean));
-        ApiAutoPlusResultBean result = autoPlusService.sendCode(userId,autoPlusRequestBean);
+        ApiAutoPlusResultBean result = autoPlusService.sendCode(autoPlusRequestBean);
         result.setStatusForResponse(ErrorCodeConstant.SUCCESS);
         result.setStatusDesc("发送短信验证码成功");
         return result;

@@ -7,6 +7,7 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.OperationReportService;
+import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
@@ -46,7 +47,9 @@ public class OperationReportController extends BaseController {
     @Autowired
     private OperationReportService operationReportService;
     @Autowired
-    SystemConfig  systemConfig;
+    private SystemConfig  systemConfig;
+    @Autowired
+    private FileUpLoadUtil fileUpLoadUtil;
 
     @ApiOperation(value = "列表初始化", notes = "运营报告列表查询")
     @PostMapping("/list")
@@ -318,9 +321,9 @@ public class OperationReportController extends BaseController {
      */
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping("/uploadFile")
-    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public AdminResult uploadFile(HttpServletRequest request) throws Exception {
         AdminResult adminResult = new AdminResult();
-        LinkedList<BorrowCommonImage> borrowCommonImages = operationReportService.uploadFile(request, response);
+        LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);
         adminResult.setData(borrowCommonImages);
         return adminResult;
     }

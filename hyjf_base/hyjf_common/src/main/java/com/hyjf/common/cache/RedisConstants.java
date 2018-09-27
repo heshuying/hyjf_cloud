@@ -383,4 +383,9 @@ public class RedisConstants {
      * 月推标上限额度前缀
      */
     public static final String MONTH_MARK_LINE = "bail_month_mark_line:";
+
+    /**
+     * 登录失败配置项
+     */
+    public static final String LOCKED_CONFIG = "lock_config";
 }

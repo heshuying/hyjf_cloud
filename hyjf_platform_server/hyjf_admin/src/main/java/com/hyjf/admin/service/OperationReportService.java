@@ -100,14 +100,4 @@ public interface OperationReportService {
      */
     public OperationReportResponse halfPreview(OperationReportRequest request);
 
-
-    /**
-     * 资料上传
-     * @param request
-     * @param response
-     * @return
-     */
-    LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request, HttpServletResponse response);
-
-
 }

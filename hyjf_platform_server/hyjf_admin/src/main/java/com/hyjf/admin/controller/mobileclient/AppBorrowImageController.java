@@ -6,6 +6,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.mobileclient.AppBorrowImageService;
+import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
@@ -28,6 +29,7 @@ import java.util.LinkedList;
 
 /**
  * 产品图片
+ *
  * @author lisheng
  * @version AppBorrowImageController, v0.1 2018/7/11 11:26
  */
@@ -35,30 +37,22 @@ import java.util.LinkedList;
 @RestController
 @RequestMapping("/hyjf-admin/app/maintenance/borrowimage")
 public class AppBorrowImageController extends BaseController {
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
-    AppBorrowImageService appBorrowImageService;
-
-    @Value("${file.domain.url}")
-    private String DOMAIN_URL;
-
-    @Value("${file.physical.path}")
-    private String PHYSICAL_PATH;
-
-    @Value("${file.upload.temp.path}")
-    private String TEMP_PATH;
-
+    private AppBorrowImageService appBorrowImageService;
+    @Autowired
+    private FileUpLoadUtil fileUpLoadUtil;
 
     @ApiOperation(value = "产品图片:列表查询", notes = "产品图片:列表查询")
     @PostMapping(value = "/search")
     @ResponseBody
-    public AdminResult<ListResult<AppBorrowImageVO>> search(@RequestBody  AppBorrowImageRequest request) {
+    public AdminResult<ListResult<AppBorrowImageVO>> search(@RequestBody AppBorrowImageRequest request) {
         try {
             AppBorrowImageResponse recordList = appBorrowImageService.getRecordList(request);
             if (!Response.isSuccess(recordList)) {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
-            return new AdminResult<ListResult<AppBorrowImageVO>>(ListResult.build(recordList.getResultList(), recordList.getRecordTotal()));
+            return new AdminResult<>(ListResult.build(recordList.getResultList(), recordList.getRecordTotal()));
         } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -74,8 +68,8 @@ public class AppBorrowImageController extends BaseController {
             if (!Response.isSuccess(record)) {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
-            return new AdminResult<AppBorrowImageVO>(record.getResult());
-        }catch (Exception e) {
+            return new AdminResult<>(record.getResult());
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
@@ -84,7 +78,7 @@ public class AppBorrowImageController extends BaseController {
     @ApiOperation(value = "产品图片添加维护信息", notes = "产品图片:添加维护信息")
     @PostMapping(value = "/insertinfo")
     @ResponseBody
-    public AdminResult<AppBorrowImageVO> insertinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
+    public AdminResult<AppBorrowImageVO> insertinfo(@RequestBody AppBorrowImageRequest request) {
         try {
             AppBorrowImageResponse response = appBorrowImageService.insertRecord(request);
             if (!Response.isSuccess(response)) {
@@ -99,14 +93,14 @@ public class AppBorrowImageController extends BaseController {
     @ApiOperation(value = "产品图片:修改维护信息", notes = "产品图片:修改维护信息")
     @PostMapping(value = "/updateinfo")
     @ResponseBody
-    public AdminResult<AppBorrowImageVO> updateinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
+    public AdminResult<AppBorrowImageVO> updateinfo(@RequestBody AppBorrowImageRequest request) {
         try {
             AppBorrowImageResponse response = appBorrowImageService.updateRecord(request);
             if (!Response.isSuccess(response)) {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
             return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
@@ -114,17 +108,18 @@ public class AppBorrowImageController extends BaseController {
     @ApiOperation(value = "产品图片:刪除信息", notes = "产品图片:刪除信息")
     @PostMapping(value = "/deleteinfo")
     @ResponseBody
-    public AdminResult<AppBorrowImageVO> deleteinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
+    public AdminResult<AppBorrowImageVO> deleteinfo(@RequestBody AppBorrowImageRequest request) {
         try {
-        AppBorrowImageResponse response = appBorrowImageService.deleteRecord(request);
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        }catch (Exception e) {
+            AppBorrowImageResponse response = appBorrowImageService.deleteRecord(request);
+            if (!Response.isSuccess(response)) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
+
 
     /**
      * 资料上传
@@ -140,69 +135,8 @@ public class AppBorrowImageController extends BaseController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("statusDesc", SUCCESS_DESC);
         jsonObject.put("status", SUCCESS);
-
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        String fileDomainUrl = DOMAIN_URL;
-        String filePhysicalPath = PHYSICAL_PATH;
-        String fileUploadTempPath = TEMP_PATH;
-
-        String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
-
-        File logoSaveFile = new File(logoRealPathDir);
-        if (!logoSaveFile.exists()) {
-            logoSaveFile.mkdirs();
-        }
-
-        BorrowCommonImage fileMeta = null;
-        LinkedList<BorrowCommonImage> files = new LinkedList<BorrowCommonImage>();
-
-        Iterator<String> itr = multipartRequest.getFileNames();
-        MultipartFile multipartFile = null;
-
-        while (itr.hasNext()) {
-            multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(System.currentTimeMillis());
-            String originalFilename = multipartFile.getOriginalFilename();
-            fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-
-            // 文件大小
-            String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-
-            fileMeta = new BorrowCommonImage();
-            int index = originalFilename.lastIndexOf(".");
-            if (index != -1) {
-                fileMeta.setImageName(originalFilename.substring(0, index));
-            } else {
-                fileMeta.setImageName(originalFilename);
-            }
-
-            fileMeta.setImageRealName(fileRealName);
-            fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
-            fileMeta.setImageType(multipartFile.getContentType());
-            fileMeta.setErrorMessage(errorMessage);
-            // 获取文件路径
-            fileMeta.setImagePath(logoRealPathDir + fileRealName);
-            fileMeta.setImageSrc(fileDomainUrl + logoRealPathDir + fileRealName);
-            files.add(fileMeta);
-        }
-        jsonObject.put("data",files);
+        jsonObject.put("data", fileUpLoadUtil.upLoad(request));
         return jsonObject;
     }
-
-
-    /**
-     * 信息验证
-     *
-     * @param mav
-     */
-    public void validatorFieldCheck(JSONObject mav, AppBorrowImageRequest form) {
-        // 图片标识
-        //ValidatorFieldCheckUtil.validateAlphaNumericAndMaxLength(mav, "borrowImage", form.getBorrowImage(), 20, true);
-        // 图片名称
-        // ValidatorFieldCheckUtil.validateMaxLength(mav, "borrowImageTitle", form.getBorrowImageTitle(), 100, true);
-        // 图片
-        //ValidatorFieldCheckUtil.validateRequired(mav, "borrowImageRealname", form.getBorrowImageRealname());
-    }
-
 
 }

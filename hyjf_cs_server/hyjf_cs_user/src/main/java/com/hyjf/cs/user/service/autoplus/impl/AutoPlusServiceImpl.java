@@ -345,7 +345,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     }
 
     @Override
-    public ApiAutoPlusResultBean sendCode(Integer userId, AutoPlusRequestBean autoPlusRequestBean) {
+    public ApiAutoPlusResultBean sendCode(AutoPlusRequestBean autoPlusRequestBean) {
         ApiAutoPlusResultBean resultBean = new ApiAutoPlusResultBean();
         // 手机号
         String mobile = autoPlusRequestBean.getMobile();
@@ -452,7 +452,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 调用短信发送接口
         BankCallBean bankBean = null;
         try {
-            bankBean = callSendCode(userId, mobile, srvTxCode, channel, null);
+            bankBean = callSendCode(user.getUserId(), mobile, srvTxCode, channel, null);
         } catch (Exception e) {
             logger.error("请求验证码接口发生异常", e);
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
