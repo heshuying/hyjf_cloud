@@ -452,6 +452,17 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         return 1;
     }
 
+    @Override
+    public BorrowTenderCpn getCouponTenderInfo(String couponTenderNid) {
+        BorrowTenderCpnExample example = new BorrowTenderCpnExample();
+        example.createCriteria().andNidEqualTo(couponTenderNid);
+        List<BorrowTenderCpn> btList = this.borrowTenderCpnMapper.selectByExample(example);
+        if (btList != null && btList.size() > 0) {
+            return btList.get(0);
+        }
+        return null;
+    }
+
     /**
      * 优惠券还款 余额不足 短信通知
      */
