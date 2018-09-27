@@ -40,6 +40,20 @@ public interface AmConfigClient {
      */
     AdminSystemVO getUserInfoById(Integer loginUserId);
 
+	/**
+	 * 债转配置初始化查询
+	 * @auth
+	 * @param
+	 * @return
+	 */
+	DebtConfigResponse getDebtConfig();
+	/**
+	 * 债转配置更新
+	 * @auth
+	 * @param
+	 * @return
+	 */
+	DebtConfigResponse updateDebtConfig(DebtConfigRequest request);
     /**
      * 获取数据字典表的下拉列表
      * @param nameClass
