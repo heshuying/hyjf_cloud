@@ -38,8 +38,12 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         BorrowTenderExample example = new BorrowTenderExample();
         BorrowTenderExample.Criteria cra = example.createCriteria();
         cra.andNidEqualTo(request.getTenderNid());
-        cra.andBorrowNidEqualTo(request.getBorrowNid());
-        cra.andUserIdEqualTo(request.getTenderUserId());
+        if (StringUtils.isNotBlank(request.getBorrowNid())){
+            cra.andBorrowNidEqualTo(request.getBorrowNid());
+        }
+        if (request.getTenderUserId() != null){
+            cra.andUserIdEqualTo(request.getTenderUserId());
+        }
         List<BorrowTender> tenderList = this.borrowTenderMapper.selectByExample(example);
         if(tenderList != null && tenderList.size() > 0){
             return tenderList.get(0);
