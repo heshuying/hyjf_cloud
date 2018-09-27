@@ -3,6 +3,7 @@ package com.hyjf.admin.client;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
+import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
