@@ -22,15 +22,20 @@ public class FileUpLoadUtil {
     @Value("${file.domain.url}")
     private String DOMAIN_URL;
 
+    @Value("${file.physical.path}")
+    private String PHYSICAL_PATH;
+
     @Value("${file.upload.temp.path}")
     private String TEMP_PATH;
 
 
     public LinkedList<BorrowCommonImage> upLoad(HttpServletRequest request) {
         BorrowCommonImage fileMeta = null;
-        LinkedList<BorrowCommonImage> files = new LinkedList<BorrowCommonImage>();
+        LinkedList<BorrowCommonImage> files = new LinkedList<>();
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        File logoSaveFile = new File(TEMP_PATH);
+        String logoRealPathDir = PHYSICAL_PATH + TEMP_PATH;
+
+        File logoSaveFile = new File(logoRealPathDir);
         if (!logoSaveFile.exists()) {
             logoSaveFile.mkdirs();
         }
@@ -46,7 +51,7 @@ public class FileUpLoadUtil {
             // 文件大小
             String errorMessage = null;
             try {
-                errorMessage = UploadFileUtils.upload4Stream(fileRealName, TEMP_PATH, multipartFile.getInputStream(), 5000000L);
+                errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -64,12 +69,13 @@ public class FileUpLoadUtil {
             fileMeta.setImageType(multipartFile.getContentType());
             fileMeta.setErrorMessage(errorMessage);
             // 获取文件路径
-            fileMeta.setImagePath(TEMP_PATH + fileRealName);
-            fileMeta.setImageSrc(DOMAIN_URL + TEMP_PATH + fileRealName);
+            fileMeta.setImagePath(logoRealPathDir + "/" + fileRealName);
+            fileMeta.setImageSrc(DOMAIN_URL + logoRealPathDir + "/" + fileRealName);
             files.add(fileMeta);
         }
 
         return files;
     }
+
 
 }
