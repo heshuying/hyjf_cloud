@@ -3,22 +3,35 @@
  */
 package com.hyjf.am.trade.controller.admin.config;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.BailConfigCustomizeResponse;
+import com.hyjf.am.response.admin.BailConfigInfoCustomizeResponse;
+import com.hyjf.am.response.user.HjhInstConfigResponse;
+import com.hyjf.am.resquest.admin.BailConfigAddRequest;
 import com.hyjf.am.resquest.admin.BailConfigRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.HjhBailConfigInfo;
+import com.hyjf.am.trade.dao.model.auto.HjhBailConfigInfoExample;
+import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.service.admin.config.BailConfigService;
 import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
+import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
+import com.hyjf.am.vo.admin.NifaFieldDefinitionVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetterUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,7 +65,7 @@ public class BailConfigController extends BaseController {
     public BailConfigCustomizeResponse selectBailConfigRecordList(@RequestBody BailConfigRequest bailConfigRequest) {
         BailConfigCustomizeResponse response = new BailConfigCustomizeResponse();
         Integer recordTotal = bailConfigService.selectBailConfigCount(bailConfigRequest);
-        Paginator paginator = new Paginator(bailConfigRequest.getCurrPage(), recordTotal,bailConfigRequest.getPageSize());
+        Paginator paginator = new Paginator(bailConfigRequest.getCurrPage(), recordTotal, bailConfigRequest.getPageSize());
         bailConfigRequest.setLimitStart(paginator.getOffset());
         bailConfigRequest.setLimitEnd(paginator.getLimit());
 
@@ -61,6 +74,77 @@ public class BailConfigController extends BaseController {
             List<BailConfigCustomizeVO> bankAccountManageCustomizeVOS = CommonUtils.convertBeanList(bailConfigCustomizeVOList, BailConfigCustomizeVO.class);
             response.setResultList(bankAccountManageCustomizeVOS);
         }
+        return response;
+    }
+
+    /**
+     * @Author: liushouyi
+     * @Desc 根据主键获取保证金配置
+     */
+    @ApiOperation(value = "根据主键获取保证金配置")
+    @GetMapping("/select_bail_config_by_id/{id}")
+    public BailConfigInfoCustomizeResponse selectBailConfigById(@PathVariable String id) {
+        BailConfigInfoCustomizeResponse response = new BailConfigInfoCustomizeResponse();
+        BailConfigInfoCustomizeVO bailConfigInfoCustomizeVO = bailConfigService.selectBailConfigById(GetterUtil.getInteger(id));
+        if (null != bailConfigInfoCustomizeVO) {
+            response.setResult(bailConfigInfoCustomizeVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * @Author: liushouyi
+     * @Desc 未配置保证金的机构编号
+     */
+    @ApiOperation(value = "未配置保证金的机构编号")
+    @GetMapping("/select_noused_inst_config_list")
+    public HjhInstConfigResponse selectNoUsedInstConfigList() {
+        HjhInstConfigResponse response = new HjhInstConfigResponse();
+        List<HjhInstConfig> hjhInstConfigList = bailConfigService.selectNoUsedInstConfigList();
+        if (null != hjhInstConfigList && hjhInstConfigList.size() > 0) {
+            List<HjhInstConfigVO> hjhInstConfigVOList = CommonUtils.convertBeanList(hjhInstConfigList,HjhInstConfigVO.class);
+            response.setResultList(hjhInstConfigVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+    /**
+     * @Author: liushouyi
+     * @Desc 周期内发标已发额度
+     */
+    @ApiOperation(value = "周期内发标已发额度")
+    @PostMapping("/select_sended_account_by_cyc")
+    public StringResponse selectSendedAccountByCyc(@RequestBody BailConfigAddRequest bailConfigAddRequest) {
+        StringResponse result = new StringResponse();
+        String msg = bailConfigService.selectSendedAccountByCyc(bailConfigAddRequest);
+        result.setResultStr(msg);
+        return result;
+    }
+
+    /**
+     * @Author: liushouyi
+     * @Desc 根据该机构可用还款方式更新可用授信方式
+     */
+    @ApiOperation(value = "根据该机构可用还款方式更新可用授信方式")
+    @GetMapping("/update_bail_info_delflg/{instCode}")
+    public BooleanResponse updateBailInfoDelFlg(@PathVariable String instCode){
+        BooleanResponse response = new BooleanResponse();
+        response.setResultBoolean(bailConfigService.updateBailInfoDelFlg(instCode));
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+    /**
+     * @Author: liushouyi
+     * @Desc 添加保证金配置
+     */
+    @ApiOperation(value = "添加保证金配置")
+    @PostMapping("/insert_bail_config")
+    public BooleanResponse insertBailConfig(@RequestBody BailConfigAddRequest bailConfigAddRequest){
+        BooleanResponse response = new BooleanResponse();
+        response.setResultBoolean(bailConfigService.insertBailConfig(bailConfigAddRequest));
+        response.setRtn(Response.SUCCESS);
         return response;
     }
 

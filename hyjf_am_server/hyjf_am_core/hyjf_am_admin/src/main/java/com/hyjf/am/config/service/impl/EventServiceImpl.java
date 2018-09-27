@@ -10,6 +10,7 @@ import com.hyjf.am.config.dao.model.auto.EventExample;
 import com.hyjf.am.config.dao.model.customize.ContentEventsCustomize;
 import com.hyjf.am.config.service.EventService;
 import com.hyjf.am.resquest.admin.EventsRequest;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,8 +34,8 @@ public class EventServiceImpl implements EventService {
 		EventExample example = new EventExample();
 		EventExample.Criteria criteria = example.createCriteria();
 		if (request.getStartTime() != null && request.getEndTime() != null) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
-			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
+			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.getDayStartOfSomeDay(request.getStartTime()));
+			criteria.andCreateTimeLessThanOrEqualTo(GetDate.getDayEndOfSomeDay(request.getEndTime()));
 		}
 		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
 			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());

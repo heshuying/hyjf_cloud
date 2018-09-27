@@ -686,6 +686,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             String borrowStyle = borrow.getBorrowStyle();
             // 收益率
             BigDecimal borrowApr = borrow.getBorrowApr();
+            //TODO:开始时这里是有的
 /*            if (borrow.getProjectType() == 13 && borrow.getBorrowExtraYield() != null && borrow.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
                 borrowApr = borrowApr.add(borrow.getBorrowExtraYield());
             }*/

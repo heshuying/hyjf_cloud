@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.controller.web.assetmanage;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManagePlanRequest;
+import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
@@ -11,6 +12,7 @@ import com.hyjf.cs.trade.bean.PlanAjaxBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.assetmanage.AssetManageService;
+import com.hyjf.cs.trade.service.assetmanage.DebtConfigService;
 import com.hyjf.cs.trade.vo.WebGetRepayMentRequestVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +38,10 @@ public class WebAssetManageController extends BaseTradeController {
 
     @Autowired
     private AssetManageService assetManageService;
+
+    @Autowired
+    private DebtConfigService debtConfigService;
+
     /**
      * @Description 资产管理页面初始化
      * @Author pangchengchao
@@ -51,6 +57,11 @@ public class WebAssetManageController extends BaseTradeController {
 
         String currentTab = form.getCurrentTab();
         AccountVO account = assetManageService.getAccount(userId);
+        DebtConfigVO config = debtConfigService.getDebtConfig();
+        if(config!=null){
+            result.put("toggle",config.getToggle());
+            result.put("closeDes",config.getCloseDes());
+        }
         result.put("data", account);
         result.put("currentTab", currentTab);
         result.put("status", BaseResult.SUCCESS);

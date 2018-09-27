@@ -1153,6 +1153,20 @@ public class GetDate extends PropertyEditorSupport {
         
 	}
 
+	public static Date getDayEndOfSomeDay(Date date){
+		String dayStartString = getDateFormat(date_sdf_key).format(date) + " 23:59:59";
+		SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date2 = null;
+		try{
+			date2 = d.parse(dayStartString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return date2;
+
+	}
+
 	/**
 	 *
 	 * 获取某一天的开始时间

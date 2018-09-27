@@ -1,12 +1,12 @@
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.ParamName;
 import com.hyjf.am.config.dao.model.auto.Submissions;
 import com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
+
+import java.util.List;
 
 /**
  * @author lisheng
@@ -44,5 +44,11 @@ public interface SubmissionsService {
      */
      int addSubmission(Submissions submissions);
 
+    /**
+     * 根据id查询单条记录
+     * @param id
+     * @return
+     */
+     Submissions queryRecordById(Integer id) ;
 
 }
