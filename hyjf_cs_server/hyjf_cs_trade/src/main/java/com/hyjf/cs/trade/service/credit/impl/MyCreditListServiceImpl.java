@@ -174,10 +174,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         WebResult webResult = new WebResult();
         UserVO user = amUserClient.findUserById(userId);
         DebtConfigResponse response = amConfigClient.getDebtConfig();
-        List<DebtConfigVO> config = response.getResultList();
-        if(!CollectionUtils.isEmpty(config)){
-            DebtConfigVO configVO = config.get(0);
-            creditResultBean.setDebtConfigVO(configVO);
+        DebtConfigVO config = response.getResult();
+        if(config!=null){
+            creditResultBean.setDebtConfigVO(config);
         }else{
             logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "配置表无数据请配置");
             creditResultBean.setResultFlag(CustomConstants.RESULT_FAIL);
@@ -415,13 +414,13 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     private void checkTenderToCreditParam(TenderBorrowCreditCustomize request, Integer userId) {
         // 验证折让率
         //新增配置表校验add tanyy2018-9-27
-        List<DebtConfigVO> config = amConfigClient.getDebtConfig().getResultList();
-        if (org.apache.commons.lang.StringUtils.isEmpty(request.getCreditDiscount())||CollectionUtils.isEmpty(config)) {
+        DebtConfigVO config = amConfigClient.getDebtConfig().getResult();
+        if (org.apache.commons.lang.StringUtils.isEmpty(request.getCreditDiscount())||config==null) {
             // 折让率不能为空
             throw  new CheckException(MsgEnum.ERROR_CREDIT_CREDIT_DISCOUNT_NULL);
         } else {
             float creditDiscount = Float.parseFloat(request.getCreditDiscount());
-            DebtConfigVO debtConfig = config.get(0);
+            DebtConfigVO debtConfig = config;
             if (creditDiscount > debtConfig.getConcessionRateUp().floatValue() || creditDiscount < debtConfig.getConcessionRateDown().floatValue()) {
                 // 折让率范围错误
                 throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);

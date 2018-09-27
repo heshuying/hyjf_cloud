@@ -19,13 +19,11 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,11 +57,10 @@ public class WebAssetManageController extends BaseTradeController {
 
         String currentTab = form.getCurrentTab();
         AccountVO account = assetManageService.getAccount(userId);
-
-        List<DebtConfigVO> config = debtConfigService.getDebtConfig();
-        if(!CollectionUtils.isEmpty(config)){
-            result.put("toggle",config.get(0).getToggle());
-            result.put("closeDes",config.get(0).getCloseDes());
+        DebtConfigVO config = debtConfigService.getDebtConfig();
+        if(config!=null){
+            result.put("toggle",config.getToggle());
+            result.put("closeDes",config.getCloseDes());
         }
         result.put("data", account);
         result.put("currentTab", currentTab);
