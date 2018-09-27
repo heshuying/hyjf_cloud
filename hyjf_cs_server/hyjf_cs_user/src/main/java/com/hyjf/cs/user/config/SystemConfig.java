@@ -1,5 +1,7 @@
 package com.hyjf.cs.user.config;
 
+import com.hyjf.common.file.UploadFileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +44,16 @@ public class SystemConfig {
     @Value("${file.upload.real.path}")
     public String fileUpload;
 
+    /**
+     * 获取文件url前缀
+     * @return
+     */
+    public String getFilePrefixUrl() {
+        String host = UploadFileUtils.getDoPath(this.getFileDomainUrl());
+        String fileUploadRealPath = UploadFileUtils.getDoPath(this.getFileUpload());
+        return host + fileUploadRealPath;
+    }
+
     @Value("${hyjf.front.app.host}")
     public String appServerHost;
 
@@ -68,9 +80,6 @@ public class SystemConfig {
 
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
-
-    @Value("${file.domain.app.url}")
-    public String domainAppUrl;
 
     @Value("${hyjf.activity.888.id}")
     public Integer activity888Id;
@@ -198,14 +207,6 @@ public class SystemConfig {
 
     public void setActivity888Id(Integer activity888Id) {
         this.activity888Id = activity888Id;
-    }
-
-    public String getDomainAppUrl() {
-        return domainAppUrl;
-    }
-
-    public void setDomainAppUrl(String domainAppUrl) {
-        this.domainAppUrl = domainAppUrl;
     }
 
     public String getAopAccesskey() {

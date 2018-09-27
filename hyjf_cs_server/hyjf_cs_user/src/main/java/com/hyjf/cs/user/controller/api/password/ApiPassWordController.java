@@ -8,6 +8,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordResultBean;
@@ -64,7 +65,7 @@ public class ApiPassWordController extends BaseController {
         logger.info("api端设置交易密码 start");
         ModelAndView modelAndView = new ModelAndView();
         logger.info("第三方请求参数："+JSONObject.toJSONString(transPasswordRequestBean));
-        Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean,BankCallConstant.TXCODE_PASSWORD_SET);
+        Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean,BankCallConstant.TXCODE_PASSWORD_SET, BaseDefine.METHOD_SERVER_SET_PASSWORD);
         if (null==map.get("flag")){
             return (ModelAndView) map.get("modelAndView");
         }
@@ -197,7 +198,7 @@ public class ApiPassWordController extends BaseController {
     public ModelAndView resetPassword(@RequestBody ThirdPartyTransPasswordRequestBean transPasswordRequestBean) {
        ModelAndView modelAndView = new ModelAndView();
         logger.info("第三方请求参数："+JSONObject.toJSONString(transPasswordRequestBean));
-        Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean, BankCallConstant.TXCODE_PASSWORD_RESET);
+        Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean, BankCallConstant.TXCODE_PASSWORD_RESET,BaseDefine.METHOD_SERVER_RESET_PASSWORD);
         if (null==map.get("flag")){
             return (ModelAndView) map.get("modelAndView");
         }

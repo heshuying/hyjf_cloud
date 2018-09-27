@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.resquest.admin.BailConfigRequest;
+import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
 import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
 
@@ -30,4 +31,11 @@ public interface HjhBailConfigCustomizeMapper {
      * @return
      */
     BailConfigInfoCustomizeVO selectHjhBailConfigInfo(Integer id);
+
+    /**
+     * 获取未配置保证金的资产来源
+     *
+     * @return
+     */
+    List<HjhInstConfig> hjhNoUsedInstConfigList();
 }

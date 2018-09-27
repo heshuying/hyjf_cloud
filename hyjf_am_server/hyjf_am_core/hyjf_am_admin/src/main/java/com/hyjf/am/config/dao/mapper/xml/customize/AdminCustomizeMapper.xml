@@ -86,4 +86,13 @@
 	    </if>
 	</select>
 
+	<select id="selectByUsername" parameterType="string" resultType="com.hyjf.am.config.dao.model.auto.Admin">
+		SELECT
+			*
+		FROM
+			ht_admin a
+		WHERE
+			username = #{username}
+	</select>
+
 </mapper>

@@ -462,4 +462,46 @@ public interface AmAdminClient {
      * @return
      */
     BooleanResponse unlock(LockedUserInfoVO vo, boolean isFront);
+
+    /**
+     * 前台用户锁定配置
+     * @return
+     */
+    LockedConfig.Config getFrontLockedCfg();
+
+    /**
+     * 后台用户锁定配置
+     * @return
+     */
+    LockedConfig.Config getAdminLockedCfg();
+
+    /**
+     * 保存前台用户锁定配置
+     * @param webConfig
+     * @return
+     */
+    BooleanResponse saveFrontConfig(LockedConfig.Config webConfig);
+
+
+    /**
+     * 保存后台用户锁定配置
+     * @param adminConfig
+     * @return
+     */
+    BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig);
+
+    /**
+     * 根据主键获取保证金配置
+     *
+     * @param id
+     * @return
+     */
+    BailConfigInfoCustomizeVO selectBailConfigById(Integer id);
+
+    /**
+     * 未配置保证金的机构编号
+     *
+     * @return
+     */
+    List<HjhInstConfigVO> selectNoUsedInstConfigList();
 }

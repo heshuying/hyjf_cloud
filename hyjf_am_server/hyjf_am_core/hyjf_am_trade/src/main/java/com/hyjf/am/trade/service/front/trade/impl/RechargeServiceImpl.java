@@ -163,7 +163,7 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 			BigDecimal txAmount = new BigDecimal(accountRechargeVO.getTxAmount());
 			String accountId = accountRechargeVO.getAccountId();
 			AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
-			accountRechargeExample.createCriteria().andNidEqualTo(orderId).andStatusEqualTo(accountRechargeVO.getStatus());
+			accountRechargeExample.createCriteria().andNidEqualTo(orderId);
 			AccountRecharge accountRecharge = new AccountRecharge();
 			BeanUtils.copyProperties(accountRechargeVO,accountRecharge);
 			int isAccountRechargeFlag = accountRechargeMapper.updateByExampleSelective(accountRecharge, accountRechargeExample);

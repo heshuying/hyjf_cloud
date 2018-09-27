@@ -154,4 +154,47 @@
         WHERE hhbc.del_flg = 0 and hhbc.id = #{id,jdbcType=INTEGER}
     </select>
 
+    <resultMap id="HjhInstConfigResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhInstConfig">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="inst_code" property="instCode" jdbcType="VARCHAR"/>
+        <result column="inst_name" property="instName" jdbcType="VARCHAR"/>
+        <result column="inst_type" property="instType" jdbcType="TINYINT"/>
+        <result column="capital_toplimit" property="capitalToplimit" jdbcType="DECIMAL"/>
+        <result column="commission_fee" property="commissionFee" jdbcType="DECIMAL"/>
+        <result column="repay_capital_type" property="repayCapitalType" jdbcType="TINYINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="INTEGER"/>
+        <result column="update_user" property="updateUser" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="INTEGER"/>
+        <result column="del_flag" property="delFlag" jdbcType="TINYINT"/>
+    </resultMap>
+    <select id="hjhNoUsedInstConfigList" resultMap="HjhInstConfigResultMap">
+        SELECT
+            hhic.id,
+            hhic.inst_code,
+            hhic.inst_name,
+            hhic.inst_type,
+            hhic.capital_toplimit,
+            hhic.commission_fee,
+            hhic.repay_capital_type,
+            hhic.remark,
+            hhic.create_user,
+            hhic.create_time,
+            hhic.update_user,
+            hhic.update_time,
+            hhic.del_flag
+        FROM
+            ht_hjh_inst_config hhic
+        WHERE
+            hhic.inst_code NOT IN (
+                SELECT
+                    hhbc.inst_code
+                FROM
+                    ht_hjh_bail_config hhbc
+                WHERE
+                    hhbc.del_flg = 0
+            )
+        AND hhic.del_flag = 0
+    </select>
 </mapper>
