@@ -1,5 +1,6 @@
 package com.hyjf.am.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class Response<T> {
 	private String message;
 	private T result;
 
-	private List<T> resultList;
+	private List<T> resultList = new ArrayList();
 
 	public Response() {
 		this.rtn = SUCCESS;
