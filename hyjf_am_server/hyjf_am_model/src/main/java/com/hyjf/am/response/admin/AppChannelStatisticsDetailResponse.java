@@ -13,15 +13,16 @@ import java.util.List;
  */
 
 public class AppChannelStatisticsDetailResponse extends Response<AppChannelStatisticsDetailVO> {
-    private int recordTotal;
+    private Long count;
     List<UtmPlatVO> appUtm;
     AdminUtmReadPermissionsVO adminUtmReadPermissions;
-    public int getRecordTotal() {
-        return recordTotal;
+
+    public Long getCount() {
+        return count;
     }
 
-    public void setRecordTotal(int recordTotal) {
-        this.recordTotal = recordTotal;
+    public void setCount(Long count) {
+        this.count = count;
     }
 
     public List<UtmPlatVO> getAppUtm() {

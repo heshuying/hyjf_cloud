@@ -21,11 +21,11 @@
 
 			<if test="timeStartSrch != null and timeStartSrch != ''">
 				<!-- 优化sql(字段类型转换) timestamp-->
-				AND b.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
+				AND unix_timestamp(b.create_time) >= unix_timestamp(CONCAT(#{timeStartSrch},' 00:00:00'))
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
 				<!-- 优化sql(字段类型转换) timestamp-->
-				AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+				AND unix_timestamp(b.create_time) <![CDATA[<=]]> unix_timestamp(CONCAT(#{timeEndSrch},' 23:59:59'))
 			</if>
 		</where>
 	</sql>
