@@ -1074,6 +1074,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             map.put(ProjectConstant.HJH_DATA_ACCEDE_ACCOUNT_TOTAL, CommonUtils.formatAmount(totalInvestAndInterestVO.getHjhTotalInvestAmount()));
             map.put(ProjectConstant.HJH_DATA_INTEREST_TOTAL, CommonUtils.formatAmount(totalInvestAndInterestVO.getHjhTotalInterestAmount()));
             map.put(ProjectConstant.HJH_DATA_ACCEDE_TIMES, totalInvestAndInterestVO.getHjhTotalInvestNum());
+        } else {
+            map.put(ProjectConstant.HJH_DATA_ACCEDE_ACCOUNT_TOTAL, "0");
+            map.put(ProjectConstant.HJH_DATA_INTEREST_TOTAL, "0");
+            map.put(ProjectConstant.HJH_DATA_ACCEDE_TIMES, "0");
         }
         WebResult webResult = new WebResult();
         webResult.setData(map);
