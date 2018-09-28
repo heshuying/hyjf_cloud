@@ -191,9 +191,6 @@ public class CustomizeMapper extends AutoMapper {
 	protected ApiProjectListCustomizeMapper apiProjectListCustomizeMapper;
 
 	@Autowired
-	protected HjhPlanRepayCustomizeMapper hjhPlanRepayCustomizeMapper;
-
-	@Autowired
 	protected NifaContractEssenceCustomizeMapper nifaContractEssenceCustomizeMapper;
 
 	@Autowired

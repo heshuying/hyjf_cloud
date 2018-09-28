@@ -208,10 +208,12 @@
 				AND plan.borrow_style = #{borrowStyleSrch}
 			</if>
  			<if test="addTimeStart != null and addTimeStart !='' ">
-				AND FROM_UNIXTIME( plan.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{addTimeStart}
+				<!-- sqlbug(类型不一致) -->
+				AND plan.add_time >= #{addTimeStart}
 			</if>
 			<if test="addTimeEnd != null and addTimeEnd !='' ">
-				AND FROM_UNIXTIME( plan.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{addTimeEnd}
+				<!-- sqlbug(类型不一致) -->
+				AND plan.add_time <![CDATA[<=]]> #{addTimeEnd}
 			</if>
 		</where>
 	</sql>
