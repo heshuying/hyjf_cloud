@@ -283,6 +283,12 @@ public class AmConfigClientImpl implements AmConfigClient {
         return response;
     }
     @Override
+    public IntegerResponse isExistsAdminUser(String userName){
+        IntegerResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/checkaction/"+userName, IntegerResponse.class);
+        return response;
+    }
+
+    @Override
     public AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean) {
         return restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/insert",
                 requestBean, AdminUtmReadPermissionsResponse.class);

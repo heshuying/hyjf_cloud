@@ -215,10 +215,7 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
     }
 
     public String getApprovalTime() {
-        if (approvalTime != null) {
-            return GetDate.times10toStrYYYYMMDD(Integer.parseInt(approvalTime));
-        }
-        return null;
+        return approvalTime;
     }
 
     public void setApprovalTime(String approvalTime) {
