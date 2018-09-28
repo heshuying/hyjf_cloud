@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.service.recharge.impl;
+package com.hyjf.cs.trade.service.recharge.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.HandleAccountRechargeRequest;
@@ -14,14 +14,15 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.bean.BaseResultBean;
-import com.hyjf.cs.user.bean.TrusteePayResultBean;
-import com.hyjf.cs.user.bean.UserDirectRechargeRequestBean;
-import com.hyjf.cs.user.bean.UserDirectRechargeResultBean;
-import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.ErrorCodeConstant;
-import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
-import com.hyjf.cs.user.service.recharge.DirectRechargeService;
+import com.hyjf.cs.trade.bean.BaseResultBean;
+import com.hyjf.cs.trade.bean.TrusteePayResultBean;
+import com.hyjf.cs.trade.bean.UserDirectRechargeRequestBean;
+import com.hyjf.cs.trade.bean.UserDirectRechargeResultBean;
+import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.recharge.DirectRechargeService;
+import com.hyjf.cs.trade.util.ErrorCodeConstant;
+import com.hyjf.cs.trade.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -45,7 +46,7 @@ import java.util.Map;
  * @version: DirectRechargeServiceImpl, v0.1 2018/8/28 19:29
  */
 @Service
-public class DirectRechargeServiceImpl extends BaseUserServiceImpl implements DirectRechargeService {
+public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements DirectRechargeService {
 
     @Autowired
     private SystemConfig systemConfig;
@@ -68,7 +69,7 @@ public class DirectRechargeServiceImpl extends BaseUserServiceImpl implements Di
                 return modelAndView;
             }
             // 加签字段     时间戳  电子帐户号   手机号  idno   cardNo  txamount   name
-            if (!this.verifyRequestSign(userRechargeRequestBean,"/server/user/directRechargePage/recharge")) {
+            if (!SignUtil.verifyRequestSign(userRechargeRequestBean,"/server/user/directRechargePage/recharge")) {
                 logger.info("----验签失败----");
                 getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002, "验签失败");
                 logger.info("验签失败[" + JSONObject.toJSONString(userRechargeRequestBean, true) + "]");
@@ -146,8 +147,8 @@ public class DirectRechargeServiceImpl extends BaseUserServiceImpl implements Di
             BankCallBean bean = new BankCallBean();
             bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
             bean.setTxCode(BankCallMethodConstant.TXCODE_DIRECT_RECHARGE_PAGE);// 交易代码
-            bean.setInstCode(systemConfig.bankInstcode);// 机构代码
-            bean.setBankCode(systemConfig.bankCode);// 银行代码
+            bean.setInstCode(systemConfig.getBankInstcode());// 机构代码
+            bean.setBankCode(systemConfig.getBankBankcode());// 银行代码
             bean.setTxDate(GetOrderIdUtils.getTxDate()); // 交易日期
             bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
             bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号
