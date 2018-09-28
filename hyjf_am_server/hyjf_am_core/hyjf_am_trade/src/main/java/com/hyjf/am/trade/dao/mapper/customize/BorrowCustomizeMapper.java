@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -58,6 +59,13 @@ public interface BorrowCustomizeMapper {
      * @return
      */
     List<BorrowWithBLOBs> selectAutoBorrowNidList();
+
+    /**
+     * 检索正在还款中的标的
+     *
+     * @return
+     */
+    List<BorrowAndInfoVO> selectBorrowRepayList();
 
     /**
      * @Author walter.limeng

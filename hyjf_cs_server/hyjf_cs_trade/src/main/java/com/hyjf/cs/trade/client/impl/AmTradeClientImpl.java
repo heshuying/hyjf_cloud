@@ -1637,7 +1637,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BorrowAndInfoVO> selectBorrowList() {
         BorrowResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/trade/selectRepayBorrowList/",
+                "http://AM-TRADE/am-trade/borrow/selectBorrowList/",
                 BorrowResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -1792,7 +1792,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<BorrowRepayPlanVO> selectBorrowRepayPlan(String borrowNid, Integer repaySmsReminder) {
 
         BorrowRepayPlanResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/borrowRepayPlan/selectBorrowRepayPlan/" + borrowNid + "/" + repaySmsReminder,
+                "http://AM-TRADE/am-trade/borrowRepayPlan/selectBorrowPlanRepayList/" + borrowNid + "/" + repaySmsReminder,
                 BorrowRepayPlanResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
