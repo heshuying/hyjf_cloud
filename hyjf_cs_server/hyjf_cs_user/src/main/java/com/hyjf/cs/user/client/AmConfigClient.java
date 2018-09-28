@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.client;
 
-import com.hyjf.am.response.config.MessagePushTemplateResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.*;
@@ -113,14 +112,6 @@ public interface AmConfigClient {
     BankConfigVO getBankConfigByCode(String code);
 
     /**
-     * 根据主键id查询银行配置
-     * @auth sunpeikai
-     * @param id 数据库表的主键id
-     * @return
-     */
-    BankConfigVO getBankConfigById(Integer id);
-
-    /**
      * 根据银行id查询江西银行配置
      * @auth sunpeikai
      * @param id 银行id
@@ -158,15 +149,6 @@ public interface AmConfigClient {
      * @return
      */
     Integer insertUserCorner(UserCornerVO userCornerVO);
-
-    /**
-     * 根据bankId查询BankRechargeConfig
-     * @auth sunpeikai
-     * @param bankId
-     * @return
-     */
-    BankRechargeConfigVo getBankRechargeConfigByBankId(Integer bankId);
-
 
     /**
      *查询平台的公告信息

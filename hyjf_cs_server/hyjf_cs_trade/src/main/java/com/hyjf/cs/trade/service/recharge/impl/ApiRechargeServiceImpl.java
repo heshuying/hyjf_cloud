@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.service.recharge.impl;
+package com.hyjf.cs.trade.service.recharge.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
@@ -16,12 +16,12 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.bean.ApiUserRechargeRequestBean;
-import com.hyjf.cs.user.bean.ApiUserRechargeResultBean;
-import com.hyjf.cs.user.bean.BaseDefine;
-import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
-import com.hyjf.cs.user.service.recharge.ApiRechargeService;
+import com.hyjf.cs.trade.bean.ApiUserRechargeRequestBean;
+import com.hyjf.cs.trade.bean.ApiUserRechargeResultBean;
+import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.recharge.ApiRechargeService;
+import com.hyjf.cs.trade.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
@@ -40,7 +40,7 @@ import java.util.List;
  * @version: ApiRechargeServiceImpl, v0.1 2018/8/28 10:40
  */
 @Service
-public class ApiRechargeServiceImpl extends BaseUserServiceImpl implements ApiRechargeService {
+public class ApiRechargeServiceImpl extends BaseTradeServiceImpl implements ApiRechargeService {
 
     @Autowired
     private SystemConfig systemConfig;
@@ -244,8 +244,8 @@ public class ApiRechargeServiceImpl extends BaseUserServiceImpl implements ApiRe
             BankCallBean bean = new BankCallBean();
             bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
             bean.setTxCode(BankCallMethodConstant.TXCODE_DIRECT_RECHARGE_ONLINE);// 交易代码
-            bean.setInstCode(systemConfig.bankInstcode);// 机构代码
-            bean.setBankCode(systemConfig.bankCode);// 银行代码
+            bean.setInstCode(systemConfig.getBankInstcode());// 机构代码
+            bean.setBankCode(systemConfig.getBankBankcode());// 银行代码
             bean.setTxDate(GetOrderIdUtils.getTxDate()); // 交易日期
             bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
             bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号
@@ -448,7 +448,7 @@ public class ApiRechargeServiceImpl extends BaseUserServiceImpl implements ApiRe
         // 机构编号
         CheckUtil.check(Validator.isNull(instCode),MsgEnum.ERR_OBJECT_REQUIRED,"机构编号");
         // 验签
-        CheckUtil.check(!this.verifyRequestSign(requestBean, BaseDefine.METHOD_SERVER_SEND_RECHARGE_SMS),MsgEnum.ERR_SIGN);
+        CheckUtil.check(!SignUtil.verifyRequestSign(requestBean, "/server/user/recharge/sendSms"),MsgEnum.ERR_SIGN);
         // 手机号合法性校验
         CheckUtil.check(!Validator.isMobile(mobile),MsgEnum.ERR_MOBILE_IS_NOT_REAL);
     }
@@ -494,7 +494,7 @@ public class ApiRechargeServiceImpl extends BaseUserServiceImpl implements ApiRe
         // 充值平台
         CheckUtil.check(Validator.isNull(platform),MsgEnum.ERR_OBJECT_REQUIRED,"充值平台");
         // 验签
-        CheckUtil.check(!this.verifyRequestSign(requestBean, BaseDefine.METHOD_SERVER_RECHARGE),MsgEnum.ERR_SIGN);
+        CheckUtil.check(!SignUtil.verifyRequestSign(requestBean, "/server/user/recharge/recharge"),MsgEnum.ERR_SIGN);
         // 手机号合法性校验
         CheckUtil.check(!Validator.isMobile(mobile),MsgEnum.STATUS_ZC000003);
         // 充值金额校验
@@ -514,8 +514,8 @@ public class ApiRechargeServiceImpl extends BaseUserServiceImpl implements ApiRe
         BankCallBean bean = new BankCallBean();
         bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
         bean.setTxCode(BankCallMethodConstant.TXCODE_SMSCODE_APPLY);// 交易代码cardBind
-        bean.setInstCode(systemConfig.bankInstcode);// 机构代码
-        bean.setBankCode(systemConfig.bankCode);// 银行代码
+        bean.setInstCode(systemConfig.getBankInstcode());// 机构代码
+        bean.setBankCode(systemConfig.getBankBankcode());// 银行代码
         bean.setTxDate(GetOrderIdUtils.getOrderDate());// 交易日期
         bean.setTxTime(GetOrderIdUtils.getOrderTime());// 交易时间
         bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位

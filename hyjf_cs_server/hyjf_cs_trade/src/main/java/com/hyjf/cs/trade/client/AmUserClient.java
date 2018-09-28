@@ -2,6 +2,8 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.user.BankCardRequest;
+import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -367,4 +369,12 @@ public interface AmUserClient {
 	int updateBankCard(BankCardVO bankCardVO);
 
 	BankCardVO getBankCardById(Integer bankId);
+
+    BankCardVO selectBankCardByUserIdAndCardNo(BankCardRequest request);
+
+	int updateUserCard(BankCardRequest bankCardRequest);
+
+	String selectBankSmsLog(BankSmsLogRequest bankSmsLogRequest);
+
+	boolean updateBankSmsLog(BankSmsLogRequest request);
 }
