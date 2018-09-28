@@ -117,6 +117,8 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         logger.info("userIds=====[{}]",userIds);
         List<UserVO> userVOList = amUserClient.findUserListByUserIds(userIds);
         for(AccountRechargeVO accountRechargeVO:accountRechargeVOList){
+            //txTime时间格式化
+            accountRechargeVO.setTxTimeStr(timeFormat(accountRechargeVO.getTxTime()));
             for(UserVO userVO:userVOList){
                 if(null != userVO && null != userVO.getUserId() && accountRechargeVO.getUserId().equals(userVO.getUserId())){
                     accountRechargeVO.setMobile(userVO.getMobile());
@@ -127,6 +129,26 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         }
         logger.info("accountRechargeVOList:[{}]",JSON.toJSONString(accountRechargeVOList));
         return accountRechargeVOList;
+    }
+
+    private String timeFormat(int time){
+        int s = time % 100;
+        time = time / 100;
+        int m = time % 100;
+        int h = time / 100;
+        String hStr = "" + h;
+        String mStr = "" + m;
+        String sStr = "" + s;
+        if(m<10){
+            mStr = "0" + m;
+        }
+        if(s<10){
+            sStr = "0" + s;
+        }
+        if(h<10){
+            hStr = "0" + h;
+        }
+        return hStr + ":" + mStr + ":" + sStr;
     }
 
     /**

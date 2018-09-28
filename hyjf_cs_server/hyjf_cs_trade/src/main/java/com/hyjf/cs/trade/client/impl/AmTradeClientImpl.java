@@ -2544,8 +2544,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowTenderCpnVO getCouponTenderInfo(String couponTenderNid) {
-        String url = "http://AM-TRADE/am-trade/batch/getCouponTenderInfo/"+couponTenderNid;
-        BorrowTenderCpnResponse response = restTemplate.getForEntity(url,BorrowTenderCpnResponse.class).getBody();
+        BorrowTenderCpnResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponperiodrepay/getcoupontenderinfo/" + couponTenderNid,BorrowTenderCpnResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

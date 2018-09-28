@@ -219,7 +219,14 @@ public class SmsHandle {
 		try {
 			// 获取模板信息
 			try {
-				SmsNoticeConfigVO smsNoticeConfig = amConfigClient.findSmsNoticeByCode(tplCode);
+				SmsNoticeConfigRequest request = new SmsNoticeConfigRequest();
+				// 只查询开启状态
+				request.setStatus(1);
+				request.setName(tplCode);
+				SmsNoticeConfigVO smsNoticeConfig = amConfigClient.findSmsNotice(request);
+				if (smsNoticeConfig == null) {
+					throw new RuntimeException("无可用通知配置模板");
+				}
 				String mobile = smsNoticeConfig.getValue();
 				String messageStr = smsNoticeConfig.getContent();
 				if (Validator.isNotNull(messageStr)) {

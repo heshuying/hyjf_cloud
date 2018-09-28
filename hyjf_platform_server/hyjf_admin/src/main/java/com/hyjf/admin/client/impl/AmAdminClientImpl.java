@@ -8,6 +8,7 @@ import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
@@ -148,6 +149,90 @@ public class AmAdminClientImpl implements AmAdminClient {
         String url = "http://AM-ADMIN/am-trade/bail_config/select_noused_inst_config_list";
         HjhInstConfigResponse response = restTemplate.getForEntity(url,HjhInstConfigResponse.class).getBody();
         if (HjhInstConfigResponse.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 添加保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public boolean insertBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/insert_bail_config";
+        BooleanResponse response = restTemplate.postForEntity(url, bailConfigAddRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 周期内发标已发额度
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public String selectSendedAccountByCyc(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_sended_account_by_cyc";
+        StringResponse response = restTemplate.postForEntity(url,bailConfigAddRequest,StringResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 根据该机构可用还款方式更新可用授信方式
+     *
+     * @param instCode
+     * @return
+     */
+    @Override
+    public boolean updateBailInfoDelFlg(String instCode) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/update_bail_info_delflg/" + instCode;
+        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 更新保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/update_bail_config";
+        BooleanResponse response = restTemplate.postForEntity(url, bailConfigAddRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 删除保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public boolean deleteBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/delete_bail_config";
+        BooleanResponse response = restTemplate.postForEntity(url, bailConfigAddRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 获取当前机构可用还款方式
+     *
+     * @param instCode
+     * @return
+     */
+    @Override
+    public List<String> selectRepayMethod(String instCode) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_repay_method/" + instCode;
+        Response response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
             return response.getResultList();
         }
         return null;
