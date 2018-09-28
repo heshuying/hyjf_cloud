@@ -48,6 +48,10 @@ public class AdminUtmReadPermissionsVO extends BaseVO implements Serializable {
      */
     private String utmIds;
     /*
+     * 渠道ids
+     */
+    private String names;
+    /*
      * 关键字
      */
     private String keyCode;
@@ -157,5 +161,13 @@ public class AdminUtmReadPermissionsVO extends BaseVO implements Serializable {
 
     public void setCreateTimeStr(String createTimeStr) {
         this.createTimeStr = createTimeStr;
+    }
+
+    public String getNames() {
+        return names;
+    }
+
+    public void setNames(String names) {
+        this.names = names;
     }
 }
