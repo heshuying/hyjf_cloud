@@ -4,9 +4,6 @@
 package com.hyjf.am.trade.service.front.account;
 
 
-import com.hyjf.am.resquest.admin.AccountRechargeRequest;
-import com.hyjf.am.trade.dao.model.customize.AccountRechargeCustomize;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -29,47 +26,4 @@ public interface AccountRecharge {
      * @return
      */
     List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> getAccountRechargeByUserId(Integer userId);
-
-    /**
-     * 资金中心 - 充值管理 - 获取充值列表条数
-     * @param request
-     * @return
-     * @Author : huanghui
-     */
-    Integer getAccountRechargeListCount(AccountRechargeRequest request);
-
-    /**
-     * 资金中心 - 充值管理 - 获取充值列表
-     * @param request
-     * @return
-     * @Author : huanghui
-     */
-    List<AccountRechargeCustomize> getAccountRechargeList(AccountRechargeRequest request);
-
-    /**
-     * 更新用户充值订单状态
-     * @param userId
-     * @param nid
-     * @return
-     * @Author : huanghui
-     */
-    boolean updateRechargeStatus(Integer userId, String nid);
-
-    /**
-     * 充值掉单后,更新用户的账户信息
-     * @param userId
-     * @param nid
-     * @return
-     * @Author : huanghui
-     */
-    boolean updateAccountAfterRecharge(Integer userId, String nid);
-
-    /**
-     * 充值失败后,更新用户订单状态
-     * @param userId
-     * @param nid
-     * @return
-     * @Author : huanghui
-     */
-    boolean updateAccountAfterRechargeFail(Integer userId, String nid);
 }

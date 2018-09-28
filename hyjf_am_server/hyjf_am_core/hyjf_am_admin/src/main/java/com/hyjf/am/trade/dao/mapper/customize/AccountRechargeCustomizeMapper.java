@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
+import com.hyjf.am.trade.dao.model.customize.RechargeManagementCustomize;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 
 /**
@@ -23,16 +24,16 @@ public interface AccountRechargeCustomizeMapper {
 
     /**
      * 资金中心 - 充值管理
-     * @param params
+     * @param request
      * @return
      * @Author : huanghui
      */
     Integer getAccountRechargeListCount(AccountRechargeRequest request);
     /**
      * 资金中心 - 充值管理
-     * @param params
+     * @param request
      * @return
      * @Author : huanghui
      */
-    List<AccountRechargeVO> getAccountRechargeList(AccountRechargeRequest request);
+    List<RechargeManagementCustomize> getAccountRechargeList(AccountRechargeRequest request);
 }
