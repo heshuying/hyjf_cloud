@@ -48,7 +48,7 @@ public class WebOperationReportController extends BaseController {
 		if("success".equals(response.get("success"))){
 			result.setData(response);
 		}else{
-            result.setStatus("1");
+            result.setStatus("000");
             result.setStatusDesc(response.get("error")==null?"失败":response.get("error").toString());
 			//beta环境没数据时发生404 初始化recordList
 			result.setData(response);

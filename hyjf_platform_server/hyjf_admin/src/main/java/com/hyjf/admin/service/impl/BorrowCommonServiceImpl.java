@@ -22,6 +22,7 @@ import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import java.util.List;
@@ -131,6 +132,11 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
 		
 		return amTradeClient.exportBorrowList(borrowCommonCustomize);
+	}
+
+	@Override
+	public UserVO getUserByUserName(String userName) {
+		return amUserClient.getUserByUserName(userName);
 	}
 
 }

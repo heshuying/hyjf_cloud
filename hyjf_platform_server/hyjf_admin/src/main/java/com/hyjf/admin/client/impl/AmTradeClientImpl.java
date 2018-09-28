@@ -496,7 +496,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @auth sunpeikai
      */
     @Override
-    public BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId) {
+    public BankMerchantAccountVO searchBankMerchantAccountByAccountId(String accountId) {
         String url = "http://AM-TRADE/am-trade/platformtransfer/searchbankmerchantaccount/" + accountId;
         BankMerchantAccountResponse response = restTemplate.getForEntity(url, BankMerchantAccountResponse.class).getBody();
         if (response != null) {
@@ -3567,7 +3567,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AccountRechargeCustomizeResponse queryRechargeList(AccountRechargeRequest request) {
-        AccountRechargeCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/getAccountRechargeList/", request, AccountRechargeCustomizeResponse.class).getBody();
+        AccountRechargeCustomizeResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/rechargemanagement/getAccountRechargeList/", request, AccountRechargeCustomizeResponse.class).getBody();
 
         if (response != null && Response.SUCCESS.equals(response.getRtn())){
             return response;
@@ -3584,7 +3584,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateRechargeStatus(Integer userId, String nid) {
-        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/modifyRechargeStatus/" + userId + "/" + nid, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-ADMIN/am-trade/rechargemanagement/modifyRechargeStatus/" + userId + "/" + nid, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 
@@ -3596,7 +3596,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
-        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/updateAccountAfterRecharge", request, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-trade/rechargemanagement/updateAccountAfterRecharge", request, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 
@@ -3608,7 +3608,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public UnderLineRechargeResponse selectUnderLineList(UnderLineRechargeRequestBean requestBean) {
-        UnderLineRechargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/underLineRecharge/selectUnderLineList/", requestBean, UnderLineRechargeResponse.class).getBody();
+        UnderLineRechargeResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/underLineRecharge/selectUnderLineList/", requestBean, UnderLineRechargeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())){
             return response;
         }
@@ -3623,7 +3623,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public UnderLineRechargeResponse insterUnderRechargeCode(UnderLineRechargeRequestBean requestBean) {
-        UnderLineRechargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/underLineRecharge/insterUnderRechargeCode/", requestBean, UnderLineRechargeResponse.class).getBody();
+        UnderLineRechargeResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/underLineRecharge/insterUnderRechargeCode/", requestBean, UnderLineRechargeResponse.class).getBody();
         if (response != null){
             return response;
         }
@@ -3638,8 +3638,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean getUnderLineRecharge(String code) {
-//        return restTemplate.getForEntity("http://AM-TRADE/am-trade/underLineRecharge/checkValidate/" + code, Boolean.class).getBody();
-        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-TRADE/am-trade/underLineRecharge/checkValidate/" + code, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-ADMIN/am-trade/underLineRecharge/checkValidate/" + code, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 
@@ -3651,8 +3650,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateUnderLineRecharge(UnderLineRechargeRequestBean requestBean) {
-//        return restTemplate.postForEntity("http://AM-TRADE/am-trade/underLineRecharge/updateUnderLineRecharge/", requestBean, boolean.class).getBody();
-        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-TRADE/am-trade/underLineRecharge/updateUnderLineRecharge/", requestBean, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-trade/underLineRecharge/updateUnderLineRecharge/", requestBean, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 
@@ -3664,8 +3662,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean deleteUnderLineRecharge(Integer id) {
-//        return restTemplate.getForEntity("http://AM-TRADE/am-trade/underLineRecharge/deleteUnderLineRecharge/" + id, Boolean.class).getBody();
-        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-TRADE/am-trade/underLineRecharge/deleteUnderLineRecharge/" + id, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-ADMIN/am-trade/underLineRecharge/deleteUnderLineRecharge/" + id, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 

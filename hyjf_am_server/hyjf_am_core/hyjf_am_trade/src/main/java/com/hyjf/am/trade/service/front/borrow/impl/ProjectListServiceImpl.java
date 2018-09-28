@@ -123,6 +123,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("capitalSort",request.getCapitalSort());
         // 进度排序
         params.put("inProgressSort",request.getInProgressSort());
+        params.put("creditStatus", "0");
         int count = webProjectListCustomizeMapper.countCreditList(params);
         return count;
     }
@@ -152,6 +153,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("inProgressSort",request.getInProgressSort());
         params.put("limitStart",request.getLimitStart());
         params.put("limitEnd", request.getLimitEnd());
+        params.put("creditStatus", "0");
         List<CreditListVO> list = webProjectListCustomizeMapper.searchCreditList(params);
         return list;
     }

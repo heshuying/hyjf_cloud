@@ -1,0 +1,77 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA.CLIENT.SERVICEURL}
+  instance:
+    preferIpAddress: true
+
+rocketMQ:
+  namesrvAddr: ${rocketMQ.namesrvAddr}
+
+mybatis:
+  mapper-locations: classpath:com/hyjf/am/user/dao/mapper/xml/**/*.xml
+
+#多数据源 1主2从
+datasource:
+ #从库数量
+  readSize: 2
+   # 使用druid数据源
+  type: com.alibaba.druid.pool.DruidDataSource
+#主库
+  write:
+    url: ${jdbc.write.url}
+    username: ${jdbc.write.username}
+    password: ${jdbc.write.password}
+    driverClassName: ${jdbc.write.driverClassName}
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQueryTimeout: 900000
+    validationQuery: SELECT SYSDATE() from dual
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+  read1:
+    url: ${jdbc.read1.url}
+    username: ${jdbc.read1.username}
+    password: ${jdbc.read1.password}
+    driverClassName: ${jdbc.read1.driverClassName}
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQueryTimeout: 900000
+    validationQuery: SELECT SYSDATE() from dual
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+  read2:
+    url: ${jdbc.read2.url}
+    username: ${jdbc.read2.username}
+    password: ${jdbc.read2.password}
+    driverClassName: ${jdbc.read2.driverClassName}
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQueryTimeout: 900000
+    validationQuery: SELECT SYSDATE() from dual
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20

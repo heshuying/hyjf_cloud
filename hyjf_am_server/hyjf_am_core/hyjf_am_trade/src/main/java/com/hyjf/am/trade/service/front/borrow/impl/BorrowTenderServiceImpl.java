@@ -31,7 +31,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     public Integer getCountBorrowTenderService(Integer userId, String borrowNid) {
         BorrowTenderExample example = new BorrowTenderExample();
         BorrowTenderExample.Criteria cri = example.createCriteria();
-        cri.andNidEqualTo(borrowNid);
+        cri.andBorrowNidEqualTo(borrowNid);
         cri.andUserIdEqualTo(userId);
         int count = borrowTenderMapper.countByExample(example);
         return count;

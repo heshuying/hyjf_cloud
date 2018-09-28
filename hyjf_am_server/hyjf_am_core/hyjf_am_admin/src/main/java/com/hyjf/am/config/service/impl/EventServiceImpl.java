@@ -34,8 +34,8 @@ public class EventServiceImpl implements EventService {
 		EventExample example = new EventExample();
 		EventExample.Criteria criteria = example.createCriteria();
 		if (request.getStartTime() != null && request.getEndTime() != null) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.getDayStartOfSomeDay(request.getStartTime()));
-			criteria.andCreateTimeLessThanOrEqualTo(GetDate.getDayEndOfSomeDay(request.getEndTime()));
+			criteria.andEventTimeGreaterThanOrEqualTo(GetDate.dateToString2(request.getStartTime()));
+			criteria.andEventTimeLessThanOrEqualTo(GetDate.dateToString2(request.getEndTime()));
 		}
 		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
 			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
