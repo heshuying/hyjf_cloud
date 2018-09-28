@@ -1020,4 +1020,25 @@ WHERE
 			</if>
 		</where>
 	</select>
+
+	<resultMap id="BorrowAndInfoVOMap" type="com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO">
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="repay_org_user_id" property="repayOrgUserId" jdbcType="VARCHAR" />
+		<result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectBorrowRepayList" resultMap="BorrowAndInfoVOMap">
+		SELECT
+			a.user_id,
+			a.borrow_nid,
+			b.repay_org_user_id,
+			a.borrow_style
+		FROM
+			ht_borrow a,
+			ht_borrow_info b
+		WHERE
+			a.id = b.id
+		AND a.`status` = 3
+		AND a.repay_full_status = 0
+	</select>
 </mapper>

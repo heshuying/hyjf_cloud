@@ -3,7 +3,7 @@ package com.hyjf.admin.controller.promotion.appReconcliation;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.promotion.AppChannelReconciliationService;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
-import com.hyjf.am.response.admin.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;

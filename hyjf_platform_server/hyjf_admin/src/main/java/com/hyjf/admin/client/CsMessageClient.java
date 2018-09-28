@@ -3,11 +3,10 @@
  */
 package com.hyjf.admin.client;
 
-import java.util.List;
-
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -19,6 +18,8 @@ import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
+
+import java.util.List;
 
 /**
  * @author zhangqingqing
