@@ -403,6 +403,7 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 				jsonObject.put("statusDesc","成功");
 				jsonObject.put("displayName",map);
 			} catch (Exception e) {
+				logger.error("协议查询异常：" + e);
 				jsonObject.put("status","99");
 				jsonObject.put("statusDesc","失败");
 			}
