@@ -1263,7 +1263,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         borrow.setCanTransactionWei(borrowInfoVO.getCanTransactionWei());
         borrow.setBorrowIncreaseMoney(borrowInfoVO.getBorrowIncreaseMoney());
         logger.info("散标投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
-        UserVO user = amUserClient.findUserById(request.getUser().getUserId());
+        UserVO user = amUserClient.findUserById(request.getUserId());
+        request.setUser(user);
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         // 检查用户状态  角色  授权状态等  是否允许投资
         checkUser(user, userInfo);
