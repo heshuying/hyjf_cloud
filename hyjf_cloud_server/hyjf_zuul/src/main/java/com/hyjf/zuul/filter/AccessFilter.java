@@ -438,9 +438,6 @@ public class AccessFilter extends ZuulFilter {
         } else {
             return executeResultOfTokenInvalid(ctx, isNecessary, WECHAT_CHANNEL);
         }
-        logger.debug(JSONObject.toJSONString(ctx.getZuulRequestHeaders()));
-        logger.debug(JSONObject.toJSONString(ctx.getRequest()));
-        logger.debug(JSONObject.toJSONString(ctx.getRequest()));
         return ctx;
     }
 
