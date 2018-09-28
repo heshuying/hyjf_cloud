@@ -2215,4 +2215,13 @@ public interface AmTradeClient {
      * @return
      */
     int countNewUserTotal(Integer userId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  微信获取我的优惠券列表
+     * @Date 15:27 2018/9/28
+     * @Param requestBean
+     * @return
+     */
+    List<MyCouponListCustomizeVO> selectWechatCouponList(MyCouponListRequest requestBean);
 }

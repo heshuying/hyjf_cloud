@@ -10,6 +10,17 @@ import java.io.Serializable;
  * @version BorrowRepaymentInfoRequsetBean, v0.1 2018/7/7 14:18
  */
 public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Serializable {
+
+    private String nid;
+    @ApiModelProperty(value = "借款编号（导出用）")
+    private String borrowNid;
+    /**
+     * 借款人 检索条件
+     */
+    @ApiModelProperty(value = "借款人")
+    private String borrowUserName;
+    @ApiModelProperty(value = "资产来源")
+    private String instCodeSrch;
     /**
      * 借款编号 检索条件
      */
@@ -20,73 +31,76 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
      */
     @ApiModelProperty(value = "计划编号")
     private String planNidSrch;
-    /**
-     * 借款标题 检索条件
-     */
-    @ApiModelProperty(value = "借款标题")
-    private String borrowNameSrch;
+
     /**
      * 用户名 检索条件
      */
     @ApiModelProperty(value = "用户名")
-    private String usernameSrch;
-    /**
-     * 推荐人 检索条件
-     */
-    @ApiModelProperty(value = "推荐人")
-    private String referrerNameSrch;
-    /**
-     * 还款方式 检索条件
-     */
-    @ApiModelProperty(value = "还款方式 ")
-    private String borrowStyleSrch;
-    /**
-     * 操作平台 检索条件
-     */
-    @ApiModelProperty(value = "操作平台 ")
-    private String clientSrch;
-    /**
-     * 渠道 检索条件
-     */
-    @ApiModelProperty(value = "渠道")
-    private String utmIdSrch;
-
+    private String recoverUserName;
     /**
      * 还款批次号 检索条件
      */
     @ApiModelProperty(value = "还款批次号")
     private String repayBatchNo;
     /**
-     * 投资时间 检索条件
+     * 还款状态 检索条件
      */
-    @ApiModelProperty(value = "投资时间开始")
+    @ApiModelProperty(value = "还款状态")
+    private String status;
+
+    /**
+     * 应还日期 检索条件
+     */
+    @ApiModelProperty(value = "应还日期开始")
     private String timeStartSrch;
     /**
      * 投资时间 检索条件
      */
-    @ApiModelProperty(value = "投资时间结束")
+    @ApiModelProperty(value = "应还日期结束")
     private String timeEndSrch;
 
     /**
-     * 还款日期 检索条件
+     * 实际还款时间 检索条件
      */
-    @ApiModelProperty(value = "还款日期开始")
+    @ApiModelProperty(value = "实际还款时间开始")
     private String yesTimeStartSrch;
     /**
-     * 还款日期 检索条件
+     * 实际还款时间 检索条件
      */
-    @ApiModelProperty(value = "还款日期结束")
+    @ApiModelProperty(value = "实际还款时间结束")
     private String yesTimeEndSrch;
-    @ApiModelProperty(value = "借款编号（导出用）")
-    private String borrowNid;
+
 
     /**
      * 列表来源标识 0：还款明细 1：批次还款-查看按钮
      */
     @ApiModelProperty(value = "列表来源标识 0：还款明细 1：批次还款-查看按钮")
     private  int serchFlag = 0;
-    @ApiModelProperty(value = "资产来源")
-    private String instCodeSrch;
+    private String accedeOrderIdSrch;
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
+    }
+
+    public String getBorrowUserName() {
+        return borrowUserName;
+    }
+
+    public void setBorrowUserName(String borrowUserName) {
+        this.borrowUserName = borrowUserName;
+    }
+
+    public String getInstCodeSrch() {
+        return instCodeSrch;
+    }
+
+    public void setInstCodeSrch(String instCodeSrch) {
+        this.instCodeSrch = instCodeSrch;
+    }
 
     public String getBorrowNidSrch() {
         return borrowNidSrch;
@@ -104,52 +118,12 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
         this.planNidSrch = planNidSrch;
     }
 
-    public String getBorrowNameSrch() {
-        return borrowNameSrch;
+    public String getRecoverUserName() {
+        return recoverUserName;
     }
 
-    public void setBorrowNameSrch(String borrowNameSrch) {
-        this.borrowNameSrch = borrowNameSrch;
-    }
-
-    public String getUsernameSrch() {
-        return usernameSrch;
-    }
-
-    public void setUsernameSrch(String usernameSrch) {
-        this.usernameSrch = usernameSrch;
-    }
-
-    public String getReferrerNameSrch() {
-        return referrerNameSrch;
-    }
-
-    public void setReferrerNameSrch(String referrerNameSrch) {
-        this.referrerNameSrch = referrerNameSrch;
-    }
-
-    public String getBorrowStyleSrch() {
-        return borrowStyleSrch;
-    }
-
-    public void setBorrowStyleSrch(String borrowStyleSrch) {
-        this.borrowStyleSrch = borrowStyleSrch;
-    }
-
-    public String getClientSrch() {
-        return clientSrch;
-    }
-
-    public void setClientSrch(String clientSrch) {
-        this.clientSrch = clientSrch;
-    }
-
-    public String getUtmIdSrch() {
-        return utmIdSrch;
-    }
-
-    public void setUtmIdSrch(String utmIdSrch) {
-        this.utmIdSrch = utmIdSrch;
+    public void setRecoverUserName(String recoverUserName) {
+        this.recoverUserName = recoverUserName;
     }
 
     public String getRepayBatchNo() {
@@ -158,6 +132,14 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
 
     public void setRepayBatchNo(String repayBatchNo) {
         this.repayBatchNo = repayBatchNo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getTimeStartSrch() {
@@ -200,19 +182,19 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
         this.serchFlag = serchFlag;
     }
 
-    public String getBorrowNid() {
-        return borrowNid;
+    public String getNid() {
+        return nid;
     }
 
-    public void setBorrowNid(String borrowNid) {
-        this.borrowNid = borrowNid;
+    public void setNid(String nid) {
+        this.nid = nid;
     }
 
-    public String getInstCodeSrch() {
-        return instCodeSrch;
+    public String getAccedeOrderIdSrch() {
+        return accedeOrderIdSrch;
     }
 
-    public void setInstCodeSrch(String instCodeSrch) {
-        this.instCodeSrch = instCodeSrch;
+    public void setAccedeOrderIdSrch(String accedeOrderIdSrch) {
+        this.accedeOrderIdSrch = accedeOrderIdSrch;
     }
 }
