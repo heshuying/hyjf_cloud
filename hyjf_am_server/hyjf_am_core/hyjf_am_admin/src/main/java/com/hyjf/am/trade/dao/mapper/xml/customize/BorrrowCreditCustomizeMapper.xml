@@ -135,7 +135,7 @@
         WHEN bc.client = 0 THEN  'pc'
         ELSE '其他' END  as client,
         bc.bid_nid,
-        u.username,
+        bc.credit_user_name  userName,
         FORMAT(bc.credit_capital, 2) AS credit_capital,
         FORMAT(bc.credit_capital, 2) AS credit_capital_price,
         CONCAT(credit_discount, '%') AS credit_discount,
@@ -161,12 +161,12 @@
         '0'
         END
         END AS credit_status,
-        bc.create_time  AS add_time,
+        date_format(bc.create_time, '%Y-%m-%d %H:%i:%s')  AS add_time,
         CASE WHEN b.repay_last_time != 0 AND b.repay_last_time IS NOT NULL THEN FROM_UNIXTIME( b.repay_last_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS repay_last_time
         FROM
         ht_borrow_credit bc
         INNER JOIN ht_borrow b ON bc.bid_nid = b.borrow_nid
-        LEFT JOIN ht_r_user u ON u.user_id = bc.credit_user_id
+        -- LEFT JOIN ht_r_user u ON u.user_id = bc.credit_user_id
         <include refid="Where_Clause" />
         ORDER BY
         bc.create_time DESC
@@ -239,7 +239,7 @@
             </if>
             <!-- 用户名 -->
             <if test="userName != null and userName != ''">
-                AND u.username LIKE CONCAT( #{userName}, '%')
+                AND bc.credit_user_name LIKE CONCAT( #{userName}, '%')
             </if>
             <!-- 承接人-->
             <if test="creditUsername != null and creditUsername != ''">
@@ -262,7 +262,7 @@
                 AND bc.credit_status = 2
             </if>
             <!-- 转让状态 -->
-            <if test="creditStatusSrch == '0'.toString()">
+            <if test="creditStatus == '0'.toString()">
                 AND ( bc.credit_status = 0 AND bc.create_time  <![CDATA[>=]]> UNIX_TIMESTAMP(NOW()) )
             </if>
             <!-- 时间 -->
