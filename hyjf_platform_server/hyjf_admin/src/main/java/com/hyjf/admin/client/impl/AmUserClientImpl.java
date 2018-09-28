@@ -119,7 +119,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO getUserByUserName(String loginUserName) {
 		UserResponse response = restTemplate
-				.getForEntity(userService + "/user/findByCondition/" + loginUserName, UserResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/user/findByCondition/" + loginUserName, UserResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -204,7 +204,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public UserInfoCustomizeVO getUserInfoCustomizeByUserName(String userName) {
-		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserName/" + userName;
+		String url = "http://AM-ADMIN/am-user/userInfo/queryUserInfoCustomizeByUserName/" + userName;
 		UserInfoCustomizeResponse response = restTemplate.getForEntity(url, UserInfoCustomizeResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();

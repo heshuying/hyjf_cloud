@@ -135,8 +135,8 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 	}
 
 	@Override
-	public UserInfoCustomizeVO getUserInfoCustomizeByUserUserName(String userName) {
-		return amUserClient.getUserInfoCustomizeByUserName(userName);
+	public UserVO getUserByUserName(String userName) {
+		return amUserClient.getUserByUserName(userName);
 	}
 
 }
