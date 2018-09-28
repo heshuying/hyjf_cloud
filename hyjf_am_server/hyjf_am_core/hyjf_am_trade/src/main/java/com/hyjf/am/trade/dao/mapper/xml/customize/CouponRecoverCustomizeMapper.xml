@@ -13,12 +13,12 @@
 		
 	<select id="selectCurrentCouponRecover" resultMap="currentCouponRecover" parameterType="java.util.Map">
 			SELECT
-				cr.id,
-				cr.recover_interest,
-				cr.recover_account,
-				cr.recover_capital,
-				cc.coupon_type,
-				cu.coupon_user_code
+				cr.id id,
+				cr.recover_interest recover_interest,
+				cr.recover_account recover_account,
+				cr.recover_capital recover_capital,
+				cc.coupon_type coupon_type,
+				cu.coupon_user_code coupon_user_code
 			FROM
 				ht_coupon_recover cr
 			INNER JOIN ht_coupon_tender ct ON cr.tender_id = ct.order_id
@@ -30,9 +30,9 @@
 			AND cr.recover_status = 0
 			AND cr.received_flg = 1
 			AND cr.del_flag = 0
-			AND ct.del_flg = 0
+			AND ct.del_flag = 0
 			AND cu.del_flag = 0
-			AND cc.del_flg = 0
+			AND cc.del_flag = 0
 	</select>
 	
 	<select id="selectCurrentCouponRecoverFailed" resultMap="currentCouponRecover" parameterType="java.util.Map">

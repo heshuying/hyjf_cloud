@@ -3,6 +3,7 @@ package com.hyjf.admin.client;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
+import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
@@ -462,4 +463,94 @@ public interface AmAdminClient {
      * @return
      */
     BooleanResponse unlock(LockedUserInfoVO vo, boolean isFront);
+
+    /**
+     * 前台用户锁定配置
+     * @return
+     */
+    LockedConfig.Config getFrontLockedCfg();
+
+    /**
+     * 后台用户锁定配置
+     * @return
+     */
+    LockedConfig.Config getAdminLockedCfg();
+
+    /**
+     * 保存前台用户锁定配置
+     * @param webConfig
+     * @return
+     */
+    BooleanResponse saveFrontConfig(LockedConfig.Config webConfig);
+
+
+    /**
+     * 保存后台用户锁定配置
+     * @param adminConfig
+     * @return
+     */
+    BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig);
+
+    /**
+     * 根据主键获取保证金配置
+     *
+     * @param id
+     * @return
+     */
+    BailConfigInfoCustomizeVO selectBailConfigById(Integer id);
+
+    /**
+     * 未配置保证金的机构编号
+     *
+     * @return
+     */
+    List<HjhInstConfigVO> selectNoUsedInstConfigList();
+
+    /**
+     * 添加保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    boolean insertBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 周期内发标已发额度
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    String selectSendedAccountByCyc(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 根据该机构可用还款方式更新可用授信方式
+     *
+     * @param instCode
+     * @return
+     */
+    boolean updateBailInfoDelFlg(String instCode);
+
+    /**
+     * 更新保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 删除保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    boolean deleteBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 获取当前机构可用还款方式
+     * 
+     * @param instCode
+     * @return
+     */
+    List<String> selectRepayMethod(String instCode);
 }

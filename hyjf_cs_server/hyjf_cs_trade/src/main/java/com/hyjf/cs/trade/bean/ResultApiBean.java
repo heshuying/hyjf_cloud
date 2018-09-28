@@ -14,7 +14,7 @@ package com.hyjf.cs.trade.bean;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.cs.common.util.ApiSignUtil;
 
 /**
  * API结果返回Bean

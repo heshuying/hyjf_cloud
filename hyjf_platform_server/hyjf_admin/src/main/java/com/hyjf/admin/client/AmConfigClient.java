@@ -1,6 +1,8 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.*;
+import com.hyjf.am.bean.admin.LockedConfig;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
@@ -40,6 +42,22 @@ public interface AmConfigClient {
      */
     AdminSystemVO getUserInfoById(Integer loginUserId);
 
+	/**
+	 * 债转配置初始化查询
+	 * @auth
+	 * @param
+	 * @return
+	 */
+	DebtConfigResponse getDebtConfig();
+
+
+	/**
+	 * 债转配置更新
+	 * @auth
+	 * @param
+	 * @return
+	 */
+	DebtConfigResponse updateDebtConfig(DebtConfigRequest request);
     /**
      * 获取数据字典表的下拉列表
      * @param nameClass
@@ -1421,6 +1439,5 @@ public interface AmConfigClient {
 	AdminUserResponse adminUserResetPwdAction(AdminRequest adminRequest);
 	
 	AdminUserResponse adminUsercCheckAction(AdminRequest adminRequest);
-
 
 }

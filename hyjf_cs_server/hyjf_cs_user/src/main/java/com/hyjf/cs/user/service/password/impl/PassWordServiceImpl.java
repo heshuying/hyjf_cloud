@@ -25,7 +25,6 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordResultBean;
@@ -691,7 +690,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     }
 
     @Override
-    public Map<String, Object> apiCheack(ThirdPartyTransPasswordRequestBean transPasswordRequestBean, String type) {
+    public Map<String, Object> apiCheack(ThirdPartyTransPasswordRequestBean transPasswordRequestBean, String type,String verifyValue) {
         Map<String,Object> result = new HashMap<>();
         ModelAndView modelAndView = new ModelAndView();
         String account = transPasswordRequestBean.getAccountId();
@@ -734,7 +733,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             return result;
         }
         //验签  暂时去掉验签
-        if(!this.verifyRequestSign(transPasswordRequestBean, BaseDefine.METHOD_SERVER_SET_PASSWORD)){
+        if(!this.verifyRequestSign(transPasswordRequestBean, verifyValue)){
             ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
             repwdResult.set("accountId", account);
             repwdResult.set("acqRes",acqRes);

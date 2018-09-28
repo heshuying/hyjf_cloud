@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.bean;
 
+import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
 import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
 
@@ -14,6 +15,8 @@ public class CreditResultBean implements Serializable
 	private TenderCreditCustomizeVO data;
 	private String mobile;
 	private ExpectCreditFeeVO calData;
+	//债转新配置表
+	private DebtConfigVO debtConfigVO;
 
 
 	public String getResultFlag() {
@@ -56,4 +59,11 @@ public class CreditResultBean implements Serializable
 		this.calData = calData;
 	}
 
+	public DebtConfigVO getDebtConfigVO() {
+		return debtConfigVO;
+	}
+
+	public void setDebtConfigVO(DebtConfigVO debtConfigVO) {
+		this.debtConfigVO = debtConfigVO;
+	}
 }

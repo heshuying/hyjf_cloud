@@ -4,10 +4,13 @@ import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
+import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
@@ -115,6 +118,121 @@ public class AmAdminClientImpl implements AmAdminClient {
         String url = "http://AM-ADMIN/am-trade/bail_config/select_bail_config_record_list";
         BailConfigCustomizeResponse response = restTemplate.postForEntity(url,request,BailConfigCustomizeResponse.class).getBody();
         if (BailConfigCustomizeResponse.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据主键获取保证金配置
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public BailConfigInfoCustomizeVO selectBailConfigById(Integer id) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_bail_config_by_id/" + id;
+        BailConfigInfoCustomizeResponse response = restTemplate.getForEntity(url,BailConfigInfoCustomizeResponse.class).getBody();
+        if (BailConfigInfoCustomizeResponse.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 未配置保证金的机构编号
+     *
+     * @return
+     */
+    @Override
+    public List<HjhInstConfigVO> selectNoUsedInstConfigList() {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_noused_inst_config_list";
+        HjhInstConfigResponse response = restTemplate.getForEntity(url,HjhInstConfigResponse.class).getBody();
+        if (HjhInstConfigResponse.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 添加保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public boolean insertBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/insert_bail_config";
+        BooleanResponse response = restTemplate.postForEntity(url, bailConfigAddRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 周期内发标已发额度
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public String selectSendedAccountByCyc(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_sended_account_by_cyc";
+        StringResponse response = restTemplate.postForEntity(url,bailConfigAddRequest,StringResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 根据该机构可用还款方式更新可用授信方式
+     *
+     * @param instCode
+     * @return
+     */
+    @Override
+    public boolean updateBailInfoDelFlg(String instCode) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/update_bail_info_delflg/" + instCode;
+        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 更新保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/update_bail_config";
+        BooleanResponse response = restTemplate.postForEntity(url, bailConfigAddRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 删除保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public boolean deleteBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/delete_bail_config";
+        BooleanResponse response = restTemplate.postForEntity(url, bailConfigAddRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 获取当前机构可用还款方式
+     *
+     * @param instCode
+     * @return
+     */
+    @Override
+    public List<String> selectRepayMethod(String instCode) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_repay_method/" + instCode;
+        Response response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
             return response.getResultList();
         }
         return null;
@@ -897,5 +1015,31 @@ public class AmAdminClientImpl implements AmAdminClient {
                         AppBannerResponse.class)
                 .getBody();
         return response;
+    }
+
+    @Override
+    public LockedConfig.Config getFrontLockedCfg() {
+
+        LockedConfigResponse response=restTemplate.getForObject("http://AM-ADMIN/am-admin/lockedconfig/webconfig",LockedConfigResponse.class);
+
+        return response.getResult();
+    }
+
+    @Override
+    public LockedConfig.Config getAdminLockedCfg() {
+
+        LockedConfigResponse response=restTemplate.getForObject("http://AM-ADMIN/am-admin/lockedconfig/adminconfig",LockedConfigResponse.class);
+
+        return response.getResult();
+    }
+
+    @Override
+    public BooleanResponse saveFrontConfig(LockedConfig.Config webConfig) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/lockedconfig/savewebconfig",webConfig,BooleanResponse.class);
+    }
+
+    @Override
+    public BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/lockedconfig/saveadminconfig",adminConfig,BooleanResponse.class);
     }
 }
