@@ -256,12 +256,14 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
                 resultBean = BankCallUtils.callApiBg(bean);
             } catch (Exception e) {
                 e.printStackTrace();
+                logger.info("调用银行出错,e:[{}]",e.getMessage());
                 result.put("status", "error");
                 result.put("result", "平台转账发生错误,请重新操作!");
                 return result;
             }
 
             if (resultBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                logger.info("调用银行未返回或者返回失败，银行返回码:[{}]",resultBean.getRetCode());
                 result.put("status", "error");
                 result.put("result", "平台转账发生错误,请重新操作!");
                 return result;
@@ -280,10 +282,12 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
                 result.put("status", "0");
                 result.put("result", "平台转账操作成功!");
             } else {
+                logger.info("调用银行成功后，插入数据表失败");
                 result.put("status", "error");
                 result.put("result", "平台转账发生错误,请重新操作!");
             }
         } else {
+            logger.info("密码错误");
             result.put("status", "error");
             result.put("result", "密码错误,请重新操作!");
         }
@@ -330,7 +334,6 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         } catch (Exception e) {
             e.printStackTrace();
         }
-        logger.info("getBankBalance::::::::balance======[{}]",balance);
         return balance;
     }
     /**
