@@ -50,4 +50,6 @@ public interface SmsNoticeConfigService {
      * @return
      */
     Integer onlyName(String name);
+
+    SmsNoticeConfig findNoticeByName(String name);
 }

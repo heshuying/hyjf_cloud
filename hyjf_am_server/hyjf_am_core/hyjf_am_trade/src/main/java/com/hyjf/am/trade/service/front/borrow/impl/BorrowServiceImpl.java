@@ -127,12 +127,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @return
      */
     @Override
-    public List<Borrow> selectBorrowList() {
-        BorrowExample example = new BorrowExample();
-        BorrowExample.Criteria cra = example.createCriteria();
-        cra.andStatusEqualTo(3);
-        cra.andRepayFullStatusEqualTo(0);
-        List<Borrow> list = this.borrowMapper.selectByExample(example);
+    public List<BorrowAndInfoVO> selectBorrowList() {
+        List<BorrowAndInfoVO> list = this.borrowCustomizeMapper.selectBorrowRepayList();
         if (list != null && list.size() > 0) {
             return list;
         }
