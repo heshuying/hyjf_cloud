@@ -115,6 +115,7 @@ public class ProjectListController extends BaseController {
     /**
      * @desc  查询web端债转列表count
      * @author zhangyk
+     * 原接口: com.hyjf.web.bank.web.user.credit.CreditController.searchWebCreditList()
      * @date 2018/6/19 15:12
      */
     @RequestMapping("/web/countCreditList")
