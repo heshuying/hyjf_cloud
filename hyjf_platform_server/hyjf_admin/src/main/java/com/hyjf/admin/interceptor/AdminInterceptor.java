@@ -18,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.ReturnMessageException;
 
 /**
  * @author DongZeShan
@@ -44,32 +46,34 @@ public class AdminInterceptor implements HandlerInterceptor {
 			username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
 			String val = RedisUtils.get("admin@" + username);
 			if (val != null && !val.equals(request.getHeader("Cookies"))) {
-//				request.getSession().removeAttribute("user");
+				request.getSession().removeAttribute("user");
 //				JSONObject res = new JSONObject();
 //				res.put("success", "99");
 //				res.put("msg", "未登录,登陆超时,其他地方已登陆");
 //				PrintWriter out = response.getWriter();
 //				out.append(res.toString());
-//				return false;
+				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+				//return false;
 			} else {
 				RedisUtils.set("admin@" + username, val, 3600);
 			}
 
 		} catch (NullPointerException e) {
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application/json; charset=utf-8");
-			try {
-				JSONObject res = new JSONObject();
-				res.put("success", "99");
-				res.put("msg", "未登录");
-				PrintWriter out = response.getWriter();
-				out.append(res.toString());
-				return false;
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				response.sendError(500);
-				return false;
-			}
+//			response.setCharacterEncoding("UTF-8");
+//			response.setContentType("application/json; charset=utf-8");
+//			try {
+//				JSONObject res = new JSONObject();
+//				res.put("success", "99");
+//				res.put("msg", "未登录");
+//				PrintWriter out = response.getWriter();
+//				out.append(res.toString());
+//				return false;
+				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+//			} catch (Exception ex) {
+//				ex.printStackTrace();
+//				response.sendError(500);
+//				return false;
+//			}
 
 		}
 
@@ -87,15 +91,17 @@ public class AdminInterceptor implements HandlerInterceptor {
 					return true;
 				}
 			}
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application/json; charset=utf-8");
-			JSONObject res = new JSONObject();
-			res.put("success", "99");
-			res.put("msg", "您没有权限使用此接口");
-			PrintWriter out = response.getWriter();
-			out.append(res.toString());
-			System.out.println("权限的key为:" + authorityAnnotation.key() + "权限的val:" + authorityAnnotation.value());
-			return false;
+//			response.setCharacterEncoding("UTF-8");
+//			response.setContentType("application/json; charset=utf-8");
+//			JSONObject res = new JSONObject();
+//			res.put("success", "99");
+//			res.put("msg", "您没有权限使用此接口");
+//			PrintWriter out = response.getWriter();
+//			out.append(res.toString());
+			
+			logger.info("权限的key为:" + authorityAnnotation.key() + "权限的val:" + authorityAnnotation.value());
+			throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
+	//		return false;
 
 		}
 
