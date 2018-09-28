@@ -1,10 +1,10 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.*;
+import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.BaseAdminService;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.common.service.BaseServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

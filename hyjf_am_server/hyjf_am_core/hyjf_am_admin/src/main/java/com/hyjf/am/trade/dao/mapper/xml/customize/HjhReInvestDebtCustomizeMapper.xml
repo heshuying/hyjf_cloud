@@ -18,19 +18,22 @@
         <result column="assign_type" property="assignType" jdbcType="VARCHAR" />
         <result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
         <result column="assign_period" property="assignPeriod" jdbcType="VARCHAR" />
-        <result column="create_time" property="assignOrderDate" jdbcType="VARCHAR" />
+        <!--<result column="create_time" property="assignOrderDate" jdbcType="VARCHAR" />-->
         <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
         <result column="assign_time" property="assignTime" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Where_Clause">
         <where>
-            ct.tender_type = 1
+            1=1
             <if test="planNid != null and planNid != ''">
                 AND hp.plan_nid = #{planNid }
             </if>
-            <if test="date != null and date != ''">
-                AND	FROM_UNIXTIME( ct.create_time, '%Y-%m-%d' ) = #{date }
+            <if test="date != null ">
+                AND  ct.create_time <![CDATA[ >= ]]> #{date}
+            </if>
+            <if test="datee != null">
+                AND  ct.create_time <![CDATA[ <= ]]> #{datee}
             </if>
             <if test="assignPlanOrderIdSrch != null and assignPlanOrderIdSrch != ''">
                 AND ct.assign_plan_order_id = #{assignPlanOrderIdSrch }
@@ -62,6 +65,18 @@
         </where>
     </sql>
 
+    <select id="queryReInvestDebtCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize">
+        SELECT
+        count(*) AS recordTotal
+        FROM
+        ht_hjh_debt_credit_tender ct
+        INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid	AND bc.credit_nid = ct.credit_nid
+        INNER JOIN ht_borrow b ON ct.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_hjh_plan hp ON hp.plan_nid = ct.assign_plan_nid
+        LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+        <include refid="Where_Clause" />
+    </select>
+
     <select id="queryReinvestDebtList" resultMap="HjhReInvestDebtMap" parameterType="com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize">
         SELECT
         hp.plan_nid,
@@ -86,6 +101,57 @@
         b.borrow_period
         END AS borrow_period,
         assign_period,
+        ct.create_time AS assign_time
+        FROM
+        ht_hjh_debt_credit_tender ct
+        INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid	AND bc.credit_nid = ct.credit_nid
+        INNER JOIN ht_borrow b ON ct.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_hjh_plan hp ON hp.plan_nid = ct.assign_plan_nid
+        LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+        <include refid="Where_Clause" />
+        ORDER BY
+        ct.create_time DESC
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="queryReInvestDebtTotal" resultType="com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize" parameterType="com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize">
+        SELECT
+        SUM(ct.assign_capital) as assignCapital,
+        SUM(ct.assign_interest_advance) as assignInterestAdvance,
+        SUM(ct.assign_pay) as assignPay
+        FROM
+        ht_hjh_debt_credit_tender ct
+        INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid	AND bc.credit_nid = ct.credit_nid
+        INNER JOIN ht_borrow b ON ct.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_hjh_plan hp ON hp.plan_nid = ct.assign_plan_nid
+        LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+        <include refid="Where_Clause" />
+    </select>
+
+    <select id="exportReInvestDebts" resultMap="HjhReInvestDebtMap" parameterType="com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize">
+        SELECT
+        hp.plan_nid,
+        ct.assign_plan_nid,
+        ct.assign_plan_order_id,
+        ct.user_name,
+        ct.credit_user_name,
+        ct.credit_nid,
+        ct.borrow_nid,
+        b.borrow_style,
+        ct.assign_capital,
+        ct.assign_interest_advance,
+        ct.assign_pay,
+        ct.assign_type,
+        CASE
+        WHEN b.borrow_style = 'endday'
+        OR b.borrow_style = 'end' THEN
+        1
+        ELSE
+        b.borrow_period
+        END AS borrow_period,
+        assign_period,
         FROM_UNIXTIME(
         ct.create_time,
         '%Y-%m-%d %H:%i:%s'
@@ -99,8 +165,5 @@
         <include refid="Where_Clause" />
         ORDER BY
         ct.create_time DESC
-        <if test="limitStart != null and limitEnd !=null" >
-            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
-        </if>
     </select>
 </mapper>

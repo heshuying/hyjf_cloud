@@ -22,7 +22,9 @@
         <result column="account_receive" 			property="accountReceive" 			jdbcType="VARCHAR" />
         <result column="liquidates_time" 			property="liquidatesTime" 			jdbcType="VARCHAR" />
         <result column="credit_status_name" 		property="creditStatusName" 		jdbcType="VARCHAR" />
+        <result column="credit_status" 		        property="creditStatus"  		    jdbcType="VARCHAR" />
         <result column="repay_status_name" 		    property="repayStatusName" 		    jdbcType="VARCHAR" />
+        <result column="repay_status" 		        property="repayStatus" 		        jdbcType="VARCHAR" />
         <result column="borrow_period" 				property="borrowPeriod" 			jdbcType="VARCHAR" />
         <result column="assign_period" 				property="assignPeriod" 			jdbcType="VARCHAR" />
         <result column="liquidates_period" 			property="liquidatesPeriod" 		jdbcType="VARCHAR" />
@@ -64,10 +66,6 @@
             <!-- 转让状态 -->
             <if test="creditStatus != null and creditStatus != ''">
                 AND dc.credit_status = #{creditStatus}
-            </if>
-            <!-- 还款状态-->
-            <if test="repayStatus != null and repayStatus != ''">
-                AND dc.repay_status = #{repayStatus}
             </if>
             <!-- 还款状态-->
             <if test="repayStatus != null and repayStatus != ''">
@@ -126,7 +124,7 @@
             </if>
             <!-- 用户名 -->
             <if test="userName != null and userName != ''">
-                AND dc.user_name LIKE CONCAT('%' , #{userName} , '%')
+                AND dc.user_name LIKE CONCAT( #{userName} , '%')
             </if>
             <!-- 还款方式 -->
             <if test="repayStyle != null and repayStyle != ''">
@@ -190,10 +188,10 @@
         INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
         INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
         LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
---         LEFT JOIN ht_param_name pa ON pa.name_cd = dc.credit_status
---         AND pa.name_class ='HJH_DEBT_CREDIT_STATUS'
---         LEFT JOIN ht_param_name par ON par.name_cd = dc.repay_status
---         AND par.name_class = 'HJH_DEBT_REPAY_STATUS'
+        --         LEFT JOIN ht_param_name pa ON pa.name_cd = dc.credit_status
+        --         AND pa.name_class ='HJH_DEBT_CREDIT_STATUS'
+        --         LEFT JOIN ht_param_name par ON par.name_cd = dc.repay_status
+        --         AND par.name_class = 'HJH_DEBT_REPAY_STATUS'
         <include refid="Where_Clause_New" />
     </select>
 
@@ -216,11 +214,19 @@
         dc.credit_capital_assigned AS assign_capital,
         dc.credit_interest_advance_assigned AS assign_advance_interest,
         dc.credit_income AS account_receive,
-        FROM_UNIXTIME(dc.create_time,'%Y-%m-%d %H:%i:%s') AS liquidates_time,
+        dc.create_time AS liquidates_time,
+        dc.repay_status,
+        dc.credit_status,
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
         dc.assign_period,
         dc.liquidates_period,
-        FROM_UNIXTIME(IF(dc.end_time=0, NULL, dc.end_time),'%Y-%m-%d %H:%i:%s') AS end_time,
+        IF(dc.end_time=0, NULL,  FROM_UNIXTIME(dc.end_time, '%Y-%m-%d %H:%i:%s')) AS end_time,
+        CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN FROM_UNIXTIME(dc.credit_repay_end_time,'%Y-%m-%d %H:%i:%s')  ELSE
+        FROM_UNIXTIME(dc.credit_repay_next_time,'%Y-%m-%d %H:%i:%s') END AS repay_next_time,
+        dc.label_name,
+        ( dc.liquidation_fair_value - dc.credit_capital_assigned - dc.credit_interest_advance_assigned ) as remain_credit,
+        --         pa.`name` AS credit_status_name,
+        --         par.`name` AS repay_status_name,
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN FROM_UNIXTIME(dc.credit_repay_end_time,'%Y-%m-%d %H:%i:%s')  ELSE
         FROM_UNIXTIME(dc.credit_repay_next_time,'%Y-%m-%d %H:%i:%s') END AS repay_next_time
         FROM
@@ -234,21 +240,5 @@
             LIMIT #{limitStart} , #{limitEnd}
         </if>
     </select>
-
-    <!--<select id="selectSumRecord" resultType="java.util.HashMap" parameterType="map">-->
-        <!--SELECT-->
-        <!--SUM(dc.credit_capital)  AS sumCreditCapital,-->
-        <!--SUM(dc.liquidation_fair_value) AS sumLiquidationFairValue,-->
-        <!--SUM(dc.credit_capital_assigned) AS sumAssignCapital,-->
-        <!--SUM(dc.credit_interest_advance_assigned) AS sumAssignAdvanceInterest-->
-        <!--FROM-->
-        <!--ht_hjh_debt_credit dc-->
-        <!--INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid-->
-        <!--<include refid="Where_Clause" />-->
-        <!--ORDER BY dc.create_time DESC-->
-        <!--<if  test="limitStart != null and limitEnd != null and limitStart >= 0">-->
-            <!--LIMIT #{limitStart} , #{limitEnd}-->
-        <!--</if>-->
-    <!--</select>-->
 
 </mapper>

@@ -2,6 +2,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.AdminUtmReadPermissionsService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
@@ -22,6 +23,13 @@ public class AdminUtmReadPermissionsServiceImpl implements AdminUtmReadPermissio
 		return  amConfigClient.getUtmPlatList();
 
 	}
+	@Override
+	public IntegerResponse isExistsAdminUser(String userName){
+		IntegerResponse response = amConfigClient.isExistsAdminUser(userName);
+		return response;
+
+	}
+
 	@Override
 	public AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean) {
 		return amConfigClient.insertAction(requestBean);

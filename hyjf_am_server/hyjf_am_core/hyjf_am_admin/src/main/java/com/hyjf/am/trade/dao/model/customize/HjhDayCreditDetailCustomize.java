@@ -128,6 +128,16 @@ public class HjhDayCreditDetailCustomize {
      */
     private String endTime;
 
+    /**
+     * 转让状态
+     */
+    private Integer creditStatus;
+
+    /**
+     * 债转还款状态
+     */
+    private Integer repayStatus;
+
     public String getId() {
         return id;
     }
@@ -326,5 +336,21 @@ public class HjhDayCreditDetailCustomize {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getCreditStatus() {
+        return creditStatus;
+    }
+
+    public void setCreditStatus(Integer creditStatus) {
+        this.creditStatus = creditStatus;
+    }
+
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
     }
 }
