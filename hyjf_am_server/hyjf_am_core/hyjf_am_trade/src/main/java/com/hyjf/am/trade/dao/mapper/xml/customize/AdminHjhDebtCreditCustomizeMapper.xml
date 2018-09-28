@@ -77,10 +77,12 @@
             </if>
             <!-- 清算时间 -->
             <if test="liquidatesTimeStart != null and liquidatesTimeStart != ''">
-                AND dc.create_time <![CDATA[>=]]> unix_timestamp(CONCAT(#{liquidatesTimeStart},' 00:00:00'))
+                <!-- sqlbug(比较类型不一致) -->
+                AND dc.create_time >= STR_TO_DATE(#{liquidatesTimeStart},'%Y-%m-%d %H:%i:%s')
             </if>
             <if test="liquidatesTimeEnd != null and liquidatesTimeEnd != ''">
-                AND dc.create_time <![CDATA[<=]]> unix_timestamp(CONCAT(#{liquidatesTimeEnd},' 23:59:59'))
+                <!-- sqlbug(比较类型不一致) -->
+                AND dc.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{liquidatesTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
             </if>
             <!-- 下期还款时间 -->
             <if test="repayNextTimeStart != null and repayNextTimeStart != ''">

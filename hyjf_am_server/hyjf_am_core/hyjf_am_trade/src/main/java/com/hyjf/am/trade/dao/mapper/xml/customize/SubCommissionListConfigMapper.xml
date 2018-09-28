@@ -49,7 +49,7 @@
             </if>
             <if test="recieveTimeEndSrch != null and recieveTimeEndSrch != ''">
                 <!-- 优化sql(字段类型转换) timestamp-->
-                AND c.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{recieveTimeEndSrch},'23:59:59'),'%Y-%m-%d %H:%i:%s')
+                AND c.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{recieveTimeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
             </if>
 
         </where>

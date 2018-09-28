@@ -89,6 +89,18 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
         }
         // 债转编号
         String creditNid = hjhDebtCredit.getCreditNid();
+
+
+        // 根据债转编号查询投资异常记录表里是否有数据
+        HjhPlanBorrowTmpExample hjhPlanBorrowTmpExample = new HjhPlanBorrowTmpExample();
+        HjhPlanBorrowTmpExample.Criteria hjhPlanBorrowTmpCra = hjhPlanBorrowTmpExample.createCriteria();
+        hjhPlanBorrowTmpCra.andBorrowNidEqualTo(creditNid);
+        List<HjhPlanBorrowTmp> hjhPlanBorrowTmpList = this.hjhPlanBorrowTmpMapper.selectByExample(hjhPlanBorrowTmpExample);
+        if (hjhPlanBorrowTmpList != null && hjhPlanBorrowTmpList.size() > 0) {
+            logger.info("转让记录投资存在异常,不予结束转让,转让编号:[" + creditNid + "].");
+            return;
+        }
+
         // 计划的开放额度减扣
         // 债权的公允价值
         BigDecimal liquidationFairValue = BigDecimal.ZERO;

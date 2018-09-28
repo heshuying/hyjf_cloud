@@ -267,10 +267,12 @@
             </if>
             <!-- 时间 -->
             <if test="timeStart != null and timeStart != ''">
-                AND bc.create_time <![CDATA[>=]]> concat(#{timeStart},' 00:00:00')
+                <!-- 优化sql(字段类型转换) timestamp-->
+                AND bc.create_time >= STR_TO_DATE(#{timeStart},'%Y-%m-%d %H:%i:%s')
             </if>
             <if test="timeEnd != null and timeEnd != ''">
-                AND bc.create_time <![CDATA[<=]]> concat(#{timeEnd},' 23:59:59')
+                <!-- 优化sql(字段类型转换) timestamp-->
+                AND bc.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
             </if>
         </where>
     </sql>
