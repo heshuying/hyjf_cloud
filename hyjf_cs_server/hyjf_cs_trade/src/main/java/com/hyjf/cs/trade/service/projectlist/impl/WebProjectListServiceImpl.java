@@ -40,16 +40,16 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
+import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
-import org.apache.rocketmq.client.producer.MQProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1106,6 +1106,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 throw new RuntimeException("web查询原子层计划专区计划列表数据异常");
             }
             result.put(ProjectConstant.WEB_PLAN_LIST, list);
+        } else {
+            result.put(ProjectConstant.WEB_PLAN_LIST, new ArrayList<HjhPlanCustomizeVO>());
         }
         webResult.setData(result);
         page.setTotal(count);
