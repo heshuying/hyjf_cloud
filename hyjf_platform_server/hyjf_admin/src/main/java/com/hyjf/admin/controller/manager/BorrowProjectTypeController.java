@@ -114,7 +114,7 @@ public class BorrowProjectTypeController extends BaseController {
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
         if(StringUtils.isBlank(adminRequest.getBorrowCd())){
             response.setRtn(Response.FAIL);
-            response.setMessage("borrowCd 不能为空");
+            response.setMessage("项目名称不能为空，请重试。");
             result.setData(response);
             result.setStatus(BaseResult.FAIL);
             result.setStatusDesc(BaseResult.FAIL_DESC);
@@ -124,7 +124,7 @@ public class BorrowProjectTypeController extends BaseController {
             int bo=Integer.valueOf(adminRequest.getBorrowCd());
             if(bo>127||bo<0){
                 response.setRtn(Response.FAIL);
-                response.setMessage("borrowCd要小于128");
+                response.setMessage("项目名称要小于128，请重试。");
                 result.setData(response);
                 result.setStatus(BaseResult.FAIL);
                 result.setStatusDesc(BaseResult.FAIL_DESC);
@@ -284,14 +284,14 @@ public class BorrowProjectTypeController extends BaseController {
     public AdminResult checkAction(@RequestBody BorrowProjectTypeRequest adminRequest) {
         String borrowCd =adminRequest.getBorrowCd();
         if(StringUtils.isBlank(borrowCd)){
-            return new AdminResult<String>("borrowCd不能为空!");
+            return new AdminResult<String>("项目名称不能为空，请重试。");
         }
         // 检查项目名称唯一性
         BorrowProjectTypeRequest form =new BorrowProjectTypeRequest();
         form.setBorrowCd(borrowCd);
         int cnt = this.borrowProjectTypeService.borrowCdIsExists(form);
         if (cnt > 0) {
-            return new AdminResult<String>("borrowCd项目编号重复了!");
+            return new AdminResult<String>("项目名称重复了，请重试。");
         }
         // 没有错误时,返回y
         return new AdminResult<String>("y");
@@ -307,49 +307,49 @@ public class BorrowProjectTypeController extends BaseController {
         String message="";
         // 项目类型
         if(StringUtils.isBlank(form.getBorrowCd())){
-            message="borrowCd 不能为空！";
+            message="项目类型不能为空,请重试。";
             return message;
         }
         // 项目编号
         if(StringUtils.isBlank(form.getBorrowClass())|| (StringUtils.isNotBlank(form.getBorrowClass())&&form.getBorrowClass().length()>20)){
-            message="borrowClass不为空，且最大长度小于20！";
+            message="项目编号不为空且最大长度小于20,请重试。";
             return message;
         }
         // 权限名字
         if(StringUtils.isBlank(form.getBorrowName())|| (StringUtils.isNotBlank(form.getBorrowName())&&form.getBorrowName().length()>20)){
-            message="borrowName不为空， 最大长度小于20！";
+            message="权限名字不为空且最大长度小于20,请重试。";
             return message;
         }
         // 用户类型
         if(StringUtils.isBlank(form.getInvestUserType())){
-            message="investUserType 不能为空！";
+            message="用户类型不能为空,请重试。";
             return message;
         }
         // 状态
         if(StringUtils.isBlank(form.getStatus())){
-            message="status 不能为空！";
+            message="状态不能为空,请重试。";
             return message;
         }
         // 还款方式
         if(StringUtils.isBlank(form.getMethodName())){
-            message="methodName 不能为空！";
+            message="还款方式不能为空,请重试。";
             return message;
         }
         // 投资最小范围
         if(StringUtils.isBlank(form.getInvestStart())|| (StringUtils.isNotBlank(form.getInvestStart())&&form.getInvestStart().length()>10)){
-            message="investStart不能为空且最大长度为10位！";
+            message="投资最小范围不能为空且最大长度为10位,请重试。";
             return message;
         }
         // 投资最大范围
         if(StringUtils.isBlank(form.getInvestEnd())|| (StringUtils.isNotBlank(form.getInvestEnd())&&form.getInvestEnd().length()>10)){
-            message="investEnd不能为空且最大长度为10位！";
+            message="投资最大范围不能为空且最大长度为10位,请重试。";
             return message;
         }
         if ("N".equals(form.getModifyFlag())) {
             // 检查唯一性
             int cnt = this.borrowProjectTypeService.borrowCdIsExists(form);
             if (cnt > 0) {
-                message="borrowCd重复了！";
+                message="项目类型重复了,请重试。";
             }
         }
         return message;
