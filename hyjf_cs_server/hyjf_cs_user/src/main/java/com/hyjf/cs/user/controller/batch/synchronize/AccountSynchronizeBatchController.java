@@ -20,7 +20,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/cs-user/batch")
 public class AccountSynchronizeBatchController {
     private static final Logger logger = LoggerFactory.getLogger(AccountSynchronizeBatchController.class);
-
     @Autowired
     AccountSynchronizeBatchService accountSynchronizeBatchService;
 
@@ -33,7 +32,7 @@ public class AccountSynchronizeBatchController {
     @RequestMapping("/mobileSynchronize")
     public void mobileSynchronize() {
         logger.info("手机号(每日)定时任务开始....");
-        accountSynchronizeBatchService.accountSynchronize();
+        accountSynchronizeBatchService.mobileSychronize();
     }
 
 }

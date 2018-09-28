@@ -837,9 +837,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return userInfo
 	 * */
 	@Override
-	public List<UserInfoVO> searchUserInfo() {
-		String url = "http://AM-USER/user_batch/portrait/search_user_info_list";
-		UserInfoResponse response = restTemplate.getForEntity(url, UserInfoResponse.class).getBody();
+	public List<UserLoginLogVO> searchUserIdForUserPortrait() {
+		String url = "http://AM-USER/user_batch/portrait/search_user_id_for_user_portrait";
+		UserLoginLogResponse response = restTemplate.getForEntity(url, UserLoginLogResponse.class).getBody();
 		if(response != null){
 			return response.getResultList();
 		}

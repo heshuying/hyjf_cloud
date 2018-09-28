@@ -339,4 +339,5 @@ public interface AmTradeClient {
      * @return
      */
     CouponConfigVO getCouponByCouponCode(String couponCode);
+
 }

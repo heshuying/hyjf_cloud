@@ -53,7 +53,7 @@
 			</if>
 			<if test="endDateSearch != null and endDateSearch != ''">
 				<!-- 优化sql(字段类型转换) -->
-				AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endDateSearch},'23:59:59'),'%Y-%m-%d %H:%i:%s')
+				AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endDateSearch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>

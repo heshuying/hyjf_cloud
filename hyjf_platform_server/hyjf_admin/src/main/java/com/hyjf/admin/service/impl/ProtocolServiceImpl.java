@@ -367,11 +367,11 @@ public class ProtocolServiceImpl implements ProtocolService {
                 errorMessage="上传的文件不能是空";
             }
             try {
-                String templetId = multipartRequest.getParameter("templetId");
-                // ======上传校验=======
-                if (templetId.isEmpty()){
-                    errorMessage="协议类型必须选择";
-                }
+//                String templetId = multipartRequest.getParameter("templetId");
+//                // ======上传校验=======
+//                if (templetId.isEmpty()){
+//                    errorMessage="协议类型必须选择";
+//                }
                 //从request中取得MultipartFile列表
                 List<MultipartFile> multipartFileList = getMultipartFileList(multipartRequest);
                 if (multipartFileList == null || multipartFileList.size() <= 0){

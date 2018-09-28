@@ -3,13 +3,11 @@
  */
 package com.hyjf.admin.beans.request;
 
-import java.util.Date;
-
+import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.hyjf.admin.beans.BaseRequest;
-
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Date;
 
 /**
  * @author fuqiang
@@ -38,19 +36,19 @@ public class ContentPartnerRequestBean extends BaseRequest {
 	@ApiModelProperty(value = "logo地址")
 	private String logo;
 
-	private String province;
+	private String province = "";
 
-	private String city;
+	private String city = "";
 
-	private String area;
+	private String area = "";
 
-	private String phone;
+	private String phone = "";
 
-	private String address;
+	private String address = "";
 
-	private String setupTime;
+	private String setupTime = "";
 
-	private String cooperationTime;
+	private String cooperationTime = "";
 	@ApiModelProperty(value = "logo1地址")
 	private String logo1;
 
