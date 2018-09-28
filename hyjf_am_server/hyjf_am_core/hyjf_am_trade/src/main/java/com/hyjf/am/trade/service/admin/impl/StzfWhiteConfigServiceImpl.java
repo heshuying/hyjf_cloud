@@ -26,11 +26,11 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	private StzhWhiteListMapper stzhWhiteListMapper;
 
 	@Override
-	public List<StzhWhiteList> selectSTZHWhiteList(STZHWhiteListRequest request) {
+	public List<StzhWhiteList> selectSTZHWhiteList(STZHWhiteListRequest request, int limitStart, int limitEnd) {
 		StzhWhiteListExample example = new StzhWhiteListExample();
-		if (request != null && request.getLimitStart() > 0 && request.getLimitEnd() > 0) {
-			example.setLimitStart(request.getLimitStart());
-			example.setLimitEnd(request.getLimitEnd());
+		if (limitStart != -1) {
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
 		}
 		return stzhWhiteListMapper.selectByExample(example);
 	}
@@ -63,4 +63,11 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 		StzhWhiteList pushMoney = stzhWhiteListMapper.selectByPrimaryKey(id);
 		return pushMoney;
     }
+
+	@Override
+	public int countSTZFHWhiteList(STZHWhiteListRequest request) {
+		StzhWhiteListExample example = new StzhWhiteListExample();
+		int count = stzhWhiteListMapper.countByExample(example);
+		return count;
+	}
 }

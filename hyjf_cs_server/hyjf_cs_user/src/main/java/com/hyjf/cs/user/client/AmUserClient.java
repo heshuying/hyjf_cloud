@@ -351,7 +351,7 @@ public interface AmUserClient {
 	/**
 	 * 获取需要更新用户画像的userInfo --用户画像定时任务用
 	 * */
-	List<UserInfoVO> searchUserInfo();
+	List<UserLoginLogVO> searchUserIdForUserPortrait();
 	/**
 	 * 保存用户画像信息 --用户画像定时任务用
 	 * */

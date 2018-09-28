@@ -80,10 +80,12 @@
                 </if>
             </if>
             <if test="addTimeStart != null and addTimeStart !='' ">
-                AND hyduab.create_time <![CDATA[>=]]> concat(#{addTimeStart,jdbcType=VARCHAR},' 00:00:00')
+                <!-- 优化sql(字段类型转换) timestamp-->
+                AND hyduab.create_time >= STR_TO_DATE(#{addTimeStart},'%Y-%m-%d %H:%i:%s')
             </if>
             <if test="addTimeEnd != null and addTimeEnd !='' ">
-                AND hyduab.create_time <![CDATA[<=]]> concat(#{addTimeEnd,jdbcType=VARCHAR},' 23:59:59')
+                <!-- 优化sql(字段类型转换) timestamp-->
+                AND hyduab.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{addTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
             </if>
         </where>
     </sql>

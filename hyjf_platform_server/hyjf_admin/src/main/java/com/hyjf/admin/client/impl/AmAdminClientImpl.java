@@ -3,6 +3,7 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
+import com.hyjf.admin.beans.response.BailConfigLogResponseBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.BooleanResponse;
@@ -1041,5 +1042,37 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig) {
         return restTemplate.postForObject("http://AM-ADMIN/am-admin/lockedconfig/saveadminconfig",adminConfig,BooleanResponse.class);
+    }
+
+    /**
+     * 获取保证金配置日志总数
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer selectBailConfigLogCount(BailConfigLogRequest request) {
+        String url = "http://AM-ADMIN/am-admin/bail_config_log/select_bail_config_log_count";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+    /**
+     * 获取保证金配置日志列表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<BailConfigLogCustomizeVO> selectBailConfigLogList(BailConfigLogRequest request) {
+        String url = "http://AM-ADMIN/am-admin/bail_config_log/select_bail_config_log_list";
+        BailConfigLogCustomizeResponse response = restTemplate.postForEntity(url,request,BailConfigLogCustomizeResponse.class).getBody();
+        if (BailConfigCustomizeResponse.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
     }
 }

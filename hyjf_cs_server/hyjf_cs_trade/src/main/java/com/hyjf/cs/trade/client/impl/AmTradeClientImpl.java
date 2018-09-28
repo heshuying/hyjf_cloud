@@ -1637,7 +1637,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BorrowAndInfoVO> selectBorrowList() {
         BorrowResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/trade/selectRepayBorrowList/",
+                "http://AM-TRADE/am-trade/borrow/selectBorrowList/",
                 BorrowResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -1792,7 +1792,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<BorrowRepayPlanVO> selectBorrowRepayPlan(String borrowNid, Integer repaySmsReminder) {
 
         BorrowRepayPlanResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/borrowRepayPlan/selectBorrowRepayPlan/" + borrowNid + "/" + repaySmsReminder,
+                "http://AM-TRADE/am-trade/borrowRepayPlan/selectBorrowPlanRepayList/" + borrowNid + "/" + repaySmsReminder,
                 BorrowRepayPlanResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -5292,6 +5292,32 @@ public class AmTradeClientImpl implements AmTradeClient {
         StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
         if(Response.isSuccess(response)){
             return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户投资数量
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public int countNewUserTotal(Integer userId) {
+        Integer result = restTemplate
+                .getForEntity(urlBase + "borrowTender/countNewUserTotal/" + userId,  Integer.class).getBody();
+        if (result != null) {
+            return result;
+        }
+        return 0;
+    }
+
+    @Override
+    public List<MyCouponListCustomizeVO> selectWechatCouponList(MyCouponListRequest requestBean) {
+        String url = urlBase + "coupon/wechatcouponlist";
+        MyCouponListResponse response = restTemplate.postForEntity(url, requestBean, MyCouponListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
         }
         return null;
     }

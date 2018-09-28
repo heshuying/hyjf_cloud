@@ -3,9 +3,6 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.resquest.admin.AccountRechargeRequest;
-import com.hyjf.am.trade.dao.model.customize.AccountRechargeCustomize;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,18 +18,4 @@ public interface AccountRechargeCustomizeMapper {
      */
     BigDecimal getRechargePrice(List<Integer> list);
 
-    /**
-     * 资金中心 - 充值管理
-     * @param request
-     * @return
-     * @Author : huanghui
-     */
-    Integer getAccountRechargeListCount(AccountRechargeRequest request);
-    /**
-     * 资金中心 - 充值管理
-     * @param request
-     * @return
-     * @Author : huanghui
-     */
-    List<AccountRechargeCustomize> getAccountRechargeList(AccountRechargeRequest request);
 }

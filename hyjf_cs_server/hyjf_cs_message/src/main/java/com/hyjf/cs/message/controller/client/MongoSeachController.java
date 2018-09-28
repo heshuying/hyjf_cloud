@@ -136,7 +136,7 @@ public class MongoSeachController extends BaseController {
             query.addCriteria(criteria);
             int currPage = request.getCurrPage();
             int pageSize = request.getPageSize();
-            int limitStart = currPage * pageSize;
+            int limitStart = (currPage-1) * pageSize;
             int limitEnd = limitStart + pageSize;
             query.skip(limitStart).limit(limitEnd);
             List<AppChannelStatisticsDetail> list = appChannelStatisticsDetailDao.find(query);

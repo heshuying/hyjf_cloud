@@ -10,14 +10,6 @@ import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
 public interface HjhReInvestDetailService {
 
     /**
-     * 列表总数 (废弃)
-     * @param data
-     * @param planNid
-     * @return
-     */
-    Integer countHjhReInvestDetailTotal(String data, String planNid);
-
-    /**
      * 列表
      * @param request
      * @return
