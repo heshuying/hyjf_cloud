@@ -58,17 +58,21 @@
 			</if>
 			<!-- 投资时间 -->
 			<if test="timeRecoverStartSrch != null and timeRecoverStartSrch != ''">
-				AND UNIX_TIMESTAMP(bt.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeRecoverStartSrch})
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND bt.create_time >= STR_TO_DATE(#{timeRecoverStartSrch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeRecoverEndSrch != null and timeRecoverEndSrch != ''">
-				AND UNIX_TIMESTAMP(bt.create_time) <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeRecoverEndSrch})+86399
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND bt.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeRecoverEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<!-- 放款时间 -->
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND UNIX_TIMESTAMP(br.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeStartSrch})
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND br.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeEndSrch})+86399
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND br.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<!--  计划编号 -->
 			<if test="planNidSrch != null and planNidSrch != ''">

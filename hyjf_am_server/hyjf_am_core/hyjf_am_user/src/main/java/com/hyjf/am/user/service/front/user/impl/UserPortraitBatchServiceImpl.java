@@ -32,7 +32,7 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
      * 查询需要更新用户画像的userInfo的list
      * */
     @Override
-    public List<UserInfo> searchUserInfoList() {
+    public List<UserLoginLog> searchUserIdForUserPortrait() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         String yesterday = GetDate.date_sdf.format(cal.getTime());
@@ -41,11 +41,11 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
         String yesterdayEnd = yesterday + " 23:59:59";
 
         // 从UserInfo中获得所有昨天登录过的userId
-        UserInfoExample example = new UserInfoExample();
-        UserInfoExample.Criteria criteria = example.createCriteria();
-        criteria.andUpdateTimeBetween(GetDate.stringToDate(yesterdayBegin), GetDate.stringToDate(yesterdayEnd));
-        List<UserInfo> userInfoList = userInfoMapper.selectByExample(example);
-        return userInfoList;
+        UserLoginLogExample example = new UserLoginLogExample();
+        UserLoginLogExample.Criteria criteria = example.createCriteria();
+        criteria.andLoginTimeBetween(GetDate.stringToDate(yesterdayBegin), GetDate.stringToDate(yesterdayEnd));
+        List<UserLoginLog> userLoginLogList = userLoginLogMapper.selectByExample(example);
+        return userLoginLogList;
     }
     /**
      * 保存用户画像
@@ -200,7 +200,9 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
      * 更新用户画像
      * */
     private int updateInformation(UserPortrait userPortrait) {
-        int count = userPortraitMapper.updateByPrimaryKeySelective(userPortrait);
+        UserPortraitExample example = new UserPortraitExample();
+        example.createCriteria().andUserIdEqualTo(userPortrait.getUserId());
+        int count = userPortraitMapper.updateByExampleSelective(userPortrait,example);
         return count;
     }
     /**

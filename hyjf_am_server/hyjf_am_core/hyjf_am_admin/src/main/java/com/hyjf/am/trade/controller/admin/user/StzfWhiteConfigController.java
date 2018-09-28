@@ -109,7 +109,7 @@ public class StzfWhiteConfigController extends BaseController {
 		if (stzhWhiteList != null) {
 			STZHWhiteListVO stzhWhiteListVO = new STZHWhiteListVO();
 			BeanUtils.copyProperties(stzhWhiteList,stzhWhiteListVO);
-			stzhWhiteListVO.setApprovalTime(GetDate.times10toStrYYYYMMDD(Integer.parseInt(stzhWhiteList.getApprovalTime())));
+//			stzhWhiteListVO.setApprovalTime(GetDate.times10toStrYYYYMMDD(Integer.parseInt(stzhWhiteList.getApprovalTime())));
 			response.setResult(stzhWhiteListVO);
 		}
 		return response;

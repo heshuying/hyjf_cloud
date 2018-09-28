@@ -5,6 +5,7 @@ package com.hyjf.am.user.service.front.user;
 
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UserLoginLog;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface UserPortraitBatchService {
     /**
      * 查询需要更新用户画像的userInfo的list
      * */
-    List<UserInfo> searchUserInfoList();
+    List<UserLoginLog> searchUserIdForUserPortrait();
     /**
      * 保存用户画像
      * */

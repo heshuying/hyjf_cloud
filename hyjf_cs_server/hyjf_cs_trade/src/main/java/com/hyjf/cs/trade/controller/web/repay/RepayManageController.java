@@ -52,10 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 还款管理相关页面接口
@@ -153,6 +150,8 @@ public class RepayManageController extends BaseTradeController {
     @PostMapping(value = "/repay_wait_list", produces = "application/json; charset=utf-8")
     public WebResult<List<RepayListCustomizeVO>> selectRepayWaitList(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
         WebResult<List<RepayListCustomizeVO>> result = new WebResult<>();
+        result.setData(Collections.emptyList());
+
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
         logger.info("用户待还款列表开始，userId:{}", userVO.getUserId());
 
@@ -190,6 +189,8 @@ public class RepayManageController extends BaseTradeController {
     @PostMapping(value = "/repayed_list", produces = "application/json; charset=utf-8")
     public WebResult<List<RepayListCustomizeVO>> selectRepayedList(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
         WebResult<List<RepayListCustomizeVO>> result = new WebResult<List<RepayListCustomizeVO>>();
+        result.setData(Collections.emptyList());
+
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
         logger.info("用户已还款列表开始，userId:{}", userVO.getUserId());
 
@@ -347,6 +348,7 @@ public class RepayManageController extends BaseTradeController {
             logger.error("获取还款详情页面数据异常", e);
             result.setStatus(WebResult.ERROR);
             result.setStatusDesc(WebResult.ERROR_DESC);
+            result.setData(Collections.emptyMap());
             return result;
         }
 
