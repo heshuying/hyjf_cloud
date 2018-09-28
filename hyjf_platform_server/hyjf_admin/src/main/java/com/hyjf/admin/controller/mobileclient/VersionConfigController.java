@@ -1,7 +1,6 @@
 package com.hyjf.admin.controller.mobileclient;
 
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.mobileclient.VersionConfigService;
 import com.hyjf.am.response.Response;
@@ -36,18 +35,12 @@ public class VersionConfigController extends BaseController {
     @ApiOperation(value = "版本管理:列表查询", notes = "版本管理:列表查询")
     @PostMapping(value = "/search")
     @ResponseBody
-    public AdminResult<ListResult<VersionVO>> search(@RequestBody VersionConfigBeanRequest request) {
-        try{
-            VersionConfigBeanResponse recordList = versionConfigService.getRecordList(request);
-            if (!Response.isSuccess(recordList)) {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
-            return new AdminResult<ListResult<VersionVO>>(ListResult.build(recordList.getResultList(), recordList.getRecordTotal()));
-        }
-        catch(Exception e){
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+    public VersionConfigBeanResponse search(@RequestBody VersionConfigBeanRequest request) {
+         VersionConfigBeanResponse recordList = versionConfigService.getRecordList(request);
+         return recordList;
     }
+
+
 
     /**
      * 详情查询

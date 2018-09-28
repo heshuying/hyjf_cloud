@@ -49,11 +49,8 @@ public class AppVersionController {
             List<VersionVO> versionVOS = CommonUtils.convertBeanList(recordList, VersionVO.class);
             response.setResultList(versionVOS);
             response.setRecordTotal(count);
-
-            Map<String, String> versionName = CacheUtil.getParamNameMap("VERSION_NAME");
-            Map<String, String> isUpdate = CacheUtil.getParamNameMap("IS_UPDATE");
-            response.setIsUpdate(isUpdate);
-            response.setIsUpdate(versionName);
+            Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+            response.setClient(client);
         }
         return response;
     }
@@ -77,7 +74,6 @@ public class AppVersionController {
             VersionVO versionVO = CommonUtils.convertBean(record, VersionVO.class);
             response.setResult(versionVO);
         }
-
         Map<String, String> versionName = CacheUtil.getParamNameMap("VERSION_NAME");
         Map<String, String> isUpdate = CacheUtil.getParamNameMap("IS_UPDATE");
         response.setIsUpdate(isUpdate);

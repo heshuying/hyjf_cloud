@@ -1,10 +1,8 @@
 package com.hyjf.am.response.config;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.config.AppBorrowImageVO;
 import com.hyjf.am.vo.config.VersionVO;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -23,6 +21,7 @@ public class VersionConfigBeanResponse extends Response<VersionVO> {
 
     private Map<String, String>  versionName;
     private Map<String, String> isUpdate;
+    private Map<String, String> client;
 
     public Map<String, String> getVersionName() {
         return versionName;
@@ -38,5 +37,13 @@ public class VersionConfigBeanResponse extends Response<VersionVO> {
 
     public void setIsUpdate(Map<String, String> isUpdate) {
         this.isUpdate = isUpdate;
+    }
+
+    public Map<String, String> getClient() {
+        return client;
+    }
+
+    public void setClient(Map<String, String> client) {
+        this.client = client;
     }
 }
