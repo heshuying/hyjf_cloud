@@ -72,4 +72,28 @@ public interface BailConfigService extends BaseService {
      * @return
      */
     Boolean insertBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 更新保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    Boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 删除保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    Boolean deleteBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 获取当前机构可用还款方式
+     *
+     * @param instCode
+     * @return
+     */
+    List<String> selectRepayMethod(String instCode);
 }

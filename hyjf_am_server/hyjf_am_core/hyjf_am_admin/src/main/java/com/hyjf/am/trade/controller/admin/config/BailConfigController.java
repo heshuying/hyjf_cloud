@@ -73,6 +73,7 @@ public class BailConfigController extends BaseController {
         if (null != bailConfigCustomizeVOList && bailConfigCustomizeVOList.size() > 0) {
             List<BailConfigCustomizeVO> bankAccountManageCustomizeVOS = CommonUtils.convertBeanList(bailConfigCustomizeVOList, BailConfigCustomizeVO.class);
             response.setResultList(bankAccountManageCustomizeVOS);
+            response.setRtn(Response.SUCCESS);
         }
         return response;
     }
@@ -119,6 +120,7 @@ public class BailConfigController extends BaseController {
         StringResponse result = new StringResponse();
         String msg = bailConfigService.selectSendedAccountByCyc(bailConfigAddRequest);
         result.setResultStr(msg);
+        result.setRtn(Response.SUCCESS);
         return result;
     }
 
@@ -148,4 +150,42 @@ public class BailConfigController extends BaseController {
         return response;
     }
 
+    /**
+     * @Author: liushouyi
+     * @Desc 更新保证金配置
+     */
+    @ApiOperation(value = "更新保证金配置")
+    @PostMapping("/update_bail_config")
+    public BooleanResponse updateBailConfig(@RequestBody BailConfigAddRequest bailConfigAddRequest){
+        BooleanResponse response = new BooleanResponse();
+        response.setResultBoolean(bailConfigService.updateBailConfig(bailConfigAddRequest));
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+    /**
+     * @Author: liushouyi
+     * @Desc 删除保证金配置
+     */
+    @ApiOperation(value = "删除保证金配置")
+    @PostMapping("/delete_bail_config")
+    public BooleanResponse deleteBailConfig(@RequestBody BailConfigAddRequest bailConfigAddRequest){
+        BooleanResponse response = new BooleanResponse();
+        response.setResultBoolean(bailConfigService.deleteBailConfig(bailConfigAddRequest));
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+    /**
+     * @Author: liushouyi
+     * @Desc 获取当前机构可用还款方式
+     */
+    @ApiOperation(value = "获取当前机构可用还款方式")
+    @GetMapping("/select_repay_method/{instCode}")
+    public Response selectRepayMethod(@PathVariable String instCode){
+        Response response = new Response();
+        response.setResultList(bailConfigService.selectRepayMethod(instCode));
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
 }

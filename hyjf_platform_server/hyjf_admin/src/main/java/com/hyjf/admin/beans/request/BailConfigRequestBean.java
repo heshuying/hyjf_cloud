@@ -13,6 +13,9 @@ import java.math.BigDecimal;
  */
 public class BailConfigRequestBean {
 
+    @ApiModelProperty(value = "主键id")
+    private Integer id;
+
     @ApiModelProperty(value = "机构编号")
     private String instCode;
 
@@ -544,5 +547,13 @@ public class BailConfigRequestBean {
 
     public void setEndmonthsDEL(Integer endmonthsDEL) {
         this.endmonthsDEL = endmonthsDEL;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

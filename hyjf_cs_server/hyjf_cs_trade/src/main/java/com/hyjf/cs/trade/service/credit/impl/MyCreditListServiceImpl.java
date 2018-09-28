@@ -49,6 +49,7 @@ import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -414,12 +415,13 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 验证折让率
         //新增配置表校验add tanyy2018-9-27
         DebtConfigVO config = amConfigClient.getDebtConfig().getResult();
-        if (org.apache.commons.lang.StringUtils.isEmpty(request.getCreditDiscount())||config!=null) {
+        if (org.apache.commons.lang.StringUtils.isEmpty(request.getCreditDiscount())||config==null) {
             // 折让率不能为空
             throw  new CheckException(MsgEnum.ERROR_CREDIT_CREDIT_DISCOUNT_NULL);
         } else {
             float creditDiscount = Float.parseFloat(request.getCreditDiscount());
-            if (creditDiscount > config.getConcessionRateUp().floatValue() || creditDiscount < config.getConcessionRateDown().floatValue()) {
+            DebtConfigVO debtConfig = config;
+            if (creditDiscount > debtConfig.getConcessionRateUp().floatValue() || creditDiscount < debtConfig.getConcessionRateDown().floatValue()) {
                 // 折让率范围错误
                 throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);
             }
@@ -481,7 +483,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 生成creditNid
         // 获取当前时间的日期
         String nowDate = (GetDate.yyyyMMdd.format(new Date()) != null && !"".equals(GetDate.yyyyMMdd.format(new Date()))) ? GetDate.yyyyMMdd.format(new Date()) : "0";
-        Integer creditedNum = amTradeClient.tenderAbleToCredit(userId);
+        Integer creditedNum = amTradeClient.tenderAbleToCredit(0);
         Integer creditNumToday = (creditedNum == null ? 0 : creditedNum);
         String creditNid = nowDate.substring(2) + String.format("%04d", (creditNumToday + 1));
         // 获取待债转数据

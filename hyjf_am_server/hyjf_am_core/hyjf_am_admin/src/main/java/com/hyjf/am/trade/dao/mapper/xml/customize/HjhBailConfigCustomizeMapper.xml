@@ -231,4 +231,19 @@
         WHERE
             hhab.inst_code = #{instCode}
     </select>
+
+    <select id="selectAccountByCyc" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT
+            sum(hb.account)
+        FROM
+            ht_borrow hb
+        INNER JOIN ht_hjh_plan_asset hhpa ON hhpa.borrow_nid = hb.borrow_nid
+        AND hhpa.inst_code = #{instCode}
+        WHERE
+            hhpa.`status` IN (11, 12, 3, 4, 5, 7, 9)
+        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timeStart},'00:00:00'
+        ),'%Y-%m-%d %H:%i:%s')
+        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEnd},'23:59:59'
+        ),'%Y-%m-%d %H:%i:%s')
+    </select>
 </mapper>

@@ -1439,7 +1439,6 @@
         </table>
 
         <table tableName="ht_transfer_exception_log" domainObjectName="TransferExceptionLog">
-            <generatedKey column="uuid" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />

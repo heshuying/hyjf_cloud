@@ -529,4 +529,28 @@ public interface AmAdminClient {
      * @return
      */
     boolean updateBailInfoDelFlg(String instCode);
+
+    /**
+     * 更新保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 删除保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    boolean deleteBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 获取当前机构可用还款方式
+     * 
+     * @param instCode
+     * @return
+     */
+    List<String> selectRepayMethod(String instCode);
 }
