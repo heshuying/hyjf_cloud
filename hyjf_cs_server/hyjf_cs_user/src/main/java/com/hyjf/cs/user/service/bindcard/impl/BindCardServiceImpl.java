@@ -479,7 +479,6 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		}
 		
 		// 插入操作记录表
-		LogAcqResBean logAcq = bean.getLogAcqResBean();
 		String bankId = amConfigClient.queryBankIdByCardNo(cardNo);
 		if(bankId == null) {
 			bankId = "0";
@@ -504,10 +503,10 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			throw new CheckException(MsgEnum.ERR_CARD_SAVE);
 		}
 		BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), cardNo);
-        if (retCard != null) {
+        if (retCard != null && StringUtils.isNotBlank(bean.getMobile())) {
             BankCardRequest bankCard=new BankCardRequest();
             bankCard.setId(retCard.getId());
-            bankCard.setMobile(logAcq.getMobile());
+            bankCard.setMobile(bean.getMobile());
             amUserClient.updateUserCard(bankCard);
         }
 		

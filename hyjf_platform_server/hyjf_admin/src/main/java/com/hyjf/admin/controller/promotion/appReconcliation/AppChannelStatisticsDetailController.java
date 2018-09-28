@@ -4,7 +4,6 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.promotion.AppChannelReconciliationService;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
-
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
@@ -48,7 +47,6 @@ public class AppChannelStatisticsDetailController extends BaseController {
     public AppChannelStatisticsDetailResponse init(@RequestBody AppChannelStatisticsDetailRequest appChannelStatisticsDetailRequest,HttpServletRequest request){
         AdminSystemVO user = getUser(request);
         Integer userId = Integer.valueOf(user.getId());
-        userId=111;
         AdminUtmReadPermissionsVO adminUtmReadPermissions = this.appChannelReconciliationService.selectAdminUtmReadPermissions(userId);
         AppChannelStatisticsDetailResponse response = appChannelStatisticsDetailService.getstatisticsList(appChannelStatisticsDetailRequest);
         List<UtmPlatVO> appUtm = appChannelStatisticsDetailService.getAppUtm();
