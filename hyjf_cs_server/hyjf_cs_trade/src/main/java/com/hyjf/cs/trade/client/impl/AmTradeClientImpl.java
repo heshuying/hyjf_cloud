@@ -5295,4 +5295,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 获取用户投资数量
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public int countNewUserTotal(Integer userId) {
+        Integer result = restTemplate
+                .getForEntity(urlBase + "borrowTender/countNewUserTotal/" + userId,  Integer.class).getBody();
+        if (result != null) {
+            return result;
+        }
+        return 0;
+    }
 }

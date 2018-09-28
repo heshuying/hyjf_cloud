@@ -2208,4 +2208,11 @@ public interface AmTradeClient {
     int insertAccountRecharge(AccountRechargeVO record);
 
     String handleRechargeInfo(HandleAccountRechargeRequest rechargeRequest);
+
+    /**
+     * 获取用户投资数量
+     * @param userId
+     * @return
+     */
+    int countNewUserTotal(Integer userId);
 }
