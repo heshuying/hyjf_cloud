@@ -200,7 +200,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setLimitEnd(4);
         request.setIsHome("1");
         List<HjhPlanCustomizeVO> planList = amTradeClient.searchPlanList(request);
-        result.setHjhPlanList(planList);
+        result.setHjhPlanList(CollectionUtils.isEmpty(planList) ? new ArrayList<>() :planList);
         ContentArticleRequest req = new ContentArticleRequest();
         req.setNoticeType(NOTICE_TYPE_COMPANY_DYNAMICS);
         req.setLimitStart(0);
@@ -217,6 +217,8 @@ public class WebHomeServiceImpl implements WebHomeService {
                 contentArticleVO.setContent(HtmlUtil.getTextFromHtml(contentArticleVO.getContent()));
             }
             result.setCompanyArticle(list1.get(0));
+        }else{
+            result.setCompanyArticle(new ContentArticleVO());
         }
 
         req.setLimitStart(1);

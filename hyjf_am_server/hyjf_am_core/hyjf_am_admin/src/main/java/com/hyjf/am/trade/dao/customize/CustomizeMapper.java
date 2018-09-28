@@ -198,4 +198,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected HjhBailConfigLogCustomizeMapper hjhBailConfigLogCustomizeMapper;
+
+	@Autowired
+	protected HjhPlanRepayCustomizeMapper hjhPlanRepayCustomizeMapper;
 }

@@ -3,17 +3,17 @@
  */
 package com.hyjf.am.trade.service.api.wrb.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
+import com.hyjf.am.trade.dao.mapper.customize.WrbQueryCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
+import com.hyjf.am.trade.service.api.wrb.WrbInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.trade.dao.mapper.customize.WrbQueryCustomizeMapper;
-import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
-import com.hyjf.am.trade.service.api.wrb.WrbInfoService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author fq
@@ -24,8 +24,11 @@ public class WrbInfoServiceImpl implements WrbInfoService {
     @Autowired
     private WrbQueryCustomizeMapper wrbQueryCustomizeMapper;
 
+    @Autowired
+    private AccountMapper accountMapper;
+
     @Override
-    public List<WrbBorrowListCustomize> borrowList(String borrowNid) {
+    public List<WrbBorrowListCustomize> borrowList(String borrowNid)  {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("borrowClass", "");
 
@@ -44,4 +47,6 @@ public class WrbInfoServiceImpl implements WrbInfoService {
         }
         return customizeList;
     }
+
+
 }

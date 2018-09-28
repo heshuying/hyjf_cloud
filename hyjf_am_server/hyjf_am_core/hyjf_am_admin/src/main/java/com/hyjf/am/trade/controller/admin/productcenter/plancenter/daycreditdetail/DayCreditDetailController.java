@@ -1,11 +1,16 @@
 package com.hyjf.am.trade.controller.admin.productcenter.plancenter.daycreditdetail;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.DayCreditDetailResponse;
+import com.hyjf.am.resquest.admin.DayCreditDetailRequest;
+import com.hyjf.am.resquest.admin.Paginator;
+import com.hyjf.am.trade.dao.model.customize.HjhDayCreditDetailCustomize;
+import com.hyjf.am.trade.service.admin.DayCreditDetailService;
+import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.CommonUtils;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -14,14 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.DayCreditDetailResponse;
-import com.hyjf.am.resquest.admin.DayCreditDetailRequest;
-import com.hyjf.am.resquest.admin.Paginator;
-import com.hyjf.am.trade.service.admin.DayCreditDetailService;
-import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
-
-import io.swagger.annotations.Api;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 汇计划-资金计划-汇计划按天转让记录列表
@@ -39,6 +40,12 @@ public class DayCreditDetailController {
     public DayCreditDetailResponse hjhDayCreditList(@RequestBody @Valid DayCreditDetailRequest request){
         DayCreditDetailResponse response = new DayCreditDetailResponse();
 
+
+        // Redis中 承接状态列表
+        Map<String, String> hjhDebtCreditStatus = RedisUtils.hgetall(RedisConstants.CACHE_PARAM_NAME + "HJH_DEBT_CREDIT_STATUS");
+        // Redis中 还款状态列表
+        Map<String, String> hjhDebtRepayStatus = RedisUtils.hgetall(RedisConstants.CACHE_PARAM_NAME + "HJH_DEBT_REPAY_STATUS");
+
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("planNid", request.getPlanNid());
 //        params.put("planOrderId", request.getPlanOrderId());
@@ -49,11 +56,13 @@ public class DayCreditDetailController {
         params.put("repayStyle", request.getRepayStyle());
         params.put("creditStatus", request.getCreditStatus());
         params.put("repayStatus", request.getRepayStatus());
-        params.put("liquidatesTimeStart", org.apache.commons.lang.StringUtils.isNotBlank(request.getDate())?request.getDate():null);
-        params.put("liquidatesTimeEnd", org.apache.commons.lang.StringUtils.isNotBlank(request.getDate())?request.getDate():null);
-        params.put("repayNextTimeStart", org.apache.commons.lang.StringUtils.isNotBlank(request.getRepayNextTimeStart())?request.getRepayNextTimeStart():null);
-        params.put("repayNextTimeEnd", org.apache.commons.lang.StringUtils.isNotBlank(request.getRepayNextTimeEnd())?request.getRepayNextTimeEnd():null);
-        params.put("endTimeStart", org.apache.commons.lang.StringUtils.isNotBlank(request.getEndTimeStart())?request.getEndTimeStart():null);
+        params.put("liquidatesTimeStart", StringUtils.isNotBlank(request.getDate())?request.getDate():null);
+        //TODO : 测试使用
+//        params.put("liquidatesTimeEnd", StringUtils.isNotBlank(request.getDate())?request.getDate():null);
+        params.put("liquidatesTimeEnd", "2018-09-30");
+        params.put("repayNextTimeStart", StringUtils.isNotBlank(request.getRepayNextTimeStart())?request.getRepayNextTimeStart():null);
+        params.put("repayNextTimeEnd",StringUtils.isNotBlank(request.getRepayNextTimeEnd())?request.getRepayNextTimeEnd():null);
+        params.put("endTimeStart", StringUtils.isNotBlank(request.getEndTimeStart())?request.getEndTimeStart():null);
         params.put("endTimeEnd", StringUtils.isNotBlank(request.getEndTimeEnd())?request.getEndTimeEnd():null);
 
         //总计条数
@@ -73,11 +82,28 @@ public class DayCreditDetailController {
 
             params.put("limitStart", paginator.getOffset());
             params.put("limitEnd", paginator.getLimit());
-            //按天转让记录列表
-            List<DayCreditDetailVO> responseList = this.dayCreditDetailService.selectDebtCreditList(params);
+
+            //按天转让记录列表(时间段内所有)
+            List<HjhDayCreditDetailCustomize> responseList = this.dayCreditDetailService.selectDebtCreditList(params);
+
+            //遍历列表,重设承接状态和还款状态值
+            for (HjhDayCreditDetailCustomize vo : responseList) {
+                for (Map.Entry<String, String> hjhDebtCreditStatusEntry : hjhDebtCreditStatus.entrySet()){
+                    if (vo.getCreditStatus().equals(Integer.valueOf(hjhDebtCreditStatusEntry.getKey()))){
+                        vo.setCreditStatusName(hjhDebtCreditStatusEntry.getValue());
+                    }
+                }
+
+                for (Map.Entry<String, String> hjhDebtRepayStatusEntry : hjhDebtRepayStatus.entrySet()){
+                    if (vo.getRepayStatus().equals(Integer.valueOf(hjhDebtRepayStatusEntry.getKey()))){
+                        vo.setRepayStatusName(hjhDebtRepayStatusEntry.getValue());
+                    }
+                }
+            }
 
             if (!CollectionUtils.isEmpty(responseList)){
-                response.setResultList(responseList);
+                List<DayCreditDetailVO> responseLista = CommonUtils.convertBeanList(responseList, DayCreditDetailVO.class);
+                response.setResultList(responseLista);
                 response.setCount(count);
                 response.setRtn(Response.SUCCESS);
             }

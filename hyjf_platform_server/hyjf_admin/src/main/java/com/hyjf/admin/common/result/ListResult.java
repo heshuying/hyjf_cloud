@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.common.result;
 
-import com.hyjf.cs.common.util.Page;
+import com.hyjf.admin.utils.Page;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;

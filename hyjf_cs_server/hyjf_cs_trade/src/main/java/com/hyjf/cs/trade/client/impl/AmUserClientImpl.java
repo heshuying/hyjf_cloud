@@ -11,9 +11,7 @@ import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
-import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
-import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
-import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -879,6 +877,52 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * 根据用户id和银行卡号查询银行卡信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public BankCardVO selectBankCardByUserIdAndCardNo(BankCardRequest request) {
+		String url = userService + "/bankCard/selectBankCardByUserIdAndCardNo";
+		com.hyjf.am.response.user.BankCardResponse response = restTemplate.postForEntity(url,request, com.hyjf.am.response.user.BankCardResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 更新用户绑定的银行卡
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public int updateUserCard(BankCardRequest request) {
+		int result = restTemplate
+				.postForEntity(userService+"/card/updateUserCard", request, Integer.class).getBody();
+		return result;
+	}
+
+	@Override
+	public String selectBankSmsLog(BankSmsLogRequest request) {
+		String result = restTemplate
+				.postForEntity(userService+"/card/selectBankSmsLog", request, String.class).getBody();
+		return result;
+	}
+
+	/**
+	 *
+	 * 更新绑卡验证码
+	 */
+	@Override
+	public boolean updateBankSmsLog(BankSmsLogRequest request) {
+		boolean result = restTemplate
+				.postForEntity(userService+"/card/updateBankSmsLog", request, Boolean.class).getBody();
+		return result;
 	}
 
 }

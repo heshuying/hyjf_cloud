@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
@@ -23,6 +24,14 @@ public interface AdminUtmReadPermissionsService {
 	AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request);
 
 	UtmPlatResponse getUtmPlatList();
+
+	/**
+	 * 用户是否存在
+	 *
+	 * @param userName
+	 * @return
+	 */
+	public IntegerResponse isExistsAdminUser(String userName);
 
 	/**
 	 * 添加

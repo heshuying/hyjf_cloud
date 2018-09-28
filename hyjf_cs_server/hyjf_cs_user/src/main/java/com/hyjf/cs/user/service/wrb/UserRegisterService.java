@@ -1,14 +1,10 @@
 package com.hyjf.cs.user.service.wrb;
 
-import com.hyjf.am.response.config.MessagePushTemplateResponse;
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
-import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author lisheng
@@ -82,5 +78,13 @@ public interface UserRegisterService {
      * @return
      */
     Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest);
+
+    /**
+     * 插入app渠道的统计数据
+     * @param wrbRegisterRequest
+     * @return
+     */
+    boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest);
+
 
 }

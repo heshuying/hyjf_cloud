@@ -1,13 +1,13 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.controller.api.user.recharge;
+package com.hyjf.cs.trade.controller.api.recharge;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.cs.user.bean.ApiUserRechargeRequestBean;
-import com.hyjf.cs.user.bean.ApiUserRechargeResultBean;
-import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.recharge.ApiRechargeService;
+import com.hyjf.cs.trade.bean.ApiUserRechargeRequestBean;
+import com.hyjf.cs.trade.bean.ApiUserRechargeResultBean;
+import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.recharge.ApiRechargeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "api端-用户充值",tags = "api端-用户充值")
 @RestController
 @RequestMapping(value = "/hyjf-api/server/user/recharge")
-public class UserRechargeController extends BaseUserController {
+public class UserRechargeController extends BaseTradeController {
 
     @Autowired
     private ApiRechargeService apiRechargeService;
