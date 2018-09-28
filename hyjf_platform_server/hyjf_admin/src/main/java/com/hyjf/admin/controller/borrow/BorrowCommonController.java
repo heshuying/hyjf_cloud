@@ -55,6 +55,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -1641,8 +1643,20 @@ public class BorrowCommonController extends BaseController {
 	 */
 	@ApiOperation(value = " 受托用户是否存在")
 	@PostMapping("/isEntrustedExistsUser")
-	public AdminResult<Integer> isEntrustedExistsUser(@RequestBody @Valid   String userName) {
-		return new AdminResult<>(this.borrowCommonService.isEntrustedExistsUser(userName)) ;
+	public AdminResult isEntrustedExistsUser(@RequestBody @Valid   String userName) {
+		int usersFlag=this.borrowCommonService.isEntrustedExistsUser(userName);
+		if (usersFlag == 1) {
+			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_EXIST);
+		} else if (usersFlag == 2) {
+			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_ACCOUNTS);
+		} else if (usersFlag == 3) {
+			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_USES);
+		} else if (usersFlag == 4) {
+			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_IN);
+		} else if (usersFlag == 6) {
+			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_IS_DISABLE);
+		}
+		return new AdminResult<>() ;
 	}
 
 	/**

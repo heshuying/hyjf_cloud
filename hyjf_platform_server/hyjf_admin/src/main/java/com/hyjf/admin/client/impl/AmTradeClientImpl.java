@@ -1183,7 +1183,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowTenderVO getBorrowTenderByNid(String nid) {
-        String url = "http://AM-TRADE/am-trade/borrowTender/getBorrowTenderByNid/" + nid;
+        String url = "http://AM-ADMIN/am-trade/borrowTender/getBorrowTenderByNid/" + nid;
         BorrowTenderResponse response = restTemplate.getForEntity(url, BorrowTenderResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResult();
@@ -3567,7 +3567,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AccountRechargeCustomizeResponse queryRechargeList(AccountRechargeRequest request) {
-        AccountRechargeCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/getAccountRechargeList/", request, AccountRechargeCustomizeResponse.class).getBody();
+        AccountRechargeCustomizeResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/rechargemanagement/getAccountRechargeList/", request, AccountRechargeCustomizeResponse.class).getBody();
 
         if (response != null && Response.SUCCESS.equals(response.getRtn())){
             return response;
@@ -3584,7 +3584,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateRechargeStatus(Integer userId, String nid) {
-        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/modifyRechargeStatus/" + userId + "/" + nid, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-ADMIN/am-trade/rechargemanagement/modifyRechargeStatus/" + userId + "/" + nid, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 
@@ -3596,7 +3596,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
-        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/updateAccountAfterRecharge", request, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-trade/rechargemanagement/updateAccountAfterRecharge", request, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 
@@ -3608,7 +3608,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public UnderLineRechargeResponse selectUnderLineList(UnderLineRechargeRequestBean requestBean) {
-        UnderLineRechargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/underLineRecharge/selectUnderLineList/", requestBean, UnderLineRechargeResponse.class).getBody();
+        UnderLineRechargeResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/underLineRecharge/selectUnderLineList/", requestBean, UnderLineRechargeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())){
             return response;
         }
@@ -3623,7 +3623,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public UnderLineRechargeResponse insterUnderRechargeCode(UnderLineRechargeRequestBean requestBean) {
-        UnderLineRechargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/underLineRecharge/insterUnderRechargeCode/", requestBean, UnderLineRechargeResponse.class).getBody();
+        UnderLineRechargeResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/underLineRecharge/insterUnderRechargeCode/", requestBean, UnderLineRechargeResponse.class).getBody();
         if (response != null){
             return response;
         }
@@ -3638,8 +3638,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean getUnderLineRecharge(String code) {
-//        return restTemplate.getForEntity("http://AM-TRADE/am-trade/underLineRecharge/checkValidate/" + code, Boolean.class).getBody();
-        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-TRADE/am-trade/underLineRecharge/checkValidate/" + code, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-ADMIN/am-trade/underLineRecharge/checkValidate/" + code, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 
@@ -3651,8 +3650,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateUnderLineRecharge(UnderLineRechargeRequestBean requestBean) {
-//        return restTemplate.postForEntity("http://AM-TRADE/am-trade/underLineRecharge/updateUnderLineRecharge/", requestBean, boolean.class).getBody();
-        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-TRADE/am-trade/underLineRecharge/updateUnderLineRecharge/", requestBean, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-trade/underLineRecharge/updateUnderLineRecharge/", requestBean, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 
@@ -3664,8 +3662,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean deleteUnderLineRecharge(Integer id) {
-//        return restTemplate.getForEntity("http://AM-TRADE/am-trade/underLineRecharge/deleteUnderLineRecharge/" + id, Boolean.class).getBody();
-        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-TRADE/am-trade/underLineRecharge/deleteUnderLineRecharge/" + id, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-ADMIN/am-trade/underLineRecharge/deleteUnderLineRecharge/" + id, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 
@@ -4170,7 +4167,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponConfigCustomizeResponse getRecordList(CouponConfigRequest couponConfigRequest) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/getRecordList";
+        String url = "http://AM-ADMIN/am-trade/couponConfig/getRecordList";
         CouponConfigCustomizeResponse response = restTemplate.postForEntity(url, couponConfigRequest, CouponConfigCustomizeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4186,7 +4183,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponConfigResponse getCouponConfig(CouponConfigRequest couponConfigRequest) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/getCouponConfig";
+        String url = "http://AM-ADMIN/am-trade/couponConfig/getCouponConfig";
         CouponConfigResponse response = restTemplate.postForEntity(url, couponConfigRequest, CouponConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4202,7 +4199,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponConfigResponse saveCouponConfig(CouponConfigRequest request) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/saveCouponConfig";
+        String url = "http://AM-ADMIN/am-trade/couponConfig/saveCouponConfig";
         CouponConfigResponse response = restTemplate.postForEntity(url, request, CouponConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4218,7 +4215,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponConfigResponse insertAction(CouponConfigRequest couponConfigRequest) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/insertCouponConfig";
+        String url = "http://AM-ADMIN/am-trade/couponConfig/insertCouponConfig";
         CouponConfigResponse response = restTemplate.postForEntity(url, couponConfigRequest, CouponConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4234,7 +4231,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponConfigResponse deleteAction(CouponConfigRequest couponConfigRequest) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/deleteCouponConfig";
+        String url = "http://AM-ADMIN/am-trade/couponConfig/deleteCouponConfig";
         CouponConfigResponse response = restTemplate.postForEntity(url, couponConfigRequest, CouponConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4250,7 +4247,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponConfigResponse getAuditInfo(CouponConfigRequest ccfr) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/getAuditInfo";
+        String url = "http://AM-ADMIN/am-trade/couponConfig/getAuditInfo";
         CouponConfigResponse response = restTemplate.postForEntity(url, ccfr, CouponConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4266,7 +4263,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponConfigResponse updateAuditInfo(CouponConfigRequest couponConfigRequest) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/updateAuditInfo";
+        String url = "http://AM-ADMIN/am-trade/couponConfig/updateAuditInfo";
         CouponConfigResponse response = restTemplate.postForEntity(url, couponConfigRequest, CouponConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4282,7 +4279,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponUserResponse getIssueNumber(String couponCode) {
-        String url = "http://AM-TRADE/am-trade/couponUser/getIssueNumber/" + couponCode;
+        String url = "http://AM-ADMIN/am-trade/couponUser/getIssueNumber/" + couponCode;
         CouponUserResponse response = restTemplate.getForEntity(url, CouponUserResponse.class).getBody();
         if (response != null) {
             return response;
@@ -4925,7 +4922,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public JSONObject getBatchCoupons(Map<String, String> params) {
-        String url = "http://AM-TRADE/am-user/checkCoupon/getBatchCoupons";
+        String url = "http://AM-ADMIN/am-trade/checkCoupon/getBatchCoupons";
         return restTemplate.postForEntity(url, params, JSONObject.class).getBody();
     }
 
@@ -5176,7 +5173,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest) {
-        String url = "http://AM-TRADE/am-trade/adminCouponUser/getCouponUserList";
+        String url = "http://AM-ADMIN/am-trade/couponUser/getCouponUserList";
         CouponUserCustomizeResponse response = restTemplate.postForEntity(url, couponUserBeanRequest, CouponUserCustomizeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5192,7 +5189,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponUserCustomizeResponse deleteById(CouponUserBeanRequest couponUserBeanRequest) {
-        String url = "http://AM-TRADE/am-trade/adminCouponUser/deleteCouponUser";
+        String url = "http://AM-ADMIN/am-trade/couponUser/deleteCouponUser";
         CouponUserCustomizeResponse response = restTemplate.postForEntity(url,couponUserBeanRequest, CouponUserCustomizeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5225,7 +5222,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponConfigResponse selectCouponConfig(String couponCode) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/selectCouponConfig/" + couponCode;
+        String url = "http://AM-ADMIN/am-trade/couponConfig/selectCouponConfig/" + couponCode;
         CouponConfigResponse configResponse = restTemplate.getForEntity(url, CouponConfigResponse.class).getBody();
         if (configResponse != null) {
             return configResponse;
@@ -5241,7 +5238,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponUserResponse insertCouponUser(CouponUserRequest couponUserRequest) {
-        String url = "http://AM-TRADE/am-trade/adminCouponUser/insertCouponUser";
+        String url = "http://AM-ADMIN/am-trade/couponUser/insertcouponUser";
         CouponUserResponse response = restTemplate.postForEntity(url, couponUserRequest, CouponUserResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5256,7 +5253,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponUserResponse getCouponUserByCouponCode(String couponCode) {
-        String url = "http://AM-TRADE/am-trade/adminCouponUser/getCouponUserByCouponCode/" + couponCode;
+        String url = "http://AM-ADMIN/am-trade/couponUser/getCouponUserByCouponCode/" + couponCode;
         CouponUserResponse response = restTemplate.getForEntity(url,CouponUserResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5271,7 +5268,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponUserCustomizeResponse selectCouponUserById(Integer couponUserId) {
-        String url = "http://AM-TRADE/am-trade/adminCouponUser/selectCouponUserById/"+couponUserId;
+        String url = "http://AM-ADMIN/am-trade/couponUser/selectCouponUserById/"+couponUserId;
         CouponUserCustomizeResponse response = restTemplate.getForEntity(url,CouponUserCustomizeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5286,7 +5283,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponUserCustomizeResponse auditRecord(AdminCouponUserRequestBean adminCouponUserRequestBean) {
-        String url = "http://AM-TRADE/am-trade/adminCouponUser/auditRecord";
+        String url = "http://AM-ADMIN/am-trade/couponUser/auditRecord";
         CouponUserCustomizeResponse response = restTemplate.postForEntity(url,adminCouponUserRequestBean,CouponUserCustomizeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5300,7 +5297,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponRecoverCustomizeResponse checkCouponSendExcess(String couponCode) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/checkCouponSendExcess/" + couponCode;
+        String url = "http://AM-ADMIN/am-trade/couponConfig/checkCouponSendExcess/" + couponCode;
         CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url,CouponRecoverCustomizeResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5705,7 +5702,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public CouponConfigCustomizeResponse getConfigCustomizeList(CouponConfigRequest request) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/adminCouponConfig";
+        String url = "http://AM-ADMIN/am-trade/couponConfig/adminCouponConfig";
         CouponConfigCustomizeResponse response = restTemplate.postForEntity(url,request,CouponConfigCustomizeResponse.class).getBody();
         return response;
     }
@@ -6206,7 +6203,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponConfigExportCustomizeResponse getExportConfigList(CouponConfigRequest request) {
-        String url = "http://AM-TRADE/am-trade/couponConfig/getExportConfigList";
+        String url = "http://AM-ADMIN/am-trade/couponConfig/getExportConfigList";
         CouponConfigExportCustomizeResponse response = restTemplate.postForEntity(url,request,CouponConfigExportCustomizeResponse.class).getBody();
         if (response != null) {
             return response;

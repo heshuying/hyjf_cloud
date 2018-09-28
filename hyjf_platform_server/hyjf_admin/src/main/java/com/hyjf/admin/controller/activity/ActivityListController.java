@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.activity;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -19,18 +18,15 @@ import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.util.GetDate;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -53,8 +49,6 @@ public class ActivityListController extends BaseController {
 
     @Autowired
     private ActivityListService activityListService;
-    @Autowired
-    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "查询列表", notes = "查询列表")
     @PostMapping("/activityRecordList")
@@ -72,7 +66,7 @@ public class ActivityListController extends BaseController {
     }
 
 
-    @ApiOperation(value = "活动详情列表", notes = "活动详情列表")
+    @ApiOperation(value = "活动详情", notes = "活动详情")
     @PostMapping("/infoAction")
     public AdminResult getInfoList(@RequestBody ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
@@ -225,7 +219,6 @@ public class ActivityListController extends BaseController {
         }
         return new AdminResult<>();
     }
-
 
     /**
      * 表单校验

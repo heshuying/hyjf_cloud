@@ -1630,7 +1630,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public VipManageResponse searchList(VipManageRequest vipManageRequest) {
-		String url = "http://AM-USER/am-user/vipManage/getUserList";
+		String url = "http://AM-ADMIN/am-user/vipManage/getUserList";
 		VipManageResponse response = restTemplate.postForEntity(url,vipManageRequest,VipManageResponse.class).getBody();
 		if (response != null) {
 			return response;
@@ -1640,7 +1640,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public VipDetailListResponse searchDetailList(VipDetailListRequest detailListRequest) {
-		String url = "http://AM-USER/am-user/vipManage/vipDetailList";
+		String url = "http://AM-ADMIN/am-user/vipManage/vipDetailList";
 		VipDetailListResponse response = restTemplate.postForEntity(url,detailListRequest,VipDetailListResponse.class).getBody();
 		if (response != null) {
 			return response;
@@ -1650,7 +1650,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public VipUpdateGradeListResponse searchUpdateGradeList(VipUpdateGradeListRequest vgl) {
-		String url = "http://AM-USER/am-user/vipManage/vipUpdateGradeList";
+		String url = "http://AM-ADMIN/am-user/vipManage/vipUpdateGradeList";
 		VipUpdateGradeListResponse response = restTemplate.postForEntity(url,vgl,VipUpdateGradeListResponse.class).getBody();
 		if (response != null) {
 			return response;
@@ -1866,7 +1866,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public UtmResponse getChannelNameByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/channel/getchannelnamebyuserd/" + userId;
+		String url = "http://AM-ADMIN/am-user/channel/getchannelnamebyuserd/" + userId;
 		UtmResponse utmResponse = restTemplate.getForEntity(url, UtmResponse.class).getBody();
 		if (utmResponse != null) {
 			return utmResponse;

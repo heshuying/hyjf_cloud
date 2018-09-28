@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.admin.coupon;
+package com.hyjf.am.trade.controller.front.coupon;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
@@ -13,7 +13,7 @@ import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.CouponUserCustomize;
-import com.hyjf.am.trade.service.admin.coupon.AdminCouponUserService;
+import com.hyjf.am.trade.service.front.coupon.CouponUserService;
 import com.hyjf.am.vo.admin.coupon.CouponUserCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.common.paginator.Paginator;
@@ -29,15 +29,27 @@ import java.util.List;
 
 /**
  * @author yaoyong
- * @version AdminCouponUserController, v0.1 2018/7/23 16:54
- * 后台优惠券用户
+ * @version CouponUserController, v0.1 2018/9/27 14:34
  */
 @RestController
-@RequestMapping("/am-trade/adminCouponUser")
-public class AdminCouponUserController extends BaseController {
+@RequestMapping("/am-trade/couponUser")
+public class CouponUserController extends BaseController {
 
     @Autowired
-    private AdminCouponUserService adminCouponUserService;
+    private CouponUserService couponUserService;
+
+    /**
+     * 根据优惠券编号查询用户优惠券
+     * @param couponCode
+     * @return
+     */
+    @RequestMapping("/getIssueNumber/{couponCode}")
+    public CouponUserResponse getIssueNumber(@PathVariable String couponCode) {
+        CouponUserResponse response = new CouponUserResponse();
+        int count = couponUserService.getIssueNumber(couponCode);
+        response.setCount(count);
+        return response;
+    }
 
     /**
      * 优惠券用户列表
@@ -50,12 +62,12 @@ public class AdminCouponUserController extends BaseController {
         logger.info("后台优惠券用户列表" + JSONObject.toJSON(request));
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         String returnCode = Response.FAIL;
-        Integer recordCount = adminCouponUserService.countCouponUser(request);
+        Integer recordCount = couponUserService.countCouponUser(request);
         Paginator paginator = new Paginator(request.getCurrPage(), recordCount, request.getPageSize());
         if (request.getPageSize() == 0) {
             paginator = new Paginator(request.getCurrPage(), recordCount);
         }
-        List<CouponUserCustomize> couponUserCustomizes = adminCouponUserService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
+        List<CouponUserCustomize> couponUserCustomizes = couponUserService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
         if (recordCount > 0) {
             if (!CollectionUtils.isEmpty(couponUserCustomizes)) {
                 List<CouponUserCustomizeVO> couponUserCustomizeVOS = CommonUtils.convertBeanList(couponUserCustomizes, CouponUserCustomizeVO.class);
@@ -79,7 +91,7 @@ public class AdminCouponUserController extends BaseController {
     public CouponUserCustomizeResponse deleteCouponUser(@RequestBody CouponUserBeanRequest couponUserBeanRequest) {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         try {
-            int count = adminCouponUserService.deleteCouponUserById(couponUserBeanRequest);
+            int count = couponUserService.deleteCouponUserById(couponUserBeanRequest);
             if (count > 0) {
                 response.setRtn(Response.SUCCESS);
                 response.setCount(count);
@@ -96,11 +108,11 @@ public class AdminCouponUserController extends BaseController {
      * @param request
      * @return
      */
-    @PostMapping("/insertCouponUser")
+    @PostMapping("/insertcouponUser")
     public CouponUserResponse insertCouponUser(@RequestBody CouponUserRequest request) {
         CouponUserResponse response = new CouponUserResponse();
         try {
-            int count = adminCouponUserService.insertCouponUser(request);
+            int count = couponUserService.insertCouponUser(request);
             if (count > 0) {
                 response.setRtn("0");
             }
@@ -120,7 +132,7 @@ public class AdminCouponUserController extends BaseController {
     @RequestMapping("/getCouponUserByCouponCode/{couponCode}")
     public CouponUserResponse getCouponUserByCouponCode(@PathVariable String couponCode) {
         CouponUserResponse response = new CouponUserResponse();
-        List<CouponUser> couponUserList = adminCouponUserService.getCouponUserByCouponCode(couponCode);
+        List<CouponUser> couponUserList = couponUserService.getCouponUserByCouponCode(couponCode);
         if (!CollectionUtils.isEmpty(couponUserList)) {
             List<CouponUserVO> couponUserVOS = CommonUtils.convertBeanList(couponUserList,CouponUserVO.class);
             response.setResultList(couponUserVOS);
@@ -136,7 +148,7 @@ public class AdminCouponUserController extends BaseController {
     @RequestMapping("/selectCouponUserById/{couponUserId}")
     public CouponUserCustomizeResponse selectCouponUserById(@PathVariable Integer couponUserId) {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
-        CouponUser couponUser = adminCouponUserService.selectCouponUserById(couponUserId);
+        CouponUser couponUser = couponUserService.selectCouponUserById(couponUserId);
         if (couponUser != null) {
             CouponUserVO couponUserVO = new CouponUserVO();
             BeanUtils.copyProperties(couponUser,couponUserVO);
@@ -155,7 +167,7 @@ public class AdminCouponUserController extends BaseController {
     @PostMapping("/auditRecord")
     public CouponUserCustomizeResponse auditRecord(@RequestBody AdminCouponUserRequestBean couponUserRequestBean) {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
-        Integer count = adminCouponUserService.auditRecord(couponUserRequestBean);
+        Integer count = couponUserService.auditRecord(couponUserRequestBean);
         if (count > 0) {
             response.setCount(count);
         }else {
@@ -164,5 +176,4 @@ public class AdminCouponUserController extends BaseController {
         }
         return response;
     }
-
 }

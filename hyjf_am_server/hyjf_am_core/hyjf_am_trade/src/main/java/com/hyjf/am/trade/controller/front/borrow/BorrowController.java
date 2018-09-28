@@ -177,7 +177,7 @@ public class BorrowController extends BaseController {
 	public BorrowResponse selectBorrowList(){
 
 		BorrowResponse response = new BorrowResponse();
-		List<Borrow> borrows = borrowService.selectBorrowList();
+		List<BorrowAndInfoVO> borrows = borrowService.selectBorrowList();
 		if (borrows != null) {
 			List<BorrowAndInfoVO> borrowVO = CommonUtils.convertBeanList(borrows,BorrowAndInfoVO.class);
 			response.setResultList(borrowVO);

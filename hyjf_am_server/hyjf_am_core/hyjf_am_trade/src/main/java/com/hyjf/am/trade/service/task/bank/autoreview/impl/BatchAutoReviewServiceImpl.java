@@ -202,12 +202,14 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                                 borrowApicron.setApiType(0);// 任务类型放款
                                 borrowApicron.setPeriodNow(0);// 放款期数
                                 borrowApicron.setCreditRepayStatus(0);// 债转还款状态
-                                if(projectType==13){
-                                    borrowApicron.setExtraYieldStatus(0);// 融通宝加息相关的放款状态
-                                    borrowApicron.setExtraYieldRepayStatus(0);// 融通宝相关的加息还款状态
+                                //add by cwyang 20180730 加息需求变更
+                                boolean increase = Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield());
+                                if(increase){
+                                    borrowApicron.setExtraYieldStatus(0);// 加息放款相关的放款状态
+                                    borrowApicron.setExtraYieldRepayStatus(0);// 加息放款相关的加息还款状态
                                 }else{
-                                    borrowApicron.setExtraYieldStatus(1);// 融通宝加息相关的放款状态
-                                    borrowApicron.setExtraYieldRepayStatus(1);// 融通宝相关的加息还款状态
+                                    borrowApicron.setExtraYieldStatus(1);// 加息放款相关的放款状态
+                                    borrowApicron.setExtraYieldRepayStatus(1);// 加息放款相关的加息还款状态
                                 }
                                 borrowApicron.setCreateTime(new Date());// 创建时间
                                 borrowApicron.setUpdateTime(new Date());// 更新时间

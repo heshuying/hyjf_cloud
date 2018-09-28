@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.config.controller.admin;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +47,12 @@ public class AdminCouponCheckController extends BaseConfigController {
     public CouponCheckResponse getCheckList(@RequestBody @Valid AdminCouponCheckRequest request) {
         logger.info("优惠券列表..." + JSONObject.toJSON(request));
         CouponCheckResponse response = new CouponCheckResponse();
-        Map<String, Object> mapParam = paramSet(request);
-        int count = checkService.countCouponCheck(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), count, request.getLimit());
+        int count = checkService.countCouponCheck(request);
+        Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
         if (request.getLimit() == 0) {
             paginator = new Paginator(request.getPaginatorPage(), count);
         }
-        List<CouponCheck> couponChecks = checkService.searchCouponCheck(mapParam, paginator.getOffset(), paginator.getLimit());
+        List<CouponCheck> couponChecks = checkService.searchCouponCheck(request, paginator.getOffset(), paginator.getLimit());
         if (count > 0) {
             if (!CollectionUtils.isEmpty(couponChecks)) {
                 List<CouponCheckVO> couponCheckVOS = CommonUtils.convertBeanList(couponChecks, CouponCheckVO.class);
@@ -77,33 +77,38 @@ public class AdminCouponCheckController extends BaseConfigController {
 
 
     @PostMapping("/insertCoupon")
-    public CouponCheckResponse insertCoupon(@RequestBody @Valid AdminCouponCheckRequest request) {
+    public CouponCheckResponse insertCoupon(@RequestBody AdminCouponCheckRequest request) {
         logger.info("插入优惠券信息..." + JSONObject.toJSON(request));
         CouponCheckResponse response = new CouponCheckResponse();
         CouponCheck couponCheck = new CouponCheck();
         couponCheck.setFileName(request.getFileName());
-        couponCheck.setCreateTime(GetDate.str2Timestamp(request.getCreateTime()));
+        couponCheck.setCreateTime(new Date());
         couponCheck.setFilePath(request.getFilePath());
         couponCheck.setDeFlag(0);
         couponCheck.setStatus(1);
         int count = checkService.insertCoupon(couponCheck);
-        response.setMessage(Response.FAIL_MSG);
-        response.setRecordTotal(count);
         if (count > 0) {
             response.setMessage(Response.SUCCESS_MSG);
+            response.setRecordTotal(count);
+        }else {
+            response.setRecordTotal(0);
         }
         return response;
     }
 
 
     @GetMapping("/selectCoupon/{id}")
-    public CouponCheckVO selectCoupon(@PathVariable String id) {
-        CouponCheckVO couponCheckVO = new CouponCheckVO();
+    public CouponCheckResponse selectCoupon(@PathVariable String id) {
+        CouponCheckResponse response = new CouponCheckResponse();
         CouponCheck couponCheck = checkService.selectCoupon(id);
         if (couponCheck != null) {
-            BeanUtils.copyProperties(couponCheck, couponCheckVO);
+            CouponCheckVO checkVO = new CouponCheckVO();
+            BeanUtils.copyProperties(couponCheck,checkVO);
+            response.setResult(checkVO);
+        }else {
+            response.setMessage("数据为空");
         }
-        return couponCheckVO;
+        return response;
     }
 
 
@@ -114,7 +119,6 @@ public class AdminCouponCheckController extends BaseConfigController {
         response.setBool(result);
         return response;
     }
-
 
 
     /**
