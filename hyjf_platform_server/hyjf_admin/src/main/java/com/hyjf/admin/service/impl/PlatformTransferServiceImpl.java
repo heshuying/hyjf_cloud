@@ -329,6 +329,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         try{
             BankCallBean resultBean = BankCallUtils.callApiBg(bean);
             if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                logger.info("银行返回的code:[{}]",resultBean.getRetCode());
                 balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
             }
         } catch (Exception e) {
