@@ -10,6 +10,7 @@ import com.hyjf.admin.service.EventService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.EventResponse;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.common.file.UploadFileUtils;
 import io.swagger.annotations.Api;
@@ -61,7 +62,9 @@ public class EventController extends BaseController {
 
 	@ApiOperation(value = "添加公司管理-公司记事", notes = "添加公司管理-公司记事")
 	@PostMapping("/insert")
-	public AdminResult add(@RequestBody EventRequestBean requestBean) {
+	public AdminResult add(@RequestBody EventRequestBean requestBean, HttpServletRequest request) {
+		AdminSystemVO adminUser = getUser(request);
+		requestBean.setAddAdmin(adminUser.getUsername());
 		int num = eventService.insertAction(requestBean);
 		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
