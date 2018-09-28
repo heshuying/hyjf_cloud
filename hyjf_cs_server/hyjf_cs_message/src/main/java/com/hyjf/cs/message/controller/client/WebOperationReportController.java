@@ -78,6 +78,8 @@ public class WebOperationReportController extends BaseController {
 		if(report==null){
 			result.setStatus("1");
 			result.setStatusDesc("失败");
+			//beta环境没数据时发生404 进行初始化
+			result.setData(new OperationReportColumnEntity());
 		}else {
 			result.setData(report);
 		}
