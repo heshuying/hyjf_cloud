@@ -1075,4 +1075,88 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+
+    /**
+     * 查询异常标的总件数
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer selectAssetExceptionCount(AssetExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/select_asset_exception_count";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+    /**
+     * 查询异常标的列表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<AssetExceptionCustomizeVO> selectAssetExceptionList(AssetExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/select_asset_exception_list";
+        AssetExceptionCustomizeResponse response = restTemplate.postForEntity(url,request,AssetExceptionCustomizeResponse.class).getBody();
+        if (BailConfigCustomizeResponse.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 插入异常标的并更新保证金
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    @Override
+    public boolean insertAssetException(AssetExceptionRequest assetExceptionRequest) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/insert_asset_exception";
+        BooleanResponse response = restTemplate.postForEntity(url, assetExceptionRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 项目编号是否存在
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public String isExistsBorrow(String borrowNid) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/is_exists_borrow/" + borrowNid;
+        StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        return response.getResultStr();
+    }
+
+    /**
+     * 删除异常标的
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    @Override
+    public boolean deleteAssetException(AssetExceptionRequest assetExceptionRequest) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/delete_asset_exception";
+        BooleanResponse response = restTemplate.postForEntity(url, assetExceptionRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 修改异常标的
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    @Override
+    public boolean updateAssetException(AssetExceptionRequest assetExceptionRequest) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/update_asset_exception";
+        BooleanResponse response = restTemplate.postForEntity(url, assetExceptionRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
 }
