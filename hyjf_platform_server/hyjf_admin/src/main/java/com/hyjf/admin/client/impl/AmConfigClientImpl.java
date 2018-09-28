@@ -596,7 +596,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankReturnCodeConfigResponse selectBankRetcodeListByPage(AdminBankRetcodeConfigRequest adminRequest) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/list";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/list";
         BankReturnCodeConfigResponse response = restTemplate.postForEntity(url, adminRequest, BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -612,7 +612,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankReturnCodeConfigResponse selectBankRetcodeConfigInfo(AdminBankRetcodeConfigRequest adminRequest) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/info";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/info";
         BankReturnCodeConfigResponse response = restTemplate.postForEntity(url, adminRequest, BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -627,7 +627,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankReturnCodeConfigResponse insertBankReturnCodeConfig(AdminBankRetcodeConfigRequest req) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/insert";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/insert";
         BankReturnCodeConfigResponse response = restTemplate.postForEntity(url, req, BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -642,7 +642,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankReturnCodeConfigResponse updateBankReturnCodeConfig(AdminBankRetcodeConfigRequest req) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/update";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/update";
         BankReturnCodeConfigResponse response = restTemplate.postForEntity(url, req, BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -657,7 +657,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public boolean isExistsReturnCode(AdminBankRetcodeConfigRequest record) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/isExistsReturnCode";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/isExistsReturnCode";
         return restTemplate.postForEntity(url, record, BooleanResponse.class).getBody().getResultBoolean();
     }
 
@@ -669,7 +669,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public boolean isExistsRecord(AdminBankRetcodeConfigRequest adminRequest) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/isExistsRecord";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/isExistsRecord";
         return restTemplate.postForEntity(url, adminRequest, BooleanResponse.class).getBody().getResultBoolean();
     }
 
