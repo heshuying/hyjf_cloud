@@ -51,7 +51,7 @@
         <if test="submitTimeEndSrch != null and submitTimeEndSrch != ''">
 
             <!-- 优化sql(字段类型转换) timestamp-->
-            AND hba.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{submitTimeEndSrch},'23:59:59'),'%Y-%m-%d %H:%i:%s')
+            AND hba.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{submitTimeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
     </sql>
 

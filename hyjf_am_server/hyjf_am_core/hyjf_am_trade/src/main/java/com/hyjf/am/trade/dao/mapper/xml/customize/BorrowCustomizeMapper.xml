@@ -499,12 +499,14 @@ WHERE
 		   <if test="recoverTimeEndSrch != null and recoverTimeEndSrch != ''">
 		    AND b.recover_last_time <![CDATA[<=]]> unix_timestamp(#{recoverTimeEndSrch})+86399
 		   </if>
-		   <if test="timeStartSrch != null and timeStartSrch != ''">
-		    AND unix_timestamp(b.create_time) <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
-		   </if>
-		   <if test="timeEndSrch != null and timeEndSrch != ''">
-		    AND unix_timestamp(b.create_time) <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})+86399
-		   </if>
+			  <if test="timeStartSrch != null and timeStartSrch != ''">
+				  <!-- 优化sql(字段类型转换) timestamp-->
+				  AND b.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
+			  </if>
+			  <if test="timeEndSrch != null and timeEndSrch != ''">
+				  <!-- 优化sql(字段类型转换) timestamp-->
+				  AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+			  </if>
 		   <if test="planNidSrch != null and planNidSrch != ''">
 		    AND b.plan_nid = #{planNidSrch}
 		   </if>

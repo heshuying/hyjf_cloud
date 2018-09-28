@@ -164,10 +164,12 @@
                 #{openAccountPlat,jdbcType=VARCHAR}
             </if>
             <if test="openTimeStart != null and openTimeStart !='' ">
-                AND hydac.create_time <![CDATA[>=]]> concat(#{openTimeStart,jdbcType=VARCHAR},' 00:00:00')
+                <!-- 优化sql(字段类型转换) timestamp-->
+                AND hydac.create_time >= STR_TO_DATE(#{openTimeStart},'%Y-%m-%d %H:%i:%s')
             </if>
             <if test="openTimeEnd != null and openTimeEnd !='' ">
-                AND hydac.create_time <![CDATA[<=]]>  concat(#{openTimeEnd,jdbcType=VARCHAR},' 23:59:59')
+                <!-- 优化sql(字段类型转换) timestamp-->
+                AND hydac.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{openTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
             </if>
         </where>
     </sql>
