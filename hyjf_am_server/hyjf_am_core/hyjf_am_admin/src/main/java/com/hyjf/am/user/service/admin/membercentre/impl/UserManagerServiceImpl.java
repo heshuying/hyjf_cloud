@@ -4,21 +4,12 @@
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.config.dao.mapper.auto.JxBankConfigMapper;
-import com.hyjf.am.config.dao.model.auto.JxBankConfig;
-import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
-import com.hyjf.am.trade.dao.mapper.auto.ROaDepartmentMapper;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserChangeLogMapper;
-import com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserLeaveCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.admin.membercentre.UserManagerService;
@@ -29,14 +20,12 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -53,24 +42,7 @@ import java.util.Map;
  */
 @Service
 public class UserManagerServiceImpl extends BaseServiceImpl implements UserManagerService {
-
     private static Logger logger = LoggerFactory.getLogger(UserManagerServiceImpl.class);
-    @Autowired
-    private SpreadsUserLogMapper spreadsUserLogMapper;
-    @Autowired
-    private EmployeeCustomizeMapper employeeCustomizeMapper;
-    @Autowired
-    private UserLeaveCustomizeMapper userLeaveCustomizeMapper;
-    @Autowired
-    private SpreadsUserMapper spreadsUserMapper;
-    @Autowired
-    private UserChangeLogMapper userChangeLogMapper;
-    @Autowired
-    private ROaDepartmentMapper rOaDepartmentMapper;
-    @Autowired
-    private JxBankConfigMapper jxBankConfigMapper;
-    @Autowired
-    private BankConfigService bankConfigService;
     /**
      * 根据筛选条件查找会员列表
      *
@@ -947,19 +919,13 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
-    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest) {
+    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,String bankName,String payAllianceCode,User user,String bankId) {
         Response response = new Response();
         String accountId = updCompanyRequest.getAccountId();
-        String userId = updCompanyRequest.getUserId();
-        if (StringUtils.isBlank(userId)) {
-            response.setMessage("请先选择用户再进行操作!");
-            return response;
-        }
         if (StringUtils.isBlank(accountId)) {
             response.setMessage("请输入正确的电子账号!");
             return response;
         }
-        User user = this.selectUserByUserId(Integer.parseInt(userId));
         int bankOpenFlag = user.getBankOpenAccount();
         if (user != null && user.getUserType() != 1) {
             if (user.getBankOpenAccount() == 1) {//已开户
@@ -1034,37 +1000,23 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         bankCard.setCardNo(updCompanyRequest.getAccount());
         bankCard.setCreateTime(GetDate.getDate());
         bankCard.setCreateUserId(user.getUserId());
-        String bankId = bankConfigService.queryBankIdByCardNo(updCompanyRequest.getAccount());
-        if (StringUtils.isNotBlank(updCompanyRequest.getBankId())) {
-            String bankName = getBankNameById(bankId);
-            String payAllianceCode = null;
-            BankCallBean callBean = payAllianceCodeQuery(updCompanyRequest.getAccount(), user.getUserId());
-            if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(callBean.getRetCode())) {
-                payAllianceCode = callBean.getPayAllianceCode();
-                if (StringUtils.isBlank(payAllianceCode)) {
-                    payAllianceCode = getPayAllianceCodeByBankId(bankId);
-                }
-            }
+        if (StringUtils.isNotBlank(bankId)) {
             bankCard.setBankId(Integer.parseInt(bankId));
             bankCard.setBank(bankName);
             bankCard.setPayAllianceCode(payAllianceCode);
-
-            bankCard.setBankId(Integer.parseInt(updCompanyRequest.getBankId()));
-            bankCard.setBank(updCompanyRequest.getBankName());
-            bankCard.setPayAllianceCode(updCompanyRequest.getPayAllianceCode());
             if (bankOpenFlag == 1) {
                 int updateflag = bankCardMapper.updateByPrimaryKeySelective(bankCard);
                 if (updateflag > 0) {
-                    throw new RuntimeException("银行卡信息修改更新异常!");
-                }else {
                     logger.info("=============银行卡信息修改更新成功==================");
+                }else {
+                    throw new RuntimeException("银行卡信息修改更新异常!");
                 }
             } else {
                 int insertcard = bankCardMapper.insertSelective(bankCard);
                 if (insertcard > 0) {
-                    throw new RuntimeException("银行卡信息修改保存异常!");
-                }else {
                     logger.info("=============银行卡信息修改保存成功==================");
+                }else {
+                    throw new RuntimeException("银行卡信息修改保存异常!");
                 }
             }
         }
@@ -1085,18 +1037,18 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             openFlag = this.insertBankOpenAccount(openAccount);
         }
         if (openFlag > 0) {
-            throw new RuntimeException("银行开户信息修改保存异常!");
-        }else {
             logger.info("=============银行开户信息修改保存成功==================");
+        }else {
+            throw new RuntimeException("银行开户信息修改保存异常!");
         }
         //替换企业信息名称
         UserInfo userInfo =this.findUsersInfo(user.getUserId());
         userInfo.setTruename(updCompanyRequest.getName());
         int userInfoFlag = this.updateUserInfoByUserInfo(userInfo);
         if (userInfoFlag > 0) {
-            throw new RuntimeException("用户详细信息保存异常!");
-        }else {
             logger.info("=============用户详细信息保存成功==================");
+        }else {
+            throw new RuntimeException("用户详细信息保存异常!");
         }
         if (bankOpenFlag != 1) {
             user.setBankAccountEsb(0);//开户平台,pc
@@ -1104,9 +1056,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             user.setBankOpenAccount(1);//已开户
             int userFlag = this.updateUser(user);
             if (userInfoFlag > 0) {
-                throw new RuntimeException("用户表信息保存异常!");
-            }else {
                 logger.info("=============用户详细信息保存成功==================");
+            }else {
+                 throw new RuntimeException("用户表信息保存异常!");
             }
         }
         response.setMessage("企业用户信息补录成功!");
@@ -1125,7 +1077,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return null;
     }
 
-    
+
 	/**
      * 根据绑定信息取得用户id
      * @param bindUniqueId
@@ -1323,31 +1275,12 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         rOaDepartmentList=rOaDepartmentMapper.selectByExample(example);
         return rOaDepartmentList;
     }
-
-    public String getBankNameById(String bankId) {
-        JxBankConfig bankConfig = jxBankConfigMapper.selectByPrimaryKey(Integer.parseInt(bankId));
-        if (bankConfig != null) {
-            return bankConfig.getBankName();
-        }
-        return null;
-    }
-    /**
-     * 根据银行Id查询本地存的银联行号
-     * @param bankId
-     * @return
-     */
-    public String getPayAllianceCodeByBankId(String bankId) {
-        JxBankConfig bankConfig = jxBankConfigMapper.selectByPrimaryKey(Integer.parseInt(bankId));
-        if (bankConfig != null) {
-            return bankConfig.getPayAllianceCode();
-        }
-        return null;
-    }
     /**
      * 调用江西银行查询联行号
      * @param cardNo
      * @return
      */
+    @Override
     public BankCallBean payAllianceCodeQuery(String cardNo,Integer userId) {
         BankCallBean bean = new BankCallBean();
         String channel = BankCallConstant.CHANNEL_PC;

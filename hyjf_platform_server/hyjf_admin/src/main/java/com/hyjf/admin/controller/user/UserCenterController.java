@@ -135,12 +135,12 @@ public class UserCenterController extends BaseController {
         }
         userDetailInfoResponseBean.setUserBankOpenAccountVO(userBankOpenAccountCustomizeVO);
         //公司信息
-        CorpOpenAccountRecordVO corpOpenAccountRecordVO = userCenterService.selectCorpOpenAccountRecordByUserId(userId);
-        CorpOpenAccountRecordCustomizeVO corpOpenAccountRecordCustomizeVO = new CorpOpenAccountRecordCustomizeVO();
-        if(null!=corpOpenAccountRecordVO){
-            BeanUtils.copyProperties(corpOpenAccountRecordVO, corpOpenAccountRecordCustomizeVO);
+        CompanyInfoVO companyInfo = userCenterService.selectCompanyInfoByUserId(userId);
+        CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
+        if(null!=companyInfo){
+            BeanUtils.copyProperties(companyInfo, companyInfoCompanyInfoVO);
         }
-        userDetailInfoResponseBean.setEnterpriseInformation(corpOpenAccountRecordCustomizeVO);
+        userDetailInfoResponseBean.setEnterpriseInformation(companyInfoCompanyInfoVO);
         //第三方平台绑定信息
         BindUserVo bindUserVo = userCenterService.selectBindeUserByUserI(userId);
         BindUserCustomizeVO bindUserCustomizeVO = new BindUserCustomizeVO();
