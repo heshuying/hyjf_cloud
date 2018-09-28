@@ -508,7 +508,7 @@
 				SELECT
 					account
 				FROM
-					ht_bank_open_account hboa
+					hyjf_user.ht_bank_open_account hboa
 				WHERE
 					hboa.user_id = hu.user_id
 			) accountid,
@@ -517,12 +517,12 @@
 				SELECT
 					truename
 				FROM
-					ht_user_info hui
+					hyjf_user.ht_user_info hui
 				WHERE
 					hui.user_id = hu.user_id
 			) customer_name
 		FROM
-			ht_user hu
+			ht_r_user hu
 		WHERE
     <if test="userName != null" >
         hu.username = #{userName,jdbcType=VARCHAR}

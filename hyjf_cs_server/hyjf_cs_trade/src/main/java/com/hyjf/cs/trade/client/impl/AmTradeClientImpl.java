@@ -5232,6 +5232,70 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 更新充值的相关信息(页面调用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public String handleRechargeOnlineInfo(HandleAccountRechargeRequest request) {
+        String url = tradeService + "/trade/handleRechargeOnlineInfo";
+        StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 根据orderId查询充值记录
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<AccountRechargeVO> selectAccountRechargeByOrderId(String orderId) {
+        String url = tradeService + "/trade/selectAccountRechargeByOrderId/" + orderId;
+        AccountRechargeResponse response = restTemplate.getForEntity(url,AccountRechargeResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 插入充值记录
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int insertAccountRecharge(AccountRechargeVO accountRechargeVO) {
+        String url = tradeService + "/trade/insertAccountRecharge";
+        AccountRechargeResponse response = restTemplate.postForEntity(url,accountRechargeVO,AccountRechargeResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 更新充值的相关信息(接口调用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public String handleRechargeInfo(HandleAccountRechargeRequest request) {
+        String url = tradeService + "/trade/handleRechargeInfo";
+        StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
+
     @Override
     public List<MyCouponListCustomizeVO> selectWechatCouponList(MyCouponListRequest requestBean) {
         String url = urlBase + "coupon/wechatcouponlist";

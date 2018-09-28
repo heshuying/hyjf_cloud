@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.BaseService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.List;
 import java.util.Map;
@@ -224,7 +225,7 @@ public interface UserManagerService extends BaseService {
      * @param updCompanyRequest
      * @return
      */
-    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest);
+    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,String bankName,String payAllianceCode,User user,String bankId);
 
 	Integer getUserIdByBind(int bindUniqueId, int bindPlatformId);
 
@@ -286,4 +287,11 @@ public interface UserManagerService extends BaseService {
      * @return
      */
     List<ROaDepartment> getDeptInfoByDeptId(int deptId);
+
+    /**
+     * 调用江西银行查询联行号
+     * @param cardNo
+     * @return
+     */
+    BankCallBean payAllianceCodeQuery(String cardNo, Integer userId);
 }

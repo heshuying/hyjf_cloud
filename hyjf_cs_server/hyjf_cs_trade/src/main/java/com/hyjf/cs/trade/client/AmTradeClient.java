@@ -2201,6 +2201,14 @@ public interface AmTradeClient {
 
     String handlerAfterCash(ApiUserWithdrawRequest userWithdrawRequest);
 
+    String handleRechargeOnlineInfo(HandleAccountRechargeRequest rechargeRequest);
+
+    List<AccountRechargeVO> selectAccountRechargeByOrderId(String ordId);
+
+    int insertAccountRecharge(AccountRechargeVO record);
+
+    String handleRechargeInfo(HandleAccountRechargeRequest rechargeRequest);
+
     /**
      * @Author walter.limeng
      * @Description  微信获取我的优惠券列表

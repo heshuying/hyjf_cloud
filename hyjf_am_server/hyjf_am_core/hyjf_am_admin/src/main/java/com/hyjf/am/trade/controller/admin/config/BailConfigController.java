@@ -13,25 +13,19 @@ import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.BailConfigAddRequest;
 import com.hyjf.am.resquest.admin.BailConfigRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.HjhBailConfigInfo;
-import com.hyjf.am.trade.dao.model.auto.HjhBailConfigInfoExample;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.service.admin.config.BailConfigService;
 import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
 import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
-import com.hyjf.am.vo.admin.NifaFieldDefinitionVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetterUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,7 +54,7 @@ public class BailConfigController extends BaseController {
      * @Author: liushouyi
      * @Desc :查询列表数据
      */
-    @ApiOperation(value = "银行账户管理查询列表")
+    @ApiOperation(value = "保证金查询列表")
     @PostMapping("/select_bail_config_record_list")
     public BailConfigCustomizeResponse selectBailConfigRecordList(@RequestBody BailConfigRequest bailConfigRequest) {
         BailConfigCustomizeResponse response = new BailConfigCustomizeResponse();
@@ -104,12 +98,13 @@ public class BailConfigController extends BaseController {
         HjhInstConfigResponse response = new HjhInstConfigResponse();
         List<HjhInstConfig> hjhInstConfigList = bailConfigService.selectNoUsedInstConfigList();
         if (null != hjhInstConfigList && hjhInstConfigList.size() > 0) {
-            List<HjhInstConfigVO> hjhInstConfigVOList = CommonUtils.convertBeanList(hjhInstConfigList,HjhInstConfigVO.class);
+            List<HjhInstConfigVO> hjhInstConfigVOList = CommonUtils.convertBeanList(hjhInstConfigList, HjhInstConfigVO.class);
             response.setResultList(hjhInstConfigVOList);
             response.setRtn(Response.SUCCESS);
         }
         return response;
     }
+
     /**
      * @Author: liushouyi
      * @Desc 周期内发标已发额度
@@ -130,7 +125,7 @@ public class BailConfigController extends BaseController {
      */
     @ApiOperation(value = "根据该机构可用还款方式更新可用授信方式")
     @GetMapping("/update_bail_info_delflg/{instCode}")
-    public BooleanResponse updateBailInfoDelFlg(@PathVariable String instCode){
+    public BooleanResponse updateBailInfoDelFlg(@PathVariable String instCode) {
         BooleanResponse response = new BooleanResponse();
         response.setResultBoolean(bailConfigService.updateBailInfoDelFlg(instCode));
         response.setRtn(Response.SUCCESS);
@@ -143,7 +138,7 @@ public class BailConfigController extends BaseController {
      */
     @ApiOperation(value = "添加保证金配置")
     @PostMapping("/insert_bail_config")
-    public BooleanResponse insertBailConfig(@RequestBody BailConfigAddRequest bailConfigAddRequest){
+    public BooleanResponse insertBailConfig(@RequestBody BailConfigAddRequest bailConfigAddRequest) {
         BooleanResponse response = new BooleanResponse();
         response.setResultBoolean(bailConfigService.insertBailConfig(bailConfigAddRequest));
         response.setRtn(Response.SUCCESS);
@@ -156,7 +151,7 @@ public class BailConfigController extends BaseController {
      */
     @ApiOperation(value = "更新保证金配置")
     @PostMapping("/update_bail_config")
-    public BooleanResponse updateBailConfig(@RequestBody BailConfigAddRequest bailConfigAddRequest){
+    public BooleanResponse updateBailConfig(@RequestBody BailConfigAddRequest bailConfigAddRequest) {
         BooleanResponse response = new BooleanResponse();
         response.setResultBoolean(bailConfigService.updateBailConfig(bailConfigAddRequest));
         response.setRtn(Response.SUCCESS);
@@ -169,7 +164,7 @@ public class BailConfigController extends BaseController {
      */
     @ApiOperation(value = "删除保证金配置")
     @PostMapping("/delete_bail_config")
-    public BooleanResponse deleteBailConfig(@RequestBody BailConfigAddRequest bailConfigAddRequest){
+    public BooleanResponse deleteBailConfig(@RequestBody BailConfigAddRequest bailConfigAddRequest) {
         BooleanResponse response = new BooleanResponse();
         response.setResultBoolean(bailConfigService.deleteBailConfig(bailConfigAddRequest));
         response.setRtn(Response.SUCCESS);
@@ -182,7 +177,7 @@ public class BailConfigController extends BaseController {
      */
     @ApiOperation(value = "获取当前机构可用还款方式")
     @GetMapping("/select_repay_method/{instCode}")
-    public Response selectRepayMethod(@PathVariable String instCode){
+    public Response selectRepayMethod(@PathVariable String instCode) {
         Response response = new Response();
         response.setResultList(bailConfigService.selectRepayMethod(instCode));
         response.setRtn(Response.SUCCESS);

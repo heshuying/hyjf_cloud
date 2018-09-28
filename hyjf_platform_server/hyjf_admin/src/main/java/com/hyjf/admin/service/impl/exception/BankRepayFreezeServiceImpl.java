@@ -1,10 +1,10 @@
 package com.hyjf.admin.service.impl.exception;
 
 import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;

@@ -144,6 +144,8 @@ public class BorrowFlowController extends BaseController {
         AdminSystemVO user = getUser(request);
         adminRequest.setCreateUser(Integer.parseInt(user.getId()));
         adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
+//        adminRequest.setCreateUser(3);
+//        adminRequest.setUpdateUser(3);
         // 插入
         resList = this.borrowFlowService.insertRecord(adminRequest);
         if (resList == null) {

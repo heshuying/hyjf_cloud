@@ -5,7 +5,7 @@
 	<sql id="Where_Clause">
 		<where>
 		    b.`status` = 1
-		    AND (habt.auto_record != 1 OR habt.auto_record IS NULL)
+			AND (habt.auto_bail != 1 OR habt.auto_bail IS NULL OR habt.auto_audit != 1 OR habt.auto_audit IS NULL)
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
 				AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
