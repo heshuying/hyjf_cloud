@@ -61,4 +61,5 @@ public class ActivityListServiceImpl implements ActivityListService {
     public ActivityListResponse getRecordById(Integer id) {
         return amMarketClient.getInfoById(id);
     }
+
 }
