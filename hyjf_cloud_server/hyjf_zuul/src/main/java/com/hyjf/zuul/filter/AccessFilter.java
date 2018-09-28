@@ -422,7 +422,7 @@ public class AccessFilter extends ZuulFilter {
             logger.info("sign:"+sign);
             // 获取用户ID
             AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-            logger.info("appUserToken:"+appUserToken);
+            logger.info("appUserToken:"+appUserToken.getUserId());
             if (appUserToken == null || appUserToken.getUserId() == null) {
                 logger.error("token invalid...");
                 return executeResultOfTokenInvalid(ctx, isNecessary, WECHAT_CHANNEL);
@@ -438,6 +438,7 @@ public class AccessFilter extends ZuulFilter {
         } else {
             return executeResultOfTokenInvalid(ctx, isNecessary, WECHAT_CHANNEL);
         }
+        logger.info(ctx.getResponseBody());
         return ctx;
     }
 
