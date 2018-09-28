@@ -202,7 +202,6 @@
 	<select id="selectCurrentHoldObligatoryRightList" resultMap="currentHoldObligatoryRightMap" parameterType="java.util.Map">
 		SELECT t.* FROM (
 		SELECT
-
 		1 AS creditUserId,
 
 		borrow.borrow_nid,
@@ -226,7 +225,7 @@
 		(ten.account-(
 		SELECT IFNULL(SUM(ct.assign_capital),0)
 		FROM ht_credit_tender ct
-		WHERE rec.nid = ct.credit_tender_nid)) AS capital,
+		WHERE ct.user_id = #{userId} AND rec.nid = ct.credit_tender_nid)) AS capital,
 		CASE
 		WHEN hbc.credit_capital_assigned IS NOT NULL THEN 1
 		ELSE 0 END type,
@@ -244,17 +243,18 @@
 		IFNULL( rec.recover_interest_wait, 0 )-
 		(SELECT IFNULL(SUM(ct.assign_interest - ct.assign_repay_interest),0)
 		FROM ht_credit_tender ct
-		WHERE rec.nid = ct.credit_tender_nid
+		WHERE ct.user_id = #{userId} AND rec.nid = ct.credit_tender_nid
 		)-
 		(SELECT IFNULL(SUM(ct.assign_capital - ct.assign_repay_capital),0)
 		FROM ht_credit_tender ct
-		WHERE rec.nid = ct.credit_tender_nid
+		WHERE ct.user_id = #{userId} AND rec.nid = ct.credit_tender_nid
 		)- (
 		SELECT
 		IFNULL(SUM(rp.charge_interest) ,0)
 		FROM
 		ht_credit_repay rp
 		WHERE
+		rp.user_id = #{userId} AND
 		rec.nid = rp.credit_tender_nid
 		and rp.status = 1
 		)
@@ -276,10 +276,10 @@
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
 		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = borrow.borrow_nid
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
-		LEFT JOIN (SELECT hbc.tender_nid,
-		SUM(hbc.credit_capital_assigned) credit_capital_assigned,
-		MIN(hbc.credit_status) credit_status FROM ht_borrow_credit hbc
-		GROUP BY hbc.tender_nid
+		LEFT JOIN (SELECT hbcc.tender_nid,
+		SUM(hbcc.credit_capital_assigned) credit_capital_assigned,
+		MIN(hbcc.credit_status) credit_status FROM ht_borrow_credit hbcc
+		GROUP BY hbcc.tender_nid
 		) hbc ON ten.nid=hbc.tender_nid
 		WHERE
 		(
@@ -291,10 +291,9 @@
 		AND ten.account>IFNULL(hbc.credit_capital_assigned,0)
 		AND borrow.plan_nid IS NULL
 
-
 		UNION ALL
-		SELECT
 
+		SELECT
 		ten.credit_user_id AS creditUserId,
 
 		borrow.borrow_nid,
@@ -309,8 +308,8 @@
 		CONCAT(borrow.borrow_apr, '%') borrow_apr,
 		ten.user_id AS ten_user_id,
 		ten.assign_nid nid,
-		DATE_FORMAT(ten.create_time, '%Y-%m-%d') AS addtime,
-		ten.create_time,
+		DATE_FORMAT( ten.create_time, '%Y-%m-%d' ) AS addtime,
+		ten.create_time as orderby_addtime,
 		IFNULL(FROM_UNIXTIME(IF(borrow.repay_last_time='',NULL,borrow.repay_last_time),'%Y-%m-%d'),'--') AS invest_date,
 		borrow.repay_last_time,
 		ten.assign_capital AS capital,
@@ -324,6 +323,7 @@
 		FROM
 		ht_credit_repay hdcrp
 		WHERE
+		hdcrp.user_id =#{userId} AND
 		hdcrp.assign_nid = ten.assign_nid
 		AND hdcrp.`status` = 1
 		)
@@ -376,7 +376,7 @@
 		hbtc.user_id AS ten_user_id,
 		hbtc.nid nid,
 		DATE_FORMAT( hbtc.create_time, '%Y-%m-%d' ) AS addtime,
-		hbtc.create_time,
+		hbtc.create_time as orderby_addtime,
 		IFNULL(FROM_UNIXTIME( IF(MAX(hcr.recover_time)='',NULL,MAX(hcr.recover_time)), '%Y-%m-%d' ),'--') AS recover_time,
 		MAX(hcr.recover_time),
 		CASE
@@ -416,9 +416,7 @@
 		HAVING MIN(hcr.recover_status)=0
 		AND IFNULL((SUM(hcr.recover_account)-SUM(hcr.recover_account_yes)),0)<![CDATA[>]]>0
 
-
 		UNION ALL
-
 
 		SELECT
 
@@ -438,15 +436,15 @@
 		CONCAT(hiii.borrow_extra_yield, '%') borrow_apr,
 		hiii.user_id AS ten_user_id,
 		hiii.order_id nid,
-		DATE_FORMAT( hiii.create_time, '%Y-%m-%d' ) AS addtime,
+		FROM_UNIXTIME( hiii.create_time, '%Y-%m-%d' ) AS addtime,
 		hiii.create_time,
 		IFNULL(FROM_UNIXTIME( IF(borrow.repay_last_time='',NULL,borrow.repay_last_time), '%Y-%m-%d' ),'--') AS invest_date,
 		borrow.repay_last_time,
 		hiii.account AS capital,
 		4 AS type,
-		CONCAT('加息',FORMAT(hiii.borrow_extra_yield, 2),'%') AS DATA,
+		CONCAT('加息',FORMAT(hiii.borrow_extra_yield, 2),'%')  AS DATA,
 		0 coupon_type,
-		IF(borrow.`status` = 4,hiii.repay_interest_wait,'--') AS total_wait,
+		IF(borrow.`status` = 4 OR borrow.`status` = 5,hiii.repay_interest_wait,'--') AS total_wait,
 		'' credit_nid,
 		'' credit_tender_nid,
 		case when borrowInfo.borrow_extra_yield=0 then
@@ -467,6 +465,10 @@
 		borrow.`status` = 2
 		OR borrow.`status` = 3
 		OR borrow.`status` = 4
+		OR(
+		borrow.`status` = 5
+		AND hiil.repay_status = 0
+		)
 		)
 		AND hiii.user_id=#{userId}
 		AND borrow.plan_nid IS NULL
