@@ -74,7 +74,7 @@ public class RepayAuthController extends BaseController {
      * @param payRequestBean
      * @return
      */
-    @PostMapping("/page")
+    @PostMapping("/page.do")
     @ResponseBody
     @ApiOperation(value = "还款授权", notes = "还款授权")
     public ModelAndView repayAuth(HttpServletRequest request, HttpServletResponse response, @RequestBody AutoPlusRequestBean payRequestBean) {
