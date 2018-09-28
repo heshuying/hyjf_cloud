@@ -45,8 +45,6 @@ public class WechatCouponController {
 
         try {
             List<MyCouponListCustomizeVO> listUnUsed = myCouponListService.selectWechatCouponList(String.valueOf(userId), 0);
-            Map<String,Object> resultMap = new HashMap<String,Object>();
-            resultMap.put("object", listUnUsed);
             result.setData(listUnUsed);
         } catch (Exception e) {
             result.setStatus(WebResult.ERROR);
