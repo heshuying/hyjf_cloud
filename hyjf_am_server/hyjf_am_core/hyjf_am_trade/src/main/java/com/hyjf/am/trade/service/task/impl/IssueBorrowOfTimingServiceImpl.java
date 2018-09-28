@@ -71,7 +71,10 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 			// 延期自动发标时间（单位：分钟）
 			int afterTime = this.getAfterTime(BorrowSendTypeEnum.FABIAO_CD);
 			for (Borrow unSendBorrow : unSendBorrows) {
-				BorrowInfo borrowInfo = borrowInfoMapper.selectByPrimaryKey(unSendBorrow.getId());
+
+				BorrowInfoExample example = new BorrowInfoExample();
+				example.createCriteria().andBorrowNidEqualTo(unSendBorrow.getBorrowNid());
+				BorrowInfo borrowInfo = borrowInfoMapper.selectByExample(example).get(0);
 				// 获取批次标的号
 				String borrowPreNid = borrowInfo.getBorrowPreNid();
 				// 获取新的标的号

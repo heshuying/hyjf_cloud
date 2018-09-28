@@ -1,4 +1,4 @@
-package com.hyjf.am.market.config.constant;
+package com.hyjf.am.config.constant;
 
 /**
  * @author lisheng

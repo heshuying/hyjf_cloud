@@ -553,7 +553,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/saveUserEvaluation")
-    public int saveUserEvaluation(UserEvalationResult userEvalationResult) {
+    public int saveUserEvaluation(@RequestBody UserEvalationResult userEvalationResult) {
         int cnt = userService.saveUserEvaluation(userEvalationResult);
         return cnt;
     }
@@ -571,7 +571,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/updateUserEvalationBehavior")
-    public Integer updateUserEvalationBehavior(UserEvalationBehavior userEvalationBehavior) {
+    public Integer updateUserEvalationBehavior(@RequestBody UserEvalationBehavior userEvalationBehavior) {
         int cnt = userService.updateUserEvalationBehavior(userEvalationBehavior);
         return cnt;
     }
@@ -828,5 +828,16 @@ public class UserController extends BaseController {
         HjhUserAuthLog hjhUserAuth = new HjhUserAuthLog();
         BeanUtils.copyProperties(hjhUserAuthLogRequest,hjhUserAuth);
         return userService.updateHjhUserAuthLog(hjhUserAuth);
+    }
+    /**
+     * 根据username查询用户
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/isExistsUser/{userId}")
+    public int findUserByUsername(@PathVariable String userId) {
+        logger.info("findUserByCondition run...condition is :{}", userId);
+        return userService.isExistsUser(userId);
     }
 }

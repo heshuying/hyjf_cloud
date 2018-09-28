@@ -22,6 +22,9 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.consumer.TyjCouponRepayService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,8 +119,6 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
         cr.setId(currentRecover.getId());
         String orderId = GetOrderIdUtils.getOrderId2(borrowTenderCpn.getUserId());
         String seqNo = GetOrderIdUtils.getSeqNo(6);
-        BankCallBean resultBean = null;
-        BankCallBean bean = new BankCallBean();
 
         UserInfoCustomizeVO userInfoCustomize = this.queryUserInfoByUserId(tenderUserId);
         UserVO user = amUserClient.findUserById(tenderUserId);

@@ -53,7 +53,7 @@ public class SendTypeServiceImpl implements SendTypeService {
         record.setSendCd(form.getSendCd());
         record.setSendName(form.getSendName());
         record.setAfterTime(Integer.valueOf(form.getAfterTime()));
-        if (StringUtils.isEmpty(record.getRemark())) {
+        if (StringUtils.isEmpty(form.getRemark())) {
             record.setRemark(StringUtils.EMPTY);
         } else {
             record.setRemark(form.getRemark());

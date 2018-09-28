@@ -4,6 +4,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
 import com.hyjf.admin.client.AmConfigClient;
@@ -17,14 +18,17 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
@@ -80,6 +84,9 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         // 初始化分页参数，并组合到请求参数
         // 关联hyjf_trade库的ht_hjh_inst_config表
         List<HjhInstConfigVO> listHjhInstConfig = amTradeClient.selectInstConfigAll();
+        //部门
+        String [] strDepts = getDeptId(request.getCombotreeListSrch());
+        request.setCombotreeListSrch(strDepts);
         // 查询列表
         UserManagerResponse userManagerResponse = userCenterClient.selectUserMemberList(request);
         if (null != userManagerResponse) {
@@ -474,7 +481,9 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogRemark("联行号查询");
         bean.setLogClient(0);
-        return BankCallUtils.callApiBg(bean);
+        BankCallBean callBean =  BankCallUtils.callApiBg(bean);
+        logger.info("========银联号查询结果为:"+JSONObject.toJSON(callBean));
+        return callBean;
     }
 
 
@@ -583,5 +592,102 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     @Override
     public List<SpreadsUserVO> selectSpreadsUserBySpreadUserId(int userId){
         return userCenterClient.selectSpreadsUserBySpreadUserId(userId);
+    }
+    /**
+     * 部门树形结构
+     * @return
+     */
+    @Override
+    public JSONArray getCrmDepartmentList(String[] list) {
+        List<OADepartmentCustomizeVO> departmentList = userCenterClient.queryDepartmentInfo(null);
+
+        Map<String, String> map = new HashMap<String, String>();
+        if (departmentList != null && departmentList.size() > 0) {
+            for (OADepartmentCustomizeVO oaDepartment : departmentList) {
+                map.put(String.valueOf(oaDepartment.getId()), HtmlUtil.unescape(oaDepartment.getName()));
+            }
+        }
+        return treeDepartmentList(departmentList, map, list, "0", "");
+    }
+    /**
+     * 部门树形结构
+     *
+     * @param departmentTreeDBList
+     * @param topParentDepartmentCd
+     * @return
+     */
+    private JSONArray treeDepartmentList(List<OADepartmentCustomizeVO> departmentTreeDBList, Map<String, String> map, String[] selectedNode, String topParentDepartmentCd,
+                                         String topParentDepartmentName) {
+        JSONArray ja = new JSONArray();
+        JSONObject joAttr = new JSONObject();
+        if (departmentTreeDBList != null && departmentTreeDBList.size() > 0) {
+            JSONObject jo = null;
+            for (OADepartmentCustomizeVO departmentTreeRecord : departmentTreeDBList) {
+                jo = new JSONObject();
+                jo.put("title", departmentTreeRecord.getName());
+                jo.put("key", UUID.randomUUID());
+                jo.put("value", departmentTreeRecord.getId().toString());
+                String departmentCd = String.valueOf(departmentTreeRecord.getId());
+                String departmentName = String.valueOf(departmentTreeRecord.getName());
+                String parentDepartmentCd = String.valueOf(departmentTreeRecord.getParentid());
+                if (topParentDepartmentCd.equals(parentDepartmentCd)) {
+                    JSONArray array = treeDepartmentList(departmentTreeDBList, map, selectedNode, departmentCd, departmentName);
+                    if(null!=array&&array.size()>0){
+                        jo.put("value", "P"+departmentTreeRecord.getId().toString());
+                    }
+                    jo.put("children", array);
+                    ja.add(jo);
+                }
+            }
+        }
+        return ja;
+    }
+
+    /**
+     * 对部门进行操作
+     * @param deptParam
+     * @return
+     */
+    public String[] getDeptId(String[] deptParam) {
+        String[] strIds = null;
+        List<String> stringList = new ArrayList<String>();
+        if (Validator.isNotNull(deptParam)) {
+            //判断部门选择里是否有父级部门
+            for (int i = 0; i < deptParam.length; i++) {
+                String st = deptParam[i];
+                if (st.contains("P")) {
+                    //选择的是父级部门的情况下
+                    String strDe = st.split("P")[1];
+                    if (StringUtils.isNotBlank(strDe)) {
+                        stringList = getDeptInfoByDeptId(Integer.parseInt(strDe), stringList);
+                    }
+                } else {
+                    //既选择了父级部门又选择子级菜单的情况下
+                    stringList.add(st);
+                }
+                //其他
+                if (("-10086").equals(st)) {
+                    stringList.add("0");
+                }
+            }
+        }
+        if (null != stringList && stringList.size() > 0) {
+            strIds = stringList.toArray(new String[stringList.size()]);
+        }
+        return strIds;
+    }
+
+    /**
+     * 根据部门查找是否有子级部门并循环将部门id设置的list中
+     */
+    private List<String> getDeptInfoByDeptId(int deptId, List<String> keysList) {
+        List<OADepartmentCustomizeVO> list = userCenterClient.getDeptInfoByDeptId(deptId);
+        if (null != list && list.size() > 0) {
+            for (OADepartmentCustomizeVO oaDepartmentCustomizeVO : list) {
+                keysList.add(oaDepartmentCustomizeVO.getId().toString());
+                getDeptInfoByDeptId(oaDepartmentCustomizeVO.getId(), keysList);
+            }
+        }
+        return keysList;
     }
 }

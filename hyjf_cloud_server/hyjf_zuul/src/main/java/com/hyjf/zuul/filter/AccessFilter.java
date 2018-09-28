@@ -304,19 +304,12 @@ public class AccessFilter extends ZuulFilter {
         ctx.setResponseStatusCode(200);
         JSONObject result = new JSONObject();
 
-        String loginPromptStr = "";
-        try {
-            loginPromptStr = URLEncoder.encode("请先登录！", "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
         if (APP_CHANNEL.equals(channel)) {
             result.put("status", "708");
-            result.put("statusDesc", loginPromptStr);
+            result.put("statusDesc", "need login");
         } else {
             result.put("status", "999");
-            result.put("statusDesc", loginPromptStr);
+            result.put("statusDesc", "need login");
         }
         ctx.setResponseBody(result.toJSONString());
         return ctx;

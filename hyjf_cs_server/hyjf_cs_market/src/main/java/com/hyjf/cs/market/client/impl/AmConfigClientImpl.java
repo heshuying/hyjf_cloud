@@ -243,7 +243,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 */
 	@Override
 	public IntegerResponse addSubmission(SubmissionsVO submissionsVO){
-		IntegerResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,IntegerResponse.class);
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-config/submission/addSubmission",submissionsVO ,IntegerResponse.class);
 		return response;
 	}
 

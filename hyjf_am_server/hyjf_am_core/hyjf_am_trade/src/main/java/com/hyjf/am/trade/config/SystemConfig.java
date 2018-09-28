@@ -8,7 +8,13 @@ public class SystemConfig {
 	
 	@Value("${hyjf.env.test}")
 	private boolean envTest;
-	
+
+    /**
+     * app前端地址
+     */
+    @Value("${hyjf.front.app.host}")
+    public String AppFrontHost;
+
     @Value("${hostFtp.hostName}")
     public String ftpHostName;
 
@@ -435,6 +441,12 @@ public class SystemConfig {
 	public void setMerrpAccount(String merrpAccount) {
 		this.merrpAccount = merrpAccount;
 	}
-    
-    
+
+    public String getAppFrontHost() {
+        return AppFrontHost;
+    }
+
+    public void setAppFrontHost(String appFrontHost) {
+        AppFrontHost = appFrontHost;
+    }
 }

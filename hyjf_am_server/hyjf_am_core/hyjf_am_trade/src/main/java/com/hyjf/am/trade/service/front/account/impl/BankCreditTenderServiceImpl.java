@@ -1125,12 +1125,13 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	@Override
 	public Integer tenderAbleToCredit(Integer userId) {
 		// 获取当前时间
-		Integer nowTime = GetDate.getNowTime10();
 		// 获取当前时间的日期
 		String nowDate = (GetDate.yyyyMMdd.format(new Date()) != null && !"".equals(GetDate.yyyyMMdd.format(new Date()))) ? GetDate.yyyyMMdd.format(new Date()) : "0";
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("nowDate", nowDate);
-		params.put("userId", userId);
+		if(userId!=null&&userId.intValue()>0){
+			params.put("userId", userId);
+		}
 		Integer creditedNum = tenderCreditCustomizeMapper.tenderAbleToCredit(params);
 		return creditedNum;
 	}
@@ -1198,6 +1199,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 			List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(borrowRecoverExample);
 			BorrowRecover borrowRecover = borrowRecoverList.get(0);
 			// 还款表更新债转时间
+			logger.info("修改债转表数据 addtime {} " ,request.getAddTime());
 			borrowRecover.setCreditTime(request.getAddTime());
 			boolean isUpdateFlag = this.borrowRecoverMapper.updateByPrimaryKey(borrowRecover) > 0 ? true : false;
 			if (!isUpdateFlag) {

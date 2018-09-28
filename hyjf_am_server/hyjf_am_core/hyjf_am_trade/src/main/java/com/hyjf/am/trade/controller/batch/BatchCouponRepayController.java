@@ -3,13 +3,16 @@
  */
 package com.hyjf.am.trade.controller.batch;
 
+import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
 import com.hyjf.am.trade.service.task.CouponRepayService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.exception.MQException;
@@ -72,7 +75,7 @@ public class BatchCouponRepayController extends BaseController {
     public CouponRecoverCustomizeResponse selectCurrentCouponRecover(@PathVariable String couponTenderNid,@PathVariable int periodNow) {
         CouponRecoverCustomizeResponse response = new CouponRecoverCustomizeResponse();
         Map<String,Object> map = new HashMap<>();
-        map.put("couponTenderNid",couponTenderNid);
+        map.put("tenderNid",couponTenderNid);
         map.put("periodNow",periodNow);
         CouponRecoverCustomize customize = couponRepayService.selectCurrentCouponRecover(map);
         if (customize != null) {
@@ -80,7 +83,20 @@ public class BatchCouponRepayController extends BaseController {
             BeanUtils.copyProperties(customize,customizeVO);
             response.setResult(customizeVO);
         }
-        return null;
+        return response;
+    }
+
+    /**
+     * 取得优惠券投资信息
+     * @param couponTenderNid
+     * @return
+     */
+    @GetMapping("/getcoupontenderinfo/{couponTenderNid}")
+    public BorrowTenderCpnResponse getCouponTenderInfo(@PathVariable String couponTenderNid) {
+        BorrowTenderCpnResponse response = new BorrowTenderCpnResponse();
+        BorrowTenderCpn borrowTenderCpn = couponRepayService.getCouponTenderInfo(couponTenderNid);
+        response.setResult(CommonUtils.convertBean(borrowTenderCpn,BorrowTenderCpnVO.class));
+        return response;
     }
 
     /**
@@ -89,7 +105,7 @@ public class BatchCouponRepayController extends BaseController {
      * @return
      */
     @PostMapping("/updatecouponrecover")
-    public Integer updateCouponRecover(CouponRecoverVO recoverVO) {
+    public Integer updateCouponRecover(@RequestBody CouponRecoverVO recoverVO) {
         CouponRecover couponRecover = new CouponRecover();
         BeanUtils.copyProperties(recoverVO,couponRecover);
         try{
@@ -106,7 +122,7 @@ public class BatchCouponRepayController extends BaseController {
      * @return
      */
     @PostMapping("/updatecoupononlyrecover")
-    public Integer updateCouponOnlyRecover(CouponRecoverCustomizeRequest request) {
+    public Integer updateCouponOnlyRecover(@RequestBody CouponRecoverCustomizeRequest request) {
         Integer result = null;
         try {
             result = couponRepayService.updateCouponOnlyRecover(request);

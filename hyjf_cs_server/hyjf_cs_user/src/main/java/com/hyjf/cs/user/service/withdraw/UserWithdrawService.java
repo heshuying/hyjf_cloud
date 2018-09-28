@@ -8,11 +8,8 @@ import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.AccountBankVO;
 import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.UserWithdrawRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,27 +71,4 @@ public interface UserWithdrawService extends BaseUserService {
      */
     ModelAndView withdraw(UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request);
 
-    /**
-     * api用户提现后,同步处理
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    ModelAndView cashReturn(HttpServletRequest request, BankCallBean bean);
-
-    /**
-     * 用户提现异步回调处理
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    BankCallResult withdrawBgReturn(HttpServletRequest request, BankCallBean bean);
-
-    /**
-     * 获取用户提现记录
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    BaseResultBean getUserWithdrawRecord(UserWithdrawRequestBean userWithdrawRequestBean);
 }

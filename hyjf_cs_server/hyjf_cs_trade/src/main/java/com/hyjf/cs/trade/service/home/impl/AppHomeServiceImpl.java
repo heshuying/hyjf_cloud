@@ -151,8 +151,8 @@ public class AppHomeServiceImpl implements AppHomeService {
                 //获取累计收益
                 info.put("accumulatedEarnings", accountVO != null ? DF_FOR_VIEW.format(accountVO.getBankInterestSum()) : "0.00");
                 //获取(未使用的)优惠券数量
-                int couponCount = amTradeClient.getUserCouponCount(Integer.valueOf(userId), "0");
-                info.put("coupons", couponCount);
+                Integer couponCount = amTradeClient.getUserCouponCount(Integer.valueOf(userId), "0");
+                info.put("coupons", couponCount != null ? String.valueOf(couponCount) : "0");
                 info.put("adPicUrl", "");
                 info.put("adClickPicUrl", "");
             }

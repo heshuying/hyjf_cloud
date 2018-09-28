@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.task;
 
 import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
+import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.BatchCouponTimeoutCommonCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
@@ -70,4 +71,13 @@ public interface CouponRepayService {
      * @return
      */
     Integer updateCouponOnlyRecover(CouponRecoverCustomizeRequest request) throws MQException;
+
+    /**
+     * @Author walter.limeng
+     * @Description  获取优惠券信息
+     * @Date 17:59 2018/9/27
+     * @Param couponTenderNid
+     * @return
+     */
+    BorrowTenderCpn getCouponTenderInfo(String couponTenderNid);
 }

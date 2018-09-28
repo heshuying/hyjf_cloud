@@ -1,4 +1,4 @@
-package com.hyjf.am.config.controller;
+package com.hyjf.am.config.controller.admin.submission;
 
 import com.hyjf.am.config.dao.model.auto.Submissions;
 import com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * @author lisheng
  * @version SubmissionsController, v0.1 2018/7/13 16:19
  */
 @RestController

@@ -5,16 +5,11 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.mobileclient.SubmissionsService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
-import com.hyjf.am.vo.config.AppBorrowImageVO;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
-import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -60,7 +55,6 @@ public class SubmissionsController extends BaseController {
     @PostMapping("/getRecordList")
     @ResponseBody
     public AdminResult<ListResult<SubmissionsCustomizeVO>> findAppBannerData(@RequestBody SubmissionsRequest form) {
-        try {
             SubmissionsResponse response = new SubmissionsResponse();
             Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
             if (StringUtils.isNotBlank(form.getUserName())) {
@@ -80,13 +74,7 @@ public class SubmissionsController extends BaseController {
                 String userName = users.getResult() != null ? users.getResult().getUsername() : "";
                 submissionsCustomizeVO.setUserName(userName);
             }
-
             return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(submissionList.getResultList(), submissionList.getRecordTotal()));
-
-        } catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-
     }
 
 
@@ -94,11 +82,7 @@ public class SubmissionsController extends BaseController {
     @PostMapping(value = "/searchinfo")
     @ResponseBody
     public AdminResult<SubmissionsVO> searchinfo(@RequestBody SubmissionsRequest request) {
-        try {
-            return new AdminResult<SubmissionsVO>(submissionsService.getRecord(request));
-        }catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+        return new AdminResult<SubmissionsVO>(submissionsService.getRecord(request));
     }
     /**
      * 意见反馈更新保存
@@ -109,12 +93,9 @@ public class SubmissionsController extends BaseController {
     @ApiOperation(value = "意见反馈更新保存", notes = "意见反馈更新保存")
     @PostMapping("/updateSubmissionsAction")
     public AdminResult<ListResult<SubmissionsCustomizeVO>> updateSubmissions(@RequestBody SubmissionsRequest form) {
-        try {
             SubmissionsResponse response = submissionsService.updateSubmissionStatus(form);
             return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
-        } catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+
 
     }
 

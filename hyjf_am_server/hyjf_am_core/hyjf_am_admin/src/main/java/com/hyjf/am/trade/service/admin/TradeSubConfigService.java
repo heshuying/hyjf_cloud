@@ -1,15 +1,15 @@
 package com.hyjf.am.trade.service.admin;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
 import com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author by xiehuili on 2018/7/9.
  */
-public interface SubConfigService {
+public interface TradeSubConfigService {
     /*
     * 查询分账名单记录总数
     * */

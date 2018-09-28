@@ -85,6 +85,7 @@
         c.charge_mode,
         c.service_fee_total,
         c.auto_repay,
+        c.repayer_type,
         hic.inst_name,
         hat.asset_type_name
         FROM
