@@ -93,9 +93,6 @@ public class CustomizeMapper extends AutoMapper {
 	protected TenderCreditCustomizeMapper tenderCreditCustomizeMapper;
 
 	@Autowired
-	protected HjhReInvestDetailCustomizeMapper hjhReInvestDetailCustomizeMapper;
-
-	@Autowired
 	protected WebPandectCustomizeMapper webPandectCustomizeMapper;
 
 	@Autowired
