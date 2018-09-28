@@ -1252,6 +1252,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if(borrowInfoVO ==null){
             borrowInfoVO = amTradeClient.getBorrowInfoByNid(request.getBorrowNid());
         }
+        if (borrow == null || borrowInfoVO == null) {
+            throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
+        }
         borrow.setTenderAccountMin(borrowInfoVO.getTenderAccountMin());
         borrow.setTenderAccountMax(borrowInfoVO.getTenderAccountMax());
         borrow.setCanTransactionAndroid(borrowInfoVO.getCanTransactionAndroid());
@@ -1259,9 +1262,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         borrow.setCanTransactionPc(borrowInfoVO.getCanTransactionPc());
         borrow.setCanTransactionWei(borrowInfoVO.getCanTransactionWei());
         borrow.setBorrowIncreaseMoney(borrowInfoVO.getBorrowIncreaseMoney());
-        if (borrow == null) {
-            throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
-        }
         logger.info("散标投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
         UserVO user = amUserClient.findUserById(request.getUser().getUserId());
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
