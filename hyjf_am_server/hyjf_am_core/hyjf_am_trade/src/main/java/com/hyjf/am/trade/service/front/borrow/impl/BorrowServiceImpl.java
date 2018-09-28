@@ -555,6 +555,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             }
             return incinvflag;
         }
+        return false;
     }
 
     /**

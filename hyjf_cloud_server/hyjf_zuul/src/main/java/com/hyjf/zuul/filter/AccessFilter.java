@@ -23,8 +23,6 @@ import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Map;
 
 /**
@@ -421,8 +419,10 @@ public class AccessFilter extends ZuulFilter {
             sign = (String) request.getAttribute(SIGN);
         }
         if (StringUtils.isNotBlank(sign)) {
+            logger.info("sign:"+sign);
             // 获取用户ID
             AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
+            logger.info("appUserToken:"+appUserToken);
             if (appUserToken == null || appUserToken.getUserId() == null) {
                 logger.error("token invalid...");
                 return executeResultOfTokenInvalid(ctx, isNecessary, WECHAT_CHANNEL);
