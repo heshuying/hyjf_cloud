@@ -5,7 +5,6 @@ package com.hyjf.cs.message.controller.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.message.OperationReportRequest;
-import com.hyjf.am.vo.datacollect.OperationReportVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
@@ -16,10 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author tanyy
@@ -54,6 +50,8 @@ public class WebOperationReportController extends BaseController {
 		}else{
             result.setStatus("1");
             result.setStatusDesc(response.get("error")==null?"失败":response.get("error").toString());
+			//beta环境没数据时发生404 初始化recordList
+			result.setData(response);
         }
 		return result;
 

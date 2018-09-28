@@ -186,6 +186,8 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			response.put("recordList", recordList);
 			response.put("success", "success");
 		} else {
+			//beta环境没数据时发生404 初始化recordList
+			response.put("recordList", new ArrayList<List<OperationReportVO>>());
 			response.put("error", "暂无任何数据");
 		}
 		return response;
