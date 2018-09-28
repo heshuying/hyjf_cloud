@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.customize;
 
 import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
+import com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -93,9 +94,6 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected HjhReInvestDetailCustomizeMapper hjhReInvestDetailCustomizeMapper;
-
-	@Autowired
-	protected HjhReInvestDebtCustomizeMapper hjhReInvestDebtCustomizeMapper;
 
 	@Autowired
 	protected HjhDayCreditDetailCustomizeMapper hjhDayCreditDetailCustomizeMapper;

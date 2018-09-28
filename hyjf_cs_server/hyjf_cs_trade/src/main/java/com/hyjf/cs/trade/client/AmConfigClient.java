@@ -98,4 +98,6 @@ public interface AmConfigClient {
 	 * @date 2018/9/27 14:32
 	 */
 	List<DebtConfigVO> getDebtConfigList();
+
+    String getBankRetMsg(String retCode);
 }

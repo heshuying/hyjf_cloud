@@ -254,16 +254,6 @@ public class AmConfigClientImpl implements AmConfigClient {
         return 0;
     }
 
-    @Override
-    public BankConfigVO getBankConfigById(Integer id) {
-        BankConfigResponse response = restTemplate
-                .getForEntity(configService+"/config/getBankConfigByBankId/" + id, BankConfigResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
-        }
-        return null;
-    }
-
     /**
      * 根据银行id查询江西银行配置
      * @auth sunpeikai
@@ -274,21 +264,6 @@ public class AmConfigClientImpl implements AmConfigClient {
     public JxBankConfigVO getJxBankConfigById(Integer id) {
         JxBankConfigResponse response = restTemplate
                 .getForEntity(configService+"/config/getJxBankConfigByBankId/" + id, JxBankConfigResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
-        }
-        return null;
-    }
-
-    /**
-     * 根据bankId查询BankRechargeConfig
-     * @param bankId
-     * @return
-     */
-    @Override
-    public BankRechargeConfigVo getBankRechargeConfigByBankId(Integer bankId) {
-        BankRechargeConfigResponse response = restTemplate
-                .getForEntity("http://AM-ADMIN/am-admin/config/bankrecharge/getBankRechargeConfigByBankId/" + bankId, BankRechargeConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

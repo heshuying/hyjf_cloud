@@ -135,12 +135,12 @@ public class UserCenterController extends BaseController {
         }
         userDetailInfoResponseBean.setUserBankOpenAccountVO(userBankOpenAccountCustomizeVO);
         //公司信息
-        CorpOpenAccountRecordVO corpOpenAccountRecordVO = userCenterService.selectCorpOpenAccountRecordByUserId(userId);
-        CorpOpenAccountRecordCustomizeVO corpOpenAccountRecordCustomizeVO = new CorpOpenAccountRecordCustomizeVO();
-        if(null!=corpOpenAccountRecordVO){
-            BeanUtils.copyProperties(corpOpenAccountRecordVO, corpOpenAccountRecordCustomizeVO);
+        CompanyInfoVO companyInfo = userCenterService.selectCompanyInfoByUserId(userId);
+        CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
+        if(null!=companyInfo){
+            BeanUtils.copyProperties(companyInfo, companyInfoCompanyInfoVO);
         }
-        userDetailInfoResponseBean.setEnterpriseInformation(corpOpenAccountRecordCustomizeVO);
+        userDetailInfoResponseBean.setEnterpriseInformation(companyInfoCompanyInfoVO);
         //第三方平台绑定信息
         BindUserVo bindUserVo = userCenterService.selectBindeUserByUserI(userId);
         BindUserCustomizeVO bindUserCustomizeVO = new BindUserCustomizeVO();
@@ -576,44 +576,6 @@ public class UserCenterController extends BaseController {
         Response response = userCenterService.saveCompanyInfo(updCompanyRequest);
         return new AdminResult<Response>(response);
     }
-/*
-    *//**
-     * 获取部门信息
-     * @return
-     *//*
-    @ResponseBody
-    @PostMapping(value = "/getDepartmentList")
-    @ApiOperation(value = "获取部门信息", notes = "获取部门信息")
-    public JSONObject getCrmDepartmentListAction() {
-        JSONObject jsonObject = new JSONObject();
-        // 部门
-        String[] list = new String[] {};
-        //ids 刷新时可用,暂不删除 保留
-        *//*if (Validator.isNotNull(deptIds)) {
-            if (deptIds.contains(StringPool.COMMA)) {
-                list = deptIds.split(StringPool.COMMA);
-            } else {
-                list = new String[] { deptIds};
-            }
-        }*//*
-        JSONArray ja = smsCountService.getCrmDepartmentList(list);
-        if (ja != null) {
-            //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
-            JSONObject jo = new JSONObject();
-            jo.put("value", "-10086");
-            jo.put("title", "其他");
-            JSONArray array = new JSONArray();
-            jo.put("key", UUID.randomUUID());
-            jo.put("children", array);
-            ja.add(jo);
-            JSONObject ret= new JSONObject();
-            ret.put("data", ja);
-            ret.put("status", "000");
-            ret.put("statusDesc", "成功");
-            return ret;
-        }
-        return jsonObject;
-    }*/
 
     public UserManagerInitResponseBean initUserManaget(){
         UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();
