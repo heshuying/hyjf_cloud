@@ -44,6 +44,23 @@ public class MyCouponListController extends BaseController {
         return responseBean;
     }
 
+    /**
+     * @Author walter.limeng
+     * @Description  微信端查询我的优惠券列表
+     * @Date 15:29 2018/9/28
+     * @Param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/wechatcouponlist")
+    public MyCouponListResponse wechatCouponList(@RequestBody @Valid MyCouponListRequest requestBean) {
+        MyCouponListResponse responseBean = new MyCouponListResponse();
+
+        List<MyCouponListCustomizeVO> resultList = myCouponListService.wechatCouponList(requestBean.getUserId(),requestBean.getUsedFlag(),requestBean.getLimitStart(),requestBean.getLimitEnd());
+        responseBean.setResultList(resultList);
+
+        return responseBean;
+    }
+
 
     /**
      * 查询最优优惠券

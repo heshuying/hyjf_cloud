@@ -1252,6 +1252,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if(borrowInfoVO ==null){
             borrowInfoVO = amTradeClient.getBorrowInfoByNid(request.getBorrowNid());
         }
+        if (borrow == null || borrowInfoVO == null) {
+            throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
+        }
         borrow.setTenderAccountMin(borrowInfoVO.getTenderAccountMin());
         borrow.setTenderAccountMax(borrowInfoVO.getTenderAccountMax());
         borrow.setCanTransactionAndroid(borrowInfoVO.getCanTransactionAndroid());
@@ -1259,11 +1262,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         borrow.setCanTransactionPc(borrowInfoVO.getCanTransactionPc());
         borrow.setCanTransactionWei(borrowInfoVO.getCanTransactionWei());
         borrow.setBorrowIncreaseMoney(borrowInfoVO.getBorrowIncreaseMoney());
-        if (borrow == null) {
-            throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
-        }
         logger.info("散标投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
-        UserVO user = amUserClient.findUserById(request.getUser().getUserId());
+        UserVO user = amUserClient.findUserById(request.getUserId());
+        request.setUser(user);
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         // 检查用户状态  角色  授权状态等  是否允许投资
         checkUser(user, userInfo);
@@ -1285,7 +1286,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 检查金额
         this.checkTenderMoney(request, borrow, cuc, tenderAccount );
         logger.info("所有参数都已检查通过!");
-        return null;
+        return new WebResult<Map<String, Object>>();
     }
 
     /**

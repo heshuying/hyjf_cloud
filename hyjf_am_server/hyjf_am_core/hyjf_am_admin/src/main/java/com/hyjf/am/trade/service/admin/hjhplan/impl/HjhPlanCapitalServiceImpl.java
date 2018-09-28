@@ -1,14 +1,16 @@
 package com.hyjf.am.trade.service.admin.hjhplan.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-
+import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
+import com.hyjf.am.trade.dao.model.customize.HjhReInvestDetailCustomize;
 import com.hyjf.am.trade.service.admin.hjhplan.HjhPlanCapitalService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 汇计划-资金计划
@@ -20,36 +22,51 @@ public class HjhPlanCapitalServiceImpl extends BaseServiceImpl implements HjhPla
 
     /**
      * 复投原始标的 条数
-     * @param data
-     * @param planNid
+     * @param request
      * @return
      */
     @Override
-    public Integer queryReInvestDetailCount(String data, String planNid) {
+    public Integer queryReInvestDetailCount(HjhReInvestDetailRequest request) {
         Map<String, Object> param = new HashMap<String, Object>();
 
         //起始时间
-        param.put("date", data + " 00:00:00");
+        param.put("date", request.getDate() + " 00:00:00");
         // 结束时间
-        param.put("datee", data + " 23:59:59");
-        param.put("planNid", planNid);
+        param.put("datee", request.getDate() + " 23:59:59");
+        param.put("planNid", request.getPlanNid());
+        param.put("username", request.getUserNameSrch());
+        param.put("accede_order_id", request.getAccedeOrderIdSrch());
+        param.put("borrow_nid", request.getBorrowNidSrch());
+        param.put("borrow_period", request.getLockPeriodSrch());
+        param.put("invest_type", request.getInvestTypeSrch());
+        param.put("name", request.getBorrowStyleSrch());
 
         return this.hjhReInvestDetailCustomizeMapper.queryReInvestDetailCount(param);
     }
 
     /**
      * 复投原始标的 列表
-     * @param data
-     * @param planNid
+     * @param request
      * @return
      */
     @Override
-    public List<HjhReInvestDetailVO> getReinvestInfo(String data, String planNid) {
+    public List<HjhReInvestDetailVO> getReinvestInfo(HjhReInvestDetailRequest request) {
         Map<String, Object> param = new HashMap<String, Object>();
 
-        param.put("date", data + " 00:00:00");
-        param.put("datee", data + " 23:59:59");
-        param.put("planNid", planNid);
+        //起始时间
+        param.put("date", request.getDate() + " 00:00:00");
+        // 结束时间
+        // TODO : bt.tender_type = 1 为方便联调删除的sql语句Where条件, 联调完应替换 1=1 条件
+        // TODO : 为方便前端联调做修改, 联调完应做删除
+//        param.put("datee", request.getDate() + " 23:59:59");
+        param.put("datee",  "2018-09-30 23:59:59");
+        param.put("planNid", request.getPlanNid());
+        param.put("userNameSrch", request.getUserNameSrch());
+        param.put("accedeOrderIdSrch", request.getAccedeOrderIdSrch());
+        param.put("borrowNidSrch", request.getBorrowNidSrch());
+        param.put("lockPeriodSrch", request.getLockPeriodSrch());
+        param.put("investTypeSrch", request.getInvestTypeSrch());
+        param.put("borrowStyleSrch", request.getBorrowStyleSrch());
 
         List<HjhReInvestDetailVO> recordList = hjhReInvestDetailCustomizeMapper.queryReInvestDetails(param);
         return recordList;

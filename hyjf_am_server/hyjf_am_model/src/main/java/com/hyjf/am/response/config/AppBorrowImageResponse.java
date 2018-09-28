@@ -9,7 +9,7 @@ import com.hyjf.am.vo.config.AppBorrowImageVO;
  */
 
 public class AppBorrowImageResponse extends Response<AppBorrowImageVO> {
-    private int recordTotal;
+    private int recordTotal=0;
     public int getRecordTotal() {
         return recordTotal;
     }

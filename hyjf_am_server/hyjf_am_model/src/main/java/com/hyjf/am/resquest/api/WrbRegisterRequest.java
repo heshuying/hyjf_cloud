@@ -17,7 +17,7 @@ public class WrbRegisterRequest implements Serializable {
     private Integer instType;
     private UtmPlatVO utmPlat;
     private String platform;
-
+    private Integer userId;
     public WrbRegisterRequest(String mobile, String instCode, String ipAddr, Integer instType, UtmPlatVO utmPlat, String platform) {
         this.mobile = mobile;
         this.instCode = instCode;
@@ -76,5 +76,13 @@ public class WrbRegisterRequest implements Serializable {
 
     public void setPlatform(String platform) {
         this.platform = platform;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

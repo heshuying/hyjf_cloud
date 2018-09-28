@@ -361,7 +361,7 @@
 	    <result column="end_time" property="endTime" jdbcType="INTEGER" />
 	    <result column="used_flag" property="usedFlag" jdbcType="INTEGER" />
 	    <result column="update_time" property="userUpdateTime" jdbcType="INTEGER" />
-	    <result column="add_flg" property="addFlg" jdbcType="INTEGER" />
+	    <result column="add_flag" property="addFlag" jdbcType="INTEGER" />
     	<result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />
 	    <result column="repay_time_config" property="repayTimeConfig" jdbcType="INTEGER" />
 	    <result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />
@@ -385,7 +385,7 @@
 			cu.end_time,
 			cu.used_flag,
 			cu.update_time,
-			cc.add_flg add_flg,
+			cc.add_flag add_flag,
 			cc.coupon_profit_time coupon_profit_time,
 			cc.repay_time_config repayTimeConfig,
 			cc.coupon_profit_time couponProfitTime
@@ -419,7 +419,7 @@
 			cu.end_time,
 			cu.used_flag,
 			cu.update_time,
-			cc.add_flg add_flg,
+			cc.add_flag add_flag,
 			cc.coupon_profit_time coupon_profit_time,
 			cc.repay_time_config repayTimeConfig,
 			cc.coupon_profit_time couponProfitTime

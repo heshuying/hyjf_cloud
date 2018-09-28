@@ -131,34 +131,34 @@ public class CouponConfigController extends BaseController {
         return response;
     }
 
-    /**
-     * 保存优惠券配置信息
-     * @param configRequest
-     * @return
-     */
-    @PostMapping("/saveCouponConfig")
-    public CouponConfigResponse saveCouponConfig(@RequestBody @Valid CouponConfigRequest configRequest) {
-        CouponConfigResponse ccr = new CouponConfigResponse();
-        try {
-            if (StringUtils.isNotEmpty(configRequest.getId())) {
-                CouponConfig couponConfig = new CouponConfig();
-                BeanUtils.copyProperties(configRequest, couponConfig);
-                couponConfig.setId(Integer.valueOf(configRequest.getId()));
-                couponConfig.setUpdateTime(GetDate.getDate());
-                int result = couponConfigService.saveCouponConfig(couponConfig);
-                if (result > 0) {
-                    ccr.setRtn(Response.SUCCESS);
-                } else {
-                    ccr.setRtn(Response.FAIL);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            ccr.setRtn(Response.FAIL);
-            ccr.setMessage(Response.FAIL_MSG);
-        }
-        return ccr;
-    }
+//    /**
+//     * 保存优惠券配置信息
+//     * @param configRequest
+//     * @return
+//     */
+//    @PostMapping("/saveCouponConfig")
+//    public CouponConfigResponse saveCouponConfig(@RequestBody @Valid CouponConfigRequest configRequest) {
+//        CouponConfigResponse ccr = new CouponConfigResponse();
+//        try {
+//            if (StringUtils.isNotEmpty(configRequest.getId())) {
+//                CouponConfig couponConfig = new CouponConfig();
+//                BeanUtils.copyProperties(configRequest, couponConfig);
+//                couponConfig.setId(Integer.valueOf(configRequest.getId()));
+//                couponConfig.setUpdateTime(GetDate.getDate());
+//                int result = couponConfigService.saveCouponConfig(couponConfig);
+//                if (result > 0) {
+//                    ccr.setRtn(Response.SUCCESS);
+//                } else {
+//                    ccr.setRtn(Response.FAIL);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            ccr.setRtn(Response.FAIL);
+//            ccr.setMessage(Response.FAIL_MSG);
+//        }
+//        return ccr;
+//    }
 
 
     /**
@@ -166,73 +166,73 @@ public class CouponConfigController extends BaseController {
      * @param couponConfigRequest
      * @return
      */
-    @PostMapping("/insertCouponConfig")
-    public CouponConfigResponse insertAction(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
-        CouponConfigResponse ccr = new CouponConfigResponse();
-        try {
-            CouponConfig couponConfig = new CouponConfig();
-            BeanUtils.copyProperties(couponConfigRequest, couponConfig);
-            couponConfig.setCouponCode(GetCode.getCouponCode(couponConfigRequest
-                    .getCouponType()));
-            couponConfig.setStatus(1);
-            couponConfig.setDelFlag(0);
-            couponConfig.setUpdateTime(GetDate.getDate());
-            couponConfig.setCreateTime(GetDate.getDate());
-            int result = couponConfigService.insertAction(couponConfig);
-            if (result > 0) {
-                ccr.setRtn(Response.SUCCESS);
-            } else {
-                ccr.setRtn(Response.FAIL);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return ccr;
-    }
+//    @PostMapping("/insertCouponConfig")
+//    public CouponConfigResponse insertAction(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
+//        CouponConfigResponse ccr = new CouponConfigResponse();
+//        try {
+//            CouponConfig couponConfig = new CouponConfig();
+//            BeanUtils.copyProperties(couponConfigRequest, couponConfig);
+//            couponConfig.setCouponCode(GetCode.getCouponCode(couponConfigRequest
+//                    .getCouponType()));
+//            couponConfig.setStatus(1);
+//            couponConfig.setDelFlag(0);
+//            couponConfig.setUpdateTime(GetDate.getDate());
+//            couponConfig.setCreateTime(GetDate.getDate());
+//            int result = couponConfigService.insertAction(couponConfig);
+//            if (result > 0) {
+//                ccr.setRtn(Response.SUCCESS);
+//            } else {
+//                ccr.setRtn(Response.FAIL);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//        return ccr;
+//    }
 
     /**
      * 根据id删除优惠券信息
      * @param couponConfigRequest
      * @return
      */
-    @PostMapping("/deleteCouponConfig")
-    public CouponConfigResponse deleteAction(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
-        CouponConfigResponse response = new CouponConfigResponse();
-        try {
-            if (StringUtils.isNotEmpty(couponConfigRequest.getId())) {
-                int result = couponConfigService.deleteCouponConfig(Integer.parseInt(couponConfigRequest.getId()));
-                if (result > 0) {
-                    response.setRtn(Response.SUCCESS);
-                } else {
-                    response.setRtn(Response.FAIL);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return response;
-    }
+//    @PostMapping("/deleteCouponConfig")
+//    public CouponConfigResponse deleteAction(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
+//        CouponConfigResponse response = new CouponConfigResponse();
+//        try {
+//            if (StringUtils.isNotEmpty(couponConfigRequest.getId())) {
+//                int result = couponConfigService.deleteCouponConfig(Integer.parseInt(couponConfigRequest.getId()));
+//                if (result > 0) {
+//                    response.setRtn(Response.SUCCESS);
+//                } else {
+//                    response.setRtn(Response.FAIL);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return response;
+//    }
 
     /**
      * 根据id获取要修改的优惠券信息
      * @param couponConfigRequest
      * @return
      */
-    @PostMapping("/getAuditInfo")
-    public CouponConfigResponse getAuditInfo(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
-        CouponConfigResponse ccr = new CouponConfigResponse();
-        if (!StringUtils.isEmpty(couponConfigRequest.getId())) {
-            CouponConfig ccf = couponConfigService.getCouponConfig(Integer.parseInt(couponConfigRequest.getId()));
-            if (ccf != null) {
-                CouponConfigVO configVO = new CouponConfigVO();
-                BeanUtils.copyProperties(ccf, configVO);
-                ccr.setResult(configVO);
-            }
-            ccr.setMessage("优惠券信息为空");
-        }
-        return ccr;
-    }
+//    @PostMapping("/getAuditInfo")
+//    public CouponConfigResponse getAuditInfo(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
+//        CouponConfigResponse ccr = new CouponConfigResponse();
+//        if (!StringUtils.isEmpty(couponConfigRequest.getId())) {
+//            CouponConfig ccf = couponConfigService.getCouponConfig(Integer.parseInt(couponConfigRequest.getId()));
+//            if (ccf != null) {
+//                CouponConfigVO configVO = new CouponConfigVO();
+//                BeanUtils.copyProperties(ccf, configVO);
+//                ccr.setResult(configVO);
+//            }
+//            ccr.setMessage("优惠券信息为空");
+//        }
+//        return ccr;
+//    }
 
 
     /**
@@ -240,26 +240,26 @@ public class CouponConfigController extends BaseController {
      * @param request
      * @return
      */
-    @PostMapping("/updateAuditInfo")
-    public CouponConfigResponse updateAuditInfo(@RequestBody @Valid CouponConfigRequest request) {
-        CouponConfigResponse configResponse = new CouponConfigResponse();
-        CouponConfig couponConfig = new CouponConfig();
-        BeanUtils.copyProperties(request,couponConfig);
-        couponConfig.setId(Integer.parseInt(request.getId()));
-        long nowTime = System.currentTimeMillis() / 1000;
-        couponConfig.setAuditUser(request.getAuditUser());
-        couponConfig.setUpdateUserId(Integer.parseInt(request.getAuditUser()));
-        couponConfig.setAuditTime((int)nowTime);
-        couponConfig.setUpdateTime(GetDate.getDate());
-        int result = couponConfigService.saveCouponConfig(couponConfig);
-        if (result > 0) {
-            configResponse.setRtn(Response.SUCCESS);
-        } else {
-            configResponse.setRtn(Response.FAIL);
-            configResponse.setMessage(Response.FAIL_MSG);
-        }
-        return configResponse;
-    }
+//    @PostMapping("/updateAuditInfo")
+//    public CouponConfigResponse updateAuditInfo(@RequestBody @Valid CouponConfigRequest request) {
+//        CouponConfigResponse configResponse = new CouponConfigResponse();
+//        CouponConfig couponConfig = new CouponConfig();
+//        BeanUtils.copyProperties(request,couponConfig);
+//        couponConfig.setId(Integer.parseInt(request.getId()));
+//        long nowTime = System.currentTimeMillis() / 1000;
+//        couponConfig.setAuditUser(request.getAuditUser());
+//        couponConfig.setUpdateUserId(Integer.parseInt(request.getAuditUser()));
+//        couponConfig.setAuditTime((int)nowTime);
+//        couponConfig.setUpdateTime(GetDate.getDate());
+//        int result = couponConfigService.saveCouponConfig(couponConfig);
+//        if (result > 0) {
+//            configResponse.setRtn(Response.SUCCESS);
+//        } else {
+//            configResponse.setRtn(Response.FAIL);
+//            configResponse.setMessage(Response.FAIL_MSG);
+//        }
+//        return configResponse;
+//    }
 
 
     /**
@@ -504,16 +504,16 @@ public class CouponConfigController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/getExportConfigList")
-    public CouponConfigExportCustomizeResponse getExportConfigList(@RequestBody CouponConfigRequest request) {
-        CouponConfigExportCustomizeResponse response = new CouponConfigExportCustomizeResponse();
-        CouponConfigCustomize configCustomize = new CouponConfigCustomize();
-        BeanUtils.copyProperties(request,configCustomize);
-        List<CouponConfigExportCustomize> configExportCustomizes = couponConfigService.exoportRecordList(configCustomize);
-        if (!CollectionUtils.isEmpty(configExportCustomizes)) {
-            List<CouponConfigExportCustomizeVO> configExportCustomizeVOS = CommonUtils.convertBeanList(configExportCustomizes,CouponConfigExportCustomizeVO.class);
-            response.setResultList(configExportCustomizeVOS);
-        }
-        return response;
-    }
+//    @RequestMapping("/getExportConfigList")
+//    public CouponConfigExportCustomizeResponse getExportConfigList(@RequestBody CouponConfigRequest request) {
+//        CouponConfigExportCustomizeResponse response = new CouponConfigExportCustomizeResponse();
+//        CouponConfigCustomize configCustomize = new CouponConfigCustomize();
+//        BeanUtils.copyProperties(request,configCustomize);
+//        List<CouponConfigExportCustomize> configExportCustomizes = couponConfigService.exoportRecordList(configCustomize);
+//        if (!CollectionUtils.isEmpty(configExportCustomizes)) {
+//            List<CouponConfigExportCustomizeVO> configExportCustomizeVOS = CommonUtils.convertBeanList(configExportCustomizes,CouponConfigExportCustomizeVO.class);
+//            response.setResultList(configExportCustomizeVOS);
+//        }
+//        return response;
+//    }
 }

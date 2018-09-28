@@ -64,13 +64,13 @@ public class CouponUserController extends BaseController {
     }
 
 
-    @RequestMapping("/getIssueNumber/{couponCode}")
-    public CouponUserResponse getIssueNumber(@PathVariable String couponCode) {
-        CouponUserResponse response = new CouponUserResponse();
-        int count = couponUserService.getIssueNumber(couponCode);
-        response.setCount(count);
-        return response;
-    }
+//    @RequestMapping("/getIssueNumber/{couponCode}")
+//    public CouponUserResponse getIssueNumber(@PathVariable String couponCode) {
+//        CouponUserResponse response = new CouponUserResponse();
+//        int count = couponUserService.getIssueNumber(couponCode);
+//        response.setCount(count);
+//        return response;
+//    }
 
 
     /**

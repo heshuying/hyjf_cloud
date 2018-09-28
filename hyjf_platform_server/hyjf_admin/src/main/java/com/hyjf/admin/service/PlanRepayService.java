@@ -17,11 +17,4 @@ public interface PlanRepayService {
      */
     HjhRepayResponse selectHjhRepayList(HjhRepayRequest request);
 
-    /**
-     * 根据订单号查询指定数据
-     * @param accedeOrderId
-     * @return
-     */
-    HjhRepayResponseBean selectByAccedeOrderId(String accedeOrderId);
-
 }

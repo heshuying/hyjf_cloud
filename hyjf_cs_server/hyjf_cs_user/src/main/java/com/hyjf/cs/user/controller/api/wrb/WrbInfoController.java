@@ -17,6 +17,7 @@ import com.hyjf.common.util.WrbParseParamUtil;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.bean.WrbNoticeinfoResponse.NoticeinfoDetail;
 import com.hyjf.cs.user.service.wrb.WrbInfoServcie;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,18 +36,21 @@ import java.util.Map;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
+ *
  * @author lisheng
  * @version WrbNoticeinfoController, v0.1 2018/9/20 14:32
  */
 @RestController
-@RequestMapping("")
+@Api(tags = "风车理财-平台公告查询接口")
+@RequestMapping("/wrb_interface")
 public class WrbInfoController {
     private Logger logger = LoggerFactory.getLogger(WrbInfoController.class);
     public static final String datetimeFormat_key = "yyyy-MM-dd HH:mm:ss";
+
     @Autowired
     private WrbInfoServcie wrbInvestServcie;
 
-    @RequestMapping("")
+    @RequestMapping("/notice_info")
     public WrbNoticeinfoResponse getNoticeinfoDetail(@RequestParam String param,
                                                      @RequestParam(value = "sign", required = false) String sign){
         logger.info("获取平台的公告信息, param is :{}, sign is :{}", param, sign);

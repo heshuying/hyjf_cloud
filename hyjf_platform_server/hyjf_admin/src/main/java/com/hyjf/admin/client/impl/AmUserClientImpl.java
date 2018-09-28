@@ -1,17 +1,5 @@
 package com.hyjf.admin.client.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.RestTemplate;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
@@ -34,6 +22,16 @@ import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -1614,7 +1612,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public VipManageResponse searchList(VipManageRequest vipManageRequest) {
-		String url = "http://AM-USER/am-user/vipManage/getUserList";
+		String url = "http://AM-ADMIN/am-user/vipManage/getUserList";
 		VipManageResponse response = restTemplate.postForEntity(url,vipManageRequest,VipManageResponse.class).getBody();
 		if (response != null) {
 			return response;
@@ -1624,7 +1622,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public VipDetailListResponse searchDetailList(VipDetailListRequest detailListRequest) {
-		String url = "http://AM-USER/am-user/vipManage/vipDetailList";
+		String url = "http://AM-ADMIN/am-user/vipManage/vipDetailList";
 		VipDetailListResponse response = restTemplate.postForEntity(url,detailListRequest,VipDetailListResponse.class).getBody();
 		if (response != null) {
 			return response;
@@ -1634,7 +1632,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public VipUpdateGradeListResponse searchUpdateGradeList(VipUpdateGradeListRequest vgl) {
-		String url = "http://AM-USER/am-user/vipManage/vipUpdateGradeList";
+		String url = "http://AM-ADMIN/am-user/vipManage/vipUpdateGradeList";
 		VipUpdateGradeListResponse response = restTemplate.postForEntity(url,vgl,VipUpdateGradeListResponse.class).getBody();
 		if (response != null) {
 			return response;
@@ -1850,7 +1848,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public UtmResponse getChannelNameByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/channel/getchannelnamebyuserd/" + userId;
+		String url = "http://AM-ADMIN/am-user/channel/getchannelnamebyuserd/" + userId;
 		UtmResponse utmResponse = restTemplate.getForEntity(url, UtmResponse.class).getBody();
 		if (utmResponse != null) {
 			return utmResponse;
@@ -2005,7 +2003,7 @@ public class AmUserClientImpl implements AmUserClient {
 		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/sms_code/query_user",
 				requestBean, SmsCodeCustomizeResponse.class);
 		if (response != null) {
-			List<SmsCodeCustomizeVO> list = response.getResultList();
+			/*List<SmsCodeCustomizeVO> list = response.getResultList();
 			SmsCodeCustomizeResponse response1 = restTemplate.postForObject("http://AM-ADMIN/am-user/sms_code/query_user",
 					requestBean, SmsCodeCustomizeResponse.class);
 			if (response1 != null) {
@@ -2014,7 +2012,8 @@ public class AmUserClientImpl implements AmUserClient {
 					list.retainAll(list1);
 					return list;
 				}
-			}
+			}*/
+			return response.getResultList();
 		}
 		return null;
 	}

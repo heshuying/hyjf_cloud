@@ -1,9 +1,12 @@
 package com.hyjf.admin.controller.promotion.appReconcliation;
 
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.promotion.AppChannelReconciliationService;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
-import com.hyjf.am.response.admin.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
+
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -34,7 +37,7 @@ import java.util.List;
 @Api(tags ="app渠道统计明细")
 @RestController
 @RequestMapping("/hyjf-admin/promotion/app/channel/detail")
-public class AppChannelStatisticsDetailController {
+public class AppChannelStatisticsDetailController extends BaseController {
     @Autowired
     AppChannelStatisticsDetailService appChannelStatisticsDetailService;
     @Autowired
@@ -42,9 +45,12 @@ public class AppChannelStatisticsDetailController {
 
     @ApiOperation(value = "app渠道统计明细-画面初始化", notes = "app渠道统计明细-画面初始化")
     @PostMapping("/init")
-    public AppChannelStatisticsDetailResponse init(@RequestBody AppChannelStatisticsDetailRequest request, @RequestHeader(value="userId")Integer userId){
+    public AppChannelStatisticsDetailResponse init(@RequestBody AppChannelStatisticsDetailRequest appChannelStatisticsDetailRequest,HttpServletRequest request){
+        AdminSystemVO user = getUser(request);
+        Integer userId = Integer.valueOf(user.getId());
+        userId=111;
         AdminUtmReadPermissionsVO adminUtmReadPermissions = this.appChannelReconciliationService.selectAdminUtmReadPermissions(userId);
-        AppChannelStatisticsDetailResponse response = appChannelStatisticsDetailService.getstatisticsList(request);
+        AppChannelStatisticsDetailResponse response = appChannelStatisticsDetailService.getstatisticsList(appChannelStatisticsDetailRequest);
         List<UtmPlatVO> appUtm = appChannelStatisticsDetailService.getAppUtm();
         response.setAdminUtmReadPermissions(adminUtmReadPermissions);
         response.setAppUtm(appUtm);

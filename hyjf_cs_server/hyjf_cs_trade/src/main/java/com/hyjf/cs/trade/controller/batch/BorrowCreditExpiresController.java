@@ -63,7 +63,7 @@ public class BorrowCreditExpiresController {
         if(borrowCreditVOS!=null && borrowCreditVOS.size()>0) {
             for (BorrowCreditVO borrowCredit : borrowCreditVOS) {
                 Integer nowTime = GetDate.getNowTime10();
-                Integer creditAddTime = borrowCredit.getAddTime();
+                Integer creditAddTime = GetDate.getTime10(borrowCredit.getCreateTime());
                 Integer timeDifference = (nowTime - creditAddTime) / 3600;
                 if (timeDifference >= 72) {
                     borrowCredit.setCreditStatus(1);

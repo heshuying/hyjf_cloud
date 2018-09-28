@@ -98,7 +98,7 @@ public class ContentJobsController extends BaseController {
 	}
 
 	@ApiOperation(value = "公司管理-招贤纳士初始化", notes = "公司管理-招贤纳士初始化")
-	@PostMapping("/delete/{id}")
+	@PostMapping("/select_by_id")
 	public AdminResult selectById(@RequestBody ContentJobRequestBean requestBean) {
 		JobsVo vo = contentPartnerService.selectById(requestBean);
 		return new AdminResult(vo);

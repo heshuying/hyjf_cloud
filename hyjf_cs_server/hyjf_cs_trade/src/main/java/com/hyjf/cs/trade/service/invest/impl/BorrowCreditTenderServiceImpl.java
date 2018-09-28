@@ -619,15 +619,15 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignAccountList.setTradeCode("balance");
                 assignAccountList.setTotal(assignAccount.getTotal());
                 assignAccountList.setBalance(assignAccount.getBalance());
-                assignAccountList.setBankBalance(assignAccount.getBankBalance());
-                assignAccountList.setBankAwait(assignAccount.getBankAwait());
-                assignAccountList.setBankAwaitCapital(assignAccount.getBankAwaitCapital());
-                assignAccountList.setBankAwaitInterest(assignAccount.getBankAwaitInterest());
-                assignAccountList.setBankInvestSum(assignAccount.getBankInvestSum());
+                assignAccountList.setBankBalance(assignAccountNew.getBankBalance());
+                assignAccountList.setBankAwait(assignAccountNew.getBankAwait());
+                assignAccountList.setBankAwaitCapital(assignAccountNew.getBankAwaitCapital());
+                assignAccountList.setBankAwaitInterest(assignAccountNew.getBankAwaitInterest());
+                assignAccountList.setBankInvestSum(assignAccountNew.getBankInvestSum());
                 assignAccountList.setBankInterestSum(assignAccount.getBankInterestSum());
                 assignAccountList.setBankFrost(assignAccount.getBankFrost());
                 assignAccountList.setBankInterestSum(assignAccount.getBankInterestSum());
-                assignAccountList.setBankTotal(assignAccount.getBankTotal());
+                assignAccountList.setBankTotal(assignAccountNew.getBankTotal());
                 //汇计划账户可用余额
                 assignAccountList.setPlanBalance(assignAccount.getPlanBalance());
                 assignAccountList.setPlanFrost(assignAccount.getPlanFrost());
@@ -636,7 +636,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignAccountList.setTxTime(creditTenderLog.getTxTime());
                 assignAccountList.setBankSeqNo(String.valueOf(creditTenderLog.getTxDate()) + String.valueOf(creditTenderLog.getTxTime()) + String.valueOf(creditTenderLog.getSeqNo()));
                 // 承接人电子账户号
-                assignAccountList.setAccountId(creditTenderLog.getAccountId());
+                assignAccountList.setAccountId(assignAccount.getAccountId());
                 assignAccountList.setFrost(assignAccount.getFrost());
                 assignAccountList.setAwait(assignAccount.getAwait());
                 assignAccountList.setRepay(assignAccount.getRepay());
@@ -679,14 +679,14 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 sellerAccountList.setTradeCode("balance");
                 sellerAccountList.setTotal(sellerAccount.getTotal());
                 sellerAccountList.setBalance(sellerAccount.getBalance());
-                sellerAccountList.setBankBalance(sellerAccount.getBankBalance());
-                sellerAccountList.setBankAwait(sellerAccount.getBankAwait());
-                sellerAccountList.setBankAwaitCapital(sellerAccount.getBankAwaitCapital());
-                sellerAccountList.setBankAwaitInterest(sellerAccount.getBankAwaitInterest());
-                sellerAccountList.setBankInterestSum(sellerAccount.getBankInterestSum());
+                sellerAccountList.setBankBalance(sellerAccountNew.getBankBalance());
+                sellerAccountList.setBankAwait(sellerAccountNew.getBankAwait());
+                sellerAccountList.setBankAwaitCapital(sellerAccountNew.getBankAwaitCapital());
+                sellerAccountList.setBankAwaitInterest(sellerAccountNew.getBankAwaitInterest());
+                sellerAccountList.setBankInterestSum(sellerAccountNew.getBankInterestSum());
                 sellerAccountList.setBankInvestSum(sellerAccount.getBankInvestSum());
                 sellerAccountList.setBankFrost(sellerAccount.getBankFrost());
-                sellerAccountList.setBankTotal(sellerAccount.getBankTotal());
+                sellerAccountList.setBankTotal(sellerAccountNew.getBankTotal());
                 //汇计划账户可用余额
                 sellerAccountList.setPlanBalance(sellerAccount.getPlanBalance());
                 sellerAccountList.setPlanFrost(sellerAccount.getPlanFrost());

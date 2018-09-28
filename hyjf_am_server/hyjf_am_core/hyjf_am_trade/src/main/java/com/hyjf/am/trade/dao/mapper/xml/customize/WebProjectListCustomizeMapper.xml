@@ -1583,7 +1583,8 @@
 					AND hydb.project_type  <![CDATA[<>]]>  '4'
 					AND hydb.project_type  <![CDATA[<>]]>  '11'
 					AND hydb.is_show  <![CDATA[<>]]>  1
-					AND ( hydb.`status` = 3 or (hydb.`status` = 4 AND borrow_success_time <![CDATA[>=]]> UNIX_TIMESTAMP( NOW() )-(60*60*24*3)))
+         		<!--	AND ( hydb.`status` = 3 or (hydb.`status` = 4 AND borrow_success_time <![CDATA[>=]]> UNIX_TIMESTAMP( NOW() )-(60*60*24*3))) -->
+                    AND ( hydb.`status` = 3 or (hydb.`status` = 4 ))
 					)
 			) t
 			order by t.status ASC,t.verify_time DESC

@@ -37,7 +37,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -768,12 +767,10 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<ParamNameVO> selectProjectTypeParamList() {
-        List<ParamNameVO> paramNameVOS = new ArrayList<>();
-        ParamNameResponse amResponse = restTemplate.postForEntity("http://AM-CONFIG/am-config/accountconfig/selectProjectTypeParamList", null, ParamNameResponse.class)
+        ParamNameResponse amResponse = restTemplate.postForEntity("http://AM-ADMIN/am-admin/paramname/selectProjectTypeParamList", null, ParamNameResponse.class)
                 .getBody();
         if (Response.isSuccess(amResponse)) {
-            paramNameVOS = amResponse.getResultList();
-            return paramNameVOS;
+            return amResponse.getResultList();
         }
         return null;
     }
@@ -1142,7 +1139,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CouponCheckResponse getCouponList(AdminCouponCheckRequest adminCouponCheckRequest) {
-        String url = "http://AM-CONFIG/am-config/checkList/getCheckList";
+        String url = "http://AM-ADMIN/am-config/checkList/getCheckList";
         CouponCheckResponse response = restTemplate.postForEntity(url, adminCouponCheckRequest, CouponCheckResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1152,7 +1149,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CouponCheckResponse deleteCouponList(AdminCouponCheckRequest acr) {
-        String url = "http://AM-CONFIG/am-config/checkList/deleteCheckList";
+        String url = "http://AM-ADMIN/am-config/checkList/deleteCheckList";
         CouponCheckResponse response = restTemplate.postForEntity(url, acr, CouponCheckResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1162,7 +1159,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CouponCheckResponse insert(AdminCouponCheckRequest accr) {
-        String url = "http://AM-CONFIG/am-config/checkList/insertCoupon";
+        String url = "http://AM-ADMIN/am-config/checkList/insertCoupon";
         CouponCheckResponse response = restTemplate.postForEntity(url, accr, CouponCheckResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1172,7 +1169,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CouponCheckVO selectCoupon(Integer id) {
-        String url = "http://AM-CONFIG/am-config/checkList/selectCoupon/" + id;
+        String url = "http://AM-ADMIN/am-config/checkList/selectCoupon/" + id;
         CouponCheckResponse response = restTemplate.getForEntity(url, CouponCheckResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -1182,7 +1179,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CouponCheckResponse updateCoupon(AdminCouponCheckRequest request) {
-        String url = "http://AM-CONFIG/am-config/checkList/updateCoupon";
+        String url = "http://AM-ADMIN/am-config/checkList/updateCoupon";
         return restTemplate.postForEntity(url, request, CouponCheckResponse.class).getBody();
     }
 

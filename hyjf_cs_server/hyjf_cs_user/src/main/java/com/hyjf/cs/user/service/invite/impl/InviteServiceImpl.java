@@ -7,6 +7,7 @@ import com.hyjf.cs.user.service.invite.InviteService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,11 @@ public class InviteServiceImpl extends BaseUserServiceImpl implements InviteServ
         requestBean.setUserId(userId);
         requestBean.setLimitStart(limitStart);
         requestBean.setLimitEnd(limitEnd);
-        return amUserClient.selectMyInviteList(requestBean);
+        List<MyInviteListCustomizeVO> result = amUserClient.selectMyInviteList(requestBean);
+        if(result == null){
+            return Collections.emptyList();
+        }
+        return result;
     }
 
     /**

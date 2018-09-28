@@ -1,20 +1,18 @@
 spring:
-  application:
-    name: ZUUL
-  boot:
+ application:
+   name: ZUUL
+ cloud:
+   config:
+      uri: http://micoserver:2222/
+      name: zuul
+ boot:
     admin:
       client:
         url: http://micoserver:18080
-  profiles:
-    active: dev
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://micoserver:1111/eureka/
-  instance:
-    preferIpAddress: true
+ profiles:
+   active: dev
 server:
-  port: 8080
+ port: 8080
 
 management:
   endpoints:
