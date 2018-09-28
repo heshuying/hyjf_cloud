@@ -3534,7 +3534,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhRepayResponse selectHjhRepayList(HjhRepayRequest request) {
-        HjhRepayResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhRepay/hjhRepayList", request, HjhRepayResponse.class).getBody();
+        HjhRepayResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/hjhRepay/hjhRepayList", request, HjhRepayResponse.class).getBody();
 
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
