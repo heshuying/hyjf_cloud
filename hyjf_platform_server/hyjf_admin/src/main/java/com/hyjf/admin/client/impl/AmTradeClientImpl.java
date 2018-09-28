@@ -3520,7 +3520,6 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer getRepayCount(HjhRepayRequest repayRequest) {
-//        return restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhRepay/getRepayCount", repayRequest, Integer.class).getBody();
         IntegerResponse integerResponse = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhRepay/getRepayCount", repayRequest, IntegerResponse.class).getBody();
         return integerResponse.getResultInt();
     }
@@ -3566,7 +3565,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhReInvestDetailResponse getHjhReInvestDetailList(HjhReInvestDetailRequest requestBean) {
-        HjhReInvestDetailResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhPlanCapital/hjhPlanCapitalReinvestInfo/", requestBean, HjhReInvestDetailResponse.class).getBody();
+        HjhReInvestDetailResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/hjhPlanCapital/hjhPlanCapitalReinvestInfo/", requestBean, HjhReInvestDetailResponse.class).getBody();
 
         if (response != null) {
             return response;
@@ -3599,7 +3598,6 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateRechargeStatus(Integer userId, String nid) {
-//        return restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/modifyRechargeStatus/" + userId + "/" + nid, boolean.class).getBody();
         BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/modifyRechargeStatus/" + userId + "/" + nid, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
@@ -3612,7 +3610,6 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
-//        return restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/updateAccountAfterRecharge", request, boolean.class).getBody();
         BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/updateAccountAfterRecharge", request, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
@@ -3684,20 +3681,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 //        return restTemplate.getForEntity("http://AM-TRADE/am-trade/underLineRecharge/deleteUnderLineRecharge/" + id, Boolean.class).getBody();
         BooleanResponse booleanResponse = restTemplate.getForEntity("http://AM-TRADE/am-trade/underLineRecharge/deleteUnderLineRecharge/" + id, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
-    }
-
-    /**
-     * 汇计划 -> 资金计划 -> 复投原始标的 总数 (废弃)
-     * @param data
-     * @param planNid
-     * @return
-     * @Author : huanghui
-     */
-    @Override
-    public Integer getHjhReInvestDetailListCount(String data, String planNid) {
-//        return restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhPlanCapital/hjhPlanCapitalReinvestCount/" + data + "/"+ planNid, Integer.class).getBody();
-        IntegerResponse integerResponse = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhPlanCapital/hjhPlanCapitalReinvestCount/" + data + "/"+ planNid, IntegerResponse.class).getBody();
-        return integerResponse.getResultInt();
     }
 
     @Override
