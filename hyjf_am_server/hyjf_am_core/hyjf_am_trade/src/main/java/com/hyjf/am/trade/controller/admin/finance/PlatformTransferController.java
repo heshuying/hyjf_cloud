@@ -87,7 +87,7 @@ public class PlatformTransferController extends BaseController {
 
     @ApiOperation(value = "平台转账-根据账户id查询BankMerchantAccount",notes = "平台转账-根据账户id查询BankMerchantAccount")
     @GetMapping(value = "/searchbankmerchantaccount/{accountId}")
-    public BankMerchantAccountResponse searchBankMerchantAccountByAccountId(@PathVariable Integer accountId){
+    public BankMerchantAccountResponse searchBankMerchantAccountByAccountId(@PathVariable String accountId){
         BankMerchantAccountResponse response = new BankMerchantAccountResponse();
         BankMerchantAccount bankMerchantAccount = platformTransferService.searchBankMerchantAccountByAccountId(accountId);
         if(null != bankMerchantAccount){

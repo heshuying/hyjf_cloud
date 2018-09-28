@@ -280,7 +280,7 @@ public interface AmTradeClient {
      * @param accountId 账户id
      * @return
      */
-    BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId);
+    BankMerchantAccountVO searchBankMerchantAccountByAccountId(String accountId);
 
     /**
      * 更新红包账户信息

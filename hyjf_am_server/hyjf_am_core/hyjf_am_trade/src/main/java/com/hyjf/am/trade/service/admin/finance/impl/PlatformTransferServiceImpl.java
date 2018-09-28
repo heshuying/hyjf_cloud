@@ -130,8 +130,14 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @auth sunpeikai
      */
     @Override
-    public BankMerchantAccount searchBankMerchantAccountByAccountId(Integer accountId) {
-        BankMerchantAccount bankMerchantAccount = bankMerchantAccountMapper.selectByPrimaryKey(accountId);
+    public BankMerchantAccount searchBankMerchantAccountByAccountId(String accountId) {
+        BankMerchantAccount bankMerchantAccount = new BankMerchantAccount();
+        BankMerchantAccountExample example = new BankMerchantAccountExample();
+        example.createCriteria().andAccountCodeEqualTo(accountId);
+        List<BankMerchantAccount> bankMerchantAccountList = bankMerchantAccountMapper.selectByExample(example);
+        if(!CollectionUtils.isEmpty(bankMerchantAccountList)){
+            bankMerchantAccount = bankMerchantAccountList.get(0);
+        }
         return bankMerchantAccount;
     }
 
