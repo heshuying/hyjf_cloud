@@ -53,10 +53,12 @@
 	            AND hdpa.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{searchEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 	        </if>
 	        <if test="countInterestTimeStartDate != null and countInterestTimeStartDate != ''">
-	            AND hdpa.count_interest_time <![CDATA[>=]]> STR_TO_DATE(#{countInterestTimeStartDate}, '%Y-%m-%d %H:%i:%s')
+				<!-- sqlbug(类型不一致) -->
+				AND hdpa.count_interest_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{countInterestTimeStartDate})
 	        </if>
 	        <if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
-	            AND hdpa.count_interest_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{countInterestTimeEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+				<!-- sqlbug(类型不一致) -->
+				AND hdpa.count_interest_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{countInterestTimeEndDate},' 23:59:59'))
 	        </if>
 			
 			<if test="matchDatesSrch != null and matchDatesSrch != ''">
@@ -320,10 +322,12 @@
 		            AND hdpa.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{searchEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 		        </if>
 		        <if test="countInterestTimeStartDate != null and countInterestTimeStartDate != ''">
-		            AND hdpa.count_interest_time <![CDATA[>=]]> STR_TO_DATE(#{countInterestTimeStartDate}, '%Y-%m-%d %H:%i:%s')
+					<!-- sqlbug(类型不一致) -->
+					AND hdpa.count_interest_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{countInterestTimeStartDate})
 		        </if>
 		        <if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
-		            AND hdpa.count_interest_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{countInterestTimeEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+					<!-- sqlbug(类型不一致) -->
+					AND hdpa.count_interest_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{countInterestTimeEndDate},' 23:59:59'))
 		        </if>
 				
 				<if test="matchDatesSrch != null and matchDatesSrch != ''">
@@ -421,10 +425,12 @@
 		            AND hdpa.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{searchEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 		        </if>
 		        <if test="countInterestTimeStartDate != null and countInterestTimeStartDate != ''">
-		            AND hdpa.count_interest_time <![CDATA[>=]]> STR_TO_DATE(#{countInterestTimeStartDate}, '%Y-%m-%d %H:%i:%s')
-		        </if>
-		        <if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
-		            AND hdpa.count_interest_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{countInterestTimeEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+					<!-- sqlbug(类型不一致) -->
+					AND hdpa.count_interest_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{countInterestTimeStartDate})
+				</if>
+				<if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
+					<!-- sqlbug(类型不一致) -->
+					AND hdpa.count_interest_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{countInterestTimeEndDate},' 23:59:59'))
 		        </if>
 				
 				<if test="matchDatesSrch != null and matchDatesSrch != ''">
