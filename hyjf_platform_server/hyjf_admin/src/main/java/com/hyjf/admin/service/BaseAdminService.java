@@ -1,12 +1,12 @@
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.common.service.BaseService;
 
 import java.math.BigDecimal;
 
 
-public interface BaseAdminService extends BaseService{
+public interface BaseAdminService extends BaseService {
 
 	/**
 	 * 查询用户对象
