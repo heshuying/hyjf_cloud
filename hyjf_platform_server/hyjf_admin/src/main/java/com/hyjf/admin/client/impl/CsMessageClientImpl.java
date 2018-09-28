@@ -2,7 +2,7 @@
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 package com.hyjf.admin.client.impl;
-
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
