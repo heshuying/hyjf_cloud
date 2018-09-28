@@ -112,4 +112,26 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
     public boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest) {
         return amAdminClient.updateBailConfig(bailConfigAddRequest);
     }
+
+    /**
+     * 删除保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public boolean deleteBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        return amAdminClient.deleteBailConfig(bailConfigAddRequest);
+    }
+
+    /**
+     * 获取当前机构可用还款方式
+     *
+     * @param instCode
+     * @return
+     */
+    @Override
+    public List<String> selectRepayMethod(String instCode) {
+        return amAdminClient.selectRepayMethod(instCode);
+    }
 }

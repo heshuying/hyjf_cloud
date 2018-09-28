@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.trade.util;
 
-import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.BaseBean;
 import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
 import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;

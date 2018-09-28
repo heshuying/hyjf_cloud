@@ -292,6 +292,53 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
     }
 
     /**
+     * 删除保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    @Override
+    public Boolean deleteBailConfig(BailConfigAddRequest bailConfigAddRequest) {
+        boolean re = true;
+        Integer id = bailConfigAddRequest.getId();
+        // 根据id获取保证金配置
+        // 保证金配置表逻辑删除
+        HjhBailConfig hjhBailConfig = this.hjhBailConfigMapper.selectByPrimaryKey(id);
+        hjhBailConfig.setDelFlg(1);
+        hjhBailConfig.setUpdateTime(new Date());
+        hjhBailConfig.setUpdateUserId(bailConfigAddRequest.getUpdateUserId());
+        if (hjhBailConfigMapper.updateByPrimaryKeySelective(hjhBailConfig) > 0 ? false : true) {
+            re = false;
+        }
+        // 保证金详情配置表物理删除
+        HjhBailConfigInfoExample hjhBailConfigInfoExample = new HjhBailConfigInfoExample();
+        hjhBailConfigInfoExample.createCriteria().andInstCodeEqualTo(hjhBailConfig.getInstCode());
+        if (hjhBailConfigInfoMapper.deleteByExample(hjhBailConfigInfoExample) > 0 ? false : true) {
+            re = false;
+        }
+
+        // 表删除字段更新成功后删除redis值
+        if (re && RedisUtils.exists(RedisConstants.DAY_MARK_LINE + hjhBailConfig.getInstCode())) {
+            RedisUtils.del(RedisConstants.DAY_MARK_LINE + hjhBailConfig.getInstCode());
+        }
+        if (re && RedisUtils.exists(RedisConstants.MONTH_MARK_LINE + hjhBailConfig.getInstCode())) {
+            RedisUtils.del(RedisConstants.MONTH_MARK_LINE + hjhBailConfig.getInstCode());
+        }
+        return re;
+    }
+
+    /**
+     * 获取当前机构可用还款方式
+     *
+     * @param instCode
+     * @return
+     */
+    @Override
+    public List<String> selectRepayMethod(String instCode) {
+        return this.hjhBailConfigCustomizeMapper.selectRepayMethod(instCode);
+    }
+
+    /**
      * 保证金校验方式和回滚方式处理
      *
      * @param bailConfigAddRequest

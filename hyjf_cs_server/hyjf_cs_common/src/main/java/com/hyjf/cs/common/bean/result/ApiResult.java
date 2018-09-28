@@ -14,7 +14,7 @@ package com.hyjf.cs.common.bean.result;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.common.constants.MsgCode;
-import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.cs.common.util.ApiSignUtil;
 
 import java.io.Serializable;
 
