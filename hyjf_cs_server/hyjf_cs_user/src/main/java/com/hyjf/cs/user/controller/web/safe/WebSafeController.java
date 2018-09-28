@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -265,6 +266,8 @@ public class WebSafeController extends BaseUserController {
             Map<String, String> map = new HashMap<>();
             map.put("iconUrl", user.getIconUrl());
             result.setData(map);
+        }else{
+            result.setData(Collections.emptyMap());
         }
         return result;
     }
