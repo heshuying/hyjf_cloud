@@ -4,13 +4,10 @@
 package com.hyjf.am.trade.service.front.batch;
 
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.vo.trade.CalculateInvestInterestVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**

@@ -1,8 +1,8 @@
 package com.hyjf.am.resquest.callcenter;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
 
 /**
  * @author libin

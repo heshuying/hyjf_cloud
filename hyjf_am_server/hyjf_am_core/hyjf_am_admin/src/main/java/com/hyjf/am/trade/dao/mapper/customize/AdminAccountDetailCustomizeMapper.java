@@ -3,13 +3,13 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
 import com.hyjf.am.trade.dao.model.customize.AdminAccountDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.AdminAccountDetailDataRepairCustomize;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl

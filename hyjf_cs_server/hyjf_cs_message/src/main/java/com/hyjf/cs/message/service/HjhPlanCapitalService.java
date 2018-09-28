@@ -4,7 +4,6 @@
 package com.hyjf.cs.message.service;
 
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
-import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
 

@@ -1,10 +1,10 @@
 package com.hyjf.am.user.service.admin.anrong;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.user.dao.model.customize.MspConfigureCustomize;
 import com.hyjf.am.user.service.BaseService;
+
+import java.util.List;
+import java.util.Map;
 
 public interface MspService extends BaseService {
 

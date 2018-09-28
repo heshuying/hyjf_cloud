@@ -1,8 +1,8 @@
 package com.hyjf.am.trade.dao.model.customize;
 
-import java.io.Serializable;
-
 import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
+
+import java.io.Serializable;
 
 public class WithdrawCustomize extends AccountWithdraw implements Serializable {
 

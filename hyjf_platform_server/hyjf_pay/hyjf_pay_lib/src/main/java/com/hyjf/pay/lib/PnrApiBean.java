@@ -13,7 +13,6 @@ package com.hyjf.pay.lib;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.common.chinapnr.MerPriv;
 import com.hyjf.common.util.GetterUtil;
-import com.hyjf.common.util.MD5Util2;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import org.apache.commons.lang.StringUtils;

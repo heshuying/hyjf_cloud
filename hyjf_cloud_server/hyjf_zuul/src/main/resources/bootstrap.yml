@@ -46,4 +46,4 @@ logging:
 hyjf:
    req:
     pub:
-     key: /hyjfdata/data/hyjfapi_key/
+     key: D:/hyjfdata/data/hyjfapi_key/

@@ -3,19 +3,6 @@
  */
 package com.hyjf.am.trade.controller.admin.borrow;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import com.hyjf.am.trade.controller.BaseController;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.admin.BorrowInvestCustomizeResponse;
 import com.hyjf.am.response.admin.BorrowListCustomizeResponse;
 import com.hyjf.am.response.admin.WebProjectRepayListCustomizeResponse;
@@ -23,6 +10,7 @@ import com.hyjf.am.response.admin.WebUserInvestListCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowRecoverResponse;
 import com.hyjf.am.response.trade.TenderAgreementResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
 import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
@@ -37,6 +25,16 @@ import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author wangjun

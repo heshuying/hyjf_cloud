@@ -1,7 +1,6 @@
 package com.hyjf.cs.user.config;
 
 import com.hyjf.common.file.UploadFileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

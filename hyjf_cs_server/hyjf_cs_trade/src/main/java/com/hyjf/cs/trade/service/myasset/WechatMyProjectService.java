@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.myasset;
 
-import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 

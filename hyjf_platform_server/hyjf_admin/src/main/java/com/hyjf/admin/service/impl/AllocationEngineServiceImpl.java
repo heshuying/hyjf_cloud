@@ -3,12 +3,6 @@
  */
 package com.hyjf.admin.service.impl;
 
-import java.util.List;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AllocationEngineService;
 import com.hyjf.am.response.admin.HjhAllocationEngineResponse;
@@ -18,6 +12,11 @@ import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
 import com.hyjf.am.vo.admin.HjhRegionVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author libin

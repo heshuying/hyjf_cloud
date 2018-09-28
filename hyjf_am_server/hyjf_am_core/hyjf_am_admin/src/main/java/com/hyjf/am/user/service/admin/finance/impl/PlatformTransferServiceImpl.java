@@ -3,15 +3,14 @@
  */
 package com.hyjf.am.user.service.admin.finance.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.service.admin.finance.PlatformTransferService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: sunpeikai

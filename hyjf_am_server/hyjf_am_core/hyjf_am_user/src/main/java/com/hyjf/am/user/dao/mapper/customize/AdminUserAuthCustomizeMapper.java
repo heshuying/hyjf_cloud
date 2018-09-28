@@ -12,13 +12,13 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.user.dao.model.customize.AdminUserAuthListCustomize;
 import com.hyjf.am.user.dao.model.customize.AdminUserAuthLogListCustomize;
 import com.hyjf.am.user.dao.model.customize.AdminUserPayAuthCustomize;
 import com.hyjf.am.user.dao.model.customize.AdminUserRePayAuthCustomize;
+
+import java.util.List;
+import java.util.Map;
 
 public interface AdminUserAuthCustomizeMapper {
 

@@ -3,14 +3,11 @@
  */
 package com.hyjf.am.user.controller.front.user;
 
-import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserLoginLogResponse;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.auto.UserLoginLog;
 import com.hyjf.am.user.service.front.user.UserPortraitBatchService;
-import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserLoginLogVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;

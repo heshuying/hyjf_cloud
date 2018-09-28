@@ -1,8 +1,7 @@
 package com.hyjf.am.vo.trade.borrow;
 
 import com.hyjf.am.vo.BaseVO;
-import com.hyjf.common.paginator.Paginator;
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 

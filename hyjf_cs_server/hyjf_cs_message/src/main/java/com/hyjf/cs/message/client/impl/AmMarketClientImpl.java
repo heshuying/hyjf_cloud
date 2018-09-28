@@ -1,10 +1,6 @@
 package com.hyjf.cs.message.client.impl;
 
-import com.hyjf.am.response.admin.MessagePushNoticesResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
-import com.hyjf.am.vo.admin.MessagePushMsgVO;
-import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.cs.message.client.AmMarketClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

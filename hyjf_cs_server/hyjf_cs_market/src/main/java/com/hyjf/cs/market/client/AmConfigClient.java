@@ -3,9 +3,6 @@
  */
 package com.hyjf.cs.market.client;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
@@ -16,6 +13,9 @@ import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author fuqiang

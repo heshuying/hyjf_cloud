@@ -3,26 +3,14 @@
  */
 package com.hyjf.am.user.service.impl;
 
+import com.hyjf.am.user.dao.customize.CustomizeMapper;
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.service.BaseService;
+import org.springframework.util.CollectionUtils;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.List;
-
-import org.springframework.util.CollectionUtils;
-
-import com.hyjf.am.user.dao.customize.CustomizeMapper;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
-import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
-import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecordExample;
-import com.hyjf.am.user.dao.model.auto.SpreadsUser;
-import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserExample;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.auto.UserInfoExample;
-import com.hyjf.am.user.service.BaseService;
 
 /**
  * 用户服务:BaseService实现类

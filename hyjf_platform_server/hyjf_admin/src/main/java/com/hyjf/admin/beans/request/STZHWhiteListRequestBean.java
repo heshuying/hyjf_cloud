@@ -3,11 +3,11 @@
  */
 package com.hyjf.admin.beans.request;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.hyjf.admin.beans.BaseRequest;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author fuqiang

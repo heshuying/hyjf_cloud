@@ -1,6 +1,5 @@
 package com.hyjf.admin.service;
 
-import com.hyjf.admin.beans.response.HjhRepayResponseBean;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
 

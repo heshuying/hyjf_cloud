@@ -1,9 +1,9 @@
 package com.hyjf.am.vo.user;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import com.hyjf.am.vo.BaseVO;
 
 /**
  * 用户绑卡日志VO

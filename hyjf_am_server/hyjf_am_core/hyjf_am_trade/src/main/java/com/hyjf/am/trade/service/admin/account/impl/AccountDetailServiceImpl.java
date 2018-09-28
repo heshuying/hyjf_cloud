@@ -5,7 +5,6 @@ package com.hyjf.am.trade.service.admin.account.impl;
 
 import com.hyjf.am.resquest.admin.AccountListRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.AccountListExample;
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
 import com.hyjf.am.trade.dao.model.customize.AdminAccountDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.AdminAccountDetailDataRepairCustomize;

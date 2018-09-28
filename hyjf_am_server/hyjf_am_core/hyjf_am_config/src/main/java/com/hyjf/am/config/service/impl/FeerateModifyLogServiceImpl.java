@@ -2,13 +2,9 @@ package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.FeerateModifyLogMapper;
 import com.hyjf.am.config.dao.model.auto.FeerateModifyLog;
-import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.service.FeerateModifyLogService;
 import com.hyjf.am.resquest.admin.FinmanChargeNewRequest;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import org.apache.catalina.manager.util.SessionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;

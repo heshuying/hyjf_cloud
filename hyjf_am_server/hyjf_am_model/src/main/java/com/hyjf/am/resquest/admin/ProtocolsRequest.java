@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.resquest.admin;
 
-import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
 import io.swagger.annotations.ApiModelProperty;

@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.vo.config;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
+
+import java.util.Date;
 
 /**
  * @author fuqiang

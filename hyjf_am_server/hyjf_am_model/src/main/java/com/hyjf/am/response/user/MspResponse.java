@@ -1,12 +1,11 @@
 package com.hyjf.am.response.user;
 
 
-
-import java.util.List;
-
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.vo.user.MspConfigureVO;
 import com.hyjf.am.vo.user.MspRegionVO;
+
+import java.util.List;
 
 
 public class MspResponse extends AdminResponse<MspConfigureVO>  {

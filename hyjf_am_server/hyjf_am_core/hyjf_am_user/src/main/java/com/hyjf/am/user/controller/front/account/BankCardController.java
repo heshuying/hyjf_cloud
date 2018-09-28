@@ -2,16 +2,15 @@ package com.hyjf.am.user.controller.front.account;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.controller.BaseController;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.service.front.account.BankCardService;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 绑卡及解绑卡服务类

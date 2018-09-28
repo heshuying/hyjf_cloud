@@ -2,9 +2,6 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
-import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
-
-import java.util.List;
 
 /**
  * 汇计划 -- 资金计划 Service

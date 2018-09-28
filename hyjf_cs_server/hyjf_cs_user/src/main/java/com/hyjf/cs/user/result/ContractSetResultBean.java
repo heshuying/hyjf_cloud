@@ -1,10 +1,10 @@
 package com.hyjf.cs.user.result;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.hyjf.am.vo.user.UsersContactVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 紧急联系人设置返回bean

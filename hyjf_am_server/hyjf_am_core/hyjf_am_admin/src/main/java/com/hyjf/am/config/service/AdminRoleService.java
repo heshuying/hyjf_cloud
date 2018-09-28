@@ -1,12 +1,12 @@
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.config.dao.model.auto.AdminRole;
 import com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions;
 import com.hyjf.am.config.dao.model.customize.AdminRoleCustomize;
 import com.hyjf.am.resquest.config.AdminRoleRequest;
+
+import java.util.List;
 
 public interface AdminRoleService {
 

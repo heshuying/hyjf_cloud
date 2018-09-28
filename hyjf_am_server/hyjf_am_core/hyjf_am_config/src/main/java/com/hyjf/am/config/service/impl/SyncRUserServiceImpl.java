@@ -3,17 +3,16 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import javax.annotation.Resource;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.config.dao.mapper.auto.RUserMapper;
+import com.hyjf.am.config.dao.model.auto.RUser;
+import com.hyjf.am.config.service.SyncRUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.config.dao.mapper.auto.RUserMapper;
-import com.hyjf.am.config.dao.model.auto.RUser;
-import com.hyjf.am.config.service.SyncRUserService;
+import javax.annotation.Resource;
 
 /**
  * 同步用户信息服务类

@@ -3,8 +3,6 @@
  */
 package com.hyjf.am.trade.dao.model.customize;
 
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-
 import java.io.Serializable;
 import java.util.Date;
 

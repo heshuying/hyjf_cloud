@@ -4,7 +4,6 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
-import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
 import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
 
 import java.util.List;

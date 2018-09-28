@@ -3,18 +3,17 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.JxBankConfigMapper;
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
 import com.hyjf.am.config.dao.model.auto.JxBankConfigExample;
 import com.hyjf.am.config.service.BankSettingService;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.common.util.GetDate;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author dangzw

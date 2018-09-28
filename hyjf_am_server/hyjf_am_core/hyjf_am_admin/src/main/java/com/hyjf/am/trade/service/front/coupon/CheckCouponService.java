@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.service.front.coupon;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.exception.MQException;
 
 import java.util.Map;
 

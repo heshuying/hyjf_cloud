@@ -1,7 +1,6 @@
 package com.hyjf.am.vo.admin;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 
 
 

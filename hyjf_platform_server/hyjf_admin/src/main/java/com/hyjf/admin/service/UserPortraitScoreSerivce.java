@@ -5,8 +5,8 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.UserPortraitScoreResponse;
 import com.hyjf.am.resquest.admin.UserPortraitScoreRequest;
-import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.util.List;
 

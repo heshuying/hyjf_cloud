@@ -5,7 +5,6 @@ package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
-import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
 /**
  * @author lb

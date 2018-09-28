@@ -6,8 +6,6 @@ package com.hyjf.admin.beans.request;
 import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.math.BigDecimal;
-
 /**
  * @author nxl
  * @version AccountDetailVO, v0.1 2018/6/30 10:13

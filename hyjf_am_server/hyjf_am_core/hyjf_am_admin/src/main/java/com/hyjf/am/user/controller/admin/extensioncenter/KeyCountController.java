@@ -3,8 +3,12 @@
  */
 package com.hyjf.am.user.controller.admin.extensioncenter;
 
-import javax.annotation.Resource;
-
+import com.hyjf.am.response.user.KeyCountResponse;
+import com.hyjf.am.resquest.user.KeyCountRequest;
+import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.service.admin.extensioncenter.KeyCountService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,13 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.user.KeyCountResponse;
-import com.hyjf.am.resquest.user.KeyCountRequest;
-import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.service.admin.extensioncenter.KeyCountService;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.annotation.Resource;
 
 /**
  * @author tanyy

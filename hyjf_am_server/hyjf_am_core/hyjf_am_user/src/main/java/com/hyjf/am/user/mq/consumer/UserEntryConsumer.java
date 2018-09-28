@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.user.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.mq.base.Consumer;
 import com.hyjf.am.user.service.front.user.UserEntryService;
 import com.hyjf.common.constants.MQConstant;

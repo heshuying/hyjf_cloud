@@ -1,12 +1,13 @@
 
 
 package com.hyjf.am.trade.dao.model.customize;
+
+import com.hyjf.common.util.CustomConstants;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-
-import com.hyjf.common.util.CustomConstants;
 
 /**
  * 

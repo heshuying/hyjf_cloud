@@ -1,13 +1,8 @@
 
 
 package com.hyjf.am.vo.trade.hjh;
-import com.hyjf.am.vo.BaseVO;
-import com.hyjf.common.util.CustomConstants;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
+import com.hyjf.am.vo.BaseVO;
 
 /**
  * 

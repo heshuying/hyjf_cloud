@@ -4,7 +4,8 @@
 package com.hyjf.am.trade.service.front.repay.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
 import com.hyjf.am.trade.service.front.repay.BorrowRecoverPlanService;
 import org.springframework.stereotype.Service;
 

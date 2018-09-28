@@ -5,7 +5,10 @@ package com.hyjf.am.trade.service.front.batch.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountWithdrawMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
+import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdrawExample;
 import com.hyjf.am.trade.service.front.batch.BatchUserPortraitQueryService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;

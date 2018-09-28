@@ -3,36 +3,29 @@
  */
 package com.hyjf.am.trade.service.admin.hjhplan.impl;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.admin.PlanListCustomizeRequest;
 import com.hyjf.am.resquest.admin.PlanListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAllocationEngineMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhPlanMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhRegionMapper;
 import com.hyjf.am.trade.dao.mapper.customize.HjhPlanCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.HjhAllocationEngine;
-import com.hyjf.am.trade.dao.model.auto.HjhAllocationEngineExample;
-import com.hyjf.am.trade.dao.model.auto.HjhPlan;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanExample;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanWithBLOBs;
-import com.hyjf.am.trade.dao.model.auto.HjhRegion;
-import com.hyjf.am.trade.dao.model.auto.HjhRegionExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhPlanService;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author libin

@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.bean.repay;
 
+import com.hyjf.am.vo.trade.CreditRepayVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-
-import com.hyjf.am.vo.trade.CreditRepayVO;
 
 public class RepayCreditRepayBean extends CreditRepayVO implements Serializable {
 

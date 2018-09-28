@@ -3,7 +3,8 @@ package com.hyjf.callcenter.controller.coupon;
 
 import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.callcenter.beans.*;
+import com.hyjf.callcenter.beans.ResultListBean;
+import com.hyjf.callcenter.beans.UserBean;
 import com.hyjf.callcenter.controller.base.CallcenterBaseController;
 import com.hyjf.callcenter.result.BaseResultBean;
 import com.hyjf.callcenter.service.CouponService;

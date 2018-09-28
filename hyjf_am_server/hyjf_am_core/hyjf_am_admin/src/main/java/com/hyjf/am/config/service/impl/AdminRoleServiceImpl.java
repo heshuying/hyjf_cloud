@@ -1,18 +1,5 @@
 package com.hyjf.am.config.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.mapper.auto.AdminRoleMapper;
@@ -28,6 +15,13 @@ import com.hyjf.am.resquest.config.AdminRoleRequest;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 @Service
 public class AdminRoleServiceImpl implements  AdminRoleService {

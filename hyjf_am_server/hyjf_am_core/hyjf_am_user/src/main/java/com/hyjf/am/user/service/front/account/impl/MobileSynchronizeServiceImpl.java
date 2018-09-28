@@ -10,7 +10,6 @@ import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.service.front.account.BindCardService;
 import com.hyjf.am.user.service.front.account.MobileSynchronizeService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.user.AccountMobileSynchVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

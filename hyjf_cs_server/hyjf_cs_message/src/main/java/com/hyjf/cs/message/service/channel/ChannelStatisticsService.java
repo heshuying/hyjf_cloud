@@ -3,12 +3,12 @@
  */
 package com.hyjf.cs.message.service.channel;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.admin.PcChannelStatisticsRequest;
 import com.hyjf.cs.message.bean.ic.AppChannelStatistics;
 import com.hyjf.cs.message.bean.ic.PcChannelStatistics;
+
+import java.util.List;
 
 /**
  * @author yaoyong

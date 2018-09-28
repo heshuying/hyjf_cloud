@@ -3,26 +3,20 @@
  */
 package com.hyjf.am.trade.service.admin.htl.impl;
 
-import java.util.List;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
-import com.hyjf.am.trade.dao.model.auto.ProductList;
-import com.hyjf.am.trade.dao.model.auto.ProductListExample;
-import com.hyjf.am.trade.dao.model.auto.ProductRedeem;
-import com.hyjf.am.trade.dao.model.auto.ProductRedeemExample;
-import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
-import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.ProductIntoRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.ProductRedeemCustomize;
 import com.hyjf.am.trade.service.admin.htl.HtlTradeService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai

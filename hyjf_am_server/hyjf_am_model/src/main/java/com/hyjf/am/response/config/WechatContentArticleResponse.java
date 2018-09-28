@@ -3,8 +3,6 @@ package com.hyjf.am.response.config;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.config.WechatContentArticleResultVO;
 
-import java.util.List;
-
 /**
  * @author lisheng
  * @version WechatContentArticleResponse, v0.1 2018/7/27 10:18

@@ -1,10 +1,10 @@
 package com.hyjf.callcenter.beans;
 
+import com.hyjf.callcenter.result.BaseResultBean;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.hyjf.callcenter.result.BaseResultBean;
 
 /**
  * 呼叫中心用接口返回多条数据的通用类

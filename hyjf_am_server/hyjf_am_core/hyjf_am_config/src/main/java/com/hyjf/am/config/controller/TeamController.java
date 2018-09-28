@@ -3,8 +3,13 @@
  */
 package com.hyjf.am.config.controller;
 
-import java.util.List;
-
+import com.hyjf.am.config.dao.model.auto.Team;
+import com.hyjf.am.config.service.TeamService;
+import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.config.TeamResponse;
+import com.hyjf.am.resquest.admin.TeamRequest;
+import com.hyjf.am.vo.config.TeamVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -13,13 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.config.dao.model.auto.Team;
-import com.hyjf.am.config.service.TeamService;
-import com.hyjf.am.response.AdminResponse;
-import com.hyjf.am.response.config.TeamResponse;
-import com.hyjf.am.resquest.admin.TeamRequest;
-import com.hyjf.am.vo.config.TeamVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
 
 /**
  * @author fuqiang

@@ -3,8 +3,6 @@
  */
 package com.hyjf.am.user.dao.model.customize;
 
-import com.hyjf.am.vo.BaseVO;
-
 import java.io.Serializable;
 
 /**

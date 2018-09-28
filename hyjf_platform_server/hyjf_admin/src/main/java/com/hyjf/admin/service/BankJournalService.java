@@ -1,8 +1,6 @@
 package com.hyjf.admin.service;
 
-import com.hyjf.am.resquest.admin.BankAleveRequest;
 import com.hyjf.am.resquest.admin.BankEveRequest;
-import com.hyjf.am.vo.admin.BankAleveVO;
 import com.hyjf.am.vo.admin.BankEveVO;
 
 import java.util.List;

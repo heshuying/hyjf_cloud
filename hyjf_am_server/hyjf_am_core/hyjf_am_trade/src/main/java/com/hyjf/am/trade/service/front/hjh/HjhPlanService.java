@@ -4,7 +4,10 @@
 package com.hyjf.am.trade.service.front.hjh;
 
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
+import com.hyjf.am.trade.dao.model.auto.HjhLabel;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.customize.DebtPlanAccedeCustomize;
 import com.hyjf.am.trade.dao.model.customize.DebtPlanBorrowCustomize;
 import com.hyjf.am.trade.dao.model.customize.HjhPlanCustomize;
