@@ -30,6 +30,13 @@ public interface AdminUtmReadPermissionsService {
 	void insertAction(AdminUtmReadPermissionsRequest request);
 
 	/**
+	 * 用户是否存在
+	 *
+	 * @param userName
+	 * @return
+	 */
+	public int isExistsAdminUser(String userName);
+	/**
 	 * 修改
 	 *
 	 * @param request

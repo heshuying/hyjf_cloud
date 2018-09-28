@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -66,13 +67,15 @@ public class SubmissionsController extends BaseController {
             }
             SubmissionsResponse submissionList = submissionsService.getSubmissionList(form);
             List<SubmissionsCustomizeVO> resultList = submissionList.getResultList();
-            for (SubmissionsCustomizeVO submissionsCustomizeVO : resultList) {
-                String type = userStatus.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
-                submissionsCustomizeVO.setSysType(type);
-                Integer userId = submissionsCustomizeVO.getUserId();
-                UserResponse users = submissionsService.getUserIdByUserId(userId);
-                String userName = users.getResult() != null ? users.getResult().getUsername() : "";
-                submissionsCustomizeVO.setUserName(userName);
+            if(!CollectionUtils.isEmpty(resultList)){
+                for (SubmissionsCustomizeVO submissionsCustomizeVO : resultList) {
+                     String type = userStatus.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
+                     submissionsCustomizeVO.setSysType(type);
+                     Integer userId = submissionsCustomizeVO.getUserId();
+                     UserResponse users = submissionsService.getUserIdByUserId(userId);
+                     String userName = users.getResult() != null ? users.getResult().getUsername() : "";
+                     submissionsCustomizeVO.setUserName(userName);
+                    }
             }
             return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(submissionList.getResultList(), submissionList.getRecordTotal()));
     }

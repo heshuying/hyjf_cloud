@@ -4,11 +4,6 @@
 package com.hyjf.admin.beans.response;
 
 import com.hyjf.admin.beans.vo.*;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.BindUserVo;
-import com.hyjf.am.vo.user.CertificateAuthorityVO;
-import com.hyjf.am.vo.user.UserBankOpenAccountVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -37,7 +32,7 @@ public class UserDetailInfoResponseBean {
 
     //公司信息
     @ApiModelProperty(value = "公司信息")
-    private CorpOpenAccountRecordCustomizeVO enterpriseInformation;
+    private CompanyInfoCompanyInfoVO enterpriseInformation;
     //文件服务器
     @ApiModelProperty(value = "文件服务器")
     private String hostUrl;
@@ -74,11 +69,11 @@ public class UserDetailInfoResponseBean {
         this.userBankOpenAccountVO = userBankOpenAccountVO;
     }
 
-    public CorpOpenAccountRecordCustomizeVO getEnterpriseInformation() {
+    public CompanyInfoCompanyInfoVO getEnterpriseInformation() {
         return enterpriseInformation;
     }
 
-    public void setEnterpriseInformation(CorpOpenAccountRecordCustomizeVO enterpriseInformation) {
+    public void setEnterpriseInformation(CompanyInfoCompanyInfoVO enterpriseInformation) {
         this.enterpriseInformation = enterpriseInformation;
     }
 

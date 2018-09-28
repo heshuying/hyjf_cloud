@@ -37,7 +37,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -220,7 +219,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public JxBankConfigResponse getJXbankConfigByBankId(int bankId) {
         JxBankConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/getJXbankConfigByBankId/" + bankId, JxBankConfigResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-config/config/getJXbankConfigByBankId/" + bankId, JxBankConfigResponse.class).getBody();
         return response;
     }
 
@@ -282,6 +281,12 @@ public class AmConfigClientImpl implements AmConfigClient {
         UtmPlatResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/preparedatas", UtmPlatResponse.class);
         return response;
     }
+    @Override
+    public IntegerResponse isExistsAdminUser(String userName){
+        IntegerResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/checkaction/"+userName, IntegerResponse.class);
+        return response;
+    }
+
     @Override
     public AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean) {
         return restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/insert",
@@ -762,12 +767,10 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<ParamNameVO> selectProjectTypeParamList() {
-        List<ParamNameVO> paramNameVOS = new ArrayList<>();
-        ParamNameResponse amResponse = restTemplate.postForEntity("http://AM-CONFIG/am-config/accountconfig/selectProjectTypeParamList", null, ParamNameResponse.class)
+        ParamNameResponse amResponse = restTemplate.postForEntity("http://AM-ADMIN/am-admin/paramname/selectProjectTypeParamList", null, ParamNameResponse.class)
                 .getBody();
         if (Response.isSuccess(amResponse)) {
-            paramNameVOS = amResponse.getResultList();
-            return paramNameVOS;
+            return amResponse.getResultList();
         }
         return null;
     }
