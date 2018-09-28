@@ -146,30 +146,27 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.TransferExceptionLogWithBLOBs" >
-    <selectKey resultType="java.lang.String" keyProperty="uuid" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_transfer_exception_log (order_id, recover_id, `type`, 
-      `status`, respcode, trans_amt, 
-      account_id, seq_no, cus_id, 
-      acct_id, user_id, remark, 
-      del_flag, create_user, update_user, 
-      create_time, update_time, content, 
-      `result`)
-    values (#{orderId,jdbcType=VARCHAR}, #{recoverId,jdbcType=INTEGER}, #{type,jdbcType=TINYINT}, 
-      #{status,jdbcType=TINYINT}, #{respcode,jdbcType=VARCHAR}, #{transAmt,jdbcType=DECIMAL}, 
-      #{accountId,jdbcType=VARCHAR}, #{seqNo,jdbcType=VARCHAR}, #{cusId,jdbcType=VARCHAR}, 
-      #{acctId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
-      #{delFlag,jdbcType=TINYINT}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR}, 
-      #{result,jdbcType=LONGVARCHAR})
+    insert into ht_transfer_exception_log (uuid, order_id, recover_id, 
+      `type`, `status`, respcode, 
+      trans_amt, account_id, seq_no, 
+      cus_id, acct_id, user_id, 
+      remark, del_flag, create_user, 
+      update_user, create_time, update_time, 
+      content, `result`)
+    values (#{uuid,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{recoverId,jdbcType=INTEGER}, 
+      #{type,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{respcode,jdbcType=VARCHAR}, 
+      #{transAmt,jdbcType=DECIMAL}, #{accountId,jdbcType=VARCHAR}, #{seqNo,jdbcType=VARCHAR}, 
+      #{cusId,jdbcType=VARCHAR}, #{acctId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, #{createUser,jdbcType=VARCHAR}, 
+      #{updateUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{content,jdbcType=LONGVARCHAR}, #{result,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.TransferExceptionLogWithBLOBs" >
-    <selectKey resultType="java.lang.String" keyProperty="uuid" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_transfer_exception_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        uuid,
+      </if>
       <if test="orderId != null" >
         order_id,
       </if>
@@ -229,6 +226,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
       <if test="orderId != null" >
         #{orderId,jdbcType=VARCHAR},
       </if>

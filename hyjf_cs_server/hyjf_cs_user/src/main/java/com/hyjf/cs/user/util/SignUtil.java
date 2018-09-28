@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.user.util;
 
-import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.user.bean.BaseBean;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.PaymentAuthPageRequestBean;

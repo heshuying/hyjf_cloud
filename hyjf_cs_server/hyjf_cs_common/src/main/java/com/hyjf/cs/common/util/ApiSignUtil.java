@@ -1,13 +1,20 @@
-package com.hyjf.common.util;
+package com.hyjf.cs.common.util;
 
 import java.io.File;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.hyjf.common.util.RSAHelper;
+import com.hyjf.common.util.RSAKeyUtil;
+
 @Component
 public class ApiSignUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(ApiSignUtil.class);
 	
 	/** 汇盈金服公钥文件地址(请求) **/
 
@@ -38,14 +45,14 @@ public class ApiSignUtil {
 //	public static final String HYJF_RES_KEY_PASS = PropUtils.getSystem("hyjf.res.password");
 
 
-	public static String getHyjfReqPubKeyPath() {
-		return HYJF_REQ_PUB_KEY_PATH;
-	}
-
-	@Value("${hyjf.req.pub.key}")
-	public void setHyjfReqPubKeyPath(String hyjfReqPubKeyPath) {
-		HYJF_REQ_PUB_KEY_PATH = hyjfReqPubKeyPath;
-	}
+//	public static String getHyjfReqPubKeyPath() {
+//		return HYJF_REQ_PUB_KEY_PATH;
+//	}
+//
+//	@Value("${hyjf.req.pub.key}")
+//	public void setHyjfReqPubKeyPath(String hyjfReqPubKeyPath) {
+//		HYJF_REQ_PUB_KEY_PATH = hyjfReqPubKeyPath;
+//	}
 
 	/**
 	 * RSA方式加签
@@ -54,7 +61,7 @@ public class ApiSignUtil {
 	 * @throws Exception
 	 */
 	public static String encryptByRSA(String... encPramas) {
-		System.out.println(HYJF_REQ_PUB_KEY_PATH + "::::::::" + HYJF_REQ_PRI_KEY_PATH + "::::::::" + HYJF_REQ_KEY_PASS + "::::::::" + HYJF_RES_PUB_KEY_PATH + "::::::::" + HYJF_RES_PRI_KEY_PATH + ":::::::::" + HYJF_RES_KEY_PASS);
+		logger.debug(HYJF_REQ_PUB_KEY_PATH + "::::::::" + HYJF_REQ_PRI_KEY_PATH + "::::::::" + HYJF_REQ_KEY_PASS + "::::::::" + HYJF_RES_PUB_KEY_PATH + "::::::::" + HYJF_RES_PRI_KEY_PATH + ":::::::::" + HYJF_RES_KEY_PASS);
 		// 生成待签名字符串
 		StringBuffer buff = new StringBuffer();
 		for (String param : encPramas) {
@@ -150,7 +157,7 @@ public class ApiSignUtil {
 	}
 
 
-/*	@Value("${hyjf.req.pub.key}")
+	@Value("${hyjf.req.pub.key}")
 	public void setHyjfReqPubKeyPath(String hyjfReqPubKeyPath) {
 		HYJF_REQ_PUB_KEY_PATH = hyjfReqPubKeyPath;
 	}
@@ -173,5 +180,5 @@ public class ApiSignUtil {
 	@Value("${hyjf.res.password}")
 	public void setHyjfResKeyPass(String hyjfResKeyPass) {
 		HYJF_RES_KEY_PASS = hyjfResKeyPass;
-	}*/
+	}
 }

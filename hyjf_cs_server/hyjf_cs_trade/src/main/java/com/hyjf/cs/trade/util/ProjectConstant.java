@@ -1,11 +1,11 @@
 package com.hyjf.cs.trade.util;
 
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.ApiSignUtil;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.BaseBean;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.api.ApiBorrowReqBean;

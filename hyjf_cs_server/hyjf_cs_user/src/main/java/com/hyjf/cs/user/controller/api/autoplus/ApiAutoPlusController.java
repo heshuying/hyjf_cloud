@@ -60,8 +60,6 @@ public class ApiAutoPlusController extends BaseUserController {
     public ApiAutoPlusResultBean sendCode(@RequestBody AutoPlusRequestBean autoPlusRequestBean) {
         logger.info("api端授权申请发送短信验证码第三方请求参数：" + JSONObject.toJSONString(autoPlusRequestBean));
         ApiAutoPlusResultBean result = autoPlusService.sendCode(autoPlusRequestBean);
-        result.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-        result.setStatusDesc("发送短信验证码成功");
         return result;
     }
 

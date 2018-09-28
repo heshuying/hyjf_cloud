@@ -3,12 +3,13 @@
  */
 package com.hyjf.cs.trade.util;
 
-import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.BaseBean;
 import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
 import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
+import com.hyjf.cs.trade.bean.assetpush.UserWithdrawRequestBean;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
@@ -58,6 +59,10 @@ public class SignUtil {
             TransactionDetailsResultBean bean = (TransactionDetailsResultBean) paramBean;
             //暂定四个参数
             sign = bean.getInstCode() + bean.getTimestamp() + bean.getPhone() + bean.getAccountId();
+        }else if("/withdraw".equals(methodName)){
+            // 用户提现
+            UserWithdrawRequestBean bean = (UserWithdrawRequestBean)paramBean;
+            sign = bean.getChannel() + bean.getAccountId() + bean.getAccount() + bean.getCardNo() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
         }
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
     }
