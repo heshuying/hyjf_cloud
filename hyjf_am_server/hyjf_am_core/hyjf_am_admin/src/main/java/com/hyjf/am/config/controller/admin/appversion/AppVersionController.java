@@ -48,7 +48,7 @@ public class AppVersionController {
             List<Version> recordList  = appVersionService.getRecordList(version, paginator.getOffset(), paginator.getLimit());
             List<VersionVO> versionVOS = CommonUtils.convertBeanList(recordList, VersionVO.class);
             response.setResultList(versionVOS);
-            response.setRecordTotal(count);
+            response.setCount(count);
             Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
             response.setClient(client);
         }

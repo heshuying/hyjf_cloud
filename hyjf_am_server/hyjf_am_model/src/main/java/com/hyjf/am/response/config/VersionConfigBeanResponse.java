@@ -11,13 +11,8 @@ import java.util.Map;
  */
 
 public class VersionConfigBeanResponse extends Response<VersionVO> {
-    private int recordTotal;
-    public int getRecordTotal() {
-        return recordTotal;
-    }
-    public void setRecordTotal(int recordTotal) {
-        this.recordTotal = recordTotal;
-    }
+    private int count;
+
 
     private Map<String, String>  versionName;
     private Map<String, String> isUpdate;
@@ -45,5 +40,13 @@ public class VersionConfigBeanResponse extends Response<VersionVO> {
 
     public void setClient(Map<String, String> client) {
         this.client = client;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }
