@@ -192,7 +192,7 @@ public class PlatformTransferController extends BaseController {
                     else if (celLength == 6) {
                         String status = "";
                         if(record.getStatus() == 1){
-                            status = "充值中";
+                            status = "转账中";
                         }else if(record.getStatus() == 2){
                             status = "成功";
                         }else{

@@ -66,4 +66,5 @@ public interface ActivityListService {
      * @return
      */
     ActivityListResponse getRecordById(Integer id);
+
 }
