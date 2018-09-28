@@ -289,6 +289,16 @@ public interface AmUserClient {
     UserVO selectUserByUserId(int userId);
 
     /**
+     * 根据用户List id查找用户表
+     *
+     * @param userId
+     * @param userId
+     * @return
+     * @auth nxl
+     */
+    List<UserVO> selectUserByListUserId(List userId);
+
+    /**
      * 根据用户id查找用户信息
      *
      * @param userId

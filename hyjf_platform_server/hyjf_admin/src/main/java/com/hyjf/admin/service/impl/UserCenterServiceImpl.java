@@ -352,6 +352,20 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         return null;
     }
 
+    /**
+     * 根据用户List id查找用户信息
+     *
+     * @param List userId
+     * @return
+     */
+    @Override
+    public List<UserVO> selectUserByListUserId(List userId) {
+        if (userId != null && userId.size() != 0) {
+            return userCenterClient.selectUserByListUserId(userId);
+        }
+        return null;
+    }
+
     @Override
     public CompanyInfoVO selectCompanyInfoByUserId(String userId) {
         CompanyInfoVO info = new CompanyInfoVO();
