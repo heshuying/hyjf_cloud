@@ -132,14 +132,16 @@ public class SmsCodeController extends BaseController {
             jsonObject.put("statusDesc", FAIL_DESC);
             return jsonObject;
         }
-        if (request.getHeader("Referer").contains("timeinit")) {
+
+        boolean flag = false;
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(mobile)) {
             if (mobile.contains(",")) {
                 jsonObject.put("msg", "单发只能发送一条");
                 jsonObject.put("status", FAIL);
                 jsonObject.put("statusDesc", FAIL_DESC);
                 return jsonObject;
             }
-            boolean flag = smsCodeService.getUserByMobile(mobile);
+            flag = smsCodeService.getUserByMobile(mobile);
             if (!flag) {
                 jsonObject.put("msg", "单发不能发送平台外的用户手机号");
                 jsonObject.put("status", FAIL);
@@ -147,6 +149,7 @@ public class SmsCodeController extends BaseController {
                 return jsonObject;
             }
         }
+
         String send_message = form.getMessage();
         String channelType = form.getChannelType();
         String sendType = form.getSendType();
@@ -171,7 +174,7 @@ public class SmsCodeController extends BaseController {
                     return jsonObject;
                 }
             }
-            boolean flag = smsCodeService.sendSmsOntime(form);
+            flag = smsCodeService.sendSmsOntime(form);
             if (flag) {
                 jsonObject.put("success", true);
                 jsonObject.put("msg", "定时发送任务创建成功");

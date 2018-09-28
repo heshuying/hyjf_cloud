@@ -62,4 +62,11 @@ public interface BorrowInvestCustomizeMapper {
      * @return
      */
     List<BorrowListCustomize> selectBorrowList(@Param("borrowNid") String borrowNid);
+
+    /**
+     * 获取用户投资数量
+     * @param userId
+     * @return
+     */
+    Integer selectTenderCount(Integer userId);
 }
