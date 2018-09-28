@@ -4663,7 +4663,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhReInvestDebtResponse hjhReInvestDebtList(HjhReInvestDebtRequest request) {
-        HjhReInvestDebtResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhReInvestDebt/hjhReInvestDebtList", request, HjhReInvestDebtResponse.class).getBody();
+        HjhReInvestDebtResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/hjhReInvestDebt/hjhReInvestDebtList", request, HjhReInvestDebtResponse.class).getBody();
 
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
