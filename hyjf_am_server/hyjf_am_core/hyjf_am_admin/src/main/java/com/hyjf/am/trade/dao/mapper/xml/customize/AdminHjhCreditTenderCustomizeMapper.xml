@@ -49,10 +49,12 @@
 
 			<!-- 时间  只有am admin改了，am trade 没改-->
 			<if test="assignTimeStart != null and assignTimeStart != ''">
-				AND UNIX_TIMESTAMP(ct.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(#{assignTimeStart})
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND ct.create_time >= STR_TO_DATE(#{assignTimeStart},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="assignTimeEnd != null and assignTimeEnd != ''">
-				AND UNIX_TIMESTAMP(ct.create_time) <![CDATA[<=]]> UNIX_TIMESTAMP(#{assignTimeEnd})+86399
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND ct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{assignTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			
 		</where>
