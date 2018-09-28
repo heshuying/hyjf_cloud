@@ -17,17 +17,6 @@ public class HjhReInvestDetailServiceImpl implements HjhReInvestDetailService {
     @Autowired
     private AmTradeClient amTradeClient;
 
-    /**
-     * 废弃
-     * @param data
-     * @param planNid
-     * @return
-     */
-    @Override
-    public Integer countHjhReInvestDetailTotal(String data, String planNid) {
-        return this.amTradeClient.getHjhReInvestDetailListCount(data, planNid);
-    }
-
     @Override
     public HjhReInvestDetailResponse getHjhReInvestDetailList(HjhReInvestDetailRequest request) {
         HjhReInvestDetailResponse recoList = this.amTradeClient.getHjhReInvestDetailList(request);

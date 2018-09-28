@@ -1763,14 +1763,6 @@ public interface AmTradeClient {
     public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
 
     /**
-     * 汇计划 -> 资金计划 -> 复投原始标的 总条数 (废弃)
-     * @param data
-     * @param planNid
-     * @return
-     * @Author : huanghui
-     */
-    Integer getHjhReInvestDetailListCount(String data, String planNid);
-    /**
      * 汇计划 -> 资金计划 -> 复投原始标的 列表
      * @param requestBean
      * @return

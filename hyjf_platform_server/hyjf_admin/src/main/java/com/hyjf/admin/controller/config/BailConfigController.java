@@ -45,14 +45,14 @@ import java.util.List;
  */
 @Api(value = "配置中心-保证金配置", tags = "配置中心-保证金配置")
 @RestController
-@RequestMapping("/hyjf-admin/bailConfig")
+@RequestMapping("/hyjf-admin/bail_config")
 public class BailConfigController extends BaseController {
 
     @Autowired
     BailConfigService bailConfigService;
 
     /**
-     * 银行账户管理页面
+     * 保证金配置列表查询
      *
      * @param request
      * @return
@@ -83,7 +83,7 @@ public class BailConfigController extends BaseController {
     }
 
     /**
-     * 画面迁移
+     * 画面迁移-保证金配置详情
      *
      * @param idStr
      * @return
