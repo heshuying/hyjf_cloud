@@ -61,10 +61,7 @@ import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
@@ -1818,11 +1815,6 @@ public interface AmTradeClient {
      *
      * 投资预插入
      *
-     * @param borrowNid
-     * @param orderId
-     * @param userId
-     * @param account
-     * @param ip
      * @return
      * @author Administrator
      * @throws Exception
@@ -2199,4 +2191,13 @@ public interface AmTradeClient {
 
 	ProjectBeanVO getRepayProjectDetail(ProjectBeanVO form);
 
+    HjhInstConfigVO selectInstConfigByInstCode(String instCode);
+
+    int updateBeforeCash(ApiUserWithdrawRequest request);
+
+    AccountWithdrawVO getAccountWithdrawByOrderId(String logOrderId);
+
+    List<AccountWithdrawVO> searchAccountWithdrawByUserIdPaginate(ApiUserWithdrawRequest request);
+
+    String handlerAfterCash(ApiUserWithdrawRequest userWithdrawRequest);
 }

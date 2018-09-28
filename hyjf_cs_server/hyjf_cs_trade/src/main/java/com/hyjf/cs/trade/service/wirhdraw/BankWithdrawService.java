@@ -9,9 +9,14 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.BaseResultBean;
+import com.hyjf.cs.trade.bean.assetpush.UserWithdrawRequestBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.bean.BankCallResult;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -170,4 +175,24 @@ public interface BankWithdrawService extends BaseTradeService {
      * @Date
      */
     List<AccountRechargeVO> getTodayRecharge(Integer userId);
+
+    /**
+     * api提现
+     * @param userWithdrawRequestBean
+     * @param request
+     * @return
+     */
+    ModelAndView withdraw(UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request);
+
+    /**
+     * 同步
+     * @param request
+     * @param bean
+     * @return
+     */
+    ModelAndView cashReturn(HttpServletRequest request, BankCallBean bean);
+
+    BankCallResult withdrawBgReturn(HttpServletRequest request, BankCallBean bean);
+
+    BaseResultBean getUserWithdrawRecord(UserWithdrawRequestBean userWithdrawRequestBean);
 }

@@ -60,10 +60,7 @@ import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
@@ -79,6 +76,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -102,6 +100,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     public static final String urlBase = "http://AM-TRADE/am-trade/";
 
     public static final  String BASE_URL = "http://AM-TRADE/am-trade/projectlist";
+
+    @Value("${am.trade.service.name}")
+    private String tradeService;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -5156,4 +5157,78 @@ public class AmTradeClientImpl implements AmTradeClient {
 	        }
 	        return null;
 	    }
+    @Override
+    public HjhInstConfigVO selectInstConfigByInstCode(String instCode) {
+        HjhInstConfigResponse response = restTemplate
+                .getForEntity(tradeService+"/hjhInstConfig/selectInstConfigByInstCode/"+instCode, HjhInstConfigResponse.class)
+                .getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 第三方用户提现
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int updateBeforeCash(ApiUserWithdrawRequest request) {
+        String url = tradeService + "/withdraw/updateBeforeCash";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据orderId查询出status=2的账户提现信息
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    @Override
+    public AccountWithdrawVO getAccountWithdrawByOrderId(String orderId) {
+        String url = tradeService + "/withdraw/getAccountWithdrawByOrderId/" + orderId;
+        AccountWithdrawResponse response = restTemplate.getForEntity(url,AccountWithdrawResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 查询某用户 id 的提现记录，带分页
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<AccountWithdrawVO> searchAccountWithdrawByUserIdPaginate(ApiUserWithdrawRequest request) {
+        String url = tradeService + "/withdraw/searchAccountWithdrawPaginate";
+        AccountWithdrawResponse response = restTemplate.postForEntity(url,request,AccountWithdrawResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 执行提现后处理
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public String handlerAfterCash(ApiUserWithdrawRequest request) {
+        String url = tradeService + "/withdraw/handlerAfterCash";
+        StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
 }
