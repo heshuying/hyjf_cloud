@@ -1,9 +1,10 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.trade.dao.model.customize.HjhDayCreditDetailCustomize;
+import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
+
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
 
 /**
  * @Author : huanghui
@@ -21,5 +22,5 @@ public interface HjhDayCreditDetailCustomizeMapper {
      * @param param
      * @return
      */
-    List<DayCreditDetailVO> selectDebtCreditList(Map<String, Object> param);
+    List<HjhDayCreditDetailCustomize> selectDebtCreditList(Map<String, Object> param);
 }

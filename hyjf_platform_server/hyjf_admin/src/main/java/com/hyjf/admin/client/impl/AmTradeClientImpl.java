@@ -3551,7 +3551,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request) {
-        DayCreditDetailResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhDayCreditDetail/hjhDayCreditList/", request, DayCreditDetailResponse.class).getBody();
+        DayCreditDetailResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/hjhDayCreditDetail/hjhDayCreditList/", request, DayCreditDetailResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
