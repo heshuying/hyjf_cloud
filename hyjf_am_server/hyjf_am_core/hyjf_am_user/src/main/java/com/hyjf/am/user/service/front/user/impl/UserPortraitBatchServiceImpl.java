@@ -200,7 +200,9 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
      * 更新用户画像
      * */
     private int updateInformation(UserPortrait userPortrait) {
-        int count = userPortraitMapper.updateByPrimaryKeySelective(userPortrait);
+        UserPortraitExample example = new UserPortraitExample();
+        example.createCriteria().andUserIdEqualTo(userPortrait.getUserId());
+        int count = userPortraitMapper.updateByExampleSelective(userPortrait,example);
         return count;
     }
     /**
