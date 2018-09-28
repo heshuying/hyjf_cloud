@@ -19,4 +19,14 @@ public interface MyCouponListService extends BaseTradeService {
     List<MyCouponListCustomizeVO> selectMyCouponListInValid(String userId);
 
     Map<String,String> selectInvitePageData(String userId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  微信端获取我的优惠券列表
+     * @Date 15:24 2018/9/28
+     * @Param userId
+     * @Param useFlag 0:未使用  1：已使用  4：已失效
+     * @return
+     */
+    List<MyCouponListCustomizeVO> selectWechatCouponList(String userId,Integer useFlag);
 }

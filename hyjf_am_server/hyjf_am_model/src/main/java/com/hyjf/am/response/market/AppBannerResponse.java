@@ -3,9 +3,8 @@ package com.hyjf.am.response.market;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.market.AdsTypeVO;
 import com.hyjf.am.vo.market.AdsVO;
-import com.hyjf.am.vo.market.AppBannerVO;
-import org.apache.poi.ss.formula.functions.T;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,8 +14,8 @@ import java.util.List;
 
 public class AppBannerResponse extends Response<AdsVO> {
 
-    private int recordTotal;
-    private List<AdsTypeVO> adsTypeList;
+    private int recordTotal=0;
+    private List<AdsTypeVO> adsTypeList = new ArrayList<AdsTypeVO>();
     public int getRecordTotal() {
         return recordTotal;
     }

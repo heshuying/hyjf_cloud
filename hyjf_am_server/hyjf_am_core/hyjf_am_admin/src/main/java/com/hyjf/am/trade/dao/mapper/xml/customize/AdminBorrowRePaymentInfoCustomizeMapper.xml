@@ -33,10 +33,7 @@
 			<if test="instCodeSrch != null and instCodeSrch != ''">
 				AND binfo.inst_code = #{instCodeSrch}
 			</if>
-			<!-- 借款标题 -->
-			<if test="borrowNameSrch != null and borrowNameSrch != ''">
-				AND binfo.name LIKE CONCAT( #{borrowNameSrch}, '%')
-			</if>
+
 			<!-- 借款人 -->
 			<if test="borrowUserName != null and borrowUserName != ''">
 				AND b.borrow_user_name LIKE CONCAT( #{borrowUserName},
@@ -56,11 +53,11 @@
 				AND br.repay_batch_no LIKE CONCAT( #{repayBatchNo}, '%')
 			</if>
 			<!-- 最后还款日 -->
-			<if test="recoverTimeStartSrch != null and recoverTimeStartSrch != ''">
-				AND b.repay_last_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{recoverTimeStartSrch})
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND b.repay_last_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeStartSrch})
 			</if>
-			<if test="recoverTimeEndSrch != null and recoverTimeEndSrch != ''">
-				AND b.repay_last_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{recoverTimeEndSrch})+86399
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND b.repay_last_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeEndSrch})+86399
 			</if>
 			<!-- 计划编号 -->
 			<if test="planNidSrch != null and planNidSrch != ''">
