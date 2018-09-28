@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +57,7 @@ public class RewardController {
             logger.error("获取我的奖励列表异常", e);
             result.setStatus(WebResult.ERROR);
             result.setStatusDesc(WebResult.ERROR_DESC);
+            result.setData(Collections.emptyList());
         }
 
         result.setPage(page);
