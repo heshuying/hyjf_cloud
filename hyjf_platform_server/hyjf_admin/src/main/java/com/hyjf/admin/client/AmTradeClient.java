@@ -1740,27 +1740,12 @@ public interface AmTradeClient {
 
 
     /**
-     * 汇计划 - 计划还款 - 统计
-     * @param repayRequest
-     * @return
-     * @Author : huanghui
-     */
-    Integer getRepayCount(HjhRepayRequest repayRequest);
-    /**
      * 获取汇计划 -  计划还款(计划退出)列表
      * @param request
      * @return
      * @Author : huanghui
      */
     HjhRepayResponse selectHjhRepayList(HjhRepayRequest request);
-
-    /**
-     * 指定指端检索 计划还款列表
-     * @param accedeOrderId
-     * @return
-     * @Author : huanghui
-     */
-    public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
 
     /**
      * 汇计划 -> 资金计划 -> 复投原始标的 列表

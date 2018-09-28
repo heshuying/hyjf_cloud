@@ -3510,20 +3510,6 @@ public class AmTradeClientImpl implements AmTradeClient {
                 .getBody();
     }
 
-
-    /**
-     * 汇计划 - 计划还款 - 统计
-     *
-     * @param repayRequest
-     * @return
-     * @Author : huanghui
-     */
-    @Override
-    public Integer getRepayCount(HjhRepayRequest repayRequest) {
-        IntegerResponse integerResponse = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhRepay/getRepayCount", repayRequest, IntegerResponse.class).getBody();
-        return integerResponse.getResultInt();
-    }
-
     /**
      * 获取汇计划 -  计划还款(计划退出)列表
      *
@@ -4563,23 +4549,6 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
-
-    /**
-     * 指定指端检索 计划还款列表
-     *
-     * @param accedeOrderId
-     * @return
-     * @Author : huanghui
-     */
-    @Override
-    public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId) {
-        HjhRepayResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhRepay/hjhRepaymentDetails/" + accedeOrderId, HjhRepayResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
 
     @Override
     public Boolean updateAccountCallbackRecharge(Map<String, Object> params) {

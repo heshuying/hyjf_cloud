@@ -646,6 +646,43 @@ public class MyCouponListServiceImpl implements MyCouponListService {
         return jsonObject;
     }
 
+    @Override
+    public List<MyCouponListCustomizeVO> wechatCouponList(String userId, String usedFlag, Integer limitStart, Integer limitEnd) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("usedFlag", usedFlag);
+        param.put("userId", userId);
+
+        if (limitStart != null) {
+            param.put("limitStart", limitStart);
+        } else {
+            param.put("limitStart", -1);
+        }
+        if (limitEnd != null) {
+            param.put("limitEnd", limitEnd);
+        } else {
+            param.put("limitEnd", -1);
+        }
+        List<MyCouponListCustomizeVO> list = myCouponListCustomizeMapper.selectMyCouponList(param);
+        List<MyCouponListCustomizeVO> wechatList = new ArrayList<>();
+        for (MyCouponListCustomizeVO myCouponCustomizeVO:list) {
+            String couponSystem = myCouponCustomizeVO.getCouponSystem();
+            //处理使用平台
+            if (StringUtils.isNotBlank(couponSystem)){
+                couponSystem = dealOperation(couponSystem);
+                myCouponCustomizeVO.setCouponSystem(couponSystem);
+            }
+            //处理项目类型
+            String projectType = myCouponCustomizeVO.getProjectType();
+            if (StringUtils.isNotBlank(projectType)){
+                projectType = dealProjectType(projectType);
+                myCouponCustomizeVO.setProjectType(projectType);
+            }
+            wechatList.add(myCouponCustomizeVO);
+        }
+
+        return wechatList;
+    }
+
     /**
      * 处理校验优惠券平台
      * @param couponSystem 优惠券适用平台
