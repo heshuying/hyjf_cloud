@@ -175,6 +175,8 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
         if (StringUtils.isNotEmpty(user.getIconUrl())) {
             resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconUrl());
+        }else {
+            resultMap.put("iconUrl", "");
         }
         resultMap.put("inviteLink", systemConfig.getFrontHost() + "/user/regist?from=" + user.getUserId());
         return resultMap;

@@ -22,6 +22,7 @@
 		<result column="recieve_time" property="recieveTime" jdbcType="VARCHAR" />
 		<result column="label_name" property="labelName" jdbcType="VARCHAR" />
 		<result column="bank_open_account" property="bankOpenAccount" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="queryAssetList" resultMap="resultMap" parameterType="Map">
 		SELECT
@@ -45,7 +46,7 @@
 			hpa.status AS status,
 			FROM_UNIXTIME( hpa.recieve_time, '%Y-%m-%d %H:%i:%s' ) AS recieve_time,
 			hpa.label_name,
-			
+			hpa.user_id,
 			<!-- 如果ht_r_user里面有truename说明是开户成功，是否银行开户,0未开户,1已开户 -->
 			CASE 
 				WHEN 

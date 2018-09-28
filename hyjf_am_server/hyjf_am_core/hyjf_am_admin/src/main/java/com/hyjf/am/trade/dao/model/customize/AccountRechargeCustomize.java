@@ -1,17 +1,8 @@
-package com.hyjf.am.vo.trade.account;
+package com.hyjf.am.trade.dao.model.customize;
 
-import com.hyjf.am.vo.BaseVO;
-
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
-/**
- * 充值管理自定义返回值
- * @Author : huanghui
- */
-public class AccountRechargeCustomizeVO extends BaseVO implements Serializable {
-
+public class AccountRechargeCustomize {
     /**
      *
      */
@@ -155,7 +146,7 @@ public class AccountRechargeCustomizeVO extends BaseVO implements Serializable {
     /**
      *
      */
-    private Date createTime;
+    private String createTime;
 
     /**
      *
@@ -433,11 +424,11 @@ public class AccountRechargeCustomizeVO extends BaseVO implements Serializable {
         this.remark = remark;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

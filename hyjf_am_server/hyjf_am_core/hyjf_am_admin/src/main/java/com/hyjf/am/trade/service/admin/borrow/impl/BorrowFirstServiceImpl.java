@@ -211,7 +211,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
             return;
         }
         // 判断是否设定自动初审
-        if (hjhAssetBorrowType.getAutoBail() == 1) {
+        if (hjhAssetBorrowType.getAutoAudit() == 1) {
             try {
                 JSONObject params = new JSONObject();
                 params.put("instCode",borrowInfo.getInstCode());
