@@ -37,6 +37,8 @@ public class ProjectListRequest extends BasePage {
      */
     private String creditStatus;
 
+    private String status;
+
     /**
      * 翻页机能用的隐藏变量（app原来的参数）
      */
@@ -125,5 +127,13 @@ public class ProjectListRequest extends BasePage {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

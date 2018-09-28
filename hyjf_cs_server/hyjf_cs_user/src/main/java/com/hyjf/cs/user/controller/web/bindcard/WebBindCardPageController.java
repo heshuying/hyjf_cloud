@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -68,6 +69,7 @@ public class WebBindCardPageController extends BaseUserController{
         } catch (Exception e) {
             result.setStatus(WebResult.ERROR);
             result.setStatusDesc(WebResult.ERROR_DESC);
+            result.setData(Collections.emptyMap());
             logger.error("请求银行接口异常", e);
             return result;
         }

@@ -255,6 +255,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("host",request.getHost());
         params.put("type",request.getType());
         params.put("platform",request.getPlatform());
+        params.put("status",request.getStatus());
         return webProjectListCustomizeMapper.searchAppProjectList(params);
     }
 

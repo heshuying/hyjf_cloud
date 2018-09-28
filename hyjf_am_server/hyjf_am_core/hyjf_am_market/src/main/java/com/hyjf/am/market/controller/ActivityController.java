@@ -202,16 +202,16 @@ public class ActivityController {
      * @param request
      * @return
      */
-    @PostMapping("/selectRecordListValid")
-    public ActivityListCustomizeResponse selectRecordListValid(@RequestBody ActivityListCustomizeVO request) {
-        ActivityListCustomizeResponse response = new ActivityListCustomizeResponse();
-        List<ActivityListCustomize> recordList = activityService.selectRecordListValid(new ActivityListCustomize(),-1,-1);
-        if (!CollectionUtils.isEmpty(recordList)) {
-            List<ActivityListCustomizeVO> activityListCustomizeVOS = CommonUtils.convertBeanList(recordList,ActivityListCustomizeVO.class);
-            response.setResultList(activityListCustomizeVOS);
-        }
-        return response;
-    }
+//    @PostMapping("/selectRecordListValid")
+//    public ActivityListCustomizeResponse selectRecordListValid(@RequestBody ActivityListCustomizeVO request) {
+//        ActivityListCustomizeResponse response = new ActivityListCustomizeResponse();
+//        List<ActivityListCustomize> recordList = activityService.selectRecordListValid(new ActivityListCustomize(),-1,-1);
+//        if (!CollectionUtils.isEmpty(recordList)) {
+//            List<ActivityListCustomizeVO> activityListCustomizeVOS = CommonUtils.convertBeanList(recordList,ActivityListCustomizeVO.class);
+//            response.setResultList(activityListCustomizeVOS);
+//        }
+//        return response;
+//    }
 
     /**
      * @Author walter.limeng
@@ -254,17 +254,17 @@ public class ActivityController {
         return activityListResponse;
     }
 
-    @GetMapping("/getInfoById/{id}")
-    public ActivityListResponse getInfoById(@PathVariable Integer id) {
-        ActivityListResponse response = new ActivityListResponse();
-        ActivityList activityList = activityService.getActivityInfo(id);
-        ActivityListVO activityListVO = new ActivityListVO();
-        if (activityList != null) {
-            BeanUtils.copyProperties(activityList, activityListVO);
-            activityListVO.setAcStartTime(GetDate.getDateTimeMyTime(activityList.getTimeStart()));
-            activityListVO.setAcEndTime(GetDate.getDateTimeMyTime(activityList.getTimeEnd()));
-            response.setResult(activityListVO);
-        }
-        return response;
-    }
+//    @GetMapping("/getInfoById/{id}")
+//    public ActivityListResponse getInfoById(@PathVariable Integer id) {
+//        ActivityListResponse response = new ActivityListResponse();
+//        ActivityList activityList = activityService.getActivityInfo(id);
+//        ActivityListVO activityListVO = new ActivityListVO();
+//        if (activityList != null) {
+//            BeanUtils.copyProperties(activityList, activityListVO);
+//            activityListVO.setAcStartTime(GetDate.getDateTimeMyTime(activityList.getTimeStart()));
+//            activityListVO.setAcEndTime(GetDate.getDateTimeMyTime(activityList.getTimeEnd()));
+//            response.setResult(activityListVO);
+//        }
+//        return response;
+//    }
 }

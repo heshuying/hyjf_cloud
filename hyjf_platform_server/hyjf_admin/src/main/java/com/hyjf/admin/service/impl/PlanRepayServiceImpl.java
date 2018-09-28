@@ -32,17 +32,4 @@ public class PlanRepayServiceImpl implements PlanRepayService {
         HjhRepayResponse recordList = amTradeClient.selectHjhRepayList(request);
         return recordList;
     }
-
-    /**
-     * 根据订单号查询指定数据
-     * @param accedeOrderId
-     * @return
-     */
-    @Override
-    public HjhRepayResponseBean selectByAccedeOrderId(String accedeOrderId) {
-        HjhRepayResponseBean repayResponseBean = new HjhRepayResponseBean();
-        List<HjhRepayVO> hjhRepayVOList = amTradeClient.selectByAccedeOrderId(accedeOrderId);
-        repayResponseBean.setRecordList(hjhRepayVOList);
-        return repayResponseBean;
-    }
 }

@@ -1,21 +1,19 @@
 package com.hyjf.common.pdf;
 
-import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 /**
  * 将pdf转换为图片
@@ -51,7 +49,7 @@ public class PdfToHtml extends PDFToImage {
 	            PDPageTree pages = pdDocument.getPages();
 	            PDFRenderer renderer = new PDFRenderer(pdDocument);
 	            for (int i = 0; i < pages.getCount(); i++) {
-	                String saveFileName = savePath+"/"+fileName+i+"."+imgType;
+	                String saveFileName = savePath+"/"+i+"."+imgType;
 	                File dstFile = new File(saveFileName);
 	                BufferedImage image = renderer.renderImageWithDPI(i, 122);
 	                BufferedImage srcImage = resize(image, 1191, 1684);//产生缩略图

@@ -4,7 +4,6 @@
 package com.hyjf.am.config.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.hyjf.am.config.dao.model.auto.CouponCheck;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest; /**
@@ -12,9 +11,9 @@ import com.hyjf.am.resquest.admin.AdminCouponCheckRequest; /**
  * @version CheckService, v0.1 2018/7/4 11:45
  */
 public interface CheckService {
-    int countCouponCheck(Map<String, Object> mapParam);
+    int countCouponCheck(AdminCouponCheckRequest request);
 
-    List<CouponCheck> searchCouponCheck(Map<String, Object> mapParam, int offset, int limit);
+    List<CouponCheck> searchCouponCheck(AdminCouponCheckRequest request, int offset, int limit);
 
     void deleteCheckList(int id);
 

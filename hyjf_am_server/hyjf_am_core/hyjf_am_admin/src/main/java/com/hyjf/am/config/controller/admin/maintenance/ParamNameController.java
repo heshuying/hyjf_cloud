@@ -164,7 +164,6 @@ public class ParamNameController extends BaseConfigController {
             response.setResultList(paramName);
             return response;
         }
-        response.setRtn(Response.FAIL);
         return response;
     }
     /**
@@ -179,7 +178,6 @@ public class ParamNameController extends BaseConfigController {
             response.setResultList(paramName);
             return response;
         }
-        response.setRtn(Response.FAIL);
         return response;
     }
     /**
@@ -194,7 +192,6 @@ public class ParamNameController extends BaseConfigController {
             response.setResultList(paramNames);
             return response;
         }
-        response.setRtn(Response.FAIL);
         return response;
     }
 }

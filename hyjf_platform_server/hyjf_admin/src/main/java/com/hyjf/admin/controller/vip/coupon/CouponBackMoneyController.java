@@ -96,7 +96,7 @@ public class CouponBackMoneyController extends BaseController {
      * 导出功能
      *
      */
-    @GetMapping("/exportAction")
+    @PostMapping("/exportAction")
     public void exportAction( @RequestParam(value="father",required=true)  String father,@RequestParam(value="son",required=true)  String son,
                               HttpServletResponse response,CouponBackMoneyCustomize couponBackMoneyCustomize) throws Exception {
 
