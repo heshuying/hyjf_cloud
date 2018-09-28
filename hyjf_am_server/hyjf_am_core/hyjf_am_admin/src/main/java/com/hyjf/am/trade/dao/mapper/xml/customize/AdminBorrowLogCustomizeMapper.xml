@@ -20,10 +20,12 @@
 			</if>
 
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( b.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND b.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( b.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>
@@ -52,7 +54,7 @@
 		b.type,
 		b.remark,
 		b.create_user_name,
-		b.create_time AS create_time,
+		date_format( b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
 		b.del_flag
 		FROM
 		ht_borrow_log b
@@ -77,7 +79,7 @@
 		<result column="remark" property="remark" jdbcType="VARCHAR" />
 		<result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
-		<result column="del_flag" property="delFlg" jdbcType="TINYINT" />
+		<result column="del_flag" property="delFlag" jdbcType="TINYINT" />
 	</resultMap>
 	<select id="exportBorrowLogList" resultMap="exportBorrowLogListMap" parameterType="com.hyjf.am.resquest.admin.BorrowLogRequset">
 		SELECT
@@ -86,7 +88,7 @@
 		b.type,
 		b.remark,
 		b.create_user_name,
-		FROM_UNIXTIME( b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+		date_format( b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
 		b.del_flag
 		FROM
 		ht_borrow_log b

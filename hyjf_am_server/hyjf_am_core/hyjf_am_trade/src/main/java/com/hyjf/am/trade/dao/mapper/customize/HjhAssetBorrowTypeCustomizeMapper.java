@@ -24,4 +24,6 @@ public interface HjhAssetBorrowTypeCustomizeMapper {
      * @return
      */
     public List<HjhAssetBorrowtype> getRecordList(AdminBorrowFlowRequest form);
+
+    int updateByPrimaryKeySelective(HjhAssetBorrowtype record);
 }

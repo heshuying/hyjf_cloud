@@ -84,7 +84,8 @@ public class AccountSynchronizeBatchServiceImpl implements AccountSynchronizeBat
                 updateMobile(accountMobileAynch);
             }
         }catch(Exception e){
-            throw new RuntimeException("查询同步手机号异常");        }
+            throw new RuntimeException("查询同步手机号异常");
+        }
     }
 
 

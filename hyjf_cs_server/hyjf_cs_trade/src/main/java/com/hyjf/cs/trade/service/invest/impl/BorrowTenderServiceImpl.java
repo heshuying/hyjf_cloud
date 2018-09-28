@@ -1285,7 +1285,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 检查金额
         this.checkTenderMoney(request, borrow, cuc, tenderAccount );
         logger.info("所有参数都已检查通过!");
-        return null;
+        return new WebResult<Map<String, Object>>();
     }
 
     /**

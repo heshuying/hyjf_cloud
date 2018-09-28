@@ -67,7 +67,7 @@
 		FROM ht_user u
 		LEFT JOIN ht_user_info ui ON u.user_id= ui.user_id
 		LEFT JOIN ht_spreads_user su ON u.user_id= su.user_id
-		LEFT JOIN ht_r_oa_users ou ON su.spreads_userid= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN ht_r_oa_users ou ON su.spreads_user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
 		LEFT JOIN ht_r_oa_department od ON od.id = ou.departmentid
 		LEFT JOIN ht_r_oa_department od2 ON od2.id = od.parentid
 		LEFT JOIN ht_r_oa_department od3 on od3.id = od2.parentid

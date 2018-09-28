@@ -96,9 +96,6 @@ public class CustomizeMapper extends AutoMapper {
 	protected HjhReInvestDetailCustomizeMapper hjhReInvestDetailCustomizeMapper;
 
 	@Autowired
-	protected HjhDayCreditDetailCustomizeMapper hjhDayCreditDetailCustomizeMapper;
-
-	@Autowired
 	protected WebPandectCustomizeMapper webPandectCustomizeMapper;
 
 	@Autowired
@@ -192,9 +189,6 @@ public class CustomizeMapper extends AutoMapper {
 	protected AdminBankAccountCheckCustomizeMapper adminBankAccountCheckCustomizeMapper;
 	@Autowired
 	protected ApiProjectListCustomizeMapper apiProjectListCustomizeMapper;
-
-	@Autowired
-	protected HjhPlanRepayCustomizeMapper hjhPlanRepayCustomizeMapper;
 
 	@Autowired
 	protected NifaContractEssenceCustomizeMapper nifaContractEssenceCustomizeMapper;

@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.admin.hjhplan;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
@@ -14,20 +15,13 @@ public interface HjhRepayService {
 
     /**
      * 获取总数
-     * @param repayRequest
+     * @param params
      * @return
      */
-    Integer getRepayCount(HjhRepayRequest repayRequest);
+    Integer getRepayCount(Map<String, Object> params);
 
-    List<HjhRepay> selectByExample(HjhRepayRequest request);
+    List<HjhRepayVO> selectByExample(Map<String, Object> params);
 
     List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
-
-    /**
-     * 订单退出超过两天邮件预警list
-     * @author zhangyk
-     * @date 2018/8/15 15:47
-     */
-    List<HjhRepay>  getPlanExitCheck();
 
 }
