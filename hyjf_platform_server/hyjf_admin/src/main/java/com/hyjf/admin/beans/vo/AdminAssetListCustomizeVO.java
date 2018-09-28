@@ -82,6 +82,28 @@ public class AdminAssetListCustomizeVO  extends BaseVO implements Serializable{
 	
 	@ApiModelProperty(value = "金额合计")
 	private BigDecimal sumAccount;
+
+	@ApiModelProperty(value = "借款类型")
+	private String userType;
+
+	@ApiModelProperty(value = "用户ID")
+	private String userId;
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
 	
 	/**
 	 * assetId
