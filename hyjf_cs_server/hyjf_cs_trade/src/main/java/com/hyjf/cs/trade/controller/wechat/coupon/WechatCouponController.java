@@ -39,15 +39,15 @@ public class WechatCouponController {
      */
     @ApiOperation(value = "微信端获取我的优惠券列表", notes = "微信端我的优惠券列表")
     @PostMapping(value = "/mycouponlist", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> selectMyCouponList(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request){
-        WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
+    public WebResult<List<MyCouponListCustomizeVO>> selectMyCouponList(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request){
+        WebResult<List<MyCouponListCustomizeVO>> result = new WebResult<List<MyCouponListCustomizeVO>>();
         logger.info("微信端获取我的优惠券列表数据开始，userId:{}", userId);
 
         try {
             List<MyCouponListCustomizeVO> listUnUsed = myCouponListService.selectWechatCouponList(String.valueOf(userId), 0);
             Map<String,Object> resultMap = new HashMap<String,Object>();
             resultMap.put("object", listUnUsed);
-            result.setData(resultMap);
+            result.setData(listUnUsed);
         } catch (Exception e) {
             result.setStatus(WebResult.ERROR);
             result.setStatusDesc(WebResult.ERROR_DESC);
