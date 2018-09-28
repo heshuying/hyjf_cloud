@@ -504,7 +504,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
 
 
         // 添加红包账户明细
-        BankMerchantAccountVO bankMerchantAccountVO = amTradeClient.searchBankMerchantAccountByAccountId(Integer.valueOf(bankBean.getAccountId()));
+        BankMerchantAccountVO bankMerchantAccountVO = amTradeClient.searchBankMerchantAccountByAccountId(bankBean.getAccountId());
         bankMerchantAccountVO.setAvailableBalance(bankMerchantAccountVO.getAvailableBalance().subtract(money));
         bankMerchantAccountVO.setAccountBalance(bankMerchantAccountVO.getAccountBalance().subtract(money));
         bankMerchantAccountVO.setUpdateTime(GetDate.getNowTime());

@@ -66,7 +66,7 @@ public interface PlatformTransferService {
      * @param accountId 账户id
      * @return
      */
-    BankMerchantAccount searchBankMerchantAccountByAccountId(Integer accountId);
+    BankMerchantAccount searchBankMerchantAccountByAccountId(String accountId);
 
     /**
      * 更新红包账户信息

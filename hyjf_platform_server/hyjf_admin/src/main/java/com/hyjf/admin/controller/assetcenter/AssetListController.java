@@ -12,6 +12,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.AssetListService;
+import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
@@ -19,10 +20,9 @@ import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -53,6 +53,8 @@ public class AssetListController extends BaseController {
 	private AssetListService assetListService;
     @Autowired
     private AdminCommonService adminCommonService;
+	@Autowired
+	private UserCenterService userCenterService;
 	// 开户状态
 	private static final  String ACCOUNT_STATUS = "ACCOUNT_STATUS";
 	// 审核状态
@@ -156,7 +158,7 @@ public class AssetListController extends BaseController {
 		// 将画面检索参数request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
 		// 查询不改动是因为多处有调用
-		AssetListCustomizeResponse response = assetListService.findAssetList(form);
+        AssetListCustomizeResponse response = assetListService.findAssetList(form);
 		if(response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
@@ -166,6 +168,29 @@ public class AssetListController extends BaseController {
 		if(CollectionUtils.isNotEmpty(response.getResultList())){
 			// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
 			volist = CommonUtils.convertBeanList(response.getResultList(), AdminAssetListCustomizeVO.class);
+			//绑定user_type
+			if(!org.springframework.util.CollectionUtils.isEmpty(volist)){
+				List<String> listUserId = new ArrayList<String>();
+				Map<String, String> userTypeMap = CacheUtil.getParamNameMap("USER_TYPE");
+				for(AdminAssetListCustomizeVO assList : volist){
+					//拼接用户id
+					if (StringUtils.isNotEmpty(assList.getUserId())){
+						listUserId.add(assList.getUserId());
+					}
+				}
+				//根据用户id查询am-user中的user_type
+				List<UserVO> user = userCenterService.selectUserByListUserId(listUserId);
+				if(!org.springframework.util.CollectionUtils.isEmpty(user)){
+					//拆解user组装bean
+					for(AdminAssetListCustomizeVO assListAddUser : volist){
+						for (UserVO userVO : user){
+							if(StringUtils.isNotEmpty(assListAddUser.getUserId()) && userVO.getUserId() != null && assListAddUser.getUserId().equals(userVO.getUserType() != null ? String.valueOf(userVO.getUserType()) : null)){
+								assListAddUser.setUserType(userTypeMap.getOrDefault(userVO.getUserType() != null ? String.valueOf(userVO.getUserType()) : null,null));
+							}
+						}
+					}
+				}
+			}
 			return new AdminResult<ListResult<AdminAssetListCustomizeVO>>(ListResult.build(volist, response.getCount()));
 		} else {
 			return new AdminResult<ListResult<AdminAssetListCustomizeVO>>(ListResult.build(volist, 0));
