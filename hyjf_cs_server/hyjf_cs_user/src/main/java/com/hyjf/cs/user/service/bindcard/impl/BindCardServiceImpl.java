@@ -257,6 +257,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 
 		Map<String,Object> map = BankCallUtils.callApiMap(bindCardBean);
 
+		if(map == null){
+			return new HashMap<>();
+		}
 		return map;
 	}
 	

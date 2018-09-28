@@ -355,4 +355,18 @@ public class BorrowTenderController extends BaseController {
         }
         return response;
     }
+
+    /**
+     * 查询用户投次数
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/countNewUserTotal/{userId}")
+    public Integer countNewUserTotal(@PathVariable Integer userId) {
+        logger.info("countNewUserTotal...userId is :{}", userId);
+        Integer count = borrowTenderService.selectTenderCount(userId);
+        logger.info("countNewUserTotal...count is :{}", count);
+        return count;
+    }
 }

@@ -5,6 +5,8 @@ package com.hyjf.am.trade.controller.admin.user;
 
 import java.util.List;
 
+import com.hyjf.am.response.Response;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetDate;
 import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
@@ -31,52 +33,62 @@ import com.hyjf.common.util.CommonUtils;
 @RestController
 @RequestMapping("/am-trade/stzfwhiteconfig")
 public class StzfWhiteConfigController extends BaseController {
-	@Autowired
-	private StzfWhiteConfigService stzfWhiteConfigService;
+    @Autowired
+    private StzfWhiteConfigService stzfWhiteConfigService;
 
-	/**
-	 * 获取受托支付白名单列表
-	 *
-	 * @return
-	 */
-	@RequestMapping("/selectSTZHWhiteList")
-	public STZHWhiteListResponse selectSTZHWhiteList(@RequestBody STZHWhiteListRequest request) {
-		STZHWhiteListResponse response = new STZHWhiteListResponse();
-		List<StzhWhiteList> list = stzfWhiteConfigService.selectSTZHWhiteList(request);
-		if (!CollectionUtils.isEmpty(list)) {
-			List<STZHWhiteListVO> voList = CommonUtils.convertBeanList(list, STZHWhiteListVO.class);
-			response.setResultList(voList);
-		}
-		return response;
-	}
+    /**
+     * 获取受托支付白名单列表
+     *
+     * @return
+     */
+    @RequestMapping("/selectSTZHWhiteList")
+    public STZHWhiteListResponse selectSTZHWhiteList(@RequestBody STZHWhiteListRequest request) {
+        STZHWhiteListResponse response = new STZHWhiteListResponse();
+        int count = stzfWhiteConfigService.countSTZFHWhiteList(request);
+        Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
+        if (request.getPageSize() == 0) {
+            paginator = new Paginator(request.getCurrPage(), count);
+        }
+        List<StzhWhiteList> list = stzfWhiteConfigService.selectSTZHWhiteList(request, paginator.getOffset(), paginator.getLimit());
+        if (count > 0) {
+            if (!CollectionUtils.isEmpty(list)) {
+                List<STZHWhiteListVO> voList = CommonUtils.convertBeanList(list, STZHWhiteListVO.class);
+                response.setResultList(voList);
+                response.setCount(count);
+            } else {
+                response.setRtn(Response.FAIL);
+            }
+        }
+        return response;
+    }
 
-	/**
-	 * 添加受托支付白名单
-	 *
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/insertSTZHWhiteList")
-	public STZHWhiteListResponse insertSTZHWhiteList(@RequestBody STZHWhiteListRequest request) {
-		STZHWhiteListResponse response = new STZHWhiteListResponse();
-		stzfWhiteConfigService.insertSTZHWhiteList(request);
-		response.setRtn(AdminResponse.SUCCESS);
-		return response;
-	}
+    /**
+     * 添加受托支付白名单
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/insertSTZHWhiteList")
+    public STZHWhiteListResponse insertSTZHWhiteList(@RequestBody STZHWhiteListRequest request) {
+        STZHWhiteListResponse response = new STZHWhiteListResponse();
+        stzfWhiteConfigService.insertSTZHWhiteList(request);
+        response.setRtn(AdminResponse.SUCCESS);
+        return response;
+    }
 
-	/**
-	 * 修改受托支付白名单
-	 *
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/updateSTZHWhiteList")
-	public STZHWhiteListResponse updateSTZHWhiteList(@RequestBody STZHWhiteListRequest request) {
-		STZHWhiteListResponse response = new STZHWhiteListResponse();
-		stzfWhiteConfigService.updateSTZHWhiteList(request);
-		response.setRtn(AdminResponse.SUCCESS);
-		return response;
-	}
+    /**
+     * 修改受托支付白名单
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateSTZHWhiteList")
+    public STZHWhiteListResponse updateSTZHWhiteList(@RequestBody STZHWhiteListRequest request) {
+        STZHWhiteListResponse response = new STZHWhiteListResponse();
+        stzfWhiteConfigService.updateSTZHWhiteList(request);
+        response.setRtn(AdminResponse.SUCCESS);
+        return response;
+    }
 
 
 }

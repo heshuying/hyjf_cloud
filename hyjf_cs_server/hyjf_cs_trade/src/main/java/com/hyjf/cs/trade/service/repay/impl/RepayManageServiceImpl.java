@@ -186,7 +186,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     @Override
     public JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean) {
-        return amTradeClient.getRepayDetailData(requestBean);
+        JSONObject result = amTradeClient.getRepayDetailData(requestBean);
+        if(result == null){
+            result = new JSONObject();
+        }
+        return result;
     }
 
    /**
