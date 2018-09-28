@@ -15,7 +15,7 @@
 			ad.new_user_show
 		FROM
 			ht_ads ad
-		INNER JOIN ht_ads_type adt ON ad.type_id = adt.type_id
+		LEFT JOIN ht_ads_type adt ON ad.type_id = adt.type_id
 		WHERE
 			ad.`status` = 1
 		<if test="code != null and code != ''">
