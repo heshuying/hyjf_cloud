@@ -1,0 +1,19 @@
+rocketMQ:
+  namesrvAddr: ${rocketMQ.namesrvAddr}
+
+am:
+  config:
+    service:
+      name: http://AM-CONFIG/am-config
+  user:
+    service:
+      name: http://AM-USER/am-user
+  trade:
+    service:
+      name: http://AM-TRADE/am-trade
+  market:
+    service:
+      name: http://AM-MARKET/am-market
+  dataCollect:
+    service:
+      name: http://CS-MESSAGE/cs-message

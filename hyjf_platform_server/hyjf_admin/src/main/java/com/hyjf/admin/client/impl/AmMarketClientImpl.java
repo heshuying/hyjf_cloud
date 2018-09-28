@@ -32,7 +32,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 	@Override
 	public List<ActivityListVO> getActivityList() {
 		ActivityListResponse response = restTemplate.getForEntity(
-				"http://AM-MARKET/am-market/activity/getActivityList",
+				"http://AM-admin/am-admin/activity/getActivityList",
 				ActivityListResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
@@ -42,7 +42,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListResponse getRecordList(ActivityListRequest activityListRequest) {
-		String url = "http://AM-MARKET/am-market/activity/getRecordList";
+		String url = "http://AM-ADMIN/am-market/activity/getRecordList";
 		ActivityListResponse response = restTemplate.postForEntity(url, activityListRequest, ActivityListResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -52,7 +52,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListResponse insertRecord(ActivityListRequest request) {
-		String url = "http://AM-MARKET/am-market/activity/insertRecord";
+		String url = "http://AM-ADMIN/am-market/activity/insertRecord";
 		ActivityListResponse response = restTemplate.postForEntity(url, request, ActivityListResponse.class).getBody();
 		if (response != null) {
 			return response;
@@ -62,7 +62,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListResponse selectActivityById(ActivityListRequest activityListRequest) {
-		String url = "http://AM-MARKET/am-market/activity/selectActivityList";
+		String url = "http://AM-ADMIN/am-market/activity/selectActivityList";
 		ActivityListResponse response = restTemplate.postForEntity(url, activityListRequest, ActivityListResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -72,7 +72,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListResponse updateActivity(ActivityListRequest request) {
-		String url = "http://AM-MARKET/am-market/activity/updateActivity";
+		String url = "http://AM-ADMIN/am-market/activity/updateActivity";
 		ActivityListResponse response = restTemplate.postForEntity(url, request, ActivityListResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -82,7 +82,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListResponse deleteActivity(ActivityListRequest request) {
-		String url = "http://AM-MARKET/am-market/activity/deleteActivity";
+		String url = "http://AM-ADMIN/am-market/activity/deleteActivity";
 		ActivityListResponse response = restTemplate.postForEntity(url, request, ActivityListResponse.class).getBody();
 		if (response != null) {
 			return response;
@@ -145,7 +145,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 	 */
 	@Override
 	public List<ActivityListCustomizeVO> getActivityList(ActivityListCustomizeVO request) {
-		String url = "http://AM-MARKET/am-market/activity/selectRecordListValid";
+		String url = "http://AM-ADMIN/am-market/activity/selectRecordListValid";
 		ActivityListCustomizeResponse response = restTemplate.postForEntity(url, request, ActivityListCustomizeResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
@@ -263,7 +263,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
     public ActivityListResponse getInfoById(Integer id) {
-		ActivityListResponse response = restTemplate.getForEntity("http://AM-MARKET/am-market/activity/getInfoById/" + id, ActivityListResponse.class).getBody();
+		ActivityListResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-market/activity/getInfoById/" + id, ActivityListResponse.class).getBody();
         return response;
     }
 

@@ -84,4 +84,11 @@ public interface ActivityService {
     public List<ActivityList> getActivity(int day);
 
     List<ActivityList> getActivityList();
+
+    /**
+     * 获取活动详情
+     * @param id
+     * @return
+     */
+    ActivityList getActivityInfo(Integer id);
 }
