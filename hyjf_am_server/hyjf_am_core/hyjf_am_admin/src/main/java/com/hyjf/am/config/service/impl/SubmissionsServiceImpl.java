@@ -10,6 +10,7 @@ import com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs;
 import com.hyjf.am.config.service.SubmissionsService;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,8 +62,6 @@ public class SubmissionsServiceImpl implements SubmissionsService {
         Map<String, Object> searchCon = new HashMap<String, Object>();
         // 用户名
         String userName = StringUtils.isNotEmpty(form.getUserName()) ? form.getUserName() : null;
-
-
         searchCon.put("userName", userName);
         form.setUserName(userName);
         // 系统类别
@@ -83,12 +82,13 @@ public class SubmissionsServiceImpl implements SubmissionsService {
         // 添加时间-开始
         String addTimeStart = form.getAddTimeStart();
         if(StringUtils.isNotEmpty(addTimeStart)){
-            searchCon.put("addTimeStart", addTimeStart);
+
+            searchCon.put("addTimeStart", GetDate.getDayStart(addTimeStart));
         }
         // 添加时间-结束
-        String addTimeEnd = form.getAddTimeEnd();
+        String  addTimeEnd= form.getAddTimeEnd();
         if(StringUtils.isNotEmpty(addTimeEnd)){
-            searchCon.put("addTimeEnd", addTimeEnd);
+            searchCon.put("addTimeEnd", GetDate.getDayEnd(addTimeEnd));
         }
 
         if(limitEnd>=0&&limitStart>=0){
@@ -131,12 +131,12 @@ public class SubmissionsServiceImpl implements SubmissionsService {
         // 添加时间-开始
         String addTimeStart = form.getAddTimeStart();
         if(StringUtils.isNotEmpty(addTimeStart)){
-            searchCon.put("addTimeStart", addTimeStart);
+            searchCon.put("addTimeStart", GetDate.getDayStart(addTimeStart));
         }
         // 添加时间-结束
         String addTimeEnd = form.getAddTimeEnd();
         if(StringUtils.isNotEmpty(addTimeEnd)){
-            searchCon.put("addTimeEnd", addTimeEnd);
+            searchCon.put("addTimeEnd", GetDate.getDayEnd(addTimeEnd));
         }
         return submissionsCustomizeMapper.countRecordTotal(searchCon);
     }
