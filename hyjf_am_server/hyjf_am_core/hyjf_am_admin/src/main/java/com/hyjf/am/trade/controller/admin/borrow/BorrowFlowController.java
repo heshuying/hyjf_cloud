@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.admin.borrow;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowFlowResponse;
 import com.hyjf.am.response.admin.HjhAssetTypeResponse;
@@ -47,7 +48,7 @@ public class BorrowFlowController {
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
         List<BorrowProjectTypeVO> vo =borrowFlowService.selectBorrowProjectTypeList(borrowTypeCd);
         if(CollectionUtils.isEmpty(vo)){
-            return null;
+            return response;
         }
         response.setResultList(vo);
         return response;
@@ -73,8 +74,11 @@ public class BorrowFlowController {
      * @return
      */
     @RequestMapping("/countRecordByPK/{instCode}/{assetType}")
-    public int countRecordByPK(@PathVariable String instCode, @PathVariable Integer assetType){
-        return borrowFlowService.countRecordByPK(instCode,assetType);
+    public IntegerResponse countRecordByPK(@PathVariable String instCode, @PathVariable Integer assetType){
+        IntegerResponse response=new IntegerResponse();
+        int count =borrowFlowService.countRecordByPK(instCode,assetType);
+        response.setResultInt(count);
+        return response;
     }
     /**
      * 根据资金来源查询产品类型
@@ -101,18 +105,17 @@ public class BorrowFlowController {
         AdminBorrowFlowResponse response = new AdminBorrowFlowResponse();
         int total = this.borrowFlowService.countRecord(adminRequest);
         if (total > 0) {
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), total);
+            response.setTotal(total);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), total,adminRequest.getPageSize() == 0?10:adminRequest.getPageSize());
             List<HjhAssetBorrowtype> recordList =
                     this.borrowFlowService.getRecordList(adminRequest, paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<HjhAssetBorrowTypeVO>  hjhAssetBorrowTypeVOS = CommonUtils.convertBeanList(recordList,HjhAssetBorrowTypeVO.class);
                 response.setResultList(hjhAssetBorrowTypeVOS);
                 response.setRtn(Response.SUCCESS);
-                return response;
             }
-            return null;
         }
-        return null;
+        return response;
     }
     /**
      *详情
@@ -129,11 +132,9 @@ public class BorrowFlowController {
             if(null != record){
                 BeanUtils.copyProperties(record, recordVo);
                 result.setResult(recordVo);
-                result.setRtn(Response.SUCCESS);
             }
-            return result;
         }
-        return null;
+        return result;
     }
     /**
      * 添加
@@ -144,12 +145,13 @@ public class BorrowFlowController {
     public AdminBorrowFlowResponse insertRecord(@RequestBody  AdminBorrowFlowRequest adminRequest){
         AdminBorrowFlowResponse result=new AdminBorrowFlowResponse();
         // 插入
-       int cou= this.borrowFlowService.insertRecord(adminRequest);
-       if(cou > 0){
-           result.setRtn(Response.SUCCESS);
-           return result;
-       }
+        int cou= this.borrowFlowService.insertRecord(adminRequest);
+        if(cou > 0){
+            result.setRtn(Response.SUCCESS);
+            return result;
+        }
         result.setRtn(Response.FAIL);
+        result.setMessage(Response.FAIL_MSG);
         return result;
     }
     /**
@@ -160,13 +162,14 @@ public class BorrowFlowController {
     @RequestMapping("/updateRecord")
     public AdminBorrowFlowResponse updateRecord(@RequestBody  AdminBorrowFlowRequest adminRequest){
         AdminBorrowFlowResponse result = new AdminBorrowFlowResponse();
-            // 修改
-       int cou= this.borrowFlowService.updateRecord(adminRequest);
+        // 修改
+        int cou= this.borrowFlowService.updateRecord(adminRequest);
         if(cou > 0){
             result.setRtn(Response.SUCCESS);
             return result;
         }
         result.setRtn(Response.FAIL);
+        result.setMessage(Response.FAIL_MSG);
         return result;
     }
     /**
@@ -184,9 +187,11 @@ public class BorrowFlowController {
                 return resp;
             }
             resp.setRtn(Response.FAIL);
+            resp.setMessage(Response.FAIL_MSG);
             return resp;
         }
         resp.setRtn(Response.FAIL);
+        resp.setMessage(Response.FAIL_MSG);
         return resp;
     }
 }
