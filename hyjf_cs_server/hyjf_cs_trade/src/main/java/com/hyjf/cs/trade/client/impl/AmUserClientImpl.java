@@ -268,22 +268,6 @@ public class AmUserClientImpl implements AmUserClient {
         return false;
     }
 
-	/**
-	 * 获取用户投资数量
-	 *
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public int countNewUserTotal(Integer userId) {
-		Integer result = restTemplate
-				.getForEntity(urlBase + "user/countNewUserTotal/" + userId,  Integer.class).getBody();
-		if (result != null) {
-			return result;
-		}
-		return 0;
-	}
-
 	@Override
 	public CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId) {
 		  CertificateAuthorityResponse response = restTemplate.
