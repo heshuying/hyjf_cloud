@@ -553,4 +553,20 @@ public interface AmAdminClient {
      * @return
      */
     List<String> selectRepayMethod(String instCode);
+
+    /**
+     * 获取保证金配置日志总数
+     *
+     * @param request
+     * @return
+     */
+    Integer selectBailConfigLogCount(BailConfigLogRequest request);
+
+    /**
+     * 获取保证金配置日志列表
+     *
+     * @param request
+     * @return
+     */
+    List<BailConfigLogCustomizeVO> selectBailConfigLogList(BailConfigLogRequest request);
 }

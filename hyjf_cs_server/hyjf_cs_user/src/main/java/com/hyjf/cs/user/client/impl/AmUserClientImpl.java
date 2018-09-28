@@ -83,18 +83,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-
-
-	@Override
-	public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId) {
-		BankCardResponse response = restTemplate
-				.getForEntity(userService+"/bankopen/selectBankCardByUserIdAndStatus/" + userId, BankCardResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResultList();
-		}
-		return null;
-	}
-
 	/**
 	 * 获取银行卡信息
 	 * @param userId
@@ -522,16 +510,6 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public EvalationVO getEvalationByCountScore(short countScore) {
-		EvalationResponse response = restTemplate
-				.getForEntity(userService+"/user/getEvalationByCountScore/" + countScore, EvalationResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
-
-	@Override
 	public List<EvalationVO> getEvalationRecord() {
 		EvalationResponse response = restTemplate
 				.getForEntity(userService+"/user/getEvalationRecord", EvalationResponse.class).getBody();
@@ -557,16 +535,6 @@ public class AmUserClientImpl implements AmUserClient {
 			return   response.getResult();
 		}
 		return  null;
-	}
-
-	@Override
-	public UserInfoVO findUserInfoByCardNo(String cradNo) {
-		UserInfoResponse response = restTemplate
-				.getForEntity(userService+"/bankopen/findByCardId/" + cradNo, UserInfoResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResult();
-		}
-		return null;
 	}
 
 
@@ -600,11 +568,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-
-	@Override
-	public void deleteUserEvalationResultByUserId(Integer userId) {
-		restTemplate.put(userService+"/user/deleteUserEvalationResultByUserId/", userId);
-	}
 
 	/**
 	 * 修改开户日志表的状态
@@ -707,18 +670,6 @@ public class AmUserClientImpl implements AmUserClient {
 	public int deleteUserCardByUserId(String userId) {
 		int result = restTemplate
 				.getForEntity(userService+"/card/deleteUserCardByUserId/" + userId, Integer.class).getBody();
-		return result;
-	}
-
-	/**
-	 * 根据cardNo删除银行卡
-	 * @param cardNo
-	 * @return
-	 */
-	@Override
-	public int deleteUserCardByCardNo(String cardNo) {
-		int result = restTemplate
-				.getForEntity(userService+"/card/deleteUserCardByCardNo/" + cardNo, Integer.class).getBody();
 		return result;
 	}
 
@@ -886,9 +837,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return userInfo
 	 * */
 	@Override
-	public List<UserInfoVO> searchUserInfo() {
-		String url = "http://AM-USER/user_batch/portrait/search_user_info_list";
-		UserInfoResponse response = restTemplate.getForEntity(url, UserInfoResponse.class).getBody();
+	public List<UserLoginLogVO> searchUserIdForUserPortrait() {
+		String url = "http://AM-USER/user_batch/portrait/search_user_id_for_user_portrait";
+		UserLoginLogResponse response = restTemplate.getForEntity(url, UserLoginLogResponse.class).getBody();
 		if(response != null){
 			return response.getResultList();
 		}
@@ -929,15 +880,6 @@ public class AmUserClientImpl implements AmUserClient {
 		restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+sign, IntegerResponse.class);
 	}
 
-	@Override
-	public UserVO insertSurongUser(String mobile, String password, String ipAddr, String platform) {
-		UserResponse response = restTemplate
-				.getForEntity(userService+"/user/insertSurongUser/" + mobile, UserResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResult();
-		}
-		return null;
-	}
 	@Override
 	public UserVO surongRegister(RegisterUserRequest request) {
 		UserResponse response = restTemplate
@@ -1094,21 +1036,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return response;
 	}
 
-	/**
-	 * 根据用户id和银行卡号查询银行卡信息
-	 * @auth sunpeikai
-	 * @param
-	 * @return
-	 */
-	@Override
-	public BankCardVO selectBankCardByUserIdAndCardNo(BankCardRequest request) {
-		String url = userService + "/bankCard/selectBankCardByUserIdAndCardNo";
-		BankCardResponse response = restTemplate.postForEntity(url,request,BankCardResponse.class).getBody();
-		if(Response.isSuccess(response)){
-			return response.getResult();
-		}
-		return null;
-	}
     @Override
     public boolean updateMobileSynch(AccountMobileSynchRequest accountMobileAynch) {
         String url = userService+"/batch/updateMobileSynch";
@@ -1129,37 +1056,7 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return false;
     }
-    /**
-     * 更新银行卡信息
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    @Override
-    public int updateBankCard(BankCardVO bankCardVO) {
-        String url = userService + "/bankCard/updateBankCard";
-        IntegerResponse response = restTemplate.postForEntity(url,bankCardVO,IntegerResponse.class).getBody();
-        if(Response.isSuccess(response)){
-            response.getResultInt();
-        }
-        return 0;
-    }
 
-    /**
-     * 根据主键查询银行卡信息
-     * @auth sunpeikai
-     * @param id 主键
-     * @return
-     */
-    @Override
-    public BankCardVO getBankCardById(Integer id) {
-        String url = userService + "/bankCard/getBankCardById/" + id;
-        BankCardResponse response = restTemplate.getForEntity(url,BankCardResponse.class).getBody();
-        if(Response.isSuccess(response)){
-            return response.getResult();
-        }
-        return null;
-    }
 
 	/**
 	 * 更新用户信息表

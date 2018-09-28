@@ -55,7 +55,7 @@ public class AdminBorrowLogController extends BaseController {
         return response;
     }
 
-    @RequestMapping(value = "/exportBorrowRecoverList")
+    @RequestMapping(value = "/exportBorrowLogList")
     public AdminBorrowLogResponse exportBorrowRecoverList(@RequestBody @Valid BorrowLogRequset request){
         logger.info("request:" +JSONObject.toJSON(request));
         AdminBorrowLogResponse response = new AdminBorrowLogResponse();

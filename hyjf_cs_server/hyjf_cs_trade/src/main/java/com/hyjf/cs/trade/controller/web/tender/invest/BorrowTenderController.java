@@ -74,14 +74,7 @@ public class BorrowTenderController extends BaseTradeController {
         tender.setIp(ip);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        WebResult<Map<String,Object>> result = null;
-        try{
-            result =  borrowTenderService.borrowTenderCheck(tender,null,null,null,null);
-        }catch (CheckException e){
-            throw e;
-        }finally {
-            RedisUtils.del(RedisConstants.BORROW_TENDER_REPEAT + tender.getUser().getUserId());
-        }
+        WebResult<Map<String,Object>>  result =  borrowTenderService.borrowTenderCheck(tender,null,null,null,null);
         return result;
     }
 

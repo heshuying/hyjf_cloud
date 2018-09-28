@@ -3,25 +3,22 @@
  */
 package com.hyjf.cs.user.client;
 
-import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.resquest.trade.HandleAccountRechargeRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
-import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 
@@ -307,68 +304,12 @@ public interface AmTradeClient {
     STZHWhiteListVO getSTZHWhiteList(String instCode, String receiptAccountId);
 
     /**
-     * 插入充值记录
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    int insertAccountRecharge(AccountRechargeVO accountRechargeVO);
-
-    /**
-     * 根据orderId查询充值记录
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    List<AccountRechargeVO> selectAccountRechargeByOrderId(String orderId);
-
-    /**
-     * 更新充值的相关信息(接口调用)
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    String handleRechargeInfo(HandleAccountRechargeRequest request);
-
-    /**
-     * 更新充值的相关信息(页面调用)
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    String handleRechargeOnlineInfo(HandleAccountRechargeRequest request);
-
-    /**
      * 第三方用户提现
      * @auth sunpeikai
      * @param
      * @return
      */
     int updateBeforeCash(ApiUserWithdrawRequest request);
-
-    /**
-     * 根据orderId查询出status=2的账户提现信息
-     * @auth sunpeikai
-     * @param orderId 订单号
-     * @return
-     */
-    AccountWithdrawVO getAccountWithdrawByOrderId(String orderId);
-
-    /**
-     * 执行提现后处理
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    String handlerAfterCash(ApiUserWithdrawRequest request);
-
-    /**
-     * 查询某用户 id 的提现记录，带分页
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    List<AccountWithdrawVO> searchAccountWithdrawByUserIdPaginate(ApiUserWithdrawRequest request);
 
     /**
      * 根据用户ID修改account表的电子账户
@@ -398,4 +339,5 @@ public interface AmTradeClient {
      * @return
      */
     CouponConfigVO getCouponByCouponCode(String couponCode);
+
 }

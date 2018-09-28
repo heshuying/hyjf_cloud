@@ -87,4 +87,71 @@
             LIMIT #{limitStart} , #{limitEnd}
         </if>
     </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype" >
+        update ht_hjh_asset_borrowtype
+        <set >
+            <if test="instCode != null" >
+                inst_code = #{instCode,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                asset_type = #{assetType,jdbcType=TINYINT},
+            </if>
+            <if test="borrowCd != null" >
+                borrow_cd = #{borrowCd,jdbcType=TINYINT},
+            </if>
+            <if test="isOpen != null" >
+                is_open = #{isOpen,jdbcType=TINYINT},
+            </if>
+            <if test="autoAdd != null" >
+                auto_add = #{autoAdd,jdbcType=TINYINT},
+            </if>
+            <if test="autoRecord != null" >
+                auto_record = #{autoRecord,jdbcType=TINYINT},
+            </if>
+            <if test="autoBail != null" >
+                auto_bail = #{autoBail,jdbcType=TINYINT},
+            </if>
+            <if test="autoAudit != null" >
+                auto_audit = #{autoAudit,jdbcType=TINYINT},
+            </if>
+            <if test="autoReview != null" >
+                auto_review = #{autoReview,jdbcType=TINYINT},
+            </if>
+            <if test="autoSendMinutes != null and autoSendMinutes != -1" >
+                auto_send_minutes = #{autoSendMinutes,jdbcType=INTEGER},
+            </if>
+            <if test="autoSendMinutes != null and autoSendMinutes == -1" >
+                auto_send_minutes = NULL ,
+            </if>
+            <if test="autoReviewMinutes != null and autoReviewMinutes != -1" >
+                auto_review_minutes = #{autoReviewMinutes,jdbcType=INTEGER},
+            </if>
+            <if test="autoReviewMinutes != null and autoReviewMinutes == -1" >
+                auto_review_minutes = NULL ,
+            </if>
+            <if test="applicant != null" >
+                applicant = #{applicant,jdbcType=VARCHAR},
+            </if>
+            <if test="repayOrgName != null" >
+                repay_org_name = #{repayOrgName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                create_user = #{createUser,jdbcType=INTEGER},
+            </if>
+            <if test="updateUser != null" >
+                update_user = #{updateUser,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 </mapper>

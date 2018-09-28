@@ -23,10 +23,10 @@
 				AND s.content LIKE CONCAT(#{content},'%')
 			</if>
 		    <if test="addTimeStart != null and addTimeStart != ''">
-				AND s.create_time <![CDATA[>=]]> unix_timestamp(#{addTimeStart,jdbcType=VARCHAR})
+				AND s.create_time <![CDATA[>=]]> #{addTimeStart,jdbcType=VARCHAR}
 			</if>
 			<if test="addTimeEnd != null and addTimeEnd != ''">
-				AND s.create_time <![CDATA[<=]]> unix_timestamp(#{addTimeEnd,jdbcType=VARCHAR})
+				AND s.create_time <![CDATA[<=]]> #{addTimeEnd,jdbcType=VARCHAR}
 			</if>
 	</sql>
 	<resultMap id="SubmissionsMapResult"

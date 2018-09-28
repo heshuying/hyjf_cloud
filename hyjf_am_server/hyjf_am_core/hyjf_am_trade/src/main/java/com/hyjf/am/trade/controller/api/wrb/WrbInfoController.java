@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.trade.controller.api.wrb;
 
-import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.response.trade.WrbBorrowListResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
 import com.hyjf.am.trade.service.api.wrb.WrbInfoService;
+import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;

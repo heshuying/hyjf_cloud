@@ -2200,4 +2200,12 @@ public interface AmTradeClient {
     List<AccountWithdrawVO> searchAccountWithdrawByUserIdPaginate(ApiUserWithdrawRequest request);
 
     String handlerAfterCash(ApiUserWithdrawRequest userWithdrawRequest);
+
+    String handleRechargeOnlineInfo(HandleAccountRechargeRequest rechargeRequest);
+
+    List<AccountRechargeVO> selectAccountRechargeByOrderId(String ordId);
+
+    int insertAccountRecharge(AccountRechargeVO record);
+
+    String handleRechargeInfo(HandleAccountRechargeRequest rechargeRequest);
 }

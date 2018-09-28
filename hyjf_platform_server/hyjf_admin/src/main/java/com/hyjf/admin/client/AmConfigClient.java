@@ -133,6 +133,8 @@ public interface AmConfigClient {
 	public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request);
 
 	UtmPlatResponse getUtmPlatList();
+
+	IntegerResponse isExistsAdminUser(String userName);
 	/**
 	 * 添加
 	 *

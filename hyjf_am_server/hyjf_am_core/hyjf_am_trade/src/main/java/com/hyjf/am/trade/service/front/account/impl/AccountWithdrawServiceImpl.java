@@ -80,9 +80,9 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
         AccountWithdrawVO accountWithdrawVO=bankRequest.getAccountWithdrawVO();
         AccountWithdraw accountWithdraw=new AccountWithdraw();
         BeanUtils.copyProperties(accountWithdrawVO, accountWithdraw);
-
+        accountWithdraw.setStatus(accountWithdrawVO.getStatus());
         AccountWithdrawExample accountWithdrawExample = new AccountWithdrawExample();
-        accountWithdrawExample.createCriteria().andNidEqualTo(accountWithdraw.getNid());
+        accountWithdrawExample.createCriteria().andNidEqualTo(accountWithdrawVO.getNid());
         // 更新订单信息
 
         boolean isAccountWithdrawFlag = this.accountWithdrawMapper.updateByExampleSelective(accountWithdraw, accountWithdrawExample) > 0 ? true : false;
@@ -130,10 +130,10 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
         accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
         accountList.setPlanFrost(account.getPlanFrost());
         // mod by liuyang 20180119 银行文件对账功能修改 start
-        accountList.setSeqNo(String.valueOf(accountWithdraw.getSeqNo()));
-        accountList.setTxDate(accountWithdraw.getTxDate());
-        accountList.setTxTime(accountWithdraw.getTxTime());
-        accountList.setBankSeqNo(accountWithdraw.getTxDate() + accountWithdraw.getTxTime() + String.valueOf(accountWithdraw.getSeqNo()));
+        accountList.setSeqNo(String.valueOf(accountWithdrawVO.getSeqNo()));
+        accountList.setTxDate(accountWithdrawVO.getTxDate());
+        accountList.setTxTime(accountWithdrawVO.getTxTime());
+        accountList.setBankSeqNo(accountWithdrawVO.getTxDate() + accountWithdrawVO.getTxTime() + String.valueOf(accountWithdrawVO.getSeqNo()));
         // mod by liuyang 20180119 银行文件对账功能修改 end
         accountList.setAccountId(accountId);
         accountList.setRemark("网站提现");
