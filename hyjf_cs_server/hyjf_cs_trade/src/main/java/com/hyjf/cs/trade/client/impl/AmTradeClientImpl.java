@@ -5231,4 +5231,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public List<MyCouponListCustomizeVO> selectWechatCouponList(MyCouponListRequest requestBean) {
+        String url = urlBase + "coupon/wechatcouponlist";
+        MyCouponListResponse response = restTemplate.postForEntity(url, requestBean, MyCouponListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }

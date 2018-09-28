@@ -102,5 +102,13 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
         return resultMap;
     }
 
+    @Override
+    public List<MyCouponListCustomizeVO> selectWechatCouponList(String userId,Integer useFlag) {
+        MyCouponListRequest requestBean = new MyCouponListRequest();
+        requestBean.setUserId(userId);
+        requestBean.setUsedFlag(String.valueOf(useFlag));
+        return amTradeClient.selectWechatCouponList(requestBean);
+    }
+
 
 }
