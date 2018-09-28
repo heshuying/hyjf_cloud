@@ -334,7 +334,6 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         } catch (Exception e) {
             e.printStackTrace();
         }
-        logger.info("getBankBalance::::::::balance======[{}]",balance);
         return balance;
     }
     /**
