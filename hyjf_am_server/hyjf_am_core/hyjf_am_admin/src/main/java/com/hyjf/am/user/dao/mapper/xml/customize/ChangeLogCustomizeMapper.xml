@@ -15,7 +15,7 @@
     <result column="change_type" property="changeType" jdbcType="INTEGER" />
     <result column="change_userid" property="changeUserid" jdbcType="INTEGER" />
     <result column="change_user" property="changeUser" jdbcType="VARCHAR" />
-    <result column="change_time" property="changeTime" jdbcType="INTEGER" />
+    <result column="change_time" property="changeTime" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="borrower_type" property="borrowerType" jdbcType="VARCHAR" />
     <result column="idcard" property="idCard" jdbcType="VARCHAR" />
@@ -67,7 +67,7 @@
 	<select id="queryChangeLogList" resultMap="BaseResultMap"
 		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
 		SELECT id, user_id, username, real_name, mobile, idcard, `role`, `attribute`, recommend_user, is51, 
-               `status`, update_user_id as change_userid,update_user as change_user,update_time as change_time, remark
+               `status`, update_user_id as change_userid,update_user as change_user,DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%s') as change_time, remark
 		,borrower_type from ht_user_change_log l
 		
 		WHERE 1=1 

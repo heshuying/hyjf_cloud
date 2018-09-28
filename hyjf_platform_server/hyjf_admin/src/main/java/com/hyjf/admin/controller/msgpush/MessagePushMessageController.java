@@ -13,6 +13,7 @@ import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
 
 import com.hyjf.admin.utils.FileUpLoadUtil;
+import com.hyjf.admin.utils.GetMessageIdUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushMsgResponse;
 import com.hyjf.am.resquest.message.MessagePushMsgRequest;
@@ -22,7 +23,6 @@ import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.common.util.GetMessageIdUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
