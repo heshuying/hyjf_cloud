@@ -1,12 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.controller.api.user.directrecharge;
+package com.hyjf.cs.trade.controller.api.directrecharge;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.cs.user.bean.UserDirectRechargeRequestBean;
-import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.recharge.DirectRechargeService;
+import com.hyjf.cs.trade.bean.UserDirectRechargeRequestBean;
+import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.recharge.DirectRechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import io.swagger.annotations.Api;
@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "api端-用户充值(页面调用)",tags = "api端-用户充值(页面调用)")
 @Controller
 @RequestMapping(value = "/hyjf-api/server/user/directRechargePage")
-public class UserDirectRechargeController extends BaseUserController {
+public class UserDirectRechargeController extends BaseTradeController {
 
     @Autowired
     private DirectRechargeService directRechargeService;

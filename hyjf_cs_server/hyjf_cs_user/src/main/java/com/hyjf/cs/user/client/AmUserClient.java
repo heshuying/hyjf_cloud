@@ -1,9 +1,6 @@
 package com.hyjf.cs.user.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
@@ -13,9 +10,7 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.springframework.beans.BeanUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -213,8 +208,6 @@ public interface AmUserClient {
 
 	String selectBankSmsLog(BankSmsLogRequest request);
 
-	EvalationVO getEvalationByCountScore(short countScore);
-
 	List<EvalationVO> getEvalationRecord();
 
 	/**
@@ -230,8 +223,6 @@ public interface AmUserClient {
 	 * @return
 	 */
 	UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
-
-	UserInfoVO findUserInfoByCardNo(String cradNo);
 
 	/**
 	 * 保存开户日志
@@ -253,8 +244,6 @@ public interface AmUserClient {
 	 * @return
 	 */
 	UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId);
-
-	void deleteUserEvalationResultByUserId(Integer userId);
 
 	/**
 	 * 修改开户日志表的状态
@@ -296,8 +285,6 @@ public interface AmUserClient {
 	int countUserCardValid(String userId);
 
 	int deleteUserCardByUserId(String userId);
-
-	int deleteUserCardByCardNo(String cardNo);
 
 	int insertUserCard(BankCardRequest request);
 
@@ -385,16 +372,7 @@ public interface AmUserClient {
 
     void clearMobileCode(Integer userId, String sign);
 
-	UserVO insertSurongUser(String mobile, String password, String ipAddr, String platform);
-
 	UserVO surongRegister(RegisterUserRequest registerUserRequest);
-
-	/**
-	 * 获取银行卡信息，status=0
-	 * @param userId
-	 * @return
-	 */
-	List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId);
 
     Boolean updateAfterDeleteCard(BankCardUpdateRequest requestBean);
 
@@ -532,14 +510,6 @@ public interface AmUserClient {
 	int updateHjhUserAuthLog(HjhUserAuthLogRequest hjhUserAuthRequest);
 
 	/**
-	 * 根据用户id和银行卡号查询银行卡信息
-	 * @auth sunpeikai
-	 * @param
-	 * @return
-	 */
-	BankCardVO selectBankCardByUserIdAndCardNo(BankCardRequest request);
-
-	/**
 	 * 同步手机号
 	 * @param accountMobileAynch
 	 * @return
@@ -552,21 +522,6 @@ public interface AmUserClient {
 	 * @return
 	 */
 	boolean updateByPrimaryKey(UserVO userVO);
-    /**
-     * 更新银行卡信息
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    int updateBankCard(BankCardVO bankCardVO);
-
-    /**
-     * 根据主键查询银行卡信息
-     * @auth sunpeikai
-     * @param id 主键
-     * @return
-     */
-    BankCardVO getBankCardById(Integer id);
 
 	/**
 	 * 更新用户信息表
