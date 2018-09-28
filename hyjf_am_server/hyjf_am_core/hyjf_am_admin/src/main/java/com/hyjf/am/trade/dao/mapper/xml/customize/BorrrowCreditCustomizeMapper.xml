@@ -255,7 +255,7 @@
             </if>
             <!-- 转让状态 -->
             <if test="creditStatus == '1'.toString()">
-                AND ( bc.credit_status = 1 OR ( bc.credit_status = 0 AND bc.create_time  <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) )
+                AND ( bc.credit_status = 1 OR ( bc.credit_status = 0 AND bc.end_time  <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) )
             </if>
             <!-- 转让状态 -->
             <if test="creditStatus == '2'.toString()">
@@ -263,7 +263,7 @@
             </if>
             <!-- 转让状态 -->
             <if test="creditStatus == '0'.toString()">
-                AND ( bc.credit_status = 0 AND bc.create_time  <![CDATA[>=]]> UNIX_TIMESTAMP(NOW()) )
+                AND ( bc.credit_status = 0 AND bc.end_time  <![CDATA[>=]]> UNIX_TIMESTAMP(NOW()) )
             </if>
             <!-- 时间 -->
             <if test="timeStart != null and timeStart != ''">
