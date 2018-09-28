@@ -532,7 +532,7 @@ public class CouponUserController extends BaseController {
                     }
                     if ("6".equals(project)) {
                         // mod by nxl 智投服务：修改汇计划->智投
-                        projectString = projectString + "汇计划/";
+                       // projectString = projectString + "汇计划/";
                         projectString = projectString + "智投/";
                     }
                 }

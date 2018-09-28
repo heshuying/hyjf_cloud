@@ -309,6 +309,11 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         params.put("userId", userId);
         UserHjhInvistDetailCustomizeVO hjhInvistDetailVO = amTradeClient.selectUserHjhInvistDetail(params);
         if (null != hjhInvistDetailVO){
+            // add by nxl 智投服务：格式化参考回报Start
+            if(hjhInvistDetailVO.getWaitInterest().equals("0.00")){
+                hjhInvistDetailVO.setWaitInterest("--");
+            }
+            // add by nxl 智投服务：格式化参考回报End
             //计算实际收益
             if(type != null && "2".equals(type)){
                 if(hjhInvistDetailVO.getAccedeAccount()!=null&&hjhInvistDetailVO.getReceivedTotal()!=null){
@@ -366,14 +371,26 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
                     if (datePeriod != null) {
                         String endStrDate = smp.format(datePeriod);
                         String startStrDate = hjhInvistDetailVO.getAddTime().substring(0, 10);
-                        hjhInvistDetailVO.setPlanPeriod(startStrDate + "~" + endStrDate);
+                        // mod by nxl 智投服务，修改服务期限的显示格式
+                       /* hjhInvistDetailVO.setPlanPeriod(startStrDate + "~" + endStrDate);*/
+                        hjhInvistDetailVO.setEndInterestTime(endStrDate);
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }else {
-                hjhInvistDetailVO.setPlanPeriod("— —");
+                // mod by nxl 智投服务，修改服务期限的显示格式
+//				hjhInvistDetailVO.setPlanPeriod("— —");
+                //add by nxl 如果开始计息时间为空或为待确认是,将开始计息时间设置为空
+                hjhInvistDetailVO.setCountInterestTime(null);
+                hjhInvistDetailVO.setEndInterestTime(null);
             }
+            // add by nxl 智投服务：计划状态为退出中显示开始退出时间 start
+            // 计划状态为5 代表退出中(如果不是退出中并且是持有中的时候，将开始推出时间设置为空）
+            if(!hjhInvistDetailVO.getOrderStatus().equals("5")&&type.equals("1")){
+                hjhInvistDetailVO.setEndInterestTime(null);
+            }
+            // add by nxl 智投服务：计划状态为退出中显示开始退出时间 end
 
             // 实际退出时间
             if(StringUtils.isEmpty(hjhInvistDetailVO.getRepayActualTime())) {
