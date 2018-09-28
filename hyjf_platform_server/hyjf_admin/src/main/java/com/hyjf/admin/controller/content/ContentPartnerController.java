@@ -87,7 +87,13 @@ public class ContentPartnerController extends BaseController {
 	@ApiOperation(value = "添加公司管理-合作伙伴", notes = "添加公司管理-合作伙伴")
 	@PostMapping("/insert")
 	public AdminResult add(@RequestBody ContentPartnerRequestBean requestBean) {
-		int num = contentPartnerService.insertAction(requestBean);
+		int num = 0;
+		try {
+			num = contentPartnerService.insertAction(requestBean);
+		} catch (Exception e) {
+			logger.error("添加公司管理-合作伙伴失败......", e);
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
 		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
