@@ -8,9 +8,17 @@ spring:
   boot:
     admin:
       client:
-        url: http://micoserver:18080
+        url: ${boot.admin.clientUrl}
   profiles:
     active: dev
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA.CLIENT.SERVICEURL}
+  instance:
+    preferIpAddress: true
+
 server:
   port: 9093
 
@@ -26,14 +34,7 @@ management:
 
 logging:
   file: admin.log
-file:
-   physical:
-      path:D:/apache-tomcat-7.0.64-windows-x64/webapps/hyjf-admin/
-   domain:
-      url:http://test.hyjf.com:8083/hyjf-admin/
-   upload:
-      temp:
-         path:/data/upfiles/filetemp/image
+
 #swagger启用开关
 swagger:
  enable: true

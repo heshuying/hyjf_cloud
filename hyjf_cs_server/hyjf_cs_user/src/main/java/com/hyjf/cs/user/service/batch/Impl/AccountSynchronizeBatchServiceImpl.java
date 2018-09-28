@@ -79,9 +79,11 @@ public class AccountSynchronizeBatchServiceImpl implements AccountSynchronizeBat
     public void mobileSychronize() {
         try {
             List<AccountMobileSynchVO> accountMobileAynches = amUserClient.searchAccountMobileSynch("1");
-            for (AccountMobileSynchVO accountMobileAynch : accountMobileAynches) {
-                // 同步手机号
-                updateMobile(accountMobileAynch);
+            if(!CollectionUtils.isEmpty(accountMobileAynches)){
+                for (AccountMobileSynchVO accountMobileAynch : accountMobileAynches) {
+                    // 同步手机号
+                    updateMobile(accountMobileAynch);
+                }
             }
         }catch(Exception e){
             throw new RuntimeException("查询同步手机号异常");

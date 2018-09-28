@@ -77,7 +77,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         if (recordTotal > 0) {
-            request.setLimitEnd( page.getOffset());
+            request.setLimitStart( page.getOffset());
             request.setLimitEnd( page.getLimit());
             // 获取用户当前持有债权列表
             List<CurrentHoldObligatoryRightListCustomizeVO> recordList = amTradeClient.selectCurrentHoldObligatoryRightList(request);

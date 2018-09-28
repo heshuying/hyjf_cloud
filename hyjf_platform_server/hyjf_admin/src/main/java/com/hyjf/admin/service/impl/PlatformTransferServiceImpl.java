@@ -212,7 +212,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
             // 查询商户子账户余额
             String merrpAccount = BANK_MERRP_ACCOUNT;
             BigDecimal bankBalance = this.getBankBalance(loginUserId, merrpAccount);
-
+            logger.info("账户余额::::::[{}],转账金额::::::::[{}]",bankBalance,platformTransferRequest.getMoney());
             if (bankBalance.compareTo(platformTransferRequest.getMoney()) <= 0) {
                 result.put("status", "error");
                 result.put("result", "红包账户余额不足,请先充值或向该子账户转账!");
@@ -330,6 +330,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         } catch (Exception e) {
             e.printStackTrace();
         }
+        logger.info("getBankBalance::::::::balance======[{}]",balance);
         return balance;
     }
     /**

@@ -208,6 +208,9 @@ public class AboutUsController extends BaseController {
 	@GetMapping("/recurit")
 	public WebResult<List<JobsVo>> getRecurit(){
 		List<JobsVo> jobsList = aboutUsService.getJobsList();
+		if(CollectionUtils.isEmpty(jobsList)){
+			jobsList = new ArrayList<JobsVo>();
+		}
 		WebResult webResult = new WebResult(jobsList);
 		return webResult;
 	}
@@ -222,6 +225,9 @@ public class AboutUsController extends BaseController {
 	@GetMapping("/contactus")
 	public WebResult<List<ContentArticleVO>> contactus(){
 		ContentArticleVO contactUs = aboutUsService.getContactUs();
+		if(contactUs==null){
+			contactUs = new ContentArticleVO();
+		}
 		WebResult webResult = new WebResult(contactUs);
 		return webResult;
 	}

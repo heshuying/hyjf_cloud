@@ -115,13 +115,6 @@ public interface AmUserClient {
     boolean checkIs51UserCanInvest(Integer userId);
 
 
-	/**
-	 * 获取用户投资数量
-	 * @param userId
-	 * @return
-	 */
-    int countNewUserTotal(Integer userId);
-
     /**
      * 根据用户id获取用户CA认证记录表
      * @return
