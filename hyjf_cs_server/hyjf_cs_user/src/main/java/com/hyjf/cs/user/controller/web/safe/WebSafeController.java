@@ -283,6 +283,7 @@ public class WebSafeController extends BaseUserController {
     @ApiImplicitParam(name = "param", value = "{image:String}", dataType = "Map")
     @PostMapping(value = "/avatar", produces = "application/json; charset=utf-8")
     public WebResult uploadAvatarAction(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param, HttpServletRequest request) {
+        logger.info("用户上传头像 -> userId::[{}]",userId);
         WebResult<Object> result = new WebResult<>();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000006);
         String image = param.get("image");
