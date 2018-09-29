@@ -7,12 +7,14 @@ import com.hyjf.am.resquest.admin.ProtocolsRequest;
 import com.hyjf.am.trade.dao.mapper.auto.FddTempletMapper;
 import com.hyjf.am.trade.dao.mapper.customize.FddTempletCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.FddTemplet;
+import com.hyjf.am.trade.dao.model.auto.FddTempletExample;
 import com.hyjf.am.trade.dao.model.customize.FddTempletCustomize;
 import com.hyjf.am.trade.service.admin.ProtocolsService;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -52,14 +54,18 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 	}
 
 	@Override
-	public void updateAction(ProtocolsRequest request) {
-		FddTemplet record = new FddTemplet();
-		BeanUtils.copyProperties(request, record);
-		int nowTime = GetDate.getNowTime10();
-		record.setCertificateTime(nowTime);//认证时间
-		// 登陆信息
-		record.setCreateTime(new Date());
-		fddTempletMapper.updateByPrimaryKeySelective(record);
+	public int updateAction(ProtocolsRequest request) {
+		String templetId = request.getTempletId();
+		FddTempletExample example = new FddTempletExample();
+		example.createCriteria().andTempletIdEqualTo(templetId);
+		List<FddTemplet> list = fddTempletMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(list)) {
+			FddTemplet fddTemplet = list.get(0);
+			fddTemplet.setRemark(request.getRemark());
+			fddTemplet.setIsActive(request.getIsActive());
+			return fddTempletMapper.updateByPrimaryKeySelective(fddTemplet);
+		}
+		return 0;
 	}
 
 	@Override

@@ -116,4 +116,15 @@ public class AdminParamNamesController extends BaseController {
         }
         return new AdminResult(result);
     }
+    /**
+     * 同步数据字典至redis
+     * @auth wgx
+     * @return
+     */
+    @ApiOperation(value = "更新数据到redis",notes = "更新数据到redis")
+    @PostMapping(value = "/syncParam")
+    public AdminResult syncParam(){
+        boolean result = adminParamNamesService.syncParam();
+        return new AdminResult(result);
+    }
 }

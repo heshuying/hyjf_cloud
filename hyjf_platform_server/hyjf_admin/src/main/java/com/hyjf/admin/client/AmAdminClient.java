@@ -285,6 +285,13 @@ public interface AmAdminClient {
     int deleteParamName(ParamNameVO paramNameVO);
 
     /**
+     * 同步数据字典至redis
+     * @auth wgx
+     * @return
+     */
+    boolean syncParam();
+
+    /**
      * 查询手续费分账配置
      * @auth sunpeikai
      * @param

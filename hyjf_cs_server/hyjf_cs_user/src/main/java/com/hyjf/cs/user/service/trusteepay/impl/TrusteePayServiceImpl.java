@@ -190,13 +190,13 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
 
         // 同步调用路径
         String retUrl = systemConfig.getWebHost() + request.getContextPath()
-                + "/server/trusteePay/trusteePayReturn.do?acqRes="
+                + "/server/trusteePay/trusteePayReturn?acqRes="
                 + payRequestBean.getAcqRes()
                 + StringPool.AMPERSAND + BankCallConstant.PARAM_PRODUCTID + StringPool.EQUAL + payRequestBean.getProductId()
                 + "&callback=" + payRequestBean.getRetUrl().replace("#", "*-*-*");
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + request.getContextPath()
-                + "/server/trusteePay/trusteePayBgreturn.do?acqRes="
+                + "/server/trusteePay/trusteePayBgreturn?acqRes="
                 + payRequestBean.getAcqRes() + "&callback=" + payRequestBean.getNotifyUrl().replace("#", "*-*-*");
 
         // 调用受托支付授权接口
