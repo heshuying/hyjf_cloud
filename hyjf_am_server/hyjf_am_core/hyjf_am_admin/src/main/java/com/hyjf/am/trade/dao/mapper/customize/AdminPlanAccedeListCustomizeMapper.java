@@ -3,13 +3,13 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.resquest.admin.AccedeListRequest;
 import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;
 import com.hyjf.am.vo.trade.hjh.UserHjhInvistDetailVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author libin

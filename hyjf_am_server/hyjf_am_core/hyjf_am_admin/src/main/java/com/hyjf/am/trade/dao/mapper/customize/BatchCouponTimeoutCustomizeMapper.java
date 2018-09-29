@@ -3,10 +3,12 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.trade.dao.model.customize.BatchCouponTimeoutCommonCustomize;
+
 import java.util.List;
 import java.util.Map;
 
-import com.hyjf.am.trade.dao.model.customize.BatchCouponTimeoutCommonCustomize; /**
+/**
  * @author yaoy
  * @version BatchCouponTimeoutCustomizeMapper, v0.1 2018/6/22 16:22
  */

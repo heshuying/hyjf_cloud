@@ -5,7 +5,10 @@ package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.*;
+import com.hyjf.admin.beans.request.AdminUserRecommendRequestBean;
+import com.hyjf.admin.beans.request.CompanyInfoInstRequesetBean;
+import com.hyjf.admin.beans.request.UserManagerRequestBean;
+import com.hyjf.admin.beans.request.UserManagerUpdateRequestBean;
 import com.hyjf.admin.beans.response.*;
 import com.hyjf.admin.beans.vo.*;
 import com.hyjf.admin.common.result.AdminResult;
@@ -21,7 +24,6 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
@@ -574,7 +576,10 @@ public class UserCenterController extends BaseController {
         UpdCompanyRequest updCompanyRequest = new UpdCompanyRequest();
         BeanUtils.copyProperties(companyInfoInstRequesetBean,updCompanyRequest);
         Response response = userCenterService.saveCompanyInfo(updCompanyRequest);
-        return new AdminResult<Response>(response);
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return new AdminResult<Response>(response);
+        }
+        return new AdminResult<>(FAIL, response.getMessage());
     }
 
     public UserManagerInitResponseBean initUserManaget(){

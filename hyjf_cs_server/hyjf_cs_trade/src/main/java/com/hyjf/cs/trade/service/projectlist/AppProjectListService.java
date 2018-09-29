@@ -3,9 +3,7 @@ package com.hyjf.cs.trade.service.projectlist;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.app.AppProjectInvestBeanRequest;
-
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-
 import com.hyjf.cs.trade.bean.HjhPlanAccedeResultBean;
 import com.hyjf.cs.trade.bean.HjhPlanBorrowResultBean;
 import com.hyjf.cs.trade.service.BaseTradeService;

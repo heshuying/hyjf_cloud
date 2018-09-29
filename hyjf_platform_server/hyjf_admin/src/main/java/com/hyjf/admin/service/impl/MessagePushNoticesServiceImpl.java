@@ -1,22 +1,13 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.am.response.admin.MessagePushNoticesResponse;
 import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
-import com.hyjf.common.file.UploadFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 /**
  * @author lisheng

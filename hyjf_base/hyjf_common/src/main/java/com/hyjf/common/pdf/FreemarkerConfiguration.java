@@ -1,12 +1,11 @@
 package com.hyjf.common.pdf;
 
+import freemarker.template.Configuration;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-
-import freemarker.template.Configuration;
 
 public class FreemarkerConfiguration {
 

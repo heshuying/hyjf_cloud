@@ -1,10 +1,10 @@
 package com.hyjf.am.user.service.admin.locked;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.user.dao.model.auto.LockedUserInfo;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author cui

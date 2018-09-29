@@ -8,10 +8,7 @@ import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.trade.mq.base.Consumer;
 import com.hyjf.am.trade.service.front.crm.CrmDepartmentService;
-import com.hyjf.am.vo.user.CrmDepartmentVO;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.CommonUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -23,10 +20,8 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Description crm ht_r_oa_department 表同步

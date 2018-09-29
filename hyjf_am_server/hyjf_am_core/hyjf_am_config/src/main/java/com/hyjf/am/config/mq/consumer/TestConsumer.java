@@ -1,7 +1,7 @@
 package com.hyjf.am.config.mq.consumer;
 
-import java.util.List;
-
+import com.hyjf.am.config.mq.base.Consumer;
+import com.hyjf.common.constants.MQConstant;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
@@ -13,8 +13,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hyjf.am.config.mq.base.Consumer;
-import com.hyjf.common.constants.MQConstant;
+import java.util.List;
 
 /**
  * 

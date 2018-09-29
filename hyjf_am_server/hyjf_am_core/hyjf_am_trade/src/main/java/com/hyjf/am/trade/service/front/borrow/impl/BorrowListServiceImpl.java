@@ -1,12 +1,11 @@
 package com.hyjf.am.trade.service.front.borrow.impl;
 
-import com.hyjf.am.vo.trade.InvestListCustomizeVO;
-import com.hyjf.am.trade.service.front.borrow.BorrowListService;
-import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.cache.RedisUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.hyjf.am.trade.dao.mapper.customize.ApiProjectListCustomizeMapper;
+import com.hyjf.am.trade.service.front.borrow.BorrowListService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.InvestListCustomizeVO;
+import com.hyjf.common.cache.CacheUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 

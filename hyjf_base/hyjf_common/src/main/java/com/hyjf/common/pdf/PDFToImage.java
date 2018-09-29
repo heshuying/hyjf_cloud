@@ -1,20 +1,18 @@
 package com.hyjf.common.pdf;
 
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.rendering.PDFRenderer;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPageTree;
-import org.apache.pdfbox.rendering.PDFRenderer;
 
 public class PDFToImage {
     public final  static String  IMG_TYPE_JPG = "jpg";

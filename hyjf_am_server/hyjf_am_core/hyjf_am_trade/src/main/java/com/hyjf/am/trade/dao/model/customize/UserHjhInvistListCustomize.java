@@ -1,7 +1,7 @@
 
 
 package com.hyjf.am.trade.dao.model.customize;
-import com.hyjf.am.vo.BaseVO;
+
 import com.hyjf.common.util.CustomConstants;
 
 import java.io.Serializable;

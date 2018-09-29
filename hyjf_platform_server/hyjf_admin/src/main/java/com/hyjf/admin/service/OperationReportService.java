@@ -1,12 +1,7 @@
 package com.hyjf.admin.service;
 
-import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.LinkedList;
 
 /**
  * @author tanyy

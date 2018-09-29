@@ -1,11 +1,9 @@
 package com.hyjf.am.vo.trade;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
+import java.text.DecimalFormat;
 
 public class UserHjhInvistDetailCustomizeVO extends BaseVO implements Serializable {
 

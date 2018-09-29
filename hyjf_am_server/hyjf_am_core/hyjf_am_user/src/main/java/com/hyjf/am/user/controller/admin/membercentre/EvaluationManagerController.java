@@ -3,18 +3,22 @@
  */
 package com.hyjf.am.user.controller.admin.membercentre;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.EvalationResultResponse;
 import com.hyjf.am.response.user.UserEvalationQuestionResponse;
+import com.hyjf.am.response.user.UserEvalationResultResponse;
+import com.hyjf.am.resquest.user.EvalationRequest;
 import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
+import com.hyjf.am.user.dao.model.customize.EvalationResultCustomize;
 import com.hyjf.am.user.dao.model.customize.UserEvalationQuestionCustomize;
+import com.hyjf.am.user.service.admin.membercentre.EvaluationManagerService;
 import com.hyjf.am.vo.user.EvalationResultVO;
 import com.hyjf.am.vo.user.UserEvalationQuestionVO;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +28,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.UserEvalationResultResponse;
-import com.hyjf.am.resquest.user.EvalationRequest;
-import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
-import com.hyjf.am.user.dao.model.customize.EvalationResultCustomize;
-import com.hyjf.am.user.service.admin.membercentre.EvaluationManagerService;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl

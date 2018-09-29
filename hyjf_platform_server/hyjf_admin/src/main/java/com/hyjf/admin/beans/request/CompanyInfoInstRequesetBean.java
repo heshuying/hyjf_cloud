@@ -1,6 +1,5 @@
 package com.hyjf.admin.beans.request;
 
-import com.hyjf.am.vo.BaseVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;

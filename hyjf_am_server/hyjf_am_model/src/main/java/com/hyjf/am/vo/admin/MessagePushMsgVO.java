@@ -1,6 +1,5 @@
 package com.hyjf.am.vo.admin;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.common.util.GetDate;
 
 /**

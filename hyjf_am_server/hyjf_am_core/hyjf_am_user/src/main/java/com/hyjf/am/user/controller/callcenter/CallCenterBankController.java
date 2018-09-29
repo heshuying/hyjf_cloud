@@ -2,6 +2,7 @@
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 package com.hyjf.am.user.controller.callcenter;
+
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.callcenter.CallCenterAccountHuifuResponse;
@@ -25,9 +26,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author wangjun

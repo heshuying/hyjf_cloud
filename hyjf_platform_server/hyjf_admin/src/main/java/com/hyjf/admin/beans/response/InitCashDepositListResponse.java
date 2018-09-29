@@ -3,12 +3,11 @@
  */
 package com.hyjf.admin.beans.response;
 
-import java.util.List;
-
 import com.hyjf.admin.beans.vo.AdminAssetListCustomizeVO;
 import com.hyjf.admin.beans.vo.AdminHjhInstConfigAPIVO;
-
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.List;
 
 /**
  * 保证金不足的列表初始化的返回内容

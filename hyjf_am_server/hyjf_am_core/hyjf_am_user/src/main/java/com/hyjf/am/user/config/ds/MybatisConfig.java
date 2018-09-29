@@ -3,7 +3,6 @@ package com.hyjf.am.user.config.ds;
 import com.hyjf.am.user.config.ds.DynamicDataSourceContextHolder.DbType;
 import com.hyjf.am.user.interceptor.SyncRuserInterceptor;
 import com.hyjf.common.constants.CommonConstant;
-
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;

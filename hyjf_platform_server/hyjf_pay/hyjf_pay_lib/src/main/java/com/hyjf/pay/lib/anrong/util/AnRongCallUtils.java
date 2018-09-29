@@ -1,17 +1,16 @@
 package com.hyjf.pay.lib.anrong.util;
 
-import java.io.Serializable;
-import java.util.Map;
-
+import com.hyjf.common.spring.SpringUtils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.anrong.bean.AnRongBean;
 import com.hyjf.pay.lib.config.URLSystemConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.common.spring.SpringUtils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.anrong.bean.AnRongBean;
+import java.io.Serializable;
+import java.util.Map;
 
 /**
  * 

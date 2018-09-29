@@ -3,10 +3,6 @@
  */
 package com.hyjf.am.user.dao.model.customize;
 
-import com.hyjf.am.vo.BaseVO;
-
-import java.io.Serializable;
-
 /**
  * @author NXL
  * @version AccountRecordVO, v0.1 2018/6/23 17:17

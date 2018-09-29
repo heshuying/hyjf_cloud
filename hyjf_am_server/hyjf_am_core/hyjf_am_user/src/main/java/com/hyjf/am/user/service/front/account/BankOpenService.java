@@ -1,7 +1,8 @@
 package com.hyjf.am.user.service.front.account;
 
 import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.auto.BankCard;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.service.BaseService;
 
 import java.util.List;

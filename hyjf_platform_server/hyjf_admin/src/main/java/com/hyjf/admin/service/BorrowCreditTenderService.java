@@ -7,7 +7,6 @@ import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.vo.config.AdminSystemVO;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 

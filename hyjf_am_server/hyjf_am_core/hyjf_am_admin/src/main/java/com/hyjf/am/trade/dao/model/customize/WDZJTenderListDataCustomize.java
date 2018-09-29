@@ -1,10 +1,9 @@
 package com.hyjf.am.trade.dao.model.customize;
 
-import java.io.Serializable;
-
+import com.hyjf.common.util.IdCard15To18;
 import org.apache.commons.lang3.StringUtils;
 
-import com.hyjf.common.util.IdCard15To18;
+import java.io.Serializable;
 
 public class WDZJTenderListDataCustomize implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -6,7 +6,6 @@ package com.hyjf.am.vo.trade;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * 债转详细预计服务费计算

@@ -3,14 +3,8 @@
  */
 package com.hyjf.admin.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.HjhCommissionService;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
@@ -20,13 +14,17 @@ import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.common.http.HtmlUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 /**
  * @author libin
  * @version HjhCommissionServiceImpl.java, v0.1 2018年8月7日 下午2:45:19

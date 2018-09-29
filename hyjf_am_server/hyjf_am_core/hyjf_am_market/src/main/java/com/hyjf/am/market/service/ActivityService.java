@@ -5,9 +5,7 @@ import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 
-import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xiasq

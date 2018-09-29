@@ -12,8 +12,6 @@ import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

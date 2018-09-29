@@ -7,7 +7,6 @@ import com.hyjf.admin.beans.response.BorrowRegistResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 
 import java.util.List;
 import java.util.Map;

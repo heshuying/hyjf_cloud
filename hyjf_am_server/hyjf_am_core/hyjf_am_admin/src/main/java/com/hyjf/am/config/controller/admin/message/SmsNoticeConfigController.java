@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/am-config/smsNoticeConfig")
 public class SmsNoticeConfigController extends BaseConfigController{
-    
+
     @Autowired
     private SmsNoticeConfigService smsNoticeConfigService;
 
@@ -70,10 +70,7 @@ public class SmsNoticeConfigController extends BaseConfigController{
             List<SmsNoticeConfigVO> configList = CommonUtils.convertBeanList(recordList, SmsNoticeConfigVO.class);
             result.setResultList(configList);
             result.setRtn(Response.SUCCESS);
-            return result;
         }
-        result.setRtn(Response.FAIL);
-        result.setMessage(Response.FAIL_MSG);
         return result;
     }
     /**
@@ -94,8 +91,6 @@ public class SmsNoticeConfigController extends BaseConfigController{
                 result.setRtn(Response.SUCCESS);
                 return result;
             }
-            result.setRtn(Response.FAIL);
-            result.setMessage(Response.FAIL_MSG);
             return result;
         }
         return null;

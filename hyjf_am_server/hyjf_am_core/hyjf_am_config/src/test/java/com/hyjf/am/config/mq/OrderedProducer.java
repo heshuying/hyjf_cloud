@@ -1,13 +1,13 @@
 package com.hyjf.am.config.mq;
 
-import java.util.List;
-
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.MessageQueueSelector;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageQueue;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
+
+import java.util.List;
 
 public class OrderedProducer {
 

@@ -3,7 +3,6 @@ package com.hyjf.cs.trade.bean;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 
 import java.util.List;

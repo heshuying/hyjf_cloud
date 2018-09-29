@@ -10,9 +10,7 @@ import com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs;
 import com.hyjf.am.config.service.SubmissionsService;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
-import com.netflix.discovery.converters.Auto;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.crypto.tls.UserMappingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

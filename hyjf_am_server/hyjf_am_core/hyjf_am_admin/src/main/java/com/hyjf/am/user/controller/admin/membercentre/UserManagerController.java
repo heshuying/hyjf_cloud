@@ -324,6 +324,28 @@ public class UserManagerController extends BaseController {
     }
 
     /**
+     * 根据用户List id查找用户表
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/selectUserByListUserId/{userId}")
+    public UserResponse selectUserByListUserId(@PathVariable List userId) {
+        UserResponse response = new UserResponse();
+        logger.info("---selectUserByUserId---  " + userId);
+        List<UserVO> userVO = new ArrayList<UserVO>();
+        List<User> user = userManagerService.selectUserByListUserId(userId);
+        if (null != user) {
+            userVO = CommonUtils.convertBeanList(user,UserVO.class);
+            //BeanUtils.copyProperties(user,userVO);
+            response.setResultList(userVO);
+            response.setRtn(Response.SUCCESS);//代表成功
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 根據accounId獲取開戶信息
      *
      * @param accountId
@@ -650,6 +672,7 @@ public class UserManagerController extends BaseController {
     @RequestMapping("/saveCompanyInfo")
     public Response saveCompanyInfo(@RequestBody @Valid  UpdCompanyRequest updCompanyRequest) {
         Response response = new Response();
+        response.setRtn(Response.FAIL);
         String userId = updCompanyRequest.getUserId();
         if (StringUtils.isBlank(userId)) {
             response.setMessage("请先选择用户再进行操作!");

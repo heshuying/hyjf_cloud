@@ -6,7 +6,6 @@ package com.hyjf.cs.user.service.safe;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.BaseUserService;

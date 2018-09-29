@@ -3,25 +3,16 @@
  */
 package com.hyjf.cs.message.service.msgpush.impl;
 
-import cn.jpush.api.common.resp.APIConnectionException;
-import cn.jpush.api.common.resp.APIRequestException;
-import cn.jpush.api.push.PushResult;
-import cn.jpush.api.push.model.PushPayload;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
-import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
-import com.hyjf.common.http.HtmlUtil;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTag;
 import com.hyjf.cs.message.client.AmUserClient;
-import com.hyjf.cs.message.jpush.*;
 import com.hyjf.cs.message.mongo.mc.MessagePushMsgHistoryDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushTagDao;
 import com.hyjf.cs.message.service.msgpush.MessagePushErrorService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /**

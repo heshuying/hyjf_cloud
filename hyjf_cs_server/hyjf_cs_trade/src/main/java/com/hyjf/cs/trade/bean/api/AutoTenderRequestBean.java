@@ -3,9 +3,9 @@
  */
 package com.hyjf.cs.trade.bean.api;
 
-import java.io.Serializable;
-
 import com.hyjf.cs.trade.bean.BaseBean;
+
+import java.io.Serializable;
 
 /**
  * @author libin

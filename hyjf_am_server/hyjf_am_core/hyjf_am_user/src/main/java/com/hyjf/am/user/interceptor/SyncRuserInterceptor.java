@@ -1,27 +1,22 @@
 package com.hyjf.am.user.interceptor;
 
-import java.util.Properties;
-import java.util.UUID;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.plugin.Intercepts;
-import org.apache.ibatis.plugin.Invocation;
-import org.apache.ibatis.plugin.Plugin;
-import org.apache.ibatis.plugin.Signature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.mq.producer.AmUserProducer;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.plugin.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.Properties;
+import java.util.UUID;
 
 /**
  * 同步用户信息的mybaitis 拦截器

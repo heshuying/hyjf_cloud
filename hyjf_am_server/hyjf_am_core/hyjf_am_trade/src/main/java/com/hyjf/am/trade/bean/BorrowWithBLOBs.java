@@ -1,10 +1,10 @@
 package com.hyjf.am.trade.bean;
 
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.hyjf.am.trade.dao.model.auto.Borrow;
 
 public class BorrowWithBLOBs extends Borrow implements Serializable {
     private String accountContents;

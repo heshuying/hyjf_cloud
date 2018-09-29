@@ -12,7 +12,6 @@
 package com.hyjf.common.security.util;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 
 
 

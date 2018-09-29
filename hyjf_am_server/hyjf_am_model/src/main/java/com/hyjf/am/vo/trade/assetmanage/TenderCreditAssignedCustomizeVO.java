@@ -1,10 +1,5 @@
 package com.hyjf.am.vo.trade.assetmanage;
 
-import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang.StringUtils;
-
-import java.util.Date;
-
 public class TenderCreditAssignedCustomizeVO {
     /* 主键 */
     private String assignId;

@@ -3,16 +3,12 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.RegistRecordService;
 import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
-import com.hyjf.common.cache.CacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 /**
  * @author nixiaoling

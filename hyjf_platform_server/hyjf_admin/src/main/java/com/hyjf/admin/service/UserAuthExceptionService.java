@@ -5,9 +5,6 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
-import com.hyjf.am.vo.user.AdminUserAuthListVO;
-
-import java.util.List;
 
 /**
  * @author: sunpeikai

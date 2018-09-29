@@ -3,8 +3,6 @@
  */
 package com.hyjf.cs.user.result;
 
-import com.hyjf.cs.user.result.BaseResultBean;
-
 /**
  * 获取微信首页VO对象
  *

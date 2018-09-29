@@ -6,7 +6,6 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.trade.service.front.repay.BankRepayFreezeLogService;
 import com.hyjf.am.trade.service.front.repay.RepayManageOldService;
-import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.common.cache.RedisConstants;

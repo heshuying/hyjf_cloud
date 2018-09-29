@@ -17,8 +17,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static com.hyjf.common.util.CustomConstants.WITHDRAW_STATUS_WAIT;
-
 /**
  * @author xiasq
  * @version AccountServiceImpl, v0.1 2018/4/25 10:41

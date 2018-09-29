@@ -1,9 +1,9 @@
 package com.hyjf.am.admin.config.ds;
 
+import com.alibaba.druid.support.http.WebStatFilter;
+
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
-
-import com.alibaba.druid.support.http.WebStatFilter;
 
 @WebFilter(filterName="druidWebStatFilter",urlPatterns="/*",
 initParams={

@@ -1,17 +1,5 @@
 package com.hyjf.callcenter.controller.balance;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.vo.callcenter.CallCenterBankAccountManageVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.callcenter.beans.ResultListBean;
@@ -20,9 +8,14 @@ import com.hyjf.callcenter.beans.UserBean;
 import com.hyjf.callcenter.controller.base.CallcenterBaseController;
 import com.hyjf.callcenter.result.BaseResultBean;
 import com.hyjf.callcenter.service.SrchBalanceInfoService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 呼叫中心:按照用户名/手机号查询账户余额Controller

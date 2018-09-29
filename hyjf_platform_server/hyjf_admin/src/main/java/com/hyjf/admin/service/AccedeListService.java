@@ -3,8 +3,6 @@
  */
 package com.hyjf.admin.service;
 
-import java.util.List;
-
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.resquest.admin.AccedeListRequest;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
@@ -13,6 +11,8 @@ import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;
 import com.hyjf.am.vo.trade.hjh.UserHjhInvistDetailVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+
+import java.util.List;
 
 /**
  * @author Albert

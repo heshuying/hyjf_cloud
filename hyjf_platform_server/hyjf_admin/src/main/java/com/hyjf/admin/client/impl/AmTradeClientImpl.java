@@ -496,7 +496,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @auth sunpeikai
      */
     @Override
-    public BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId) {
+    public BankMerchantAccountVO searchBankMerchantAccountByAccountId(String accountId) {
         String url = "http://AM-TRADE/am-trade/platformtransfer/searchbankmerchantaccount/" + accountId;
         BankMerchantAccountResponse response = restTemplate.getForEntity(url, BankMerchantAccountResponse.class).getBody();
         if (response != null) {
@@ -3690,7 +3690,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringByPage(AdminAccountBalanceMonitoringRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/accountbalance/selectAccountBalanceMonitoringByPage";
+        String url = "http://AM-ADMIN/am-admin/config/accountbalance/selectAccountBalanceMonitoringByPage";
         AdminAccountBalanceMonitoringResponse response = restTemplate.postForEntity(url, adminRequest, AdminAccountBalanceMonitoringResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response;
@@ -3706,7 +3706,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminAccountBalanceMonitoringResponse selectaccountBalanceMonitoringById(AdminAccountBalanceMonitoringRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/accountbalance/selectaccountBalanceMonitoringById";
+        String url = "http://AM-ADMIN/am-admin/config/accountbalance/selectaccountBalanceMonitoringById";
         AdminAccountBalanceMonitoringResponse response = restTemplate.postForEntity(url, adminRequest, AdminAccountBalanceMonitoringResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response;
@@ -3722,7 +3722,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<AccountBalanceMonitoringRequestBean> searchMerchantAccountList(AdminAccountBalanceMonitoringRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/accountbalance/selectAccountBalanceMonitoringByPage";
+        String url = "http://AM-ADMIN/am-admin/config/accountbalance/selectAccountBalanceMonitoringByPage";
         AdminAccountBalanceMonitoringResponse response = restTemplate.postForEntity(url, adminRequest, AdminAccountBalanceMonitoringResponse.class).getBody();
         List<AccountBalanceMonitoringRequestBean> res = new ArrayList<AccountBalanceMonitoringRequestBean>();
         if (Validator.isNotNull(response)) {
@@ -3741,7 +3741,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminAccountBalanceMonitoringResponse updateMerchantAccountList(List<AccountBalanceMonitoringRequestBean> adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/accountbalance/updateMerchantAccountList";
+        String url = "http://AM-ADMIN/am-admin/config/accountbalance/updateMerchantAccountList";
         AdminAccountBalanceMonitoringResponse response = restTemplate.postForEntity(url, adminRequest, AdminAccountBalanceMonitoringResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response;
@@ -5779,7 +5779,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminPartnerConfigDetailResponse partnerConfigInit(AdminPartnerConfigListRequest adminRequest){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/list", adminRequest, AdminPartnerConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/partnerconfig/list", adminRequest, AdminPartnerConfigDetailResponse.class)
                 .getBody();
     }
     /**
@@ -5790,7 +5790,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminPartnerConfigDetailResponse searchPartnerConfigInfo(AdminPartnerConfigListRequest adminRequest){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/info", adminRequest, AdminPartnerConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/partnerconfig/info", adminRequest, AdminPartnerConfigDetailResponse.class)
                 .getBody();
     }
 
@@ -5802,7 +5802,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminPartnerConfigDetailResponse savePartnerConfig(AdminPartnerConfigListRequest req){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/insert", req, AdminPartnerConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/partnerconfig/insert", req, AdminPartnerConfigDetailResponse.class)
                 .getBody();
     }
 
@@ -5814,7 +5814,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminPartnerConfigDetailResponse updatePartnerConfig(AdminPartnerConfigListRequest req){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/update", req, AdminPartnerConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/partnerconfig/update", req, AdminPartnerConfigDetailResponse.class)
                 .getBody();
     }
 
@@ -5826,7 +5826,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminPartnerConfigDetailResponse deletePartnerConfig(AdminPartnerConfigListRequest req){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/delete", req, AdminPartnerConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/partnerconfig/delete", req, AdminPartnerConfigDetailResponse.class)
                 .getBody();
     }
     /**

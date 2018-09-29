@@ -1,9 +1,8 @@
 package com.hyjf.am.config.dao.model.customize;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-
 import com.hyjf.am.config.dao.model.auto.Admin;
+
+import java.io.Serializable;
 
 
 public class AdminCustomize extends Admin implements Serializable {

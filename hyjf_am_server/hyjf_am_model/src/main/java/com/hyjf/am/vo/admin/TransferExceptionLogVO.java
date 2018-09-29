@@ -1,7 +1,6 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.BaseVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;

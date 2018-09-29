@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
+
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 
 /**
  * @author hesy

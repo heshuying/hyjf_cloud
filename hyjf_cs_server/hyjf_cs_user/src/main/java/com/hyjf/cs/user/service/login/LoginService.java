@@ -5,12 +5,11 @@ package com.hyjf.cs.user.service.login;
 
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.cs.user.service.BaseUserService;
-
-import java.util.Map;
+import com.hyjf.cs.user.vo.UserParameters;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author zhangqingqing

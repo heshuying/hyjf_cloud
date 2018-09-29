@@ -5,7 +5,6 @@ package com.hyjf.cs.user.service.batch.Impl;
 
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
-import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserLoginLogVO;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.client.AmTradeClient;

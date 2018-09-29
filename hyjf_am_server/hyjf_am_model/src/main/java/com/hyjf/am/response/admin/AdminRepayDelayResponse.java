@@ -2,7 +2,6 @@ package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.admin.AdminRepayDelayCustomizeVO;
-import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 
 /**
  * @author pangchengchao

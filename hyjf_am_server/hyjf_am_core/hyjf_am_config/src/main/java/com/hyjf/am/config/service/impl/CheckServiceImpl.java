@@ -9,15 +9,11 @@ import com.hyjf.am.config.dao.model.auto.CouponCheckExample;
 import com.hyjf.am.config.service.CheckService;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
 import com.hyjf.common.util.GetDate;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yaoyong

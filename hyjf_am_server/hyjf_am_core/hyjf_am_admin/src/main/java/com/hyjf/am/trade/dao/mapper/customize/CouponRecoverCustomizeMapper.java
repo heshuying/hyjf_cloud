@@ -3,12 +3,12 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponTenderCustomize;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
-import com.hyjf.am.trade.dao.model.customize.CouponTenderCustomize;
 
 /**
  * @author yaoy

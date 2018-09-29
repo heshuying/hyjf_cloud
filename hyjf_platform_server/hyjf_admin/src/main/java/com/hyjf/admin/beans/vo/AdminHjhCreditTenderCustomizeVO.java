@@ -3,12 +3,10 @@
  */
 package com.hyjf.admin.beans.vo;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.hyjf.am.vo.BaseVO;
-
 import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
 
 /**
  * @author libin

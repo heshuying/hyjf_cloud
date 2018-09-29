@@ -1,7 +1,6 @@
 package com.hyjf.am.vo.task.autoreview;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 
 /**

@@ -1,12 +1,5 @@
 package com.hyjf.am.market.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.market.dao.mapper.auto.AdsMapper;
 import com.hyjf.am.market.dao.mapper.customize.app.AppAdsCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.Ads;
@@ -15,6 +8,12 @@ import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
 import com.hyjf.am.market.service.AdsService;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.common.util.GetDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiasq

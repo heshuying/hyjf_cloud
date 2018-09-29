@@ -1,20 +1,19 @@
 package com.hyjf.cs.message.client.impl;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.message.FindAliasesForMsgPushRequest;
 import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.cs.message.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.cs.message.client.AmUserClient;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author xiasq

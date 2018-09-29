@@ -4,6 +4,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class MerchantAccountVO extends BaseVO implements Serializable {
     private String ids;
@@ -40,6 +41,10 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     private Integer createTime;
 
     private Integer updateTime;
+
+    private Date createtime;
+
+    private Date updatetime;
 
     private static final long serialVersionUID = 1L;
 
@@ -187,5 +192,21 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Date getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
+    }
+
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
     }
 }

@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -393,6 +394,22 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         List<User> usersList = this.userMapper.selectByExample(example);
         if (null!= usersList && usersList.size() > 0) {
             return usersList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户List id查找用户表
+     *
+     * @param userId
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<User> selectUserByListUserId(List userId) {
+        List<User> usersList = this.userMapper.selectUserByListUserId(userId);
+        if (null!= usersList && usersList.size() > 0) {
+            return usersList;
         }
         return null;
     }

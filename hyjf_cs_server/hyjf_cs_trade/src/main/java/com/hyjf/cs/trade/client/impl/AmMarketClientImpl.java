@@ -3,7 +3,6 @@ package com.hyjf.cs.trade.client.impl;
 import com.hyjf.am.response.market.InvitePrizeConfResponse;
 import com.hyjf.am.resquest.trade.InvitePrizeConfVO;
 import com.hyjf.cs.trade.client.AmMarketClient;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

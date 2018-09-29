@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;

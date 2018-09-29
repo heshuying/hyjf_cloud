@@ -8,12 +8,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
-import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
@@ -54,7 +52,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -363,7 +360,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             throw new CheckException(MsgEnum.ERR_TRADE_BORROR_USER_NOT_EXIST);
         }
         // 51老用户标// 1是51，0不是
-        if ("0".equals(borrowProjectType.getInvestUserType())) {
+        if (borrowProjectType.getInvestUserType().equals(0)) {
             Integer is51 = userInfo.getIs51();
             // 该项目只能51老用户投资
             if (is51 != null && is51 == 1) {
@@ -371,7 +368,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
         }
         // 新手标
-        if ("1".equals(borrowProjectType.getInvestUserType())) {
+        if (borrowProjectType.getInvestUserType().equals(1)) {
             boolean isNew = this.checkIsNewUserCanInvest(userId);
             // 该项目只能新手投资
             if (!isNew) {

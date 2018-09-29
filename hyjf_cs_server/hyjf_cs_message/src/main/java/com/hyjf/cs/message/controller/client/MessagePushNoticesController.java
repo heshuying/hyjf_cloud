@@ -1,6 +1,5 @@
 package com.hyjf.cs.message.controller.client;
 
-import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushNoticesResponse;
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;

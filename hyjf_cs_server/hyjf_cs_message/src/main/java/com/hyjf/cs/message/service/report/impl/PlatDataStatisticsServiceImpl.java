@@ -1,7 +1,6 @@
 package com.hyjf.cs.message.service.report.impl;
 
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.message.bean.ic.CalculateInvestInterest;
 import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
 import com.hyjf.cs.message.bean.ic.OperationReportEntity;
 import com.hyjf.cs.message.bean.ic.TotalInvestAndInterestEntity;

@@ -3,13 +3,13 @@
  */
 package com.hyjf.am.user.service.admin.membercentre;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
 import com.hyjf.am.user.dao.model.customize.EvalationResultCustomize;
 import com.hyjf.am.user.dao.model.customize.UserEvalationQuestionCustomize;
 import com.hyjf.am.user.service.BaseService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl

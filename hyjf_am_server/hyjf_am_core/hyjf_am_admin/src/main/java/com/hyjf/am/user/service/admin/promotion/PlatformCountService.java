@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.user.service.admin.promotion;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.PlatformCountRequest;
 import com.hyjf.am.user.dao.model.customize.PlatformUserCountCustomize;
+
+import java.util.List;
 
 /**
  * @author fq

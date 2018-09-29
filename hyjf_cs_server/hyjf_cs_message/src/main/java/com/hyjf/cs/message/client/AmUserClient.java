@@ -1,11 +1,10 @@
 package com.hyjf.cs.message.client;
 
+import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
+import com.hyjf.am.vo.user.*;
+
 import java.util.HashMap;
 import java.util.List;
-
-import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
-import com.hyjf.am.vo.user.*;
 
 /**
  * @author xiasq

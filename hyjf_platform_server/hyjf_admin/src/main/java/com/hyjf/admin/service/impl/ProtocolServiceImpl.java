@@ -170,7 +170,7 @@ public class ProtocolServiceImpl implements ProtocolService {
             //将协议模板放入redis中
             RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_URL+protocolTemplate.getProtocolId(),protocolTemplate.getProtocolUrl()+"&"+protocolTemplate.getImgUrl());
             //获取协议模板前端显示名称对应的别名
-            String alias = ProtocolEnum.getAlias(protocolTemplate.getDisplayName());
+            String alias = ProtocolEnum.getAlias(protocolTemplate.getProtocolType());
             if(StringUtils.isNotBlank(alias)){
                 RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_ALIAS+alias,protocolTemplate.getProtocolId());//协议 ID放入redis
             }
@@ -285,7 +285,7 @@ public class ProtocolServiceImpl implements ProtocolService {
             //将协议模板放入redis中
             RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_URL + protocolTemplate.getProtocolId(), protocolTemplate.getProtocolUrl() + "&" + protocolTemplate.getImgUrl());
             //获取协议模板前端显示名称对应的别名
-            String alias = ProtocolEnum.getAlias(protocolTemplate.getDisplayName());
+            String alias = ProtocolEnum.getAlias(protocolTemplate.getProtocolType());
             if (StringUtils.isNotBlank(alias)) {
                 RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_ALIAS + alias, protocolTemplate.getProtocolId());//协议 ID放入redis
             }
@@ -321,7 +321,7 @@ public class ProtocolServiceImpl implements ProtocolService {
                 //将协议模板移除redis中
                 RedisUtils.del(RedisConstants.PROTOCOL_TEMPLATE_URL+protocolTemplate.getProtocolId());
                 //获取协议模板前端显示名称对应的别名
-                String alias = ProtocolEnum.getAlias(protocolTemplate.getDisplayName());
+                String alias = ProtocolEnum.getAlias(protocolTemplate.getProtocolType());
                 if(StringUtils.isNotBlank(alias)){
                     RedisUtils.del(RedisConstants.PROTOCOL_TEMPLATE_ALIAS+alias);//删除对应协议ID
                 }

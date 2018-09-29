@@ -3,11 +3,6 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.AnswerMapper;
 import com.hyjf.am.config.dao.mapper.auto.QuestionMapper;
 import com.hyjf.am.config.dao.mapper.customize.QuestionCustomizeMapper;
@@ -18,6 +13,10 @@ import com.hyjf.am.config.dao.model.auto.QuestionExample;
 import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author zhangqingqing
