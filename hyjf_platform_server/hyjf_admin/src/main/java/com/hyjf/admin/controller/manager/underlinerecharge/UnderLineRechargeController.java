@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +43,7 @@ public class UnderLineRechargeController extends BaseController {
         UnderLineRechargeResponse underLineRechargeResponse = this.underLineRechargeService.selectUnderLineList(requestBean);
 
         // 初始化列表
-        List<UnderLineRechargeVO> returnList = null;
+        List<UnderLineRechargeVO> returnList = new ArrayList<>();
         if (underLineRechargeResponse == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
         }

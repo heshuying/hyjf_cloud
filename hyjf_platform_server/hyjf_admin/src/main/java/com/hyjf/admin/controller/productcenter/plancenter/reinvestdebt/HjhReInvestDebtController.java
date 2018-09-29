@@ -129,7 +129,7 @@ public class HjhReInvestDebtController extends BaseController {
         }
 
         // 初始化返回List
-        List<HjhReInvestDebtVO> returnList = null;
+        List<HjhReInvestDebtVO> returnList = new ArrayList<>();
 
         HjhReInvestDebtResponse response = hjhReInvestDebtService.hjhReInvestDebtList(request);
 
