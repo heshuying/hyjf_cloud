@@ -1,5 +1,4 @@
 package com.hyjf.am.config.service;
-
 import com.hyjf.am.config.dao.model.auto.Version;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
 import com.hyjf.am.vo.admin.VersionVO;
@@ -46,11 +45,19 @@ public interface VersionConfigService {
      * 删除版本配置
      * @param recordList
      */
-    public void deleteVersionConfig( Integer id) ;
+    public void deleteVersionConfig( List<Integer> id) ;
 
     /**
      * 校验版本配置当前系统版本号是否唯一
      * @param map
      */
     public VersionVO validationFeild( Map map) ;
+
+
+    /**
+     * 获取最新的版本信息
+     * @author zhangyk
+     * @date 2018/9/5 11:53
+     */
+    public Version  getLastestVersion();
 }
