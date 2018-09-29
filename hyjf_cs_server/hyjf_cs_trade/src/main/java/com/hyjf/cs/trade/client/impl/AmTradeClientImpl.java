@@ -4287,7 +4287,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/creditTender/getCreditTenderServiceFee/" +creditNid;
         StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
         if (Response.isSuccess(response)){
-            response.getResultStr();
+            return response.getResultStr();
         }
         return null;
     }

@@ -26,10 +26,7 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.AsteriskProcessUtil;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -1247,13 +1244,18 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 查询相应的还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             resultMap.put("repayPlan", repayPlanList);
-            // TODO: 2018/6/30  待实现 // 风控信息
-            /*AppRiskControlCustomize riskControl = projectService.selectRiskControl(borrowNid);
-            if(riskControl!=null){
-                riskControl.setControlMeasures(riskControl.getControlMeasures()==null?"":riskControl.getControlMeasures().replace("\r\n", ""));
-                riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
+            // 风控信息
+            BorrowInfoWithBLOBsVO borrowInfoWithBLOBsVO = amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
+            Map<String,String> riskControl = new HashMap<>();
+            if (borrowInfoWithBLOBsVO != null){
+                riskControl.put("controlMeasures",borrowInfoWithBLOBsVO.getBorrowMeasuresMea() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMea().replace("\r\n",""));
+                riskControl.put("controlMort",borrowInfoWithBLOBsVO.getBorrowMeasuresMort() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMort().replace("\r\n",""));
+                riskControl.put("partner",StringUtils.isBlank(borrowInfoWithBLOBsVO.getBorrowMeasuresInstit())? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresInstit());
+                riskControl.put("agencyIntroduction",StringUtils.isBlank(borrowInfoWithBLOBsVO.getBorrowCompanyInstruction()) ? "" : borrowInfoWithBLOBsVO.getBorrowCompanyInstruction());
+                riskControl.put("operatingProcess",StringUtils.isBlank(borrowInfoWithBLOBsVO.getBorrowOperatingProcess()) ? "" : borrowInfoWithBLOBsVO.getBorrowOperatingProcess());
             }
-            result.setRiskControl(riskControl);*/
+
+            resultMap.put("riskControl",riskControl);
 
         } else {
             resultMap.put(ProjectConstant.RES_PROJECT_INFO, new AppTransferDetailBean());
