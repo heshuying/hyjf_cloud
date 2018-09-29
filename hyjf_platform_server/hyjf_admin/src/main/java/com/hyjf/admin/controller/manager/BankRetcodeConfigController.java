@@ -7,7 +7,6 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankRetcodeConfigService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankRetcodeConfigRequest;
@@ -181,12 +180,11 @@ public class BankRetcodeConfigController extends BaseController {
     private String validatorFieldCheck(ModelAndView modelAndView, AdminBankRetcodeConfigRequest form) {
         // 权限检查用字段的校验
         if(StringUtils.isBlank(form.getTxCode())||(StringUtils.isNotBlank(form.getTxCode())&&(form.getTxCode().length()>20))){
-            return "txCode不能为空，且长度不能超过20";
+            return "接口代码不能为空，且长度不能超过20";
         }
-        ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "txCode", form.getTxCode(), 20, true);
         // 权限名字
         if(StringUtils.isBlank(form.getRetCode())||(StringUtils.isNotBlank(form.getRetCode())&&(form.getRetCode().length()>20))){
-            return "retCode，且长度不能超过20";
+            return "银行返回码不能为空，且长度不能超过20";
         }
         return "";
     }

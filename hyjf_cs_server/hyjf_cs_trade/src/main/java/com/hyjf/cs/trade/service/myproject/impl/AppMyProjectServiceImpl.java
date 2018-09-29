@@ -211,14 +211,18 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
         preck(detailBeansList, "资产信息", borrowBeansList);
 
-        // TODO: 2018/7/31  后期处理
-       /* AppRiskControlCustomize riskControl = projectService.selectRiskControl(borrow.getBorrowNid());
-        if(riskControl!=null){
-            riskControl.setControlMeasures(riskControl.getControlMeasures()==null?"":riskControl.getControlMeasures().replace("\r\n", ""));
-            riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
-        }*/
-        /*jsonObject.put("riskControl", riskControl);*/
-        jsonObject.put("riskControl", "");
+        // 风控信息
+        BorrowInfoWithBLOBsVO borrowInfoWithBLOBsVO = amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
+        Map<String,String> riskControl = new HashMap<>();
+        if (borrowInfoWithBLOBsVO != null){
+            riskControl.put("controlMeasures",borrowInfoWithBLOBsVO.getBorrowMeasuresMea() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMea().replace("\r\n",""));
+            riskControl.put("controlMort",borrowInfoWithBLOBsVO.getBorrowMeasuresMort() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMort().replace("\r\n",""));
+            riskControl.put("partner",borrowInfoWithBLOBsVO.getBorrowMeasuresInstit());
+            riskControl.put("agencyIntroduction",borrowInfoWithBLOBsVO.getBorrowCompanyInstruction());
+            riskControl.put("operatingProcess",borrowInfoWithBLOBsVO.getBorrowOperatingProcess());
+        }
+        jsonObject.put("riskControl", riskControl);
+
 
         // 加息收益
         if (isIncrease != null && "1".equals(isIncrease)) {

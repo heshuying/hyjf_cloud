@@ -50,9 +50,8 @@ public class SmsConfigController extends BaseConfigController{
 		SmsConfigVO smscon = smsConfigService.initSmsConfig(request);
 		if(smscon != null){
 			response.setResult(smscon);
-			return response;
 		}
-		return null;
+		return response;
 	}
 	/**
 	 * 添加短信加固数据

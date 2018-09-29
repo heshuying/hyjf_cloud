@@ -25,10 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
@@ -59,7 +56,6 @@ public class SubmissionsController extends BaseController {
     @ApiOperation(value = "意见反馈列表查询", notes = "意见反馈列表查询")
     @PostMapping("/getRecordList")
     public AdminResult<ListResult<SubmissionsCustomizeVO>> findAppBannerData(@RequestBody SubmissionsRequest form) {
-        SubmissionsResponse response = new SubmissionsResponse();
         Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
         if (StringUtils.isNotBlank(form.getUserName())) {
             UserResponse user = submissionsService.getUserIdByUserName(form.getUserName());
@@ -82,7 +78,19 @@ public class SubmissionsController extends BaseController {
         }
         return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(submissionList.getResultList(), submissionList.getRecordTotal()));
     }
-
+    /**
+     * 查询列表下拉框加载
+     *
+     * @return
+     */
+    @ApiOperation(value = "查询列表下拉框加载", notes = "查询列表下拉框加载")
+    @GetMapping("/recordlistselect")
+    public AdminResult recordListSelect() {
+        AdminResult adminResult = new AdminResult();
+        Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
+        adminResult.setData(userStatus);
+        return  adminResult;
+    }
 
     @ApiOperation(value = "意见反馈:获取详细画面", notes = "意见反馈:获取详细画面")
     @PostMapping(value = "/searchinfo")

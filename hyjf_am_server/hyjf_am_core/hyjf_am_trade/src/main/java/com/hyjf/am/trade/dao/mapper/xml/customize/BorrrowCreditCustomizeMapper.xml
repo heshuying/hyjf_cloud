@@ -108,7 +108,7 @@
         <!-- 原表年化利率 -->
         hbc.bid_apr AS bidApr,
         <!-- 转让时间 -->
-        FROM_UNIXTIME(hbc.create_time,'%Y-%m-%d %H:%i:%s') AS creditTime,
+        DATE_FORMAT(hbc.create_time,'%Y-%m-%d %H:%i:%s') AS creditTime,
         <!-- 截止时间 -->
         FROM_UNIXTIME(hbc.end_time,'%Y-%m-%d %H:%i:%s') AS endTime,
         <!-- 成功时间 -->

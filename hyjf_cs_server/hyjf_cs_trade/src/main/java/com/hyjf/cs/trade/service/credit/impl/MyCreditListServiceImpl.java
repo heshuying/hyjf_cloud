@@ -595,6 +595,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         borrowCredit.setRepayStatus(0);
         // 给前端展示用
         request.setCreditEndTime(borrowCredit.getEndTime());
+        logger.info("creditCapital:"+borrowCredit.getCreditCapital());
         request.setCreditPrice(DF_COM_VIEW.format(borrowCredit.getCreditPrice().setScale(2, BigDecimal.ROUND_DOWN)));
         request.setCreditCapital(DF_COM_VIEW.format(borrowCredit.getCreditCapital().setScale(2, BigDecimal.ROUND_DOWN)));
         if (borrow != null) {

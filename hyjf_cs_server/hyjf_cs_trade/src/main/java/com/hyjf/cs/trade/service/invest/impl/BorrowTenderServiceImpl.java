@@ -188,9 +188,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 异步调用路
         String bgRetUrl = "";
         if(cuc != null){
-            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + cuc.getId();
+            bgRetUrl = systemConfig.getWebHost() + "/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + cuc.getId();
         }else{
-            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
+            bgRetUrl = systemConfig.getWebHost() + "/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
         }
         //忘记密码url
         String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
@@ -360,7 +360,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             throw new CheckException(MsgEnum.ERR_TRADE_BORROR_USER_NOT_EXIST);
         }
         // 51老用户标// 1是51，0不是
-        if ("0".equals(borrowProjectType.getInvestUserType())) {
+        if (borrowProjectType.getInvestUserType().equals(0)) {
             Integer is51 = userInfo.getIs51();
             // 该项目只能51老用户投资
             if (is51 != null && is51 == 1) {
@@ -368,8 +368,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
         }
         // 新手标
-        logger.info("investUserType: "+borrowProjectType.getInvestUserType());
-        if ("1".equals(borrowProjectType.getInvestUserType())) {
+        logger.info("是否新手标：：："+borrowProjectType.getInvestUserType());
+        logger.info("是否新手标：：："+borrowProjectType.getInvestUserType().equals(1));
+        if (borrowProjectType.getInvestUserType().equals(1)) {
             boolean isNew = this.checkIsNewUserCanInvest(userId);
             // 该项目只能新手投资
             if (!isNew) {
@@ -1441,7 +1442,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         this.borrowTender(borrow, bean);
         logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
         // 如果用了优惠券
-        if (StringUtils.isNotEmpty(couponGrantId) && !"0".equals(couponGrantId)) {
+        if (StringUtils.isNotEmpty(couponGrantId) && !"0".equals(couponGrantId) && !"-1".equals(couponGrantId)) {
             // 开始使用优惠券
             Map<String, String> params = new HashMap<String, String>();
             params.put("mqMsgId", GetCode.getRandomCode(10));

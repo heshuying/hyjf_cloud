@@ -96,7 +96,7 @@
 			AND r.create_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{startDate},'00:00:00'),'%Y-%m-%d %H:%i:%s')
 		</if>
 		<if test="endDate != null and endDate != ''">
-			AND r.create_time  <![CDATA[<>]]> STR_TO_DATE(CONCAT(#{endDate},'23:59:59'),'%Y-%m-%d %H:%i:%s')
+			AND r.create_time  <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endDate},'23:59:59'),'%Y-%m-%d %H:%i:%s')
 		</if>
 		<if test="clientTypeSearch != null and clientTypeSearch != ''">
 			AND r.client = #{clientTypeSearch}
@@ -114,7 +114,7 @@
 
 		FROM ht_account_recharge r
 		<if test="usernameSearch != null and usernameSearch != ''">
-			LEFT JOIN ht_r_user ui ON r.user_id= ui.user_id
+			LEFT JOIN ht_r_user ru ON r.user_id= ru.user_id
 		</if>
 		<if test="roleIdSearch != null and roleIdSearch != 0">
 			LEFT JOIN ht_r_user ui ON r.user_id= ui.user_id
@@ -150,7 +150,10 @@
 		t.statusName statusName,
 		t.message,
 		t.client,
+		date_format(
 		t.create_time,
+		'%Y-%c-%d %H:%i:%s'
+		) AS 'create_time',
 		t.bank_seq_no,
 		t.tx_date,
 		t.tx_time,
@@ -202,7 +205,7 @@
 		r.remark,
 		r.money, r.fee,
 		r.balance ,r.payment,
-		CASE r.`type` WHEN 1 THEN '线下充值' WHEN 0 THEN '线上充值' END AS type,
+		CASE r.`type` WHEN 0 THEN '线下充值' WHEN 1 THEN '线上充值' END AS type,
 		CASE
 		r.`status` WHEN 1 THEN '转账中' WHEN 2
 		THEN '成功' ELSE '失败' END as
@@ -229,10 +232,10 @@
 			LEFT JOIN
 			ht_r_user ui ON r.user_id= ui.user_id
 		</if>
-		<if test="userProperty != null and userProperty != ''">
-			LEFT JOIN
-			ht_r_user ui ON r.user_id= ui.user_id
-		</if>
+		<!--<if test="userProperty != null and userProperty != ''">-->
+-- 			LEFT JOIN
+-- 			ht_r_user ui ON r.user_id= ui.user_id
+		<!--</if>-->
 		WHERE
 		1=1
 		<include refid="where-all-page-condition" />

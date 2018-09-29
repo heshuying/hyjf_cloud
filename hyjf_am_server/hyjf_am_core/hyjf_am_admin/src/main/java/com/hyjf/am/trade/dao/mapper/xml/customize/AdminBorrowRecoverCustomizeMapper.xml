@@ -131,6 +131,9 @@
 		<result column="time_recover" property="timeRecover" jdbcType="VARCHAR" />
 		<!-- 计划编号 -->
 		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+		<!-- 计划编号 -->
+		<result column="loan_batch_no" property="loanBatchNo" jdbcType="VARCHAR" />
+
 
 		<!-- 投资人用户属性（投资时） -->
 		<result column="tender_user_attribute" property="tenderUserAttribute" jdbcType="VARCHAR" />
@@ -176,6 +179,7 @@
 		bt.loan_fee AS service_price,
 		bt.`status` AS is_recover,
 		br.create_time AS time_recover,
+		br.loan_batch_no AS loan_batch_no,
 		b.plan_nid,
 		bt.tender_user_attribute AS tender_user_attribute,
 		if(bt.invite_user_id=0 or bt.invite_user_id=null or bt.invite_user_id= '','',bt.invite_user_attribute) AS invite_user_attribute,

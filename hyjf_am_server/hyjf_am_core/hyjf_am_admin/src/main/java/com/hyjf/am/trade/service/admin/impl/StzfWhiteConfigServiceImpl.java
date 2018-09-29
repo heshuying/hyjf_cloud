@@ -41,6 +41,7 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	public void insertSTZHWhiteList(STZHWhiteListRequest request) {
 		StzhWhiteList stzhWhiteList = new StzhWhiteList();
 		BeanUtils.copyProperties(request, stzhWhiteList);
+		stzhWhiteList.setDelFlag(0);
 		stzhWhiteListMapper.insert(stzhWhiteList);
 	}
 

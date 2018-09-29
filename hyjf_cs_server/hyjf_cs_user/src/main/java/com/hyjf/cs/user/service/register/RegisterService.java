@@ -22,19 +22,22 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * 注册参数检查
+     *
      * @param registerRequest
      */
     void checkParam(RegisterRequest registerRequest);
 
     /**
      * api渠道注册参数校验
-     *  @param
+     *
+     * @param
      * @param registerRequest
      */
     void apiCheckParam(RegisterRequest registerRequest);
 
     /**
      * app参数检查
+     *
      * @param registerRequest
      * @return
      */
@@ -42,12 +45,18 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * 通用注册功能实现
-     * @param registerRequest
+     * @param mobile
+     * @param verificationCode
+     * @param password
+     * @param reffer
+     * @param instCode
+     * @param utmId
+     * @param platform
      * @param ip
      * @return
      * @throws ReturnMessageException
      */
-    WebViewUserVO register(RegisterRequest registerRequest, String ip)
+    WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip)
             throws ReturnMessageException;
 
     /**
@@ -62,6 +71,7 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * 融东风注册
+     *
      * @param register
      * @param ipAddr
      * @param platform
@@ -71,6 +81,7 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * 检查活动是否有效
+     *
      * @param activityId 活动id
      * @return
      */
@@ -78,13 +89,15 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * 判断推荐人是否存在
+     *
      * @param recommend
-     * @return  1-存在 0-不存在
+     * @return 1-存在 0-不存在
      */
     int countUserByRecommendName(String recommend);
 
     /**
      * app查询banner
+     *
      * @param adsRequest
      * @return
      */
@@ -92,6 +105,7 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * 微信验证参数
+     *
      * @param mobile
      * @param password
      * @param reffer
@@ -102,6 +116,7 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * 保存用户信息
+     *
      * @param mobile
      * @param password
      * @param verificationCode
@@ -116,14 +131,16 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * 登录操作
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
-    int updateLoginInAction(String userName,String password,String ipAddr);
+    int updateLoginInAction(String userName, String password, String ipAddr);
 
     /**
      * 获取账户id
+     *
      * @param userId
      * @return
      */
@@ -131,6 +148,7 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * 获取授权状态
+     *
      * @param userId
      * @return
      */
