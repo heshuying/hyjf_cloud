@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -111,10 +112,10 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      * @param id
      */
     @Override
-    public void deleteVersionConfig( Integer id) {
+    public void deleteVersionConfig( List<Integer> id) {
         VersionExample example = new VersionExample();
         VersionExample.Criteria cra = example.createCriteria();
-        cra.andIdEqualTo(id);
+        cra.andIdIn(id);
         versionMapper.deleteByExample(example);
     }
 
@@ -138,5 +139,23 @@ public class VersionConfigServiceImpl implements VersionConfigService {
             return record;
         }
         return null;
+    }
+
+
+    /**
+     * 获取最新的版本信息
+     * @author zhangyk
+     * @date 2018/9/5 11:53
+     */
+    @Override
+    public Version getLastestVersion() {
+        VersionExample example = new VersionExample();
+        VersionExample.Criteria cra = example.createCriteria();
+        // 0 PC ,1 Android , 2 IOS , 3 wechat
+        cra.andTypeEqualTo(1);
+        // 版本号最高
+        example.setOrderByClause("id desc");
+        List<Version> versionList = versionMapper.selectByExample(example);
+        return CollectionUtils.isEmpty(versionList) ? new Version() : versionList.get(0);
     }
 }

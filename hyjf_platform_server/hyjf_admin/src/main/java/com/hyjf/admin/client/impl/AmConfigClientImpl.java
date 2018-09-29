@@ -1491,7 +1491,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminVersionResponse versionConfigInit(AdminVersionRequest adminRequest) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/list";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/list";
         AdminVersionResponse response = restTemplate.postForEntity(url, adminRequest, AdminVersionResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1507,7 +1507,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminVersionResponse searchVersionConfigInfo(AdminVersionRequest adminRequest) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/info";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/info";
         AdminVersionResponse response = restTemplate.postForEntity(url, adminRequest, AdminVersionResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1522,7 +1522,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminVersionResponse saveVersionConfig(AdminVersionRequest req) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/insert";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/insert";
         AdminVersionResponse response = restTemplate.postForEntity(url, req, AdminVersionResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1537,7 +1537,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminVersionResponse updateVersionConfig(AdminVersionRequest req) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/update";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/update";
         AdminVersionResponse response = restTemplate.postForEntity(url, req, AdminVersionResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1552,7 +1552,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminVersionResponse deleteVersionConfig(List<Integer> id) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/delete";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/delete";
         AdminVersionResponse response = restTemplate.postForEntity(url, id, AdminVersionResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1567,7 +1567,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public VersionVO getVersionByCode(Integer vid, Integer type, String version) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/validationFeild";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/validationFeild";
         Map<String, Object> map = new HashMap<String, Object>();
         if (vid != null) {
             map.put("vid", vid);
