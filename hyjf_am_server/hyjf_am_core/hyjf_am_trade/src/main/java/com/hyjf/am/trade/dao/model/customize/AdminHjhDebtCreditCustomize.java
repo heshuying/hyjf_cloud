@@ -137,6 +137,15 @@ public class AdminHjhDebtCreditCustomize {
 
     private String repayStatus;
 
+    /**
+     * 债转标签
+     */
+    private String labelName;
+
+    /**
+     * 剩余债权价值总和
+     */
+    private String remainCredit;
 
     private int limitStart = -1;
 
@@ -374,5 +383,21 @@ public class AdminHjhDebtCreditCustomize {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getLabelName() {
+        return labelName;
+    }
+
+    public void setLabelName(String labelName) {
+        this.labelName = labelName;
+    }
+
+    public String getRemainCredit() {
+        return remainCredit;
+    }
+
+    public void setRemainCredit(String remainCredit) {
+        this.remainCredit = remainCredit;
     }
 }
