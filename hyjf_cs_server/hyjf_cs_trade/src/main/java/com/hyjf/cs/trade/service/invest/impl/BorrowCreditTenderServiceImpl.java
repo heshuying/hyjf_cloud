@@ -627,6 +627,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignAccountList.setBankFrost(assignAccount.getBankFrost());
                 assignAccountList.setBankInterestSum(assignAccount.getBankInterestSum());
                 // 银行总资产
+                logger.info("assignAccountList.setBankTotal:   "+assignAccountNew.getBankTotal().add(assignAccount.getBankTotal()));
                 assignAccountList.setBankTotal(assignAccountNew.getBankTotal().add(assignAccount.getBankTotal()));
                 //汇计划账户可用余额
                 assignAccountList.setPlanBalance(assignAccount.getPlanBalance());
@@ -666,7 +667,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 出让人待收利息
                 sellerAccountNew.setBankAwaitInterest(creditTender.getAssignInterest());
                 // 出让人累计收益
-                sellerAccountNew.setBankInterestSum(creditTender.getAssignInterestAdvance());
+                sellerAccountNew.setBankInterestSum((creditTender.getAssignInterestAdvance()==null?BigDecimal.ZERO:creditTender.getAssignInterestAdvance()));
                 sellerAccountNew.setBankBalanceCash(creditTender.getAssignPay().subtract(creditTender.getCreditFee()));
                 // 更新账户信息
                 // 重新获取用户账户信息
@@ -694,7 +695,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 银行待还利息
                 sellerAccountList.setBankAwaitInterest(sellerAccount.getBankAwaitInterest().subtract(sellerAccountNew.getBankAwaitInterest()));
                 // 银行累计收益
-                sellerAccountList.setBankInterestSum(sellerAccountNew.getBankInvestSum().add(sellerAccount.getBankInterestSum()));
+                sellerAccountList.setBankInterestSum(sellerAccountNew.getBankInterestSum().add((sellerAccount.getBankInterestSum()==null?BigDecimal.ZERO:sellerAccount.getBankInterestSum())));
                 // 银行累计投资
                 sellerAccountList.setBankInvestSum(sellerAccount.getBankInvestSum());
                 // 银行存管冻结金额

@@ -30,7 +30,7 @@ import java.util.List;
  * @version: PoundageController, v0.1 2018/9/3 14:45
  * 资金中心-手续费分账
  */
-@RestController
+@RestController(value = "tradePoundageController")
 @RequestMapping(value = "/am-admin/poundage")
 public class PoundageController extends BaseController {
 

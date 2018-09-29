@@ -31,7 +31,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: AdminMobileSynchronizeServiceImpl, v0.1 2018/8/13 14:32
  */
-@Service
+@Service(value = "userAdminMobileSynchronizeServiceImpl")
 public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implements AdminMobileSynchronizeService {
 
     @Autowired

@@ -11,4 +11,13 @@ import com.hyjf.am.vo.admin.AccountRechargeVO;
  * @version: PlatformTransferResponse, v0.1 2018/7/9 11:00
  */
 public class PlatformTransferResponse extends Response<AccountRechargeVO> {
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

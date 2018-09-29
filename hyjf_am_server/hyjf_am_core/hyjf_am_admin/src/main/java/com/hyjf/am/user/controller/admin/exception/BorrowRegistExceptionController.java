@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author: sunpeikai
  * @version: BorrowRegistExceptionController, v0.1 2018/7/3 17:58
  */
-@RestController
+@RestController(value = "userBorrowRegistExceptionController")
 @RequestMapping("/am-user/borrow_regist_exception")
 @Api(value = "异常中心-标的备案掉单",tags ="异常中心-标的备案掉单")
 public class BorrowRegistExceptionController {

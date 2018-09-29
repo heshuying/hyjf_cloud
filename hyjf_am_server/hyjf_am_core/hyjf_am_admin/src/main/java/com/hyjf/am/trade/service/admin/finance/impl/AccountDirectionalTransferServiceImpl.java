@@ -24,7 +24,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: AccountDirectionalTransferServiceImpl, v0.1 2018/7/4 16:56
  */
-@Service
+@Service(value = "tradeAccountDirectionalTransferServiceImpl")
 public class AccountDirectionalTransferServiceImpl extends BaseServiceImpl implements AccountDirectionalTransferService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

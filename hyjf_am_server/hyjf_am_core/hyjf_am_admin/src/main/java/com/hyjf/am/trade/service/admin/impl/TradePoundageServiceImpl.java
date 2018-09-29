@@ -24,7 +24,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: TradePoundageServiceImpl, v0.1 2018/9/3 15:20
  */
-@Service
+@Service(value = "tradeTradePoundageServiceImpl")
 public class TradePoundageServiceImpl extends BaseServiceImpl implements TradePoundageService {
 
     @Autowired

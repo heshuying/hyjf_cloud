@@ -617,4 +617,12 @@ public interface AmAdminClient {
      * @return
      */
     boolean updateAssetException(AssetExceptionRequest assetExceptionRequest);
+
+    /**
+     * 处理平台转账
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateHandRechargeRecord(PlatformTransferRequest platformTransferRequest);
 }

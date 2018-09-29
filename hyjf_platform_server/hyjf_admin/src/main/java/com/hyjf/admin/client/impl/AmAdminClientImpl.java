@@ -1158,4 +1158,20 @@ public class AmAdminClientImpl implements AmAdminClient {
         BooleanResponse response = restTemplate.postForEntity(url, assetExceptionRequest, BooleanResponse.class).getBody();
         return response.getResultBoolean();
     }
+
+    /**
+     * 处理平台转账
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int updateHandRechargeRecord(PlatformTransferRequest platformTransferRequest) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/select_asset_exception_count";
+        PlatformTransferResponse response = restTemplate.postForEntity(url,platformTransferRequest,PlatformTransferResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
 }
