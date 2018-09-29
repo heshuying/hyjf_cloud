@@ -627,6 +627,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignAccountList.setBankFrost(assignAccount.getBankFrost());
                 assignAccountList.setBankInterestSum(assignAccount.getBankInterestSum());
                 // 银行总资产
+                logger.info("assignAccountList.setBankTotal:   "+assignAccountNew.getBankTotal().add(assignAccount.getBankTotal()));
                 assignAccountList.setBankTotal(assignAccountNew.getBankTotal().add(assignAccount.getBankTotal()));
                 //汇计划账户可用余额
                 assignAccountList.setPlanBalance(assignAccount.getPlanBalance());
