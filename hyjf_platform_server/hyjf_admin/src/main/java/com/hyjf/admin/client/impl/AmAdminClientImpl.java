@@ -671,6 +671,16 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
+     * 同步数据字典至redis
+     * @return
+     */
+    @Override
+    public boolean syncParam() {
+        String url = "http://AM-ADMIN/am-config/sync/synParam";
+        return restTemplate.getForEntity(url,Boolean.class).getBody();
+    }
+
+    /**
      * 查询手续费分账配置
      * @auth sunpeikai
      * @param
