@@ -3,32 +3,31 @@
  */
 package com.hyjf.am.user.controller.admin.locked;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
+import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.user.dao.model.auto.LockedUserInfo;
 import com.hyjf.am.user.service.admin.locked.LockedUserService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.google.common.collect.Maps;
-import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
-import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
-import com.hyjf.common.paginator.Paginator;
-
-import io.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Nullable;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author cui

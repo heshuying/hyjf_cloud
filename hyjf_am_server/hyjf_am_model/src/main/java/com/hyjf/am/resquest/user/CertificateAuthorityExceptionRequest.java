@@ -1,11 +1,10 @@
 package com.hyjf.am.resquest.user;
 
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
 
 /**
  * CA认证异常Bean

@@ -1,21 +1,14 @@
 package com.hyjf.am.trade.dao.customize;
 
+import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
-import com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize;
+import com.hyjf.am.trade.dao.mapper.customize.batch.BatchAccountCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.nifa.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
-
-import com.hyjf.am.trade.dao.auto.AutoMapper;
-import com.hyjf.am.trade.dao.mapper.customize.batch.BatchAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractEssenceCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractStatusCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractTemplateCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaReceivedPaymentsCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaRepayInfoCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaReportLogCustomizeMapper;
 
 @Service
 public class CustomizeMapper extends AutoMapper {

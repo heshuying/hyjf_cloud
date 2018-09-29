@@ -3,12 +3,14 @@
  */
 package com.hyjf.am.trade.controller.front.batch;
 
-import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.BorrowRecoverResponse;
+import com.hyjf.am.response.trade.BorrowTenderResponse;
+import com.hyjf.am.response.trade.HjhAccedeResponse;
+import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.batch.BatchHjhBorrowRepayService;
-import com.hyjf.am.vo.trade.CalculateInvestInterestVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;

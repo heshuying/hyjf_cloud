@@ -1,9 +1,9 @@
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
 import com.hyjf.am.resquest.admin.AdminBankRetcodeConfigRequest;
+
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/17.

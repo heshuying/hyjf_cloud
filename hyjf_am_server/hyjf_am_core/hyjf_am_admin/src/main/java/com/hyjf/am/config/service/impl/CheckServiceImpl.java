@@ -3,19 +3,17 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.CouponCheckMapper;
 import com.hyjf.am.config.dao.model.auto.CouponCheck;
 import com.hyjf.am.config.dao.model.auto.CouponCheckExample;
 import com.hyjf.am.config.service.CheckService;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author yaoyong
@@ -33,56 +31,50 @@ public class CheckServiceImpl implements CheckService {
      * @return
      */
     @Override
-    public int countCouponCheck(Map<String, Object> mapParam) {
+    public int countCouponCheck(AdminCouponCheckRequest request) {
         CouponCheckExample couponCheckExample = new CouponCheckExample();
         CouponCheckExample.Criteria criteria = couponCheckExample.createCriteria();
         //未删除
         criteria.andDeFlagEqualTo(0);
 
-        String createTimeStart =(String) mapParam.get("createTimeStart");
-        String createTimeEnd =(String) mapParam.get("createTimeEnd");
-        String status = (String)mapParam.get("status");
+        String createTimeStart =request.getCreateTimeStart();
+        String createTimeEnd =request.getCreateTimeEnd();
+        Integer status = request.getStatus();
         if (StringUtils.isNotBlank(createTimeStart) && StringUtils.isNotBlank(createTimeEnd)) {
             criteria.andCreateTimeBetween( GetDate.str2Timestamp(createTimeStart), GetDate.str2Timestamp(createTimeEnd));
         }
 
-        if (StringUtils.isNotBlank(status)) {
-            criteria.andStatusEqualTo(Integer.valueOf(status));
+        if (status != null) {
+            criteria.andStatusEqualTo(status);
         }
         return couponCheckMapper.countByExample(couponCheckExample);
     }
 
     /**
      * 列表查询
-     * @param mapParam
+     * @param request
      * @param limitStart
      * @param limitEnd
      * @return
      */
     @Override
-    public List<CouponCheck> searchCouponCheck(Map<String, Object> mapParam, int limitStart, int limitEnd) {
-        if (limitStart == 0 || limitStart > 0) {
-            mapParam.put("limitStart", limitStart);
-        }
-        if (limitEnd > 0) {
-            mapParam.put("limitEnd", limitEnd);
-        }
+    public List<CouponCheck> searchCouponCheck(AdminCouponCheckRequest request, int limitStart, int limitEnd) {
         CouponCheckExample couponCheckExample = new CouponCheckExample();
         couponCheckExample.setOrderByClause("create_time desc");
         CouponCheckExample.Criteria criteria = couponCheckExample.createCriteria();
         //未删除
         criteria.andDeFlagEqualTo(0);
 
-        String createTimeStart =(String) mapParam.get("createTimeStart");
-        String createTimeEnd = (String) mapParam.get("createTimeEnd");
-        String status =(String)  mapParam.get("status");
+        String createTimeStart = request.getCreateTimeStart();
+        String createTimeEnd = request.getCreateTimeEnd();
+        Integer status = request.getStatus();
 
         if (StringUtils.isNotBlank(createTimeStart) && StringUtils.isNotBlank(createTimeEnd)) {
             criteria.andCreateTimeBetween( GetDate.str2Timestamp(createTimeStart), GetDate.str2Timestamp(createTimeEnd));
         }
 
-        if (StringUtils.isNotBlank(status)) {
-            criteria.andStatusEqualTo(Integer.valueOf(status));
+        if (status != null) {
+            criteria.andStatusEqualTo(status);
         }
         if (limitStart != -1) {
             couponCheckExample.setLimitStart(limitStart);

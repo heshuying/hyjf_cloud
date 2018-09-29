@@ -11,11 +11,11 @@
 
 package com.hyjf.am.vo.user;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BaseVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
 
 /**
  * @author dongzeshan

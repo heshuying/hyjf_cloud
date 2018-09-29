@@ -3,13 +3,12 @@
  */
 package com.hyjf.am.trade.service.front.consumer.impl;
 
-import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.RUser;
 import com.hyjf.am.trade.service.front.consumer.SyncRUserService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
 /**
  * 同步用户信息服务类

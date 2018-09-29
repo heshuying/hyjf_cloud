@@ -3,11 +3,7 @@
  */
 package com.hyjf.cs.message.bean.ic;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.*;
-
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.ComparatorUtils;
 import org.apache.commons.collections.comparators.ComparableComparator;
@@ -15,7 +11,10 @@ import org.apache.commons.collections.comparators.ComparatorChain;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.alibaba.fastjson.JSONObject;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * @author tanyy

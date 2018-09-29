@@ -1,15 +1,14 @@
 package com.hyjf.common.validator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.KeyValueBean;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * <p>

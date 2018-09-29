@@ -6,7 +6,6 @@ package com.hyjf.am.trade.service.nifa.impl;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.nifa.NifaContractEssenceService;
-import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -3,11 +3,10 @@
  */
 package com.hyjf.am.response.admin;
 
-import java.math.BigDecimal;
-import java.util.Map;
-
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
+
+import java.util.Map;
 /**
  * @author libin
  * @version HjhCommissionResponse.java, v0.1 2018年8月7日 下午4:10:42

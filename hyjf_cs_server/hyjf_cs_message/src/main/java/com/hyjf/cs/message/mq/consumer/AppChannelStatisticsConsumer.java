@@ -3,8 +3,8 @@
  */
 package com.hyjf.cs.message.mq.consumer;
 
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.message.bean.ic.AppChannelStatistics;
 import com.hyjf.cs.message.mongo.ic.AppChannelStatisticsDao;
 import com.hyjf.cs.message.mq.base.Consumer;
@@ -21,8 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.constants.MQConstant;
+import java.util.List;
 
 /**
  * @author fuqiang

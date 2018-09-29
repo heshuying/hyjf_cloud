@@ -21,6 +21,8 @@ public class BorrowCreditAmRequest {
 
     private Integer limitEnd;
 
+    private String client;
+
     /**
      * 标注，调用接口是初次调用，还是点击搜索按钮(1:是  0:否)
      */
@@ -96,5 +98,13 @@ public class BorrowCreditAmRequest {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
     }
 }

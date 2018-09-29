@@ -4,7 +4,6 @@ import com.hyjf.admin.beans.BaseRequest;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author nxl

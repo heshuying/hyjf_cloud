@@ -1,14 +1,13 @@
 package com.hyjf.cs.trade.mq.handle;
 
-import java.util.Map;
-
+import com.hyjf.am.vo.user.UtmRegVO;
+import com.hyjf.cs.trade.client.AmUserClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.hyjf.am.vo.user.UtmRegVO;
-import com.hyjf.cs.trade.client.AmUserClient;
+import java.util.Map;
 
 /**
  * @Description 更新huiyingdai_utm_reg的首投信息

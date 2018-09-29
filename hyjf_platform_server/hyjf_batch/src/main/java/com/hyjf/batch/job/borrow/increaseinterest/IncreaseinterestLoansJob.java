@@ -1,5 +1,6 @@
 package com.hyjf.batch.job.borrow.increaseinterest;
 
+import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -7,8 +8,6 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-
-import com.hyjf.batch.job.BaseJob;
 
 /**
  * 产品加息放款批处理任务

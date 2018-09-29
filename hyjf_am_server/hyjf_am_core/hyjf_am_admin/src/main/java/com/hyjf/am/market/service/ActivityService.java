@@ -1,11 +1,11 @@
 package com.hyjf.am.market.service;
 
-import java.util.List;
-
 import com.hyjf.am.market.dao.model.auto.ActivityList;
 import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -84,4 +84,11 @@ public interface ActivityService {
     public List<ActivityList> getActivity(int day);
 
     List<ActivityList> getActivityList();
+
+    /**
+     * 获取活动详情
+     * @param id
+     * @return
+     */
+    ActivityList getActivityInfo(Integer id);
 }

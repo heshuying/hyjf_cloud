@@ -1,12 +1,12 @@
 package com.hyjf.am.trade.service.admin.borrow;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/30.

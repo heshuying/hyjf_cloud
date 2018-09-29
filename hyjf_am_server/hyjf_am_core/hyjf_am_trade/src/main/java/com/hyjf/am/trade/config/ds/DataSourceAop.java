@@ -1,11 +1,10 @@
 package com.hyjf.am.trade.config.ds;
 
+import com.hyjf.common.constants.CommonConstant;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
-
-import com.hyjf.common.constants.CommonConstant;
 
 @Aspect
 @Component

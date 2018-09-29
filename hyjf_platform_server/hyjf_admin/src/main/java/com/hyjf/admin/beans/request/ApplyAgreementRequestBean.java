@@ -1,8 +1,6 @@
 package com.hyjf.admin.beans.request;
 
-import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
 import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
-import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
 
 import java.io.Serializable;
 import java.util.List;

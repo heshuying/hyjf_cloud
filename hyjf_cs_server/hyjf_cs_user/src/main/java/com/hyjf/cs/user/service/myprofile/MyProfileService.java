@@ -2,8 +2,6 @@ package com.hyjf.cs.user.service.myprofile;
 
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.MyProfileVO;
 import com.hyjf.cs.user.vo.UserAccountInfoVO;

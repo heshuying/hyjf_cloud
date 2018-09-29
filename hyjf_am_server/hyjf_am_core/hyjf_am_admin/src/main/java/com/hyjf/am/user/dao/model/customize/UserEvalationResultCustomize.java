@@ -1,8 +1,8 @@
 package com.hyjf.am.user.dao.model.customize;
 
-import java.io.Serializable;
-
 import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
+
+import java.io.Serializable;
 
 public class UserEvalationResultCustomize extends UserEvalationResult implements Serializable {
     private String typeString;

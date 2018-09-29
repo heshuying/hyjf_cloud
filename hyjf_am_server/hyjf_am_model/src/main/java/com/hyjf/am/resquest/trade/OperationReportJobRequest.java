@@ -5,10 +5,7 @@ package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.resquest.Request;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 

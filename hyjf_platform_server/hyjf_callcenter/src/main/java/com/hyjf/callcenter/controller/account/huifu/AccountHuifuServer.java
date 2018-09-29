@@ -1,21 +1,5 @@
 package com.hyjf.callcenter.controller.account.huifu;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.vo.callcenter.CallcenterAccountHuifuVO;
 import com.hyjf.am.vo.callcenter.CallcenterBankConfigVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -25,9 +9,18 @@ import com.hyjf.callcenter.beans.UserBean;
 import com.hyjf.callcenter.controller.base.CallcenterBaseController;
 import com.hyjf.callcenter.result.BaseResultBean;
 import com.hyjf.callcenter.service.AccountHuifuService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author libin

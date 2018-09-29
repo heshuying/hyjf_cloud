@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import com.hyjf.am.vo.BasePage;
 
 /**
  * @author fuqiang

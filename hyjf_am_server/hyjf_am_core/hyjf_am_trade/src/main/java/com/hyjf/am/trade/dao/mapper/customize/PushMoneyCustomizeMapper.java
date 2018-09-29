@@ -4,8 +4,8 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 
 import java.util.List;
 import java.util.Map;

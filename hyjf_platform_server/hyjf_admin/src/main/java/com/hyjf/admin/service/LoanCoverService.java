@@ -10,9 +10,6 @@ import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author nxl
  * @version LoanCoverService, v0.1 2018/6/26 17:10

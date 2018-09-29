@@ -10,7 +10,6 @@ import com.hyjf.am.market.service.ContentAdsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ContentAdsResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
-import com.hyjf.am.vo.admin.AdsTypeVO;
 import com.hyjf.am.vo.admin.AdsVO;
 import com.hyjf.am.vo.config.ContentAdsBeanVO;
 import com.hyjf.common.paginator.Paginator;

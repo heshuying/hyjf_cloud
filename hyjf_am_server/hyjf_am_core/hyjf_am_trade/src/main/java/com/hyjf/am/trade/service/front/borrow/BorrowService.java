@@ -7,7 +7,6 @@ import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.bean.repay.ProjectBean;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.service.BaseService;
@@ -17,6 +16,7 @@ import com.hyjf.am.vo.trade.ProjectBeanVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
@@ -65,7 +65,7 @@ public interface BorrowService extends BaseService {
      * 检索正在还款中的标的
      * @return
      */
-    List<Borrow> selectBorrowList();
+    List<BorrowAndInfoVO> selectBorrowList();
 
     /**
      * 投资之前插入tmp表

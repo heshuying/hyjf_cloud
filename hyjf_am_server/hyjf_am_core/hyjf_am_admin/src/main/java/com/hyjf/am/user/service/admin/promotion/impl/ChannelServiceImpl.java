@@ -3,13 +3,12 @@
  */
 package com.hyjf.am.user.service.admin.promotion.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.user.dao.model.customize.ChannelCustomize;
 import com.hyjf.am.user.service.admin.promotion.ChannelService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author yaoyong

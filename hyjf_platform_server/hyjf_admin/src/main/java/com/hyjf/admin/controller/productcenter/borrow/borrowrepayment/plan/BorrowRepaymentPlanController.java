@@ -1,12 +1,7 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowrepayment.plan;
 
-import com.hyjf.admin.beans.BorrowRepaymentBean;
 import com.hyjf.admin.beans.BorrowRepaymentPlanBean;
-import com.hyjf.admin.beans.DelayRepayInfoBean;
-import com.hyjf.admin.beans.RepayInfoBean;
 import com.hyjf.admin.beans.request.BorrowRepaymentPlanRequestBean;
-import com.hyjf.admin.beans.request.BorrowRepaymentRequestBean;
-import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -15,17 +10,13 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowRepaymentService;
 import com.hyjf.admin.utils.ConvertUtils;
-import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
-import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentPlanCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -45,7 +36,6 @@ import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao

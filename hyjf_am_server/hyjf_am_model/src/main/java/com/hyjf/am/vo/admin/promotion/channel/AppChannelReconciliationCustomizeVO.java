@@ -1,7 +1,6 @@
 package com.hyjf.am.vo.admin.promotion.channel;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * @Auther: walter.limeng

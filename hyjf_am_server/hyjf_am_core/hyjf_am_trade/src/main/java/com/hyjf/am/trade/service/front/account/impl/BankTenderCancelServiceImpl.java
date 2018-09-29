@@ -1,8 +1,11 @@
 package com.hyjf.am.trade.service.front.account.impl;
 
 import com.hyjf.am.resquest.trade.TenderCancelRequest;
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderTmpMapper;
+import com.hyjf.am.trade.dao.mapper.auto.FreezeHistoryMapper;
+import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
+import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpExample;
+import com.hyjf.am.trade.dao.model.auto.FreezeHistory;
 import com.hyjf.am.trade.service.front.account.BankTenderCancelService;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.common.util.GetDate;

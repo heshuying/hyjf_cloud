@@ -1,11 +1,9 @@
 package com.hyjf.am.vo.trade;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
+import java.text.DecimalFormat;
 
 public class UserHjhInvistDetailCustomizeVO extends BaseVO implements Serializable {
 
@@ -40,7 +38,8 @@ public class UserHjhInvistDetailCustomizeVO extends BaseVO implements Serializab
     private String waitCaptical;
     // 还款方式 代号
     private String repayStyle;
-
+    // add by nxl 20180903 智投服务添加计息结束日
+    private String endInterestTime;
     public String getPlanNid() {
         return planNid;
     }
@@ -239,5 +238,13 @@ public class UserHjhInvistDetailCustomizeVO extends BaseVO implements Serializab
 
     public void setRepayStyle(String repayStyle) {
         this.repayStyle = repayStyle;
+    }
+
+    public String getEndInterestTime() {
+        return endInterestTime;
+    }
+
+    public void setEndInterestTime(String endInterestTime) {
+        this.endInterestTime = endInterestTime;
     }
 }

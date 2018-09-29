@@ -1,8 +1,8 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.customize.AdminRoleCustomize;
+
+import java.util.List;
 
 
 public interface AdminRoleCustomizeMapper {

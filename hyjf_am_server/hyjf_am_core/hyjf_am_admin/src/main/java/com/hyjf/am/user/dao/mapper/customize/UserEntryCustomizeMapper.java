@@ -3,11 +3,10 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
-import java.util.List;
-
+import com.hyjf.am.user.dao.model.auto.UserInfo;
 import org.apache.ibatis.annotations.Param;
 
-import com.hyjf.am.user.dao.model.auto.UserInfo;
+import java.util.List;
 /**
  * @author wangjun
  * @version UserEntryCustomizeMapper, v0.1 2018/6/12 16:06

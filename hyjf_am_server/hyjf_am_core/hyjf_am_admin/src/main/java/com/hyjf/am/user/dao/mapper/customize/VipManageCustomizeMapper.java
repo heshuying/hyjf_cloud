@@ -3,11 +3,13 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.user.dao.model.customize.VipManageListCustomize;
+import com.hyjf.am.vo.user.VipAuthVO;
+
 import java.util.List;
 import java.util.Map;
 
-import com.hyjf.am.user.dao.model.customize.VipManageListCustomize;
-import com.hyjf.am.vo.user.VipAuthVO; /**
+/**
  * @author yaoyong
  * @version VipManageCustomizeMapper, v0.1 2018/7/2 18:08
  */

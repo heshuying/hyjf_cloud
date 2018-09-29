@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.service.invite;
 
-import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 import com.hyjf.cs.user.service.BaseUserService;
 

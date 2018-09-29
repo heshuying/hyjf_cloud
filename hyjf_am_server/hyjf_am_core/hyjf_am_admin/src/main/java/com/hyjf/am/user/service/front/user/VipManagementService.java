@@ -9,7 +9,9 @@ import com.hyjf.am.user.dao.model.customize.VipUpdateGradeListCustomize;
 import com.hyjf.am.user.service.BaseService;
 
 import java.util.List;
-import java.util.Map; /**
+import java.util.Map;
+
+/**
  * @author yaoyong
  * @version VipManagementService, v0.1 2018/7/2 17:48
  */

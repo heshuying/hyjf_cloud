@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.trade.service.admin;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -18,7 +18,7 @@ public interface StzfWhiteConfigService {
 	 *
 	 * @return
 	 */
-	List<StzhWhiteList> selectSTZHWhiteList(STZHWhiteListRequest request);
+	List<StzhWhiteList> selectSTZHWhiteList(STZHWhiteListRequest request, int offset, int limit);
 
 	/**
 	 * 添加受托支付白名单
@@ -40,4 +40,11 @@ public interface StzfWhiteConfigService {
 	 * @return
 	 */
     StzhWhiteList selectStzfWhiteById(Integer id);
+
+	/**
+	 * 计算受托支付列表条数
+	 * @param request
+	 * @return
+	 */
+	int countSTZFHWhiteList(STZHWhiteListRequest request);
 }

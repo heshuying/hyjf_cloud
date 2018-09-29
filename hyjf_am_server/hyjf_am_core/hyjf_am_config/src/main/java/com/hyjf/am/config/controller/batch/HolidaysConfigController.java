@@ -4,20 +4,15 @@
 package com.hyjf.am.config.controller.batch;
 
 import com.hyjf.am.config.controller.BaseConfigController;
-import com.hyjf.am.config.dao.model.auto.HolidaysConfig;
 import com.hyjf.am.config.service.HolidaysConfigService;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
-import com.hyjf.am.resquest.admin.AdminHolidaysConfigRequest;
-import com.hyjf.am.vo.trade.HolidaysConfigVO;
-import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author yaoy

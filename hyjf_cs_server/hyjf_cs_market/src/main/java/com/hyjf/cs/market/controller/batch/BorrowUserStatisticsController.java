@@ -4,12 +4,11 @@
 package com.hyjf.cs.market.controller.batch;
 
 import com.hyjf.am.response.StringResponse;
+import com.hyjf.cs.market.controller.BaseMarketController;
+import com.hyjf.cs.market.service.BorrowUserStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.hyjf.cs.market.controller.BaseMarketController;
-import com.hyjf.cs.market.service.BorrowUserStatisticsService;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**

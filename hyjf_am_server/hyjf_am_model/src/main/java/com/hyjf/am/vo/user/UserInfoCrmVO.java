@@ -3,7 +3,6 @@ package com.hyjf.am.vo.user;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @Description 用户部门信息

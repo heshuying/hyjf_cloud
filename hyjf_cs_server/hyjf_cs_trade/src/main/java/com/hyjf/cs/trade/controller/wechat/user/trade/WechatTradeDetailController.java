@@ -3,19 +3,15 @@
  */
 package com.hyjf.cs.trade.controller.wechat.user.trade;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
-import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomize;
 import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.bean.app.AppTradeDetailBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.trade.TradeDetailService;
-import com.hyjf.cs.trade.util.ProjectConstant;
 import com.hyjf.cs.trade.vo.BaseResultBean;
 import com.hyjf.cs.trade.vo.SimpleResultBean;
 import io.swagger.annotations.Api;

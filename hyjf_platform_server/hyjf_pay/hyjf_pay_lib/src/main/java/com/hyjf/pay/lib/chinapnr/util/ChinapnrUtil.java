@@ -1,12 +1,9 @@
 package com.hyjf.pay.lib.chinapnr.util;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.chinapnr.MerPriv;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.spring.SpringUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.config.URLSystemConfig;
@@ -17,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.net.URLEncoder;
 import java.util.Map;
 
 /**

@@ -3,19 +3,16 @@
  */
 package com.hyjf.admin.controller.locked;
 
-import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
-import com.hyjf.am.vo.config.AdminSystemVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.locked.LockedUserService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
-
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 

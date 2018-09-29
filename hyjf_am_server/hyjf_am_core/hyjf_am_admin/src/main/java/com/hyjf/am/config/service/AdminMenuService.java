@@ -1,12 +1,11 @@
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
-import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.config.dao.model.customize.AdminCustomize;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.resquest.config.AdminMenuRequest;
+
+import java.util.List;
 
 
 public interface AdminMenuService {

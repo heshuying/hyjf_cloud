@@ -3,7 +3,6 @@ package com.hyjf.am.response.trade;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.am.vo.market.EventsVO;
 
 import java.util.List;
 

@@ -3,11 +3,10 @@
  */
 package com.hyjf.admin.beans;
 
-import java.io.Serializable;
-
 import com.alibaba.fastjson.JSONObject;
-
 import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
 
 /**
  * @author libin

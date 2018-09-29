@@ -85,6 +85,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1637,7 +1638,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BorrowAndInfoVO> selectBorrowList() {
         BorrowResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/trade/selectRepayBorrowList/",
+                "http://AM-TRADE/am-trade/borrow/selectBorrowList/",
                 BorrowResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -1792,7 +1793,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<BorrowRepayPlanVO> selectBorrowRepayPlan(String borrowNid, Integer repaySmsReminder) {
 
         BorrowRepayPlanResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/borrowRepayPlan/selectBorrowRepayPlan/" + borrowNid + "/" + repaySmsReminder,
+                "http://AM-TRADE/am-trade/borrowRepayPlan/selectBorrowPlanRepayList/" + borrowNid + "/" + repaySmsReminder,
                 BorrowRepayPlanResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -3781,7 +3782,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<AppAdsCustomizeVO> getBannerList(AdsRequest request) {
         AppAdsCustomizeResponse response = restTemplate.postForEntity("http://AM-MARKET/am-market/ads/searchBanner",request,AppAdsCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)){
-            return response.getResultList();
+            List<AppAdsCustomizeVO> list = new ArrayList<>();
+            if (response.getResult() != null){
+                list.add(response.getResult());
+            }
+            return list;
         }
         return null;
     }

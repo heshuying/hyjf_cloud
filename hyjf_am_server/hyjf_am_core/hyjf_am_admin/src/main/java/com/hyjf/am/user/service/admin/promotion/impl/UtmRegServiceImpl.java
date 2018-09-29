@@ -3,15 +3,14 @@
  */
 package com.hyjf.am.user.service.admin.promotion.impl;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.user.dao.model.auto.UtmReg;
 import com.hyjf.am.user.service.admin.promotion.UtmRegService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.GetDate;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author fuqiang

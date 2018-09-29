@@ -1,9 +1,14 @@
 package com.hyjf.cs.trade.mq.consumer;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.coupon.UserCouponBean;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.security.util.MD5;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.service.coupon.CouponSendMessageService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -17,15 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.coupon.UserCouponBean;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.security.util.MD5;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.mq.base.Consumer;
-import com.hyjf.cs.trade.service.coupon.CouponSendMessageService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: walter.limeng

@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.BankCardExceptionRequest;
 import com.hyjf.am.user.dao.model.customize.AdminBankCardExceptionCustomize;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai

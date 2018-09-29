@@ -29,16 +29,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author jijun
@@ -72,8 +68,15 @@ public class WithdrawController extends BaseController {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 
-		List<AdminWithdrawAPIVO> apiList=CommonUtils.convertBeanList(response.getResultList(), AdminWithdrawAPIVO.class);
-		return new AdminResult<ListResult<AdminWithdrawAPIVO>>(ListResult.build(apiList, response.getCount()));
+		List<AdminWithdrawAPIVO> apiList = new ArrayList<AdminWithdrawAPIVO>();
+
+		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			apiList=CommonUtils.convertBeanList(response.getResultList(), AdminWithdrawAPIVO.class);
+			return new AdminResult<ListResult<AdminWithdrawAPIVO>>(ListResult.build(apiList, response.getCount()));
+		}else {
+			return new AdminResult<ListResult<AdminWithdrawAPIVO>>(ListResult.build(apiList,0));
+
+		}
 	}
 
 	/**

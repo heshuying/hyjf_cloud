@@ -9,6 +9,7 @@ import com.hyjf.am.vo.admin.BorrowLogCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +39,8 @@ public class BorrowLogServiceImpl implements BorrowLogService {
         if (count != null && count > 0) {
             List<BorrowLogCustomizeVO> recordList = this.amTradeClient.selectBorrowLogList(request);
             bean.setRecordList(recordList);
+        }else{
+            bean.setRecordList(new ArrayList<BorrowLogCustomizeVO>());
         }
         return bean;
     }

@@ -316,6 +316,28 @@ public class UserManagerController extends BaseController {
     }
 
     /**
+     * 根据用户List id查找用户表
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/selectUserByListUserId/{userId}")
+    public UserResponse selectUserByListUserId(@PathVariable List userId) {
+        UserResponse response = new UserResponse();
+        logger.info("---selectUserByUserId---  " + userId);
+        List<UserVO> userVO = new ArrayList<UserVO>();
+        List<User> user = userManagerService.selectUserByListUserId(userId);
+        if (null != user) {
+            BeanUtils.copyProperties(user,userVO);
+            response.setResultList(userVO);
+            response.setRtn(Response.SUCCESS);//代表成功
+            return response;
+        }
+        return null;
+    }
+
+
+    /**
      * 根據accounId獲取開戶信息
      *
      * @param accountId

@@ -3,18 +3,17 @@
  */
 package com.hyjf.am.trade.service.admin.impl;
 
-import java.util.List;
-
-import com.hyjf.common.util.GetDate;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteListExample;
 import com.hyjf.am.trade.service.admin.StzfWhiteConfigService;
+import com.hyjf.common.util.GetDate;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -26,11 +25,11 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	private StzhWhiteListMapper stzhWhiteListMapper;
 
 	@Override
-	public List<StzhWhiteList> selectSTZHWhiteList(STZHWhiteListRequest request) {
+	public List<StzhWhiteList> selectSTZHWhiteList(STZHWhiteListRequest request, int limitStart, int limitEnd) {
 		StzhWhiteListExample example = new StzhWhiteListExample();
-		if (request != null && request.getLimitStart() > 0 && request.getLimitEnd() > 0) {
-			example.setLimitStart(request.getLimitStart());
-			example.setLimitEnd(request.getLimitEnd());
+		if (limitStart != -1) {
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
 		}
 		return stzhWhiteListMapper.selectByExample(example);
 	}
@@ -63,4 +62,11 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 		StzhWhiteList pushMoney = stzhWhiteListMapper.selectByPrimaryKey(id);
 		return pushMoney;
     }
+
+	@Override
+	public int countSTZFHWhiteList(STZHWhiteListRequest request) {
+		StzhWhiteListExample example = new StzhWhiteListExample();
+		int count = stzhWhiteListMapper.countByExample(example);
+		return count;
+	}
 }

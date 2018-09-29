@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AssetExceptionCustomizeMapper" >
+    <resultMap id="BaseResultMap" type="com.hyjf.am.vo.admin.AssetExceptionCustomizeVO" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+        <result column="inst_name" property="instName" jdbcType="VARCHAR" />
+        <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+        <result column="account" property="account" jdbcType="DECIMAL" />
+        <result column="exception_type" property="exceptionType" jdbcType="TINYINT" />
+        <result column="exception_remark" property="exceptionRemark" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="exception_time" property="exceptionTime" jdbcType="VARCHAR" />
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+        <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Where_Clause">
+        <if test="borrowNidSrch != null and borrowNidSrch != ''">
+            AND hbd.borrow_nid = #{borrowNidSrch}
+        </if>
+        <if test="instCodeSrch != null and instCodeSrch != ''">
+            AND hbd.inst_code = #{instCodeSrch}
+        </if>
+        <if test="timeStartSrch != null and timeStartSrch != ''">
+            AND STR_TO_DATE(hbd.exception_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{timeStartSrch},'00:00:00'
+            ),'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="timeEndSrch != null and timeEndSrch != ''">
+            AND STR_TO_DATE(hbd.exception_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{timeEndSrch},'23:59:59'
+            ),'%Y-%m-%d %H:%i:%s')
+        </if>
+    </sql>
+
+    <select id="countBorrowDelete" resultType="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.AssetExceptionRequest">
+        SELECT
+        COUNT(hbd.id)
+        FROM
+        ht_borrow_delete hbd
+        INNER JOIN ht_hjh_inst_config hhic ON hbd.inst_code = hhic.inst_code
+        INNER JOIN hyjf_config.ht_param_name hpn ON hpn.name_class = 'BORROW_STATUS'
+        AND hpn.name_cd = hbd.`status`
+        <include refid="Where_Clause" />
+    </select>
+
+    <select id="selectBorrowDeleteList" resultMap="BaseResultMap"
+            parameterType="com.hyjf.am.resquest.admin.AssetExceptionRequest">
+        SELECT
+        hbd.id,
+        hbd.inst_code,
+        hhic.inst_name,
+        hbd.borrow_nid,
+        hbd.account,
+        hbd.exception_type,
+        hbd.exception_remark,
+        hpn.`name` AS `status`,
+        hbd.exception_time
+        FROM
+        ht_borrow_delete hbd
+        INNER JOIN ht_hjh_inst_config hhic ON hbd.inst_code = hhic.inst_code
+        INNER JOIN hyjf_config.ht_param_name hpn ON hpn.name_class = 'BORROW_STATUS'
+        AND hpn.name_cd = hbd.`status`
+        <include refid="Where_Clause" />
+        ORDER BY hbd.exception_time DESC
+        <if test="limitStart != null and limitEnd !=null and limitStart >=0" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+
+</mapper>

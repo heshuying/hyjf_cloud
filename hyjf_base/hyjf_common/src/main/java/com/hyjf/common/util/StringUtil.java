@@ -1,11 +1,11 @@
 package com.hyjf.common.util;
 
+import com.hyjf.common.constants.MsgCode;
+import com.hyjf.common.validator.Validator;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.hyjf.common.constants.MsgCode;
-import com.hyjf.common.validator.Validator;
 
 /**
  * <p>

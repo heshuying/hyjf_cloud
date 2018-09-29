@@ -3,23 +3,15 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.BankSettingService;
 import com.hyjf.am.response.admin.AdminBankSettingResponse;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
-import com.hyjf.common.file.UploadFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**

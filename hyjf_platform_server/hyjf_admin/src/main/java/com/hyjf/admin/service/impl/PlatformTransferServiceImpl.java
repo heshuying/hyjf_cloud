@@ -212,7 +212,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
             // 查询商户子账户余额
             String merrpAccount = BANK_MERRP_ACCOUNT;
             BigDecimal bankBalance = this.getBankBalance(loginUserId, merrpAccount);
-
+            logger.info("账户余额::::::[{}],转账金额::::::::[{}]",bankBalance,platformTransferRequest.getMoney());
             if (bankBalance.compareTo(platformTransferRequest.getMoney()) <= 0) {
                 result.put("status", "error");
                 result.put("result", "红包账户余额不足,请先充值或向该子账户转账!");
@@ -256,12 +256,14 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
                 resultBean = BankCallUtils.callApiBg(bean);
             } catch (Exception e) {
                 e.printStackTrace();
+                logger.info("调用银行出错,e:[{}]",e.getMessage());
                 result.put("status", "error");
                 result.put("result", "平台转账发生错误,请重新操作!");
                 return result;
             }
 
             if (resultBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                logger.info("调用银行未返回或者返回失败，银行返回码:[{}]",resultBean.getRetCode());
                 result.put("status", "error");
                 result.put("result", "平台转账发生错误,请重新操作!");
                 return result;
@@ -280,10 +282,12 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
                 result.put("status", "0");
                 result.put("result", "平台转账操作成功!");
             } else {
+                logger.info("调用银行成功后，插入数据表失败");
                 result.put("status", "error");
                 result.put("result", "平台转账发生错误,请重新操作!");
             }
         } else {
+            logger.info("密码错误");
             result.put("status", "error");
             result.put("result", "密码错误,请重新操作!");
         }
@@ -324,7 +328,9 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         bean.setLogClient(0);
         try{
             BankCallBean resultBean = BankCallUtils.callApiBg(bean);
+            logger.info("银行返回的报文:[{}]",JSON.toJSONString(resultBean));
             if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                logger.info("银行返回的code:[{}]",resultBean.getRetCode());
                 balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
             }
         } catch (Exception e) {
@@ -498,7 +504,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
 
 
         // 添加红包账户明细
-        BankMerchantAccountVO bankMerchantAccountVO = amTradeClient.searchBankMerchantAccountByAccountId(Integer.valueOf(bankBean.getAccountId()));
+        BankMerchantAccountVO bankMerchantAccountVO = amTradeClient.searchBankMerchantAccountByAccountId(bankBean.getAccountId());
         bankMerchantAccountVO.setAvailableBalance(bankMerchantAccountVO.getAvailableBalance().subtract(money));
         bankMerchantAccountVO.setAccountBalance(bankMerchantAccountVO.getAccountBalance().subtract(money));
         bankMerchantAccountVO.setUpdateTime(GetDate.getNowTime());

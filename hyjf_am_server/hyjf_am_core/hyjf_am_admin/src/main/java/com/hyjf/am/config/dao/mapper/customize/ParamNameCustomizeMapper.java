@@ -1,7 +1,8 @@
 package com.hyjf.am.config.dao.mapper.customize;
-import java.util.List;
 
 import com.hyjf.am.config.dao.model.auto.ParamName;
+
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/30.

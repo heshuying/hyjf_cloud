@@ -4,7 +4,6 @@
 package com.hyjf.am.response.config;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 
 /**

@@ -3,16 +3,11 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.user.dao.model.auto.UserChangeLog;
+import com.hyjf.am.user.dao.model.customize.*;
+
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.user.dao.model.auto.UserChangeLog;
-import com.hyjf.am.user.dao.model.customize.UserBankOpenAccountCustomize;
-import com.hyjf.am.user.dao.model.customize.UserInfoForLogCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerDetailCustomize;
-import com.hyjf.am.user.dao.model.customize.UserManagerUpdateCustomize;
-import com.hyjf.am.user.dao.model.customize.UserRecommendCustomize;
 
 /**
  * @author Administrator

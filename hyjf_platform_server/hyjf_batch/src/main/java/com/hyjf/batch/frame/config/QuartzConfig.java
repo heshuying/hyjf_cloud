@@ -1,8 +1,5 @@
 package com.hyjf.batch.frame.config;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
@@ -12,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * @author xiasq

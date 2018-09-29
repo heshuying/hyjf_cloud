@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.config.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author yinhui

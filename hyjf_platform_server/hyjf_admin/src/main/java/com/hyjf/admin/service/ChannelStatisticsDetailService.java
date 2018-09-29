@@ -4,7 +4,6 @@
 package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 

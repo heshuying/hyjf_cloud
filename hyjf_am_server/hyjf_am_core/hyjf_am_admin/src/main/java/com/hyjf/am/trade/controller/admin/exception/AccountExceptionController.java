@@ -3,17 +3,6 @@
  */
 package com.hyjf.am.trade.controller.admin.exception;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountExceptionResponse;
 import com.hyjf.am.resquest.admin.AccountExceptionRequest;
@@ -23,9 +12,13 @@ import com.hyjf.am.trade.service.admin.exception.AccountExceptionService;
 import com.hyjf.am.vo.admin.AccountExceptionVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai

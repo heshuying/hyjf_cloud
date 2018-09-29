@@ -1,7 +1,10 @@
 package com.hyjf.am.trade.mq;
 
-import java.util.UUID;
-
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.trade.AmTradeApplication;
+import com.hyjf.am.trade.mq.transactionmq.AccountTProducer;
+import com.hyjf.am.trade.mq.transactionmq.TransactionProducer;
+import com.hyjf.common.exception.MQException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,11 +15,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.trade.AmTradeApplication;
-import com.hyjf.am.trade.mq.transactionmq.AccountTProducer;
-import com.hyjf.am.trade.mq.transactionmq.TransactionProducer;
-import com.hyjf.common.exception.MQException;
+import java.util.UUID;
 
 /**
  * @author xiasq

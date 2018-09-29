@@ -1,7 +1,6 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
 import com.hyjf.am.user.dao.model.auto.UserPortrait;
-import com.hyjf.am.user.dao.model.customize.ChangeLogCustomize;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.resquest.config;
 
-import com.hyjf.am.resquest.Request;
 import com.hyjf.am.vo.BasePage;
 
 import java.io.Serializable;

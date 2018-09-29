@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.VipDetailListResponse;
 import com.hyjf.am.response.admin.VipManageResponse;
@@ -12,7 +11,6 @@ import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
 import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 

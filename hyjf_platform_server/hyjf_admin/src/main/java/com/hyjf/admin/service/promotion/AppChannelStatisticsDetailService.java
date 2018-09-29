@@ -1,6 +1,6 @@
 package com.hyjf.admin.service.promotion;
 
-import com.hyjf.am.response.admin.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.user.UtmPlatVO;
 

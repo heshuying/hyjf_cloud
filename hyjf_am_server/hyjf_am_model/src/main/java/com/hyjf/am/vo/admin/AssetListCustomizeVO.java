@@ -1,9 +1,9 @@
 package com.hyjf.am.vo.admin;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-
-import com.hyjf.am.vo.BaseVO;
 
 public class AssetListCustomizeVO extends BaseVO implements Serializable {
 
@@ -109,6 +109,18 @@ public class AssetListCustomizeVO extends BaseVO implements Serializable {
 
 	public void setUserType(String userType) {
 		this.userType = userType;
+	}
+	/**
+	 * 用户ID
+	 * */
+	private String userId;
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	/**

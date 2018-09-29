@@ -1,11 +1,7 @@
 package com.hyjf.am.market.config.ds;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
+import com.hyjf.am.market.config.ds.DynamicDataSourceContextHolder.DbType;
+import com.hyjf.common.constants.CommonConstant;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -24,8 +20,10 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
-import com.hyjf.am.market.config.ds.DynamicDataSourceContextHolder.DbType;
-import com.hyjf.common.constants.CommonConstant;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 @Configuration
 @MapperScan("com.hyjf.am.*.dao.mapper")

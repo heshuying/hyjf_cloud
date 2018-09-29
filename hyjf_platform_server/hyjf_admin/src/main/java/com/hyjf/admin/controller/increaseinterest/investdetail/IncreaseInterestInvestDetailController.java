@@ -1,11 +1,13 @@
 package com.hyjf.admin.controller.increaseinterest.investdetail;
 
 import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.List2Result;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.IncreaseInterestInvestDetailService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.IncreaseInterestInvestDetailResponse;
 import com.hyjf.am.resquest.admin.IncreaseInterestInvestDetailRequest;
 import com.hyjf.am.vo.admin.IncreaseInterestInvestVO;
 import com.hyjf.common.util.CustomConstants;
@@ -20,8 +22,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.am.response.admin.IncreaseInterestInvestDetailResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;

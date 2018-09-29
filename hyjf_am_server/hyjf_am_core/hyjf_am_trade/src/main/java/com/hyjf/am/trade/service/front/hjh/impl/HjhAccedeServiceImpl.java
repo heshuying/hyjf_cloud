@@ -3,15 +3,12 @@
  */
 package com.hyjf.am.trade.service.front.hjh.impl;
 
-import com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BatchHjhAccedeCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
 import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
 import com.hyjf.am.trade.service.front.hjh.HjhAccedeService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
