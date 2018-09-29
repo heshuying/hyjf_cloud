@@ -314,7 +314,6 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         account.setPlanCapitalWait(accountDecimal);
         // 计划待收利息
         account.setPlanAccountWait(accountDecimal.add(request.getEarnings()));
-
         // 更新用户计划账户
         boolean accountFlag = hjhPlanCustomizeMapper.updateOfPlanJoin(account)> 0 ? true : false;
 
