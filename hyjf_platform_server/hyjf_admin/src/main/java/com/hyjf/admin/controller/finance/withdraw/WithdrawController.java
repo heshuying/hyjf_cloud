@@ -28,6 +28,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,13 +54,12 @@ public class WithdrawController extends BaseController {
 	 * 返现管理画面初始化
 	 *
 	 * @param request
-	 * @param form
 	 * @return
 	 */
 	@ApiOperation(value = "提现管理页面载入", notes = "提现管理页面载入")
 	@PostMapping("/init")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public AdminResult<ListResult<AdminWithdrawAPIVO>> init(WithdrawBeanAPIRequest request) {
+	public AdminResult<ListResult<AdminWithdrawAPIVO>> init(@RequestBody WithdrawBeanAPIRequest request) {
 
 		WithdrawCustomizeResponse response =withdrawService.getWithdrawRecordList(CommonUtils.convertBean(request, WithdrawBeanRequest.class));
 		if (response==null){

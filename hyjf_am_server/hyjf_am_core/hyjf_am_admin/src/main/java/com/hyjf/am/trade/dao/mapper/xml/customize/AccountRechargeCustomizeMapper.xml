@@ -205,7 +205,7 @@
 		r.remark,
 		r.money, r.fee,
 		r.balance ,r.payment,
-		CASE r.`type` WHEN 1 THEN '线下充值' WHEN 0 THEN '线上充值' END AS type,
+		CASE r.`type` WHEN 0 THEN '线下充值' WHEN 1 THEN '线上充值' END AS type,
 		CASE
 		r.`status` WHEN 1 THEN '转账中' WHEN 2
 		THEN '成功' ELSE '失败' END as

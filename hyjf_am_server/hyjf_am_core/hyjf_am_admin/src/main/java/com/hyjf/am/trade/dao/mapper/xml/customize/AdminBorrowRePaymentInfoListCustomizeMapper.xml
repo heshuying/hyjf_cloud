@@ -94,10 +94,10 @@
 		SELECT
 		brp.nid AS nid,
 		brp.borrow_nid AS borrowNid,
-		b.user_id AS borrowUserId,
-		b.borrow_user_name AS borrowUserName,
+		u1.user_id AS borrowUserId,
+		u1.username AS borrowUserName,
 		binfo. NAME AS borrowName,
-		binfo.project_Type AS projectType,
+		b.project_Type AS projectType,
 		bpt.borrow_name AS projectTypeName,
 		hic.inst_name AS instName,
 		CASE
@@ -111,8 +111,8 @@
 		b.borrow_account_yes AS borrowAccountYes,
 		bs. NAME AS repayType,
 		brp.recover_period AS recoverPeriod,
-		brp.invite_user_id AS recoverUserId,
-		brp.invite_user_name AS recoverUserName,
+		u2.user_id AS recoverUserId,
+		u2.username AS recoverUserName,
 		t.account AS recoverTotal,
 		brp.recover_capital AS recoverCapital,
 		brp.recover_interest AS recoverInterest,
@@ -160,7 +160,9 @@
 		INNER JOIN ht_borrow_info AS binfo ON b.borrow_nid = binfo.borrow_nid
 		LEFT JOIN ht_borrow_tender AS t ON brp.tender_id = t.id
 		LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(binfo.project_type AS CHAR)
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_r_user AS u1 ON brp.borrow_userid = u1.user_id
+		LEFT JOIN ht_r_user AS u2 ON brp.user_id = u2.user_id
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
 
 		<include refid="Where_Clause" />
@@ -185,7 +187,9 @@
 		INNER JOIN ht_borrow_info AS binfo ON b.borrow_nid = binfo.borrow_nid
 		LEFT JOIN ht_borrow_tender AS t ON brp.tender_id = t.id
 		LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(binfo.project_type AS CHAR)
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_r_user AS u1 ON brp.borrow_userid = u1.user_id
+		LEFT JOIN ht_r_user AS u2 ON brp.user_id = u2.user_id
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
 
 		<include refid="Where_Clause" />
@@ -208,7 +212,9 @@
 		INNER JOIN ht_borrow_info AS binfo ON b.borrow_nid = binfo.borrow_nid
 		LEFT JOIN ht_borrow_tender AS t ON brp.tender_id = t.id
 		LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(binfo.project_type AS CHAR)
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_r_user AS u1 ON brp.borrow_userid = u1.user_id
+		LEFT JOIN ht_r_user AS u2 ON brp.user_id = u2.user_id
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
 		<include refid="Where_Clause" />
 	</select>

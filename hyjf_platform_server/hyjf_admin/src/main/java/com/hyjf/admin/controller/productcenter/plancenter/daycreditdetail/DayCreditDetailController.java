@@ -126,7 +126,7 @@ public class DayCreditDetailController extends BaseController {
         }
 
         //初始化返回List
-        List<DayCreditDetailVO> returnList = null;
+        List<DayCreditDetailVO> returnList = new ArrayList<>();
 
         //类表查询
         DayCreditDetailResponse response = this.dayCreditDetailService.hjhDayCreditDetailList(copyRequest);

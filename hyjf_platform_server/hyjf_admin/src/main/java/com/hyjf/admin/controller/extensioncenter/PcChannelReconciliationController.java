@@ -154,7 +154,7 @@ public class PcChannelReconciliationController extends BaseController {
                         }
                         // 投资时间
                         else if (celLength == 9) {
-                            cell.setCellValue(record.getInvestTime()==null?"":GetDate.timestamptoStrYYYYMMDDHHMM(String.valueOf(record.getInvestTime())));
+                            cell.setCellValue(record.getInvestTime()==null?"":String.valueOf(record.getInvestTime()));
                         }
                     }
                 }
