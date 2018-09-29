@@ -2683,7 +2683,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         if (Response.isSuccess(response)) {
             return response.getCouponCount();
         }
-        return null;
+        return 0;
     }
 
     @Override
@@ -3052,7 +3052,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         if (Response.isSuccess(response)) {
             return response.getCount();
         }
-        return null;
+        return 0;
     }
 
     /**
