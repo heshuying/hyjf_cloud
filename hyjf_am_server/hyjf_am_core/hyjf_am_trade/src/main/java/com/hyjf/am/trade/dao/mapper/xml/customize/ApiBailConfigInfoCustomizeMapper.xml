@@ -119,4 +119,14 @@
         WHERE hhbc.del_flg = 0 and hhbc.inst_code = #{instCode,jdbcType=INTEGER}
     </select>
 
+    <select id="updateForSendBorrow" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        UPDATE hyjf_hjh_bail_config
+        SET remain_mark_line = remain_mark_line - #{amount,jdbcType=DECIMAL},
+            cyc_loan_total = cyc_loan_total + #{amount,jdbcType=DECIMAL},
+            loan_mark_line = loan_mark_line + #{amount,jdbcType=DECIMAL},
+            loan_balance = loan_balance + #{amount,jdbcType=DECIMAL},
+            his_loan_total = his_loan_total + #{amount,jdbcType=DECIMAL}
+        WHERE
+            inst_code = #{instCode,jdbcType=VARCHAR}
+    </select>
 </mapper>

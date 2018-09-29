@@ -628,4 +628,22 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         }
         return null;
     }
+
+    /**
+     * 获取保证金配置
+     * @param instCode
+     * @return
+     */
+    @Override
+    public HjhBailConfig getBailConfig(String instCode){
+        HjhBailConfigExample example = new HjhBailConfigExample();
+        example.createCriteria().andInstCodeEqualTo(instCode).andDelFlgEqualTo(0);
+
+        List<HjhBailConfig> list = hjhBailConfigMapper.selectByExample(example);
+        if(list != null && !list.isEmpty()){
+            return list.get(0);
+        }
+
+        return null;
+    }
 }
