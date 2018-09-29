@@ -1367,19 +1367,19 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public SmsMailTemplateResponse findMailTemplate(MailTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/findMailTemplate", request,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/smsMailTemplate/findMailTemplate", request,
                 SmsMailTemplateResponse.class);
     }
 
     @Override
     public int insertMailTemplate(MailTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/insertMailTemplate", request,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/smsMailTemplate/insertMailTemplate", request,
                 IntegerResponse.class).getResultInt();
     }
 
     @Override
     public int updateMailTemplate(MailTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/update_mail_template", request,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/smsMailTemplate/update_mail_template", request,
                 IntegerResponse.class).getResultInt();
     }
 
@@ -1944,7 +1944,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public int openAction(MailTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/update_status", request,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/smsMailTemplate/update_status", request,
                 IntegerResponse.class).getResultInt();
     }
 

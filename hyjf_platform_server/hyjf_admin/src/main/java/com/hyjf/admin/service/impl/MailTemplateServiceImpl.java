@@ -43,11 +43,6 @@ public class MailTemplateServiceImpl implements MailTemplateService {
     }
 
     @Override
-    public void closeAction(MailTemplateRequest request) {
-        amConfigClient.closeAction(request);
-    }
-
-    @Override
     public int updateStatus(MailTemplateRequest request) {
         return amConfigClient.openAction(request);
     }

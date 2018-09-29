@@ -4,6 +4,8 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -27,6 +29,16 @@ public class PlatformTransferRequest extends BaseVO implements Serializable {
     private BigDecimal money;
     @ApiModelProperty(value = "备注说明")
     private String remark;
+    @ApiModelProperty(value = "后台内部用参数")
+    private BankCallBeanVO bankCallBeanVO;
+    @ApiModelProperty(value = "后台内部用参数")
+    private String accountId;
+    @ApiModelProperty(value = "后台内部用参数")
+    private String loginUserName;
+    @ApiModelProperty(value = "后台内部用参数")
+    private UserInfoCustomizeVO userInfo;
+    @ApiModelProperty(value = "后台内部用参数")
+    private UserInfoCustomizeVO userInfoCustomizeVO;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -70,5 +82,45 @@ public class PlatformTransferRequest extends BaseVO implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public BankCallBeanVO getBankCallBeanVO() {
+        return bankCallBeanVO;
+    }
+
+    public void setBankCallBeanVO(BankCallBeanVO bankCallBeanVO) {
+        this.bankCallBeanVO = bankCallBeanVO;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getLoginUserName() {
+        return loginUserName;
+    }
+
+    public void setLoginUserName(String loginUserName) {
+        this.loginUserName = loginUserName;
+    }
+
+    public UserInfoCustomizeVO getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfoCustomizeVO userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public UserInfoCustomizeVO getUserInfoCustomizeVO() {
+        return userInfoCustomizeVO;
+    }
+
+    public void setUserInfoCustomizeVO(UserInfoCustomizeVO userInfoCustomizeVO) {
+        this.userInfoCustomizeVO = userInfoCustomizeVO;
     }
 }
