@@ -1,8 +1,6 @@
 package com.hyjf.am.vo;
 
 
-import java.io.Serializable;
-
 public class UserDeviceUniqueCodeVO extends BaseVO{
     private Integer id;
 

@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.user.service.admin.promotion;
 
-import java.util.List;
-
 import com.hyjf.am.user.dao.model.customize.ChannelCustomize;
 import com.hyjf.am.user.service.BaseService;
+
+import java.util.List;
 
 /**
  * @author yaoyong

@@ -1,7 +1,6 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.resquest.Request;
-import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 
 /**
  * @author jun

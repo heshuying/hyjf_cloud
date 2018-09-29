@@ -1,7 +1,6 @@
 package com.hyjf.cs.market.mq.base;
 
-import javax.annotation.PostConstruct;
-
+import com.hyjf.common.exception.MQException;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
@@ -14,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
-import com.hyjf.common.exception.MQException;
+import javax.annotation.PostConstruct;
 
 /**
  * @author xiasq

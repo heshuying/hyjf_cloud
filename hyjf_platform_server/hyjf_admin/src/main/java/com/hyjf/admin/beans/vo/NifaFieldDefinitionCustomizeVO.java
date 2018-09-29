@@ -2,7 +2,6 @@ package com.hyjf.admin.beans.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**

@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.vo.datacollect;
 
-import java.math.BigDecimal;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.math.BigDecimal;
 
 /**
  * @author fuqiang

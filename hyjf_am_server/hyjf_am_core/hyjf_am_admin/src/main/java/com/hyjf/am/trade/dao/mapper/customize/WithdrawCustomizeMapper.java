@@ -1,11 +1,11 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
 import com.hyjf.am.trade.dao.model.customize.UserWithdrawRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.WithdrawCustomize;
+
+import java.util.List;
+import java.util.Map;
 
 public interface WithdrawCustomizeMapper {
 

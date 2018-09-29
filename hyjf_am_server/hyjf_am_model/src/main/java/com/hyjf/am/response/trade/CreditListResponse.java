@@ -5,7 +5,6 @@ package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.CreditListVO;
-import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 
 /**
  * @desc 债转标的vo

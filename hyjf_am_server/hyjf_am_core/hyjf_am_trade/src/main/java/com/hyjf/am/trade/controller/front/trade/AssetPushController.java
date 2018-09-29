@@ -5,15 +5,15 @@ package com.hyjf.am.trade.controller.front.trade;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.StringResponse;
-import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.asset.AssetPushService;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.BorrowBailVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;

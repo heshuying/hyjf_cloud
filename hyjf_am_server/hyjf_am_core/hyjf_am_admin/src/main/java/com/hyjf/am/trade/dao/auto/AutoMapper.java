@@ -1,12 +1,11 @@
 package com.hyjf.am.trade.dao.auto;
 
 
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowFullCustomizeMapper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Service
 public class AutoMapper {

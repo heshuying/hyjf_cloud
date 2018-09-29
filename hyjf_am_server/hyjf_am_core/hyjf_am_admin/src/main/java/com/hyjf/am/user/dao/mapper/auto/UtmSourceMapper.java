@@ -2,8 +2,9 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.UtmSource;
 import com.hyjf.am.user.dao.model.auto.UtmSourceExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface UtmSourceMapper {
     int countByExample(UtmSourceExample example);

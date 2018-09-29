@@ -3,22 +3,15 @@
  */
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.response.Response;
-import com.hyjf.am.resquest.config.MessagePushTagRequest;
-import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetDate;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.am.config.dao.model.auto.MessagePushTag;
 import com.hyjf.am.config.service.MessagePushTagServcie;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.vo.config.MessagePushTagVO;
-
-import java.util.List;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author fuqiang

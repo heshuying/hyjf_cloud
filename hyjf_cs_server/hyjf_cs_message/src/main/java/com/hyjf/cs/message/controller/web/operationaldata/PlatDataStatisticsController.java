@@ -1,7 +1,6 @@
 package com.hyjf.cs.message.controller.web.operationaldata;
 
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.message.PlatDataAgeDataBean;
 import com.hyjf.cs.common.bean.result.WebResult;

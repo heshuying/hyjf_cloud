@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.trade.service.admin.finance;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest;
 import com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize;
+
+import java.util.List;
 
 /**
  * @author zhangqingqing

@@ -3,19 +3,16 @@
  */
 package com.hyjf.am.config.controller.admin.locked;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.config.service.locked.LockedConfigService;
 import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author cui

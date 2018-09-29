@@ -5745,16 +5745,16 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //			UserExample example = new UsersExample();
 //			UsersExample.Criteria cra = example.createCriteria();
 //			cra.andUsernameEqualTo(userName);
-			 RUser user = this.getRUser(userName);
-			if (user == null ) {
-				// 借款人用户名不存在。
-				return 1;
-			}
-			 Account openAccount = this.getAccount(user.getUserId());
-			if (Validator.isNull(openAccount)) {
-				// 借款人用户名必须已在银行开户
-				return 2;
-			}
+//			 RUser user = this.getRUser(userName);
+//			if (user == null ) {
+//				// 借款人用户名不存在。
+//				return 1;
+//			}
+//			 Account openAccount = this.getAccount(user.getUserId());
+//			if (Validator.isNull(openAccount)) {
+//				// 借款人用户名必须已在银行开户
+//				return 2;
+//			}
 //			if (users.getStatus() != 0) {
 //				// 借款人用户名已经被禁用
 //				return 3;

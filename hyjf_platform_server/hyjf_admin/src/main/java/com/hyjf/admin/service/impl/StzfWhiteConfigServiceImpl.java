@@ -3,15 +3,14 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmTradeClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.service.StzfWhiteConfigService;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

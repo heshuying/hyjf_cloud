@@ -3,9 +3,12 @@
  */
 package com.hyjf.am.user.controller.admin.promotion;
 
-import java.math.BigDecimal;
-import java.util.List;
-
+import com.hyjf.am.response.market.UtmRegResponse;
+import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.dao.model.auto.UtmReg;
+import com.hyjf.am.user.service.admin.promotion.UtmRegService;
+import com.hyjf.am.vo.user.UtmRegVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,12 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.market.UtmRegResponse;
-import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.dao.model.auto.UtmReg;
-import com.hyjf.am.user.service.admin.promotion.UtmRegService;
-import com.hyjf.am.vo.user.UtmRegVO;
-import com.hyjf.common.util.CommonUtils;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author fuqiang

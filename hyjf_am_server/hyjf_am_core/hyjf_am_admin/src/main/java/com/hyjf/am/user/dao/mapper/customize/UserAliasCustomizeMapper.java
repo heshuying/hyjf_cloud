@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.vo.user.UserAliasVO;
+
+import java.util.List;
 
 /**
  * @author fuqiang

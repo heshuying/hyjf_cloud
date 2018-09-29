@@ -3,12 +3,11 @@
  */
 package com.hyjf.batch.job.msgpush;
 
+import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
-import com.hyjf.batch.job.BaseJob;
 
 /**
  * 平台消息统计报表

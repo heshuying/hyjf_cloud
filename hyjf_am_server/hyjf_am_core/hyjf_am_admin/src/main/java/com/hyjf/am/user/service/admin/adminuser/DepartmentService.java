@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.user.service.admin.adminuser;
 
-import java.util.List;
-
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
+
+import java.util.List;
 
 /**
  * @author DongZeShan

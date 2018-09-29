@@ -5,7 +5,6 @@ package com.hyjf.am.user.service.admin.finance;
 
 import com.hyjf.am.user.dao.model.auto.AccountChinapnr;
 import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.vo.trade.account.AccountVO;
 
 import java.util.List;
 

@@ -1,14 +1,13 @@
 package com.hyjf.am.config.mq.producer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import com.hyjf.am.config.mq.base.MessageContent;
 import com.hyjf.am.config.mq.base.Producer;
 import com.hyjf.am.config.mq.base.ProducerFieldsWrapper;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * 

@@ -3,9 +3,9 @@
  */
 package com.hyjf.cs.message.result;
 
-import java.math.BigDecimal;
-
 import io.swagger.annotations.ApiModelProperty;
+
+import java.math.BigDecimal;
 
 /**
  * @author wangjun

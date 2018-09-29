@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
+
+import java.util.List;
 
 /**
  * @author wangjun

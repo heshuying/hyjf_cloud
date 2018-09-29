@@ -1,10 +1,10 @@
 package com.hyjf.am.bean.admin;
 
+import com.hyjf.am.vo.trade.borrow.BorrowAdminVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.hyjf.am.vo.trade.borrow.BorrowAdminVO;
 
 public class BorrowWithBLOBs extends BorrowAdminVO implements Serializable {
     private String accountContents;

@@ -4,7 +4,6 @@ import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
-
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.springframework.stereotype.Service;

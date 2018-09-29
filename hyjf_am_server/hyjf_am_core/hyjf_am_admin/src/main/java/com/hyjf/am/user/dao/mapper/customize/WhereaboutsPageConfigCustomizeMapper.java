@@ -1,9 +1,9 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
+
+import java.util.List;
 
 /**
  * @author tanyy

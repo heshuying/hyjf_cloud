@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.admin.beans.vo.AdminBorrowRegistCustomizeVO;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import io.swagger.annotations.ApiModelProperty;

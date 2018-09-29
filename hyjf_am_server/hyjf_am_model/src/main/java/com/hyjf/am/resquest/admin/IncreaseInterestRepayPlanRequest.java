@@ -1,13 +1,8 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.admin.AdminIncreaseInterestRepayCustomizeVO;
-import com.hyjf.am.vo.admin.IncreaseInterestRepayDetailVO;
-import com.hyjf.common.paginator.Paginator;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/12.

@@ -3,10 +3,12 @@
  */
 package com.hyjf.am.config.service;
 
+import com.hyjf.am.config.dao.model.auto.CouponCheck;
+import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
+
 import java.util.List;
 
-import com.hyjf.am.config.dao.model.auto.CouponCheck;
-import com.hyjf.am.resquest.admin.AdminCouponCheckRequest; /**
+/**
  * @author yaoyong
  * @version CheckService, v0.1 2018/7/4 11:45
  */

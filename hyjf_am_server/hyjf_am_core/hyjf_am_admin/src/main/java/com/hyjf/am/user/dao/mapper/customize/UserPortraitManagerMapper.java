@@ -1,10 +1,10 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.user.dao.model.auto.UserPortrait;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.user.dao.model.auto.UserPortrait;
 
 
 public interface UserPortraitManagerMapper {

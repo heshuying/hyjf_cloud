@@ -3,8 +3,11 @@
  */
 package com.hyjf.am.config.mq.consumer;
 
-import java.util.List;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.config.mq.base.Consumer;
+import com.hyjf.am.config.service.SyncRUserService;
+import com.hyjf.common.constants.MQConstant;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -16,14 +19,9 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.config.mq.base.Consumer;
-import com.hyjf.am.config.service.SyncRUserService;
-import com.hyjf.common.constants.MQConstant;
+import java.util.List;
 
 /**
  * r_user用户信息同步处理器

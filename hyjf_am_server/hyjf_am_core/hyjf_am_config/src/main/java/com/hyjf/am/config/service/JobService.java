@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.Job;
 import com.hyjf.am.resquest.admin.JobRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang

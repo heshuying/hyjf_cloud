@@ -1,17 +1,16 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowCreditTenderCustomize;
 import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.trade.CreditTenderListCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
+import org.apache.ibatis.annotations.Param;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 public interface BorrowCreditTenderCustomizeMapper {
 

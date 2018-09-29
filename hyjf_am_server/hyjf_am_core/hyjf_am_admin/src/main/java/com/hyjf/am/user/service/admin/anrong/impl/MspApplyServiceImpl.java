@@ -1,40 +1,12 @@
 package com.hyjf.am.user.service.admin.anrong.impl;
 
-import java.util.List;
-
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.service.admin.anrong.MspApplyService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcredit;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcreditExample;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetail;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetailExample;
-import com.hyjf.am.user.dao.model.auto.MspAnliinfos;
-import com.hyjf.am.user.dao.model.auto.MspAnliinfosExample;
-import com.hyjf.am.user.dao.model.auto.MspApply;
-import com.hyjf.am.user.dao.model.auto.MspApplyExample;
-import com.hyjf.am.user.dao.model.auto.MspApplydetails;
-import com.hyjf.am.user.dao.model.auto.MspApplydetailsExample;
-import com.hyjf.am.user.dao.model.auto.MspBlackdata;
-import com.hyjf.am.user.dao.model.auto.MspBlackdataExample;
-import com.hyjf.am.user.dao.model.auto.MspConfigure;
-import com.hyjf.am.user.dao.model.auto.MspConfigureExample;
-import com.hyjf.am.user.dao.model.auto.MspFqz;
-import com.hyjf.am.user.dao.model.auto.MspFqzExample;
-import com.hyjf.am.user.dao.model.auto.MspNormalcreditdetail;
-import com.hyjf.am.user.dao.model.auto.MspNormalcreditdetailExample;
-import com.hyjf.am.user.dao.model.auto.MspQuerydetail;
-import com.hyjf.am.user.dao.model.auto.MspQuerydetailExample;
-import com.hyjf.am.user.dao.model.auto.MspRegion;
-import com.hyjf.am.user.dao.model.auto.MspRegionExample;
-import com.hyjf.am.user.dao.model.auto.MspShixininfos;
-import com.hyjf.am.user.dao.model.auto.MspShixininfosExample;
-import com.hyjf.am.user.dao.model.auto.MspTitle;
-import com.hyjf.am.user.dao.model.auto.MspTitleExample;
-import com.hyjf.am.user.dao.model.auto.MspZhixinginfos;
-import com.hyjf.am.user.dao.model.auto.MspZhixinginfosExample;
-import com.hyjf.am.user.service.admin.anrong.MspApplyService;
-import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import java.util.List;
 
 @Service
 public class MspApplyServiceImpl extends BaseServiceImpl implements MspApplyService {

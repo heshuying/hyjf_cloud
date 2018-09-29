@@ -1,15 +1,14 @@
 package com.hyjf.am.market.controller;
 
-import java.util.List;
-
+import com.hyjf.am.market.service.InvitePrizeConfigService;
+import com.hyjf.am.response.market.InvitePrizeConfResponse;
+import com.hyjf.am.resquest.trade.InvitePrizeConfVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.market.service.InvitePrizeConfigService;
-import com.hyjf.am.response.market.InvitePrizeConfResponse;
-import com.hyjf.am.resquest.trade.InvitePrizeConfVO;
+import java.util.List;
 
 /**
  * @Auther: walter.limeng

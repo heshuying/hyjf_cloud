@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.service.front.hjh;
 
 import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 
 import java.util.List;

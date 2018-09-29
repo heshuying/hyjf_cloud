@@ -1,17 +1,15 @@
 package com.hyjf.am.config.service.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import com.hyjf.am.config.dao.mapper.auto.FeerateModifyLogMapper;
 import com.hyjf.am.config.dao.model.auto.FeerateModifyLog;
 import com.hyjf.am.config.service.FeerateModifyLogService;
 import com.hyjf.am.resquest.admin.FinmanChargeNewRequest;
-import com.hyjf.common.util.GetDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author xiehuili on 2018/8/14.

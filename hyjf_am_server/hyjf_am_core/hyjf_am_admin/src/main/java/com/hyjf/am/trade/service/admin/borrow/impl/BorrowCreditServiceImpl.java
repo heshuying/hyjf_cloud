@@ -94,6 +94,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
        params.put("creditStatus",request.getCreditStatus());
        params.put("timeStart",request.getTimeStart());
        params.put("timeEnd",request.getTimeEnd());
+       params.put("client",request.getClient());
        return borrowCreditCustomizeMapper.getBorrowCreditList4Admin(params);
     }
 

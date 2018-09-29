@@ -1,8 +1,8 @@
 package com.hyjf.am.trade.controller.front.trade;
 
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.trade.dao.model.customize.Event;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.Event;
 import com.hyjf.am.trade.service.front.trade.WeeklyService;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;

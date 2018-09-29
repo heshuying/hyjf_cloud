@@ -4,7 +4,6 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.IncreaseInterestRepayPlanResponse;
 import com.hyjf.am.resquest.admin.IncreaseInterestRepayPlanRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.admin.IncreaseInterestRepayInfoListService;
 import com.hyjf.am.trade.service.admin.IncreaseInterestRepayPlanService;
 import com.hyjf.am.vo.admin.IncreaseInterestRepayDetailVO;
 import io.swagger.annotations.Api;

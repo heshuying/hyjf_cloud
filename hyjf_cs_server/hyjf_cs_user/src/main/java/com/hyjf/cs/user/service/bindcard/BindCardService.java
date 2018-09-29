@@ -1,20 +1,19 @@
 package com.hyjf.cs.user.service.bindcard;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.Map;
-
-import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.user.bean.BindCardPageBean;
 import com.hyjf.cs.user.bean.BindCardPageRequestBean;
-import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.constants.ResultEnum;
+import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.Map;
 
 public interface BindCardService extends BaseUserService {
     /**

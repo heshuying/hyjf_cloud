@@ -1,15 +1,5 @@
 package com.hyjf.cs.market.service.impl;
 
-import java.util.Date;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.common.constants.MQConstant;
@@ -20,7 +10,15 @@ import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.mq.producer.StatisticsTzjProducer;
 import com.hyjf.cs.market.service.TzjDataCollectService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+
+import java.util.Date;
+import java.util.Set;
 
 /**
  * @author xiasq

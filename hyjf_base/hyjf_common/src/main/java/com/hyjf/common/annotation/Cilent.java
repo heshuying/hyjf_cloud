@@ -5,10 +5,10 @@ package com.hyjf.common.annotation;
  * @version Cilent, v0.1 2018/7/6 11:22
  */
 
-import java.lang.annotation.*;
-
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Service;
+
+import java.lang.annotation.*;
 
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

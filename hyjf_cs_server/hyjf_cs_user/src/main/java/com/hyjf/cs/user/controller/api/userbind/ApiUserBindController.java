@@ -15,7 +15,6 @@ import com.hyjf.common.util.WrbParseParamUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.user.bean.ApiResultPageBean;
 import com.hyjf.cs.user.bean.ApiUserPostBean;
 import com.hyjf.cs.user.bean.LoginResultBean;
@@ -27,7 +26,6 @@ import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanMap;
@@ -41,7 +39,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;

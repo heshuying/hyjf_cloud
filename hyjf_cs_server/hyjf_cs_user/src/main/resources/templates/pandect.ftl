@@ -3,7 +3,7 @@
   "status": "${datas.status!''}",
   "statusDesc": "${datas.statusDesc!''}",
   "data": {
-        "bankCard":${(datas.data.bankCard)!'0'}
+        "bankCard":${(datas.data.bankCard)!'0'},
         "isVip":${(datas.data.isVip)?string('true', 'false')},
         "vipName":"${(datas.data.vipName)!''}",
         "couponValidCount":"${(datas.data.couponValidCount)!''}",

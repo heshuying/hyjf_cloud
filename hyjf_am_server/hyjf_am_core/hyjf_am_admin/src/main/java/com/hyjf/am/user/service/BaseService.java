@@ -3,17 +3,10 @@
  */
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.user.dao.model.auto.*;
+
 import java.text.ParseException;
 import java.util.List;
-
-import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
-import com.hyjf.am.user.dao.model.auto.SpreadsUser;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
 
 /**
  * 用户服务:BaseService

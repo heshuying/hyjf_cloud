@@ -1,9 +1,6 @@
 package com.hyjf.common.http;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
+import com.hyjf.common.util.StringPool;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -17,7 +14,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hyjf.common.util.StringPool;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 在java中处理http请求.

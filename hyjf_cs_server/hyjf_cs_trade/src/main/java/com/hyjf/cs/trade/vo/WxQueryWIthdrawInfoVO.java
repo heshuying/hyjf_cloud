@@ -1,9 +1,9 @@
 package com.hyjf.cs.trade.vo;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import com.hyjf.cs.trade.bean.BankCardBean;
+
+import java.util.List;
 
 /**
  * 微信客户端提现信息返回数据结构封装类

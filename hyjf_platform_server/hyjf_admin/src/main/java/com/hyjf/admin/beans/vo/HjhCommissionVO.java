@@ -3,12 +3,11 @@
  */
 package com.hyjf.admin.beans.vo;
 
+import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-
-import com.hyjf.admin.beans.BaseRequest;
-
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author Albert

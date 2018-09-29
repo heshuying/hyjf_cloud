@@ -3,17 +3,14 @@
  */
 package com.hyjf.am.trade.controller.api.autotender;
 
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.resquest.api.AutoTenderComboRequest;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.service.api.autotender.ApiAutoTenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.resquest.api.AutoTenderComboRequest;
-import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.service.api.autotender.ApiAutoTenderService;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 
 /**
  * @author libin

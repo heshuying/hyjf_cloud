@@ -1,7 +1,5 @@
 package com.hyjf.cs.message.mongo.mc;
 
-import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
-import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTag;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.data.domain.Sort;

@@ -14,7 +14,7 @@ public class URLSystemConfig {
     @Value("${hyjf.pay.url}")
     public String payUrl;
 
-    // 法大大接口调用地址
+    // 法大大接口调用地址hyjf.pay.url
     @Value("${hyjf.pay.fdd.url}")
     public String fddPayUrl;
 

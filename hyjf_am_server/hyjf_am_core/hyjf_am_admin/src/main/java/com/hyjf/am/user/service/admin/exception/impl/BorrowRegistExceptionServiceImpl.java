@@ -3,12 +3,6 @@
  */
 package com.hyjf.am.user.service.admin.exception.impl;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
 import com.hyjf.am.user.dao.model.auto.User;
@@ -17,6 +11,11 @@ import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai

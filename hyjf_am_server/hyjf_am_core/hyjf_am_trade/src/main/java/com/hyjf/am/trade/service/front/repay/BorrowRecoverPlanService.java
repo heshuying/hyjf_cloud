@@ -1,7 +1,6 @@
 package com.hyjf.am.trade.service.front.repay;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 
 import java.util.List;
 

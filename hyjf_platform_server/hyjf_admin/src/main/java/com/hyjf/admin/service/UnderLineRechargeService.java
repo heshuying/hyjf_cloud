@@ -2,10 +2,6 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.UnderLineRechargeRequestBean;
 import com.hyjf.am.response.admin.UnderLineRechargeResponse;
-import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
-import com.hyjf.am.vo.admin.UnderLineRechargeVO;
-
-import java.util.List;
 
 /**
  * 线下充值类型配置

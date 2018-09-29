@@ -14,12 +14,7 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
-import com.hyjf.am.trade.dao.model.customize.AppProjectInvestListCustomize;
-import com.hyjf.am.trade.dao.model.customize.AppProjectListCustomize;
-import com.hyjf.am.trade.dao.model.customize.AppTenderCreditInvestListCustomize;
-import com.hyjf.am.trade.dao.model.customize.HjhPlanCustomize;
-import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebProjectListCustomize;
+import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.front.borrow.ProjectListService;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
@@ -115,6 +110,7 @@ public class ProjectListController extends BaseController {
     /**
      * @desc  查询web端债转列表count
      * @author zhangyk
+     * 原接口: com.hyjf.web.bank.web.user.credit.CreditController.searchWebCreditList()
      * @date 2018/6/19 15:12
      */
     @RequestMapping("/web/countCreditList")
