@@ -96,7 +96,7 @@
 			AND r.create_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{startDate},'00:00:00'),'%Y-%m-%d %H:%i:%s')
 		</if>
 		<if test="endDate != null and endDate != ''">
-			AND r.create_time  <![CDATA[<>]]> STR_TO_DATE(CONCAT(#{endDate},'23:59:59'),'%Y-%m-%d %H:%i:%s')
+			AND r.create_time  <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endDate},'23:59:59'),'%Y-%m-%d %H:%i:%s')
 		</if>
 		<if test="clientTypeSearch != null and clientTypeSearch != ''">
 			AND r.client = #{clientTypeSearch}
