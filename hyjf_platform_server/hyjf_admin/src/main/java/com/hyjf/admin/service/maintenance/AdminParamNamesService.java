@@ -57,4 +57,11 @@ public interface AdminParamNamesService extends BaseAdminService {
      * @return
      */
     ParamNameVO selectParamName(ParamNameVO paramNameVO);
+
+    /**
+     * 同步数据字典到redis
+     * @auth wgx
+     * @return
+     */
+    boolean syncParam();
 }
