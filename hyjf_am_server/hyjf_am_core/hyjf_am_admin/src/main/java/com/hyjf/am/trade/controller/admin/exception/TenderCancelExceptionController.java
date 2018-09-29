@@ -27,7 +27,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: TenderCancelExceptionController, v0.1 2018/7/11 10:38
  */
-@RestController
+@RestController(value = "tradeTenderCancelExceptionController")
 @RequestMapping("/am-trade/tendercancelexception")
 @Api(value = "异常中心-银行投资撤销异常",tags = "异常中心-银行投资撤销异常")
 public class TenderCancelExceptionController extends BaseController {

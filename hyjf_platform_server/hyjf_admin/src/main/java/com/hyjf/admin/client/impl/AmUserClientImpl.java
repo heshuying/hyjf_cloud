@@ -57,7 +57,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<UserVO> searchUserByUsername(String userName) {
-		String url = "http://AM-USER/am-user/customertransfer/searchuserbyusername/" + userName;
+		String url = "http://AM-ADMIN/am-user/customertransfer/searchuserbyusername/" + userName;
 		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultList();
@@ -74,7 +74,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<AccountChinapnrVO> searchAccountChinapnrByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/customertransfer/searchaccountchinapnrbyuserid/" + userId;
+		String url = "http://AM-ADMIN/am-user/customertransfer/searchaccountchinapnrbyuserid/" + userId;
 		AccountChinapnrResponse response = restTemplate.getForEntity(url, AccountChinapnrResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultList();
@@ -92,7 +92,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public UserVO searchUserByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/customertransfer/searchuserbyuserid/" + userId;
+		String url = "http://AM-ADMIN/am-user/customertransfer/searchuserbyuserid/" + userId;
 		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResult();
@@ -169,7 +169,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<UserVO> findUserListByUserIds(String userIds) {
 		UserResponse response = restTemplate.postForEntity(
-				"http://AM-USER/am-user/platformtransfer/finduserlistbyuserids", userIds, UserResponse.class).getBody();
+				"http://AM-ADMIN/am-user/platformtransfer/finduserlistbyuserids", userIds, UserResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -186,7 +186,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public BankOpenAccountVO searchBankOpenAccount(Integer userId) {
-		String url = "http://AM-USER/am-user/borrow_regist_exception/searchbankopenaccount/" + userId;
+		String url = "http://AM-ADMIN/am-user/borrow_regist_exception/searchbankopenaccount/" + userId;
 		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -275,7 +275,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public AdminUserAuthListResponse userAuthList(AdminUserAuthListRequest adminUserAuthListRequest) {
-		AdminUserAuthListResponse response = restTemplate.postForEntity("http://AM-USER/am-user/userauth/userauthlist",
+		AdminUserAuthListResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-user/userauth/userauthlist",
 				adminUserAuthListRequest, AdminUserAuthListResponse.class).getBody();
 
 		return response;
@@ -292,7 +292,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public JSONObject synUserAuth(Integer userId, Integer type) {
 		JSONObject jsonObject = restTemplate
-				.getForEntity("http://AM-USER/am-user/userauth/synuserauth/" + userId + "/" + type, JSONObject.class)
+				.getForEntity("http://AM-ADMIN/am-user/userauth/synuserauth/" + userId + "/" + type, JSONObject.class)
 				.getBody();
 
 		return jsonObject;
@@ -1882,7 +1882,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int countBankOpenAccountUser(MobileSynchronizeRequest request) {
-		String url = userService + "/mobilesynchronize/countBankOpenAccountUser";
+		String url = "http://AM-ADMIN/am-user/mobilesynchronize/countBankOpenAccountUser";
 		MobileSynchronizeResponse response = restTemplate.postForEntity(url,request, MobileSynchronizeResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getCount();
@@ -1898,7 +1898,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<MobileSynchronizeCustomizeVO> selectBankOpenAccountUserList(MobileSynchronizeRequest request) {
-		String url = userService + "/mobilesynchronize/selectBankOpenAccountUserList";
+		String url = "http://AM-ADMIN/am-user/mobilesynchronize/selectBankOpenAccountUserList";
 		MobileSynchronizeResponse response = restTemplate.postForEntity(url,request, MobileSynchronizeResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultList();
@@ -1914,7 +1914,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public boolean updateMobile(MobileSynchronizeRequest request) {
-		String url = userService + "/mobilesynchronize/updateMobile";
+		String url = "http://AM-ADMIN/am-user/mobilesynchronize/updateMobile";
 		MobileSynchronizeResponse response = restTemplate.postForEntity(url,request, MobileSynchronizeResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.isUpdate();
@@ -1930,7 +1930,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int getBankCardExceptionCount(BankCardExceptionRequest request) {
-		String url = userService + "/bankcardexception/getBankCardExceptionCount";
+		String url = "http://AM-ADMIN/am-user/bankcardexception/getBankCardExceptionCount";
 		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getCount();
@@ -1946,7 +1946,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request) {
-		String url = userService + "/bankcardexception/searchBankCardExceptionList";
+		String url = "http://AM-ADMIN/am-user/bankcardexception/searchBankCardExceptionList";
 		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultList();
@@ -1962,7 +1962,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public String updateAccountBankByUserId(BankCardExceptionRequest request) {
-		String url = userService + "/bankcardexception/updateAccountBankByUserId";
+		String url = "http://AM-ADMIN/am-user/bankcardexception/updateAccountBankByUserId";
 		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBankCardExceptionResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultMsg();
@@ -2044,7 +2044,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int getModifyInfoCount(AccountMobileSynchRequest request) {
-		String url = userService + "/accountmobilesynch/getModifyInfoCount";
+		String url = "http://AM-ADMIN/am-user/accountmobilesynch/getModifyInfoCount";
 		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getCount();
@@ -2060,7 +2060,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<AccountMobileSynchVO> searchModifyInfoList(AccountMobileSynchRequest request) {
-		String url = userService + "/accountmobilesynch/searchModifyInfoList";
+		String url = "http://AM-ADMIN/am-user/accountmobilesynch/searchModifyInfoList";
 		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultList();
@@ -2076,7 +2076,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public Integer insertAccountMobileSynch(AccountMobileSynchRequest request) {
-		String url = userService + "/accountmobilesynch/insertAccountMobileSynch";
+		String url = "http://AM-ADMIN/am-user/accountmobilesynch/insertAccountMobileSynch";
 		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getCount();
@@ -2092,7 +2092,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public Integer deleteAccountMobileSynch(AccountMobileSynchRequest request) {
-		String url = userService + "/accountmobilesynch/deleteAccountMobileSynch";
+		String url = "http://AM-ADMIN/am-user/accountmobilesynch/deleteAccountMobileSynch";
 		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getCount();

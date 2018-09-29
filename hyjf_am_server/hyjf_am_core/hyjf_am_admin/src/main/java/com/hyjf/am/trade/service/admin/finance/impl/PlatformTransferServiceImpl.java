@@ -43,7 +43,7 @@ import java.util.UUID;
  * @author: sunpeikai
  * @version: PlatformTransferServiceImpl, v0.1 2018/7/9 11:11
  */
-@Service
+@Service(value = "tradePlatformTransferServiceImpl")
 public class PlatformTransferServiceImpl extends BaseServiceImpl implements PlatformTransferService {
 
     @Autowired
