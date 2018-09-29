@@ -501,5 +501,8 @@ public class AutoMapper {
 
     @Resource
     protected HjhBailConfigMapper hjhBailConfigMapper;
+
+    @Resource
+    protected HjhBailConfigInfoMapper hjhBailConfigInfoMapper;
 }
 

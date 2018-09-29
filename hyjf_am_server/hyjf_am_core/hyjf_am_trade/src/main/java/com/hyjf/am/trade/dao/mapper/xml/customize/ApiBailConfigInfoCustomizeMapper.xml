@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.ApiBailConfigInfoCustomizeMapper">
+    <resultMap id="BaseResultMap" type="com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="inst_code" property="instCode" jdbcType="VARCHAR"/>
+        <result column="inst_name" property="instName" jdbcType="VARCHAR"/>
+        <result column="bail_tatol" property="bailTatol" jdbcType="DECIMAL"/>
+        <result column="bail_rate" property="bailRate" jdbcType="INTEGER"/>
+        <result column="timestart" property="timestart" jdbcType="VARCHAR"/>
+        <result column="timeend" property="timeend" jdbcType="VARCHAR"/>
+        <result column="new_credit_line" property="newCreditLine" jdbcType="DECIMAL"/>
+        <result column="loan_credit_line" property="loanCreditLine" jdbcType="DECIMAL"/>
+        <result column="day_mark_line" property="dayMarkLine" jdbcType="DECIMAL"/>
+        <result column="month_mark_line" property="monthMarkLine" jdbcType="DECIMAL"/>
+        <result column="push_mark_line" property="pushMarkLine" jdbcType="DECIMAL"/>
+        <result column="loan_mark_line" property="loanMarkLine" jdbcType="DECIMAL"/>
+        <result column="remain_mark_line" property="remainMarkLine" jdbcType="DECIMAL"/>
+        <result column="repayed_capital" property="repayedCapital" jdbcType="DECIMAL"/>
+        <result column="his_loan_total" property="hisLoanTotal" jdbcType="DECIMAL"/>
+        <result column="cyc_loan_total" property="cycLoanTotal" jdbcType="DECIMAL"/>
+        <result column="loan_balance" property="loanBalance" jdbcType="DECIMAL"/>
+        <result column="is_accumulate" property="isAccumulate" jdbcType="TINYINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="update_user_id" property="updateUserId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="monthNCL" property="monthNCL" jdbcType="TINYINT"/>
+        <result column="monthLCL" property="monthLCL" jdbcType="TINYINT"/>
+        <result column="monthRCT" property="monthRCT" jdbcType="TINYINT"/>
+        <result column="monthDEL" property="monthDEL" jdbcType="TINYINT"/>
+        <result column="endNCL" property="endNCL" jdbcType="TINYINT"/>
+        <result column="endLCL" property="endLCL" jdbcType="TINYINT"/>
+        <result column="endRCT" property="endRCT" jdbcType="TINYINT"/>
+        <result column="endDEL" property="endDEL" jdbcType="TINYINT"/>
+        <result column="endmonthNCL" property="endmonthNCL" jdbcType="TINYINT"/>
+        <result column="endmonthLCL" property="endmonthLCL" jdbcType="TINYINT"/>
+        <result column="endmonthRCT" property="endmonthRCT" jdbcType="TINYINT"/>
+        <result column="endmonthDEL" property="endmonthDEL" jdbcType="TINYINT"/>
+        <result column="enddayNCL" property="enddayNCL" jdbcType="TINYINT"/>
+        <result column="enddayLCL" property="enddayLCL" jdbcType="TINYINT"/>
+        <result column="enddayRCT" property="enddayRCT" jdbcType="TINYINT"/>
+        <result column="enddayDEL" property="enddayDEL" jdbcType="TINYINT"/>
+        <result column="principalNCL" property="principalNCL" jdbcType="TINYINT"/>
+        <result column="principalLCL" property="principalLCL" jdbcType="TINYINT"/>
+        <result column="principalRCT" property="principalRCT" jdbcType="TINYINT"/>
+        <result column="principalDEL" property="principalDEL" jdbcType="TINYINT"/>
+        <result column="seasonNCL" property="seasonNCL" jdbcType="TINYINT"/>
+        <result column="seasonLCL" property="seasonLCL" jdbcType="TINYINT"/>
+        <result column="seasonRCT" property="seasonRCT" jdbcType="TINYINT"/>
+        <result column="seasonDEL" property="seasonDEL" jdbcType="TINYINT"/>
+        <result column="endmonthsNCL" property="endmonthsNCL" jdbcType="TINYINT"/>
+        <result column="endmonthsLCL" property="endmonthsLCL" jdbcType="TINYINT"/>
+        <result column="endmonthsRCT" property="endmonthsRCT" jdbcType="TINYINT"/>
+        <result column="endmonthsDEL" property="endmonthsDEL" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <select id="selectBailConfigByInstCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+            hhbc.id,
+            hhbc.inst_code,
+            hhic.inst_name,
+            hhbc.bail_tatol,
+            hhbc.bail_rate,
+            hhbc.new_credit_line,
+            hhbc.loan_credit_line,
+            hhbc.timestart,
+            hhbc.timeend,
+            hhbc.day_mark_line,
+            hhbc.month_mark_line,
+            hhbc.push_mark_line,
+            hhbc.loan_mark_line,
+            hhbc.remain_mark_line,
+            hhbc.repayed_capital,
+            hhbc.his_loan_total,
+            hhbc.cyc_loan_total,
+            hhbc.loan_balance,
+            hhbc.is_accumulate,
+            hhbc.remark,
+            m.is_new_credit as monthNCL,
+            m.is_loan_credit as monthLCL,
+            m.repay_capital_type as monthRCT,
+            m.del_flg as monthDEL,
+            e.is_new_credit as endNCL,
+            e.is_loan_credit as endLCL,
+            e.repay_capital_type as endRCT,
+            e.del_flg as endDEL,
+            em.is_new_credit as endmonthNCL,
+            em.is_loan_credit as endmonthLCL,
+            em.repay_capital_type as endmonthRCT,
+            em.del_flg as endmonthDEL,
+            ed.is_new_credit as enddayNCL,
+            ed.is_loan_credit as enddayLCL,
+            ed.repay_capital_type as enddayRCT,
+            ed.del_flg as enddayDEL,
+            p.is_new_credit as principalNCL,
+            p.is_loan_credit as principalLCL,
+            p.repay_capital_type as principalRCT,
+            p.del_flg as principalDEL,
+            s.is_new_credit as seasonNCL,
+            s.is_loan_credit as seasonLCL,
+            s.repay_capital_type as seasonRCT,
+            s.del_flg as seasonDEL,
+            ems.is_new_credit as endmonthsNCL,
+            ems.is_loan_credit as endmonthsLCL,
+            ems.repay_capital_type as endmonthsRCT,
+            ems.del_flg as endmonthsDEL
+        FROM
+        ht_hjh_bail_config hhbc
+        INNER JOIN ht_hjh_inst_config hhic ON hhbc.inst_code = hhic.inst_code
+        LEFT JOIN ht_hjh_bail_config_info m ON hhbc.inst_code = m.inst_code and m.borrow_style = 'month'
+        LEFT JOIN ht_hjh_bail_config_info e ON hhbc.inst_code = e.inst_code and e.borrow_style = 'end'
+        LEFT JOIN ht_hjh_bail_config_info em ON hhbc.inst_code = em.inst_code and em.borrow_style = 'endmonth'
+        LEFT JOIN ht_hjh_bail_config_info ed ON hhbc.inst_code = ed.inst_code and ed.borrow_style = 'endday'
+        LEFT JOIN ht_hjh_bail_config_info p ON hhbc.inst_code = p.inst_code and p.borrow_style = 'principal'
+        LEFT JOIN ht_hjh_bail_config_info s ON hhbc.inst_code = s.inst_code and s.borrow_style = 'season'
+        LEFT JOIN ht_hjh_bail_config_info ems ON hhbc.inst_code = ems.inst_code and ems.borrow_style = 'endmonths'
+        WHERE hhbc.del_flg = 0 and hhbc.inst_code = #{instCode,jdbcType=INTEGER}
+    </select>
+
+    <select id="updateForSendBorrow" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        UPDATE hyjf_hjh_bail_config
+        SET remain_mark_line = remain_mark_line - #{amount,jdbcType=DECIMAL},
+            cyc_loan_total = cyc_loan_total + #{amount,jdbcType=DECIMAL},
+            loan_mark_line = loan_mark_line + #{amount,jdbcType=DECIMAL},
+            loan_balance = loan_balance + #{amount,jdbcType=DECIMAL},
+            his_loan_total = his_loan_total + #{amount,jdbcType=DECIMAL}
+        WHERE
+            inst_code = #{instCode,jdbcType=VARCHAR}
+    </select>
+</mapper>

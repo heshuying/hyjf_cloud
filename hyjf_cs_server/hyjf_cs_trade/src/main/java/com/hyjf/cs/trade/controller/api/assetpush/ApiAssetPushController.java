@@ -41,7 +41,7 @@ public class ApiAssetPushController extends BaseTradeController {
     @Autowired
     private ApiAssetPushService pushService;
 
-    @PostMapping("/push")
+    @PostMapping("/push.do")
     @ApiParam(required = true, name = "pushRequestBean", value = "个人资产信息")
     @ApiOperation(value = "个人资产推送", httpMethod = "POST", notes = "个人资产推送")
     public PushResultBean push(@RequestBody PushRequestBean pushRequestBean) {
@@ -80,7 +80,7 @@ public class ApiAssetPushController extends BaseTradeController {
         return resultBean;
     }
 
-    @PostMapping("/pushcompany")
+    @PostMapping("/pushcompany.do")
     @ApiParam(required = true, name = "pushRequestBean", value = "企业资产信息")
     @ApiOperation(value = "企业资产推送", httpMethod = "POST", notes = "企业资产推送")
     public PushResultBean pushcompany(@RequestBody PushRequestBean pushRequestBean) {

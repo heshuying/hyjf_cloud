@@ -6,6 +6,7 @@ import com.hyjf.am.trade.dao.mapper.customize.BorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.MailProducer;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.issuerecover.AutoIssueRecoverService;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
@@ -28,9 +29,7 @@ import redis.clients.jedis.Transaction;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 汇计划自动发标修复
@@ -38,37 +37,10 @@ import java.util.UUID;
  * @version AutoIssueRecoverJob, v0.1 2018/7/11 10:30
  */
 @Service
-public class AutoIssueRecoverServiceImpl implements AutoIssueRecoverService {
-    private static final Logger logger = LoggerFactory.getLogger(AutoIssueRecoverServiceImpl.class);
+public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements AutoIssueRecoverService {
 
     @Resource
-    private HjhPlanAssetMapper hjhPlanAssetMapper;
-    @Resource
-    private HjhDebtCreditMapper hjhDebtCreditMapper;
-    @Resource
-    private BorrowMapper borrowMapper;
-    @Resource
-    private BorrowCustomizeMapper borrowCustomizeMapper;
-    @Resource
-    private HjhAssetBorrowtypeMapper hjhAssetBorrowtypeMapper;
-    @Resource
-    private HjhInstConfigMapper hjhInstConfigMapper;
-    @Resource
-    private BorrowProjectTypeMapper borrowProjectTypeMapper;
-    @Resource
-    private BorrowFinmanNewChargeMapper borrowFinmanNewChargeMapper;
-    @Resource
-    private BorrowConfigMapper borrowConfigMapper;
-    @Resource
-    private HjhLabelMapper hjhLabelMapper;
-    @Resource
-    private AccountMapper accountMapper;
-    @Resource
-    private BorrowInfoMapper borrowInfoMapper;
-    @Resource
     private MailProducer mailProducer;
-    @Resource
-    private BorrowManinfoMapper borrowManinfoMapper;
 
     @Value("${hyjf.env.test}")
     private Boolean env_test;
@@ -170,12 +142,17 @@ public class AutoIssueRecoverServiceImpl implements AutoIssueRecoverService {
     @Override
     public boolean insertSendBorrow(HjhPlanAsset hjhPlanAsset, HjhAssetBorrowtype hjhAssetBorrowType) {
         // 验证资产风险保证金是否足够（redis）
-        if (!checkAssetCanSend(hjhPlanAsset)) {
-            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 保证金不足");
+        Integer checkResult = checkAssetCanSend(hjhPlanAsset);
+        if(checkResult ==  -1){
+            return false;
+        }
+        if (checkResult > 0) {
+            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 录标校验未通过:" + checkResult);
             //add by cwyang 20180420 增加待补缴状态
             HjhPlanAsset planAsset = new HjhPlanAsset();
             planAsset.setId(hjhPlanAsset.getId());
-            planAsset.setStatus(1);//待补缴保证金
+            //待补缴保证金
+            planAsset.setStatus(checkResult);
             this.hjhPlanAssetMapper.updateByPrimaryKeySelective(planAsset);
             //end
             return false;
@@ -205,7 +182,30 @@ public class AutoIssueRecoverServiceImpl implements AutoIssueRecoverService {
             return false;
         }
 
+        // 更新额度
+        updateForSend(hjhPlanAsset.getInstCode(), new BigDecimal(hjhPlanAsset.getAccount()));
+        // 累加日已用额度
+        String dayUsedKey = RedisConstants.DAY_USED + hjhPlanAsset.getInstCode() + "_" + GetDate.getDate("yyyyMMdd");
+        RedisUtils.add(dayUsedKey, String.valueOf(hjhPlanAsset.getAccount()));
+        // 累加月已用额度
+        String monthKey = RedisConstants.MONTH_USED + hjhPlanAsset.getInstCode() + "_" + GetDate.getDate("yyyyMM");
+        RedisUtils.add(monthKey, String.valueOf(hjhPlanAsset.getAccount()));
+
         return true;
+    }
+
+    /**
+     * 发标完成更新相应额度
+     * @param instCode
+     * @param assetAccount
+     * @return
+     */
+    private Integer updateForSend(String instCode, BigDecimal assetAccount){
+        Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("amount", assetAccount);
+        paraMap.put("instCode", instCode);
+
+        return  apiBailConfigInfoCustomizeMapper.updateForSendBorrow(paraMap);
     }
 
     /**
@@ -282,6 +282,14 @@ public class AutoIssueRecoverServiceImpl implements AutoIssueRecoverService {
         // 新借款预编码
         borrowInfo.setBorrowPreNidNew(borrowPreNidNew);
 
+        // 标的还款后的回滚方式
+        HjhBailConfigInfoExample example = new HjhBailConfigInfoExample();
+        example.createCriteria().andInstCodeEqualTo(hjhPlanAsset.getInstCode()).andBorrowStyleEqualTo(hjhPlanAsset.getBorrowStyle());
+        List<HjhBailConfigInfo> hjhBailConfigInfoList = this.hjhBailConfigInfoMapper.selectByExample(example);
+        // 推送资产的时候校验回滚方式是否配置、若未配置不得推送资产
+        if(null!=hjhBailConfigInfoList && hjhBailConfigInfoList.size()>0) {
+            borrow.setRepayCapitalType(hjhBailConfigInfoList.get(0).getRepayCapitalType());
+        }
 
         // 借款表插入
         int id = this.borrowMapper.insertSelective(borrow);
@@ -1077,6 +1085,7 @@ public class AutoIssueRecoverServiceImpl implements AutoIssueRecoverService {
      *
      * @return
      */
+    @Override
     public String getBorrowConfig(String configCd) {
         BorrowConfig borrowConfig = this.borrowConfigMapper.selectByPrimaryKey(configCd);
         return borrowConfig.getConfigValue();
@@ -1126,45 +1135,166 @@ public class AutoIssueRecoverServiceImpl implements AutoIssueRecoverService {
      * @param hjhPlanAsset
      * @return
      */
-    private boolean checkAssetCanSend(HjhPlanAsset hjhPlanAsset) {
+    private Integer checkAssetCanSend(HjhPlanAsset hjhPlanAsset) {
         String instCode = hjhPlanAsset.getInstCode();
-        if (!RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instCode)) {
+        HjhBailConfig bailConfig = this.getBailConfig(instCode);
+        BigDecimal availableBalance = bailConfig.getRemainMarkLine();
+        BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
 
-            BigDecimal capitalToplimit = null;
-            HjhInstConfigExample example = new HjhInstConfigExample();
-            HjhInstConfigExample.Criteria cra = example.createCriteria();
-            cra.andInstCodeEqualTo(hjhPlanAsset.getInstCode());
-            cra.andDelFlagEqualTo(0);
-
-            List<HjhInstConfig> list = this.hjhInstConfigMapper.selectByExample(example);
-            if (list != null && list.size() > 0) {
-                capitalToplimit = list.get(0).getCapitalToplimit();
-            }
-            if(capitalToplimit != null){
-                RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+instCode, capitalToplimit.toString());
-            }
+        if(bailConfig == null){
+            logger.error("没有添加保证金配置");
+            return -1;
         }
 
-        String capitalToplimit = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+instCode);
-        if(null != capitalToplimit){
-            BigDecimal lcapitalToplimit = new BigDecimal(capitalToplimit);
-            BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
+        // 可用发标额度余额校验
+        if (BigDecimal.ZERO.compareTo(availableBalance) >= 0) {
+            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 可用发标额度余额小于等于零 " + availableBalance);
+            // 可用发标额度余额小于等于0不能发标
+            return 1;
+        }
+        if(assetAcount.compareTo(availableBalance) > 0){
+            // 可用发标额度余额不够不能发标
+            return 1;
+        }
 
-            if (BigDecimal.ZERO.compareTo(lcapitalToplimit) >= 0) {
-                logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 风险保证金小于等于零 "+capitalToplimit);
-                // 风险保证金小于等于0不能发标
-                return false;
+        // 日推标额度校验
+        BigDecimal dayAvailable = BigDecimal.ZERO;
+        // 今日已用额度
+        String dayUsedKey = RedisConstants.DAY_USED + instCode + "_" + GetDate.getDate("yyyyMMdd");
+        BigDecimal dayUsed = getValueInRedis(dayUsedKey);
+        logger.info("dayUsedKey: " + dayUsedKey + " day userd in redis: " + dayUsed);
+        // 累积可用额度
+        String accumulateKey = RedisConstants.DAY_MARK_ACCUMULATE + instCode;
+        BigDecimal accumulate = getValueInRedis(accumulateKey);
+        logger.info("accumulateKey: " + accumulateKey + " accumulate in redis: " + accumulate);
+        dayAvailable = dayAvailable.add(bailConfig.getDayMarkLine()).subtract(dayUsed);
+        if(bailConfig.getIsAccumulate() == 1){
+            dayAvailable = dayAvailable.add(accumulate);
+            logger.info("已开启日累计额度，当前可用额度：" + dayAvailable);
+        }
+        if(dayAvailable.compareTo(assetAcount) < 0){
+            logger.info("日推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", dayAvailable, assetAcount);
+            return 23;
+        }
+
+        // 月推标额度校验
+        BigDecimal monthAvailable = BigDecimal.ZERO;
+        String monthKey = RedisConstants.MONTH_USED + instCode + "_" + GetDate.getDate("yyyyMM");
+        BigDecimal monthUsed = getValueInRedis(monthKey);
+        logger.info("monthKey: " + monthKey + " month userd in redis: " + monthUsed);
+        monthAvailable = monthAvailable.add(bailConfig.getMonthMarkLine()).subtract(monthUsed);
+        if(monthAvailable.compareTo(assetAcount) < 0){
+            logger.info("月推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", monthAvailable, assetAcount);
+            return 24;
+        }
+
+        // 授信额度校验
+        HjhBailConfigInfo configInfo = getConfigInfo(hjhPlanAsset.getBorrowStyle(), hjhPlanAsset.getInstCode());
+        if(configInfo == null){
+            logger.info("HjhBailConfigInfo不存在，机构编号：{}, 还款方式：{}", hjhPlanAsset.getInstCode(), hjhPlanAsset.getBorrowStyle());
+            return -1;
+        }
+
+        if(configInfo.getIsNewCredit() == 1 && configInfo.getIsLoanCredit() != 1){
+            // 新增授信校验
+            if(!checkNewCredit(bailConfig, assetAcount)){
+                return 21;
             }
-            if(assetAcount.compareTo(lcapitalToplimit) > 0){
-                // 风险保证金不够不能发标
-                return false;
+
+        }else if(configInfo.getIsNewCredit() != 1 && configInfo.getIsLoanCredit() == 1){
+            // 在贷余额授信校验
+            if(!checkLoanCredit(bailConfig, assetAcount)){
+                return 22;
             }
-        }else{
-            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 风险保证金为空 "+capitalToplimit);
+
+        }else if(configInfo.getIsNewCredit() == 1 && configInfo.getIsLoanCredit() == 1){
+            // 新增授信校验或在贷余额校验一个校验通过就可以
+            if(!checkNewCredit(bailConfig, assetAcount) && !checkLoanCredit(bailConfig, assetAcount)){
+                return 21;
+            }
+        }
+        // 新增授信校验或在贷余额校验都没有配置
+        if(configInfo.getIsNewCredit() != 1 && configInfo.getIsLoanCredit() != 1){
+            logger.error("因还款方式未配置保证金授信方式，推标失败");
+            return -1;
+        }
+
+        return 0;
+    }
+
+    /**
+     * 新增授信额度校验
+     * @return
+     */
+    private boolean checkNewCredit(HjhBailConfig bailConfig, BigDecimal account){
+        // 新增授信额度
+        BigDecimal newCreditLine = bailConfig.getNewCreditLine();
+        // 周期内发标已发额度
+        BigDecimal cycLoanTotal = bailConfig.getCycLoanTotal().add(account);
+        logger.info("周期内发标已发额度+本次推标额度：" + cycLoanTotal);
+
+        if(newCreditLine.compareTo(cycLoanTotal) < 0){
+            logger.info("周期内发标已发额度超过授信额度");
             return false;
         }
-
         return true;
+    }
+
+    /**
+     * 在贷余额额度校验
+     * @return
+     */
+    private boolean checkLoanCredit(HjhBailConfig bailConfig, BigDecimal account){
+        // 在贷授信额度
+        BigDecimal loanCreditLine = bailConfig.getLoanCreditLine();
+        // 历史标的发标总额
+        BigDecimal hisLoanTotal = bailConfig.getLoanMarkLine().add(account);
+        logger.info("机构编号：{}, 发标已发额度+本次推标额度：{}", bailConfig.getInstCode(), hisLoanTotal);
+        // 已还本金
+        BigDecimal repayedCapital = bailConfig.getRepayedCapital();
+        logger.info("机构编号：{}, 已还本金：{}", bailConfig.getInstCode(), repayedCapital);
+
+        if(loanCreditLine.compareTo(hisLoanTotal.subtract(repayedCapital)) < 0){
+            logger.info("机构编号：{}, 在贷余额额度已超过授信额度", bailConfig.getInstCode());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 获取保证金配置详情
+     *
+     * @param borrowStyle
+     * @param instCode
+     * @return
+     */
+    private HjhBailConfigInfo getConfigInfo(String borrowStyle, String instCode){
+        HjhBailConfigInfoExample example = new HjhBailConfigInfoExample();
+        example.createCriteria().andInstCodeEqualTo(instCode).andBorrowStyleEqualTo(borrowStyle).andDelFlgEqualTo(0);
+
+        List<HjhBailConfigInfo> list = hjhBailConfigInfoMapper.selectByExample(example);
+        if(list != null && !list.isEmpty()){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 获取redis值
+     *
+     * @param key
+     * @return
+     */
+    private BigDecimal getValueInRedis(String key){
+        logger.info("get value in redis, key:{}", key);
+        String value = RedisUtils.get(key);
+        logger.info("value in redis, key:{}, value:{}", key, value);
+
+        if (StringUtils.isBlank(value)){
+            RedisUtils.set(key, "0");
+            return BigDecimal.ZERO;
+        }
+        return new BigDecimal(value);
     }
 
 }

@@ -3469,29 +3469,16 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				//add by cwyang 更新汇计划相关机构的风险准备金
 				//判断是否最后一期
 				String instCode = borrowInfo.getInstCode();
-				if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) &&  !"10000000".equals(instCode)){
-					//等额本息的标的判断保证金回滚方式
-					HjhInstConfigExample hjhInstConfigExample = new HjhInstConfigExample();
-					hjhInstConfigExample.createCriteria().andInstCodeEqualTo(instCode);
-					List<HjhInstConfig> hjhInstConfigs = hjhInstConfigMapper.selectByExample(hjhInstConfigExample);
-					if (hjhInstConfigs != null && hjhInstConfigs.size() > 0 && null != hjhInstConfigs.get(0).getRepayCapitalType()) {
-						Integer repayCapitalType = hjhInstConfigs.get(0).getRepayCapitalType();
-						//回滚标识位：0 到期回滚、1 分期回滚、 2 不回滚
-						if ("0".equals(repayCapitalType.toString())) {
-							if (periodNext == 0) {
-								updateInstitutionData(borrow, borrowInfo);
-							}
-						} else if ("1".equals(repayCapitalType.toString())){
-							//分期回滚
-							updateInstitutionDataMonth(instCode,repayCapitalWait,borrowNid);
-						}
-					} else {
-						throw new Exception("保证金回滚未获取到资产方信息配置:" + instCode + "]");
-					}
-				}else{
+				//modify by cwyang 根据配置好的保证金配置进行保证金回滚 迁移by liushouyi
+				Integer repayCapitalType = borrow.getRepayCapitalType();
+				//回滚标识位：0 到期回滚、1 分期回滚、 2 不回滚
+				if ("0".equals(repayCapitalType.toString())) {
 					if (periodNext == 0) {
 						updateInstitutionData(borrow, borrowInfo);
 					}
+				} else if ("1".equals(repayCapitalType.toString()) && !"10000000".equals(instCode)){
+					//分期回滚
+					updateInstitutionDataMonth(instCode,repayCapitalWait,borrowNid);
 				}
 				try { 
 					this.sendSmsForManager(borrowNid);
@@ -3700,7 +3687,10 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				updatePlanAsset(borrowNid,status);
 				//add by cwyang 更新汇计划相关机构的风险准备金
 				//判断标的是否分期，并且是否是最后一期
-				updateInstitutionData(borrow, borrowInfo);
+				Integer repayCapitalType = borrow.getRepayCapitalType();
+				if("0".equals(repayCapitalType.toString())){
+					updateInstitutionData(borrow, borrowInfo);
+				}
 				try {
 					this.sendSmsForManager(borrowNid);
 				} catch (Exception e) {
@@ -3785,7 +3775,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		return true;
 	}
     /**
-     * 等额本息还款方式的保证金回滚
+     * 分期保证金回滚
      * @param instCode
      * @param repayCapitalWait
      * @param borrowNid
@@ -3795,13 +3785,30 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
         String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
         boolean flag = redisAddstrack(key, repayCapitalWait.toString());
         if (flag) {
-            logger.info("=================标的还款后机构风险准备金增加成功,标的号:" + borrowNid + ",机构编号:" + instCode + ",增加金额:" + repayCapitalWait);
+			// 更新发标额度余额(增加)和在贷额度（减少） 在数据库更新，防止数据并发 add by cwyang 20180801
+			HashMap map = new HashMap();
+			map.put("amount",repayCapitalWait);
+			map.put("instCode",instCode);
+			this.hjhBailConfigCustomizeMapper.updateRepayInstitutionAmount(map);
+			logger.info("=================标的分期还款后机构风险准备金增加成功,标的号:" + borrowNid + ",机构编号:" + instCode + ",增加金额:" + repayCapitalWait);
+			HjhBailConfigExample bailExample = new HjhBailConfigExample();
+			bailExample.createCriteria().andInstCodeEqualTo(instCode);
+			List<HjhBailConfig> hjhBailConfigs = this.hjhBailConfigMapper.selectByExample(bailExample);
+			if(hjhBailConfigs != null && hjhBailConfigs.size() > 0){
+				HjhBailConfig hjhBailConfig = hjhBailConfigs.get(0);
+				BigDecimal remainMarkLine = hjhBailConfig.getRemainMarkLine();
+				BigDecimal loanBalance = hjhBailConfig.getLoanBalance();
+				BigDecimal repayedCapital = hjhBailConfig.getRepayedCapital();
+				logger.info("=================标的分期还款后机构风险准备金增加成功,标的号:" + borrowNid + ",机构编号:" + instCode
+						+ ",发标额度余额:" + remainMarkLine + ",在贷余额：" + loanBalance + ",已还本金：" + repayedCapital);
+			}
         }
     }
 
 	/**
-	 * 机构的风险准备金还款后增加 
-	 * @param borrowNid
+	 * 整个标的的保证金回滚
+	 * @param borrow
+	 * @param borrowInfo
 	 */
 	private void updateInstitutionData(Borrow borrow, BorrowInfo borrowInfo) {
 		logger.info("===================cwyang标的还款后机构风险准备金开始回滚,标的号:" + borrow.getBorrowNid());
@@ -3813,8 +3820,23 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			//回滚扣减掉的风险准备金
 			String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
 			boolean flag = redisAddstrack(key, account.toString());
-			if (flag) {
+			if (flag) {				// 更新发标额度余额和在贷额度 在数据库更新，防止数据并发
+				HashMap map = new HashMap();
+				map.put("amount",account);
+				map.put("instCode",instCode);
+				this.hjhBailConfigCustomizeMapper.updateRepayInstitutionAmount(map);
 				logger.info("=================标的还款后机构风险准备金增加成功,标的号:" + borrow.getBorrowNid() + ",机构编号:" + instCode + ",增加金额:" + account);
+				HjhBailConfigExample bailExample = new HjhBailConfigExample();
+				bailExample.createCriteria().andInstCodeEqualTo(instCode);
+				List<HjhBailConfig> hjhBailConfigs = this.hjhBailConfigMapper.selectByExample(bailExample);
+				if(hjhBailConfigs != null && hjhBailConfigs.size() > 0){
+					HjhBailConfig hjhBailConfig = hjhBailConfigs.get(0);
+					BigDecimal remainMarkLine = hjhBailConfig.getRemainMarkLine();
+					BigDecimal loanBalance = hjhBailConfig.getLoanBalance();
+					BigDecimal repayedCapital = hjhBailConfig.getRepayedCapital();
+					logger.info("=================标的还款后机构风险准备金增加成功,标的号:" + borrow.getBorrowNid() + ",机构编号:" + instCode
+							+ ",发标额度余额:" + remainMarkLine + ",在贷余额：" + loanBalance + ",已还本金：" + repayedCapital);
+				}
 			}
 		}
 		
