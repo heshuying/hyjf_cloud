@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,7 +45,11 @@ public class TradeDetailController  extends BaseTradeController {
         WebResult<Object> result=new WebResult<Object>();
         // 交易类型列表
         List<AccountTradeVO> trades = this.tradeDetailService.selectTradeTypes();
-        result.setData(trades);
+        if(trades == null){
+            result.setData(new ArrayList<AccountTradeVO>());
+        } else {
+            result.setData(trades);
+        }
         result.setStatus(BaseResult.SUCCESS);
         result.setStatusDesc(BaseResult.SUCCESS_DESC);
         return result;
