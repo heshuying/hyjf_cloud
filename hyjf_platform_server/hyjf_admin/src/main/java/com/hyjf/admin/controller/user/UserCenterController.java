@@ -576,7 +576,10 @@ public class UserCenterController extends BaseController {
         UpdCompanyRequest updCompanyRequest = new UpdCompanyRequest();
         BeanUtils.copyProperties(companyInfoInstRequesetBean,updCompanyRequest);
         Response response = userCenterService.saveCompanyInfo(updCompanyRequest);
-        return new AdminResult<Response>(response);
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return new AdminResult<Response>(response);
+        }
+        return new AdminResult<>(FAIL, response.getMessage());
     }
 
     public UserManagerInitResponseBean initUserManaget(){
