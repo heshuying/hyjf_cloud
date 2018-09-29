@@ -3,16 +3,15 @@
  */
 package com.hyjf.cs.message.mongo.mc;
 
-import java.util.List;
-
+import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
+import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
+import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
-import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
-import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
+import java.util.List;
 
 /**
  * @author fuqiang

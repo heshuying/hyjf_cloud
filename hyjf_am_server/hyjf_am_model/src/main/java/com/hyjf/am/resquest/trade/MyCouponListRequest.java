@@ -2,8 +2,6 @@ package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.BaseVO;
 
-import java.math.BigDecimal;
-
 /**
  * 我的优惠券列表
  * @author hesy

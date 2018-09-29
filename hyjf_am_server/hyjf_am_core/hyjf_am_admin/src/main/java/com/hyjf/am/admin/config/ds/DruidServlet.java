@@ -1,9 +1,9 @@
 package com.hyjf.am.admin.config.ds;
 
+import com.alibaba.druid.support.http.StatViewServlet;
+
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
-
-import com.alibaba.druid.support.http.StatViewServlet;
 
 @WebServlet(urlPatterns = "/druid/*", 
 initParams={

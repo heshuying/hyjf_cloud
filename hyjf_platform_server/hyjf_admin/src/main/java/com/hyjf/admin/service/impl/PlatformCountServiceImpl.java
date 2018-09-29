@@ -3,17 +3,14 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
+import com.hyjf.admin.beans.request.PlatformCountRequestBean;
+import com.hyjf.admin.client.AmAdminClient;
+import com.hyjf.admin.service.PlatformCountService;
 import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
 import com.hyjf.am.vo.admin.PlatformUserCountCustomizeVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.hyjf.admin.beans.request.PlatformCountRequestBean;
-import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.service.PlatformCountService;
-import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
 
 import java.util.List;
 

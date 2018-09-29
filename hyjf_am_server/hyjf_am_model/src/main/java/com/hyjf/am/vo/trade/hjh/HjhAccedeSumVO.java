@@ -3,11 +3,10 @@
  */
 package com.hyjf.am.vo.trade.hjh;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BaseVO;
-
 import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
 
 /**
  * @author libin

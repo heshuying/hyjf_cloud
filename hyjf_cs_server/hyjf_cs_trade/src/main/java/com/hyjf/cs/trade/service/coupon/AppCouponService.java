@@ -5,7 +5,6 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author walter.limeng

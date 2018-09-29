@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.customize;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 充值管理
@@ -151,7 +152,7 @@ public class RechargeManagementCustomize implements Serializable {
     /**
      *
      */
-    private String createTime;
+    private Date createTime;
 
     /**
      *
@@ -429,11 +430,11 @@ public class RechargeManagementCustomize implements Serializable {
         this.remark = remark;
     }
 
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 

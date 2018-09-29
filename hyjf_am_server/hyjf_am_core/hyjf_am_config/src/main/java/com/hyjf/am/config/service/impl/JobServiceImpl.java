@@ -8,7 +8,6 @@ import com.hyjf.am.config.dao.model.auto.Job;
 import com.hyjf.am.config.dao.model.auto.JobExample;
 import com.hyjf.am.config.service.JobService;
 import com.hyjf.am.resquest.admin.JobRequest;
-import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

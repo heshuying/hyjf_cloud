@@ -1,7 +1,6 @@
 package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 
 /**

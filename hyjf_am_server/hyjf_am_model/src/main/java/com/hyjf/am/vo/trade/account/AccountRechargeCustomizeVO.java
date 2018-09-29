@@ -4,6 +4,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 充值管理自定义返回值
@@ -154,7 +155,7 @@ public class AccountRechargeCustomizeVO extends BaseVO implements Serializable {
     /**
      *
      */
-    private String createTime;
+    private Date createTime;
 
     /**
      *
@@ -432,11 +433,11 @@ public class AccountRechargeCustomizeVO extends BaseVO implements Serializable {
         this.remark = remark;
     }
 
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 

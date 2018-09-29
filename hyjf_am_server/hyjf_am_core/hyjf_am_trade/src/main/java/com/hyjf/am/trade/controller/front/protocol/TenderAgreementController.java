@@ -1,22 +1,23 @@
 package com.hyjf.am.trade.controller.front.protocol;
 
-import java.util.List;
-
-import com.hyjf.am.trade.controller.BaseController;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.am.response.trade.AssetManageResponse;
 import com.hyjf.am.response.trade.TenderAgreementResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
 import com.hyjf.am.trade.service.front.config.TenderAgreementService;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
-
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author pangchengchao

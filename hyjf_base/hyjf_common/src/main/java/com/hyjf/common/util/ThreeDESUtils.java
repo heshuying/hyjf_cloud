@@ -11,18 +11,12 @@
 
 package com.hyjf.common.util;
 
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.util.HashMap;
-import java.util.Map;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-
-import com.alibaba.fastjson.JSON;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import java.security.MessageDigest;
 
 /**
  * 三重加解密工具类

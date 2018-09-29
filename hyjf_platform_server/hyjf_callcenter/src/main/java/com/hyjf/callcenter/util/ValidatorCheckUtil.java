@@ -1,21 +1,16 @@
 package com.hyjf.callcenter.util;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.GenericValidator;
+import org.springframework.web.servlet.support.RequestContext;
+
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.validator.CheckUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.servlet.support.RequestContext;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.validator.GenericValidator;
-
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.validator.Validator;
 
 /**
  * @author libin

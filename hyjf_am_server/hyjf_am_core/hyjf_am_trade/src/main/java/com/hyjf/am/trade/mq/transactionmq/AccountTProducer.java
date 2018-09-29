@@ -1,15 +1,14 @@
 package com.hyjf.am.trade.mq.transactionmq;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.trade.controller.transactiondemo.TransactionService;
+import com.hyjf.common.exception.MQException;
 import org.apache.rocketmq.client.producer.LocalTransactionState;
 import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.hyjf.am.trade.controller.transactiondemo.TransactionService;
-import com.hyjf.common.exception.MQException;
 
 /**
  * @author xiasq

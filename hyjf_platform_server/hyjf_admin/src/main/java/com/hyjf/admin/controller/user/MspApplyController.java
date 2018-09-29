@@ -1,7 +1,6 @@
 package com.hyjf.admin.controller.user;
 
 import com.hyjf.admin.beans.request.MspApplytRequestBean;
-import com.hyjf.admin.beans.request.MspRequestBean;
 import com.hyjf.admin.beans.response.MspApplytResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;

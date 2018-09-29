@@ -2,8 +2,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.HjhBailConfigLog;
 import com.hyjf.am.trade.dao.model.auto.HjhBailConfigLogExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface HjhBailConfigLogMapper {
     int countByExample(HjhBailConfigLogExample example);

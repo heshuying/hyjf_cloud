@@ -2,7 +2,9 @@ package com.hyjf.cs.trade.controller.api.inveset;
 
 
 import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.invest.BorrowListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
-import com.hyjf.cs.trade.service.invest.BorrowListService;
 
 /**
  * api端：标的接口

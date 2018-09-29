@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.resquest.admin;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BasePage;
+
+import java.io.Serializable;
 /**
  * @author libin
  * @version AllocationEngineBean.java, v0.1 2018年7月3日 下午12:00:11

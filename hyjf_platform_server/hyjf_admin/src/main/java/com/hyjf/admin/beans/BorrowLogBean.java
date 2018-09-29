@@ -2,11 +2,8 @@ package com.hyjf.admin.beans;
 
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.am.vo.admin.BorrowLogCustomizeVO;
-import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao

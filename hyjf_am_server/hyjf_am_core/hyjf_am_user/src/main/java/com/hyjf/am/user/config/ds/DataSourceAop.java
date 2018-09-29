@@ -1,15 +1,10 @@
 package com.hyjf.am.user.config.ds;
 
+import com.hyjf.common.constants.CommonConstant;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
-
-import com.hyjf.common.constants.CommonConstant;
 
 @Aspect
 @Component

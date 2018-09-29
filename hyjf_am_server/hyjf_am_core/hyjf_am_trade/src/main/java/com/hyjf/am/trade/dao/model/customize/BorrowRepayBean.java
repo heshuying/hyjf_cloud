@@ -3,7 +3,6 @@ package com.hyjf.am.trade.dao.model.customize;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

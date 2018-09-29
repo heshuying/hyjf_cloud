@@ -7,8 +7,8 @@ import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.batch.BorrowCreditService;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

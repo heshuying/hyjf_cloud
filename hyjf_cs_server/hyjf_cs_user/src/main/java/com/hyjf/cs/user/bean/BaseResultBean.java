@@ -3,9 +3,9 @@
  */
 package com.hyjf.cs.user.bean;
 
-import java.io.Serializable;
-
 import com.hyjf.cs.common.util.ApiSignUtil;
+
+import java.io.Serializable;
 
 /**
  * 接口返回数据的基类

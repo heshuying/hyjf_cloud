@@ -1,72 +1,13 @@
 package com.hyjf.am.trade.service.front.consumer.impl;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.trade.config.SystemConfig;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.AccountListExample;
-import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
-import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterestExample;
-import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditRepay;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditRepayExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtDetail;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtDetailExample;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
-import com.hyjf.am.trade.dao.model.auto.HjhPlan;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanExample;
-import com.hyjf.am.trade.dao.model.auto.HjhRepay;
-import com.hyjf.am.trade.dao.model.auto.HjhRepayExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.CalculateInvestInterestProducer;
-import com.hyjf.am.trade.mq.producer.CouponLoansHjhMessageProducer;
-import com.hyjf.am.trade.mq.producer.CouponRepayHjhMessageProducer;
-import com.hyjf.am.trade.mq.producer.CouponRepayMessageProducer;
-import com.hyjf.am.trade.mq.producer.FddProducer;
-import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
+import com.hyjf.am.trade.mq.producer.*;
 import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayPlanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -87,10 +28,16 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 自动扣款(还款服务)

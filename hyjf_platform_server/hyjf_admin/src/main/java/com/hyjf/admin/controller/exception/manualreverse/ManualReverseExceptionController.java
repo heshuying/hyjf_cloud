@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.exception.manualreverse;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
@@ -9,7 +8,6 @@ import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.ManualReverseAddRequest;
 import com.hyjf.am.resquest.admin.ManualReverseCustomizeRequest;
 import com.hyjf.am.vo.admin.ManualReverseCustomizeVO;
-import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;

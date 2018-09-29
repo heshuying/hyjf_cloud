@@ -1,9 +1,5 @@
 package com.hyjf.am.resquest.user;
 
-import com.hyjf.am.vo.BaseVO;
-
-import java.io.Serializable;
-
 public class UserChangeLogRequest {
     private Integer id;
 

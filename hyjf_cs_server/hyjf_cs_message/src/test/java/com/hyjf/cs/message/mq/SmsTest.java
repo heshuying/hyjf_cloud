@@ -1,15 +1,5 @@
 package com.hyjf.cs.message.mq;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
@@ -19,6 +9,15 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.message.CsMessageApplication;
 import com.hyjf.cs.message.mq.base.MessageContent;
 import com.hyjf.cs.message.mq.producer.SmsProducer;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author xiasq

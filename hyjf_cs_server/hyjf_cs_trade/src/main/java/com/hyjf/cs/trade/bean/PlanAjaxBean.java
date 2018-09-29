@@ -1,12 +1,10 @@
 package com.hyjf.cs.trade.bean;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
+
+import java.util.List;
 
 public class PlanAjaxBean {
 

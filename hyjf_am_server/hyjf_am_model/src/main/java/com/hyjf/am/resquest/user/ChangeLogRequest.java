@@ -12,7 +12,6 @@
 package com.hyjf.am.resquest.user;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.BaseVO;
 
 /**
  * @author dongzeshan

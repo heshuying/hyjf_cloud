@@ -1,9 +1,9 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
+
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 
 /**
  * @author hesy

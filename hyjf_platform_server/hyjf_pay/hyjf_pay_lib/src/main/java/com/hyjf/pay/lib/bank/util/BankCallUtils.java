@@ -10,9 +10,10 @@
  */
 package com.hyjf.pay.lib.bank.util;
 
-import java.io.Serializable;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.spring.SpringUtils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.config.URLSystemConfig;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -21,10 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.spring.SpringUtils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import java.io.Serializable;
+import java.util.Map;
 
 public class BankCallUtils implements Serializable {
 	private static Logger logger = LoggerFactory.getLogger(BankCallUtils.class);

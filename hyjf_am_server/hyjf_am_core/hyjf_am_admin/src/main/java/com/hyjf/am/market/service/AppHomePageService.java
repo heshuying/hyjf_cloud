@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.market.service;
 
+import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
+
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
 
 /**
  * @author dangzw

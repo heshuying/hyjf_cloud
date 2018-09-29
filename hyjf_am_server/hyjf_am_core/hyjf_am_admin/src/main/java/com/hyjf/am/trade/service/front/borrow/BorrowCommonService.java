@@ -1,18 +1,14 @@
 package com.hyjf.am.trade.service.front.borrow;
 
-import java.util.List;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.HjhAssetType;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
+
+import java.util.List;
 
 public interface BorrowCommonService extends BaseService {
 

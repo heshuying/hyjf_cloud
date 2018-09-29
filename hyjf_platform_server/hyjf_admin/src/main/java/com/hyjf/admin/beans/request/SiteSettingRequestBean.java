@@ -3,9 +3,9 @@
  */
 package com.hyjf.admin.beans.request;
 
-import java.io.Serializable;
-
 import com.hyjf.admin.beans.BaseRequest;
+
+import java.io.Serializable;
 
 /**
  * @author fuqiang

@@ -7,7 +7,7 @@ import com.hyjf.am.response.admin.MessagePushMsgResponse;
 import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
 
-import java.util.List; /**
+/**
  * @author yaoyong
  * @version MessagePushMsgService, v0.1 2018/8/15 16:02
  */

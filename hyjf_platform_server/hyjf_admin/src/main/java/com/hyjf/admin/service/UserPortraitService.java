@@ -3,15 +3,9 @@
  */
 package com.hyjf.admin.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.user.UserPortraitResponse;
-import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
-import com.hyjf.am.vo.user.LoanCoverUserVO;
 import com.hyjf.am.vo.user.UserPortraitVO;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl

@@ -1,11 +1,11 @@
 package com.hyjf.am.response.config;
 
-import java.util.List;
-
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.vo.admin.AdminCustomizeVO;
 import com.hyjf.am.vo.admin.AdminRoleVO;
 import com.hyjf.am.vo.admin.ROaDepartmentVO;
+
+import java.util.List;
 
 /**
  * @author dongzeshan

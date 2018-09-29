@@ -1,12 +1,12 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.dao.model.auto.ContentArticleExample;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author lisheng

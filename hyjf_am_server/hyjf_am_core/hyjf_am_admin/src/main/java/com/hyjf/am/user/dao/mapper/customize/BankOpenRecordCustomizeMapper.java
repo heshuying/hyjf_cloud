@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.user.dao.model.customize.BankOpenAccountRecordCustomize;
+
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.user.dao.model.customize.BankOpenAccountRecordCustomize;
 
 /**
  * @author nxl

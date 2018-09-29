@@ -1,23 +1,10 @@
 package com.hyjf.am.response.user;
 
+import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.vo.user.*;
+
 import java.math.BigDecimal;
 import java.util.List;
-
-import com.hyjf.am.response.AdminResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.user.MspAbnormalBeanVO;
-import com.hyjf.am.vo.user.MspAnliinfosVO;
-import com.hyjf.am.vo.user.MspApplyVO;
-import com.hyjf.am.vo.user.MspApplydetailsVO;
-import com.hyjf.am.vo.user.MspBlackdataVO;
-import com.hyjf.am.vo.user.MspConfigureVO;
-import com.hyjf.am.vo.user.MspFqzVO;
-import com.hyjf.am.vo.user.MspNormalcreditdetailVO;
-import com.hyjf.am.vo.user.MspQuerydetailVO;
-import com.hyjf.am.vo.user.MspRegionVO;
-import com.hyjf.am.vo.user.MspShixininfosVO;
-import com.hyjf.am.vo.user.MspTitleVO;
-import com.hyjf.am.vo.user.MspZhixinginfosVO;
 
 public class MspApplytResponse extends AdminResponse<MspApplyVO>  {
 

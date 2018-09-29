@@ -1,11 +1,11 @@
 package com.hyjf.am.trade.service.admin.statistics;
 
+import com.hyjf.am.resquest.trade.OperationReportJobRequest;
+import com.hyjf.am.vo.trade.OperationReportJobVO;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
-import com.hyjf.am.resquest.trade.OperationReportJobRequest;
-import com.hyjf.am.vo.trade.OperationReportJobVO;
 
 /**
  * @author tanyy

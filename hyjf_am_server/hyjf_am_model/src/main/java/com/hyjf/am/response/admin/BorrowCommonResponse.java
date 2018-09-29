@@ -3,18 +3,17 @@
  */
 package com.hyjf.am.response.admin;
 
-import java.util.List;
-
 import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.bean.admin.BorrowWithBLOBs;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.config.LinkVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+
+import java.util.List;
 
 
 /**

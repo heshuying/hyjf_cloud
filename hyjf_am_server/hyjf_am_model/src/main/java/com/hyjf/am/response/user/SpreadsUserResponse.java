@@ -2,7 +2,6 @@ package com.hyjf.am.response.user;
 
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
 
 /**

@@ -3,14 +3,12 @@
  */
 package com.hyjf.cs.market.controller.batch;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.market.service.PcChannelStatisticsService;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**

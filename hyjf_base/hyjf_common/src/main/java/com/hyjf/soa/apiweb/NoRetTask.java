@@ -1,10 +1,9 @@
 package com.hyjf.soa.apiweb;
 
-import java.util.Map;
-
+import com.hyjf.common.http.HttpClientUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.hyjf.common.http.HttpClientUtils;
+import java.util.Map;
 
 public class NoRetTask implements Runnable {
 	String requestUrl = StringUtils.EMPTY;

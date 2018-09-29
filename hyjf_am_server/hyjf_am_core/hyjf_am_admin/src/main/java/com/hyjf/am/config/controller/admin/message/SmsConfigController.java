@@ -1,11 +1,5 @@
 package com.hyjf.am.config.controller.admin.message;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.SmsConfig;
 import com.hyjf.am.config.service.SmsConfigService;
@@ -13,6 +7,11 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.resquest.admin.SmsConfigRequest;
 import com.hyjf.am.vo.config.SmsConfigVO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author xiasq

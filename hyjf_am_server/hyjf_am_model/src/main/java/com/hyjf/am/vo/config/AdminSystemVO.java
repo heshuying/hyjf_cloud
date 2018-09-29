@@ -1,11 +1,10 @@
 package com.hyjf.am.vo.config;
 
+import com.hyjf.am.vo.BasePage;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.BaseVO;
 
 public class AdminSystemVO extends BasePage implements Serializable {
 

@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.user.dao.model.customize.EvalationResultCustomize;
 import com.hyjf.am.user.dao.model.customize.UserEvalationQuestionCustomize;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Administrator

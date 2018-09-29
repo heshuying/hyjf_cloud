@@ -1,22 +1,9 @@
 package com.hyjf.am.user.service.admin.anrong;
 
-import java.util.List;
-
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcredit;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetail;
-import com.hyjf.am.user.dao.model.auto.MspAnliinfos;
-import com.hyjf.am.user.dao.model.auto.MspApply;
-import com.hyjf.am.user.dao.model.auto.MspApplydetails;
-import com.hyjf.am.user.dao.model.auto.MspBlackdata;
-import com.hyjf.am.user.dao.model.auto.MspConfigure;
-import com.hyjf.am.user.dao.model.auto.MspFqz;
-import com.hyjf.am.user.dao.model.auto.MspNormalcreditdetail;
-import com.hyjf.am.user.dao.model.auto.MspQuerydetail;
-import com.hyjf.am.user.dao.model.auto.MspRegion;
-import com.hyjf.am.user.dao.model.auto.MspShixininfos;
-import com.hyjf.am.user.dao.model.auto.MspTitle;
-import com.hyjf.am.user.dao.model.auto.MspZhixinginfos;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.BaseService;
+
+import java.util.List;
 
 
 public interface MspApplyService extends BaseService{

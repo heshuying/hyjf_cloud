@@ -7,8 +7,6 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.LateAndCreditService;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

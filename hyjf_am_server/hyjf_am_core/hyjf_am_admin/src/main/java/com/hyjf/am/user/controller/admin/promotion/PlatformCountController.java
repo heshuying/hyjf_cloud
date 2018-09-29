@@ -3,13 +3,6 @@
  */
 package com.hyjf.am.user.controller.admin.promotion;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.resquest.admin.PlatformCountRequest;
 import com.hyjf.am.user.controller.BaseController;
@@ -17,6 +10,12 @@ import com.hyjf.am.user.dao.model.customize.PlatformUserCountCustomize;
 import com.hyjf.am.user.service.admin.promotion.PlatformCountService;
 import com.hyjf.am.vo.admin.PlatformUserCountCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author fq

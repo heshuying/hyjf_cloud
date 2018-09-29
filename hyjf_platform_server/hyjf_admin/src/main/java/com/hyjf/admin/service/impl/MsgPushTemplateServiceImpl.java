@@ -8,11 +8,8 @@ import com.hyjf.admin.service.MsgPushTemplateService;
 import com.hyjf.am.response.config.MessagePushTemplateResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTagVO;
-import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author fuqiang

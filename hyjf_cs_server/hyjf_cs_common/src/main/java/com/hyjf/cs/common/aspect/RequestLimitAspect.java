@@ -3,8 +3,10 @@
  */
 package com.hyjf.cs.common.aspect;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.exception.CheckException;
+import com.hyjf.cs.common.annotation.RequestLimit;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,10 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.exception.CheckException;
-import com.hyjf.cs.common.annotation.RequestLimit;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author dxj

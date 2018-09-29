@@ -1,8 +1,6 @@
 package com.hyjf.cs.message.client;
 
 import com.hyjf.am.vo.config.IdCardCustomize;
-import com.hyjf.am.vo.datacollect.OperationReportInfoVO;
-import com.hyjf.am.vo.datacollect.OperationReportVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 
 import java.math.BigDecimal;

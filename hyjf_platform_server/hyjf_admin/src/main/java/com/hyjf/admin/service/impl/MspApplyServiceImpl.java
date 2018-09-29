@@ -1,16 +1,14 @@
 package com.hyjf.admin.service.impl;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.MspApplyService;
 import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.response.user.MspResponse;
 import com.hyjf.am.resquest.user.MspApplytRequest;
 import com.hyjf.am.resquest.user.MspRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 @Service
 public class MspApplyServiceImpl implements MspApplyService{
 	@Autowired

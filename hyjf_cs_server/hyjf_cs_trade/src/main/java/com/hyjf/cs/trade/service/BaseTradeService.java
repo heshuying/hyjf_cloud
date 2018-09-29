@@ -1,15 +1,11 @@
 package com.hyjf.cs.trade.service;
 
-import java.math.BigDecimal;
-
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
+
+import java.math.BigDecimal;
 
 
 public interface BaseTradeService extends BaseService{

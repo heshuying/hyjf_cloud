@@ -1,7 +1,6 @@
 package com.hyjf.cs.market.client.impl;
 
 import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.cs.market.client.AmMarketClient;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**

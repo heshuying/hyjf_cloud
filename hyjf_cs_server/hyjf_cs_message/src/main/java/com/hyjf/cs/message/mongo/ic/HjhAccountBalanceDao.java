@@ -5,7 +5,6 @@ package com.hyjf.cs.message.mongo.ic;
 
 import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.ic.BankSmsAuthCode;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;

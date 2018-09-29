@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
 import com.hyjf.am.trade.dao.model.customize.CallCenterBorrowCreditCustomize;
+
+import java.util.List;
 
 public interface CallcenterBorrowCreditCustomizeMapper {
 	/**

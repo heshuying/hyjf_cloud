@@ -1,10 +1,9 @@
 package com.hyjf.am.trade.dao.model.customize;
 
-import java.util.Date;
-
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 
-import com.hyjf.common.util.GetDate;
+import java.util.Date;
 
 public class TenderCreditAssignedCustomize {
     /* 主键 */

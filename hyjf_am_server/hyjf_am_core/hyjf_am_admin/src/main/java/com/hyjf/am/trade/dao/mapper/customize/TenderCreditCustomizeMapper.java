@@ -11,11 +11,11 @@
 
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.trade.dao.model.customize.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.TenderToCreditDetailCustomize;
+
+import java.util.List;
+import java.util.Map;
 
 
 public interface TenderCreditCustomizeMapper {

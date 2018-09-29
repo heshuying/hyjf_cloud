@@ -2,8 +2,6 @@ package com.hyjf.callcenter.client;
 
 import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
 import com.hyjf.am.vo.callcenter.CallcenterBankConfigVO;
-import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.util.List;
 

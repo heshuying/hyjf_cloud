@@ -5,10 +5,7 @@ package com.hyjf.am.trade.service.front.coupon.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.CouponBatchSendProducer;
 import com.hyjf.am.bean.admin.BatchSubUserCouponBean;
-import com.hyjf.am.resquest.user.BatchCouponsRequest;
 import com.hyjf.am.trade.dao.mapper.auto.CouponConfigMapper;
 import com.hyjf.am.trade.dao.mapper.auto.CouponUserMapper;
 import com.hyjf.am.trade.dao.mapper.customize.CouponConfigCustomizeMapper;
@@ -23,9 +20,6 @@ import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserExample;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.auto.UserInfoExample;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
@@ -37,7 +31,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoyong

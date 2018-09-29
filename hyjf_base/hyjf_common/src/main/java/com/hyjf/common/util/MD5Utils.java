@@ -11,7 +11,6 @@
 
 package com.hyjf.common.util;
 
-import java.io.IOException;
 import java.security.MessageDigest;
 
 /**

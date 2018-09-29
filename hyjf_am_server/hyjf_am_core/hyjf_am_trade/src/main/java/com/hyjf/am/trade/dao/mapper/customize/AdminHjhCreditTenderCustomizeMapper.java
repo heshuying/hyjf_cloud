@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderSumVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author libin

@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.front.borrow.impl;
 
-import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.resquest.admin.BorrowCreditAmRequest;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowCreditMapper;

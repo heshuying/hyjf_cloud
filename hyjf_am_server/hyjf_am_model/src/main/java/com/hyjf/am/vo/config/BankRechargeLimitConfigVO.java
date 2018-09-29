@@ -2,12 +2,10 @@ package com.hyjf.am.vo.config;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
-import com.hyjf.am.vo.trade.BankConfigVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 public class BankRechargeLimitConfigVO extends BaseVO implements Serializable {
     private Integer id;

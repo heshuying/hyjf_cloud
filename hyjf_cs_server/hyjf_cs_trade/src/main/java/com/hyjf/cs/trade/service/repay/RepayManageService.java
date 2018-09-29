@@ -1,9 +1,7 @@
 package com.hyjf.cs.trade.service.repay;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.BatchRepayDataRequest;
 import com.hyjf.am.resquest.trade.RepayListRequest;
-import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
@@ -14,9 +12,7 @@ import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author hesy

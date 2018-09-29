@@ -1,8 +1,8 @@
 package com.hyjf.am.vo.user;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
 
 public class ChangeLogVO extends BaseVO implements Serializable {
 

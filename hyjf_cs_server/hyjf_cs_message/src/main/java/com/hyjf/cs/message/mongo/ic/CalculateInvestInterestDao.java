@@ -1,12 +1,11 @@
 package com.hyjf.cs.message.mongo.ic;
 
-import java.math.BigDecimal;
-import java.util.List;
-
+import com.hyjf.cs.message.bean.ic.CalculateInvestInterest;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import com.hyjf.cs.message.bean.ic.CalculateInvestInterest;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @Description 网站收益  运营数据

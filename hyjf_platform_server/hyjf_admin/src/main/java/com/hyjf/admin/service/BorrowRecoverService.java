@@ -1,6 +1,5 @@
 package com.hyjf.admin.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowRecoverBean;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;

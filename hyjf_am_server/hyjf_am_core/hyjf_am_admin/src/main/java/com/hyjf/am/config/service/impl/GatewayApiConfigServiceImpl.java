@@ -1,14 +1,13 @@
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.GatewayApiConfigMapper;
 import com.hyjf.am.config.dao.model.auto.GatewayApiConfig;
 import com.hyjf.am.config.dao.model.auto.GatewayApiConfigExample;
 import com.hyjf.am.config.service.GatewayApiConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author xiasq

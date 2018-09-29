@@ -23,6 +23,8 @@ public class BorrowCreditRequest extends BaseRequest {
     @ApiModelProperty(value = "添加时间 结束")
     private String timeEnd;
 
+    private String client;
+
     /**
      * 标注，调用接口是初次调用，还是点击搜索按钮(1:是  0:否)
      */
@@ -93,5 +95,13 @@ public class BorrowCreditRequest extends BaseRequest {
 
     public void setIsExport(String isExport) {
         this.isExport = isExport;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
     }
 }

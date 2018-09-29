@@ -52,6 +52,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowCommonCarVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonCompanyAuthenVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
 import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -1643,13 +1644,25 @@ public class BorrowCommonController extends BaseController {
 	 */
 	@ApiOperation(value = " 受托用户是否存在")
 	@PostMapping("/isEntrustedExistsUser")
-	public AdminResult isEntrustedExistsUser(@RequestBody @Valid   String userName) {
-		int usersFlag=this.borrowCommonService.isEntrustedExistsUser(userName);
-		if (usersFlag == 1) {
+	public AdminResult isEntrustedExistsUser(@RequestBody @Valid  Map<String, String> userName) {
+		 UserVO user = this.borrowCommonService.getUserByUserName(userName.get("userName"));
+		if (user == null ) {
+		// 借款人用户名不存在。
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_EXIST);
-		} else if (usersFlag == 2) {
+		}
+		if (user.getBankOpenAccount()!=1) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_ACCOUNTS);
-		} else if (usersFlag == 3) {
+		}
+		if (user.getStatus() != 0) {
+			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_USES);
+		}
+		int usersFlag=this.borrowCommonService.isEntrustedExistsUser(userName.get("userName"));
+//		if (usersFlag == 1) {
+//			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_EXIST);
+//		} else if (usersFlag == 2) {
+//			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_ACCOUNTS);
+//		} else 
+		if (usersFlag == 3) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_USES);
 		} else if (usersFlag == 4) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_IN);

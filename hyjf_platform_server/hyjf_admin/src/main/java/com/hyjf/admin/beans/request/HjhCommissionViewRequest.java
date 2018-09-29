@@ -3,13 +3,12 @@
  */
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.admin.beans.vo.HjhCommissionVO;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
-
-import com.hyjf.admin.beans.vo.HjhCommissionVO;
-
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author libin
