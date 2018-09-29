@@ -937,6 +937,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     @Override
     public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,String bankName,String payAllianceCode,User user,String bankId) {
         Response response = new Response();
+        response.setRtn(Response.FAIL);
         String accountId = updCompanyRequest.getAccountId();
         if (StringUtils.isBlank(accountId)) {
             response.setMessage("请输入正确的电子账号!");
