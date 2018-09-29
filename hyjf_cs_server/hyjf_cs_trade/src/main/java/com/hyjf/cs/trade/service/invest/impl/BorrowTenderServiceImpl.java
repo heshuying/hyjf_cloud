@@ -371,6 +371,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
         }
         // 新手标
+        logger.info("investUserType: "+borrowProjectType.getInvestUserType());
         if ("1".equals(borrowProjectType.getInvestUserType())) {
             boolean isNew = this.checkIsNewUserCanInvest(userId);
             // 该项目只能新手投资
