@@ -248,8 +248,8 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
         List<WithdrawCustomize> list = withdrawCustomizeMapper.selectWithdrawList(request);
         for (WithdrawCustomize withdrawCustomize:list) {
             withdrawCustomize.setUserProperty(userPropertyMap.getOrDefault(withdrawCustomize.getUserProperty(),null));
-            withdrawCustomize.setClientStr(userPropertyMap.getOrDefault(withdrawCustomize.getClientStr(),null));
-            withdrawCustomize.setStatusStr(userPropertyMap.getOrDefault(withdrawCustomize.getStatusStr(),null));
+            withdrawCustomize.setClientStr(clientMap.getOrDefault(withdrawCustomize.getClientStr(),null));
+            withdrawCustomize.setStatusStr(withdrawStatusMap.getOrDefault(withdrawCustomize.getStatusStr(),null));
         }
         return list;
     }

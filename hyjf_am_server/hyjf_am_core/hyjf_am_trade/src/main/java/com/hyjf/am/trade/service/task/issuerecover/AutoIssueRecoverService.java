@@ -4,6 +4,7 @@ import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
+import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * @author walter.limeng
  * @version AutoIssueRecoverJob, v0.1 2018/7/11 10:30
  */
-public interface AutoIssueRecoverService {
+public interface AutoIssueRecoverService extends BaseService {
 
     /**
      * 查询待录标列表

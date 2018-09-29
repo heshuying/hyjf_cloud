@@ -4,13 +4,14 @@ import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
+import com.hyjf.am.trade.service.BaseService;
 
 /**
  * @Author walter.limeng
  * @Description  自动初审消息
  * @Date 9:23 2018/7/12
  */
-public interface AutoPreAuditMessageService {
+public interface AutoPreAuditMessageService extends BaseService {
     
     /**
      * @Author walter.limeng

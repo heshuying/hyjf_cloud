@@ -188,7 +188,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         }
         //判断新标还是老标，老标走原来逻辑原来页面，新标走新方法 0为老标 1为新标(融通宝走原来页面)  -- 原系统注释
         if (detailCsVO.getIsNew() == 0 || "13".equals(detailCsVO.getType())) {
-            // TODO: 2018/6/23  getProjectDetail(modelAndView, detailCsVO,userId);     待确认是否还有老标后再处理
         } else {
             getProjectDetailNew(other, projectCustomeDetail, userVO);
         }
@@ -262,7 +261,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             request.setMoney("0");
             Integer couponAvailableCount = amUserClient.countAvaliableCoupon(request);
             other.put("couponAvailableCount", couponAvailableCount == null ? "0" : String.valueOf(couponAvailableCount));
-            other.put("borrowMeasuresMea", borrow.getBorrowMeasuresMea());
+            BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(borrow.getBorrowNid());
+            other.put("borrowMeasuresMea", StringUtils.isNotBlank(borrow.getBorrowMeasuresMea()) ? borrow.getBorrowMeasuresMea() : "");
             /** 可用优惠券张数结束 pccvip */
             /** 计算最优优惠券结束 */
 

@@ -438,7 +438,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         BASE64Decoder decoder = new BASE64Decoder();
         // 将字符串格式的image转为二进制流（biye[])的decodedBytes
         byte[] decodedBytes = decoder.decodeBuffer(image);
-
+        logger.info("头像转成二进制大小:[{}]",decodedBytes.length);
         String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
         // 实际物理路径前缀2
         String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
@@ -452,9 +452,11 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         String fileRealName = String.valueOf(System.currentTimeMillis());
         fileRealName = "appIconImg_" + userId + fileRealName + ".png";
         // 指定图片要存放的位置
-        String imgFilePath = logoSaveFile + "/" + fileRealName;
+        String imgFilePath = logoSaveFile + File.separator + fileRealName;
         // 新建一个文件输出器，并为它指定输出位置imgFilePath
-        try (FileOutputStream out = new FileOutputStream(imgFilePath)) {
+        try{
+            logger.info("开始将头像写入硬盘 -> fileName:[{}]",fileRealName);
+            FileOutputStream out = new FileOutputStream(imgFilePath);
             // 利用文件输出器将二进制格式decodedBytes输出
             out.write(decodedBytes);
             out.close(); // 关闭文件输出器

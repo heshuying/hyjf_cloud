@@ -4287,7 +4287,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/creditTender/getCreditTenderServiceFee/" +creditNid;
         StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
         if (Response.isSuccess(response)){
-            response.getResultStr();
+            return response.getResultStr();
         }
         return null;
     }
@@ -5323,6 +5323,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         MyCouponListResponse response = restTemplate.postForEntity(url, requestBean, MyCouponListResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据资产来源查询保证金配置 add by liushouyi
+     *
+     * @param instCode
+     * @return
+     */
+    @Override
+    public BailConfigInfoCustomizeVO selectBailConfigByInstCode(String instCode) {
+        String url = urlBase + "bail_config/select_bail_config_by_instcode/" + instCode;
+        BailConfigInfoCustomizeResponse response = restTemplate.getForEntity(url,BailConfigInfoCustomizeResponse.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
         }
         return null;
     }

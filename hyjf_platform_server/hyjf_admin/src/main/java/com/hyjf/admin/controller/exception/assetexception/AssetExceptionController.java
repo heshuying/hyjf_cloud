@@ -42,7 +42,7 @@ import java.util.Map;
  * @author PC-LIUSHOUYI
  * @version AssetException, v0.1 2018/9/28 17:54
  */
-@Api(value = "配置中心-异常标的处理", tags = "配置中心-异常标的处理")
+@Api(value = "异常中心-异常标的处理", tags = "异常中心-异常标的处理")
 @RestController
 @RequestMapping("/hyjf-admin/asset_exception")
 public class AssetExceptionController extends BaseController {

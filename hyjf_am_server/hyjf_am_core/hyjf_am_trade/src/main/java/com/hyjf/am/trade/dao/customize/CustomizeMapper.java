@@ -215,4 +215,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected BorrowRecoverPlanMapper borrowRecoverPlanMapper;
+
+	@Autowired
+	protected ApiBailConfigInfoCustomizeMapper apiBailConfigInfoCustomizeMapper;
 }

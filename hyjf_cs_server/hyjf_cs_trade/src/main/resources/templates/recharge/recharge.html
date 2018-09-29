@@ -7,16 +7,72 @@
 </head>
 <body>
     <h2>充值模拟页面</h2>
-    <form action="page">
-        <lable for="userId" class="kh-lable">用户ID</lable>
-        <input type="text" name="userId" id="userId"  value="" /><br/>
-        
-        <lable for="mobile" class="kh-lable">手机号码</lable>
-        <input type="text" name="mobile" id="mobile"  value="" /><br/>
-        
-        <label >充值金额:</label>
-        <input  name="money" id="money" type="text"  value="99" /><br/>
-        
+    <form method="post" action="/hyjf-api/server/user/withdraw/withdraw">
+        <lable for="timestamp" class="kh-lable">当前时间戳</lable>
+        <input type="text" name="timestamp" id="timestamp"  value="1537950175" /><br/>
+
+        <lable for="channel" class="kh-lable">channel</lable>
+        <input type="text" name="channel" id="channel"  value="000002" /><br/>
+
+        <lable for="accountId" class="kh-lable">accountId</lable>
+        <input type="text" name="accountId" id="accountId"  value="6212461890000551730" /><br/>
+
+        <lable for="productId" class="kh-lable">标的编号</lable>
+        <input type="text" name="productId" id="productId"  value="HJD180100000005" /><br/>
+
+        <lable for="name" class="kh-lable">姓名</lable>
+        <input type="text" name="name" id="name"  value="name" /><br/>
+
+        <lable for="instCode" class="kh-lable">机构编号</lable>
+        <input type="text" name="instCode" id="instCode"  value="10000000" /><br/>
+
+        <lable for="idType" class="kh-lable">借款人证件类型</lable>
+        <input type="text" name="idType" id="idType"  value="01" /><br/>
+
+        <lable for="txAmount" class="kh-lable">充值金额</lable>
+        <input type="text" name="txAmount" id="txAmount"  value="10" /><br/>
+
+        <lable for="account" class="kh-lable">提现金额</lable>
+        <input type="text" name="account" id="account"  value="10" /><br/>
+
+
+        <lable for="mobile" class="kh-lable">手机号</lable>
+        <input type="text" name="mobile" id="mobile"  value="13061408863" /><br/>
+
+
+
+
+        <lable for="idNo" class="kh-lable">借款人证件号码</lable>
+        <input type="text" name="idNo" id="idNo"  value="410324198202022129" /><br/>
+
+        <lable for="cardNo" class="kh-lable">收款人电子帐户</lable>
+        <input type="text" name="cardNo" id="cardNo"  value="6228488023225154" /><br/>
+
+        <lable for="payAllianceCode" class="kh-lable">银联行号</lable>
+        <input type="text" name="payAllianceCode" id="payAllianceCode"  value="10" /><br/>
+
+
+        <lable for="retUrl" class="kh-lable">同步回调</lable>
+        <input type="text" name="retUrl" id="retUrl"  value="www.baidu.com" /><br/>
+        <lable for="bgRetUrl" class="kh-lable">异步返回url</lable>
+        <input type="text" name="bgRetUrl" id="bgRetUrl"  value="www.baidu.com" /><br/>
+
+        <lable for="platform" class="kh-lable">platform</lable>
+        <input type="text" name="platform" id="platform"  value="0" /><br/>
+
+
+        <lable for="notifyUrl" class="kh-lable">异步回调</lable>
+        <input type="text" name="notifyUrl" id="notifyUrl"  value="www.baidu.com" /><br/>
+
+        <lable for="forgotPwdUrl" class="kh-lable">异步回调</lable>
+        <input type="text" name="forgotPwdUrl" id="forgotPwdUrl"  value="www.baidu.com" /><br/>
+
+        <lable for="acqRes" class="kh-lable">acqRes</lable>
+        <input type="text" name="acqRes" id="acqRes"  value="www.baidu.com" /><br/>
+
+        <lable for="chkValue" class="kh-lable">chkValue</lable>
+        <input type="text" name="chkValue" id="chkValue"  value="www.baidu.com" /><br/>
+
         <input type="submit" value="提交"/>
     </form>
 </body>
