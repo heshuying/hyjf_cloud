@@ -8,6 +8,7 @@ import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,13 +18,13 @@ import java.util.List;
 public class BankAccountManageResponseBean {
 
     @ApiModelProperty(value = "部门下拉框")
-    List<DropDownVO> departmentList;
+    private List<DropDownVO> departmentList = new ArrayList<>();
 
     @ApiModelProperty(value = "会员等级下拉框")
-    List<DropDownVO> vipList;
+    private List<DropDownVO> vipList = new ArrayList<>();
 
     @ApiModelProperty(value = "银行账户管理列表")
-    List<BankAccountManageCustomizeVO> recordList;
+    private List<BankAccountManageCustomizeVO> recordList = new ArrayList<>();
 
     @ApiModelProperty(value = "总条数")
     private Integer total;
