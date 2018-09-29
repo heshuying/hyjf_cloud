@@ -11,6 +11,7 @@ import com.hyjf.cs.message.bean.ic.PcChannelStatistics;
 import com.hyjf.cs.message.mongo.ic.AppChannelStatisticsDao;
 import com.hyjf.cs.message.mongo.ic.PcChannelStatisticsDao;
 import com.hyjf.cs.message.service.channel.ChannelStatisticsService;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -21,9 +22,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 
@@ -58,18 +57,23 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
             criteria.and("updateTime").gte(begin).lte(end);
         }
         if (utmIdsSrch.length > 0) {
+            List<Integer> listInt = new ArrayList<>();
             List<String> sourceIds = Arrays.asList(utmIdsSrch);
-            criteria.in(sourceIds);
+            org.apache.commons.collections.CollectionUtils.collect(sourceIds, new Transformer() {
+                @Override
+                public Object transform(Object o) {
+                    return Integer.valueOf(String.valueOf(o));
+                }
+            },listInt);
+            criteria.and("sourceId").in(listInt);
         }
         Aggregation aggregation = Aggregation.newAggregation(
                 match(criteria),
-                Aggregation.group("id").count().as("count")
+                Aggregation.group("sourceId").count().as("count")
         );
-        AggregationResults<Integer> ar = appChannelStatisticsDao.countChannelStatistics(aggregation);
-        int count = 0;
-        if (ar.getUniqueMappedResult() != null) {
-            count = ar.getUniqueMappedResult();
-        }
+        AggregationResults<Map> ar = appChannelStatisticsDao.countChannelStatistics(aggregation);
+        List<Map> result = ar.getMappedResults();
+        int count = result.size();
         return count;
     }
 
@@ -90,7 +94,7 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
         }
         Aggregation aggregation = Aggregation.newAggregation(
                 match(criteria),
-                Aggregation.group("channelName", "sourceId", "updateTime").sum("visitCount").as("visitCount").sum("registerCount").as("registerCount").sum("registerAttrCount").as("registerAttrCount").sum("openAccountCount").as("openAccountCount").sum("investNumber").as("investNumber").sum("cumulativeCharge").as("cumulativeCharge").sum("cumulativeInvest").as("cumulativeInvest").sum("hztInvestSum").as("hztInvestSum").sum("hxfInvestSum").as("hxfInvestSum").sum("htlInvestSum").as("htlInvestSum").sum("htjInvestSum").as("htjInvestSum").sum("rtbInvestSum").as("rtbInvestSum").sum("hzrInvestSum").as("hzrInvestSum").sum("accountNumberIos").as("accountNumberIos").sum("accountNumberPc").as("accountNumberPc").sum("accountNumberAndroid").as("accountNumberAndroid").sum("accountNumberWechat").as("accountNumberWechat").sum("tenderNumberAndroid").as("tenderNumberAndroid").sum("tenderNumberIos").as("tenderNumberIos").sum("tenderNumberPc").as("tenderNumberPc").sum("tenderNumberWechat").as("tenderNumberWechat").sum("cumulativeAttrCharge").as("cumulativeAttrCharge").sum("cumulativeAttrInvest").as("cumulativeAttrInvest").sum("openAccountAttrCount").as("openAccountAttrCount").sum("investAttrNumber").as("investAttrNumber")
+                Aggregation.group("sourceId").sum("visitCount").as("visitCount").sum("registerCount").as("registerCount").sum("registerAttrCount").as("registerAttrCount").sum("openAccountCount").as("openAccountCount").sum("investNumber").as("investNumber").sum("cumulativeCharge").as("cumulativeCharge").sum("cumulativeInvest").as("cumulativeInvest").sum("hztInvestSum").as("hztInvestSum").sum("hxfInvestSum").as("hxfInvestSum").sum("htlInvestSum").as("htlInvestSum").sum("htjInvestSum").as("htjInvestSum").sum("rtbInvestSum").as("rtbInvestSum").sum("hzrInvestSum").as("hzrInvestSum").sum("accountNumberIos").as("accountNumberIos").sum("accountNumberPc").as("accountNumberPc").sum("accountNumberAndroid").as("accountNumberAndroid").sum("accountNumberWechat").as("accountNumberWechat").sum("tenderNumberAndroid").as("tenderNumberAndroid").sum("tenderNumberIos").as("tenderNumberIos").sum("tenderNumberPc").as("tenderNumberPc").sum("tenderNumberWechat").as("tenderNumberWechat").sum("cumulativeAttrCharge").as("cumulativeAttrCharge").sum("cumulativeAttrInvest").as("cumulativeAttrInvest").sum("openAccountAttrCount").as("openAccountAttrCount").sum("investAttrNumber").as("investAttrNumber").addToSet("channelName").as("channelName").addToSet("sourceId").as("sourceId").addToSet("updateTime").as("updateTime")
         );
         AggregationResults<AppChannelStatistics> ar = appChannelStatisticsDao.exportList(aggregation);
         List<AppChannelStatistics> result = ar.getMappedResults();
