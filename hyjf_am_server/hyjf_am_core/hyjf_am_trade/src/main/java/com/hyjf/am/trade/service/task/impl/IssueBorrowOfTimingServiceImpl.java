@@ -303,7 +303,9 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 	}
 
 	public boolean updateFireBorrow(Borrow borrow, int nowTime) throws MQException {
-		BorrowInfo borrowInfo = this.borrowInfoMapper.selectByPrimaryKey(borrow.getId());
+		BorrowInfoExample example = new BorrowInfoExample();
+		example.createCriteria().andBorrowNidEqualTo(borrow.getBorrowNid());
+		BorrowInfo borrowInfo = this.borrowInfoMapper.selectByExample(example).get(0);
 		// 借款到期时间
 		borrow.setBorrowEndTime(String.valueOf(nowTime + borrowInfo.getBorrowValidTime() * 86400));
 		// 状态

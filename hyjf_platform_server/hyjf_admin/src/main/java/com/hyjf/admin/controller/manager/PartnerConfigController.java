@@ -70,6 +70,7 @@ public class PartnerConfigController extends BaseController {
     public AdminResult insertInstConfig(HttpServletRequest request, @RequestBody AdminPartnerConfigListRequest req) {
         AdminSystemVO user = getUser(request);
         req.setUserId(Integer.valueOf(user.getId()));//为了接口测试用
+        req.setUserId(3);
         AdminPartnerConfigDetailResponse prs = partnerConfigService.savePartnerConfig(req);
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

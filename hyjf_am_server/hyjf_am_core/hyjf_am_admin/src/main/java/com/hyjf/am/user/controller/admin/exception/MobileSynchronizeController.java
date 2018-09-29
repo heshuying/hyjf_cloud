@@ -27,7 +27,7 @@ import java.util.List;
  * @version: MobileSynchronizeController, v0.1 2018/8/13 14:19
  */
 @Api(value = "手机号同步",tags = "手机号同步")
-@RestController
+@RestController(value = "userMobileSynchronizeController")
 @RequestMapping(value = "/am-user/mobilesynchronize")
 public class MobileSynchronizeController extends BaseController {
 

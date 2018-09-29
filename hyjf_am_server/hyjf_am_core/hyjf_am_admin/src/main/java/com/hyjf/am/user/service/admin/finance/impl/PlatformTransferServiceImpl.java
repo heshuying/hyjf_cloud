@@ -16,7 +16,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: PlatformTransferServiceImpl, v0.1 2018/7/9 13:55
  */
-@Service("amUserPlatformTransferServiceImpl")
+@Service("userPlatformTransferServiceImpl")
 public class PlatformTransferServiceImpl extends BaseServiceImpl implements PlatformTransferService {
 
     /**

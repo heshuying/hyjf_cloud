@@ -166,4 +166,13 @@ public class AdminParamNamesServiceImpl extends BaseAdminServiceImpl implements 
         CheckUtil.check(StringUtils.isNotBlank(paramNameVO.getNameCd()),MsgEnum.ERR_OBJECT_REQUIRED,"字典编号");
         return amAdminClient.searchParamNameByKey(paramNameVO);
     }
+    /**
+     * 同步数据字典至redis
+     * @auth wgx
+     * @return
+     */
+    @Override
+    public boolean syncParam() {
+        return amAdminClient.syncParam();
+    }
 }

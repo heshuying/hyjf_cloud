@@ -188,9 +188,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 异步调用路
         String bgRetUrl = "";
         if(cuc != null){
-            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + cuc.getId();
+            bgRetUrl = systemConfig.getWebHost() + "/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + cuc.getId();
         }else{
-            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
+            bgRetUrl = systemConfig.getWebHost() + "/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
         }
         //忘记密码url
         String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
@@ -368,6 +368,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
         }
         // 新手标
+        logger.info("是否新手标：：："+borrowProjectType.getInvestUserType());
+        logger.info("是否新手标：：："+borrowProjectType.getInvestUserType().equals(1));
         if (borrowProjectType.getInvestUserType().equals(1)) {
             boolean isNew = this.checkIsNewUserCanInvest(userId);
             // 该项目只能新手投资

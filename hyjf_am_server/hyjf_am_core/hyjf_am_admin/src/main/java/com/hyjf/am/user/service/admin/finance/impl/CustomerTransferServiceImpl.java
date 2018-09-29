@@ -17,7 +17,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: CustomerTransferServiceImpl, v0.1 2018/7/6 9:30
  */
-@Service("amUserCustomerTransferServiceImpl")
+@Service("userCustomerTransferServiceImpl")
 public class CustomerTransferServiceImpl extends BaseServiceImpl implements CustomerTransferService {
 
     /**

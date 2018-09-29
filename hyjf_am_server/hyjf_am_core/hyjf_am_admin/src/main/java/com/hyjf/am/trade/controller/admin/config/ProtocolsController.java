@@ -72,7 +72,11 @@ public class ProtocolsController extends BaseController {
 	@RequestMapping("/updateaction")
 	public FddTempletCustomizeResponse updateAction(ProtocolsRequest request) {
 		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
-		protocolsService.updateAction(request);
+		int result = protocolsService.updateAction(request);
+		if (result == 0) {
+			response.setRtn(AdminResponse.FAIL);
+			return response;
+		}
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}

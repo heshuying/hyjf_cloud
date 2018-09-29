@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class AppChannelStatisticsDetailController extends BaseController {
         AppChannelStatisticsDetailResponse appChannelStatisticsDetailResponse = this.appChannelStatisticsDetailService.exportStatisticsList(form);
         List<AppChannelStatisticsDetailVO> recordList = appChannelStatisticsDetailResponse.getResultList();
 
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         String[] titles = new String[] { "序号", "渠道", "用户ID", "用户名",  "注册时间", "开户时间", "首次投资时间", "首投项目类型", "首投项目期限", "首投金额", "累计投资金额" };
         // 声明一个工作薄

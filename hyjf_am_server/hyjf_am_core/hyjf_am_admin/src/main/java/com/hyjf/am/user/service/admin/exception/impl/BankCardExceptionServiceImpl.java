@@ -34,7 +34,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: BankCardExceptionServiceImpl, v0.1 2018/8/14 15:03
  */
-@Service
+@Service(value = "userBankCardExceptionServiceImpl")
 public class BankCardExceptionServiceImpl extends BaseServiceImpl implements BankCardExceptionService {
 
     private static final Logger logger = LoggerFactory.getLogger(BankCardExceptionServiceImpl.class);

@@ -24,7 +24,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: TenderCancelExceptionServiceImpl, v0.1 2018/7/11 10:42
  */
-@Service
+@Service(value = "tradeTenderCancelExceptionServiceImpl")
 public class TenderCancelExceptionServiceImpl extends BaseServiceImpl implements TenderCancelExceptionService {
 
     @Autowired

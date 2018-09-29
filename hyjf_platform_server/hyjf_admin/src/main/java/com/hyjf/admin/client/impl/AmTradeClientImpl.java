@@ -104,7 +104,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer getDirectionalTransferCount(DirectionalTransferListRequest request) {
         Integer count = restTemplate
-                .postForEntity(tradeService + "/accountdirectionaltransfer/getdirectionaltransfercount", request, Integer.class)
+                .postForEntity("http://AM-ADMIN/am-trade/accountdirectionaltransfer/getdirectionaltransfercount", request, Integer.class)
                 .getBody();
 
         return count;
@@ -120,7 +120,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request) {
         AccountDirectionalTransferResponse response = restTemplate
-                .postForEntity(tradeService + "/accountdirectionaltransfer/searchdirectionaltransferlist", request, AccountDirectionalTransferResponse.class)
+                .postForEntity("http://AM-ADMIN/am-trade/accountdirectionaltransfer/searchdirectionaltransferlist", request, AccountDirectionalTransferResponse.class)
                 .getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
@@ -137,8 +137,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<AccountVO> searchAccountByUserId(Integer userId) {
+        String url = "http://AM-ADMIN/am-trade/customertransfer/searchaccountbyuserid/" + userId;
         AccountResponse response = restTemplate
-                .getForEntity(tradeService + "/customertransfer/searchaccountbyuserid/" + userId, AccountResponse.class)
+                .getForEntity(url, AccountResponse.class)
                 .getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
@@ -155,7 +156,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Boolean insertUserTransfer(CustomerTransferRequest request) {
-        String url = tradeService + "/customertransfer/insertusertransfer";
+        String url = "http://AM-ADMIN/am-trade/customertransfer/insertusertransfer";
         Boolean response = restTemplate.postForEntity(url, request, Boolean.class).getBody();
         return response;
     }
@@ -170,7 +171,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer getUserTransferCount(CustomerTransferListRequest request) {
         Integer count = restTemplate
-                .postForEntity(tradeService + "/customertransfer/getusertransfercount", request, Integer.class)
+                .postForEntity("http://AM-ADMIN/am-trade/customertransfer/getusertransfercount", request, Integer.class)
                 .getBody();
         return count;
     }
@@ -185,7 +186,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<UserTransferVO> searchUserTransferList(CustomerTransferListRequest request) {
         UserTransferResponse response = restTemplate
-                .postForEntity(tradeService + "/customertransfer/searchusertransferlist", request, UserTransferResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/customertransfer/searchusertransferlist", request, UserTransferResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
         }
@@ -201,7 +202,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public UserTransferVO searchUserTransferById(Integer transferId) {
-        String url = tradeService + "/customertransfer/searchusertransferbyid/" + transferId;
+        String url = "http://AM-ADMIN/am-trade/customertransfer/searchusertransferbyid/" + transferId;
         UserTransferResponse response = restTemplate.getForEntity(url, UserTransferResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResult();
@@ -300,7 +301,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer getPlatformTransferCount(PlatformTransferListRequest request) {
-        Integer count = restTemplate.postForEntity(tradeService + "/platformtransfer/getplatformtransfercount", request, Integer.class).getBody();
+        Integer count = restTemplate.postForEntity("http://AM-ADMIN/am-trade/platformtransfer/getplatformtransfercount", request, Integer.class).getBody();
         return count;
     }
 
@@ -314,7 +315,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<AccountRechargeVO> searchPlatformTransferList(PlatformTransferListRequest request) {
         PlatformTransferResponse response = restTemplate
-                .postForEntity(tradeService + "/platformtransfer/searchplatformtransferlist", request, PlatformTransferResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/platformtransfer/searchplatformtransferlist", request, PlatformTransferResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
         }
@@ -347,7 +348,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowStyleVO> selectBorrowStyleList() {
-        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/select_borrow_style";
+        String url = "http://AM-ADMIN/am-trade/borrow_regist_exception/select_borrow_style";
         BorrowStyleResponse response = restTemplate.getForEntity(url, BorrowStyleResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -364,7 +365,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest) {
-        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/get_regist_count";
+        String url = "http://AM-ADMIN/am-trade/borrow_regist_exception/get_regist_count";
         return restTemplate.postForEntity(url, borrowRegistListRequest, Integer.class).getBody();
     }
 
@@ -377,7 +378,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowRegistCustomizeVO> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest) {
-        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/select_borrow_regist_list";
+        String url = "http://AM-ADMIN/am-trade/borrow_regist_exception/select_borrow_regist_list";
         BorrowRegistCustomizeResponse response = restTemplate.postForEntity(url, borrowRegistListRequest, BorrowRegistCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -394,7 +395,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowAndInfoVO searchBorrowByBorrowNid(String borrowNid) {
-        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/search_borrow_by_borrownid/" + borrowNid;
+        String url = "http://AM-ADMIN/am-trade/borrow_regist_exception/search_borrow_by_borrownid/" + borrowNid;
         BorrowResponse response = restTemplate.getForEntity(url, BorrowResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -412,7 +413,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public String getStAccountIdByEntrustedUserId(Integer entrustedUserId) {
-        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/get_staccountid_by_entrusteduserid/" + entrustedUserId;
+        String url = "http://AM-ADMIN/am-trade/borrow_regist_exception/get_staccountid_by_entrusteduserid/" + entrustedUserId;
         String response = restTemplate.getForEntity(url, String.class).getBody();
         return response;
     }
@@ -427,7 +428,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateBorrowRegist(BorrowAndInfoVO borrowVO, Integer type) {
-        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/update_borrowregist_by_type/" + type;
+        String url = "http://AM-ADMIN/am-trade/borrow_regist_exception/update_borrowregist_by_type/" + type;
         Boolean response = restTemplate.postForEntity(url, borrowVO, Boolean.class).getBody();
         return response;
     }
@@ -441,7 +442,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateBorrowAsset(BorrowAndInfoVO borrowVO, Integer status) {
-        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/update_borrowasset/" + status;
+        String url = "http://AM-ADMIN/am-trade/borrow_regist_exception/update_borrowasset/" + status;
         Boolean response = restTemplate.postForEntity(url, borrowVO, Boolean.class).getBody();
         return response;
     }
@@ -455,7 +456,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer updateAccount(AccountVO accountVO) {
-        String url = "http://AM-TRADE/am-trade/platformtransfer/updateaccount";
+        String url = "http://AM-ADMIN/am-trade/platformtransfer/updateaccount";
         Integer response = restTemplate.postForEntity(url, accountVO, Integer.class).getBody();
         return response;
     }
@@ -469,7 +470,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer insertAccountRecharge(AccountRechargeVO accountRechargeVO) {
-        String url = "http://AM-TRADE/am-trade/platformtransfer/insertaccountrecharge";
+        String url = "http://AM-ADMIN/am-trade/platformtransfer/insertaccountrecharge";
         Integer response = restTemplate.postForEntity(url, accountRechargeVO, Integer.class).getBody();
         return response;
     }
@@ -483,7 +484,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer insertAccountList(AccountListVO accountListVO) {
-        String url = "http://AM-TRADE/am-trade/platformtransfer/insertaccountlist";
+        String url = "http://AM-ADMIN/am-trade/platformtransfer/insertaccountlist";
         Integer response = restTemplate.postForEntity(url, accountListVO, Integer.class).getBody();
         return response;
     }
@@ -497,7 +498,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BankMerchantAccountVO searchBankMerchantAccountByAccountId(String accountId) {
-        String url = "http://AM-TRADE/am-trade/platformtransfer/searchbankmerchantaccount/" + accountId;
+        String url = "http://AM-ADMIN/am-trade/platformtransfer/searchbankmerchantaccount/" + accountId;
         BankMerchantAccountResponse response = restTemplate.getForEntity(url, BankMerchantAccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -514,7 +515,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer updateBankMerchantAccount(BankMerchantAccountVO bankMerchantAccountVO) {
-        String url = "http://AM-TRADE/am-trade/platformtransfer/updatebankmerchantaccount";
+        String url = "http://AM-ADMIN/am-trade/platformtransfer/updatebankmerchantaccount";
         Integer response = restTemplate.postForEntity(url, bankMerchantAccountVO, Integer.class).getBody();
         return response;
     }
@@ -554,7 +555,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO) {
-        String url = "http://AM-TRADE/am-trade/platformtransfer/insertbankmerchantaccountlist";
+        String url = "http://AM-ADMIN/am-trade/platformtransfer/insertbankmerchantaccountlist";
         Integer response = restTemplate.postForEntity(url, bankMerchantAccountListVO, Integer.class).getBody();
         return response;
     }
@@ -626,7 +627,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<SubCommissionListConfigVO> searchSubCommissionListConfig() {
-        String url = "http://AM-TRADE/am-trade/subcommission/searchsubcommissionlistconfig";
+        String url = "http://AM-ADMIN/am-trade/subcommission/searchsubcommissionlistconfig";
         SubCommissionListConfigResponse response = restTemplate.getForEntity(url, SubCommissionListConfigResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -643,7 +644,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean insertSubCommission(SubCommissionVO subCommissionVO) {
-        String url = "http://AM-TRADE/am-trade/subcommission/insertsubcommission";
+        String url = "http://AM-ADMIN/am-trade/subcommission/insertsubcommission";
         Boolean response = restTemplate.postForEntity(url, subCommissionVO, Boolean.class).getBody();
         return response;
     }
@@ -657,7 +658,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public SubCommissionVO searchSubCommissionByOrderId(String orderId) {
-        String url = "http://AM-TRADE/am-trade/subcommission/searchsubcommissionbyorderid/" + orderId;
+        String url = "http://AM-ADMIN/am-trade/subcommission/searchsubcommissionbyorderid/" + orderId;
         SubCommissionResponse response = restTemplate.getForEntity(url, SubCommissionResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -672,12 +673,13 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      * @auth sunpeikai
      */
-    @Override
+/*    @Override
+    @Deprecated
     public Integer updateSubCommission(SubCommissionVO subCommissionVO) {
-        String url = "http://AM-TRADE/am-trade/subcommission/updatesubcommission";
+        String url = "http://AM-ADMIN/am-trade/subcommission/updatesubcommission";
         Integer response = restTemplate.postForEntity(url, subCommissionVO, Integer.class).getBody();
         return response;
-    }
+    }*/
 
     /**
      * 根据筛选条件查询分佣数据count
@@ -688,7 +690,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer getSubCommissionCount(SubCommissionRequest request) {
-        String url = "http://AM-TRADE/am-trade/subcommission/getsubcommissioncount";
+        String url = "http://AM-ADMIN/am-trade/subcommission/getsubcommissioncount";
         Integer response = restTemplate.postForEntity(url, request, Integer.class).getBody();
         return response;
     }
@@ -702,7 +704,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<SubCommissionVO> searchSubCommissionList(SubCommissionRequest request) {
-        String url = "http://AM-TRADE/am-trade/subcommission/searchsubcommissionlist";
+        String url = "http://AM-ADMIN/am-trade/subcommission/searchsubcommissionlist";
         SubCommissionResponse response = restTemplate.postForEntity(url, request, SubCommissionResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -779,7 +781,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer getTenderCancelExceptionCount(TenderCancelExceptionRequest request) {
-        String url = "http://AM-TRADE/am-trade/tendercancelexception/gettendercancelexceptioncount";
+        String url = "http://AM-ADMIN/am-trade/tendercancelexception/gettendercancelexceptioncount";
         Integer response = restTemplate.postForEntity(url, request, Integer.class).getBody();
         return response;
     }
@@ -793,7 +795,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowTenderTmpVO> searchTenderCancelExceptionList(TenderCancelExceptionRequest request) {
-        String url = "http://AM-TRADE/am-trade/tendercancelexception/searchtendercancelexceptionlist";
+        String url = "http://AM-ADMIN/am-trade/tendercancelexception/searchtendercancelexceptionlist";
         BorrowTenderTmpResponse response = restTemplate.postForEntity(url, request, BorrowTenderTmpResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -810,7 +812,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowTenderVO> searchBorrowTenderByOrderId(String orderId) {
-        String url = "http://AM-TRADE/am-trade/tendercancelexception/searchborrowtenderbyorderid/" + orderId;
+        String url = "http://AM-ADMIN/am-trade/tendercancelexception/searchborrowtenderbyorderid/" + orderId;
         BorrowTenderResponse response = restTemplate.getForEntity(url, BorrowTenderResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -827,7 +829,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowTenderTmpVO searchBorrowTenderTmpByOrderId(String orderId) {
-        String url = "http://AM-TRADE/am-trade/tendercancelexception/searchborrowtendertmpbyorderid/" + orderId;
+        String url = "http://AM-ADMIN/am-trade/tendercancelexception/searchborrowtendertmpbyorderid/" + orderId;
         BorrowTenderTmpResponse response = restTemplate.getForEntity(url, BorrowTenderTmpResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -844,7 +846,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer deleteBorrowTenderTmpById(Integer id) {
-        String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteborrowtendertmpbyid/" + id;
+        String url = "http://AM-ADMIN/am-trade/tendercancelexception/deleteborrowtendertmpbyid/" + id;
         Integer response = restTemplate.getForEntity(url, Integer.class).getBody();
         return response;
     }
@@ -858,7 +860,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer insertFreezeHistory(FreezeHistoryVO freezeHistoryVO) {
-        String url = "http://AM-TRADE/am-trade/tendercancelexception/insertfreezehistory";
+        String url = "http://AM-ADMIN/am-trade/tendercancelexception/insertfreezehistory";
         Integer response = restTemplate.postForEntity(url, freezeHistoryVO, Integer.class).getBody();
         return response;
     }
@@ -944,7 +946,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer getAccountExceptionCount(AccountExceptionRequest request) {
-        String url = "http://AM-TRADE/am-trade/accountexception/getaccountexceptioncount";
+        String url = "http://AM-ADMIN/am-trade/accountexception/getaccountexceptioncount";
         Integer count = restTemplate.postForEntity(url, request, Integer.class).getBody();
         return count;
     }
@@ -958,7 +960,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<AccountExceptionVO> searchAccountExceptionList(AccountExceptionRequest request) {
-        String url = "http://AM-TRADE/am-trade/accountexception/searchaccountexceptionlist";
+        String url = "http://AM-ADMIN/am-trade/accountexception/searchaccountexceptionlist";
         AccountExceptionResponse response = restTemplate.postForEntity(url, request, AccountExceptionResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
@@ -975,7 +977,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AccountExceptionVO searchAccountExceptionById(Integer id) {
-        String url = "http://AM-TRADE/am-trade/accountexception/searchaccountexceptionbyid/" + id;
+        String url = "http://AM-ADMIN/am-trade/accountexception/searchaccountexceptionbyid/" + id;
         AccountExceptionResponse response = restTemplate.getForEntity(url, AccountExceptionResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResult();
@@ -992,7 +994,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer updateAccountException(AccountExceptionVO accountExceptionVO) {
-        String url = "http://AM-TRADE/am-trade/accountexception/updateaccountexception";
+        String url = "http://AM-ADMIN/am-trade/accountexception/updateaccountexception";
         Integer response = restTemplate.postForEntity(url, accountExceptionVO, Integer.class).getBody();
         return response;
     }
@@ -1006,7 +1008,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer deleteAccountExceptionById(Integer id) {
-        String url = "http://AM-TRADE/am-trade/accountexception/deleteaccountexceptionbyid/" + id;
+        String url = "http://AM-ADMIN/am-trade/accountexception/deleteaccountexceptionbyid/" + id;
         Integer response = restTemplate.getForEntity(url, Integer.class).getBody();
         return response;
     }
@@ -3690,7 +3692,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringByPage(AdminAccountBalanceMonitoringRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/accountbalance/selectAccountBalanceMonitoringByPage";
+        String url = "http://AM-ADMIN/am-admin/config/accountbalance/selectAccountBalanceMonitoringByPage";
         AdminAccountBalanceMonitoringResponse response = restTemplate.postForEntity(url, adminRequest, AdminAccountBalanceMonitoringResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response;
@@ -3706,7 +3708,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminAccountBalanceMonitoringResponse selectaccountBalanceMonitoringById(AdminAccountBalanceMonitoringRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/accountbalance/selectaccountBalanceMonitoringById";
+        String url = "http://AM-ADMIN/am-admin/config/accountbalance/selectaccountBalanceMonitoringById";
         AdminAccountBalanceMonitoringResponse response = restTemplate.postForEntity(url, adminRequest, AdminAccountBalanceMonitoringResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response;
@@ -3722,7 +3724,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<AccountBalanceMonitoringRequestBean> searchMerchantAccountList(AdminAccountBalanceMonitoringRequest adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/accountbalance/selectAccountBalanceMonitoringByPage";
+        String url = "http://AM-ADMIN/am-admin/config/accountbalance/selectAccountBalanceMonitoringByPage";
         AdminAccountBalanceMonitoringResponse response = restTemplate.postForEntity(url, adminRequest, AdminAccountBalanceMonitoringResponse.class).getBody();
         List<AccountBalanceMonitoringRequestBean> res = new ArrayList<AccountBalanceMonitoringRequestBean>();
         if (Validator.isNotNull(response)) {
@@ -3741,7 +3743,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminAccountBalanceMonitoringResponse updateMerchantAccountList(List<AccountBalanceMonitoringRequestBean> adminRequest) {
-        String url = "http://AM-TRADE/am-trade/config/accountbalance/updateMerchantAccountList";
+        String url = "http://AM-ADMIN/am-admin/config/accountbalance/updateMerchantAccountList";
         AdminAccountBalanceMonitoringResponse response = restTemplate.postForEntity(url, adminRequest, AdminAccountBalanceMonitoringResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response;
@@ -4872,7 +4874,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public JSONObject subCommission(SubCommissionRequest request) {
-        String url = tradeService + "/subcommission/subCommission";
+        String url = "http://AM-ADMIN/am-trade/subcommission/subCommission";
         SubCommissionResponse response = restTemplate.postForEntity(url, request, SubCommissionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getJsonObject();
@@ -4987,7 +4989,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int getPushMoneyListCount(PushMoneyRequest request) {
         PushMoneyResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/pushMoneyRecord/getPushMoneyListCount" ,request,
+                .postForEntity("http://AM-ADMIN/am-trade/pushMoneyRecord/getPushMoneyListCount" ,request,
                         PushMoneyResponse.class)
                 .getBody();
         if (Response.isSuccess(response)) {
@@ -5005,7 +5007,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<PushMoneyVO> searchPushMoneyList(PushMoneyRequest request) {
         PushMoneyResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/pushMoneyRecord/searchPushMoneyList" ,request,
+                .postForEntity("http://AM-ADMIN/am-trade/pushMoneyRecord/searchPushMoneyList" ,request,
                         PushMoneyResponse.class)
                 .getBody();
         if (Response.isSuccess(response)) {
@@ -5023,7 +5025,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Map<String, Object> queryPushMoneyTotle(PushMoneyRequest request) {
         PushMoneyResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/pushMoneyRecord/queryPushMoneyTotle" ,request,
+                .postForEntity("http://AM-ADMIN/am-trade/pushMoneyRecord/queryPushMoneyTotle" ,request,
                         PushMoneyResponse.class)
                 .getBody();
         if (Response.isSuccess(response)) {
@@ -5056,7 +5058,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int updateTenderCommissionRecord(PushMoneyRequest pushMoneyRequest) {
-        String url = tradeService + "/pushMoneyRecord/updateTenderCommissionRecord";
+        String url = "http://AM-ADMIN/am-trade/pushMoneyRecord/updateTenderCommissionRecord";
         PushMoneyResponse response = restTemplate.postForEntity(url,pushMoneyRequest,PushMoneyResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getCnt();
@@ -5779,7 +5781,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminPartnerConfigDetailResponse partnerConfigInit(AdminPartnerConfigListRequest adminRequest){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/list", adminRequest, AdminPartnerConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/partnerconfig/list", adminRequest, AdminPartnerConfigDetailResponse.class)
                 .getBody();
     }
     /**
@@ -5790,7 +5792,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminPartnerConfigDetailResponse searchPartnerConfigInfo(AdminPartnerConfigListRequest adminRequest){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/info", adminRequest, AdminPartnerConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/partnerconfig/info", adminRequest, AdminPartnerConfigDetailResponse.class)
                 .getBody();
     }
 
@@ -5802,7 +5804,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminPartnerConfigDetailResponse savePartnerConfig(AdminPartnerConfigListRequest req){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/insert", req, AdminPartnerConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/partnerconfig/insert", req, AdminPartnerConfigDetailResponse.class)
                 .getBody();
     }
 
@@ -5814,7 +5816,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminPartnerConfigDetailResponse updatePartnerConfig(AdminPartnerConfigListRequest req){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/update", req, AdminPartnerConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/partnerconfig/update", req, AdminPartnerConfigDetailResponse.class)
                 .getBody();
     }
 
@@ -5826,7 +5828,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminPartnerConfigDetailResponse deletePartnerConfig(AdminPartnerConfigListRequest req){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/delete", req, AdminPartnerConfigDetailResponse.class)
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/partnerconfig/delete", req, AdminPartnerConfigDetailResponse.class)
                 .getBody();
     }
     /**

@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.finance.recharge;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccountRechargeRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -63,7 +64,7 @@ public class AccountRechargeController extends BaseController {
 
         //用户账户充值状态
         List<ParamNameVO> paramList = this.rechargeService.getParamNameList("RECHARGE_STATUS");
-
+        logger.info(JSON.toJSONString(paramList));
         List<Object> rechargeStatusList = new ArrayList<>();
         for(int i = 0; i<paramList.size(); i++){
             Map<String, Object> rechargeStatusMap = new HashedMap();
@@ -74,7 +75,7 @@ public class AccountRechargeController extends BaseController {
 
         // 充值银行列表
         List<JxBankConfigVO> banks = this.rechargeService.getBankcardList();
-
+        logger.info(JSON.toJSONString(paramList));
         List<Object> banksList = new ArrayList<>();
         for(int i = 0; i<banks.size(); i++){
             Map<String, Object> banksMap = new HashedMap();
@@ -85,7 +86,7 @@ public class AccountRechargeController extends BaseController {
 
         // 资金托管平台
         List<ParamNameVO> bankType = this.rechargeService.getParamNameList("BANK_TYPE");
-
+        logger.info(JSON.toJSONString(paramList));
         List<Object> bankTypeList = new ArrayList<>();
         for(int i = 0; i<bankType.size(); i++){
             Map<String, Object> bankTypeMap = new HashedMap();
@@ -220,7 +221,7 @@ public class AccountRechargeController extends BaseController {
 
 
         //初始化返回List
-        List<AccountRechargeCustomizeVO> returnList = null;
+        List<AccountRechargeCustomizeVO> returnList = new ArrayList<>();
         AccountRechargeCustomizeResponse rechargeResponse = rechargeService.queryRechargeList(copyRequest);
 
         if (rechargeResponse == null){

@@ -1346,12 +1346,6 @@ public interface AmConfigClient {
 	public Integer onlyName(String name);
 
 	/**
-	 * 关闭模板
-	 * @param request
-	 */
-	void closeAction(MailTemplateRequest request);
-
-	/**
 	 * 开启模板
 	 * @param request
 	 */
