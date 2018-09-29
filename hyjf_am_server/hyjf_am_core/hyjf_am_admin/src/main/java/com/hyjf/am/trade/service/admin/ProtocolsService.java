@@ -33,7 +33,7 @@ public interface ProtocolsService {
 	 *
 	 * @param request
 	 */
-	void updateAction(ProtocolsRequest request);
+	int updateAction(ProtocolsRequest request);
 
 	/**
 	 * 取得新规的模板编号
