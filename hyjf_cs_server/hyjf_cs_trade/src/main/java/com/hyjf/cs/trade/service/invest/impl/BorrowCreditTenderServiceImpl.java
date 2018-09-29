@@ -667,7 +667,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 出让人待收利息
                 sellerAccountNew.setBankAwaitInterest(creditTender.getAssignInterest());
                 // 出让人累计收益
-                sellerAccountNew.setBankInterestSum(creditTender.getAssignInterestAdvance());
+                sellerAccountNew.setBankInterestSum((creditTender.getAssignInterestAdvance()==null?BigDecimal.ZERO:creditTender.getAssignInterestAdvance()));
                 sellerAccountNew.setBankBalanceCash(creditTender.getAssignPay().subtract(creditTender.getCreditFee()));
                 // 更新账户信息
                 // 重新获取用户账户信息
