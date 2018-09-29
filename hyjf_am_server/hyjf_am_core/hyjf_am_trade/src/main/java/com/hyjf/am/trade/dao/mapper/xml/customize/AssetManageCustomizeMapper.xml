@@ -11,6 +11,8 @@
 		<result column="type" property="type" />
 		<result column="coupon_type" property="couponType" />
 		<result column="projectNid" property="projectNid" />
+		<result column="exit_flg" property="exitType" />
+		<result column="hjh_flg"  property="hjhType" />
 	</resultMap>
 	<select id="selectRecentPaymentList" resultMap="recentPaymentMap" parameterType="java.util.Map">
 

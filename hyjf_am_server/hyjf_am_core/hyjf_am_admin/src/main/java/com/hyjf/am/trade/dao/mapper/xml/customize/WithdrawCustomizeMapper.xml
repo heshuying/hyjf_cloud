@@ -69,7 +69,7 @@
 				AND a.bank_flag = #{bankFlagSrch}
 			</if>
 			<if test="accountIdSrch != null and accountIdSrch != ''">
-				AND a.account = #{accountIdSrch}
+				AND a.account_id = #{accountIdSrch}
 			</if>
 			<if test="bankSeqNoSrch != null and bankSeqNoSrch != ''">
 				AND a.bank_seq_no = #{bankSeqNoSrch}
