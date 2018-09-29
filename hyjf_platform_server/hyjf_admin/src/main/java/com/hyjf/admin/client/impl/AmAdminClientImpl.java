@@ -1167,7 +1167,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public int updateHandRechargeRecord(PlatformTransferRequest platformTransferRequest) {
-        String url = "http://AM-ADMIN/am-admin/asset_exception/select_asset_exception_count";
+        String url = "http://AM-ADMIN/am-trade/platformtransfer/updateHandRechargeRecord";
         PlatformTransferResponse response = restTemplate.postForEntity(url,platformTransferRequest,PlatformTransferResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getCount();
