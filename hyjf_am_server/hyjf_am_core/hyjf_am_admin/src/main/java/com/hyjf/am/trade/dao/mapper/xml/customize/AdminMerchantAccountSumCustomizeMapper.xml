@@ -16,4 +16,59 @@
 		WHERE
 			sub_account_type <![CDATA[<>]]> 'DEP'
 	</select>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.vo.admin.MerchantAccountVO" >
+		update hyjf_trade.ht_merchant_account
+		<set >
+			<if test="subAccountName != null" >
+				sub_account_name = #{subAccountName,jdbcType=VARCHAR},
+			</if>
+			<if test="subAccountType != null" >
+				sub_account_type = #{subAccountType,jdbcType=VARCHAR},
+			</if>
+			<if test="subAccountCode != null" >
+				sub_account_code = #{subAccountCode,jdbcType=VARCHAR},
+			</if>
+			<if test="transferIntoFlg != null" >
+				transfer_into_flg = #{transferIntoFlg,jdbcType=TINYINT},
+			</if>
+			<if test="transferOutFlg != null" >
+				transfer_out_flg = #{transferOutFlg,jdbcType=TINYINT},
+			</if>
+			<if test="balanceLowerLimit != null" >
+				balance_lower_limit = #{balanceLowerLimit,jdbcType=DECIMAL},
+			</if>
+			<if test="autoTransferOut != null" >
+				auto_transfer_out = #{autoTransferOut,jdbcType=TINYINT},
+			</if>
+			<if test="autoTransferInto != null" >
+				auto_transfer_into = #{autoTransferInto,jdbcType=TINYINT},
+			</if>
+			<if test="transferIntoRatio != null" >
+				transfer_into_ratio = #{transferIntoRatio,jdbcType=INTEGER},
+			</if>
+			<if test="accountBalance != null" >
+				account_balance = #{accountBalance,jdbcType=DECIMAL},
+			</if>
+			<if test="availableBalance != null" >
+				available_balance = #{availableBalance,jdbcType=DECIMAL},
+			</if>
+			<if test="frost != null" >
+				frost = #{frost,jdbcType=DECIMAL},
+			</if>
+			<if test="purpose != null" >
+				purpose = #{purpose,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null" >
+				sort = #{sort,jdbcType=SMALLINT},
+			</if>
+			<if test="createtime != null" >
+				create_time =  #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updatetime != null" >
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>

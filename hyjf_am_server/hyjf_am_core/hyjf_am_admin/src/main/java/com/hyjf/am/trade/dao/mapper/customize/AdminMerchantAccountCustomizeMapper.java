@@ -12,6 +12,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.customize.AdminMerchantAccountSumCustomize;
+import com.hyjf.am.vo.admin.MerchantAccountVO;
 
 public interface AdminMerchantAccountCustomizeMapper {
 
@@ -22,6 +23,6 @@ public interface AdminMerchantAccountCustomizeMapper {
 		
 	AdminMerchantAccountSumCustomize searchMerchantAccountSum();
 
-
+	int updateByPrimaryKeySelective(MerchantAccountVO record);
 
 }
