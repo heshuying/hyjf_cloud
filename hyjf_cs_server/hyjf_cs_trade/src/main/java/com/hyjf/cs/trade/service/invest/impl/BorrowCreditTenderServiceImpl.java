@@ -695,7 +695,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 银行待还利息
                 sellerAccountList.setBankAwaitInterest(sellerAccount.getBankAwaitInterest().subtract(sellerAccountNew.getBankAwaitInterest()));
                 // 银行累计收益
-                sellerAccountList.setBankInterestSum(sellerAccountNew.getBankInvestSum().add(sellerAccount.getBankInterestSum()));
+                sellerAccountList.setBankInterestSum(sellerAccountNew.getBankInterestSum().add((sellerAccount.getBankInterestSum()==null?BigDecimal.ZERO:sellerAccount.getBankInterestSum())));
                 // 银行累计投资
                 sellerAccountList.setBankInvestSum(sellerAccount.getBankInvestSum());
                 // 银行存管冻结金额
