@@ -21,7 +21,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: BorrowRegistExceptionServiceImpl, v0.1 2018/7/3 18:04
  */
-@Service
+@Service(value = "userBorrowRegistExceptionServiceImpl")
 public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements BorrowRegistExceptionService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

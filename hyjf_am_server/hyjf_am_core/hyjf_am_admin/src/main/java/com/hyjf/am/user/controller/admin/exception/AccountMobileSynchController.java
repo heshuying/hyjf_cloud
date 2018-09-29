@@ -26,7 +26,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: AccountMobileSynchController, v0.1 2018/8/15 14:08
  */
-@RestController
+@RestController(value = "userAccountMobileSynchController")
 @RequestMapping("/am-user/accountmobilesynch")
 public class AccountMobileSynchController extends BaseController {
 

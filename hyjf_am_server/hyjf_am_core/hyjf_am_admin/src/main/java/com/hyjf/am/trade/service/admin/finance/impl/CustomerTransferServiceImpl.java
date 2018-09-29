@@ -30,7 +30,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: CustomerTransferServiceImpl, v0.1 2018/7/6 10:17
  */
-@Service
+@Service(value = "tradeCustomerTransferServiceImpl")
 public class CustomerTransferServiceImpl extends BaseServiceImpl implements CustomerTransferService {
 
     @Autowired

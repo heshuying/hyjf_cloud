@@ -19,7 +19,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: AccountMobileSynchServiceImpl, v0.1 2018/8/15 14:14
  */
-@Service
+@Service(value = "userAccountMobileSynchServiceImpl")
 public class AccountMobileSynchServiceImpl extends BaseServiceImpl implements AccountMobileSynchService {
 
     /**

@@ -113,7 +113,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public SiteSettingsVO findSiteSetting() {
 
         SiteSettingsResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/siteSettings/findOne/", SiteSettingsResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-config/siteSettings/findOne/", SiteSettingsResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -130,7 +130,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode) {
         SmsMailTemplateResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/smsMailTemplate/findSmsMailByCode/" + mailCode,
+                .getForEntity("http://AM-ADMIN/am-config/smsMailTemplate/findSmsMailByCode/" + mailCode,
                         SmsMailTemplateResponse.class)
                 .getBody();
         if (response != null) {
@@ -149,7 +149,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public String getBankRetMsg(String retCode) {
         BankReturnCodeConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/config/getBankReturnCodeConfig/" + retCode,
+                .getForEntity("http://AM-ADMIN/config/getBankReturnCodeConfig/" + retCode,
                         BankReturnCodeConfigResponse.class)
                 .getBody();
         if (response != null) {

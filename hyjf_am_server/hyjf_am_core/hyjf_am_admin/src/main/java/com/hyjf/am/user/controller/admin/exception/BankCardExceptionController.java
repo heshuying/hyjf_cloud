@@ -28,7 +28,7 @@ import java.util.List;
  * @version: BankCardExceptionController, v0.1 2018/8/14 15:01
  */
 @Api(value = "江西银行卡异常",tags = "江西银行卡异常")
-@RestController
+@RestController(value = "userBankCardExceptionController")
 @RequestMapping(value = "/am-user/bankcardexception")
 public class BankCardExceptionController extends BaseController {
 

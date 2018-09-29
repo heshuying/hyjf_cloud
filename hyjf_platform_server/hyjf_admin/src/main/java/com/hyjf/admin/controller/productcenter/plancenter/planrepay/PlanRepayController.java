@@ -136,7 +136,7 @@ public class PlanRepayController extends BaseController {
 //        }
 
         //初始化返回List
-        List<HjhRepayVO> returnList = null;
+        List<HjhRepayVO> returnList = new ArrayList<>();
         // 查询列表
         HjhRepayResponse hjhRepayResponse = this.planRepayService.selectHjhRepayList(repayRequest);
         if (hjhRepayResponse == null){

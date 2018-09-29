@@ -328,7 +328,10 @@ public interface AmTradeClient {
      * @param subCommissionVO 待更新的数据参数
      * @return
      */
+/*
+    @Deprecated
     Integer updateSubCommission(SubCommissionVO subCommissionVO);
+*/
 
     /**
      *  获取银行转账异常列表 jijun 20180710
