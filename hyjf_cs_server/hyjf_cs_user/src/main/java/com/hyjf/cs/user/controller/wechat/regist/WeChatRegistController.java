@@ -13,6 +13,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -130,9 +131,11 @@ public class WeChatRegistController extends BaseUserController {
         if(null!=ret.getStatus()&&!ret.getStatus().equals("000")){
             return ret;
         }
-        WebViewUserVO webViewUserVO =  registService.register(register, GetCilentIP.getIpAddr(request));
+        WebViewUserVO webViewUserVO = registService.register(register.getMobile(),
+                register.getVerificationCode(), register.getPassword(),
+                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request));
         //注册成功重新登录
-        WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
+        WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
          if(null!=userVO){
              ret.setSign(userVO.getToken());
          }else {

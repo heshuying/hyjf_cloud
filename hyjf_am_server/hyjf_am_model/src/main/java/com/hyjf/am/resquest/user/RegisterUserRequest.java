@@ -5,85 +5,110 @@ package com.hyjf.am.resquest.user;
  * @version RegisterUserRequest, v0.1 2018/4/11 12:49
  */
 public class RegisterUserRequest {
-	private String mobile;
-	private String verificationCode;
-	private String reffer;
-	private String password;
-	private String utmId;
-	private String loginIp;
-	private String platform;
-	private String instCode;
-	private Integer instType;
+    private String mobile;
+    private String verificationCode;
+    private String reffer;
+    private String password;
+    private String utmId;
+    private String loginIp;
+    private String platform;
+    private String instCode;
+    private Integer instType;
 
-	public String getMobile() {
-		return mobile;
-	}
+    public RegisterUserRequest() {
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    }
 
-	public String getVerificationCode() {
-		return verificationCode;
-	}
+    /**
+     * 注册构造器
+     *
+     * @param mobile
+     * @param verificationCode
+     * @param reffer
+     * @param password
+     * @param utmId
+     * @param platform
+     */
+    public RegisterUserRequest(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform) {
+        this.mobile = mobile;
+        this.verificationCode = verificationCode;
+        this.reffer = reffer;
+        this.instCode = instCode;
+        this.password = password;
+        this.utmId = utmId;
+        this.platform = platform;
+    }
 
-	public void setVerificationCode(String verificationCode) {
-		this.verificationCode = verificationCode;
-	}
 
-	public String getReffer() {
-		return reffer;
-	}
+    public String getMobile() {
+        return mobile;
+    }
 
-	public void setReffer(String reffer) {
-		this.reffer = reffer;
-	}
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getVerificationCode() {
+        return verificationCode;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
 
-	public String getUtmId() {
-		return utmId;
-	}
+    public String getReffer() {
+        return reffer;
+    }
 
-	public void setUtmId(String utmId) {
-		this.utmId = utmId;
-	}
+    public void setReffer(String reffer) {
+        this.reffer = reffer;
+    }
 
-	public String getLoginIp() {
-		return loginIp;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setLoginIp(String loginIp) {
-		this.loginIp = loginIp;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getPlatform() {
-		return platform;
-	}
+    public String getUtmId() {
+        return utmId;
+    }
 
-	public void setPlatform(String platform) {
-		this.platform = platform;
-	}
+    public void setUtmId(String utmId) {
+        this.utmId = utmId;
+    }
 
-	public String getInstCode() {
-		return instCode;
-	}
+    public String getLoginIp() {
+        return loginIp;
+    }
 
-	public void setInstCode(String instCode) {
-		this.instCode = instCode;
-	}
+    public void setLoginIp(String loginIp) {
+        this.loginIp = loginIp;
+    }
 
-	public Integer getInstType() {
-		return instType;
-	}
+    public String getPlatform() {
+        return platform;
+    }
 
-	public void setInstType(Integer instType) {
-		this.instType = instType;
-	}
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public String getInstCode() {
+        return instCode;
+    }
+
+    public void setInstCode(String instCode) {
+        this.instCode = instCode;
+    }
+
+    public Integer getInstType() {
+        return instType;
+    }
+
+    public void setInstType(Integer instType) {
+        this.instType = instType;
+    }
 }
