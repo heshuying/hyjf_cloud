@@ -5,7 +5,6 @@ import com.hyjf.am.response.admin.IncreaseInterestRepayDetailResponse;
 import com.hyjf.am.resquest.admin.IncreaseInterestRepayDetailRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.admin.IncreaseInterestRepayDetailService;
-import com.hyjf.am.trade.service.admin.IncreaseInterestRepayService;
 import com.hyjf.am.vo.admin.AdminIncreaseInterestRepayCustomizeVO;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;

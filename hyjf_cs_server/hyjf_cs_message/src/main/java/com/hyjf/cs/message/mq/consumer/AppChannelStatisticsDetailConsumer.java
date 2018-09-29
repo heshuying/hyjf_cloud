@@ -1,9 +1,8 @@
 package com.hyjf.cs.message.mq.consumer;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.ic.AppChannelStatisticsDetail;
 import com.hyjf.cs.message.mongo.ic.AppChannelStatisticsDetailDao;
 import com.hyjf.cs.message.mq.base.Consumer;
@@ -23,9 +22,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.validator.Validator;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author xiasq

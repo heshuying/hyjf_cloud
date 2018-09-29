@@ -3,11 +3,17 @@
  */
 package com.hyjf.am.trade.mq.consumer;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.trade.dao.model.auto.AleveErrorLog;
+import com.hyjf.am.trade.dao.model.auto.AleveLog;
+import com.hyjf.am.trade.mq.base.Consumer;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.DownloadFileProducer;
+import com.hyjf.am.trade.service.task.AleveLogFileService;
+import com.hyjf.am.trade.utils.TransUtil;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -23,17 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.trade.dao.model.auto.AleveErrorLog;
-import com.hyjf.am.trade.dao.model.auto.AleveLog;
-import com.hyjf.am.trade.mq.base.Consumer;
-import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.DownloadFileProducer;
-import com.hyjf.am.trade.service.task.AleveLogFileService;
-import com.hyjf.am.trade.utils.TransUtil;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.calculate.DateUtils;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author wangjun

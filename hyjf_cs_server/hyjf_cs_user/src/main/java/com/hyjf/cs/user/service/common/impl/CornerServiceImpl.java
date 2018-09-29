@@ -6,8 +6,8 @@ package com.hyjf.cs.user.service.common.impl;
 import com.hyjf.am.vo.config.UserCornerVO;
 import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.cs.user.client.AmConfigClient;
-import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.common.CornerService;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

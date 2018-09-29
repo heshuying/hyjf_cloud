@@ -1,12 +1,5 @@
 package com.hyjf.am.market.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.admin.config.SystemConfig;
 import com.hyjf.am.market.dao.mapper.auto.ActivityListMapper;
 import com.hyjf.am.market.dao.mapper.customize.app.AppActivityListCustomizeMapper;
@@ -19,6 +12,11 @@ import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListCustomizeVO;
 import com.hyjf.common.util.GetDate;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xiasq

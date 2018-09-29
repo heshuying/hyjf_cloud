@@ -1,11 +1,11 @@
 package com.hyjf.am.resquest.user;
 
+import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import com.hyjf.am.vo.BasePage;
-
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @package com.hyjf.admin.maintenance.AlllBorrowCustomize;

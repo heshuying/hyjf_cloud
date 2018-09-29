@@ -2,21 +2,16 @@ package com.hyjf.admin.controller.productcenter.plancenter.planrepay;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.HjhRepayRequestBean;
-import com.hyjf.admin.beans.response.HjhRepayResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.PlanRepayService;
-import com.hyjf.admin.utils.Page;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
-import com.hyjf.am.resquest.admin.PlanListRequest;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
-import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -36,9 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.net.URLEncoder;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

@@ -1,6 +1,7 @@
 package com.hyjf.am.config.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.config.dao.model.auto.Version;
 import com.hyjf.am.config.service.VersionConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminVersionResponse;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.hyjf.am.config.dao.model.auto.Version;
+
 import java.util.List;
 import java.util.Map;
 

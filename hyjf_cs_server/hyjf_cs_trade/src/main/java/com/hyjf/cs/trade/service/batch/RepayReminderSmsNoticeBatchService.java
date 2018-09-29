@@ -3,9 +3,9 @@
  */
 package com.hyjf.cs.trade.service.batch;
 
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 import java.util.List;

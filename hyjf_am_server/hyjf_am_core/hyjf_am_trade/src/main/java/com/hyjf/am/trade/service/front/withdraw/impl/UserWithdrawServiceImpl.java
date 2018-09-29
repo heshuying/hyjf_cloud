@@ -17,7 +17,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.util.BankCallParamConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 

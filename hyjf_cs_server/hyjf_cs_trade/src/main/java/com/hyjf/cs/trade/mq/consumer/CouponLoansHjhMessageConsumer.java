@@ -1,9 +1,14 @@
 package com.hyjf.cs.trade.mq.consumer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.CouponLoansBean;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.service.consumer.CouponLoansService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -18,15 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.CouponLoansBean;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.mq.base.Consumer;
-import com.hyjf.cs.trade.service.consumer.CouponLoansService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: walter.limeng

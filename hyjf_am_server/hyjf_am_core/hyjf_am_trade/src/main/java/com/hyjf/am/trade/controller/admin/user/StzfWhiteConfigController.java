@@ -3,28 +3,23 @@
  */
 package com.hyjf.am.trade.controller.admin.user;
 
-import java.util.List;
-
-import com.hyjf.am.response.Response;
-import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.GetDate;
-import io.swagger.models.auth.In;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
 import com.hyjf.am.trade.service.admin.StzfWhiteConfigService;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author fuqiang

@@ -1,15 +1,11 @@
 package com.hyjf.am.config.controller.app;
 
 import com.hyjf.am.config.controller.BaseConfigController;
-import com.hyjf.am.config.controller.admin.content.CategoryController;
-import com.hyjf.am.config.dao.model.auto.Category;
 import com.hyjf.am.config.service.app.ShareNewsService;
-import com.hyjf.am.response.admin.CategoryResponse;
 import com.hyjf.am.response.config.ShareNewsResponse;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

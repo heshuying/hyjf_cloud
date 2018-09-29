@@ -10,8 +10,10 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.trade.account.*;
-import com.hyjf.am.response.trade.account.AccountRechargeResponse;
+import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
+import com.hyjf.am.response.trade.account.AccountTradeResponse;
+import com.hyjf.am.response.trade.account.MerchantTransferResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
@@ -24,7 +26,6 @@ import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
@@ -280,7 +281,7 @@ public interface AmTradeClient {
      * @param accountId 账户id
      * @return
      */
-    BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId);
+    BankMerchantAccountVO searchBankMerchantAccountByAccountId(String accountId);
 
     /**
      * 更新红包账户信息

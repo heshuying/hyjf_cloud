@@ -1,11 +1,10 @@
 package com.hyjf.am.user.controller.front.user;
 
+import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.service.front.user.UserEntryBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.service.front.user.UserEntryBatchService;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**

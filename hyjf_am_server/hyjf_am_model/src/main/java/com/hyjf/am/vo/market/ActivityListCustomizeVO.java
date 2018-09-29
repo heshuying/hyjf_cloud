@@ -1,7 +1,5 @@
 package com.hyjf.am.vo.market;
 
-import io.swagger.models.auth.In;
-
 /**
  * @Auther: walter.limeng
  * @Date: 2018/7/26 13:55

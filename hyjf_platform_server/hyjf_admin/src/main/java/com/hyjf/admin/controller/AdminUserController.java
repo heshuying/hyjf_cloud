@@ -1,33 +1,17 @@
 package com.hyjf.admin.controller;
 
-import java.lang.reflect.InvocationTargetException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.service.AdminService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AdminRoleResponse;
-import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.AdminUserResponse;
-import com.hyjf.am.response.config.TreeResponse;
-import com.hyjf.am.resquest.config.AdminMenuRequest;
 import com.hyjf.am.resquest.config.AdminRequest;
-import com.hyjf.am.resquest.config.AdminRoleRequest;
-import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.config.TreeVO;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @package com.hyjf.admin.maintenance.Admin

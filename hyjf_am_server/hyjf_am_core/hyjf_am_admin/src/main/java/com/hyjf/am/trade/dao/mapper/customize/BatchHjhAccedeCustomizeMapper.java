@@ -1,10 +1,10 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
+
+import java.util.List;
+import java.util.Map;
 
 public interface BatchHjhAccedeCustomizeMapper {
 	/**

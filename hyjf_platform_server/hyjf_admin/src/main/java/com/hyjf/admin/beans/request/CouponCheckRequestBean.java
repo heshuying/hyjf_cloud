@@ -4,12 +4,8 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
-import com.hyjf.am.vo.config.CouponCheckVO;
-import com.hyjf.common.paginator.Paginator;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author yaoyong

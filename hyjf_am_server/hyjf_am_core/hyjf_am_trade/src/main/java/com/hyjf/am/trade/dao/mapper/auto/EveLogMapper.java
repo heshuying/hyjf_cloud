@@ -2,8 +2,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.EveLog;
 import com.hyjf.am.trade.dao.model.auto.EveLogExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface EveLogMapper {
     int countByExample(EveLogExample example);

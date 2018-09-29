@@ -4,7 +4,6 @@
 package com.hyjf.am.user.service.front.user;
 
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.auto.UserLoginLog;
 
 import java.util.List;

@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hyjf.am.vo.BaseVO;
-
 public class TreeVO extends AdminMenuVO implements Serializable {
 
 	/**

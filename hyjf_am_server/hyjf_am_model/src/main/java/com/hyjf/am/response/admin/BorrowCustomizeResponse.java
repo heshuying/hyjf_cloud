@@ -3,16 +3,15 @@
  */
 package com.hyjf.am.response.admin;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.response.AdminResponse;
-
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**

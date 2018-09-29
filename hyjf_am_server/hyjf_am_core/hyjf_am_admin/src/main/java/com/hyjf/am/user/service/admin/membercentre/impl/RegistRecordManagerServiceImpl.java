@@ -3,16 +3,15 @@
  */
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.user.dao.model.customize.RegistRecordCustomize;
 import com.hyjf.am.user.service.admin.membercentre.RegistRecordManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl

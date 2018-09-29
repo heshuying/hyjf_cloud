@@ -1,10 +1,9 @@
 package com.hyjf.am.config.controller;
 
+import com.hyjf.am.config.service.HolidaysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.hyjf.am.config.service.HolidaysConfigService;
 
 import java.time.LocalDate;
 

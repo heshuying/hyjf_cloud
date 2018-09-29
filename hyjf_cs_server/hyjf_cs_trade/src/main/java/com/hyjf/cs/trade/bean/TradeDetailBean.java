@@ -1,11 +1,6 @@
 package com.hyjf.cs.trade.bean;
 
-import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
-import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
-import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.cs.common.bean.result.WebResult;
-
-import java.util.List;
 
 /**
  * @author pangchengchao

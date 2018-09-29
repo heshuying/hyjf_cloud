@@ -1,12 +1,11 @@
 package com.hyjf.am.admin.mq.producer;
 
-import org.springframework.stereotype.Component;
-
 import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.admin.mq.base.Producer;
 import com.hyjf.am.admin.mq.base.ProducerFieldsWrapper;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import org.springframework.stereotype.Component;
 
 /**
  * 同步账户额度生产者

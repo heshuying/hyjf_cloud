@@ -1,16 +1,5 @@
 package com.hyjf.am.user.service.front.ca.impl;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.admin.mq.producer.FddCertificateProducer;
@@ -23,6 +12,16 @@ import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * CA认证异常Service实现类

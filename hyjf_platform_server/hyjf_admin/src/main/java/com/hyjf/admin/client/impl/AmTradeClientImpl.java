@@ -496,7 +496,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @auth sunpeikai
      */
     @Override
-    public BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId) {
+    public BankMerchantAccountVO searchBankMerchantAccountByAccountId(String accountId) {
         String url = "http://AM-TRADE/am-trade/platformtransfer/searchbankmerchantaccount/" + accountId;
         BankMerchantAccountResponse response = restTemplate.getForEntity(url, BankMerchantAccountResponse.class).getBody();
         if (response != null) {

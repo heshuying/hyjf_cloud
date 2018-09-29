@@ -4,7 +4,10 @@
 package com.hyjf.am.trade.controller.batch;
 
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
+import com.hyjf.am.trade.dao.model.auto.NifaContractStatus;
 import com.hyjf.am.trade.service.task.LateAndCreditService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;

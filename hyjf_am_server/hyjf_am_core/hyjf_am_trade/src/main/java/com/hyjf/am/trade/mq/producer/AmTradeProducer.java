@@ -3,17 +3,16 @@
  */
 package com.hyjf.am.trade.mq.producer;
 
-import org.apache.rocketmq.client.exception.MQBrokerException;
-import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.common.message.Message;
-import org.apache.rocketmq.remoting.exception.RemotingException;
-import org.springframework.stereotype.Component;
-
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.base.Producer;
 import com.hyjf.am.trade.mq.base.ProducerFieldsWrapper;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import org.apache.rocketmq.client.exception.MQBrokerException;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.exception.RemotingException;
+import org.springframework.stereotype.Component;
 
 /**
  *  交易原子服务通用生产者

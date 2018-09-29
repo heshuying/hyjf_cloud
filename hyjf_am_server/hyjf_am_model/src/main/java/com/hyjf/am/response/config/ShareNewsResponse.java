@@ -2,9 +2,6 @@ package com.hyjf.am.response.config;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
-import org.apache.poi.ss.formula.functions.T;
-
-import java.util.List;
 
 /**
  * @Auther: walter.limeng

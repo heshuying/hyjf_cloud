@@ -15,13 +15,11 @@ import com.hyjf.admin.mq.FddProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -348,6 +346,20 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         if (StringUtils.isNotEmpty(userId)) {
             int userIdInt = Integer.parseInt(userId);
             return userCenterClient.selectUserByUserId(userIdInt);
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户List id查找用户信息
+     *
+     * @param List userId
+     * @return
+     */
+    @Override
+    public List<UserVO> selectUserByListUserId(List userId) {
+        if (userId != null && userId.size() != 0) {
+            return userCenterClient.selectUserByListUserId(userId);
         }
         return null;
     }

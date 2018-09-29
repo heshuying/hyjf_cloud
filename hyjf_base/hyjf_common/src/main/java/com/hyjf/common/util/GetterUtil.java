@@ -1,9 +1,9 @@
 package com.hyjf.common.util;
 
+import com.hyjf.common.validator.Validator;
+
 import java.text.DateFormat;
 import java.util.Date;
-
-import com.hyjf.common.validator.Validator;
 
 /**
  * <p>

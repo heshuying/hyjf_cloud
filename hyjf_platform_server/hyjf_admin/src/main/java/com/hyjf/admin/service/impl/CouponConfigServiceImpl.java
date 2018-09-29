@@ -13,11 +13,8 @@ import com.hyjf.am.response.trade.CouponConfigExportCustomizeResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
-import com.hyjf.am.resquest.admin.CouponUserRequest;
-import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.sun.corba.se.spi.ior.IdentifiableFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

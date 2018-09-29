@@ -6,7 +6,6 @@ import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.datacollect.*;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
 import com.hyjf.cs.message.bean.mc.UserOperationReportEntity;
@@ -16,7 +15,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

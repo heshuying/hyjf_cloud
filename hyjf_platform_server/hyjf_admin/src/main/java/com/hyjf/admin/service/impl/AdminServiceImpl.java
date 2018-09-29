@@ -1,12 +1,8 @@
 package com.hyjf.admin.service.impl;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.AdminService;
-import com.hyjf.admin.service.AdminTransferExceptionLogService;
 import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.AdminUserResponse;
@@ -14,8 +10,8 @@ import com.hyjf.am.response.config.TreeResponse;
 import com.hyjf.am.resquest.config.AdminMenuRequest;
 import com.hyjf.am.resquest.config.AdminRequest;
 import com.hyjf.am.resquest.config.AdminRoleRequest;
-
-import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @package com.hyjf.admin.maintenance.Admin

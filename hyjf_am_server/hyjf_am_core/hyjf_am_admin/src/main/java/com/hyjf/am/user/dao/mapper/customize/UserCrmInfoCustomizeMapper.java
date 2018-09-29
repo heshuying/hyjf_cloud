@@ -3,11 +3,10 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
-import java.util.List;
-
+import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
 import org.apache.ibatis.annotations.Param;
 
-import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
+import java.util.List;
 
 /**
  * @Description 用户CRM信息查询

@@ -1,7 +1,6 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
 import com.hyjf.am.user.dao.model.customize.ChannelCustomize;
-import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 
 import java.util.List;
 

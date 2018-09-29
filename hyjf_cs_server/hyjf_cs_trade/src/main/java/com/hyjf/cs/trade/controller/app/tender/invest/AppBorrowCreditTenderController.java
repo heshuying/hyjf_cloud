@@ -4,9 +4,7 @@
 package com.hyjf.cs.trade.controller.app.tender.invest;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Map;
 
 /**

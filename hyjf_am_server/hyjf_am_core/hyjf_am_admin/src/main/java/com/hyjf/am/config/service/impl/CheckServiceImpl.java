@@ -3,19 +3,17 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.CouponCheckMapper;
 import com.hyjf.am.config.dao.model.auto.CouponCheck;
 import com.hyjf.am.config.dao.model.auto.CouponCheckExample;
 import com.hyjf.am.config.service.CheckService;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author yaoyong

@@ -1,9 +1,9 @@
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.FeeConfig;
 import com.hyjf.am.resquest.admin.AdminFeeConfigRequest;
+
+import java.util.List;
 
 public interface FeeConfigService {
 

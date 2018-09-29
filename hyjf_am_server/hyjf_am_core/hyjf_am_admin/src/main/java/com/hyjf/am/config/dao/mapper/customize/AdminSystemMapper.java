@@ -1,8 +1,8 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
+
+import java.util.List;
 
 /**
  * @author by dongzeshan on 2018/7/20.

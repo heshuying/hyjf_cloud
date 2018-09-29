@@ -20,7 +20,8 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.app.AppHomePageCustomize;
 import com.hyjf.cs.trade.bean.app.AppModuleBean;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.home.AppHomeService;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -34,9 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * APP首页service

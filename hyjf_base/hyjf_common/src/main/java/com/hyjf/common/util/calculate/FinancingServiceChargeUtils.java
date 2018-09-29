@@ -12,7 +12,6 @@
 package com.hyjf.common.util.calculate;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

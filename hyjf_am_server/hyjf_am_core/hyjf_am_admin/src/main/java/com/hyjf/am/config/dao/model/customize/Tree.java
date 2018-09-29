@@ -1,10 +1,10 @@
 package com.hyjf.am.config.dao.model.customize;
 
+import com.hyjf.am.config.dao.model.auto.AdminMenu;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.hyjf.am.config.dao.model.auto.AdminMenu;
 
 public class Tree extends AdminMenu implements Serializable {
 

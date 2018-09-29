@@ -12,8 +12,6 @@ package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
 
-import java.io.Serializable;
-
 public class WebCarinfoVO extends BaseVO {
 
 	/** 序列化id */

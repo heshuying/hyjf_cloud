@@ -1,9 +1,8 @@
 package com.hyjf.pay.mongo;
 
-import org.springframework.stereotype.Repository;
-
 import com.hyjf.pay.base.BaseMongoDao;
 import com.hyjf.pay.entity.DzqzSendLog;
+import org.springframework.stereotype.Repository;
 
 
 @Repository

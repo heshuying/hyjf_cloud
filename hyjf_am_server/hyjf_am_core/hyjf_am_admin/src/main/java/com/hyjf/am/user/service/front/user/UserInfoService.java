@@ -7,7 +7,6 @@ import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
 import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
 package com.hyjf.cs.message.bean.ic;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "ht_bank_sms_auth_code")
 public class BankSmsAuthCode implements Serializable {

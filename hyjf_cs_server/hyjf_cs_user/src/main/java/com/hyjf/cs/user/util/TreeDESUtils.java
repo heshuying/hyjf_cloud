@@ -1,10 +1,9 @@
 package com.hyjf.cs.user.util;
 
-import java.net.URLEncoder;
-
+import com.hyjf.common.util.ThreeDESUtils;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.hyjf.common.util.ThreeDESUtils;
+import java.net.URLEncoder;
 
 /**
  * @author xiasq

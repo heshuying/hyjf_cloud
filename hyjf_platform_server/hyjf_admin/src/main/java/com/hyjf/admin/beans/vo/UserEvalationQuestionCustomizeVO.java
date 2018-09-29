@@ -4,7 +4,6 @@ import com.hyjf.am.vo.BaseVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class UserEvalationQuestionCustomizeVO extends BaseVO implements Serializable {
 

@@ -3,19 +3,18 @@
  */
 package com.hyjf.am.trade.service.admin.impl;
 
-import java.util.List;
-
+import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
+import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
 import com.hyjf.am.trade.dao.mapper.customize.StzhWhiteListCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
+import com.hyjf.am.trade.dao.model.auto.StzhWhiteListExample;
 import com.hyjf.am.trade.dao.model.customize.STZHWhiteListCustomize;
+import com.hyjf.am.trade.service.admin.StzfWhiteConfigService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
-import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
-import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
-import com.hyjf.am.trade.dao.model.auto.StzhWhiteListExample;
-import com.hyjf.am.trade.service.admin.StzfWhiteConfigService;
+import java.util.List;
 
 /**
  * @author fuqiang

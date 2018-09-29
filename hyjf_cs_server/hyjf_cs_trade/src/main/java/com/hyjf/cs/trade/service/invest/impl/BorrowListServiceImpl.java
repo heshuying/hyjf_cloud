@@ -17,15 +17,15 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.invest.BorrowListService;
 import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
-import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;

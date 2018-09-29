@@ -4,7 +4,6 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.BaseVO;
 
 /**
  * @Description 可转让列表

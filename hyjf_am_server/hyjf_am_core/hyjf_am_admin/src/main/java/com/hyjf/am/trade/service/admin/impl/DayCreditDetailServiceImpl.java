@@ -3,7 +3,6 @@ package com.hyjf.am.trade.service.admin.impl;
 import com.hyjf.am.trade.dao.model.customize.HjhDayCreditDetailCustomize;
 import com.hyjf.am.trade.service.admin.DayCreditDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

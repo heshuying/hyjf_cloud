@@ -3,18 +3,17 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.config.dao.mapper.auto.UserCornerMapper;
 import com.hyjf.am.config.dao.model.auto.UserCorner;
 import com.hyjf.am.config.dao.model.auto.UserCornerExample;
 import com.hyjf.am.config.service.UserCornerService;
 import com.hyjf.am.vo.config.UserCornerVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai

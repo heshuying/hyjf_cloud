@@ -8,11 +8,8 @@ import com.hyjf.am.response.trade.CouponConfigExportCustomizeResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
-import com.hyjf.am.resquest.admin.CouponUserRequest;
-import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**

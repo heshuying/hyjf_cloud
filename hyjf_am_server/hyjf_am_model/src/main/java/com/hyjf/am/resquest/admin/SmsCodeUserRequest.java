@@ -4,7 +4,6 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
-
 import io.swagger.annotations.ApiModelProperty;
 
 /**

@@ -1,12 +1,11 @@
 package com.hyjf.am.trade.mq.producer;
 
-import org.springframework.stereotype.Component;
-
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.base.Producer;
 import com.hyjf.am.trade.mq.base.ProducerFieldsWrapper;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import org.springframework.stereotype.Component;
 
 /**
  * @author xiasq

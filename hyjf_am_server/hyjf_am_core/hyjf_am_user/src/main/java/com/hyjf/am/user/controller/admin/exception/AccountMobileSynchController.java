@@ -3,19 +3,15 @@
  */
 package com.hyjf.am.user.controller.admin.exception;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.AccountMobileSynchResponse;
 import com.hyjf.am.resquest.user.AccountMobileSynchRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.AccountMobileSynch;
-import com.hyjf.am.user.dao.model.customize.AdminBankCardExceptionCustomize;
 import com.hyjf.am.user.service.admin.exception.AccountMobileSynchService;
-import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
 import com.hyjf.am.vo.user.AccountMobileSynchVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;

@@ -3,13 +3,10 @@
  */
 package com.hyjf.admin.service.coupon;
 
-import com.hyjf.am.response.admin.AdminCouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.admin.AdminCouponUserRequestBean;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;

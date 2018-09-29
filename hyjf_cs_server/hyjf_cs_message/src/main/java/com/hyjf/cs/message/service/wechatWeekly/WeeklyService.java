@@ -2,7 +2,6 @@ package com.hyjf.cs.message.service.wechatWeekly;
 
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.am.vo.market.EventsVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;

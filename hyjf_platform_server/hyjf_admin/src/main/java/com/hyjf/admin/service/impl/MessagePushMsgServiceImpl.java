@@ -11,8 +11,6 @@ import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * @author yaoyong
  * @version MessagePushMsgServiceImpl, v0.1 2018/8/15 16:03

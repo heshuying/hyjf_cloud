@@ -4,21 +4,19 @@
 package com.hyjf.am.user.controller.admin.content;
 
 
-import com.hyjf.am.response.StringResponse;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.WhereaboutsPageConfig;
 import com.hyjf.am.user.service.admin.content.WhereaboutsPageService;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
-
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author tanyy

@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.resquest.api;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+
+import java.io.Serializable;
 
 /**
  * @author libin

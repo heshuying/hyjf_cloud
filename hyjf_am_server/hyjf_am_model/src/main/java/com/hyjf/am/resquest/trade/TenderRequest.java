@@ -7,7 +7,6 @@ import com.hyjf.am.vo.BaseVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;

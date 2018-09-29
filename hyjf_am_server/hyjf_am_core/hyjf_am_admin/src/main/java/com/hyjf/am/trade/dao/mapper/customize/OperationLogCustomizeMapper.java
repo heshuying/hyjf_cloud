@@ -1,10 +1,10 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetType;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
+
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/18.
