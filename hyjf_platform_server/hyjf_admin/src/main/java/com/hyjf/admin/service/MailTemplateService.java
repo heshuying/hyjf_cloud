@@ -44,12 +44,6 @@ public interface MailTemplateService {
     int updateMailTemplate(MailTemplateRequest request);
 
     /**
-     * 关闭模板
-     * @param request
-     */
-    void closeAction(MailTemplateRequest request);
-
-    /**
      * 开启模板
      * @param request
      */
