@@ -240,7 +240,7 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
 			certificateAuthority = cam.get(0);
 		}
 
-		/*LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = null;
+		LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = null;
 		LoanSubjectCertificateAuthorityExample example2 = new LoanSubjectCertificateAuthorityExample();
 		LoanSubjectCertificateAuthorityExample.Criteria cra = example2.createCriteria();
 		cra.andNameEqualTo(tureName);
@@ -251,8 +251,11 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
 
 		if (certificateAuthority == null && loanSubjectCertificateAuthority == null){
 			return null;
-		}*/
-        return  certificateAuthority;
+		}
+		if(certificateAuthority != null ) {
+			return certificateAuthority;
+		}
+        return new CertificateAuthority();
  
     }
   	/**

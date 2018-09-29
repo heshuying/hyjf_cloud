@@ -111,6 +111,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         params.put("creditStatus",request.getCreditStatus());
         params.put("timeStart",request.getTimeStart());
         params.put("timeEnd",request.getTimeEnd());
+        params.put("client",request.getClient());
         return borrowCreditCustomizeMapper.countBorrowCreditList4Admin(params);
     }
 
@@ -127,6 +128,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         params.put("creditStatus",request.getCreditStatus());
         params.put("timeStart",request.getTimeStart());
         params.put("timeEnd",request.getTimeEnd());
+        params.put("client",request.getClient());
         return borrowCreditCustomizeMapper.getBorrowCreditTotalCount(params);
     }
 
