@@ -2,7 +2,6 @@ package com.hyjf.admin.service.impl.promotion;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmUserClient;
-import com.hyjf.admin.client.impl.AmUserClientImpl;
 import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.vo.admin.UtmVO;

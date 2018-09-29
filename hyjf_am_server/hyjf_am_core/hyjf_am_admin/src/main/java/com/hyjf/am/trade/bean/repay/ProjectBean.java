@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.bean.repay;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.util.List;
-
-import com.hyjf.am.vo.BaseVO;
 
 public class ProjectBean extends BaseVO implements Serializable {
 

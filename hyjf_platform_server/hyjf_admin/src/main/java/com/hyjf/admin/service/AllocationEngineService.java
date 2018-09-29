@@ -3,14 +3,14 @@
  */
 package com.hyjf.admin.service;
 
-import java.util.List;
-
 import com.hyjf.am.response.admin.HjhAllocationEngineResponse;
 import com.hyjf.am.response.admin.HjhRegionResponse;
 import com.hyjf.am.resquest.admin.AllocationEngineRuquest;
 import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
 import com.hyjf.am.vo.admin.HjhRegionVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+
+import java.util.List;
 /**
  * @author libin
  * @version AllocationEngineService.java, v0.1 2018年7月3日 上午11:50:37

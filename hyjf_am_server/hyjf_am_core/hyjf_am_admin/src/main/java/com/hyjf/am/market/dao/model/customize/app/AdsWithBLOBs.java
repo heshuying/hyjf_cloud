@@ -1,8 +1,8 @@
 package com.hyjf.am.market.dao.model.customize.app;
 
-import java.io.Serializable;
-
 import com.hyjf.am.market.dao.model.auto.Ads;
+
+import java.io.Serializable;
 
 /**
  * @author lisheng

@@ -4,7 +4,6 @@ import com.hyjf.am.config.dao.mapper.auto.BankRechargeConfigMapper;
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfig;
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfigExample;
 import com.hyjf.am.config.service.BankRechargeService;
-import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;

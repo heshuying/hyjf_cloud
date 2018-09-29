@@ -3,23 +3,20 @@
  */
 package com.hyjf.am.trade.service.admin.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import com.hyjf.common.util.CommonUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.admin.ProtocolsRequest;
 import com.hyjf.am.trade.dao.mapper.auto.FddTempletMapper;
 import com.hyjf.am.trade.dao.mapper.customize.FddTempletCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.FddTemplet;
 import com.hyjf.am.trade.dao.model.customize.FddTempletCustomize;
 import com.hyjf.am.trade.service.admin.ProtocolsService;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author fuqiang

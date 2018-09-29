@@ -1,14 +1,14 @@
 package com.hyjf.admin.service;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author libin

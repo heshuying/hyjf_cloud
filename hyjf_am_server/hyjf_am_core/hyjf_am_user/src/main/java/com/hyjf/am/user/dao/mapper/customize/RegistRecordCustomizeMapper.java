@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
-import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.user.dao.model.customize.RegistRecordCustomize;
 
 import java.util.List;

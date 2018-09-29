@@ -1,14 +1,5 @@
 package com.hyjf.am.user.mq;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.user.AmUserApplication;
 import com.hyjf.am.user.mq.base.MessageContent;
@@ -16,6 +7,14 @@ import com.hyjf.am.user.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author xiasq

@@ -10,7 +10,6 @@ import com.hyjf.am.trade.service.admin.finance.BankAleveService;
 import com.hyjf.am.vo.admin.BankAleveVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;

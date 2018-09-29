@@ -1,34 +1,22 @@
 package com.hyjf.am.config.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.AdminMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminMenuMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminMenuPermssionsMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminPermissionsMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminCustomizeMapper;
-import com.hyjf.am.config.dao.model.auto.AdminExample;
-import com.hyjf.am.config.dao.model.auto.AdminMenu;
-import com.hyjf.am.config.dao.model.auto.AdminMenuExample;
-import com.hyjf.am.config.dao.model.auto.AdminMenuPermssions;
-import com.hyjf.am.config.dao.model.auto.AdminMenuPermssionsExample;
-import com.hyjf.am.config.dao.model.auto.AdminPermissions;
-import com.hyjf.am.config.dao.model.auto.AdminPermissionsExample;
+import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.dao.model.customize.AdminCustomize;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminMenuService;
 import com.hyjf.am.resquest.config.AdminMenuRequest;
 import com.hyjf.common.validator.Validator;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 
 @Service

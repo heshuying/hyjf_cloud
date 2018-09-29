@@ -1,12 +1,12 @@
 package com.hyjf.am.config.bean;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.AdminRole;
 import com.hyjf.am.config.dao.model.customize.AdminCustomize;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.common.paginator.Paginator;
+
+import java.io.Serializable;
+import java.util.List;
 
 
 /**

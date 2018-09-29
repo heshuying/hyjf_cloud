@@ -3,13 +3,11 @@
  */
 package com.hyjf.am.resquest.admin;
 
-import com.hyjf.am.resquest.Request;
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * @author fuqiang

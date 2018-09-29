@@ -9,7 +9,6 @@ import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserExample;
 import com.hyjf.am.user.service.admin.finance.CustomerTransferService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

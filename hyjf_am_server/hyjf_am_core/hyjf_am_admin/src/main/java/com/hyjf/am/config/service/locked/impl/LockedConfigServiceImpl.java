@@ -5,7 +5,6 @@ package com.hyjf.am.config.service.locked.impl;
 
 import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.config.controller.admin.locked.LockedConfigManager;
-import com.hyjf.am.config.dao.mapper.auto.AdminMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.config.service.locked.LockedConfigService;
@@ -16,7 +15,6 @@ import com.hyjf.am.user.dao.model.auto.LockedUserInfoExample;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.calculate.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

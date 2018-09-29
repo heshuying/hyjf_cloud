@@ -2,11 +2,9 @@ package com.hyjf.am.vo.config;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
-import com.hyjf.am.vo.trade.BankConfigVO;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 public class FeeConfigVO extends BaseVO implements Serializable {
     private Integer id;

@@ -13,8 +13,6 @@ package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
 
-import java.io.Serializable;
-
 /**
  * 个人项目详情
  * @author zhangyk

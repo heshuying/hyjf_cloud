@@ -1,9 +1,9 @@
 package com.hyjf.am.vo.admin;
 
+import com.hyjf.am.vo.BasePage;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import com.hyjf.am.vo.BasePage;
 
 public class AdminRoleVO extends BasePage implements Serializable  {
     private Integer id;

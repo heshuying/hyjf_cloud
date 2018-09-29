@@ -5,7 +5,6 @@ package com.hyjf.am.resquest.config;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
-import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 

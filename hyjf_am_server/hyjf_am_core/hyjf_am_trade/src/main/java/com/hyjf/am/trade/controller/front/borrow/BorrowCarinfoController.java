@@ -1,9 +1,12 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
 
-import java.util.List;
-
+import com.hyjf.am.response.trade.BorrowCarinfoResponse;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.BorrowCarinfo;
+import com.hyjf.am.trade.service.front.borrow.BorrowCarinfoService;
+import com.hyjf.am.vo.trade.borrow.BorrowCarinfoVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.trade.BorrowCarinfoResponse;
-import com.hyjf.am.trade.dao.model.auto.BorrowCarinfo;
-import com.hyjf.am.trade.service.front.borrow.BorrowCarinfoService;
-import com.hyjf.am.vo.trade.borrow.BorrowCarinfoVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
 
 /**
  * @author $xiasq

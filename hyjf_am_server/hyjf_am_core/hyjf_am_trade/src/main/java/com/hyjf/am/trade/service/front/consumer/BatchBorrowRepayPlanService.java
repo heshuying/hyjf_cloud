@@ -1,14 +1,14 @@
 package com.hyjf.am.trade.service.front.consumer;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+
+import java.util.List;
+import java.util.Map;
 
 public interface BatchBorrowRepayPlanService extends BaseService {
 

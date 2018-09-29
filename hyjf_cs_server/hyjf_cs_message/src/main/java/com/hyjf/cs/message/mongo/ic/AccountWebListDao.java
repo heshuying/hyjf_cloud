@@ -100,8 +100,8 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
         return new Criteria();
     }
 
-    public int selectBorrowInvestAccount(AccountWebListVO accountWebList){
-        int total = 0;
+    public double selectBorrowInvestAccount(AccountWebListVO accountWebList){
+        double total = 0;
         Aggregation aggregation = Aggregation.newAggregation(
                 match(createCriteria(accountWebList)),
                 Aggregation.group("id").sum("amount").as("amount")
@@ -109,7 +109,7 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
         AggregationResults<Map> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Map.class);
         List<Map> result = ar.getMappedResults();
         for (Map<String,Object> map :result) {
-            total += Integer.parseInt(map.get("amount")==null||map.get("amount").equals("")?"0":map.get("amount").toString());
+            total += Double.parseDouble(map.get("amount")==null||map.get("amount").equals("")?"0":map.get("amount").toString());
         }
         return total;
     }

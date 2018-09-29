@@ -1,22 +1,20 @@
 package com.hyjf.am.config.controller.callcenter;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.hyjf.am.config.controller.BaseConfigController;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.config.dao.model.customize.CallcenterBankConfigCustomize;
 import com.hyjf.am.config.service.CallCenterService;
 import com.hyjf.am.response.callcenter.CallcenterBankConfigResponse;
 import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
 import com.hyjf.am.vo.callcenter.CallcenterBankConfigVO;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author libin

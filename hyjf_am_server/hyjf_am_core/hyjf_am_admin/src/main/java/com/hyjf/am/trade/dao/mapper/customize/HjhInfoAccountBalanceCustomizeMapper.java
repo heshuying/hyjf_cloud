@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.HjhAccountBalanceRequest;
 import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
+
+import java.util.List;
 
 /**
  * @author：yinhui

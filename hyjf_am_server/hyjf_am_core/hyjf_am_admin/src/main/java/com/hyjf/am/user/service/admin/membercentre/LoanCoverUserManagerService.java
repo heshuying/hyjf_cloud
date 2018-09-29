@@ -3,13 +3,13 @@
  */
 package com.hyjf.am.user.service.admin.membercentre;
 
-import java.util.Date;
-import java.util.List;
-
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 import com.hyjf.am.user.service.BaseService;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author nxl

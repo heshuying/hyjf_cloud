@@ -149,6 +149,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         // 新的判断是否为新用户方法
         try {
             int total = amTradeClient.countNewUserTotal(userId);
+            logger.info("获取用户投资数量 userID {} 数量 {} ",userId,total);
             if (total == 0) {
                 return true;
             } else {

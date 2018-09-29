@@ -1,18 +1,17 @@
 package com.hyjf.am.trade.utils;
 
 
+import com.jcraft.jsch.*;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.jcraft.jsch.*;
 
 @SuppressWarnings("unchecked")
 public class FtpUtil {

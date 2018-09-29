@@ -1,8 +1,6 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.*;
-import com.hyjf.am.bean.admin.LockedConfig;
-import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
@@ -19,7 +17,6 @@ import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 
@@ -1347,12 +1344,6 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	public Integer onlyName(String name);
-
-	/**
-	 * 关闭模板
-	 * @param request
-	 */
-	void closeAction(MailTemplateRequest request);
 
 	/**
 	 * 开启模板

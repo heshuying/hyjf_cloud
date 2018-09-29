@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
-import com.hyjf.am.user.dao.model.customize.*;
+import com.hyjf.am.user.dao.model.customize.BankOpenAccountRecordCustomize;
 
 import java.util.List;
 import java.util.Map;

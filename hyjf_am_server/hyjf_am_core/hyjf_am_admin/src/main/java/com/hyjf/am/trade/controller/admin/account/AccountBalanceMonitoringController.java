@@ -1,17 +1,5 @@
 package com.hyjf.am.trade.controller.admin.account;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminAccountBalanceMonitoringResponse;
@@ -21,12 +9,23 @@ import com.hyjf.am.trade.service.admin.account.AccountBalanceMonitoringService;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/13.
  */
 @RestController
-@RequestMapping("/am-trade/config/accountbalance")
+@RequestMapping("/am-admin/config/accountbalance")
 public class AccountBalanceMonitoringController {
 
     private static Logger logger = LoggerFactory.getLogger(AdminAccountDetailController.class);
@@ -37,13 +36,13 @@ public class AccountBalanceMonitoringController {
      * @return
      */
     @RequestMapping("/selectAccountBalanceMonitoringByPage")
-    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringByPage(AdminAccountBalanceMonitoringRequest adminRequest) {
+    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringByPage(@RequestBody AdminAccountBalanceMonitoringRequest adminRequest) {
         logger.info("平台账户配置 余额监控列表..." + JSONObject.toJSON(adminRequest));
         AdminAccountBalanceMonitoringResponse  response =new AdminAccountBalanceMonitoringResponse();
         //查询平台账户配置 余额监控条数
         int recordTotal = this.accountBalanceMonitoringService.getAccountBalanceMonitoringCount(adminRequest);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal,adminRequest.getPageSize() ==0?10:adminRequest.getPageSize());
             //查询平台账户配置 余额监控记录
             List<MerchantAccount> recordList =accountBalanceMonitoringService.getAccountBalanceMonitoringByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
@@ -53,9 +52,8 @@ public class AccountBalanceMonitoringController {
                 response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
             }
-            return response;
         }
-        return null;
+        return response;
     }
 
     /**
@@ -63,18 +61,22 @@ public class AccountBalanceMonitoringController {
      * @return
      */
     @RequestMapping("/selectaccountBalanceMonitoringById")
-    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringById(AdminAccountBalanceMonitoringRequest adminRequest) {
+    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringById(@RequestBody AdminAccountBalanceMonitoringRequest adminRequest) {
         logger.info("平台账户配置 余额监控详情页面..." + JSONObject.toJSON(adminRequest));
         AdminAccountBalanceMonitoringResponse  response = new AdminAccountBalanceMonitoringResponse();
         try{
             List<MerchantAccount> merchantAccounts= accountBalanceMonitoringService.selectAccountBalanceMonitoringById(adminRequest);
             if(!CollectionUtils.isEmpty(merchantAccounts)){
                 List<MerchantAccountVO> merchantAccountVOList = CommonUtils.convertBeanList(merchantAccounts, MerchantAccountVO.class);
-                merchantAccountVOList=this.forback(merchantAccountVOList);
+//                merchantAccountVOList=this.forback(merchantAccountVOList);
                 response.setResultList(merchantAccountVOList);
                 response.setRecordTotal(merchantAccountVOList.size());
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询到的数据为空！");
+            return response;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -94,6 +96,7 @@ public class AccountBalanceMonitoringController {
             if(cot > 0 ){
                 resp.setRtn(Response.SUCCESS);
             }else{
+                resp.setMessage("修改失败！");
                 resp.setRtn(Response.FAIL);
             }
         }catch (Exception e){

@@ -1,10 +1,10 @@
 package com.hyjf.am.vo.trade.borrow;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.hyjf.am.vo.BaseVO;
 
 public class BorrowAdminVO extends BaseVO  implements Serializable {
     private Integer id;

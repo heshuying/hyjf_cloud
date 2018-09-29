@@ -1,10 +1,10 @@
 package com.hyjf.cs.trade.mq.base;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.springframework.beans.factory.annotation.Value;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author xiasq

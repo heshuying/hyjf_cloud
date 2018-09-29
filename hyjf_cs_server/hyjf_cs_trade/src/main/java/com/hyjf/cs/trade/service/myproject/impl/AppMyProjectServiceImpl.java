@@ -16,11 +16,7 @@ import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.AccountBorrowVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -40,12 +36,15 @@ import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.service.BaseClient;
-import com.hyjf.cs.trade.bean.*;
+import com.hyjf.cs.trade.bean.BorrowDetailBean;
+import com.hyjf.cs.trade.bean.BorrowProjectDetailBean;
+import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
+import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
-import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,12 +55,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author pangchengchao
@@ -217,14 +211,18 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
         preck(detailBeansList, "资产信息", borrowBeansList);
 
-        // TODO: 2018/7/31  后期处理
-       /* AppRiskControlCustomize riskControl = projectService.selectRiskControl(borrow.getBorrowNid());
-        if(riskControl!=null){
-            riskControl.setControlMeasures(riskControl.getControlMeasures()==null?"":riskControl.getControlMeasures().replace("\r\n", ""));
-            riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
-        }*/
-        /*jsonObject.put("riskControl", riskControl);*/
-        jsonObject.put("riskControl", "");
+        // 风控信息
+        BorrowInfoWithBLOBsVO borrowInfoWithBLOBsVO = amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
+        Map<String,String> riskControl = new HashMap<>();
+        if (borrowInfoWithBLOBsVO != null){
+            riskControl.put("controlMeasures",borrowInfoWithBLOBsVO.getBorrowMeasuresMea() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMea().replace("\r\n",""));
+            riskControl.put("controlMort",borrowInfoWithBLOBsVO.getBorrowMeasuresMort() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMort().replace("\r\n",""));
+            riskControl.put("partner",borrowInfoWithBLOBsVO.getBorrowMeasuresInstit());
+            riskControl.put("agencyIntroduction",borrowInfoWithBLOBsVO.getBorrowCompanyInstruction());
+            riskControl.put("operatingProcess",borrowInfoWithBLOBsVO.getBorrowOperatingProcess());
+        }
+        jsonObject.put("riskControl", riskControl);
+
 
         // 加息收益
         if (isIncrease != null && "1".equals(isIncrease)) {

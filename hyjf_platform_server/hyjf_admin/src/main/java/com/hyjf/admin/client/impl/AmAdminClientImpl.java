@@ -3,7 +3,6 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
-import com.hyjf.admin.beans.response.BailConfigLogResponseBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.BooleanResponse;
@@ -27,11 +26,11 @@ import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
-import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
@@ -672,6 +671,16 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
+     * 同步数据字典至redis
+     * @return
+     */
+    @Override
+    public boolean syncParam() {
+        String url = "http://AM-ADMIN/am-config/sync/synParam";
+        return restTemplate.getForEntity(url,Boolean.class).getBody();
+    }
+
+    /**
      * 查询手续费分账配置
      * @auth sunpeikai
      * @param
@@ -1074,5 +1083,105 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getResultList();
         }
         return null;
+    }
+
+    /**
+     * 查询异常标的总件数
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer selectAssetExceptionCount(AssetExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/select_asset_exception_count";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+    /**
+     * 查询异常标的列表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<AssetExceptionCustomizeVO> selectAssetExceptionList(AssetExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/select_asset_exception_list";
+        AssetExceptionCustomizeResponse response = restTemplate.postForEntity(url,request,AssetExceptionCustomizeResponse.class).getBody();
+        if (BailConfigCustomizeResponse.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 插入异常标的并更新保证金
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    @Override
+    public boolean insertAssetException(AssetExceptionRequest assetExceptionRequest) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/insert_asset_exception";
+        BooleanResponse response = restTemplate.postForEntity(url, assetExceptionRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 项目编号是否存在
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public String isExistsBorrow(String borrowNid) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/is_exists_borrow/" + borrowNid;
+        StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        return response.getResultStr();
+    }
+
+    /**
+     * 删除异常标的
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    @Override
+    public boolean deleteAssetException(AssetExceptionRequest assetExceptionRequest) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/delete_asset_exception";
+        BooleanResponse response = restTemplate.postForEntity(url, assetExceptionRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 修改异常标的
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    @Override
+    public boolean updateAssetException(AssetExceptionRequest assetExceptionRequest) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/update_asset_exception";
+        BooleanResponse response = restTemplate.postForEntity(url, assetExceptionRequest, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 处理平台转账
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int updateHandRechargeRecord(PlatformTransferRequest platformTransferRequest) {
+        String url = "http://AM-ADMIN/am-trade/platformtransfer/updateHandRechargeRecord";
+        PlatformTransferResponse response = restTemplate.postForEntity(url,platformTransferRequest,PlatformTransferResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
     }
 }

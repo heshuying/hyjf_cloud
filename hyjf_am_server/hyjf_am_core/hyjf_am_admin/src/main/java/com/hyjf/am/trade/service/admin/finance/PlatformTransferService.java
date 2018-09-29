@@ -3,10 +3,9 @@
  */
 package com.hyjf.am.trade.service.admin.finance;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
+import com.hyjf.am.resquest.admin.PlatformTransferRequest;
+import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccount;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
@@ -14,6 +13,9 @@ import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -41,7 +43,7 @@ public interface PlatformTransferService {
      * @param accountVO 账户信息
      * @return
      */
-    Integer updateAccount(AccountVO accountVO);
+    Integer updateAccount(Account accountVO);
 
     /**
      * 插入充值表记录
@@ -65,7 +67,7 @@ public interface PlatformTransferService {
      * @param accountId 账户id
      * @return
      */
-    BankMerchantAccount searchBankMerchantAccountByAccountId(Integer accountId);
+    BankMerchantAccount searchBankMerchantAccountByAccountId(String accountId);
 
     /**
      * 更新红包账户信息
@@ -73,7 +75,7 @@ public interface PlatformTransferService {
      * @param bankMerchantAccountVO 红包账户信息
      * @return
      */
-    Integer updateBankMerchantAccount(BankMerchantAccountVO bankMerchantAccountVO);
+    Integer updateBankMerchantAccount(BankMerchantAccount bankMerchantAccountVO);
 
     /**
      * 插入红包明细数据
@@ -82,6 +84,14 @@ public interface PlatformTransferService {
      * @return
      */
     Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO);
+
+    /**
+     * 处理平台转账
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateHandRechargeRecord(PlatformTransferRequest platformTransferRequest);
 
     /**
      * 根据orderId查询红包明细

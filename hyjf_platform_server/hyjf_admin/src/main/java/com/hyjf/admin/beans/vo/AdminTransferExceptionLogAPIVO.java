@@ -3,10 +3,10 @@
  */
 package com.hyjf.admin.beans.vo;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
 
 /**
  * 返回给前端的VO

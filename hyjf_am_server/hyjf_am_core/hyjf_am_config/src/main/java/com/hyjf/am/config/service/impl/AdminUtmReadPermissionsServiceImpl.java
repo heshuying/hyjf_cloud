@@ -8,9 +8,7 @@ import com.hyjf.am.config.dao.mapper.customize.AdminUtmReadPermissionsCustomMapp
 import com.hyjf.am.config.dao.model.auto.AdminUtmReadPermissions;
 import com.hyjf.am.config.dao.model.auto.AdminUtmReadPermissionsExample;
 import com.hyjf.am.config.service.AdminUtmReadPermissionsService;
-import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
-import com.hyjf.am.resquest.admin.AppChannelReconciliationRequest;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import com.hyjf.common.paginator.Paginator;

@@ -4,18 +4,14 @@
 package com.hyjf.admin.controller.locked;
 
 import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.admin.locked.LockedConfigResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.am.bean.admin.LockedConfig;
-import com.hyjf.am.response.Response;
-
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author cui

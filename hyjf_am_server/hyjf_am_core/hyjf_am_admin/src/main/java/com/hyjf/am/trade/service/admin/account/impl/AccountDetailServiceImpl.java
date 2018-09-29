@@ -3,13 +3,6 @@
  */
 package com.hyjf.am.trade.service.admin.account.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.admin.AccountListRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
@@ -17,6 +10,12 @@ import com.hyjf.am.trade.dao.model.customize.AdminAccountDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.AdminAccountDetailDataRepairCustomize;
 import com.hyjf.am.trade.service.admin.account.AccountDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl

@@ -3,9 +3,10 @@
  */
 package com.hyjf.am.resquest.admin;
 
-import java.io.Serializable;
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
+
+import java.io.Serializable;
 
 /**
  * @author 李彬

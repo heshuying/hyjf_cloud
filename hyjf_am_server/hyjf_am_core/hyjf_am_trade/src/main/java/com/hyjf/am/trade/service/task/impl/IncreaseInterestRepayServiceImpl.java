@@ -3,37 +3,9 @@
  */
 package com.hyjf.am.trade.service.task.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.config.SystemConfig;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.AccountListExample;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvestExample;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestLoan;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestLoanDetail;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestLoanDetailExample;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestLoanExample;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepay;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayDetail;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayDetailExample;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.AppMessageProducer;
@@ -57,6 +29,13 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 产品加息还款

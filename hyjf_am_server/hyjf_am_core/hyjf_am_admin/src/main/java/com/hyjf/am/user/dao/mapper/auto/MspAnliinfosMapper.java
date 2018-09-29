@@ -2,8 +2,9 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.MspAnliinfos;
 import com.hyjf.am.user.dao.model.auto.MspAnliinfosExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface MspAnliinfosMapper {
     int countByExample(MspAnliinfosExample example);

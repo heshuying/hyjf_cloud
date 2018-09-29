@@ -1,7 +1,5 @@
 package com.hyjf.am.bean.crmtender;
 
-import com.hyjf.am.resquest.trade.TenderRequest;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;

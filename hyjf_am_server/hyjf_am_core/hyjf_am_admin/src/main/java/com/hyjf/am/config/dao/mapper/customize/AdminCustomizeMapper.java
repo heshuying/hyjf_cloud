@@ -1,9 +1,9 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.config.dao.model.customize.AdminCustomize;
+
+import java.util.List;
 
 
 public interface AdminCustomizeMapper {

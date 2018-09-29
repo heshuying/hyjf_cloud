@@ -1,11 +1,9 @@
 package com.hyjf.am.vo.user;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import com.hyjf.am.vo.BaseVO;
 
 public class MspConfigureVO extends BaseVO implements Serializable {
 	 private Integer id;

@@ -7,7 +7,6 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.trade.service.front.batch.BatchHjhBorrowRepayService;
 import com.hyjf.am.vo.trade.HjhLockVo;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;

@@ -5,7 +5,6 @@ import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;

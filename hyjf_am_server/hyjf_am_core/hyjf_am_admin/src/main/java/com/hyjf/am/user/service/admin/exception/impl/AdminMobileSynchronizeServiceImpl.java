@@ -3,12 +3,6 @@
  */
 package com.hyjf.am.user.service.admin.exception.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.admin.MobileSynchronizeRequest;
 import com.hyjf.am.user.dao.mapper.customize.MobileSynchronizeCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.UserCustomizeMapper;
@@ -27,12 +21,17 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai
  * @version: AdminMobileSynchronizeServiceImpl, v0.1 2018/8/13 14:32
  */
-@Service
+@Service(value = "userAdminMobileSynchronizeServiceImpl")
 public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implements AdminMobileSynchronizeService {
 
     @Autowired

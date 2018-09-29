@@ -16,7 +16,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: PlatformTransferService, v0.1 2018/7/9 10:29
  */
-public interface PlatformTransferService {
+public interface PlatformTransferService extends BaseAdminService{
     /**
      * 根据筛选条件查询数据count
      * @auth sunpeikai

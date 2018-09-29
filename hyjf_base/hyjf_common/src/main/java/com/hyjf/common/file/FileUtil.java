@@ -18,7 +18,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.awt.print.PageFormat;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;

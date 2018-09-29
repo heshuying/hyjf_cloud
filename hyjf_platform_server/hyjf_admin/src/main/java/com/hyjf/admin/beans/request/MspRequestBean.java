@@ -1,9 +1,10 @@
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.am.vo.BasePage;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import com.hyjf.am.vo.BasePage;
 
 
 /**

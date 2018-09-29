@@ -6,7 +6,6 @@ package com.hyjf.am.resquest.admin;
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.paginator.Paginator;
-import redis.clients.jedis.Jedis;
 
 import java.util.List;
 

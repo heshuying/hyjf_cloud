@@ -8,7 +8,6 @@ import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.issuerecover.AutoRecordService;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;

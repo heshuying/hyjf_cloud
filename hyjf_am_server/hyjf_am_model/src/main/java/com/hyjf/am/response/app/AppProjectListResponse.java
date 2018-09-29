@@ -5,7 +5,6 @@ package com.hyjf.am.response.app;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 
 import java.util.Map;
 

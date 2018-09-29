@@ -1,28 +1,27 @@
 package com.hyjf.am.trade.controller.front.trade;
 
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.trade.TenderDetailResponse;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
-import com.hyjf.am.trade.dao.model.customize.AppTradeListCustomize;
-import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
+import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.customize.AppTradeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserRechargeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserTradeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserWithdrawListCustomize;
+import com.hyjf.am.trade.service.front.trade.TradeDetailService;
+import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
+import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
+import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
+import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.TenderDetailResponse;
-import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
-import com.hyjf.am.trade.dao.model.customize.WebUserRechargeListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebUserTradeListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebUserWithdrawListCustomize;
-import com.hyjf.am.trade.service.front.trade.TradeDetailService;
-import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
-import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
-import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
 
 /**
  * @author pangchengchao

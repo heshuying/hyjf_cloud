@@ -14,7 +14,6 @@ package com.hyjf.am.vo.trade;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @desc 债转列表model

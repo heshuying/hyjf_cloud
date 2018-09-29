@@ -3,21 +3,21 @@ package com.hyjf.cs.trade.service.repay.impl;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.trade.ProjectBeanVO;
-import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.service.repay.RepayService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayProjectListBean;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.service.repay.RepayService;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @version RepayServiceImpl, v0.1 2018/8/27 15:39

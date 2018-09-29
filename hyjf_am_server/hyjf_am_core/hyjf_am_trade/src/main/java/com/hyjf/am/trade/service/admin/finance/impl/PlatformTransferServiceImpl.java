@@ -10,7 +10,6 @@ import com.hyjf.am.trade.service.admin.finance.PlatformTransferService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
@@ -21,7 +20,6 @@ import com.hyjf.pay.lib.bank.util.BankCallParamConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
@@ -130,8 +128,14 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @auth sunpeikai
      */
     @Override
-    public BankMerchantAccount searchBankMerchantAccountByAccountId(Integer accountId) {
-        BankMerchantAccount bankMerchantAccount = bankMerchantAccountMapper.selectByPrimaryKey(accountId);
+    public BankMerchantAccount searchBankMerchantAccountByAccountId(String accountId) {
+        BankMerchantAccount bankMerchantAccount = new BankMerchantAccount();
+        BankMerchantAccountExample example = new BankMerchantAccountExample();
+        example.createCriteria().andAccountCodeEqualTo(accountId);
+        List<BankMerchantAccount> bankMerchantAccountList = bankMerchantAccountMapper.selectByExample(example);
+        if(!CollectionUtils.isEmpty(bankMerchantAccountList)){
+            bankMerchantAccount = bankMerchantAccountList.get(0);
+        }
         return bankMerchantAccount;
     }
 

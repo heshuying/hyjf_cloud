@@ -4,15 +4,12 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmUserClient;
-
 import com.hyjf.admin.service.UserPortraitService;
 import com.hyjf.am.response.user.UserPortraitResponse;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
 import com.hyjf.am.vo.user.UserPortraitVO;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Map;
 
 /**
  * @author nxl

@@ -4,7 +4,8 @@
 package com.hyjf.am.trade.service.front.borrow;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO; /**
+
+/**
  * @author yaoy
  * @version BorrowTenderCpnService, v0.1 2018/6/26 10:37
  */

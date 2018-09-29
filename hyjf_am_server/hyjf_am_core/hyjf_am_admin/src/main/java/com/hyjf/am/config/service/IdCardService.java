@@ -1,9 +1,9 @@
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.customize.IdCardCustomize;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
+
+import java.util.List;
 
 /**
  * @Auther: walter.tanyy

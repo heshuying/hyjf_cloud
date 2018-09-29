@@ -3,9 +3,6 @@ package com.hyjf.admin.service.promotion;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.resquest.admin.AppChannelReconciliationRequest;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
-
-import java.util.List;
 
 /**
  * @Auther: walter.limeng

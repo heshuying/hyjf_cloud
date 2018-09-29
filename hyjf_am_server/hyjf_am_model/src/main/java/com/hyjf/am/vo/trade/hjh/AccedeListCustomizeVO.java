@@ -3,11 +3,10 @@
  */
 package com.hyjf.am.vo.trade.hjh;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-
-import com.hyjf.am.vo.BaseVO;
 
 /**
  * @author libin

@@ -1,7 +1,6 @@
 package com.hyjf.am.trade.controller.batch;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.FundChangeStatisticsService;
 import com.hyjf.common.cache.RedisConstants;
@@ -13,11 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**

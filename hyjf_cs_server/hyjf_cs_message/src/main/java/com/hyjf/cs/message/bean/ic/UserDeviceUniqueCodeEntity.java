@@ -3,7 +3,6 @@ package com.hyjf.cs.message.bean.ic;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @Document(collection = "t__userdevice_uniquecode")
 public class UserDeviceUniqueCodeEntity implements Serializable {

@@ -7,7 +7,6 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowRecoverService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
@@ -36,7 +35,6 @@ import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao

@@ -6,7 +6,6 @@ package com.hyjf.cs.message.mongo.ic;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.DirectionalTransferAssociatedLog;
-import com.hyjf.cs.message.bean.ic.DirectionalTransferAssociatedRecords;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;

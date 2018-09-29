@@ -6,7 +6,6 @@ package com.hyjf.am.trade.service.front.batch;
 import com.hyjf.am.trade.dao.model.customize.AutoReqRepayBorrowCustomize;
 import com.hyjf.am.trade.service.BaseService;
 
-import java.text.ParseException;
 import java.util.List;
 
 /**

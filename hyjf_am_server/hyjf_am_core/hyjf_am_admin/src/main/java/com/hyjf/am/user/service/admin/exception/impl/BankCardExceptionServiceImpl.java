@@ -3,29 +3,11 @@
  */
 package com.hyjf.am.user.service.admin.exception.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.BankCardExceptionRequest;
 import com.hyjf.am.user.dao.mapper.customize.AdminBankCardExceptionCustomizeMapper;
-import com.hyjf.am.user.dao.model.auto.AccountBank;
-import com.hyjf.am.user.dao.model.auto.AccountBankExample;
-import com.hyjf.am.user.dao.model.auto.AccountChinapnr;
-import com.hyjf.am.user.dao.model.auto.AccountChinapnrExample;
-import com.hyjf.am.user.dao.model.auto.BankCardLog;
-import com.hyjf.am.user.dao.model.auto.BankCardLogExample;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.auto.UserInfoExample;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.AdminBankCardExceptionCustomize;
 import com.hyjf.am.user.service.admin.exception.BankCardExceptionService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -37,12 +19,22 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import com.hyjf.pay.lib.chinapnr.util.ChinapnrUtil;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: sunpeikai
  * @version: BankCardExceptionServiceImpl, v0.1 2018/8/14 15:03
  */
-@Service
+@Service(value = "userBankCardExceptionServiceImpl")
 public class BankCardExceptionServiceImpl extends BaseServiceImpl implements BankCardExceptionService {
 
     private static final Logger logger = LoggerFactory.getLogger(BankCardExceptionServiceImpl.class);

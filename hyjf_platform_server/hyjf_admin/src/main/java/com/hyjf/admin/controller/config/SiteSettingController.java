@@ -3,9 +3,6 @@
  */
 package com.hyjf.admin.controller.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.admin.beans.request.SiteSettingRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
@@ -13,9 +10,10 @@ import com.hyjf.admin.service.SiteSettingService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.SiteSettingsResponse;
 import com.hyjf.am.vo.config.SiteSettingsVO;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author fuqiang

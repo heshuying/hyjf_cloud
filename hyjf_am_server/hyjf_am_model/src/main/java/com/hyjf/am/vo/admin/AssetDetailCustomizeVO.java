@@ -1,8 +1,8 @@
 package com.hyjf.am.vo.admin;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
 
 public class AssetDetailCustomizeVO extends BaseVO implements Serializable{
 

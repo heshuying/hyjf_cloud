@@ -1,11 +1,10 @@
 package com.hyjf.common.util;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-
-import javax.servlet.http.HttpServletRequest;
 
 public class GetCilentIP {
 

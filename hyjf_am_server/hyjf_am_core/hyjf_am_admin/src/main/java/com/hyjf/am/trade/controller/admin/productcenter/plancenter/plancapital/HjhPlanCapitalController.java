@@ -4,7 +4,6 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhReInvestDetailResponse;
 import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
 import com.hyjf.am.resquest.admin.Paginator;
-import com.hyjf.am.trade.dao.model.customize.HjhReInvestDetailCustomize;
 import com.hyjf.am.trade.service.admin.hjhplan.HjhPlanCapitalService;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
 import io.swagger.annotations.Api;
@@ -12,9 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.List;
 
 

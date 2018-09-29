@@ -3,21 +3,6 @@
  */
 package com.hyjf.am.trade.controller.admin.finance;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.response.admin.OADepartmentResponse;
@@ -28,9 +13,17 @@ import com.hyjf.am.trade.service.admin.finance.AdminHjhCommissionService;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
-
-import io.swagger.annotations.Api;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 /**
  * @author libin
  * @version AdminHjhCommissionController.java, v0.1 2018年8月7日 下午4:42:18   旧

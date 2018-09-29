@@ -3,14 +3,13 @@
  */
 package com.hyjf.am.user.service.admin.adminuser.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.user.dao.customize.CustomizeMapper;
 import com.hyjf.am.user.service.admin.adminuser.DepartmentService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author DongZeShan

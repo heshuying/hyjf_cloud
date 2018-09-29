@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
+import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponseForCoupon;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.coupon.MyCouponListService;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
@@ -85,6 +85,7 @@ public class MyCouponListController extends BaseController {
      */
     @RequestMapping(value = "/countAvaliableCoupon", method = RequestMethod.POST)
     public MyBestCouponListResponse countAvaliableCoupon(@RequestBody @Valid MyCouponListRequest requestBean) {
+        // TODO: 2018/9/29 接口有问题
         MyBestCouponListResponse responseBean = new MyBestCouponListResponse();
         Integer count = myCouponListService.countAvaliableCoupon(requestBean);
         responseBean.setCouponCount(count);

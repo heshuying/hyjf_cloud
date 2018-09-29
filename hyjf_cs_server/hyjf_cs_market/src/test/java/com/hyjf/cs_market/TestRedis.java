@@ -1,8 +1,9 @@
 package com.hyjf.cs_market;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.cs.market.CsMarketApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -10,10 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.cs.market.CsMarketApplication;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xiasq

@@ -3,32 +3,23 @@
  */
 package com.hyjf.am.user.service.admin.exception.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.resquest.user.AccountMobileSynchRequest;
-import com.hyjf.am.user.dao.model.auto.AccountMobileSynch;
-import com.hyjf.am.user.dao.model.auto.AccountMobileSynchExample;
-import com.hyjf.am.user.dao.model.auto.BankCard;
-import com.hyjf.am.user.dao.model.auto.BankCardExample;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserExample;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.admin.exception.AccountMobileSynchService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.AccountMobileSynchVO;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai
  * @version: AccountMobileSynchServiceImpl, v0.1 2018/8/15 14:14
  */
-@Service
+@Service(value = "userAccountMobileSynchServiceImpl")
 public class AccountMobileSynchServiceImpl extends BaseServiceImpl implements AccountMobileSynchService {
 
     /**

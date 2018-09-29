@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.UserConstant;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;

@@ -1,11 +1,8 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.service.BankAleveService;
 import com.hyjf.admin.service.BankJournalService;
-import com.hyjf.am.resquest.admin.BankAleveRequest;
 import com.hyjf.am.resquest.admin.BankEveRequest;
-import com.hyjf.am.vo.admin.BankAleveVO;
 import com.hyjf.am.vo.admin.BankEveVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

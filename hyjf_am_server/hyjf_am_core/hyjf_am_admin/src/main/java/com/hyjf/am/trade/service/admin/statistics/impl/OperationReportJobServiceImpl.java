@@ -1,18 +1,16 @@
 package com.hyjf.am.trade.service.admin.statistics.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.trade.dao.mapper.customize.OperationReportInfoJobCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.OperationReportJobCustomizeMapper;
 import com.hyjf.am.trade.service.admin.statistics.OperationReportJobService;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
