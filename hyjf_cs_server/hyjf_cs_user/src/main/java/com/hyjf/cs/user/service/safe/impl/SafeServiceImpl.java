@@ -452,7 +452,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         String fileRealName = String.valueOf(System.currentTimeMillis());
         fileRealName = "appIconImg_" + userId + fileRealName + ".png";
         // 指定图片要存放的位置
-        String imgFilePath = logoSaveFile + "/" + fileRealName;
+        String imgFilePath = logoSaveFile + File.separator + fileRealName;
         // 新建一个文件输出器，并为它指定输出位置imgFilePath
         try (FileOutputStream out = new FileOutputStream(imgFilePath)) {
             // 利用文件输出器将二进制格式decodedBytes输出

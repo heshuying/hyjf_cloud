@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class PlanCapitalController extends BaseController {
         }
 
         // 初始化返回list
-        List<HjhPlanCapitalVO> returnList = null;
+        List<HjhPlanCapitalVO> returnList = new ArrayList<>();
 
         // 获取结果集
         HjhPlanCapitalResponse planCapitalResponse = planCapitalService.getPlanCapitalList(hjhPlanCapitalRequest);

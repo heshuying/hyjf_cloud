@@ -5,6 +5,7 @@ package com.hyjf.cs.user.controller.api.user.autologin;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.security.util.SignUtil;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -101,7 +103,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
 
     @ApiOperation(value = "纳觅财富自动登录",notes = "纳觅财富自动登录")
     @PostMapping(value = "/nmcfThirdLogin")
-    public ModelAndView nmcfThirdLogin(HttpServletRequest httpServletRequest,@ModelAttribute NmcfLoginRequestBean request){
+    public ModelAndView nmcfThirdLogin(HttpServletResponse response,HttpServletRequest httpServletRequest,@ModelAttribute NmcfLoginRequestBean request){
 
         // 验证
         //this.checkNmcfPostBean(request);
@@ -128,24 +130,26 @@ public class ApiUserAutoLoginController extends BaseUserController {
         // 登陆
         UserVO userVO = loginService.getUsersById(userId);
         logger.info("userId:[{}],userName:[{}],password:[{}]",userId,userVO.getUsername(),userVO.getPassword());
-        loginService.loginOperationOnly(userVO,userVO.getUsername(),GetCilentIP.getIpAddr(httpServletRequest), BankCallConstant.CHANNEL_APP);
+        WebViewUserVO webViewUserVO = loginService.loginOperationOnly(userVO,userVO.getUsername(),GetCilentIP.getIpAddr(httpServletRequest), BankCallConstant.CHANNEL_PC);
         //WebViewUser webUser = loginService.getWebViewUserByUserId(userId);
         //WebUtils.sessionLogin(request, response, webUser);
-
+        String token = webViewUserVO.getToken();
+        logger.info("用户登录生成的token::[{}]",token);
+        response.setHeader("token",token);
         // 先跳转纳觅传过来的url
         if (request.getRetUrl() != null) {
             logger.info("retUrl");
             return new ModelAndView("redirect:" + request.getRetUrl());
         } else {
             // 如果纳觅没传url,有borrowNid,跳标的详情,无borowNid,跳个人中心
-            if (request.getBorrowNid() == null) {
+            if (request.getBorrowNid() == null || "".equals(request.getBorrowNid())) {
                 logger.info("pandect");
-                return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/user/pandect");
+                return new ModelAndView("redirect:https://frontweb1.hyjf.com/user/pandect?token=" + token);
             } else {
                 // 跳转到前端的标的详情
                 logger.info("borrowDetail");
                 //return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/projectlist/getBorrowDetail?borrowNid=" + request.getBorrowNid());
-                return new ModelAndView("redirect:https://frontweb1.hyjf.com/borrow/borrowDetail?borrowNid=" + request.getBorrowNid());
+                return new ModelAndView("redirect:https://frontweb1.hyjf.com/borrow/borrowDetail?borrowNid=" + request.getBorrowNid() + "&token=" + token);
 
             }
         }
