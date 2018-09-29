@@ -1,11 +1,17 @@
 package com.hyjf.am.user.controller.front.user;
 
-import java.util.List;
-
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.dao.model.auto.SpreadsUser;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
+import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
+import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
+import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
+import com.hyjf.am.vo.user.*;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.user.dao.model.auto.SpreadsUser;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
-import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
-import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
-import com.hyjf.am.user.service.front.user.UserInfoService;
-import com.hyjf.am.vo.user.EmployeeCustomizeVO;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserInfoCrmVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
 
 /**
  * @author xiasq

@@ -11,7 +11,6 @@ import com.hyjf.am.trade.dao.model.customize.UserHjhInvistListCustomize;
 import com.hyjf.am.vo.trade.borrow.ProjectUndertakeListVO;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
-import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
 
 import java.util.List;
 import java.util.Map;

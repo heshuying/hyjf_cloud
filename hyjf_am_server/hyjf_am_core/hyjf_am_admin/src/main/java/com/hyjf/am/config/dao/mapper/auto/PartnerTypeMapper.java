@@ -2,8 +2,9 @@ package com.hyjf.am.config.dao.mapper.auto;
 
 import com.hyjf.am.config.dao.model.auto.PartnerType;
 import com.hyjf.am.config.dao.model.auto.PartnerTypeExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface PartnerTypeMapper {
     int countByExample(PartnerTypeExample example);

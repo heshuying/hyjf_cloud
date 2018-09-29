@@ -1,8 +1,8 @@
 package com.hyjf.am.resquest.config;
 
-import java.util.List;
-
 import com.hyjf.am.vo.admin.AdminCustomizeVO;
+
+import java.util.List;
 
 /**
  * @author dongzeshan

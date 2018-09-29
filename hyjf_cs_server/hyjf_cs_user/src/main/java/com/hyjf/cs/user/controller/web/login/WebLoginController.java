@@ -4,16 +4,16 @@
 package com.hyjf.cs.user.controller.web.login;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

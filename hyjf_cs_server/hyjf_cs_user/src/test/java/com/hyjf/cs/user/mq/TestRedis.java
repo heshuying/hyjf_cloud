@@ -1,17 +1,16 @@
 package com.hyjf.cs.user.mq;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.user.CsUserApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.cs.user.CsUserApplication;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 
 /**

@@ -1,16 +1,15 @@
 package com.hyjf.admin.service.impl;
 
-import java.util.List;
-
 import com.hyjf.admin.client.AmConfigClient;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.hyjf.admin.service.LoginService;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class LoginServiceImpl  implements LoginService {

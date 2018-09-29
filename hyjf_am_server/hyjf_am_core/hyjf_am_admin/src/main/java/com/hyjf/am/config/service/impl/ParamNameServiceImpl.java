@@ -1,22 +1,21 @@
 package com.hyjf.am.config.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.hyjf.am.config.dao.mapper.auto.ParamNameMapper;
+import com.hyjf.am.config.dao.mapper.customize.ParamNameCustomizeMapper;
+import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.config.dao.model.auto.ParamNameExample;
 import com.hyjf.am.config.dao.model.auto.ParamNameKey;
+import com.hyjf.am.config.service.ParamNameService;
 import com.hyjf.am.resquest.admin.AdminParamNameRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.config.dao.mapper.auto.ParamNameMapper;
-import com.hyjf.am.config.dao.mapper.customize.ParamNameCustomizeMapper;
-import com.hyjf.am.config.dao.model.auto.ParamName;
-import com.hyjf.am.config.dao.model.auto.ParamNameExample;
-import com.hyjf.am.config.service.ParamNameService;
-import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/13.

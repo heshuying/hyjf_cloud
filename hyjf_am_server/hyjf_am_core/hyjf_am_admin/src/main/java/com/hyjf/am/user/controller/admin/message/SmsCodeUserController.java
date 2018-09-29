@@ -3,14 +3,6 @@
  */
 package com.hyjf.am.user.controller.admin.message;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.admin.SmsCodeCustomizeResponse;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.user.controller.BaseController;
@@ -18,6 +10,13 @@ import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
 import com.hyjf.am.user.service.admin.message.SmsCodeService;
 import com.hyjf.am.vo.admin.SmsCodeCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author fq

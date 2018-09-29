@@ -5,7 +5,6 @@ import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
-import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;

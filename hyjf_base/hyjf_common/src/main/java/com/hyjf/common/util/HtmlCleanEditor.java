@@ -3,10 +3,10 @@
  */
 package com.hyjf.common.util;
 
-import java.beans.PropertyEditorSupport;
-
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
+
+import java.beans.PropertyEditorSupport;
 
 /**
  * HTML清理

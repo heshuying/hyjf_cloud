@@ -2,7 +2,6 @@ package com.hyjf.am.response.trade.account;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
 
 /**
  * @author pangchengchao

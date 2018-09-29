@@ -11,10 +11,10 @@
 	
 package com.hyjf.cs.trade.bean;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hyjf.cs.common.util.ApiSignUtil;
+
+import java.io.Serializable;
 
 /**
  * API结果返回Bean

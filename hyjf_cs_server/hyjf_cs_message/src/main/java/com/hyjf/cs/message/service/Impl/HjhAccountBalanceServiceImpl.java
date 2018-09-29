@@ -5,10 +5,8 @@ package com.hyjf.cs.message.service.Impl;
 
 import com.hyjf.am.response.admin.HjhAccountBalanceResponse;
 import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
-import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.message.mongo.ic.HjhAccountBalanceDao;
-import com.hyjf.cs.message.mongo.ic.HjhPlanCapitalDao;
 import com.hyjf.cs.message.service.BaseMessageServiceImpl;
 import com.hyjf.cs.message.service.HjhAccountBalanceService;
 import org.springframework.beans.factory.annotation.Autowired;

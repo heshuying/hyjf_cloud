@@ -3,10 +3,6 @@
  */
 package com.hyjf.am.resquest.user;
 
-import com.hyjf.am.vo.BaseVO;
-
-import java.io.Serializable;
-
 /**
  * @author nxl
  * @version UserRecommendCustomize, v0.1 2018/6/21 21:38

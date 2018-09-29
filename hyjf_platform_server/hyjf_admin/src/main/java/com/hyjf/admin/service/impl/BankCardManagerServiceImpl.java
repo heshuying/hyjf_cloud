@@ -11,14 +11,11 @@ import com.hyjf.am.response.user.BankCardManagerResponse;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardManagerRequest;
 import com.hyjf.am.vo.trade.BankConfigVO;
-import com.hyjf.am.vo.user.BankCardLogVO;
 import com.hyjf.am.vo.user.BankcardManagerVO;
-import com.hyjf.common.cache.CacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nixiaoling

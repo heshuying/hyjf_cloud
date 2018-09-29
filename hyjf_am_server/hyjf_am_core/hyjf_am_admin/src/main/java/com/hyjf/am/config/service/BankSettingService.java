@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
+
+import java.util.List;
 
 /**
  * @author dangzw

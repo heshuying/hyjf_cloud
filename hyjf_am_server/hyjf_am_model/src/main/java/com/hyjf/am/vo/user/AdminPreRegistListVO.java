@@ -11,10 +11,9 @@
 
 package com.hyjf.am.vo.user;
 
-import java.io.Serializable;
-
-import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
 
 /**
  * @author dongzeshan

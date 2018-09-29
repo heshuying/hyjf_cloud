@@ -1,17 +1,13 @@
 package com.hyjf.cs.message.mq.consumer;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.ic.AppChannelStatisticsDetail;
 import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.mongo.ic.AppChannelStatisticsDetailDao;
 import com.hyjf.cs.message.mq.base.Consumer;
-import com.hyjf.cs.message.mq.base.MessageContent;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -29,7 +25,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @Description 投资更新首投信息等

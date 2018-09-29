@@ -3,18 +3,17 @@
  */
 package com.hyjf.am.trade.controller.front.hjh.autocredit;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.HjhAccede;
+import com.hyjf.am.trade.service.task.HjhAutoCreditService;
+import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.service.task.HjhAutoCreditService;
-import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 汇计划自动清算

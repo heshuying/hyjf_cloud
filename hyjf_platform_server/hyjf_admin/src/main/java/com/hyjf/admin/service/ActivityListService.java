@@ -6,12 +6,8 @@ package com.hyjf.admin.service;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.market.ActivityListVO;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yaoy

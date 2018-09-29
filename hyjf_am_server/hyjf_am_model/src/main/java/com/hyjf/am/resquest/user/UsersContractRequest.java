@@ -1,8 +1,8 @@
 package com.hyjf.am.resquest.user;
 
-import java.util.Date;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.util.Date;
 
 /**
  * @author hesy

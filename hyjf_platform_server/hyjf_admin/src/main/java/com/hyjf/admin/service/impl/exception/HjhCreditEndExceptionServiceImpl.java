@@ -6,7 +6,6 @@ import com.hyjf.admin.service.exception.HjhCreditEndExceptionService;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.vo.admin.HjhDebtCreditVo;
-import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;

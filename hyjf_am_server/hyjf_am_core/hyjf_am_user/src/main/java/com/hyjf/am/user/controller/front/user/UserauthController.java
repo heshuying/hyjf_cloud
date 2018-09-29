@@ -3,26 +3,14 @@
  */
 package com.hyjf.am.user.controller.front.user;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
 import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
+import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.customize.AdminUserAuthListCustomize;
 import com.hyjf.am.user.dao.model.customize.AdminUserAuthLogListCustomize;
 import com.hyjf.am.user.service.front.user.UserauthService;
@@ -30,6 +18,16 @@ import com.hyjf.am.vo.user.AdminUserAuthListVO;
 import com.hyjf.am.vo.user.AdminUserAuthLogListVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author DongZeShan

@@ -6,7 +6,6 @@ package com.hyjf.am.vo.callcenter;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author wangjun

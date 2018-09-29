@@ -2,8 +2,9 @@ package com.hyjf.am.market.dao.mapper.auto;
 
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.auto.AdsExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface AdsMapper {
     int countByExample(AdsExample example);

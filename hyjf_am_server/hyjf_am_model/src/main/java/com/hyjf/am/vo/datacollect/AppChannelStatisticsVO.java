@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.vo.datacollect;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.hyjf.am.vo.BaseVO;
 
 /**
  * @author fuqiang

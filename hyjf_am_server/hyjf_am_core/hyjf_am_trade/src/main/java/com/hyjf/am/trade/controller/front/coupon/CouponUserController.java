@@ -5,7 +5,6 @@ package com.hyjf.am.trade.controller.front.coupon;
 
 import com.hyjf.am.response.trade.CouponUserListCustomizeResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
-import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
@@ -15,7 +14,6 @@ import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -3,13 +3,13 @@
  */
 package com.hyjf.am.trade.service.admin.coupon;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.AdminCouponUserRequestBean;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.CouponUserCustomize;
+
+import java.util.List;
 
 /**
  * @author yaoyong

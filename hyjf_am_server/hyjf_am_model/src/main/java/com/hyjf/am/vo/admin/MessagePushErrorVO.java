@@ -7,7 +7,6 @@ import com.hyjf.am.vo.BaseVO;
 import com.hyjf.common.paginator.Paginator;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author dangzw

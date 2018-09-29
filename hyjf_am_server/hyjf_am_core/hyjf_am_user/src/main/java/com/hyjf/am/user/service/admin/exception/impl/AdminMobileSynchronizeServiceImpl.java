@@ -16,7 +16,6 @@ import com.hyjf.am.user.dao.model.customize.UserInfoForLogCustomize;
 import com.hyjf.am.user.service.admin.exception.AdminMobileSynchronizeService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;

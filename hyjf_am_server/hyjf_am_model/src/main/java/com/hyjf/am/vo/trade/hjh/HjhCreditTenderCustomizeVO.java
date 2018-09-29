@@ -3,10 +3,9 @@
  */
 package com.hyjf.am.vo.trade.hjh;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
 
 /**
  * @author libin

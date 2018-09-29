@@ -1,16 +1,15 @@
 package com.hyjf.am.user.utils;
 
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /***
  * <b>function:</b> 文件上传工具类

@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.vo.datacollect;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
 
 /**
  * @author fuqiang

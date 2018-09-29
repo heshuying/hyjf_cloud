@@ -6,11 +6,9 @@
 package com.hyjf.admin.beans.vo;
 
 import com.hyjf.am.vo.BaseVO;
-import com.hyjf.am.vo.trade.BankConfigVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl

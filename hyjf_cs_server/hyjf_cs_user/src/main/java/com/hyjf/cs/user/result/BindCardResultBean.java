@@ -1,7 +1,5 @@
 package com.hyjf.cs.user.result;
 
-import java.io.Serializable;
-
 /**
  * @author fuqiang
  */

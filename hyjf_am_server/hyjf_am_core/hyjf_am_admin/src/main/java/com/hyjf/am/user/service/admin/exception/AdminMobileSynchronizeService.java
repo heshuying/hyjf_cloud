@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.user.service.admin.exception;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.MobileSynchronizeRequest;
 import com.hyjf.am.user.dao.model.customize.MobileSynchronizeCustomize;
 import com.hyjf.am.user.service.BaseService;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai

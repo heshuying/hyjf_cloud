@@ -4,9 +4,9 @@
 
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.Map;
-
 import com.hyjf.am.trade.dao.model.customize.BorrowTenderInfoCustomize;
+
+import java.util.Map;
 
 
 public interface BorrowTenderInfoCustomizeMapper {

@@ -1,22 +1,21 @@
 package com.hyjf.am.user.controller.front.account;
 
-import javax.validation.Valid;
-
 import com.hyjf.am.response.Response;
-import com.hyjf.am.resquest.user.BankCardUpdateRequest;
-import com.hyjf.am.user.controller.BaseController;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
+import com.hyjf.am.resquest.user.BankCardUpdateRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
+import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardLog;
 import com.hyjf.am.user.service.front.account.BindCardService;
 import com.hyjf.am.vo.user.BankCardVO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * 绑卡及解绑卡服务类

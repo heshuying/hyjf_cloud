@@ -5,8 +5,6 @@ import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 江西银行提现掉单异常处理定时任务

@@ -5,7 +5,6 @@ import com.fadada.sdk.client.FddClientExtra;
 import com.fadada.sdk.client.nonpublic.SyncCompanyAuto;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.call.DzqzCallApi;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.trade.dao.model.customize.AppAccountTradeListCustomize;
+
+import java.util.List;
 
 public interface AppAccountTradeCustomizeMapper {
 

@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl.mobileclient;
 
 import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.service.mobileclient.AppBannerService;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.market.AppBannerRequest;

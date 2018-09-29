@@ -1644,8 +1644,8 @@ public class BorrowCommonController extends BaseController {
 	 */
 	@ApiOperation(value = " 受托用户是否存在")
 	@PostMapping("/isEntrustedExistsUser")
-	public AdminResult isEntrustedExistsUser(@RequestBody @Valid   String userName) {
-		 UserVO user = this.borrowCommonService.getUserByUserName(userName);
+	public AdminResult isEntrustedExistsUser(@RequestBody @Valid  Map<String, String> userName) {
+		 UserVO user = this.borrowCommonService.getUserByUserName(userName.get("userName"));
 		if (user == null ) {
 		// 借款人用户名不存在。
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_EXIST);
@@ -1656,7 +1656,7 @@ public class BorrowCommonController extends BaseController {
 		if (user.getStatus() != 0) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_USES);
 		}
-		int usersFlag=this.borrowCommonService.isEntrustedExistsUser(userName);
+		int usersFlag=this.borrowCommonService.isEntrustedExistsUser(userName.get("userName"));
 //		if (usersFlag == 1) {
 //			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_EXIST);
 //		} else if (usersFlag == 2) {

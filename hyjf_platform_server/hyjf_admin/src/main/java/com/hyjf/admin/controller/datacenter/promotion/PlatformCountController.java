@@ -5,12 +5,9 @@ package com.hyjf.admin.controller.datacenter.promotion;
 
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.PlatformCountService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
 import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -31,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

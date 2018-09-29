@@ -3,14 +3,6 @@
  */
 package com.hyjf.am.trade.controller.admin.promotion;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
 import com.hyjf.am.resquest.admin.PlatformCountRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -18,6 +10,13 @@ import com.hyjf.am.trade.dao.model.customize.PlatformCountCustomize;
 import com.hyjf.am.trade.service.admin.promotion.PlatformCountService;
 import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author fq

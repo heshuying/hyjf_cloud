@@ -1,12 +1,11 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
+import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import org.apache.ibatis.annotations.Param;
 
-import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
+import java.util.List;
+import java.util.Map;
 
 public interface UserInfoCustomizeMapper {
 

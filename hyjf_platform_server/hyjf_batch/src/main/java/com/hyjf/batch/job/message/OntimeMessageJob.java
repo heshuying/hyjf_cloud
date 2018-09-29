@@ -3,12 +3,11 @@
  */
 package com.hyjf.batch.job.message;
 
+import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
-import com.hyjf.batch.job.BaseJob;
 
 /**
  * 定时发短信定时任务

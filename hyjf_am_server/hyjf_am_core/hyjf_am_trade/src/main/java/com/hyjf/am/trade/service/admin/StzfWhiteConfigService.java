@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.trade.service.admin;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
+
+import java.util.List;
 
 /**
  * @author fuqiang

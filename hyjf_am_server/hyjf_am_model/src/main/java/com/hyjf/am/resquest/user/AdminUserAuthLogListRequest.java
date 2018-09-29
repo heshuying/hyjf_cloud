@@ -11,11 +11,9 @@
 
 package com.hyjf.am.resquest.user;
 
-import java.math.BigDecimal;
-
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.user.AdminPreRegistListVO;
-import com.hyjf.am.vo.user.AdminUserAuthLogListVO;
+
+import java.math.BigDecimal;
 
 /**
  * @author wangqi

@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.synbalance;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.user.service.BaseUserService;
 
 /**

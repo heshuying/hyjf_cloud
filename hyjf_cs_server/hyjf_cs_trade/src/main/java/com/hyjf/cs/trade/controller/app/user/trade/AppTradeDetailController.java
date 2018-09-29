@@ -13,16 +13,12 @@ import com.hyjf.cs.trade.service.trade.TradeDetailService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author jun

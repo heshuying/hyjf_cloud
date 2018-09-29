@@ -1,13 +1,10 @@
 package com.hyjf.batch.job.exception.credittenderexception;
 
+import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.hyjf.batch.job.BaseJob;
 /**
  * 债转投资异常处理定时任务
  * @author jun

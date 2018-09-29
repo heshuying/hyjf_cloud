@@ -2,8 +2,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.DebtApicron;
 import com.hyjf.am.trade.dao.model.auto.DebtApicronExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface DebtApicronMapper {
     int countByExample(DebtApicronExample example);

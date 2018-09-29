@@ -4,7 +4,6 @@ import com.hyjf.am.vo.BaseVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class EvalationCustomizeVO extends BaseVO implements Serializable {
 @ApiModelProperty(value = "用戶id")

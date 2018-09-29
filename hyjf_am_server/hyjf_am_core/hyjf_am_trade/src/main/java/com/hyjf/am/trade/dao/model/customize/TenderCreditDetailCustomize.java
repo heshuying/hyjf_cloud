@@ -11,11 +11,10 @@
 
 package com.hyjf.am.trade.dao.model.customize;
 
-import java.util.Date;
-
-
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Date;
 
 /**
  * web用户转让记录列表实体

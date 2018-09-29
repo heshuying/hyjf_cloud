@@ -3,9 +3,9 @@
  */
 package com.hyjf.cs.trade.client;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.trade.InvitePrizeConfVO;
+
+import java.util.List;
 
 /**
  * @author DongZeShan

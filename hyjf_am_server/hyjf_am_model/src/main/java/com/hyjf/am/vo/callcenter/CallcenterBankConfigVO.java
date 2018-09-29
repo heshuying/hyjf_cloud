@@ -1,8 +1,8 @@
 package com.hyjf.am.vo.callcenter;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
 
 /**
  * @author libin
@@ -14,11 +14,11 @@ public class CallcenterBankConfigVO extends BaseVO implements Serializable {
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
-	// Ö÷¼ü
+	// ï¿½ï¿½ï¿½ï¿½
 	private Integer id;
-    // ÒøÐÐ´úÂë
+    // ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½
     private String bankCode;		
-    // ÒøÐÐÃû³Æ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private String bankName;
 	public Integer getId() {
 		return id;

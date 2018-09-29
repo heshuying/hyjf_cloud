@@ -1,8 +1,8 @@
 package com.hyjf.am.resquest.user;
 
-import java.util.Date;
-
 import com.hyjf.am.vo.BasePage;
+
+import java.util.Date;
 
 /**
  * 用户绑卡日志request

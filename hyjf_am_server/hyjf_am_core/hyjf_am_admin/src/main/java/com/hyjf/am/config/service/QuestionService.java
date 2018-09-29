@@ -3,12 +3,12 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.Answer;
 import com.hyjf.am.config.dao.model.auto.Question;
 import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
+
+import java.util.List;
 
 /**
  * @author zhangqingqing

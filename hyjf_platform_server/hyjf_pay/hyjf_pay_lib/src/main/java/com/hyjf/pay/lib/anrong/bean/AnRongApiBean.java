@@ -10,6 +10,16 @@
  */
 package com.hyjf.pay.lib.anrong.bean;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.util.GetterUtil;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.anrong.util.AnRongMethodConstant;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -18,18 +28,6 @@ import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.alibaba.fastjson.JSON;
-import com.hyjf.common.bank.LogAcqResBean;
-import com.hyjf.common.util.GetterUtil;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.anrong.util.AnRongMethodConstant;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Administrator

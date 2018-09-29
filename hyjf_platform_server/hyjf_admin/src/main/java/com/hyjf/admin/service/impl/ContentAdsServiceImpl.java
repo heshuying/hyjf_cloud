@@ -6,7 +6,6 @@ import com.hyjf.admin.service.ContentAdsService;
 import com.hyjf.am.response.admin.ContentAdsResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.vo.admin.AdsVO;
-import com.hyjf.am.vo.trade.borrow.BorrowCommonImageVO;
 import com.hyjf.common.file.UploadFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

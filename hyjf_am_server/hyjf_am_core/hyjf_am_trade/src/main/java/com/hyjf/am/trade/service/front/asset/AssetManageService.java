@@ -5,8 +5,6 @@ import com.hyjf.am.response.trade.RepayPlanResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
 import com.hyjf.am.trade.dao.model.customize.*;
-import com.hyjf.am.trade.dao.model.customize.AppAlreadyRepayListCustomize;
-import com.hyjf.am.trade.dao.model.customize.AppTenderCreditRecordListCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;
 

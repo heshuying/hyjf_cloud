@@ -19,7 +19,6 @@ import com.hyjf.am.trade.mq.producer.AppMessageProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.CouponRepayService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;

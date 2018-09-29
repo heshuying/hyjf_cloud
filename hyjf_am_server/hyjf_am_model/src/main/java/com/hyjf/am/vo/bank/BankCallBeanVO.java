@@ -1,12 +1,12 @@
 package com.hyjf.am.vo.bank;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.TreeMap;
-
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.TreeMap;
 
 /**
  * 接收银行数据的bean

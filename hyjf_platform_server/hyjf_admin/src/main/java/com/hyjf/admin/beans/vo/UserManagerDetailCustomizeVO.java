@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.beans.vo;
 
-import com.hyjf.am.vo.BaseVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;

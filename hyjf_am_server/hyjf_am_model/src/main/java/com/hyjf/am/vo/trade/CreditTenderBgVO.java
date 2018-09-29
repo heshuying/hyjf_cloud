@@ -7,8 +7,6 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @Description 债转异步操作VO

@@ -1,12 +1,5 @@
 package com.hyjf.admin.service.impl;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
@@ -16,15 +9,15 @@ import com.hyjf.am.response.admin.BorrowCommonResponse;
 import com.hyjf.am.response.admin.BorrowCustomizeResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.LinkResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 /**
  * @author GOGTZ-Z

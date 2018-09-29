@@ -3,10 +3,6 @@
  */
 package com.hyjf.admin.service.impl.exception;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BidApplyQueryBean;
@@ -14,10 +10,13 @@ import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.exception.BidApplyQueryService;
 import com.hyjf.admin.service.impl.BaseAdminServiceImpl;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 /**
  * @author libin
  * @version BidApplyQueryServiceImpl.java, v0.1 2018年8月21日 上午9:20:52

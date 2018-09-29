@@ -2,8 +2,9 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.CallcenterServiceUsers;
 import com.hyjf.am.user.dao.model.auto.CallcenterServiceUsersExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface CallcenterServiceUsersMapper {
     int countByExample(CallcenterServiceUsersExample example);

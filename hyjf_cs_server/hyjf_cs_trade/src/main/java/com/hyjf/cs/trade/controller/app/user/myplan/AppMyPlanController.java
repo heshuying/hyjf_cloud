@@ -11,13 +11,11 @@ import com.hyjf.cs.trade.bean.app.MyPlanDetailResultBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.myplan.AppMyPlanService;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;

@@ -1,9 +1,9 @@
 package com.hyjf.am.resquest.config;
 
-import java.util.List;
-
 import com.hyjf.am.vo.admin.AdminRoleMenuPermissionsVO;
 import com.hyjf.am.vo.admin.AdminRoleVO;
+
+import java.util.List;
 
 
 /**
