@@ -360,7 +360,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             throw new CheckException(MsgEnum.ERR_TRADE_BORROR_USER_NOT_EXIST);
         }
         // 51老用户标// 1是51，0不是
-        if ("0".equals(borrowProjectType.getInvestUserType())) {
+        if (borrowProjectType.getInvestUserType().equals(0)) {
             Integer is51 = userInfo.getIs51();
             // 该项目只能51老用户投资
             if (is51 != null && is51 == 1) {
@@ -368,8 +368,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
         }
         // 新手标
-        logger.info("investUserType: "+borrowProjectType.getInvestUserType());
-        if ("1".equals(borrowProjectType.getInvestUserType())) {
+        if (borrowProjectType.getInvestUserType().equals(1)) {
             boolean isNew = this.checkIsNewUserCanInvest(userId);
             // 该项目只能新手投资
             if (!isNew) {

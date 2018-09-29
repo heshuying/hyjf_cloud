@@ -7,6 +7,7 @@ import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.am.vo.admin.BailConfigLogCustomizeVO;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,16 +17,16 @@ import java.util.List;
 public class BailConfigLogResponseBean {
 
     @ApiModelProperty(value = "机构名称下拉框")
-    List<DropDownVO> instNameList;
+    private List<DropDownVO> instNameList = new ArrayList<>();
 
     @ApiModelProperty(value = "机构名称下拉框")
-    List<DropDownVO> modifyColumnList;
+    private List<DropDownVO> modifyColumnList = new ArrayList<>();
 
     @ApiModelProperty(value = "总条数")
     private Integer total;
 
     @ApiModelProperty(value = "保证金配置")
-    List<BailConfigLogCustomizeVO> recordList;
+    private List<BailConfigLogCustomizeVO> recordList = new ArrayList<>();
 
     public List<DropDownVO> getInstNameList() {
         return instNameList;

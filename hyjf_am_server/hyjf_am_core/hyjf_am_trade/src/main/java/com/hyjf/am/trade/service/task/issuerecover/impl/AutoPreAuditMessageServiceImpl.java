@@ -183,7 +183,9 @@ public class AutoPreAuditMessageServiceImpl implements AutoPreAuditMessageServic
         List<Borrow> borrowList = this.borrowMapper.selectByExample(borrowExample);
         if (borrowList != null && borrowList.size() == 1) {
             Borrow borrow = borrowList.get(0);
-            BorrowInfo borrowInfo = borrowInfoMapper.selectByPrimaryKey(borrow.getId());
+            BorrowInfoExample example = new BorrowInfoExample();
+            example.createCriteria().andBorrowNidEqualTo(borrow.getBorrowNid());
+            BorrowInfo borrowInfo = this.borrowInfoMapper.selectByExample(example).get(0);
             // 剩余的金额
             borrow.setBorrowAccountWait(borrow.getAccount());
             int time = systemNowDateLong;

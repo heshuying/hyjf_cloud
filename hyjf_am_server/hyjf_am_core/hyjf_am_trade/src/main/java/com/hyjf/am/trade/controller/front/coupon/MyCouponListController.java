@@ -85,6 +85,7 @@ public class MyCouponListController extends BaseController {
      */
     @RequestMapping(value = "/countAvaliableCoupon", method = RequestMethod.POST)
     public MyBestCouponListResponse countAvaliableCoupon(@RequestBody @Valid MyCouponListRequest requestBean) {
+        // TODO: 2018/9/29 接口有问题 
         MyBestCouponListResponse responseBean = new MyBestCouponListResponse();
         Integer count = myCouponListService.countAvaliableCoupon(requestBean);
         responseBean.setCouponCount(count);
