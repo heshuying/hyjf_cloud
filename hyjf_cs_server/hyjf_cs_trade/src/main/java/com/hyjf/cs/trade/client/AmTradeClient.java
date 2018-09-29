@@ -2209,4 +2209,12 @@ public interface AmTradeClient {
      * @return
      */
     List<MyCouponListCustomizeVO> selectWechatCouponList(MyCouponListRequest requestBean);
+
+    /**
+     * 根据资产来源查询保证金配置 add by liushouyi
+     *
+     * @param instCode
+     * @return
+     */
+    BailConfigInfoCustomizeVO selectBailConfigByInstCode(String instCode);
 }
