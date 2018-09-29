@@ -298,6 +298,7 @@ public class WebSafeController extends BaseUserController {
             Map<String, String> map = new HashMap<>();
             map.put("iconUrl", imgFilePath);
             result.setData(map);
+            logger.info("头像上传成功");
         } catch (Exception e) {
             throw new CheckException(MsgEnum.STATUS_EV000002);
         }
