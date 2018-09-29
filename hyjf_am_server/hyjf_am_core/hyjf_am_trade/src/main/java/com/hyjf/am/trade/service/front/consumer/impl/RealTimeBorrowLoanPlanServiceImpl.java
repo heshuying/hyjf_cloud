@@ -712,6 +712,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			// insert by zhangjp 增加优惠券放款区分 end
 			//变更资产表的对应状态 add by cwyang
 			updatePlanAsset(borrowNid);
+			//保证金配置相关金额变更 add by cwyang 20180801 迁移by liushouyi
+			updateInstitutionData(borrow);
 			//发送短信
 			try {
 //				this.sendSmsForBorrower(borrowUserId, borrowNid);
@@ -1808,5 +1810,30 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			logger.info("-----------------生成计划居间服务协议失败，ordid:" + nid + ",异常信息：" + e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * 变更保证金少放款相关金额
+	 * @param borrow
+	 */
+	private void updateInstitutionData(Borrow borrow) {
+
+		BorrowInfo borrowInfo = getBorrowInfoByNid(borrow.getBorrowNid());
+
+		BorrowTenderExample btexample = new BorrowTenderExample();
+		btexample.createCriteria().andBorrowNidEqualTo(borrow.getBorrowNid());
+		List<BorrowTender> btList = this.borrowTenderMapper.selectByExample(btexample);
+		BigDecimal sumTender = new BigDecimal(0);
+		if (btList != null && btList.size() > 0) {
+			for (int i = 0; i < btList.size(); i++) {
+				sumTender = sumTender.add(btList.get(i).getAccount());
+			}
+		}
+		if(borrow.getAccount().compareTo(sumTender) > 0){
+			BigDecimal amount = borrow.getAccount().subtract(sumTender);
+			HashMap map = new HashMap();
+			map.put("amount",amount);
+			map.put("instCode",borrowInfo.getInstCode());
+			this.hjhBailConfigCustomizeMapper.updateLoanInstitutionAmount(map);
+		}
+	}
 }
