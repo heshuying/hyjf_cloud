@@ -155,7 +155,7 @@ public class AccountRechargeCustomizeVO extends BaseVO implements Serializable {
     /**
      *
      */
-    private Date createTime;
+    private String createTime;
 
     /**
      *
@@ -433,11 +433,11 @@ public class AccountRechargeCustomizeVO extends BaseVO implements Serializable {
         this.remark = remark;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
