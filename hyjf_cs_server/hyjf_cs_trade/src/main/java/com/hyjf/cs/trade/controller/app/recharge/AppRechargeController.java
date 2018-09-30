@@ -133,7 +133,7 @@ public class AppRechargeController extends BaseTradeController{
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
 		String retUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/failed";
-		String bgRetUrl = "http://CS-TRADE/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
+		String bgRetUrl = "http://CS-TRADE/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile+"&userId"+userId;
         bgRetUrl=splicingParam(bgRetUrl,request);
         if(null==money||money.isEmpty()){
         	money="0";
@@ -190,10 +190,10 @@ public class AppRechargeController extends BaseTradeController{
 		BankCallResult result = new BankCallResult();
 		logger.info("[app页面充值异步回调开始]");
 		String phone = request.getParameter("phone");
+		String userId = request.getParameter("uerId");
 		bean.setMobile(phone);
 		bean.convert();
-		Integer userId = Integer.parseInt(bean.getLogUserId());
-		UserVO user = this.userRechargeService.getUsers(userId);
+		UserVO user = this.userRechargeService.getUsers(Integer.parseInt(userId));
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("ip", bean.getUserIP());
 		params.put("mobile",bean.getMobile());

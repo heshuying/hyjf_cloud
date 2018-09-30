@@ -42,6 +42,11 @@ public class UserInfoCustomizeVO extends BaseVO implements Serializable{
      * 用户类型 0个人 1企业
      */
     private Integer userType;
+
+    /**
+     * 用户类型 0个人 1企业
+     */
+    private String userTypeName;
     /**
      * 合作机构编号
      */
@@ -213,5 +218,13 @@ public class UserInfoCustomizeVO extends BaseVO implements Serializable{
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public String getUserTypeName() {
+        return userTypeName;
+    }
+
+    public void setUserTypeName(String userTypeName) {
+        this.userTypeName = userTypeName;
     }
 }
