@@ -95,6 +95,9 @@ public class CouponBackMoneyCustomize extends BaseVO implements Serializable {
      */
     private Integer pageSize = 10;
 
+    private String father;
+
+    private String son;
 
     public String getTimeStartSrch() {
         return timeStartSrch;
@@ -351,5 +354,21 @@ public class CouponBackMoneyCustomize extends BaseVO implements Serializable {
 
     public void setRecoverYestime(String recoverYestime) {
         this.recoverYestime = recoverYestime;
+    }
+
+    public String getFather() {
+        return father;
+    }
+
+    public void setFather(String father) {
+        this.father = father;
+    }
+
+    public String getSon() {
+        return son;
+    }
+
+    public void setSon(String son) {
+        this.son = son;
     }
 }
