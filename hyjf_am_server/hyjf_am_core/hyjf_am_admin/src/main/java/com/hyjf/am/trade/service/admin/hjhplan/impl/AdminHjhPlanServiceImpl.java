@@ -373,6 +373,8 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 				plan.setMarginMeasures(StringUtils.isEmpty(form.getMarginMeasures()) ? "" : form.getMarginMeasures());
 				// 常见问题
 				plan.setNormalQuestions(StringUtils.isEmpty(form.getNormalQuestion()) ? "" : form.getNormalQuestion());
+				// 最小投资比数
+				plan.setMinInvestCounts(StringUtils.isEmpty(form.getMinInvestCounts()) ? 0 : Integer.parseInt(form.getMinInvestCounts()));
 				// 更新时间
 				plan.setUpdateTime(new Date());
 				// 更新用户ID
@@ -455,7 +457,9 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		plan.setPlanInvestStatus(Integer.valueOf(form.getDebtPlanStatus()));
 		// 显示状态
 		plan.setPlanDisplayStatus(Integer.valueOf(form.getPlanDisplayStatusSrch()));
-		// 添加时间
+        // 最小投资比数
+        plan.setMinInvestCounts(StringUtils.isEmpty(form.getMinInvestCounts()) ? 0 : Integer.parseInt(form.getMinInvestCounts()));
+        // 添加时间
 		plan.setAddTime(GetDate.getMyTimeInMillis());
 		// 还款方式
 		plan.setBorrowStyle(form.getBorrowStyle());
