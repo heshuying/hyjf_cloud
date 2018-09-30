@@ -201,7 +201,7 @@ public class BankOpenController extends BaseController {
 	 * @Author sunss
 	 * @Date 2018/6/22 9:07
 	 */
-	@GetMapping("/bankopen/getBankOpenAccountFiledMess/{logOrdId}")
+	@GetMapping("/getBankOpenAccountFiledMess/{logOrdId}")
 	public String getBankOpenAccountFiledMess(@PathVariable String logOrdId){
 		return bankOpenService.getBankOpenAccountFiledMess(logOrdId);
 	}
