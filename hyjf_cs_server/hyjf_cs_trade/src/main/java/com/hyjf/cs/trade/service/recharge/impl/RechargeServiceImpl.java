@@ -344,15 +344,15 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	private String getForgotPwdUrlByPlatform(String platform) {
 		Integer client = Integer.parseInt(platform);
 		if (ClientConstants.WEB_CLIENT == client) {
-			return "";
+			return systemConfig.getForgetPassword();
 		}
 		if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
-			return "";
+			return systemConfig.getForgetPassword();
 		}
 		if (ClientConstants.WECHAT_CLIENT == client) {
-			return "";
+			return systemConfig.getForgetPassword();
 		}
-		return "";
+		return systemConfig.getForgetPassword();
 	}
 	@Override
 	public BankCallBean rechargeService(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
