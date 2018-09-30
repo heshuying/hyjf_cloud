@@ -36,11 +36,12 @@ public class SubConfigServiceImpl extends BaseServiceImpl implements SubConfigSe
                 vo.setTrueName((String)map.get("truename"));
                 vo.setRoleId((Integer)map.get("role_id"));
                 if((Boolean) map.get("user_type")){
-                    vo.setStatus(1);
+                    vo.setUserType(1);
                 }
                 if(!(Boolean) map.get("user_type")){
-                    vo.setStatus(0);
+                    vo.setUserType(0);
                 }
+                vo.setUserTypeName((String)map.get("userType"));
                 vo.setCooperateNum((String)map.get("cooperateNum"));
                 vo.setAccount((String)map.get("account"));
                 vo.setOpen((String)map.get("OPEN"));
