@@ -2,6 +2,7 @@ package com.hyjf.admin.controller.productcenter.borrow.credit;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.vo.DropDownVO;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
@@ -124,10 +125,10 @@ public class HjhDebtCreditController extends BaseController{
                 hjhDebtCreditService.queryHjhDebtCreditListStatusName(hjhDebtCreditVoList);
                 jsonObject = this.success(recordCount, hjhDebtCreditVoList);
             } else {
-                jsonObject = this.fail("暂无符合条件数据");
+                jsonObject = this.success(0,new ArrayList<>());
             }
         }else{
-            jsonObject = this.fail("暂无符合条件数据");
+            jsonObject = this.success(0,new ArrayList<>());
         }
         return jsonObject;
     }
@@ -237,7 +238,7 @@ public class HjhDebtCreditController extends BaseController{
                     }
                     // 在途资金
                     else if (celLength == 14) {
-                        cell.setCellValue(0);
+                        cell.setCellValue(debtCredit.getRemainCredit());
                     }
                     // 出让人实际到账金额
                     else if (celLength == 15) {

@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.task.issuerecover.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.issuerecover.AutoPreAuditMessageService;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -24,20 +25,7 @@ import java.util.List;
  * @Description: AutoPreAuditMessageServiceImpl
  */
 @Service
-public class AutoPreAuditMessageServiceImpl implements AutoPreAuditMessageService {
-    private static final Logger logger = LoggerFactory.getLogger(AutoPreAuditMessageServiceImpl.class);
-    @Resource
-    private BorrowBailMapper borrowBailMapper;
-    @Resource
-    private BorrowMapper borrowMapper;
-    @Resource
-    private HjhPlanAssetMapper hjhPlanAssetMapper;
-    @Resource
-    private HjhAssetBorrowtypeMapper hjhAssetBorrowTypeMapper;
-    @Resource
-    private BorrowConfigMapper borrowConfigMapper;
-    @Resource
-    private BorrowInfoMapper borrowInfoMapper;
+public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements AutoPreAuditMessageService {
 
     @Override
     public boolean updateRecordBorrow(Borrow borrow, BorrowInfo borrowInfo) {
@@ -117,17 +105,17 @@ public class AutoPreAuditMessageServiceImpl implements AutoPreAuditMessageServic
 
     @Override
     public boolean updateRecordBorrow(HjhPlanAsset hjhPlanAsset, HjhAssetBorrowtype hjhAssetBorrowType) {
-        // 验证资产风险保证金是否足够（redis）,关联汇计划才验证
-        if (!checkAssetCanSend(hjhPlanAsset)) {
-            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 保证金不足");
-            //add by pcc 20180531 增加待补缴状态
-            HjhPlanAsset planAsset = new HjhPlanAsset();
-            planAsset.setId(hjhPlanAsset.getId());
-            planAsset.setStatus(1);//待补缴保证金
-            this.hjhPlanAssetMapper.updateByPrimaryKeySelective(planAsset);
-            //end
-            return false;
-        }
+//        // 验证资产风险保证金是否足够（redis）,关联汇计划才验证
+//        if (!checkAssetCanSend(hjhPlanAsset)) {
+//            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 保证金不足");
+//            //add by pcc 20180531 增加待补缴状态
+//            HjhPlanAsset planAsset = new HjhPlanAsset();
+//            planAsset.setId(hjhPlanAsset.getId());
+//            planAsset.setStatus(1);//待补缴保证金
+//            this.hjhPlanAssetMapper.updateByPrimaryKeySelective(planAsset);
+//            //end
+//            return false;
+//        }
 
         // 风险保证金，初审
         if(hjhAssetBorrowType.getAutoBail() != null && hjhAssetBorrowType.getAutoBail() == 1){
@@ -264,6 +252,7 @@ public class AutoPreAuditMessageServiceImpl implements AutoPreAuditMessageServic
      *
      * @return
      */
+    @Override
     public String getBorrowConfig(String configCd) {
         BorrowConfig borrowConfig = this.borrowConfigMapper.selectByPrimaryKey(configCd);
         return borrowConfig.getConfigValue();

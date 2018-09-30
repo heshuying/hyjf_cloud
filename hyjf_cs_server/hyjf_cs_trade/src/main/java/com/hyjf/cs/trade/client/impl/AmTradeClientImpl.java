@@ -5326,4 +5326,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 根据资产来源查询保证金配置 add by liushouyi
+     *
+     * @param instCode
+     * @return
+     */
+    @Override
+    public BailConfigInfoCustomizeVO selectBailConfigByInstCode(String instCode) {
+        String url = urlBase + "bail_config/select_bail_config_by_instcode/" + instCode;
+        BailConfigInfoCustomizeResponse response = restTemplate.getForEntity(url,BailConfigInfoCustomizeResponse.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 }

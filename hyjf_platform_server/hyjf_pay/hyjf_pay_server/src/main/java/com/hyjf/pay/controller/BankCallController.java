@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyjf.common.http.HttpDeal;
+import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +50,9 @@ public class BankCallController extends BaseController {
     
     @Autowired
     SystemConfig systemConfig;
+
+    @Autowired
+    private  RestTemplate restTemplate;
 
     /**
      * 调用接口(页面)
@@ -439,7 +444,9 @@ public class BankCallController extends BaseController {
                                 bean.setSign(null);
                                 bean.setVersion(null);
                                 notifyUrl = StringEscapeUtils.unescapeHtml(notifyUrl);
-                                content = HttpDeal.post(notifyUrl, bean.getAllParams());
+//                                content = HttpDeal.post(notifyUrl, bean.getAllParams());
+                                content = restTemplate
+                                        .postForEntity(notifyUrl, bean.getAllParams(), String.class).getBody();
                                 if (StringUtils.isNotBlank(content)) {
                                     BankCallResult callResult = JSONObject.parseObject(content, BankCallResult.class);
                                     if (callResult.isStatus()) {
@@ -695,7 +702,9 @@ public class BankCallController extends BaseController {
                                 bean.setSign(null);
                                 bean.setVersion(null);
                                 notifyUrl = StringEscapeUtils.unescapeHtml(notifyUrl);
-                                content = HttpDeal.post(notifyUrl, bean.getAllParams());
+//                                content = HttpDeal.post(notifyUrl, bean.getAllParams());
+                                content = restTemplate
+                                        .postForEntity(notifyUrl, bean.getAllParams(), String.class).getBody();
                                 logger.info("联机异步调用notifyUrl: "+notifyUrl+"   返回结果为: "+content);
                                 if (StringUtils.isNotBlank(content)) {
                                     BankCallResult callResult = JSONObject.parseObject(content, BankCallResult.class);

@@ -134,7 +134,7 @@ public class HjhReInvestDetailController extends BaseController {
         }
 
         // 初始化范湖List
-        List<HjhReInvestDetailVO> returnList = null;
+        List<HjhReInvestDetailVO> returnList = new ArrayList<>();
 
         HjhReInvestDetailResponse investDetailResponse = this.hjhReInvestDetailService.getHjhReInvestDetailList(reInvestDetailRequest);
 

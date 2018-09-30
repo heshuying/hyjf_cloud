@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -224,6 +225,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updataUserInfo(UserManagerUpdateRequest request) {
         if (null != request) {
             if (StringUtils.isNotBlank(request.getUserId())) {
@@ -439,6 +441,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateCorpOpenAccountRecord(CorpOpenAccountRecord corpOpenAccountRecord) {
         int intflg = corpOpenAccountRecordMapper.updateByPrimaryKey(corpOpenAccountRecord);
         if (intflg > 0) {
@@ -456,6 +459,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insertCorpOpenAccountRecord(CorpOpenAccountRecord corpOpenAccountRecord) {
         int intflg = corpOpenAccountRecordMapper.insertSelective(corpOpenAccountRecord);
         if (intflg > 0) {
@@ -522,6 +526,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insertBankOpenAccount(BankOpenAccount request) {
         int openFlag = this.bankOpenAccountMapper.insertSelective(request);
         if (openFlag > 0) {
@@ -539,6 +544,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateUserInfoByUserInfo(UserInfo userInfo) {
         int userFlag = this.userInfoMapper.updateByPrimaryKey(userInfo);
         if (userFlag > 0) {
@@ -556,6 +562,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateUser(User user) {
         int userFlag = this.userMapper.updateByPrimaryKey(user);
         if (userFlag > 0) {
@@ -625,6 +632,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateUserRe(AdminUserRecommendRequest request) {
         // 根据推荐人用户名查询用户
         User userRecommendNew = this.selectUserByRecommendName(request.getRecommendName());
@@ -788,7 +796,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return 1;
     }
 
-
+    @Transactional(rollbackFor = Exception.class)
     public int updateUserParam(Integer userId, Integer speadUserId) {
         User user = this.selectUserByUserId(userId);
         int flg = 0;
@@ -853,6 +861,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateUserIdCard(AdminUserRecommendRequest request) {
         // 初始化用户操作日志信息
         UserChangeLog changeLog = new UserChangeLog();
@@ -935,6 +944,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,String bankName,String payAllianceCode,User user,String bankId) {
         Response response = new Response();
         response.setRtn(Response.FAIL);

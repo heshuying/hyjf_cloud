@@ -74,6 +74,8 @@ public class AppChannelStatisticsVO extends BaseVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	public AppChannelStatisticsVO(){}
+
 	public AppChannelStatisticsVO(Integer sourceId, String channelName, Integer visitCount, Integer registerCount,
 			Integer openAccountCount, Integer investNumber, BigDecimal cumulativeCharge, BigDecimal hztInvestSum,
 			BigDecimal hxfInvestSum, BigDecimal htlInvestSum, BigDecimal htjInvestSum, BigDecimal rtbInvestSum,
