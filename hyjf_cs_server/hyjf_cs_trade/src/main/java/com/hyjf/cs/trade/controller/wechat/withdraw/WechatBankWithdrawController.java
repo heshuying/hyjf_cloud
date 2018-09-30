@@ -195,7 +195,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         String retUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/failed";
-        String bgRetUrl = systemConfig.getWechatHost()+"/hyjf-wechat/wx/bank/withdraw/bgreturn.do";
+        String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/bank/withdraw/bgreturn.do";
         String successfulUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/success";
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip, retUrl, bgRetUrl, successfulUrl);
         Map<String,Object> map = new HashMap<>();
