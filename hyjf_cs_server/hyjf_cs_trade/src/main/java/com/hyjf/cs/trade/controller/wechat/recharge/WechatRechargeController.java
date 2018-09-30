@@ -66,7 +66,7 @@ public class WechatRechargeController extends BaseTradeController{
 		// 拼装参数 调用江西银行
 		String retUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/failed/?sign="+sign+"&txAmount="+money;
 		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/success/?sign="+sign+"&txAmount="+money;
-		String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/recharge/bgreturn?phone="+mobile+"&userId="+userId;
+		String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/recharge/bgreturn?phone="+mobile;
 		//String successfulUrl = systemConfig.getWeiFrontHost()+"/user/rechargeSuccess?money="+money;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
@@ -142,14 +142,14 @@ public class WechatRechargeController extends BaseTradeController{
 	@ApiOperation(value = "用户充值异步回调", notes = "用户充值")
 	@ResponseBody
 	@PostMapping("/bgreturn")
-	public BankCallResult bgreturn(HttpServletRequest request,BankCallBean bean) {
+	public BankCallResult bgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
 		BankCallResult result = new BankCallResult();
 		logger.info("[wechat页面充值异步回调开始]");
 		String phone = request.getParameter("phone");
-		String userId = request.getParameter("uerId");
 		bean.setMobile(phone);
 		bean.convert();
-		UserVO user = this.userRechargeService.getUsers(Integer.parseInt(userId));
+		Integer userId = Integer.parseInt(bean.getLogUserId());
+		UserVO user = this.userRechargeService.getUsers(userId);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("ip", bean.getUserIP());
 		params.put("mobile",bean.getMobile());

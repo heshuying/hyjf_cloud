@@ -110,7 +110,7 @@ public class WebBankWithdrawController extends BaseTradeController {
     @ApiIgnore
     @PostMapping("/userBankWithdrawBgreturn")
     @ResponseBody
-    public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
+    public String userBankWithdrawBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         logger.info("[web用户银行提现异步回调开始]");
         logger.info("web端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
         BankCallResult result = new BankCallResult();
