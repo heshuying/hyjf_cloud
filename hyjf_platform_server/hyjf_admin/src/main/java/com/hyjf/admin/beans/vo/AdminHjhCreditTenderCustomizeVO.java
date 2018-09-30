@@ -279,4 +279,27 @@ public class AdminHjhCreditTenderCustomizeVO extends BaseVO implements Serializa
 		this.imgUrl = imgUrl;
 	}
 
+	public String getTenderType() {
+		return tenderType;
+	}
+
+	public void setTenderType(String tenderType) {
+		this.tenderType = tenderType;
+	}
+
+	public String getAssignServiceFee() {
+		return assignServiceFee;
+	}
+
+	public void setAssignServiceFee(String assignServiceFee) {
+		this.assignServiceFee = assignServiceFee;
+	}
+
+	public String getAssignServiceApr() {
+		return assignServiceApr;
+	}
+
+	public void setAssignServiceApr(String assignServiceApr) {
+		this.assignServiceApr = assignServiceApr;
+	}
 }
