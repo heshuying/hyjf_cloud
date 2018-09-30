@@ -854,7 +854,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
         }
 
-        bean.setForgotPwdUrl(systemConfig.getForgetPassword());
+        bean.setForgotPwdUrl(getForgotPwdUrlByPlatform(platform));
         bean.setRetUrl(retUrl);// 商户前台台应答地址(必须)
         bean.setNotifyUrl(bgRetUrl); // 商户后台应答地址(必须)
         logger.info("提现前台回调函数：\n" + bean.getRetUrl());
@@ -862,6 +862,21 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
         return bean;
     }
+
+    private String getForgotPwdUrlByPlatform(String platform) {
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WEB_CLIENT == client) {
+            return systemConfig.getForgetPassword();
+        }
+        if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+            return systemConfig.getForgetPassword();
+        }
+        if (ClientConstants.WECHAT_CLIENT == client) {
+            return systemConfig.getForgetPassword();
+        }
+        return systemConfig.getForgetPassword();
+    }
+
     @Override
     public String getWithdrawFee(Integer userId, String cardNo) {
         String feetmp = ClientConstants.BANK_FEE;
