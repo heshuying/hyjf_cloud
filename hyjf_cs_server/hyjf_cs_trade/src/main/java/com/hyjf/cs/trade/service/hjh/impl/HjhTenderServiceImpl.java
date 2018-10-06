@@ -633,6 +633,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setTenderAccount(tenderAccount);
         // 体验金投资
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
+            // TODO: 2018/10/6   需要改成用mq 的
             logger.info("体验{},优惠金投资开始:userId:{},平台{},券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
             // 体验金投资
             couponService.couponTender(request, plan,  cuc, userId);
@@ -878,6 +879,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         planAccede.setRequest(request);
         // 插入汇计划加入明细表
+        logger.info("插入汇计划加入明细表  planAccede: {} ", JSONObject.toJSONString(planAccede) );
         boolean trenderFlag = amTradeClient.insertHJHPlanAccede(planAccede);
         logger.info("投资明细表插入完毕,userId{},平台{},结果{}", userId, request.getPlatform(), trenderFlag);
         if (trenderFlag) {
@@ -914,6 +916,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 params.put("userId", userId+"");
                 params.put("account", request.getAccount());
                 params.put("mainTenderNid", request.getMainTenderNid());
+                logger.info("加入计划 开始调用优惠券投资：{} ",JSONObject.toJSONString(params));
                 hjhCouponTenderProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 
             } catch (Exception e) {

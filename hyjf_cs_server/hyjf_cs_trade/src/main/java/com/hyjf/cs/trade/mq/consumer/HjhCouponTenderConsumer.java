@@ -57,18 +57,19 @@ public class HjhCouponTenderConsumer extends Consumer {
         defaultMQPushConsumer.registerMessageListener(new MessageListener());
         // Consumer对象在使用之前必须要调用start初始化，初始化一次即可
         defaultMQPushConsumer.start();
-        logger.info("====BatchCouponsConsumer start=====");
+        logger.info("====计划类优惠券使用 start=====");
     }
 
     public class MessageListener implements MessageListenerConcurrently {
 
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext context) {
-            logger.info("CouponTenderConsumer 收到消息，开始处理....");
+            logger.info("计划类优惠券使用 收到消息，开始处理....");
             MessageExt paramBean = list.get(0);
             Map<String, Object> map = new HashMap<>();
             String msgBody = new String(paramBean.getBody());
             map = JSONObject.parseObject(msgBody, Map.class);
+            logger.info("计划类优惠券使用 收到消息，参数为: {} " , JSONObject.toJSONString(map));
             JSONObject result = new JSONObject();
             try {
                 Integer couponGrantId = (Integer) map.get("couponGrantId");
@@ -76,9 +77,9 @@ public class HjhCouponTenderConsumer extends Consumer {
                 String money = (String) map.get("money");
                 String platform = (String) map.get("platform");
                 String ip = (String) map.get("ip");
-                String ordId = (String) map.get("ordId");
+                // 真实订单号
                 Integer userId = (Integer) map.get("userId");
-                String mainTenderNid = (String) map.get("mainTenderNid");
+                String mainTenderNid = (String) map.get("ordId");
                 String account = (String) map.get("account");
 
 

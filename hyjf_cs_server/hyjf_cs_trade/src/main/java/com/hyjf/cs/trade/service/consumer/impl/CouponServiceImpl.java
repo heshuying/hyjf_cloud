@@ -104,9 +104,11 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         int nowTime = GetDate.getNowTime10();
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
         //汇计划只支持按天和按月
-       /* if (!"endday".equals(borrowStyle)) {
-            borrowStyle = "end";
-        }*/
+        if (CustomConstants.COUPON_TENDER_TYPE_HJH.equals(bean.getTenderType())) {
+            if (!"endday".equals(borrowStyle)) {
+                borrowStyle = "end";
+            }
+        }
         // 优惠券类别
         int couponType = couponUser.getCouponType();
         // 面值
@@ -285,7 +287,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         logger.info("散标优惠券投资  请求原子层   参数为: {} ",JSONObject.toJSONString(couponTender));
         boolean tenderFlag = amTradeClient.updateCouponTender(couponTender);
         logger.info("散标优惠券投资  请求原子层   结果为: {} ",tenderFlag);
-       /* if (bean.getMainTenderNid() == null || bean.getMainTenderNid().length() == 0) {
+       if (bean.getMainTenderNid() == null || bean.getMainTenderNid().length() == 0) {
             Map<String, String> params = new HashMap<String, String>();
             params.put("mqMsgId", GetCode.getRandomCode(10));
             // 借款项目编号
@@ -295,7 +297,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
                 // TODO: 2018/6/23  如果优惠券单独投资的话就调用进入锁定期  PlanCouponServiceImpl 1323行
                 //rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS_HJH, JSONObject.toJSONString(params));
             }
-        }*/
+        }
         // 设置优惠券的预期收益
         bean.setCouponInterest(recoverAccountInterestWait);
         return true;
