@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.service.consumer.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
@@ -97,15 +98,15 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         Integer couponGrantId = bean.getCouponGrantId();
         Integer userId = bean.getUserId();
         String borrowStyle = bean.getBorrowStyle();
-        logger.info("优惠券投资开始。。。。。。券编号：" + couponGrantId);
+        logger.info("散标优惠券投资组装调用原子层参数开始。。。。。。券编号：" + couponGrantId);
         // 调用原子层需要
         CouponTenderVO couponTender = new CouponTenderVO();
         int nowTime = GetDate.getNowTime10();
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
         //汇计划只支持按天和按月
-        if (!"endday".equals(borrowStyle)) {
+       /* if (!"endday".equals(borrowStyle)) {
             borrowStyle = "end";
-        }
+        }*/
         // 优惠券类别
         int couponType = couponUser.getCouponType();
         // 面值
@@ -118,7 +119,6 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         }
         // 生成订单id
         String tenderNid = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
-
         // 投资金额
         BigDecimal accountDecimal = null;
         BigDecimal planApr = bean.getExpectApr();
@@ -136,25 +136,25 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         BorrowTenderCpnVO borrowTenderCpn = new BorrowTenderCpnVO();
         borrowTenderCpn.setAccount(accountDecimal);
         borrowTenderCpn.setAccountTender(new BigDecimal(0));
-        borrowTenderCpn.setActivityFlag(0);//
+        borrowTenderCpn.setActivityFlag(0);
         borrowTenderCpn.setAddip(bean.getIp());
-        borrowTenderCpn.setAutoStatus(0);//
+        borrowTenderCpn.setAutoStatus(0);
         borrowTenderCpn.setBorrowNid(bean.getBorrowNid());
-        borrowTenderCpn.setChangePeriod(0);//
+        borrowTenderCpn.setChangePeriod(0);
         borrowTenderCpn.setChangeUserid(0);
         borrowTenderCpn.setClient(0);
-        borrowTenderCpn.setContents("");//
-        borrowTenderCpn.setFlag(0);//
+        borrowTenderCpn.setContents("");
+        borrowTenderCpn.setFlag(0);
         borrowTenderCpn.setIsok(0);
         borrowTenderCpn.setIsReport(0);
         borrowTenderCpn.setChangeStatus(0);
         borrowTenderCpn.setNid(tenderNid);
         borrowTenderCpn.setOrderDate(GetDate.getServerDateTime(1, new Date()));
-        borrowTenderCpn.setPeriodStatus(0);//
-        /*// 预期本息收益
+        borrowTenderCpn.setPeriodStatus(0);
+        /*// 预期本息收益*/
         borrowTenderCpn.setRecoverAccountAll(new BigDecimal(0));
         // 预期利息
-        borrowTenderCpn.setRecoverAccountInterest(new BigDecimal(0));*/
+        borrowTenderCpn.setRecoverAccountInterest(new BigDecimal(0));
         // 已收本息
         borrowTenderCpn.setRecoverAccountYes(new BigDecimal(0));
         // 已收本金
@@ -282,8 +282,10 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         cu.setUsedFlag(1);
         // 4   修改优惠券用户表状态
         couponTender.setCouponUser(cu);
+        logger.info("散标优惠券投资  请求原子层   参数为: {} ",JSONObject.toJSONString(couponTender));
         boolean tenderFlag = amTradeClient.updateCouponTender(couponTender);
-        if (bean.getMainTenderNid() == null || bean.getMainTenderNid().length() == 0) {
+        logger.info("散标优惠券投资  请求原子层   结果为: {} ",tenderFlag);
+       /* if (bean.getMainTenderNid() == null || bean.getMainTenderNid().length() == 0) {
             Map<String, String> params = new HashMap<String, String>();
             params.put("mqMsgId", GetCode.getRandomCode(10));
             // 借款项目编号
@@ -293,7 +295,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
                 // TODO: 2018/6/23  如果优惠券单独投资的话就调用进入锁定期  PlanCouponServiceImpl 1323行
                 //rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS_HJH, JSONObject.toJSONString(params));
             }
-        }
+        }*/
         // 设置优惠券的预期收益
         bean.setCouponInterest(recoverAccountInterestWait);
         return true;
@@ -447,7 +449,6 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
     @Override
     public void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean) {
         boolean isUsed = RedisUtils.tranactionSet(RedisConstants.COUPON_TENDER_KEY, 300);
-        // TODO: 2018/6/27  计划优惠券使用也会被锁定
         if (!isUsed) {
             logger.error("当前优惠券正在使用....");
             return;
