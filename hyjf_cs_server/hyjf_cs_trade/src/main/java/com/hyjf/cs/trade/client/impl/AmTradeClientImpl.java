@@ -2600,7 +2600,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 优惠券投资
+     * 散标优惠券投资
      *
      * @param couponTender
      * @return
