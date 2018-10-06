@@ -89,7 +89,7 @@ public class WebRechargeController extends BaseTradeController{
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
 		String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/rechargeError";
-		String bgRetUrl = "http://CS-TRADE/hyjf-web/recharge/bgreturn" + "?phone="+bankRechargeVO.getMobile()+"&userId="+userId;
+		String bgRetUrl = "http://CS-TRADE/hyjf-web/recharge/bgreturn" + "?phone="+bankRechargeVO.getMobile();
 		String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/rechargeSuccess?money="+bankRechargeVO.getMoney();
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
@@ -119,14 +119,14 @@ public class WebRechargeController extends BaseTradeController{
 	@ApiOperation(value = "用户充值异步回调", notes = "用户充值")
 	@ResponseBody
 	@PostMapping("/bgreturn")
-	public BankCallResult bgreturn(HttpServletRequest request,BankCallBean bean) {
+	public BankCallResult bgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
 		BankCallResult result = new BankCallResult();
 		logger.info("[web页面充值异步回调开始]");
 		String phone = request.getParameter("phone");
-		String userId = request.getParameter("uerId");
 		bean.setMobile(phone);
 		bean.convert();
-		UserVO user = this.userRechargeService.getUsers(Integer.parseInt(userId));
+		Integer userId = Integer.parseInt(bean.getLogUserId());
+		UserVO user = this.userRechargeService.getUsers(userId);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("ip", bean.getUserIP());
 		params.put("mobile",phone);
