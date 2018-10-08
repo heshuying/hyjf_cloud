@@ -7,6 +7,8 @@ import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmpExample;
 import com.hyjf.am.trade.service.front.hjh.HjhPlanBorrowTmpService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.common.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,11 +24,29 @@ public class HjhPlanBorrowTmpServiceImpl extends BaseServiceImpl implements HjhP
 
     @Override
     public int deleteHjhPlanBorrowTmp(HjhPlanBorrowTmp hjhPlanBorrowTmp) {
+        if (StringUtils.isEmpty(hjhPlanBorrowTmp.getOrderId())){
+            return deleteHjhPlanBorrowTmpByAccedeBorrow(
+                    hjhPlanBorrowTmp.getAccedeOrderId(),
+                    hjhPlanBorrowTmp.getBorrowNid());
+        }else{
+            return deleteHjhPlanBorrowTmpByOrderId(hjhPlanBorrowTmp.getOrderId());
+        }
+    }
+
+    @Override
+    public int deleteHjhPlanBorrowTmpByOrderId(String orderId) {
         HjhPlanBorrowTmpExample hjhPlanBorrowTmpExample = new HjhPlanBorrowTmpExample();
         HjhPlanBorrowTmpExample.Criteria crt = hjhPlanBorrowTmpExample.createCriteria();
-        crt.andAccedeOrderIdEqualTo(hjhPlanBorrowTmp.getAccedeOrderId());
-        crt.andBorrowNidEqualTo(hjhPlanBorrowTmp.getBorrowNid());
-        crt.andUserIdEqualTo(hjhPlanBorrowTmp.getUserId());
+        crt.andAccedeOrderIdEqualTo(orderId);
+        return this.hjhPlanBorrowTmpMapper.deleteByExample(hjhPlanBorrowTmpExample);
+    }
+
+    @Override
+    public int deleteHjhPlanBorrowTmpByAccedeBorrow(String accedeOrderId, String borrowNid) {
+        HjhPlanBorrowTmpExample hjhPlanBorrowTmpExample = new HjhPlanBorrowTmpExample();
+        HjhPlanBorrowTmpExample.Criteria crt = hjhPlanBorrowTmpExample.createCriteria();
+        crt.andAccedeOrderIdEqualTo(accedeOrderId);
+        crt.andBorrowNidEqualTo(borrowNid);
         return this.hjhPlanBorrowTmpMapper.deleteByExample(hjhPlanBorrowTmpExample);
     }
 
