@@ -1,12 +1,12 @@
 /**
  * 开户
  */
-package com.hyjf.am.config.service.impl;
+package com.hyjf.am.user.service.admin.bank.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.admin.utils.IdCard15To18;
-import com.hyjf.am.config.service.BankOpenService;
+import com.hyjf.am.user.service.admin.bank.BankOpenService;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
