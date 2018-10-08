@@ -89,7 +89,7 @@ public class WxTransPasswordController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "设置交易密码异步回调")
     @PostMapping(value = "/passwordBgreturn")
-    public BankCallResult passwordBgreturn(BankCallBean bean) {
+    public BankCallResult passwordBgreturn(@RequestBody BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
         Integer userId = Integer.parseInt(bean.getLogUserId());
@@ -158,7 +158,7 @@ public class WxTransPasswordController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "重置交易密码异步回调")
     @PostMapping(value = "/resetPasswordBgreturn")
-    public BankCallResult resetPasswordBgreturn(BankCallBean bean) {
+    public BankCallResult resetPasswordBgreturn(@RequestBody BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         result.setMessage("交易密码修改成功");
         result.setStatus(true);
