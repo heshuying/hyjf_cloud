@@ -69,6 +69,7 @@ public class SyncRUserServiceImpl implements SyncRUserService {
         // String roleId = jsonObj.getString("roleId");
         // String trueName = jsonObj.getString("trueName");
         // String spreadUserId = jsonObj.getString("spreadUserId");
+        String userType = jsonObj.getString("userType");
 
         if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(userName)) {
             RUser record = new RUser();
@@ -79,13 +80,37 @@ public class SyncRUserServiceImpl implements SyncRUserService {
             if (StringUtils.isNotBlank(mobile)) {
                 record.setMobile(mobile);
             }
-
+            if(StringUtils.isNotBlank(userType)){
+                int userTypeInt = Integer.parseInt(userType);
+                record.setUserType(userTypeInt);
+            }
             int upRet = rUserMapper.insertSelective(record);
 
             logger.info(userIdInt + " uid,插入user " + upRet);
 
         }
 
+    }
+
+    /**
+     * 修改用户类型
+     * @param jsonObj
+     * @author wgx
+     * @date 2018/10/08
+     */
+    @Override
+    public void updateUser(JSONObject jsonObj) {
+        String userId = jsonObj.getString("userId");
+        String userType = jsonObj.getString("userType");
+        if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(userType)) {
+            RUser record = new RUser();
+            int userIdInt = Integer.parseInt(userId);
+            record.setUserId(userIdInt);
+            int userTypeInt = Integer.parseInt(userType);
+            record.setUserType(userTypeInt);
+            int upRet = rUserMapper.updateByPrimaryKeySelective(record);
+            logger.info("{} uid,更新user {}", userIdInt, upRet);
+        }
     }
 
     @Override
