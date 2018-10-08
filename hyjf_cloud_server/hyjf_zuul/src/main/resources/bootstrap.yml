@@ -25,14 +25,14 @@ management:
 
 zuul:
   host:
-    connect-timeout-millis: 10000
+    connect-timeout-millis: 60000
     socket-timeout-millis: 60000
   routes:
     ser:
       path: 123
 ribbon:
-  ConnectTimeout: 1000
-  ReadTimeout: 6000
+  ConnectTimeout: 10000
+  ReadTimeout: 10000
 
 hystrix:
   command:
