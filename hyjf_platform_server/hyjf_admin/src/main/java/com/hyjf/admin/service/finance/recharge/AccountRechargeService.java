@@ -3,6 +3,7 @@ package com.hyjf.admin.service.finance.recharge;
 import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 
 import java.util.List;
@@ -48,4 +49,6 @@ public interface AccountRechargeService extends BaseService {
      * @return
      */
     boolean updateAccountAfterRecharge(AccountRechargeRequest request);
+
+    List<ParamNameVO> selectParamNameList(String nameClass);
 }

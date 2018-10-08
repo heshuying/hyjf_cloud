@@ -24,4 +24,10 @@ public interface JxBankConfigService {
      * @return
      */
     List<JxBankConfig> getJxBankConfigByBankId(Integer bankId);
+
+    /**
+     * 获取银行列表
+     * @Author : huanghui
+     */
+    List<JxBankConfig> selectBankConfigList();
 }
