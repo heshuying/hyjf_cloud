@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.LoanCoverService;
 import com.hyjf.am.response.user.CertificateAuthorityResponse;
 import com.hyjf.am.response.user.LoanCoverUserResponse;
@@ -15,7 +16,6 @@ import com.hyjf.am.vo.user.LoanCoverUserVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
-import com.hyjf.pay.lib.fadada.util.DzqzConstant;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,8 @@ import java.util.Map;
 public class LoanCoverServiceImpl implements LoanCoverService {
     @Autowired
     private AmUserClient loanCoverClient;
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * 查找借款盖章用户信息
      *
@@ -134,8 +136,10 @@ public class LoanCoverServiceImpl implements LoanCoverService {
                         DzqzCallBean bean = new DzqzCallBean();
                         bean.setUserId(0);
                         bean.setTxCode("infochange");
-                        bean.setApp_id(DzqzConstant.HYJF_FDD_APP_ID);
-                        bean.setV(DzqzConstant.HYJF_FDD_VERSION);
+                        bean.setApp_id(systemConfig.getFaaAppUrl());
+                        bean.setV(systemConfig.getFddVersion());
+                        bean.setSecret(systemConfig.getFddSecret());
+                        bean.setUrl(systemConfig.getFddUrl());
                         bean.setTimestamp(GetDate.getDate("yyyyMMddHHmmss"));
                         bean.setCustomer_id(loanCoverUserVO.getCustomerId());// 客户编号
                         if(null!=loanCoverUserRequestBean.getEmail()&&null!=loanCoverUserVO.getEmail()){
