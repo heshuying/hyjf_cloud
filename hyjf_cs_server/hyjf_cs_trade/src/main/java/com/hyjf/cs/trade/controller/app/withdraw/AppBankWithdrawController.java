@@ -446,7 +446,8 @@ public class AppBankWithdrawController extends BaseTradeController {
         String bgRetUrl = "http://CS-TRADE/hyjf-app/bank/user/withdraw/userBankWithdrawBgreturn";
         bgRetUrl=splicingParam(bgRetUrl,request);
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/success";
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ip,retUrl,bgRetUrl,successfulUrl);
+        String forgotPwdUrl=super.getForgotPwdUrl(platform,request,systemConfig);
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ip,retUrl,bgRetUrl,successfulUrl, forgotPwdUrl);
         try {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);
             result.setData(data);

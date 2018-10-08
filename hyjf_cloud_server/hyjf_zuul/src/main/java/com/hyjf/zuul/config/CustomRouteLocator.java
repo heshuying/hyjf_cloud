@@ -67,12 +67,12 @@ public class CustomRouteLocator extends SimpleRouteLocator implements Refreshabl
 			values.put(path, entry.getValue());
 		}
 
-		logger.info("locateRoutes is : {}", values);
+		logger.debug("locateRoutes is : {}", values);
 		return values;
 	}
 
 	private Map<String, ZuulRoute> locateRoutesFromDB() {
-		logger.info("load zuul routes from DB");
+		logger.info("load zuul routes from DB...");
 		Map<String, ZuulRoute> routes = new LinkedHashMap<String, ZuulRoute>();
 		List<GatewayApiConfigVO> results = amConfigClient.findGatewayConfigs();
 		if (!CollectionUtils.isEmpty(results)) {

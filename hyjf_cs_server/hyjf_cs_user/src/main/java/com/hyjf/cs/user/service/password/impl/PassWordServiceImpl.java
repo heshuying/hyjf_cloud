@@ -152,7 +152,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=0&logOrdId="+bean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=0";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost()+"/user/password/passwordBgreturn";
+        String bgRetUrl = "http://CS-USER/hyjf-web/user/password/passwordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
@@ -205,7 +205,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=1&logOrdId="+bean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=1";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost()+"/user/password/resetPasswordBgreturn";
+        String bgRetUrl = "http://CS-USER/hyjf-web/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
