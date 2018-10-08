@@ -11,19 +11,11 @@
 
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
+import com.hyjf.am.trade.dao.model.customize.*;
 import org.apache.ibatis.annotations.Param;
 
-import com.hyjf.am.trade.dao.model.customize.AppUserInvestListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebProjectCompanyDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebProjectConsumeListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebProjectInvestListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebProjectPersonDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebUserProjectListCustomize;
+import java.util.List;
+import java.util.Map;
 
 public interface WebUserInvestListCustomizeMapper {
 

@@ -1,7 +1,5 @@
 package com.hyjf.admin.beans.request;
 
-import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
-
 import java.io.Serializable;
 
 /**

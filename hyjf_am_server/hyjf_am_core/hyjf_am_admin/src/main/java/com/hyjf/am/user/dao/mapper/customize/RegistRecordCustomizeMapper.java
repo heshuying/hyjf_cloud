@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.user.dao.model.customize.RegistRecordCustomize;
+
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.user.dao.model.customize.RegistRecordCustomize;
 
 /**
  * @author nxl

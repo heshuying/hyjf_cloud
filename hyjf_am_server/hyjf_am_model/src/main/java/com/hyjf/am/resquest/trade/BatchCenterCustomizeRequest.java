@@ -13,7 +13,6 @@ package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.resquest.Request;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**

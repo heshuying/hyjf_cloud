@@ -2,20 +2,16 @@ package com.hyjf.am.market.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.market.dao.model.auto.ActivityList;
-import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
 import com.hyjf.am.market.service.ActivityService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.ActivityListCustomizeResponse;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
-import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import io.swagger.models.auth.In;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +19,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -202,16 +197,16 @@ public class ActivityController {
      * @param request
      * @return
      */
-    @PostMapping("/selectRecordListValid")
-    public ActivityListCustomizeResponse selectRecordListValid(@RequestBody ActivityListCustomizeVO request) {
-        ActivityListCustomizeResponse response = new ActivityListCustomizeResponse();
-        List<ActivityListCustomize> recordList = activityService.selectRecordListValid(new ActivityListCustomize(),-1,-1);
-        if (!CollectionUtils.isEmpty(recordList)) {
-            List<ActivityListCustomizeVO> activityListCustomizeVOS = CommonUtils.convertBeanList(recordList,ActivityListCustomizeVO.class);
-            response.setResultList(activityListCustomizeVOS);
-        }
-        return response;
-    }
+//    @PostMapping("/selectRecordListValid")
+//    public ActivityListCustomizeResponse selectRecordListValid(@RequestBody ActivityListCustomizeVO request) {
+//        ActivityListCustomizeResponse response = new ActivityListCustomizeResponse();
+//        List<ActivityListCustomize> recordList = activityService.selectRecordListValid(new ActivityListCustomize(),-1,-1);
+//        if (!CollectionUtils.isEmpty(recordList)) {
+//            List<ActivityListCustomizeVO> activityListCustomizeVOS = CommonUtils.convertBeanList(recordList,ActivityListCustomizeVO.class);
+//            response.setResultList(activityListCustomizeVOS);
+//        }
+//        return response;
+//    }
 
     /**
      * @Author walter.limeng
@@ -253,4 +248,18 @@ public class ActivityController {
         activityListResponse.setResultList(activityListVOS);
         return activityListResponse;
     }
+
+//    @GetMapping("/getInfoById/{id}")
+//    public ActivityListResponse getInfoById(@PathVariable Integer id) {
+//        ActivityListResponse response = new ActivityListResponse();
+//        ActivityList activityList = activityService.getActivityInfo(id);
+//        ActivityListVO activityListVO = new ActivityListVO();
+//        if (activityList != null) {
+//            BeanUtils.copyProperties(activityList, activityListVO);
+//            activityListVO.setAcStartTime(GetDate.getDateTimeMyTime(activityList.getTimeStart()));
+//            activityListVO.setAcEndTime(GetDate.getDateTimeMyTime(activityList.getTimeEnd()));
+//            response.setResult(activityListVO);
+//        }
+//        return response;
+//    }
 }

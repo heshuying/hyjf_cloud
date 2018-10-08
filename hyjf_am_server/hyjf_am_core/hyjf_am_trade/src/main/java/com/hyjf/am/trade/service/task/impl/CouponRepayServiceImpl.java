@@ -19,7 +19,6 @@ import com.hyjf.am.trade.mq.producer.AppMessageProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.CouponRepayService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
@@ -450,6 +449,17 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         // 发送push消息
         this.sendPushMsgCoupon(retMsgList, user);
         return 1;
+    }
+
+    @Override
+    public BorrowTenderCpn getCouponTenderInfo(String couponTenderNid) {
+        BorrowTenderCpnExample example = new BorrowTenderCpnExample();
+        example.createCriteria().andNidEqualTo(couponTenderNid);
+        List<BorrowTenderCpn> btList = this.borrowTenderCpnMapper.selectByExample(example);
+        if (btList != null && btList.size() > 0) {
+            return btList.get(0);
+        }
+        return null;
     }
 
     /**

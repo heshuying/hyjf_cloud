@@ -5,8 +5,6 @@ package com.hyjf.am.resquest.callcenter;
 
 import com.hyjf.am.vo.BaseVO;
 
-import java.util.Date;
-
 /**
  * @author wangjun
  * @version CallCenterUserInfoRequest, v0.1 2018/6/11 17:52

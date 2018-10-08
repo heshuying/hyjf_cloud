@@ -1,6 +1,5 @@
 package com.hyjf.admin.service;
 
-import com.hyjf.admin.beans.response.HjhRepayResponseBean;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
 
@@ -16,12 +15,5 @@ public interface PlanRepayService {
      * @return
      */
     HjhRepayResponse selectHjhRepayList(HjhRepayRequest request);
-
-    /**
-     * 根据订单号查询指定数据
-     * @param accedeOrderId
-     * @return
-     */
-    HjhRepayResponseBean selectByAccedeOrderId(String accedeOrderId);
 
 }

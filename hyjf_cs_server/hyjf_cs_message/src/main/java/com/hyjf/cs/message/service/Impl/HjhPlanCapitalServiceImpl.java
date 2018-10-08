@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -50,7 +51,7 @@ public class HjhPlanCapitalServiceImpl implements HjhPlanCapitalService {
      */
     @Override
     public List<HjhPlanCapitalVO> getPlanCapitalForActList(Date date) {
-        HjhPlanCapitalResponse response = this.baseClient.getExe("http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalForActList/" + date, HjhPlanCapitalResponse.class);
+        HjhPlanCapitalResponse response = this.baseClient.getExe("http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalForActList/" + GetDate.dateToString2(date), HjhPlanCapitalResponse.class);
         return response.getResultList();
     }
 
@@ -63,11 +64,11 @@ public class HjhPlanCapitalServiceImpl implements HjhPlanCapitalService {
     public Boolean updatePlanCapital(HjhPlanCapitalVO hjhPlanCapital) {
         Boolean result = false;
         // 判断数据是否已存在
-        List<HjhPlanCapitalVO> list = this.hjhPlanCapitalDao.selectHjhPlanCapitalList(hjhPlanCapital);
-        if (list == null ) {
-            throw new RuntimeException("取得汇计划资本按天统计及预估表的数据失败。");
+        Long cnt = this.hjhPlanCapitalDao.countHjhPlanCapitalList(hjhPlanCapital);
+        if (cnt == null ) {
+            throw new RuntimeException("取得汇计划资本按天统计及预估表的count失败。");
         }
-        if (list.size()>0){
+        if (cnt>0){
             // 存在，更新记录（汇计划资本按天统计及预估表）
             result = this.hjhPlanCapitalDao.updateHjhPlanCapital(hjhPlanCapital);
         }else{
@@ -85,7 +86,7 @@ public class HjhPlanCapitalServiceImpl implements HjhPlanCapitalService {
      */
     @Override
     public List<HjhPlanCapitalVO> getPlanCapitalForProformaList(Date fromDate, Date toDate) {
-        HjhPlanCapitalResponse response = this.baseClient.getExe("http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalForProformaList/" + fromDate + "/" + toDate
+        HjhPlanCapitalResponse response = this.baseClient.getExe("http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalForProformaList/" + GetDate.dateToString2(fromDate) + "/" + GetDate.dateToString2(toDate)
                 , HjhPlanCapitalResponse.class);
         return response.getResultList();
     }

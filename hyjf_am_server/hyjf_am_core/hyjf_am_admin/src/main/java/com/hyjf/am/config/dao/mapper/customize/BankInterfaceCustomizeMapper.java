@@ -1,9 +1,9 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
+import com.hyjf.am.config.dao.model.auto.BankInterface;
+
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.config.dao.model.auto.BankInterface;
 
 /**
  * @author by xiehuili on 2018/7/20.

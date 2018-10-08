@@ -3,11 +3,6 @@
  */
 package com.hyjf.admin.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.HjhLabelService;
 import com.hyjf.am.response.admin.HjhLabelCustomizeResponse;
@@ -16,6 +11,10 @@ import com.hyjf.am.resquest.admin.HjhLabelRequest;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author libin

@@ -113,7 +113,7 @@ public class ProtocolServiceImpl implements ProtocolService {
 
         Integer createUserId = Integer.valueOf(userId);
         //模板存放路径
-        String fileDomainUrl = "";
+        String fileDomainUrl = FILEPHYSICALPATH;
         //年月日，随机数
         Calendar calendar1 = Calendar.getInstance();
         String yearNow = String.valueOf(calendar1.get(Calendar.YEAR)).substring(2);
@@ -170,7 +170,7 @@ public class ProtocolServiceImpl implements ProtocolService {
             //将协议模板放入redis中
             RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_URL+protocolTemplate.getProtocolId(),protocolTemplate.getProtocolUrl()+"&"+protocolTemplate.getImgUrl());
             //获取协议模板前端显示名称对应的别名
-            String alias = ProtocolEnum.getAlias(protocolTemplate.getDisplayName());
+            String alias = ProtocolEnum.getAlias(protocolTemplate.getProtocolType());
             if(StringUtils.isNotBlank(alias)){
                 RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_ALIAS+alias,protocolTemplate.getProtocolId());//协议 ID放入redis
             }
@@ -245,7 +245,7 @@ public class ProtocolServiceImpl implements ProtocolService {
         List<ProtocolTemplateCommonVO> listLogVO = new ArrayList<>();
         ProtocolTemplateCommonVO protocolTemplateCommonVO = new ProtocolTemplateCommonVO();
         ProtocolTemplateCommonVO logVO = new ProtocolTemplateCommonVO();
-        String fileDomainUrl = "";
+        String fileDomainUrl = FILEPHYSICALPATH;
         Integer updateUserId = Integer.valueOf(userId);
         //1.1修改协议模板
         ProtocolTemplateVO protocolTemplate = request.getProtocolTemplateVO();
@@ -285,7 +285,7 @@ public class ProtocolServiceImpl implements ProtocolService {
             //将协议模板放入redis中
             RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_URL + protocolTemplate.getProtocolId(), protocolTemplate.getProtocolUrl() + "&" + protocolTemplate.getImgUrl());
             //获取协议模板前端显示名称对应的别名
-            String alias = ProtocolEnum.getAlias(protocolTemplate.getDisplayName());
+            String alias = ProtocolEnum.getAlias(protocolTemplate.getProtocolType());
             if (StringUtils.isNotBlank(alias)) {
                 RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_ALIAS + alias, protocolTemplate.getProtocolId());//协议 ID放入redis
             }
@@ -321,7 +321,7 @@ public class ProtocolServiceImpl implements ProtocolService {
                 //将协议模板移除redis中
                 RedisUtils.del(RedisConstants.PROTOCOL_TEMPLATE_URL+protocolTemplate.getProtocolId());
                 //获取协议模板前端显示名称对应的别名
-                String alias = ProtocolEnum.getAlias(protocolTemplate.getDisplayName());
+                String alias = ProtocolEnum.getAlias(protocolTemplate.getProtocolType());
                 if(StringUtils.isNotBlank(alias)){
                     RedisUtils.del(RedisConstants.PROTOCOL_TEMPLATE_ALIAS+alias);//删除对应协议ID
                 }
@@ -367,11 +367,11 @@ public class ProtocolServiceImpl implements ProtocolService {
                 errorMessage="上传的文件不能是空";
             }
             try {
-                String templetId = multipartRequest.getParameter("templetId");
-                // ======上传校验=======
-                if (templetId.isEmpty()){
-                    errorMessage="协议类型必须选择";
-                }
+//                String templetId = multipartRequest.getParameter("templetId");
+//                // ======上传校验=======
+//                if (templetId.isEmpty()){
+//                    errorMessage="协议类型必须选择";
+//                }
                 //从request中取得MultipartFile列表
                 List<MultipartFile> multipartFileList = getMultipartFileList(multipartRequest);
                 if (multipartFileList == null || multipartFileList.size() <= 0){

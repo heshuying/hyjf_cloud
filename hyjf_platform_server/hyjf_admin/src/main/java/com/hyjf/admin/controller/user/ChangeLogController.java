@@ -1,25 +1,5 @@
 package com.hyjf.admin.controller.user;
 
-import java.net.URLEncoder;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -32,9 +12,22 @@ import com.hyjf.am.vo.user.ChangeLogVO;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -73,7 +66,7 @@ public class ChangeLogController extends BaseController {
 		clr.setAttribute(map.get("attribute"));
 		ChangeLogResponse prs=changeLogService.getChangeLogList(clr);
 		if (prs == null) {
-			return new AdminResult<>(FAIL, FAIL_DESC);
+			return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(new ArrayList<ChangeLogVO>(), 0));
 		}
 		if (!AdminResponse.isSuccess(prs)) {
 			return new AdminResult<>(FAIL, prs.getMessage());
@@ -116,7 +109,7 @@ public class ChangeLogController extends BaseController {
 
         String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
 
-        String[] titles = new String[] { "序号", "用户名", "姓名", "手机号", "用户角色", "用户属性", "推荐人", "51老用户", "用户状态", "修改人", "修改时间", "说明"};
+        String[] titles = new String[] { "序号", "用户名", "姓名", "手机号", "用户角色", "用户属性", "推荐人", "用户状态", "修改人", "修改时间", "说明"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -176,23 +169,23 @@ public class ChangeLogController extends BaseController {
                         cell.setCellValue(changeLog.getRecommendUser());
                     }
                     // 是否51老用户
-                    else if (celLength == 7) {
-                        cell.setCellValue(changeLog.getIs51()==null?"":changeLog.getIs51()==1?"是" : "否");
-                    }
+//                    else if (celLength == 7) {
+//                        cell.setCellValue(changeLog.getIs51()==null?"":changeLog.getIs51()==1?"是" : "否");
+//                    }
                     // 用户状态
-                    else if (celLength == 8) {
+                    else if (celLength == 7) {
                         cell.setCellValue(changeLog.getStatus()==null?"":changeLog.getStatus()==1?"启用" : "禁用");
                     }
                     // 修改人
-                    else if (celLength == 9) {
+                    else if (celLength == 8) {
                         cell.setCellValue(changeLog.getChangeUser());
                     }
                     // 修改时间
-                    else if (celLength == 10) {
+                    else if (celLength == 9) {
                         cell.setCellValue(changeLog.getChangeTime());
                     }
                     // 修改说明
-                    else if (celLength == 11) { 
+                    else if (celLength == 10) { 
                         cell.setCellValue(changeLog.getRemark());
                     }
                 }

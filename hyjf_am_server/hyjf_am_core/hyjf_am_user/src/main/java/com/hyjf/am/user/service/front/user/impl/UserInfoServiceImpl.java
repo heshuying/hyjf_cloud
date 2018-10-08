@@ -95,7 +95,11 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	 */
 	@Override
 	public UserInfoCustomize queryUserInfoCustomizeByUserName(String userName) {
-		return userInfoCustomizeMapper.queryUserInfoByEmployeeName(userName);
+		UserInfoCustomize userInfoCustomize = userInfoCustomizeMapper.queryUserInfoByEmployeeName(userName);
+		if(userInfoCustomize == null){
+			userInfoCustomize = userInfoCustomizeMapper.queryUserInfoByName(userName);
+		}
+		return userInfoCustomize;
 	}
 
 	@Override

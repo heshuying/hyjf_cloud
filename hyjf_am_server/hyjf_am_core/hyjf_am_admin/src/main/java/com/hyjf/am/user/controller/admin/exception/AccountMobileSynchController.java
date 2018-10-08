@@ -3,15 +3,6 @@
  */
 package com.hyjf.am.user.controller.admin.exception;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.AccountMobileSynchResponse;
 import com.hyjf.am.resquest.user.AccountMobileSynchRequest;
@@ -21,14 +12,21 @@ import com.hyjf.am.user.service.admin.exception.AccountMobileSynchService;
 import com.hyjf.am.vo.user.AccountMobileSynchVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai
  * @version: AccountMobileSynchController, v0.1 2018/8/15 14:08
  */
-@RestController
+@RestController(value = "userAccountMobileSynchController")
 @RequestMapping("/am-user/accountmobilesynch")
 public class AccountMobileSynchController extends BaseController {
 

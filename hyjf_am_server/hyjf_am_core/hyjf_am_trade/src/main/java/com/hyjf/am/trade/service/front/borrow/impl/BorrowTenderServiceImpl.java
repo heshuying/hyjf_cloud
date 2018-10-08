@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.trade.dao.mapper.customize.BorrowInvestCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.borrow.BorrowTenderService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -9,6 +10,7 @@ import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,12 +24,14 @@ import java.util.Map;
 @Service
 public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTenderService {
 
+    @Autowired
+    private BorrowInvestCustomizeMapper borrowInvestCustomizeMapper;
 
     @Override
     public Integer getCountBorrowTenderService(Integer userId, String borrowNid) {
         BorrowTenderExample example = new BorrowTenderExample();
         BorrowTenderExample.Criteria cri = example.createCriteria();
-        cri.andNidEqualTo(borrowNid);
+        cri.andBorrowNidEqualTo(borrowNid);
         cri.andUserIdEqualTo(userId);
         int count = borrowTenderMapper.countByExample(example);
         return count;
@@ -38,8 +42,12 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         BorrowTenderExample example = new BorrowTenderExample();
         BorrowTenderExample.Criteria cra = example.createCriteria();
         cra.andNidEqualTo(request.getTenderNid());
-        cra.andBorrowNidEqualTo(request.getBorrowNid());
-        cra.andUserIdEqualTo(request.getTenderUserId());
+        if (StringUtils.isNotBlank(request.getBorrowNid())){
+            cra.andBorrowNidEqualTo(request.getBorrowNid());
+        }
+        if (request.getTenderUserId() != null){
+            cra.andUserIdEqualTo(request.getTenderUserId());
+        }
         List<BorrowTender> tenderList = this.borrowTenderMapper.selectByExample(example);
         if(tenderList != null && tenderList.size() > 0){
             return tenderList.get(0);
@@ -191,7 +199,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
                 e.printStackTrace();
             }
         }
-       return null;
+        return null;
     }
 
     /**
@@ -223,4 +231,16 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         List<BorrowTender> tenderList = this.borrowTenderMapper.selectByExample(example);
         return tenderList;
     }
+
+    /**
+     * 查询用户投资次数
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer selectTenderCount(Integer userId) {
+        return borrowInvestCustomizeMapper.selectTenderCount(userId);
+    }
+
 }

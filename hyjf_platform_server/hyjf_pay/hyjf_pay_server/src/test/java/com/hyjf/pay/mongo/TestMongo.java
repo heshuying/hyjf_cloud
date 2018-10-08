@@ -1,7 +1,7 @@
 package com.hyjf.pay.mongo;
 
-import java.util.Date;
-
+import com.hyjf.pay.PayApplication;
+import com.hyjf.pay.entity.BankExclusiveLog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -13,9 +13,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.hyjf.pay.PayApplication;
-import com.hyjf.pay.entity.BankExclusiveLog;
 
 /**
  * @author xiasq

@@ -1,16 +1,5 @@
 package com.hyjf.am.config.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.admin.mq.producer.SmsProducer;
@@ -18,19 +7,11 @@ import com.hyjf.am.config.dao.mapper.auto.AdminAndRoleMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminRoleMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminCustomizeMapper;
-import com.hyjf.am.config.dao.model.auto.Admin;
-import com.hyjf.am.config.dao.model.auto.AdminAndRole;
-import com.hyjf.am.config.dao.model.auto.AdminAndRoleExample;
-import com.hyjf.am.config.dao.model.auto.AdminExample;
+import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.dao.model.auto.AdminExample.Criteria;
-import com.hyjf.am.config.dao.model.auto.AdminRole;
-import com.hyjf.am.config.dao.model.auto.AdminRoleExample;
 import com.hyjf.am.config.dao.model.customize.AdminCustomize;
 import com.hyjf.am.config.service.AdminUserService;
 import com.hyjf.am.resquest.config.AdminRequest;
-import com.hyjf.am.trade.dao.mapper.auto.ROaDepartmentMapper;
-import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
-import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -38,9 +19,14 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 
 @Service

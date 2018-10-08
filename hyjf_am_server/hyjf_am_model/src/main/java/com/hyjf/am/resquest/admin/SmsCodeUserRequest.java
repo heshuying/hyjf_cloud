@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author fq
@@ -14,41 +15,49 @@ public class SmsCodeUserRequest extends BasePage {
     /**
      * 用户手机号码，以英文逗号间隔
      */
+    @ApiModelProperty(value = "手机号码")
     private String user_phones;
 
     /**
      * 短信内容
      */
+    @ApiModelProperty(value = "短信内容")
     private String message;
 
     /**
      * 是否开户 0 未开 1 已开 3 所有用户
      */
+    @ApiModelProperty(value = "是否开户 0 未开 1 已开 3 所有用户")
     private Integer open_account;
 
     /**
      * 注册时间日期段---开始时间
      */
+    @ApiModelProperty(value = "注册开始日期")
     private String re_time_begin;
 
     /**
      * 注册时间日期段---结束时间
      */
+    @ApiModelProperty(value = "注册结束日期")
     private String re_time_end;
 
     /**
      * 投资日期段开始时间
      */
+    @ApiModelProperty(value = "投资开始日期")
     private String add_time_begin;
 
     /**
      * 投资日期段结束时间
      */
+    @ApiModelProperty(value = "投资结束日期")
     private String add_time_end;
 
     /**
      * 累计投资金额
      */
+    @ApiModelProperty(value = "累计投资金额")
     private String add_money_count;
 
     /**
@@ -64,14 +73,17 @@ public class SmsCodeUserRequest extends BasePage {
     /**
      * 短信通道
      */
+    @ApiModelProperty(value = "短信通道")
     private String channelType;
     /**
      * 发送类型
      */
+    @ApiModelProperty(value = "发送类型")
     private String sendType;
     /**
      * 定时发送时间
      */
+    @ApiModelProperty(value = "定时发送时间 yyyy-MM-dd HH:mm:ss")
     private String on_time;
 
     /**

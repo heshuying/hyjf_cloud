@@ -1,15 +1,14 @@
 package com.hyjf.cs.user.util;
 
-import java.security.Key;
-import java.security.spec.AlgorithmParameterSpec;
-import java.util.Random;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.Random;
 
 /**
  * DES加密

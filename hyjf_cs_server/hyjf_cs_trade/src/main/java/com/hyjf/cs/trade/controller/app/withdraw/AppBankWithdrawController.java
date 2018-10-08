@@ -32,10 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -446,10 +443,11 @@ public class AppBankWithdrawController extends BaseTradeController {
         String ip=CustomUtil.getIpAddr(request);
         // (提现)
         String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/handing";
-        String bgRetUrl = systemConfig.getAppHost()+"/hyjf-app/bank/user/withdraw/userBankWithdrawBgreturn";
+        String bgRetUrl = "http://CS-TRADE/hyjf-app/bank/user/withdraw/userBankWithdrawBgreturn";
         bgRetUrl=splicingParam(bgRetUrl,request);
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/success";
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ip,retUrl,bgRetUrl,successfulUrl);
+        String forgotPwdUrl=super.getForgotPwdUrl(platform,request);
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ip,retUrl,bgRetUrl,successfulUrl, forgotPwdUrl);
         try {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);
             result.setData(data);
@@ -484,7 +482,7 @@ public class AppBankWithdrawController extends BaseTradeController {
     @ApiIgnore
     @ResponseBody
     @PostMapping("/userBankWithdrawBgreturn")
-    public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
+    public String userBankWithdrawBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         logger.info("[app用户银行提现异步回调开始]");
         logger.info("app端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
         BankCallResult result = new BankCallResult();

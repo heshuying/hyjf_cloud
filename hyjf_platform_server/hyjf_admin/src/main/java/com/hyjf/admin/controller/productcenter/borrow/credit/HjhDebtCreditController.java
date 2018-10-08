@@ -2,6 +2,7 @@ package com.hyjf.admin.controller.productcenter.borrow.credit;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.vo.DropDownVO;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
@@ -16,13 +17,19 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
@@ -118,10 +125,10 @@ public class HjhDebtCreditController extends BaseController{
                 hjhDebtCreditService.queryHjhDebtCreditListStatusName(hjhDebtCreditVoList);
                 jsonObject = this.success(recordCount, hjhDebtCreditVoList);
             } else {
-                jsonObject = this.fail("暂无符合条件数据");
+                jsonObject = this.success(0,new ArrayList<>());
             }
         }else{
-            jsonObject = this.fail("暂无符合条件数据");
+            jsonObject = this.success(0,new ArrayList<>());
         }
         return jsonObject;
     }
@@ -231,7 +238,7 @@ public class HjhDebtCreditController extends BaseController{
                     }
                     // 在途资金
                     else if (celLength == 14) {
-                        cell.setCellValue(0);
+                        cell.setCellValue(debtCredit.getRemainCredit());
                     }
                     // 出让人实际到账金额
                     else if (celLength == 15) {

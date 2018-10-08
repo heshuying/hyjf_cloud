@@ -1,8 +1,12 @@
 package com.hyjf.cs.user.controller.api.regist;
 
 import com.hyjf.am.response.WrbResponse;
-import com.hyjf.am.vo.user.*;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.am.resquest.api.WrbRegisterRequest;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.WrbCommonDateUtil;
 import com.hyjf.common.util.WrbParseParamUtil;
 import com.hyjf.common.validator.Validator;
@@ -21,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -30,29 +33,26 @@ import java.util.Map;
  */
 @RestController
 @Api(tags = "风车理财用户注册")
-@RequestMapping(value = "")
+@RequestMapping(value = "/server/wrb/register")
 public class WrbRegiestController {
 
+    Logger log = LoggerFactory.getLogger(WrbRegiestController.class);
     public static final String WRB = "wrb";
     public static final String RETCODE = "3";
     public static final String RETCODE1 = "99";
     public static final String RETCODE2 = "0";
     public static final String RETMSG = "注册平台异常，用户注册失败！";
-
     @Autowired
     UserRegisterService userRegisterService;
 
-    Logger log = LoggerFactory.getLogger(WrbRegiestController.class);
-
-    @PostMapping("")
+    @PostMapping("/register")
     public WrbRegisterResultBean userRegister(@RequestParam String param,
-                                              @RequestParam(value = "sign", required = false) String sign,HttpServletRequest request){
+                                              @RequestParam(value = "sign", required = false) String sign, HttpServletRequest request) {
         log.info("风车理财注册, param is :{}, sign is :{}", param, sign);
         Map<String, String> paramMap = WrbParseParamUtil.parseParam(param);
         WrbRegisterResultBean resultBean = new WrbRegisterResultBean();
         resultBean.setRetcode(RETCODE1);
         resultBean.setRetmsg(RETMSG);
-
         if (CollectionUtils.isEmpty(paramMap)) {
             resultBean.setRetcode(WrbResponse.FAIL_RETCODE);
             resultBean.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
@@ -65,18 +65,18 @@ public class WrbRegiestController {
                 return resultBean;
             }
         } catch (Exception e) {
-            log.error("参数解析失败, paramMap is :"+ paramMap, e);
+            log.error("参数解析失败, paramMap is :" + paramMap, e);
             return resultBean;
         }
         // 手机号
         String mobile = wrbRegisterRequestBean.getMobile();
         // 注册平台
         String from = wrbRegisterRequestBean.getFrom();
-        if(!(StringUtils.isNotBlank(from) && WRB.equals(from))){
+        if (!(StringUtils.isNotBlank(from) && WRB.equals(from))) {
             return resultBean;
         }
         // 机构编号
-        String instCode = WrbCommonDateUtil.FCLC_INSTCODE+"";
+        String instCode = WrbCommonDateUtil.FCLC_INSTCODE + "";
         // 注册平台
         String platform = WrbCommonDateUtil.FCLC_PLATFORM;
         // 注册渠道
@@ -99,7 +99,7 @@ public class WrbRegiestController {
             HjhInstConfigVO instConfig = this.userRegisterService.selectHjhInstConfig(instCode);
             // 机构编号
             if (instConfig == null) {
-                log.info("获取机构信息为空,机构编号:{}" , instCode );
+                log.info("获取机构信息为空,机构编号:{}", instCode);
                 resultBean.setRetcode(RETCODE);
                 resultBean.setRetmsg("机构编号错误");
                 return resultBean;
@@ -107,7 +107,7 @@ public class WrbRegiestController {
             // 根据渠道号检索推广渠道是否存在
             UtmPlatVO utmPlat = this.userRegisterService.selectUtmPlatByUtmId(utmId);
             if (utmPlat == null) {
-                log.info("根据渠道号获取推广渠道为空,渠道号:{}"  ,utmId );
+                log.info("根据渠道号获取推广渠道为空,渠道号:{}", utmId);
                 resultBean.setRetcode(RETCODE);
                 resultBean.setRetmsg("推广渠道号非法");
                 return resultBean;
@@ -119,7 +119,7 @@ public class WrbRegiestController {
             if (user != null) {
                 Integer bindUsers = userRegisterService.selectByUserId(user.getUserId(), instCode);
                 if (bindUsers == null) {
-                    log.info("用户手机号已在平台注册:用户名:{},用户手机号:{}",user.getUsername(), mobile);
+                    log.info("用户手机号已在平台注册:用户名:{},用户手机号:{}", user.getUsername(), mobile);
                     // 合作平台的老用户
                     resultBean.setRetcode("1");
                     resultBean.setRetmsg("手机号已在平台注册");
@@ -144,17 +144,24 @@ public class WrbRegiestController {
                 }
             } else {
                 // 手机号未注册
-                log.info("手机号在平台未注册,手机号:{}",mobile);
-                Integer userId = this.userRegisterService.insertUserAction(mobile, instCode, request, instConfig.getInstType(), utmPlat,platform);
+                log.info("手机号在平台未注册,手机号:{}", mobile);
+                String ipAddr = GetCilentIP.getIpAddr(request);
+                WrbRegisterRequest wrbRegisterRequest = new WrbRegisterRequest(mobile, instCode, ipAddr, instConfig.getInstType(), utmPlat, platform);
+
+                Integer userId = this.userRegisterService.insertUserAction(wrbRegisterRequest);
+                if (utmPlat.getSourceType() == 1) {
+                    wrbRegisterRequest.setUserId(userId);
+                    userRegisterService.insertAppChannelStatisticsDetail(wrbRegisterRequest);
+                }
                 if (userId == null || userId == 0) {
-                    log.info("用户注册失败,手机号:{}",mobile);
+                    log.info("用户注册失败,手机号:{}", mobile);
                     resultBean.setRetcode(RETCODE);
                     resultBean.setRetmsg("注册失败");
                     return resultBean;
                 } else {
                     UserVO users = this.userRegisterService.checkUserByUserId(userId);
                     if (users == null) {
-                        log.info("根据用户ID获取用户信息表失败,用户ID:{}",userId );
+                        log.info("根据用户ID获取用户信息表失败,用户ID:{}", userId);
                         resultBean.setRetcode(RETCODE);
                         resultBean.setRetmsg("注册失败");
                         return resultBean;
@@ -167,12 +174,12 @@ public class WrbRegiestController {
                     userRegisterService.updateUserInfoByUserInfo(userInfo);
 
                     //插入用户绑定表
-                    userRegisterService.bindThirdUser(userId,Integer.valueOf(wrbRegisterRequestBean.getWrb_user_id()),Integer.valueOf(instCode));
-                    log.info("汇盈金福用户：{} 跟风车理财用户：{}已经绑定！",userId,userId);
+                    userRegisterService.bindThirdUser(userId, Integer.valueOf(wrbRegisterRequestBean.getWrb_user_id()), Integer.valueOf(instCode));
+                    log.info("汇盈金福用户：{} 跟风车理财用户：{}已经绑定！", userId, userId);
 
                     String userName = users.getUsername();
                     // 用户注册成功
-                    log.info("用户注册成功,手机号:{},用户ID:{},用户名:{}",mobile,userId,userName);
+                    log.info("用户注册成功,手机号:{},用户ID:{},用户名:{}", mobile, userId, userName);
                     resultBean.setRetcode(RETCODE2);
                     resultBean.setRetmsg("注册成功");
                     // 用户Id
@@ -182,7 +189,7 @@ public class WrbRegiestController {
                 }
             }
         } catch (Exception e) {
-            log.info("用户注册失败~,手机号:{},失败原因:{}",mobile,e.getMessage());
+            log.info("用户注册失败~,手机号:{},失败原因:{}", mobile, e.getMessage());
             resultBean.setRetcode(RETCODE);
             resultBean.setRetmsg("注册失败");
             return resultBean;

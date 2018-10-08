@@ -1,20 +1,22 @@
 package com.hyjf.am.trade.controller.admin.productcenter.plancenter.plancapital;
 
-import java.util.List;
-
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.HjhReInvestDetailResponse;
+import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
+import com.hyjf.am.resquest.admin.Paginator;
+import com.hyjf.am.trade.service.admin.hjhplan.HjhPlanCapitalService;
+import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.admin.HjhReInvestDetailResponse;
-import com.hyjf.am.trade.service.admin.hjhplan.HjhPlanCapitalService;
-import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
-
-import io.swagger.annotations.Api;
+import java.util.List;
 
 
 /**
@@ -31,24 +33,34 @@ public class HjhPlanCapitalController {
 
     private static Logger logger = LoggerFactory.getLogger(HjhPlanCapitalController.class);
 
-
-    @GetMapping(value = "/hjhPlanCapitalReinvestCount/{data}/{planNid}")
-    public Integer hjhPlanCapitalReinvestCount(@PathVariable String data, @PathVariable String planNid){
-        return this.hjhPlanCapitalService.queryReInvestDetailCount(data, planNid);
-    }
-
     /**
      * 资金计划 - 复投原始标的
-     * @param data
-     * @param planNid
+     * @param request
      * @return
      */
-    @GetMapping(value = "/hjhPlanCapitalReinvestInfo/{data}/{planNid}")
-    public HjhReInvestDetailResponse hjhPlanCapitalReinvestInfo(@PathVariable String data, @PathVariable String planNid){
+    @PostMapping(value = "/hjhPlanCapitalReinvestInfo")
+    public HjhReInvestDetailResponse hjhPlanCapitalReinvestInfo(@RequestBody HjhReInvestDetailRequest request){
         HjhReInvestDetailResponse response = new HjhReInvestDetailResponse();
 
-        List<HjhReInvestDetailVO> hjhReInvestDetailCustomizeList = this.hjhPlanCapitalService.getReinvestInfo(data, planNid);
-        response.setResultList(hjhReInvestDetailCustomizeList);
+        Integer count = this.hjhPlanCapitalService.queryReInvestDetailCount(request);
+
+        if (request.getCurrPage() > 0){
+            Paginator paginator = new Paginator(request.getCurrPage(), count);
+            request.setLimitStart(paginator.getOffset());
+            if (request.getPageSize() > 0){
+                request.setLimitEnd(request.getPageSize());
+            }else{
+                request.setLimitEnd(paginator.getLimit());
+            }
+        }
+
+        List<HjhReInvestDetailVO> reInvestDetailVOList = this.hjhPlanCapitalService.getReinvestInfo(request);
+
+        if (!CollectionUtils.isEmpty(reInvestDetailVOList)){
+            response.setResultList(reInvestDetailVOList);
+            response.setCount(count);
+            response.setRtn(Response.SUCCESS);
+        }
         return response;
     }
 

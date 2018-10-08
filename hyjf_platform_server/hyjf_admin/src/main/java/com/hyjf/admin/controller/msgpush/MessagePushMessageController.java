@@ -11,7 +11,8 @@ import com.hyjf.admin.service.MessagePushMsgService;
 import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
-
+import com.hyjf.admin.utils.FileUpLoadUtil;
+import com.hyjf.admin.utils.GetMessageIdUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushMsgResponse;
 import com.hyjf.am.resquest.message.MessagePushMsgRequest;
@@ -21,7 +22,6 @@ import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.common.util.GetMessageIdUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -30,7 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author yaoyong
@@ -263,13 +265,15 @@ public class MessagePushMessageController extends BaseController {
         return new AdminResult<>(response);
     }
 
+    @Autowired
+    private FileUpLoadUtil fileUpLoadUtil;
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);
             adminResult.setData(borrowCommonImages);
             adminResult.setStatus(SUCCESS);
             adminResult.setStatusDesc(SUCCESS_DESC);

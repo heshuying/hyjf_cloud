@@ -4,7 +4,6 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.BaseVO;
 
 /**
  * 项目列表请求参数
@@ -36,6 +35,8 @@ public class ProjectListRequest extends BasePage {
      * app债转列表用
      */
     private String creditStatus;
+
+    private String status;
 
     /**
      * 翻页机能用的隐藏变量（app原来的参数）
@@ -125,5 +126,13 @@ public class ProjectListRequest extends BasePage {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

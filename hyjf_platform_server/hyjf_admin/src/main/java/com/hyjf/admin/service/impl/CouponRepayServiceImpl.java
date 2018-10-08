@@ -8,7 +8,6 @@ import com.hyjf.admin.service.CouponRepayService;
 import com.hyjf.am.response.admin.AdminCouponRepayMonitorCustomizeResponse;
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
-import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

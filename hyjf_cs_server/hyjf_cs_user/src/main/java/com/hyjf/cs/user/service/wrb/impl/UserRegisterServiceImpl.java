@@ -1,16 +1,16 @@
 package com.hyjf.cs.user.service.wrb.impl;
 
+import com.hyjf.am.resquest.api.WrbRegisterRequest;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.client.CsMessageClient;
 import com.hyjf.cs.user.service.wrb.UserRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author lisheng
@@ -25,6 +25,8 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     @Autowired
     AmUserClient amUserClient;
 
+    @Autowired
+    CsMessageClient csMessageClient;
 
     @Override
     public HjhInstConfigVO selectHjhInstConfig(String instcode) {
@@ -67,7 +69,14 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     }
 
     @Override
-    public Integer insertUserAction(String mobile, String instCode, HttpServletRequest request, Integer instType, UtmPlatVO utmPlat, String platform) {
-        return amUserClient.insertUserAction(mobile, instCode, request, instType, utmPlat,platform);
+    public Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest) {
+        return amUserClient.insertUserAction(wrbRegisterRequest);
     }
+
+    @Override
+    public boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest) {
+        return csMessageClient.insertAppChannelStatisticsDetail(wrbRegisterRequest);
+    }
+
+
 }

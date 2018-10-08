@@ -1,10 +1,9 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
-import java.util.List;
-
+import com.hyjf.am.config.dao.model.auto.HolidaysConfig;
 import org.apache.ibatis.annotations.Param;
 
-import com.hyjf.am.config.dao.model.auto.HolidaysConfig;
+import java.util.List;
 
 /**
  * @author xiasq

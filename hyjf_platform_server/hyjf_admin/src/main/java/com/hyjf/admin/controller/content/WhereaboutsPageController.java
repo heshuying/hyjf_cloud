@@ -10,6 +10,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.WhereaboutsPageService;
+import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
@@ -21,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -140,6 +140,8 @@ public class WhereaboutsPageController extends BaseController {
 		return adminResult;
 	}
 
+	@Autowired
+	private FileUpLoadUtil fileUpLoadUtil;
 	/**
 	 * 资料上传
 	 *
@@ -149,9 +151,9 @@ public class WhereaboutsPageController extends BaseController {
 	 */
 	@ApiOperation(value = "移动端着陆页管理", notes = "资料上传")
 	@PostMapping("/uploadfile")
-	public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public AdminResult uploadFile(HttpServletRequest request) throws Exception {
         AdminResult adminResult = new AdminResult();
-        LinkedList<BorrowCommonImage> borrowCommonImages = whereaboutsPageService.uploadFile(request, response);
+        LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);
         adminResult.setData(borrowCommonImages);
         return adminResult;
 	}

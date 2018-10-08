@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.BorrowLogRequset;
 import com.hyjf.am.trade.dao.model.customize.BorrowLogCustomize;
+
+import java.util.List;
 
 /**
  * @author pangchengchao

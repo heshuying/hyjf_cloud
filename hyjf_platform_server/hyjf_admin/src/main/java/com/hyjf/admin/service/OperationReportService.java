@@ -1,12 +1,7 @@
 package com.hyjf.admin.service;
 
-import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.LinkedList;
 
 /**
  * @author tanyy
@@ -99,15 +94,5 @@ public interface OperationReportService {
      * @return
      */
     public OperationReportResponse halfPreview(OperationReportRequest request);
-
-
-    /**
-     * 资料上传
-     * @param request
-     * @param response
-     * @return
-     */
-    LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request, HttpServletResponse response);
-
 
 }

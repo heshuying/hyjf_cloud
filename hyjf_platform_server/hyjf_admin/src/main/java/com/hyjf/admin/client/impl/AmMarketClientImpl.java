@@ -4,15 +4,12 @@ import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.am.resquest.market.ActivityListRequest;
-import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.am.vo.market.AdsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 	@Override
 	public List<ActivityListVO> getActivityList() {
 		ActivityListResponse response = restTemplate.getForEntity(
-				"http://AM-MARKET/am-market/activity/getActivityList",
+				"http://AM-admin/am-market/activity/getActivityList",
 				ActivityListResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
@@ -45,7 +42,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListResponse getRecordList(ActivityListRequest activityListRequest) {
-		String url = "http://AM-MARKET/am-market/activity/getRecordList";
+		String url = "http://AM-ADMIN/am-market/activity/getRecordList";
 		ActivityListResponse response = restTemplate.postForEntity(url, activityListRequest, ActivityListResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -55,7 +52,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListResponse insertRecord(ActivityListRequest request) {
-		String url = "http://AM-MARKET/am-market/activity/insertRecord";
+		String url = "http://AM-ADMIN/am-market/activity/insertRecord";
 		ActivityListResponse response = restTemplate.postForEntity(url, request, ActivityListResponse.class).getBody();
 		if (response != null) {
 			return response;
@@ -65,7 +62,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListResponse selectActivityById(ActivityListRequest activityListRequest) {
-		String url = "http://AM-MARKET/am-market/activity/selectActivityList";
+		String url = "http://AM-ADMIN/am-market/activity/selectActivityList";
 		ActivityListResponse response = restTemplate.postForEntity(url, activityListRequest, ActivityListResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -75,7 +72,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListResponse updateActivity(ActivityListRequest request) {
-		String url = "http://AM-MARKET/am-market/activity/updateActivity";
+		String url = "http://AM-ADMIN/am-market/activity/updateActivity";
 		ActivityListResponse response = restTemplate.postForEntity(url, request, ActivityListResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -85,7 +82,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListResponse deleteActivity(ActivityListRequest request) {
-		String url = "http://AM-MARKET/am-market/activity/deleteActivity";
+		String url = "http://AM-ADMIN/am-market/activity/deleteActivity";
 		ActivityListResponse response = restTemplate.postForEntity(url, request, ActivityListResponse.class).getBody();
 		if (response != null) {
 			return response;
@@ -93,50 +90,6 @@ public class AmMarketClientImpl implements AmMarketClient {
 		return null;
 	}
 
-	@Override
-	public AppBannerResponse findAppBannerList(AppBannerRequest request) {
-		AppBannerResponse response = restTemplate
-				.postForEntity("http://AM-MARKET/am-market/appconfig/getRecordList" ,request,
-						AppBannerResponse.class)
-				.getBody();
-		return response;
-	}
-
-	@Override
-	public AppBannerResponse insertAppBannerList(AdsVO adsVO) {
-		AppBannerResponse response = restTemplate
-				.postForEntity("http://AM-MARKET/am-market/appconfig/insertRecord" ,adsVO,
-						AppBannerResponse.class)
-				.getBody();
-		return response;
-	}
-
-	@Override
-	public AppBannerResponse updateAppBannerList(AdsVO adsVO) {
-		AppBannerResponse response = restTemplate
-				.postForEntity("http://AM-MARKET/am-market/appconfig/updateRecord" ,adsVO,
-						AppBannerResponse.class)
-				.getBody();
-		return response;
-	}
-
-	@Override
-	public AppBannerResponse updateAppBannerStatus(AdsVO adsVO) {
-		AppBannerResponse response = restTemplate
-				.postForEntity("http://AM-MARKET/am-market/appconfig/updateStatus" ,adsVO,
-						AppBannerResponse.class)
-				.getBody();
-		return response;
-	}
-
-	@Override
-	public AppBannerResponse deleteAppBanner(AdsVO adsVO) {
-		AppBannerResponse response = restTemplate
-				.postForEntity("http://AM-MARKET/am-market/appconfig/deleteAppBanner" ,adsVO,
-						AppBannerResponse.class)
-				.getBody();
-		return response;
-	}
 
 	@Override
 	public ContentAdsResponse searchAction(ContentAdsRequest request) {
@@ -192,7 +145,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 	 */
 	@Override
 	public List<ActivityListCustomizeVO> getActivityList(ActivityListCustomizeVO request) {
-		String url = "http://AM-MARKET/am-market/activity/selectRecordListValid";
+		String url = "http://AM-ADMIN/am-market/activity/selectRecordListValid";
 		ActivityListCustomizeResponse response = restTemplate.postForEntity(url, request, ActivityListCustomizeResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
@@ -305,14 +258,13 @@ public class AmMarketClientImpl implements AmMarketClient {
 		return response;
     }
 
-	@Override
-	public AppBannerResponse getRecordById(AdsVO adsVO) {
-		AppBannerResponse response = restTemplate
-				.postForEntity("http://AM-MARKET/am-market/appconfig/getRecordById" ,adsVO,
-						AppBannerResponse.class)
-				.getBody();
 
-		return response;
-	}
+
+
+	@Override
+    public ActivityListResponse getInfoById(Integer id) {
+		ActivityListResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-market/activity/getInfoById/" + id, ActivityListResponse.class).getBody();
+        return response;
+    }
 
 }

@@ -5,7 +5,6 @@ package com.hyjf.cs.trade.controller.web.tender.invest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
@@ -64,8 +63,9 @@ public class BorrowCreditTenderController extends BaseTradeController {
     @ApiIgnore
     @PostMapping("/bgReturn")
     @ResponseBody
-    public BankCallResult borrowCreditTenderBgReturn(BankCallBean bean ) {
-        logger.info("web端债转投资异步处理start,userId:{},返回码:{}", bean.getLogUserId(),bean.getRetCode());
+    public BankCallResult borrowCreditTenderBgReturn(@RequestBody BankCallBean bean ,Integer platform) {
+        logger.info("web端债转投资异步处理start,userId:{},返回码:{}  平台 {} ", bean.getLogUserId(),bean.getRetCode(),platform);
+        bean.setLogClient(platform);
         BankCallResult result = borrowTenderService.borrowCreditTenderBgReturn(bean);
         return result;
     }

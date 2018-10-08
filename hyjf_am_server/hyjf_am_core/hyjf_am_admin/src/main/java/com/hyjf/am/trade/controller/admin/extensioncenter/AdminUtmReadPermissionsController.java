@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller.admin.extensioncenter;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.service.AdminUtmReadPermissionsService;
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
@@ -45,6 +46,16 @@ public class AdminUtmReadPermissionsController extends BaseConfigController {
 	public AdminUtmReadPermissionsResponse searchAction(@RequestBody AdminUtmReadPermissionsRequest request) {
 		logger.info("渠道帐号管理查询开始......");
 		AdminUtmReadPermissionsResponse response = adminUtmReadPermissionsService.searchAction(request);
+		return response;
+	}
+
+	@ApiOperation(value = "检查编号唯一性", notes = "检查编号唯一性")
+	@GetMapping ("/checkaction/{userName}")
+	public IntegerResponse checkAction(@PathVariable String userName) {
+		logger.info("检查编号唯一性......");
+		IntegerResponse response = new IntegerResponse();
+		int flag = adminUtmReadPermissionsService.isExistsAdminUser(userName);
+		response.setResultInt(flag);
 		return response;
 	}
 

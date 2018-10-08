@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.activity;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -11,7 +10,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ActivityListService;
-import com.hyjf.admin.service.MessagePushNoticesService;
+import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
@@ -22,14 +21,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author yaoy
@@ -51,8 +50,6 @@ public class ActivityListController extends BaseController {
 
     @Autowired
     private ActivityListService activityListService;
-    @Autowired
-    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "查询列表", notes = "查询列表")
     @PostMapping("/activityRecordList")
@@ -67,6 +64,29 @@ public class ActivityListController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         return new AdminResult<ListResult<ActivityListVO>>(ListResult.build(forBack, response.getCount()));
+    }
+
+
+    @ApiOperation(value = "活动详情", notes = "活动详情")
+    @PostMapping("/infoAction")
+    public AdminResult getInfoList(@RequestBody ActivityListRequest request) {
+        ActivityListResponse response = new ActivityListResponse();
+        List<ParamNameVO> clients = activityListService.getParamNameList("CLIENT");
+        response.setClients(clients);
+        if (request.getId() != null) {
+            response = activityListService.getRecordById(request.getId());
+            // 拆分平台
+            String[] split = response.getResult().getPlatform().split(",");
+            response.setPlatforms(split);
+            response.setFileDomainUrl(fileDomainUrl);
+        }
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult(response);
     }
 
 
@@ -167,13 +187,16 @@ public class ActivityListController extends BaseController {
         return new AdminResult<>();
     }
 
+    @Autowired
+    private FileUpLoadUtil fileUpLoadUtil;
+
+
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @PostMapping("/uploadFile")
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
-            adminResult.setData(borrowCommonImages);
+            adminResult.setData(fileUpLoadUtil.upLoad(request));
             adminResult.setStatus(SUCCESS);
             adminResult.setStatusDesc(SUCCESS_DESC);
             return adminResult;
@@ -197,7 +220,6 @@ public class ActivityListController extends BaseController {
         }
         return new AdminResult<>();
     }
-
 
     /**
      * 表单校验

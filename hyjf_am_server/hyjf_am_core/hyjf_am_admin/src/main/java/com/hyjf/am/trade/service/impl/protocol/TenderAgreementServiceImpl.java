@@ -4,7 +4,6 @@ import com.hyjf.am.trade.dao.mapper.auto.TenderAgreementMapper;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreementExample;
 import com.hyjf.am.trade.service.front.protocol.TenderAgreementService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

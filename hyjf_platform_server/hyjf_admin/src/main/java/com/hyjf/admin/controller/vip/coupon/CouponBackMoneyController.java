@@ -96,10 +96,10 @@ public class CouponBackMoneyController extends BaseController {
      * 导出功能
      *
      */
-    @GetMapping("/exportAction")
-    public void exportAction( @RequestParam(value="father",required=true)  String father,@RequestParam(value="son",required=true)  String son,
-                              HttpServletResponse response,CouponBackMoneyCustomize couponBackMoneyCustomize) throws Exception {
-
+    @PostMapping("/exportAction")
+    public void exportAction( HttpServletResponse response,@RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) throws Exception {
+        String father = couponBackMoneyCustomize.getFather();
+        String son = couponBackMoneyCustomize.getSon();
         if(StringUtils.isEmpty(father) || StringUtils.isEmpty(son)){
             return ;
         }

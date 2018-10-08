@@ -3,16 +3,15 @@
  */
 package com.hyjf.am.response.admin;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.response.AdminResponse;
-
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -26,7 +25,14 @@ public class BorrowCustomizeResponse extends AdminResponse<BorrowCustomizeVO> {
 	private Map<String, String> st;
 	private Map<String, String> bs;
 	private List<BorrowCommonCustomizeVO> borrowCommonCustomizeList;
+	private String webUrl;
 	
+	public String getWebUrl() {
+		return webUrl;
+	}
+	public void setWebUrl(String webUrl) {
+		this.webUrl = webUrl;
+	}
 	public List<BorrowCommonCustomizeVO> getBorrowCommonCustomizeList() {
 		return borrowCommonCustomizeList;
 	}

@@ -3,7 +3,7 @@ package com.hyjf.admin.service.impl.promotion;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
-import com.hyjf.am.response.admin.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.springframework.stereotype.Service;
@@ -30,5 +30,9 @@ public class AppChannelStatisticsDetailServiceImpl implements AppChannelStatisti
     @Override
     public AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
         return csMessageClient.getstatisticsList(request);
+    }
+    @Override
+    public AppChannelStatisticsDetailResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
+        return csMessageClient.exportStatisticsList(request);
     }
 }

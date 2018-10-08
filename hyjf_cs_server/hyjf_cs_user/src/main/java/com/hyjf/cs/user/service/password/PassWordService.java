@@ -183,5 +183,5 @@ public interface PassWordService extends BaseUserService {
      * @param type
      * @return
      */
-    Map<String,Object> apiCheack(ThirdPartyTransPasswordRequestBean transPasswordRequestBean, String type);
+    Map<String,Object> apiCheack(ThirdPartyTransPasswordRequestBean transPasswordRequestBean, String type,String verifyValue);
 }

@@ -75,4 +75,5 @@ public interface CouponService {
      * @return
      */
     BigDecimal getInterest(String borrowStyle, Integer couponType, BigDecimal borrowApr, BigDecimal couponQuota, String money, Integer borrowPeriod);
+
 }

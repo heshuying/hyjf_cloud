@@ -1,14 +1,13 @@
 package com.hyjf.am.trade.dao.customize;
 
+import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
+import com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.TzjCustomizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
-
-import com.hyjf.am.trade.dao.auto.AutoMapper;
-import com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.TzjCustomizeMapper;
 
 @Service
 public class CustomizeMapper extends AutoMapper {
@@ -195,4 +194,13 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected HjhBailConfigCustomizeMapper hjhBailConfigCustomizeMapper;
+
+	@Autowired
+	protected HjhBailConfigLogCustomizeMapper hjhBailConfigLogCustomizeMapper;
+
+	@Autowired
+	protected HjhPlanRepayCustomizeMapper hjhPlanRepayCustomizeMapper;
+
+	@Autowired
+	protected AssetExceptionCustomizeMapper assetExceptionCustomizeMapper;
 }

@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.DebtConfigLogMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.DebtConfigLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="hyjf_debt_config_id" property="hyjfDebtConfigId" jdbcType="INTEGER" />
+    <result column="attorn_rate" property="attornRate" jdbcType="DECIMAL" />
+    <result column="concession_rate_up" property="concessionRateUp" jdbcType="DECIMAL" />
+    <result column="concession_rate_down" property="concessionRateDown" jdbcType="DECIMAL" />
+    <result column="toggle" property="toggle" jdbcType="TINYINT" />
+    <result column="close_des" property="closeDes" jdbcType="VARCHAR" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="update_username" property="updateUsername" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="ip_address" property="ipAddress" jdbcType="VARCHAR" />
+    <result column="mac_address" property="macAddress" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, hyjf_debt_config_id, attorn_rate, concession_rate_up, concession_rate_down, toggle, 
+    close_des, update_user, update_username, update_time, ip_address, mac_address
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfigLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_debt_config_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_debt_config_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_debt_config_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfigLogExample" >
+    delete from ht_debt_config_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfigLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_config_log (hyjf_debt_config_id, attorn_rate, concession_rate_up, 
+      concession_rate_down, toggle, close_des, 
+      update_user, update_username, update_time, 
+      ip_address, mac_address)
+    values (#{hyjfDebtConfigId,jdbcType=INTEGER}, #{attornRate,jdbcType=DECIMAL}, #{concessionRateUp,jdbcType=DECIMAL}, 
+      #{concessionRateDown,jdbcType=DECIMAL}, #{toggle,jdbcType=TINYINT}, #{closeDes,jdbcType=VARCHAR}, 
+      #{updateUser,jdbcType=INTEGER}, #{updateUsername,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{ipAddress,jdbcType=VARCHAR}, #{macAddress,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfigLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_config_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="hyjfDebtConfigId != null" >
+        hyjf_debt_config_id,
+      </if>
+      <if test="attornRate != null" >
+        attorn_rate,
+      </if>
+      <if test="concessionRateUp != null" >
+        concession_rate_up,
+      </if>
+      <if test="concessionRateDown != null" >
+        concession_rate_down,
+      </if>
+      <if test="toggle != null" >
+        toggle,
+      </if>
+      <if test="closeDes != null" >
+        close_des,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateUsername != null" >
+        update_username,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="ipAddress != null" >
+        ip_address,
+      </if>
+      <if test="macAddress != null" >
+        mac_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="hyjfDebtConfigId != null" >
+        #{hyjfDebtConfigId,jdbcType=INTEGER},
+      </if>
+      <if test="attornRate != null" >
+        #{attornRate,jdbcType=DECIMAL},
+      </if>
+      <if test="concessionRateUp != null" >
+        #{concessionRateUp,jdbcType=DECIMAL},
+      </if>
+      <if test="concessionRateDown != null" >
+        #{concessionRateDown,jdbcType=DECIMAL},
+      </if>
+      <if test="toggle != null" >
+        #{toggle,jdbcType=TINYINT},
+      </if>
+      <if test="closeDes != null" >
+        #{closeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateUsername != null" >
+        #{updateUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ipAddress != null" >
+        #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="macAddress != null" >
+        #{macAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfigLogExample" resultType="java.lang.Integer" >
+    select count(*) from ht_debt_config_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_debt_config_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.hyjfDebtConfigId != null" >
+        hyjf_debt_config_id = #{record.hyjfDebtConfigId,jdbcType=INTEGER},
+      </if>
+      <if test="record.attornRate != null" >
+        attorn_rate = #{record.attornRate,jdbcType=DECIMAL},
+      </if>
+      <if test="record.concessionRateUp != null" >
+        concession_rate_up = #{record.concessionRateUp,jdbcType=DECIMAL},
+      </if>
+      <if test="record.concessionRateDown != null" >
+        concession_rate_down = #{record.concessionRateDown,jdbcType=DECIMAL},
+      </if>
+      <if test="record.toggle != null" >
+        toggle = #{record.toggle,jdbcType=TINYINT},
+      </if>
+      <if test="record.closeDes != null" >
+        close_des = #{record.closeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUsername != null" >
+        update_username = #{record.updateUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.ipAddress != null" >
+        ip_address = #{record.ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.macAddress != null" >
+        mac_address = #{record.macAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_debt_config_log
+    set id = #{record.id,jdbcType=INTEGER},
+      hyjf_debt_config_id = #{record.hyjfDebtConfigId,jdbcType=INTEGER},
+      attorn_rate = #{record.attornRate,jdbcType=DECIMAL},
+      concession_rate_up = #{record.concessionRateUp,jdbcType=DECIMAL},
+      concession_rate_down = #{record.concessionRateDown,jdbcType=DECIMAL},
+      toggle = #{record.toggle,jdbcType=TINYINT},
+      close_des = #{record.closeDes,jdbcType=VARCHAR},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      update_username = #{record.updateUsername,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      ip_address = #{record.ipAddress,jdbcType=VARCHAR},
+      mac_address = #{record.macAddress,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfigLog" >
+    update ht_debt_config_log
+    <set >
+      <if test="hyjfDebtConfigId != null" >
+        hyjf_debt_config_id = #{hyjfDebtConfigId,jdbcType=INTEGER},
+      </if>
+      <if test="attornRate != null" >
+        attorn_rate = #{attornRate,jdbcType=DECIMAL},
+      </if>
+      <if test="concessionRateUp != null" >
+        concession_rate_up = #{concessionRateUp,jdbcType=DECIMAL},
+      </if>
+      <if test="concessionRateDown != null" >
+        concession_rate_down = #{concessionRateDown,jdbcType=DECIMAL},
+      </if>
+      <if test="toggle != null" >
+        toggle = #{toggle,jdbcType=TINYINT},
+      </if>
+      <if test="closeDes != null" >
+        close_des = #{closeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateUsername != null" >
+        update_username = #{updateUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ipAddress != null" >
+        ip_address = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="macAddress != null" >
+        mac_address = #{macAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfigLog" >
+    update ht_debt_config_log
+    set hyjf_debt_config_id = #{hyjfDebtConfigId,jdbcType=INTEGER},
+      attorn_rate = #{attornRate,jdbcType=DECIMAL},
+      concession_rate_up = #{concessionRateUp,jdbcType=DECIMAL},
+      concession_rate_down = #{concessionRateDown,jdbcType=DECIMAL},
+      toggle = #{toggle,jdbcType=TINYINT},
+      close_des = #{closeDes,jdbcType=VARCHAR},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      update_username = #{updateUsername,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      ip_address = #{ipAddress,jdbcType=VARCHAR},
+      mac_address = #{macAddress,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

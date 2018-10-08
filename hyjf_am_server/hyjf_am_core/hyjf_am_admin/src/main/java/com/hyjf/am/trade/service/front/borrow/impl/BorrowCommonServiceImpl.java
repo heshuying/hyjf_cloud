@@ -15,6 +15,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample.Criteria;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -857,8 +858,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 						//添加修改日志
 						BorrowLog borrowLog = new BorrowLog();
 						borrowLog.setBorrowNid(borrowNid);
+						Map<String, String> map = CacheUtil.getParamNameMap("BORROW_STATUS");
 						//String statusNameString = getBorrowStatusName(borrowBean.getStatus());
-						//borrowLog.setBorrowStatus(statusNameString);
+						borrowLog.setBorrowStatus(map.get(borrowBean.getStatus()));
 						borrowLog.setBorrowStatusCd(StringUtil.isBlank(borrowBean.getStatus())?0:Integer.valueOf(borrowBean.getStatus()));
 						borrowLog.setType(BORROW_LOG_UPDATE);
 						borrowLog.setCreateTime(new Date());
@@ -2529,33 +2531,33 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	@Override
 	public List<BorrowProjectRepay> borrowProjectRepayList() {
 
-		HashMap<String, BorrowProjectRepay> map = new HashMap<String, BorrowProjectRepay>();
+//		HashMap<String, BorrowProjectRepay> map = new HashMap<String, BorrowProjectRepay>();
 		BorrowProjectRepayExample example = new BorrowProjectRepayExample();
 		BorrowProjectRepayExample.Criteria cra = example.createCriteria();
 		cra.andDelFlagEqualTo(Integer.valueOf(CustomConstants.FLAG_NORMAL));
 		List<BorrowProjectRepay> borrowProjectRepayList = this.borrowProjectRepayMapper.selectByExample(example);
-		if (borrowProjectRepayList != null && borrowProjectRepayList.size() > 0) {
-			for (BorrowProjectRepay borrowProjectRepay : borrowProjectRepayList) {
-				if (map.containsKey(borrowProjectRepay.getRepayMethod())) {
-					BorrowProjectRepay mapRecord = map.get(borrowProjectRepay.getRepayMethod());
-					String borrowClass = borrowProjectRepay.getBorrowClass();
-				//	String optionAttr = mapRecord.getBorrowClass() + "data-" + borrowClass + "='" + borrowClass + "' ";
-					mapRecord.setBorrowClass(borrowClass);
-					map.put(borrowProjectRepay.getRepayMethod(), mapRecord);
-				} else {
-					String borrowClass = borrowProjectRepay.getBorrowClass();
-				//	String optionAttr = "data-" + borrowClass + "='" + borrowClass + "' ";
-					borrowProjectRepay.setBorrowClass(borrowClass);
-					map.put(borrowProjectRepay.getRepayMethod(), borrowProjectRepay);
-				}
-			}
-		}
-		borrowProjectRepayList = new ArrayList<BorrowProjectRepay>();
-		Iterator<Entry<String, BorrowProjectRepay>> iter = map.entrySet().iterator();
-		while (iter.hasNext()) {
-			Entry<String, BorrowProjectRepay> entry = iter.next();
-			borrowProjectRepayList.add(entry.getValue());
-		}
+//		if (borrowProjectRepayList != null && borrowProjectRepayList.size() > 0) {
+//			for (BorrowProjectRepay borrowProjectRepay : borrowProjectRepayList) {
+//				if (map.containsKey(borrowProjectRepay.getRepayMethod())) {
+//					BorrowProjectRepay mapRecord = map.get(borrowProjectRepay.getRepayMethod());
+//					String borrowClass = borrowProjectRepay.getBorrowClass();
+//				//	String optionAttr = mapRecord.getBorrowClass() + "data-" + borrowClass + "='" + borrowClass + "' ";
+//					mapRecord.setBorrowClass(borrowClass);
+//					map.put(borrowProjectRepay.getRepayMethod(), mapRecord);
+//				} else {
+//					String borrowClass = borrowProjectRepay.getBorrowClass();
+//				//	String optionAttr = "data-" + borrowClass + "='" + borrowClass + "' ";
+//					borrowProjectRepay.setBorrowClass(borrowClass);
+//					map.put(borrowProjectRepay.getRepayMethod(), borrowProjectRepay);
+//				}
+//			}
+//		}
+//		borrowProjectRepayList = new ArrayList<BorrowProjectRepay>();
+//		Iterator<Entry<String, BorrowProjectRepay>> iter = map.entrySet().iterator();
+//		while (iter.hasNext()) {
+//			Entry<String, BorrowProjectRepay> entry = iter.next();
+//			borrowProjectRepayList.add(entry.getValue());
+//		}
 
 		return borrowProjectRepayList;
 	}
@@ -5743,16 +5745,16 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //			UserExample example = new UsersExample();
 //			UsersExample.Criteria cra = example.createCriteria();
 //			cra.andUsernameEqualTo(userName);
-			 RUser user = this.getRUser(userName);
-			if (user == null ) {
-				// 借款人用户名不存在。
-				return 1;
-			}
-			 Account openAccount = this.getAccount(user.getUserId());
-			if (Validator.isNull(openAccount)) {
-				// 借款人用户名必须已在银行开户
-				return 2;
-			}
+//			 RUser user = this.getRUser(userName);
+//			if (user == null ) {
+//				// 借款人用户名不存在。
+//				return 1;
+//			}
+//			 Account openAccount = this.getAccount(user.getUserId());
+//			if (Validator.isNull(openAccount)) {
+//				// 借款人用户名必须已在银行开户
+//				return 2;
+//			}
 //			if (users.getStatus() != 0) {
 //				// 借款人用户名已经被禁用
 //				return 3;

@@ -1,6 +1,5 @@
 package com.hyjf.am.market.dao.mapper.customize.app;
 
-import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListCustomizeVO;
 
 import java.util.List;

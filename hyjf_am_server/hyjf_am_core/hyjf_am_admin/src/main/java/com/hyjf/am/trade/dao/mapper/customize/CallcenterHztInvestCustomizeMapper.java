@@ -1,11 +1,11 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.callcenter.CallcenterHtjInvestRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
 import com.hyjf.am.trade.dao.model.customize.CallcenterHtjInvestCustomize;
 import com.hyjf.am.trade.dao.model.customize.CallcenterHztInvestCustomize;
+
+import java.util.List;
 
 public interface CallcenterHztInvestCustomizeMapper {
 

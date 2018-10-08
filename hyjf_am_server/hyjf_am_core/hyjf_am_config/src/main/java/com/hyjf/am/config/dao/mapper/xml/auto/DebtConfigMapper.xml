@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.DebtConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.DebtConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="attorn_rate" property="attornRate" jdbcType="DECIMAL" />
+    <result column="concession_rate_up" property="concessionRateUp" jdbcType="DECIMAL" />
+    <result column="concession_rate_down" property="concessionRateDown" jdbcType="DECIMAL" />
+    <result column="toggle" property="toggle" jdbcType="TINYINT" />
+    <result column="close_des" property="closeDes" jdbcType="VARCHAR" />
+    <result column="config_type" property="configType" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, attorn_rate, concession_rate_up, concession_rate_down, toggle, close_des, config_type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_debt_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_debt_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_debt_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfigExample" >
+    delete from ht_debt_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_config (attorn_rate, concession_rate_up, concession_rate_down, 
+      toggle, close_des, config_type
+      )
+    values (#{attornRate,jdbcType=DECIMAL}, #{concessionRateUp,jdbcType=DECIMAL}, #{concessionRateDown,jdbcType=DECIMAL}, 
+      #{toggle,jdbcType=TINYINT}, #{closeDes,jdbcType=VARCHAR}, #{configType,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="attornRate != null" >
+        attorn_rate,
+      </if>
+      <if test="concessionRateUp != null" >
+        concession_rate_up,
+      </if>
+      <if test="concessionRateDown != null" >
+        concession_rate_down,
+      </if>
+      <if test="toggle != null" >
+        toggle,
+      </if>
+      <if test="closeDes != null" >
+        close_des,
+      </if>
+      <if test="configType != null" >
+        config_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="attornRate != null" >
+        #{attornRate,jdbcType=DECIMAL},
+      </if>
+      <if test="concessionRateUp != null" >
+        #{concessionRateUp,jdbcType=DECIMAL},
+      </if>
+      <if test="concessionRateDown != null" >
+        #{concessionRateDown,jdbcType=DECIMAL},
+      </if>
+      <if test="toggle != null" >
+        #{toggle,jdbcType=TINYINT},
+      </if>
+      <if test="closeDes != null" >
+        #{closeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="configType != null" >
+        #{configType,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfigExample" resultType="java.lang.Integer" >
+    select count(*) from ht_debt_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_debt_config
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.attornRate != null" >
+        attorn_rate = #{record.attornRate,jdbcType=DECIMAL},
+      </if>
+      <if test="record.concessionRateUp != null" >
+        concession_rate_up = #{record.concessionRateUp,jdbcType=DECIMAL},
+      </if>
+      <if test="record.concessionRateDown != null" >
+        concession_rate_down = #{record.concessionRateDown,jdbcType=DECIMAL},
+      </if>
+      <if test="record.toggle != null" >
+        toggle = #{record.toggle,jdbcType=TINYINT},
+      </if>
+      <if test="record.closeDes != null" >
+        close_des = #{record.closeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.configType != null" >
+        config_type = #{record.configType,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_debt_config
+    set id = #{record.id,jdbcType=INTEGER},
+      attorn_rate = #{record.attornRate,jdbcType=DECIMAL},
+      concession_rate_up = #{record.concessionRateUp,jdbcType=DECIMAL},
+      concession_rate_down = #{record.concessionRateDown,jdbcType=DECIMAL},
+      toggle = #{record.toggle,jdbcType=TINYINT},
+      close_des = #{record.closeDes,jdbcType=VARCHAR},
+      config_type = #{record.configType,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfig" >
+    update ht_debt_config
+    <set >
+      <if test="attornRate != null" >
+        attorn_rate = #{attornRate,jdbcType=DECIMAL},
+      </if>
+      <if test="concessionRateUp != null" >
+        concession_rate_up = #{concessionRateUp,jdbcType=DECIMAL},
+      </if>
+      <if test="concessionRateDown != null" >
+        concession_rate_down = #{concessionRateDown,jdbcType=DECIMAL},
+      </if>
+      <if test="toggle != null" >
+        toggle = #{toggle,jdbcType=TINYINT},
+      </if>
+      <if test="closeDes != null" >
+        close_des = #{closeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="configType != null" >
+        config_type = #{configType,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.DebtConfig" >
+    update ht_debt_config
+    set attorn_rate = #{attornRate,jdbcType=DECIMAL},
+      concession_rate_up = #{concessionRateUp,jdbcType=DECIMAL},
+      concession_rate_down = #{concessionRateDown,jdbcType=DECIMAL},
+      toggle = #{toggle,jdbcType=TINYINT},
+      close_des = #{closeDes,jdbcType=VARCHAR},
+      config_type = #{configType,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

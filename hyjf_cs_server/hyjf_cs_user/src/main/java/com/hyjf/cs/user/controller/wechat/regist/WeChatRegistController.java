@@ -13,16 +13,18 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseMapBean;
+import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.bean.RegistLandingPageCommitRequestBean;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
@@ -31,7 +33,6 @@ import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
-import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
@@ -130,9 +131,11 @@ public class WeChatRegistController extends BaseUserController {
         if(null!=ret.getStatus()&&!ret.getStatus().equals("000")){
             return ret;
         }
-        WebViewUserVO webViewUserVO =  registService.register(register, GetCilentIP.getIpAddr(request));
+        WebViewUserVO webViewUserVO = registService.register(register.getMobile(),
+                register.getVerificationCode(), register.getPassword(),
+                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request));
         //注册成功重新登录
-        WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
+        WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
          if(null!=userVO){
              ret.setSign(userVO.getToken());
          }else {
@@ -157,7 +160,7 @@ public class WeChatRegistController extends BaseUserController {
             AdsRequest adsRequest = new AdsRequest();
             adsRequest.setLimitStart(0);
             adsRequest.setLimitEnd(1);
-            adsRequest.setHost(systemConfig.getDomainAppUrl());
+            adsRequest.setHost(systemConfig.getFileDomainUrl());
             adsRequest.setCode("registpop");
             AppAdsCustomizeVO record = registService.searchBanner(adsRequest);
             // 注册成功发券提示

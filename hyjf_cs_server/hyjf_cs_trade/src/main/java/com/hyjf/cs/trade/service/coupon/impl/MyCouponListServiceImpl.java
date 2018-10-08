@@ -98,8 +98,16 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
         resultMap.put("couponCount", String.valueOf(couponCount));
         resultMap.put("rewardRecordsSum", String.valueOf(rewardTotal));
         resultMap.put("userId", userId);
-        resultMap.put("inviteLink", systemConfig.webUserHost + "web/user/register?from=" + userId);
+        resultMap.put("inviteLink", systemConfig.frontHost + "/register?from=" + userId);
         return resultMap;
+    }
+
+    @Override
+    public List<MyCouponListCustomizeVO> selectWechatCouponList(String userId,Integer useFlag) {
+        MyCouponListRequest requestBean = new MyCouponListRequest();
+        requestBean.setUserId(userId);
+        requestBean.setUsedFlag(String.valueOf(useFlag));
+        return amTradeClient.selectWechatCouponList(requestBean);
     }
 
 

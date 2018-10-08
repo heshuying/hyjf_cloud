@@ -1,31 +1,30 @@
 package com.hyjf.am.trade.service.task.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowCustomize;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.SmsProducer;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.trade.service.task.IssueBorrowOfTimingService;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
+import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
-import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.trade.service.task.IssueBorrowOfTimingService;
-import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -71,7 +70,10 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 			// 延期自动发标时间（单位：分钟）
 			int afterTime = this.getAfterTime(BorrowSendTypeEnum.FABIAO_CD);
 			for (Borrow unSendBorrow : unSendBorrows) {
-				BorrowInfo borrowInfo = borrowInfoMapper.selectByPrimaryKey(unSendBorrow.getId());
+
+				BorrowInfoExample example = new BorrowInfoExample();
+				example.createCriteria().andBorrowNidEqualTo(unSendBorrow.getBorrowNid());
+				BorrowInfo borrowInfo = borrowInfoMapper.selectByExample(example).get(0);
 				// 获取批次标的号
 				String borrowPreNid = borrowInfo.getBorrowPreNid();
 				// 获取新的标的号
@@ -301,7 +303,9 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 	}
 
 	public boolean updateFireBorrow(Borrow borrow, int nowTime) throws MQException {
-		BorrowInfo borrowInfo = this.borrowInfoMapper.selectByPrimaryKey(borrow.getId());
+		BorrowInfoExample example = new BorrowInfoExample();
+		example.createCriteria().andBorrowNidEqualTo(borrow.getBorrowNid());
+		BorrowInfo borrowInfo = this.borrowInfoMapper.selectByExample(example).get(0);
 		// 借款到期时间
 		borrow.setBorrowEndTime(String.valueOf(nowTime + borrowInfo.getBorrowValidTime() * 86400));
 		// 状态

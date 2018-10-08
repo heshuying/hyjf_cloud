@@ -121,4 +121,11 @@ public interface BorrowTenderService {
      * @return
      */
     List<BorrowTender> getBorrowTenderListByBorrowNid(String borrowNid);
+
+    /**
+     * 查询用户投次数
+     * @param userId
+     * @return
+     */
+    Integer selectTenderCount(Integer userId);
 }

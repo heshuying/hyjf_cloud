@@ -11,10 +11,10 @@
 	
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.user.dao.model.customize.AdminPreRegistListCustomize;
+
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.user.dao.model.customize.AdminPreRegistListCustomize;
 
 
 public interface AdminPreRegistCustomizeMapper {

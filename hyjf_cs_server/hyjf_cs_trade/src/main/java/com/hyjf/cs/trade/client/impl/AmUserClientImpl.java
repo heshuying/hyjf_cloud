@@ -11,9 +11,7 @@ import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
-import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
-import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
-import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -24,6 +22,7 @@ import com.hyjf.cs.trade.client.AmUserClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -44,6 +43,8 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	@Value("${am.user.service.name}")
+	private String userService;
 	@Override
 	public UserVO findUserById(int userId) {
 		UserResponse response = restTemplate
@@ -266,22 +267,6 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return false;
     }
-
-	/**
-	 * 获取用户投资数量
-	 *
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public int countNewUserTotal(Integer userId) {
-		Integer result = restTemplate
-				.getForEntity(urlBase + "user/countNewUserTotal/" + userId,  Integer.class).getBody();
-		if (result != null) {
-			return result;
-		}
-		return 0;
-	}
 
 	@Override
 	public CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId) {
@@ -783,4 +768,145 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+	@Override
+	public HjhUserAuthVO getHjhUserAuthByUserId(Integer userId) {
+		HjhUserAuthResponse response = restTemplate
+				.getForEntity(userService+"/user/getHjhUserAuthByUserId/"+userId, HjhUserAuthResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据accounId获取开户信息
+	 * @param accountId
+	 * @return
+	 */
+	@Override
+	public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
+		BankOpenAccountResponse response = restTemplate
+				.getForEntity(userService+"/userManager/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public UserInfoVO findUserInfoById(Integer userId) {
+		UserInfoResponse response = restTemplate
+				.getForEntity(userService+"/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据userId查询BankCard
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public BankCardVO getBankCardByUserId(Integer userId) {
+		String url = userService + "/bankCard/getBankCard/" + userId;
+		com.hyjf.am.response.user.BankCardResponse response = restTemplate
+				.getForEntity(url, com.hyjf.am.response.user.BankCardResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId) {
+		CorpOpenAccountRecordResponse response = restTemplate
+				.getForEntity(userService+"/bankopen/getCorpOpenAccountRecord/" + userId, CorpOpenAccountRecordResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 更新银行卡信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public int updateBankCard(BankCardVO bankCardVO) {
+		String url = userService + "/bankCard/updateBankCard";
+		IntegerResponse response = restTemplate.postForEntity(url,bankCardVO,IntegerResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			response.getResultInt();
+		}
+		return 0;
+	}
+
+	/**
+	 * 根据主键查询银行卡信息
+	 * @auth sunpeikai
+	 * @param id 主键
+	 * @return
+	 */
+	@Override
+	public BankCardVO getBankCardById(Integer id) {
+		String url = userService + "/bankCard/getBankCardById/" + id;
+		com.hyjf.am.response.user.BankCardResponse response = restTemplate.getForEntity(url, com.hyjf.am.response.user.BankCardResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户id和银行卡号查询银行卡信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public BankCardVO selectBankCardByUserIdAndCardNo(BankCardRequest request) {
+		String url = userService + "/bankCard/selectBankCardByUserIdAndCardNo";
+		com.hyjf.am.response.user.BankCardResponse response = restTemplate.postForEntity(url,request, com.hyjf.am.response.user.BankCardResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 更新用户绑定的银行卡
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public int updateUserCard(BankCardRequest request) {
+		int result = restTemplate
+				.postForEntity(userService+"/card/updateUserCard", request, Integer.class).getBody();
+		return result;
+	}
+
+	@Override
+	public String selectBankSmsLog(BankSmsLogRequest request) {
+		String result = restTemplate
+				.postForEntity(userService+"/card/selectBankSmsLog", request, String.class).getBody();
+		return result;
+	}
+
+	/**
+	 *
+	 * 更新绑卡验证码
+	 */
+	@Override
+	public boolean updateBankSmsLog(BankSmsLogRequest request) {
+		boolean result = restTemplate
+				.postForEntity(userService+"/card/updateBankSmsLog", request, Boolean.class).getBody();
+		return result;
+	}
+
 }

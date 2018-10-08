@@ -7,6 +7,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.util.GetCilentIP;
@@ -117,7 +120,10 @@ public class AppRegistController extends BaseUserController {
         if(ret.get(CustomConstants.APP_STATUS)!=null){
             return ret;
         }
-        registService.register(register, GetCilentIP.getIpAddr(request));
+        WebViewUserVO webViewUserVO = registService.register(register.getMobile(),
+                register.getVerificationCode(), register.getPassword(),
+                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), platform, GetCilentIP.getIpAddr(request));
+
         String statusDesc = "注册成功";
         boolean active = false;
         try {
@@ -144,7 +150,7 @@ public class AppRegistController extends BaseUserController {
             AdsRequest adsRequest = new AdsRequest();
             adsRequest.setLimitStart(0);
             adsRequest.setLimitEnd(1);
-            adsRequest.setHost(systemConfig.getDomainAppUrl());
+            adsRequest.setHost(systemConfig.getFileDomainUrl());
             adsRequest.setCode("registpop");
             AppAdsCustomizeVO record = new AppAdsCustomizeVO();
             try {

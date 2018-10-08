@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -30,11 +29,11 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.FddCertificateProducer;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
-import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -223,7 +222,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             retUrl += "&token=1&sign=" +sign;
             successUrl += "&token=1&sign=" +sign;
         }
-        String bgRetUrl = systemConfig.getWebHost()+"/user/secure/open/bgReturn?phone=" + openBean.getMobile();
+        String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);
         openAccoutBean.setSuccessfulUrl(successUrl);
         openAccoutBean.setNotifyUrl(bgRetUrl);
@@ -574,7 +573,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
             String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openSuccess";
             // 异步调用路
-            String bgRetUrl = systemConfig.getWebHost() + "/user/secure/assurebankopen/bgReturn?phone=" + openBean.getMobile();
+            String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/assurebankopen/bgReturn?phone=" + openBean.getMobile();
             openAccoutBean.setRetUrl(retUrl);
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);
@@ -628,7 +627,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
             String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openSuccess";
             // 异步调用路
-            String bgRetUrl = systemConfig.getWebHost() + "/user/secure/loanbankopen/bgReturn?phone=" + openBean.getMobile();
+            String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/loanbankopen/bgReturn?phone=" + openBean.getMobile();
             openAccoutBean.setRetUrl(retUrl);
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);

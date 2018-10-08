@@ -3,6 +3,7 @@ package com.hyjf.admin.client;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
+import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
@@ -12,16 +13,26 @@ import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
+import com.hyjf.am.response.config.AppBorrowImageResponse;
+import com.hyjf.am.response.config.SubmissionsResponse;
+import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
+import com.hyjf.am.resquest.config.AppBorrowImageRequest;
+import com.hyjf.am.resquest.config.SubmissionsRequest;
+import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
+import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.config.SubmissionsVO;
+import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -274,6 +285,13 @@ public interface AmAdminClient {
     int deleteParamName(ParamNameVO paramNameVO);
 
     /**
+     * 同步数据字典至redis
+     * @auth wgx
+     * @return
+     */
+    boolean syncParam();
+
+    /**
      * 查询手续费分账配置
      * @auth sunpeikai
      * @param
@@ -350,6 +368,77 @@ public interface AmAdminClient {
     List<UtmPlatVO> getAppUtm();
 
     /**
+     * 获取版本管理详情
+     * @param request
+     * @return
+     */
+    SubmissionsVO getSubmissionsRecord(SubmissionsRequest request);
+
+     SubmissionsResponse findSubmissionsList(SubmissionsRequest form);
+
+     SubmissionsResponse updateSubmissionsStatus(SubmissionsRequest form);
+
+     SubmissionsResponse exportSubmissionsList(SubmissionsRequest form);
+
+
+     VersionConfigBeanResponse searchList(VersionConfigBeanRequest request);
+
+     VersionConfigBeanResponse searchInfo(VersionConfigBeanRequest request);
+
+     VersionConfigBeanResponse insertInfo(VersionConfigBeanRequest request);
+
+     VersionConfigBeanResponse updateInfo(VersionConfigBeanRequest request);
+
+     VersionConfigBeanResponse deleteInfo(VersionConfigBeanRequest request);
+    /**
+     * 获取广告管理列表数据
+     * @param appBorrowImageRequest
+     * @return
+     */
+    AppBorrowImageResponse searchList(AppBorrowImageRequest appBorrowImageRequest);
+    /**
+     *获取广告管理列表获取详情
+     * @param appBorrowImageRequest
+     * @return
+     */
+    AppBorrowImageResponse searchInfo(AppBorrowImageRequest appBorrowImageRequest);
+    /**
+     *插入广告管理列表
+     * @param appBorrowImageRequest
+     * @return
+     */
+    AppBorrowImageResponse insertInfo(AppBorrowImageRequest appBorrowImageRequest);
+    /**
+     *修改广告管理列表
+     * @param appBorrowImageRequest
+     * @return
+     */
+    AppBorrowImageResponse updateInfo(AppBorrowImageRequest appBorrowImageRequest);
+    /**
+     *删除广告管理列表
+     * @param appBorrowImageRequest
+     * @return
+     */
+    AppBorrowImageResponse deleteInfo(AppBorrowImageRequest appBorrowImageRequest);
+
+    AppBannerResponse findAppBannerList(AppBannerRequest request);
+
+    AppBannerResponse insertAppBannerList(AdsVO adsVO);
+
+    AppBannerResponse updateAppBannerList(AdsVO adsVO);
+
+    AppBannerResponse updateAppBannerStatus(AdsVO adsVO);
+
+    AppBannerResponse deleteAppBanner(AdsVO adsVO);
+    /**
+     * 根据id获取广告
+     * @param adsVO
+     * @return
+     */
+    AppBannerResponse getRecordById(AdsVO adsVO);
+
+
+    /**
      * 获取保证金配置总数
      *
      * @param request
@@ -381,4 +470,166 @@ public interface AmAdminClient {
      * @return
      */
     BooleanResponse unlock(LockedUserInfoVO vo, boolean isFront);
+
+    /**
+     * 前台用户锁定配置
+     * @return
+     */
+    LockedConfig.Config getFrontLockedCfg();
+
+    /**
+     * 后台用户锁定配置
+     * @return
+     */
+    LockedConfig.Config getAdminLockedCfg();
+
+    /**
+     * 保存前台用户锁定配置
+     * @param webConfig
+     * @return
+     */
+    BooleanResponse saveFrontConfig(LockedConfig.Config webConfig);
+
+
+    /**
+     * 保存后台用户锁定配置
+     * @param adminConfig
+     * @return
+     */
+    BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig);
+
+    /**
+     * 根据主键获取保证金配置
+     *
+     * @param id
+     * @return
+     */
+    BailConfigInfoCustomizeVO selectBailConfigById(Integer id);
+
+    /**
+     * 未配置保证金的机构编号
+     *
+     * @return
+     */
+    List<HjhInstConfigVO> selectNoUsedInstConfigList();
+
+    /**
+     * 添加保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    boolean insertBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 周期内发标已发额度
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    String selectSendedAccountByCyc(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 根据该机构可用还款方式更新可用授信方式
+     *
+     * @param instCode
+     * @return
+     */
+    boolean updateBailInfoDelFlg(String instCode);
+
+    /**
+     * 更新保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    boolean updateBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 删除保证金配置
+     *
+     * @param bailConfigAddRequest
+     * @return
+     */
+    boolean deleteBailConfig(BailConfigAddRequest bailConfigAddRequest);
+
+    /**
+     * 获取当前机构可用还款方式
+     * 
+     * @param instCode
+     * @return
+     */
+    List<String> selectRepayMethod(String instCode);
+
+    /**
+     * 获取保证金配置日志总数
+     *
+     * @param request
+     * @return
+     */
+    Integer selectBailConfigLogCount(BailConfigLogRequest request);
+
+    /**
+     * 获取保证金配置日志列表
+     *
+     * @param request
+     * @return
+     */
+    List<BailConfigLogCustomizeVO> selectBailConfigLogList(BailConfigLogRequest request);
+
+    /**
+     * 查询异常标的总件数
+     *
+     * @param request
+     * @return
+     */
+    Integer selectAssetExceptionCount(AssetExceptionRequest request);
+
+    /**
+     * 查询异常标的列表
+     *
+     * @param request
+     * @return
+     */
+    List<AssetExceptionCustomizeVO> selectAssetExceptionList(AssetExceptionRequest request);
+
+    /**
+     * 插入异常标的并更新保证金
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    boolean insertAssetException(AssetExceptionRequest assetExceptionRequest);
+
+    /**
+     * 项目编号是否存在
+     *
+     * @param borrowNid
+     * @return
+     */
+    String isExistsBorrow(String borrowNid);
+
+    /**
+     * 删除异常标的
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    boolean deleteAssetException(AssetExceptionRequest assetExceptionRequest);
+
+    /**
+     * 修改异常标的
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    boolean updateAssetException(AssetExceptionRequest assetExceptionRequest);
+
+    /**
+     * 处理平台转账
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateHandRechargeRecord(PlatformTransferRequest platformTransferRequest);
 }

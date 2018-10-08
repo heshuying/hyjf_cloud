@@ -2,13 +2,9 @@ package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.FeerateModifyLogMapper;
 import com.hyjf.am.config.dao.model.auto.FeerateModifyLog;
-import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.service.FeerateModifyLogService;
 import com.hyjf.am.resquest.admin.FinmanChargeNewRequest;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import org.apache.catalina.manager.util.SessionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +38,8 @@ public class FeerateModifyLogServiceImpl implements FeerateModifyLogService {
             // 月标
             record.setBorrowStyle("月标");
         }
+        record.setCreateUserId(form.getCreateUserId());
+        record.setUpdateUserId(form.getCreateUserId());
         record.setBorrowApr(new BigDecimal(form.getAutoBorrowApr()));
         record.setServiceFee(form.getChargeRate());
         record.setManageFee(form.getManChargeRate());
@@ -80,7 +78,7 @@ public class FeerateModifyLogServiceImpl implements FeerateModifyLogService {
         record.setLateInterestRate(form.getLateInterest());
         record.setLateFreeDays(form.getLateFreeDays());
         record.setStatus(form.getStatus());
-
+        record.setUpdateUserId(form.getCreateUserId());
         record.setModifyType(2);//修改类型 0:全部 1：增加 2:修改 3:删除
 
 //        AdminSystem adminSystem = (AdminSystem) SessionUtils.getSession(CustomConstants.LOGIN_USER_INFO);
@@ -104,7 +102,7 @@ public class FeerateModifyLogServiceImpl implements FeerateModifyLogService {
         record.setInstCode(form.getInstCode());
         record.setAssetType(form.getAssetType());
         record.setBorrowPeriod(form.getManChargeTime());
-
+        record.setUpdateUserId(form.getCreateUserId());
         if ("endday".equals(form.getManChargeTimeType())) {
             // 天标
             record.setBorrowStyle("天标");

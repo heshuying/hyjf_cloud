@@ -3,25 +3,16 @@ package com.hyjf.cs.trade.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
-import com.hyjf.am.response.config.BankConfigResponse;
-import com.hyjf.am.response.config.FeeConfigResponse;
-import com.hyjf.am.response.config.SiteSettingsResponse;
-import com.hyjf.am.response.config.VersionConfigBeanResponse;
-import com.hyjf.am.response.trade.BankInterfaceResponse;
-import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.BanksConfigResponse;
-import com.hyjf.am.response.trade.ContentArticleResponse;
-import com.hyjf.am.response.trade.HolidaysConfigResponse;
+import com.hyjf.am.response.config.*;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
-import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.am.vo.config.FeeConfigVO;
-import com.hyjf.am.vo.config.SiteSettingsVO;
-import com.hyjf.am.vo.config.VersionVO;
+import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.trade.client.AmConfigClient;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +83,12 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+	@Override
+	public DebtConfigResponse getDebtConfig(){
+		String url = "http://AM-CONFIG/am-config/debtconfig/init" ;
+		DebtConfigResponse response = restTemplate.getForEntity(url, DebtConfigResponse.class).getBody();
+		return response;
+	}
 
 
     /**
@@ -227,4 +224,29 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+
+
+    /**
+     * 查询债转折让率配置列表
+     * @author zhangyk
+     * @date 2018/9/27 14:33
+     */
+	@Override
+	public List<DebtConfigVO> getDebtConfigList() {
+		String url = "http://AM-CONFIG/am-config/debtconfig/getDebtConfigList";
+		DebtConfigResponse response = restTemplate.getForEntity(url,DebtConfigResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public String getBankRetMsg(String retCode) {
+		BankReturnCodeConfigVO vo = this.getBankReturnCodeConfig(retCode);
+		if (vo == null) {
+			return Response.ERROR_MSG;
+		}
+		return StringUtils.isNotBlank(vo.getRetMsg()) ? vo.getRetMsg() : Response.ERROR_MSG;
+	}
 }

@@ -21,7 +21,9 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.HomeDataResultBean;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmConfigClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.home.WebHomeService;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -200,7 +202,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setLimitEnd(4);
         request.setIsHome("1");
         List<HjhPlanCustomizeVO> planList = amTradeClient.searchPlanList(request);
-        result.setHjhPlanList(planList);
+        result.setHjhPlanList(CollectionUtils.isEmpty(planList) ? new ArrayList<>() :planList);
         ContentArticleRequest req = new ContentArticleRequest();
         req.setNoticeType(NOTICE_TYPE_COMPANY_DYNAMICS);
         req.setLimitStart(0);
@@ -217,6 +219,8 @@ public class WebHomeServiceImpl implements WebHomeService {
                 contentArticleVO.setContent(HtmlUtil.getTextFromHtml(contentArticleVO.getContent()));
             }
             result.setCompanyArticle(list1.get(0));
+        }else{
+            result.setCompanyArticle(new ContentArticleVO());
         }
 
         req.setLimitStart(1);

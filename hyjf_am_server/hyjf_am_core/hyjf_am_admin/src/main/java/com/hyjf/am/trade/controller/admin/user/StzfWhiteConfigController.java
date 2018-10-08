@@ -3,10 +3,17 @@
  */
 package com.hyjf.am.trade.controller.admin.user;
 
-import java.util.List;
-
+import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.STZHWhiteListResponse;
+import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
 import com.hyjf.am.trade.dao.model.customize.STZHWhiteListCustomize;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.am.trade.service.admin.StzfWhiteConfigService;
+import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -15,14 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.AdminResponse;
-import com.hyjf.am.response.trade.STZHWhiteListResponse;
-import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
-import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
-import com.hyjf.am.trade.service.admin.StzfWhiteConfigService;
-import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -42,10 +42,20 @@ public class StzfWhiteConfigController extends BaseController {
 	@RequestMapping("/selectSTZHWhiteList")
 	public STZHWhiteListResponse selectSTZHWhiteList(@RequestBody STZHWhiteListRequest request) {
 		STZHWhiteListResponse response = new STZHWhiteListResponse();
-		List<StzhWhiteList> list = stzfWhiteConfigService.selectSTZHWhiteList(request);
-		if (!CollectionUtils.isEmpty(list)) {
-			List<STZHWhiteListVO> voList = CommonUtils.convertBeanList(list, STZHWhiteListVO.class);
-			response.setResultList(voList);
+		int count = stzfWhiteConfigService.countSTZFHWhiteList(request);
+		Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
+		if (request.getPageSize() == 0) {
+			paginator = new Paginator(request.getCurrPage(), count);
+		}
+		List<StzhWhiteList> list = stzfWhiteConfigService.selectSTZHWhiteList(request, paginator.getOffset(), paginator.getLimit());
+		if (count > 0) {
+			if (!CollectionUtils.isEmpty(list)) {
+				List<STZHWhiteListVO> voList = CommonUtils.convertBeanList(list, STZHWhiteListVO.class);
+				response.setResultList(voList);
+				response.setCount(count);
+			} else {
+				response.setRtn(Response.FAIL);
+			}
 		}
 		return response;
 	}
@@ -109,7 +119,7 @@ public class StzfWhiteConfigController extends BaseController {
 		if (stzhWhiteList != null) {
 			STZHWhiteListVO stzhWhiteListVO = new STZHWhiteListVO();
 			BeanUtils.copyProperties(stzhWhiteList,stzhWhiteListVO);
-			stzhWhiteListVO.setApprovalTime(GetDate.times10toStrYYYYMMDD(Integer.parseInt(stzhWhiteList.getApprovalTime())));
+//			stzhWhiteListVO.setApprovalTime(GetDate.times10toStrYYYYMMDD(Integer.parseInt(stzhWhiteList.getApprovalTime())));
 			response.setResult(stzhWhiteListVO);
 		}
 		return response;

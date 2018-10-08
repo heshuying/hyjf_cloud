@@ -1,6 +1,6 @@
 package com.hyjf.admin.service.promotion;
 
-import com.hyjf.am.response.admin.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
@@ -26,5 +26,10 @@ public interface AppChannelStatisticsDetailService {
      */
     AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
 
-
+    /**
+     *导出app渠道统计明细
+     * @param request
+     * @return
+     */
+    AppChannelStatisticsDetailResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 }

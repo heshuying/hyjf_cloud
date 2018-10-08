@@ -5,16 +5,11 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.mobileclient.SubmissionsService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
-import com.hyjf.am.vo.config.AppBorrowImageVO;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
-import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -29,6 +24,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -54,24 +50,23 @@ public class SubmissionsController extends BaseController {
 
     /**
      * 查询列表
+     *
      * @return
      */
     @ApiOperation(value = "意见反馈列表查询", notes = "意见反馈列表查询")
     @PostMapping("/getRecordList")
-    @ResponseBody
     public AdminResult<ListResult<SubmissionsCustomizeVO>> findAppBannerData(@RequestBody SubmissionsRequest form) {
-        try {
-            SubmissionsResponse response = new SubmissionsResponse();
-            Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
-            if (StringUtils.isNotBlank(form.getUserName())) {
-                UserResponse user = submissionsService.getUserIdByUserName(form.getUserName());
-                if (user != null && user.getResult() != null) {
-                    Integer userId = user.getResult().getUserId();
-                    form.setUserId(userId);
-                }
+        Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
+        if (StringUtils.isNotBlank(form.getUserName())) {
+            UserResponse user = submissionsService.getUserIdByUserName(form.getUserName());
+            if (user != null && user.getResult() != null) {
+                Integer userId = user.getResult().getUserId();
+                form.setUserId(userId);
             }
-            SubmissionsResponse submissionList = submissionsService.getSubmissionList(form);
-            List<SubmissionsCustomizeVO> resultList = submissionList.getResultList();
+        }
+        SubmissionsResponse submissionList = submissionsService.getSubmissionList(form);
+        List<SubmissionsCustomizeVO> resultList = submissionList.getResultList();
+        if (!CollectionUtils.isEmpty(resultList)) {
             for (SubmissionsCustomizeVO submissionsCustomizeVO : resultList) {
                 String type = userStatus.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
                 submissionsCustomizeVO.setSysType(type);
@@ -80,26 +75,29 @@ public class SubmissionsController extends BaseController {
                 String userName = users.getResult() != null ? users.getResult().getUsername() : "";
                 submissionsCustomizeVO.setUserName(userName);
             }
-
-            return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(submissionList.getResultList(), submissionList.getRecordTotal()));
-
-        } catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-
+        return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(submissionList.getResultList(), submissionList.getRecordTotal()));
     }
-
+    /**
+     * 查询列表下拉框加载
+     *
+     * @return
+     */
+    @ApiOperation(value = "查询列表下拉框加载", notes = "查询列表下拉框加载")
+    @GetMapping("/recordlistselect")
+    public AdminResult recordListSelect() {
+        AdminResult adminResult = new AdminResult();
+        Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
+        adminResult.setData(userStatus);
+        return  adminResult;
+    }
 
     @ApiOperation(value = "意见反馈:获取详细画面", notes = "意见反馈:获取详细画面")
     @PostMapping(value = "/searchinfo")
-    @ResponseBody
     public AdminResult<SubmissionsVO> searchinfo(@RequestBody SubmissionsRequest request) {
-        try {
-            return new AdminResult<SubmissionsVO>(submissionsService.getRecord(request));
-        }catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+        return new AdminResult<SubmissionsVO>(submissionsService.getRecord(request));
     }
+
     /**
      * 意见反馈更新保存
      *
@@ -109,12 +107,9 @@ public class SubmissionsController extends BaseController {
     @ApiOperation(value = "意见反馈更新保存", notes = "意见反馈更新保存")
     @PostMapping("/updateSubmissionsAction")
     public AdminResult<ListResult<SubmissionsCustomizeVO>> updateSubmissions(@RequestBody SubmissionsRequest form) {
-        try {
-            SubmissionsResponse response = submissionsService.updateSubmissionStatus(form);
-            return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
-        } catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+        SubmissionsResponse response = submissionsService.updateSubmissionStatus(form);
+        return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
+
 
     }
 

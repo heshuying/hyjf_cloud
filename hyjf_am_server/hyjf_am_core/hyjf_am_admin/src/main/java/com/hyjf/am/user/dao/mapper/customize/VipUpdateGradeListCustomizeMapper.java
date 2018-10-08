@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.user.dao.model.customize.VipUpdateGradeListCustomize;
+
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.user.dao.model.customize.VipUpdateGradeListCustomize;
 /**
  * @author yaoyong
  * @version VipUpdateGradeListCustomizeMapper, v0.1 2018/7/4 9:51

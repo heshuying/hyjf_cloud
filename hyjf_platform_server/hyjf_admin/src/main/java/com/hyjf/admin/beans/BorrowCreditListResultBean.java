@@ -2,7 +2,6 @@ package com.hyjf.admin.beans;
 
 import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
-import org.omg.CORBA.StringHolder;
 
 import java.io.Serializable;
 import java.util.List;

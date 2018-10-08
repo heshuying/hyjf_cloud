@@ -1,10 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-
+import com.hyjf.am.trade.dao.model.customize.BorrowCustomize;
 import org.apache.ibatis.annotations.Param;
 
-import com.hyjf.am.trade.dao.model.customize.BorrowCustomize;
+import java.util.List;
 
 /**
  * @author xiasq

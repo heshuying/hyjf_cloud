@@ -52,10 +52,10 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         WebViewUserVO webViewUserVO = new WebViewUserVO();
         BeanUtils.copyProperties(user,webViewUserVO);
         Integer userId = user.getUserId();
-        String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
+        String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
         // 实际物理路径前缀2
-        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
         if(StringUtils.isNotEmpty(user.getIconUrl())){
             user.setIconUrl(imghost + fileUploadTempPath + user.getIconUrl());
         }
@@ -134,6 +134,14 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         // 获取用户的银行电子账户信息
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
         result.put("bankOpenAccount", bankAccount);
+        // 根据用户Id查询用户银行卡号 add by tyy 2018-6-27
+        BankCardVO bankCard = amUserClient.getBankCardByUserId(userId);
+        if(bankCard==null){
+            result.put("bankCard", 0);
+        }else {
+            result.put("bankCard", 1);
+        }
+
         List<RecentPaymentListCustomizeVO> recoverLatestList = amTradeClient.selectRecentPaymentList(userId);
         result.put("recoverLatestList", recoverLatestList);
         // 登录用户

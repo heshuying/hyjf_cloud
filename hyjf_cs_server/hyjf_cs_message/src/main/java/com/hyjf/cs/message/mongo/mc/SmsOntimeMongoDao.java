@@ -3,10 +3,9 @@
  */
 package com.hyjf.cs.message.mongo.mc;
 
+import com.hyjf.cs.message.bean.mc.SmsOntime;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.stereotype.Repository;
-
-import com.hyjf.cs.message.bean.mc.SmsOntime;
 
 /**
  * @author fuqiang

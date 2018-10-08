@@ -1,34 +1,26 @@
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAssetBorrowtypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAssetTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
 import com.hyjf.am.trade.dao.mapper.customize.HjhAssetBorrowTypeCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectTypeExample;
-import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
-import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtypeExample;
-import com.hyjf.am.trade.dao.model.auto.HjhAssetType;
-import com.hyjf.am.trade.dao.model.auto.HjhAssetTypeExample;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFlowService;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/30.
@@ -173,9 +165,14 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
     public int updateRecord(AdminBorrowFlowRequest adminRequest){
         HjhAssetBorrowtype record = new HjhAssetBorrowtype();
         BeanUtils.copyProperties(adminRequest, record);
+        //自动复审时，自动发标时间间隔和自动复审时间间隔清空
+        if(adminRequest.getAutoReview() != null&&adminRequest.getAutoReview().intValue() == 1){
+            record.setAutoSendMinutes(-1);
+            record.setAutoReviewMinutes(-1);
+        }
         // 更新时间
         record.setUpdateTime(new Date());
-         return hjhAssetBorrowtypeMapper.updateByPrimaryKeySelective(record);
+        return hjhAssetBorrowTypeCustomizeMapper.updateByPrimaryKeySelective(record);
     }
     /**
      * 删除

@@ -1,10 +1,8 @@
 package com.hyjf.am.response.config;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.config.AppBorrowImageVO;
 import com.hyjf.am.vo.config.VersionVO;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -13,16 +11,12 @@ import java.util.Map;
  */
 
 public class VersionConfigBeanResponse extends Response<VersionVO> {
-    private int recordTotal;
-    public int getRecordTotal() {
-        return recordTotal;
-    }
-    public void setRecordTotal(int recordTotal) {
-        this.recordTotal = recordTotal;
-    }
+    private int count;
+
 
     private Map<String, String>  versionName;
     private Map<String, String> isUpdate;
+    private Map<String, String> client;
 
     public Map<String, String> getVersionName() {
         return versionName;
@@ -38,5 +32,21 @@ public class VersionConfigBeanResponse extends Response<VersionVO> {
 
     public void setIsUpdate(Map<String, String> isUpdate) {
         this.isUpdate = isUpdate;
+    }
+
+    public Map<String, String> getClient() {
+        return client;
+    }
+
+    public void setClient(Map<String, String> client) {
+        this.client = client;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

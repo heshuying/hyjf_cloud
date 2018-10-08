@@ -24,13 +24,17 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -190,9 +194,9 @@ public class PlatformTransferController extends BaseController {
                     // 转账状态
                     else if (celLength == 6) {
                         String status = "";
-                        if(record.getStatus() == 0){
-                            status = "充值中";
-                        }else if(record.getStatus() == 1){
+                        if(record.getStatus() == 1){
+                            status = "转账中";
+                        }else if(record.getStatus() == 2){
                             status = "成功";
                         }else{
                             status = "失败";
@@ -201,17 +205,21 @@ public class PlatformTransferController extends BaseController {
                     }
                     // 转账时间
                     else if (celLength == 7) {
-                        cell.setCellValue(record.getCreateTime());
+                        cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(record.getCreateTime()));
                     }
                     // 备注
                     else if (celLength == 8) {
                         cell.setCellValue(record.getRemark());
                     }
                     else if (celLength == 9) {
-                        cell.setCellValue(record.getTxDate());
+                        String dateStr = String.valueOf(record.getTxDate());
+                        String year = dateStr.substring(0,4);
+                        String month = dateStr.substring(4,6);
+                        String day = dateStr.substring(6,8);
+                        cell.setCellValue(year + "-" + month + "-" + day);
                     }
                     else if (celLength == 10) {
-                        cell.setCellValue(record.getTxTime());
+                        cell.setCellValue(record.getTxTimeStr());
                     }
                     else if (celLength == 11) {
                         cell.setCellValue(record.getBankSeqNo());

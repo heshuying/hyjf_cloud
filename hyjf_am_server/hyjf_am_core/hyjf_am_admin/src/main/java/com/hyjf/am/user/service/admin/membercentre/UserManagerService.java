@@ -7,9 +7,11 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.BaseService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.List;
 import java.util.Map;
@@ -127,6 +129,15 @@ public interface UserManagerService extends BaseService {
      */
     User selectUserByUserId(int userId);
 
+    /**
+     * 根据用户List id查找用户表
+     *
+     * @param userId
+     * @param userId
+     * @return
+     */
+    List<User> selectUserByListUserId (List userId);
+
     BankOpenAccount selectBankOpenAccountByAccountId(String accountId);
 
     /**
@@ -223,7 +234,7 @@ public interface UserManagerService extends BaseService {
      * @param updCompanyRequest
      * @return
      */
-    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest);
+    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,String bankName,String payAllianceCode,User user,String bankId);
 
 	Integer getUserIdByBind(int bindUniqueId, int bindPlatformId);
 
@@ -279,4 +290,17 @@ public interface UserManagerService extends BaseService {
      * @return
      */
    int countByMobileList(String mobile);
+    /**
+     * 根据部门id查找是否有自级菜单
+     * @param deptId
+     * @return
+     */
+    List<ROaDepartment> getDeptInfoByDeptId(int deptId);
+
+    /**
+     * 调用江西银行查询联行号
+     * @param cardNo
+     * @return
+     */
+    BankCallBean payAllianceCodeQuery(String cardNo, Integer userId);
 }

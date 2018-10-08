@@ -1,11 +1,10 @@
 package com.hyjf.pay.lib.anrong.bean;
 
-import java.io.Serializable;
-
-import org.springframework.beans.factory.annotation.Value;
-
 import com.hyjf.common.util.CreateUUID;
 import com.hyjf.common.util.GetOrderIdUtils;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.io.Serializable;
 
 /**
  * 

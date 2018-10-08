@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
+
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/30.
@@ -24,4 +24,6 @@ public interface HjhAssetBorrowTypeCustomizeMapper {
      * @return
      */
     public List<HjhAssetBorrowtype> getRecordList(AdminBorrowFlowRequest form);
+
+    int updateByPrimaryKeySelective(HjhAssetBorrowtype record);
 }

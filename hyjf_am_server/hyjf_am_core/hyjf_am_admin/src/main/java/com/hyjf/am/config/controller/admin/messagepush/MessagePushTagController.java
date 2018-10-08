@@ -211,6 +211,24 @@ public class MessagePushTagController {
         }
         return response;
     }
+
+    /**
+     * 根据名称获取消息模板标签
+     *
+     * @param tagName
+     * @return
+     */
+    @RequestMapping("/findMsgTagByTagName/{tagName}")
+    public MessagePushTagResponse findMsgTagByTagName(@PathVariable String tagName) {
+        MessagePushTagResponse response = new MessagePushTagResponse();
+        MessagePushTag messagePushTag = messagePushTagServcie.findMsgTagByTagName(tagName);
+        if (messagePushTag != null) {
+            MessagePushTagVO messagePushTagVO = new MessagePushTagVO();
+            BeanUtils.copyProperties(messagePushTag, messagePushTagVO);
+            response.setResult(messagePushTagVO);
+        }
+        return response;
+    }
 }
 
 

@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/am-config/smsNoticeConfig")
 public class SmsNoticeConfigController extends BaseConfigController{
-    
+
     @Autowired
     private SmsNoticeConfigService smsNoticeConfigService;
 
@@ -70,10 +70,7 @@ public class SmsNoticeConfigController extends BaseConfigController{
             List<SmsNoticeConfigVO> configList = CommonUtils.convertBeanList(recordList, SmsNoticeConfigVO.class);
             result.setResultList(configList);
             result.setRtn(Response.SUCCESS);
-            return result;
         }
-        result.setRtn(Response.FAIL);
-        result.setMessage(Response.FAIL_MSG);
         return result;
     }
     /**
@@ -94,8 +91,6 @@ public class SmsNoticeConfigController extends BaseConfigController{
                 result.setRtn(Response.SUCCESS);
                 return result;
             }
-            result.setRtn(Response.FAIL);
-            result.setMessage(Response.FAIL_MSG);
             return result;
         }
         return null;
@@ -210,6 +205,23 @@ public class SmsNoticeConfigController extends BaseConfigController{
         SmsNoticeConfigResponse result=new SmsNoticeConfigResponse();
         //查询记录
         return smsNoticeConfigService.onlyName(name);
+    }
+
+    /**
+     * 根据name查询开启的通知配置
+     * @param request
+     * @return
+     */
+    @RequestMapping("/find_notice_by_name")
+    public SmsNoticeConfigResponse findNoticeByName(@RequestBody SmsNoticeConfigRequest request) {
+        SmsNoticeConfigResponse response = new SmsNoticeConfigResponse();
+        SmsNoticeConfig smsNoticeConfig = smsNoticeConfigService.findNoticeByName(request.getName());
+        if (smsNoticeConfig != null) {
+            SmsNoticeConfigVO smsNoticeConfigVO = new SmsNoticeConfigVO();
+            BeanUtils.copyProperties(smsNoticeConfig, smsNoticeConfigVO);
+            response.setResult(smsNoticeConfigVO);
+        }
+        return response;
     }
 
 

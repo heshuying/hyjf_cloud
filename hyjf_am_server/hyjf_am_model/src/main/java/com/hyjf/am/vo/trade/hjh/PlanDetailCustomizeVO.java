@@ -4,8 +4,6 @@ package com.hyjf.am.vo.trade.hjh;
 
 import com.hyjf.am.vo.BaseVO;
 
-import java.io.Serializable;
-
 /**
  * 计划详情
  * @author zhangyk

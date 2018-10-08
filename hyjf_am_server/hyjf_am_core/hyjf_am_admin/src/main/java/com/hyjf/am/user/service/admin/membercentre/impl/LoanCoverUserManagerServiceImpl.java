@@ -3,17 +3,6 @@
  */
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
@@ -21,7 +10,17 @@ import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthorityExample;
 import com.hyjf.am.user.service.admin.membercentre.LoanCoverUserManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author nxl
@@ -241,7 +240,7 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
 			certificateAuthority = cam.get(0);
 		}
 
-		/*LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = null;
+		LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = null;
 		LoanSubjectCertificateAuthorityExample example2 = new LoanSubjectCertificateAuthorityExample();
 		LoanSubjectCertificateAuthorityExample.Criteria cra = example2.createCriteria();
 		cra.andNameEqualTo(tureName);
@@ -252,8 +251,11 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
 
 		if (certificateAuthority == null && loanSubjectCertificateAuthority == null){
 			return null;
-		}*/
-        return  certificateAuthority;
+		}
+		if(certificateAuthority != null ) {
+			return certificateAuthority;
+		}
+        return new CertificateAuthority();
  
     }
   	/**

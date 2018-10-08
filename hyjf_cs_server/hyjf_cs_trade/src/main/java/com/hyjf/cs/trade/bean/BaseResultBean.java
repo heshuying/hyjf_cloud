@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.trade.bean;
 
-import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.cs.common.util.ApiSignUtil;
 
 import java.io.Serializable;
 

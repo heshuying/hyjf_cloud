@@ -25,6 +25,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
@@ -354,5 +355,19 @@ public class BorrowTenderController extends BaseController {
             response.setResultList(CommonUtils.convertBeanList(tenderList,BorrowTenderVO.class));
         }
         return response;
+    }
+
+    /**
+     * 查询用户投次数
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/countNewUserTotal/{userId}")
+    public Integer countNewUserTotal(@PathVariable Integer userId) {
+        logger.info("countNewUserTotal...userId is :{}", userId);
+        Integer count = borrowTenderService.selectTenderCount(userId);
+        logger.info("countNewUserTotal...count is :{}", count);
+        return count;
     }
 }

@@ -3,33 +3,31 @@
  */
 package com.hyjf.am.user.controller.front.account;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankCardLogResponse;
+import com.hyjf.am.response.user.BankCardManagerResponse;
+import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
+import com.hyjf.am.resquest.user.BankCardManagerRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.BankCardLog;
+import com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize;
+import com.hyjf.am.user.service.front.account.BankCardManagerRecordService;
 import com.hyjf.am.vo.user.BankCardLogVO;
+import com.hyjf.am.vo.user.BankcardManagerVO;
+import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.BankCardManagerResponse;
-import com.hyjf.am.response.user.UserManagerResponse;
-import com.hyjf.am.resquest.user.BankCardManagerRequest;
-import com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize;
-import com.hyjf.am.user.service.front.account.BankCardManagerRecordService;
-import com.hyjf.am.vo.user.BankcardManagerVO;
-import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl

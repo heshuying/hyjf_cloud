@@ -5,7 +5,6 @@ package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
-import com.hyjf.am.vo.admin.UserTransferVO;
 
 /**
  * @author jun

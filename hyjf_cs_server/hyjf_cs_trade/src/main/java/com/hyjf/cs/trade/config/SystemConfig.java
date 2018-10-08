@@ -13,9 +13,6 @@ public class SystemConfig {
     @Value("${hyjf.weChat.host}")
     public String wechatHost;
 
-    @Value("${http.hyjf.web.host}")
-    public String httpWebHost;
-
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetPassword;
 
@@ -237,14 +234,6 @@ public class SystemConfig {
 
     public void setWebHost(String webHost) {
         this.webHost = webHost;
-    }
-
-    public String getHttpWebHost() {
-        return httpWebHost;
-    }
-
-    public void setHttpWebHost(String httpWebHost) {
-        this.httpWebHost = httpWebHost;
     }
 
     public String getForgetPassword() {

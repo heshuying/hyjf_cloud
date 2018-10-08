@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -75,19 +74,14 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     @Autowired
     private AmMarketClient amMarketClient;
 
-    @Value("${file.domain.head.url}")
-    private String fileHeadUrl;
-    @Value("${file.upload.head.path}")
-    private String fileHeadPath;
-
-
     /**
      * api注册参数校验
-     *  @param
+     *
+     * @param
      * @param
      */
     @Override
-    public void apiCheckParam( RegisterRequest registerRequest) {
+    public void apiCheckParam(RegisterRequest registerRequest) {
         // 手机号
         String mobile = registerRequest.getMobile();
         // 机构编号
@@ -148,7 +142,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         CheckUtil.check(m.matches(), MsgEnum.ERR_FMT_PASSWORD);
         String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
         int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED, true);
         CheckUtil.check(cnt != 0, MsgEnum.STATUS_ZC000015);
         String reffer = registerRequest.getReffer();
         if (StringUtils.isNotEmpty(reffer)) {
@@ -167,36 +161,36 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         JSONObject ret = new JSONObject();
         String mobile = registerRequest.getMobile();
         //手机号未填写
-        if(StringUtils.isEmpty(mobile)){
+        if (StringUtils.isEmpty(mobile)) {
             ret.put(CustomConstants.APP_STATUS, 1);
             ret.put(CustomConstants.APP_STATUS_DESC, "手机号不能为空");
             return ret;
         }
-        if(!Validator.isMobile(mobile)){
+        if (!Validator.isMobile(mobile)) {
             ret.put(CustomConstants.APP_STATUS, 1);
             ret.put(CustomConstants.APP_STATUS_DESC, "请填写您的真实手机号码");
             return ret;
         }
-        if(existUser(mobile)){
+        if (existUser(mobile)) {
             ret.put(CustomConstants.APP_STATUS, 1);
             ret.put(CustomConstants.APP_STATUS_DESC, "手机号已存在");
             return ret;
         }
         String smsCode = registerRequest.getVerificationCode();
         //验证码不能为空
-        if(StringUtils.isEmpty(smsCode)){
+        if (StringUtils.isEmpty(smsCode)) {
             ret.put(CustomConstants.APP_STATUS, 1);
             ret.put(CustomConstants.APP_STATUS_DESC, "验证码不能为空");
             return ret;
         }
         String password = registerRequest.getPassword();
         //密码不能为空
-        if(StringUtils.isEmpty(password)){
+        if (StringUtils.isEmpty(password)) {
             ret.put(CustomConstants.APP_STATUS, 1);
             ret.put(CustomConstants.APP_STATUS_DESC, "密码不能为空");
             return ret;
         }
-        if(password.length() < 6 || password.length() > 16){
+        if (password.length() < 6 || password.length() > 16) {
             ret.put(CustomConstants.APP_STATUS, 1);
             ret.put(CustomConstants.APP_STATUS_DESC, "密码长度6-16位");
             return ret;
@@ -208,7 +202,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 break;
             }
         }
-        if(!hasNumber){
+        if (!hasNumber) {
             ret.put(CustomConstants.APP_STATUS, 1);
             ret.put(CustomConstants.APP_STATUS_DESC, "密码必须包含数字");
             return ret;
@@ -216,15 +210,15 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         String regEx = "^[a-zA-Z0-9]+$";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(password);
-        if(!m.matches()){
+        if (!m.matches()) {
             ret.put(CustomConstants.APP_STATUS, 1);
             ret.put(CustomConstants.APP_STATUS_DESC, "密码必须由数字和字母组成，如abc123");
             return ret;
         }
         String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
         int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
-        if(cnt == 0){
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED, true);
+        if (cnt == 0) {
             ret.put(CustomConstants.APP_STATUS, 1);
             ret.put(CustomConstants.APP_STATUS_DESC, "验证码错误");
             return ret;
@@ -232,7 +226,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         String reffer = registerRequest.getReffer();
         if (StringUtils.isNotEmpty(reffer)) {
             //无效推荐人
-            if(amUserClient.countUserByRecommendName(reffer) <= 0){
+            if (amUserClient.countUserByRecommendName(reffer) <= 0) {
                 ret.put(CustomConstants.APP_STATUS, 1);
                 ret.put(CustomConstants.APP_STATUS_DESC, "推荐人无效");
                 return ret;
@@ -245,19 +239,22 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     /**
      * 1. 必要参数检查 2. 注册 3. 注册后处理
      *
-     * @param registerRequest
-     * @param
-     * @param
+     * @param mobile
+     * @param verificationCode
+     * @param password
+     * @param reffer
+     * @param instCode
+     * @param utmId
+     * @param platform
+     * @param ip
      * @return
      * @throws ReturnMessageException
      */
     @Override
-    public WebViewUserVO register(RegisterRequest registerRequest, String ip)
+    public WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip)
             throws ReturnMessageException {
-        RegisterUserRequest registerUserRequest = new RegisterUserRequest();
-        BeanUtils.copyProperties(registerRequest, registerUserRequest);
+        RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform);
         registerUserRequest.setLoginIp(ip);
-        registerUserRequest.setInstCode(CommonConstant.HYJF_INST_CODE);
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
@@ -284,7 +281,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
         registerUserRequest.setInstType(instConfig.getInstType());
         // 验签
-       CheckUtil.check(this.verifyRequestSign(userRegisterRequestBean, BaseDefine.METHOD_SERVER_REGISTER), MsgEnum.STATUS_CE000002);
+        CheckUtil.check(this.verifyRequestSign(userRegisterRequestBean, BaseDefine.METHOD_SERVER_REGISTER), MsgEnum.STATUS_CE000002);
         // 根据渠道号检索推广渠道是否存在
         UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatByUtmId(registerRequest.getUtmId());
         CheckUtil.check(null != utmPlat, MsgEnum.STATUS_ZC000020);
@@ -293,7 +290,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
 
         // 3. 注册成功用户保存账户表
-        sendMqToSaveAccount(userVO.getUserId(),userVO.getUsername());
+        sendMqToSaveAccount(userVO.getUserId(), userVO.getUsername());
         return userVO;
     }
 
@@ -307,7 +304,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         UserVO userVO = amUserClient.surongRegister(registerUserRequest);
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         // 注册成功用户保存账户表
-        sendMqToSaveAccount(userVO.getUserId(),userVO.getUsername());
+        sendMqToSaveAccount(userVO.getUserId(), userVO.getUsername());
         return userVO;
     }
 
@@ -325,7 +322,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         RedisUtils.setObjEx(RedisConstants.USERID_KEY + userId, webViewUserVO, 7 * 24 * 60 * 60);
 
         // 2. 注册成功用户保存账户表
-        sendMqToSaveAccount(webViewUserVO.getUserId(),webViewUserVO.getUsername());
+        sendMqToSaveAccount(webViewUserVO.getUserId(), webViewUserVO.getUsername());
 
         // 3. 注册送188元新手红包
         // 活动有效期校验
@@ -334,7 +331,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             if (!checkActivityIfAvailable(activityId)) {
                 sendCoupon(userVO);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("注册发放888红包失败...", e);
         }
 
@@ -370,8 +367,8 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     @Override
     public AppAdsCustomizeVO searchBanner(AdsRequest adsRequest) {
-        AppAdsCustomizeVO appAdsCustomizeVO =  amMarketClient.searchBanner(adsRequest);
-        if (null==appAdsCustomizeVO){
+        AppAdsCustomizeVO appAdsCustomizeVO = amMarketClient.searchBanner(adsRequest);
+        if (null == appAdsCustomizeVO) {
             appAdsCustomizeVO = new AppAdsCustomizeVO();
         }
         return appAdsCustomizeVO;
@@ -384,16 +381,16 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             //无效推荐人
             CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_OBJECT_INVALID, "推荐人");
         }
-        {
-            if (!Validator.isNull(reffer)) {
-                int count = amUserClient.countUserByRecommendName(reffer);
-                if (count == 0) {
-                    vo.setEnum(ResultEnum.ERROR_009);
-                    vo.setSuccessUrl("");
-                    return vo;
-                }
+
+        if (!Validator.isNull(reffer)) {
+            int count = amUserClient.countUserByRecommendName(reffer);
+            if (count == 0) {
+                vo.setEnum(ResultEnum.ERROR_009);
+                vo.setSuccessUrl("");
+                return vo;
             }
         }
+
         // 检查参数正确性
         if (Validator.isNull(mobile) || Validator.isNull(verificationCode)) {
             vo.setEnum(ResultEnum.PARAM);
@@ -453,30 +450,30 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 vo.setSuccessUrl("");
                 return vo;
             }
-            {
-                if (existUser(mobile)) {
-                    vo.setEnum(ResultEnum.ERROR_017);
-                    vo.setSuccessUrl("");
-                    return vo;
-                }
+
+            if (existUser(mobile)) {
+                vo.setEnum(ResultEnum.ERROR_017);
+                vo.setSuccessUrl("");
+                return vo;
             }
-            {
-                String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-                int cnt = amUserClient.checkMobileCode(mobile, verificationCode, verificationType, String.valueOf(ClientConstants.WECHAT_CLIENT),
-                        CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
-                if (cnt == 0) {
-                    vo.setEnum(ResultEnum.ERROR_018);
-                    vo.setSuccessUrl("");
-                    return vo;
-                }
+
+            String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
+            int cnt = amUserClient.checkMobileCode(mobile, verificationCode, verificationType, String.valueOf(ClientConstants.WECHAT_CLIENT),
+                    CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED, true);
+            if (cnt == 0) {
+                vo.setEnum(ResultEnum.ERROR_018);
+                vo.setSuccessUrl("");
+                return vo;
             }
-        }catch (Exception e){
+
+        } catch (Exception e) {
             vo.setEnum(ResultEnum.PARAM);
             vo.setSuccessUrl("");
             return vo;
         }
         return vo;
     }
+
     /**
      * 保存用户信息
      */
@@ -496,9 +493,10 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     /**
      * 登录操作
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     @Override
     public int updateLoginInAction(String userName, String password, String ipAddr) {
@@ -524,7 +522,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         // 密码正确时
         if (Validator.isNotNull(userId) && Validator.isNotNull(password) && password.equals(passwordDb)) {
             // 更新登录信息
-            amUserClient.updateLoginUser(userId,ipAddr);
+            amUserClient.updateLoginUser(userId, ipAddr);
             return userId;
         } else {
             return -3;
@@ -534,7 +532,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     @Override
     public String getAccountId(Integer userId) {
         AccountVO account = amTradeClient.getAccount(userId);
-        if(null != account){
+        if (null != account) {
             return account.getAccountId();
         }
         return null;
@@ -543,7 +541,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     @Override
     public String getAutoInvesStatus(Integer userId) {
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthByUserId(userId);
-        if (null!= hjhUserAuth){
+        if (null != hjhUserAuth) {
             return String.valueOf(hjhUserAuth.getAutoInvesStatus());
         }
         return null;
@@ -555,7 +553,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @param userId
      * @throws MQException
      */
-    private void sendMqToSaveAccount(int userId,String userName) {
+    private void sendMqToSaveAccount(int userId, String userName) {
         AccountVO account = new AccountVO();
         account.setUserId(userId);
         account.setUserName(userName);
@@ -595,7 +593,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         logger.info("注册插入account：{}", JSON.toJSONString(account));
         try {
             logger.info("发送mq开始");
-            accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(account)));
+            accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(account)));
             logger.info("发送mq结束");
         } catch (MQException e) {
             logger.error("注册成功推送account——mq失败.... user_id is :{}", userId);
@@ -634,6 +632,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     /**
      * 组装 userVO
+     *
      * @param userVO
      * @return
      */
@@ -682,9 +681,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     private String assembleIconUrl(UserVO userVO) {
         String iconUrl = userVO.getIconUrl();
         if (StringUtils.isNotBlank(iconUrl)) {
-            String imghost = UploadFileUtils.getDoPath(fileHeadUrl);
+            String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);
-            String fileUploadTempPath = UploadFileUtils.getDoPath(fileHeadPath);
+            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
             return imghost + fileUploadTempPath + iconUrl;
         }
         return "";

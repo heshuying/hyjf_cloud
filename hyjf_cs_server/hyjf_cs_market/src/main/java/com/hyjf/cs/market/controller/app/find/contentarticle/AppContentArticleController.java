@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 
-import static com.hyjf.am.bean.result.BaseResult.FAIL_DESC;
-
 /**
  * @author dangzw
  * @version AppContentArticleController, v0.1 2018/7/30 23:13

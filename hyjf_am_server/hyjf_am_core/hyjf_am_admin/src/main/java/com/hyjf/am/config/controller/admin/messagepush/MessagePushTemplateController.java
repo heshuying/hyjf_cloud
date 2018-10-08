@@ -140,4 +140,16 @@ public class MessagePushTemplateController {
         }
         return response;
     }
+
+    @RequestMapping("/getAllTemplates")
+    public MessagePushTemplateResponse getAllTemplates() {
+        logger.info("查询所有消息推送模板开始...");
+        MessagePushTemplateResponse response = new MessagePushTemplateResponse();
+        List<MessagePushTemplate> list = templateServcie.getAllTemplates();
+
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(CommonUtils.convertBeanList(list, MessagePushTemplateVO.class));
+        }
+        return response;
+    }
 }

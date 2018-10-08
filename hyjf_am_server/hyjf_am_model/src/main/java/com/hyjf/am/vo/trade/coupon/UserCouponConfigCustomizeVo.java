@@ -13,7 +13,6 @@ package com.hyjf.am.vo.trade.coupon;
 
 
 import java.io.Serializable;
-import java.text.NumberFormat;
 
 /**
  * @author Administrator

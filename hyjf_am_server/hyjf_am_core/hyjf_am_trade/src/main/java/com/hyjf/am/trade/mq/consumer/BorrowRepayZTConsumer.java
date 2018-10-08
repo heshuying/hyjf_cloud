@@ -3,10 +3,24 @@
  */
 package com.hyjf.am.trade.mq.consumer;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.trade.config.SystemConfig;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.mq.base.Consumer;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.nifa.NifaRepayInfoMessageProducer;
+import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayZTService;
+import com.hyjf.am.vo.message.MailMessage;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -19,26 +33,10 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.trade.config.SystemConfig;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.mq.base.Consumer;
-import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayZTService;
-import com.hyjf.am.vo.message.MailMessage;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 直投类标的还款消息处理
@@ -46,7 +44,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
  * @version BorrowRepayZTConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
 @Component
-@Profile("test")
+//@Profile("test")
 public class BorrowRepayZTConsumer extends Consumer{
 	
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRepayZTConsumer.class);

@@ -3,8 +3,6 @@
  */
 package com.hyjf.admin.beans.request;
 
-import com.hyjf.admin.beans.BaseRequest;
-import com.hyjf.am.vo.BaseVO;
 import io.swagger.annotations.ApiModelProperty;
 
 /**

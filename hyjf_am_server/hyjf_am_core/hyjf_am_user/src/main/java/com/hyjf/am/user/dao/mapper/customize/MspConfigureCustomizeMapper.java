@@ -1,13 +1,11 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-
-import com.hyjf.am.user.dao.model.auto.MspConfigure;
 import com.hyjf.am.user.dao.model.auto.MspConfigureExample;
 import com.hyjf.am.user.dao.model.customize.MspConfigureCustomize;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 
 

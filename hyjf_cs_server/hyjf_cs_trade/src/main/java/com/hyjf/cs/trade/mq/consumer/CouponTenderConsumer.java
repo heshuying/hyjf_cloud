@@ -3,10 +3,13 @@
  */
 package com.hyjf.cs.trade.mq.consumer;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.service.consumer.CouponService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -20,13 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.mq.base.Consumer;
-import com.hyjf.cs.trade.service.consumer.CouponService;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 优惠券使用
@@ -56,18 +55,19 @@ public class CouponTenderConsumer extends Consumer {
         defaultMQPushConsumer.registerMessageListener(new MessageListener());
         // Consumer对象在使用之前必须要调用start初始化，初始化一次即可
         defaultMQPushConsumer.start();
-        logger.info("====BatchCouponsConsumer start=====");
+        logger.info("====散标优惠券投资 start=====");
     }
 
     public class MessageListener implements MessageListenerConcurrently {
 
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext context) {
-            logger.info("CouponTenderConsumer 收到消息，开始处理....");
+            logger.info("散标优惠券投资 收到消息，开始处理....");
             MessageExt paramBean = list.get(0);
             Map<String, Object> map = new HashMap<>();
             String msgBody = new String(paramBean.getBody());
             map = JSONObject.parseObject(msgBody, Map.class);
+            logger.info("散标优惠券投资请求参数：{}",msgBody);
             JSONObject result = new JSONObject();
             try {
                 String couponGrantId = (String) map.get("couponGrantId");
@@ -85,7 +85,6 @@ public class CouponTenderConsumer extends Consumer {
                 bean.setLogClient(Integer.parseInt(platform));
                 bean.setTxAmount(money);
                 BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
-
                 couponService.borrowTenderCouponUse(couponGrantId, borrow, bean);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {

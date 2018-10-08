@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -46,6 +47,7 @@ public class AppBindCardPageController extends BaseUserController {
     public AppResult<Object> bindCardPage(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
 
         AppResult<Object> result = new AppResult<Object>();
+        result.setData(Collections.emptyMap());
         String sign = request.getParameter("sign");
         String token = request.getParameter("token");
         WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
@@ -72,6 +74,9 @@ public class AppBindCardPageController extends BaseUserController {
             // 微官网 1
             bean.setPlatform("1");
             Map<String,Object> map = bindCardService.getCallbankMap(bean,sign,token);
+            if(map == null){
+                map = Collections.emptyMap();
+            }
             result.setData(map);
             result.setStatus(BaseResult.SUCCESS);
             logger.info("绑卡调用页面end");

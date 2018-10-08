@@ -1,7 +1,6 @@
 package com.hyjf.cs.user.service.myprofile.impl;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -16,9 +15,6 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.http.HttpClientUtils;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.MD5;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;

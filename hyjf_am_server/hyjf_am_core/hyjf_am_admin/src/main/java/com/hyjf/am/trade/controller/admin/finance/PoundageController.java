@@ -13,12 +13,10 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.PoundageDetail;
 import com.hyjf.am.trade.dao.model.auto.PoundageLedger;
 import com.hyjf.am.trade.dao.model.customize.AdminPoundageCustomize;
-import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
 import com.hyjf.am.trade.service.admin.TradePoundageService;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.admin.PoundageDetailVO;
 import com.hyjf.am.vo.admin.PoundageLedgerVO;
-import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,7 @@ import java.util.List;
  * @version: PoundageController, v0.1 2018/9/3 14:45
  * 资金中心-手续费分账
  */
-@RestController
+@RestController(value = "tradePoundageController")
 @RequestMapping(value = "/am-admin/poundage")
 public class PoundageController extends BaseController {
 

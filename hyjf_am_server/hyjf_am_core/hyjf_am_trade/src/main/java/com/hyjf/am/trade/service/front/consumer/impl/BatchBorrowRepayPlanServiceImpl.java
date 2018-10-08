@@ -1,72 +1,13 @@
 package com.hyjf.am.trade.service.front.consumer.impl;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.trade.config.SystemConfig;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.AccountListExample;
-import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
-import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterestExample;
-import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditRepay;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditRepayExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtDetail;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtDetailExample;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
-import com.hyjf.am.trade.dao.model.auto.HjhPlan;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanExample;
-import com.hyjf.am.trade.dao.model.auto.HjhRepay;
-import com.hyjf.am.trade.dao.model.auto.HjhRepayExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.CalculateInvestInterestProducer;
-import com.hyjf.am.trade.mq.producer.CouponLoansHjhMessageProducer;
-import com.hyjf.am.trade.mq.producer.CouponRepayHjhMessageProducer;
-import com.hyjf.am.trade.mq.producer.CouponRepayMessageProducer;
-import com.hyjf.am.trade.mq.producer.FddProducer;
-import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
+import com.hyjf.am.trade.mq.producer.*;
 import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayPlanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -87,10 +28,16 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 自动扣款(还款服务)
@@ -3522,29 +3469,16 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				//add by cwyang 更新汇计划相关机构的风险准备金
 				//判断是否最后一期
 				String instCode = borrowInfo.getInstCode();
-				if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) &&  !"10000000".equals(instCode)){
-					//等额本息的标的判断保证金回滚方式
-					HjhInstConfigExample hjhInstConfigExample = new HjhInstConfigExample();
-					hjhInstConfigExample.createCriteria().andInstCodeEqualTo(instCode);
-					List<HjhInstConfig> hjhInstConfigs = hjhInstConfigMapper.selectByExample(hjhInstConfigExample);
-					if (hjhInstConfigs != null && hjhInstConfigs.size() > 0 && null != hjhInstConfigs.get(0).getRepayCapitalType()) {
-						Integer repayCapitalType = hjhInstConfigs.get(0).getRepayCapitalType();
-						//回滚标识位：0 到期回滚、1 分期回滚、 2 不回滚
-						if ("0".equals(repayCapitalType.toString())) {
-							if (periodNext == 0) {
-								updateInstitutionData(borrow, borrowInfo);
-							}
-						} else if ("1".equals(repayCapitalType.toString())){
-							//分期回滚
-							updateInstitutionDataMonth(instCode,repayCapitalWait,borrowNid);
-						}
-					} else {
-						throw new Exception("保证金回滚未获取到资产方信息配置:" + instCode + "]");
-					}
-				}else{
+				//modify by cwyang 根据配置好的保证金配置进行保证金回滚 迁移by liushouyi
+				Integer repayCapitalType = borrow.getRepayCapitalType();
+				//回滚标识位：0 到期回滚、1 分期回滚、 2 不回滚
+				if ("0".equals(repayCapitalType.toString())) {
 					if (periodNext == 0) {
 						updateInstitutionData(borrow, borrowInfo);
 					}
+				} else if ("1".equals(repayCapitalType.toString()) && !"10000000".equals(instCode)){
+					//分期回滚
+					updateInstitutionDataMonth(instCode,repayCapitalWait,borrowNid);
 				}
 				try { 
 					this.sendSmsForManager(borrowNid);
@@ -3753,7 +3687,10 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				updatePlanAsset(borrowNid,status);
 				//add by cwyang 更新汇计划相关机构的风险准备金
 				//判断标的是否分期，并且是否是最后一期
-				updateInstitutionData(borrow, borrowInfo);
+				Integer repayCapitalType = borrow.getRepayCapitalType();
+				if("0".equals(repayCapitalType.toString())){
+					updateInstitutionData(borrow, borrowInfo);
+				}
 				try {
 					this.sendSmsForManager(borrowNid);
 				} catch (Exception e) {
@@ -3838,7 +3775,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		return true;
 	}
     /**
-     * 等额本息还款方式的保证金回滚
+     * 分期保证金回滚
      * @param instCode
      * @param repayCapitalWait
      * @param borrowNid
@@ -3848,13 +3785,30 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
         String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
         boolean flag = redisAddstrack(key, repayCapitalWait.toString());
         if (flag) {
-            logger.info("=================标的还款后机构风险准备金增加成功,标的号:" + borrowNid + ",机构编号:" + instCode + ",增加金额:" + repayCapitalWait);
+			// 更新发标额度余额(增加)和在贷额度（减少） 在数据库更新，防止数据并发 add by cwyang 20180801
+			HashMap map = new HashMap();
+			map.put("amount",repayCapitalWait);
+			map.put("instCode",instCode);
+			this.hjhBailConfigCustomizeMapper.updateRepayInstitutionAmount(map);
+			logger.info("=================标的分期还款后机构风险准备金增加成功,标的号:" + borrowNid + ",机构编号:" + instCode + ",增加金额:" + repayCapitalWait);
+			HjhBailConfigExample bailExample = new HjhBailConfigExample();
+			bailExample.createCriteria().andInstCodeEqualTo(instCode);
+			List<HjhBailConfig> hjhBailConfigs = this.hjhBailConfigMapper.selectByExample(bailExample);
+			if(hjhBailConfigs != null && hjhBailConfigs.size() > 0){
+				HjhBailConfig hjhBailConfig = hjhBailConfigs.get(0);
+				BigDecimal remainMarkLine = hjhBailConfig.getRemainMarkLine();
+				BigDecimal loanBalance = hjhBailConfig.getLoanBalance();
+				BigDecimal repayedCapital = hjhBailConfig.getRepayedCapital();
+				logger.info("=================标的分期还款后机构风险准备金增加成功,标的号:" + borrowNid + ",机构编号:" + instCode
+						+ ",发标额度余额:" + remainMarkLine + ",在贷余额：" + loanBalance + ",已还本金：" + repayedCapital);
+			}
         }
     }
 
 	/**
-	 * 机构的风险准备金还款后增加 
-	 * @param borrowNid
+	 * 整个标的的保证金回滚
+	 * @param borrow
+	 * @param borrowInfo
 	 */
 	private void updateInstitutionData(Borrow borrow, BorrowInfo borrowInfo) {
 		logger.info("===================cwyang标的还款后机构风险准备金开始回滚,标的号:" + borrow.getBorrowNid());
@@ -3866,8 +3820,23 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			//回滚扣减掉的风险准备金
 			String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
 			boolean flag = redisAddstrack(key, account.toString());
-			if (flag) {
+			if (flag) {				// 更新发标额度余额和在贷额度 在数据库更新，防止数据并发
+				HashMap map = new HashMap();
+				map.put("amount",account);
+				map.put("instCode",instCode);
+				this.hjhBailConfigCustomizeMapper.updateRepayInstitutionAmount(map);
 				logger.info("=================标的还款后机构风险准备金增加成功,标的号:" + borrow.getBorrowNid() + ",机构编号:" + instCode + ",增加金额:" + account);
+				HjhBailConfigExample bailExample = new HjhBailConfigExample();
+				bailExample.createCriteria().andInstCodeEqualTo(instCode);
+				List<HjhBailConfig> hjhBailConfigs = this.hjhBailConfigMapper.selectByExample(bailExample);
+				if(hjhBailConfigs != null && hjhBailConfigs.size() > 0){
+					HjhBailConfig hjhBailConfig = hjhBailConfigs.get(0);
+					BigDecimal remainMarkLine = hjhBailConfig.getRemainMarkLine();
+					BigDecimal loanBalance = hjhBailConfig.getLoanBalance();
+					BigDecimal repayedCapital = hjhBailConfig.getRepayedCapital();
+					logger.info("=================标的还款后机构风险准备金增加成功,标的号:" + borrow.getBorrowNid() + ",机构编号:" + instCode
+							+ ",发标额度余额:" + remainMarkLine + ",在贷余额：" + loanBalance + ",已还本金：" + repayedCapital);
+				}
 			}
 		}
 		

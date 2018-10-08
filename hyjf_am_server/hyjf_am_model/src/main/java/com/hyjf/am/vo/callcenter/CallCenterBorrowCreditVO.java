@@ -1,8 +1,8 @@
 package com.hyjf.am.vo.callcenter;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
 
 /**
  * @author libin
@@ -16,156 +16,156 @@ public class CallCenterBorrowCreditVO extends BaseVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * ¼ìË÷Ìõ¼þ ÓÃ»§Ãû
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã»ï¿½ï¿½ï¿½
 	 */
 	private String usernameSrch;
 
 	/**
-	 * ¼ìË÷Ìõ¼þ Õ®×ª±àºÅ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Õ®×ªï¿½ï¿½ï¿½
 	 */
 	private String creditNidSrch;
 
 	/**
-	 * ¼ìË÷Ìõ¼þ ÏîÄ¿±àºÅ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½
 	 */
 	private String bidNidSrch;
 
 	/**
-	 * ¼ìË÷Ìõ¼þ ×ªÈÃ×´Ì¬
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ×ªï¿½ï¿½×´Ì¬
 	 */
 	private String creditStatusSrch;
 
 	/**
-	 * ¼ìË÷Ìõ¼þ ·¢²¼Ê±¼ä¿ªÊ¼
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä¿ªÊ¼
 	 */
 	private String timeStartSrch;
 
 	/**
-	 * ¼ìË÷Ìõ¼þ ·¢²¼Ê±¼ä¿ªÊ¼
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä¿ªÊ¼
 	 */
 	private String timeEndSrch;
 
 	/**
-	 * ¼ìË÷Ìõ¼þ limitStart
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ limitStart
 	 */
 	private int limitStart = -1;
 
 	/**
-	 * ¼ìË÷Ìõ¼þ limitEnd
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ limitEnd
 	 */
 	private int limitEnd = -1;
 
 	/**
-	 * ÐòºÅ
+	 * ï¿½ï¿½ï¿½
 	 */
 	private String creditId;
 
 	/**
-	 * Õ®×ª±àºÅ
+	 * Õ®×ªï¿½ï¿½ï¿½
 	 */
 	private String creditNid;
 
 	/**
-	 * ÏîÄ¿±àºÅ
+	 * ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½
 	 */
 	private String bidNid;
 
 	/**
-	 * ÓÃ»§Ãû
+	 * ï¿½Ã»ï¿½ï¿½ï¿½
 	 */
 	private String username;
 
 	/**
-	 * Õ®È¨±¾½ð
+	 * Õ®È¨ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String creditCapital;
 
 	/**
-	 * ×ªÈÃ±¾½ð
+	 * ×ªï¿½Ã±ï¿½ï¿½ï¿½
 	 */
 	private String creditCapitalPrice;
 
 	/**
-	 * ÕÛÈÃÂÊ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String creditDiscount;
 
 	/**
-	 * ×ªÈÃ¼Û¸ñ
+	 * ×ªï¿½Ã¼Û¸ï¿½
 	 */
 	private String creditPrice;
 
 	/**
-	 * ÒÑ×ªÈÃ½ð¶î
+	 * ï¿½ï¿½×ªï¿½Ã½ï¿½ï¿½
 	 */
 	private String creditCapitalAssigned;
 
 	/**
-	 * ×ªÈÃ×´Ì¬
+	 * ×ªï¿½ï¿½×´Ì¬
 	 */
 	private String creditStatus;
 
 	/**
-	 * ·¢²¼Ê±¼ä
+	 * ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 	 */
 	private String addTime;
 
 	/**
-	 * »¹¿îÊ±¼ä
+	 * ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 	 */
 	private String repayLastTime;
 
 	/**
-	 * ¶©µ¥ºÅ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String assignNid;
 
 	/**
-	 * ³öÈÃÈË
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String creditUsername;
 
 	/**
-	 * ×ªÈÃ±¾½ð
+	 * ×ªï¿½Ã±ï¿½ï¿½ï¿½
 	 */
 	private String assignCapital;
 
 	/**
-	 * ×ªÈÃ¼Û¸ñ
+	 * ×ªï¿½Ã¼Û¸ï¿½
 	 */
 	private String assignCapitalPrice;
 
 	/**
-	 * ÈÏ¹º½ð¶î
+	 * ï¿½Ï¹ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String assignPrice;
 
 	/**
-	 * µæ¸¶ÀûÏ¢
+	 * ï¿½æ¸¶ï¿½ï¿½Ï¢
 	 */
 	private String assignInterestAdvance;
 	/**
-	 * ·þÎñ·Ñ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String creditFee;
 	/**
-	 * ÈÏ¹ºÊ±¼ä
+	 * ï¿½Ï¹ï¿½Ê±ï¿½ï¿½
 	 */
 	private String assignPay;
 	/**
-	 * ×´Ì¬Ãû³Æ
+	 * ×´Ì¬ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String creditStatusName;
 	/**
-	 * ×´Ì¬Ãû³Æ
+	 * ×´Ì¬ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String repayStatusName;
 	/**
-	 * ¿Í»§¶Ë 0pc 1ios 2Android 3Î¢ÐÅ
+	 * ï¿½Í»ï¿½ï¿½ï¿½ 0pc 1ios 2Android 3Î¢ï¿½ï¿½
 	 */
 	private String client;
 	/**
-	 * ÓÃ»§Ãû
+	 * ï¿½Ã»ï¿½ï¿½ï¿½
 	 */
 	private Integer userId;
 

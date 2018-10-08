@@ -3,13 +3,12 @@
  */
 package com.hyjf.batch.job.pc.statistic;
 
+import com.hyjf.am.response.StringResponse;
+import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
-import com.hyjf.am.response.StringResponse;
-import com.hyjf.batch.job.BaseJob;
 
 /**
  * PC渠道统计数据定时

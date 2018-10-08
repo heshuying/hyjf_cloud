@@ -22,15 +22,12 @@ import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
-import com.hyjf.pay.lib.fadada.util.DzqzConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -159,10 +156,6 @@ public class LoanCoverController extends BaseController {
         AdminSystemVO adminSystemVO = this.getUser(request);
         int loginUserId = Integer.parseInt(adminSystemVO.getId());
         String loginUserName = adminSystemVO.getUsername();
-        //修改判断是否重复
-        if (!loanCoverService.selectIsExistsRecordByIdNo(loanCoverUserRequestBean.getIdNo(),loanCoverUserRequestBean.getName())) {
-            return new AdminResult<>(FAIL, "数据重复,请检查后提交");
-        }
         return loanCoverService.updateLoanCoverUser(loanCoverUserRequestBean,loginUserId,loginUserName);
     }
 
@@ -319,6 +312,7 @@ public class LoanCoverController extends BaseController {
                     ma.setCode(resultt.getCode());
                     ma.setStatus("error");
                     ma.setUpdateTime(new Date());
+                    BeanUtils.copyProperties(ma, loanCoverUserRequest);
                     loanCoverService.updateLoanCoverUserRecord(loanCoverUserRequest);
                     return new AdminResult<>(FAIL, resultt.getMsg());
                 }

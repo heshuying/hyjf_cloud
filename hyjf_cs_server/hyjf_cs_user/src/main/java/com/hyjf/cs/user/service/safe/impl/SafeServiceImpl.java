@@ -169,12 +169,14 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
         // 获得是否授权
         // 获取用户上传头像
-        String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
+        String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
         // 实际物理路径前缀2
-        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
         if (StringUtils.isNotEmpty(user.getIconUrl())) {
             resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconUrl());
+        }else {
+            resultMap.put("iconUrl", "");
         }
         resultMap.put("inviteLink", systemConfig.getFrontHost() + "/user/regist?from=" + user.getUserId());
         return resultMap;
@@ -436,10 +438,10 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         BASE64Decoder decoder = new BASE64Decoder();
         // 将字符串格式的image转为二进制流（biye[])的decodedBytes
         byte[] decodedBytes = decoder.decodeBuffer(image);
-
+        logger.info("头像转成二进制大小:[{}]",decodedBytes.length);
         String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
         // 实际物理路径前缀2
-        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
         // 如果文件夹(前缀+后缀)不存在,则新建文件夹
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
         File logoSaveFile = new File(logoRealPathDir);
@@ -450,9 +452,11 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         String fileRealName = String.valueOf(System.currentTimeMillis());
         fileRealName = "appIconImg_" + userId + fileRealName + ".png";
         // 指定图片要存放的位置
-        String imgFilePath = logoSaveFile + "/" + fileRealName;
+        String imgFilePath = logoSaveFile + File.separator + fileRealName;
         // 新建一个文件输出器，并为它指定输出位置imgFilePath
-        try (FileOutputStream out = new FileOutputStream(imgFilePath)) {
+        try{
+            logger.info("开始将头像写入硬盘 -> fileName:[{}]",fileRealName);
+            FileOutputStream out = new FileOutputStream(imgFilePath);
             // 利用文件输出器将二进制格式decodedBytes输出
             out.write(decodedBytes);
             out.close(); // 关闭文件输出器
@@ -504,7 +508,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 实际物理路径前缀1
         String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
         // 实际物理路径前缀2
-        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
         // 如果文件夹(前缀+后缀)不存在,则新建文件夹
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
         File logoSaveFile = new File(logoRealPathDir);
@@ -526,7 +530,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 保存到数据库
         amUserClient.updateUserById(userVO);
         // 测试环境要加 + request.getContextPath().replace("//", "");
-        String imghost = UploadFileUtils.getDoPath(systemConfig.getDomainAppUrl());
+        String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
         iconUrl = imghost + fileUploadTempPath + fileRealName;
         return iconUrl;

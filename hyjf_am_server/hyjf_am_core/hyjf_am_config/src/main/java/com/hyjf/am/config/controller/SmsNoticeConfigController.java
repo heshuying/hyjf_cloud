@@ -211,5 +211,22 @@ public class SmsNoticeConfigController extends BaseConfigController{
         return smsNoticeConfigService.onlyName(name);
     }
 
+    /**
+     * 根据name查询开启的通知配置
+     * @param request
+     * @return
+     */
+    @RequestMapping("/find_notice_by_name")
+    public SmsNoticeConfigResponse findNoticeByName(@RequestBody SmsNoticeConfigRequest request) {
+        SmsNoticeConfigResponse response = new SmsNoticeConfigResponse();
+        SmsNoticeConfig smsNoticeConfig = smsNoticeConfigService.findNoticeByName(request.getName());
+        if (smsNoticeConfig != null) {
+            SmsNoticeConfigVO smsNoticeConfigVO = new SmsNoticeConfigVO();
+            BeanUtils.copyProperties(smsNoticeConfig, smsNoticeConfigVO);
+            response.setResult(smsNoticeConfigVO);
+        }
+        return response;
+    }
+
 
 }

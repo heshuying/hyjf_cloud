@@ -3,8 +3,8 @@
  */
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
-import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
@@ -117,6 +117,14 @@ public interface UserCenterService {
     UserVO selectUserByUserId(String userId);
 
     /**
+     * 根据用户list id查找用户表
+     * @param userId
+     * @param userId
+     * @return
+     */
+    List<UserVO> selectUserByListUserId(List userId);
+
+    /**
      * 根据用户id查找企业信息
      * @param userId
      * @return
@@ -194,4 +202,10 @@ public interface UserCenterService {
      * @return
      */
     List<SpreadsUserVO> selectSpreadsUserBySpreadUserId(int userId);
+
+    /**
+     * 部门树形结构
+     * @return
+     */
+    JSONArray getCrmDepartmentList(String[] list);
 }

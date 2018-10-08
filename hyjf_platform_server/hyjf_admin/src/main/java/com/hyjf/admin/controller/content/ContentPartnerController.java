@@ -60,13 +60,40 @@ public class ContentPartnerController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
+		List<LinkVO> resultList = response.getResultList();
+		for (LinkVO vo : resultList) {
+			Integer id = vo.getPartnerType();
+			switch (id) {
+				case 11:
+					vo.setPartnerName("法律支持");
+					continue;
+				case 7:
+					vo.setPartnerName("金融机构");
+					continue;
+				case 12:
+					vo.setPartnerName("其他");
+					continue;
+				case 10:
+					vo.setPartnerName("服务支持");
+					continue;
+				case 8:
+					vo.setPartnerName("联系我们");
+					continue;
+			}
+		}
 		return new AdminResult(response);
 	}
 
 	@ApiOperation(value = "添加公司管理-合作伙伴", notes = "添加公司管理-合作伙伴")
 	@PostMapping("/insert")
 	public AdminResult add(@RequestBody ContentPartnerRequestBean requestBean) {
-		int num = contentPartnerService.insertAction(requestBean);
+		int num = 0;
+		try {
+			num = contentPartnerService.insertAction(requestBean);
+		} catch (Exception e) {
+			logger.error("添加公司管理-合作伙伴失败......", e);
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
 		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}

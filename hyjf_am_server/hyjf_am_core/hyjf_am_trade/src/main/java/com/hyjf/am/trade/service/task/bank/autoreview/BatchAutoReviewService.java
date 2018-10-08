@@ -1,7 +1,6 @@
 package com.hyjf.am.trade.service.task.bank.autoreview;
 
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
-import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 
 import java.util.List;

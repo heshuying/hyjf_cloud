@@ -6,19 +6,20 @@ package com.hyjf.cs.trade.service.credit.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
+import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
-import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -30,13 +31,12 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
-import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.CreditResultBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
+import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
@@ -85,7 +85,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     private SmsProducer smsProducer;
     @Autowired
     private SystemConfig systemConfig;
-
+    @Autowired
+    private AmConfigClient amConfigClient;
 
     /**
      * 我要债转列表页 获取参数
@@ -171,6 +172,18 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         CreditResultBean creditResultBean = new CreditResultBean();
         WebResult webResult = new WebResult();
         UserVO user = amUserClient.findUserById(userId);
+        DebtConfigResponse response = amConfigClient.getDebtConfig();
+        DebtConfigVO config = response.getResult();
+        if(config!=null){
+            creditResultBean.setDebtConfigVO(config);
+        }else{
+            logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "配置表无数据请配置");
+            creditResultBean.setResultFlag(CustomConstants.RESULT_FAIL);
+            creditResultBean.setMsg("配置表无数据请配置");
+            creditResultBean.setData(null);
+            webResult.setData(creditResultBean);
+            return webResult;
+        }
         creditResultBean.setMobile(user.getMobile());
         Integer nowTime = GetDate.getNowTime10();
         if (StringUtils.isEmpty(request.getBorrowNid()) || StringUtils.isEmpty(request.getTenderNid())) {
@@ -288,13 +301,14 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             logger.info("插入债转表结束---userId:{} ",userId);
             Map data = new HashedMap();
             // 结束日期
-            data.put("creditEndTime", request.getCreditEndTime());
+            data.put("creditEndTime", GetDate.timestamptoStrYYYYMMDDHHMMSS(request.getCreditEndTime()));
             // 转让价格
             data.put("creditPrice",request.getCreditPrice());
             // 转让本金
             data.put("creditCapital",request.getCreditCapital());
             // web的转让本金
             data.put("assignCapital",request.getCreditCapital());
+            logger.info("债转保存，返回给前端数据 {}", JSONObject.toJSONString(data));
             result.setData(data);
         }catch (Exception e){
         	e.printStackTrace();
@@ -398,21 +412,35 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      */
     private void checkTenderToCreditParam(TenderBorrowCreditCustomize request, Integer userId) {
         // 验证折让率
-        if (StringUtils.isEmpty(request.getCreditDiscount())) {
+        //新增配置表校验add tanyy2018-9-27
+        DebtConfigVO config = amConfigClient.getDebtConfig().getResult();
+        if (org.apache.commons.lang.StringUtils.isEmpty(request.getCreditDiscount())||config==null) {
             // 折让率不能为空
             throw  new CheckException(MsgEnum.ERROR_CREDIT_CREDIT_DISCOUNT_NULL);
         } else {
-            if (request.getCreditDiscount().matches(regex)) {
-                float creditDiscount = Float.parseFloat(request.getCreditDiscount());
-                if (creditDiscount > creditDiscountEnd || creditDiscount < creditDiscountStart) {
-                    // 折让率范围错误
-                    throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);
-                }
-            } else {
-                // 折让率格式错误
-                throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_FORMAT_ERROR);
+            float creditDiscount = Float.parseFloat(request.getCreditDiscount());
+            DebtConfigVO debtConfig = config;
+            if (creditDiscount > debtConfig.getConcessionRateUp().floatValue() || creditDiscount < debtConfig.getConcessionRateDown().floatValue()) {
+                // 折让率范围错误
+                throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);
             }
+
         }
+//        if (StringUtils.isEmpty(request.getCreditDiscount())) {
+//            // 折让率不能为空
+//            throw  new CheckException(MsgEnum.ERROR_CREDIT_CREDIT_DISCOUNT_NULL);
+//        } else {
+//            if (request.getCreditDiscount().matches(regex)) {
+//                float creditDiscount = Float.parseFloat(request.getCreditDiscount());
+//                if (creditDiscount > creditDiscountEnd || creditDiscount < creditDiscountStart) {
+//                    // 折让率范围错误
+//                    throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);
+//                }
+//            } else {
+//                // 折让率格式错误
+//                throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_FORMAT_ERROR);
+//            }
+//        }
         // 验证手机验证码
 //        if (StringUtils.isEmpty(request.getTelcode())) {
 //            // 手机验证码不能为空
@@ -454,7 +482,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 生成creditNid
         // 获取当前时间的日期
         String nowDate = (GetDate.yyyyMMdd.format(new Date()) != null && !"".equals(GetDate.yyyyMMdd.format(new Date()))) ? GetDate.yyyyMMdd.format(new Date()) : "0";
-        Integer creditedNum = amTradeClient.tenderAbleToCredit(userId);
+        Integer creditedNum = amTradeClient.tenderAbleToCredit(0);
         Integer creditNumToday = (creditedNum == null ? 0 : creditedNum);
         String creditNid = nowDate.substring(2) + String.format("%04d", (creditNumToday + 1));
         // 获取待债转数据
@@ -567,7 +595,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         borrowCredit.setRepayStatus(0);
         // 给前端展示用
         request.setCreditEndTime(borrowCredit.getEndTime());
+        logger.info("creditCapital:"+borrowCredit.getCreditCapital());
         request.setCreditPrice(DF_COM_VIEW.format(borrowCredit.getCreditPrice().setScale(2, BigDecimal.ROUND_DOWN)));
+        request.setCreditCapital(DF_COM_VIEW.format(borrowCredit.getCreditCapital().setScale(2, BigDecimal.ROUND_DOWN)));
         if (borrow != null) {
             if ("endmonth".equals(borrow.getBorrowStyle())) {
                 // 从第几期开始

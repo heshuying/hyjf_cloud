@@ -3,11 +3,9 @@ package com.hyjf.admin.service.finance.withdraw;
 import com.hyjf.admin.service.BaseAdminService;
 import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
-import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 
-import java.util.List;
 import java.util.Map;
 
 public interface WithdrawService extends BaseAdminService {

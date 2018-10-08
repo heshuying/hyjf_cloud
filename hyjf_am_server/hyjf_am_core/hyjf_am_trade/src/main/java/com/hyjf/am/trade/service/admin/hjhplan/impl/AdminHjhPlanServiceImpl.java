@@ -373,6 +373,8 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 				plan.setMarginMeasures(StringUtils.isEmpty(form.getMarginMeasures()) ? "" : form.getMarginMeasures());
 				// 常见问题
 				plan.setNormalQuestions(StringUtils.isEmpty(form.getNormalQuestion()) ? "" : form.getNormalQuestion());
+				// 最小投资比数
+				plan.setMinInvestCounts(StringUtils.isEmpty(form.getMinInvestCounts()) ? 0 : Integer.parseInt(form.getMinInvestCounts()));
 				// 更新时间
 				plan.setUpdateTime(new Date());
 				// 更新用户ID
@@ -463,6 +465,8 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		plan.setCouponConfig(form.getCouponConfig());
 		// 计划介绍
 		plan.setPlanConcept(form.getPlanConcept());
+		// 最小投资比数
+		plan.setMinInvestCounts(StringUtils.isEmpty(form.getMinInvestCounts()) ? 0 : Integer.parseInt(form.getMinInvestCounts()));
 		// 计划原理
 		plan.setPlanPrinciple("计划原理");
 		// 风控保障措施

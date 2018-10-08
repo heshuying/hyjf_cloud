@@ -9,17 +9,17 @@ import com.hyjf.am.resquest.config.AppBorrowImageRequest;
  */
 
 public interface AppBorrowImageService {
-    public AppBorrowImageResponse getRecordList(AppBorrowImageRequest request);
+     AppBorrowImageResponse getRecordList(AppBorrowImageRequest request);
 
     /**
      * 获取单个
      *
      * @return
      */
-    public AppBorrowImageResponse getRecord(AppBorrowImageRequest request);
+     AppBorrowImageResponse getRecord(AppBorrowImageRequest request);
 
-    public AppBorrowImageResponse insertRecord(AppBorrowImageRequest record) throws Exception;
-    public AppBorrowImageResponse updateRecord(AppBorrowImageRequest record) throws Exception;
+     AppBorrowImageResponse insertRecord(AppBorrowImageRequest record) ;
+     AppBorrowImageResponse updateRecord(AppBorrowImageRequest record) ;
 
-    public AppBorrowImageResponse deleteRecord(AppBorrowImageRequest record) throws Exception;
+     AppBorrowImageResponse deleteRecord(AppBorrowImageRequest record) ;
 }

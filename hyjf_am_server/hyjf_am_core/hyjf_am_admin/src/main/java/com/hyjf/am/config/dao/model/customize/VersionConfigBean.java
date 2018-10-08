@@ -1,10 +1,10 @@
 package com.hyjf.am.config.dao.model.customize;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.Version;
 import com.hyjf.common.paginator.Paginator;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author lisheng

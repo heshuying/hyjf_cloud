@@ -14,8 +14,8 @@ import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
 import com.hyjf.am.resquest.admin.AutoTenderExceptionRequest;
 import com.hyjf.am.resquest.admin.TenderExceptionSolveRequest;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.bean.RedisBorrow;
@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -221,6 +222,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String tenderExceptionAction(TenderExceptionSolveRequestBean tenderExceptionSolveRequestBean){
         String userId = tenderExceptionSolveRequestBean.getUserId();
         String planOrderId = tenderExceptionSolveRequestBean.getPlanOrderId();

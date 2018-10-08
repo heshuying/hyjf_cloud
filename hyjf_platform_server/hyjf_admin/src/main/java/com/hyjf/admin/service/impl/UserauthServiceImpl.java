@@ -4,9 +4,6 @@
 package com.hyjf.admin.service.impl;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.UserauthService;
@@ -15,6 +12,8 @@ import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
 import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author DongZeShan

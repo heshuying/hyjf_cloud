@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -1404,6 +1404,7 @@
 
         <table tableName="ht_r_user" domainObjectName="RUser">
             <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="user_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_stzh_white_list" domainObjectName="StzhWhiteList">
@@ -1439,7 +1440,6 @@
         </table>
 
         <table tableName="ht_transfer_exception_log" domainObjectName="TransferExceptionLog">
-            <generatedKey column="uuid" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1586,6 +1586,7 @@
 
         <table tableName="ht_content_help" domainObjectName="ContentHelp">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="zhichi_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_content_qualify" domainObjectName="ContentQualify">
@@ -1904,6 +1905,24 @@
         <table tableName="ht_borrow_delete" domainObjectName="BorrowDelete">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="exception_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+	    
+	    <table tableName="ht_debt_config" domainObjectName="DebtConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="toggle" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="config_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        
+          <table tableName="ht_debt_config_log" domainObjectName="DebtConfigLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="toggle" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 销售日报邮件配置表 -->
+        <table tableName="ht_sell_daily_distribution" domainObjectName="SellDailyDistribution">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="time_point" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 

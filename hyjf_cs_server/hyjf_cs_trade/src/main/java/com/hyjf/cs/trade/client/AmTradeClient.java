@@ -1,4 +1,5 @@
 package com.hyjf.cs.trade.client;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
@@ -30,22 +31,6 @@ import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
-import com.hyjf.am.vo.trade.InvestListCustomizeVO;
-import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
-import com.hyjf.am.vo.trade.ProjectBeanVO;
-import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.ProtocolTemplateVO;
-import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
-import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.TenderToCreditAssignCustomizeVO;
-import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
-import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
-import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
@@ -61,10 +46,7 @@ import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
@@ -1818,11 +1800,6 @@ public interface AmTradeClient {
      *
      * 投资预插入
      *
-     * @param borrowNid
-     * @param orderId
-     * @param userId
-     * @param account
-     * @param ip
      * @return
      * @author Administrator
      * @throws Exception
@@ -2199,4 +2176,45 @@ public interface AmTradeClient {
 
 	ProjectBeanVO getRepayProjectDetail(ProjectBeanVO form);
 
+    HjhInstConfigVO selectInstConfigByInstCode(String instCode);
+
+    int updateBeforeCash(ApiUserWithdrawRequest request);
+
+    AccountWithdrawVO getAccountWithdrawByOrderId(String logOrderId);
+
+    List<AccountWithdrawVO> searchAccountWithdrawByUserIdPaginate(ApiUserWithdrawRequest request);
+
+    String handlerAfterCash(ApiUserWithdrawRequest userWithdrawRequest);
+
+    String handleRechargeOnlineInfo(HandleAccountRechargeRequest rechargeRequest);
+
+    List<AccountRechargeVO> selectAccountRechargeByOrderId(String ordId);
+
+    int insertAccountRecharge(AccountRechargeVO record);
+
+    String handleRechargeInfo(HandleAccountRechargeRequest rechargeRequest);
+
+    /**
+     * 获取用户投资数量
+     * @param userId
+     * @return
+     */
+    int countNewUserTotal(Integer userId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  微信获取我的优惠券列表
+     * @Date 15:27 2018/9/28
+     * @Param requestBean
+     * @return
+     */
+    List<MyCouponListCustomizeVO> selectWechatCouponList(MyCouponListRequest requestBean);
+
+    /**
+     * 根据资产来源查询保证金配置 add by liushouyi
+     *
+     * @param instCode
+     * @return
+     */
+    BailConfigInfoCustomizeVO selectBailConfigByInstCode(String instCode);
 }

@@ -8,7 +8,6 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.security.util.SignUtil;
-import com.hyjf.common.util.ApiSignUtil;
 import com.hyjf.common.util.CookieUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.SecretUtil;
@@ -27,7 +26,6 @@ import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanMap;
@@ -37,10 +35,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,12 +65,13 @@ public class ApiUserBindController extends BaseUserController {
      * @param
      * @return
      */
-	@ApiOperation(value = "获取登录参数",notes = "获取登录参数")
+	@ApiOperation(value = "页面授权绑定api-跳转登陆授权页面",notes = "页面授权绑定api-跳转登陆授权页面")
 	@PostMapping(value = "/bindApi")
-	public JSONObject bindApi(HttpServletRequest request, HttpServletResponse response,@RequestBody ApiUserPostBean apiUserPostBean){
+	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response, @RequestBody ApiUserPostBean apiUserPostBean){
 		// 设置接口结果页的信息（返回Url）
 		this.initCheckUtil(apiUserPostBean);
-		JSONObject result = new JSONObject();
+		//TODO:用户登录授权页面
+		ModelAndView result = new ModelAndView("api/user/auth/fast-authorize-login");
 		// 验证
 		this.checkPostBeanOfWeb(apiUserPostBean);
 		logger.info("验签开始....");
@@ -82,12 +81,12 @@ public class ApiUserBindController extends BaseUserController {
 		// 解密
 		int bindUniqueId = this.decrypt(apiUserPostBean);
 		logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
-		result.put("instcode",apiUserPostBean.getPid());
+		result.addObject("instcode",apiUserPostBean.getPid());
 		Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
 
 		if(userId == null){
 			// 跳转登陆授权画面
-			result.put("apiForm",new BeanMap(apiUserPostBean));
+			result.addObject("apiForm",new BeanMap(apiUserPostBean));
 			//modelAndView.addObject("apiForm",new BeanMap(apiUserPostBean));
 		}else{
 			// 登陆
@@ -114,8 +113,8 @@ public class ApiUserBindController extends BaseUserController {
 				readonly = "readonly";
 			}
 		}
-		result.put("mobile", mobile);
-		result.put("readonly", readonly);
+		result.addObject("mobile", mobile);
+		result.addObject("readonly", readonly);
 
 		return result;
 	}
@@ -431,7 +430,7 @@ public class ApiUserBindController extends BaseUserController {
 	 /**
      * 登陆
      * @param request
-     * @param response
+     * @param
      * @param userName 用户名
      * @param password 密码
      * @return LoginResultBean

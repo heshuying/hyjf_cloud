@@ -10,6 +10,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminPartnerConfigDetailResponse;
 import com.hyjf.am.resquest.admin.AdminPartnerConfigListRequest;
 import com.hyjf.am.vo.admin.HjhInstConfigWrapVo;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -67,14 +68,9 @@ public class PartnerConfigController extends BaseController {
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertInstConfig(HttpServletRequest request, @RequestBody AdminPartnerConfigListRequest req) {
-        //登录用户id  todo   联调时要放开
-//        AdminSystemVO user = getUser(request);
-//        if(StringUtils.isNotBlank(user.getId())){
-//            req.setUserId(Integer.parseInt(user.getId()));
-//        }else{
-            req.setUserId(3);//为了接口测试用
-//        }
-
+        AdminSystemVO user = getUser(request);
+        req.setUserId(Integer.valueOf(user.getId()));//为了接口测试用
+        req.setUserId(3);
         AdminPartnerConfigDetailResponse prs = partnerConfigService.savePartnerConfig(req);
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -89,13 +85,9 @@ public class PartnerConfigController extends BaseController {
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateInstConfig(HttpServletRequest request, @RequestBody AdminPartnerConfigListRequest req) {
-        //登录用户id  todo   联调时要放开
-//        AdminSystemVO user = getUser(request);
-//        if(StringUtils.isNotBlank(user.getId())){
-//            req.setUserId(Integer.parseInt(user.getId()));
-//        }else{
-        req.setUserId(3);//为了接口测试用
-//        }
+        AdminSystemVO user = getUser(request);
+        req.setUserId(Integer.valueOf(user.getId()));
+//        req.setUserId(3);//为了接口测试用
         AdminPartnerConfigDetailResponse prs = partnerConfigService.updatePartnerConfig(req);
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

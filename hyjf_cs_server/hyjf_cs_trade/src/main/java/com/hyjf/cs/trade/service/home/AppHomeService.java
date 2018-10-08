@@ -1,8 +1,8 @@
 package com.hyjf.cs.trade.service.home;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.alibaba.fastjson.JSONObject;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface AppHomeService {
 

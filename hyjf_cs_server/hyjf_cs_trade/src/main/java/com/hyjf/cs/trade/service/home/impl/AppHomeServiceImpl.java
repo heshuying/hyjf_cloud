@@ -20,7 +20,8 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.app.AppHomePageCustomize;
 import com.hyjf.cs.trade.bean.app.AppModuleBean;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.home.AppHomeService;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -34,9 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * APP首页service
@@ -116,7 +115,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         } else {
 
             //查询用户是否开户
-            Integer userType = userVO.getUserType();
+            Integer userType = userVO.getBankOpenAccount();
             if (userType == 0) {//未开户
                 info.put("userType", "1");
                 info.put("totalAssets", "0.00");
@@ -151,8 +150,8 @@ public class AppHomeServiceImpl implements AppHomeService {
                 //获取累计收益
                 info.put("accumulatedEarnings", accountVO != null ? DF_FOR_VIEW.format(accountVO.getBankInterestSum()) : "0.00");
                 //获取(未使用的)优惠券数量
-                int couponCount = amTradeClient.getUserCouponCount(Integer.valueOf(userId), "0");
-                info.put("coupons", couponCount);
+                Integer couponCount = amTradeClient.getUserCouponCount(Integer.valueOf(userId), "0");
+                info.put("coupons", couponCount != null ? String.valueOf(couponCount) : "0");
                 info.put("adPicUrl", "");
                 info.put("adClickPicUrl", "");
             }
@@ -240,7 +239,12 @@ public class AppHomeServiceImpl implements AppHomeService {
         boolean hasInvestment = false;
         //判断是否有可投资计划
         for (HjhPlanCustomizeVO hjhPlanCustomize:planList){
-            if("立即加入".equals(hjhPlanCustomize.getStatusName())){
+            /*if("立即加入".equals(hjhPlanCustomize.getStatusName())){
+                hasInvestment = true;
+                break;
+            }*/
+            // mod by nxl 智投服务 立即加入->授权服务
+            if("授权服务".equals(hjhPlanCustomize.getStatusName())){
                 hasInvestment = true;
                 break;
             }
@@ -315,9 +319,13 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setBorrowDesc("计划");
             homePageCustomize.setBorrowType(listCustomize.getBorrowType());
             homePageCustomize.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
-            homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
+            // mod by nxl 智投服务 计划的历史回报率->参考年回报率
+//            homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
+            homePageCustomize.setBorrowTheFirstDesc("参考年回报率");
             homePageCustomize.setBorrowTheSecond(listCustomize.getBorrowPeriod());
-            homePageCustomize.setBorrowTheSecondDesc("锁定期限");
+            // mod by nxl 智投服务 锁定期限->服务回报期限
+//            homePageCustomize.setBorrowTheSecondDesc("锁定期限");
+            homePageCustomize.setBorrowTheSecondDesc("服务回报期限");
 
             PlanDetailCustomizeVO planDetailCustomizeVO = amTradeClient.getPlanDetailByPlanNid(listCustomize.getBorrowNid());
             String statusNameDesc = planDetailCustomizeVO != null ? planDetailCustomizeVO.getAvailableInvestAccount() : "0.00";
@@ -338,9 +346,12 @@ public class AppHomeServiceImpl implements AppHomeService {
                 // 20.立即加入  21.稍后开启
                 homePageCustomize.setStatus("21");
                 homePageCustomize.setStatusName("稍后开启");
-            }else if("立即加入".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
+            }/*else if("立即加入".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
                 homePageCustomize.setStatus("20");
                 homePageCustomize.setStatusName("立即加入");
+            }*/else if(listCustomize.getStatusName().equals("授权服务")){  //1.启用  2.关闭
+                homePageCustomize.setStatus("20");
+                homePageCustomize.setStatusName("授权服务");
             }
             homePageCustomize.setOnTime(listCustomize.getOnTime());
             homePageCustomize.setBorrowSchedule(listCustomize.getBorrowSchedule());

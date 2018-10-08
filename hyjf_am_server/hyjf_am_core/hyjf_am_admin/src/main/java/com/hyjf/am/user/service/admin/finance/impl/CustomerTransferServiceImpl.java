@@ -3,22 +3,21 @@
  */
 package com.hyjf.am.user.service.admin.finance.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.user.dao.model.auto.AccountChinapnr;
 import com.hyjf.am.user.dao.model.auto.AccountChinapnrExample;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserExample;
 import com.hyjf.am.user.service.admin.finance.CustomerTransferService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai
  * @version: CustomerTransferServiceImpl, v0.1 2018/7/6 9:30
  */
-@Service("amUserCustomerTransferServiceImpl")
+@Service("userCustomerTransferServiceImpl")
 public class CustomerTransferServiceImpl extends BaseServiceImpl implements CustomerTransferService {
 
     /**

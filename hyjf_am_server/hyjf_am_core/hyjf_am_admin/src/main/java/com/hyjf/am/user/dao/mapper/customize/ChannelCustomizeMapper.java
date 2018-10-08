@@ -1,8 +1,8 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.user.dao.model.customize.ChannelCustomize;
+
+import java.util.List;
 
 public interface ChannelCustomizeMapper {
 

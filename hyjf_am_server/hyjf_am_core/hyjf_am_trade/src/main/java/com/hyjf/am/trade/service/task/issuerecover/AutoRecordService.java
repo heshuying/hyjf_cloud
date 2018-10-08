@@ -3,6 +3,7 @@ package com.hyjf.am.trade.service.task.issuerecover;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
+import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 
 /**
  * 汇计划自动发标修复
@@ -32,10 +33,10 @@ public interface AutoRecordService {
      * @Author walter.limeng
      * @Description  根据ID获取对象
      * @Date 17:52 2018/7/11
-     * @Param id 主键ID
+     * @Param borrowNid
      * @return
      */
-    BorrowInfo getBorrowInfoById(Integer id);
+    BorrowInfo getBorrowInfoById(String borrowNid);
 
     /**
      * @Author walter.limeng
@@ -46,4 +47,14 @@ public interface AutoRecordService {
      * @return boolean
      */
     boolean updateRecordBorrow(Borrow borrow,BorrowInfo borrowInfo);
+
+    /**
+     * @Author walter.limeng
+     * @Description  计划标自动备案
+     * @Date 11:26 2018/9/27
+     * @Param mqHjhPlanAsset
+     * @Param hjhAssetBorrowType
+     * @return
+     */
+    boolean updateRecordBorrow(HjhPlanAsset mqHjhPlanAsset, HjhAssetBorrowtype hjhAssetBorrowType);
 }

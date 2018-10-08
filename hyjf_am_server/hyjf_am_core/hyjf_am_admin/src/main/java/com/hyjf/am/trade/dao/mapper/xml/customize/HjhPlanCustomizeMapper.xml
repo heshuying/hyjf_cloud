@@ -6,7 +6,6 @@
 	<update id="updateOfPlanJoin" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update ht_account
 		set
-		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
 		plan_account_wait = IFNULL(plan_account_wait,0) + #{planAccountWait,jdbcType=DECIMAL},
 		plan_capital_wait = IFNULL(plan_capital_wait,0) + #{planCapitalWait,jdbcType=DECIMAL},
 		plan_interest_wait = IFNULL(plan_interest_wait,0) + #{planInterestWait,jdbcType=DECIMAL}
@@ -208,10 +207,12 @@
 				AND plan.borrow_style = #{borrowStyleSrch}
 			</if>
  			<if test="addTimeStart != null and addTimeStart !='' ">
-				AND FROM_UNIXTIME( plan.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{addTimeStart}
+				<!-- sqlbug(类型不一致) -->
+				AND plan.add_time >= #{addTimeStart}
 			</if>
 			<if test="addTimeEnd != null and addTimeEnd !='' ">
-				AND FROM_UNIXTIME( plan.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{addTimeEnd}
+				<!-- sqlbug(类型不一致) -->
+				AND plan.add_time <![CDATA[<=]]> #{addTimeEnd}
 			</if>
 		</where>
 	</sql>

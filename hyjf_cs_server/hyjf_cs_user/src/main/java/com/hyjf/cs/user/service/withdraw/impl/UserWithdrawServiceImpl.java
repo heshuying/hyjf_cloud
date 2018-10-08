@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.withdraw.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
@@ -12,10 +11,8 @@ import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.*;
@@ -27,7 +24,6 @@ import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.withdraw.UserWithdrawService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
@@ -540,9 +536,14 @@ public class UserWithdrawServiceImpl extends BaseUserServiceImpl implements User
             account = new BigDecimal(account).subtract(new BigDecimal(Validator.isNull(fee) ? "0" : fee)).toString();
             // 调用江西银行提现接口
             // 调用汇付接口(提现)
-            String bankRetUrl = systemConfig.httpWebHost + "/server/user/withdraw/return.do?callback=" + retUrl.replace("#", "*-*-*");
+
+            // todo  url的域名先干掉，应该加什么？？
+            String bankRetUrl =  "/server/user/withdraw/return.do?callback=" + retUrl.replace("#", "*-*-*");
+           // String bankRetUrl = systemConfig.httpWebHost + "/server/user/withdraw/return.do?callback=" + retUrl.replace("#", "*-*-*");
             // 支付工程路径
-            String bankBgRetUrl = systemConfig.httpWebHost + "/server/user/withdraw/callback.do?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
+           // String bankBgRetUrl = systemConfig.httpWebHost + "/server/user/withdraw/callback.do?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
+            String bankBgRetUrl = "/server/user/withdraw/callback.do?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
+
             // 路由代码
             String routeCode = "";
             // 调用汇付接口(4.2.2 用户绑卡接口)
@@ -641,237 +642,6 @@ public class UserWithdrawServiceImpl extends BaseUserServiceImpl implements User
             return modelAndView;
         }
         return modelAndView;
-    }
-
-    /**
-     * api用户提现后,同步处理
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    @Override
-    public ModelAndView cashReturn(HttpServletRequest request, BankCallBean bean) {
-        logger.info("用户提现后,同步处理");
-        ModelAndView modelAndView = new ModelAndView("/callback/callback_post");
-        bean.convert();
-        String logOrderId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId();
-        // 提现订单号
-        logger.info("提现订单号:[" + logOrderId + "].");
-        UserWithdrawResultBean resultBean = new UserWithdrawResultBean();
-        resultBean.setCallBackAction(request.getParameter("callback").replace("*-*-*", "#"));
-        AccountWithdrawVO accountWithdrawVO = amTradeClient.getAccountWithdrawByOrderId(logOrderId);
-        // 提现成功
-        if (accountWithdrawVO != null) {
-            logger.info("提现成功,提现订单号:[" + logOrderId + "]");
-            resultBean.setAmt(String.valueOf(accountWithdrawVO.getTotal()));// 交易金额
-            resultBean.setArrivalAmount(String.valueOf(accountWithdrawVO.getCredited()));// 到账金额
-            resultBean.setFee(accountWithdrawVO.getFee());// 提现手续费
-            modelAndView.addObject("statusDesc", "提现成功");
-            BaseResultBean baseResultBean = new BaseResultBean();
-            baseResultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            resultBean.set("chkValue", baseResultBean.getChkValue());
-            resultBean.set("status", baseResultBean.getStatus());
-            resultBean.set("amt", String.valueOf(accountWithdrawVO.getTotal()));// 交易金额
-            resultBean.set("arrivalAmount", String.valueOf(accountWithdrawVO.getCredited()));// 到账金额
-            resultBean.set("fee", accountWithdrawVO.getFee());// 提现手续费
-            resultBean.set("orderId", accountWithdrawVO.getNid());// 提现订单号
-        } else {
-            logger.info("银行处理中,请稍后查询交易明细");
-            modelAndView.addObject("statusDesc", "银行处理中,请稍后查询交易明细");
-            BaseResultBean baseResultBean = new BaseResultBean();
-            baseResultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000005);
-            resultBean.set("chkValue", baseResultBean.getChkValue());
-            resultBean.set("status", baseResultBean.getStatus());
-//            resultBean.setStatus("2");
-//            resultBean.setStatusDesc("银行处理中,请稍后查询交易明细");
-        }
-        modelAndView.addObject("callBackForm", resultBean);
-        return modelAndView;
-    }
-
-    /**
-     * 用户提现异步回调处理
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    @Override
-    public BankCallResult withdrawBgReturn(HttpServletRequest request, BankCallBean bean) {
-        UserWithdrawResultBean resultBean = new UserWithdrawResultBean();
-        String logOrderId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId();
-        bean.convert();
-        BankCallResult result = new BankCallResult();
-        try {
-            String status ="";
-            String message = "";
-            Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID
-            resultBean.setCallBackAction(request.getParameter("callback"));
-            // 插值用参数
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("userId", String.valueOf(userId));
-            params.put("ip", CustomUtil.getIpAddr(request));
-            // 执行提现后处理
-            ApiUserWithdrawRequest userWithdrawRequest = new ApiUserWithdrawRequest();
-            BankCardVO bankCardVO = amUserClient.getBankCardByUserId(userId);
-            userWithdrawRequest.setBankCallBeanVO(CommonUtils.convertBean(bean,BankCallBeanVO.class));
-            userWithdrawRequest.setParams(params);
-            String resultStr = amTradeClient.handlerAfterCash(userWithdrawRequest);
-            JSONObject jsonObject = JSONObject.parseObject(resultStr);
-            boolean flag = jsonObject.getBoolean("flag");
-            // 提现成功后,更新银行联行号
-            // 大额提现返回成功 并且银联行号不为空的情况,将正确的银联行号更新到bankCard表中
-            // 原本在原子层逻辑中插入，但是涉及到跨库
-            if(flag){
-                // 银联行号
-                String payAllianceCode = bean.getLogAcqResBean() == null ? "" : bean.getLogAcqResBean().getPayAllianceCode();
-                logger.info("银联行号:" + payAllianceCode);
-                if ("CE999028".equals(bean.getRetCode()) && StringUtils.isNotEmpty(payAllianceCode)) {
-                    bankCardVO.setPayAllianceCode(payAllianceCode);
-                    boolean isBankCardUpdateFlag = amUserClient.updateBankCard(bankCardVO) > 0;
-                    if (!isBankCardUpdateFlag) {
-                        throw new Exception("大额提现成功后,更新用户银行卡的银联行号失败~~~!" + bankCardVO.getId());
-                    }
-                }
-            }
-
-            AccountWithdrawVO accountWithdrawVO = amTradeClient.getAccountWithdrawByOrderId(logOrderId);
-            // 提现成功
-            if (accountWithdrawVO != null) {
-                logger.info("提现成功,提现订单号:[" + logOrderId + "]");
-                status = ErrorCodeConstant.SUCCESS;
-                resultBean.setAmt(String.valueOf(accountWithdrawVO.getTotal()));// 交易金额
-                resultBean.setArrivalAmount(String.valueOf(accountWithdrawVO.getCredited()));// 到账金额
-                resultBean.setFee(accountWithdrawVO.getFee());// 提现手续费
-                message="提现成功";
-            } else {
-                logger.info("银行处理中,请稍后查询交易明细");
-//                resultBean.setStatus("2");
-//                resultBean.setStatusDesc("银行处理中,请稍后查询交易明细");
-                message = "银行处理中,请稍后查询交易明细";
-                status = ErrorCodeConstant.STATUS_CE000005;
-            }
-            logger.info("用户提现异步回调end");
-            params.put("accountId",bean.getAccountId());
-            params.put("orderId",logOrderId);
-            params.put("status", status);
-            params.put("statusDesc",message);
-            BaseResultBean baseResultBean = new BaseResultBean();
-            baseResultBean.setStatusForResponse(status);
-            params.put("chkValue", baseResultBean.getChkValue());
-            CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*","#"), params);
-        } catch (Exception e) {
-            logger.info("提现失败,用户提现发生异常,错误信息:[" + e.getMessage() + "]");
-//            resultBean.setStatus(BaseResultBean.STATUS_FAIL);
-//            resultBean.setStatusDesc("提现失败");
-        }
-        result.setStatus(true);
-        return result;
-    }
-
-    /**
-     * 获取用户提现记录
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    @Override
-    public BaseResultBean getUserWithdrawRecord(UserWithdrawRequestBean userWithdrawRequestBean) {
-        logger.info("userWithdrawRequestBean:"+JSONObject.toJSONString(userWithdrawRequestBean));
-        UserWithdrawRecordResultBean result=new UserWithdrawRecordResultBean();
-        if (Validator.isNull(userWithdrawRequestBean.getAccountId())||
-                Validator.isNull(userWithdrawRequestBean.getLimitEnd())||
-                Validator.isNull(userWithdrawRequestBean.getLimitStart())||
-                Validator.isNull(userWithdrawRequestBean.getInstCode())) {
-
-            logger.info("-------------------请求参数非法--------------------");
-            result.setStatus(BaseResultBean.STATUS_FAIL);
-            result.setStatusDesc("请求参数非法");
-            return result;
-        }
-
-        //验签
-        if(!this.verifyRequestSign(userWithdrawRequestBean, BaseDefine.METHOD_SERVER_GET_USER_WITHDRAW_RECORD)){
-            logger.info("-------------------验签失败！--------------------");
-            result.setStatus(BaseResultBean.STATUS_FAIL);
-            result.setStatusDesc("验签失败");
-            return result;
-        }
-
-        //根据账号找出用户ID
-        BankOpenAccountVO bankOpenAccount = amUserClient.selectBankOpenAccountByAccountId(userWithdrawRequestBean.getAccountId());
-        if(bankOpenAccount == null){
-            logger.info("-------------------没有根据电子银行卡找到用户"+userWithdrawRequestBean.getAccountId()+"！--------------------");
-            result.setStatus(BaseResultBean.STATUS_FAIL);
-            result.setStatusDesc("没有根据电子银行卡找到用户");
-            return result;
-        }
-        UserVO user = amUserClient.findUserById(bankOpenAccount.getUserId());//用户ID
-        if(user == null){
-            logger.info("---用户不存在汇盈金服账户---");
-            result.setStatus(BaseResultBean.STATUS_FAIL);
-            result.setStatusDesc("用户不存在汇盈金服账户");
-            return result;
-        }
-        if (user.getBankOpenAccount()==0) {
-            logger.info("-------------------没有根据电子银行卡找到用户"+userWithdrawRequestBean.getAccountId()+"！--------------------");
-            result.setStatus(BaseResultBean.STATUS_FAIL);
-            result.setStatusDesc("没有根据电子银行卡找到用户");
-            return result;
-        }
-
-        if (userWithdrawRequestBean.getInstCode()==null||!userWithdrawRequestBean.getInstCode().equals(user.getInstCode())) {
-            logger.info("-------------------该电子账户号非本平台注册不能查询"+userWithdrawRequestBean.getAccountId()+"！--------------------");
-            result.setStatus(BaseResultBean.STATUS_FAIL);
-            result.setStatusDesc("该电子账户号非本平台注册不能查询");
-            return result;
-        }
-
-        // 查询用户提现记录列表 做格式化等操作
-        List<UserWithdrawRecordCustomizeVO> recordList =
-                this.getThirdPartyUserWithdrawRecord(user.getUserId(),userWithdrawRequestBean.getStatus(),userWithdrawRequestBean.getLimitStart(),userWithdrawRequestBean.getLimitEnd());
-        logger.info("用户提现记录列表【{}】", JSON.toJSONString(recordList));
-        result.setRecordList(recordList);
-        result.setStatus(BaseResultBean.STATUS_SUCCESS);
-        result.setStatusDesc(BaseResultBean.STATUS_DESC_SUCCESS);
-        // 返回查询结果
-        return result;
-    }
-
-    /**
-     * 查询用户提现记录列表
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    private List<UserWithdrawRecordCustomizeVO> getThirdPartyUserWithdrawRecord(Integer userId,String status,Integer limitStart,Integer limitEnd){
-        UserVO userVO = amUserClient.findUserById(userId);
-        UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
-        List<UserWithdrawRecordCustomizeVO> resultList = new ArrayList<>();
-        ApiUserWithdrawRequest request = new ApiUserWithdrawRequest();
-        request.setUserId(userId);
-        request.setStatus(Integer.valueOf(status));
-        request.setLimitStart(limitStart);
-        request.setLimitEnd(limitEnd);
-        List<AccountWithdrawVO> accountWithdrawVOList = amTradeClient.searchAccountWithdrawByUserIdPaginate(request);
-        Map<String,String> map = CacheUtil.getParamNameMap("WITHDRAW_STATUS");
-        for(AccountWithdrawVO accountWithdrawVO:accountWithdrawVOList){
-            UserWithdrawRecordCustomizeVO result = new UserWithdrawRecordCustomizeVO();
-            result.setUsername(userVO.getUsername());
-            result.setTruename(userInfoVO.getTruename());
-            result.setTotal(accountWithdrawVO.getTotal().toString());
-            result.setCredited(accountWithdrawVO.getCredited().toString());
-            result.setFee(accountWithdrawVO.getFee());
-            BankCardVO bankCardVO = amUserClient.getBankCardById(accountWithdrawVO.getBankId());
-            String cardNo = bankCardVO.getCardNo();
-            result.setCardNo((cardNo==null || "".equals(cardNo))?"银行卡已删除":cardNo);
-            result.setBank(accountWithdrawVO.getBank());
-            result.setStatus(map.get(String.valueOf(accountWithdrawVO.getStatus())));
-            //TODO:这里有问题，数据库表的字段已经更换。同时由于nxl代码中有关于老字段的应用，所以这里需要确认
-            result.setWithdrawTime(accountWithdrawVO.getAddtime());
-            //result.setWithdrawTime(GetDate.dateToString(accountWithdrawVO.getCreateTime()));
-            resultList.add(result);
-        }
-        return resultList;
     }
 
     /**

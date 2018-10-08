@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.resquest.admin;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author libin

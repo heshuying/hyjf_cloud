@@ -1,8 +1,8 @@
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.AppBorrowImage;
+
+import java.util.List;
 
 /**
  * @author lisheng

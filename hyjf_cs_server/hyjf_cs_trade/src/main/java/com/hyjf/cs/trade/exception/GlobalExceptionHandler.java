@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.exception;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.trade.bean.BaseResultBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hyjf.common.exception.ReturnMessageException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author xiasq

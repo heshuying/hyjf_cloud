@@ -3,9 +3,10 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
+import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.batch.RedPacketSmsNoticeBatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.hyjf.cs.trade.service.batch.RedPacketSmsNoticeBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @ApiIgnore
 @RestController
 @RequestMapping("/redPacket")
-public class RedPacketSmsNoticeBatchController {
+public class RedPacketSmsNoticeBatchController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(RedPacketSmsNoticeBatchController.class);
 
     @Autowired

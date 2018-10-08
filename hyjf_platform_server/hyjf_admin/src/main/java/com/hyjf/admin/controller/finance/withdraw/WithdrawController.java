@@ -28,17 +28,14 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author jijun
@@ -57,13 +54,12 @@ public class WithdrawController extends BaseController {
 	 * 返现管理画面初始化
 	 *
 	 * @param request
-	 * @param form
 	 * @return
 	 */
 	@ApiOperation(value = "提现管理页面载入", notes = "提现管理页面载入")
 	@PostMapping("/init")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public AdminResult<ListResult<AdminWithdrawAPIVO>> init(WithdrawBeanAPIRequest request) {
+	public AdminResult<ListResult<AdminWithdrawAPIVO>> init(@RequestBody WithdrawBeanAPIRequest request) {
 
 		WithdrawCustomizeResponse response =withdrawService.getWithdrawRecordList(CommonUtils.convertBean(request, WithdrawBeanRequest.class));
 		if (response==null){
@@ -72,8 +68,15 @@ public class WithdrawController extends BaseController {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 
-		List<AdminWithdrawAPIVO> apiList=CommonUtils.convertBeanList(response.getResultList(), AdminWithdrawAPIVO.class);
-		return new AdminResult<ListResult<AdminWithdrawAPIVO>>(ListResult.build(apiList, response.getCount()));
+		List<AdminWithdrawAPIVO> apiList = new ArrayList<AdminWithdrawAPIVO>();
+
+		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			apiList=CommonUtils.convertBeanList(response.getResultList(), AdminWithdrawAPIVO.class);
+			return new AdminResult<ListResult<AdminWithdrawAPIVO>>(ListResult.build(apiList, response.getCount()));
+		}else {
+			return new AdminResult<ListResult<AdminWithdrawAPIVO>>(ListResult.build(apiList,0));
+
+		}
 	}
 
 	/**
@@ -85,7 +88,7 @@ public class WithdrawController extends BaseController {
 	@ApiOperation(value = "提现确认", notes = "提现确认")
 	@PostMapping("/withdrawConfirm")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CONFIRM)
-	public String confirmWithdrawAction(HttpServletRequest request,WithdrawBeanRequest form) {
+	public String confirmWithdrawAction(HttpServletRequest request,@RequestBody WithdrawBeanAPIRequest form) {
 		JSONObject ret = new JSONObject();
 		Integer userId = form.getUserId();
 		String nid = form.getNid();
@@ -162,8 +165,8 @@ public class WithdrawController extends BaseController {
 	 */
 	@ApiOperation(value = "导出EXCEL", notes = "导出EXCEL")
 	@PostMapping("/exportWithdrawExcel")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-	public void exportWithdrawExcel(HttpServletRequest request, HttpServletResponse response, WithdrawBeanRequest form) throws Exception {
+	//@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportWithdrawExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody WithdrawBeanAPIRequest form) throws Exception {
 		// 表格sheet名称
 		String sheetName = "提现列表";
 
@@ -178,7 +181,7 @@ public class WithdrawController extends BaseController {
 			form.setAddtimeEndSrch(GetDate.getDate("yyyy-MM-dd"));
 		}
 		List<WithdrawCustomizeVO> recordList = null;
-		WithdrawCustomizeResponse recordListResponse=this.withdrawService.getWithdrawRecordList(form);
+		WithdrawCustomizeResponse recordListResponse=this.withdrawService.getWithdrawRecordList(CommonUtils.convertBean(form, WithdrawBeanRequest.class));
 		if (Validator.isNotNull(recordListResponse)){
 			recordList=recordListResponse.getResultList();
 		}

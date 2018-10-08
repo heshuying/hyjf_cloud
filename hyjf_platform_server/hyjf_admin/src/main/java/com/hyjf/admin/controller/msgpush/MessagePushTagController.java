@@ -6,10 +6,9 @@ package com.hyjf.admin.controller.msgpush;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.service.ActivityListService;
 import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
-import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
+import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.resquest.config.MessagePushTagRequest;
@@ -17,16 +16,13 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetterUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -184,12 +180,15 @@ public class MessagePushTagController extends BaseController {
         return new AdminResult<>(response);
     }
 
+    @Autowired
+    private FileUpLoadUtil fileUpLoadUtil;
+
     @ApiOperation(value = "文件上传", notes = "文件上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);
             adminResult.setData(borrowCommonImages);
             adminResult.setStatus(SUCCESS);
             adminResult.setStatusDesc(SUCCESS_DESC);

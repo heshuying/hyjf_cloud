@@ -1,13 +1,12 @@
 package com.hyjf.am.trade.service.admin.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-
+import com.hyjf.am.trade.dao.model.customize.HjhDayCreditDetailCustomize;
 import com.hyjf.am.trade.service.admin.DayCreditDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 产品中心 --> 汇计划 --> 资金计划 -> 转让详情 ServiceImpl
@@ -32,8 +31,8 @@ public class DayCreditDetailServiceImpl extends BaseServiceImpl implements DayCr
      * @return
      */
     @Override
-    public List<DayCreditDetailVO> selectDebtCreditList(Map<String, Object> params) {
-        List<DayCreditDetailVO> recordList = hjhDayCreditDetailCustomizeMapper.selectDebtCreditList(params);
+    public List<HjhDayCreditDetailCustomize> selectDebtCreditList(Map<String, Object> params) {
+        List<HjhDayCreditDetailCustomize> recordList = hjhDayCreditDetailCustomizeMapper.selectDebtCreditList(params);
         return recordList;
     }
 }

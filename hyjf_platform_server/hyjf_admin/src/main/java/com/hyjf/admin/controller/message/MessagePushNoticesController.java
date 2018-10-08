@@ -6,6 +6,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MessagePushHistoryService;
 import com.hyjf.admin.service.MessagePushNoticesService;
+import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushNoticesResponse;
 import com.hyjf.am.response.admin.MessagePushTagResponse;
@@ -15,7 +16,6 @@ import com.hyjf.am.vo.admin.MessagePushTagVO;
 import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
@@ -25,7 +25,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -88,7 +87,6 @@ public class MessagePushNoticesController extends BaseController {
     @PostMapping(value = "/add")
     @ResponseBody
     public AdminResult<MessagePushMsgVO> add(@RequestBody MessagePushNoticesRequest form,HttpServletRequest request) {
-        try {
             AdminSystemVO user = getUser(request);
             if (user != null) {
                 String username = user.getUsername();
@@ -100,35 +98,25 @@ public class MessagePushNoticesController extends BaseController {
             } else {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
-        }catch (ReturnMessageException e){
-            return new AdminResult<>(FAIL, e.getError().getMsg());
-        }
-        catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+
     }
 
     @ApiOperation(value = "发送列表删除", notes = "发送列表删除")
     @PostMapping(value = "/delete")
     @ResponseBody
     public AdminResult<MessagePushMsgVO> delete(@RequestBody MessagePushNoticesRequest form) {
-        try {
             MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.deleteRecord(form);
             if (Response.isSuccess(messagePushNoticesResponse)) {
                 return new AdminResult<>(SUCCESS, SUCCESS_DESC);
             } else {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
-        } catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
     }
 
     @ApiOperation(value = "发送列表修改", notes = "发送列表修改")
     @PostMapping(value = "/update")
     @ResponseBody
     public AdminResult<MessagePushMsgVO> update(@RequestBody MessagePushNoticesRequest form,HttpServletRequest request) {
-        try {
             AdminSystemVO user = getUser(request);
             if (user != null) {
                 String username = user.getUsername();
@@ -140,9 +128,6 @@ public class MessagePushNoticesController extends BaseController {
             } else {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
-        } catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
     }
 
     /**
@@ -156,8 +141,6 @@ public class MessagePushNoticesController extends BaseController {
     @ResponseBody
     public JSONObject info(@RequestBody MessagePushNoticesRequest form) {
         JSONObject jsonObject = new JSONObject();
-
-        try {
             if (StringUtils.isNotEmpty(form.getIds())) {
                     MessagePushNoticesResponse response = this.messagePushNoticesService.getRecord(form);
                 MessagePushMsgVO record = response.getResult();
@@ -191,49 +174,19 @@ public class MessagePushNoticesController extends BaseController {
                 }
             }
             jsonObject.put("msgPushNoticesForm", form);
-
             // 标签类型
             MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
             List<MessagePushTagVO> resultList = tagList.getResultList();
             jsonObject.put("noticesPushTags", resultList);
             prepareDatas(jsonObject);
             return jsonObject;
-        } catch (Exception e) {
-            jsonObject.put(FAIL, FAIL_DESC);
-            return jsonObject;
 
-        }
     }
 
 
 
-    /**
-     * 检查是否是电话号码
-     *
-     * @param request
-     * @return
-     */
-    /*public String checkMobilesAction(ModelAndView modelAndView, HttpServletRequest request,@RequestParam("mobile") String mobile) {
-        String mobiles = request.getParameter("param");
-        JSONObject ret = new JSONObject();
-        // 检查是否是电话号码
-        if (!com.hyjf.admin.utils.ValidatorFieldCheckUtil.validateRequired(modelAndView, "msgDestination", mobiles)) {
-            ret.put("info", "电话号码不能为空.");
-            return ret.toString();
-        }
-        String[] mobileStrs = mobiles.split(",");
-        for (int i = 0; i < mobileStrs.length; i++) {
-            if (!com.hyjf.admin.utils.ValidatorFieldCheckUtil.validateMobile(modelAndView, "msgDestination", mobileStrs[i], true)) {
-                ret.put("info", mobileStrs[i] + "不是正确的电话号码");
-                return ret.toString();
-            }
-        }
-        // 没有错误时,返回y
-        if (!ret.containsKey("info")) {
-            ret.put("status", "y");
-        }
-        return ret.toString();
-    }*/
+    @Autowired
+    private FileUpLoadUtil fileUpLoadUtil;
 
     /**
      * 资料上传
@@ -246,16 +199,12 @@ public class MessagePushNoticesController extends BaseController {
     @ResponseBody
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
-        try {
-            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);
             adminResult.setData(borrowCommonImages);
             adminResult.setStatus(SUCCESS);
             adminResult.setStatusDesc(SUCCESS_DESC);
             return adminResult;
-        } catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
 
-        }
     }
 
 

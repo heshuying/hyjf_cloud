@@ -2,12 +2,10 @@ package com.hyjf.am.trade.service.admin.impl;
 
 import com.hyjf.am.resquest.admin.IncreaseInterestRepayPlanRequest;
 import com.hyjf.am.trade.dao.mapper.auto.IncreaseInterestRepayDetailMapper;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepay;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayDetail;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayDetailExample;
 import com.hyjf.am.trade.service.admin.IncreaseInterestRepayPlanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.admin.AdminIncreaseInterestRepayCustomizeVO;
 import com.hyjf.am.vo.admin.IncreaseInterestRepayDetailVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;

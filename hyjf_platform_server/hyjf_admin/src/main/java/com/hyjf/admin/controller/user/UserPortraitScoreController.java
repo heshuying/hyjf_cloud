@@ -12,26 +12,17 @@ import com.hyjf.admin.service.UserPortraitScoreSerivce;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UserPortraitScoreResponse;
 import com.hyjf.am.resquest.admin.UserPortraitScoreRequest;
-import com.hyjf.am.vo.admin.AccountRechargeVO;
 import com.hyjf.am.vo.admin.UserPortraitScoreCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yaoyong

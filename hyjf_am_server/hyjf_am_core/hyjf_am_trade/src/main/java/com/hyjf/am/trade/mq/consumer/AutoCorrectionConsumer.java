@@ -3,9 +3,12 @@
  */
 package com.hyjf.am.trade.mq.consumer;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.trade.dao.model.customize.AleveLogCustomize;
+import com.hyjf.am.trade.mq.base.Consumer;
+import com.hyjf.am.trade.service.task.AleveLogFileService;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.validator.Validator;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -19,12 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.trade.dao.model.customize.AleveLogCustomize;
-import com.hyjf.am.trade.mq.base.Consumer;
-import com.hyjf.am.trade.service.task.AleveLogFileService;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.validator.Validator;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author wangjun

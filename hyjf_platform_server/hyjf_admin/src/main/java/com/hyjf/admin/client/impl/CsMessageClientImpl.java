@@ -8,6 +8,7 @@ import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -464,6 +465,15 @@ public class CsMessageClientImpl implements CsMessageClient {
         return null;
     }
 
+    @Override
+    public AppChannelStatisticsDetailResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
+        AppChannelStatisticsDetailResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/search/exportStatisticsList", request, AppChannelStatisticsDetailResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+
+    }
     @Override
     public SmsOntimeResponse queryTime(SmsLogRequest request) {
         SmsOntimeResponse response = restTemplate

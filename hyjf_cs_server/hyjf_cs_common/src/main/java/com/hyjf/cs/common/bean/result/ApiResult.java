@@ -14,7 +14,7 @@ package com.hyjf.cs.common.bean.result;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.common.constants.MsgCode;
-import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.cs.common.util.ApiSignUtil;
 
 import java.io.Serializable;
 
@@ -27,14 +27,18 @@ import java.io.Serializable;
 public class ApiResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 5413541226545232L;
 
-	private String chkValue = null; // response时的签名，可选
+	// response时的签名，可选
+	private String chkValue = null;
 
-	{
+	//{
 		// 返回值加签
-		this.chkValue = ApiSignUtil.encryptByRSA(super.getStatus());
-	}
+		//this.chkValue = ApiSignUtil.encryptByRSA(super.getStatus());
+
+	//}
 
 	public ApiResult() {
+		// 返回值加签
+		this.chkValue = ApiSignUtil.encryptByRSA(super.getStatus());
 	}
 
 	public ApiResult(String chkValue) {

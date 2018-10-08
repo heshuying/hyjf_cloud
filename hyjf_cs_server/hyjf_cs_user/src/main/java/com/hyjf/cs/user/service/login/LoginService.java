@@ -5,12 +5,11 @@ package com.hyjf.cs.user.service.login;
 
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.cs.user.service.BaseUserService;
-
-import java.util.Map;
+import com.hyjf.cs.user.vo.UserParameters;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -26,6 +25,14 @@ public interface LoginService extends BaseUserService {
      * @param ip
      */
     WebViewUserVO login(String loginUserName, String loginPassword, String ip,String channel);
+
+    /**
+     * 通过密码验证后的纯登录操作
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    WebViewUserVO loginOperationOnly(UserVO userVO,String loginUserName,String ip,String channel);
 
     /**
      * app登录参数检查

@@ -1,6 +1,6 @@
 package com.hyjf.admin.service.impl.mobileclient;
 
-import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.service.mobileclient.AppBorrowImageService;
 import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AppBorrowImageServiceImpl implements AppBorrowImageService {
-    @Autowired
-    AmConfigClient amConfigClient;
 
+    @Autowired
+    AmAdminClient amAdminClient;
     /**
      * 获取广告管理列表数据
      * @param request
@@ -23,7 +23,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      */
     @Override
     public AppBorrowImageResponse getRecordList(AppBorrowImageRequest request) {
-        return amConfigClient.searchList(request);
+        return amAdminClient.searchList(request);
     }
 
     /**
@@ -33,7 +33,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      */
     @Override
     public AppBorrowImageResponse getRecord(AppBorrowImageRequest request) {
-        return amConfigClient.searchInfo(request);
+        return amAdminClient.searchInfo(request);
     }
 
     /**
@@ -43,8 +43,8 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      * @throws Exception
      */
     @Override
-    public AppBorrowImageResponse insertRecord(AppBorrowImageRequest record) throws Exception {
-        return amConfigClient.insertInfo(record);
+    public AppBorrowImageResponse insertRecord(AppBorrowImageRequest record)  {
+        return amAdminClient.insertInfo(record);
     }
 
     /**
@@ -54,8 +54,8 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      * @throws Exception
      */
     @Override
-    public AppBorrowImageResponse updateRecord(AppBorrowImageRequest record) throws Exception {
-        return amConfigClient.updateInfo(record);
+    public AppBorrowImageResponse updateRecord(AppBorrowImageRequest record)  {
+        return amAdminClient.updateInfo(record);
 
     }
 
@@ -66,7 +66,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      * @throws Exception
      */
     @Override
-    public AppBorrowImageResponse deleteRecord(AppBorrowImageRequest record) throws Exception {
-        return amConfigClient.deleteInfo(record);
+    public AppBorrowImageResponse deleteRecord(AppBorrowImageRequest record)  {
+        return amAdminClient.deleteInfo(record);
     }
 }

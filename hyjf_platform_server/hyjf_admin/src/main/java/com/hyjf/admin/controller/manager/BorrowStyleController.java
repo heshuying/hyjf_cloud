@@ -15,7 +15,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -124,8 +127,8 @@ public class BorrowStyleController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "保证金配置删除", notes = "保证金配置删除")
-    @PostMapping("/deleteAction}")
+    @ApiOperation(value = "还款方式删除", notes = "还款方式删除")
+    @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBorrowStyle(@RequestBody BorrowStyleRequestBean from) {
         AdminBorrowStyleResponse prs =new AdminBorrowStyleResponse();

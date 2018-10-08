@@ -22,7 +22,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.*;
@@ -131,7 +130,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "设置交易密码异步回调")
     @PostMapping(value = "/passwordBgreturn")
-    public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
+    public String passwordBgreturn(BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
         BankMerchantAccountVO bankMerchantAccount = bankMerchantAccountService.getBankMerchantAccount(bean.getAccountId());
@@ -165,7 +164,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "重置交易密码异步回调")
     @PostMapping(value = "/resetPasswordBgreturn")
-    public String resetPasswordBgreturn(@ModelAttribute BankCallBean bean) {
+    public String resetPasswordBgreturn(BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         result.setMessage("交易密码修改成功");
         result.setStatus(true);
@@ -179,9 +178,9 @@ public class BankMerchantAccountController extends BaseController {
     @ApiOperation(value = "调用银行失败原因", notes = "调用银行失败原因")
     @PostMapping("/searchFiledMess")
     @ResponseBody
-    public WebResult<Object> searchFiledMess(@RequestParam("logOrdId") String logOrdId) {
+    public AdminResult<Object> searchFiledMess(@RequestParam("logOrdId") String logOrdId) {
         logger.info("调用银行失败原因start,logOrdId:{}", logOrdId);
-        WebResult<Object> result = new WebResult<Object>();
+        AdminResult<Object> result = new AdminResult<Object>();
         String retMsg = bankMerchantAccountService.getFiledMess(logOrdId);
         Map<String,String> map = new HashedMap();
         map.put("error",retMsg);

@@ -3,16 +3,15 @@
  */
 package com.hyjf.am.vo.datacollect;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.*;
-
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.ComparatorUtils;
 import org.apache.commons.collections.comparators.ComparableComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
 
-import com.alibaba.fastjson.JSONObject;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * @author fuqiang

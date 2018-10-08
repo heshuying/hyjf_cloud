@@ -5,7 +5,7 @@ package com.hyjf.cs.user.service.batch.Impl;
 
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
-import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserLoginLogVO;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -38,13 +38,13 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
     public void userPortraitBatch() {
         logger.info("用户画像(每日)定时任务开始....");
         // 查询出需要更新用户画像的用户信息
-        List<UserInfoVO> userInfoVOList = amUserClient.searchUserInfo();
+        List<UserLoginLogVO> userLoginLogVOList = amUserClient.searchUserIdForUserPortrait();
         String userId = "";
         // list不为空就进行更新
-        if(!CollectionUtils.isEmpty(userInfoVOList)){
+        if(!CollectionUtils.isEmpty(userLoginLogVOList)){
             // 组装userId，去am-trade查询用户画像的相关信息
-            for(UserInfoVO userInfoVO:userInfoVOList){
-                userId += userInfoVO.getUserId() + ",";
+            for(UserLoginLogVO userLoginLogVO:userLoginLogVOList){
+                userId += userLoginLogVO.getUserId() + ",";
             }
             // 去掉最后的,
             userId = userId.substring(0,userId.lastIndexOf(","));

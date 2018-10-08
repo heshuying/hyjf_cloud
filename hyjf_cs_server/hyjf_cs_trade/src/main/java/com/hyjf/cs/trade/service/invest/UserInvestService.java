@@ -2,7 +2,6 @@ package com.hyjf.cs.trade.service.invest;
 
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.cs.common.service.BaseService;
 
 import java.util.List;
