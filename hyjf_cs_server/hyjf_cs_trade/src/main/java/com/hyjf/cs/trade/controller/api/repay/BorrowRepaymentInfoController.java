@@ -46,16 +46,16 @@ public class BorrowRepaymentInfoController  extends BaseController {
     public ResultApiBean repaymentInfoList(@RequestBody @Valid ApiBorrowRepaymentInfoRequestBean bean) {
         logger.info(bean.getAccountId() + "第三方还款明细查询接口开始-----------------------------");
         logger.info("第三方请求参数：" + JSONObject.toJSONString(bean));
-        // 验证
-        // 共通验证
-        commonSvrChkService.checkRequired(bean);
-        // 验证资产编号
-        CheckUtil.check(Validator.isNotNull(bean.getAssetId()), MsgEnum.STATUS_ZC000018);
-        // 分页验证
-        commonSvrChkService.checkLimit(bean.getLimitStart(), bean.getLimitEnd());
-        // 验签
-        CheckUtil.check(SignUtil.verifyRequestSign(bean, "/server/repayment/repaymentInfoList"),
-                MsgEnum.ERR_SIGN);
+//        // 验证
+//        // 共通验证
+//        commonSvrChkService.checkRequired(bean);
+//        // 验证资产编号
+//        CheckUtil.check(Validator.isNotNull(bean.getAssetId()), MsgEnum.STATUS_ZC000018);
+//        // 分页验证
+//        commonSvrChkService.checkLimit(bean.getLimitStart(), bean.getLimitEnd());
+//        // 验签
+//        CheckUtil.check(SignUtil.verifyRequestSign(bean, "/server/repayment/repaymentInfoList"),
+//                MsgEnum.ERR_SIGN);
 
 
         logger.info(bean.getInstCode() + "  ----还款明细查询接口开始");

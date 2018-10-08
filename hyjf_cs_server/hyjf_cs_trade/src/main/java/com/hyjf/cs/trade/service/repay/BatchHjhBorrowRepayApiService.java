@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.repay;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.vo.trade.borrow.BatchCenterCustomizeVO;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
@@ -15,7 +16,7 @@ public interface BatchHjhBorrowRepayApiService extends BaseService {
 	 * @param batchCenterCustomize
 	 * @return
 	 */
-	Long countBatchCenter(BatchCenterCustomize batchCenterCustomize);
+	Integer countBatchCenter(BatchCenterCustomize batchCenterCustomize);
 	/**
 	 *
 	 * 获取批次放款列表
