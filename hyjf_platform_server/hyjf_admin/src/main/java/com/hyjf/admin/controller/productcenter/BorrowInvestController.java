@@ -79,8 +79,10 @@ public class BorrowInvestController extends BaseController {
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
-        //初始化只获取10天数据
-        borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
+        //如果是投资明细页面进入 默认近10天数据
+        if(!borrowInvestRequestBean.getIsOptFlag().equals("1")){
+            borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
+        }
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         //还款方式
         List<DropDownVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
