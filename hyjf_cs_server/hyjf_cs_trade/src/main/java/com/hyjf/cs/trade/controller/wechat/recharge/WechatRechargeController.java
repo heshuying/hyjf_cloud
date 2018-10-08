@@ -72,7 +72,7 @@ public class WechatRechargeController extends BaseTradeController{
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		directRechargeBean.setPlatform(CommonConstant.CLIENT_WECHAT);
-        directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig));
+        directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 		Map<String,Object> map = new HashMap<>();
 		try {
