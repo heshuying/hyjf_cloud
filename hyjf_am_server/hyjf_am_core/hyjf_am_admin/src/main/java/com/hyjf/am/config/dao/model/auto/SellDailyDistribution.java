@@ -1,20 +1,9 @@
-package com.hyjf.am.vo.admin;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+package com.hyjf.am.config.dao.model.auto;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-/**
- * @author lisheng
- * @version SellDailyDistributionVO, v0.1 2018/10/8 11:26
- */
-
-public class SellDailyDistributionVO implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class SellDailyDistribution implements Serializable {
     private Integer id;
 
     private String businessName;
@@ -23,7 +12,6 @@ public class SellDailyDistributionVO implements Serializable {
 
     private Integer timePoint;
 
-    @JsonFormat(pattern="HH:mm:ss",timezone="GMT+8")
     private Date sendTime;
 
     private Integer status;
@@ -32,13 +20,11 @@ public class SellDailyDistributionVO implements Serializable {
 
     private String updateName;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createTime;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updateTime;
 
-    private List<String> emails;
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -53,7 +39,7 @@ public class SellDailyDistributionVO implements Serializable {
     }
 
     public void setBusinessName(String businessName) {
-        this.businessName = businessName;
+        this.businessName = businessName == null ? null : businessName.trim();
     }
 
     public String getEmail() {
@@ -61,7 +47,7 @@ public class SellDailyDistributionVO implements Serializable {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email == null ? null : email.trim();
     }
 
     public Integer getTimePoint() {
@@ -71,6 +57,7 @@ public class SellDailyDistributionVO implements Serializable {
     public void setTimePoint(Integer timePoint) {
         this.timePoint = timePoint;
     }
+
     public Date getSendTime() {
         return sendTime;
     }
@@ -92,7 +79,7 @@ public class SellDailyDistributionVO implements Serializable {
     }
 
     public void setCreateName(String createName) {
-        this.createName = createName;
+        this.createName = createName == null ? null : createName.trim();
     }
 
     public String getUpdateName() {
@@ -100,28 +87,20 @@ public class SellDailyDistributionVO implements Serializable {
     }
 
     public void setUpdateName(String updateName) {
-        this.updateName = updateName;
-    }
-    public Date getCreateTime() {
-        return createTime;
+        this.updateName = updateName == null ? null : updateName.trim();
     }
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
-    public Date getUpdateTime() {
-        return updateTime;
-    }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
-
-    public List<String> getEmails() {
-        return emails;
+    public Date getCreateTime() {
+        return createTime;
     }
-
-    public void setEmails(List<String> emails) {
-        this.emails = emails;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 }

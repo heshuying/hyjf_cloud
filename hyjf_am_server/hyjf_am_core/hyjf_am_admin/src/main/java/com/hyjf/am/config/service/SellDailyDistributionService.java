@@ -1,7 +1,7 @@
 package com.hyjf.am.config.service;
 
+import com.hyjf.am.config.dao.model.auto.SellDailyDistribution;
 import com.hyjf.am.resquest.admin.EmailRecipientRequest;
-import com.hyjf.am.vo.admin.SellDailyDistributionVO;
 
 import java.util.List;
 
@@ -22,13 +22,33 @@ public interface SellDailyDistributionService {
      * 根据查询条件 取得数据
      * @return
      */
-    List<SellDailyDistributionVO> queryRecordList(EmailRecipientRequest form, int limitStart, int limitEnd);
+    List<SellDailyDistribution> queryRecordList(EmailRecipientRequest form, Integer limitStart, Integer limitEnd);
 
     /**
      * 根据id查询单条记录
      * @param id
      * @return
      */
-    SellDailyDistributionVO queryRecordById(Integer id) ;
+    SellDailyDistribution queryRecordById(Integer id) ;
 
+    /**
+     * 修改邮件配置表
+     * @param form
+     * @return
+     */
+    boolean updateRecord(EmailRecipientRequest form);
+
+    /**
+     * 禁用
+     * @param form
+     * @return
+     */
+    boolean updateForbidden(EmailRecipientRequest form);
+
+    /**
+     * 添加邮件配置
+     * @param form
+     * @return
+     */
+    boolean insertRecord(EmailRecipientRequest form);
 }

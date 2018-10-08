@@ -1,10 +1,13 @@
 package com.hyjf.am.config.controller.admin.config;
 
+import com.hyjf.am.config.dao.model.auto.SellDailyDistribution;
 import com.hyjf.am.config.service.SellDailyDistributionService;
 import com.hyjf.am.response.EmailRecipientResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.EmailRecipientRequest;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,8 +37,9 @@ public class SellDailyDistributionController {
         int count = sellDaily.queryTotal(form);
         if(count>0){
             Paginator paginator = new Paginator(form.getCurrPage(), count,form.getPageSize());
-            List<SellDailyDistributionVO> recordList = sellDaily.queryRecordList(form, paginator.getOffset(), paginator.getLimit());
-            response.setResultList(recordList);
+            List<SellDailyDistribution> recordList = sellDaily.queryRecordList(form, paginator.getOffset(), paginator.getLimit());
+            List<SellDailyDistributionVO> sellDailyDistributionVOS = CommonUtils.convertBeanList(recordList, SellDailyDistributionVO.class);
+            response.setResultList(sellDailyDistributionVOS);
             response.setCount(count);
         }
         return response;
@@ -47,24 +51,56 @@ public class SellDailyDistributionController {
      * @return
      */
     @PostMapping("/getRecordById")
-    public EmailRecipientResponse getSubmissionsRecord(@RequestBody EmailRecipientRequest form) {
+    public EmailRecipientResponse getRecordById(@RequestBody EmailRecipientRequest form) {
         EmailRecipientResponse emailRecipientResponse = new EmailRecipientResponse();
-        SellDailyDistributionVO sellDailyDistributionVO = sellDaily.queryRecordById(Integer.valueOf(form.getId()));
-        emailRecipientResponse.setResult(sellDailyDistributionVO);
+        SellDailyDistribution sellDailyDistributionVO = sellDaily.queryRecordById(Integer.valueOf(form.getId()));
+        SellDailyDistributionVO record = CommonUtils.convertBean(sellDailyDistributionVO, SellDailyDistributionVO.class);
+        emailRecipientResponse.setResult(record);
         return emailRecipientResponse;
     }
 
     /**
-     * 修改状态
+     * 修改配置
      * @return
      */
     @PostMapping("/updateEmailRecipient")
-    public EmailRecipientResponse updateSubmissionsStatus(@RequestBody EmailRecipientRequest form) {
+    public EmailRecipientResponse updateEmailRecipient(@RequestBody EmailRecipientRequest form) {
         EmailRecipientResponse response = new EmailRecipientResponse();
-        if(form.getId()==null){
+        if (sellDaily.updateRecord(form)) {
+            response.setRtn(Response.SUCCESS);
             return response;
         }
+        response.setRtn(Response.FAIL);
+        return response;
+    }
 
+    /**
+     * 禁用状态
+     * @return
+     */
+    @PostMapping("/forbiddenAction")
+    public EmailRecipientResponse forbiddenAction(@RequestBody EmailRecipientRequest form) {
+        EmailRecipientResponse response = new EmailRecipientResponse();
+        if (sellDaily.updateForbidden(form)) {
+            response.setRtn(Response.SUCCESS);
+            return response;
+        }
+        response.setRtn(Response.FAIL);
+        return response;
+    }
+
+    /**
+     * 添加配置
+     * @return
+     */
+    @PostMapping("/insertAction")
+    public EmailRecipientResponse insertAction(@RequestBody EmailRecipientRequest form) {
+        EmailRecipientResponse response = new EmailRecipientResponse();
+        if (sellDaily.insertRecord(form)) {
+            response.setRtn(Response.SUCCESS);
+            return response;
+        }
+        response.setRtn(Response.FAIL);
         return response;
     }
 }
