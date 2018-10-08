@@ -104,7 +104,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 获取债转数据错误
             throw new CheckException(MsgEnum.ERROR_CREDIT_NOT_EXIST);
         }
-        logger.info("债转投资校验开始   userId:{},credNid:{},ip:{},平台{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform());
+        logger.info("债转投资校验开始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
         UserVO user = amUserClient.findUserById(userId);
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         BankOpenAccountVO bankOpenAccount = amUserClient.selectBankAccountById(userId);
@@ -117,7 +117,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         logger.info("creditAssign {}", JSONObject.toJSONString(creditAssign));
         // 检查金额
         this.checkTenderMoney(request, tenderAccount,creditAssign);
-        logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform());
+        logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
         // 获取插入债转日志的数据
         CreditTenderLogVO creditTenderLog = this.getCreditTenderLog(request,user,borrowCredit);
         // 获取调用银行的参数
