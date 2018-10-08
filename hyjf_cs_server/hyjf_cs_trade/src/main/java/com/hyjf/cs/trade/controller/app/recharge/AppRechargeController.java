@@ -148,6 +148,7 @@ public class AppRechargeController extends BaseTradeController{
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_APP);
 		directRechargeBean.setPlatform(platform);
+		directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(platform,request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 
 		try {
@@ -175,6 +176,8 @@ public class AppRechargeController extends BaseTradeController{
         }
 	    return sb.toString();
     }
+
+
 
 
     /**

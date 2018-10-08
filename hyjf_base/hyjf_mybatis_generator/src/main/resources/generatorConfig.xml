@@ -1404,6 +1404,7 @@
 
         <table tableName="ht_r_user" domainObjectName="RUser">
             <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="user_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_stzh_white_list" domainObjectName="StzhWhiteList">
