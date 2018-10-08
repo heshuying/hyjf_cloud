@@ -1,10 +1,9 @@
 package com.hyjf.cs.message.bean.ic;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @Author : huanghui

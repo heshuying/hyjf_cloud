@@ -258,4 +258,16 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByListExample" resultMap="BaseResultMap" parameterType="java.util.ArrayList" >
+    select
+    <include refid="Base_Column_List" />
+    from ht_bank_open_account
+    <where>
+      user_id in (
+      <foreach item="user" index="index" collection="list"
+               separator=","> #{user,jdbcType=INTEGER} </foreach>
+      )
+    </where>
+  </select>
 </mapper>

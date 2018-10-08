@@ -2,7 +2,6 @@ package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 
 import java.io.Serializable;
 

@@ -3,15 +3,6 @@
  */
 package com.hyjf.am.trade.service.api.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderTmpinfoMapper;
@@ -19,6 +10,14 @@ import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpinfo;
 import com.hyjf.am.trade.service.api.autotender.ApiAutoTenderService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author libin

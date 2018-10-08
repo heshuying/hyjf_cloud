@@ -254,16 +254,16 @@
 			hcc.audit_content,
 			hcc.audit_user,
 			hcc.audit_time,
-			hcc.add_time,
-			hcc.add_user,
+			hcc.create_time add_time,
+			hcc. create_user_id add_user,
 			hcc.update_time,
-			hcc.update_user,
+			hcc.update_user_id update_user,
 			hcu.del_flag,
 			hcu.id user_coupon_id,
 			FROM_UNIXTIME(hcu.end_time,'%Y.%m.%d') end_time,
-			FROM_UNIXTIME(hcu.add_time,'%Y.%m.%d') coupon_add_time,
+			FROM_UNIXTIME(hcu.create_time,'%Y.%m.%d') coupon_add_time,
 			hcu.coupon_user_code coupon_user_code,
-			hcc.add_flg add_flg,
+			hcc.add_flag add_flg,
 			hcc.coupon_profit_time coupon_profit_time
 		FROM
 			ht_coupon_user hcu

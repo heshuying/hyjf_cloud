@@ -11,8 +11,8 @@ import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.service.front.borrow.BorrowInfoService;
 import com.hyjf.am.trade.service.front.borrow.BorrowProjectTypeService;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
-import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
 import com.hyjf.am.trade.service.front.coupon.MyCouponListService;
+import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
@@ -644,6 +644,43 @@ public class MyCouponListServiceImpl implements MyCouponListService {
         jsonObject.put("notAvailableCouponListCount", notAvailableCouponList.size());
 
         return jsonObject;
+    }
+
+    @Override
+    public List<MyCouponListCustomizeVO> wechatCouponList(String userId, String usedFlag, Integer limitStart, Integer limitEnd) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("usedFlag", usedFlag);
+        param.put("userId", userId);
+
+        if (limitStart != null) {
+            param.put("limitStart", limitStart);
+        } else {
+            param.put("limitStart", -1);
+        }
+        if (limitEnd != null) {
+            param.put("limitEnd", limitEnd);
+        } else {
+            param.put("limitEnd", -1);
+        }
+        List<MyCouponListCustomizeVO> list = myCouponListCustomizeMapper.selectMyCouponList(param);
+        List<MyCouponListCustomizeVO> wechatList = new ArrayList<>();
+        for (MyCouponListCustomizeVO myCouponCustomizeVO:list) {
+            String couponSystem = myCouponCustomizeVO.getCouponSystem();
+            //处理使用平台
+            if (StringUtils.isNotBlank(couponSystem)){
+                couponSystem = dealOperation(couponSystem);
+                myCouponCustomizeVO.setCouponSystem(couponSystem);
+            }
+            //处理项目类型
+            String projectType = myCouponCustomizeVO.getProjectType();
+            if (StringUtils.isNotBlank(projectType)){
+                projectType = dealProjectType(projectType);
+                myCouponCustomizeVO.setProjectType(projectType);
+            }
+            wechatList.add(myCouponCustomizeVO);
+        }
+
+        return wechatList;
     }
 
     /**

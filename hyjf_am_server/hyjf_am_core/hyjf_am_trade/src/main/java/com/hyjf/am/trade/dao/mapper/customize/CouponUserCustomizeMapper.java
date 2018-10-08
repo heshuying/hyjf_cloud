@@ -1,13 +1,13 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
-import com.hyjf.am.trade.dao.model.customize.DataCenterCouponCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomizeV2;
 import com.hyjf.am.trade.dao.model.customize.CouponUserCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponUserForAppCustomize;
+import com.hyjf.am.trade.dao.model.customize.DataCenterCouponCustomize;
+
+import java.util.List;
+import java.util.Map;
 
 public interface CouponUserCustomizeMapper {
 

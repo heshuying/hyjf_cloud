@@ -3,8 +3,6 @@
  */
 package com.hyjf.admin.service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
 

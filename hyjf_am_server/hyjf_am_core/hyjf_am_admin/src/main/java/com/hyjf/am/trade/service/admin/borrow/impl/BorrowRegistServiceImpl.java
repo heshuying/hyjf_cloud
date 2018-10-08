@@ -16,7 +16,6 @@ import com.hyjf.am.trade.service.admin.borrow.BorrowRegistService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
@@ -193,7 +192,8 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
             //备案接口(EntrustFlag和ReceiptAccountId要么都传，要么都不传)
             if (borrowInfo.getEntrustedFlg() == 1) {
                 //查询受托支付记录
-                StzhWhiteList stzhWhiteList = this.selectStzfWhiteList(borrowInfo.getInstCode().trim(), String.valueOf(borrowInfo.getEntrustedUserId()));
+                StzhWhiteList stzhWhiteList = this.selectStzfWhiteList(borrowInfo.getInstCode().trim(), borrowInfo.getEntrustedUserId());
+                logger.info("标的备案受托支付查询：机构编号:{}，受托用户ID:{}", borrowInfo.getInstCode().trim(), borrowInfo.getEntrustedUserId());
                 if (stzhWhiteList != null) {
                     debtRegistBean.setEntrustFlag(borrowInfo.getEntrustedFlg().toString());
                     debtRegistBean.setReceiptAccountId(stzhWhiteList.getStAccountid());
@@ -308,13 +308,13 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
      * 受托白名单查询
      *
      * @param instCode
-     * @param entrustedAccountId
+     * @param entrustedUserId
      * @return
      */
-    private StzhWhiteList selectStzfWhiteList(String instCode, String entrustedAccountId) {
+    private StzhWhiteList selectStzfWhiteList(String instCode, Integer entrustedUserId) {
         StzhWhiteListExample example = new StzhWhiteListExample();
         StzhWhiteListExample.Criteria crt = example.createCriteria();
-        crt.andStAccountidEqualTo(entrustedAccountId);
+        crt.andStUserIdEqualTo(entrustedUserId);
         crt.andInstcodeEqualTo(instCode);
         crt.andDelFlagEqualTo(0);
         crt.andStateEqualTo(1);

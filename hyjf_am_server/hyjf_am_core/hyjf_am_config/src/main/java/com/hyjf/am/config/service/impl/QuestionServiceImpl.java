@@ -6,11 +6,13 @@ package com.hyjf.am.config.service.impl;
 import com.hyjf.am.config.dao.mapper.auto.AnswerMapper;
 import com.hyjf.am.config.dao.mapper.auto.QuestionMapper;
 import com.hyjf.am.config.dao.mapper.customize.QuestionCustomizeMapper;
-import com.hyjf.am.config.dao.model.auto.*;
+import com.hyjf.am.config.dao.model.auto.Answer;
+import com.hyjf.am.config.dao.model.auto.AnswerExample;
+import com.hyjf.am.config.dao.model.auto.Question;
+import com.hyjf.am.config.dao.model.auto.QuestionExample;
 import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.QuestionService;
-import com.hyjf.common.util.CustomConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

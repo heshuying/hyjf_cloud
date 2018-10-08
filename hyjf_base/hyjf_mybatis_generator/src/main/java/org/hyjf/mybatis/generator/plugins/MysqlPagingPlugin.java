@@ -1,7 +1,5 @@
 package org.hyjf.mybatis.generator.plugins;
 
-import java.util.List;
-
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
@@ -9,6 +7,8 @@ import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
+
+import java.util.List;
 
 public class MysqlPagingPlugin extends PluginAdapter {
 

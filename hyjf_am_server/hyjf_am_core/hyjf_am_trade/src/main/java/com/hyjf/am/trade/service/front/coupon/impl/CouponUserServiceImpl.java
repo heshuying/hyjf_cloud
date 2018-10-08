@@ -4,18 +4,15 @@
 package com.hyjf.am.trade.service.front.coupon.impl;
 
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
-import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.trade.dao.mapper.auto.CouponUserMapper;
 import com.hyjf.am.trade.dao.mapper.customize.CouponUserCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.CouponUserListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.auto.CouponUserExample;
-import com.hyjf.am.trade.dao.model.customize.DataCenterCouponCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponUserListCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponUserService;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

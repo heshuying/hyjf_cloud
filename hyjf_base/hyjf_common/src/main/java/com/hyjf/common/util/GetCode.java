@@ -2,7 +2,10 @@ package com.hyjf.common.util;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class GetCode {
 

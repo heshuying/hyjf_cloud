@@ -9,7 +9,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
@@ -24,7 +23,6 @@ import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
@@ -34,11 +32,9 @@ import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
-import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.coupon.AppCouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
@@ -275,7 +271,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         String planNid = tender.getBorrowNid();
         AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
         if (StringUtils.isNotBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) > 0) {
-            resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
+            // mod by nxl 智投服务 修改 确认加入->确认授权
+//            resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
+            resultVo.setButtonWord("确认授权" + CommonUtils.formatAmount(null, money) + "元");
         }else if(StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0){
             resultVo.setButtonWord("确认");
         }
@@ -635,6 +633,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setTenderAccount(tenderAccount);
         // 体验金投资
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
+            // TODO: 2018/10/6   需要改成用mq 的
             logger.info("体验{},优惠金投资开始:userId:{},平台{},券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
             // 体验金投资
             couponService.couponTender(request, plan,  cuc, userId);
@@ -880,6 +879,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         planAccede.setRequest(request);
         // 插入汇计划加入明细表
+        logger.info("插入汇计划加入明细表  planAccede: {} ", JSONObject.toJSONString(planAccede) );
         boolean trenderFlag = amTradeClient.insertHJHPlanAccede(planAccede);
         logger.info("投资明细表插入完毕,userId{},平台{},结果{}", userId, request.getPlatform(), trenderFlag);
         if (trenderFlag) {
@@ -916,6 +916,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 params.put("userId", userId+"");
                 params.put("account", request.getAccount());
                 params.put("mainTenderNid", request.getMainTenderNid());
+                logger.info("加入计划 开始调用优惠券投资：{} ",JSONObject.toJSONString(params));
                 hjhCouponTenderProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 
             } catch (Exception e) {

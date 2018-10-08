@@ -3,12 +3,10 @@
  */
 package com.hyjf.admin.beans.vo;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.hyjf.am.vo.BaseVO;
-
 import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
 
 /**
  * @author libin
@@ -281,4 +279,27 @@ public class AdminHjhCreditTenderCustomizeVO extends BaseVO implements Serializa
 		this.imgUrl = imgUrl;
 	}
 
+	public String getTenderType() {
+		return tenderType;
+	}
+
+	public void setTenderType(String tenderType) {
+		this.tenderType = tenderType;
+	}
+
+	public String getAssignServiceFee() {
+		return assignServiceFee;
+	}
+
+	public void setAssignServiceFee(String assignServiceFee) {
+		this.assignServiceFee = assignServiceFee;
+	}
+
+	public String getAssignServiceApr() {
+		return assignServiceApr;
+	}
+
+	public void setAssignServiceApr(String assignServiceApr) {
+		this.assignServiceApr = assignServiceApr;
+	}
 }

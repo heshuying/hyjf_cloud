@@ -7,11 +7,11 @@ import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
 
 /**
  * @author pangchengchao
@@ -58,6 +58,13 @@ public interface BorrowCustomizeMapper {
      * @return
      */
     List<BorrowWithBLOBs> selectAutoBorrowNidList();
+
+    /**
+     * 检索正在还款中的标的
+     *
+     * @return
+     */
+    List<BorrowAndInfoVO> selectBorrowRepayList();
 
     /**
      * @Author walter.limeng

@@ -3,10 +3,14 @@
  */
 package com.hyjf.cs.trade.mq.consumer;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.service.consumer.CouponService;
 import org.apache.commons.collections.MapUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -21,14 +25,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.mq.base.Consumer;
-import com.hyjf.cs.trade.service.consumer.CouponService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 计划类优惠券使用
@@ -58,18 +57,19 @@ public class HjhCouponTenderConsumer extends Consumer {
         defaultMQPushConsumer.registerMessageListener(new MessageListener());
         // Consumer对象在使用之前必须要调用start初始化，初始化一次即可
         defaultMQPushConsumer.start();
-        logger.info("====BatchCouponsConsumer start=====");
+        logger.info("====计划类优惠券使用 start=====");
     }
 
     public class MessageListener implements MessageListenerConcurrently {
 
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext context) {
-            logger.info("CouponTenderConsumer 收到消息，开始处理....");
+            logger.info("计划类优惠券使用 收到消息，开始处理....");
             MessageExt paramBean = list.get(0);
             Map<String, Object> map = new HashMap<>();
             String msgBody = new String(paramBean.getBody());
             map = JSONObject.parseObject(msgBody, Map.class);
+            logger.info("计划类优惠券使用 收到消息，参数为: {} " , JSONObject.toJSONString(map));
             JSONObject result = new JSONObject();
             try {
                 Integer couponGrantId = (Integer) map.get("couponGrantId");
@@ -77,9 +77,9 @@ public class HjhCouponTenderConsumer extends Consumer {
                 String money = (String) map.get("money");
                 String platform = (String) map.get("platform");
                 String ip = (String) map.get("ip");
-                String ordId = (String) map.get("ordId");
+                // 真实订单号
                 Integer userId = (Integer) map.get("userId");
-                String mainTenderNid = (String) map.get("mainTenderNid");
+                String mainTenderNid = (String) map.get("ordId");
                 String account = (String) map.get("account");
 
 

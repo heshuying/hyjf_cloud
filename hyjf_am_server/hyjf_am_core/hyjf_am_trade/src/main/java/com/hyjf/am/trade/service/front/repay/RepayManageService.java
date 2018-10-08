@@ -5,7 +5,6 @@ import com.hyjf.am.trade.bean.repay.ProjectBean;
 import com.hyjf.am.trade.bean.repay.RepayBean;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;

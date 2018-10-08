@@ -32,6 +32,9 @@ public class SystemConfig {
 
     @Value("${hyjf.bank.mers.account}")
     public String BANK_MERS_ACCOUNT;
+
+    @Value("${hyjf.handrecharge.password}")
+    public String HYJF_HANDRECHARGE_PASSWORD;
     /**
      * 银行代码
      */
@@ -383,5 +386,13 @@ public class SystemConfig {
 
     public void setFddUrl(String fddUrl) {
         this.fddUrl = fddUrl;
+    }
+
+    public String getHYJF_HANDRECHARGE_PASSWORD() {
+        return HYJF_HANDRECHARGE_PASSWORD;
+    }
+
+    public void setHYJF_HANDRECHARGE_PASSWORD(String HYJF_HANDRECHARGE_PASSWORD) {
+        this.HYJF_HANDRECHARGE_PASSWORD = HYJF_HANDRECHARGE_PASSWORD;
     }
 }

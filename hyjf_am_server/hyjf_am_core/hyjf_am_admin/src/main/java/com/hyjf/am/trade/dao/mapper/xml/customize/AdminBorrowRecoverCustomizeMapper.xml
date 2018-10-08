@@ -58,17 +58,21 @@
 			</if>
 			<!-- 投资时间 -->
 			<if test="timeRecoverStartSrch != null and timeRecoverStartSrch != ''">
-				AND UNIX_TIMESTAMP(bt.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeRecoverStartSrch})
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND bt.create_time >= STR_TO_DATE(#{timeRecoverStartSrch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeRecoverEndSrch != null and timeRecoverEndSrch != ''">
-				AND UNIX_TIMESTAMP(bt.create_time) <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeRecoverEndSrch})+86399
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND bt.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeRecoverEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<!-- 放款时间 -->
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND UNIX_TIMESTAMP(br.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeStartSrch})
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND br.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeEndSrch})+86399
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND br.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<!--  计划编号 -->
 			<if test="planNidSrch != null and planNidSrch != ''">
@@ -127,6 +131,9 @@
 		<result column="time_recover" property="timeRecover" jdbcType="VARCHAR" />
 		<!-- 计划编号 -->
 		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+		<!-- 计划编号 -->
+		<result column="loan_batch_no" property="loanBatchNo" jdbcType="VARCHAR" />
+
 
 		<!-- 投资人用户属性（投资时） -->
 		<result column="tender_user_attribute" property="tenderUserAttribute" jdbcType="VARCHAR" />
@@ -164,14 +171,15 @@
 		bt.user_name       AS tender_username,
 		bt.user_id                AS tender_user_id,
 		hic.inst_code 			  AS inst_code,
-		 bt.create_time AS create_time,
+		date_format(bt.create_time, '%Y-%m-%d %H:%i:%s' )  AS create_time,
 		bt.account                AS account,
 		bt.account - bt.loan_fee  AS account_yes,
 		bt.loan_fee               AS loan_fee,
 		bt.loan_amount AS recover_price,
 		bt.loan_fee AS service_price,
 		bt.`status` AS is_recover,
-		br.create_time AS time_recover,
+		date_format(br.create_time, '%Y-%m-%d %H:%i:%s' ) AS time_recover,
+		br.loan_batch_no AS loan_batch_no,
 		b.plan_nid,
 		bt.tender_user_attribute AS tender_user_attribute,
 		if(bt.invite_user_id=0 or bt.invite_user_id=null or bt.invite_user_id= '','',bt.invite_user_attribute) AS invite_user_attribute,

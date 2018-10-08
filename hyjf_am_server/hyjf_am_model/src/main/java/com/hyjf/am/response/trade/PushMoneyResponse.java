@@ -7,7 +7,6 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.common.paginator.Paginator;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 /**

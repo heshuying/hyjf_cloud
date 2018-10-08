@@ -1,9 +1,9 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.customize.CallcenterBankConfigCustomize;
 import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
+
+import java.util.List;
 
 /**
  * @author libin

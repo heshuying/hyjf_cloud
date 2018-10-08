@@ -3,18 +3,15 @@
  */
 package com.hyjf.am.trade.service.front.asset.impl;
 
-import java.util.List;
-
-import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.asset.AssetPushService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author fuqiang

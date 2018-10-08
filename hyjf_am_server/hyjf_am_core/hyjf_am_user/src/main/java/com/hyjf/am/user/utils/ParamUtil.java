@@ -1,11 +1,9 @@
 package com.hyjf.am.user.utils;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.hyjf.am.resquest.user.MspApplytRequest;
 import com.hyjf.pay.lib.anrong.bean.AnRongBean;
+
+import java.math.BigDecimal;
 
 
 public class ParamUtil {

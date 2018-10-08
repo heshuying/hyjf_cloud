@@ -21,11 +21,11 @@ import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
-import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -283,6 +283,13 @@ public interface AmAdminClient {
      * @return
      */
     int deleteParamName(ParamNameVO paramNameVO);
+
+    /**
+     * 同步数据字典至redis
+     * @auth wgx
+     * @return
+     */
+    boolean syncParam();
 
     /**
      * 查询手续费分账配置
@@ -553,4 +560,76 @@ public interface AmAdminClient {
      * @return
      */
     List<String> selectRepayMethod(String instCode);
+
+    /**
+     * 获取保证金配置日志总数
+     *
+     * @param request
+     * @return
+     */
+    Integer selectBailConfigLogCount(BailConfigLogRequest request);
+
+    /**
+     * 获取保证金配置日志列表
+     *
+     * @param request
+     * @return
+     */
+    List<BailConfigLogCustomizeVO> selectBailConfigLogList(BailConfigLogRequest request);
+
+    /**
+     * 查询异常标的总件数
+     *
+     * @param request
+     * @return
+     */
+    Integer selectAssetExceptionCount(AssetExceptionRequest request);
+
+    /**
+     * 查询异常标的列表
+     *
+     * @param request
+     * @return
+     */
+    List<AssetExceptionCustomizeVO> selectAssetExceptionList(AssetExceptionRequest request);
+
+    /**
+     * 插入异常标的并更新保证金
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    boolean insertAssetException(AssetExceptionRequest assetExceptionRequest);
+
+    /**
+     * 项目编号是否存在
+     *
+     * @param borrowNid
+     * @return
+     */
+    String isExistsBorrow(String borrowNid);
+
+    /**
+     * 删除异常标的
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    boolean deleteAssetException(AssetExceptionRequest assetExceptionRequest);
+
+    /**
+     * 修改异常标的
+     *
+     * @param assetExceptionRequest
+     * @return
+     */
+    boolean updateAssetException(AssetExceptionRequest assetExceptionRequest);
+
+    /**
+     * 处理平台转账
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateHandRechargeRecord(PlatformTransferRequest platformTransferRequest);
 }

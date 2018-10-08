@@ -39,7 +39,7 @@ public class TransactionDetailsController extends BaseController {
     private CommonSvrChkService commonSvrChkService;
 
     @ApiOperation(value = "第三方同步余额", notes = "同步余额")
-    @PostMapping(value = "/tradelist", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/tradelist.do", produces = "application/json; charset=utf-8")
     public ResultApiBean srchTradeList(@RequestBody TransactionDetailsResultBean resultBean){
 
         TransactionDetailsResultBean transactionDetailsResultBean = new TransactionDetailsResultBean();

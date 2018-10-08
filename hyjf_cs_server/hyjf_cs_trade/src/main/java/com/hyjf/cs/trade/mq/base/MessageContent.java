@@ -1,8 +1,8 @@
  package com.hyjf.cs.trade.mq.base;
 
-import java.io.Serializable;
+ import com.hyjf.common.constants.MQConstant;
 
-import com.hyjf.common.constants.MQConstant;
+ import java.io.Serializable;
 
 /**
  * 队列消息

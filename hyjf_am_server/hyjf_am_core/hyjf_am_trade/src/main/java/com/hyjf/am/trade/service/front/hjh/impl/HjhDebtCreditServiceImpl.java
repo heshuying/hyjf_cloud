@@ -18,8 +18,6 @@ import com.hyjf.am.trade.service.front.hjh.HjhDebtCreditService;
 import com.hyjf.am.vo.trade.borrow.ProjectUndertakeListVO;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
-
-import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

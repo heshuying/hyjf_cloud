@@ -1,24 +1,16 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowlog;
 
 import com.hyjf.admin.beans.BorrowLogBean;
-import com.hyjf.admin.beans.BorrowRepaymentInfoBean;
 import com.hyjf.admin.beans.request.BorrowLogRequsetBean;
-import com.hyjf.admin.beans.request.BorrowRecoverRequestBean;
-import com.hyjf.admin.beans.request.BorrowRepaymentInfoRequsetBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowLogService;
-import com.hyjf.admin.service.BorrowRecoverService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowLogRequset;
-import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
-import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
 import com.hyjf.am.vo.admin.BorrowLogCustomizeVO;
-import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -42,7 +34,6 @@ import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao

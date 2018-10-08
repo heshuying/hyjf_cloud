@@ -1,6 +1,5 @@
 package com.hyjf.cs.message.bean.mc;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;

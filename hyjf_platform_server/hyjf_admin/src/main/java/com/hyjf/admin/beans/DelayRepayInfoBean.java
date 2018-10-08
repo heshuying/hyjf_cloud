@@ -2,7 +2,6 @@ package com.hyjf.admin.beans;
 
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.am.vo.admin.AdminRepayDelayCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 
 /**
  * @author pangchengchao

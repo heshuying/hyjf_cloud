@@ -4,10 +4,10 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.excel.ReadExcel;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.admin.excel.ReadExcel;
 import com.hyjf.admin.service.CouponCheckService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponCheckResponse;
@@ -34,16 +34,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -156,16 +156,13 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             fileP = couponCheck.getFilePath();
             fileN = couponCheck.getFileName();
         }
-
-        OutputStream out = null;
         try {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
-            response.setContentType("application/vnd.ms-excel;utf-8");
-            FileInputStream in = new FileInputStream(fileP);
 
+            FileInputStream in = new FileInputStream(fileP);
             // 创建输出流
-            out = response.getOutputStream();
+            OutputStream out = response.getOutputStream();
             // 创建缓冲区
             byte buffer[] = new byte[1024];
             int len = 0;
@@ -174,19 +171,12 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 // 输出缓冲区内容到浏览器，实现文件下载
                 out.write(buffer, 0, len);
             }
-
+            // 关闭文件流
+            in.close();
+            // 关闭输出流
+            out.close();
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                // 关闭输出流
-                if (Validator.isNotNull(out)) {
-                    out.flush();
-                    out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
         }
     }
 

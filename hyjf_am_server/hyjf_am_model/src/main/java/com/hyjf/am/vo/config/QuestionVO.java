@@ -2,7 +2,6 @@ package com.hyjf.am.vo.config;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 public class QuestionVO implements Serializable {
     private Integer id;

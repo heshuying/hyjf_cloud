@@ -11,6 +11,8 @@
 		<result column="type" property="type" />
 		<result column="coupon_type" property="couponType" />
 		<result column="projectNid" property="projectNid" />
+		<result column="exit_flg" property="exitType" />
+		<result column="hjh_flg"  property="hjhType" />
 	</resultMap>
 	<select id="selectRecentPaymentList" resultMap="recentPaymentMap" parameterType="java.util.Map">
 
@@ -26,6 +28,8 @@
 		WHEN hbc.credit_capital_assigned IS NOT NULL THEN 1
 		ELSE 0 END type,
 		0 coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		0 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		IFNULL(rec.recover_capital_wait,ten.account)+
 		IFNULL( rec.recover_interest_wait, 0 )-
 		(SELECT IFNULL(SUM(ct.assign_interest - ct.assign_repay_interest),0)
@@ -63,6 +67,8 @@
 		borrow.repay_last_time,
 		2 AS type,
 		0 coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		0 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		(ten.assign_capital+ten.assign_interest) total_wait
 		FROM
 		ht_credit_tender ten
@@ -87,6 +93,8 @@
 		MAX(hcr.recover_time),
 		3 type,
 		hcc.coupon_type coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		0 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		IFNULL(SUM(hcr.recover_account),0) total_wait
 		FROM
 		ht_borrow_tender_cpn hbtc
@@ -111,6 +119,8 @@
 		borrow.repay_last_time,
 		4 AS type,
 		0 coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		0 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		hiii.repay_interest_wait AS total_wait
 		FROM
 		ht_increase_interest_invest hiii
@@ -133,17 +143,38 @@
 		hha.last_payment_time,
 		5 AS type,
 		0 coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		1 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		hha.wait_total wait_total
 		FROM ht_hjh_accede hha
 		LEFT JOIN ht_hjh_plan hhp
 		ON hha.plan_nid=hhp.plan_nid
 		WHERE hha.order_status=3
 		AND hha.user_id=#{userId}
-
+		<!-- add by nxl 智投服务 添加推出中的计划 start-->
+		UNION ALL SELECT
+		hhp.plan_name,
+		hhp.plan_name AS projectNid,
+		CONCAT(hhp.expect_apr, '%') borrow_apr,
+		IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
+		hha.last_payment_time,
+		5 AS type,
+		0 coupon_type,
+		1 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识 1 :退出中-->
+		1 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
+		hha.wait_total wait_total
+		FROM ht_hjh_accede hha
+		LEFT JOIN ht_hjh_plan hhp
+		ON hha.plan_nid=hhp.plan_nid
+		WHERE hha.order_status= 5
+		AND hha.user_id=#{userId}
+		<!-- add by nxl 智投服务 添加推出中的计划 end-->
 		UNION ALL
 		SELECT
 		hhp.plan_name AS project_name,
-		hbtc.borrow_nid AS projectNid,
+		<!--hbtc.borrow_nid AS projectNid,-->
+		<!--智投服务:修改计划显示计划编号->计划名称-->
+		hhp.plan_name AS projectNid,
 		CASE
 		WHEN hcc.coupon_type = 2 THEN
 		CONCAT(hcc.coupon_quota, '%')
@@ -155,6 +186,8 @@
 		hcr.recover_time,
 		3 type,
 		hcc.coupon_type coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		1 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		IFNULL(hcr.recover_account,0) total_wait
 		FROM
 		ht_borrow_tender_cpn hbtc
@@ -202,7 +235,6 @@
 	<select id="selectCurrentHoldObligatoryRightList" resultMap="currentHoldObligatoryRightMap" parameterType="java.util.Map">
 		SELECT t.* FROM (
 		SELECT
-
 		1 AS creditUserId,
 
 		borrow.borrow_nid,
@@ -226,7 +258,7 @@
 		(ten.account-(
 		SELECT IFNULL(SUM(ct.assign_capital),0)
 		FROM ht_credit_tender ct
-		WHERE rec.nid = ct.credit_tender_nid)) AS capital,
+		WHERE ct.user_id = #{userId} AND rec.nid = ct.credit_tender_nid)) AS capital,
 		CASE
 		WHEN hbc.credit_capital_assigned IS NOT NULL THEN 1
 		ELSE 0 END type,
@@ -244,17 +276,18 @@
 		IFNULL( rec.recover_interest_wait, 0 )-
 		(SELECT IFNULL(SUM(ct.assign_interest - ct.assign_repay_interest),0)
 		FROM ht_credit_tender ct
-		WHERE rec.nid = ct.credit_tender_nid
+		WHERE ct.user_id = #{userId} AND rec.nid = ct.credit_tender_nid
 		)-
 		(SELECT IFNULL(SUM(ct.assign_capital - ct.assign_repay_capital),0)
 		FROM ht_credit_tender ct
-		WHERE rec.nid = ct.credit_tender_nid
+		WHERE ct.user_id = #{userId} AND rec.nid = ct.credit_tender_nid
 		)- (
 		SELECT
 		IFNULL(SUM(rp.charge_interest) ,0)
 		FROM
 		ht_credit_repay rp
 		WHERE
+		rp.user_id = #{userId} AND
 		rec.nid = rp.credit_tender_nid
 		and rp.status = 1
 		)
@@ -276,10 +309,10 @@
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
 		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = borrow.borrow_nid
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
-		LEFT JOIN (SELECT hbc.tender_nid,
-		SUM(hbc.credit_capital_assigned) credit_capital_assigned,
-		MIN(hbc.credit_status) credit_status FROM ht_borrow_credit hbc
-		GROUP BY hbc.tender_nid
+		LEFT JOIN (SELECT hbcc.tender_nid,
+		SUM(hbcc.credit_capital_assigned) credit_capital_assigned,
+		MIN(hbcc.credit_status) credit_status FROM ht_borrow_credit hbcc
+		GROUP BY hbcc.tender_nid
 		) hbc ON ten.nid=hbc.tender_nid
 		WHERE
 		(
@@ -291,10 +324,9 @@
 		AND ten.account>IFNULL(hbc.credit_capital_assigned,0)
 		AND borrow.plan_nid IS NULL
 
-
 		UNION ALL
-		SELECT
 
+		SELECT
 		ten.credit_user_id AS creditUserId,
 
 		borrow.borrow_nid,
@@ -309,8 +341,8 @@
 		CONCAT(borrow.borrow_apr, '%') borrow_apr,
 		ten.user_id AS ten_user_id,
 		ten.assign_nid nid,
-		DATE_FORMAT(ten.create_time, '%Y-%m-%d') AS addtime,
-		ten.create_time,
+		DATE_FORMAT( ten.create_time, '%Y-%m-%d' ) AS addtime,
+		ten.create_time as orderby_addtime,
 		IFNULL(FROM_UNIXTIME(IF(borrow.repay_last_time='',NULL,borrow.repay_last_time),'%Y-%m-%d'),'--') AS invest_date,
 		borrow.repay_last_time,
 		ten.assign_capital AS capital,
@@ -324,6 +356,7 @@
 		FROM
 		ht_credit_repay hdcrp
 		WHERE
+		hdcrp.user_id =#{userId} AND
 		hdcrp.assign_nid = ten.assign_nid
 		AND hdcrp.`status` = 1
 		)
@@ -376,7 +409,7 @@
 		hbtc.user_id AS ten_user_id,
 		hbtc.nid nid,
 		DATE_FORMAT( hbtc.create_time, '%Y-%m-%d' ) AS addtime,
-		hbtc.create_time,
+		hbtc.create_time as orderby_addtime,
 		IFNULL(FROM_UNIXTIME( IF(MAX(hcr.recover_time)='',NULL,MAX(hcr.recover_time)), '%Y-%m-%d' ),'--') AS recover_time,
 		MAX(hcr.recover_time),
 		CASE
@@ -416,9 +449,7 @@
 		HAVING MIN(hcr.recover_status)=0
 		AND IFNULL((SUM(hcr.recover_account)-SUM(hcr.recover_account_yes)),0)<![CDATA[>]]>0
 
-
 		UNION ALL
-
 
 		SELECT
 
@@ -438,15 +469,15 @@
 		CONCAT(hiii.borrow_extra_yield, '%') borrow_apr,
 		hiii.user_id AS ten_user_id,
 		hiii.order_id nid,
-		DATE_FORMAT( hiii.create_time, '%Y-%m-%d' ) AS addtime,
+		FROM_UNIXTIME( hiii.create_time, '%Y-%m-%d' ) AS addtime,
 		hiii.create_time,
 		IFNULL(FROM_UNIXTIME( IF(borrow.repay_last_time='',NULL,borrow.repay_last_time), '%Y-%m-%d' ),'--') AS invest_date,
 		borrow.repay_last_time,
 		hiii.account AS capital,
 		4 AS type,
-		CONCAT('加息',FORMAT(hiii.borrow_extra_yield, 2),'%') AS DATA,
+		CONCAT('加息',FORMAT(hiii.borrow_extra_yield, 2),'%')  AS DATA,
 		0 coupon_type,
-		IF(borrow.`status` = 4,hiii.repay_interest_wait,'--') AS total_wait,
+		IF(borrow.`status` = 4 OR borrow.`status` = 5,hiii.repay_interest_wait,'--') AS total_wait,
 		'' credit_nid,
 		'' credit_tender_nid,
 		case when borrowInfo.borrow_extra_yield=0 then
@@ -467,6 +498,10 @@
 		borrow.`status` = 2
 		OR borrow.`status` = 3
 		OR borrow.`status` = 4
+		OR(
+		borrow.`status` = 5
+		AND hiil.repay_status = 0
+		)
 		)
 		AND hiii.user_id=#{userId}
 		AND borrow.plan_nid IS NULL
@@ -1087,6 +1122,7 @@
 		<result column="debt_lock_period" property="debtLockPeriod" />
 		<result column="user_id" property="userId" />
 		<result column="accede_account" property="accedeAccount" />
+		<result column="reference_return" property="referenceReturn" />
 		<result column="repay_account_wait" property="repayAccountWait" />
 		<result column="create_time" property="createTime" />
 		<result column="liquidate_should_time" property="liquidateShouldTime" />
@@ -1103,6 +1139,10 @@
 		CONCAT(hdp.debt_lock_period,'个月') debt_lock_period,
 		hdpa.user_id user_id,
 		hdpa.accede_account accede_account,
+		<!-- add by nxl 智投服务加入参考回报 -->
+		CASE hdpa.repay_interest_wait
+		WHEN 0.00 THEN '--'
+		ELSE hdpa.repay_interest_wait end AS reference_return,
 		hdpa.repay_account_wait repay_account_wait,
 		IFNULL(DATE_FORMAT( hdpa.create_time, '%Y-%m-%d' ),'--') AS create_time,
 		hdpa.create_time orderby_create_time,
@@ -1110,7 +1150,10 @@
 		hdp.liquidate_should_time orderby_liquidate_should_time,
 		0 type,
 		CASE
-		WHEN hdp.debt_plan_status = 4 THEN '投资中'
+		WHEN hdp.debt_plan_status = 4
+		<!-- mod by nxl 智投服务修改-->
+		<!-- THEN '投资中'-->
+		THEN '智能投标中'
 		ELSE '现金投资'
 		END AS DATA,
 		0 coupon_type
@@ -1132,6 +1175,11 @@
 		END AS debt_lock_period,
 		hha.user_id user_id,
 		hha.accede_account accede_account,
+		<!-- add by nxl 智投服务加入参考回报 -->
+		CASE hha.wait_interest
+		WHEN 0.00 THEN '--'
+		ELSE hha.wait_interest end AS reference_return,
+
 		IF(hha.wait_total=0,'--',hha.wait_total) wait_total,
 		IFNULL(DATE_FORMAT( hha.create_time, '%Y-%m-%d' ),'--') AS add_time,
 		hha.create_time orderby_add_time,
@@ -1139,7 +1187,10 @@
 		hha.quit_time orderby_last_payment_time,
 		1 type,
 		CASE
-		WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '投资中'
+		WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 )
+		<!-- mod by nxl 智投服务修改-->
+		<!--THEN '投资中'-->
+		THEN '智能投标中'
 		ELSE '现金投资'
 		END AS DATA,
 		0 coupon_type
@@ -1164,6 +1215,9 @@
 		ELSE
 		hcc.coupon_quota
 		END AS accede_account,
+		<!-- add by nxl 智投服务加入参考回报 -->
+		case IFNULL(SUM(hcr.recover_account)-SUM(hcr.recover_account_yes),0)  WHEN 0.00 THEN '--'
+		ELSE IFNULL(SUM(hcr.recover_account)-SUM(hcr.recover_account_yes),0) END AS reference_return,
 		IFNULL(SUM(hcr.recover_account)-SUM(hcr.recover_account_yes),0) AS wait_total,
 		DATE_FORMAT( hbtc.create_time, '%Y-%m-%d' ) AS addtime,
 		hbtc.create_time orderby_add_time,

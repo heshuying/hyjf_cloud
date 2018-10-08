@@ -2,11 +2,13 @@ package com.hyjf.am.resquest.admin;
 
 import java.io.Serializable;
 
+import com.hyjf.am.vo.BasePage;
+
 /**
  * @author libin
  * @version AssetListRequest, v0.1 2018/6/27 
  */
-public class AssetListRequest implements Serializable {
+public class AssetListRequest extends BasePage implements Serializable {
 
 	/**
 	 * serialVersionUID

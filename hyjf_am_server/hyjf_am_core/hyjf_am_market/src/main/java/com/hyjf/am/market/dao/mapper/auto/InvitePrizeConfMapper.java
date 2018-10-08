@@ -2,8 +2,9 @@ package com.hyjf.am.market.dao.mapper.auto;
 
 import com.hyjf.am.market.dao.model.auto.InvitePrizeConf;
 import com.hyjf.am.market.dao.model.auto.InvitePrizeConfExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface InvitePrizeConfMapper {
     int countByExample(InvitePrizeConfExample example);

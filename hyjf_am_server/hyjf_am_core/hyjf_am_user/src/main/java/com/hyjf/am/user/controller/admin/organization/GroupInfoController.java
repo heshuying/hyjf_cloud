@@ -3,20 +3,19 @@
  */
 package com.hyjf.am.user.controller.admin.organization;
 
-import java.util.List;
-
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.GroupInfoResponse;
 import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.dao.model.auto.ROaDepartment;
+import com.hyjf.am.user.service.admin.organization.GroupInfoService;
+import com.hyjf.am.vo.user.OrganizationStructureVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.GroupInfoResponse;
-import com.hyjf.am.user.dao.model.auto.ROaDepartment;
-import com.hyjf.am.user.service.admin.organization.GroupInfoService;
-import com.hyjf.am.vo.user.OrganizationStructureVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
 
 /**
  * 集团组织机构查询服务类

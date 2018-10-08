@@ -1,7 +1,6 @@
 package com.hyjf.am.trade.service.front.borrow;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowCarinfo;
-import com.hyjf.am.vo.trade.WebCarinfoVO;
 
 import java.util.List;
 

@@ -3,15 +3,14 @@
  */
 package com.hyjf.am.trade.service.admin.promotion.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.admin.PlatformCountRequest;
 import com.hyjf.am.trade.dao.mapper.customize.admin.PlatformCountCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.PlatformCountCustomize;
 import com.hyjf.am.trade.service.admin.promotion.PlatformCountService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author fq

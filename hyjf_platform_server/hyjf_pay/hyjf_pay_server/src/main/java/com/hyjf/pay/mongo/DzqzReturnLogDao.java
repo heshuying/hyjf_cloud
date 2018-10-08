@@ -1,9 +1,8 @@
 package com.hyjf.pay.mongo;
 
-import org.springframework.stereotype.Repository;
-
 import com.hyjf.pay.base.BaseMongoDao;
 import com.hyjf.pay.entity.DzqzReturnLog;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class DzqzReturnLogDao extends BaseMongoDao<DzqzReturnLog>{

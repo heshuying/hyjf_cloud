@@ -3,14 +3,6 @@
  */
 package com.hyjf.am.trade.service.admin.finance.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountDirectionalTransferMapper;
 import com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransfer;
@@ -20,12 +12,19 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai
  * @version: AccountDirectionalTransferServiceImpl, v0.1 2018/7/4 16:56
  */
-@Service
+@Service(value = "tradeAccountDirectionalTransferServiceImpl")
 public class AccountDirectionalTransferServiceImpl extends BaseServiceImpl implements AccountDirectionalTransferService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

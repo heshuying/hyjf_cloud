@@ -12,7 +12,6 @@ import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.bean.repay.ProjectBean;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
@@ -177,7 +176,7 @@ public class BorrowController extends BaseController {
 	public BorrowResponse selectBorrowList(){
 
 		BorrowResponse response = new BorrowResponse();
-		List<Borrow> borrows = borrowService.selectBorrowList();
+		List<BorrowAndInfoVO> borrows = borrowService.selectBorrowList();
 		if (borrows != null) {
 			List<BorrowAndInfoVO> borrowVO = CommonUtils.convertBeanList(borrows,BorrowAndInfoVO.class);
 			response.setResultList(borrowVO);

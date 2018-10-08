@@ -4,6 +4,9 @@
 package com.hyjf.am.user.controller.admin.membercentre;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.config.dao.model.auto.JxBankConfig;
+import com.hyjf.am.config.service.BankConfigService;
+import com.hyjf.am.config.service.JxBankConfigService;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.OADepartmentResponse;
@@ -21,6 +24,8 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +50,10 @@ import java.util.Map;
 public class UserManagerController extends BaseController {
     @Autowired
     private UserManagerService userManagerService;
+    @Autowired
+    private JxBankConfigService jxBankConfigService;
+    @Autowired
+    private BankConfigService bankConfigService;
 
     /**
      * 根据筛选条件查找(用户管理列表显示)
@@ -153,21 +162,17 @@ public class UserManagerController extends BaseController {
      * @return
      */
     @RequestMapping("/selectCorpOpenAccountRecordByUserId/{userId}")
-    public CorpOpenAccountRecordResponse selectCorpOpenAccountRecordByUserId(@PathVariable String userId) {
+    public CorpOpenAccountRecordResponse selectCorpOpenAccountRecordByUserId(@PathVariable int userId) {
         logger.info("---selectCorpOpenAccountRecordByUserId---  " + userId);
         CorpOpenAccountRecordResponse response = new CorpOpenAccountRecordResponse();
-        if (StringUtils.isNotEmpty(userId)) {
-            int intUserId = Integer.parseInt(userId);
-            CorpOpenAccountRecordVO corpOpenAccountRecordVO = new CorpOpenAccountRecordVO();
-            CorpOpenAccountRecord corpOpenAccountRecord = userManagerService.selectCorpOpenAccountRecordByUserId(intUserId);
-            if (null != corpOpenAccountRecord) {
-                BeanUtils.copyProperties(corpOpenAccountRecord, corpOpenAccountRecordVO);
-                response.setResult(corpOpenAccountRecordVO);
-                response.setRtn(Response.SUCCESS);//代表成功
-            }
-            return response;
+        CorpOpenAccountRecordVO corpOpenAccountRecordVO = new CorpOpenAccountRecordVO();
+        CorpOpenAccountRecord corpOpenAccountRecord = userManagerService.selectCorpOpenAccountRecordByUserId(userId);
+        if (null != corpOpenAccountRecord) {
+            BeanUtils.copyProperties(corpOpenAccountRecord, corpOpenAccountRecordVO);
+            response.setResult(corpOpenAccountRecordVO);
+            response.setRtn(Response.SUCCESS);//代表成功
         }
-        return null;
+        return response;
     }
 
     /**
@@ -312,6 +317,28 @@ public class UserManagerController extends BaseController {
         if (null != user) {
             BeanUtils.copyProperties(user,userVO);
             response.setResult(userVO);
+            response.setRtn(Response.SUCCESS);//代表成功
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户List id查找用户表
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/selectUserByListUserId/{userId}")
+    public UserResponse selectUserByListUserId(@PathVariable List userId) {
+        UserResponse response = new UserResponse();
+        logger.info("---selectUserByUserId---  " + userId);
+        List<UserVO> userVO = new ArrayList<UserVO>();
+        List<User> user = userManagerService.selectUserByListUserId(userId);
+        if (null != user) {
+            userVO = CommonUtils.convertBeanList(user,UserVO.class);
+            //BeanUtils.copyProperties(user,userVO);
+            response.setResultList(userVO);
             response.setRtn(Response.SUCCESS);//代表成功
             return response;
         }
@@ -643,9 +670,39 @@ public class UserManagerController extends BaseController {
      * @return
      */
     @RequestMapping("/saveCompanyInfo")
-    public Response saveCompanyInfo(@RequestBody @Valid  UpdCompanyRequest updCompanyRequest){
-        Response bankCardResponse = userManagerService.saveCompanyInfo(updCompanyRequest);
-        return bankCardResponse;
+    public Response saveCompanyInfo(@RequestBody @Valid  UpdCompanyRequest updCompanyRequest) {
+        Response response = new Response();
+        response.setRtn(Response.FAIL);
+        String userId = updCompanyRequest.getUserId();
+        if (StringUtils.isBlank(userId)) {
+            response.setMessage("请先选择用户再进行操作!");
+            return response;
+        }
+        User user = userManagerService.selectUserByUserId(Integer.parseInt(userId));
+        String bankId = bankConfigService.queryBankIdByCardNo(updCompanyRequest.getAccount());
+        String bankName = null;
+        String payAllianceCode = null;
+        if (StringUtils.isNotBlank(bankId)) {
+            List<JxBankConfig> jxBankConfigList = jxBankConfigService.getJxBankConfigByBankId(Integer.parseInt(bankId));
+            if (null != jxBankConfigList && jxBankConfigList.size() > 0) {
+                bankName = jxBankConfigList.get(0).getBankName();
+            }
+        }
+
+        BankCallBean callBean = userManagerService.payAllianceCodeQuery(updCompanyRequest.getAccount(), user.getUserId());
+        if (null!=callBean&&BankCallStatusConstant.RESPCODE_SUCCESS.equals(callBean.getRetCode())) {
+            payAllianceCode = callBean.getPayAllianceCode();
+            if (StringUtils.isBlank(payAllianceCode)) {
+                if (StringUtils.isNotBlank(bankId)) {
+                    List<JxBankConfig> jxBankConfigList = jxBankConfigService.getJxBankConfigByBankId(Integer.parseInt(bankId));
+                    if (null != jxBankConfigList && jxBankConfigList.size() > 0) {
+                        payAllianceCode = jxBankConfigList.get(0).getPayAllianceCode();
+                    }
+                }
+            }
+        }
+        response = userManagerService.saveCompanyInfo(updCompanyRequest, bankName, payAllianceCode, user, bankId);
+        return response;
     }
     @RequestMapping("/getUserIdByBind/{bindUniqueId}/{bindPlatformId}")
     public Integer getUserIdByBind(@PathVariable Integer bindUniqueId,@PathVariable Integer bindPlatformId){

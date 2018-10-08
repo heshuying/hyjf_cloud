@@ -24,7 +24,10 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -191,12 +194,12 @@ public class PlatformTransferController extends BaseController {
                     // 转账状态
                     else if (celLength == 6) {
                         String status = "";
-                        if(record.getStatus() == 0){
-                            status = "充值中";
-                        }else if(record.getStatus() == 1){
-                            status = "失败";
-                        }else{
+                        if(record.getStatus() == 1){
+                            status = "转账中";
+                        }else if(record.getStatus() == 2){
                             status = "成功";
+                        }else{
+                            status = "失败";
                         }
                         cell.setCellValue(status);
                     }

@@ -3,50 +3,9 @@
  */
 package com.hyjf.am.trade.service.front.consumer.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountBorrow;
-import com.hyjf.am.trade.dao.model.auto.AccountBorrowExample;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectTypeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
-import com.hyjf.am.trade.dao.model.auto.FreezeList;
-import com.hyjf.am.trade.dao.model.auto.FreezeListExample;
-import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtDetail;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.FddProducer;
@@ -69,6 +28,12 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author dxj
@@ -747,6 +712,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			// insert by zhangjp 增加优惠券放款区分 end
 			//变更资产表的对应状态 add by cwyang
 			updatePlanAsset(borrowNid);
+			//保证金配置相关金额变更 add by cwyang 20180801 迁移by liushouyi
+			updateInstitutionData(borrow);
 			//发送短信
 			try {
 //				this.sendSmsForBorrower(borrowUserId, borrowNid);
@@ -1843,5 +1810,30 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			logger.info("-----------------生成计划居间服务协议失败，ordid:" + nid + ",异常信息：" + e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * 变更保证金少放款相关金额
+	 * @param borrow
+	 */
+	private void updateInstitutionData(Borrow borrow) {
+
+		BorrowInfo borrowInfo = getBorrowInfoByNid(borrow.getBorrowNid());
+
+		BorrowTenderExample btexample = new BorrowTenderExample();
+		btexample.createCriteria().andBorrowNidEqualTo(borrow.getBorrowNid());
+		List<BorrowTender> btList = this.borrowTenderMapper.selectByExample(btexample);
+		BigDecimal sumTender = new BigDecimal(0);
+		if (btList != null && btList.size() > 0) {
+			for (int i = 0; i < btList.size(); i++) {
+				sumTender = sumTender.add(btList.get(i).getAccount());
+			}
+		}
+		if(borrow.getAccount().compareTo(sumTender) > 0){
+			BigDecimal amount = borrow.getAccount().subtract(sumTender);
+			HashMap map = new HashMap();
+			map.put("amount",amount);
+			map.put("instCode",borrowInfo.getInstCode());
+			this.hjhBailConfigCustomizeMapper.updateLoanInstitutionAmount(map);
+		}
+	}
 }

@@ -43,7 +43,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      * @throws Exception
      */
     @Override
-    public AppBorrowImageResponse insertRecord(AppBorrowImageRequest record) throws Exception {
+    public AppBorrowImageResponse insertRecord(AppBorrowImageRequest record)  {
         return amAdminClient.insertInfo(record);
     }
 
@@ -54,7 +54,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      * @throws Exception
      */
     @Override
-    public AppBorrowImageResponse updateRecord(AppBorrowImageRequest record) throws Exception {
+    public AppBorrowImageResponse updateRecord(AppBorrowImageRequest record)  {
         return amAdminClient.updateInfo(record);
 
     }
@@ -66,7 +66,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      * @throws Exception
      */
     @Override
-    public AppBorrowImageResponse deleteRecord(AppBorrowImageRequest record) throws Exception {
+    public AppBorrowImageResponse deleteRecord(AppBorrowImageRequest record)  {
         return amAdminClient.deleteInfo(record);
     }
 }

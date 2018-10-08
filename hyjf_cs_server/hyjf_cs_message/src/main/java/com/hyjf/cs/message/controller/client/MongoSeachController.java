@@ -1,5 +1,6 @@
 package com.hyjf.cs.message.controller.client;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
@@ -10,11 +11,13 @@ import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
+import com.hyjf.am.resquest.api.WrbRegisterRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
@@ -32,6 +35,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.List;
 
 @ApiIgnore
@@ -132,7 +136,7 @@ public class MongoSeachController extends BaseController {
             query.addCriteria(criteria);
             int currPage = request.getCurrPage();
             int pageSize = request.getPageSize();
-            int limitStart = currPage * pageSize;
+            int limitStart = (currPage-1) * pageSize;
             int limitEnd = limitStart + pageSize;
             query.skip(limitStart).limit(limitEnd);
             List<AppChannelStatisticsDetail> list = appChannelStatisticsDetailDao.find(query);
@@ -244,7 +248,7 @@ public class MongoSeachController extends BaseController {
 
     @RequestMapping(value = "/selectBorrowInvestAccount")
     public String selectBorrowInvestAccount(@RequestBody AccountWebListVO accountWebList){
-        int total = accountWebListDao.selectBorrowInvestAccount(accountWebList);
+        double total = accountWebListDao.selectBorrowInvestAccount(accountWebList);
         DecimalFormat df = new DecimalFormat("#0.00");
         return df.format(total);
     }
@@ -357,5 +361,23 @@ public class MongoSeachController extends BaseController {
             response.setResultList(bindLogVOList);
         }
         return response;
+    }
+
+    /**
+     *插入app渠道注册统计数据
+     * @return
+     */
+    @RequestMapping("/insertAppChannelStatisticsDetail")
+    public BooleanResponse insertAppChannelStatisticsDetail(@RequestBody WrbRegisterRequest request) {
+        UtmPlatVO utmPlat = request.getUtmPlat();
+        BooleanResponse booleanResponse = new BooleanResponse();
+        AppChannelStatisticsDetail detail = new AppChannelStatisticsDetail();
+        detail.setSourceId(utmPlat.getSourceId());
+        detail.setSourceName(utmPlat.getSourceName() != null ? utmPlat.getSourceName() : "");
+        detail.setUserId(request.getUserId());
+        detail.setRegisterTime(new Date());
+        detail.setCumulativeInvest(BigDecimal.ZERO);
+        appChannelStatisticsDetailDao.save(detail);
+        return booleanResponse;
     }
 }

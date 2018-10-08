@@ -1,31 +1,25 @@
 package com.hyjf.am.trade.service.front.account.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
+import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.WithdrawCustomize;
+import com.hyjf.am.trade.service.front.account.AccountWithdrawService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
-import com.hyjf.am.trade.dao.model.customize.WithdrawCustomize;
-import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.common.cache.CacheUtil;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
-import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
-import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
-import com.hyjf.am.trade.dao.model.auto.AccountWithdrawExample;
-import com.hyjf.am.trade.service.front.account.AccountWithdrawService;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
 
 /**
  * @author pangchengchao
@@ -80,9 +74,9 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
         AccountWithdrawVO accountWithdrawVO=bankRequest.getAccountWithdrawVO();
         AccountWithdraw accountWithdraw=new AccountWithdraw();
         BeanUtils.copyProperties(accountWithdrawVO, accountWithdraw);
-
+        accountWithdraw.setStatus(accountWithdrawVO.getStatus());
         AccountWithdrawExample accountWithdrawExample = new AccountWithdrawExample();
-        accountWithdrawExample.createCriteria().andNidEqualTo(accountWithdraw.getNid());
+        accountWithdrawExample.createCriteria().andNidEqualTo(accountWithdrawVO.getNid());
         // 更新订单信息
 
         boolean isAccountWithdrawFlag = this.accountWithdrawMapper.updateByExampleSelective(accountWithdraw, accountWithdrawExample) > 0 ? true : false;
@@ -130,10 +124,10 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
         accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
         accountList.setPlanFrost(account.getPlanFrost());
         // mod by liuyang 20180119 银行文件对账功能修改 start
-        accountList.setSeqNo(String.valueOf(accountWithdraw.getSeqNo()));
-        accountList.setTxDate(accountWithdraw.getTxDate());
-        accountList.setTxTime(accountWithdraw.getTxTime());
-        accountList.setBankSeqNo(accountWithdraw.getTxDate() + accountWithdraw.getTxTime() + String.valueOf(accountWithdraw.getSeqNo()));
+        accountList.setSeqNo(String.valueOf(accountWithdrawVO.getSeqNo()));
+        accountList.setTxDate(accountWithdrawVO.getTxDate());
+        accountList.setTxTime(accountWithdrawVO.getTxTime());
+        accountList.setBankSeqNo(accountWithdrawVO.getTxDate() + accountWithdrawVO.getTxTime() + String.valueOf(accountWithdrawVO.getSeqNo()));
         // mod by liuyang 20180119 银行文件对账功能修改 end
         accountList.setAccountId(accountId);
         accountList.setRemark("网站提现");

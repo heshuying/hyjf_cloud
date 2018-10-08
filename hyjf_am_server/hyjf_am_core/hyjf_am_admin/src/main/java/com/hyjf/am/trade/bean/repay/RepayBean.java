@@ -1,10 +1,10 @@
 package com.hyjf.am.trade.bean.repay;
 
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 
 public class RepayBean extends BorrowRepayVO implements Serializable {
 

@@ -3,12 +3,9 @@
  */
 package com.hyjf.cs.message.mq.consumer;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.CalculateInvestInterestVO;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.message.bean.ic.CalculateInvestInterest;
 import com.hyjf.cs.message.bean.ic.TotalInvestAndInterestEntity;
 import com.hyjf.cs.message.mongo.ic.CalculateInvestInterestDao;
@@ -31,8 +28,10 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.constants.MQConstant;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 网站累计投资追加 、  修改mongodb运营数据

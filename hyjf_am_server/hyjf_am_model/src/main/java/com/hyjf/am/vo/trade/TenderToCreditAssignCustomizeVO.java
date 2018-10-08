@@ -90,6 +90,9 @@ public class TenderToCreditAssignCustomizeVO extends BaseVO implements Serializa
      *实际支付金额本金
      */
     private String assignCapitalMax;
+
+    /**页面输入金额*/
+    private String money;
 	
     public String getBorrowNid() {
         return borrowNid;
@@ -181,4 +184,12 @@ public class TenderToCreditAssignCustomizeVO extends BaseVO implements Serializa
 	public void setAssignCapitalMax(String assignCapitalMax) {
 		this.assignCapitalMax = assignCapitalMax;
 	}
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
 }

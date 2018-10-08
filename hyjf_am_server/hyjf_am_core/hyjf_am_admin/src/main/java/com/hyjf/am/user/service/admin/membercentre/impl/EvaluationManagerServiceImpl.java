@@ -3,13 +3,6 @@
  */
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
 import com.hyjf.am.user.dao.model.auto.UserEvalationResultExample;
 import com.hyjf.am.user.dao.model.customize.EvalationResultCustomize;
@@ -17,6 +10,12 @@ import com.hyjf.am.user.dao.model.customize.UserEvalationQuestionCustomize;
 import com.hyjf.am.user.service.admin.membercentre.EvaluationManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl

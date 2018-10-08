@@ -113,8 +113,8 @@ public class MerchantAccountServiceImpl extends BaseServiceImpl implements Merch
         MerchantAccount record = new MerchantAccount();
         BeanUtils.copyProperties(adminRequest, record);
         int nowTime = GetDate.getNowTime10();
-        record.setCreateTime(nowTime);
-        record.setUpdateTime(nowTime);
+//        record.setCreateTime(nowTime);
+//        record.setUpdateTime(nowTime);
         return merchantAccountMapper.insertSelective(record);
     }
     /**
@@ -127,7 +127,7 @@ public class MerchantAccountServiceImpl extends BaseServiceImpl implements Merch
         MerchantAccount record = new MerchantAccount();
         BeanUtils.copyProperties(adminRequest, record);
         int nowTime = GetDate.getNowTime10();
-        record.setUpdateTime(nowTime);
+//        record.setUpdateTime(nowTime);
         if (StringUtils.isNotEmpty(adminRequest.getIds())) {
             record.setId(Integer.parseInt(adminRequest.getIds()));
         }

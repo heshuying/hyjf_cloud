@@ -1,11 +1,11 @@
 package com.hyjf.am.user.service.admin.membercentre;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
 import com.hyjf.am.user.dao.model.customize.AdminPreRegistListCustomize;
 import com.hyjf.am.user.service.BaseService;
+
+import java.util.List;
+import java.util.Map;
 
 
 public interface PreRegistService extends BaseService{

@@ -55,4 +55,16 @@ public interface MyCouponListService {
      * @return JSONObject
      */
     JSONObject getPlanCouponoupon(MyCouponListRequest requestBean);
+
+    /**
+     * @Author walter.limeng
+     * @Description  微信获取我的优惠券列表
+     * @Date 15:29 2018/9/28
+     * @Param userId
+     * @Param usedFlag 0:未使用  1：已使用  4：已失效
+     * @Param limitStart
+     * @Param limitEnd
+     * @return
+     */
+    List<MyCouponListCustomizeVO> wechatCouponList(String userId, String usedFlag, Integer limitStart, Integer limitEnd);
 }

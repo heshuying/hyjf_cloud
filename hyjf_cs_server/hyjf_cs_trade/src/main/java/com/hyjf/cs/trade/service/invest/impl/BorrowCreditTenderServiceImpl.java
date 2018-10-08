@@ -7,15 +7,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -33,7 +32,6 @@ import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.*;
@@ -276,6 +274,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,userId);
         JSONObject ret = new JSONObject();
         if (Validator.isNotNull(creditAssign)) {
+            creditAssign.setMoney(DF_FOR_VIEW.format(new BigDecimal(assignCapital).setScale(2, BigDecimal.ROUND_DOWN)));
             ret.put("creditAssign", creditAssign);
             ret.put(CustomConstants.RESULT_FLAG, CustomConstants.RESULT_SUCCESS);
         } else {
@@ -610,6 +609,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignAccountNew.setBankInvestSum(creditTender.getAssignCapital());
                 // 更新账户信息
                 // 重新获取出让人用户账户信息
+                // 重新获取出让人用户账户信息
                 AccountListVO assignAccountList = new AccountListVO();
                 assignAccountList.setNid(creditTender.getAssignNid());
                 assignAccountList.setUserId(userId);
@@ -619,15 +619,17 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignAccountList.setTradeCode("balance");
                 assignAccountList.setTotal(assignAccount.getTotal());
                 assignAccountList.setBalance(assignAccount.getBalance());
-                assignAccountList.setBankBalance(assignAccount.getBankBalance());
-                assignAccountList.setBankAwait(assignAccount.getBankAwait());
-                assignAccountList.setBankAwaitCapital(assignAccount.getBankAwaitCapital());
-                assignAccountList.setBankAwaitInterest(assignAccount.getBankAwaitInterest());
-                assignAccountList.setBankInvestSum(assignAccount.getBankInvestSum());
+                assignAccountList.setBankBalance(assignAccountNew.getBankBalance().subtract(assignAccount.getBankBalance()));
+                assignAccountList.setBankAwait(assignAccountNew.getBankAwait().add(assignAccount.getBankAwait()));
+                assignAccountList.setBankAwaitCapital(assignAccountNew.getBankAwaitCapital().add(assignAccount.getBankAwaitCapital()));
+                assignAccountList.setBankAwaitInterest(assignAccountNew.getBankAwaitInterest().add(assignAccount.getBankAwaitInterest()));
+                assignAccountList.setBankInvestSum(assignAccountNew.getBankInvestSum().add(assignAccount.getBankInvestSum()));
                 assignAccountList.setBankInterestSum(assignAccount.getBankInterestSum());
                 assignAccountList.setBankFrost(assignAccount.getBankFrost());
                 assignAccountList.setBankInterestSum(assignAccount.getBankInterestSum());
-                assignAccountList.setBankTotal(assignAccount.getBankTotal());
+                // 银行总资产
+                logger.info("assignAccountList.setBankTotal:   "+assignAccountNew.getBankTotal().add(assignAccount.getBankTotal()));
+                assignAccountList.setBankTotal(assignAccountNew.getBankTotal().add(assignAccount.getBankTotal()));
                 //汇计划账户可用余额
                 assignAccountList.setPlanBalance(assignAccount.getPlanBalance());
                 assignAccountList.setPlanFrost(assignAccount.getPlanFrost());
@@ -636,7 +638,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignAccountList.setTxTime(creditTenderLog.getTxTime());
                 assignAccountList.setBankSeqNo(String.valueOf(creditTenderLog.getTxDate()) + String.valueOf(creditTenderLog.getTxTime()) + String.valueOf(creditTenderLog.getSeqNo()));
                 // 承接人电子账户号
-                assignAccountList.setAccountId(creditTenderLog.getAccountId());
+                assignAccountList.setAccountId(assignAccount.getAccountId());
                 assignAccountList.setFrost(assignAccount.getFrost());
                 assignAccountList.setAwait(assignAccount.getAwait());
                 assignAccountList.setRepay(assignAccount.getRepay());
@@ -656,7 +658,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 AccountVO sellerAccountNew = new AccountVO();
                 sellerAccountNew.setUserId(sellerUserId);
                 // 银行可用余额
-                sellerAccountNew.setBankBalance(creditTender.getAssignPay().subtract(creditTender.getCreditFee()));
+                sellerAccountNew.setBankBalance(creditTender.getAssignPay().add(creditTender.getCreditFee()));
                 // 银行总资产
                 sellerAccountNew.setBankTotal(creditTender.getAssignPay().subtract(creditTender.getCreditFee()).subtract(creditTender.getAssignAccount()));
                 // 出让人待收金额
@@ -666,29 +668,44 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 出让人待收利息
                 sellerAccountNew.setBankAwaitInterest(creditTender.getAssignInterest());
                 // 出让人累计收益
-                sellerAccountNew.setBankInterestSum(creditTender.getAssignInterestAdvance());
+                sellerAccountNew.setBankInterestSum((creditTender.getAssignInterestAdvance()==null?BigDecimal.ZERO:creditTender.getAssignInterestAdvance()));
                 sellerAccountNew.setBankBalanceCash(creditTender.getAssignPay().subtract(creditTender.getCreditFee()));
                 // 更新账户信息
                 // 重新获取用户账户信息
                 AccountListVO sellerAccountList = new AccountListVO();
                 sellerAccountList.setNid(creditTender.getAssignNid());
                 sellerAccountList.setUserId(creditTender.getCreditUserId());
+                //操作金额
                 sellerAccountList.setAmount(creditTender.getAssignPay().subtract(creditTender.getCreditFee()));
+                // 收支类型1收入2支出3冻结
                 sellerAccountList.setType(1);
+                // 交易类型
                 sellerAccountList.setTrade("creditsell");
+                // 操作识别码 balance余额操作 frost冻结操作 await待收操作
                 sellerAccountList.setTradeCode("balance");
+                // 资金总额
                 sellerAccountList.setTotal(sellerAccount.getTotal());
+                // 可用金额
                 sellerAccountList.setBalance(sellerAccount.getBalance());
-                sellerAccountList.setBankBalance(sellerAccount.getBankBalance());
-                sellerAccountList.setBankAwait(sellerAccount.getBankAwait());
-                sellerAccountList.setBankAwaitCapital(sellerAccount.getBankAwaitCapital());
-                sellerAccountList.setBankAwaitInterest(sellerAccount.getBankAwaitInterest());
-                sellerAccountList.setBankInterestSum(sellerAccount.getBankInterestSum());
+                // 银行存管可用余额
+                sellerAccountList.setBankBalance(sellerAccountNew.getBankBalance().add(sellerAccount.getBankBalance()));
+                // 银行待收总额
+                sellerAccountList.setBankAwait(sellerAccount.getBankAwait().subtract(sellerAccountNew.getBankAwait()));
+                // 银行待还本金
+                sellerAccountList.setBankAwaitCapital(sellerAccount.getBankAwaitCapital().subtract(sellerAccountNew.getBankAwaitCapital()));
+                // 银行待还利息
+                sellerAccountList.setBankAwaitInterest(sellerAccount.getBankAwaitInterest().subtract(sellerAccountNew.getBankAwaitInterest()));
+                // 银行累计收益
+                sellerAccountList.setBankInterestSum(sellerAccountNew.getBankInterestSum().add((sellerAccount.getBankInterestSum()==null?BigDecimal.ZERO:sellerAccount.getBankInterestSum())));
+                // 银行累计投资
                 sellerAccountList.setBankInvestSum(sellerAccount.getBankInvestSum());
+                // 银行存管冻结金额
                 sellerAccountList.setBankFrost(sellerAccount.getBankFrost());
-                sellerAccountList.setBankTotal(sellerAccount.getBankTotal());
+                // 银行总资产
+                sellerAccountList.setBankTotal(sellerAccountNew.getBankTotal().add(sellerAccount.getBankTotal()));
                 //汇计划账户可用余额
                 sellerAccountList.setPlanBalance(sellerAccount.getPlanBalance());
+                // 汇添金账户冻结金额
                 sellerAccountList.setPlanFrost(sellerAccount.getPlanFrost());
                 sellerAccountList.setSeqNo(String.valueOf(creditTenderLog.getSeqNo()));
                 sellerAccountList.setTxDate(creditTenderLog.getTxDate());
@@ -711,7 +728,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 sellerAccountList.setIsBank(1);
                 sellerAccountList.setCheckStatus(0);
                 // 插入交易明细
-               // 6.更新Borrow_recover
+                // 6.更新Borrow_recover
                 if (borrowRecover != null) {
                     // 不分期
                     if (!isMonth) {
@@ -996,12 +1013,13 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     // 4.添加网站收支明细  // 发送mq更新添加网站收支明细
                     // 服务费大于0时,插入网站收支明细
                     if (creditTender.getCreditFee().compareTo(BigDecimal.ZERO) > 0) {
+                        BigDecimal money = creditTender.getCreditFee().setScale(2,BigDecimal.ROUND_DOWN);
                         // 插入网站收支明细记录
                         logger.info("网站收支明细记录 mq ");
                         AccountWebListVO accountWebList = new AccountWebListVO();
                         accountWebList.setOrdid(logOrderId);
                         accountWebList.setBorrowNid(creditTender.getBidNid());
-                        accountWebList.setAmount(Double.valueOf(creditTender.getCreditFee().toString()));
+                        accountWebList.setAmount(Double.valueOf(money.toString()));
                         accountWebList.setType(1);
                         accountWebList.setTrade("CREDITFEE");
                         accountWebList.setTradeType("债转服务费");
@@ -1358,7 +1376,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         }
 
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/tender/credit/bgReturn?platform="+request.getPlatform();
+        String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/credit/bgReturn?platform="+request.getPlatform();
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         bean.setSuccessfulUrl(successUrl);

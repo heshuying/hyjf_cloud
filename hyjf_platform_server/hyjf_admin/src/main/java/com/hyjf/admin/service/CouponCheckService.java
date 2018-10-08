@@ -7,7 +7,6 @@ import com.hyjf.am.response.admin.CouponCheckResponse;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
 import com.hyjf.am.vo.config.CouponCheckVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.user.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

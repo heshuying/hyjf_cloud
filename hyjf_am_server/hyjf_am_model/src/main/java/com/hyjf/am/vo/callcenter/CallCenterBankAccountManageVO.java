@@ -1,9 +1,9 @@
 package com.hyjf.am.vo.callcenter;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-
-import com.hyjf.am.vo.BaseVO;
 /**
  * @author libin
  * @version CallCenterBankAccountManageVO, v0.1 2018/6/16 17:22
@@ -19,162 +19,162 @@ public class CallCenterBankAccountManageVO extends BaseVO implements Serializabl
      */
 	private int id;
 	/**
-	 * ÓÃ»§id
+	 * ï¿½Ã»ï¿½id
 	 */
 	private String userId;
 	/**
-	 * ×Ê½ð×Ü¶î
+	 * ï¿½Ê½ï¿½ï¿½Ü¶ï¿½
 	 */
 	private BigDecimal bankTotal;
 	/**
-	 * ÒøÐÐ¿ÉÓÃ½ð¶î
+	 * ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½Ã½ï¿½ï¿½
 	 */
 	private BigDecimal bankBalance;
 
 	/**
-	 * ÒøÐÐ¶³½á½ð¶î
+	 * ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private BigDecimal bankFrost;
 
 	/**
-	 * ÒøÐÐ´ýÊÕ
+	 * ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½
 	 */
 	private BigDecimal bankAwait;
 
 	/**
-	 * ÒøÐÐ´ý»¹
+	 * ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½
 	 */
 	private BigDecimal bankWaitRepay;
 
 	/**
-	 * ÒøÐÐÀÛ¼ÆÍ¶×Ê
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Û¼ï¿½Í¶ï¿½ï¿½
 	 */
 	private BigDecimal bankInvestSum;
 	/**
-	 * ½­Î÷ÒøÐÐ¿ÉÌáÏÖ½ð¶î
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½
 	 */
 	private BigDecimal bankBalanceCash;
 
 	/**
-	 * ½­Î÷ÒøÐÐ¶³½á½ð¶î
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private BigDecimal bankFrostCash;
 
 	/**
-	 * ÒøÐÐ´ý»¹±¾½ð
+	 * ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private BigDecimal bankWaitCapital;
 
 	/**
-	 * ÒøÐÐ´ý»¹ÀûÏ¢
+	 * ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 	 */
 	private BigDecimal bankWaitInterest;
 
 	/**
-	 * ÒøÐÐÀÛ¼ÆÊÕÒæ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Û¼ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private BigDecimal bankInterestSum;
 
 	/**
-	 * µç×ÓÕËºÅ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Ëºï¿½
 	 */
 	private String account;
 
 	/**
-	 * ÐÕÃû
+	 * ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String truename;
 
 	/**
-	 * ÓÃ»§Ãû
+	 * ï¿½Ã»ï¿½ï¿½ï¿½
 	 */
 	private String username;
 	/**
-	 * »áÔ±µÈ¼¶
+	 * ï¿½ï¿½Ô±ï¿½È¼ï¿½
 	 */
 	private String vipName;
 
 	/**
-	 * ÊÖ»úºÅ
+	 * ï¿½Ö»ï¿½ï¿½ï¿½
 	 */
 	private String mobile;
 
 	/**
-	 * ÓÃ»§ÊôÐÔ£¨µ±Ç°£©
+	 * ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String userAttribute;
 
 	/**
-	 * ÓÃ»§½ÇÉ«
+	 * ï¿½Ã»ï¿½ï¿½ï¿½É«
 	 */
 	private String roleid;
 
 	/**
-	 * ÓÃ»§ËùÊôÒ»¼¶·Ö²¿£¨µ±Ç°£©
+	 * ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String userRegionName;
 
 	/**
-	 * ÓÃ»§ËùÊô¶þ¼¶·Ö²¿£¨µ±Ç°£©
+	 * ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String userBranchName;
 
 	/**
-	 * ÓÃ»§ËùÊôÈý¼¶·Ö²¿£¨µ±Ç°£©
+	 * ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String userDepartmentName;
 
 	/**
-	 * ÍÆ¼öÈËÓÃ»§Ãû£¨µ±Ç°£©
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String referrerName;
 
 	/**
-	 * ÍÆ¼öÈËÐÕÃû£¨µ±Ç°£©
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String referrerTrueName;
 
 	/**
-	 * ÍÆ¼öÈËËùÊôÒ»¼¶·Ö²¿£¨µ±Ç°
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Ç°
 	 */
 	private String referrerRegionName;
 
 	/**
-	 * ÍÆ¼öÈËËùÊô¶þ¼¶·Ö²¿£¨µ±Ç°£©
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String referrerBranchName;
 
 	/**
-	 * ÍÆ¼öÈËËùÊôÈý¼¶·Ö²¿£¨µ±Ç°£©
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String referrerDepartmentName;
 
 	/**
-	 * ´óÇø
+	 * ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String regionName;
 
 	/**
-	 * ·Ö¹«Ë¾
+	 * ï¿½Ö¹ï¿½Ë¾
 	 */
 	private String branchName;
 	/**
-	 * ²¿ÃÅ
+	 * ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String departmentName;
 
-	/** ²¿ÃÅ */
+	/** ï¿½ï¿½ï¿½ï¿½ */
 	private String combotreeSrch;
-	/** ²¿ÃÅ */
+	/** ï¿½ï¿½ï¿½ï¿½ */
 	private String[] combotreeListSrch;
 
 	/**
-	 * µç×ÓÕËºÅ(¼ìË÷ÓÃ)
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Ëºï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 	 */
 	private String accountSrch;
 
 	/**
-	 * »áÔ±µÈ¼¶(¼ìË÷ÓÃ)
+	 * ï¿½ï¿½Ô±ï¿½È¼ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 	 */
 	private String vipSrch;
 
@@ -182,12 +182,12 @@ public class CallCenterBankAccountManageVO extends BaseVO implements Serializabl
 	private int limitEnd = -1;
 	
 	/**
-	 * ×ÜµÄ¶³½á½ð¶î(»ã¸¶)
+	 * ï¿½ÜµÄ¶ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ã¸¶)
 	 */
 	private BigDecimal frostTotal;
 
 	/**
-	 * ×ÜµÄ¿ÉÓÃ½ð¶î(»ã¸¶)
+	 * ï¿½ÜµÄ¿ï¿½ï¿½Ã½ï¿½ï¿½(ï¿½ã¸¶)
 	 */
 	private BigDecimal balanceTotal;
 	public int getId() {

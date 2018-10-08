@@ -1,11 +1,9 @@
 package com.hyjf.am.resquest.config;
 
-import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.vo.config.VersionVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author lisheng

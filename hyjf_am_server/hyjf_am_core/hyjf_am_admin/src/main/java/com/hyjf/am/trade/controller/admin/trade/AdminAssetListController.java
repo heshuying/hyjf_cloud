@@ -1,20 +1,5 @@
 package com.hyjf.am.trade.controller.admin.trade;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.admin.AssetDetailCustomizeResponse;
 import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
@@ -24,8 +9,15 @@ import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author libin
@@ -44,12 +36,21 @@ public class AdminAssetListController extends BaseController {
 	 */
 	@RequestMapping(value = "/findAssetList", method = RequestMethod.POST)
 	public AssetListCustomizeResponse findAssetList(@RequestBody @Valid AssetListRequest request){
-		Map<String, Object> mapParam = paramSet(request);
 		AssetListCustomizeResponse response = new AssetListCustomizeResponse();
 		Integer registCount = assetListService.getRecordCount(request);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());
+		// 查询列表传入分页
+		Paginator paginator;
+        /*Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());*/
+		if(request.getLimit() == 0){
+			// 前台传分页
+			paginator = new Paginator(request.getCurrPage(), registCount);
+		} else {
+			// 前台未传分页那默认 10
+			paginator = new Paginator(request.getCurrPage(), registCount,request.getPageSize());
+		}
 		//代表成功
 		String returnCode = "0";
+		Map<String, Object> mapParam = paramSet(request);
 		List<AssetListCustomizeVO> assetList = assetListService.findAssetList(mapParam,paginator.getOffset(), paginator.getLimit());
 		if(registCount>0){
 			if(null!=assetList&&assetList.size()>0){

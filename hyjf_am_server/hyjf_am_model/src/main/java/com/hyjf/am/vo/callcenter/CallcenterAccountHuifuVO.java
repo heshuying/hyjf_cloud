@@ -1,8 +1,8 @@
 package com.hyjf.am.vo.callcenter;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
 /**
  * @author libin
  * @version CallcenterHztInvestVO, v0.1 2018/6/16 17:22
@@ -14,33 +14,33 @@ public class CallcenterAccountHuifuVO extends BaseVO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	// ÓÃ‘ôid
+	// ï¿½Ã‘ï¿½id
 	public String userId;
-	// ÓÃ‘ôÃû
+	// ï¿½Ã‘ï¿½ï¿½ï¿½
 	public String userName;
 
-    //ÓÃ»§ÊÖ»úºÅ
+    //ï¿½Ã»ï¿½ï¿½Ö»ï¿½ï¿½ï¿½
     private String mobile;
-    /** ÓÃ»§ÕæÊµÐÕÃû */
+    /** ï¿½Ã»ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ */
     private String realName;
-    /** Éí·ÝÖ¤ºÅ */
+    /** ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½ */
     private String idcard;
-	// ÒøÐÐÕË»§
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Ë»ï¿½
 	public String account;
-	/**×¨ÃÅÌí¼ÓÎªÁËµ÷ÓÃ»ã¸¶½Ó¿Ú,´Ó¶øºË¶ÔÒøÐÐ¿¨ÐÅÏ¢*/
-	//»ã¸¶¿Í»§ºÅ
+	/**×¨ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Ëµï¿½ï¿½Ã»ã¸¶ï¿½Ó¿ï¿½,ï¿½Ó¶ï¿½ï¿½Ë¶ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½Ï¢*/
+	//ï¿½ã¸¶ï¿½Í»ï¿½ï¿½ï¿½
 	public String customerAccount;
-	// ÒøÐÐ
+	// ï¿½ï¿½ï¿½ï¿½
 	public String bank;
-	// ÒøÐÐ¿¨ÊÇ·ñÊÇÄ¬ÈÏÌáÏÖ¿¨
+	// ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½Ö¿ï¿½
 	public String cardType;
-	// ÒøÐÐ¿¨ÊÇ·ñÊÇ¿ì½ÝÖ§¸¶¿¨
+	// ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½Ç·ï¿½ï¿½Ç¿ï¿½ï¿½Ö§ï¿½ï¿½ï¿½ï¿½
 	public String cardProperty;
-	// Ìí¼ÓÊ±¼ä
+	// ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 	public String addTime;
 
 	/**
-	 * ¹¹Ôì·½·¨²»´ø²ÎÊý
+	 * ï¿½ï¿½ï¿½ì·½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	public CallcenterAccountHuifuVO() {
 		super();

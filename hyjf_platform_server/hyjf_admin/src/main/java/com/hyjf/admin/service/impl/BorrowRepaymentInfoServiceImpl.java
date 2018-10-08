@@ -36,8 +36,8 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
      */
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
-        List<HjhInstConfigVO> list = amTradeClient.selectHjhInstConfigByInstCode(instCode);
-        return list;
+        List<HjhInstConfigVO> hjhInstConfigVOList = amTradeClient.selectCommonHjhInstConfigList();
+        return hjhInstConfigVOList;
     }
     /**
      * @Description
@@ -51,19 +51,10 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
         Date endDate = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         //modify by cwyang 搜索条件存在标的号时，不加时间限制  20180510
-        if(StringUtils.isNotBlank(request.getBorrowNid())||
-                (StringUtils.isNotBlank(request.getTimeStartSrch())&&StringUtils.isNotBlank(request.getTimeEndSrch()))){
+        if(StringUtils.isNotBlank(request.getBorrowNid())){
             request.setYesTimeStartSrch(null);
             request.setYesTimeEndSrch(null);
-        }else{
-            if(request.getYesTimeStartSrch() == null||"".equals(request.getYesTimeStartSrch())){
-                request.setYesTimeStartSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
-            }
-            if(request.getYesTimeEndSrch() == null||"".equals(request.getYesTimeEndSrch())){
-                request.setYesTimeEndSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
-            }
         }
-
         if(request.getYesTimeStartSrch() != null&&!"".equals(request.getYesTimeStartSrch())) {
             Date date;
             try {

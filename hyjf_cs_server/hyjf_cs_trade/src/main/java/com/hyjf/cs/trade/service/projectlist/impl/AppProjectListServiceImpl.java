@@ -22,16 +22,11 @@ import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.AsteriskProcessUtil;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -39,7 +34,8 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.app.AppBorrowProjectInfoBeanVO;
 import com.hyjf.cs.trade.bean.app.AppTransferDetailBean;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.projectlist.AppProjectListService;
@@ -1248,13 +1244,18 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 查询相应的还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             resultMap.put("repayPlan", repayPlanList);
-            // TODO: 2018/6/30  待实现 // 风控信息
-            /*AppRiskControlCustomize riskControl = projectService.selectRiskControl(borrowNid);
-            if(riskControl!=null){
-                riskControl.setControlMeasures(riskControl.getControlMeasures()==null?"":riskControl.getControlMeasures().replace("\r\n", ""));
-                riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
+            // 风控信息
+            BorrowInfoWithBLOBsVO borrowInfoWithBLOBsVO = amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
+            Map<String,String> riskControl = new HashMap<>();
+            if (borrowInfoWithBLOBsVO != null){
+                riskControl.put("controlMeasures",borrowInfoWithBLOBsVO.getBorrowMeasuresMea() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMea().replace("\r\n",""));
+                riskControl.put("controlMort",borrowInfoWithBLOBsVO.getBorrowMeasuresMort() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMort().replace("\r\n",""));
+                riskControl.put("partner",StringUtils.isBlank(borrowInfoWithBLOBsVO.getBorrowMeasuresInstit())? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresInstit());
+                riskControl.put("agencyIntroduction",StringUtils.isBlank(borrowInfoWithBLOBsVO.getBorrowCompanyInstruction()) ? "" : borrowInfoWithBLOBsVO.getBorrowCompanyInstruction());
+                riskControl.put("operatingProcess",StringUtils.isBlank(borrowInfoWithBLOBsVO.getBorrowOperatingProcess()) ? "" : borrowInfoWithBLOBsVO.getBorrowOperatingProcess());
             }
-            result.setRiskControl(riskControl);*/
+
+            resultMap.put("riskControl",riskControl);
 
         } else {
             resultMap.put(ProjectConstant.RES_PROJECT_INFO, new AppTransferDetailBean());
@@ -1444,18 +1445,27 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 appProjectListCustomize = new AppProjectListCustomizeVO();
                 /*重构整合 开始*/
                 appProjectListCustomize.setBorrowTheFirst(entity.getPlanApr() + "%");
+                // mod by nxl 智投服务修改历史年回报率->参考年回报率
                 appProjectListCustomize.setBorrowTheFirstDesc("历史年回报率");
+                appProjectListCustomize.setBorrowTheFirstDesc("参考年回报率");
                 appProjectListCustomize.setBorrowTheSecond(entity.getPlanPeriod());
+                // mod by nxl 智投服务修改锁定期限->服务回报期限
                 appProjectListCustomize.setBorrowTheSecondDesc("锁定期限");
+                appProjectListCustomize.setBorrowTheSecondDesc("服务回报期限");
                 appProjectListCustomize.setStatusNameDesc(StringUtils.isNotBlank(entity.getAvailableInvestAccount()) ? "额度"+ entity.getAvailableInvestAccount() : "");
 
                 if ("稍后开启".equals(entity.getStatusName())){    //1.启用  2.关闭
                     // 20.立即加入  21.稍后开启
                     appProjectListCustomize.setStatus("21");
                     appProjectListCustomize.setStatusName("稍后开启");
-                }else if("立即加入".equals(entity.getStatusName())){  //1.启用  2.关闭
+                }/*else if("立即加入".equals(entity.getStatusName())){  //1.启用  2.关闭
                     appProjectListCustomize.setStatus("20");
                     appProjectListCustomize.setStatusName("立即加入");
+                }*/
+                //mod by nxl 智投服务 修改立即加入->授权服务
+                else if("授权服务".equals(entity.getStatusName())){  //1.启用  2.关闭
+                    appProjectListCustomize.setStatus("20");
+                    appProjectListCustomize.setStatusName("授权服务");
                 }
                 /*重构整合 结束*/
                 appProjectListCustomize.setBorrowName(entity.getPlanName());

@@ -3,13 +3,10 @@
  */
 package com.hyjf.admin.service;
 
-import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.am.response.admin.AdminBankSettingResponse;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedList;
 import java.util.List;
 
 /**

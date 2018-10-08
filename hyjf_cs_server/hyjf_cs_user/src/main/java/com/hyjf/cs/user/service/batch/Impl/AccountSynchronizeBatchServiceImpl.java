@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -79,12 +80,15 @@ public class AccountSynchronizeBatchServiceImpl implements AccountSynchronizeBat
     public void mobileSychronize() {
         try {
             List<AccountMobileSynchVO> accountMobileAynches = amUserClient.searchAccountMobileSynch("1");
-            for (AccountMobileSynchVO accountMobileAynch : accountMobileAynches) {
-                // 同步手机号
-                updateMobile(accountMobileAynch);
+            if(!CollectionUtils.isEmpty(accountMobileAynches)){
+                for (AccountMobileSynchVO accountMobileAynch : accountMobileAynches) {
+                    // 同步手机号
+                    updateMobile(accountMobileAynch);
+                }
             }
         }catch(Exception e){
-            throw new RuntimeException("查询同步手机号异常");        }
+            throw new RuntimeException("查询同步手机号异常");
+        }
     }
 
 

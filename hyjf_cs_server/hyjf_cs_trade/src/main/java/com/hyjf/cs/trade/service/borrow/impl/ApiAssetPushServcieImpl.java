@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.service.borrow.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.assetpush.InfoBean;
+import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -84,6 +85,18 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         HjhAssetBorrowTypeVO assetBorrow = amTradeClient.selectAssetBorrowType(pushRequestBean.getInstCode(), pushRequestBean.getAssetType());
         if (assetBorrow == null) {
             logger.info(pushRequestBean.getInstCode() + "  " + pushRequestBean.getAssetType() + " ------机构编号不存在");
+            return resultBean;
+        }
+
+        // 授信期内校验
+        BailConfigInfoCustomizeVO bailConfig = amTradeClient.selectBailConfigByInstCode(pushRequestBean.getInstCode());
+        if(bailConfig == null){
+            logger.info("保证金配置不存在:{}", pushRequestBean.getInstCode());
+            return resultBean;
+        }
+        if(GetDate.getNowTime10() < GetDate.getDayStart10(bailConfig.getTimestart())
+                || GetDate.getNowTime10() > GetDate.getDayEnd10(bailConfig.getTimeend())){
+            logger.info("未在授信期内，不能推标");
             return resultBean;
         }
 
@@ -516,6 +529,18 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         if (assetBorrow == null) {
             logger.info(pushRequestBean.getInstCode() + "  "+ pushRequestBean.getAssetType() + " ------机构编号不存在");
             resultBean.setStatusDesc("机构编号不存在！");
+            return resultBean;
+        }
+
+        // 授信期内校验
+        BailConfigInfoCustomizeVO bailConfig = amTradeClient.selectBailConfigByInstCode(pushRequestBean.getInstCode());
+        if(bailConfig == null){
+            logger.info("保证金配置不存在:{}", pushRequestBean.getInstCode());
+            return resultBean;
+        }
+        if(GetDate.getNowTime10() < GetDate.getDayStart10(bailConfig.getTimestart())
+                || GetDate.getNowTime10() > GetDate.getDayEnd10(bailConfig.getTimeend())){
+            logger.info("未在授信期内，不能推标");
             return resultBean;
         }
 

@@ -97,7 +97,7 @@
 			</if>
 			<if test="addTimeEnd != null and addTimeEnd != ''">
 				<!-- 优化sql(字段类型转换) timestamp-->
-				AND hct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{addTimeEnd},'23:59:59'),'%Y-%m-%d %H:%i:%s')
+				AND hct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{addTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>
@@ -231,7 +231,7 @@
 			</if>
 			<if test="addTimeEnd != null and addTimeEnd != ''">
 				<!-- 优化sql(字段类型转换) timestamp-->
-				AND ct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{addTimeEnd},'23:59:59'),'%Y-%m-%d %H:%i:%s')
+				AND ct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{addTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>

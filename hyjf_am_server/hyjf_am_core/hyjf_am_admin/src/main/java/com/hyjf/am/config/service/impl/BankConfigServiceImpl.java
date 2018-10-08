@@ -1,34 +1,20 @@
 package com.hyjf.am.config.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
+import com.hyjf.am.config.dao.mapper.auto.*;
+import com.hyjf.am.config.dao.mapper.customize.JXBankConfigCustomizeMapper;
+import com.hyjf.am.config.dao.model.auto.*;
+import com.hyjf.am.config.service.BankConfigService;
+import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
+import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.hyjf.am.config.dao.mapper.auto.BankConfigMapper;
-import com.hyjf.am.config.dao.mapper.auto.BankReturnCodeConfigMapper;
-import com.hyjf.am.config.dao.mapper.auto.CardBinMapper;
-import com.hyjf.am.config.dao.mapper.auto.JxBankConfigMapper;
-import com.hyjf.am.config.dao.mapper.auto.ParamNameMapper;
-import com.hyjf.am.config.dao.mapper.customize.JXBankConfigCustomizeMapper;
-import com.hyjf.am.config.dao.model.auto.BankConfig;
-import com.hyjf.am.config.dao.model.auto.BankConfigExample;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
-import com.hyjf.am.config.dao.model.auto.CardBin;
-import com.hyjf.am.config.dao.model.auto.CardBinExample;
-import com.hyjf.am.config.dao.model.auto.JxBankConfig;
-import com.hyjf.am.config.dao.model.auto.JxBankConfigExample;
-import com.hyjf.am.config.dao.model.auto.ParamName;
-import com.hyjf.am.config.dao.model.auto.ParamNameExample;
-import com.hyjf.am.config.service.BankConfigService;
-import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
-import com.hyjf.am.vo.trade.BankConfigVO;
-import com.hyjf.common.util.CustomConstants;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class BankConfigServiceImpl implements BankConfigService {

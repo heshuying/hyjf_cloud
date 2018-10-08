@@ -1,6 +1,5 @@
 package com.hyjf.am.config.service.impl.app;
 
-import com.hyjf.am.config.controller.app.ShareNewsController;
 import com.hyjf.am.config.dao.mapper.auto.InviteMapper;
 import com.hyjf.am.config.dao.model.auto.Invite;
 import com.hyjf.am.config.dao.model.auto.InviteExample;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.xml.ws.RespectBinding;
 import java.util.List;
 
 /**

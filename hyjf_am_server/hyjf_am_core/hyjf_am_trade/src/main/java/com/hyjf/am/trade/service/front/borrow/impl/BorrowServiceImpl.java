@@ -30,6 +30,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
@@ -126,12 +127,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @return
      */
     @Override
-    public List<Borrow> selectBorrowList() {
-        BorrowExample example = new BorrowExample();
-        BorrowExample.Criteria cra = example.createCriteria();
-        cra.andStatusEqualTo(3);
-        cra.andRepayFullStatusEqualTo(0);
-        List<Borrow> list = this.borrowMapper.selectByExample(example);
+    public List<BorrowAndInfoVO> selectBorrowList() {
+        List<BorrowAndInfoVO> list = this.borrowCustomizeMapper.selectBorrowRepayList();
         if (list != null && list.size() > 0) {
             return list;
         }
@@ -266,6 +263,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     @Override
     public void updateTenderAfter(TenderBgVO tenderBg) {
         Borrow borrow = getBorrow(tenderBg.getBorrowNid());
+        BorrowInfo borrowInfo = getBorrowInfoByNid(tenderBg.getBorrowNid());
         Integer userId = tenderBg.getUserId();
         // 删除临时表
         BorrowTenderTmpExample borrowTenderTmpExample = new BorrowTenderTmpExample();
@@ -340,6 +338,17 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         logger.info("开始插入borrowTender表...");
         borrowTenderMapper.insertSelective(borrowTender);
         logger.info("插入borrowTender表结束...");
+
+
+        // 插入产品加息
+        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+            //boolean increaseFlag = this.insertIncreaseInterest(borrow,borrowInfo,tenderBg,borrowTender);
+            //if (!increaseFlag) {
+                //throw new RuntimeException("插入产品加息表失败！");
+           // }
+            logger.info("用户:" + userId + "******插入产品加息，投资订单号：" + borrowTender.getNid());
+        }
+
         // 更新用户账户余额表
         Account accountBean = new Account();
         accountBean.setUserId(userId);
@@ -479,6 +488,74 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         }
 
 
+    }
+
+    // 插入产品加息表
+    private boolean insertIncreaseInterest(Borrow borrow, BorrowInfo borrowInfo, TenderBgVO tenderBg, BorrowTender borrowTender) {
+        // 操作ip
+        String ip = tenderBg.getIp();
+        // 操作平台
+        int client = borrowTender.getClient();
+        // 投资人id
+        Integer userId = borrowTender.getUserId();
+        // 借款金额
+        String account = tenderBg.getAccountDecimal().toString();
+        // 订单id
+        String tenderOrderId = tenderBg.getOrderId();
+        // 项目编号
+        String borrowNid = borrow.getBorrowNid();
+        // 项目的还款方式
+        String borrowStyle = borrow.getBorrowStyle();
+        BorrowStyle borrowStyleMain = this.getborrowStyleByNid(borrowStyle);
+        String borrowStyleName = borrowStyleMain.getName();
+        // 借款期数
+        Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
+        // 生成额外利息订单
+        String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
+        if (borrowTender != null) {
+            IncreaseInterestInvest increaseInterestInvest = new IncreaseInterestInvest();
+            increaseInterestInvest.setUserId(userId);
+            increaseInterestInvest.setInvestUserName(borrowTender.getUserName());
+            increaseInterestInvest.setTenderId(borrowTender.getId());
+            increaseInterestInvest.setTenderNid(tenderOrderId);
+            increaseInterestInvest.setBorrowNid(borrowNid);
+            increaseInterestInvest.setBorrowApr(borrow.getBorrowApr());
+            increaseInterestInvest.setBorrowExtraYield(borrowInfo.getBorrowExtraYield());
+            increaseInterestInvest.setBorrowPeriod(borrowPeriod);
+            increaseInterestInvest.setBorrowStyle(borrowStyle);
+            increaseInterestInvest.setBorrowStyleName(borrowStyleName);
+            increaseInterestInvest.setOrderId(orderId);
+            increaseInterestInvest.setOrderDate(GetDate.getServerDateTime(10, new Date()));
+            increaseInterestInvest.setAccount(new BigDecimal(account));
+            increaseInterestInvest.setStatus(0);
+            increaseInterestInvest.setWeb(0);
+            increaseInterestInvest.setClient(client);
+            increaseInterestInvest.setAddIp(ip);
+            increaseInterestInvest.setRemark("加息收益");
+            increaseInterestInvest.setInvestType(0);
+            increaseInterestInvest.setCreateTime(GetDate.getNowTime());
+            increaseInterestInvest.setCreateUserId(userId);
+            increaseInterestInvest.setCreateUserName(borrowTender.getUserName());
+
+            // 设置推荐人之类的
+            increaseInterestInvest.setTenderUserAttribute(borrowTender.getTenderUserAttribute());
+            increaseInterestInvest.setInviteRegionId(borrowTender.getInviteRegionId());
+            increaseInterestInvest.setInviteRegionName(borrowTender.getInviteRegionName());
+            increaseInterestInvest.setInviteBranchId(borrowTender.getInviteBranchId());
+            increaseInterestInvest.setInviteBranchName(borrowTender.getInviteBranchName());
+            increaseInterestInvest.setInviteDepartmentId(borrowTender.getInviteDepartmentId());
+            increaseInterestInvest.setInviteDepartmentName(borrowTender.getInviteDepartmentName());
+            increaseInterestInvest.setInviteUserId(borrowTender.getInviteUserId());
+            increaseInterestInvest.setInviteUserName(borrowTender.getInviteUserName());
+
+            boolean incinvflag = increaseInterestInvestMapper.insertSelective(increaseInterestInvest) > 0 ? true : false;
+            if (!incinvflag) {
+                logger.error("产品加息投资额外利息投资失败，插入额外投资信息失败,投资订单号:" + tenderOrderId);
+                throw new RuntimeException("产品加息投资额外利息投资失败，插入额外投资信息失败,投资订单号:" + tenderOrderId);
+            }
+            return incinvflag;
+        }
+        return false;
     }
 
     /**

@@ -18,7 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
@@ -38,128 +41,98 @@ public class AppBannerController extends BaseController {
     AppBannerService appBannerService;
     @Autowired
     private MessagePushNoticesService messagePushNoticesService;
+    @Autowired
+    private FileUpLoadUtil fileUpLoadUtil;
 
     @ApiOperation(value = "广告管理页面载入", notes = "广告管理页面载入")
     @PostMapping(value = "/init")
-    @ResponseBody
     public AdminResult<AppBannerResponse> init(@RequestBody  AppBannerRequestBean appBannerRequestBean) {
-            AppBannerRequest aprlr = new AppBannerRequest();
-            BeanUtils.copyProperties(appBannerRequestBean, aprlr);
-            AppBannerResponse prs = appBannerService.getRecordList(aprlr);
-            if (prs == null) {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
-            if (!Response.isSuccess(prs)) {
-                return new AdminResult<>(FAIL, prs.getMessage());
-            }
-            AdminResult adminResult = new AdminResult();
-            adminResult.setData(prs);
-            return adminResult;
+        AppBannerRequest aprlr = new AppBannerRequest();
+        BeanUtils.copyProperties(appBannerRequestBean, aprlr);
+        AppBannerResponse response = new AppBannerResponse();
+        AppBannerResponse prs = appBannerService.getRecordList(aprlr);
+        if (prs != null) {
+            response=prs;
+        }
+
+        AdminResult adminResult = new AdminResult();
+        adminResult.setData(response);
+        return adminResult;
 
     }
 
     @ApiOperation(value = "广告管理修改转跳", notes = "广告管理修改转跳")
     @PostMapping(value = "/infoAction")
-    @ResponseBody
     public AdminResult<AppBannerResponse> infoAction(@RequestBody  AdsVO adsVO) {
-        try {
-            AppBannerResponse prs = appBannerService.getRecordById(adsVO);
-            if (prs == null) {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
-            if (!Response.isSuccess(prs)) {
-                return new AdminResult<>(FAIL, prs.getMessage());
-            }
-            AdminResult adminResult = new AdminResult();
-            adminResult.setData(prs);
-            return adminResult;
-        } catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+        AppBannerResponse response = new AppBannerResponse();
+        AppBannerResponse prs = appBannerService.getRecordById(adsVO);
+        if (prs != null) {
+            response=prs;
         }
+        AdminResult adminResult = new AdminResult();
+        adminResult.setData(response);
+        return adminResult;
+
     }
 
     @ApiOperation(value = "广告管理添加", notes = "广告管理添加")
     @PostMapping(value = "/add")
-    @ResponseBody
     public AdminResult<AdsWithBLOBsVO> add(@RequestBody AdsVO adsVO) {
-        try {
-            AppBannerResponse appBannerResponse = appBannerService.insertRecord(adsVO);
-            if (Response.isSuccess(appBannerResponse)) {
-                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-            } else {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
-        } catch (Exception e) {
+        AppBannerResponse appBannerResponse = appBannerService.insertRecord(adsVO);
+        if (Response.isSuccess(appBannerResponse)) {
+            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+        } else {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+
     }
 
     @ApiOperation(value = "广告管理修改", notes = "广告管理修改")
     @PostMapping(value = "/update")
-    @ResponseBody
     public AdminResult<AdsWithBLOBsVO> update(@RequestBody AdsVO adsVO) {
-        try {
-            AppBannerResponse appBannerResponse = appBannerService.updateRecord(adsVO);
-            if (Response.isSuccess(appBannerResponse)) {
-                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-            } else {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
-        } catch (Exception e) {
+        AppBannerResponse appBannerResponse = appBannerService.updateRecord(adsVO);
+        if (Response.isSuccess(appBannerResponse)) {
+            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+        } else {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+
     }
 
     @ApiOperation(value = "修改状态", notes = "修改状态")
     @PostMapping(value = "/updateStatus")
-    @ResponseBody
     public AdminResult<AdsWithBLOBsVO> updateStatus(@RequestBody AdsVO adsVO) {
-        try {
-            AppBannerResponse appBannerResponse = appBannerService.updateStatus(adsVO);
-            if (Response.isSuccess(appBannerResponse)) {
-                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-            } else {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
-        } catch (Exception e) {
+        AppBannerResponse appBannerResponse = appBannerService.updateStatus(adsVO);
+        if (Response.isSuccess(appBannerResponse)) {
+            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+        } else {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+
     }
 
 
     @ApiOperation(value = "删除", notes = "删除")
     @PostMapping(value = "/delete")
-    @ResponseBody
     public AdminResult<AdsWithBLOBsVO> deleteBanner(@RequestBody AdsVO adsVO) {
-        try {
-            AppBannerResponse appBannerResponse = appBannerService.deleteAppBanner(adsVO);
-            if (Response.isSuccess(appBannerResponse)) {
-                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-            } else {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
-        } catch (Exception e) {
+        AppBannerResponse appBannerResponse = appBannerService.deleteAppBanner(adsVO);
+        if (Response.isSuccess(appBannerResponse)) {
+            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+        } else {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-    }
 
-    @Autowired
-    private FileUpLoadUtil fileUpLoadUtil;
+    }
 
     @ApiOperation(value = "上传", notes = "上传")
     @PostMapping(value = "/upLoadFile")
-    @ResponseBody
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
-        try {
-            LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);
-            adminResult.setData(borrowCommonImages);
-            adminResult.setStatus(SUCCESS);
-            adminResult.setStatusDesc(SUCCESS_DESC);
-            return adminResult;
-        } catch (Exception e) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+        LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);
+        adminResult.setData(borrowCommonImages);
+        adminResult.setStatus(SUCCESS);
+        adminResult.setStatusDesc(SUCCESS_DESC);
+        return adminResult;
     }
 
 

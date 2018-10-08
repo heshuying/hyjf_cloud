@@ -40,16 +40,16 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
+import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
-import org.apache.rocketmq.client.producer.MQProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,7 +188,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         }
         //判断新标还是老标，老标走原来逻辑原来页面，新标走新方法 0为老标 1为新标(融通宝走原来页面)  -- 原系统注释
         if (detailCsVO.getIsNew() == 0 || "13".equals(detailCsVO.getType())) {
-            // TODO: 2018/6/23  getProjectDetail(modelAndView, detailCsVO,userId);     待确认是否还有老标后再处理
         } else {
             getProjectDetailNew(other, projectCustomeDetail, userVO);
         }
@@ -262,7 +261,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             request.setMoney("0");
             Integer couponAvailableCount = amUserClient.countAvaliableCoupon(request);
             other.put("couponAvailableCount", couponAvailableCount == null ? "0" : String.valueOf(couponAvailableCount));
-            other.put("borrowMeasuresMea", borrow.getBorrowMeasuresMea());
+            BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(borrow.getBorrowNid());
+            other.put("borrowMeasuresMea", StringUtils.isNotBlank(borrow.getBorrowMeasuresMea()) ? borrow.getBorrowMeasuresMea() : "");
             /** 可用优惠券张数结束 pccvip */
             /** 计算最优优惠券结束 */
 
@@ -1074,6 +1074,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             map.put(ProjectConstant.HJH_DATA_ACCEDE_ACCOUNT_TOTAL, CommonUtils.formatAmount(totalInvestAndInterestVO.getHjhTotalInvestAmount()));
             map.put(ProjectConstant.HJH_DATA_INTEREST_TOTAL, CommonUtils.formatAmount(totalInvestAndInterestVO.getHjhTotalInterestAmount()));
             map.put(ProjectConstant.HJH_DATA_ACCEDE_TIMES, totalInvestAndInterestVO.getHjhTotalInvestNum());
+        } else {
+            map.put(ProjectConstant.HJH_DATA_ACCEDE_ACCOUNT_TOTAL, "0");
+            map.put(ProjectConstant.HJH_DATA_INTEREST_TOTAL, "0");
+            map.put(ProjectConstant.HJH_DATA_ACCEDE_TIMES, "0");
         }
         WebResult webResult = new WebResult();
         webResult.setData(map);
@@ -1106,6 +1110,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 throw new RuntimeException("web查询原子层计划专区计划列表数据异常");
             }
             result.put(ProjectConstant.WEB_PLAN_LIST, list);
+        } else {
+            result.put(ProjectConstant.WEB_PLAN_LIST, new ArrayList<HjhPlanCustomizeVO>());
         }
         webResult.setData(result);
         page.setTotal(count);

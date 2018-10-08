@@ -3,36 +3,29 @@
  */
 package com.hyjf.am.trade.service.admin.hjhplan.impl;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.admin.PlanListCustomizeRequest;
 import com.hyjf.am.resquest.admin.PlanListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAllocationEngineMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhPlanMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhRegionMapper;
 import com.hyjf.am.trade.dao.mapper.customize.HjhPlanCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.HjhAllocationEngine;
-import com.hyjf.am.trade.dao.model.auto.HjhAllocationEngineExample;
-import com.hyjf.am.trade.dao.model.auto.HjhPlan;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanExample;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanWithBLOBs;
-import com.hyjf.am.trade.dao.model.auto.HjhRegion;
-import com.hyjf.am.trade.dao.model.auto.HjhRegionExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhPlanService;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author libin
@@ -380,6 +373,8 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 				plan.setMarginMeasures(StringUtils.isEmpty(form.getMarginMeasures()) ? "" : form.getMarginMeasures());
 				// 常见问题
 				plan.setNormalQuestions(StringUtils.isEmpty(form.getNormalQuestion()) ? "" : form.getNormalQuestion());
+				// 最小投资比数
+				plan.setMinInvestCounts(StringUtils.isEmpty(form.getMinInvestCounts()) ? 0 : Integer.parseInt(form.getMinInvestCounts()));
 				// 更新时间
 				plan.setUpdateTime(new Date());
 				// 更新用户ID
@@ -462,7 +457,9 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		plan.setPlanInvestStatus(Integer.valueOf(form.getDebtPlanStatus()));
 		// 显示状态
 		plan.setPlanDisplayStatus(Integer.valueOf(form.getPlanDisplayStatusSrch()));
-		// 添加时间
+        // 最小投资比数
+        plan.setMinInvestCounts(StringUtils.isEmpty(form.getMinInvestCounts()) ? 0 : Integer.parseInt(form.getMinInvestCounts()));
+        // 添加时间
 		plan.setAddTime(GetDate.getMyTimeInMillis());
 		// 还款方式
 		plan.setBorrowStyle(form.getBorrowStyle());

@@ -1,20 +1,5 @@
 package com.hyjf.am.trade.controller.admin.trade;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.admin.AssetDetailCustomizeResponse;
 import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
@@ -24,8 +9,15 @@ import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author libin

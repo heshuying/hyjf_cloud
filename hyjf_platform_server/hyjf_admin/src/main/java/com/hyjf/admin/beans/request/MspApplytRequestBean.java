@@ -1,10 +1,9 @@
 package com.hyjf.admin.beans.request;
 
-import java.math.BigDecimal;
-
 import com.hyjf.am.vo.BasePage;
-
 import io.swagger.annotations.ApiModelProperty;
+
+import java.math.BigDecimal;
 
 public class MspApplytRequestBean extends BasePage {
 

@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -186,7 +186,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     @Override
     public JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean) {
-        return amTradeClient.getRepayDetailData(requestBean);
+        JSONObject result = amTradeClient.getRepayDetailData(requestBean);
+        if(result == null){
+            result = new JSONObject();
+        }
+        return result;
     }
 
    /**

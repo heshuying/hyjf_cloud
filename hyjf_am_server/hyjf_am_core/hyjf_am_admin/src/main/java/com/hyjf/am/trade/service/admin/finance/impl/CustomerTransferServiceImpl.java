@@ -3,15 +3,6 @@
  */
 package com.hyjf.am.trade.service.admin.finance.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
 import com.hyjf.am.resquest.admin.TransferListRequest;
@@ -26,12 +17,20 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.ThreeDESUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author: sunpeikai
  * @version: CustomerTransferServiceImpl, v0.1 2018/7/6 10:17
  */
-@Service
+@Service(value = "tradeCustomerTransferServiceImpl")
 public class CustomerTransferServiceImpl extends BaseServiceImpl implements CustomerTransferService {
 
     @Autowired

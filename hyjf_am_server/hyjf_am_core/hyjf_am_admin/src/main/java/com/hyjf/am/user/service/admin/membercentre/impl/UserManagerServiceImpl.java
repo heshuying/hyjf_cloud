@@ -3,32 +3,31 @@
  */
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
-import com.hyjf.am.trade.dao.mapper.auto.ROaDepartmentMapper;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserChangeLogMapper;
-import com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserLeaveCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.admin.membercentre.UserManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,21 +43,7 @@ import java.util.Map;
  */
 @Service
 public class UserManagerServiceImpl extends BaseServiceImpl implements UserManagerService {
-
     private static Logger logger = LoggerFactory.getLogger(UserManagerServiceImpl.class);
-    @Autowired
-    private SpreadsUserLogMapper spreadsUserLogMapper;
-    @Autowired
-    private EmployeeCustomizeMapper employeeCustomizeMapper;
-    @Autowired
-    private UserLeaveCustomizeMapper userLeaveCustomizeMapper;
-    @Autowired
-    private SpreadsUserMapper spreadsUserMapper;
-    @Autowired
-    private UserChangeLogMapper userChangeLogMapper;
-    @Autowired
-    private ROaDepartmentMapper rOaDepartmentMapper;
-
     /**
      * 根据筛选条件查找会员列表
      *
@@ -240,6 +225,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updataUserInfo(UserManagerUpdateRequest request) {
         if (null != request) {
             if (StringUtils.isNotBlank(request.getUserId())) {
@@ -411,6 +397,22 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         List<User> usersList = this.userMapper.selectByExample(example);
         if (null!= usersList && usersList.size() > 0) {
             return usersList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户List id查找用户表
+     *
+     * @param userId
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<User> selectUserByListUserId(List userId) {
+        List<User> usersList = this.userMapper.selectUserByListUserId(userId);
+        if (null!= usersList && usersList.size() > 0) {
+            return usersList;
         }
         return null;
     }
@@ -625,6 +627,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateUserRe(AdminUserRecommendRequest request) {
         // 根据推荐人用户名查询用户
         User userRecommendNew = this.selectUserByRecommendName(request.getRecommendName());
@@ -788,7 +791,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return 1;
     }
 
-
+    @Transactional(rollbackFor = Exception.class)
     public int updateUserParam(Integer userId, Integer speadUserId) {
         User user = this.selectUserByUserId(userId);
         int flg = 0;
@@ -853,6 +856,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateUserIdCard(AdminUserRecommendRequest request) {
         // 初始化用户操作日志信息
         UserChangeLog changeLog = new UserChangeLog();
@@ -929,41 +933,30 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return 1;
     }
 
-    /*public void sendCAChangeMQ(AdminUserUpdateCustomize form) {
-        // 加入到消息队列
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("mqMsgId", GetCode.getRandomCode(10));
-        params.put("userId", String.valueOf(form.getUserId()));
-        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_USER_INFO_CHANGE, JSONObject.toJSONString(params));
-        // add by liuyang 20180227 修改手机号后 发送更新客户信息MQ end
-    }*/
-
     /**
      * 保存企业开户信息
      * @param updCompanyRequest
      * @return
      */
     @Override
-    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest) {
+    @Transactional(rollbackFor = Exception.class)
+    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,String bankName,String payAllianceCode,User user,String bankId) {
         Response response = new Response();
+        response.setRtn(Response.FAIL);
         String accountId = updCompanyRequest.getAccountId();
-        String userId = updCompanyRequest.getUserId();
-        String idType =updCompanyRequest.getIdType();
-        if (StringUtils.isBlank(userId)) {
-            response.setMessage("请先选择用户再进行操作!");
-            return response;
-        }
         if (StringUtils.isBlank(accountId)) {
             response.setMessage("请输入正确的电子账号!");
             return response;
         }
-        User user = this.selectUserByUserId(Integer.parseInt(userId));
         int bankOpenFlag = user.getBankOpenAccount();
         if (user != null && user.getUserType() != 1) {
             if (user.getBankOpenAccount() == 1) {//已开户
                 response.setMessage("用户已开户!");
                 return response;
             }
+        }
+        if (StringUtils.isBlank(updCompanyRequest.getIdType())) {
+            updCompanyRequest.setIdType("0");
         }
         if (user.getUserType() != 1) {
             BankOpenAccount bankOpenAccountVO = this.selectBankOpenAccountByAccountId(accountId);
@@ -991,7 +984,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         record.setStatus(6);//成功
         record.setCreateTime(new Date());
         record.setIsBank(1);//银行开户
-        record.setCardType(Integer.parseInt(idType));
+        record.setCardType(Integer.parseInt(updCompanyRequest.getIdType()));
         record.setTaxRegistrationCode(updCompanyRequest.getTaxId());
         record.setBuseNo(updCompanyRequest.getBusId());
         record.setRemark(updCompanyRequest.getRemark());
@@ -999,9 +992,19 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         if (bankOpenFlag == 1) {
             //修改信息
             int flag = this.updateCorpOpenAccountRecord(record);
+            if (flag > 0) {
+                logger.info(("==================ht_corp_open_account_record 企业用户信息变更保存成功!======"));
+            }else{
+                logger.info("============企业信息变更保存异常!========");
+            }
         } else {
             // 保存信息
             int insertFlag = this.insertCorpOpenAccountRecord(record);
+            if (insertFlag > 0) {
+                logger.info(("==================ht_corp_open_account_record 企业用户信息保存成功!======"));
+            }else{
+                logger.info("============企业信息保存异常!========");
+            }
         }
         //保存银行卡信息
         BankCard bankCard = null;
@@ -1019,23 +1022,23 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         bankCard.setCardNo(updCompanyRequest.getAccount());
         bankCard.setCreateTime(GetDate.getDate());
         bankCard.setCreateUserId(user.getUserId());
-        if (StringUtils.isNotBlank(updCompanyRequest.getBankId())) {
-            bankCard.setBankId(Integer.parseInt(updCompanyRequest.getBankId()));
-            bankCard.setBank(updCompanyRequest.getBankName());
-            bankCard.setPayAllianceCode(updCompanyRequest.getPayAllianceCode());
+        if (StringUtils.isNotBlank(bankId)) {
+            bankCard.setBankId(Integer.parseInt(bankId));
+            bankCard.setBank(bankName);
+            bankCard.setPayAllianceCode(payAllianceCode);
             if (bankOpenFlag == 1) {
                 int updateflag = bankCardMapper.updateByPrimaryKeySelective(bankCard);
                 if (updateflag > 0) {
-                    throw new RuntimeException("银行卡信息修改更新异常!");
-                }else {
                     logger.info("=============银行卡信息修改更新成功==================");
+                }else {
+                    throw new RuntimeException("银行卡信息修改更新异常!");
                 }
             } else {
                 int insertcard = bankCardMapper.insertSelective(bankCard);
                 if (insertcard > 0) {
-                    throw new RuntimeException("银行卡信息修改保存异常!");
-                }else {
                     logger.info("=============银行卡信息修改保存成功==================");
+                }else {
+                    throw new RuntimeException("银行卡信息修改保存异常!");
                 }
             }
         }
@@ -1056,18 +1059,18 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             openFlag = this.insertBankOpenAccount(openAccount);
         }
         if (openFlag > 0) {
-            throw new RuntimeException("银行开户信息修改保存异常!");
-        }else {
             logger.info("=============银行开户信息修改保存成功==================");
+        }else {
+            throw new RuntimeException("银行开户信息修改保存异常!");
         }
         //替换企业信息名称
         UserInfo userInfo =this.findUsersInfo(user.getUserId());
         userInfo.setTruename(updCompanyRequest.getName());
         int userInfoFlag = this.updateUserInfoByUserInfo(userInfo);
         if (userInfoFlag > 0) {
-            throw new RuntimeException("用户详细信息保存异常!");
-        }else {
             logger.info("=============用户详细信息保存成功==================");
+        }else {
+            throw new RuntimeException("用户详细信息保存异常!");
         }
         if (bankOpenFlag != 1) {
             user.setBankAccountEsb(0);//开户平台,pc
@@ -1075,9 +1078,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             user.setBankOpenAccount(1);//已开户
             int userFlag = this.updateUser(user);
             if (userInfoFlag > 0) {
-                throw new RuntimeException("用户表信息保存异常!");
-            }else {
                 logger.info("=============用户详细信息保存成功==================");
+            }else {
+                 throw new RuntimeException("用户表信息保存异常!");
             }
         }
         response.setMessage("企业用户信息补录成功!");
@@ -1096,7 +1099,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return null;
     }
 
-    
+
 	/**
      * 根据绑定信息取得用户id
      * @param bindUniqueId
@@ -1293,6 +1296,35 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         criteria.andParentidEqualTo(deptId);
         rOaDepartmentList=rOaDepartmentMapper.selectByExample(example);
         return rOaDepartmentList;
+    }
+    /**
+     * 调用江西银行查询联行号
+     * @param cardNo
+     * @return
+     */
+    @Override
+    public BankCallBean payAllianceCodeQuery(String cardNo,Integer userId) {
+        BankCallBean bean = new BankCallBean();
+        String channel = BankCallConstant.CHANNEL_PC;
+        String orderDate = GetOrderIdUtils.getOrderDate();
+        String txDate = GetOrderIdUtils.getTxDate();
+        String txTime = GetOrderIdUtils.getTxTime();
+        String seqNo = GetOrderIdUtils.getSeqNo(6);
+        bean.setVersion(BankCallConstant.VERSION_10);// 版本号
+        bean.setTxCode(BankCallConstant.TXCODE_PAY_ALLIANCE_CODE_QUERY);// 交易代码
+        bean.setTxDate(txDate);
+        bean.setTxTime(txTime);
+        bean.setSeqNo(seqNo);
+        bean.setChannel(channel);
+        bean.setAccountId(cardNo);
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+        bean.setLogOrderDate(orderDate);
+        bean.setLogUserId(String.valueOf(userId));
+        bean.setLogRemark("联行号查询");
+        bean.setLogClient(0);
+        BankCallBean bankCallBean =  BankCallUtils.callApiBg(bean);
+        logger.info("========联行号查询返回结恶为:"+ JSONObject.toJSON(bankCallBean));
+        return bankCallBean;
     }
 
 }

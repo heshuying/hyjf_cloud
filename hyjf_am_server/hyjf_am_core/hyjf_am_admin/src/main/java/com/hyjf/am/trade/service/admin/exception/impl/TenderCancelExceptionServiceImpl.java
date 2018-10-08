@@ -3,33 +3,28 @@
  */
 package com.hyjf.am.trade.service.admin.exception.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hyjf.am.resquest.admin.TenderCancelExceptionRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderTmpMapper;
 import com.hyjf.am.trade.dao.mapper.auto.FreezeHistoryMapper;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpExample;
-import com.hyjf.am.trade.dao.model.auto.FreezeHistory;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.exception.TenderCancelExceptionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.FreezeHistoryVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai
  * @version: TenderCancelExceptionServiceImpl, v0.1 2018/7/11 10:42
  */
-@Service
+@Service(value = "tradeTenderCancelExceptionServiceImpl")
 public class TenderCancelExceptionServiceImpl extends BaseServiceImpl implements TenderCancelExceptionService {
 
     @Autowired

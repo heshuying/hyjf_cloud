@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankCardUpdateRequest;
-import com.hyjf.am.vo.trade.BankConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
@@ -25,9 +23,9 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
-import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.constants.ResultEnum;
+import com.hyjf.cs.user.service.bindcard.BindCardService;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -257,6 +255,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 
 		Map<String,Object> map = BankCallUtils.callApiMap(bindCardBean);
 
+		if(map == null){
+			return new HashMap<>();
+		}
 		return map;
 	}
 	
@@ -476,7 +477,6 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		}
 		
 		// 插入操作记录表
-		LogAcqResBean logAcq = bean.getLogAcqResBean();
 		String bankId = amConfigClient.queryBankIdByCardNo(cardNo);
 		if(bankId == null) {
 			bankId = "0";
@@ -501,10 +501,10 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			throw new CheckException(MsgEnum.ERR_CARD_SAVE);
 		}
 		BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), cardNo);
-        if (retCard != null) {
+        if (retCard != null && StringUtils.isNotBlank(bean.getMobile())) {
             BankCardRequest bankCard=new BankCardRequest();
             bankCard.setId(retCard.getId());
-            bankCard.setMobile(logAcq.getMobile());
+            bankCard.setMobile(bean.getMobile());
             amUserClient.updateUserCard(bankCard);
         }
 		

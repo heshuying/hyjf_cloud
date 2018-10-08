@@ -3,17 +3,6 @@
  */
 package com.hyjf.am.trade.controller.admin.hjhplan;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
 import com.hyjf.am.response.admin.HjhCreditTenderSumResponse;
@@ -24,8 +13,16 @@ import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhCreditTenderService;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
-
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author libin

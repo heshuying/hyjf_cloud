@@ -421,14 +421,9 @@ WHERE
 		FROM
 		ht_borrow hb
 		LEFT JOIN ht_borrow_info inf ON hb.borrow_nid = inf.borrow_nid
-		INNER JOIN
-		ht_hjh_asset_borrowtype hhab ON inf.inst_code = hhab.inst_code
-		AND
-		inf.asset_type = hhab.asset_type
 		WHERE
 		hb.`status` = 3
 		AND hb.borrow_full_status = 1
-		AND hhab.auto_review = 1
 		AND
 		hb.plan_nid IS NULL;
 	</select>
@@ -504,12 +499,14 @@ WHERE
 		   <if test="recoverTimeEndSrch != null and recoverTimeEndSrch != ''">
 		    AND b.recover_last_time <![CDATA[<=]]> unix_timestamp(#{recoverTimeEndSrch})+86399
 		   </if>
-		   <if test="timeStartSrch != null and timeStartSrch != ''">
-		    AND unix_timestamp(b.create_time) <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
-		   </if>
-		   <if test="timeEndSrch != null and timeEndSrch != ''">
-		    AND unix_timestamp(b.create_time) <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})+86399
-		   </if>
+			  <if test="timeStartSrch != null and timeStartSrch != ''">
+				  <!-- 优化sql(字段类型转换) timestamp-->
+				  AND b.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
+			  </if>
+			  <if test="timeEndSrch != null and timeEndSrch != ''">
+				  <!-- 优化sql(字段类型转换) timestamp-->
+				  AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+			  </if>
 		   <if test="planNidSrch != null and planNidSrch != ''">
 		    AND b.plan_nid = #{planNidSrch}
 		   </if>
@@ -1022,5 +1019,26 @@ WHERE
 				AND info.repay_org_user_id LIKE CONCAT( #{repayOrgUserId}, '%')
 			</if>
 		</where>
+	</select>
+
+	<resultMap id="BorrowAndInfoVOMap" type="com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO">
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="repay_org_user_id" property="repayOrgUserId" jdbcType="VARCHAR" />
+		<result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectBorrowRepayList" resultMap="BorrowAndInfoVOMap">
+		SELECT
+			a.user_id,
+			a.borrow_nid,
+			b.repay_org_user_id,
+			a.borrow_style
+		FROM
+			ht_borrow a,
+			ht_borrow_info b
+		WHERE
+			a.id = b.id
+		AND a.`status` = 3
+		AND a.repay_full_status = 0
 	</select>
 </mapper>

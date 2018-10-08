@@ -15,13 +15,11 @@ import com.hyjf.admin.mq.FddProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -352,6 +350,20 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         return null;
     }
 
+    /**
+     * 根据用户List id查找用户信息
+     *
+     * @param List userId
+     * @return
+     */
+    @Override
+    public List<UserVO> selectUserByListUserId(List userId) {
+        if (userId != null && userId.size() != 0) {
+            return userCenterClient.selectUserByListUserId(userId);
+        }
+        return null;
+    }
+
     @Override
     public CompanyInfoVO selectCompanyInfoByUserId(String userId) {
         CompanyInfoVO info = new CompanyInfoVO();
@@ -394,98 +406,9 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
      */
     @Override
     public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest) {
-        UserVO user = this.selectUserByUserId(updCompanyRequest.getUserId());
-        String bankId = amConfigClient.queryBankIdByCardNo(updCompanyRequest.getAccount());
-        if (StringUtils.isNotBlank(bankId)) {
-            String bankName = getBankNameById(bankId);
-            String payAllianceCode = null;
-            BankCallBean callBean = payAllianceCodeQuery(updCompanyRequest.getAccount(), user.getUserId());
-            if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(callBean.getRetCode())) {
-                payAllianceCode = callBean.getPayAllianceCode();
-                if (StringUtils.isBlank(payAllianceCode)) {
-                    payAllianceCode = getPayAllianceCodeByBankId(bankId);
-                }
-            }
-            updCompanyRequest.setBankName(bankName);
-            updCompanyRequest.setPayAllianceCode(payAllianceCode);
-            updCompanyRequest.setBankId(bankId);
-        }
         Response response = userCenterClient.saveCompanyInfo(updCompanyRequest);
         return response;
     }
-
-    /**
-     * 根据银行Id查询所属银行名称
-     *
-     * @param bankId
-     * @return
-     */
-    public String getBankNameById(String bankId) {
-        String bankName = "";
-        if (StringUtils.isNotBlank(bankId)) {
-            int bankIdInt = Integer.parseInt(bankId);
-            JxBankConfigResponse jxBankConfigResponse = amConfigClient.getJXbankConfigByBankId(bankIdInt);
-            if(null!=jxBankConfigResponse&&Response.SUCCESS.equals(jxBankConfigResponse.getRtn())){
-                JxBankConfigVO jxBankConfigVO = jxBankConfigResponse.getResult();
-                if (null != jxBankConfigVO) {
-                    bankName = jxBankConfigVO.getBankName();
-                }
-            }
-        }
-        return bankName;
-    }
-
-    /**
-     * 根据银行Id查询本地存的银联行号
-     *
-     * @param bankId
-     * @return
-     */
-    public String getPayAllianceCodeByBankId(String bankId) {
-        String payAllianceCode = "";
-        if (StringUtils.isNotBlank(bankId)) {
-            int bankIdInt = Integer.parseInt(bankId);
-            JxBankConfigResponse jxBankConfigResponse = amConfigClient.getJXbankConfigByBankId(bankIdInt);
-            if(null!=jxBankConfigResponse&&Response.SUCCESS.equals(jxBankConfigResponse.getRtn())){
-                JxBankConfigVO banksConfigVO = new JxBankConfigVO();
-                if (null != banksConfigVO) {
-                    payAllianceCode = banksConfigVO.getPayAllianceCode();
-                }
-            }
-        }
-        return payAllianceCode;
-    }
-
-    /**
-     * 调用江西银行查询联行号
-     *
-     * @param cardNo
-     * @return
-     */
-    public BankCallBean payAllianceCodeQuery(String cardNo, Integer userId) {
-        BankCallBean bean = new BankCallBean();
-        String channel = BankCallConstant.CHANNEL_PC;
-        String orderDate = GetOrderIdUtils.getOrderDate();
-        String txDate = GetOrderIdUtils.getTxDate();
-        String txTime = GetOrderIdUtils.getTxTime();
-        String seqNo = GetOrderIdUtils.getSeqNo(6);
-        bean.setVersion(BankCallConstant.VERSION_10);// 版本号
-        bean.setTxCode(BankCallConstant.TXCODE_PAY_ALLIANCE_CODE_QUERY);// 交易代码
-        bean.setTxDate(txDate);
-        bean.setTxTime(txTime);
-        bean.setSeqNo(seqNo);
-        bean.setChannel(channel);
-        bean.setAccountId(cardNo);
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
-        bean.setLogOrderDate(orderDate);
-        bean.setLogUserId(String.valueOf(userId));
-        bean.setLogRemark("联行号查询");
-        bean.setLogClient(0);
-        BankCallBean callBean =  BankCallUtils.callApiBg(bean);
-        logger.info("========银联号查询结果为:"+JSONObject.toJSON(callBean));
-        return callBean;
-    }
-
 
     /**
      * 获取推荐人信息

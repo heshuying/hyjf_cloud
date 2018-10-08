@@ -23,10 +23,10 @@ import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.autoplus.AutoPlusService;
-import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.constants.ResultEnum;
+import com.hyjf.cs.user.service.autoplus.AutoPlusService;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -226,14 +226,14 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String bgRetUrl = "";
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
             remark = "投资人自动投标签约增强";
-            bgRetUrl = systemConfig.getWebHost() + "/user/invesbgreturn";
+            bgRetUrl = "http://CS-USER/hyjf-web/user/invesbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
             bean.setDeadline(GetDate.date2Str(GetDate.countDate(1, 5), new SimpleDateFormat("yyyyMMdd")));
             bean.setTxAmount("1000000");
             bean.setTotAmount("1000000000");
         } else if (BankCallConstant.QUERY_TYPE_2.equals(type)) {
             remark = "投资人自动债权转让签约增强";
-            bgRetUrl = systemConfig.getWebHost() + "/user/creditbgreturn";
+            bgRetUrl = "http://CS-USER/hyjf-web/user/creditbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
         }
         //1wechat 2app

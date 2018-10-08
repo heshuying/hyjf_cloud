@@ -13,9 +13,6 @@ package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.trade.dao.model.customize.*;
-import com.hyjf.am.trade.dao.model.customize.AppAlreadyRepayListCustomize;
-import com.hyjf.am.trade.dao.model.customize.AppRepayCalendarCustomize;
-import com.hyjf.am.trade.dao.model.customize.AppTenderCreditRecordListCustomize;
 
 import java.util.List;
 import java.util.Map;

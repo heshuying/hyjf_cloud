@@ -2,6 +2,8 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.user.BankCardRequest;
+import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -112,13 +114,6 @@ public interface AmUserClient {
 	 */
     boolean checkIs51UserCanInvest(Integer userId);
 
-
-	/**
-	 * 获取用户投资数量
-	 * @param userId
-	 * @return
-	 */
-    int countNewUserTotal(Integer userId);
 
     /**
      * 根据用户id获取用户CA认证记录表
@@ -367,4 +362,12 @@ public interface AmUserClient {
 	int updateBankCard(BankCardVO bankCardVO);
 
 	BankCardVO getBankCardById(Integer bankId);
+
+    BankCardVO selectBankCardByUserIdAndCardNo(BankCardRequest request);
+
+	int updateUserCard(BankCardRequest bankCardRequest);
+
+	String selectBankSmsLog(BankSmsLogRequest bankSmsLogRequest);
+
+	boolean updateBankSmsLog(BankSmsLogRequest request);
 }

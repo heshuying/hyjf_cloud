@@ -18,6 +18,8 @@ public class RUser implements Serializable {
 
     private Integer spreadsUserId;
 
+    private Integer userType;
+
     private Date createTime;
 
     private Date updateTime;
@@ -78,6 +80,14 @@ public class RUser implements Serializable {
 
     public void setSpreadsUserId(Integer spreadsUserId) {
         this.spreadsUserId = spreadsUserId;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
     }
 
     public Date getCreateTime() {

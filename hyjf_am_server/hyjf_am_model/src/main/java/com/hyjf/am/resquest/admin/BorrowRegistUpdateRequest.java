@@ -3,8 +3,8 @@
  */
 package com.hyjf.am.resquest.admin;
 
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 
 import java.io.Serializable;
 

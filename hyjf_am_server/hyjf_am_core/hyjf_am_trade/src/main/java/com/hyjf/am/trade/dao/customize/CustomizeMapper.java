@@ -1,20 +1,14 @@
 package com.hyjf.am.trade.dao.customize;
 
+import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
+import com.hyjf.am.trade.dao.mapper.customize.batch.BatchAccountCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.nifa.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
-
-import com.hyjf.am.trade.dao.auto.AutoMapper;
-import com.hyjf.am.trade.dao.mapper.customize.batch.BatchAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractEssenceCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractStatusCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractTemplateCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaReceivedPaymentsCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaRepayInfoCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.NifaReportLogCustomizeMapper;
 
 @Service
 public class CustomizeMapper extends AutoMapper {
@@ -90,15 +84,6 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected TenderCreditCustomizeMapper tenderCreditCustomizeMapper;
-
-	@Autowired
-	protected HjhReInvestDetailCustomizeMapper hjhReInvestDetailCustomizeMapper;
-
-	@Autowired
-	protected HjhReInvestDebtCustomizeMapper hjhReInvestDebtCustomizeMapper;
-
-	@Autowired
-	protected HjhDayCreditDetailCustomizeMapper hjhDayCreditDetailCustomizeMapper;
 
 	@Autowired
 	protected WebPandectCustomizeMapper webPandectCustomizeMapper;
@@ -196,9 +181,6 @@ public class CustomizeMapper extends AutoMapper {
 	protected ApiProjectListCustomizeMapper apiProjectListCustomizeMapper;
 
 	@Autowired
-	protected HjhPlanRepayCustomizeMapper hjhPlanRepayCustomizeMapper;
-
-	@Autowired
 	protected NifaContractEssenceCustomizeMapper nifaContractEssenceCustomizeMapper;
 
 	@Autowired
@@ -233,4 +215,10 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected BorrowRecoverPlanMapper borrowRecoverPlanMapper;
+
+	@Autowired
+	protected ApiBailConfigInfoCustomizeMapper apiBailConfigInfoCustomizeMapper;
+
+	@Autowired
+	protected HjhBailConfigCustomizeMapper hjhBailConfigCustomizeMapper;
 }

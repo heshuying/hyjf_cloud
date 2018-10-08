@@ -84,10 +84,11 @@ public class WebBankWithdrawController extends BaseTradeController {
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawError";
-        String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn";
+        String bgRetUrl ="http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn";
         String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawSuccess";
+        String forgotPwdUrl=super.getForgotPwdUrl(CommonConstant.CLIENT_PC,request,systemConfig);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),
-                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip, retUrl, bgRetUrl, successfulUrl);
+                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip, retUrl, bgRetUrl, successfulUrl,forgotPwdUrl);
 
         try {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);
@@ -110,7 +111,7 @@ public class WebBankWithdrawController extends BaseTradeController {
     @ApiIgnore
     @PostMapping("/userBankWithdrawBgreturn")
     @ResponseBody
-    public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
+    public String userBankWithdrawBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         logger.info("[web用户银行提现异步回调开始]");
         logger.info("web端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
         BankCallResult result = new BankCallResult();

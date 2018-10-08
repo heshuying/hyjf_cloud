@@ -3,15 +3,6 @@
  */
 package com.hyjf.am.user.controller.admin.exception;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MobileSynchronizeResponse;
 import com.hyjf.am.resquest.admin.MobileSynchronizeRequest;
@@ -21,15 +12,22 @@ import com.hyjf.am.user.service.admin.exception.AdminMobileSynchronizeService;
 import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai
  * @version: MobileSynchronizeController, v0.1 2018/8/13 14:19
  */
 @Api(value = "手机号同步",tags = "手机号同步")
-@RestController
+@RestController(value = "userMobileSynchronizeController")
 @RequestMapping(value = "/am-user/mobilesynchronize")
 public class MobileSynchronizeController extends BaseController {
 

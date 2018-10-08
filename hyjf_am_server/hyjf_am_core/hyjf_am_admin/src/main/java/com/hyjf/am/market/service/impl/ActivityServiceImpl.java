@@ -1,12 +1,5 @@
 package com.hyjf.am.market.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.admin.config.SystemConfig;
 import com.hyjf.am.market.dao.mapper.auto.ActivityListMapper;
 import com.hyjf.am.market.dao.mapper.customize.app.AppActivityListCustomizeMapper;
@@ -19,6 +12,11 @@ import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListCustomizeVO;
 import com.hyjf.common.util.GetDate;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -85,6 +83,9 @@ public class ActivityServiceImpl implements ActivityService {
             example.setLimitStart(offset);
             example.setLimitEnd(limit);
         }
+        if (request.getTitle() != null) {
+            example.createCriteria().andTitleEqualTo(request.getTitle());
+        }
         example.setOrderByClause("`create_time` Desc");
         return activityListMapper.selectByExample(example);
     }
@@ -114,6 +115,17 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
+     * 获取活动详情
+     * @param id
+     * @return
+     */
+    @Override
+    public ActivityList getActivityInfo(Integer id) {
+        ActivityList list = activityListMapper.selectByPrimaryKey(id);
+        return list;
+    }
+
+    /**
      * 添加活动
      *
      * @param activityList
@@ -121,15 +133,15 @@ public class ActivityServiceImpl implements ActivityService {
      */
     @Override
     public int insertRecord(ActivityList activityList) {
-        activityList.setCreateTime(GetDate.getTimestamp());
-        activityList.setUpdateTime(GetDate.getTimestamp());
+        activityList.setCreateTime(GetDate.getDate());
+        activityList.setUpdateTime(GetDate.getDate());
         int insert = activityListMapper.insertSelective(activityList);
         return insert;
     }
 
     @Override
     public int updateActivity(ActivityList activityList) {
-        activityList.setUpdateTime(GetDate.getTimestamp());
+        activityList.setUpdateTime(GetDate.getDate());
         int update = activityListMapper.updateByPrimaryKey(activityList);
         return update;
     }

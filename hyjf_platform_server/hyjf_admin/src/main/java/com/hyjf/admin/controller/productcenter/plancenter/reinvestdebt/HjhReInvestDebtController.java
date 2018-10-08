@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -130,7 +129,7 @@ public class HjhReInvestDebtController extends BaseController {
         }
 
         // 初始化返回List
-        List<HjhReInvestDebtVO> returnList = null;
+        List<HjhReInvestDebtVO> returnList = new ArrayList<>();
 
         HjhReInvestDebtResponse response = hjhReInvestDebtService.hjhReInvestDebtList(request);
 

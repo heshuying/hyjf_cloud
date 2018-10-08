@@ -4,7 +4,6 @@
 package com.hyjf.am.response.config;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 

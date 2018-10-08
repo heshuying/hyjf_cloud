@@ -3,12 +3,11 @@
  */
 package com.hyjf.batch.job.app.statistic;
 
+import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
-import com.hyjf.batch.job.BaseJob;
 
 /**
  * app推广统计定时任务

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,8 @@ public class BorrowAuthController extends BaseTradeController {
     @PostMapping(value = "/list_auth", produces = "application/json; charset=utf-8")
     public WebResult<List<BorrowAuthCustomizeVO>> authList(@RequestHeader(value = "userId") Integer userId, @RequestBody BorrowAuthRequest requestBean, HttpServletRequest request){
         WebResult<List<BorrowAuthCustomizeVO>> result = new WebResult<>();
+        result.setData(Collections.emptyList());
+
         if(StringUtils.isBlank(requestBean.getUserId())){
             requestBean.setUserId(String.valueOf(userId));
         }
@@ -82,6 +85,8 @@ public class BorrowAuthController extends BaseTradeController {
     @PostMapping(value = "/list_authed", produces = "application/json; charset=utf-8")
     public WebResult<List<BorrowAuthCustomizeVO>> authedList(@RequestHeader(value = "userId") Integer userId, @RequestBody BorrowAuthRequest requestBean, HttpServletRequest request){
         WebResult<List<BorrowAuthCustomizeVO>> result = new WebResult<List<BorrowAuthCustomizeVO>>();
+        result.setData(Collections.emptyList());
+
         if(StringUtils.isBlank(requestBean.getUserId())){
             requestBean.setUserId(String.valueOf(userId));
         }
@@ -119,6 +124,8 @@ public class BorrowAuthController extends BaseTradeController {
     @GetMapping(value = "/trusteepay/{borrowNid}", produces = "application/json; charset=utf-8")
     public WebResult<Object> trusteePay(@RequestHeader(value = "userId") Integer userId, @PathVariable String borrowNid, HttpServletRequest request){
         WebResult<Object> result = new WebResult<Object>();
+        result.setData(Collections.emptyMap());
+
         WebViewUserVO userVO = borrowAuthService.getUserFromCache(userId);
 
         logger.info("受托支付授权开始，borrowNid：{}", borrowNid);

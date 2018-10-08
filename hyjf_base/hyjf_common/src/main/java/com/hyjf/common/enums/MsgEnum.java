@@ -95,6 +95,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_USERNAME_AND_PASSWORD_REQUIRED("EUS000011","用户名或密码不能为空"),
 	ERR_USER_RECOMMEND_INVALID("EUS000012","无效的推荐人"),
 	ERR_USER_AUTH("EUS000013","用户认证失败"),
+	ERR_USER_AUTHORITY("EUS000014","没有权限使用此接口"),
 
 	// 资金相关错误信息ERR_AMT_
 	ERR_AMT_NO_MONEY("EAM000001","账户余额不足"),
@@ -388,6 +389,12 @@ public enum MsgEnum implements MsgCode {
 	ERR_BIND_REPEAT("1","重复绑定"),
 	ERR_DIC_NO_MATCH("ENM000001","字典表中没有值={0}的平台"),
 
+	ERR_USERNAME_NOT_EXIST ("99","受托人用户名不存在。"),
+	ERR_USERNAME_NOT_ACCOUNTS("99","受托人用户名必须已在江西银行开户。"),
+	ERR_USERNAME_NOT_USES("99","受托人用户名已经被禁用"),
+	ERR_USERNAME_NOT_IN("99","受托人用户名不在配置表中。"),
+	ERR_USERNAME_NOT_RELEVANT("99","受托人用户名与资产来源不一致。"),
+	ERR_USERNAME_IS_DISABLE("99","受托人在白名单中被禁用。"),
 	// 枚举终结
 	ERR_ENUM("", "");
 

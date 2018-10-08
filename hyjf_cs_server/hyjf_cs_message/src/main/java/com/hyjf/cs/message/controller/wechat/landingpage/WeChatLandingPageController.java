@@ -3,18 +3,16 @@
  */
 package com.hyjf.cs.message.controller.wechat.landingpage;
 
+import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.result.BaseResultBean;
 import com.hyjf.cs.message.result.LandingPageResulltVO;
 import com.hyjf.cs.message.service.landingpage.LandingPageService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.hyjf.cs.common.controller.BaseController;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * @author wangjun

@@ -6,7 +6,6 @@ package com.hyjf.am.config.service.impl.app;
 import com.hyjf.am.config.dao.mapper.auto.ContentArticleMapper;
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.service.app.AppContentArticleService;
-import com.hyjf.am.vo.config.ContentArticleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

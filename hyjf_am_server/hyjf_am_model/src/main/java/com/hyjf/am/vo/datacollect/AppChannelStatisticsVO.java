@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.vo.datacollect;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.hyjf.am.vo.BaseVO;
 
 /**
  * @author fuqiang
@@ -73,6 +73,8 @@ public class AppChannelStatisticsVO extends BaseVO implements Serializable {
 	private BigDecimal cumulativeAttrInvest;
 
 	private static final long serialVersionUID = 1L;
+
+	public AppChannelStatisticsVO(){}
 
 	public AppChannelStatisticsVO(Integer sourceId, String channelName, Integer visitCount, Integer registerCount,
 			Integer openAccountCount, Integer investNumber, BigDecimal cumulativeCharge, BigDecimal hztInvestSum,

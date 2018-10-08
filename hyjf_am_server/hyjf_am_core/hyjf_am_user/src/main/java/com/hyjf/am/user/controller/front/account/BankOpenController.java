@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.BankCardResponse;
-import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.BankOpenAccountListResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
@@ -201,7 +201,7 @@ public class BankOpenController extends BaseController {
 	 * @Author sunss
 	 * @Date 2018/6/22 9:07
 	 */
-	@GetMapping("/bankopen/getBankOpenAccountFiledMess/{logOrdId}")
+	@GetMapping("/getBankOpenAccountFiledMess/{logOrdId}")
 	public String getBankOpenAccountFiledMess(@PathVariable String logOrdId){
 		return bankOpenService.getBankOpenAccountFiledMess(logOrdId);
 	}

@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -49,23 +50,23 @@ public class SubmissionsController extends BaseController {
 
     /**
      * 查询列表
+     *
      * @return
      */
     @ApiOperation(value = "意见反馈列表查询", notes = "意见反馈列表查询")
     @PostMapping("/getRecordList")
-    @ResponseBody
     public AdminResult<ListResult<SubmissionsCustomizeVO>> findAppBannerData(@RequestBody SubmissionsRequest form) {
-            SubmissionsResponse response = new SubmissionsResponse();
-            Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
-            if (StringUtils.isNotBlank(form.getUserName())) {
-                UserResponse user = submissionsService.getUserIdByUserName(form.getUserName());
-                if (user != null && user.getResult() != null) {
-                    Integer userId = user.getResult().getUserId();
-                    form.setUserId(userId);
-                }
+        Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
+        if (StringUtils.isNotBlank(form.getUserName())) {
+            UserResponse user = submissionsService.getUserIdByUserName(form.getUserName());
+            if (user != null && user.getResult() != null) {
+                Integer userId = user.getResult().getUserId();
+                form.setUserId(userId);
             }
-            SubmissionsResponse submissionList = submissionsService.getSubmissionList(form);
-            List<SubmissionsCustomizeVO> resultList = submissionList.getResultList();
+        }
+        SubmissionsResponse submissionList = submissionsService.getSubmissionList(form);
+        List<SubmissionsCustomizeVO> resultList = submissionList.getResultList();
+        if (!CollectionUtils.isEmpty(resultList)) {
             for (SubmissionsCustomizeVO submissionsCustomizeVO : resultList) {
                 String type = userStatus.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
                 submissionsCustomizeVO.setSysType(type);
@@ -74,16 +75,29 @@ public class SubmissionsController extends BaseController {
                 String userName = users.getResult() != null ? users.getResult().getUsername() : "";
                 submissionsCustomizeVO.setUserName(userName);
             }
-            return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(submissionList.getResultList(), submissionList.getRecordTotal()));
+        }
+        return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(submissionList.getResultList(), submissionList.getRecordTotal()));
     }
-
+    /**
+     * 查询列表下拉框加载
+     *
+     * @return
+     */
+    @ApiOperation(value = "查询列表下拉框加载", notes = "查询列表下拉框加载")
+    @GetMapping("/recordlistselect")
+    public AdminResult recordListSelect() {
+        AdminResult adminResult = new AdminResult();
+        Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
+        adminResult.setData(userStatus);
+        return  adminResult;
+    }
 
     @ApiOperation(value = "意见反馈:获取详细画面", notes = "意见反馈:获取详细画面")
     @PostMapping(value = "/searchinfo")
-    @ResponseBody
     public AdminResult<SubmissionsVO> searchinfo(@RequestBody SubmissionsRequest request) {
         return new AdminResult<SubmissionsVO>(submissionsService.getRecord(request));
     }
+
     /**
      * 意见反馈更新保存
      *
@@ -93,8 +107,8 @@ public class SubmissionsController extends BaseController {
     @ApiOperation(value = "意见反馈更新保存", notes = "意见反馈更新保存")
     @PostMapping("/updateSubmissionsAction")
     public AdminResult<ListResult<SubmissionsCustomizeVO>> updateSubmissions(@RequestBody SubmissionsRequest form) {
-            SubmissionsResponse response = submissionsService.updateSubmissionStatus(form);
-            return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
+        SubmissionsResponse response = submissionsService.updateSubmissionStatus(form);
+        return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
 
 
     }

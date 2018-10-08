@@ -3,16 +3,16 @@
  */
 package com.hyjf.common.validator;
 
+import com.hyjf.common.util.CharPool;
+import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
+
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.hyjf.common.util.CharPool;
-import com.hyjf.common.util.StringPool;
-import com.hyjf.common.util.StringUtil;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author fuqiang

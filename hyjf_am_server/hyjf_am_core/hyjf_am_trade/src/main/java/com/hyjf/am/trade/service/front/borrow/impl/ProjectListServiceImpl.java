@@ -9,12 +9,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvestExample;
-import com.hyjf.am.trade.dao.model.customize.AppProjectInvestListCustomize;
-import com.hyjf.am.trade.dao.model.customize.AppProjectListCustomize;
-import com.hyjf.am.trade.dao.model.customize.AppTenderCreditInvestListCustomize;
-import com.hyjf.am.trade.dao.model.customize.HjhPlanCustomize;
-import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebProjectListCustomize;
+import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.front.borrow.ProjectListService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
@@ -123,6 +118,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("capitalSort",request.getCapitalSort());
         // 进度排序
         params.put("inProgressSort",request.getInProgressSort());
+        params.put("creditStatus", "0");
         int count = webProjectListCustomizeMapper.countCreditList(params);
         return count;
     }
@@ -152,6 +148,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("inProgressSort",request.getInProgressSort());
         params.put("limitStart",request.getLimitStart());
         params.put("limitEnd", request.getLimitEnd());
+        params.put("creditStatus", "0");
         List<CreditListVO> list = webProjectListCustomizeMapper.searchCreditList(params);
         return list;
     }
@@ -255,6 +252,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("host",request.getHost());
         params.put("type",request.getType());
         params.put("platform",request.getPlatform());
+        params.put("status",request.getStatus());
         return webProjectListCustomizeMapper.searchAppProjectList(params);
     }
 

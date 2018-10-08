@@ -8,7 +8,6 @@ import com.hyjf.am.trade.service.admin.IncreaseInterestInvestDetailService;
 import com.hyjf.am.vo.admin.IncreaseInterestInvestVO;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

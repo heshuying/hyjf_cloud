@@ -30,7 +30,8 @@
         <result column="end_time" 					property="endTime" 					jdbcType="VARCHAR" />
         <result column="credit_status" 				property="creditStatus" 			jdbcType="VARCHAR" />
         <result column="repay_status" 				property="repayStatus" 					jdbcType="VARCHAR" />
-
+        <result column="label_name"       			property="labelName" 				jdbcType="VARCHAR" />
+        <result column="remain_credit"              property="remainCredit"             jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Where_Clause">
@@ -77,10 +78,12 @@
             </if>
             <!-- 清算时间 -->
             <if test="liquidatesTimeStart != null and liquidatesTimeStart != ''">
-                AND dc.create_time <![CDATA[>=]]> unix_timestamp(CONCAT(#{liquidatesTimeStart},' 00:00:00'))
+                <!-- sqlbug(比较类型不一致) -->
+                AND dc.create_time >= STR_TO_DATE(#{liquidatesTimeStart},'%Y-%m-%d %H:%i:%s')
             </if>
             <if test="liquidatesTimeEnd != null and liquidatesTimeEnd != ''">
-                AND dc.create_time <![CDATA[<=]]> unix_timestamp(CONCAT(#{liquidatesTimeEnd},' 23:59:59'))
+                <!-- sqlbug(比较类型不一致) -->
+                AND dc.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{liquidatesTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
             </if>
             <!-- 下期还款时间 -->
             <if test="repayNextTimeStart != null and repayNextTimeStart != ''">
@@ -140,6 +143,8 @@
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
         dc.assign_period,
         dc.liquidates_period,
+        dc.label_name,
+        ( dc.liquidation_fair_value - dc.credit_capital_assigned - dc.credit_interest_advance_assigned ) as remain_credit,
         FROM_UNIXTIME(IF(dc.end_time=0, NULL, dc.end_time),'%Y-%m-%d %H:%i:%s') AS end_time,
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN FROM_UNIXTIME(dc.credit_repay_end_time,'%Y-%m-%d %H:%i:%s')  ELSE
         FROM_UNIXTIME(dc.credit_repay_next_time,'%Y-%m-%d %H:%i:%s') END AS repay_next_time

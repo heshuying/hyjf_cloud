@@ -147,11 +147,16 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     @Override
     public boolean checkIsNewUserCanInvest(Integer userId) {
         // 新的判断是否为新用户方法
-        int total = amUserClient.countNewUserTotal(userId);
-        if (total == 0) {
-            return true;
-        } else {
-            return false;
+        try {
+            int total = amTradeClient.countNewUserTotal(userId);
+            logger.info("获取用户投资数量 userID {} 数量 {} ",userId,total);
+            if (total == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception e) {
+            throw e;
         }
     }
 

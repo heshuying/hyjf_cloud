@@ -8,7 +8,6 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.HjhReInvestDetailService;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhReInvestDetailResponse;
 import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -136,7 +134,7 @@ public class HjhReInvestDetailController extends BaseController {
         }
 
         // 初始化范湖List
-        List<HjhReInvestDetailVO> returnList = null;
+        List<HjhReInvestDetailVO> returnList = new ArrayList<>();
 
         HjhReInvestDetailResponse investDetailResponse = this.hjhReInvestDetailService.getHjhReInvestDetailList(reInvestDetailRequest);
 

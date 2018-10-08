@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.RandomValidateCode;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
@@ -98,7 +99,9 @@ public class WebRegistController extends BaseUserController {
         password = RSAJSPUtil.rsaToPassword(password);
         registerRequest.setPassword(password);
         registService.checkParam(registerRequest);
-        WebViewUserVO webViewUserVO = registService.register(registerRequest, GetCilentIP.getIpAddr(request));
+        WebViewUserVO webViewUserVO = registService.register(registerRequest.getMobile(),
+                registerRequest.getVerificationCode(), registerRequest.getPassword(),
+                registerRequest.getReffer(), CommonConstant.HYJF_INST_CODE, registerRequest.getUtmId(), String.valueOf(ClientConstants.WEB_CLIENT), GetCilentIP.getIpAddr(request));
         if (webViewUserVO != null) {
             logger.info("Web端用户注册成功, userId is :{}", webViewUserVO.getUserId());
             result.setData(webViewUserVO);

@@ -85,6 +85,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1637,7 +1638,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BorrowAndInfoVO> selectBorrowList() {
         BorrowResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/trade/selectRepayBorrowList/",
+                "http://AM-TRADE/am-trade/borrow/selectBorrowList/",
                 BorrowResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -1792,7 +1793,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<BorrowRepayPlanVO> selectBorrowRepayPlan(String borrowNid, Integer repaySmsReminder) {
 
         BorrowRepayPlanResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/borrowRepayPlan/selectBorrowRepayPlan/" + borrowNid + "/" + repaySmsReminder,
+                "http://AM-TRADE/am-trade/borrowRepayPlan/selectBorrowPlanRepayList/" + borrowNid + "/" + repaySmsReminder,
                 BorrowRepayPlanResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -2599,7 +2600,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 优惠券投资
+     * 散标优惠券投资
      *
      * @param couponTender
      * @return
@@ -2682,7 +2683,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         if (Response.isSuccess(response)) {
             return response.getCouponCount();
         }
-        return null;
+        return 0;
     }
 
     @Override
@@ -3051,7 +3052,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         if (Response.isSuccess(response)) {
             return response.getCount();
         }
-        return null;
+        return 0;
     }
 
     /**
@@ -3781,7 +3782,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<AppAdsCustomizeVO> getBannerList(AdsRequest request) {
         AppAdsCustomizeResponse response = restTemplate.postForEntity("http://AM-MARKET/am-market/ads/searchBanner",request,AppAdsCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)){
-            return response.getResultList();
+            List<AppAdsCustomizeVO> list = new ArrayList<>();
+            if (response.getResult() != null){
+                list.add(response.getResult());
+            }
+            return list;
         }
         return null;
     }
@@ -4282,7 +4287,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/creditTender/getCreditTenderServiceFee/" +creditNid;
         StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
         if (Response.isSuccess(response)){
-            response.getResultStr();
+            return response.getResultStr();
         }
         return null;
     }
@@ -5228,6 +5233,112 @@ public class AmTradeClientImpl implements AmTradeClient {
         StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
         if(Response.isSuccess(response)){
             return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 更新充值的相关信息(页面调用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public String handleRechargeOnlineInfo(HandleAccountRechargeRequest request) {
+        String url = tradeService + "/trade/handleRechargeOnlineInfo";
+        StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 根据orderId查询充值记录
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<AccountRechargeVO> selectAccountRechargeByOrderId(String orderId) {
+        String url = tradeService + "/trade/selectAccountRechargeByOrderId/" + orderId;
+        AccountRechargeResponse response = restTemplate.getForEntity(url,AccountRechargeResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 插入充值记录
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int insertAccountRecharge(AccountRechargeVO accountRechargeVO) {
+        String url = tradeService + "/trade/insertAccountRecharge";
+        AccountRechargeResponse response = restTemplate.postForEntity(url,accountRechargeVO,AccountRechargeResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 更新充值的相关信息(接口调用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public String handleRechargeInfo(HandleAccountRechargeRequest request) {
+        String url = tradeService + "/trade/handleRechargeInfo";
+        StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户投资数量
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public int countNewUserTotal(Integer userId) {
+        Integer result = restTemplate
+                .getForEntity(urlBase + "borrowTender/countNewUserTotal/" + userId,  Integer.class).getBody();
+        if (result != null) {
+            return result;
+        }
+        return 0;
+    }
+
+    @Override
+    public List<MyCouponListCustomizeVO> selectWechatCouponList(MyCouponListRequest requestBean) {
+        String url = urlBase + "coupon/wechatcouponlist";
+        MyCouponListResponse response = restTemplate.postForEntity(url, requestBean, MyCouponListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据资产来源查询保证金配置 add by liushouyi
+     *
+     * @param instCode
+     * @return
+     */
+    @Override
+    public BailConfigInfoCustomizeVO selectBailConfigByInstCode(String instCode) {
+        String url = urlBase + "bail_config/select_bail_config_by_instcode/" + instCode;
+        BailConfigInfoCustomizeResponse response = restTemplate.getForEntity(url,BailConfigInfoCustomizeResponse.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
         }
         return null;
     }

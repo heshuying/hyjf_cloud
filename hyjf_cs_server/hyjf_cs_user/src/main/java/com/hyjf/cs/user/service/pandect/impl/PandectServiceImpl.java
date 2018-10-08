@@ -134,6 +134,14 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         // 获取用户的银行电子账户信息
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
         result.put("bankOpenAccount", bankAccount);
+        // 根据用户Id查询用户银行卡号 add by tyy 2018-6-27
+        BankCardVO bankCard = amUserClient.getBankCardByUserId(userId);
+        if(bankCard==null){
+            result.put("bankCard", 0);
+        }else {
+            result.put("bankCard", 1);
+        }
+
         List<RecentPaymentListCustomizeVO> recoverLatestList = amTradeClient.selectRecentPaymentList(userId);
         result.put("recoverLatestList", recoverLatestList);
         // 登录用户

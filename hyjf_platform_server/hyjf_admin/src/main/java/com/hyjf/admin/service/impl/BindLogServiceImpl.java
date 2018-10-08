@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.BindLogService;

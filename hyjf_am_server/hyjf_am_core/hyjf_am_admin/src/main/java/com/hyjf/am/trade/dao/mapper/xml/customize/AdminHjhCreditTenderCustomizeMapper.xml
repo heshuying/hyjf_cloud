@@ -22,21 +22,24 @@
 			<if test="assignPlanNid != null and assignPlanNid != ''">
 				AND ct.assign_plan_nid LIKE CONCAT( #{assignPlanNid}, '%')
 			</if>
+			<!--应产品要求模糊匹配改成精确匹配 2018年6月12日18:36:34 start -->
 			<!-- 承接人计划订单号 -->
 			<if test="assignPlanOrderId != null and assignPlanOrderId != ''">
-				AND ct.assign_plan_order_id LIKE CONCAT( #{assignPlanOrderId}, '%')
+				AND ct.assign_plan_order_id = #{assignPlanOrderId}
 			</if>
 			<!-- 用户名 -->
 			<if test="creditUserName != null and creditUserName != ''">
 				AND ct.credit_user_name LIKE CONCAT( #{creditUserName}, '%')
 			</if>
+			<!--应产品要求模糊匹配改成精确匹配 2018年6月12日18:36:34 start-->
 			<!-- 债转编号 -->
 			<if test="creditNid != null and creditNid != ''">
-				AND ct.credit_nid LIKE CONCAT( #{creditNid}, '%')
+				AND ct.credit_nid = #{creditNid}
 			</if>
+			<!--应产品要求模糊匹配改成精确匹配 2018年6月12日18:36:34 end-->
 			<!-- 原始项目编号 -->
 			<if test="borrowNid != null and borrowNid != ''">
-				AND ct.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
+				AND ct.borrow_nid = #{borrowNid}
 			</if>
 			<!-- 承接类型 0 自动承接 1手动承接 -->
 			<if test="assignType != null and assignType != ''">
@@ -49,12 +52,16 @@
 
 			<!-- 时间  只有am admin改了，am trade 没改-->
 			<if test="assignTimeStart != null and assignTimeStart != ''">
-				AND UNIX_TIMESTAMP(ct.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(#{assignTimeStart})
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND ct.create_time >= STR_TO_DATE(#{assignTimeStart},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="assignTimeEnd != null and assignTimeEnd != ''">
-				AND UNIX_TIMESTAMP(ct.create_time) <![CDATA[<=]]> UNIX_TIMESTAMP(#{assignTimeEnd})+86399
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND ct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{assignTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
-			
+			<if test="tenderType != null and tenderType != ''">
+				AND ct.tender_type = #{tenderType}
+			</if>
 		</where>
 	</sql>
 	
@@ -87,6 +94,12 @@
 		<result column="viewpdf_url" property="viewpdfUrl"  />
 		<!--脱敏后合同查看地址-->
 		<result column="img_url" property="imgUrl"  />
+		<!--是否复投承接-->
+		<result column="tender_type" property="tenderType"/>
+		<!--债转服务费-->
+		<result column="assign_service_fee" property="assignServiceFee"/>
+		<!--债转服务费率-->
+		<result column="assign_service_apr" property="assignServiceApr"/>
 	</resultMap>
 	
 	<select id="selectDebtCreditTenderList" resultMap="DebtCreditTenderMap" parameterType="map">
@@ -118,7 +131,10 @@
 			hta.contract_number AS contract_number,
 			hta.download_url AS download_url,
 			hta.viewpdf_url AS viewpdf_url,
-			hta.img_url AS img_url
+			hta.img_url AS img_url,
+			CASE WHEN ct.tender_type = 1 THEN  '是' ELSE '否' END  AS  tender_type,
+			ct.assign_service_fee AS assign_service_fee,
+			CASE WHEN ct.assign_service_apr <![CDATA[<>]]> 0 then  ct.assign_service_apr ELSE '0.00' END AS assign_service_apr
 		FROM
 			ht_hjh_debt_credit_tender ct
 		INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid AND bc.credit_nid = ct.credit_nid

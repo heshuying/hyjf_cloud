@@ -3,15 +3,14 @@
  */
 package com.hyjf.cs.user.bean;
 
+import com.hyjf.common.util.GetterUtil;
+import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.apache.commons.lang3.math.NumberUtils;
-
-import com.hyjf.common.util.GetterUtil;
-import com.hyjf.common.validator.Validator;
 
 /**
  * @author Administrator

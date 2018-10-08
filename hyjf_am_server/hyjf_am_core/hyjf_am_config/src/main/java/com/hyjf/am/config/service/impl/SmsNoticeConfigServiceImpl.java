@@ -96,4 +96,18 @@ public class SmsNoticeConfigServiceImpl implements SmsNoticeConfigService {
 		exam.createCriteria().andNameEqualTo(name);
 		return smsNoticeConfigMapper.countByExample(exam);
 	}
+
+	@Override
+	public SmsNoticeConfig findNoticeByName(String name) {
+		SmsNoticeConfigExample exam = new SmsNoticeConfigExample();
+		SmsNoticeConfigExample.Criteria criteria = exam.createCriteria();
+		criteria.andNameEqualTo(name);
+		// 只查询开启
+		criteria.andStatusEqualTo(1);
+		List<SmsNoticeConfig> list = smsNoticeConfigMapper.selectByExample(exam);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.get(0);
+		}
+		return null;
+	}
 }

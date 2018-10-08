@@ -185,4 +185,12 @@ public interface BaseService {
      * @return
      */
     List<BorrowRecover> selectBorrowRecoverList(String borrowNid, Integer repayPeriod);
+
+    /**
+     * 获取保证金配置信息
+     *
+     * @param instCode
+     * @return
+     */
+    HjhBailConfig getBailConfig(String instCode);
 }

@@ -3,22 +3,7 @@
  */
 package com.hyjf.admin.controller.finance.hjhcommission;
 
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.HjhCommissionViewRequest;
 import com.hyjf.admin.common.result.AdminResult;
@@ -28,11 +13,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.admin.service.AccedeListService;
-import com.hyjf.admin.service.BankAccountManageService;
-import com.hyjf.admin.service.BankMerchantAccountService;
-import com.hyjf.admin.service.HjhCommissionService;
-import com.hyjf.admin.service.AdminTransferExceptionLogService;
+import com.hyjf.admin.service.*;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
@@ -43,32 +24,33 @@ import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.StringPool;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.beans.BeanUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import com.alibaba.fastjson.JSONArray;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.util.Date;
+import java.util.List;
 /**
  * @author libin
  * @version HjhCommissionController.java, v0.1 2018年8月7日 下午2:38:45
@@ -267,13 +249,18 @@ public class HjhCommissionController extends BaseController{
 		if(res != null) {
 			returnList = res.getResultList();
 		}
+		// mod by nxl 智投服务 修改计划名称为智投订单
 		// 列头
-        String[] titles =
+        /*String[] titles =
                 new String[] { "序号", "加入订单号", "计划编号", "还款方式", "锁定期", "预期年化收益率", "提成人", "提成人真实姓名", "提成人用户属性(投资时)", "投资人用户名", 
                 		"投资人用户属性(投资时)",
                 		"加入金额", "提成金额",
-                        "提成发放状态", "提成发放时间" ,"计划订单加入时间","计划订单锁定时间"};
-		
+                        "提成发放状态", "提成发放时间" ,"计划订单加入时间","计划订单锁定时间"};*/
+		String[] titles =
+				new String[] { "序号", "加入订单号", "计划编号", "还款方式", "锁定期", "预期年化收益率", "提成人", "提成人真实姓名", "提成人用户属性(投资时)", "投资人用户名",
+						"投资人用户属性(投资时)",
+						"加入金额", "提成金额",
+						"提成发放状态", "提成发放时间" ,"授权服务订单时间","智投订单锁定时间"};
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格

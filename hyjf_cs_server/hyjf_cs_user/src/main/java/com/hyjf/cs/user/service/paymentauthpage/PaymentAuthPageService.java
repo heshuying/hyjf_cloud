@@ -3,18 +3,11 @@
  */
 package com.hyjf.cs.user.service.paymentauthpage;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.bean.PaymentAuthPageBean;
-import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
-import com.hyjf.cs.user.vo.SendSmsVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.Map;
 
 /**
  * @author nxl

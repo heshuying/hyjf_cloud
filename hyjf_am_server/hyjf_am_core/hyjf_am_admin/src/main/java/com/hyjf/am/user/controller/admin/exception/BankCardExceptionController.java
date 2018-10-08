@@ -3,15 +3,6 @@
  */
 package com.hyjf.am.user.controller.admin.exception;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankCardExceptionResponse;
@@ -22,15 +13,22 @@ import com.hyjf.am.user.service.admin.exception.BankCardExceptionService;
 import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author: sunpeikai
  * @version: BankCardExceptionController, v0.1 2018/8/14 15:01
  */
 @Api(value = "江西银行卡异常",tags = "江西银行卡异常")
-@RestController
+@RestController(value = "userBankCardExceptionController")
 @RequestMapping(value = "/am-user/bankcardexception")
 public class BankCardExceptionController extends BaseController {
 

@@ -1,9 +1,10 @@
 package com.hyjf.cs.message.mq.consumer;
 
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.message.bean.ic.AccountWebList;
 import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.mongo.ic.AccountWebListDao;
@@ -22,9 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.common.constants.MQConstant;
+import java.util.List;
 
 /**
  * @author xiasq

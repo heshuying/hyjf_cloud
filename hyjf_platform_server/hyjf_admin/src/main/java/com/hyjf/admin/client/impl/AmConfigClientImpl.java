@@ -37,7 +37,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +61,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminSystemVO getUserInfoById(Integer loginUserId) {
-//        String url = "http://AM-CONFIG/am-config/adminSystem/get_admin_system_by_userid/" + loginUserId;
+//        String url = "http://AM-ADMIN/am-config/adminSystem/get_admin_system_by_userid/" + loginUserId;
         String url = "http://AM-ADMIN/am-config/adminSystem/get_admin_system_by_userid/" + loginUserId;
         AdminSystemResponse response = restTemplate.getForEntity(url, AdminSystemResponse.class).getBody();
         if (response != null) {
@@ -95,7 +94,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public List<ParamNameVO> getParamName(String other1) {
-        String url = "http://AM-CONFIG/am-config/config/getParamName/" + other1;
+        String url = "http://AM-ADMIN/am-config/config/getParamName/" + other1;
         ParamNameResponse response = restTemplate.getForEntity(url, ParamNameResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResultList();
@@ -114,7 +113,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public SiteSettingsVO findSiteSetting() {
 
         SiteSettingsResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/siteSettings/findOne/", SiteSettingsResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-config/siteSettings/findOne/", SiteSettingsResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -131,7 +130,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode) {
         SmsMailTemplateResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/smsMailTemplate/findSmsMailByCode/" + mailCode,
+                .getForEntity("http://AM-ADMIN/am-config/smsMailTemplate/findSmsMailByCode/" + mailCode,
                         SmsMailTemplateResponse.class)
                 .getBody();
         if (response != null) {
@@ -150,7 +149,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public String getBankRetMsg(String retCode) {
         BankReturnCodeConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/config/getBankReturnCodeConfig/" + retCode,
+                .getForEntity("http://AM-ADMIN/config/getBankReturnCodeConfig/" + retCode,
                         BankReturnCodeConfigResponse.class)
                 .getBody();
         if (response != null) {
@@ -220,7 +219,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public JxBankConfigResponse getJXbankConfigByBankId(int bankId) {
         JxBankConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/getJXbankConfigByBankId/" + bankId, JxBankConfigResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-config/config/getJXbankConfigByBankId/" + bankId, JxBankConfigResponse.class).getBody();
         return response;
     }
 
@@ -262,7 +261,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public AdminSystemResponse isExistsApplicant(String applicant) {
         AdminSystemResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/adminSystem/isexistsapplicant/" + applicant, AdminSystemResponse.class)
+                .getForEntity("http://AM-ADMIN/am-config/adminSystem/isexistsapplicant/" + applicant, AdminSystemResponse.class)
                 .getBody();
         if (response != null) {
             return response;
@@ -282,6 +281,12 @@ public class AmConfigClientImpl implements AmConfigClient {
         UtmPlatResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/preparedatas", UtmPlatResponse.class);
         return response;
     }
+    @Override
+    public IntegerResponse isExistsAdminUser(String userName){
+        IntegerResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/checkaction/"+userName, IntegerResponse.class);
+        return response;
+    }
+
     @Override
     public AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean) {
         return restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/insert",
@@ -319,7 +324,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public AppChannelReconciliationResponse getReconciliationPage(AppChannelReconciliationRequest form) {
-//		return restTemplate.postForObject("http://AM-CONFIG/am-config/extensioncenter/adminutmreadpermissions/getreconciliationpage",form,
+//		return restTemplate.postForObject("http://AM-ADMIN/am-config/extensioncenter/adminutmreadpermissions/getreconciliationpage",form,
 //				AppChannelReconciliationResponse.class);
         return null;
     }
@@ -591,7 +596,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankReturnCodeConfigResponse selectBankRetcodeListByPage(AdminBankRetcodeConfigRequest adminRequest) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/list";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/list";
         BankReturnCodeConfigResponse response = restTemplate.postForEntity(url, adminRequest, BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -607,7 +612,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankReturnCodeConfigResponse selectBankRetcodeConfigInfo(AdminBankRetcodeConfigRequest adminRequest) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/info";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/info";
         BankReturnCodeConfigResponse response = restTemplate.postForEntity(url, adminRequest, BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -622,7 +627,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankReturnCodeConfigResponse insertBankReturnCodeConfig(AdminBankRetcodeConfigRequest req) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/insert";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/insert";
         BankReturnCodeConfigResponse response = restTemplate.postForEntity(url, req, BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -637,7 +642,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankReturnCodeConfigResponse updateBankReturnCodeConfig(AdminBankRetcodeConfigRequest req) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/update";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/update";
         BankReturnCodeConfigResponse response = restTemplate.postForEntity(url, req, BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response;
@@ -652,7 +657,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public boolean isExistsReturnCode(AdminBankRetcodeConfigRequest record) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/isExistsReturnCode";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/isExistsReturnCode";
         return restTemplate.postForEntity(url, record, BooleanResponse.class).getBody().getResultBoolean();
     }
 
@@ -664,7 +669,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public boolean isExistsRecord(AdminBankRetcodeConfigRequest adminRequest) {
-        String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/isExistsRecord";
+        String url = "http://AM-ADMIN/am-admin/config/bankretcodeconfig/isExistsRecord";
         return restTemplate.postForEntity(url, adminRequest, BooleanResponse.class).getBody().getResultBoolean();
     }
 
@@ -762,12 +767,10 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<ParamNameVO> selectProjectTypeParamList() {
-        List<ParamNameVO> paramNameVOS = new ArrayList<>();
-        ParamNameResponse amResponse = restTemplate.postForEntity("http://AM-CONFIG/am-config/accountconfig/selectProjectTypeParamList", null, ParamNameResponse.class)
+        ParamNameResponse amResponse = restTemplate.postForEntity("http://AM-ADMIN/am-admin/paramname/selectProjectTypeParamList", null, ParamNameResponse.class)
                 .getBody();
         if (Response.isSuccess(amResponse)) {
-            paramNameVOS = amResponse.getResultList();
-            return paramNameVOS;
+            return amResponse.getResultList();
         }
         return null;
     }
@@ -803,7 +806,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CategoryResponse getCategoryPage(CategoryBeanRequest categoryBeanRequest) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/searchaction",
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/searchaction",
                 categoryBeanRequest, CategoryResponse.class).getBody();
         if (null != response) {
             return response;
@@ -813,7 +816,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CategoryResponse changeSubTypeAction(CategoryBeanRequest categoryBeanRequest) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/changesubtype",
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/changesubtype",
                 categoryBeanRequest, CategoryResponse.class).getBody();
         if (null != response) {
             return response;
@@ -830,7 +833,7 @@ public class AmConfigClientImpl implements AmConfigClient {
          * ParameterizedTypeReference<CategoryResponse<CategoryVO>>() {});
          */
         ResponseEntity<CategoryResponse<CategoryVO>> response = restTemplate.exchange(
-                "http://AM-CONFIG/am-config/content/help/infotypeaction/" + id, HttpMethod.GET, null,
+                "http://AM-ADMIN/am-config/content/help/infotypeaction/" + id, HttpMethod.GET, null,
                 new ParameterizedTypeReference<CategoryResponse<CategoryVO>>() {
                 });
         if (null != response) {
@@ -841,7 +844,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CategoryResponse infoSubTypeAction(CategoryBeanRequest categoryBeanRequest) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/infosubtypeaction",
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/infosubtypeaction",
                 categoryBeanRequest, CategoryResponse.class).getBody();
         if (null != response) {
             return response;
@@ -851,7 +854,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public Integer insertCategory(CategoryVO categoryVO) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/insertcategory",
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/insertcategory",
                 categoryVO, CategoryResponse.class).getBody();
         if (null != response) {
             return response.getFlag();
@@ -861,7 +864,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public Integer updateAction(CategoryVO categoryVO) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/updateaction",
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/updateaction",
                 categoryVO, CategoryResponse.class).getBody();
         if (null != response) {
             return response.getFlag();
@@ -871,7 +874,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CategoryResponse getCategoryCount(CategoryVO categoryVO) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/getcategorycount",
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/getcategorycount",
                 categoryVO, CategoryResponse.class).getBody();
         if (null != response) {
             return response;
@@ -884,7 +887,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         CategoryVO request = new CategoryVO();
         request.setPid(pid);
         request.setId(cid);
-        CategoryResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/content/help/getbypcateidAandcateid", request,
+        CategoryResponse response = restTemplate.postForObject("http://AM-ADMIN/am-config/content/help/getbypcateidAandcateid", request,
                 CategoryResponse.class);
         if (null != response) {
             return response.getCount();
@@ -896,14 +899,14 @@ public class AmConfigClientImpl implements AmConfigClient {
     public List<ContentHelpVO> getListByPcateIdAndcateId(CategoryVO categoryVO) {
         ParameterizedTypeReference<CategoryResponse<ContentHelpVO>> typeRef = new ParameterizedTypeReference<CategoryResponse<ContentHelpVO>>() {
         };
-        ResponseEntity<CategoryResponse<ContentHelpVO>> responseEntity = restTemplate.exchange("http://AM-CONFIG/am-config/content/help/getlistbypcateidandcateid", HttpMethod.POST, new HttpEntity<>(categoryVO), typeRef);
+        ResponseEntity<CategoryResponse<ContentHelpVO>> responseEntity = restTemplate.exchange("http://AM-ADMIN/am-config/content/help/getlistbypcateidandcateid", HttpMethod.POST, new HttpEntity<>(categoryVO), typeRef);
         CategoryResponse<ContentHelpVO> responseBean = responseEntity.getBody();
         return responseBean.getRecordList();
     }
 
     @Override
     public Integer delContentHelp(Integer id) {
-        CategoryResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/content/help/delcontenthelp/" + id,
+        CategoryResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/content/help/delcontenthelp/" + id,
                 CategoryResponse.class).getBody();
         if (null != response) {
             return response.getFlag();
@@ -913,7 +916,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public Integer delCategory(Integer id) {
-        CategoryResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/content/help/delcategory/" + id,
+        CategoryResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/content/help/delcategory/" + id,
                 CategoryResponse.class).getBody();
         if (null != response) {
             return response.getFlag();
@@ -923,7 +926,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public Integer updateContentHelp(ContentHelpVO contentHelpVO) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/updatecontenthelp", contentHelpVO,
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/updatecontenthelp", contentHelpVO,
                 CategoryResponse.class).getBody();
         if (null != response) {
             return response.getFlag();
@@ -933,7 +936,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CategoryResponse getHelpPage(ContentHelpBeanRequest contentHelpBeanRequest) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/gethelppage", contentHelpBeanRequest,
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/gethelppage", contentHelpBeanRequest,
                 CategoryResponse.class).getBody();
         if (null != response) {
             return response;
@@ -943,7 +946,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CategoryResponse getHelpInfo(ContentHelpBeanRequest contentHelpBeanRequest) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/gethelpinfo", contentHelpBeanRequest,
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/gethelpinfo", contentHelpBeanRequest,
                 CategoryResponse.class).getBody();
         if (null != response) {
             return response;
@@ -953,7 +956,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CategoryResponse insertHelpInfo(ContentHelpBeanRequest contentHelpBeanRequest) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/inserthelpinfo", contentHelpBeanRequest,
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/inserthelpinfo", contentHelpBeanRequest,
                 CategoryResponse.class).getBody();
         if (null != response) {
             return response;
@@ -963,7 +966,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CategoryResponse updateHelpAction(ContentHelpBeanRequest contentHelpBeanRequest) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/updatehelpaction", contentHelpBeanRequest,
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/updatehelpaction", contentHelpBeanRequest,
                 CategoryResponse.class).getBody();
         if (null != response) {
             return response;
@@ -973,7 +976,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public Integer chanContentHelp(Integer contentId, Integer status, Integer zhiChiStatus) {
-        CategoryResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/content/help/chancontenthelp/" + contentId + "/" + status + "/" + zhiChiStatus,
+        CategoryResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/content/help/chancontenthelp/" + contentId + "/" + status + "/" + zhiChiStatus,
                 CategoryResponse.class).getBody();
         if (null != response) {
             return response.getFlag();
@@ -983,7 +986,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CategoryResponse getOftenInitPage(ContentHelpBeanRequest contentHelpBeanRequest) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/getofteninitpage", contentHelpBeanRequest,
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/getofteninitpage", contentHelpBeanRequest,
                 CategoryResponse.class).getBody();
         if (null != response) {
             return response;
@@ -992,7 +995,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
     @Override
     public CategoryResponse getZhiChiInit(ContentHelpBeanRequest contentHelpBeanRequest) {
-        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/getzhichiinit", contentHelpBeanRequest,
+        CategoryResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/help/getzhichiinit", contentHelpBeanRequest,
                 CategoryResponse.class).getBody();
         if (null != response) {
             return response;
@@ -1136,7 +1139,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CouponCheckResponse getCouponList(AdminCouponCheckRequest adminCouponCheckRequest) {
-        String url = "http://AM-CONFIG/am-config/checkList/getCheckList";
+        String url = "http://AM-ADMIN/am-config/checkList/getCheckList";
         CouponCheckResponse response = restTemplate.postForEntity(url, adminCouponCheckRequest, CouponCheckResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1146,7 +1149,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CouponCheckResponse deleteCouponList(AdminCouponCheckRequest acr) {
-        String url = "http://AM-CONFIG/am-config/checkList/deleteCheckList";
+        String url = "http://AM-ADMIN/am-config/checkList/deleteCheckList";
         CouponCheckResponse response = restTemplate.postForEntity(url, acr, CouponCheckResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1156,7 +1159,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CouponCheckResponse insert(AdminCouponCheckRequest accr) {
-        String url = "http://AM-CONFIG/am-config/checkList/insertCoupon";
+        String url = "http://AM-ADMIN/am-config/checkList/insertCoupon";
         CouponCheckResponse response = restTemplate.postForEntity(url, accr, CouponCheckResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1166,7 +1169,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CouponCheckVO selectCoupon(Integer id) {
-        String url = "http://AM-CONFIG/am-config/checkList/selectCoupon/" + id;
+        String url = "http://AM-ADMIN/am-config/checkList/selectCoupon/" + id;
         CouponCheckResponse response = restTemplate.getForEntity(url, CouponCheckResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -1176,7 +1179,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public CouponCheckResponse updateCoupon(AdminCouponCheckRequest request) {
-        String url = "http://AM-CONFIG/am-config/checkList/updateCoupon";
+        String url = "http://AM-ADMIN/am-config/checkList/updateCoupon";
         return restTemplate.postForEntity(url, request, CouponCheckResponse.class).getBody();
     }
 
@@ -1364,19 +1367,19 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public SmsMailTemplateResponse findMailTemplate(MailTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/findMailTemplate", request,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/smsMailTemplate/findMailTemplate", request,
                 SmsMailTemplateResponse.class);
     }
 
     @Override
     public int insertMailTemplate(MailTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/insertMailTemplate", request,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/smsMailTemplate/insertMailTemplate", request,
                 IntegerResponse.class).getResultInt();
     }
 
     @Override
     public int updateMailTemplate(MailTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/update_mail_template", request,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/smsMailTemplate/update_mail_template", request,
                 IntegerResponse.class).getResultInt();
     }
 
@@ -1390,13 +1393,13 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse findMsgPushTemplate(MsgPushTemplateRequest request) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/messagePushTemplate/findMsgPushTemplate", request,
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/messagePushTemplate/findMsgPushTemplate", request,
                 MessagePushTemplateResponse.class).getBody();
     }
 
     @Override
     public void insertMsgPushTemplate(MsgPushTemplateRequest request) {
-        restTemplate.postForEntity("http://AM-CONFIG/am-config/messagePushTemplate/insertMsgPushTemplate", IntegerResponse.class,
+        restTemplate.postForEntity("http://AM-ADMIN/am-config/messagePushTemplate/insertMsgPushTemplate", IntegerResponse.class,
                 Object.class);
     }
 
@@ -1488,7 +1491,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminVersionResponse versionConfigInit(AdminVersionRequest adminRequest) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/list";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/list";
         AdminVersionResponse response = restTemplate.postForEntity(url, adminRequest, AdminVersionResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1504,7 +1507,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminVersionResponse searchVersionConfigInfo(AdminVersionRequest adminRequest) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/info";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/info";
         AdminVersionResponse response = restTemplate.postForEntity(url, adminRequest, AdminVersionResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1519,7 +1522,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminVersionResponse saveVersionConfig(AdminVersionRequest req) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/insert";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/insert";
         AdminVersionResponse response = restTemplate.postForEntity(url, req, AdminVersionResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1534,7 +1537,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminVersionResponse updateVersionConfig(AdminVersionRequest req) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/update";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/update";
         AdminVersionResponse response = restTemplate.postForEntity(url, req, AdminVersionResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1549,7 +1552,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminVersionResponse deleteVersionConfig(List<Integer> id) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/delete";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/delete";
         AdminVersionResponse response = restTemplate.postForEntity(url, id, AdminVersionResponse.class).getBody();
         if (response != null) {
             return response;
@@ -1564,7 +1567,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public VersionVO getVersionByCode(Integer vid, Integer type, String version) {
-        String url = "http://AM-CONFIG/am-config/config/versionconfig/validationFeild";
+        String url = "http://AM-ADMIN/am-admin/config/versionconfig/validationFeild";
         Map<String, Object> map = new HashMap<String, Object>();
         if (vid != null) {
             map.put("vid", vid);
@@ -1934,14 +1937,8 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public void closeAction(MailTemplateRequest request) {
-        restTemplate.postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/close_action", request,
-                Object.class);
-    }
-
-    @Override
     public int openAction(MailTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/update_status", request,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/smsMailTemplate/update_status", request,
                 IntegerResponse.class).getResultInt();
     }
 
@@ -1953,7 +1950,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<JxBankConfigVO> getBankcardList() {
-        JxBankConfigResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/config/JxBank/selectBankConfigList", JxBankConfigResponse.class).getBody();
+        JxBankConfigResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/config/JxBank/selectBankConfigList", JxBankConfigResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResultList();
         }
@@ -2002,7 +1999,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public SmsTemplateVO selectSmsTemByTplCode(String tplCode) {
-        SmsTemplateResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/smsTemplate/findSmsTemplateByCode/" + tplCode, SmsTemplateResponse.class);
+        SmsTemplateResponse response = restTemplate.getForObject("http://AM-ADMIN/am-config/smsTemplate/findSmsTemplateByCode/" + tplCode, SmsTemplateResponse.class);
         if (response != null) {
             return response.getResult();
         }
@@ -2011,7 +2008,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public SmsMailTemplateVO infoAction(MailTemplateRequest request) {
-        SmsMailTemplateResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/smsMailTemplate/find_by_id/" + request.getId(),
+        SmsMailTemplateResponse response = restTemplate.getForObject("http://AM-ADMIN/am-config/smsMailTemplate/find_by_id/" + request.getId(),
                 SmsMailTemplateResponse.class);
         if (response != null) {
             return response.getResult();

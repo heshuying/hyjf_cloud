@@ -23,8 +23,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -392,17 +390,20 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 			try {
 				List<ProtocolTemplateVO> list = getdisplayNameDynamic();
 				//是否在枚举中有定义
-				for (ProtocolTemplateVO p : list) {
-					String protocolType = p.getProtocolType();
-					String alia = ProtocolEnum.getAlias(protocolType);
-					if (alia != null){
-						map.put(alia, p.getDisplayName());
-					}
-				}
+                if (CollectionUtils.isNotEmpty(list)){
+                    for (ProtocolTemplateVO p : list) {
+                        String protocolType = p.getProtocolType();
+                        String alia = ProtocolEnum.getAlias(protocolType);
+                        if (alia != null){
+                            map.put(alia, p.getDisplayName());
+                        }
+                    }
+                }
 				jsonObject.put("status","000");
 				jsonObject.put("statusDesc","成功");
 				jsonObject.put("displayName",map);
 			} catch (Exception e) {
+				logger.error("协议查询异常：" + e);
 				jsonObject.put("status","99");
 				jsonObject.put("statusDesc","失败");
 			}

@@ -1,35 +1,46 @@
 package com.hyjf.cs.trade.service.home.impl;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.MessageFormat;
-import java.util.*;
-
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.WechatProjectListResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.DebtCreditRequest;
+import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.app.AppBorrowProjectInfoBeanVO;
 import com.hyjf.cs.trade.bean.app.AppModuleBean;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.service.home.WechatProjectListService;
+import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.HomePageDefine;
+import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -39,23 +50,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.HjhAccedeRequest;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.common.bean.result.WeChatResult;
-import com.hyjf.cs.trade.service.repay.RepayPlanService;
-import com.hyjf.cs.trade.service.home.WechatProjectListService;
-import com.hyjf.cs.trade.util.ProjectConstant;
-
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.MessageFormat;
+import java.util.*;
 
 @Service
 public class WechatProjectListServiceImpl implements WechatProjectListService {

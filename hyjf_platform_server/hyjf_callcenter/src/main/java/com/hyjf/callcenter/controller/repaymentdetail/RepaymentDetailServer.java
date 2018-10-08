@@ -7,7 +7,10 @@ import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
 import com.hyjf.am.vo.callcenter.CallCenterHtjRepaymentDetailVO;
 import com.hyjf.am.vo.callcenter.CallCenterHztRepaymentDetailVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.callcenter.beans.*;
+import com.hyjf.callcenter.beans.RepaymentDetailHtjBean;
+import com.hyjf.callcenter.beans.RepaymentDetailHztBean;
+import com.hyjf.callcenter.beans.ResultListBean;
+import com.hyjf.callcenter.beans.UserBean;
 import com.hyjf.callcenter.controller.base.CallcenterBaseController;
 import com.hyjf.callcenter.result.BaseResultBean;
 import com.hyjf.callcenter.service.RepaymentDetailService;
@@ -16,10 +19,11 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**

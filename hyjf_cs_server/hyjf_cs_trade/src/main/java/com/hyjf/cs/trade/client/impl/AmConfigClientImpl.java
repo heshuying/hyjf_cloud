@@ -4,11 +4,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
-import com.hyjf.am.response.trade.BankInterfaceResponse;
-import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.BanksConfigResponse;
-import com.hyjf.am.response.trade.ContentArticleResponse;
-import com.hyjf.am.response.trade.HolidaysConfigResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -16,6 +12,7 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.trade.client.AmConfigClient;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -242,5 +239,14 @@ public class AmConfigClientImpl implements AmConfigClient {
 			return response.getResultList();
 		}
 		return null;
+	}
+
+	@Override
+	public String getBankRetMsg(String retCode) {
+		BankReturnCodeConfigVO vo = this.getBankReturnCodeConfig(retCode);
+		if (vo == null) {
+			return Response.ERROR_MSG;
+		}
+		return StringUtils.isNotBlank(vo.getRetMsg()) ? vo.getRetMsg() : Response.ERROR_MSG;
 	}
 }

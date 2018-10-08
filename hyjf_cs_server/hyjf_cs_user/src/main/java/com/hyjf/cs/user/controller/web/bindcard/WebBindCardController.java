@@ -1,7 +1,6 @@
 package com.hyjf.cs.user.controller.web.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -109,7 +108,7 @@ public class WebBindCardController extends BaseUserController {
 	public WebResult<Object> bindCardSendCode(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BindCardVO bindCardVO) {
 		logger.info("绑卡发送验证码开始, mobile :{}，cardNo:{}", bindCardVO.getMobile(), bindCardVO.getCardNo());
 		WebResult<Object> result = new WebResult<Object>();
-		
+		result.setData("");
 
         bindCardService.checkParamSendcode(userId, bindCardVO.getMobile(), bindCardVO.getCardNo());
         // 请求银行绑卡接口

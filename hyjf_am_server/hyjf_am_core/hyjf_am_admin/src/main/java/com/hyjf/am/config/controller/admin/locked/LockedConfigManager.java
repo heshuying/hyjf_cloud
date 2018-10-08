@@ -3,16 +3,15 @@
  */
 package com.hyjf.am.config.controller.admin.locked;
 
-import com.hyjf.am.bean.admin.LockedConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 
 /**
  * 前后台登录失败配置管理，单例模式

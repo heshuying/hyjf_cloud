@@ -165,13 +165,17 @@ public class RepayCalendarServiceImpl extends BaseServiceImpl implements RepayCa
             // 拼接详情url borrowUrl
             // type = 6,5 是计划详情 其他是散标详情
             if (Arrays.asList("6", "5").contains(customize.getType())) {
-                result.setBorrowUrl(systemConfig.getAppFrontHost() +"/hyjf-app/user/plan" + "/" + customize.getOrderId() + "?type="
+                // mod by nxl 智投服务 项目期限->回报期限
+                result.setBorrowTheSecondDesc("回报期限");
+                result.setBorrowUrl(systemConfig.getAppFrontHost() +"/user/plan" + "/" + customize.getOrderId() + "?type="
                         + customize.getType() + "&couponType=" + customize.getCouponType().concat("&investStatusDesc=还款中"));
                 // add 汇计划二期前端优化  计划的回款日历计划显示退出时间 20180509 start
-                result.setBorrowTheThirdDesc("退出时间");
+                // mod by nxl 智投服务 退出时间->开始退出
+//                result.setBorrowTheThirdDesc("退出时间");
+                result.setBorrowTheThirdDesc("开始退出");
                 // add 汇计划二期前端优化  计划的回款日历计划显示退出时间 20180509 end
             } else {
-                String borrowUrl = systemConfig.getAppFrontHost() +"/hyjf-app/user/borrow" + "/" + customize.getBorrowNid()
+                String borrowUrl = systemConfig.getAppFrontHost() +"/user/borrow" + "/" + customize.getBorrowNid()
                         + "?couponType=" + customize.getCouponType();
                 // 如果是产品加息  特殊展示
                 if(customize.getType().equals("4")){
