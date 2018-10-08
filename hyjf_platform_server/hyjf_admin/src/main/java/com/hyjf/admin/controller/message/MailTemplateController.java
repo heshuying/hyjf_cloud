@@ -128,17 +128,17 @@ public class MailTemplateController extends BaseController {
 			int num = mailTemplateService.updateMailTemplate(request);
 			if (num > 0) {
 				jsonObject.put("status", "000");
-				jsonObject.put("statusDesc", "添加邮件模板成功");
+				jsonObject.put("statusDesc", "修改邮件模板成功");
 				return jsonObject;
 			} else {
 				jsonObject.put("status", "99");
-				jsonObject.put("statusDesc", "添加邮件模板失败");
+				jsonObject.put("statusDesc", "修改邮件模板失败");
 				return jsonObject;
 			}
 		} catch (Exception e) {
-			logger.error("添加邮件模板失败......", e);
+			logger.error("修改邮件模板失败......", e);
 			jsonObject.put("status", "99");
-			jsonObject.put("statusDesc", "添加邮件模板失败");
+			jsonObject.put("statusDesc", "修改邮件模板失败");
 			return jsonObject;
 		}
 	}
