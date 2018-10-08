@@ -320,7 +320,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		bean.setIdNo(rechargeBean.getIdNo());
 		bean.setName(rechargeBean.getName());
 		bean.setMobile(rechargeBean.getMobile());
-		bean.setForgotPwdUrl(getForgotPwdUrlByPlatform(rechargeBean.getPlatform()));
+		bean.setForgotPwdUrl(rechargeBean.getForgotPwdUrl());
 		bean.setUserIP(rechargeBean.getIp());
 		bean.setRetUrl(rechargeBean.getRetUrl()+"?status=99&statusDesc=充值失败&logOrdId="+logOrderId);
 		bean.setNotifyUrl(rechargeBean.getNotifyUrl());
@@ -340,19 +340,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			throw new Exception("插入充值记录失败,userid=["+rechargeBean.getUserId()+"].accountid=["+rechargeBean.getAccountId()+"]");
 		}
 		return bean;
-	}
-	private String getForgotPwdUrlByPlatform(String platform) {
-		Integer client = Integer.parseInt(platform);
-		if (ClientConstants.WEB_CLIENT == client) {
-			return systemConfig.getForgetPassword();
-		}
-		if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
-			return systemConfig.getForgetPassword();
-		}
-		if (ClientConstants.WECHAT_CLIENT == client) {
-			return systemConfig.getForgetPassword();
-		}
-		return systemConfig.getForgetPassword();
 	}
 	@Override
 	public BankCallBean rechargeService(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {

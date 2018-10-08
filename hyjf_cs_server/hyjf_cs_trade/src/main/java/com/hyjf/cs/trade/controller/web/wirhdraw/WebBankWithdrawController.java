@@ -86,8 +86,9 @@ public class WebBankWithdrawController extends BaseTradeController {
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawError";
         String bgRetUrl ="http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn";
         String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawSuccess";
+        String forgotPwdUrl=super.getForgotPwdUrl(CommonConstant.CLIENT_PC,request,systemConfig);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),
-                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip, retUrl, bgRetUrl, successfulUrl);
+                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip, retUrl, bgRetUrl, successfulUrl,forgotPwdUrl);
 
         try {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);

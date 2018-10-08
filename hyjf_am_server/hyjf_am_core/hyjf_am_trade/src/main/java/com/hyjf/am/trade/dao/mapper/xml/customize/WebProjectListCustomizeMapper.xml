@@ -1533,7 +1533,7 @@
 					) t
 					where t.order_by_status_name=2
 			) t
-			ORDER BY t.status ASC, t.order_by_lock_period ASC,
+			ORDER BY t.status ASC, t.order_by_lock_period ASC
 	      	LIMIT 0 , 2
 	</select>
 
