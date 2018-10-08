@@ -6,6 +6,7 @@ import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.finance.recharge.AccountRechargeService;
 import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,5 +50,10 @@ public class AccountRechargeServiceImpl extends BaseServiceImpl implements Accou
     @Override
     public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
         return amTradeClient.updateAccountAfterRecharge(request);
+    }
+
+    @Override
+    public List<ParamNameVO> selectParamNameList(String nameClass) {
+        return amTradeClient.selectParamNameList(nameClass);
     }
 }

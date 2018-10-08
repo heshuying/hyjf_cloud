@@ -30,7 +30,7 @@ public class SubConfigServiceImpl extends BaseServiceImpl implements SubConfigSe
         if (StringUtils.isNotBlank(userName)) {
             Map<String, Object> map= subConfigCustomizeMapper.selectUserInfoByUserName(userName);
             UserInfoCustomizeVO vo = new UserInfoCustomizeVO();
-            if (map.get("user_id")!=null) {
+            if (map != null&&map.get("user_id")!=null) {
                 vo.setUserId(Integer.parseInt(String.valueOf(map.get("user_id"))));
                 vo.setUserName((String)map.get("username"));
                 vo.setTrueName((String)map.get("truename"));

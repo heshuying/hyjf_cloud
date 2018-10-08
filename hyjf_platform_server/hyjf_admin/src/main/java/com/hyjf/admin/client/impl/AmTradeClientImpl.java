@@ -3618,6 +3618,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 子账户类型 查询
+     * @param nameClass
+     * @return
+     */
+    @Override
+    public List<ParamNameVO> selectParamNameList(String nameClass) {
+        String url = "http://AM-ADMIN/am-admin/paramname/getParamNameList/" + nameClass;
+        ParamNameResponse response = restTemplate.getForEntity(url, ParamNameResponse.class).getBody();
+        if (Validator.isNotNull(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      * 添加线下充值类型
      * @param requestBean
      * @return

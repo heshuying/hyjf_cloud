@@ -1793,6 +1793,13 @@ public interface AmTradeClient {
     boolean updateAccountAfterRecharge(AccountRechargeRequest request);
 
     /**
+     * 子账户类型 查询
+     * @param nameClass
+     * @return
+     */
+    List<ParamNameVO> selectParamNameList(String nameClass);
+
+    /**
      * 获取线下充值类型列表
      * @param requestBean
      * @return
