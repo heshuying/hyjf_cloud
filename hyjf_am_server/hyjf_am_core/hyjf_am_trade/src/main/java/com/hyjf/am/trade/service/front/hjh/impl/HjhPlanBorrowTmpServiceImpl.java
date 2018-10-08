@@ -42,7 +42,7 @@ public class HjhPlanBorrowTmpServiceImpl extends BaseServiceImpl implements HjhP
     }
 
     @Override
-    public int deleteHjhPlanBorrowTmpByAccedeBorrow(String accedeOrderId, String borrowNid) {
+    public int deleteHjhPlanBorrowTmpByAccedeBorrow(String borrowNid, String accedeOrderId) {
         HjhPlanBorrowTmpExample hjhPlanBorrowTmpExample = new HjhPlanBorrowTmpExample();
         HjhPlanBorrowTmpExample.Criteria crt = hjhPlanBorrowTmpExample.createCriteria();
         crt.andAccedeOrderIdEqualTo(accedeOrderId);

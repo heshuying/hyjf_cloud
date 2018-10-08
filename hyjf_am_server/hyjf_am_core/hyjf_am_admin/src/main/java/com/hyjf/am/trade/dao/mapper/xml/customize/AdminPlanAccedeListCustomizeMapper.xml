@@ -25,7 +25,7 @@
 		LEFT JOIN ht_r_oa_department odx3 ON odx3.id = odx2.parentid
 		<where>
 			<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
-				AND hdp.plan_nid LIKE CONCAT( #{debtPlanNidSrch}, '%')
+				AND hdp.plan_nid LIKE CONCAT('%', #{debtPlanNidSrch}, '%')
 			</if>
 			<if test="accedeOrderIdSrch != null and accedeOrderIdSrch != ''">
 				AND hdpa.accede_order_id = #{accedeOrderIdSrch} 
@@ -294,7 +294,7 @@
 			LEFT JOIN ht_r_oa_department odx3 ON odx3.id = odx2.parentid
 			<where>
 				<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
-					AND hdp.plan_nid LIKE CONCAT( #{debtPlanNidSrch}, '%')
+					AND hdp.plan_nid LIKE CONCAT('%', #{debtPlanNidSrch}, '%')
 				</if>
 				<if test="accedeOrderIdSrch != null and accedeOrderIdSrch != ''">
 					AND hdpa.accede_order_id = #{accedeOrderIdSrch}                       
@@ -397,7 +397,7 @@
 			LEFT JOIN ht_r_oa_department odx3 ON odx3.id = odx2.parentid
 			<where>
 				<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
-					AND hdp.plan_nid LIKE CONCAT( #{debtPlanNidSrch}, '%')
+					AND hdp.plan_nid LIKE CONCAT('%', #{debtPlanNidSrch}, '%')
 				</if>
 				<if test="accedeOrderIdSrch != null and accedeOrderIdSrch != ''">
 					AND hdpa.accede_order_id = #{accedeOrderIdSrch} 

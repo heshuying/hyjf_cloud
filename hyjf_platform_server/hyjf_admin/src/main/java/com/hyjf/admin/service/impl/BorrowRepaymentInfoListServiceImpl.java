@@ -28,8 +28,8 @@ public class BorrowRepaymentInfoListServiceImpl implements BorrowRepaymentInfoLi
     private AmTradeClient amTradeClient;
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
-        List<HjhInstConfigVO> list = amTradeClient.selectHjhInstConfigByInstCode(instCode);
-        return list;
+        List<HjhInstConfigVO> hjhInstConfigVOList = amTradeClient.selectCommonHjhInstConfigList();
+        return hjhInstConfigVOList;
     }
     /**
      * @Description
