@@ -13,7 +13,7 @@
  * @author PC-LIUSHOUYI
  */
 
-package com.hyjf.am.trade.dao.mapper.auto;
+package com.hyjf.am.trade.dao.mapper.customize.admin;
 
 
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayExample;
