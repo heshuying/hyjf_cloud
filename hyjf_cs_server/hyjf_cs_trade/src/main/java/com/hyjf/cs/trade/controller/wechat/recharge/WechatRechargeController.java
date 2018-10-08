@@ -72,6 +72,7 @@ public class WechatRechargeController extends BaseTradeController{
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		directRechargeBean.setPlatform(CommonConstant.CLIENT_WECHAT);
+        directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 		Map<String,Object> map = new HashMap<>();
 		try {
@@ -84,52 +85,7 @@ public class WechatRechargeController extends BaseTradeController{
 		return result;
 	}
 
-	/**
-	 * @Author: zhangqingqing
-	 * @Desc :页面充值同步
-	 * @Param: * @param request
-	 * @param bean
-	 * @Date: 12:40 2018/6/5
-	 * @Return: ModelAndView
-	 */
-/*
-	@ApiOperation(value = "用户充值同步回调", notes = "用户充值")
-	@GetMapping("/return")
-	public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
-		logger.info("[wechat页面充值同步回调开始]");
-		ModelAndView modelAndView = new ModelAndView();
-		String money = request.getParameter("txAmount");
-		String frontParams = request.getParameter("frontParams");
-		String isSuccess = request.getParameter("isSuccess");
-		// 充值成功
-		DecimalFormat df = new DecimalFormat("#,##0.00");
-		BigDecimal feeAmt = new BigDecimal(money);
-		if(StringUtils.isBlank(bean.getRetCode())&&StringUtils.isNotBlank(frontParams)){
-			JSONObject jsonParm = JSONObject.parseObject(frontParams);
-			if(jsonParm.containsKey("RETCODE")){
-				bean.setRetCode(jsonParm.getString("RETCODE"));
-			}
-		}
-		bean.convert();
-		if (isSuccess != null && "1".equals(isSuccess)) {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_success");
-			modelAndView.addObject("message", "页面充值成功");
-			modelAndView.addObject("balance", df.format(feeAmt).toString());
-			return modelAndView;
-		}
-		String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-		if (bean!=null&& BankCallStatusConstant.RESPCODE_SUCCESS.equals(retCode)) {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_success");
-			modelAndView.addObject("message", "页面充值成功");
-			modelAndView.addObject("balance", df.format(feeAmt).toString());
-			return modelAndView;
-		} else {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
-			modelAndView.addObject("message", userRechargeService.getBankRetMsg(bean.getRetCode()));
-			return modelAndView;
-		}
-	}
-*/
+
 
 	/**
 	 * @Author: zhangqingqing
