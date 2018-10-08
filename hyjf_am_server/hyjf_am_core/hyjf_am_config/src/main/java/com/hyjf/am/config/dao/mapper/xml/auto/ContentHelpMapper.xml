@@ -24,6 +24,7 @@
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="zhichi_status" property="zhichiStatus" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -86,7 +87,7 @@
   <sql id="Base_Column_List" >
     id, pcate_id, cate_id, title, content, `order`, `status`, `type`, code, `source`, 
     author, thumb, summary, seo_title, seo_keyword, seo_description, hits, out_link, 
-    create_user_id, update_user_id, create_time, update_time
+    create_user_id, update_user_id, create_time, update_time, zhichi_status
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.ContentHelpExample" >
     select
@@ -131,16 +132,16 @@
       author, thumb, summary, 
       seo_title, seo_keyword, seo_description, 
       hits, out_link, create_user_id, 
-      update_user_id, create_time, update_time
-      )
+      update_user_id, create_time, update_time, 
+      zhichi_status)
     values (#{pcateId,jdbcType=INTEGER}, #{cateId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
       #{content,jdbcType=VARCHAR}, #{order,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{type,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
       #{author,jdbcType=VARCHAR}, #{thumb,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
       #{seoTitle,jdbcType=VARCHAR}, #{seoKeyword,jdbcType=VARCHAR}, #{seoDescription,jdbcType=VARCHAR}, 
       #{hits,jdbcType=INTEGER}, #{outLink,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
-      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{zhichiStatus,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.ContentHelp" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -211,6 +212,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="zhichiStatus != null" >
+        zhichi_status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="pcateId != null" >
@@ -275,6 +279,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="zhichiStatus != null" >
+        #{zhichiStatus,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -353,6 +360,9 @@
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.zhichiStatus != null" >
+        zhichi_status = #{record.zhichiStatus,jdbcType=TINYINT},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -381,7 +391,8 @@
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      zhichi_status = #{record.zhichiStatus,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -452,6 +463,9 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="zhichiStatus != null" >
+        zhichi_status = #{zhichiStatus,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -477,7 +491,8 @@
       create_user_id = #{createUserId,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      zhichi_status = #{zhichiStatus,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
