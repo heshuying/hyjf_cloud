@@ -3357,7 +3357,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BankAleveVO> queryBankAleveList(BankAleveRequest request) {
         BankAleveResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/bankaleve/selectBankAleveInfoList/", request, BankAleveResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/bankaleve/selectBankAleveInfoList/", request, BankAleveResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -3373,7 +3373,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BankEveVO> queryBankEveList(BankEveRequest request) {
         BankEveResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/bankeve/selectBankEveInfoList/", request, BankEveResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/bankeve/selectBankEveInfoList/", request, BankEveResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -5038,7 +5038,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int getPushMoneyListCount(PushMoneyRequest request) {
         PushMoneyResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/pushMoneyRecord/getPushMoneyListCount" ,request,
+                .postForEntity("http://AM-ADMIN/am-trade/pushMoneyRecord/getPushMoneyListCount" ,request,
                         PushMoneyResponse.class)
                 .getBody();
         if (Response.isSuccess(response)) {

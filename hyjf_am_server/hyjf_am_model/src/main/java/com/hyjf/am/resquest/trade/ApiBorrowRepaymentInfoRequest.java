@@ -20,6 +20,9 @@ public class ApiBorrowRepaymentInfoRequest {
     @ApiModelProperty(value = "资产编号 检索条件")
     private String assetId;
 
+    @ApiModelProperty(value = "机构编号 检索条件")
+    private String instCode;
+
     @ApiModelProperty(value = "应还日期开始 检索条件")
     private String recoverTimeStart;
 
@@ -82,5 +85,13 @@ public class ApiBorrowRepaymentInfoRequest {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getInstCode() {
+        return instCode;
+    }
+
+    public void setInstCode(String instCode) {
+        this.instCode = instCode;
     }
 }

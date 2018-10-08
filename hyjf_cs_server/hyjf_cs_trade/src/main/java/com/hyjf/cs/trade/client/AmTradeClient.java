@@ -2137,7 +2137,7 @@ public interface AmTradeClient {
 
 	String getborrowIdByProductId(Map<String, Object> params);
 
-	Long countBatchCenter(BatchCenterCustomize batchCenterCustomize);
+    Integer countBatchCenter(BatchCenterCustomize batchCenterCustomize);
 
 	List<BatchCenterCustomizeVO> selectBatchCenterList(BatchCenterCustomize batchCenterCustomize);
 

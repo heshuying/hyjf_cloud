@@ -22,7 +22,7 @@ public class BatchHjhBorrowRepayApiServiceImpl extends BaseServiceImpl implement
 	 * countBatchCenter
 	 */
 	@Override
-	public Long countBatchCenter(BatchCenterCustomize batchCenterCustomize) {
+	public Integer countBatchCenter(BatchCenterCustomize batchCenterCustomize) {
 		return borrowClient.countBatchCenter(batchCenterCustomize);
 	}
 
