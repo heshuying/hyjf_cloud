@@ -6,7 +6,7 @@
  * @version: 1.0
  * Created at: 2018年1月8日 下午5:22:51
  * Modification History:
- * Modified by : 
+ * Modified by :
  */
 
 /**
@@ -30,7 +30,6 @@ public interface IncreaseInterestRepayCustomizeMapper {
      * @param example
      * @return
      */
-    String sumAccount(IncreaseInterestRepayExample example);
+    public String sumAccount(IncreaseInterestRepayExample example);
 }
 
-	
