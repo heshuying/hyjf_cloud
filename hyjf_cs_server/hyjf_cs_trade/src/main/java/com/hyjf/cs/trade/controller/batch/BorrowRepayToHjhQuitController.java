@@ -10,6 +10,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetCode;
+import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.HjhQuitProducer;
 import com.hyjf.cs.trade.service.batch.BorrowRepayToHjhQuitService;
@@ -31,7 +32,7 @@ import java.util.UUID;
 @ApiIgnore
 @RestController
 @RequestMapping("/borrowRepay")
-public class BorrowRepayToHjhQuitController {
+public class BorrowRepayToHjhQuitController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(BorrowRepayToHjhQuitController.class);
 
     @Autowired
