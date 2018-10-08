@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.ProtocolLog;
 import com.hyjf.am.trade.dao.model.auto.ProtocolLogExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ProtocolLogMapper {
     int countByExample(ProtocolLogExample example);

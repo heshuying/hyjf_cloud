@@ -85,6 +85,10 @@ public class SyncRUserConsumer extends Consumer {
                     
                     syncRUserService.insertUser(jsonObj);
 
+                } else if ("up_ht_user".equals(tagName)) {
+
+                    syncRUserService.updateUser(jsonObj);
+
                 } else if ("ht_spreads_user".equals(tagName)) {
                     
                     syncRUserService.updateSpreadUser(jsonObj);
