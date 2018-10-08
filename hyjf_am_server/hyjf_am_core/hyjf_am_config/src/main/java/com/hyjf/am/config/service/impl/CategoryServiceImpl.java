@@ -215,7 +215,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
         //智齿客服状态
         if (contentHelpCustomize.getZhiChiStatus() != null) {
-            conCriteria.andZhiChiStatusEqualTo(contentHelpCustomize.getZhiChiStatus());
+            conCriteria.andZhichiStatusEqualTo(contentHelpCustomize.getZhiChiStatus());
         }
         con.setLimitStart(0);
         con.setLimitEnd(5);
@@ -272,7 +272,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
         //智齿客服状态
         if (contentHelpBeanRequest.getZhiChiStatus() != null) {
-            conCriteria.andZhiChiStatusEqualTo(contentHelpBeanRequest.getZhiChiStatus());
+            conCriteria.andZhichiStatusEqualTo(contentHelpBeanRequest.getZhiChiStatus());
         }
 
         if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_begin())) {
