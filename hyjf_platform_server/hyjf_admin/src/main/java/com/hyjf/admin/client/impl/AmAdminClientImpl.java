@@ -5,10 +5,7 @@ import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.bean.admin.LockedConfig;
-import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
@@ -1183,5 +1180,30 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getCount();
         }
         return 0;
+    }
+
+    @Override
+    public EmailRecipientResponse getRecordList(EmailRecipientRequest recipientRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/sell_daily_email/getRecordList", recipientRequest, EmailRecipientResponse.class).getBody();
+    }
+
+    @Override
+    public EmailRecipientResponse getRecordById(EmailRecipientRequest recipientRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/sell_daily_email/getRecordById", recipientRequest, EmailRecipientResponse.class).getBody();
+    }
+
+    @Override
+    public EmailRecipientResponse updateEmailRecipient(EmailRecipientRequest recipientRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/sell_daily_email/updateEmailRecipient", recipientRequest, EmailRecipientResponse.class).getBody();
+    }
+
+    @Override
+    public EmailRecipientResponse forbiddenAction(EmailRecipientRequest recipientRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/sell_daily_email/forbiddenAction", recipientRequest, EmailRecipientResponse.class).getBody();
+    }
+
+    @Override
+    public EmailRecipientResponse insertAction(EmailRecipientRequest recipientRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/sell_daily_email/insertAction", recipientRequest, EmailRecipientResponse.class).getBody();
     }
 }
