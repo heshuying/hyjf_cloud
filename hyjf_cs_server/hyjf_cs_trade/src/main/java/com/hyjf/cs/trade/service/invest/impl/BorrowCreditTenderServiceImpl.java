@@ -619,7 +619,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignAccountList.setTradeCode("balance");
                 assignAccountList.setTotal(assignAccount.getTotal());
                 assignAccountList.setBalance(assignAccount.getBalance());
-                assignAccountList.setBankBalance(assignAccountNew.getBankBalance().subtract(assignAccount.getBankBalance()));
+                assignAccountList.setBankBalance(assignAccount.getBankBalance().subtract(assignAccountNew.getBankBalance()));
                 assignAccountList.setBankAwait(assignAccountNew.getBankAwait().add(assignAccount.getBankAwait()));
                 assignAccountList.setBankAwaitCapital(assignAccountNew.getBankAwaitCapital().add(assignAccount.getBankAwaitCapital()));
                 assignAccountList.setBankAwaitInterest(assignAccountNew.getBankAwaitInterest().add(assignAccount.getBankAwaitInterest()));
