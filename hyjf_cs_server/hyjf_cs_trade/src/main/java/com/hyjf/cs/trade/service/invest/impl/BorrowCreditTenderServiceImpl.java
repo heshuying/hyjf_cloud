@@ -658,7 +658,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 AccountVO sellerAccountNew = new AccountVO();
                 sellerAccountNew.setUserId(sellerUserId);
                 // 银行可用余额
-                sellerAccountNew.setBankBalance(creditTender.getAssignPay().add(creditTender.getCreditFee()));
+                sellerAccountNew.setBankBalance(creditTender.getAssignPay().subtract(creditTender.getCreditFee()));
                 // 银行总资产
                 sellerAccountNew.setBankTotal(creditTender.getAssignPay().subtract(creditTender.getCreditFee()).subtract(creditTender.getAssignAccount()));
                 // 出让人待收金额
