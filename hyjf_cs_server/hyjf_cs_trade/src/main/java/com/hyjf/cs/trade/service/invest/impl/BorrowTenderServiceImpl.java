@@ -1089,9 +1089,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String url = "";
         // 计划不需要跳转江西银行, 不能使用前端投资的统一页面，所以针对计划单独跳转前端处理页面
         if (CommonConstant.TENDER_TYPE_HJH.equalsIgnoreCase(borrowType)){
+            // 计划的
+            hjhTenderService.checkPlan(tender);
             requestType = "9";
             requestMapping = "/join/plan?requestType=";
         }else if (CommonConstant.TENDER_TYPE_CREDIT.equalsIgnoreCase(borrowType)){
+            // 债转的
+            borrowTenderService.borrowCreditCheck(tender);
             requestType = "10";
             url = baseUrl + requestMapping + requestType;
             String creditNid = (StringUtils.isNotBlank(tender.getBorrowNid()) && tender.getBorrowNid().length() >3) ? tender.getBorrowNid().substring(3) : "";
@@ -1100,12 +1104,61 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             logger.info("url:[{}]",url);
             return url;
         }
+        // 散标的
+        appTenderCheck(tender);
         url = baseUrl + requestMapping + requestType;
         //String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/hyjf-app/user/invest/tender?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
         logger.info("url:[{}]",url);
         return url;
     }
+
+    /**
+     * 债转投资校验
+     * @param tender
+     */
+    private void appCreditTenderCheck(TenderRequest tender) {
+
+    }
+
+    /**
+     * 散标投资校验
+     * @param request
+     */
+    private void appTenderCheck(TenderRequest request) {
+        UserVO loginUser = amUserClient.findUserById(request.getUserId());
+        Integer userId = loginUser.getUserId();
+        logger.info("开始检查散标投资参数,userId:{}", userId);
+        request.setUser(loginUser);
+        request.setUserName(loginUser.getUsername());
+        // 设置redis 用户正在投资
+        String key = RedisConstants.BORROW_TENDER_REPEAT + userId;
+        boolean checkTender = RedisUtils.tranactionSet(key, RedisConstants.TENDER_OUT_TIME);
+        if(!checkTender){
+            // 用户正在投资
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
+        }
+        if (StringUtils.isEmpty(request.getBorrowNid())) {
+            // 项目编号不能为空
+            throw new CheckException(MsgEnum.STATUS_CE000013);
+        }
+        // 查询选择的优惠券
+        CouponUserVO cuc = null;
+        if (request.getCouponGrantId() != null && request.getCouponGrantId() > 0) {
+            cuc = amTradeClient.getCouponUser(request.getCouponGrantId(), userId);
+        }
+        // 查询散标是否存在
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
+        BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(request.getBorrowNid());
+        if (borrow == null) {
+            throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
+        }
+        BankOpenAccountVO account = amUserClient.selectBankAccountById(userId);
+        logger.info("散标投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
+        borrowTenderCheck(request,borrow,borrowInfoVO,cuc,account);
+        logger.info("所有参数都已检查通过!");
+    }
+
 
     /**
      * 微信端获取投资信息
