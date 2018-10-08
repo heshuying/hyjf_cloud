@@ -202,7 +202,7 @@ public class SmsCountController extends BaseController {
         if (!CollectionUtils.isEmpty(listSms)) {
             for (SmsCountCustomizeVO vo : listSms) {
                 smsNumber += vo.getSmsNumber();
-                smsMoney = smsMoney.multiply(new BigDecimal(vo.getSmsMoney()));
+                smsMoney = smsMoney.multiply(new BigDecimal(configMoney).multiply(new BigDecimal(vo.getSmsNumber())));
             }
         }
 
