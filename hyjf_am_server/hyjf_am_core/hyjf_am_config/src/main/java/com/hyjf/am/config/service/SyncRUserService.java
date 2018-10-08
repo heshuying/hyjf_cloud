@@ -8,6 +8,8 @@ public interface SyncRUserService{
 
     void insertUser(JSONObject jsonObj);
 
+    void updateUser(JSONObject jsonObj);
+
     void updateSpreadUser(JSONObject jsonObj);
 
 }

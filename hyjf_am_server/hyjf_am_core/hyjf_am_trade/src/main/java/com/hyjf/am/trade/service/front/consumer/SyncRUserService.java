@@ -9,6 +9,8 @@ import com.hyjf.am.trade.service.BaseService;
 
     void insertUser(JSONObject jsonObj);
 
+    void updateUser(JSONObject jsonObj);
+
     void updateSpreadUser(JSONObject jsonObj);
 
 }
