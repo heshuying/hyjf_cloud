@@ -48,6 +48,8 @@ public class ContentHelp implements Serializable {
 
     private Date updateTime;
 
+    private Integer zhichiStatus;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -224,5 +226,13 @@ public class ContentHelp implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getZhichiStatus() {
+        return zhichiStatus;
+    }
+
+    public void setZhichiStatus(Integer zhichiStatus) {
+        this.zhichiStatus = zhichiStatus;
     }
 }

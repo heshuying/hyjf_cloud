@@ -9,6 +9,7 @@
     <result column="truename" property="truename" jdbcType="VARCHAR" />
     <result column="attribute" property="attribute" jdbcType="INTEGER" />
     <result column="spreads_user_id" property="spreadsUserId" jdbcType="INTEGER" />
+    <result column="user_type" property="userType" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -71,8 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, username, mobile, role_id, truename, `attribute`, spreads_user_id, create_time, 
-    update_time
+    user_id, username, mobile, role_id, truename, `attribute`, spreads_user_id, user_type, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.RUserExample" >
     select
@@ -110,12 +111,12 @@
   <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.RUser" >
     insert into ht_r_user (user_id, username, mobile, 
       role_id, truename, `attribute`, 
-      spreads_user_id, create_time, update_time
-      )
+      spreads_user_id, user_type, create_time, 
+      update_time)
     values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, 
       #{roleId,jdbcType=TINYINT}, #{truename,jdbcType=VARCHAR}, #{attribute,jdbcType=INTEGER}, 
-      #{spreadsUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{spreadsUserId,jdbcType=INTEGER}, #{userType,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.RUser" >
     insert into ht_r_user
@@ -140,6 +141,9 @@
       </if>
       <if test="spreadsUserId != null" >
         spreads_user_id,
+      </if>
+      <if test="userType != null" >
+        user_type,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -169,6 +173,9 @@
       </if>
       <if test="spreadsUserId != null" >
         #{spreadsUserId,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -208,6 +215,9 @@
       <if test="record.spreadsUserId != null" >
         spreads_user_id = #{record.spreadsUserId,jdbcType=INTEGER},
       </if>
+      <if test="record.userType != null" >
+        user_type = #{record.userType,jdbcType=TINYINT},
+      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -228,6 +238,7 @@
       truename = #{record.truename,jdbcType=VARCHAR},
       `attribute` = #{record.attribute,jdbcType=INTEGER},
       spreads_user_id = #{record.spreadsUserId,jdbcType=INTEGER},
+      user_type = #{record.userType,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -255,6 +266,9 @@
       <if test="spreadsUserId != null" >
         spreads_user_id = #{spreadsUserId,jdbcType=INTEGER},
       </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=TINYINT},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -272,6 +286,7 @@
       truename = #{truename,jdbcType=VARCHAR},
       `attribute` = #{attribute,jdbcType=INTEGER},
       spreads_user_id = #{spreadsUserId,jdbcType=INTEGER},
+      user_type = #{userType,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where user_id = #{userId,jdbcType=INTEGER}

@@ -3,9 +3,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyleWithBLOBs;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BorrowStyleMapper {
     int countByExample(BorrowStyleExample example);

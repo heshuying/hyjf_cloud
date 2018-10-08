@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.ManualReverse;
 import com.hyjf.am.trade.dao.model.auto.ManualReverseExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ManualReverseMapper {
     int countByExample(ManualReverseExample example);
