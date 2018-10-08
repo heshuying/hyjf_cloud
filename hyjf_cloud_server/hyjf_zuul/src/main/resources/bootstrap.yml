@@ -26,7 +26,7 @@ management:
 # ribbon超时时间设置 - 使用serviceId路由超时策略
 ribbon:
   ConnectTimeout: 10000
-  ReadTimeout: 30000
+  ReadTimeout: 15000
 
 hystrix:
   command:
