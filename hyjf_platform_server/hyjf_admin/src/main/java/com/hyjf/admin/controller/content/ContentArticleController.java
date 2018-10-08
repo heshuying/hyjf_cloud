@@ -103,7 +103,7 @@ public class ContentArticleController extends BaseController {
     }
 
     @ApiOperation(value = "文章管理-删除", notes = "文章管理-删除")
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.POST)
     public AdminResult delete(@PathVariable Integer id) {
         ContentArticleResponse response = contentArticleService.deleteById(id);
         if (response == null) {
