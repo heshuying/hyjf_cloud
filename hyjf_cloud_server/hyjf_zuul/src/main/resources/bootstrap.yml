@@ -32,8 +32,12 @@ management:
 #      path: 123
 # ribbon超时时间设置 - 使用serviceId路由超时策略
 ribbon:
-  ConnectTimeout: 60000
-  ReadTimeout: 60000
+  ConnectTimeout: 30000
+  ReadTimeout: 30000
+  #不重试
+  MaxAutoRetries: 0
+  #不尝试下一台机器
+  MaxAutoRetriesNextServer: 0
 
 hystrix:
   command:
