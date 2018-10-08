@@ -133,6 +133,7 @@ public class AdminAssetListController extends BaseController {
 	    mapParam.put("statusSrch", request.getStatusSrch());
 	    mapParam.put("recieveTimeStartSrch", request.getRecieveTimeStartSrch());
 	    mapParam.put("recieveTimeEndSrch", request.getRecieveTimeEndSrch());
+		mapParam.put("userTypeSrch", request.getUserTypeSrch());
 	    return mapParam;
 	}
 }
