@@ -14,7 +14,7 @@ public class HjhPlanCapital implements Serializable {
 
     private String id;
 
-    private String date;
+    private Date date;
 
     private String planNid;
 
@@ -46,11 +46,11 @@ public class HjhPlanCapital implements Serializable {
         this.id = id;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
