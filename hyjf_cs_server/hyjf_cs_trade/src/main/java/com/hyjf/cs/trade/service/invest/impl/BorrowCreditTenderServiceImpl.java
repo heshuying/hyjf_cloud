@@ -618,7 +618,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignAccountList.setTradeCode("balance");
                 assignAccountList.setTotal(assignAccount.getTotal());
                 assignAccountList.setBalance(assignAccount.getBalance());
-                assignAccountList.setBankBalance(assignAccountNew.getBankBalance().add(assignAccount.getBankBalance()));
+                assignAccountList.setBankBalance(assignAccountNew.getBankBalance().subtract(assignAccount.getBankBalance()));
                 assignAccountList.setBankAwait(assignAccountNew.getBankAwait().add(assignAccount.getBankAwait()));
                 assignAccountList.setBankAwaitCapital(assignAccountNew.getBankAwaitCapital().add(assignAccount.getBankAwaitCapital()));
                 assignAccountList.setBankAwaitInterest(assignAccountNew.getBankAwaitInterest().add(assignAccount.getBankAwaitInterest()));
@@ -657,7 +657,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 AccountVO sellerAccountNew = new AccountVO();
                 sellerAccountNew.setUserId(sellerUserId);
                 // 银行可用余额
-                sellerAccountNew.setBankBalance(creditTender.getAssignPay().subtract(creditTender.getCreditFee()));
+                sellerAccountNew.setBankBalance(creditTender.getAssignPay().add(creditTender.getCreditFee()));
                 // 银行总资产
                 sellerAccountNew.setBankTotal(creditTender.getAssignPay().subtract(creditTender.getCreditFee()).subtract(creditTender.getAssignAccount()));
                 // 出让人待收金额
@@ -727,7 +727,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 sellerAccountList.setIsBank(1);
                 sellerAccountList.setCheckStatus(0);
                 // 插入交易明细
-               // 6.更新Borrow_recover
+                // 6.更新Borrow_recover
                 if (borrowRecover != null) {
                     // 不分期
                     if (!isMonth) {
@@ -1012,12 +1012,13 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     // 4.添加网站收支明细  // 发送mq更新添加网站收支明细
                     // 服务费大于0时,插入网站收支明细
                     if (creditTender.getCreditFee().compareTo(BigDecimal.ZERO) > 0) {
+                        BigDecimal money = creditTender.getCreditFee().setScale(2,BigDecimal.ROUND_DOWN);
                         // 插入网站收支明细记录
                         logger.info("网站收支明细记录 mq ");
                         AccountWebListVO accountWebList = new AccountWebListVO();
                         accountWebList.setOrdid(logOrderId);
                         accountWebList.setBorrowNid(creditTender.getBidNid());
-                        accountWebList.setAmount(Double.valueOf(creditTender.getCreditFee().toString()));
+                        accountWebList.setAmount(Double.valueOf(money.toString()));
                         accountWebList.setType(1);
                         accountWebList.setTrade("CREDITFEE");
                         accountWebList.setTradeType("债转服务费");
