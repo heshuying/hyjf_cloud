@@ -32,7 +32,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping("/am-admin/activity")
+@RequestMapping("/am-market/activity")
 public class ActivityController {
     private static final Logger logger = LoggerFactory.getLogger(ActivityController.class);
 
