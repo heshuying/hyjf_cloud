@@ -22,17 +22,18 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-zuul:
-  host:
-    connect-timeout-millis: 10000
-    socket-timeout-millis: 60000
-  routes:
-    ser:
-      path: 123
+# 使用url路由超时策略
+#zuul:
+#  host:
+#    connect-timeout-millis: 60000
+#    socket-timeout-millis: 60000
+#  routes:
+#    ser:
+#      path: 123
+# ribbon超时时间设置 - 使用serviceId路由超时策略
 ribbon:
-  ConnectTimeout: 1000
-  ReadTimeout: 6000
+  ConnectTimeout: 60000
+  ReadTimeout: 60000
 
 hystrix:
   command:

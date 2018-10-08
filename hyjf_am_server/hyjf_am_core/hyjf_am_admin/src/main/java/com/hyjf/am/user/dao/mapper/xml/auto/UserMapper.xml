@@ -655,17 +655,4 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
-  <select id="selectUserByListUserId" resultMap="BaseResultMap" parameterType="list" >
-    select
-    <include refid="Base_Column_List" />
-    from ht_user
-    <where>
-      <if test="list != null">
-        user_id in
-        <foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
-          #{item}
-        </foreach>
-      </if>
-    </where>
-  </select>
 </mapper>

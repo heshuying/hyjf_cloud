@@ -519,10 +519,7 @@ public class ContentHelpExample {
             addCriterion("`status` =", value, "status");
             return (Criteria) this;
         }
-        public Criteria andZhiChiStatusEqualTo(Integer value) {
-            addCriterion("`zhichi_status` =", value, "zhiChiStatus");
-            return (Criteria) this;
-        }
+
         public Criteria andStatusNotEqualTo(Integer value) {
             addCriterion("`status` <>", value, "status");
             return (Criteria) this;
@@ -1555,6 +1552,66 @@ public class ContentHelpExample {
 
         public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
             addCriterion("update_time not between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusIsNull() {
+            addCriterion("zhichi_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusIsNotNull() {
+            addCriterion("zhichi_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusEqualTo(Integer value) {
+            addCriterion("zhichi_status =", value, "zhichiStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusNotEqualTo(Integer value) {
+            addCriterion("zhichi_status <>", value, "zhichiStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusGreaterThan(Integer value) {
+            addCriterion("zhichi_status >", value, "zhichiStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("zhichi_status >=", value, "zhichiStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusLessThan(Integer value) {
+            addCriterion("zhichi_status <", value, "zhichiStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("zhichi_status <=", value, "zhichiStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusIn(List<Integer> values) {
+            addCriterion("zhichi_status in", values, "zhichiStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusNotIn(List<Integer> values) {
+            addCriterion("zhichi_status not in", values, "zhichiStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusBetween(Integer value1, Integer value2) {
+            addCriterion("zhichi_status between", value1, value2, "zhichiStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andZhichiStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("zhichi_status not between", value1, value2, "zhichiStatus");
             return (Criteria) this;
         }
     }

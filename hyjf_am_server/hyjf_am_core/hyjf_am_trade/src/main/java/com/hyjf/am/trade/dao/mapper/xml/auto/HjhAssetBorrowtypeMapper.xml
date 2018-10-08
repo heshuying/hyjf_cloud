@@ -381,7 +381,7 @@
       <if test="autoReview != null" >
         auto_review = #{autoReview,jdbcType=TINYINT},
       </if>
-      <if test="autoSendMinutes != null " >
+      <if test="autoSendMinutes != null" >
         auto_send_minutes = #{autoSendMinutes,jdbcType=INTEGER},
       </if>
       <if test="autoReviewMinutes != null" >
