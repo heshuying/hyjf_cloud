@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller.front.hjh;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.trade.service.front.trade.PlanCapitalService;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
+import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -34,9 +35,9 @@ public class PlanCapitalController {
      * @return
      */
     @GetMapping("/getPlanCapitalForActList/{date}")
-    public HjhPlanCapitalResponse getPlanCapitalForActList(@PathVariable(value = "date") Date date){
+    public HjhPlanCapitalResponse getPlanCapitalForActList(@PathVariable(value = "date") String date){
         HjhPlanCapitalResponse response = new HjhPlanCapitalResponse();
-        List<HjhPlanCapitalVO> list = this.planCapitalService.getPlanCapitalForActList(date);
+        List<HjhPlanCapitalVO> list = this.planCapitalService.getPlanCapitalForActList(GetDate.stringToDate2(date));
         if (!CollectionUtils.isEmpty(list)) {
             response.setResultList(list);
         }
@@ -50,10 +51,10 @@ public class PlanCapitalController {
      * @return
      */
     @GetMapping("/getPlanCapitalForProformaList/{fromDate}/{toDate}")
-    public HjhPlanCapitalResponse getPlanCapitalForProformaList(@PathVariable(value = "fromDate") Date fromDate,
-                                                                @PathVariable(value = "toDate") Date toDate){
+    public HjhPlanCapitalResponse getPlanCapitalForProformaList(@PathVariable(value = "fromDate") String fromDate,
+                                                                @PathVariable(value = "toDate") String toDate){
         HjhPlanCapitalResponse response = new HjhPlanCapitalResponse();
-        List<HjhPlanCapitalVO> list = this.planCapitalService.getPlanCapitalForProformaList(fromDate, toDate);
+        List<HjhPlanCapitalVO> list = this.planCapitalService.getPlanCapitalForProformaList(GetDate.stringToDate2(fromDate), GetDate.stringToDate2(toDate));
         if (!CollectionUtils.isEmpty(list)) {
             response.setResultList(list);
         }

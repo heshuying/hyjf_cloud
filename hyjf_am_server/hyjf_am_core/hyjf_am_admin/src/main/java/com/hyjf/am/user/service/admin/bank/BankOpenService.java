@@ -1,4 +1,4 @@
-package com.hyjf.am.config.service;
+package com.hyjf.am.user.service.admin.bank;
 
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;

@@ -170,29 +170,6 @@ public class AssetListController extends BaseController {
 		if(CollectionUtils.isNotEmpty(response.getResultList())){
 			// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
 			volist = CommonUtils.convertBeanList(response.getResultList(), AdminAssetListCustomizeVO.class);
-			//绑定user_type
-			if(!org.springframework.util.CollectionUtils.isEmpty(volist)){
-				List<String> listUserId = new ArrayList<String>();
-				Map<String, String> userTypeMap = CacheUtil.getParamNameMap("USER_TYPE");
-				for(AdminAssetListCustomizeVO assList : volist){
-					//拼接用户id
-					if (StringUtils.isNotEmpty(assList.getUserId())){
-						listUserId.add(assList.getUserId());
-					}
-				}
-				//根据用户id查询am-user中的user_type
-				List<UserVO> user = userCenterService.selectUserByListUserId(listUserId);
-				if(!org.springframework.util.CollectionUtils.isEmpty(user)){
-					//拆解user组装bean
-					for(AdminAssetListCustomizeVO assListAddUser : volist){
-						for (UserVO userVO : user){
-							if(StringUtils.isNotEmpty(assListAddUser.getUserId()) && userVO.getUserId() != null && assListAddUser.getUserId().equals(userVO.getUserType() != null ? String.valueOf(userVO.getUserType()) : null)){
-								assListAddUser.setUserType(userTypeMap.getOrDefault(userVO.getUserType() != null ? String.valueOf(userVO.getUserType()) : null,null));
-							}
-						}
-					}
-				}
-			}
 			return new AdminResult<ListResult<AdminAssetListCustomizeVO>>(ListResult.build(volist, response.getCount()));
 		} else {
 			return new AdminResult<ListResult<AdminAssetListCustomizeVO>>(ListResult.build(volist, 0));
