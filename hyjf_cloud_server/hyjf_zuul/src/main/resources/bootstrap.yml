@@ -22,22 +22,11 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-# 使用url路由超时策略
-#zuul:
-#  host:
-#    connect-timeout-millis: 60000
-#    socket-timeout-millis: 60000
-#  routes:
-#    ser:
-#      path: 123
+
 # ribbon超时时间设置 - 使用serviceId路由超时策略
 ribbon:
-  ConnectTimeout: 30000
-  ReadTimeout: 30000
-  #不重试
-  MaxAutoRetries: 0
-  #不尝试下一台机器
-  MaxAutoRetriesNextServer: 0
+  ConnectTimeout: 10000
+  ReadTimeout: 15000
 
 hystrix:
   command:

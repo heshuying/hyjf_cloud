@@ -35,6 +35,16 @@ public class BestCouponListVO  extends CouponConfigVO {
 
     private String delFlg;
 
+    private Integer addFlg;
+
+    public Integer getAddFlg() {
+        return addFlg;
+    }
+
+    public void setAddFlg(Integer addFlg) {
+        this.addFlg = addFlg;
+    }
+
     public String getUserCouponId() {
         return userCouponId;
     }

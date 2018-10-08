@@ -156,16 +156,13 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             fileP = couponCheck.getFilePath();
             fileN = couponCheck.getFileName();
         }
-
-        OutputStream out = null;
         try {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
-            response.setContentType("application/vnd.ms-excel;utf-8");
-            FileInputStream in = new FileInputStream(fileP);
 
+            FileInputStream in = new FileInputStream(fileP);
             // 创建输出流
-            out = response.getOutputStream();
+            OutputStream out = response.getOutputStream();
             // 创建缓冲区
             byte buffer[] = new byte[1024];
             int len = 0;
@@ -174,19 +171,12 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 // 输出缓冲区内容到浏览器，实现文件下载
                 out.write(buffer, 0, len);
             }
-
+            // 关闭文件流
+            in.close();
+            // 关闭输出流
+            out.close();
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                // 关闭输出流
-                if (Validator.isNotNull(out)) {
-                    out.flush();
-                    out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
         }
     }
 
