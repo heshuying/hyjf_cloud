@@ -130,7 +130,7 @@ public class WebAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
     @PostMapping(value = "/creditbgreturn")
-    public String userCreditBgreturn( BankCallBean bean) {
+    public String userCreditBgreturn(@RequestBody BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean, BankCallConstant.QUERY_TYPE_2);
         return result;
     }
@@ -142,7 +142,7 @@ public class WebAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @PostMapping(value = "/invesbgreturn")
-    public String userInvesAuthBgreturn(BankCallBean bean) {
+    public String userInvesAuthBgreturn(@RequestBody BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean, BankCallConstant.QUERY_TYPE_1);
         return result;
     }
