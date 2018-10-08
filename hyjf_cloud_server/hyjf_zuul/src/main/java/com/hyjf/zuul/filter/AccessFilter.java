@@ -340,12 +340,11 @@ public class AccessFilter extends ZuulFilter {
             logger.info("sign:" + sign);
             // 获取用户ID
             AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-            logger.info("appUserToken:" + appUserToken.getUserId());
             if (appUserToken == null || appUserToken.getUserId() == null) {
                 logger.error("token invalid...");
                 return executeResultOfTokenInvalid(ctx, isNecessary, GatewayConstant.WECHAT_CHANNEL);
             }
-
+            logger.info("appUserToken:" + appUserToken.getUserId());
             Integer userId = appUserToken.getUserId();
             String accountId = appUserToken.getAccountId();
             // 需要刷新 sign
