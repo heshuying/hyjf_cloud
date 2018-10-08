@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BorrowCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
@@ -82,7 +83,11 @@ public class BorrowCommonController extends BaseController {
 	private BorrowCommonService borrowCommonService;
 	@Autowired
 	private  CustomerTransferService  customerTransferService;
-
+    /**
+     * 引入配置文件
+     */
+    @Autowired
+    private SystemConfig systemConfig;
 
 	/**
      * 迁移到详细画面
@@ -1765,6 +1770,7 @@ public class BorrowCommonController extends BaseController {
 
 		bcr.setSt(CacheUtil.getParamNameMap("ASSET_STATUS"));
 		bcr.setResultList(vo2);
+		bcr.setWebUrl(systemConfig.getWebPdfHost());
 		return new AdminResult<BorrowCustomizeResponse>(bcr);
     }
 	/**
