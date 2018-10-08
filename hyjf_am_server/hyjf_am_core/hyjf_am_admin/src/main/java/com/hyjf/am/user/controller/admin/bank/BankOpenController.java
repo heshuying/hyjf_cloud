@@ -1,7 +1,7 @@
-package com.hyjf.am.config.controller.admin.bank;
+package com.hyjf.am.user.controller.admin.bank;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.config.service.BankOpenService;
+import com.hyjf.am.user.service.admin.bank.BankOpenService;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.BankCardResponse;

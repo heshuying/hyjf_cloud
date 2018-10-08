@@ -4169,13 +4169,13 @@ public class AmTradeClientImpl implements AmTradeClient {
      **/
     @Override
     public Integer getCountBatchCenter(BatchBorrowRecoverRequest request) {
-        Integer result = restTemplate.postForEntity(
+        IntegerResponse result = restTemplate.postForEntity(
                 "http://AM-TRADE/am-trade/adminBatchBorrowRecover/getListTotal/", request,
-                Integer.class).getBody();
+                IntegerResponse.class).getBody();
         if (result == null) {
             return 0;
         }
-        return result;
+        return result.getResultInt();
     }
 
     /**
@@ -4850,12 +4850,12 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public Long countBatchCenter (BatchCenterCustomize batchCenterCustomize){
-        Long result =  restTemplate.postForEntity(
+    public Integer countBatchCenter (BatchCenterCustomize batchCenterCustomize){
+        IntegerResponse result =  restTemplate.postForEntity(
         "http://AM-TRADE/am-trade/borrow/countBatchCenter/", batchCenterCustomize,
-                Long.class).getBody();
+                IntegerResponse.class).getBody();
         if (result != null) {
-            return result;
+            return result.getResultInt();
         }
         return null;
     }

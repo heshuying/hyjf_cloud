@@ -7,6 +7,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author lb
@@ -16,7 +17,7 @@ public class HjhPlanCapitalVO extends BaseVO implements Serializable {
 
     private String id;
 
-    private String date;
+    private Date date;
 
     private String planNid;
 
@@ -50,11 +51,11 @@ public class HjhPlanCapitalVO extends BaseVO implements Serializable {
         this.id = id;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
