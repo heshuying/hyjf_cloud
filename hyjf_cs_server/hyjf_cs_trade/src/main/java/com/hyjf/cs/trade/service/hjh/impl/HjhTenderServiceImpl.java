@@ -457,6 +457,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             resultVo.setInvestmentDescription(resultVo.getInitMoney() + "元起投," + resultVo.getIncreaseMoney() + "元递增");
             // 开放额度剩余金额
             resultVo.setBorrowAccountWait(CommonUtils.formatAmount(null, borrowAccountWait));
+            resultVo.setBorrowAccountWait1(borrowAccountWait);
             BigDecimal tmpmoney = balance.subtract(plan.getMinInvestment()).divide(plan.getInvestmentIncrement(), 0, BigDecimal.ROUND_DOWN)
                     .multiply(plan.getInvestmentIncrement()).add(plan.getMinInvestment());
             if (balance.subtract(plan.getMinInvestment()).compareTo(new BigDecimal("0")) < 0) {
