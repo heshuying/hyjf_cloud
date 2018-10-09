@@ -7,7 +7,7 @@ import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.AssociatedRecordsService;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +41,7 @@ public class AssociatedRecordsServiceImpl extends BaseServiceImpl implements Ass
      * @return
      */
     @Override
-    public List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request) {
+    public List<AssociatedRecordListVO> getAssociatedRecordList(AssociatedRecordListRequest request) {
         return csMessageClient.getAssociatedRecordList(request);
     }
 }

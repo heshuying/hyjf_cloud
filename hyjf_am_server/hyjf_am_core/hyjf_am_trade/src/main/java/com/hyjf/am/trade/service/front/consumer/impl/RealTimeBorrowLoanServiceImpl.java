@@ -327,8 +327,8 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 					// 更新任务API状态
 					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SUCCESS);
 					if (apicronResultFlag) {
-						loanResult.setRetCode(BankCallConstant.RESPCODE_SUCCESS);
-						return loanResult;
+//						loanResult.setRetCode(BankCallConstant.RESPCODE_SUCCESS);
+						return result;
 					} else {
 						throw new Exception("更新状态为（放款处理成功）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
 					}
@@ -1688,9 +1688,9 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		SmsMessage borrowerSmsMessage = new SmsMessage(borrowUserId, borrowerReplaceStrs, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_JIEKUAN_SUCCESS,
 				CustomConstants.CHANNEL_TYPE_NORMAL);
 		try {
-			mailProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowerSmsMessage)));
+			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowerSmsMessage)));
 		} catch (MQException e2) {
-			logger.error("发送邮件失败..", e2);
+			logger.error("发送短信失败..", e2);
 		}
 
 	}
@@ -1703,9 +1703,9 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		try {
-			mailProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 		} catch (MQException e2) {
-			logger.error("发送邮件失败..", e2);
+			logger.error("发送短信失败..", e2);
 		}
 
 	}

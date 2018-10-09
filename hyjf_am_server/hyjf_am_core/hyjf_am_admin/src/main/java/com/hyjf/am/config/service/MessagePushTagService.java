@@ -85,4 +85,11 @@ public interface MessagePushTagService {
      * @return
      */
     List<MessagePushTag> getTagList();
+
+    /**
+     * 根据标签id获取标签
+     * @param tagId
+     * @return
+     */
+    MessagePushTag getTagByTagId(Integer tagId);
 }

@@ -27,7 +27,7 @@ import java.util.Map;
  * @author: sunpeikai
  * @version: BankCardExceptionController, v0.1 2018/8/14 9:56
  */
-@Api(value = "异常中心-江西银行卡异常",tags = "异常中心-江西银行卡异常")
+@Api(value = "异常中心-汇付银行卡异常",tags = "异常中心-汇付银行卡异常")
 @RestController
 @RequestMapping(value = "/hyjf-admin/exception/bankcardexception")
 public class BankCardExceptionController extends BaseController {
