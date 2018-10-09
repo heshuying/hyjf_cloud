@@ -1976,7 +1976,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             appProjectType.setStatus(listCustomize.getStatus());
             appProjectType.setOnTime(listCustomize.getOnTime());
 
-            appProjectType.setMark("");
+            if ("ZXH".equals(listCustomize.getBorrowType())){
+                appProjectType.setMark("尊享");
+            }else if("RTB".equals(listCustomize.getBorrowType())){
+                appProjectType.setMark("优选");
+            }
             appProjectType.setBorrowType(listCustomize.getBorrowType());
             // 应客户端要求，返回空串
             CommonUtils.convertNullToEmptyString(appProjectType);

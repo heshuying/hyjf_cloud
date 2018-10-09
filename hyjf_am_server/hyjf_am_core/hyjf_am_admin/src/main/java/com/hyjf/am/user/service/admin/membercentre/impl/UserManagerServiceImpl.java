@@ -1077,8 +1077,8 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             user.setUserType(1);//企业用户
             user.setBankOpenAccount(1);//已开户
             int userFlag = this.updateUser(user);
-            if (userInfoFlag > 0) {
-                logger.info("=============用户详细信息保存成功==================");
+            if (userFlag > 0) {
+                logger.info("=============用户表信息保存成功==================");
             }else {
                  throw new RuntimeException("用户表信息保存异常!");
             }

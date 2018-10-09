@@ -39,7 +39,8 @@ public class AssetListRequest extends BasePage implements Serializable {
 	private String recieveTimeStartSrch;
 	// 推送时间
 	private String recieveTimeEndSrch;
-
+	// 资产类型
+	private String userTypeSrch;
 	public int limit;
 
 	private int paginatorPage = 1;
@@ -49,6 +50,9 @@ public class AssetListRequest extends BasePage implements Serializable {
 		}
 		return paginatorPage;
 	}
+
+	public String getUserTypeSrch() { return userTypeSrch; }
+	public void setUserTypeSrch(String userTypeSrch) { this.userTypeSrch = userTypeSrch; }
 	public void setPaginatorPage(int paginatorPage) {
 		this.paginatorPage = paginatorPage;
 	}

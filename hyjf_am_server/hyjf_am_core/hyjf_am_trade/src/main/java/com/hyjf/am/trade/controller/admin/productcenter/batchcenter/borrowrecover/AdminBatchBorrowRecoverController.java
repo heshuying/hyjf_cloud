@@ -39,6 +39,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
      */
     @ApiOperation(value = "放款列表查询总件数")
     @PostMapping("/getListTotal")
+    @ResponseBody
     public IntegerResponse getListTotal(@RequestBody BatchBorrowRecoverRequest request) {
         Integer count = batchBorrowRecoverService.getListTotal(request);
         IntegerResponse integerResponse = new IntegerResponse();
@@ -48,6 +49,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
 
     @ApiOperation(value = "放款列表查询")
     @PostMapping("/getList")
+    @ResponseBody
     public BatchBorrowRecoverReponse getList(@RequestBody BatchBorrowRecoverRequest request){
 
         BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
@@ -72,6 +74,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
 
     @ApiOperation(value = "获取列表求和用于显示")
     @PostMapping("/getListSum")
+    @ResponseBody
     public BatchBorrowRecoverReponse getListSum(@RequestBody BatchBorrowRecoverRequest request){
 
         BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
@@ -95,6 +98,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
 
     @ApiOperation(value = "根据id更新借款API表")
     @PostMapping("/updateBorrowApicronByPrimaryKeySelective")
+    @ResponseBody
     public boolean updateBorrowApicronByPrimaryKeySelective(@RequestBody String id){
         return batchBorrowRecoverService.updateBorrowApicronByPrimaryKeySelective(id);
     }

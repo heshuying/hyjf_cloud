@@ -1919,5 +1919,12 @@
             <columnOverride column="toggle" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <!-- 销售日报邮件配置表 -->
+        <table tableName="ht_sell_daily_distribution" domainObjectName="SellDailyDistribution">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="time_point" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
     </context>
 </generatorConfiguration>

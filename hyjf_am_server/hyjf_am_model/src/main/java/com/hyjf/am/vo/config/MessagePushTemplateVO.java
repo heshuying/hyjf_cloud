@@ -2,6 +2,7 @@ package com.hyjf.am.vo.config;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.models.auth.In;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,9 +12,9 @@ import java.util.Date;
  * @version MessagePushTemplateVO, v0.1 2018/5/4 10:42
  */
 public class MessagePushTemplateVO extends BaseVO implements Serializable {
-    private String id;
+    private Integer id;
 
-    private String tagId;
+    private Integer tagId;
 
     private String tagCode;
 
@@ -47,19 +48,19 @@ public class MessagePushTemplateVO extends BaseVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getTagId() {
+    public Integer getTagId() {
         return tagId;
     }
 
-    public void setTagId(String tagId) {
+    public void setTagId(Integer tagId) {
         this.tagId = tagId;
     }
 

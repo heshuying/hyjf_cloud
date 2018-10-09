@@ -103,17 +103,17 @@ public class RepayController extends BaseController {
         if (StringUtils.isBlank(info.getAccountId()) || StringUtils.isBlank(info.getBorrowNid()) || StringUtils.isBlank(info.getInstCode())) {
             throw new RuntimeException("参数非法,BorrowNid或accountId或instcode不得为空!");
         }
-        //验签
-        if (SignUtil.verifyRequestSign(info, "userRepayResult")) {
-            logger.info("-------------------验签失败！--------------------");
-            throw new RuntimeException("验签失败!");
-
-        }
+//        //验签
+//        if (SignUtil.verifyRequestSign(info, "userRepayResult")) {
+//            logger.info("-------------------验签失败！--------------------");
+//            throw new RuntimeException("验签失败!");
+//
+//        }
         BankOpenAccountVO bankOpenAccount = synBalanceService.getBankOpenAccount(info.getAccountId());
         if (bankOpenAccount == null) {
             logger.info("-------------------该用户没有在平台开户！--------------------");
-            throw new RuntimeException("该用户没有在平台开户!");
-        }
+        throw new RuntimeException("该用户没有在平台开户!");
+    }
         return bankOpenAccount;
     }
 
@@ -280,7 +280,7 @@ public class RepayController extends BaseController {
         batchCenterCustomize.setBorrowNid(repaybean.getBorrowNid());
         // 投资人 检索条件
         batchCenterCustomize.setApiType(1);
-        Long count = this.batchBorrowRepayService.countBatchCenter(batchCenterCustomize);
+        Integer count = this.batchBorrowRepayService.countBatchCenter(batchCenterCustomize);
         if (count != null && count > 0) {
             List<BatchCenterCustomizeVO> recordList = this.batchBorrowRepayService.selectBatchCenterList(batchCenterCustomize);
             BatchCenterCustomizeVO info = recordList.get(0);
