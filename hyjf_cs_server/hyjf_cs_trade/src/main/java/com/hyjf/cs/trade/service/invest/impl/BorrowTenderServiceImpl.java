@@ -266,7 +266,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_MONEY_LESS_NEED_BUY_ALL,balance);
             }
         } else {// 项目的剩余金额大于最低起投金额
-            if (accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {
+            if (min != null && min != 0 && accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {
                 if (accountBigDecimal.compareTo(BigDecimal.ZERO) == 0) {
                     if (cuc != null && cuc.getCouponType() != 3 && cuc.getCouponType() != 1) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,min);
@@ -277,10 +277,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             } else {
                 Integer max = borrow.getTenderAccountMax();
                 if (max != null && max != 0 && accountBigDecimal.compareTo(new BigDecimal(max)) == 1) {
-                    // "项目最大投资额为" + max + "元", "1"
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT,max);
                 }
             }
+
         }
         // 投资金额不能大于项目总额
         if (accountBigDecimal.compareTo(borrow.getAccount()) > 0) {
