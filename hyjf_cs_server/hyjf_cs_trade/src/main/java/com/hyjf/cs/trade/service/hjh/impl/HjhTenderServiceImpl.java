@@ -633,6 +633,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setTenderAccount(tenderAccount);
         // 体验金投资
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
+            // TODO: 2018/10/6   需要改成用mq 的
             logger.info("体验{},优惠金投资开始:userId:{},平台{},券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
             // 体验金投资
             couponService.couponTender(request, plan,  cuc, userId);
@@ -878,6 +879,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         planAccede.setRequest(request);
         // 插入汇计划加入明细表
+        logger.info("插入汇计划加入明细表  planAccede: {} ", JSONObject.toJSONString(planAccede) );
         boolean trenderFlag = amTradeClient.insertHJHPlanAccede(planAccede);
         logger.info("投资明细表插入完毕,userId{},平台{},结果{}", userId, request.getPlatform(), trenderFlag);
         if (trenderFlag) {
@@ -914,6 +916,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 params.put("userId", userId+"");
                 params.put("account", request.getAccount());
                 params.put("mainTenderNid", request.getMainTenderNid());
+                logger.info("加入计划 开始调用优惠券投资：{} ",JSONObject.toJSONString(params));
                 hjhCouponTenderProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 
             } catch (Exception e) {
@@ -1018,12 +1021,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 && new BigDecimal(balance).compareTo(minInvest) == -1) {
             if (accountBigDecimal.compareTo(new BigDecimal(balance)) == 1) {
                 // 剩余可加入金额为" + balance + "元
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_REMAIN);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_REMAIN,balance);
             }
             if (accountBigDecimal.compareTo(new BigDecimal(balance)) != 0) {
                 // 剩余可加入只剩" + balance + "元，须全部购买"
                 //CheckUtil.check();
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_LESS_NEED_BUY_ALL);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_LESS_NEED_BUY_ALL,balance);
             }
         }
         if (accountBigDecimal.compareTo(plan.getMinInvestment()) == -1) {
@@ -1031,18 +1034,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 if (cuc != null && cuc.getCouponType() != 3
                         && cuc.getCouponType() != 1) {
                     // plan.getMinInvestment() + "元起投"
-                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,plan.getMinInvestment());
                 }
             } else {
                 // plan.getMinInvestment() + "元起投"
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,plan.getMinInvestment());
             }
         }
         BigDecimal max = plan.getMaxInvestment();
         if (max != null && max.compareTo(BigDecimal.ZERO) != 0
                 && accountBigDecimal.compareTo(max) == 1) {
             // 项目最大加入额为" + max + "元
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT,max);
         }
         if (accountBigDecimal.compareTo(plan.getAvailableInvestAccount()) > 0) {
             // 加入金额不能大于开放额度
@@ -1062,7 +1065,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // redis剩余金额不足判断逻辑
         if (accountBigDecimal.compareTo(new BigDecimal(balance)) == 1) {
             // "项目太抢手了！剩余可加入金额只有" + balance + "元"
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_REMAIN);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_REMAIN,balance);
         }
         // 开放额度和阀值（1000）判断逻辑
         if (new BigDecimal(balance).compareTo(new BigDecimal(CustomConstants.TENDER_THRESHOLD)) == -1) {
@@ -1072,7 +1075,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 if (plan.getInvestmentIncrement() != null
                         && BigDecimal.ZERO.compareTo((accountBigDecimal.subtract(minInvest)).remainder(plan.getInvestmentIncrement())) != 0) {
                     // 加入递增金额须为" + plan.getInvestmentIncrement() + " 元的整数倍
-                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
                 }
             }
         } else {
@@ -1081,7 +1084,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     && BigDecimal.ZERO.compareTo(accountBigDecimal.subtract(minInvest).remainder(plan.getInvestmentIncrement())) != 0
                     && accountBigDecimal.compareTo(new BigDecimal(balance)) == -1) {
                 // 加入递增金额须为" + plan.getInvestmentIncrement() + " 元的整数倍
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
             }
         }
     }

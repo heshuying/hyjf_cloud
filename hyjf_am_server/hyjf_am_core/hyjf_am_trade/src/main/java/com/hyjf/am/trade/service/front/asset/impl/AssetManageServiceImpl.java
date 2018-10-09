@@ -170,8 +170,8 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
         Map<String, Object> mapParameter = createWechatParame(request);
         int total=assetManageCustomizeMapper.countCreditRecordTotal(mapParameter);
         if(total>0){
-            List<TenderCreditDetailCustomize> lst= assetManageCustomizeMapper.selectCreditRecordList(mapParameter);
-            for (TenderCreditDetailCustomize customize: lst) {
+            List<WechatTenderCreditListCustomize> lst= assetManageCustomizeMapper.selectWechatCreditRecordList(mapParameter);
+            for (WechatTenderCreditListCustomize customize: lst) {
                 String creditCapital = customize.getCreditCapital();
                 //update by jijun 20180427
                 creditCapital = creditCapital.replaceAll(",", "");

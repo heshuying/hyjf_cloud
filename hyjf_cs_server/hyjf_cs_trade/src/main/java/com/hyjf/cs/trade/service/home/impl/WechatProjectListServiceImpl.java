@@ -1196,7 +1196,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         }
 
 
-        if (showPlanFlag == null) {
+        if (StringUtils.isBlank(showPlanFlag)) {
             if (currentPage == 1) {
                 WechatProjectListResponse res = baseClient.getExe(HomePageDefine.WECHAT_HOME_PLAN_LATER_URL, WechatProjectListResponse.class);
                 List<WechatHomeProjectListVO> hjhList = res.getResultList();

@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @Author : huanghui
@@ -13,7 +14,7 @@ public class HjhPlanCapital implements Serializable {
 
     private String id;
 
-    private String date;
+    private Date date;
 
     private String planNid;
 
@@ -45,11 +46,11 @@ public class HjhPlanCapital implements Serializable {
         this.id = id;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

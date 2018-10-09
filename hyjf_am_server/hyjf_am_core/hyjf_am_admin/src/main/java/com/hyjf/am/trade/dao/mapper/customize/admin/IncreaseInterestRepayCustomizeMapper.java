@@ -6,14 +6,14 @@
  * @version: 1.0
  * Created at: 2018年1月8日 下午5:22:51
  * Modification History:
- * Modified by : 
+ * Modified by :
  */
 
 /**
  * @author PC-LIUSHOUYI
  */
 
-package com.hyjf.am.trade.dao.mapper.auto;
+package com.hyjf.am.trade.dao.mapper.customize.admin;
 
 
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayExample;
@@ -23,14 +23,13 @@ import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayExample;
  */
 
 public interface IncreaseInterestRepayCustomizeMapper {
-	
-	/**
-	 * 取得合计金额
-	 * 
-	 * @param example
-	 * @return
-	 */
-	public String sumAccount(IncreaseInterestRepayExample example);
+
+    /**
+     * 取得合计金额
+     *
+     * @param example
+     * @return
+     */
+    public String sumAccount(IncreaseInterestRepayExample example);
 }
 
-	

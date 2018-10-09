@@ -1345,7 +1345,7 @@
         WHERE hp.del_flag = 0
         AND hp.plan_display_status = 1
         ) t
-        where (t.order_by_status_name=2 or t.order_by_status_name=1)
+        where  t.order_by_status_name=1
         <if test="showPlanFlag != null and showPlanFlag=='fc'" >
             AND 1=2
         </if>
@@ -1533,7 +1533,7 @@
 					) t
 					where t.order_by_status_name=2
 			) t
-			ORDER BY t.status ASC, t.order_by_lock_period ASC,
+			ORDER BY t.status ASC, t.order_by_lock_period ASC
 	      	LIMIT 0 , 2
 	</select>
 

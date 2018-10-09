@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.CreditRepayLog;
 import com.hyjf.am.trade.dao.model.auto.CreditRepayLogExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface CreditRepayLogMapper {
     int countByExample(CreditRepayLogExample example);

@@ -104,7 +104,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 获取债转数据错误
             throw new CheckException(MsgEnum.ERROR_CREDIT_NOT_EXIST);
         }
-        logger.info("债转投资校验开始   userId:{},credNid:{},ip:{},平台{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform());
+        logger.info("债转投资校验开始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
         UserVO user = amUserClient.findUserById(userId);
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         BankOpenAccountVO bankOpenAccount = amUserClient.selectBankAccountById(userId);
@@ -117,7 +117,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         logger.info("creditAssign {}", JSONObject.toJSONString(creditAssign));
         // 检查金额
         this.checkTenderMoney(request, tenderAccount,creditAssign);
-        logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform());
+        logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
         // 获取插入债转日志的数据
         CreditTenderLogVO creditTenderLog = this.getCreditTenderLog(request,user,borrowCredit);
         // 获取调用银行的参数
@@ -274,6 +274,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,userId);
         JSONObject ret = new JSONObject();
         if (Validator.isNotNull(creditAssign)) {
+            creditAssign.setMoney(DF_FOR_VIEW.format(new BigDecimal(assignCapital).setScale(2, BigDecimal.ROUND_DOWN)));
             ret.put("creditAssign", creditAssign);
             ret.put(CustomConstants.RESULT_FLAG, CustomConstants.RESULT_SUCCESS);
         } else {
@@ -405,6 +406,43 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setInvestAllMoney("0");
         }
         return result;
+    }
+
+    /**
+     * 债转承接校验
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public WebResult<Map<String, Object>> borrowCreditCheck(TenderRequest request) {
+        UserVO loginUser = amUserClient.findUserById(Integer.valueOf(request.getUserId()));
+
+        Integer userId = loginUser.getUserId();
+        request.setUser(loginUser);
+        // 检查请求参数是否正确
+        this.checkRequest(request);
+        // 获取债转数据
+        BorrowCreditVO borrowCredit = amTradeClient.getBorrowCreditByCreditNid(request.getCreditNid());
+        if(borrowCredit==null){
+            // 获取债转数据错误
+            throw new CheckException(MsgEnum.ERROR_CREDIT_NOT_EXIST);
+        }
+        logger.info("债转投资校验开始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
+        UserVO user = amUserClient.findUserById(userId);
+        UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
+        BankOpenAccountVO bankOpenAccount = amUserClient.selectBankAccountById(userId);
+        // 检查用户状态  角色  授权状态等  是否允许投资
+        this.checkUser(user,userInfo,bankOpenAccount,borrowCredit);
+        // 查询用户账户表-投资账户
+        AccountVO tenderAccount = amTradeClient.getAccount(userId);
+        // 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+        TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(request.getCreditNid(), request.getAssignCapital(),userId);
+        logger.info("creditAssign {}", JSONObject.toJSONString(creditAssign));
+        // 检查金额
+        this.checkTenderMoney(request, tenderAccount,creditAssign);
+        logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
+        return new WebResult<Map<String, Object>>();
     }
 
     /**
@@ -618,7 +656,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignAccountList.setTradeCode("balance");
                 assignAccountList.setTotal(assignAccount.getTotal());
                 assignAccountList.setBalance(assignAccount.getBalance());
-                assignAccountList.setBankBalance(assignAccountNew.getBankBalance().add(assignAccount.getBankBalance()));
+                assignAccountList.setBankBalance(assignAccount.getBankBalance().subtract(assignAccountNew.getBankBalance()));
                 assignAccountList.setBankAwait(assignAccountNew.getBankAwait().add(assignAccount.getBankAwait()));
                 assignAccountList.setBankAwaitCapital(assignAccountNew.getBankAwaitCapital().add(assignAccount.getBankAwaitCapital()));
                 assignAccountList.setBankAwaitInterest(assignAccountNew.getBankAwaitInterest().add(assignAccount.getBankAwaitInterest()));
@@ -727,7 +765,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 sellerAccountList.setIsBank(1);
                 sellerAccountList.setCheckStatus(0);
                 // 插入交易明细
-               // 6.更新Borrow_recover
+                // 6.更新Borrow_recover
                 if (borrowRecover != null) {
                     // 不分期
                     if (!isMonth) {
@@ -1012,12 +1050,13 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     // 4.添加网站收支明细  // 发送mq更新添加网站收支明细
                     // 服务费大于0时,插入网站收支明细
                     if (creditTender.getCreditFee().compareTo(BigDecimal.ZERO) > 0) {
+                        BigDecimal money = creditTender.getCreditFee().setScale(2,BigDecimal.ROUND_DOWN);
                         // 插入网站收支明细记录
                         logger.info("网站收支明细记录 mq ");
                         AccountWebListVO accountWebList = new AccountWebListVO();
                         accountWebList.setOrdid(logOrderId);
                         accountWebList.setBorrowNid(creditTender.getBidNid());
-                        accountWebList.setAmount(Double.valueOf(creditTender.getCreditFee().toString()));
+                        accountWebList.setAmount(Double.valueOf(money.toString()));
                         accountWebList.setType(1);
                         accountWebList.setTrade("CREDITFEE");
                         accountWebList.setTradeType("债转服务费");

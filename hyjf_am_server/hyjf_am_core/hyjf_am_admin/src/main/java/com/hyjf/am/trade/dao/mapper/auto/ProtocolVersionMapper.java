@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.ProtocolVersion;
 import com.hyjf.am.trade.dao.model.auto.ProtocolVersionExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ProtocolVersionMapper {
     int countByExample(ProtocolVersionExample example);

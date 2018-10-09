@@ -156,7 +156,7 @@ public class WeChatAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
     @PostMapping(value = "/userAuthCreditBgreturn")
-    public String userCreditAuthInvesBgreturn(BankCallBean bean) {
+    public String userCreditAuthInvesBgreturn(@RequestBody BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_2);
         return result;
     }
@@ -224,7 +224,7 @@ public class WeChatAutoPlusController extends BaseUserController {
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody
     @PostMapping(value = "/userAuthInvesBgreturn")
-    public String userAuthInvesBgreturn(BankCallBean bean) {
+    public String userAuthInvesBgreturn(@RequestBody BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_1);
         return result;
     }

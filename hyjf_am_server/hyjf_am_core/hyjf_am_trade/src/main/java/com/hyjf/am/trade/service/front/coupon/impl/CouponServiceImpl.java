@@ -1,5 +1,7 @@
 package com.hyjf.am.trade.service.front.coupon.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.trade.dao.customize.CustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.CouponCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -9,6 +11,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import org.apache.commons.collections.map.HashedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -26,20 +30,13 @@ import java.util.Map;
  * @Date 2018/6/19 16:52
  */
 @Service
-public class CouponServiceImpl implements CouponService {
+public class CouponServiceImpl extends CustomizeMapper implements CouponService{
+
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Resource
 	private CouponCustomizeMapper couponCustomizeMapper;
-	@Resource
-	private BorrowTenderCpnMapper borrowTenderCpnMapper;
-	@Resource
-	private CouponTenderMapper couponTenderMapper;
-	@Resource
-	private CouponRealTenderMapper couponRealTenderMapper;
-	@Resource
-	private CouponUserMapper couponUserMapper;
-	@Resource
-	private CouponRecoverMapper couponRecoverMapper;
+
 	/**
 	 * @param couponGrantId
 	 * @param userId
@@ -71,21 +68,24 @@ public class CouponServiceImpl implements CouponService {
 		CouponTenderVO couponTenderVO = couponTender.getCouponTender();
 		CouponRealTenderVO couponRealTender = couponTender.getCouponRealTender();
 		CouponUserVO couponUser = couponTender.getCouponUser();
-
 		BorrowTenderCpn btc = new BorrowTenderCpn();
 		BeanUtils.copyProperties(borrowTenderCpn,btc);
+		logger.info("散标优惠券投资  开始插入 borrowTenderCpn 参数为 {} ",JSONObject.toJSONString(btc));
 		borrowTenderCpnMapper.insertSelective(btc);
 
 		CouponTender ct = new CouponTender();
 		BeanUtils.copyProperties(couponTenderVO,ct);
+		logger.info("散标优惠券投资  开始插入 couponTender 参数为 {} ",JSONObject.toJSONString(ct));
 		couponTenderMapper.insertSelective(ct);
 
 		CouponRealTender crt = new CouponRealTender();
 		BeanUtils.copyProperties(couponRealTender,crt);
+		logger.info("散标优惠券投资  开始插入 couponRealTender 参数为 {} ",JSONObject.toJSONString(crt));
 		couponRealTenderMapper.insertSelective(crt);
 
 		CouponUser cu = new CouponUser();
 		BeanUtils.copyProperties(couponUser,cu);
+		logger.info("散标优惠券投资  开始修改 couponUser 参数为 {} ",JSONObject.toJSONString(cu));
 		couponUserMapper.updateByPrimaryKeySelective(cu);
 	}
 

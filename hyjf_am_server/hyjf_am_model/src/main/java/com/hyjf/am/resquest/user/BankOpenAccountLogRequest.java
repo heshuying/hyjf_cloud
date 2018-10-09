@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version BankOpenAccountLogRequest, v0.1 2018/8/20 14:52
  * @Author: Zha Daojian
  */
-public class BankOpenAccountLogRequest extends BaseVO {
+public class  BankOpenAccountLogRequest extends BaseVO {
 
 
 
