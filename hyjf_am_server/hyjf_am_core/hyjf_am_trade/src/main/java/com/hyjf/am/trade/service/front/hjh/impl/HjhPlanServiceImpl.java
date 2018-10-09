@@ -320,6 +320,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         account.setBankInvestSum(accountDecimal);//注意：先set值，加法运算放在SQL中防并发
         // 计划待收利息
         account.setPlanAccountWait(accountDecimal.add(request.getEarnings()));
+        account.setBankTotal(accountDecimal);
         logger.info("加入计划账户 开始操作 account :{}",JSONObject.toJSONString(account));
         // 更新用户计划账户
         boolean accountFlag = hjhPlanCustomizeMapper.updateOfPlanJoin(account)> 0 ? true : false;
