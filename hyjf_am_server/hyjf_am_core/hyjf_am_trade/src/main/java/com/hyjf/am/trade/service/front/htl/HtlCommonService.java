@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.htl;
+package com.hyjf.am.trade.service.front.htl;
 
 import com.hyjf.am.trade.dao.model.customize.ProductSearchForPage;
 

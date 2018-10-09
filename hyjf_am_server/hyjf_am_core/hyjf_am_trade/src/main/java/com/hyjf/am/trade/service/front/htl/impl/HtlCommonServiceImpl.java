@@ -1,11 +1,11 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.htl.impl;
+package com.hyjf.am.trade.service.front.htl.impl;
 
 import com.hyjf.am.trade.dao.mapper.customize.HtlCommonCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.ProductSearchForPage;
-import com.hyjf.am.trade.service.htl.HtlCommonService;
+import com.hyjf.am.trade.service.front.htl.HtlCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

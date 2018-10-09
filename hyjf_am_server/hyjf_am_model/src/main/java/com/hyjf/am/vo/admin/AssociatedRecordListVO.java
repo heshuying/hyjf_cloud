@@ -11,10 +11,10 @@ import java.util.Date;
 
 /**
  * @author: sunpeikai
- * @version: AssociatedRecordListVo, v0.1 2018/7/5 14:27
+ * @version: AssociatedRecordListVO, v0.1 2018/7/5 14:27
  */
 @ApiModel(value = "关联记录返回值")
-public class AssociatedRecordListVo extends BaseVO {
+public class AssociatedRecordListVO extends BaseVO {
     @ApiModelProperty(value = "主键ID")
     private Integer id;
     @ApiModelProperty(value = "转出账户")

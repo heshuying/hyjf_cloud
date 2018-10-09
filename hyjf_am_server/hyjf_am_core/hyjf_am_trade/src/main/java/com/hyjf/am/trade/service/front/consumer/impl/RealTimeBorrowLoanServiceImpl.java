@@ -1688,9 +1688,9 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		SmsMessage borrowerSmsMessage = new SmsMessage(borrowUserId, borrowerReplaceStrs, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_JIEKUAN_SUCCESS,
 				CustomConstants.CHANNEL_TYPE_NORMAL);
 		try {
-			mailProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowerSmsMessage)));
+			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowerSmsMessage)));
 		} catch (MQException e2) {
-			logger.error("发送邮件失败..", e2);
+			logger.error("发送短信失败..", e2);
 		}
 
 	}
@@ -1703,9 +1703,9 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		try {
-			mailProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 		} catch (MQException e2) {
-			logger.error("发送邮件失败..", e2);
+			logger.error("发送短信失败..", e2);
 		}
 
 	}
