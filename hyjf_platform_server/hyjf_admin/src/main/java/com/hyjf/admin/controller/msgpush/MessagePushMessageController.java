@@ -133,6 +133,9 @@ public class MessagePushMessageController extends BaseController {
             prepareDatas(response);
             return new AdminResult<>(response);
         }
+
+        MessagePushTagVO messagePushTagVO = messagePushTagService.getPushTagByTagId(templateRequest.getTagId());
+        templateRequest.setTagCode(messagePushTagVO.getTagCode());
         MessagePushMsgVO templateVO = new MessagePushMsgVO();
         BeanUtils.copyProperties(templateRequest, templateVO);
         String msgTerminal[] = templateRequest.getMsgTerminal().split(",");
