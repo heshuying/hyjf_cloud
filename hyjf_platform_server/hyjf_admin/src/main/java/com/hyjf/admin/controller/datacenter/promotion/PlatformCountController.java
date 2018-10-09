@@ -71,7 +71,7 @@ public class PlatformCountController extends BaseController {
 
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-        String[] titles = new String[] { "序号", "平台", "访问数", "注册数", "开户数", "投资人数", "累计充值", "累计投资", "汇直投投资金额", "汇消费投资金额", "汇天利投资金额" };
+        String[] titles = new String[] { "序号", "平台", "访问数", "注册数", "开户数", "投资人数", "累计充值", "累计投资", "汇直投投资金额", "汇消费投资金额", "汇天利投资金额", "汇添金投资金额", "汇计划投资金额", "汇转让投资金额" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -144,6 +144,18 @@ public class PlatformCountController extends BaseController {
                     // 汇天利投资金额
                     else if (celLength == 10) {
                         cell.setCellValue(record.getHtlTenderPrice());
+                    }
+                    // 汇添金投资金额
+                    else if (celLength == 11) {
+                        cell.setCellValue(record.getHtjTenderPrice());
+                    }
+                    // 汇计划投资金额
+                    else if (celLength == 12) {
+                        cell.setCellValue(record.getHjhTenderPrice());
+                    }
+                    // 汇转让投资金额
+                    else if (celLength == 13) {
+                        cell.setCellValue(record.getHzrTenderPrice());
                     }
                 }
             }

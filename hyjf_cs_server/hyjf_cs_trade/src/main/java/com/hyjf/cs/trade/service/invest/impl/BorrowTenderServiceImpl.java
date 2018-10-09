@@ -827,6 +827,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setCouponAvailableCount(couponAvailableCount + "");
             // 优惠券总张数
             recordTotal = amTradeClient.getUserCouponCount(loginUser.getUserId(), "0");
+            logger.info("recordTotal:{}  , couponAvailableCount:{}",recordTotal,couponAvailableCount);
             investInfo.setBorrowApr(borrow.getBorrowApr() + "%");
             investInfo.setPaymentOfInterest("");
             // 是否使用优惠券
@@ -861,10 +862,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCouponQuota("");
                 investInfo.setCouponId("-1");
 
-                if (recordTotal > 0) {
+                if (couponAvailableCount > 0) {
                     investInfo.setIsThereCoupon("1");
                     investInfo.setCouponDescribe("请选择");
-                } else if (recordTotal == 0) {
+                } else if (recordTotal > 0 && couponAvailableCount == 0) {
                     investInfo.setIsThereCoupon("1");
                     investInfo.setCouponDescribe("暂无可用");
                 } else {
@@ -1067,7 +1068,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      */
     private void setProtocolsToResultVO(AppInvestInfoResultVO investInfo, String investType){
         List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
-        NewAgreementBean newAgreementBean=new NewAgreementBean("投资协议",  systemConfig.webHost+"agreement/AgreementViewList?borrowType="+investType);
+        NewAgreementBean newAgreementBean=new NewAgreementBean("投资协议",  systemConfig.webHost+"/agreement/AgreementViewList?borrowType="+investType);
         list.add(newAgreementBean);
         investInfo.setProtocols(list);
         investInfo.setProtocolUrlDesc("协议列表");

@@ -378,7 +378,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 		msgSta.setMsgId(template.getId().toString());
 		msgSta.setMsgCode(template.getTemplateCode());
 		msgSta.setMsgTitle(template.getTemplateTitle());
-		msgSta.setTagId(template.getTagId());
+		msgSta.setTagId(String.valueOf(template.getTagId()));
 		msgSta.setSendTime(GetDate.date2Str(template.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
 		msgSta.setAndroidDestinationCount(0);
 		msgSta.setIosDestinationCount(0);

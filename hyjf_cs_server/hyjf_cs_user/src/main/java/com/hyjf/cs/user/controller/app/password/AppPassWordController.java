@@ -142,7 +142,7 @@ public class AppPassWordController extends BaseUserController {
         retUrl += "&token=1&sign=" +sign;
         success += "&token=1&sign=" +sign;
         // 异步调用路
-        String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
+        String bgRetUrl = "http://CS-USER" + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
                 + CommonConstant.RETURN_ASY_PASSWORD_ACTION;
 
         bean.setRetUrl(retUrl);
@@ -215,7 +215,7 @@ public class AppPassWordController extends BaseUserController {
         retUrl += "&token=1&sign=" +sign;
         success += "&token=1&sign=" +sign;
         // 异步调用路
-        String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
+        String bgRetUrl = "http://CS-USER" + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
                 + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION+"?sign=" + sign;
 
         bean.setRetUrl(retUrl);
