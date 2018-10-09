@@ -5,6 +5,7 @@ import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.admin.promotion.UtmResultResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.slf4j.Logger;
@@ -48,6 +49,13 @@ public class UtmServiceImpl implements UtmService {
         if(null != utmResponse){
             list = utmResponse.getResultList();
         }
+        map.clear();
+        UtmPlatResponse utmPlatResponse = amUserClient.getAllUtmPlat(map);
+        List<UtmPlatVO> utmPlatVOList = new ArrayList<UtmPlatVO>();
+        if(null != utmResponse){
+            utmPlatVOList = utmPlatResponse.getResultList();
+        }
+        utmResultResponse.setUtmPlatList(utmPlatVOList);
         utmResultResponse.setResultList(list);
         utmResultResponse.setTotal(recodeTotal);
         return utmResultResponse;

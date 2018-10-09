@@ -8,10 +8,14 @@ import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -19,10 +23,7 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author walter.limeng
@@ -200,6 +201,16 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     @Override
     public List<ChannelReconciliationVO> selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
         return utmRegCustomizeMapper.selectAppChannelReconciliationRecordHjh(request);
+    }
+
+    @Override
+    public List<UtmPlatVO> getUtmPlatByParam(Map<String, Object> map) {
+        UtmPlatExample utmPlat = new UtmPlatExample();
+        List<UtmPlat> list = utmPlatMapper.selectByExample(utmPlat);
+        if(list == null){
+            list = new ArrayList<UtmPlat>();
+        }
+        return CommonUtils.convertBeanList(list, UtmPlatVO.class);
     }
 
     /**

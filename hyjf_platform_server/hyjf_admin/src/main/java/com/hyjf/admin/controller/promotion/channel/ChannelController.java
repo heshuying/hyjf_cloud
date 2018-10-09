@@ -83,7 +83,7 @@ public class ChannelController extends BaseController {
         return new AdminResult(adminResult);
     }
 
-    @ApiOperation(value = "添加信息", notes = "添加信息")
+    @ApiOperation(value = "添加或修改信息", notes = "添加或修改信息")
     @PostMapping("/insertorupdateaction")
     public UtmResultResponse insertAction(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
         UtmResultResponse adminResult = new UtmResultResponse();
