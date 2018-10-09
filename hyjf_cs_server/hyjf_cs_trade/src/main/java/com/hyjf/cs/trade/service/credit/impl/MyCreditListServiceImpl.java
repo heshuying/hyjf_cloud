@@ -213,7 +213,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
 
         // 等额本息和等额本金和先息后本
         if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
-            List<BorrowRepayPlanVO> list = this.amTradeClient.selectBorrowRepayPlan(borrowNid, borrow.getBorrowPeriod());
+            List<BorrowRepayPlanVO> list = this.amTradeClient.getBorrowRepayPlansByPeriod(borrowNid, borrow.getBorrowPeriod());
             if (list != null && list.size() > 0) {
                 try {
                     lastdays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(list.get(0).getRepayTime()));
