@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.front.hjh.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -312,11 +313,18 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         account.setPlanInterestWait(request.getEarnings());
         // 计划累计待收本金
         account.setPlanCapitalWait(accountDecimal);
+        account.setPlanBalance(accountDecimal);//注意：先set值，加法运算放在SQL中防并发
+        account.setBankBalance(accountDecimal);//注意：先set值，减法运算放在SQL中防并发
+
+        //new added APP 更新用户的累积投资金额
+        account.setBankInvestSum(accountDecimal);//注意：先set值，加法运算放在SQL中防并发
         // 计划待收利息
         account.setPlanAccountWait(accountDecimal.add(request.getEarnings()));
+        account.setBankTotal(accountDecimal);
+        logger.info("加入计划账户 开始操作 account :{}",JSONObject.toJSONString(account));
         // 更新用户计划账户
         boolean accountFlag = hjhPlanCustomizeMapper.updateOfPlanJoin(account)> 0 ? true : false;
-
+        logger.info("加入计划账户 操作account结果 :{}",accountFlag);
         // 组装accountList
         AccountList accountList = new AccountList();
         accountList.setIsBank(1);

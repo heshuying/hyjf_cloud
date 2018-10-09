@@ -83,4 +83,11 @@ public interface MessagePushTagService {
      * @return
      */
     List<MessagePushTagVO> getTagList();
+
+    /**
+     * 根据标签id查询标签
+     * @param tagId
+     * @return
+     */
+    MessagePushTagVO getPushTagByTagId(Integer tagId);
 }

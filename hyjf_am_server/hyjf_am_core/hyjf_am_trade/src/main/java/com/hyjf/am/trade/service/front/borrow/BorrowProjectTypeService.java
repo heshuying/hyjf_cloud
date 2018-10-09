@@ -78,4 +78,12 @@ public interface BorrowProjectTypeService {
      */
     public int borrowCdIsExists( String borrowCd);
 
+
+    /**
+     * 查询项目类型列表
+     * @author zhangyk
+     * @date 2018/10/9 15:58
+     */
+    public List<BorrowProjectType> getProjectTypeList();
+
 }

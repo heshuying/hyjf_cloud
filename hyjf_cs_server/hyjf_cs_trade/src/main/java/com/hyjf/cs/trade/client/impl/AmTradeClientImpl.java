@@ -5342,4 +5342,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+
+    /**
+     * 查询产品类型
+     * @author zhangyk
+     * @date 2018/10/9 15:53
+     */
+    @Override
+    public List<BorrowProjectTypeVO> getProjectTypeList() {
+        String url = "http://AM-TRADE/am-trade/config/projecttype/getProjectType";
+        BorrowProjectTypeResponse response = restTemplate.getForEntity(url,BorrowProjectTypeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 }
