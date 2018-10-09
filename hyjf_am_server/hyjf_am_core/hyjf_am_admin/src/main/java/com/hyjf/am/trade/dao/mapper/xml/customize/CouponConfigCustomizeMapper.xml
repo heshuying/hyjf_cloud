@@ -90,7 +90,7 @@
 				WHEN 2 THEN  1
 				WHEN 3 THEN  1
 				END  AS is_expiration,
-				FROM_UNIXTIME(c.audit_time,'%Y-%m-%d %H:%i:%s') AS add_time,
+				c.create_time AS add_time,
 				c.status
 			FROM
 				ht_coupon_config c

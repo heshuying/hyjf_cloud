@@ -88,7 +88,7 @@ public class CsMessageClientImpl implements CsMessageClient {
      * @auth sunpeikai
      */
     @Override
-    public List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request) {
+    public List<AssociatedRecordListVO> getAssociatedRecordList(AssociatedRecordListRequest request) {
         AssociatedRecordListResponse response = restTemplate
                 .postForEntity("http://CS-MESSAGE/cs-message/search/searchassociatedrecordlist", request, AssociatedRecordListResponse.class)
                 .getBody();
