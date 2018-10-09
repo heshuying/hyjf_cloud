@@ -16,9 +16,11 @@ import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -186,5 +188,15 @@ public class BorrowProjectTypeController extends BaseController {
         IntegerResponse response=new IntegerResponse();
         response.setResultInt(count);
        return response;
+    }
+
+    @GetMapping("/getProjectType")
+    public BorrowProjectTypeResponse getProjectType(){
+        BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
+        List<BorrowProjectType> typeList = borrowProjectTypeService.getProjectTypeList();
+        if (CollectionUtils.isNotEmpty(typeList)){
+            response.setResultList(CommonUtils.convertBeanList(typeList,BorrowProjectTypeVO.class));
+        }
+        return response;
     }
 }

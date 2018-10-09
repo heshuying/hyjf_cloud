@@ -314,4 +314,18 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         criteria.andBorrowCdEqualTo(borrowCd);
         return borrowProjectTypeMapper.countByExample(example);
     }
+
+
+    /**
+     * 查询项目类型列表
+     * @author zhangyk
+     * @date 2018/10/9 15:58
+     */
+    @Override
+    public List<BorrowProjectType> getProjectTypeList() {
+        BorrowProjectTypeExample example = new BorrowProjectTypeExample();
+        BorrowProjectTypeExample.Criteria cra = example.createCriteria();
+        cra.andStatusEqualTo(CustomConstants.FALG_NOR);
+        return this.borrowProjectTypeMapper.selectByExample(example);
+    }
 }

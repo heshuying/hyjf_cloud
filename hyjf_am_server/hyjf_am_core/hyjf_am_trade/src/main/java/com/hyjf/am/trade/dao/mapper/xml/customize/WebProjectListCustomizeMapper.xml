@@ -53,7 +53,7 @@
             </if>
             AND htb.is_show <![CDATA[<>]]> 1
             <if test="publishInstCode != null and publishInstCode != ''">
-                AND (htb.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR htb.publish_inst_code ='0')
+                AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hbi.publish_inst_code ='0')
             </if>
         </where>
     </sql>
@@ -281,6 +281,10 @@
         AND LENGTH(trim(htb.ontime)) > 1 THEN
         htb.ontime
         END ASC,
+        CASE
+        WHEN htb.`status` = '2'
+        THEN htb.borrow_account_scale
+        END DESC,
         CASE
         WHEN htb.`status` = '2' THEN
         htb.verify_time
@@ -1036,7 +1040,7 @@
             AND hydb.is_show <![CDATA[<>]]> 1
 
             <if test="publishInstCode != null and publishInstCode != ''">
-                AND (hydb.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hydb.publish_inst_code ='0')
+                AND (hbi.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hi.publish_inst_code ='0')
             </if>
 
         </where>

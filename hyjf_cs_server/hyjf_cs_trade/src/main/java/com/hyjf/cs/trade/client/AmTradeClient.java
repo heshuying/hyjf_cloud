@@ -2217,4 +2217,11 @@ public interface AmTradeClient {
      * @return
      */
     BailConfigInfoCustomizeVO selectBailConfigByInstCode(String instCode);
+
+    /**
+     * 查询产品类型
+     * @author zhangyk
+     * @date 2018/10/9 15:52
+     */
+    List<BorrowProjectTypeVO> getProjectTypeList();
 }
