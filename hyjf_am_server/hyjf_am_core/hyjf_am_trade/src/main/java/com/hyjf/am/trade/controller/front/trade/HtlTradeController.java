@@ -10,7 +10,7 @@ import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.ProductIntoRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.ProductRedeemCustomize;
-import com.hyjf.am.trade.service.admin.htl.HtlTradeService;
+import com.hyjf.am.trade.service.htl.HtlTradeService;
 import com.hyjf.am.vo.trade.HtlProductIntoRecordVO;
 import com.hyjf.am.vo.trade.HtlProductRedeemVO;
 import com.hyjf.common.paginator.Paginator;

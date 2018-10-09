@@ -5,7 +5,7 @@ package com.hyjf.am.trade.controller.front.trade;
 
 import com.hyjf.am.response.trade.ProductSearchForPageResponse;
 import com.hyjf.am.trade.dao.model.customize.ProductSearchForPage;
-import com.hyjf.am.trade.service.admin.htl.HtlCommonService;
+import com.hyjf.am.trade.service.htl.HtlCommonService;
 import com.hyjf.am.vo.trade.ProductSearchForPageVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
