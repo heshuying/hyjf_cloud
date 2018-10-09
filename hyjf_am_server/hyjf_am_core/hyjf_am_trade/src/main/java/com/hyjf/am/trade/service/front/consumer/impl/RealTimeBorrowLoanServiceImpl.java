@@ -327,8 +327,8 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 					// 更新任务API状态
 					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SUCCESS);
 					if (apicronResultFlag) {
-						loanResult.setRetCode(BankCallConstant.RESPCODE_SUCCESS);
-						return loanResult;
+//						loanResult.setRetCode(BankCallConstant.RESPCODE_SUCCESS);
+						return result;
 					} else {
 						throw new Exception("更新状态为（放款处理成功）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
 					}
