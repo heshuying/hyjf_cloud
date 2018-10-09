@@ -1490,10 +1490,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (!checkTender) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_HANDING);
         }
-        // redis扣减
-        redisTender(userId, borrowNid, txAmount);
         // 操作数据库表
         this.borrowTender(borrow, bean);
+        // redis扣减
+        redisTender(userId, borrowNid, txAmount);
         logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
         // 如果用了优惠券
         if (StringUtils.isNotEmpty(couponGrantId) && !"0".equals(couponGrantId) && !"-1".equals(couponGrantId)) {
