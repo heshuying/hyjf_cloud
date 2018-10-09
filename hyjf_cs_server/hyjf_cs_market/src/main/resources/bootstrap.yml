@@ -9,6 +9,13 @@ spring:
     admin:
       client:
         url: http://micoserver:18080
+# zipkin 监控端点
+  zipkin: 
+    base-url: http://micoserver:9411
+  sleuth:
+    sampler:
+    percentage: 0.1
+    
   profiles:
     active: dev
 server:
@@ -26,10 +33,7 @@ management:
 
 logging:
   file: cs-market.log
-
-hyjf.api.web.url: http://test.hyjf.com:8080/hyjf-api-web/
-
-hyjf.web.host: http://test.hyjf.com:8080/hyjf-web
+  
 #swagger启用开关
 swagger:
  enable: true
