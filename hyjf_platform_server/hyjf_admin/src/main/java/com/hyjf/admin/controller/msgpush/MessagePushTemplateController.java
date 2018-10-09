@@ -121,7 +121,7 @@ public class MessagePushTemplateController extends BaseController {
         }
         MessagePushTemplateVO templateVO = new MessagePushTemplateVO();
         BeanUtils.copyProperties(templateRequest, templateVO);
-        templateVO.setTagId(String.valueOf(templateRequest.getTagId()));
+        templateVO.setTagId(templateRequest.getTagId());
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setTemplateActionUrl("");
         }
