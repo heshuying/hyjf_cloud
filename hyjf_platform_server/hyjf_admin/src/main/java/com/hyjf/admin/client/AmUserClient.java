@@ -1181,4 +1181,13 @@ public interface AmUserClient {
      * @auther: nxl
      */
     List<OADepartmentCustomizeVO> getDeptInfoByDeptId(int deptId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  获取所有得UtmPlat
+     * @Date 18:38 2018/10/9
+     * @Param map
+     * @return
+     */
+    UtmPlatResponse getAllUtmPlat(Map<String,Object> map);
 }
