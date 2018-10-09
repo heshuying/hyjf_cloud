@@ -3,9 +3,11 @@
  */
 package com.hyjf.admin.controller.content;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.ContentAdsService;
 import com.hyjf.admin.service.ContentArticleService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ContentArticleResponse;
@@ -18,7 +20,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +39,9 @@ public class ContentArticleController extends BaseController {
 
     @Autowired
     private ContentArticleService contentArticleService;
+
+    @Autowired
+    private ContentAdsService contentAdsService;
 
     @ApiOperation(value = "文章管理-条件列表查询", notes = "文章管理-条件列表查询")
     @RequestMapping(value = "/searchaction",method = RequestMethod.POST)
@@ -96,7 +103,7 @@ public class ContentArticleController extends BaseController {
     }
 
     @ApiOperation(value = "文章管理-删除", notes = "文章管理-删除")
-    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.POST)
     public AdminResult delete(@PathVariable Integer id) {
         ContentArticleResponse response = contentArticleService.deleteById(id);
         if (response == null) {
@@ -117,4 +124,18 @@ public class ContentArticleController extends BaseController {
         return new AdminResult<>(map);
     }
 
+    @ApiOperation(value = "资料上传", notes = "资料上传")
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    public  AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
+        try {
+            LinkedList<BorrowCommonImage> borrowCommonImages = contentAdsService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+    }
 }

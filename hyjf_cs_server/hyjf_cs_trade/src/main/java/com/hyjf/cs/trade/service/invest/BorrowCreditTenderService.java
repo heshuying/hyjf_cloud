@@ -64,4 +64,11 @@ public interface BorrowCreditTenderService extends BaseTradeService {
      * @return
      */
     AppInvestInfoResultVO getInterestInfoApp(TenderRequest tender, String creditNid, String assignCapital);
+
+    /**
+     * 债转承接校验
+     * @param tender
+     * @return
+     */
+    WebResult<Map<String,Object>> borrowCreditCheck(TenderRequest tender);
 }

@@ -11,6 +11,7 @@ import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -108,6 +109,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             info.put("adDesc", "立即注册");
             //新手标标志
             getNewProjectFlag = Boolean.TRUE;
+            this.createProjectNewPage(info, list, HOST);
 
             //获取首页项目列表
             /*this.createProjectListPage(info, version, list, HOST);*/
@@ -127,6 +129,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 info.put("adDesc", "立即开户");
                 //获取新手标
                 getNewProjectFlag = Boolean.TRUE;
+                this.createProjectNewPage(info, list, HOST);
 
                 //获取首页项目列表
                 this.createHjhExtensionProjectListPage(info, list, HOST);
@@ -137,7 +140,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 Integer count = amTradeClient.getTotalInverestCount(userId);
                 if (count <= 0 || count == null) {
                     //获取新手标
-                    getNewProjectFlag = Boolean.TRUE;
+                    this.createProjectNewPage(info, list, HOST);
                 }
 
                 //获取首页项目列表
@@ -157,9 +160,9 @@ public class AppHomeServiceImpl implements AppHomeService {
             }
         }
 
-        if (getNewProjectFlag) {
-            this.createProjectNewPage(info, list, HOST);
-        }
+//        if (getNewProjectFlag) {
+//            this.createProjectNewPage(info, list, HOST);
+//        }
         //获取累计投资金额
         TotalInvestAndInterestResponse res = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = res.getResult();
@@ -397,8 +400,9 @@ public class AppHomeServiceImpl implements AppHomeService {
                 homePageCustomize.setStatusName("立即投资");
             }
 
-            PlanDetailCustomizeVO planDetailCustomizeVO = amTradeClient.getPlanDetailByPlanNid(listCustomize.getBorrowNid());
-            String statusNameDesc = planDetailCustomizeVO != null ? planDetailCustomizeVO.getAvailableInvestAccount() : "0.00";
+           // PlanDetailCustomizeVO planDetailCustomizeVO = amTradeClient.getPlanDetailByPlanNid(listCustomize.getBorrowNid());
+            BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(listCustomize.getBorrowNid());
+            String statusNameDesc = borrow != null ? String.valueOf(borrow.getBorrowAccountWait()) : "0.00";
             homePageCustomize.setStatusNameDesc("剩余" + DF_FOR_VIEW.format(new BigDecimal(statusNameDesc)));
             homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
             homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");

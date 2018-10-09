@@ -271,4 +271,11 @@ public interface AssetManageCustomizeMapper {
      * @return
      */
     CurrentHoldRepayMentPlanDetailsCustomize rtbRepaymentPlanStagesDetails(Map<String, Object> params);
+    /**
+     * wechat获取用户转让记录列表
+     *
+     * @param params
+     * @return
+     */
+    List<WechatTenderCreditListCustomize> selectWechatCreditRecordList(Map<String,Object> params);
 }

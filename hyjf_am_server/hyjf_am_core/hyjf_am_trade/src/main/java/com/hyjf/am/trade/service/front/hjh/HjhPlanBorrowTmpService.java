@@ -16,6 +16,10 @@ public interface HjhPlanBorrowTmpService extends BaseService {
 
     int deleteHjhPlanBorrowTmp(HjhPlanBorrowTmp hjhPlanBorrowTmp);
 
+    int deleteHjhPlanBorrowTmpByOrderId(String orderId);
+
+    int deleteHjhPlanBorrowTmpByAccedeBorrow(String borrowNid, String accedeOrderId);
+
     int updateHjhPlanBorrowTmpByPK(HjhPlanBorrowTmp hjhPlanBorrowTmp);
 
     int updateHjhPlanBorrowTmp(HjhPlanBorrowTmp hjhPlanBorrowTmp);
