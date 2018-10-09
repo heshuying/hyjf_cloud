@@ -110,6 +110,8 @@ public class AppInvestInfoResultVO implements Serializable {
 
     private String desc1;
 
+    private String borrowAccountWait1;
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -524,5 +526,13 @@ public class AppInvestInfoResultVO implements Serializable {
 
     public void setUserBalance(String userBalance) {
         this.userBalance = userBalance;
+    }
+
+    public String getBorrowAccountWait1() {
+        return borrowAccountWait1;
+    }
+
+    public void setBorrowAccountWait1(String borrowAccountWait1) {
+        this.borrowAccountWait1 = borrowAccountWait1;
     }
 }
