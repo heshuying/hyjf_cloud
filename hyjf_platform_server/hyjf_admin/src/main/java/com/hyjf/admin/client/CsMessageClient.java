@@ -44,7 +44,7 @@ public interface CsMessageClient {
      * @param
      * @return
      */
-    List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request);
+    List<AssociatedRecordListVO> getAssociatedRecordList(AssociatedRecordListRequest request);
 
     /**
      * 根据筛选参数从mongo中查询DirectionalTransferAssociatedLog的count

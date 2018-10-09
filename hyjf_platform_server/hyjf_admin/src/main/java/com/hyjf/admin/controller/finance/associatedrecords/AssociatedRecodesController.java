@@ -9,7 +9,7 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AssociatedRecordsService;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -51,10 +51,10 @@ public class AssociatedRecodesController extends BaseController {
      */
     @ApiOperation(value = "查询关联记录列表",notes = "查询关联记录列表")
     @PostMapping(value = "/getassociatedrecordlist")
-    public AdminResult<ListResult<AssociatedRecordListVo>> getAssociatedRecordList(@RequestBody AssociatedRecordListRequest request){
+    public AdminResult<ListResult<AssociatedRecordListVO>> getAssociatedRecordList(@RequestBody AssociatedRecordListRequest request){
         Integer count = associatedRecordsService.getAssociatedRecordsCount(request);
         count = (count == null)?0:count;
-        List<AssociatedRecordListVo> associatedRecordListVoList = associatedRecordsService.getAssociatedRecordList(request);
+        List<AssociatedRecordListVO> associatedRecordListVoList = associatedRecordsService.getAssociatedRecordList(request);
         return new AdminResult<>(ListResult.build(associatedRecordListVoList,count));
     }
     /**
@@ -75,7 +75,7 @@ public class AssociatedRecodesController extends BaseController {
         String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // 检索列表
-        List<AssociatedRecordListVo> associatedRecordListVos = associatedRecordsService.getAssociatedRecordList(request);
+        List<AssociatedRecordListVO> associatedRecordListVOS = associatedRecordsService.getAssociatedRecordList(request);
         String[] titles =
                 new String[] { "序号", "转出账户", "转出账户手机", "转出账户客户号", "转入账户", "转入账户手机", "转入账户客户号", "关联状态", "关联时间" };
         // 声明一个工作薄
@@ -83,10 +83,10 @@ public class AssociatedRecodesController extends BaseController {
         // 生成一个表格
         HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
 
-        if (associatedRecordListVos != null && associatedRecordListVos.size() > 0) {
+        if (associatedRecordListVOS != null && associatedRecordListVOS.size() > 0) {
             int sheetCount = 1;
             int rowNum = 0;
-            for (int i = 0; i < associatedRecordListVos.size(); i++) {
+            for (int i = 0; i < associatedRecordListVOS.size(); i++) {
                 rowNum++;
                 if (i != 0 && i % 60000 == 0) {
                     sheetCount++;
@@ -100,34 +100,34 @@ public class AssociatedRecodesController extends BaseController {
 
                 // 循环数据
                 for (int celLength = 0; celLength < titles.length; celLength++) {
-                    AssociatedRecordListVo associatedRecordListVo = associatedRecordListVos.get(i);
+                    AssociatedRecordListVO associatedRecordListVO = associatedRecordListVOS.get(i);
                     // 创建相应的单元格
                     Cell cell = row.createCell(celLength);
                     if (celLength == 0) {// 序号
                         cell.setCellValue(i + 1);
                     } else if (celLength == 1) { // 转出账户
-                        cell.setCellValue(associatedRecordListVo.getTurnOutUsername());
+                        cell.setCellValue(associatedRecordListVO.getTurnOutUsername());
                     } else if (celLength == 2) { // 转出账户手机
-                        cell.setCellValue(associatedRecordListVo.getTurnOutMobile());
+                        cell.setCellValue(associatedRecordListVO.getTurnOutMobile());
                     } else if (celLength == 3) { // 转出账户客户号
-                        cell.setCellValue(String.valueOf(associatedRecordListVo.getTurnOutChinapnrUsrcustid()));
+                        cell.setCellValue(String.valueOf(associatedRecordListVO.getTurnOutChinapnrUsrcustid()));
                     } else if (celLength == 4) {// 转入账户
-                        cell.setCellValue(associatedRecordListVo.getShiftToUsername());
+                        cell.setCellValue(associatedRecordListVO.getShiftToUsername());
                     } else if (celLength == 5) {// 转入账户手机
-                        cell.setCellValue(associatedRecordListVo.getShiftToMobile());
+                        cell.setCellValue(associatedRecordListVO.getShiftToMobile());
                     } else if (celLength == 6) {// 转入账户客户号
-                        cell.setCellValue(String.valueOf(associatedRecordListVo.getShiftToChinapnrUsrcustid()));
+                        cell.setCellValue(String.valueOf(associatedRecordListVO.getShiftToChinapnrUsrcustid()));
                     } else if (celLength == 7) {// 关联状态
-                        if (associatedRecordListVo.getAssociatedState() == 0) {
+                        if (associatedRecordListVO.getAssociatedState() == 0) {
                             cell.setCellValue("未授权");
-                        } else if (associatedRecordListVo.getAssociatedState() == 1) {
+                        } else if (associatedRecordListVO.getAssociatedState() == 1) {
                             cell.setCellValue("成功");
-                        } else if (associatedRecordListVo.getAssociatedState() == 2) {
+                        } else if (associatedRecordListVO.getAssociatedState() == 2) {
                             cell.setCellValue("失败");
                         }
                     } else if (celLength == 8) {// 关联时间
                         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        cell.setCellValue(df.format(associatedRecordListVo.getAssociatedTime()));
+                        cell.setCellValue(df.format(associatedRecordListVO.getAssociatedTime()));
                     }
                 }
             }

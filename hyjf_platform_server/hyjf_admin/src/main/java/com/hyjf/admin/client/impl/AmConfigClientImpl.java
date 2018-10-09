@@ -2121,5 +2121,19 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
-
+    /**
+     * 根据bankId查询江西银行配置
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public JxBankConfigVO selectJxBankConfigByBankId(Integer bankId) {
+        String url = "http://AM-ADMIN/am-config/jxBankConfig/selectJxBankConfigByBankId/" + bankId;
+        JxBankConfigResponse response = restTemplate.getForEntity(url,JxBankConfigResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
 }

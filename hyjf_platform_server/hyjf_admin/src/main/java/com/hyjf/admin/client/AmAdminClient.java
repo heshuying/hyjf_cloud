@@ -661,4 +661,29 @@ public interface AmAdminClient {
      * @return
      */
     EmailRecipientResponse insertAction(EmailRecipientRequest recipientRequest);
+
+
+    /**
+     * 江西银行卡异常count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getBindCardExceptionCount(BindCardExceptionRequest request);
+
+    /**
+     * 江西银行卡异常列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<BindCardExceptionCustomizeVO> searchBindCardExceptionList(BindCardExceptionRequest request);
+
+    /**
+     * 异常中心-江西银行卡异常-更新银行卡
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    void updateBindCard(BindCardExceptionRequest request);
 }
