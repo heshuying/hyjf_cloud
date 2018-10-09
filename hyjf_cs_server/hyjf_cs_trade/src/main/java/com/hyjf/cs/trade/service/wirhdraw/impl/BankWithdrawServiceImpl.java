@@ -834,7 +834,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 成功跳转的url
         bean.setSuccessfulUrl(successfulUrl);
         // 提现金额大于五万,走人行通道,路由代码传2
-        if ((new BigDecimal(transAmt).compareTo(new BigDecimal(50000)) > 0) && StringUtils.isNotBlank(payAllianceCode)) {
+        if ((new BigDecimal(transAmt).compareTo(new BigDecimal(50001)) > 0) && StringUtils.isNotBlank(payAllianceCode)) {
             routeCode = "2";// 路由代码
             bean.setCardBankCnaps(payAllianceCode);// 绑定银行联行号
         }
