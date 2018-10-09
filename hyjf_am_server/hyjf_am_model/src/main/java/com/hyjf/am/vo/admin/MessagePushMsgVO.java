@@ -12,7 +12,7 @@ public class MessagePushMsgVO {
 
     private String id;
 
-    private Integer tagId;
+    private String tagId;
 
     private String tagCode;
 
@@ -72,11 +72,11 @@ public class MessagePushMsgVO {
         this.id = id;
     }
 
-    public Integer getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
-    public void setTagId(Integer tagId) {
+    public void setTagId(String tagId) {
         this.tagId = tagId;
     }
 
