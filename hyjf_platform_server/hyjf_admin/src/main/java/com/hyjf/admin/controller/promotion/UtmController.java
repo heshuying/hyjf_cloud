@@ -38,10 +38,10 @@ public class UtmController extends BaseController {
 
     @ApiOperation(value = "页面初始化", notes = "渠道列表")
     @PostMapping("/init")
-    public JSONObject utmListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject = utmService.getByPageList(map,Integer.parseInt(getCurrPage(map)),Integer.parseInt(getPageSize(map)));
-        return jsonObject;
+    public UtmResultResponse utmListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
+        UtmResultResponse utmResultResponse = new UtmResultResponse();
+        utmResultResponse = utmService.getByPageList(map,Integer.parseInt(getCurrPage(map)),Integer.parseInt(getPageSize(map)));
+        return utmResultResponse;
     }
 
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
