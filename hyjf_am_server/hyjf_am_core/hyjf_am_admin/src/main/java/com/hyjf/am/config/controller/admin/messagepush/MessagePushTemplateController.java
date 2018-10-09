@@ -92,7 +92,7 @@ public class MessagePushTemplateController {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         MessagePushTemplate messagePushTemplate = new MessagePushTemplate();
         BeanUtils.copyProperties(templateVO, messagePushTemplate);
-        messagePushTemplate.setTagId(Integer.parseInt(templateVO.getTagId()));
+        messagePushTemplate.setTagId(templateVO.getTagId());
         messagePushTemplate.setCreateTime(GetDate.getDate());
         Integer result = templateServcie.insertMessagePushTemplate(messagePushTemplate);
         response.setCount(result);

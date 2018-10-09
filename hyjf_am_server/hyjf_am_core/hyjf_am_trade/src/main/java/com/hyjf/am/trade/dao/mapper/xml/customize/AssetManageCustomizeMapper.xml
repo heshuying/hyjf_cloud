@@ -1729,6 +1729,75 @@
 	</sql>
 
 
+	<resultMap id="WechatTenderCreditListMap" type="com.hyjf.am.trade.dao.model.customize.WechatTenderCreditListCustomize">
+		<id column="creditNid" property="creditNid" jdbcType="VARCHAR" />
+		<result column="creditTime" property="creditTime" jdbcType="VARCHAR" />
+		<result column="creditCapital" property="creditCapital" jdbcType="VARCHAR" />
+		<result column="creditCapitalAssigned" property="creditCapitalAssigned" jdbcType="VARCHAR" />
+		<result column="realCreditNid" property="realCreditNid" jdbcType="VARCHAR" />
+		<result column="creditStatusDesc" property="creditStatusDesc" jdbcType="VARCHAR" />
+		<result column="creditRecordInfoUrl" property="creditRecordInfoUrl" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<select id="selectWechatCreditRecordList" resultMap="WechatTenderCreditListMap" parameterType="Map">
+		SELECT
+		<!-- 债转编号 -->
+		hbc.bid_nid AS creditNid,
+		<!-- 债转时间 -->
+		DATE_FORMAT( hbc.create_time, '%Y-%m-%d %H:%i' ) AS creditTime,
+		<!-- 债权本金 -->
+		FORMAT(hbc.credit_capital,2) AS creditCapital,
+		<!-- 已认购金额 -->
+		FORMAT(hbc.credit_capital_assigned,2) AS creditCapitalAssigned,
+
+		<!-- 债转状态 -->
+		CASE WHEN hbc.credit_status = 0 THEN '转让中'
+		WHEN hbc.credit_status = 1 THEN CONCAT(TRUNCATE(hbc.credit_capital_assigned/hbc.credit_capital,2)*100,'%')
+		WHEN hbc.credit_status = 2 THEN '已还款'
+		END
+		AS creditStatus,
+
+		hbc.credit_nid AS realCreditNid,
+
+		<!-- 债转状态2 -->
+		CASE WHEN hbc.credit_status = 0 THEN '转让中'
+		WHEN hbc.credit_capital_assigned = hbc.credit_capital THEN '已完成'
+		else '已结束'
+		END
+		AS creditStatusDesc,
+		CASE WHEN hbc.credit_status = 0 THEN 0
+		ELSE 1
+		END
+		AS orderByCreditStatus,
+		<!-- 债转详情URL -->
+		CONCAT(#{host},'?creditNid=',hbc.credit_nid,'&amp;sign=',#{sign}) AS creditRecordInfoUrl
+		FROM
+		ht_borrow_credit hbc
+		<where>
+			<if test="userId != null and userId != ''">
+				AND hbc.credit_user_id = #{userId}
+			</if>
+			<!-- 转让中列表 -->
+			<if test="status != null and status !=''">
+				<!-- 转让中 -->
+				AND hbc.credit_status = #{status}
+			</if>
+			<if test="successStatus != null and successStatus !=''">
+				<!-- 转让成功-->
+				AND hbc.credit_status != #{successStatus}
+			</if>
+			<if test="creditCapitalAssigned != null and creditCapitalAssigned != '' ">
+				<!-- 并且认购金额>0 -->
+				AND hbc.credit_capital_assigned <![CDATA[>]]> #{creditCapitalAssigned}
+			</if>
+		</where>
+		ORDER BY orderByCreditStatus ASC , creditTime DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+
 	<resultMap id="AppAlreadyRepayListMap" type="com.hyjf.am.trade.dao.model.customize.AppAlreadyRepayListCustomize">
 		<id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
@@ -3264,5 +3333,7 @@
 			INNER JOIN ht_increase_interest_invest hiii ON hiil.invest_order_id=hiii.order_id
 		WHERE hiil.invest_order_id=#{nid}
 	</select>
+
+
 
 </mapper>
