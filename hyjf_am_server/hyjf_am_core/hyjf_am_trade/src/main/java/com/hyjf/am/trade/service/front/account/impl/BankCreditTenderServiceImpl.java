@@ -1444,7 +1444,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		// 处理出让人的 account表和account_list表
 		Account sellerAccountNew = CommonUtils.convertBean(request.getSellerAccountNew(),Account.class);
 		logger.info("处理出让人的 account表{} ",JSONObject.toJSONString(sellerAccountNew));
-		this.adminAccountCustomizeMapper.updateCreditAssignSuccess(sellerAccountNew) ;
+		this.adminAccountCustomizeMapper.updateCreditSellerSuccess(sellerAccountNew) ;
 		AccountList sellerAccountList = CommonUtils.convertBean(request.getSellerAccountList(),AccountList.class);
 		logger.info("处理出让人的 account_list表{} ",JSONObject.toJSONString(sellerAccountList));
 		this.accountListMapper.insertSelective(sellerAccountList);

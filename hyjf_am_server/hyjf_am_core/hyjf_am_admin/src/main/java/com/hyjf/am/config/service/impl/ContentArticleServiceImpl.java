@@ -13,8 +13,10 @@ import com.hyjf.am.response.admin.ContentArticleResponse;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.common.enums.ContentArticleEnum;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -150,6 +152,9 @@ public class ContentArticleServiceImpl implements ContentArticleService {
                 vo = new ContentArticleVO();
                 vo.setPublishTime(GetDate.dateToString(ca.getCreateTime()));
                 BeanUtils.copyProperties(ca, vo);
+
+                vo.setType(ContentArticleEnum.getName(vo.getType()));
+                vo.setCreateStrTime(DateFormatUtils.format(vo.getCreateTime(), GetDate.datetimeFormat_key));
                 listVO.add(vo);
             }
 //            List<ContentArticleVO> listVO = CommonUtils.convertBeanList(list, ContentArticleVO.class);

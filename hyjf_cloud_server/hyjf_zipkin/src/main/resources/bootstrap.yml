@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: ZIPKIN-SERVER
+  cloud:
+    config:
+      uri: http://micoserver:2222/
+  boot:
+    admin:
+      client:
+        url: http://micoserver:18080
+  profiles:
+    active: dev
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://micoserver:1111/eureka/
+  instance:
+    preferIpAddress: true
+
+server:
+  port: 9411
+
+#  解决zipkinserver报错 https://blog.csdn.net/duanqing_song/article/details/80422301
+management:
+  metrics:
+    web:
+      server:
+        auto-time-requests: false
+# spring boot admin 监控的端点
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+logging:
+  file: zipkin.log

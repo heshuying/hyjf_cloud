@@ -4,7 +4,7 @@
 package com.hyjf.am.config.controller.admin.messagepush;
 
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
-import com.hyjf.am.config.service.MessagePushTemplateServcie;
+import com.hyjf.am.config.service.MessagePushTemplateService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.MessagePushTemplateResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
@@ -35,7 +35,7 @@ public class MessagePushTemplateController {
     Logger logger = LoggerFactory.getLogger(MessagePushTemplateController.class);
 
     @Autowired
-    private MessagePushTemplateServcie templateServcie;
+    private MessagePushTemplateService templateServcie;
 
     /**
      * 获取消息模板列表
@@ -92,7 +92,7 @@ public class MessagePushTemplateController {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         MessagePushTemplate messagePushTemplate = new MessagePushTemplate();
         BeanUtils.copyProperties(templateVO, messagePushTemplate);
-        messagePushTemplate.setTagId(Integer.parseInt(templateVO.getTagId()));
+        messagePushTemplate.setTagId(templateVO.getTagId());
         messagePushTemplate.setCreateTime(GetDate.getDate());
         Integer result = templateServcie.insertMessagePushTemplate(messagePushTemplate);
         response.setCount(result);

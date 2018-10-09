@@ -409,6 +409,43 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     }
 
     /**
+     * 债转承接校验
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public WebResult<Map<String, Object>> borrowCreditCheck(TenderRequest request) {
+        UserVO loginUser = amUserClient.findUserById(Integer.valueOf(request.getUserId()));
+
+        Integer userId = loginUser.getUserId();
+        request.setUser(loginUser);
+        // 检查请求参数是否正确
+        this.checkRequest(request);
+        // 获取债转数据
+        BorrowCreditVO borrowCredit = amTradeClient.getBorrowCreditByCreditNid(request.getCreditNid());
+        if(borrowCredit==null){
+            // 获取债转数据错误
+            throw new CheckException(MsgEnum.ERROR_CREDIT_NOT_EXIST);
+        }
+        logger.info("债转投资校验开始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
+        UserVO user = amUserClient.findUserById(userId);
+        UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
+        BankOpenAccountVO bankOpenAccount = amUserClient.selectBankAccountById(userId);
+        // 检查用户状态  角色  授权状态等  是否允许投资
+        this.checkUser(user,userInfo,bankOpenAccount,borrowCredit);
+        // 查询用户账户表-投资账户
+        AccountVO tenderAccount = amTradeClient.getAccount(userId);
+        // 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+        TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(request.getCreditNid(), request.getAssignCapital(),userId);
+        logger.info("creditAssign {}", JSONObject.toJSONString(creditAssign));
+        // 检查金额
+        this.checkTenderMoney(request, tenderAccount,creditAssign);
+        logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
+        return new WebResult<Map<String, Object>>();
+    }
+
+    /**
      * 债转成功后操作
      * @param logOrderId
      * @param userId
