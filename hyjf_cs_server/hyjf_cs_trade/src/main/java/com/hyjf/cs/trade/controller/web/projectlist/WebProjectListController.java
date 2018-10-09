@@ -66,13 +66,14 @@ public class WebProjectListController extends BaseTradeController {
      * 散标专区散标投资列表
      * @param request
      * @return
+     * 原接口：com.hyjf.web.bank.web.borrow.BorrowController.searchBorrowList()
      */
     @ApiOperation(value = "获取散标专区散标投资列表", notes = "获取散标专区散标投资列表")
     @PostMapping(value = "/borrowProjectList", produces = "application/json; charset=utf-8")
     public Object borrowProjectList(@RequestBody @Valid ProjectListRequest request){
         // controller 不做业务处理
         request.setProjectType("HZT");
-        WebResult result =  webProjectListService.searchProjectList(request);
+        WebResult result =  webProjectListService.searchProjectListNew(request);
         return result;
     }
 

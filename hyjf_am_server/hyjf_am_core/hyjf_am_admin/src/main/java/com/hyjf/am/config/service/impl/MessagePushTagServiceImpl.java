@@ -110,4 +110,9 @@ public class MessagePushTagServiceImpl implements MessagePushTagService {
         example.setOrderByClause("sort_id asc");
         return this.messagePushTagMapper.selectByExample(example);
     }
+
+    @Override
+    public MessagePushTag getTagByTagId(Integer tagId) {
+        return  messagePushTagMapper.selectByPrimaryKey(tagId);
+    }
 }

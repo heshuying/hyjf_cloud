@@ -2106,5 +2106,20 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
+    /**
+     * 根据标签id查询标签
+     * @param tagId
+     * @return
+     */
+    @Override
+    public MessagePushTagVO getTagByTagId(Integer tagId) {
+        String url = "http://AM-ADMIN/am-config/messagePushTag/getTagByTagId/" + tagId;
+        MessagePushTagResponse response = restTemplate.getForEntity(url,MessagePushTagResponse.class).getBody();
+        if (null != response.getResult()) {
+            return response.getResult();
+        }
+        return null;
+    }
+
 
 }
