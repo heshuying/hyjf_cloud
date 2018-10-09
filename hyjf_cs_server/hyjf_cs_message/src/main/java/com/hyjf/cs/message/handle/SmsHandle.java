@@ -183,7 +183,7 @@ public class SmsHandle {
 				if (smsNoticeConfig == null) {
 					throw new RuntimeException("无可用通知配置模板");
 				}
-				String mobile = smsNoticeConfig.getValue();
+				String mobile = smsNoticeConfig.getConfigValue();
 				String messageStr = smsNoticeConfig.getContent();
 				if (Validator.isNotNull(messageStr)) {
 					if (replaceStrs != null && replaceStrs.size() > 0) {
@@ -227,7 +227,7 @@ public class SmsHandle {
 				if (smsNoticeConfig == null) {
 					throw new RuntimeException("无可用通知配置模板");
 				}
-				String mobile = smsNoticeConfig.getValue();
+				String mobile = smsNoticeConfig.getConfigValue();
 				String messageStr = smsNoticeConfig.getContent();
 				if (Validator.isNotNull(messageStr)) {
 					if (replaceStrs != null && replaceStrs.size() > 0) {
