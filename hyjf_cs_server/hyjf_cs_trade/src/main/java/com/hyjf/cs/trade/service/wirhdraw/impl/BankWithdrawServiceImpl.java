@@ -840,9 +840,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         }
         if ("2".equals(routeCode)) {
             bean.setRouteCode(routeCode);
-            LogAcqResBean logAcq = new LogAcqResBean();
-            logAcq.setPayAllianceCode(payAllianceCode);
-            bean.setLogAcqResBean(logAcq);
         }
         // 企业用户提现
         if (user.getUserType() == 1) { // 企业用户 传组织机构代码
