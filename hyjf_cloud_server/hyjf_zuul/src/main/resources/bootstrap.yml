@@ -9,6 +9,11 @@ spring:
     admin:
       client:
         url: http://micoserver:18080
+ zipkin: 
+  base-url: http://micoserver:9411
+ sleuth:
+  sampler:
+   percentage: 0.1
  profiles:
    active: dev
 server:

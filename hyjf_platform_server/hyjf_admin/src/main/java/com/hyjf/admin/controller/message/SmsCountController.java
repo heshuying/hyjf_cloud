@@ -25,6 +25,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -196,7 +197,14 @@ public class SmsCountController extends BaseController {
         }
         List<SmsCountCustomizeVO> listSms = smsCountService.querySmsCountList(smsCountCustomize).getResultList();
         //短信总条数+总费用
-        Integer smsNumber = smsCountService.querySmsCountNumberTotal(smsCountCustomize);
+        Integer smsNumber = 0;
+        BigDecimal smsMoney = BigDecimal.ZERO;
+        if (!CollectionUtils.isEmpty(listSms)) {
+            for (SmsCountCustomizeVO vo : listSms) {
+                smsNumber += vo.getSmsNumber();
+                smsMoney = smsMoney.add(new BigDecimal(configMoney).multiply(new BigDecimal(vo.getSmsNumber())));
+            }
+        }
 
         String[] titles = new String[]{"序号", "分公司", "数量(条)", "费用(元)", "时间"};
         // 声明一个工作薄
@@ -240,7 +248,7 @@ public class SmsCountController extends BaseController {
             }
 
             //总条数
-            String[] sumSmsCount = new String[]{"总条数", "", String.valueOf(smsNumber), decimalFormat.format(new BigDecimal(configMoney).multiply(new BigDecimal(smsNumber))), ""};
+            String[] sumSmsCount = new String[]{"总条数", "", String.valueOf(smsNumber), decimalFormat.format(smsMoney), ""};
             Row rowTow = sheet.createRow(rowNum + 1);
             for (int celLength = 0; celLength < sumSmsCount.length; celLength++) {
                 // 创建相应的单元格

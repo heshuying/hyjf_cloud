@@ -4,6 +4,7 @@ import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.SubConfigService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
 import com.hyjf.am.response.user.UserInfoCustomizeResponse;
 import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
@@ -49,7 +50,7 @@ public class SubConfigServiceImpl implements SubConfigService {
     public AdminSubConfigResponse insertSubConfig(AdminSubConfigRequest adminRequest){
         // 查询用户名信息
         UserInfoCustomizeResponse userResponse= userClient.queryUserInfoByUserName(adminRequest);
-        if (userResponse != null&& userResponse.getResult().getUserId() !=null) {
+        if (Response.isSuccess(userResponse)&&userResponse.getResult() != null&& userResponse.getResult().getUserId() !=null) {
             // 设置用户名信息
             adminRequest.setUserId(userResponse.getResult().getUserId());
         }
