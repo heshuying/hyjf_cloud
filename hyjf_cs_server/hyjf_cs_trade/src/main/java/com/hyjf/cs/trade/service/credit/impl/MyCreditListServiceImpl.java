@@ -320,7 +320,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     /**
      * 用户中心查询 债转详细预计服务费计算
      *
-     * @param request
+     * @param requestcreditFee
      * @param userId
      * @return
      */
@@ -652,6 +652,15 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         creditPrice = creditCapital.multiply(new BigDecimal(1).subtract(new BigDecimal(creditDiscount).divide(new BigDecimal(100)))).setScale(2, BigDecimal.ROUND_DOWN);
         // 年利率
         BigDecimal yearRate = borrow.getBorrowApr().divide(new BigDecimal("100"));
+        // 服务费
+        BigDecimal creditFee = BigDecimal.ZERO;
+
+        DebtConfigResponse response = amConfigClient.getDebtConfig();
+        DebtConfigVO config = response.getResult();
+        if(config==null){
+            throw new CheckException(MsgEnum.ERROR_CREDIT_CONFIG_NULL_ERROR);
+        }
+
         // 到期还本还息和按天计息，到期还本还息
         if (borrowStyle.equals(CalculatesUtil.STYLE_END) || borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {
             int lastDays = 0;
@@ -732,6 +741,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             // 预计收益 承接人债转本息—实付金额
             assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
         }
+        // 服务费
+        creditFee = assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN);
         resultMap.put("creditAccount", creditAccount.setScale(2, BigDecimal.ROUND_DOWN));// 债转本息
         resultMap.put("creditInterest", creditInterest.setScale(2, BigDecimal.ROUND_DOWN));// 预计收益
         resultMap.put("assignInterestAdvance", assignInterestAdvance.setScale(2, BigDecimal.ROUND_DOWN));// 垫付利息
@@ -740,6 +751,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         resultMap.put("assignInterest", assignInterest.setScale(2, BigDecimal.ROUND_DOWN));// 债转期全部利息
         resultMap.put("creditCapital", creditCapital.setScale(2, BigDecimal.ROUND_DOWN));// 可转本金
         resultMap.put("creditPrice", creditPrice.setScale(2, BigDecimal.ROUND_DOWN));// 折后价格
+        resultMap.put("creditFee", creditFee.setScale(2, BigDecimal.ROUND_DOWN));// 服务费
         return resultMap;
     }
 
