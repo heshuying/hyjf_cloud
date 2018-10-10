@@ -98,9 +98,9 @@ public class InvestProjectController extends BaseUserController {
 
 		// 用户id
 		Integer userId = SecretUtil.getUserId(sign);
-		String host = systemConfig.getWebHost()+ InvestProjectDefine.REQUEST_HOME + InvestProjectDefine.REQUEST_MAPPING
+		String host = systemConfig.getServerHost()+ InvestProjectDefine.REQUEST_HOME + InvestProjectDefine.REQUEST_MAPPING
 				+ InvestProjectDefine.REPAY_PROJECT_DETAIL_ACTION;
-		String hostContact = systemConfig.getWebHost() + InvestProjectDefine.REQUEST_HOME + InvestProjectDefine.REQUEST_MAPPING
+		String hostContact = systemConfig.getServerHost() + InvestProjectDefine.REQUEST_HOME + InvestProjectDefine.REQUEST_MAPPING
 				+ InvestProjectDefine.REPAY_CONTACT_ACTION;
 
 		// 调用接口获取数据
@@ -151,7 +151,7 @@ public class InvestProjectController extends BaseUserController {
 
 		// 用户id
 		Integer userId = SecretUtil.getUserId(sign);
-		String host = systemConfig.getWebHost() + InvestProjectDefine.REQUEST_HOME + InvestProjectDefine.REQUEST_MAPPING
+		String host = systemConfig.getServerHost() + InvestProjectDefine.REQUEST_HOME + InvestProjectDefine.REQUEST_MAPPING
 				+ InvestProjectDefine.INVEST_PROJECT_DETAIL_ACTION;
 
 		// 调用接口获取数据
@@ -201,7 +201,7 @@ public class InvestProjectController extends BaseUserController {
 
 		// 用户id
 		Integer userId = SecretUtil.getUserId(sign);
-		String host = systemConfig.getWebHost() + InvestProjectDefine.REQUEST_HOME + InvestProjectDefine.REQUEST_MAPPING
+		String host = systemConfig.getServerHost() + InvestProjectDefine.REQUEST_HOME + InvestProjectDefine.REQUEST_MAPPING
 				+ InvestProjectDefine.REPAYED_PROJECT_DETAIL_ACTION;
 
 		// 调用接口获取数据

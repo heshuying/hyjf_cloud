@@ -255,7 +255,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
      * @return
      */
     @Override
-    public Integer selectPlanAccedeSum(Map<String, Object> params) {
+    public Long selectPlanAccedeSum(Map<String, Object> params) {
         return hjhPlanCustomizeMapper.selectPlanAccedeSum(params);
     }
 
