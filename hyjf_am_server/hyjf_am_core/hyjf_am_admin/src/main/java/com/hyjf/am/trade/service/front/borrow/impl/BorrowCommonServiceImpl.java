@@ -95,8 +95,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 				
 			if (redisBorrowPreNid != null && redisBorrowPreNid.length() != 0) {
-				if (Long.valueOf(redisBorrowPreNid) >= Long.valueOf(borrowPreNid)) {
-					return true;
+				//董泽杉优化如果手动输入的预编号和redis里长度不同则pass
+				if(borrowPreNid.length()==redisBorrowPreNid.length()) {
+					if (Long.valueOf(redisBorrowPreNid) >= Long.valueOf(borrowPreNid)) {
+						return true;
+					}
 				}
 			}
 		}
