@@ -1068,7 +1068,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      */
     private void setProtocolsToResultVO(AppInvestInfoResultVO investInfo, String investType){
         List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
-        NewAgreementBean newAgreementBean=new NewAgreementBean("投资协议",  systemConfig.webHost+"/agreement/AgreementViewList?borrowType="+investType);
+        NewAgreementBean newAgreementBean=new NewAgreementBean("投资协议",  systemConfig.AppFrontHost+"/agreement/AgreementViewList?borrowType="+investType);
         list.add(newAgreementBean);
         investInfo.setProtocols(list);
         investInfo.setProtocolUrlDesc("协议列表");
@@ -1134,11 +1134,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         request.setUserName(loginUser.getUsername());
         // 设置redis 用户正在投资
         String key = RedisConstants.BORROW_TENDER_REPEAT + userId;
-        boolean checkTender = RedisUtils.tranactionSet(key, RedisConstants.TENDER_OUT_TIME);
-        if(!checkTender){
-            // 用户正在投资
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
-        }
         if (StringUtils.isEmpty(request.getBorrowNid())) {
             // 项目编号不能为空
             throw new CheckException(MsgEnum.STATUS_CE000013);
@@ -1490,10 +1485,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (!checkTender) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_HANDING);
         }
-        // redis扣减
-        redisTender(userId, borrowNid, txAmount);
         // 操作数据库表
         this.borrowTender(borrow, bean);
+        // redis扣减
+        redisTender(userId, borrowNid, txAmount);
         logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
         // 如果用了优惠券
         if (StringUtils.isNotEmpty(couponGrantId) && !"0".equals(couponGrantId) && !"-1".equals(couponGrantId)) {

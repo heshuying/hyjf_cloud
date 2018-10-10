@@ -49,7 +49,7 @@ public class AutoTenderServer extends BaseTradeController{
     SystemConfig systemConfig;
 
     @ApiOperation(value = "手动投资散标", notes = "手动投资散标")
-    @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/tender.do", produces = "application/json; charset=utf-8")
     @ResponseBody
     public AutoTenderResultBean autoTender(@RequestBody AutoTenderRequestBean autoTenderRequestBean, HttpServletRequest request, HttpServletResponse response) {
     	
@@ -82,7 +82,7 @@ public class AutoTenderServer extends BaseTradeController{
 		}*/
 		
         //新验签
-        if(SignUtil.verifyRequestSign(autoTenderRequestBean, "/tender")){
+        if(!SignUtil.verifyRequestSign(autoTenderRequestBean, "/tender")){
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
             logger.info("验签失败！---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: " + autoTenderRequestBean.getBorrowNid());
             resultBean.setStatusDesc("验签失败！");
