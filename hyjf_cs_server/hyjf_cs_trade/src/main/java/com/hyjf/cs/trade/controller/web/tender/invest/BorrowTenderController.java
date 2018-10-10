@@ -105,7 +105,7 @@ public class BorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "web端散标投资获取投资结果", notes = "web端散标投资获取投资结果")
     @PostMapping(value = "/getBorrowTenderResult", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") Integer userId,
+    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId",required = false) Integer userId,
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid,
                                                                HttpServletRequest request) {
