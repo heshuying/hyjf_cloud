@@ -3,8 +3,14 @@
  */
 package com.hyjf.am.user.controller.admin.locked;
 
+import com.hyjf.am.user.dao.model.auto.LockedUserInfo;
+import com.hyjf.am.user.service.front.user.LockedUserService;
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -17,6 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/am-user/lockeduser")
 public class LockedUserController {
 
+    private LockedUserService lockedUserService;
+
+    /**
+     * 保证金配置，根据用户名称查询用户信息
+     *
+     * @param lockedUserInfoVO
+     * @return
+     */
+    @RequestMapping(value = "/insertLockedUser", method = RequestMethod.POST)
+    public int insertLockedUser(@RequestBody LockedUserInfoVO lockedUserInfoVO) {
+        return lockedUserService.inserLockedUser(lockedUserInfoVO);
+    }
 
 
 }
