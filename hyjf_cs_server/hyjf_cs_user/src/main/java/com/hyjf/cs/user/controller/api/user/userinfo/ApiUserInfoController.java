@@ -29,7 +29,7 @@ public class ApiUserInfoController extends BaseUserController {
     private ApiUserInfoService apiUserInfoService;
 
     @ApiOperation(value = "用户信息查询",notes = "用户信息查询")
-    @PostMapping(value = "/syncUserInfo")
+    @PostMapping(value = "/syncUserInfo.do")
     public SyncUserInfoResultBean syncUserInfo(@RequestBody SyncUserInfoRequestBean requestBean){
         logger.info(JSON.toJSONString(requestBean));
         return apiUserInfoService.syncUserInfo(requestBean);
