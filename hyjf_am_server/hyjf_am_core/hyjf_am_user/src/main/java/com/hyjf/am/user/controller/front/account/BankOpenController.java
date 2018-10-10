@@ -85,7 +85,7 @@ public class BankOpenController extends BaseController {
 	 */
 	@RequestMapping("/updateUserAccount")
 	public int updateUserAccount(@RequestBody @Valid BankOpenRequest request) {
-		logger.info("updateUserAccount..d. param is ::{}", JSONObject.toJSONString(request));
+		logger.info("updateUserAccount..dd. param is ::{}", JSONObject.toJSONString(request));
 
 		Integer userId = request.getUserId();
 		String orderId = request.getOrderId();
