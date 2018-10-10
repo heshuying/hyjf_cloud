@@ -129,7 +129,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public List<LinkVO> getPartnersList(Integer partnerType) {
 		LinkResponse response = restTemplate.getForObject(
-				"http://AM-CONFIG/am-config/content/contentpartner/getbypartnertype/" + partnerType,
+				"http://AM-ADMIN/am-config/content/contentpartner/getbypartnertype/" + partnerType,
 				LinkResponse.class);
 		if (response != null) {
 			return response.getResultList();
