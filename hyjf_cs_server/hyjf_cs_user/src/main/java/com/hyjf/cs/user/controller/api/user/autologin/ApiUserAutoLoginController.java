@@ -11,6 +11,7 @@ import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.security.util.SignUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.user.bean.ApiResultPageBean;
 import com.hyjf.cs.user.bean.ApiSkipFormBean;
 import com.hyjf.cs.user.bean.ApiUserPostBean;
@@ -110,13 +111,6 @@ public class ApiUserAutoLoginController extends BaseUserController {
         // 验签
         //String sign = request.getInstCode() + request.getUserId() + (request.getBorrowNid()==null?"":request.getBorrowNid()) + request.getTimestamp() + request.getInstCode();
         //CheckUtil.check(ApiSignUtil.verifyByRSA(request.getInstCode(), request.getChkValue(), sign), MsgEnum.ERR_SIGN);
-/*		//注释从这里开始
-        // 解密
-        String nmUserId = bean.getUserId();
-        // 数字验证
-        CheckUtil.check(Validator.isDigit(nmUserId), "Object.digit", "userId");
-        //注释到这里
-*/
         // userId 解密
         //int nmUserId = this.userIdDecrypt(request);
         // 查询userid

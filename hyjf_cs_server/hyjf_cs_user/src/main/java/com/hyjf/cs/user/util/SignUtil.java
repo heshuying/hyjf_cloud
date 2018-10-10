@@ -45,11 +45,16 @@ public class SignUtil {
             // 借款人受托支付申请查询
             TrusteePayRequestBean bean = (TrusteePayRequestBean) paramBean;
             sign = bean.getChannel() + bean.getAccountId() + bean.getProductId() + bean.getTimestamp();
-        }
-        if (methodName.equals("/server/repayAuth/repayAuth")) {
+        } else if (methodName.equals("/server/repayAuth/repayAuth")) {
             // 还款授权
             PaymentAuthPageRequestBean bean = (PaymentAuthPageRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getAccountId()+bean.getRetUrl()+bean.getNotifyUrl() + bean.getTimestamp();
+        }else if(BaseDefine.METHOD_SERVER_TRUSTEE_PAY.equals(methodName)){
+            //借款人受托支付申请
+            TrusteePayRequestBean bean = (TrusteePayRequestBean) paramBean;
+            sign = bean.getChannel() + bean.getAccountId() + bean.getProductId() + bean.getIdType() + bean.getIdNo()
+                    + bean.getReceiptAccountId() + bean.getForgotPwdUrl() + bean.getRetUrl() + bean.getNotifyUrl()
+                    + bean.getTimestamp();
         }
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
     }
