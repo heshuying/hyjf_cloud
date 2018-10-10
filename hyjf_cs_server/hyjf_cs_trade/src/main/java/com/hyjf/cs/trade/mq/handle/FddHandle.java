@@ -269,6 +269,7 @@ public class FddHandle {
                 callBean.setFont_size("12");
                 callBean.setFont_type("1");
                 DzqzCallBean dzqzCallBean = DzqzCallUtil.callApiBg(callBean);
+                logger.info("--------------法大大生成居间服务协议请求银行接口返回数据："+JSONObject.toJSONString(dzqzCallBean));
                 String result = dzqzCallBean.getResult();
                 String code = dzqzCallBean.getCode();
                 dzqzCallBean.setTemplate_id(templetId);
