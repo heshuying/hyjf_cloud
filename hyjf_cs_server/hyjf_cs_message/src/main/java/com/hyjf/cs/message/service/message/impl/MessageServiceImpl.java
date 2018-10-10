@@ -149,7 +149,7 @@ public class MessageServiceImpl implements MessageService {
 			throw new Exception("定时发送短信时发生错误。" + "[错误记录id：" + apicron.getId() + "]," + "[错误件数：" + errorCnt + "]");
 		}
 		// 更新任务API状态为完成
-		updatetOntime(apicron.getId(), Integer.valueOf(STATUS_RUNNING), null);
+		updatetOntime(apicron.getId(), STATUS_RUNNING, null);
 	}
 
 	/**
