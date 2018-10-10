@@ -352,7 +352,7 @@ public class SmsHandle {
 	/**
 	 * 短信调用返回
 	 */
-	private class SmsResponse implements Serializable {
+	private static class SmsResponse implements Serializable {
 
 		/**
 		 * 此处为属性说明
