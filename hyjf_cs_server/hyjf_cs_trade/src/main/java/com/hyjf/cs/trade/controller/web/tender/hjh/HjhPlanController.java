@@ -52,7 +52,7 @@ public class HjhPlanController extends BaseTradeController {
         try {
             result = hjhTenderService.joinPlan(tender);
         } catch (CheckException e) {
-            throw e;
+           throw e;
         } finally {
             RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
         }

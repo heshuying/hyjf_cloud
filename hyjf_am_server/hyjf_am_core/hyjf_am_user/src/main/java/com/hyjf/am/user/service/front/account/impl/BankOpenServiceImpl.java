@@ -90,7 +90,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
     }
 
     @Override
-    public boolean updateUserAccount(Integer userId, String trueName, String orderId, String accountId, String idNo, Integer bankAccountEsb, String mobile, Integer roleId,Integer isSetPassword) {
+    public boolean updateUserAccount(Integer userId, String trueName, String orderId, String accountId, String idNo, Integer bankAccountEsb, String mobile, Integer roleId) {
         logger.info("开户成功后,更新用户账户信息");
         // 当前日期
         Date nowDate = new Date();
@@ -126,7 +126,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             } catch (Exception e) {
                 e.printStackTrace();
             }
-             sexInt = Integer.parseInt(idNo.substring(16, 17));
+            sexInt = Integer.parseInt(idNo.substring(16, 17));
             if (sexInt % 2 == 0) {
                 sexInt = 2;
             } else {
@@ -140,8 +140,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         user.setRechargeSms(0);
         user.setWithdrawSms(0);
         user.setUserType(0);
-        //user.setMobile(mobile);
-        user.setIsSetPassword(isSetPassword);
+        user.setMobile(mobile);
         // 更新相应的用户表
         boolean usersFlag = usersMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
         if (!usersFlag) {

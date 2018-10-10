@@ -11,6 +11,7 @@ import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.service.front.batch.AutoTenderService;
+import com.hyjf.am.trade.service.front.hjh.HjhPlanBorrowTmpService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
@@ -49,6 +50,9 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     @Autowired
     private AccountWebListProducer accountWebListProducer;
+
+    @Autowired
+    private HjhPlanBorrowTmpService hjhPlanBorrowTmpService;
 
     // 分期数据结果
     protected final String ASSIGN_RESULT = "assignResult";
@@ -148,26 +152,6 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     }
 
     /**
-     * 删除 自动投资临时表
-     *
-     * @param borrowNid
-     * @param hjhAccede
-     * @return
-     */
-    @Override
-    public boolean deleteBorrowTmp(String borrowNid, HjhAccede hjhAccede) {
-
-        HjhPlanBorrowTmpExample hjhPlanBorrowTmpExample = new HjhPlanBorrowTmpExample();
-        HjhPlanBorrowTmpExample.Criteria crt = hjhPlanBorrowTmpExample.createCriteria();
-        crt.andAccedeOrderIdEqualTo(hjhAccede.getAccedeOrderId());
-        crt.andBorrowNidEqualTo(borrowNid);
-        crt.andUserIdEqualTo(hjhAccede.getUserId());
-
-        return this.hjhPlanBorrowTmpMapper.deleteByExample(hjhPlanBorrowTmpExample) > 0 ? true : false;
-
-    }
-
-    /**
      * 银行自动投资成功后，更新投资数据
      *
      * @param borrowNid
@@ -218,7 +202,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         updateBorrowFull(borrow, hjhAccede, bean);
 
         // 删除临时表
-        deleteBorrowTmp(borrow.getBorrowNid(), hjhAccede);
+        this.hjhPlanBorrowTmpService.deleteHjhPlanBorrowTmpByAccedeBorrow(borrow.getBorrowNid(), hjhAccede.getAccedeOrderId());
 
         // 复投时，减去该计划的开放额度
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
@@ -690,7 +674,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         }
 
         // 删除临时表 OK
-        deleteBorrowTmp(credit.getCreditNid(), hjhAccede);
+        this.hjhPlanBorrowTmpService.deleteHjhPlanBorrowTmpByAccedeBorrow(credit.getCreditNid(), hjhAccede.getAccedeOrderId());
 
         // 复投时，减去该计划的开放额度
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
