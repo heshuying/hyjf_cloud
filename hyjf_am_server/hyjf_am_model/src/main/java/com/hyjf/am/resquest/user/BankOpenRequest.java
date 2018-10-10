@@ -37,6 +37,8 @@ public class BankOpenRequest extends BaseVO {
 
 	private Integer roleId;
 
+	private Integer isSetPassword;
+
 	public Integer getUserId() {
 		return userId;
 	}
@@ -147,5 +149,13 @@ public class BankOpenRequest extends BaseVO {
 
 	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
+	}
+
+	public Integer getIsSetPassword() {
+		return isSetPassword;
+	}
+
+	public void setIsSetPassword(Integer isSetPassword) {
+		this.isSetPassword = isSetPassword;
 	}
 }

@@ -119,9 +119,11 @@ public class WebBankOpenController extends BaseUserController {
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
     @PostMapping("/bgReturn")
     @ResponseBody
-    public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("phone") String mobile) {
+    public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("phone") String mobile,@RequestParam("roleId")String roleId,@RequestParam("openclient")String openclient) {
         logger.info("web端开户异步处理start,userId:{}", bean.getLogUserId());
         bean.setMobile(mobile);
+        bean.setLogClient(Integer.parseInt(openclient));
+        bean.setIdentity(roleId);
         BankCallResult result = bankOpenService.openAccountBgReturn(bean);
         return result;
     }
