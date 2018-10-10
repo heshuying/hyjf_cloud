@@ -478,9 +478,16 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			logger.info(this.getClass().getName(), "bidCancel","投资失败交易接口查询接口返回码：" + queryRespCode);
   			// 调用接口失败时(000以外)
 			if (!BankCallConstant.RESPCODE_SUCCESS.equals(queryRespCode)) {
-				String message = queryTransStatBean == null ? "" : queryTransStatBean.getRetMsg();
-				logger.error(this.getClass().getName(), "bidCancel", "调用交易查询接口(解冻)失败。" + message + ",[投资订单号：" + orgOrderId + "]", null);
-				throw new Exception("调用投标申请撤销失败。" + queryRespCode + "：" + message + ",[投资订单号：" + orgOrderId + "]");
+				/*String message = queryTransStatBean == null ? "" : queryTransStatBean.getRetMsg();*/
+				if(StringUtils.isNotEmpty(queryTransStatBean.getRetMsg())){
+					String message = queryTransStatBean.getRetMsg();
+					logger.error(this.getClass().getName(), "bidCancel", "调用交易查询接口(解冻)失败。" + message + ",[投资订单号：" + orgOrderId + "]", null);
+					throw new Exception("调用投标申请撤销失败。" + queryRespCode + "：" + message + ",[投资订单号：" + orgOrderId + "]");
+				}else{
+					String message = "";
+					logger.error(this.getClass().getName(), "bidCancel", "调用交易查询接口(解冻)失败。" + message + ",[投资订单号：" + orgOrderId + "]", null);
+					throw new Exception("调用投标申请撤销失败。" + queryRespCode + "：" + message + ",[投资订单号：" + orgOrderId + "]");
+				}
 			}else if (queryRespCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST1) || queryRespCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST2)) {
 				logger.info("===============冻结记录不存在,不予处理========");
 				/*原deleteBorrowTenderTmp(orgOrderId);   example.createCriteria().andNidEqualTo(orgOrderId);*/
