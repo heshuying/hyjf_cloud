@@ -96,27 +96,6 @@ public class SmsCodeServiceImpl extends BaseTradeServiceImpl implements SmsCodeS
         //无效的验证码类型
         CheckUtil.check(Validator.isNotNull(validCodeType) && codeTypes.contains(validCodeType), MsgEnum.ERR_OBJECT_INVALID, "验证码类型");
         CheckUtil.check(Validator.isNotNull(mobile) && Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
-        if (validCodeType.equals(CommonConstant.PARAM_TPL_ZHUCE)) {
-            // 注册时要判断不能重复
-            CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
-        }
-        if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH) || validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
-			if (userId != null) {
-				WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USERID_KEY + userId,
-						WebViewUserVO.class);
-				CheckUtil.check(webViewUserVO != null, MsgEnum.ERR_USER_NOT_EXISTS);
-				// 验证原手机号校验
-				if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
-					CheckUtil.check(StringUtils.isNotBlank(webViewUserVO.getMobile()), MsgEnum.ERR_USER_NOT_EXISTS);
-					CheckUtil.check(webViewUserVO.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_NEED_SAME);
-				}
-				// 绑定新手机号校验
-				if (validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
-					CheckUtil.check(!webViewUserVO.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_NEED_DIFFERENT);
-					CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
-				}
-			}
-        }
 
         // 判断发送间隔时间
         String intervalTime = RedisUtils.get(mobile + ":" + validCodeType + ":IntervalTime");
