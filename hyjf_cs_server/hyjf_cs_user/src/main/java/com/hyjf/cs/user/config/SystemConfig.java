@@ -7,23 +7,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class SystemConfig {
 
+    @Value("${hyjf.server.host}")
+    public String serverHost;
+
     @Value("${aop.interface.accesskey}")
     public String aopAccesskey;
 
     @Value("${release.coupon.accesskey}")
     public String couponAccesskey;
-
-    @Value("${hyjf.api.host}")
-    public String apiWebUrl;
-
-    @Value("${hyjf.web.host}")
-    public String webHost;
-
-    @Value("${hyjf.app.host}")
-    public String appHost;
-
-    @Value("${hyjf.weChat.host}")
-    public String weChatHost;
 
     @Value("{hyjf.web.ui.bindemail}")
     public String webUIBindEmail;
@@ -45,6 +36,7 @@ public class SystemConfig {
 
     /**
      * 获取文件url前缀
+     *
      * @return
      */
     public String getFilePrefixUrl() {
@@ -93,14 +85,19 @@ public class SystemConfig {
     private String wechatQrcodeUrl;
 
     @Value("${wcsr.retranspassword}")
-    // 需要在配置文件中 添加  wcsr.retranspassword = http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBack
+    /**
+     需要在配置文件中 添加  wcsr.retranspassword = http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBack
+     */
     private String retransPassword;
 
     @Value("${wcsr.resetpassword}")
-    // 需要在配置文件中 添加 wcsr.resetpassword=http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBackResetPwd
+    /** 需要在配置文件中 添加 wcsr.resetpassword=http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBackResetPwd
+     */
     private String resetpassword;
     @Value("${wcsr.deletecard.callback}")
-    // 需要在配置文件中 添加 wcsr.deletecard.callback=http://app.rongdongfeng.zhugedai.com/wcsr-app/deletecard/callBack
+    /**
+     * 需要在配置文件中 添加 wcsr.deletecard.callback=http://app.rongdongfeng.zhugedai.com/wcsr-app/deletecard/callBack
+     */
     private String surongDeletecard;
     @Value("${hyjf.env.test}")
     private boolean hyjfEnvTest;
@@ -115,12 +112,13 @@ public class SystemConfig {
     private String wrncallbackbindurl;
 
     public String getWrncallbackbindurl() {
-		return wrncallbackbindurl;
-	}
+        return wrncallbackbindurl;
+    }
 
-	public void setWrncallbackbindurl(String wrncallbackbindurl) {
-		this.wrncallbackbindurl = wrncallbackbindurl;
-	}
+    public void setWrncallbackbindurl(String wrncallbackbindurl) {
+        this.wrncallbackbindurl = wrncallbackbindurl;
+    }
+
     public String getAppServerHost() {
         return appServerHost;
     }
@@ -138,20 +136,21 @@ public class SystemConfig {
     }
 
     public String getPublickeyhjs() {
-		return publickeyhjs;
-	}
+        return publickeyhjs;
+    }
 
-	public void setPublickeyhjs(String publickeyhjs) {
-		this.publickeyhjs = publickeyhjs;
-	}
+    public void setPublickeyhjs(String publickeyhjs) {
+        this.publickeyhjs = publickeyhjs;
+    }
 
-	public String getPrivatekeyhjs() {
-		return privatekeyhjs;
-	}
+    public String getPrivatekeyhjs() {
+        return privatekeyhjs;
+    }
 
-	public void setPrivatekeyhjs(String privatekeyhjs) {
-		this.privatekeyhjs = privatekeyhjs;
-	}
+    public void setPrivatekeyhjs(String privatekeyhjs) {
+        this.privatekeyhjs = privatekeyhjs;
+    }
+
     public String getChinapnrMercustid() {
         return chinapnrMercustid;
     }
@@ -168,20 +167,12 @@ public class SystemConfig {
         this.wechatQrcodeUrl = wechatQrcodeUrl;
     }
 
-    public String getWeChatHost() {
-        return weChatHost;
+    public String getServerHost() {
+        return serverHost;
     }
 
-    public void setWeChatHost(String weChatHost) {
-        this.weChatHost = weChatHost;
-    }
-
-    public String getAppHost() {
-        return appHost;
-    }
-
-    public void setAppHost(String appHost) {
-        this.appHost = appHost;
+    public void setServerHost(String serverHost) {
+        this.serverHost = serverHost;
     }
 
     public String getNewVersion() {
@@ -216,14 +207,6 @@ public class SystemConfig {
         this.aopAccesskey = aopAccesskey;
     }
 
-    public String getApiWebUrl() {
-        return apiWebUrl;
-    }
-
-    public void setApiWebUrl(String apiWebUrl) {
-        this.apiWebUrl = apiWebUrl;
-    }
-
     public String getForgetpassword() {
         return forgetpassword;
     }
@@ -238,14 +221,6 @@ public class SystemConfig {
 
     public void setActivityId(String activityId) {
         this.activityId = activityId;
-    }
-
-    public String getWebHost() {
-        return webHost;
-    }
-
-    public void setWebHost(String webHost) {
-        this.webHost = webHost;
     }
 
     public String getBankInstcode() {
@@ -280,13 +255,13 @@ public class SystemConfig {
         this.fileUpload = fileUpload;
     }
 
-	public String getWebUIBindEmail() {
-		return webUIBindEmail;
-	}
+    public String getWebUIBindEmail() {
+        return webUIBindEmail;
+    }
 
-	public void setWebUIBindEmail(String webUIBindEmail) {
-		this.webUIBindEmail = webUIBindEmail;
-	}
+    public void setWebUIBindEmail(String webUIBindEmail) {
+        this.webUIBindEmail = webUIBindEmail;
+    }
 
     public String getFrontHost() {
         return frontHost;
@@ -312,17 +287,17 @@ public class SystemConfig {
         WeiFrontHost = weiFrontHost;
     }
 
-	public String getRetransPassword() {
-		return retransPassword;
-	}
+    public String getRetransPassword() {
+        return retransPassword;
+    }
 
-	public void setRetransPassword(String retransPassword) {
-		this.retransPassword = retransPassword;
-	}
+    public void setRetransPassword(String retransPassword) {
+        this.retransPassword = retransPassword;
+    }
 
-	public String getResetpassword() {
-		return resetpassword;
-	}
+    public String getResetpassword() {
+        return resetpassword;
+    }
 
     public void setResetpassword(String resetpassword) {
         this.resetpassword = resetpassword;
