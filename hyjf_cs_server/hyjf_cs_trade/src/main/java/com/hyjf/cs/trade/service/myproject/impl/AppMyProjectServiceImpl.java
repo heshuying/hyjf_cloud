@@ -635,7 +635,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             throw new CheckException(MsgEnum.STATUS_ZC000001);
         }
         AppResult result = new AppResult();
-
+        myCreditListService.sendCode(userId,GetCilentIP.getIpAddr(request),user.getMobile(),request.getParameter("platform"));
 		return result;
 	}
 
