@@ -261,6 +261,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             resultBean.setList(new ArrayList<WebProjectListCsVO>());
             page.setTotal(0);
         }
+        resultBean.setNowTime(GetDate.getNowTime10());
         result.setData(resultBean);
         result.setPage(page);
         return result;

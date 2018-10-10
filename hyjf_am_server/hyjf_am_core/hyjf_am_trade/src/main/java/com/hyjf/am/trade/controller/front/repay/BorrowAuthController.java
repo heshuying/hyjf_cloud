@@ -86,6 +86,7 @@ public class BorrowAuthController extends BaseController {
      */
     @GetMapping("/auth_update/{borrowNid}")
     public IntegerResponse updateTrusteePaySuccess(@PathVariable String borrowNid){
+        logger.info("受托支付申请回调更新开始，borrowNid:{}", borrowNid);
         if(StringUtils.isBlank(borrowNid)){
             logger.error("受托支付申请回调更新失败，请求参数不全");
             return new IntegerResponse(0);

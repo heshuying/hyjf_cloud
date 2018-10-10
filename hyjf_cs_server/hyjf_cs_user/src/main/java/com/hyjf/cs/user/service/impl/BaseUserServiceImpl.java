@@ -540,9 +540,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 				result.setIdcard(userInfoVO.getIdcard());
 			}
 			result.setBorrowerType(userInfoVO.getBorrowerType());
+			result.setRoleId(userInfoVO.getRoleId() + "");
 		}
-		result.setRoleId(userInfoVO.getRoleId() + "");
-
 		AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(userId);
 		if (chinapnr != null) {
 			result.setChinapnrUsrid(chinapnr.getChinapnrUsrid());
