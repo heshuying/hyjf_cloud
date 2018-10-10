@@ -266,7 +266,7 @@ public class AssetListController extends BaseController {
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
 		// 获取查询的列表
-		AssetListCustomizeResponse res = assetListService.findAssetList(form);
+		AssetListCustomizeResponse res = assetListService.findAssetListWithoutPage(form);
 		if(res != null) {
 			assetList = res.getResultList();
 		}

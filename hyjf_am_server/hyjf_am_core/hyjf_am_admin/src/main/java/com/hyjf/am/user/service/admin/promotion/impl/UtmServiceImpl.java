@@ -303,7 +303,9 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         }else {
             record.setLinkAddress("www.hyjf.com");
         }
-        record.setStatus(Integer.valueOf(channelCustomizeVO.getStatus()));
+        if(StringUtils.isNotBlank(channelCustomizeVO.getStatus())){
+            record.setStatus(Integer.valueOf(channelCustomizeVO.getStatus()));
+        }
 
         if (StringUtils.isNotEmpty(channelCustomizeVO.getRemark())) {
             record.setRemark(channelCustomizeVO.getRemark());
