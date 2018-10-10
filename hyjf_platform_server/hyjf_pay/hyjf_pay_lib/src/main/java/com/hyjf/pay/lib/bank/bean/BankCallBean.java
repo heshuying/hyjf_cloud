@@ -646,6 +646,9 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 	// 商户名称
 	private String coinstName;
 
+	/**交易状态*/
+	public String status;
+
 	/** =========== 字段结束 ===========  */
 
     public String getTransactionUrl() {
@@ -2185,4 +2188,11 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 		this.frzType = frzType;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

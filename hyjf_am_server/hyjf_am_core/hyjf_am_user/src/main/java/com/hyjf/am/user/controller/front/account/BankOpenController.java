@@ -95,8 +95,9 @@ public class BankOpenController extends BaseController {
 		String idNo = request.getIdNo();
 		String mobile = request.getMobile();
 		Integer roleId = request.getRoleId();
+		Integer isSetPassword = request.getIsSetPassword();
 		
-		boolean result = this.bankOpenService.updateUserAccount(userId, trueName, orderId, accountId, idNo, bankAccountEsb, mobile,roleId);
+		boolean result = this.bankOpenService.updateUserAccount(userId, trueName, orderId, accountId, idNo, bankAccountEsb, mobile,roleId,isSetPassword);
         
 		return result?1:0;
 	}

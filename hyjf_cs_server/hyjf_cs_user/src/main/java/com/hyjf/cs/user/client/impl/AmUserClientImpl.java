@@ -20,6 +20,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -610,6 +611,13 @@ public class AmUserClientImpl implements AmUserClient {
 		// 设置角色
 		/** 开户角色属性   1：出借角色2：借款角色3：代偿角色*/
 		request.setRoleId(Integer.parseInt(bean.getIdentity()));
+		request.setIsSetPassword(0);
+		// 开户+设密的话   状态改为已设置交易密码
+		if (BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE.equals(bean.getTxCode())
+				&& "1".equals(bean.getStatus())) {
+			request.setIsSetPassword(1);
+		}
+
 		Integer result = restTemplate
 				.postForEntity(userService+"/bankopen/updateUserAccount", request, Integer.class).getBody();
 		if (result != null) {
@@ -1069,7 +1077,7 @@ public class AmUserClientImpl implements AmUserClient {
 		UserInfoRequest request = new UserInfoRequest();
 		BeanUtils.copyProperties(userInfoVO, request);
 		IntegerResponse result = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserInfoByUserInfo", request, IntegerResponse.class)
+				.postForEntity("http://AM-USER/am-user/userManager/updateUserInfoByUserInfo", request, IntegerResponse.class)
 				.getBody();
 		if (result == null || !Response.isSuccess(result)) {
 			return 0;
@@ -1080,7 +1088,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest) {
 		Integer body = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/wrb/register", wrbRegisterRequest, IntegerResponse.class)
+				.postForEntity("http://AM-USER/am-user/wrb/register", wrbRegisterRequest, IntegerResponse.class)
 				.getBody().getResultInt();
 		return body;
 	}
