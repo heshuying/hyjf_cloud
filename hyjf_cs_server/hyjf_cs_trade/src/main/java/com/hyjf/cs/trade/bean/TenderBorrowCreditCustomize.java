@@ -55,6 +55,8 @@ public class TenderBorrowCreditCustomize extends CreditDetailsRequestBean{
 	// 转让本金
 	private String creditCapital;
 
+	private String ip;
+
 	public String getCode() {
 		return code;
 	}
@@ -127,5 +129,13 @@ public class TenderBorrowCreditCustomize extends CreditDetailsRequestBean{
 
 	public void setCreditCapital(String creditCapital) {
 		this.creditCapital = creditCapital;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 }
