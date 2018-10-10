@@ -554,6 +554,35 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     }
 
     /**
+     * 加入计划失败  恢复redis
+     *
+     * @param tender
+     */
+    @Override
+    public void recoverRedis(TenderRequest tender) {
+        String redisKey = RedisConstants.HJH_PLAN + tender.getBorrowNid();
+        JedisPool pool = RedisUtils.getPool();
+        Jedis jedis = pool.getResource();
+        BigDecimal accountBigDecimal = new BigDecimal(tender.getAccount());
+        String balanceLast = RedisUtils.get(redisKey);
+        if (StringUtils.isNotBlank(balanceLast)) {
+            while ("OK".equals(jedis.watch(redisKey))) {
+                BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
+                Transaction tx = jedis.multi();
+                tx.set(redisKey, recoverAccount + "");
+                List<Object> result = tx.exec();
+                if (result == null || result.isEmpty()) {
+                    jedis.unwatch();
+                } else {
+                    logger.info("加入计划用户:" + tender.getUserId() + "***********from redis恢复redis："
+                            + tender.getAccount());
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
      * 计算预期收益
      * @param resultVo
      * @param couponConfig
@@ -700,8 +729,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 生成冻结订单-----------------------
         boolean afterDealFlag = false;
         // 插入数据库  真正开始操作加入计划表
-        afterDealFlag = updateAfterPlanRedis(request, plan);
-        logger.info("加入计划updateAfterPlanRedis 操作结果 ", afterDealFlag);
+        try{
+            afterDealFlag = updateAfterPlanRedis(request, plan);
+            logger.info("加入计划updateAfterPlanRedis 操作结果 ", afterDealFlag);
+        }catch (Exception e){
+            // 恢复redis
+            recoverRedis(request);
+            throw e;
+        }
         if(afterDealFlag){
             // 计算收益
             Map<String, Object> tenderEarnings = getTenderEarnings(request,plan,cuc);
