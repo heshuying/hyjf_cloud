@@ -44,6 +44,21 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
         if (request.getTagId() != null) {
             criteria.and("tagId").regex(request.getTagId().toString());
         }
+        if (request.getMsgTitle() != null) {
+            criteria.and("msgTitle").is(request.getMsgTitle());
+        }
+        if (request.getMsgCode() != null) {
+            criteria.and("msgCode").is(request.getMsgCode());
+        }
+        if (request.getCreateUserName() != null) {
+            criteria.and("createUserName").is(request.getCreateUserName());
+        }
+        if (request.getMsgTerminal() != null) {
+            criteria.and("msgTerminal").is(request.getMsgTerminal());
+        }
+        if (request.getMsgSendStatus() != null) {
+            criteria.and("msgSendStatus").is(request.getMsgSendStatus());
+        }
         int currPage = request.getCurrPage();
         int pageSize = request.getPageSize();
         int limitStart = (currPage - 1) * pageSize;
