@@ -514,7 +514,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrow.getBorrowPeriod());
             if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
                 try {
-                    String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getAddTime());
+                    String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getCreateTime());
                     lastdays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(borrowRepayPlans.get(0).getRepayTime()));
                     holddays = GetDate.daysBetween(hodeDate, GetDate.getDateTimeMyTimeInMillis(nowTime));
                 } catch (Exception e) {

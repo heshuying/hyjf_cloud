@@ -100,7 +100,7 @@
 			CASE WHEN hb.borrow_style = 'endday' THEN CONCAT(hb.borrow_period, '天') ELSE CONCAT(hb.borrow_period, '个月') END borrow_period,
 			hb.borrow_style AS borrow_style,
 			CASE WHEN hb.borrow_style = 'endday' OR hb.borrow_style = 'end' THEN 1
-			WHEN hb.borrow_style = 'endmonth' THEN hb.borrow_period - hbr.recover_period END AS period_now,
+			WHEN hb.borrow_style = 'endmonth' THEN hbr.recover_period END AS period_now,
 			bs.`name` AS borrow_style_name,
 			hbr.recover_time AS recover_time,
 			(DATEDIFF(

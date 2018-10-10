@@ -2374,4 +2374,14 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	@Override
+	public UtmPlatResponse getAllUtmPlat(Map<String, Object> map) {
+		UtmPlatResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmplat", map, UtmPlatResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 }

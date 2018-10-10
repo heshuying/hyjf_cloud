@@ -35,7 +35,7 @@ public class AppBannerRequestBean  extends BaseRequest implements Serializable {
     private Integer id;
     @ApiModelProperty(value = "删除使用的id")
     private String ids;
-    @ApiModelProperty(value = "平台类型 1 安卓 2 ios 3 微信")
+    @ApiModelProperty(value = "平台类型 1： 微信 2：安卓 3：ios")
     private Integer platformType;
 
     public String getName() {

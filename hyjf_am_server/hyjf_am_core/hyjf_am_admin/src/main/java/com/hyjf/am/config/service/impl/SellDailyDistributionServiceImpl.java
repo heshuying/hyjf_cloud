@@ -23,7 +23,7 @@ import java.util.List;
 public class SellDailyDistributionServiceImpl implements SellDailyDistributionService {
     @Autowired
     SellDailyDistributionMapper sellDailyDistributionMapper;
-    public static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public Integer queryTotal(EmailRecipientRequest form) {

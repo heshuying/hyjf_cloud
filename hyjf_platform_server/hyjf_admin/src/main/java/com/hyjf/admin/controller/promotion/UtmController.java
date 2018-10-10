@@ -55,7 +55,7 @@ public class UtmController extends BaseController {
         return adminResult;
     }
 
-    @ApiOperation(value = "添加信息", notes = "添加信息")
+    @ApiOperation(value = "添加或修改信息", notes = "添加或修改信息")
     @PostMapping("/insertorupdateaction")
     public UtmResultResponse insertAction(HttpServletRequest request, HttpServletResponse response, @RequestBody UtmPlatVO utmPlatVO){
         UtmResultResponse adminResult = new UtmResultResponse();
