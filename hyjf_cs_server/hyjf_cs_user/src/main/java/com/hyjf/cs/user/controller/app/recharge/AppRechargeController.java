@@ -208,9 +208,9 @@ public class AppRechargeController extends BaseUserController {
                         JxBankConfigVO jxBankConfigVO = appRechargeService.getJxBankConfigByBankId(bankId);
 
                         if (jxBankConfigVO != null && StringUtils.isNotEmpty(jxBankConfigVO.getBankLogo())) {
-                            result.setLogo(systemConfig.webHost + jxBankConfigVO.getBankLogo());
+                            result.setLogo(systemConfig.getServerHost() + jxBankConfigVO.getBankLogo());
                         } else {
-                            result.setLogo(systemConfig.webHost + "/data/upfiles/filetemp/image/bank_log.png");
+                            result.setLogo(systemConfig.getServerHost() + "/data/upfiles/filetemp/image/bank_log.png");
                         }
 
                         if(jxBankConfigVO !=null && StringUtils.isNotEmpty(jxBankConfigVO.getBankName())){

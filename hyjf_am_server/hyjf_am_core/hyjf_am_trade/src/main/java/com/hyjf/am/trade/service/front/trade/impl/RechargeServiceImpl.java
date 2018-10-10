@@ -294,10 +294,7 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 		// 充值成功
 		if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
 			// 查询用户账户,为了版本控制,必须把查询用户账户放在最前面
-			AccountExample accountExample = new AccountExample();
-			AccountExample.Criteria accountCriteria = accountExample.createCriteria();
-			accountCriteria.andUserIdEqualTo(userId);
-			Account account = this.accountMapper.selectByExample(accountExample).get(0);
+			Account account = this.getAccount(userId);
 			// 查询充值记录
 			AccountRechargeExample example = new AccountRechargeExample();
 			example.createCriteria().andNidEqualTo(orderId);

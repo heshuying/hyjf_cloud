@@ -60,7 +60,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
 
         ModelAndView modelAndView = new ModelAndView("/bank/bank_send");
         ApiSkipFormBean apiSkipFormBean = new ApiSkipFormBean();
-        String returl = systemConfig.webHost + "/hyjf-web/api/user/thirdLogin.do";
+        String returl = systemConfig.getServerHost() + "/hyjf-web/api/user/thirdLogin.do";
 
         apiSkipFormBean.setAction(returl);
         apiSkipFormBean.set("bindUniqueIdScy", bean.getBindUniqueIdScy());
@@ -99,7 +99,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
         WebUtils.sessionLogin(request, response, webUser);*/
 
         // 返回到hyjf的系统
-        return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/user/pandect");
+        return new ModelAndView("redirect:" + systemConfig.getServerHost() + "/hyjf-web/user/pandect");
     }
 
     @ApiOperation(value = "纳觅财富自动登录",notes = "纳觅财富自动登录")
@@ -118,7 +118,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
         Integer userId = Integer.valueOf(request.getUserId());
         // userid不存在,跳转登录页面
         if(userId == null) {
-            return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/user/login/init.do");
+            return new ModelAndView("redirect:" + systemConfig.getServerHost() + "/hyjf-web/user/login/init.do");
         }
         //TODO:登录以后，前端页面还是未登录状态
         // 登陆

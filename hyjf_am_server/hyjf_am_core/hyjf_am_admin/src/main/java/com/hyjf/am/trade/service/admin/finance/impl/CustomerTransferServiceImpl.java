@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.finance.impl;
 
+import com.hyjf.am.admin.config.SystemConfig;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
 import com.hyjf.am.resquest.admin.TransferListRequest;
@@ -39,10 +40,10 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
     @Autowired
     private UserTransferMapper userTransferMapper;
 
-    @Value("${hyjf.web.transfer.url}")
-    private String URL;
-    @Value("${hyjf.transfer.3des.key}")
-    private String KEY;
+    @Autowired
+    private SystemConfig systemConfig;
+
+
 
     /**
      * 根据筛选条件查询UserTransfer数据总数
@@ -53,8 +54,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
     @Override
     public Integer getUserTransferCount(CustomerTransferListRequest request) {
         UserTransferExample example = convertExample(request);
-        Integer count = userTransferMapper.countByExample(example);
-        return count;
+        return userTransferMapper.countByExample(example);
     }
 
     /**
@@ -66,8 +66,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
     @Override
     public List<UserTransfer> searchUserTransferList(CustomerTransferListRequest request) {
         UserTransferExample example = convertExample(request);
-        List<UserTransfer> userTransferList = userTransferMapper.selectByExample(example);
-        return userTransferList;
+        return userTransferMapper.selectByExample(example);
     }
 
     /**
@@ -137,8 +136,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
         AccountExample example = new AccountExample();
         AccountExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(userId);
-        List<Account> accountList = accountMapper.selectByExample(example);
-        return accountList;
+        return accountMapper.selectByExample(example);
     }
     /**
      * 向ht_user_transfer表中插入数据
@@ -166,13 +164,12 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
         // 转账url
         String transferUrl = "";
         try {
-            transferUrl = URL + "?orderId="
-                    + ThreeDESUtils.Encrypt3DES(KEY, userTransfer.getOrderId());
+            transferUrl = systemConfig.getWebTransferUrl() + "?orderId="
+                    + ThreeDESUtils.Encrypt3DES(systemConfig.getTransfer3DesKey(), userTransfer.getOrderId());
             userTransfer.setTransferUrl(transferUrl);
-            boolean flag = this.userTransferMapper.insertSelective(userTransfer) > 0;
-            return flag;
+            return this.userTransferMapper.insertSelective(userTransfer) > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info("向ht_user_transfer表中插入数据失败:",e);
             return false;
         }
     }

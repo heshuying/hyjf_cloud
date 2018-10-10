@@ -667,6 +667,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         String resultUrl = systemConfig.getAppFrontHost() + "/user/borrow/{borrowNid}/transfer/result/{state}?status={status}&statusDesc={statusDesc}&endTime={endTime}&price={price}&account={account}";
         try {
             try{
+                request.setTelcode(request.getCode());
                 myCreditListService.checkCanCredit(request,userId);
                 myCreditListService.checkTenderToCreditParam(request,userId);
                 // 债转保存
@@ -1015,7 +1016,6 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         // 获取债转详情信息
         TenderCreditCustomizeVO appTenderToCreditDetail =amTradeClient.selectTenderToCreditDetail(userId,borrowId,tenderNid);
         //债转费率配置 开始
-        // TODO: 2018/9/12  后续处理折让率配置
         List<DebtConfigVO> config = amConfigClient.getDebtConfigList();
         if(!CollectionUtils.isEmpty(config)){
             projectInfo.put("attornRate",config.get(0).getAttornRate().setScale(2, BigDecimal.ROUND_DOWN));
@@ -1062,7 +1062,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }
 
             projectInfo.put("borrowApr", appTenderToCreditDetail.getBorrowApr());
-            projectInfo.put("borrowPeriod", appTenderToCreditDetail.getBorrowPeriod());
+            projectInfo.put("borrowPeriod", appTenderToCreditDetail.getBorrowPeriodNumber());
             projectInfo.put("borrowPeriodUnit", "endday".equals(borrowVO.getBorrowStyle())?"天":"个月");
             projectInfo.put("account", creditCreateMap.get("creditCapital"));
             projectInfo.put("borrowId", appTenderToCreditDetail.getBorrowNid());

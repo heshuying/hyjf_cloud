@@ -56,7 +56,6 @@ public class AppMyProjectDetailController extends BaseTradeController {
     @ApiOperation(value = "App端:用户中心债转提交保存", notes = "App端:用户中心债转提交保存")
     @PostMapping(value = "/saveTenderToCredit", produces = "application/json; charset=utf-8")
     public JSONObject saveTenderToCredit(@ModelAttribute TenderBorrowCreditCustomize request,@RequestHeader(value = "userId",required = false) Integer userId){
-    	request.setPlatform(Integer.parseInt(CommonConstant.CLIENT_PC));
     	JSONObject  result =  appMyProjectService.saveTenderToCredit(request,userId);
     	return result;
     }

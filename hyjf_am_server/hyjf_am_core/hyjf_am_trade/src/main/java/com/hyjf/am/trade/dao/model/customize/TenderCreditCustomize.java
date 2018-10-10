@@ -78,6 +78,10 @@ public class TenderCreditCustomize implements Serializable {
 	 */
 	private String borrowPeriod;
 	/**
+	 * 融资期限(纯数字)
+	 */
+	private String borrowPeriodNumber;
+	/**
 	 * 持有期限
 	 */
 	private String tenderPeriod;
@@ -231,4 +235,11 @@ public class TenderCreditCustomize implements Serializable {
 		this.borrowStyleName = borrowStyleName;
 	}
 
+	public String getBorrowPeriodNumber() {
+		return borrowPeriodNumber;
+	}
+
+	public void setBorrowPeriodNumber(String borrowPeriodNumber) {
+		this.borrowPeriodNumber = borrowPeriodNumber;
+	}
 }

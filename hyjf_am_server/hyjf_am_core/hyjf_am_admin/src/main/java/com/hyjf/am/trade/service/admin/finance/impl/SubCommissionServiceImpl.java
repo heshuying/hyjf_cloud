@@ -55,7 +55,6 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
     @Override
     public List<SubCommissionListConfig> searchSubCommissionListConfig() {
         SubCommissionListConfigExample example = new SubCommissionListConfigExample();
-        SubCommissionListConfigExample.Criteria criteria = example.createCriteria();
         return subCommissionListConfigMapper.selectByExample(example);
     }
 
@@ -99,8 +98,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
     @Override
     public Integer getSubCommissionCount(SubCommissionRequest request) {
         SubCommissionExample example = convertExample(request);
-        Integer count = subCommissionMapper.countByExample(example);
-        return count;
+        return subCommissionMapper.countByExample(example);
     }
 
     /**

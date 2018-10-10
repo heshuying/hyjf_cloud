@@ -93,12 +93,12 @@ public class ApiBindCardPageController extends BaseUserController {
         // 跳转到江西银行天下画面
         try {
             // 同步调用路径
-            String retUrl = systemConfig.apiWebUrl + request.getContextPath()
+            String retUrl = systemConfig.getServerHost() + request.getContextPath()
                     + "/server/user/bindcardpage/bindCardReturn.do?acqRes="
                     + bankCardRequestBean.getAcqRes()
                     + "&callback=" + bankCardRequestBean.getRetUrl().replace("#", "*-*-*");
             // 异步调用路
-            String bgRetUrl = systemConfig.apiWebUrl + request.getContextPath()
+            String bgRetUrl = systemConfig.getServerHost() + request.getContextPath()
                     + "/server/user/bindcardpage/bindCardReturn.do?phone="+userVO.getMobile()+"&acqRes="
                     + bankCardRequestBean.getAcqRes() + "&callback=" + bankCardRequestBean.getNotifyUrl().replace("#", "*-*-*");
 
