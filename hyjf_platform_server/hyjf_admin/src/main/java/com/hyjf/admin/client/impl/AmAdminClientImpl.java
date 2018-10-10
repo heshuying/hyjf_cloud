@@ -1206,4 +1206,48 @@ public class AmAdminClientImpl implements AmAdminClient {
     public EmailRecipientResponse insertAction(EmailRecipientRequest recipientRequest) {
         return restTemplate.postForEntity("http://AM-ADMIN/am-admin/sell_daily_email/insertAction", recipientRequest, EmailRecipientResponse.class).getBody();
     }
+
+    /**
+     * 江西银行卡异常count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int getBindCardExceptionCount(BindCardExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-user/bindcardexception/getBindCardExceptionCount";
+        AdminBindCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 江西银行卡异常列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<BindCardExceptionCustomizeVO> searchBindCardExceptionList(BindCardExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-user/bindcardexception/searchBindCardExceptionList";
+        AdminBindCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 异常中心-江西银行卡异常-更新银行卡
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public void updateBindCard(BindCardExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-user/bindcardexception/updateBindCard";
+        restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
+    }
 }

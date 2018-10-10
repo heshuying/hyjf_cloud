@@ -66,7 +66,7 @@ public class SyncRuserInterceptor implements Interceptor {
                 sendToMq(boundSql, methodName, "ht_user");
 
                 // 更新用户状态
-            }else if(StringUtils.containsIgnoreCase(realSql, "update ht_user")) {
+            }else if(StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.updateByPrimaryKey")) {
 
                 sendToMq(boundSql, methodName, "up_ht_user");
 

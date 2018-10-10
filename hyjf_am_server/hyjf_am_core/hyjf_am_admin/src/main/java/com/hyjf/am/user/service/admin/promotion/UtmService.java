@@ -181,4 +181,13 @@ public interface UtmService extends BaseService {
      * @return
      */
     List<ChannelReconciliationVO> selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据条件获取所有得utmPlat
+     * @Date 18:42 2018/10/9
+     * @Param map
+     * @return
+     */
+    List<UtmPlatVO> getUtmPlatByParam(Map<String,Object> map);
 }

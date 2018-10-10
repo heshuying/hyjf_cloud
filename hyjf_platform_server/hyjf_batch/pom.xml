@@ -74,6 +74,11 @@
 			<artifactId>spring-boot-admin-starter-client</artifactId>
 		</dependency>
 		<!-- spring boot admin end -->
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-zipkin</artifactId>
+		</dependency>
 
 		<!--thymeleaf-->
 		<dependency>
@@ -112,7 +117,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.9</version>
 				<configuration>
 					<skipTests>true</skipTests>
 				</configuration>

@@ -2,6 +2,7 @@ package com.hyjf.am.admin.config.ds;
 
 import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder.DbType;
 import com.hyjf.am.admin.interceptor.SyncAccountInterceptor;
+import com.hyjf.am.admin.interceptor.SyncRuserInterceptor;
 import com.hyjf.common.constants.CommonConstant;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -141,13 +142,14 @@ public class MybatisConfig {
 	 */
 	@Bean
 	public SqlSessionFactory sqlSessionFactory(@Qualifier("dynamicDataSource") DynamicDataSource dynamicDataSource,
-											   @Value("${mybatis.mapper-locations}") String mapperLocations, @Autowired SyncAccountInterceptor syncAccountInterceptor) throws Exception {
+											   @Value("${mybatis.mapper-locations}") String mapperLocations, @Autowired SyncAccountInterceptor syncAccountInterceptor,
+											   @Autowired SyncRuserInterceptor syncRuserInterceptor) throws Exception {
 		
 		SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
 		factoryBean.setDataSource(dynamicDataSource);
 		// 下边两句仅仅用于*.xml文件，如果整个持久层操作不需要使用到xml文件的话（只用注解就可以搞定），则不加
 		factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(mapperLocations));
-		factoryBean.setPlugins(new Interceptor[]{syncAccountInterceptor});
+		factoryBean.setPlugins(new Interceptor[]{syncAccountInterceptor,syncRuserInterceptor});
 		return factoryBean.getObject();
 	}
 
