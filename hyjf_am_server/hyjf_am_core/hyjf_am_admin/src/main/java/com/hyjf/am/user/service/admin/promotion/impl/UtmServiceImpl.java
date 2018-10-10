@@ -107,7 +107,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     public UtmPlat insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
         UtmPlat utmPlat = new UtmPlat();
         utmPlat = convertUtmPlat(utmPlat,utmPlatVO);
-        if(StringUtils.isNotEmpty(utmPlatVO.getId()+"")){
+        if(StringUtils.isNotBlank(utmPlatVO.getId()+"")){
             utmPlat.setId(Integer.valueOf(utmPlatVO.getId()));
             utmPlatMapper.updateByPrimaryKeySelective(utmPlat);
         }else{
@@ -225,6 +225,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         String nowDate = GetDate.getServerDateTime(6, new Date());
         record.setSourceId(Integer.valueOf(utmBean.getSourceId()));
         record.setSourceName(utmBean.getSourceName());
+        //0：启用；1：禁用
         record.setDelFlag(utmBean.getDelFlag());
         record.setSourceType(utmBean.getSourceType());
         record.setAttornFlag(utmBean.getAttornFlag());
