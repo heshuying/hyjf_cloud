@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.util;
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.BaseBean;
 import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
+import com.hyjf.cs.trade.bean.UserDirectRechargeRequestBean;
 import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
@@ -63,6 +64,11 @@ public class SignUtil {
             // 用户提现
             UserWithdrawRequestBean bean = (UserWithdrawRequestBean)paramBean;
             sign = bean.getChannel() + bean.getAccountId() + bean.getAccount() + bean.getCardNo() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
+        }else if("/server/user/directRechargePage/recharge".equals(methodName)){
+            // 页面充值
+            UserDirectRechargeRequestBean bean = (UserDirectRechargeRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getIdNo() + bean.getCardNo()
+                    + bean.getTxAmount() + bean.getName() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
         }
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
     }
