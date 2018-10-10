@@ -66,7 +66,16 @@ public class SystemConfig {
     
     @Value("${hyjf.web.host}")
     private String webHost;
-
+    /**
+     * 用户转账url
+     */
+    @Value("${hyjf.web.transfer.url}")
+    private String webTransferUrl;
+    /**
+     * 用户转账解密key
+     */
+    @Value("${hyjf.transfer.3des.key}")
+    private String transfer3DesKey;
 
     public String getBankInstcode() {
         return bankInstcode;
@@ -210,5 +219,21 @@ public class SystemConfig {
 
     public void setWebHost(String webHost) {
         this.webHost = webHost;
+    }
+
+    public String getWebTransferUrl() {
+        return webTransferUrl;
+    }
+
+    public void setWebTransferUrl(String webTransferUrl) {
+        this.webTransferUrl = webTransferUrl;
+    }
+
+    public String getTransfer3DesKey() {
+        return transfer3DesKey;
+    }
+
+    public void setTransfer3DesKey(String transfer3DesKey) {
+        this.transfer3DesKey = transfer3DesKey;
     }
 }

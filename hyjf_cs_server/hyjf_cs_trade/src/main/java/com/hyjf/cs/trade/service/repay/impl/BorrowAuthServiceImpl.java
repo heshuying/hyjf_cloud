@@ -122,8 +122,9 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
      */
     @Override
     public Map<String,Object> callTrusteePay(String borrowNid, WebViewUserVO user) throws Exception {
+        String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
         // 回调路径
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/autoplus/autoTenderFail?" + BankCallConstant.PARAM_PRODUCTID + "=" + borrowNid;
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/autoplus/autoTenderFail?" + BankCallConstant.PARAM_PRODUCTID + "=" + borrowNid + "&logOrdId=" + orderId ;
         // 商户后台应答地址(必须)
         String bgRetUrl = systemConfig.getWebHost().trim() + "/hyjf-web/borrowauth/auth_bgrturn";
         // 交易成功跳转链接
@@ -160,7 +161,7 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
 
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_TRUSTEE_PAY);
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
+        bean.setLogOrderId(orderId);
         bean.setLogRemark("平台借款人受托支付申请");
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
 
