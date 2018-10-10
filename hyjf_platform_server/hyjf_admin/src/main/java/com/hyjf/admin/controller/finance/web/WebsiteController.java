@@ -141,15 +141,15 @@ public class WebsiteController extends BaseController {
         String sheetName = "网站收支";
 
         // 取得数据
-        form.setLimitStart(-1);
-        form.setLimitEnd(-1);
-        form.setPageSize(-1);
+        accountWebList.setLimitStart(-1);
+        accountWebList.setLimitEnd(-1);
+        accountWebList.setPageSize(-1);
         //设置默认查询时间
         if(StringUtils.isEmpty(form.getStartDate())){
-            form.setStartDate(GetDate.getDate("yyyy-MM-dd"));
+            accountWebList.setStartDate(GetDate.getDate("yyyy-MM-dd"));
         }
         if(StringUtils.isEmpty(form.getEndDate())){
-            form.setEndDate(GetDate.getDate("yyyy-MM-dd"));
+            accountWebList.setEndDate(GetDate.getDate("yyyy-MM-dd"));
         }
         AccountWebListResponse accountWebListResponse = websiteService.queryAccountWebList(accountWebList);
         List<AccountWebListVO> recordList = accountWebListResponse.getResultList();
@@ -224,7 +224,7 @@ public class WebsiteController extends BaseController {
                     else if (celLength == 11) {
 
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        cell.setCellValue(sdf.format(bean.getCreateTime()));
+                        cell.setCellValue(sdf.format(new Date(bean.getCreateTime())));
                     }
                 }
             }

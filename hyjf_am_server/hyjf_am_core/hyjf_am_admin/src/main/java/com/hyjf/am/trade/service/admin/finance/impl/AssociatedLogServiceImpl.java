@@ -50,8 +50,7 @@ public class AssociatedLogServiceImpl extends BaseServiceImpl implements Associa
     public List<BindLogVO> searchBindLogList(BindLogListRequest request) {
         DirectionalTransferAssociatedLogExample example = convertExample(request);
         List<DirectionalTransferAssociatedLog> directionalTransferAssociatedLogList = directionalTransferAssociatedLogMapper.selectByExample(example);
-        List<BindLogVO> bindLogVOList = CommonUtils.convertBeanList(directionalTransferAssociatedLogList,BindLogVO.class);
-        return bindLogVOList;
+        return CommonUtils.convertBeanList(directionalTransferAssociatedLogList,BindLogVO.class);
     }
 
     /**

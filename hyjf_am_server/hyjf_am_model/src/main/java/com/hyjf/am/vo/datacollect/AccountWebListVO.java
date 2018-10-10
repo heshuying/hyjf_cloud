@@ -63,10 +63,6 @@ public class AccountWebListVO extends BasePage implements Serializable {
 
     private String note;
 
-    private Integer createStartTime;
-
-    private Integer createEndTime;
-
     private String operator;
 
     private Integer flag;
@@ -311,19 +307,4 @@ public class AccountWebListVO extends BasePage implements Serializable {
         this.flag = flag;
     }
 
-    public Integer getCreateStartTime() {
-        return createStartTime;
-    }
-
-    public void setCreateStartTime(Integer createStartTime) {
-        this.createStartTime = createStartTime;
-    }
-
-    public Integer getCreateEndTime() {
-        return createEndTime;
-    }
-
-    public void setCreateEndTime(Integer createEndTime) {
-        this.createEndTime = createEndTime;
-    }
 }
