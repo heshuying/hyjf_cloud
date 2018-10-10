@@ -667,6 +667,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         String resultUrl = systemConfig.getAppFrontHost() + "/user/borrow/{borrowNid}/transfer/result/{state}?status={status}&statusDesc={statusDesc}&endTime={endTime}&price={price}&account={account}";
         try {
             try{
+                request.setTelcode(request.getCode());
                 myCreditListService.checkCanCredit(request,userId);
                 myCreditListService.checkTenderToCreditParam(request,userId);
                 // 债转保存
