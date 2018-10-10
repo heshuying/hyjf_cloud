@@ -82,7 +82,7 @@ public class AutoTenderServer extends BaseTradeController{
 		}*/
 		
         //新验签
-        if(SignUtil.verifyRequestSign(autoTenderRequestBean, "/tender")){
+        if(!SignUtil.verifyRequestSign(autoTenderRequestBean, "/tender")){
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
             logger.info("验签失败！---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: " + autoTenderRequestBean.getBorrowNid());
             resultBean.setStatusDesc("验签失败！");
