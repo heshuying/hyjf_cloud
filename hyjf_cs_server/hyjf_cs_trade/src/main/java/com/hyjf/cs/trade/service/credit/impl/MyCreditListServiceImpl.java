@@ -25,6 +25,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
@@ -48,6 +49,7 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.smscode.SmsCodeService;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +92,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     private SystemConfig systemConfig;
     @Autowired
     private AmConfigClient amConfigClient;
+
+    @Autowired
+    private SmsCodeService sendSmsCode;
 
     /**
      * 我要债转列表页 获取参数
@@ -362,23 +367,19 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             throw new CheckException(MsgEnum.STATUS_ZC000001);
         }
         WebResult result = new WebResult();
-        String checkCode = GetCode.getRandomSMSCode(6);
-
-
-        if(systemConfig.isHyjfEnvTest()){
-            // 测试环境验证码111111
-            checkCode = "111111";
-        }
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("val_code", checkCode);
-        SmsMessage smsMessage = new SmsMessage(userId, param, user.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
-                CustomConstants.PARAM_TPL_ZHUCE, CustomConstants.CHANNEL_TYPE_NORMAL);
-        try{
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-        }catch (Exception e){
-            throw new CheckException(MsgEnum.ERROR_SMS_SEND);
-        }
+        sendCode(user.getUserId(),request.getIp(),user.getMobile(),request.getPlatform()+"");
         return result;
+    }
+
+    @Override
+    public void sendCode(Integer userId, String ip,String mobile,String platform){
+        String validCodeType = CustomConstants.PARAM_TPL_ZHUCE;
+        sendSmsCode.sendSmsCodeCheckParam(validCodeType, mobile, userId, ip);
+        try{
+            sendSmsCode.sendSmsCode(validCodeType, mobile,platform,ip);
+        }catch (MQException e){
+            e.printStackTrace();
+        }
     }
 
     /**
