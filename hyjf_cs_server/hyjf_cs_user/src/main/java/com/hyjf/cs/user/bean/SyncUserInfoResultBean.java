@@ -11,7 +11,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: SyncUserInfoResultBean, v0.1 2018/8/24 14:23
  */
-public class SyncUserInfoResultBean extends BaseResult {
+public class SyncUserInfoResultBean extends BaseResultBean {
 
     private List<AccountBean> data;
 
