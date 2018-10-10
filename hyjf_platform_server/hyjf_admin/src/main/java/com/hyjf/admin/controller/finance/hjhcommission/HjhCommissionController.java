@@ -146,6 +146,9 @@ public class HjhCommissionController extends BaseController{
 		if (!Response.isSuccess(response)) {
 			jsonObject.put("error", FAIL);
 		}
+		if(response.getTotalMap().isEmpty()){
+			jsonObject.put("error", FAIL);
+		}
 		jsonObject.put("totalMap", response.getTotalMap());
 		jsonObject.put("status", SUCCESS);
 		return jsonObject;
@@ -531,7 +534,7 @@ public class HjhCommissionController extends BaseController{
                 }
                 // IP地址
                 String ip = CustomUtil.getIpAddr(request);
-                String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
+                String orderId = GetOrderIdUtils.getOrderId2(userId);
                 BankCallBean bean = new BankCallBean();
                 bean.setVersion(BankCallConstant.VERSION_10);// 版本号
                 bean.setTxCode(BankCallMethodConstant.TXCODE_VOUCHER_PAY);// 交易代码
