@@ -44,6 +44,18 @@
 			<if test="sourceId != null and sourceId != ''" >
 				and source_id =  #{sourceId}
 			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch != ''" >
+				and source_id =  #{sourceIdSrch}
+			</if>
+			<if test="attornFlag != null and attornFlag != ''" >
+				and attorn_flag =  #{attornFlag}
+			</if>
+			<if test="timeStartSrch != null and timeStartSrch != ''" >
+				AND create_time <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''" >
+				AND create_time <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})
+			</if>
 			<if test="delFlag != null and delFlag != ''" >
 				and del_flag =  #{delFlag}
 			</if>
