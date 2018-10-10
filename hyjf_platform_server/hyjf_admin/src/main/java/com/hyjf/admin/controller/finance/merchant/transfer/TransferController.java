@@ -247,6 +247,7 @@ public class TransferController extends BaseController {
         if(StringUtils.isEmpty(form.getTransferTimeEnd())){
             form.setTransferTimeEnd(GetDate.getDate("yyyy-MM-dd"));
         }
+        form.setPageSize(-1);
         // 需要输出的结果列表
         MerchantTransferResponse merchantTransferResponse = this.transferService.selectMerchantTransfer(form);
         List<MerchantTransferVO> recordList = merchantTransferResponse.getResultList();
