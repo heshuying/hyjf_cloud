@@ -94,7 +94,7 @@ public class AppEvaluationController {
             ret.put(CommonConstant.JSON_USER_LOGIN_ERROR_KEY, CommonConstant.JSON_USER_LOGIN_ERROR_VLUES);
             return JSONObject.toJSONString(ret);
         }
-        UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(new Integer(userId));
+        UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(userId);
         if (userEvalationResult != null && userEvalationResult.getId() != 0) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
             Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(), 1, 1).getTime();

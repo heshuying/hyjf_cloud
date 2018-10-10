@@ -82,7 +82,7 @@ public class NewAgreementController extends BaseTradeController{
      */
     @ApiOperation(value = "居间服务借款协议内容的获取", httpMethod = "POST", notes = "居间服务借款协议内容的获取")
     @ResponseBody
-    @PostMapping("/interServiceLoanAgreement")
+    @GetMapping("/interServiceLoanAgreement")
     public NewAgreementResultBean interServiceLoanAgreement(@RequestHeader("sign") String sign,
                                                             @RequestHeader("tenderNid") String tenderNid,
                                                             @RequestHeader("borrowNid") String borrowNid,
@@ -153,7 +153,7 @@ public class NewAgreementController extends BaseTradeController{
      */
     @ApiOperation(value = "APP端协议接口", notes = "汇计划投资服务协议")
     @ResponseBody
-    @PostMapping("/hjhInfo")
+    @GetMapping("/hjhInfo")
     public NewAgreementResultBean hjhInfo(@RequestHeader(value = "userId") Integer userId, 
     									  @RequestHeader("accedeOrderId") String accedeOrderId) {
         NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
@@ -245,7 +245,7 @@ public class NewAgreementController extends BaseTradeController{
      */
     @ApiOperation(value = "APP端协议接口", notes = "债权转让协议")
     @ResponseBody
-    @PostMapping("/userCreditContract")
+    @GetMapping("/userCreditContract")
     public NewAgreementResultBean userCreditContract(@RequestHeader(value = "userId") Integer userId,
     												 @RequestHeader("borrowType") String borrowType,
     												 @RequestHeader("nid") String nid,
@@ -336,7 +336,7 @@ public class NewAgreementController extends BaseTradeController{
                     jsonObject.put("borrowStyle", getBorrowStyle(borrow.getBorrowStyle()));
                     // 借款期限
                     jsonObject.put("borrowPeriod", getBorrowPeriod(borrow.getBorrowStyle(), borrow.getBorrowPeriod()));
-                    if(user.getUserId().equals(new Integer(userId))){
+                    if(user.getUserId().equals(userId)){
                     	// 真实姓名
                         jsonObject.put("newCreditTruename", usersInfo.getTruename());
                         // 身份证
@@ -366,7 +366,7 @@ public class NewAgreementController extends BaseTradeController{
                         // 加密用户名
                         jsonObject.put("newCreditUsername", encryptedUserName);  
                     }
-                    if(creditUser.getUserId().equals(new Integer(userId))){
+                    if(creditUser.getUserId().equals(userId)){
                     	// 用户名
                         jsonObject.put("oldCreditUsername", creditUser.getUsername());
                         // 真实姓名
@@ -395,7 +395,7 @@ public class NewAgreementController extends BaseTradeController{
                         }
                         jsonObject.put("oldCreditIdcard", encryptedIdCard);
                     }
-                    if(borrow.getUserId().equals(new Integer(userId))){
+                    if(borrow.getUserId().equals(userId)){
                         
                         jsonObject.put("borrowUsername", borrowUser.getUsername());  
                     } else {
@@ -497,7 +497,7 @@ public class NewAgreementController extends BaseTradeController{
      */
     @ApiOperation(value = "APP端协议接口", notes = "开户协议")
     @ResponseBody
-    @PostMapping("/openAgreement")
+    @GetMapping("/openAgreement")
     public NewAgreementResultBean openAgreement(HttpServletRequest request, HttpServletResponse response) {
         NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
         String sign = request.getParameter("sign"); // 随机字符串
@@ -545,7 +545,7 @@ public class NewAgreementController extends BaseTradeController{
      */
     @ApiOperation(value = "协议列表内容的获取", httpMethod = "POST", notes = "协议列表内容的获取")
     @ResponseBody
-    @PostMapping("/userCreditContractList")
+    @GetMapping("/userCreditContractList")
     public NewAgreementResultBean userCreditContractList(@RequestHeader("nid") String nid,
                                                          @RequestHeader("sign") String sign,
                                                          @RequestHeader("userId") Integer userId,
@@ -583,16 +583,17 @@ public class NewAgreementController extends BaseTradeController{
             if(CollectionUtils.isNotEmpty(tenderList)){
             	borrowTender = tenderList.get(0);
             } 
-
-            NewAgreementBean newAgreementBean=new NewAgreementBean("《居间服务借款协议》", 
-            		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
-            		systemConfig.getAppFrontHost() +
-                    SERVICE_LOAN_AGREEMENT_PATH+"?tenderNid="+borrowTender.getNid()+
-                    "&borrowNid="+borrowTender.getBorrowNid()+"&userId="+userId);
-            list.add(newAgreementBean);
-            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
-            newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
-            newAgreementResultBean.setList(list); 
+            if(borrowTender != null){
+                NewAgreementBean newAgreementBean=new NewAgreementBean("《居间服务借款协议》", 
+                		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
+                		systemConfig.getAppFrontHost() +
+                        SERVICE_LOAN_AGREEMENT_PATH+"?tenderNid="+borrowTender.getNid()+
+                        "&borrowNid="+borrowTender.getBorrowNid()+"&userId="+userId);
+                list.add(newAgreementBean);
+                newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+                newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+                newAgreementResultBean.setList(list); 
+            }
         }else{
             List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
             // 原 债转承接信息  criteria.andAssignNidEqualTo(nid);
@@ -617,15 +618,17 @@ public class NewAgreementController extends BaseTradeController{
             if(CollectionUtils.isNotEmpty(tenderList)){
             	borrowTender = tenderList.get(0);
             } 
-            NewAgreementBean newAgreementBean1=new NewAgreementBean("《居间服务借款协议》", 
-            		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
-            		systemConfig.getAppFrontHost() +
-                    SERVICE_LOAN_AGREEMENT_PATH+"?tenderNid="+borrowTender.getNid()+
-                    "&borrowNid="+borrowTender.getBorrowNid()+"&userId="+userId);
-            list.add(newAgreementBean1);
-            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
-            newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
-            newAgreementResultBean.setList(list);
+            if(borrowTender != null){
+                NewAgreementBean newAgreementBean1=new NewAgreementBean("《居间服务借款协议》", 
+                		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
+                		systemConfig.getAppFrontHost() +
+                        SERVICE_LOAN_AGREEMENT_PATH+"?tenderNid="+borrowTender.getNid()+
+                        "&borrowNid="+borrowTender.getBorrowNid()+"&userId="+userId);
+                list.add(newAgreementBean1);
+                newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+                newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+                newAgreementResultBean.setList(list);
+            }
         }
         logger.info("get newAgreementResultBean is: {}",JSONObject.toJSON(newAgreementResultBean));
         return newAgreementResultBean;
@@ -795,9 +798,8 @@ public class NewAgreementController extends BaseTradeController{
                     resultMap.put("newCreditUsername", encryptedUserName);
                 }
             }
-
             if (usersCredit != null) {
-                if(userId.equals(usersCredit.getUserId())){
+                if(usersCredit.getUserId()!= null && userId.equals(usersCredit.getUserId())){
                     resultMap.put("oldCreditUsername", usersCredit.getUsername());
                 }else{
                     String userName= usersCredit.getUsername();
