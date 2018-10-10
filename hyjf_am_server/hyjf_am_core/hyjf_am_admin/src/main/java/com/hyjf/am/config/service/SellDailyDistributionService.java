@@ -36,7 +36,7 @@ public interface SellDailyDistributionService {
      * @param form
      * @return
      */
-    boolean updateRecord(EmailRecipientRequest form);
+    boolean updateRecord(EmailRecipientRequest form) ;
 
     /**
      * 禁用

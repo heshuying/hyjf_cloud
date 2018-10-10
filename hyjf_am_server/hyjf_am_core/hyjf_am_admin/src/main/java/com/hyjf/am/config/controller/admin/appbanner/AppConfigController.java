@@ -181,7 +181,7 @@ public class AppConfigController {
         // 获取广告类型列表
         List<AdsTypeVO> returnNewList = new ArrayList<>();
         if(!CollectionUtils.isEmpty(adsTypeList)){
-            if(platformType.intValue()==1){
+            if(platformType.intValue()==2){
                 for(AdsTypeVO type:adsTypeList){
                     if(AdsTypeEnum.startpage.toString().equals(type.getCode())) {
                         returnNewList.add(type);
@@ -203,7 +203,7 @@ public class AppConfigController {
                         returnNewList.add(type);
                     }
                 }
-            }else if(platformType.intValue()==2){
+            }else if(platformType.intValue()==3){
                 for(AdsTypeVO type:adsTypeList){
                     if(AdsTypeEnum.startpage.toString().equals(type.getCode())) {
                         returnNewList.add(type);
@@ -225,7 +225,7 @@ public class AppConfigController {
                         returnNewList.add(type);
                     }
                 }
-            }else if(platformType.intValue()==3){
+            }else if(platformType.intValue()==1){
                 for(AdsTypeVO type:adsTypeList){
                     if(AdsTypeEnum.startpage.toString().equals(type.getCode())) {
                         returnNewList.add(type);

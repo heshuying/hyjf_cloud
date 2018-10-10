@@ -37,6 +37,7 @@ public class AccessFilter extends ZuulFilter {
     @Value("${ignore.urls.app.key}")
     private String appKeyIgnoreUrls;
 
+    private static final int STATUS_SUCCESS = 200;
 
     @Override
     public String filterType() {
@@ -87,7 +88,7 @@ public class AccessFilter extends ZuulFilter {
                 if (sign == null) {
                     logger.error("sign is empty");
                     // 不对其进行路由
-                    return this.buildErrorRequestContext(ctx, 400, this.buildNoneSignResponseResult());
+                    return this.buildErrorRequestContext(ctx, STATUS_SUCCESS, this.buildNoneSignResponseResult());
                 }
                 this.appNomalRequestProcess(request, ctx, sign);
 
@@ -104,10 +105,7 @@ public class AccessFilter extends ZuulFilter {
         } else if (originalRequestPath.contains(GatewayConstant.WEB_CHANNEL)) {
             this.setUserIdByToken(request, ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
         } else if (originalRequestPath.contains(GatewayConstant.API_CHANNEL)) {
-            // api目前不能自带hyjf-api，在网关人为增加，统一访问路径
-            String modifiedRequestPath = GatewayConstant.API_VISIT_URL + originalRequestPath;
-            // 增加请求前缀识别渠道
-            ctx.put(FilterConstants.REQUEST_URI_KEY, modifiedRequestPath);
+        	//do nothing api使用签名，没有用户认证
         } else {
             logger.error("error channel...");
             // 不对其进行路由
@@ -129,7 +127,7 @@ public class AccessFilter extends ZuulFilter {
         if (signValue == null) {
             logger.error("sign is invalid");
             // 不对其进行路由
-            return this.buildErrorRequestContext(ctx, 400, this.buildNoneSignResponseResult());
+            return this.buildErrorRequestContext(ctx, STATUS_SUCCESS, this.buildNoneSignResponseResult());
         }
         ctx.addZuulRequestHeader(GatewayConstant.TOKEN, signValue.getToken());
         ctx.addZuulRequestHeader(GatewayConstant.SIGN, sign);
@@ -231,7 +229,7 @@ public class AccessFilter extends ZuulFilter {
      */
     private Object redirectLoginPage(RequestContext ctx, String channel) {
         ctx.setSendZuulResponse(false);
-        ctx.setResponseStatusCode(200);
+        ctx.setResponseStatusCode(STATUS_SUCCESS);
         JSONObject result = new JSONObject();
 
         if (GatewayConstant.APP_CHANNEL.equals(channel)) {

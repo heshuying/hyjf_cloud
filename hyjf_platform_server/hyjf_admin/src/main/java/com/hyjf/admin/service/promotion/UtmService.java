@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.promotion;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
 import java.util.Map;
@@ -17,7 +18,7 @@ public interface UtmService {
      * @param pageSize 条数
      * @return PageList
      */
-    JSONObject getByPageList(Map<String,Object> map, Integer currPage, Integer pageSize);
+    UtmResultResponse getByPageList(Map<String,Object> map, Integer currPage, Integer pageSize);
 
     /**
      * @Author walter.limeng

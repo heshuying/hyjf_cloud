@@ -1024,7 +1024,7 @@ public class ValidatorCheckUtil {
 
 		if (retValue) {
 			BigDecimal bigDecimal = new BigDecimal(value);
-			if (bigDecimal.compareTo(new BigDecimal(0.00)) == -1) {
+			if (bigDecimal.compareTo(BigDecimal.valueOf(0.00)) < 0) {
 				CustomErrors.add(info, itemname, key,
 						getErrorMessage(SIGNLESSNUMLENGTH, integerMaxLength, decimalsMaxLength));
 			}
@@ -1126,8 +1126,8 @@ public class ValidatorCheckUtil {
 	/**
 	 * 身份证验证
 	 *
-	 * @param s
-	 *            号码内容
+	 * @param
+	 *
 	 * @return 是否有效 null和"" 都是false
 	 */
 	public static boolean isIDCard(String certNo) {

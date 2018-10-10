@@ -40,19 +40,6 @@
 		</dependency>
 		<!-- spring boot admin end -->
 
-		<!-- zipkin start -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-sleuth</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-zipkin</artifactId>
-		</dependency>
-		<!-- <dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-stream-binder-rabbit</artifactId> 
-			</dependency> -->
-		<!-- zipkin end -->
-
 		<dependency>
 			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-client</artifactId>
@@ -89,7 +76,6 @@
 		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
-			<version>0.1.54</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -99,7 +85,6 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.8.2</version>
 		</dependency>
 	</dependencies>
 
@@ -122,7 +107,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.9</version>
 				<configuration>
 					<skipTests>true</skipTests>
 				</configuration>
@@ -130,7 +114,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
 				<!-- <configuration> <excludes> <exclude>**/application.yml.bak</exclude> 
 					<exclude>**/bootstrap.yml</exclude> </excludes> </configuration> -->
 			</plugin>

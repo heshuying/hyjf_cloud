@@ -1,6 +1,8 @@
 package com.hyjf.am.vo.user;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDateUtils;
+import com.hyjf.common.util.calculate.DateUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -28,11 +30,20 @@ public class UtmPlatVO extends BaseVO implements Serializable {
 
     private Date createTime;
 
+    private String createTimeString;
+
     private Date updateTime;
 
     private Integer sourceType;
 
     private static final long serialVersionUID = 1L;
+
+    public String getCreateTimeString() {
+        return GetDateUtils.format(getCreateTime(), GetDateUtils.FORMAT_TIME);
+    }
+    public void setCreateTimeString(String value) {
+        setCreateTime(GetDateUtils.parse(value, GetDateUtils.FORMAT_TIME));
+    }
 
     public Integer getId() {
         return id;

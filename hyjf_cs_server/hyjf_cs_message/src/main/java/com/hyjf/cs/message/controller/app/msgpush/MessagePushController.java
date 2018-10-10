@@ -41,8 +41,8 @@ public class MessagePushController extends BaseController {
 	@ApiOperation(value = "获取提醒列表", notes = "获取提醒列表")
 	@PostMapping("/getTagListAction")
 	public JSONObject getTagListAction(@RequestHeader(value = "userId") Integer userId,
-			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
+			@RequestParam(value = "page", defaultValue = "1") Integer page,
+			@RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize, HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-app/msgpush/getTagListAction");
 		// 版本号
@@ -105,8 +105,8 @@ public class MessagePushController extends BaseController {
 	@PostMapping("/getMsgListAction")
 	public JSONObject getMsgListAction(
 			@RequestHeader(value = "userId") Integer userId,
-			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
+			@RequestParam(value = "page", defaultValue = "1") Integer page,
+			@RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize, HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-app/msgpush/getMsgListAction");
 		// 版本号

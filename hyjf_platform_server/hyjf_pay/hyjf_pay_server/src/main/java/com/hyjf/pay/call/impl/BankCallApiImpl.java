@@ -154,6 +154,7 @@ public class BankCallApiImpl implements BankCallApi {
 
     private String generateSignCall(BankCallPnrApiBean bean) {
         String mergedStr = bankCallSignUtils_.mergeMap(bean.getAllParams());
+        log.debug("[待加签字符串]："+mergedStr);
         return bankCallSignUtils_.sign(mergedStr);
     }
 

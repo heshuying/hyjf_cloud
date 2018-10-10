@@ -57,7 +57,7 @@ import java.util.UUID;
 
 @Service
 public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpenService   {
-	
+
     @Autowired
     private AmUserClient amUserClient;
 

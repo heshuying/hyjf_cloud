@@ -29,7 +29,7 @@ public class CouponConfigRequest extends BasePage {
 
     private Integer expirationType;
 
-    private Integer expirationDate;
+    private String expirationDate;
 
     private Integer expirationLength;
 
@@ -202,11 +202,11 @@ public class CouponConfigRequest extends BasePage {
         this.expirationType = expirationType;
     }
 
-    public Integer getExpirationDate() {
+    public String getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(Integer expirationDate) {
+    public void setExpirationDate(String expirationDate) {
         this.expirationDate = expirationDate;
     }
 

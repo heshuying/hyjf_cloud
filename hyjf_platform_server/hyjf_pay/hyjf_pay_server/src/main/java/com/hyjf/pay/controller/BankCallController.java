@@ -752,51 +752,30 @@ public class BankCallController extends BaseController {
     }
 
     /**
-     * 页面接收同步返回消息
+     * 忘记密码调用接口
      *
      * @return
      */
     @RequestMapping(value = "pageForgotPWD")
-    public ModelAndView pageForgotPWD(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
-        String logOrderId = request.getParameter("logOrderId");
-        // 真实的返回URL
-        String retUrl = "";
-        // 验签成功时, 跳转到各功能模块的回调URL
-        ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
-        if (StringUtils.isNotBlank(logOrderId)) {
-            BankExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
-            if (record != null) {
-                bean.setLogOrderId(logOrderId);
-                bean.setLogClient(record.getClient());
-                bean.setLogUserId(record.getCreateuser());
-                JSONObject jo = new JSONObject();
-                try {
-                    jo = JSONObject.parseObject(record.getContent());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                retUrl = jo.getString(BankCallConstant.PARAM_FORGOTPWDURL);
-                bean.setRetUrl(retUrl);
-                bean.setAction(retUrl);
-                if (null != bean.getAllParams().get(BankCallConstant.PARAM_ACQRES)) {
-                    bean.getAllParams().put(BankCallConstant.PARAM_ACQRES, bean.getAllParams().get(BankCallConstant.PARAM_ACQRES));
-                }
-                logger.info("同步回调跳转,callBackUrl:[" + bean.getAction() + "].");
-                bean.getAllParams().remove(BankCallConstant.PARAM_SIGN);
-                bean.getAllParams().remove(BankCallConstant.PARAM_VERSION);
-                bean.setSign(null);
-                bean.setVersion(null);
-                modelAndView.addObject(BankCallDefine.BANK_FORM, bean);
-            } else {
-                modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_RESULT);
-                modelAndView.addObject("content", "未查询到相应的订单信息");
-            }
-        } else {
-            modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_RESULT);
-            modelAndView.addObject("content", "订单信息错误");
-        }
-        logger.info("[交易完成后,回调结束]");
-        return modelAndView;
-    }
+    public ModelAndView pageForgotPWD(HttpServletRequest request) {
 
+        String logOrderId = request.getParameter(BankCallConstant.PARAM_LOGORDERID);
+        logger.info("[忘记密码调用接口开始, logOrderId:" + (logOrderId == null ? "" : logOrderId) + "]");
+        String retUrl="";
+        // 真实的返回URL
+        // 获取主键
+        BankExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+        if (record != null) {
+            JSONObject jo = new JSONObject();
+            try {
+                jo = JSONObject.parseObject(record.getContent());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            retUrl = jo.getString(BankCallConstant.PARAM_FORGOTPWDURL);
+        }
+        String redirectUrl="redirect:"+retUrl;
+        logger.info("[忘记密码调用接口结束, retUrl:" + (redirectUrl == null ? "" : redirectUrl) + "]");
+        return new ModelAndView(redirectUrl);
+    }
 }

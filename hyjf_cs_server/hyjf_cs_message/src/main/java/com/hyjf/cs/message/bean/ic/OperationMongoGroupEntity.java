@@ -168,9 +168,11 @@ public class OperationMongoGroupEntity implements Serializable {
         for(int i=0;i<list.size();i++){
             SubEntity sub=list.get(i);
             int value=sub.getValue();
-
-            double per=new BigDecimal((float)value * 100/total).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-
+            double perValue = 0;
+            if(0!=total){
+                perValue = (double)value * 100/total;
+            }
+            double per= BigDecimal.valueOf(perValue).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
             sub.setPercent(per+"%");
         }
         return list;

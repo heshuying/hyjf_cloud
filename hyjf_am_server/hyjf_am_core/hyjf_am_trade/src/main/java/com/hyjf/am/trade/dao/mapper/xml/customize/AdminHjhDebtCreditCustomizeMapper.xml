@@ -62,7 +62,7 @@
             </if>
             <!-- 还款方式 -->
             <if test="repayStyle != null and repayStyle != ''">
-                AND b.borrow_style = #{repayStyle}
+                AND bs.id = #{repayStyle}
             </if>
             <!-- 转让状态 -->
             <if test="creditStatus != null and creditStatus != ''">

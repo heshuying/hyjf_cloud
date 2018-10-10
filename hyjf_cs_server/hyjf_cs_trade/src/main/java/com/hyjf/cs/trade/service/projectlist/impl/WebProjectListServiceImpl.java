@@ -165,6 +165,108 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     }
 
+
+    /**
+     * 获取Web端项目列表(新的)
+     * @author zhangyk
+     * @date 2018/10/9 15:48
+     */
+    @Override
+    public WebResult searchProjectListNew(ProjectListRequest request) {
+
+        WebResult result = new WebResult();
+        BorrowProjectListBean resultBean = new BorrowProjectListBean();
+        // 初始化分页参数，并组合到请求参数
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+
+
+        List<BorrowProjectTypeVO> borrowTypes = amTradeClient.getProjectTypeList();
+        String projectType = request.getProjectType();// 项目类型
+        String borrowClass = request.getBorrowClass();// 项目子类型
+        // 校验相应的项目类型
+        if (borrowTypes != null && borrowTypes.size() > 0) {
+            boolean typeFlag = false;
+            boolean classFlag = false;
+            if (StringUtils.isNotBlank(projectType)) {
+                for (BorrowProjectTypeVO borrowType : borrowTypes) {
+                    String type = borrowType.getBorrowProjectType();
+                    if (type.equals(projectType)) {
+                        typeFlag = true;
+                    }
+                    if (StringUtils.isNotBlank(borrowClass)) {
+                        String classType = borrowType.getBorrowClass();
+                        if (classType.equals(borrowClass)) {
+                            classFlag = true;
+                        }
+                    } else {
+                        classFlag = true;
+                    }
+                }
+            } else {
+                resultBean.setList(new ArrayList<WebProjectListCsVO>());
+                page.setTotal(0);
+            }
+            if (typeFlag && classFlag) {
+
+                request.setProjectType(projectType);
+                request.setBorrowClass(borrowClass);
+                request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
+
+                // 统计相应的汇直投的数据记录数
+                int projectToal = amTradeClient.countProjectList(request);
+
+                Map<String, Object> params = new HashMap<String, Object>();
+                if (projectToal > 0) {
+
+                    //add by cwyang 项目列表显示2页
+                    int pageNum = 2;
+                    if(projectToal > request.getPageSize() * pageNum){
+                        projectToal = request.getPageSize() * pageNum;
+                    }
+
+                    page.setTotal(projectToal);
+                    // 查询相应的汇直投列表数据
+                    int limit = page.getLimit();
+                    int offSet = page.getOffset();
+
+                    if (offSet == 0 || offSet > 0) {
+                        request.setLimitStart(offSet);
+                    }
+                    if (limit > 0) {
+                        request.setLimitEnd(limit);
+                    }
+                   List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
+                    // add by nxl 判断是否为产品加息 start
+                    if(null!=projectList&&projectList.size()>0){
+                        for(WebProjectListCustomizeVO webProjectListCustomize:projectList){
+                            int intFlg = Integer.parseInt(StringUtils.isNotBlank(webProjectListCustomize.getIncreaseInterestFlag())?webProjectListCustomize.getIncreaseInterestFlag():"0");
+                            BigDecimal dbYield = new BigDecimal(StringUtils.isNotBlank(webProjectListCustomize.getBorrowExtraYield())?webProjectListCustomize.getBorrowExtraYield():"0");
+                            boolean booleanVal = Validator.isIncrease(intFlg,dbYield);
+                            webProjectListCustomize.setIncrease(booleanVal);
+                        }
+                    }
+                    // add by nxl 判断是否为产品加息 end
+                    resultBean.setList( CommonUtils.convertBeanList(projectList, WebProjectListCsVO.class));
+                    //int nowTime = GetDate.getNowTime10();
+                   // result.setNowTime(nowTime);
+                } else {
+                    resultBean.setList(new ArrayList<WebProjectListCsVO>());
+                    page.setTotal(0);
+                }
+            } else {
+                resultBean.setList(new ArrayList<WebProjectListCsVO>());
+                page.setTotal(0);
+            }
+        } else {
+            resultBean.setList(new ArrayList<WebProjectListCsVO>());
+            page.setTotal(0);
+        }
+        resultBean.setNowTime(GetDate.getNowTime10());
+        result.setData(resultBean);
+        result.setPage(page);
+        return result;
+    }
+
     @Override
     public WebResult getBorrowDetail(Map map, String userId) {
         Object borrowNid = map.get(ProjectConstant.PARAM_BORROW_NID);

@@ -229,6 +229,23 @@ public class MessagePushTagController {
         }
         return response;
     }
+
+    /**
+     * 根据消息标签id查询消息标签
+     * @param tagId
+     * @return
+     */
+    @RequestMapping("/getTagByTagId/{tagId}")
+    public MessagePushTagResponse getTagByTagId(@PathVariable Integer tagId) {
+        MessagePushTagResponse response = new MessagePushTagResponse();
+        MessagePushTag messagePushTag = messagePushTagService.getTagByTagId(tagId);
+        if (messagePushTag != null) {
+            MessagePushTagVO messagePushTagVO = new MessagePushTagVO();
+            BeanUtils.copyProperties(messagePushTag,messagePushTagVO);
+            response.setResult(messagePushTagVO);
+        }
+        return response;
+    }
 }
 
 

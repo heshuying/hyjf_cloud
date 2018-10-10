@@ -266,7 +266,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_MONEY_LESS_NEED_BUY_ALL,balance);
             }
         } else {// 项目的剩余金额大于最低起投金额
-            if (accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {
+            if (min != null && min != 0 && accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {
                 if (accountBigDecimal.compareTo(BigDecimal.ZERO) == 0) {
                     if (cuc != null && cuc.getCouponType() != 3 && cuc.getCouponType() != 1) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,min);
@@ -277,10 +277,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             } else {
                 Integer max = borrow.getTenderAccountMax();
                 if (max != null && max != 0 && accountBigDecimal.compareTo(new BigDecimal(max)) == 1) {
-                    // "项目最大投资额为" + max + "元", "1"
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT,max);
                 }
             }
+
         }
         // 投资金额不能大于项目总额
         if (accountBigDecimal.compareTo(borrow.getAccount()) > 0) {
@@ -827,6 +827,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setCouponAvailableCount(couponAvailableCount + "");
             // 优惠券总张数
             recordTotal = amTradeClient.getUserCouponCount(loginUser.getUserId(), "0");
+            logger.info("recordTotal:{}  , couponAvailableCount:{}",recordTotal,couponAvailableCount);
             investInfo.setBorrowApr(borrow.getBorrowApr() + "%");
             investInfo.setPaymentOfInterest("");
             // 是否使用优惠券
@@ -861,10 +862,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCouponQuota("");
                 investInfo.setCouponId("-1");
 
-                if (recordTotal > 0) {
+                if (couponAvailableCount > 0) {
                     investInfo.setIsThereCoupon("1");
                     investInfo.setCouponDescribe("请选择");
-                } else if (recordTotal == 0) {
+                } else if (recordTotal > 0 && couponAvailableCount == 0) {
                     investInfo.setIsThereCoupon("1");
                     investInfo.setCouponDescribe("暂无可用");
                 } else {
@@ -1067,7 +1068,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      */
     private void setProtocolsToResultVO(AppInvestInfoResultVO investInfo, String investType){
         List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
-        NewAgreementBean newAgreementBean=new NewAgreementBean("投资协议",  systemConfig.webHost+"agreement/AgreementViewList?borrowType="+investType);
+        NewAgreementBean newAgreementBean=new NewAgreementBean("投资协议",  systemConfig.AppFrontHost+"/agreement/AgreementViewList?borrowType="+investType);
         list.add(newAgreementBean);
         investInfo.setProtocols(list);
         investInfo.setProtocolUrlDesc("协议列表");
@@ -1133,11 +1134,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         request.setUserName(loginUser.getUsername());
         // 设置redis 用户正在投资
         String key = RedisConstants.BORROW_TENDER_REPEAT + userId;
-        boolean checkTender = RedisUtils.tranactionSet(key, RedisConstants.TENDER_OUT_TIME);
-        if(!checkTender){
-            // 用户正在投资
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
-        }
         if (StringUtils.isEmpty(request.getBorrowNid())) {
             // 项目编号不能为空
             throw new CheckException(MsgEnum.STATUS_CE000013);
@@ -1489,10 +1485,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (!checkTender) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_HANDING);
         }
-        // redis扣减
-        redisTender(userId, borrowNid, txAmount);
         // 操作数据库表
         this.borrowTender(borrow, bean);
+        // redis扣减
+        redisTender(userId, borrowNid, txAmount);
         logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
         // 如果用了优惠券
         if (StringUtils.isNotEmpty(couponGrantId) && !"0".equals(couponGrantId) && !"-1".equals(couponGrantId)) {

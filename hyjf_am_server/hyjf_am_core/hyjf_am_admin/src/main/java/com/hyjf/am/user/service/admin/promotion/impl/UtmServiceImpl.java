@@ -8,10 +8,14 @@ import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -19,10 +23,7 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author walter.limeng
@@ -60,7 +61,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     @Override
     public Utm insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
         Utm utm = new Utm();
-        if(StringUtils.isNotEmpty(channelCustomizeVO.getUtmId())){
+        if(StringUtils.isNotBlank(channelCustomizeVO.getUtmId())){
             //执行更新操作
             utm = changeUtm(utm,channelCustomizeVO);
             utm.setUtmId(Integer.parseInt(channelCustomizeVO.getUtmId()));
@@ -83,7 +84,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     public UtmPlatVO getUtmPlatById(Integer id) {
         UtmPlat utmPlat = utmPlatMapper.selectByPrimaryKey(id);
         UtmPlatVO utmPlatVO = new UtmPlatVO();
-        utmPlatVO = (UtmPlatVO)convertBean2Bean(utmPlat,utmPlatVO);
+        utmPlatVO = CommonUtils.convertBean(utmPlat,UtmPlatVO.class);
         return utmPlatVO;
     }
 
@@ -106,7 +107,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     public UtmPlat insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
         UtmPlat utmPlat = new UtmPlat();
         utmPlat = convertUtmPlat(utmPlat,utmPlatVO);
-        if(StringUtils.isNotEmpty(utmPlatVO.getId()+"")){
+        if(null != utmPlatVO.getId() && !"".equals(utmPlatVO.getId())){
             utmPlat.setId(Integer.valueOf(utmPlatVO.getId()));
             utmPlatMapper.updateByPrimaryKeySelective(utmPlat);
         }else{
@@ -202,6 +203,16 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         return utmRegCustomizeMapper.selectAppChannelReconciliationRecordHjh(request);
     }
 
+    @Override
+    public List<UtmPlatVO> getUtmPlatByParam(Map<String, Object> map) {
+        UtmPlatExample utmPlat = new UtmPlatExample();
+        List<UtmPlat> list = utmPlatMapper.selectByExample(utmPlat);
+        if(list == null){
+            list = new ArrayList<UtmPlat>();
+        }
+        return CommonUtils.convertBeanList(list, UtmPlatVO.class);
+    }
+
     /**
      * @Author walter.limeng
      * @Description  转换utmplat对象
@@ -214,6 +225,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         String nowDate = GetDate.getServerDateTime(6, new Date());
         record.setSourceId(Integer.valueOf(utmBean.getSourceId()));
         record.setSourceName(utmBean.getSourceName());
+        //0：启用；1：禁用
         record.setDelFlag(utmBean.getDelFlag());
         record.setSourceType(utmBean.getSourceType());
         record.setAttornFlag(utmBean.getAttornFlag());

@@ -16,7 +16,6 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -130,17 +129,11 @@ public class CouponRepayController extends BaseController {
      */
     @ApiOperation(value = "数据导出",notes = "数据导出")
     @PostMapping("/exportAction")
-    public void exportAction(HttpServletResponse response, CouponRepayRequest form) throws UnsupportedEncodingException {
+    public void exportAction(HttpServletResponse response,@RequestBody CouponRepayRequest form) throws UnsupportedEncodingException {
         // 表格sheet名称
         String sheetName = "优惠券还款监测";
-
-        Map<String, Object> paraMap = new HashMap<String, Object>();
-        if(StringUtils.isNotEmpty(form.getTimeStartSrch())){
-            paraMap.put("timeStartSrch", form.getTimeStartSrch());
-        }
-        if(StringUtils.isNotEmpty(form.getTimeEndSrch())){
-            paraMap.put("timeEndSrch", form.getTimeEndSrch());
-        }
+        form.setTimeStartSrch(null);
+        form.setTimeEndSrch(null);
         List<AdminCouponRepayMonitorCustomizeVO> resultList = this.couponRepayService.selectRecordList(form);
         String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] { "序号", "日期", "星期", "加息券待还统计", "加息券实际还款", "差额（实际-预测）"};
