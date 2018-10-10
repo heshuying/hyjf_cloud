@@ -102,7 +102,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
     }
 
     @ApiOperation(value = "纳觅财富自动登录",notes = "纳觅财富自动登录")
-    @PostMapping(value = "/nmcfThirdLogin")
+    @PostMapping(value = "/nmcfThirdLogin.do")
     public ModelAndView nmcfThirdLogin(HttpServletResponse response,HttpServletRequest httpServletRequest,@ModelAttribute NmcfLoginRequestBean request){
 
         // 验证
