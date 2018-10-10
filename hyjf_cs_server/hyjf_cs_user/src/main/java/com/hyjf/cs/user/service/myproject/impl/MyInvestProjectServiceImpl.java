@@ -164,7 +164,7 @@ public class MyInvestProjectServiceImpl extends BaseUserServiceImpl implements M
         params.put("pageSize", pageSize);
 
         // 请求路径
-        String requestUrl = systemConfig.getApiWebUrl() + GET_INVESTINGDATA;
+        String requestUrl = systemConfig.getServerHost() + GET_INVESTINGDATA;
         // 0:成功，1：失败
         return HttpClientUtils.post(requestUrl, params);
     }
@@ -190,7 +190,7 @@ public class MyInvestProjectServiceImpl extends BaseUserServiceImpl implements M
         params.put("pageSize", pageSize);
 
         // 请求路径
-        String requestUrl = systemConfig.getApiWebUrl() + GET_REPAYEDDATA;
+        String requestUrl = systemConfig.getServerHost() + GET_REPAYEDDATA;
 
         // 0:成功，1：失败
         return HttpClientUtils.post(requestUrl, params);
@@ -218,7 +218,7 @@ public class MyInvestProjectServiceImpl extends BaseUserServiceImpl implements M
         params.put("pageSize", pageSize);
 
         // 请求路径
-        String requestUrl = systemConfig.getApiWebUrl() + GET_REPAYDATA;
+        String requestUrl = systemConfig.getServerHost() + GET_REPAYDATA;
 
         // 0:成功，1：失败
         return HttpClientUtils.post(requestUrl, params);

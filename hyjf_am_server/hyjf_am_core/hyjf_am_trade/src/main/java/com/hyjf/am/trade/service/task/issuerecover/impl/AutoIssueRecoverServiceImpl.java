@@ -1048,6 +1048,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 //		// 抵押物信息 风险控制措施-抵押物
 //		borrow.setBorrowMeasuresMort(hjhPlanAsset.getBorrowMeasuresMort());
 //		// 本息保障 险控制措施-措施  风控措施  现在默认写死
+        // 项目类型
+        borrow.setProjectType(hjhAssetBorrowType.getBorrowCd());
         // 融资服务费
         borrow.setServiceFeeRate(borrowFinmanNewCharge.getChargeRate());
         // 账户管理费率

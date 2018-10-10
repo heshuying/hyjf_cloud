@@ -872,7 +872,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String remark = "";
         String txcode = "";
         // 同步调用路径
-        String retUrl = systemConfig.getApiWebUrl()
+        String retUrl = systemConfig.getServerHost()
                 + "/server/autoPlus";
         // 异步调用路
         String bgRetUrl = "http://CS-USER/server/autoPlus";

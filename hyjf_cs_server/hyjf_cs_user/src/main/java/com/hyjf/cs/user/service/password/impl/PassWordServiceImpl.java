@@ -12,7 +12,6 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
@@ -383,9 +382,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         //拼装参数
         UserInfoVO usersInfo = getUserInfo(user.getUserId());
         // 同步调用路径
-        String retUrl = systemConfig.getApiWebUrl() + "/user/password";
+        String retUrl = systemConfig.getServerHost() + "/user/password";
         // 异步调用路
-        String bgRetUrl = systemConfig.getApiWebUrl() + "/user/password";
+        String bgRetUrl = systemConfig.getServerHost() + "/user/password";
         // 调用设置密码接口
         if(txCode.equals(BankCallConstant.TXCODE_PASSWORD_SET)){
             retUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
@@ -672,9 +671,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
         bean.setMobile(user.getMobile());
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+       /* LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(user.getUserId());
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
