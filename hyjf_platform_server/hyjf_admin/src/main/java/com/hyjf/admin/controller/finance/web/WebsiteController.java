@@ -81,10 +81,12 @@ public class WebsiteController extends BaseController {
         if(response == null||response.getRecordTotal()==0) {
             sumAccount = "0.00";
         }
-        websiteResponse.setTotal(response.getRecordTotal());
+        if (null!=response){
+            websiteResponse.setTotal(response.getRecordTotal());
+            websiteResponse.setAccountWebList(response.getResultList());
+        }
         websiteResponse.setTradeList(trades);
         websiteResponse.setSumAccount(sumAccount);
-        websiteResponse.setAccountWebList(response.getResultList());
         return new AdminResult(websiteResponse);
     }
 
@@ -112,10 +114,12 @@ public class WebsiteController extends BaseController {
         if(response == null||response.getRecordTotal()==0) {
             sumAccount = "0.00";
         }
-        websiteResponse.setTotal(response.getRecordTotal());
+        if (null!=response){
+            websiteResponse.setTotal(response.getRecordTotal());
+            websiteResponse.setAccountWebList(response.getResultList());
+        }
         websiteResponse.setTradeList(trades);
         websiteResponse.setSumAccount(sumAccount);
-        websiteResponse.setAccountWebList(response.getResultList());
         return new AdminResult(websiteResponse);
     }
 

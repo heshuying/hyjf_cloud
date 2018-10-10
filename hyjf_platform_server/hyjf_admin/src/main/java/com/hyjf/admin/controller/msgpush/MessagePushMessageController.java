@@ -153,7 +153,7 @@ public class MessagePushMessageController extends BaseController {
             templateVO.setSendTime(GetDate.getNowTime10());
             if (StringUtils.isNotEmpty(templateRequest.getMessagesPreSendTimeStr())) {
                 try {
-                    Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
+                    Integer time = GetDate.strYYYYMMDD2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
                     if (time != 0) {
                         templateVO.setPreSendTime(time);
                         templateVO.setSendTime(time);
@@ -213,7 +213,7 @@ public class MessagePushMessageController extends BaseController {
             templateRequest.setSendTime(GetDate.getMyTimeInMillis());
             if (StringUtils.isNotEmpty(templateRequest.getMessagesPreSendTimeStr())) {
                 try {
-                    Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
+                    Integer time = GetDate.strYYYYMMDD2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
                     if (time != 0) {
                         templateRequest.setPreSendTime(time);
                         templateRequest.setSendTime(GetDate.strYYYYMMDD2Timestamp2(GetDate.getDateMyTimeInMillis(time)));
