@@ -43,6 +43,7 @@ import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import org.apache.commons.lang.StringUtils;
@@ -80,6 +81,9 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     @Autowired
     private SmsProducer smsProducer;
+
+    @Autowired
+    private MyCreditListService myCreditListService;
     
     /**
      * 折让率格式
@@ -665,9 +669,9 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         try {
             try{
                 checkCanCredit(request,userId);
-                checkTenderToCreditParam(request,userId);
+                myCreditListService.checkTenderToCreditParam(request,userId);
                 // 债转保存
-                creditNid = insertTenderToCredit(userId, request);
+                myCreditListService.insertTenderToCredit(userId, request);
                 resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}","success").replace("{status}",CustomConstants.APP_STATUS_SUCCESS).replace("{statusDesc}",CustomConstants.APP_STATUS_DESC_SUCCESS).replace(accountStr,request.getCreditCapital()).replace(priceStr,request.getCreditPrice()).replace(endTimeStr, GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getCreditEndTime()));
                 // 业务手动抛出的异常
             }catch (CheckException e){
@@ -737,10 +741,9 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	        UserVO user = amUserClient.findUserById(userId);
 	        int result = amUserClient.checkMobileCode(user.getMobile(), request.getCode(), CommonConstant.PARAM_TPL_ZHUCE
 	                , request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-            // TODO: 2018/9/14  zyk  债转验证码不好用 暂时注释掉  跑流程  后期打开
-	        /*if (result == 0) {
+	        if (result == 0) {
 	            throw new CheckException(MsgEnum.STATUS_ZC000015);
-	        }*/
+	        }
 	    }
 	}
 	
