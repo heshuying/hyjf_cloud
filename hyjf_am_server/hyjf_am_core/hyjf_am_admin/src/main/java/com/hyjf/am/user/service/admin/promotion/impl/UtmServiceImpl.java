@@ -107,7 +107,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     public UtmPlat insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
         UtmPlat utmPlat = new UtmPlat();
         utmPlat = convertUtmPlat(utmPlat,utmPlatVO);
-        if(StringUtils.isNotBlank(utmPlatVO.getId()+"")){
+        if(null != utmPlatVO.getId() && !"".equals(utmPlatVO.getId())){
             utmPlat.setId(Integer.valueOf(utmPlatVO.getId()));
             utmPlatMapper.updateByPrimaryKeySelective(utmPlat);
         }else{
