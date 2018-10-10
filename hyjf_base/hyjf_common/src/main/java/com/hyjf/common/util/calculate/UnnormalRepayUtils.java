@@ -140,7 +140,7 @@ public class UnnormalRepayUtils {
 	}
 
 	/**
-	 * 融通宝提前还款减少的利息
+	 * 融通宝提前还款减少的利息  应还本金*年化收益率÷360 *提前还款天数
 	 */
 	public static BigDecimal aheadRTBRepayChargeInterest(BigDecimal termShouldPrincipal,BigDecimal yearRate, int aheadDays) {
 		
