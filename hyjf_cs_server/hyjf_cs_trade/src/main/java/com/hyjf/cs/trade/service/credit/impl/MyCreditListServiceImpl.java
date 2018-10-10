@@ -20,6 +20,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -31,6 +32,8 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
@@ -388,20 +391,20 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     @Override
     public WebResult checkCode(TenderBorrowCreditCustomize request, Integer userId) {
     	
-//        UserVO user = amUserClient.findUserById(userId);
-//        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-//        // 短信验证码
-//        String code = request.getTelcode();
-//        // 手机号码(必须,数字,最大长度)
-//        String mobile = user.getMobile();
-//        CheckUtil.check(StringUtils.isNotBlank(verificationType), MsgEnum.STATUS_CE000001);
-//        CheckUtil.check(StringUtils.isNotBlank(mobile), MsgEnum.STATUS_CE000001);
-//        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
-//        CheckUtil.check(StringUtils.isNotBlank(code), MsgEnum.ERR_SMSCODE_BLANK);
-//        int result = amUserClient.onlyCheckMobileCode(mobile, code, verificationType, request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-//        if (result == 0) {
-//            throw new CheckException(MsgEnum.STATUS_ZC000015);
-//        }
+        UserVO user = amUserClient.findUserById(userId);
+        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
+        // 短信验证码
+        String code = request.getTelcode();
+        // 手机号码(必须,数字,最大长度)
+       String mobile = user.getMobile();
+        CheckUtil.check(StringUtils.isNotBlank(verificationType), MsgEnum.STATUS_CE000001);
+        CheckUtil.check(StringUtils.isNotBlank(mobile), MsgEnum.STATUS_CE000001);
+        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
+        CheckUtil.check(StringUtils.isNotBlank(code), MsgEnum.ERR_SMSCODE_BLANK);
+        int result = amUserClient.onlyCheckMobileCode(mobile, code, verificationType, request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
+        if (result == 0) {
+            throw new CheckException(MsgEnum.STATUS_ZC000015);
+        }
         return new WebResult();
     }
 
@@ -427,33 +430,18 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             }
 
         }
-//        if (StringUtils.isEmpty(request.getCreditDiscount())) {
-//            // 折让率不能为空
-//            throw  new CheckException(MsgEnum.ERROR_CREDIT_CREDIT_DISCOUNT_NULL);
-//        } else {
-//            if (request.getCreditDiscount().matches(regex)) {
-//                float creditDiscount = Float.parseFloat(request.getCreditDiscount());
-//                if (creditDiscount > creditDiscountEnd || creditDiscount < creditDiscountStart) {
-//                    // 折让率范围错误
-//                    throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);
-//                }
-//            } else {
-//                // 折让率格式错误
-//                throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_FORMAT_ERROR);
-//            }
-//        }
         // 验证手机验证码
-//        if (StringUtils.isEmpty(request.getTelcode())) {
-//            // 手机验证码不能为空
-//            throw  new CheckException(MsgEnum.STATUS_ZC000010);
-//        } else {
-//            UserVO user = amUserClient.findUserById(userId);
-//            int result = amUserClient.checkMobileCode(user.getMobile(), request.getTelcode(), CommonConstant.PARAM_TPL_ZHUCE
-//                    , request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-//            if (result == 0) {
-//                throw new CheckException(MsgEnum.STATUS_ZC000015);
-//            }
-//        }
+        if (StringUtils.isEmpty(request.getTelcode())) {
+            // 手机验证码不能为空
+            throw  new CheckException(MsgEnum.STATUS_ZC000010);
+        } else {
+            UserVO user = amUserClient.findUserById(userId);
+            int result = amUserClient.checkMobileCode(user.getMobile(), request.getTelcode(), CommonConstant.PARAM_TPL_ZHUCE
+                    , request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
+            if (result == 0) {
+                throw new CheckException(MsgEnum.STATUS_ZC000015);
+            }
+        }
     }
 
     /**
