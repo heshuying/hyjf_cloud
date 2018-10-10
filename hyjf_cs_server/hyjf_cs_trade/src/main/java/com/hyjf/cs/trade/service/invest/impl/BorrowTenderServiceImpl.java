@@ -1134,11 +1134,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         request.setUserName(loginUser.getUsername());
         // 设置redis 用户正在投资
         String key = RedisConstants.BORROW_TENDER_REPEAT + userId;
-        boolean checkTender = RedisUtils.tranactionSet(key, RedisConstants.TENDER_OUT_TIME);
-        if(!checkTender){
-            // 用户正在投资
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
-        }
         if (StringUtils.isEmpty(request.getBorrowNid())) {
             // 项目编号不能为空
             throw new CheckException(MsgEnum.STATUS_CE000013);
