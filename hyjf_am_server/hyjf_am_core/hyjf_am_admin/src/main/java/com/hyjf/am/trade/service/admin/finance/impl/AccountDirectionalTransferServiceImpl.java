@@ -13,8 +13,6 @@ import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +25,6 @@ import java.util.List;
 @Service(value = "tradeAccountDirectionalTransferServiceImpl")
 public class AccountDirectionalTransferServiceImpl extends BaseServiceImpl implements AccountDirectionalTransferService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private AccountDirectionalTransferMapper accountDirectionalTransferMapper;
     /**
@@ -40,16 +36,14 @@ public class AccountDirectionalTransferServiceImpl extends BaseServiceImpl imple
     @Override
     public Integer getDirectionalTransferCount(DirectionalTransferListRequest request) {
         AccountDirectionalTransferExample accountDirectionalTransferExample = convertExample(request);
-        Integer count = accountDirectionalTransferMapper.countByExample(accountDirectionalTransferExample);
-        return count;
+        return accountDirectionalTransferMapper.countByExample(accountDirectionalTransferExample);
     }
 
     @Override
     public List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request) {
         AccountDirectionalTransferExample example = convertExample(request);
         List<AccountDirectionalTransfer> accountDirectionalTransferList = accountDirectionalTransferMapper.selectByExample(example);
-        List<AccountDirectionalTransferVO> accountDirectionalTransferVOList = CommonUtils.convertBeanList(accountDirectionalTransferList,AccountDirectionalTransferVO.class);
-        return accountDirectionalTransferVOList;
+        return CommonUtils.convertBeanList(accountDirectionalTransferList,AccountDirectionalTransferVO.class);
     }
 
     /**

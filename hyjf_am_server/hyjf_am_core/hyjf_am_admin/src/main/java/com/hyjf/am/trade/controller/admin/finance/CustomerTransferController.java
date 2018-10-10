@@ -126,8 +126,7 @@ public class CustomerTransferController extends BaseController {
     @ApiOperation(value = "向ht_user_transfer表中插入数据",notes = "向ht_user_transfer表中插入数据")
     @PostMapping(value = "/insertusertransfer")
     public Boolean insertUserTransfer(@RequestBody CustomerTransferRequest request){
-        Boolean success = customerTransferService.insertUserTransfer(request);
-        return success;
+        return customerTransferService.insertUserTransfer(request);
     }
 
     /**
