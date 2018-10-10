@@ -71,4 +71,12 @@ public interface AssetListService {
 	 * @return 
 	 */
 	BigDecimal sumAccount(AssetListRequest request);
+	
+	/**
+	 * 资产列表查询不分页
+	 *
+	 * @param form
+	 * @return List<HjhAssetTypeVO>
+	 */
+	AssetListCustomizeResponse findAssetListWithoutPage(AssetListRequest form);
 }

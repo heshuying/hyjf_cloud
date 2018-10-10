@@ -50,7 +50,7 @@ public class BaseTradeController extends BaseController {
         }
         if (ClientConstants.WECHAT_CLIENT == client) {
             String sign=request.getParameter("sign");
-            return sysConfig.getWechatHost()+"/hyjf-wechat/wx/transpassword/resetPassword.page?sign="+sign;
+            return sysConfig.getWeiFrontHost()+"/submitForm?queryType=6";
         }
         return "";
     }

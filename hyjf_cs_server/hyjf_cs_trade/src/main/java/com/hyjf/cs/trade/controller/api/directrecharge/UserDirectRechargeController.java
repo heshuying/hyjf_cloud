@@ -38,7 +38,7 @@ public class UserDirectRechargeController extends BaseTradeController {
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "/recharge")
+    @PostMapping(value = "/recharge.do")
     public ModelAndView recharge(@RequestBody UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
         return directRechargeService.recharge(userRechargeRequestBean, request);
     }

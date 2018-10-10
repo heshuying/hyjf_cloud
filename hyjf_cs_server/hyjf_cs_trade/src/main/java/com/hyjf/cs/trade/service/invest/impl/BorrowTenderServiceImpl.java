@@ -640,7 +640,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
-        UserVO loginUser = amUserClient.findUserById(Integer.valueOf(tender.getUserId()));
+        UserVO loginUser = null;
+        if(tender.getUserId()!=null){
+            loginUser = amUserClient.findUserById(Integer.valueOf(tender.getUserId()));
+        }
+
 
         BestCouponListVO couponConfig = new BestCouponListVO();
         // 未登录，不计算优惠券
@@ -1096,10 +1100,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             requestMapping = "/join/plan?requestType=";
         }else if (CommonConstant.TENDER_TYPE_CREDIT.equalsIgnoreCase(borrowType)){
             // 债转的
+            String creditNid = (StringUtils.isNotBlank(tender.getBorrowNid()) && tender.getBorrowNid().length() >3) ? tender.getBorrowNid().substring(3) : "";
+            tender.setCreditNid(creditNid);
+            tender.setAssignCapital(tender.getAccount());
             borrowTenderService.borrowCreditCheck(tender);
             requestType = "10";
             url = baseUrl + requestMapping + requestType;
-            String creditNid = (StringUtils.isNotBlank(tender.getBorrowNid()) && tender.getBorrowNid().length() >3) ? tender.getBorrowNid().substring(3) : "";
             String couponGrantId = (tender.getCouponGrantId() != null ? tender.getCouponGrantId().toString() : "");
             url += "&couponGrantId="+couponGrantId+"&creditNid="+creditNid+"&platform="+tender.getPlatform()+"&assignCapital="+tender.getAccount();
             logger.info("url:[{}]",url);

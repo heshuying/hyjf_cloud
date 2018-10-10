@@ -123,12 +123,9 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Override
     public BorrowAndInfoVO searchBorrowByBorrowNid(String borrowNid) {
-        // 返回结果
-        BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
         // 获取相应的标的详情
         Borrow borrow = this.getBorrow(borrowNid);
-        borrowVO = CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
-        return borrowVO;
+        return CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
     }
 
     /**
@@ -143,7 +140,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         StzhWhiteListExample.Criteria sTZHCra = stzhWhiteListExample.createCriteria();
         sTZHCra.andStUserIdEqualTo(entrustedUserId);
         List<StzhWhiteList> sTZHWhiteList = stzhWhiteListMapper.selectByExample(stzhWhiteListExample);
-        if (sTZHWhiteList != null && sTZHWhiteList.size() > 0) {
+        if (sTZHWhiteList != null && !sTZHWhiteList.isEmpty()) {
             StzhWhiteList stzf = sTZHWhiteList.get(0);
             return stzf.getStAccountid();
         }
@@ -168,8 +165,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
             // 更新受托支付备案
             example.createCriteria().andIdEqualTo(borrow.getId());
         }
-        Boolean flag = borrowMapper.updateByExampleSelective(borrow, example) > 0;
-        return flag;
+        return borrowMapper.updateByExampleSelective(borrow, example) > 0;
     }
 
     /**
@@ -200,7 +196,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
             // 受托支付备案失败推送
             if(borrowVO.getEntrustedFlg() !=1){
                 // 加入到消息队列
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("mqMsgId", GetCode.getRandomCode(10));
                 params.put("assetId", hjhPlanAsset.getAssetId());
                 params.put("instCode", hjhPlanAsset.getInstCode());
@@ -228,7 +224,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         cra.andBorrowNidEqualTo(borrow.getBorrowNid());
 
         List<HjhPlanAsset> list = this.hjhPlanAssetMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
+        if (list != null && !list.isEmpty()) {
             return list.get(0);
         }
 
