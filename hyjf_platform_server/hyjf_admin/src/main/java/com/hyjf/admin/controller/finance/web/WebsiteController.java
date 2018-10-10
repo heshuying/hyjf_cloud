@@ -143,6 +143,7 @@ public class WebsiteController extends BaseController {
         // 取得数据
         form.setLimitStart(-1);
         form.setLimitEnd(-1);
+        form.setPageSize(-1);
         //设置默认查询时间
         if(StringUtils.isEmpty(form.getStartDate())){
             form.setStartDate(GetDate.getDate("yyyy-MM-dd"));

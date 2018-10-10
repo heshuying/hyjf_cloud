@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(value = "api端-投资信息接口",tags = "api端-投资信息接口")
 @RestController
-@RequestMapping("/server/invest")
+@RequestMapping("/hyjf-api/server/invest")
 public class ApiInvestController extends BaseTradeController {
 
     @Autowired
