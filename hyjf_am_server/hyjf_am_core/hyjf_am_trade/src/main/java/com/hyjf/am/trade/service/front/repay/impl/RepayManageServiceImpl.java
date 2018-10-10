@@ -1896,6 +1896,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 // 当前期
                 if (period == borrowRepayPlan.getRepayPeriod()) {
 
+
                     // 当前期已经还款
                     if (borrowRepayPlan.getRepayStatus() == 1) {
 

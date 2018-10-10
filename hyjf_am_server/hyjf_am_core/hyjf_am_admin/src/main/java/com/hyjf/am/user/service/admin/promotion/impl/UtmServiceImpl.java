@@ -84,7 +84,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     public UtmPlatVO getUtmPlatById(Integer id) {
         UtmPlat utmPlat = utmPlatMapper.selectByPrimaryKey(id);
         UtmPlatVO utmPlatVO = new UtmPlatVO();
-        utmPlatVO = (UtmPlatVO)convertBean2Bean(utmPlat,utmPlatVO);
+        utmPlatVO = CommonUtils.convertBean(utmPlat,UtmPlatVO.class);
         return utmPlatVO;
     }
 

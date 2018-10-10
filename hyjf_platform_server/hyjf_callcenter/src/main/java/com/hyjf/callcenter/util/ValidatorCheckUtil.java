@@ -226,7 +226,7 @@ public class ValidatorCheckUtil {
 			int maxlength, boolean required) {
 
 		boolean retValue = validateMaxLength(info, itemname, key, value, maxlength, required);
-		if (retValue && !StringUtils.isEmpty(value)) {
+		if (retValue && value != null && !StringUtils.isEmpty(value)) {
 			if (!isAlphaNumeric(value)) {
 				CustomErrors.add(info, itemname, key, getErrorMessage(ALPHANUM));
 				retValue = false;
@@ -242,6 +242,9 @@ public class ValidatorCheckUtil {
 	 * @throws
 	 */
 	private static boolean isAlphaNumeric(String value) {
+		if(value == null){
+			return false;
+		}
 		for (int i = 0; i < value.length(); i++) {
 			if (!isAlphabetOrNumeric(value.charAt(i))) {
 				return false;
@@ -969,7 +972,7 @@ public class ValidatorCheckUtil {
 
 		if (retValue) {
 			BigDecimal bigDecimal = new BigDecimal(value);
-			if (bigDecimal.compareTo(new BigDecimal(0.00)) == -1) {
+			if (bigDecimal.compareTo(BigDecimal.valueOf(0.00)) == -1) {
 				CustomErrors.add(info, itemname, key,
 						getErrorMessage(SIGNLESSNUMLENGTH, integerMaxLength, decimalsMaxLength));
 			}

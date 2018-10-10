@@ -90,12 +90,12 @@
 				WHEN 2 THEN  1
 				WHEN 3 THEN  1
 				END  AS is_expiration,
-				c.create_time AS add_time,
+				DATE_FORMAT(c.create_time,'%Y-%m-%d %H:%i:%s') AS add_time,
 				c.status
 			FROM
 				ht_coupon_config c
 			<include refid="Where_Clause" />
-			ORDER BY c.status,c.audit_time DESC
+			ORDER BY c.status,c.create_time DESC
 			<if test="limitStart >= 0" >
 		      LIMIT #{limitStart} , #{limitEnd}
 		    </if>

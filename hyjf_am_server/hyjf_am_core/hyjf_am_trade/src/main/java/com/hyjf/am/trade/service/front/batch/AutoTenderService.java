@@ -74,15 +74,6 @@ public interface AutoTenderService extends BaseService {
     int updateHjhAccede(HjhAccede hjhAccede, int orderStaus);
 
     /**
-     * 删除 自动投资临时表
-     * @param borrowNid
-     * @param hjhAccede
-     * @return
-     */
-    boolean deleteBorrowTmp(String borrowNid, HjhAccede hjhAccede) ;
-
-
-    /**
      *
      * @param credit
      * @param debtPlanAccede
