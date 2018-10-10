@@ -144,7 +144,7 @@ public class UnnormalRepayUtils {
 	 */
 	public static BigDecimal aheadRTBRepayChargeInterest(BigDecimal termShouldPrincipal,BigDecimal yearRate, int aheadDays) {
 		
-		BigDecimal aheadInterest = termShouldPrincipal.multiply(yearRate).multiply(new BigDecimal(aheadDays)).divide(new BigDecimal(36000),2,BigDecimal.ROUND_DOWN);
+		BigDecimal aheadInterest = termShouldPrincipal.multiply(yearRate).divide(new BigDecimal(36000),8,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(aheadDays)).setScale(2,BigDecimal.ROUND_DOWN);
 		return aheadInterest;
 	}
 	/**
