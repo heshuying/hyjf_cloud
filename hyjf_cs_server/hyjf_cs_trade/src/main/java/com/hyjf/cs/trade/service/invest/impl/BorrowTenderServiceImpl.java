@@ -1100,6 +1100,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             requestMapping = "/join/plan?requestType=";
         }else if (CommonConstant.TENDER_TYPE_CREDIT.equalsIgnoreCase(borrowType)){
             // 债转的
+            tender.setCreditNid(tender.getBorrowNid());
+            tender.setAssignCapital(tender.getAccount());
             borrowTenderService.borrowCreditCheck(tender);
             requestType = "10";
             url = baseUrl + requestMapping + requestType;
