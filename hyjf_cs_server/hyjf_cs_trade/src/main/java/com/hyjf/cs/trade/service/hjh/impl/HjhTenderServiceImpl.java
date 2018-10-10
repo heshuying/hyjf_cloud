@@ -271,9 +271,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         String planNid = tender.getBorrowNid();
         AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
         if (StringUtils.isNotBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) > 0) {
-            // mod by nxl 智投服务 修改 确认加入->确认授权
-//            resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
-            resultVo.setButtonWord("确认授权" + CommonUtils.formatAmount(null, money) + "元");
+            resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
         }else if(StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0){
             resultVo.setButtonWord("确认");
         }

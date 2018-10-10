@@ -29,10 +29,6 @@ public class RecentPaymentListCustomize implements Serializable {
     private String couponType;
 	/**项目编号*/
 	private String projectNid;
-    //add by nxl 智投服务 添加退出中标识
-    private String exitType;
-    // add by nxl 智投服务 添加计划标识
-    private String hjhType;
 
     public String getBorrowApr() {
         return borrowApr;
@@ -76,20 +72,4 @@ public class RecentPaymentListCustomize implements Serializable {
 	public void setProjectNid(String projectNid) {
 		this.projectNid = projectNid;
 	}
-
-    public String getExitType() {
-        return exitType;
-    }
-
-    public void setExitType(String exitType) {
-        this.exitType = exitType;
-    }
-
-    public String getHjhType() {
-        return hjhType;
-    }
-
-    public void setHjhType(String hjhType) {
-        this.hjhType = hjhType;
-    }
 }
