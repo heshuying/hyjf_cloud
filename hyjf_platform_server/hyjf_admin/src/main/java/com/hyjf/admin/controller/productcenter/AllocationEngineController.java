@@ -682,6 +682,11 @@ public class AllocationEngineController extends BaseController{
 		hjhLabelRequest.setLabelNameSrch(form.getLabelName().trim());
 		// 通过标签名称只能查到一条记录，因为标签名称在标签表时唯一的
 		List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
+		if(CollectionUtils.isEmpty(list)){
+			jsonObject.put("error", "此标签名称在标签列表不存在！请从标签列表选择已经存在的标签使用！");
+			jsonObject.put("status", FAIL);
+			jsonObject.put("msg", FAIL_DESC);
+		}
 		HjhLabelCustomizeVO  hjhLabelCustomizeVO = list.get(0);
 		//5.
 		newForm.setLabelId(hjhLabelCustomizeVO.getId());

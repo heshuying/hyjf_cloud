@@ -42,7 +42,7 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
             criteria.and("createTime").lte((int) (endTime.getTime() / 1000));
         }
         if (request.getTagId() != null) {
-            criteria.and("tagId").regex(request.getTagId().toString());
+            criteria.and("tagId").is(request.getTagId());
         }
         if (request.getMsgTitle() != null) {
             criteria.and("msgTitle").is(request.getMsgTitle());
