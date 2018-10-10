@@ -35,21 +35,21 @@ public class BaseTradeController extends BaseController {
         }
         return null;
     }
-    public String getForgotPwdUrl(String platform, HttpServletRequest request) {
+    public String getForgotPwdUrl(String platform, HttpServletRequest request,SystemConfig sysConfig) {
 
 
         Integer client = Integer.parseInt(platform);
         if (ClientConstants.WEB_CLIENT == client) {
             String token=request.getHeader("token");
-            return "http://CS-USER/hyjf-web/user/password/resetTeaderPassword?token="+token;
+            return sysConfig.getWebHost()+"/hyjf-web/user/password/resetTeaderPassword?token="+token;
         }
         if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
             String sign=request.getParameter("sign");
-            return "http://CS-USER/hyjf-app/bank/user/transpassword/resetPassword?sign="+sign;
+            return sysConfig.getAppHost()+"/hyjf-app/bank/user/transpassword/resetPassword?sign="+sign;
         }
         if (ClientConstants.WECHAT_CLIENT == client) {
             String sign=request.getParameter("sign");
-            return "http://CS-USER/hyjf-wechat/wx/transpassword/resetPassword.page?sign="+sign;
+            return sysConfig.getWechatHost()+"/hyjf-wechat/wx/transpassword/resetPassword.page?sign="+sign;
         }
         return "";
     }
