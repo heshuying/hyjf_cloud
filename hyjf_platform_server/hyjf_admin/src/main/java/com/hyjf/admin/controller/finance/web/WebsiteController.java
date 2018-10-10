@@ -224,7 +224,7 @@ public class WebsiteController extends BaseController {
                     else if (celLength == 11) {
 
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        cell.setCellValue(sdf.format(bean.getCreateTime()));
+                        cell.setCellValue(sdf.format(new Date(bean.getCreateTime())));
                     }
                 }
             }
