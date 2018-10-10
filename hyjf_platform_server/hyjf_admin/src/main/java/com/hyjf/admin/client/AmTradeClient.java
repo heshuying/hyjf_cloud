@@ -3125,5 +3125,12 @@ public interface AmTradeClient {
      */
     List<IncreaseInterestRepayDetailVO> getIncreaseInterestRepayPlanList(IncreaseInterestRepayPlanRequest request);
     /** 加息接口结束*/
+    
+    /**
+     * 查询资产列表不分页
+     * @param request
+     * @return
+     */
+    AssetListCustomizeResponse findAssetListWithoutPage(AssetListRequest request);
 }
 

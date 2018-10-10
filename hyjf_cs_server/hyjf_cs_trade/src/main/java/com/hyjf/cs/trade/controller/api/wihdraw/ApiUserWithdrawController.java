@@ -39,7 +39,7 @@ public class ApiUserWithdrawController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "外部服务接口用户提现",notes = "外部服务接口用户提现")
-    @PostMapping(value = "/withdraw")
+    @PostMapping(value = "/withdraw.do")
     public ModelAndView withdraw(@RequestBody UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request){
         BaseController.logger.info("外部服务接口用户提现");
         BaseController.logger.info("用户提现第三方请求参数:" + JSONObject.toJSONString(userWithdrawRequestBean));
