@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.controller.web.tender.credit;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
@@ -14,6 +15,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Description  债转
@@ -98,7 +101,9 @@ public class CreditController {
     @ApiOperation(value = "发送短信验证码（ajax请求） 短信验证码数据保存", notes = "发送短信验证码（ajax请求） 短信验证码数据保存")
     @PostMapping(value = "/sendCode", produces = "application/json; charset=utf-8")
     public WebResult sendCode(@RequestBody TenderBorrowCreditCustomize request,
-                                        @RequestHeader(value = "userId",required = false) Integer userId){
+                                        @RequestHeader(value = "userId",required = false) Integer userId,HttpServletRequest httpRequest){
+        request.setIp(GetCilentIP.getIpAddr(httpRequest));
+        request.setPlatform(Integer.parseInt(CommonConstant.CLIENT_PC));
         WebResult result = creditListService.sendCreditCode(request,userId);
         return result;
     }

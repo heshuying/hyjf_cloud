@@ -909,4 +909,21 @@ public class AmUserClientImpl implements AmUserClient {
 		return result;
 	}
 
+	@Override
+	public int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(checkCode);
+		request.setVerificationType(validCodeType);
+		request.setStatus(status);
+		request.setPlatform(platform);
+		SmsCodeResponse response = restTemplate
+				.postForEntity(userService+"/smsCode/save", request, SmsCodeResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getCnt();
+		} else {
+			throw new RuntimeException("发送验证码失败...");
+		}
+	}
+
 }

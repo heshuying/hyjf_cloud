@@ -26,15 +26,14 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.BorrowProjectDetailBean;
@@ -46,6 +45,8 @@ import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
+import com.hyjf.cs.trade.service.smscode.SmsCodeService;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,6 +82,9 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     @Autowired
     private SmsProducer smsProducer;
+
+    @Autowired
+    private SmsCodeService sendSmsCode;
 
     @Autowired
     private MyCreditListService myCreditListService;
@@ -631,20 +635,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             throw new CheckException(MsgEnum.STATUS_ZC000001);
         }
         AppResult result = new AppResult();
-        String checkCode = GetCode.getRandomSMSCode(6);
-        if(systemConfig.isHyjfEnvTest()){
-            // 测试环境验证码111111
-            checkCode = "111111";
-        }
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("val_code", checkCode);
-        SmsMessage smsMessage = new SmsMessage(userId, param, user.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
-                CustomConstants.PARAM_TPL_ZHUCE, CustomConstants.CHANNEL_TYPE_NORMAL);
-        try{
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-        }catch (Exception e){
-            throw new CheckException(MsgEnum.ERROR_SMS_SEND);
-        }
+
 		return result;
 	}
 
