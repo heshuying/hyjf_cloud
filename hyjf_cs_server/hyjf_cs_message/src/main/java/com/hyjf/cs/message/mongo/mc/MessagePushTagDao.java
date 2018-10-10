@@ -5,6 +5,7 @@ package com.hyjf.cs.message.mongo.mc;
 
 import com.hyjf.cs.message.bean.mc.MessagePushTag;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -47,7 +48,8 @@ public class MessagePushTagDao extends BaseMongoDao<MessagePushTag> {
         Criteria criteria = new Criteria();
         Query query = new Query();
         // 条件查询
-        criteria.and("id").is(tagId);
+        criteria.and("_id").is(new ObjectId(tagId));
+        query.addCriteria(criteria);
         MessagePushTag tag = mongoTemplate.findOne(query, getEntityClass());
         if (tag != null) {
             return tag.getTagName();
