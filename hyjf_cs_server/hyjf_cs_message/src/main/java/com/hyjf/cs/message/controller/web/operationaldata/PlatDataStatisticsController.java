@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -245,13 +246,14 @@ public class PlatDataStatisticsController {
 			} else {
 				regionData.setAreaNumber(j + "");
 			}
-			if (list.get(i).getName().contains("新疆")) {
-				regionData.setName("新疆");
-			} else {
-				regionData.setName(list.get(i).getName().replace("省", ""));
+			if (!CollectionUtils.isEmpty(list)) {
+				if (list.get(i).getName().contains("新疆")) {
+					regionData.setName("新疆");
+				} else {
+					regionData.setName(list.get(i).getName().replace("省", ""));
+				}
+				regionData.setRateValue(list.get(i).getPercent());
 			}
-
-			regionData.setRateValue(list.get(i).getPercent());
 			regionDataList.add(regionData);
 		}
 		return regionDataList;

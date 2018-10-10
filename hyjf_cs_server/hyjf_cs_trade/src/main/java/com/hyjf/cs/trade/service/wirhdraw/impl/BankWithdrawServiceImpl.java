@@ -105,7 +105,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     }};
 
     @Override
-    public BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl) {
+    public BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl) {
 
 
         //检查用户信息
@@ -114,7 +114,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 取得手续费 默认1
         String fee = this.getWithdrawFee(user.getUserId(), cardNo);
         // 组装发往江西银行参数
-        BankCallBean bean = getCommonBankCallBean(users, platform, channel, transAmt, cardNo, payAllianceCode, fee,retUrl,bgRetUrl,successfulUrl);
+        BankCallBean bean = getCommonBankCallBean(users, platform, channel, transAmt, cardNo, payAllianceCode, fee,retUrl,bgRetUrl,successfulUrl,forgotPwdUrl);
         logger.debug("提现返回bean"+bean);
         // 插值用参数
         Map<String, String> params = new HashMap<String, String>();
@@ -792,9 +792,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * @param retUrl
      * @param bgRetUrl
      * @param successfulUrl
+     * @param forgotPwdUrl
      * @return
      */
-    private BankCallBean getCommonBankCallBean(UserVO user, String platform, String channel, String transAmt, String cardNo, String payAllianceCode, String fee, String retUrl, String bgRetUrl, String successfulUrl) {
+    private BankCallBean getCommonBankCallBean(UserVO user, String platform, String channel, String transAmt, String cardNo, String payAllianceCode, String fee, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl) {
         String orderId=GetOrderIdUtils.getOrderId2(user.getUserId());
         BankCardVO bankCard = this.amUserClient.queryUserCardValid(user.getUserId()+"", cardNo);
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
@@ -833,15 +834,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 成功跳转的url
         bean.setSuccessfulUrl(successfulUrl);
         // 提现金额大于五万,走人行通道,路由代码传2
-        if ((new BigDecimal(transAmt).compareTo(new BigDecimal(50000)) > 0) && StringUtils.isNotBlank(payAllianceCode)) {
+        if ((new BigDecimal(transAmt).compareTo(new BigDecimal(50001)) > 0) && StringUtils.isNotBlank(payAllianceCode)) {
             routeCode = "2";// 路由代码
             bean.setCardBankCnaps(payAllianceCode);// 绑定银行联行号
         }
         if ("2".equals(routeCode)) {
             bean.setRouteCode(routeCode);
-            LogAcqResBean logAcq = new LogAcqResBean();
-            logAcq.setPayAllianceCode(payAllianceCode);
-            bean.setLogAcqResBean(logAcq);
         }
         // 企业用户提现
         if (user.getUserType() == 1) { // 企业用户 传组织机构代码
@@ -854,7 +852,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
         }
 
-        bean.setForgotPwdUrl(systemConfig.getForgetPassword());
+        bean.setForgotPwdUrl(forgotPwdUrl);
         bean.setRetUrl(retUrl);// 商户前台台应答地址(必须)
         bean.setNotifyUrl(bgRetUrl); // 商户后台应答地址(必须)
         logger.info("提现前台回调函数：\n" + bean.getRetUrl());
@@ -862,6 +860,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
         return bean;
     }
+
+
     @Override
     public String getWithdrawFee(Integer userId, String cardNo) {
         String feetmp = ClientConstants.BANK_FEE;

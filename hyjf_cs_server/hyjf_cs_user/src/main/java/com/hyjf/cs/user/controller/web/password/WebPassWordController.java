@@ -102,7 +102,7 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = " 设置交易密码异步回调",notes = " 设置交易密码异步回调")
     @PostMapping(value = "/passwordBgreturn")
-    public WebResult<Object> passwordBgreturn(BankCallBean bean) {
+    public WebResult<Object> passwordBgreturn(@RequestBody BankCallBean bean) {
         logger.info("设置交易密码异步回调"+bean.getLogOrderId());
         WebResult<Object> result = new WebResult<Object>();
         bean.convert();
@@ -150,7 +150,8 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = " 重置交易密码异步回调",notes = " 重置交易密码异步回调")
     @PostMapping(value = "/resetPasswordBgreturn")
-    public WebResult<String> resetPasswordBgreturn(BankCallBean bean) {
+    public WebResult<String> resetPasswordBgreturn(@RequestBody BankCallBean bean) {
+        logger.info("重置交易密码异步回调开始...");
         WebResult<String> result = new WebResult<String>();
         result.setStatus("0");
         result.setStatusDesc("交易密码修改成功");

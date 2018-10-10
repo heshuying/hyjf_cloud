@@ -78,4 +78,9 @@ public class MessagePushTagServiceImpl implements MessagePushTagService {
     public List<MessagePushTagVO> getTagList() {
         return amConfigClient.getTagList();
     }
+
+    @Override
+    public MessagePushTagVO getPushTagByTagId(Integer tagId) {
+        return amConfigClient.getTagByTagId(tagId);
+    }
 }

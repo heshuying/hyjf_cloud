@@ -1775,7 +1775,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		try {
 			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
 		} catch (MQException e2) {
-			logger.error("发送邮件失败..", e2);
+			logger.error("发送短信失败..", e2);
 		}
 
 	}

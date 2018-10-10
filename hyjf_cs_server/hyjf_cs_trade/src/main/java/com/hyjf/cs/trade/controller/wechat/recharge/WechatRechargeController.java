@@ -66,12 +66,13 @@ public class WechatRechargeController extends BaseTradeController{
 		// 拼装参数 调用江西银行
 		String retUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/failed/?sign="+sign+"&txAmount="+money;
 		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/success/?sign="+sign+"&txAmount="+money;
-		String bgRetUrl = systemConfig.getWechatHost() + "/hyjf-wechat/wx/recharge/bgreturn?phone="+mobile;
+		String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/recharge/bgreturn?phone="+mobile;
 		//String successfulUrl = systemConfig.getWeiFrontHost()+"/user/rechargeSuccess?money="+money;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		directRechargeBean.setPlatform(CommonConstant.CLIENT_WECHAT);
+        directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 		Map<String,Object> map = new HashMap<>();
 		try {
@@ -84,52 +85,7 @@ public class WechatRechargeController extends BaseTradeController{
 		return result;
 	}
 
-	/**
-	 * @Author: zhangqingqing
-	 * @Desc :页面充值同步
-	 * @Param: * @param request
-	 * @param bean
-	 * @Date: 12:40 2018/6/5
-	 * @Return: ModelAndView
-	 */
-/*
-	@ApiOperation(value = "用户充值同步回调", notes = "用户充值")
-	@GetMapping("/return")
-	public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
-		logger.info("[wechat页面充值同步回调开始]");
-		ModelAndView modelAndView = new ModelAndView();
-		String money = request.getParameter("txAmount");
-		String frontParams = request.getParameter("frontParams");
-		String isSuccess = request.getParameter("isSuccess");
-		// 充值成功
-		DecimalFormat df = new DecimalFormat("#,##0.00");
-		BigDecimal feeAmt = new BigDecimal(money);
-		if(StringUtils.isBlank(bean.getRetCode())&&StringUtils.isNotBlank(frontParams)){
-			JSONObject jsonParm = JSONObject.parseObject(frontParams);
-			if(jsonParm.containsKey("RETCODE")){
-				bean.setRetCode(jsonParm.getString("RETCODE"));
-			}
-		}
-		bean.convert();
-		if (isSuccess != null && "1".equals(isSuccess)) {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_success");
-			modelAndView.addObject("message", "页面充值成功");
-			modelAndView.addObject("balance", df.format(feeAmt).toString());
-			return modelAndView;
-		}
-		String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-		if (bean!=null&& BankCallStatusConstant.RESPCODE_SUCCESS.equals(retCode)) {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_success");
-			modelAndView.addObject("message", "页面充值成功");
-			modelAndView.addObject("balance", df.format(feeAmt).toString());
-			return modelAndView;
-		} else {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
-			modelAndView.addObject("message", userRechargeService.getBankRetMsg(bean.getRetCode()));
-			return modelAndView;
-		}
-	}
-*/
+
 
 	/**
 	 * @Author: zhangqingqing
@@ -142,7 +98,7 @@ public class WechatRechargeController extends BaseTradeController{
 	@ApiOperation(value = "用户充值异步回调", notes = "用户充值")
 	@ResponseBody
 	@PostMapping("/bgreturn")
-	public BankCallResult bgreturn(HttpServletRequest request,BankCallBean bean) {
+	public BankCallResult bgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
 		BankCallResult result = new BankCallResult();
 		logger.info("[wechat页面充值异步回调开始]");
 		String phone = request.getParameter("phone");

@@ -226,14 +226,14 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String bgRetUrl = "";
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
             remark = "投资人自动投标签约增强";
-            bgRetUrl = systemConfig.getWebHost() + "/user/invesbgreturn";
+            bgRetUrl = "http://CS-USER/hyjf-web/user/invesbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
             bean.setDeadline(GetDate.date2Str(GetDate.countDate(1, 5), new SimpleDateFormat("yyyyMMdd")));
             bean.setTxAmount("1000000");
             bean.setTotAmount("1000000000");
         } else if (BankCallConstant.QUERY_TYPE_2.equals(type)) {
             remark = "投资人自动债权转让签约增强";
-            bgRetUrl = systemConfig.getWebHost() + "/user/creditbgreturn";
+            bgRetUrl = "http://CS-USER/hyjf-web/user/creditbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
         }
         //1wechat 2app
@@ -504,7 +504,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String retUrl = systemConfig.getAppFrontHost() + "/user/setting/authorization/result/failed?status=99&statusDesc=&logOrdId=" + bean.getLogOrderId();
         String success = systemConfig.getAppFrontHost() + "/user/setting/authorization/result/success?status=000&statusDesc=";
         // 异步调用路
-        String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/autoplus";
+        String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/autoplus";
         String forgetPassworedUrl = systemConfig.getForgetpassword() + "?sign=" + sign + "&token=" + token;
         retUrl += "&token=1&sign=" + sign;
         success += "&token=1&sign=" + sign;
@@ -875,8 +875,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String retUrl = systemConfig.getApiWebUrl()
                 + "/server/autoPlus";
         // 异步调用路
-        String bgRetUrl = systemConfig.getApiWebUrl()
-                + "/server/autoPlus";
+        String bgRetUrl = "http://CS-USER/server/autoPlus";
         // 版本号  交易代码  机构代码  银行代码  交易日期  交易时间  交易流水号   交易渠道
         BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10, txcode, userId, channel);
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
@@ -947,7 +946,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String retUrl = systemConfig.getWeiFrontHost() + "/user/setting/authorization/result/failed?sign=" + sign + "&logOrdId=" + bean.getLogOrderId();
         String success = systemConfig.getWeiFrontHost() + "/user/setting/authorization/result/success?sign=" + sign;
         // 异步调用路
-        String bgRetUrl = systemConfig.getWeChatHost() + "/hyjf-wechat/wx/user/autoplus/";
+        String bgRetUrl = "http://CS-USER/hyjf-wechat/wx/user/autoplus/";
         String forgetPassworedUrl = CustomConstants.FORGET_PASSWORD_URL + "?sign=" + sign;
 
         if (type == 1) {

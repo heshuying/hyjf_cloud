@@ -3,6 +3,7 @@ package com.hyjf.am.user.dao.auto;
 
 import com.hyjf.am.admin.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.am.user.dao.mapper.auto.*;
+import com.hyjf.am.user.dao.mapper.customize.AdminAccountCustomizeQuiryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -219,6 +220,9 @@ public class AutoMapper {
     protected MspQuerydetailMapper mspQueryDetailMapper;
     @Autowired
     protected MspBlackdataMapper mspBlackDataMapper;
+
+    @Autowired
+    protected AdminAccountCustomizeQuiryMapper adminAccountCustomizeQuiryMapper;
 
     
 

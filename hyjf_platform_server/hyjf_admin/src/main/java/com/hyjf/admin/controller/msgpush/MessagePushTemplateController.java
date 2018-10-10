@@ -107,7 +107,7 @@ public class MessagePushTemplateController extends BaseController {
     public AdminResult<MessagePushTemplateResponse> insertAction(HttpServletRequest request, @RequestBody MsgPushTemplateRequest templateRequest) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         AdminSystemVO user = getUser(request);
-        String username = user.getUsername();
+        String userId = user.getId();
 
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
@@ -121,7 +121,7 @@ public class MessagePushTemplateController extends BaseController {
         }
         MessagePushTemplateVO templateVO = new MessagePushTemplateVO();
         BeanUtils.copyProperties(templateRequest, templateVO);
-        templateVO.setTagId(String.valueOf(templateRequest.getTagId()));
+        templateVO.setTagId(templateRequest.getTagId());
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setTemplateActionUrl("");
         }
@@ -132,8 +132,8 @@ public class MessagePushTemplateController extends BaseController {
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
         }
         templateVO.setTemplateCode(templateRequest.getTagCode() + "_" + templateRequest.getTemplateCode());
-        templateVO.setCreateUserName(username);
-        templateVO.setLastupdateUserName(username);
+        templateVO.setCreateUserId(Integer.parseInt(userId));
+        templateVO.setLastupdateUserId(Integer.parseInt(userId));
         response = messagePushTemplateService.insertAction(templateVO);
         return new AdminResult<>(response);
     }

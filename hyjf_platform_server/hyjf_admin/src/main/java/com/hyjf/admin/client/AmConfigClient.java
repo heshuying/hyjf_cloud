@@ -1430,7 +1430,17 @@ public interface AmConfigClient {
 	AdminUserResponse adminUserDeleteRecordAction(AdminRequest adminRequest);
 	
 	AdminUserResponse adminUserResetPwdAction(AdminRequest adminRequest);
-	
+
 	AdminUserResponse adminUsercCheckAction(AdminRequest adminRequest);
 
+    MessagePushTagVO getTagByTagId(Integer tagId);
+
+
+	/**
+	 * 根据bankId查询江西银行配置
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	JxBankConfigVO selectJxBankConfigByBankId(Integer bankId);
 }

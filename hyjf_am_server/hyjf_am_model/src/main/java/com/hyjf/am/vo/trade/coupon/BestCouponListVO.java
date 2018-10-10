@@ -32,6 +32,19 @@ public class BestCouponListVO  extends CouponConfigVO {
     private String endTime;
     //优惠券开始时间
     private String couponAddTime;
+
+    private String delFlg;
+
+    private Integer addFlg;
+
+    public Integer getAddFlg() {
+        return addFlg;
+    }
+
+    public void setAddFlg(Integer addFlg) {
+        this.addFlg = addFlg;
+    }
+
     public String getUserCouponId() {
         return userCouponId;
     }
@@ -98,5 +111,11 @@ public class BestCouponListVO  extends CouponConfigVO {
         this.tenderQuotaRange = tenderQuotaRange;
     }
 
+    public String getDelFlg() {
+        return delFlg;
+    }
 
+    public void setDelFlg(String delFlg) {
+        this.delFlg = delFlg;
+    }
 }

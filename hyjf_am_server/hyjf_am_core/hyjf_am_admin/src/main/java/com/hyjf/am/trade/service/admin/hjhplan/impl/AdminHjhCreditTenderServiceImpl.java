@@ -63,6 +63,9 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		if (StringUtils.isNotEmpty(request.getAssignType())) {
 			param.put("assignType", request.getAssignType());
 		}
+		if (StringUtils.isNotEmpty(request.getTenderType())){
+			param.put("tenderType",request.getTenderType());
+		}
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		int count = adminHjhCreditTenderCustomizeMapper.countDebtCreditTender(param);
@@ -98,6 +101,9 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		}
 		if (StringUtils.isNotEmpty(request.getAssignType())) {
 			param.put("assignType", request.getAssignType());
+		}
+		if (StringUtils.isNotEmpty(request.getTenderType())){
+			param.put("tenderType",request.getTenderType());
 		}
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);

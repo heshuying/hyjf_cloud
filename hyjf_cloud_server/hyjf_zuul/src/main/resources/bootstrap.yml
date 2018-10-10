@@ -9,6 +9,13 @@ spring:
     admin:
       client:
         url: http://micoserver:18080
+# zipkin 监控端点
+ zipkin: 
+  base-url: http://micoserver:9411
+ sleuth:
+  sampler:
+   percentage: 0.1
+
  profiles:
    active: dev
 server:
@@ -23,16 +30,10 @@ management:
     health:
       show-details: ALWAYS
 
-zuul:
-  host:
-    connect-timeout-millis: 10000
-    socket-timeout-millis: 60000
-  routes:
-    ser:
-      path: 123
+# ribbon超时时间设置 - 使用serviceId路由超时策略
 ribbon:
-  ConnectTimeout: 1000
-  ReadTimeout: 6000
+  ConnectTimeout: 10000
+  ReadTimeout: 15000
 
 hystrix:
   command:
@@ -43,7 +44,3 @@ hystrix:
             timeoutInMilliseconds: 60000
 logging:
   file: zuul.log
-hyjf:
-   req:
-    pub:
-     key: /hyjfdata/data/hyjfapi_key/

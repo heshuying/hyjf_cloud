@@ -69,7 +69,7 @@
     <select id="selectByExampleUsername" resultMap="BaseResultMap" parameterType="com.hyjf.am.vo.trade.SubCommissionListConfigVo" >
         select
         <include refid="Base_Column_List" />
-        from ht_sub_commission_list_config
+        from hyjf_trade.ht_sub_commission_list_config
         WHERE 1=1
         <if test="username != null" >
             and username = #{username,jdbcType=CHAR}

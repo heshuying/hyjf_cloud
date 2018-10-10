@@ -114,11 +114,11 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
     @Override
     public Map<String,Object> callTrusteePay(String borrowNid, WebViewUserVO user) throws Exception {
         // 回调路径
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + BankCallConstant.PARAM_PRODUCTID + "=" + borrowNid;
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/autoplus/autoTenderFail?" + BankCallConstant.PARAM_PRODUCTID + "=" + borrowNid;
         // 商户后台应答地址(必须)
-        String bgRetUrl = systemConfig.getWebHost().trim() + "/web/borrowauth/auth_bgrturn";
+        String bgRetUrl = systemConfig.getWebHost().trim() + "/hyjf-web/borrowauth/auth_bgrturn";
         // 交易成功跳转链接
-        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim();
+        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/autoplus/autoTenderSuccess?";
 
         BorrowAndInfoVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
         STZHWhiteListVO whiteListVO = amTradeClient.getStzhWhiteListVO(user.getUserId(), borrow.getEntrustedUserId());

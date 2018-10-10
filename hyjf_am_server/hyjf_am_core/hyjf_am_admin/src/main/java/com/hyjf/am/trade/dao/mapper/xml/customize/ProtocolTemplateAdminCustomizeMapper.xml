@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.ProtocolTemplateAdminCustomizeMapper">
+	<resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.ProtocolTemplate" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="protocol_id" property="protocolId" jdbcType="VARCHAR" />
+		<result column="protocol_name" property="protocolName" jdbcType="VARCHAR" />
+		<result column="display_name" property="displayName" jdbcType="VARCHAR" />
+		<result column="protocol_type" property="protocolType" jdbcType="VARCHAR" />
+		<result column="version_number" property="versionNumber" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="protocol_url" property="protocolUrl" jdbcType="VARCHAR" />
+		<result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="getdisplayNameDynamic" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+		protocol_type,display_name
+		FROM
+		ht_protocol_template
+		WHERE
+		status = "1"
+	</select>
+	<sql id="Base_Column_List" >
+		id, protocol_id, protocol_name, display_name, protocol_type, version_number, `status`,
+		protocol_url, img_url, remarks, create_time, create_user_id, update_time, update_user_id
+	</sql>
+	<select id="selectTemplateById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		ht_protocol_template
+		WHERE
+		protocol_id = #{protocolId}
+	</select>
+
+	<update id="startUseExistProtocol" parameterType="com.hyjf.am.trade.dao.model.auto.ProtocolTemplate">
+		update ht_protocol_template
+		<set >
+			<if test="protocolName != null" >
+				protocol_name = #{protocolName,jdbcType=VARCHAR},
+			</if>
+			<if test="displayName != null" >
+				display_name = #{displayName,jdbcType=VARCHAR},
+			</if>
+			<if test="versionNumber != null" >
+				version_number = #{versionNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="protocolUrl != null" >
+				protocol_url = #{protocolUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="imgUrl != null" >
+				img_url = #{imgUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="remarks != null" >
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where protocol_id = #{protocolId,jdbcType=INTEGER}
+	</update>
+
+</mapper>

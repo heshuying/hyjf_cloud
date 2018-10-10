@@ -24,6 +24,13 @@ public interface WebProjectListService extends BaseTradeService {
      */
     public WebResult searchProjectList(ProjectListRequest request);
 
+    /**
+     * 获取Web端项目列表(新的)
+     * @author zhangyk
+     * @date 2018/10/9 15:44
+     */
+    public WebResult searchProjectListNew(ProjectListRequest request);
+
 
     /**
      * web端散标标的详情

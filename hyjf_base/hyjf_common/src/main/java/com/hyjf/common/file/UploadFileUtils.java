@@ -228,9 +228,9 @@ public abstract class UploadFileUtils {
 			} else {
 				return "";
 			}
-
+			return tempFile.getName();
 		}
-		return tempFile.getName();
+		return "";
 	}
 
 	/**

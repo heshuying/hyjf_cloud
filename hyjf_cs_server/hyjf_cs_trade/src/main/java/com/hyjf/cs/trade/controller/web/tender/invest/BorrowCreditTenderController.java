@@ -39,7 +39,7 @@ public class BorrowCreditTenderController extends BaseTradeController {
 
     @ApiOperation(value = "web端-散标债转投资", notes = "web端-散标债转投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") int userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId",required = false) int userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端请求债转投资接口 编号 {}   金额  {} " ,tender.getCreditNid() ,tender.getAssignCapital() );
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
@@ -94,6 +94,24 @@ public class BorrowCreditTenderController extends BaseTradeController {
         JSONObject json = borrowTenderService.getInterestInfo(userId,tender.getCreditNid(),tender.getAssignCapital());
         WebResult result = new WebResult();
         result.setData(json);
+        return result;
+    }
+
+    @ApiOperation(value = "web端-散标债转投资校验", notes = "web端-散标债转投资校验")
+    @PostMapping(value = "/webcheckcredittenderassign", produces = "application/json; charset=utf-8")
+    public WebResult<Map<String,Object>> webCheckCreditTenderAssign(@RequestHeader(value = "userId") int userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+        logger.info("web端请求债转投资校验接口 编号 {}   金额  {} " ,tender.getCreditNid() ,tender.getAssignCapital() );
+        String ip = CustomUtil.getIpAddr(request);
+        tender.setIp(ip);
+        tender.setUserId(userId);
+        tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
+
+        WebResult<Map<String,Object>> result = null;
+        try{
+            result =  borrowTenderService.borrowCreditCheck(tender);
+        }catch (CheckException e){
+            throw e;
+        }
         return result;
     }
 

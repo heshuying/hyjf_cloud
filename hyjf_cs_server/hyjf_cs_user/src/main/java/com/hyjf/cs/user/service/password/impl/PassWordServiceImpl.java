@@ -125,6 +125,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 取得用户详细信息
         UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
+        CheckUtil.check(bankAccount!=null,MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         // 调用设置密码接口
         String txcode="";
         BankCallBean bean = new BankCallBean(userId,txcode, ClientConstants.WEB_CLIENT);
@@ -152,7 +153,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=0&logOrdId="+bean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=0";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost()+"/user/password/passwordBgreturn";
+        String bgRetUrl = "http://CS-USER/hyjf-web/user/password/passwordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
@@ -205,7 +206,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=1&logOrdId="+bean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=1";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost()+"/user/password/resetPasswordBgreturn";
+        String bgRetUrl = "http://CS-USER/hyjf-web/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);

@@ -88,7 +88,7 @@ public class WithdrawController extends BaseController {
 	@ApiOperation(value = "提现确认", notes = "提现确认")
 	@PostMapping("/withdrawConfirm")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CONFIRM)
-	public String confirmWithdrawAction(HttpServletRequest request,WithdrawBeanRequest form) {
+	public String confirmWithdrawAction(HttpServletRequest request,@RequestBody WithdrawBeanAPIRequest form) {
 		JSONObject ret = new JSONObject();
 		Integer userId = form.getUserId();
 		String nid = form.getNid();
@@ -165,8 +165,8 @@ public class WithdrawController extends BaseController {
 	 */
 	@ApiOperation(value = "导出EXCEL", notes = "导出EXCEL")
 	@PostMapping("/exportWithdrawExcel")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-	public void exportWithdrawExcel(HttpServletRequest request, HttpServletResponse response, WithdrawBeanRequest form) throws Exception {
+	//@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportWithdrawExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody WithdrawBeanAPIRequest form) throws Exception {
 		// 表格sheet名称
 		String sheetName = "提现列表";
 
@@ -181,7 +181,7 @@ public class WithdrawController extends BaseController {
 			form.setAddtimeEndSrch(GetDate.getDate("yyyy-MM-dd"));
 		}
 		List<WithdrawCustomizeVO> recordList = null;
-		WithdrawCustomizeResponse recordListResponse=this.withdrawService.getWithdrawRecordList(form);
+		WithdrawCustomizeResponse recordListResponse=this.withdrawService.getWithdrawRecordList(CommonUtils.convertBean(form, WithdrawBeanRequest.class));
 		if (Validator.isNotNull(recordListResponse)){
 			recordList=recordListResponse.getResultList();
 		}

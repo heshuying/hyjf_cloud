@@ -142,7 +142,7 @@ public class AppPassWordController extends BaseUserController {
         retUrl += "&token=1&sign=" +sign;
         success += "&token=1&sign=" +sign;
         // 异步调用路
-        String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
+        String bgRetUrl = "http://CS-USER" + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
                 + CommonConstant.RETURN_ASY_PASSWORD_ACTION;
 
         bean.setRetUrl(retUrl);
@@ -163,7 +163,7 @@ public class AppPassWordController extends BaseUserController {
      */
     @ApiOperation(value = "设置交易密码异步回调")
     @PostMapping(value = "/bank/user/transpassword/passwordBgreturn")
-    public String passwordBgreturn(BankCallBean bean) {
+    public String passwordBgreturn(@RequestBody BankCallBean bean) {
         logger.info("app设置交易密码异步回调"+bean.getLogOrderId());
         BankCallResult result = new BankCallResult();
         bean.convert();
@@ -215,7 +215,7 @@ public class AppPassWordController extends BaseUserController {
         retUrl += "&token=1&sign=" +sign;
         success += "&token=1&sign=" +sign;
         // 异步调用路
-        String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
+        String bgRetUrl = "http://CS-USER" + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
                 + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION+"?sign=" + sign;
 
         bean.setRetUrl(retUrl);
@@ -236,7 +236,7 @@ public class AppPassWordController extends BaseUserController {
      */
     @ApiOperation(value = "重置交易密码异步回调")
     @PostMapping(value = "/bank/user/transpassword/resetPasswordBgreturn")
-    public String resetPasswordBgreturn(BankCallBean bean) {
+    public String resetPasswordBgreturn(@RequestBody BankCallBean bean) {
         logger.info("app重置交易密码异步回调");
         BankCallResult result = new BankCallResult();
         result.setMessage("交易密码修改成功");

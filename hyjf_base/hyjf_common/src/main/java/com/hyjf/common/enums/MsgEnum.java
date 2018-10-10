@@ -85,7 +85,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_NOT_LOGIN("EUS000001", "用户未登录"),
 	ERR_USER_LOGIN("EUS000002", "登录失败,账号或密码错误"),
 	ERR_USER_NOT_EXISTS("EUS000003", "不存在用户"),
-	ERR_USER_INVALID("EUS000004", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
+	ERR_USER_INVALID("EUS000004", "该用户已被禁用"),
 	ERR_USER_REGISTER("1","注册失败"),
 	ERR_USER_LOGIN_RETRY("EUS000006", "登录失败,请重新登陆"),
 	ERR_USER_UNUSUAL("EUS000007", "你的账户信息存在异常，请联系客服人员处理"),
@@ -375,6 +375,7 @@ public enum MsgEnum implements MsgCode {
 	ERROR_CREDIT_UPDATE_ERROR("1","更新债转数据异常"),
 	ERROR_CREDIT_FIND_LOG_ERROR("1","未查询到债转承接记录"),
 	ERROR_CREDIT_AUTH_CODE_ERROR("1","未查询到债转授权码"),
+	ERROR_CREDIT_CONFIG_NULL_ERROR("1","配置表无数据请配置"),
 
 	ERROR_SMS_SEND("1","发送验证码失败，请稍后再试"),
 	ERROR_CREDIT_NID_CAPITAL_NULL("1","债转编号和承接本金不能为空"),

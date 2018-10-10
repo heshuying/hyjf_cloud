@@ -12,6 +12,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.SyncUserInfoRequestBean;
 import com.hyjf.cs.user.bean.SyncUserInfoResultBean;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.userinfo.ApiUserInfoService;
 import org.springframework.stereotype.Service;
@@ -54,12 +55,16 @@ public class ApiUserInfoServiceImpl extends BaseUserServiceImpl implements ApiUs
         try {
             //验证请求参数
             if (Validator.isNull(instCode) || Validator.isNull(accountIds) ){
-                throw new ReturnMessageException(MsgEnum.STATUS_CE000001);
+                result.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
+                result.setStatusDesc("请求参数非法");
+                return result;
             }
             //验签
             if (!this.verifyRequestSign(requestBean, BaseDefine.METHOD_SERVER_SYNCUSERINFO)) {
                 logger.info("----验签失败----");
-                throw new ReturnMessageException(MsgEnum.STATUS_CE000002);
+                result.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
+                result.setStatusDesc("验签失败！");
+                return result;
             }
             List<SyncUserInfoResultBean.AccountBean> list = new ArrayList<>();
             SyncUserInfoResultBean.AccountBean accountBean = null;
@@ -67,14 +72,15 @@ public class ApiUserInfoServiceImpl extends BaseUserServiceImpl implements ApiUs
             for (String accountId:accountid) {
                 BankOpenAccountVO bankOpenAccount = amUserClient.selectBankOpenAccountByAccountId(accountId);
                 if (bankOpenAccount == null) {
-                    throw new ReturnMessageException(MsgEnum.STATUS_CE000004);
+                    result.setStatusForResponse(ErrorCodeConstant.STATUS_CE000004);
+                    return result;
                 }
                 Integer userId = bankOpenAccount.getUserId();
                 //根据用户ID获取用户账户信息
                 AccountVO account = amTradeClient.getAccount(userId);
                 if (account == null) {
-                    //TODO:这个异常不太对
-                    throw new ReturnMessageException(MsgEnum.STATUS_CE000010);
+                    result.setStatusForResponse(ErrorCodeConstant.STATUS_CE000010);
+                    return result;
                 }
 
                 accountBean = new SyncUserInfoResultBean.AccountBean();
@@ -82,13 +88,14 @@ public class ApiUserInfoServiceImpl extends BaseUserServiceImpl implements ApiUs
 
                 accountBean.setAccountId(accountId);
                 list.add(accountBean);
-                result.setStatus("000");
+                result.setStatusForResponse(ErrorCodeConstant.SUCCESS);
             }
             result.setData(list);
             return result;
         }catch (Exception e){
             logger.error("获取用户信息失败",e);
-            throw new ReturnMessageException(MsgEnum.STATUS_CE999999);
+            result.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
+            return result;
         }
     }
 

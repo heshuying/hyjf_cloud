@@ -341,7 +341,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		}
 		return bean;
 	}
-
 	@Override
 	public BankCallBean rechargeService(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
 		WebViewUserVO user=this.getUserFromCache(userId);
@@ -373,6 +372,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	@Override
 	public WebResult<Object> toRecharge(WebViewUserVO user) {
 		WebResult<Object> result = new WebResult<Object>();
+		UserVO userVO=this.getUsers(user.getUserId());
 		JSONObject ret = new JSONObject();
 		if(user==null){
 			result.setStatus(MsgEnum.ERR_USER_LOGIN_RETRY.getCode());
@@ -473,7 +473,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		ret.put("paymentAuthOn","");
 
 		// 是否设置交易密码
-		ret.put("isSetPassword", user.getIsSetPassword());
+		ret.put("isSetPassword", userVO.getIsSetPassword());
 		if(bankCard != null){
 			ret.put("mobile", bankCard.getMobile());
 		}

@@ -57,7 +57,7 @@ import java.util.UUID;
 
 @Service
 public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpenService   {
-	
+
     @Autowired
     private AmUserClient amUserClient;
 
@@ -222,7 +222,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             retUrl += "&token=1&sign=" +sign;
             successUrl += "&token=1&sign=" +sign;
         }
-        String bgRetUrl = systemConfig.getWebHost()+"http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile();
+        String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);
         openAccoutBean.setSuccessfulUrl(successUrl);
         openAccoutBean.setNotifyUrl(bgRetUrl);

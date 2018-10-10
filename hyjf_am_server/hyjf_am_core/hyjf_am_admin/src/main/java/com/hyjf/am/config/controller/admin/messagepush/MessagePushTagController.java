@@ -4,7 +4,7 @@
 package com.hyjf.am.config.controller.admin.messagepush;
 
 import com.hyjf.am.config.dao.model.auto.MessagePushTag;
-import com.hyjf.am.config.service.MessagePushTagServcie;
+import com.hyjf.am.config.service.MessagePushTagService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.resquest.config.MessagePushTagRequest;
@@ -28,7 +28,7 @@ import java.util.List;
 public class MessagePushTagController {
 
     @Autowired
-    private MessagePushTagServcie messagePushTagServcie;
+    private MessagePushTagService messagePushTagService;
 
     /**
      * 获取消息推送标签管理列表
@@ -38,12 +38,12 @@ public class MessagePushTagController {
     @PostMapping("/searchList")
     public MessagePushTagResponse searchList(@RequestBody MessagePushTagRequest request) {
         MessagePushTagResponse response = new MessagePushTagResponse();
-        Integer count = messagePushTagServcie.countRecord(request);
+        Integer count = messagePushTagService.countRecord(request);
         Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
         if (request.getPageSize() == 0) {
             paginator = new Paginator(request.getCurrPage(), count);
         }
-        List<MessagePushTag> messagePushTagList = messagePushTagServcie.searchList(request,paginator.getOffset(),paginator.getLimit());
+        List<MessagePushTag> messagePushTagList = messagePushTagService.searchList(request,paginator.getOffset(),paginator.getLimit());
         response.setCount(count);
         if (count > 0) {
             List<MessagePushTagVO> list = CommonUtils.convertBeanList(messagePushTagList,MessagePushTagVO.class);
@@ -61,7 +61,7 @@ public class MessagePushTagController {
     @GetMapping("/getRecord/{id}")
     public MessagePushTagResponse getRecord(@PathVariable Integer id) {
         MessagePushTagResponse response = new MessagePushTagResponse();
-        MessagePushTag messagePushTag = messagePushTagServcie.getRecord(id);
+        MessagePushTag messagePushTag = messagePushTagService.getRecord(id);
         if (messagePushTag != null) {
             MessagePushTagVO record = new MessagePushTagVO();
             BeanUtils.copyProperties(messagePushTag,record);
@@ -84,7 +84,7 @@ public class MessagePushTagController {
         messagePushTag.setCreateTime(GetDate.getDate());
         messagePushTag.setStatus(0);
         try {
-            Integer result = messagePushTagServcie.insertAction(messagePushTag);
+            Integer result = messagePushTagService.insertAction(messagePushTag);
             if (result > 0) {
                 response.setRtn(Response.SUCCESS);
                 return response;
@@ -108,7 +108,7 @@ public class MessagePushTagController {
         BeanUtils.copyProperties(request,messagePushTag);
         messagePushTag.setUpdateTime(GetDate.getDate());
         try {
-            Integer result = messagePushTagServcie.updateAction(messagePushTag);
+            Integer result = messagePushTagService.updateAction(messagePushTag);
             if (result > 0) {
                 response.setRtn(Response.SUCCESS);
                 return response;
@@ -130,7 +130,7 @@ public class MessagePushTagController {
     public MessagePushTagResponse deleteAction(@PathVariable Integer id) {
         MessagePushTagResponse response = new MessagePushTagResponse();
         try {
-            Integer result = messagePushTagServcie.deleteAction(id);
+            Integer result = messagePushTagService.deleteAction(id);
             if (result > 0) {
                 response.setRtn(Response.SUCCESS);
                 return response;
@@ -154,7 +154,7 @@ public class MessagePushTagController {
         MessagePushTag messagePushTag = new MessagePushTag();
         BeanUtils.copyProperties(messagePushTagVO,messagePushTag);
         try {
-            Integer result = messagePushTagServcie.updateAction(messagePushTag);
+            Integer result = messagePushTagService.updateAction(messagePushTag);
             if (result > 0) {
                 response.setRtn(Response.SUCCESS);
                 return response;
@@ -177,7 +177,7 @@ public class MessagePushTagController {
         MessagePushTagResponse response = new MessagePushTagResponse();
         int result = 0;
         try {
-            result = messagePushTagServcie.countByTagCode(id, tagCode);
+            result = messagePushTagService.countByTagCode(id, tagCode);
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -193,7 +193,7 @@ public class MessagePushTagController {
     @RequestMapping("/getAllPushTagList")
     public MessagePushTagResponse getAllPushTagList() {
         MessagePushTagResponse response = new MessagePushTagResponse();
-        List<MessagePushTag> list = messagePushTagServcie.getAllPushTagList();
+        List<MessagePushTag> list = messagePushTagService.getAllPushTagList();
         if (!CollectionUtils.isEmpty(list)) {
             List<MessagePushTagVO> messagePushTagVOS = CommonUtils.convertBeanList(list,MessagePushTagVO.class);
             response.setResultList(messagePushTagVOS);
@@ -204,7 +204,7 @@ public class MessagePushTagController {
     @RequestMapping("/getTagList")
     public MessagePushTagResponse getTagList() {
         MessagePushTagResponse response = new MessagePushTagResponse();
-        List<MessagePushTag> list = messagePushTagServcie.getTagList();
+        List<MessagePushTag> list = messagePushTagService.getTagList();
         if (!CollectionUtils.isEmpty(list)) {
             List<MessagePushTagVO> messagePushTagVOS = CommonUtils.convertBeanList(list,MessagePushTagVO.class);
             response.setResultList(messagePushTagVOS);
@@ -221,10 +221,27 @@ public class MessagePushTagController {
     @RequestMapping("/findMsgTagByTagName/{tagName}")
     public MessagePushTagResponse findMsgTagByTagName(@PathVariable String tagName) {
         MessagePushTagResponse response = new MessagePushTagResponse();
-        MessagePushTag messagePushTag = messagePushTagServcie.findMsgTagByTagName(tagName);
+        MessagePushTag messagePushTag = messagePushTagService.findMsgTagByTagName(tagName);
         if (messagePushTag != null) {
             MessagePushTagVO messagePushTagVO = new MessagePushTagVO();
             BeanUtils.copyProperties(messagePushTag, messagePushTagVO);
+            response.setResult(messagePushTagVO);
+        }
+        return response;
+    }
+
+    /**
+     * 根据消息标签id查询消息标签
+     * @param tagId
+     * @return
+     */
+    @RequestMapping("/getTagByTagId/{tagId}")
+    public MessagePushTagResponse getTagByTagId(@PathVariable Integer tagId) {
+        MessagePushTagResponse response = new MessagePushTagResponse();
+        MessagePushTag messagePushTag = messagePushTagService.getTagByTagId(tagId);
+        if (messagePushTag != null) {
+            MessagePushTagVO messagePushTagVO = new MessagePushTagVO();
+            BeanUtils.copyProperties(messagePushTag,messagePushTagVO);
             response.setResult(messagePushTagVO);
         }
         return response;

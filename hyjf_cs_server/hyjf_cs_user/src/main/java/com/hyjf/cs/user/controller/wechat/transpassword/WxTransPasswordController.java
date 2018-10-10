@@ -64,7 +64,7 @@ public class WxTransPasswordController extends BaseUserController {
         String txcode = "";
         BankCallBean bean = new BankCallBean(user.getUserId(),txcode, ClientConstants.WECHAT_CLIENT);
         // 异步调用路
-        String bgRetUrl = systemConfig.getWeChatHost()  + request.getContextPath() +  "/hyjf-wechat/wx/transpassword/passwordBgreturn?sign=" + sign;
+        String bgRetUrl =  "http://CS-USER/hyjf-wechat/wx/transpassword/passwordBgreturn?sign=" + sign;
         // 同步调用路径
         String retUrl = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign ;
         String success = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/success?sign=" + sign ;
@@ -89,7 +89,7 @@ public class WxTransPasswordController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "设置交易密码异步回调")
     @PostMapping(value = "/passwordBgreturn")
-    public BankCallResult passwordBgreturn(BankCallBean bean) {
+    public BankCallResult passwordBgreturn(@RequestBody BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
         Integer userId = Integer.parseInt(bean.getLogUserId());
@@ -138,7 +138,7 @@ public class WxTransPasswordController extends BaseUserController {
         String retUrl = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign;
         String success = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/success?sign=" + sign ;
         // 异步调用路
-        String bgRetUrl = systemConfig.getWeChatHost() + request.getContextPath() +  "/hyjf-wechat/wx/transpassword/resetPasswordBgreturn?sign=" + sign;
+        String bgRetUrl = "http://CS-USER/hyjf-wechat/wx/transpassword/resetPasswordBgreturn?sign=" + sign;
         bean.setSuccessfulUrl(success);
         // 页面同步返回 URL
         bean.setRetUrl(retUrl);
@@ -158,7 +158,7 @@ public class WxTransPasswordController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "重置交易密码异步回调")
     @PostMapping(value = "/resetPasswordBgreturn")
-    public BankCallResult resetPasswordBgreturn(BankCallBean bean) {
+    public BankCallResult resetPasswordBgreturn(@RequestBody BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         result.setMessage("交易密码修改成功");
         result.setStatus(true);

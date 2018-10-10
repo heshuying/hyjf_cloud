@@ -181,8 +181,10 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
             bean.setUserId(userId);
             bean.setLogordid(GetOrderIdUtils.getOrderId0(userId));
             bean.setTxCode("syncCompany_auto");
-            bean.setApp_id(DzqzConstant.HYJF_FDD_APP_ID);
-            bean.setV(DzqzConstant.HYJF_FDD_VERSION);
+            bean.setApp_id(systemConfig.getFaaAppUrl());
+            bean.setV(systemConfig.getFddVersion());
+            bean.setSecret(systemConfig.getFddSecret());
+            bean.setUrl(systemConfig.getFddUrl());
             bean.setTimestamp(GetDate.getDate("yyyyMMddHHmmss"));
             bean.setCustomer_name(userInfo.getTruename());
             bean.setEmail(StringUtils.isNotBlank(user.getEmail()) ? user.getEmail() : "");

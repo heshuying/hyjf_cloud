@@ -56,7 +56,7 @@ public class ApiTrusteePayController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/trusteePayBgreturn")
-    public BankCallResult trusteePayBgreturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
+    public BankCallResult trusteePayBgreturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
         return trusteePayService.trusteePayBgreturn(request, bean);
     }
 

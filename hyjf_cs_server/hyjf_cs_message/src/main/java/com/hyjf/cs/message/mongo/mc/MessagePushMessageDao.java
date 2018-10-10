@@ -33,16 +33,28 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
     public List<MessagePushMsg> selectMessagePushMsg(MessagePushMsgRequest request) {
         Query query = new Query();
         Criteria criteria = new Criteria();
-        if (request.getStartDateSrch() != null) {
-            Date startTime = GetDate.stringToDate2(request.getStartDateSrch());
-            criteria.and("createTime").gte((int) (startTime.getTime() / 1000));
-        }
-        if (request.getEndDateSrch() != null) {
-            Date endTime = GetDate.stringToDate2(request.getEndDateSrch());
-            criteria.and("createTime").lte((int) (endTime.getTime() / 1000));
+        if (request.getStartDateSrch() != null || request.getEndDateSrch() != null) {
+            int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartDateSrch());
+            int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndDateSrch());
+            criteria.and("sendTime").gte(startTime).lte(endTime);
         }
         if (request.getTagId() != null) {
-            criteria.and("tagId").regex(request.getTagId().toString());
+            criteria.and("tagId").is(request.getTagId());
+        }
+        if (request.getMsgTitle() != null) {
+            criteria.and("msgTitle").is(request.getMsgTitle());
+        }
+        if (request.getMsgCode() != null) {
+            criteria.and("msgCode").is(request.getMsgCode());
+        }
+        if (request.getCreateUserName() != null) {
+            criteria.and("createUserName").is(request.getCreateUserName());
+        }
+        if (request.getMsgTerminal() != null) {
+            criteria.and("msgTerminal").is(request.getMsgTerminal());
+        }
+        if (request.getMsgSendStatus() != null) {
+            criteria.and("msgSendStatus").is(request.getMsgSendStatus());
         }
         int currPage = request.getCurrPage();
         int pageSize = request.getPageSize();

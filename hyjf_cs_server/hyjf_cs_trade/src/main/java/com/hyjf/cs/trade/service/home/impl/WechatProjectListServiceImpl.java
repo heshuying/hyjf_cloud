@@ -825,6 +825,13 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     @Override
     public WechatHomePageResult getHomeProejctList(int currPage, int pageSize, String showPlanFlag, Integer userId) {
         WechatHomePageResult result = new WechatHomePageResult();
+
+        if(currPage<=0){
+            currPage=1;
+        }
+        if(pageSize<=0){
+            pageSize=10;
+        }
         Page page = Page.initPage(currPage, pageSize);
         WechatHomePageResult vo = new WechatHomePageResult();
         vo.setCurrentPage(currPage);
@@ -1196,7 +1203,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         }
 
 
-        if (showPlanFlag == null) {
+        if (StringUtils.isBlank(showPlanFlag)) {
             if (currentPage == 1) {
                 WechatProjectListResponse res = baseClient.getExe(HomePageDefine.WECHAT_HOME_PLAN_LATER_URL, WechatProjectListResponse.class);
                 List<WechatHomeProjectListVO> hjhList = res.getResultList();
@@ -1208,7 +1215,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                     //补两条
                     hjhList.addAll(list);
                     list = hjhList;
-                } else if (list.size() > 1 && !"HJH".equals(list.get(1).getBorrowType())) {
+                } else if (list.size() > 1 && !"HJH".equals(list.get(1).getBorrowType()) && !CollectionUtils.isEmpty(hjhList)) {
                     //补一条
                     list.add(1, hjhList.get(0));
                 }

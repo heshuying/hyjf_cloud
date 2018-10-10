@@ -153,7 +153,7 @@ public class HjhCommissionServiceImpl implements HjhCommissionService{
 			request.setChinapnrlogIp(chinapnrBean.getLogIp());
 		}
 		// 单独放到request中，不用bean copy ，因为原生 commission 不易修改
-		if(StringUtils.isNotEmpty(commission.getAccount())){
+		if(commission.getAccount()!= null && StringUtils.isNotEmpty(commission.getAccount())){
 			request.setAccount(commission.getAccount());
 		}
 		// 单独放到request中，防止 bean copy，因为原生 commission 不易修改

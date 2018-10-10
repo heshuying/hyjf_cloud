@@ -48,6 +48,9 @@ public class ContentArticleVO extends BaseVO {
     @ApiModelProperty(value = "发表时间")
     private String publishTime;
 
+    @ApiModelProperty(value = "创建时间")
+    private String createStrTime;
+
 
     private static final long serialVersionUID = 1L;
 
@@ -139,6 +142,7 @@ public class ContentArticleVO extends BaseVO {
         this.updateUserId = updateUserId;
     }
 
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -161,5 +165,13 @@ public class ContentArticleVO extends BaseVO {
 
     public void setPublishTime(String publishTime) {
         this.publishTime = publishTime;
+    }
+
+    public String getCreateStrTime() {
+        return createStrTime;
+    }
+
+    public void setCreateStrTime(String createStrTime) {
+        this.createStrTime = createStrTime;
     }
 }

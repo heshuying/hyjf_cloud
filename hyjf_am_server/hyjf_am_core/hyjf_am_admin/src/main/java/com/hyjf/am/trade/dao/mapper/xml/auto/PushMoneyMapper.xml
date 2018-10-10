@@ -75,7 +75,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `type`, project_type, reward_send, day_tender, month_tender, remark, create_by, update_by,
+    id, `type`, project_type, reward_send, day_tender, month_tender, create_by, update_by, 
     create_time, update_time
   </sql>
   <sql id="Blob_Column_List" >
@@ -358,8 +358,7 @@
       create_by = #{createBy,jdbcType=INTEGER},
       update_by = #{updateBy,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      remark = #{remark,jdbcType=LONGVARCHAR}
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

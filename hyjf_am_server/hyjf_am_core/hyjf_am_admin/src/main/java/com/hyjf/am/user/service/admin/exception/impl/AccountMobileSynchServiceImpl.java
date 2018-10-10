@@ -199,7 +199,7 @@ public class AccountMobileSynchServiceImpl extends BaseServiceImpl implements Ac
         Integer status = accountMobileSynchVO.getStatus();
         String accountId = accountMobileSynchVO.getAccountid();
         Integer flag = accountMobileSynchVO.getFlag();
-        flag = (flag == null || flag == 0) ? 1 : 2;
+        flag = (flag == null || flag == 0) ? 1 : flag;
         criteria.andFlagEqualTo(flag);
         //电子账号
         if (StringUtils.isNotBlank(accountId)) {

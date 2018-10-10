@@ -135,6 +135,8 @@ public class BorrowRepaymentController extends BaseController {
     /**
      * 迁移到还款画面
      *
+     *
+     *
      * @param request
      * @return 标签配置列表
      */
@@ -162,8 +164,23 @@ public class BorrowRepaymentController extends BaseController {
     @PostMapping(value = "/exportRepayClkAct")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportRepayClkAct(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowRepaymentPlanRequestBean form) throws Exception {
+
+
+
         BorrowRepaymentPlanRequest copyForm=new BorrowRepaymentPlanRequest();
+
         BeanUtils.copyProperties(form, copyForm);
+        if(form.getVerifyTimeStartSrch() != null&&!"".equals(form.getVerifyTimeStartSrch())) {
+            String date;
+            date = form.getVerifyTimeStartSrch();
+            copyForm.setVerifyTimeStartSrch(date);
+
+        }
+        if(form.getVerifyTimeEndSrch() != null&&!"".equals(form.getVerifyTimeEndSrch())) {
+            String date;
+            date = form.getVerifyTimeEndSrch();
+            copyForm.setVerifyTimeEndSrch(date);
+        }
         // 表格sheet名称
         String sheetName = "还款计划导出数据";
         // 文件名称

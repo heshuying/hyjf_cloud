@@ -441,7 +441,6 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public int updateCorpOpenAccountRecord(CorpOpenAccountRecord corpOpenAccountRecord) {
         int intflg = corpOpenAccountRecordMapper.updateByPrimaryKey(corpOpenAccountRecord);
         if (intflg > 0) {
@@ -459,7 +458,6 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public int insertCorpOpenAccountRecord(CorpOpenAccountRecord corpOpenAccountRecord) {
         int intflg = corpOpenAccountRecordMapper.insertSelective(corpOpenAccountRecord);
         if (intflg > 0) {
@@ -526,7 +524,6 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public int insertBankOpenAccount(BankOpenAccount request) {
         int openFlag = this.bankOpenAccountMapper.insertSelective(request);
         if (openFlag > 0) {
@@ -544,7 +541,6 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public int updateUserInfoByUserInfo(UserInfo userInfo) {
         int userFlag = this.userInfoMapper.updateByPrimaryKey(userInfo);
         if (userFlag > 0) {
@@ -562,7 +558,6 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * @return
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public int updateUser(User user) {
         int userFlag = this.userMapper.updateByPrimaryKey(user);
         if (userFlag > 0) {
@@ -1082,8 +1077,8 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             user.setUserType(1);//企业用户
             user.setBankOpenAccount(1);//已开户
             int userFlag = this.updateUser(user);
-            if (userInfoFlag > 0) {
-                logger.info("=============用户详细信息保存成功==================");
+            if (userFlag > 0) {
+                logger.info("=============用户表信息保存成功==================");
             }else {
                  throw new RuntimeException("用户表信息保存异常!");
             }

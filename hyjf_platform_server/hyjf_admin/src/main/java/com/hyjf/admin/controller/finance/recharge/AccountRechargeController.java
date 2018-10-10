@@ -63,7 +63,7 @@ public class AccountRechargeController extends BaseController {
         JSONObject jsonObject = new JSONObject();
 
         //用户账户充值状态
-        List<ParamNameVO> paramList = this.rechargeService.getParamNameList("RECHARGE_STATUS");
+        List<ParamNameVO> paramList = this.rechargeService.selectParamNameList("RECHARGE_STATUS");
         logger.info(JSON.toJSONString(paramList));
         List<Object> rechargeStatusList = new ArrayList<>();
         for(int i = 0; i<paramList.size(); i++){
@@ -85,7 +85,7 @@ public class AccountRechargeController extends BaseController {
         }
 
         // 资金托管平台
-        List<ParamNameVO> bankType = this.rechargeService.getParamNameList("BANK_TYPE");
+        List<ParamNameVO> bankType = this.rechargeService.selectParamNameList("BANK_TYPE");
         logger.info(JSON.toJSONString(paramList));
         List<Object> bankTypeList = new ArrayList<>();
         for(int i = 0; i<bankType.size(); i++){

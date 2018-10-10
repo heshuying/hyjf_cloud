@@ -5,10 +5,7 @@ import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.bean.admin.LockedConfig;
-import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
@@ -1183,5 +1180,74 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getCount();
         }
         return 0;
+    }
+
+    @Override
+    public EmailRecipientResponse getRecordList(EmailRecipientRequest recipientRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/sell_daily_email/getRecordList", recipientRequest, EmailRecipientResponse.class).getBody();
+    }
+
+    @Override
+    public EmailRecipientResponse getRecordById(EmailRecipientRequest recipientRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/sell_daily_email/getRecordById", recipientRequest, EmailRecipientResponse.class).getBody();
+    }
+
+    @Override
+    public EmailRecipientResponse updateEmailRecipient(EmailRecipientRequest recipientRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/sell_daily_email/updateEmailRecipient", recipientRequest, EmailRecipientResponse.class).getBody();
+    }
+
+    @Override
+    public EmailRecipientResponse forbiddenAction(EmailRecipientRequest recipientRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/sell_daily_email/forbiddenAction", recipientRequest, EmailRecipientResponse.class).getBody();
+    }
+
+    @Override
+    public EmailRecipientResponse insertAction(EmailRecipientRequest recipientRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/sell_daily_email/insertAction", recipientRequest, EmailRecipientResponse.class).getBody();
+    }
+
+    /**
+     * 江西银行卡异常count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int getBindCardExceptionCount(BindCardExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-user/bindcardexception/getBindCardExceptionCount";
+        AdminBindCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 江西银行卡异常列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<BindCardExceptionCustomizeVO> searchBindCardExceptionList(BindCardExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-user/bindcardexception/searchBindCardExceptionList";
+        AdminBindCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 异常中心-江西银行卡异常-更新银行卡
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public void updateBindCard(BindCardExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-user/bindcardexception/updateBindCard";
+        restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
     }
 }

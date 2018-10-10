@@ -2600,7 +2600,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 优惠券投资
+     * 散标优惠券投资
      *
      * @param couponTender
      * @return
@@ -4169,13 +4169,13 @@ public class AmTradeClientImpl implements AmTradeClient {
      **/
     @Override
     public Integer getCountBatchCenter(BatchBorrowRecoverRequest request) {
-        Integer result = restTemplate.postForEntity(
+        IntegerResponse result = restTemplate.postForEntity(
                 "http://AM-TRADE/am-trade/adminBatchBorrowRecover/getListTotal/", request,
-                Integer.class).getBody();
+                IntegerResponse.class).getBody();
         if (result == null) {
             return 0;
         }
-        return result;
+        return result.getResultInt();
     }
 
     /**
@@ -4850,12 +4850,12 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public Long countBatchCenter (BatchCenterCustomize batchCenterCustomize){
-        Long result =  restTemplate.postForEntity(
+    public Integer countBatchCenter (BatchCenterCustomize batchCenterCustomize){
+        IntegerResponse result =  restTemplate.postForEntity(
         "http://AM-TRADE/am-trade/borrow/countBatchCenter/", batchCenterCustomize,
-                Long.class).getBody();
+                IntegerResponse.class).getBody();
         if (result != null) {
-            return result;
+            return result.getResultInt();
         }
         return null;
     }
@@ -5339,6 +5339,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         BailConfigInfoCustomizeResponse response = restTemplate.getForEntity(url,BailConfigInfoCustomizeResponse.class).getBody();
         if (response!=null && Response.isSuccess(response)){
             return response.getResult();
+        }
+        return null;
+    }
+
+
+    /**
+     * 查询产品类型
+     * @author zhangyk
+     * @date 2018/10/9 15:53
+     */
+    @Override
+    public List<BorrowProjectTypeVO> getProjectTypeList() {
+        String url = "http://AM-TRADE/am-trade/config/projecttype/getProjectType";
+        BorrowProjectTypeResponse response = restTemplate.getForEntity(url,BorrowProjectTypeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }

@@ -133,7 +133,7 @@ public class AppRechargeController extends BaseTradeController{
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
 		String retUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/failed";
-		String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
+		String bgRetUrl = "http://CS-TRADE/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
         bgRetUrl=splicingParam(bgRetUrl,request);
         if(null==money||money.isEmpty()){
         	money="0";
@@ -148,6 +148,7 @@ public class AppRechargeController extends BaseTradeController{
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_APP);
 		directRechargeBean.setPlatform(platform);
+		directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(platform,request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 
 		try {
@@ -177,6 +178,8 @@ public class AppRechargeController extends BaseTradeController{
     }
 
 
+
+
     /**
 	 * 页面充值异步回调
 	 * @param request
@@ -186,14 +189,14 @@ public class AppRechargeController extends BaseTradeController{
 	@ApiIgnore
 	@ResponseBody
 	@PostMapping("/bank/user/userDirectRecharge/bgreturn")
-	public BankCallResult bgreturn(HttpServletRequest request,BankCallBean bean) {
+	public BankCallResult bgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
 		BankCallResult result = new BankCallResult();
 		logger.info("[app页面充值异步回调开始]");
 		String phone = request.getParameter("phone");
+		String userId = bean.getLogUserId();
 		bean.setMobile(phone);
 		bean.convert();
-		Integer userId = Integer.parseInt(bean.getLogUserId());
-		UserVO user = this.userRechargeService.getUsers(userId);
+		UserVO user = this.userRechargeService.getUsers(Integer.parseInt(userId));
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("ip", bean.getUserIP());
 		params.put("mobile",bean.getMobile());

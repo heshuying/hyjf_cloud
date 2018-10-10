@@ -41,7 +41,7 @@ public class BankOpenController extends BaseController {
 	@RequestMapping("/updateUserAccountLog")
 	public IntegerResponse updateUserAccountLog(@RequestBody @Valid BankOpenRequest request) {
 		logger.info("updateUserAccountLog...param is :{}", JSONObject.toJSONString(request));
-		
+
 		Integer userId = request.getUserId();
 		String username = request.getUsername();
 		String mobile = request.getMobile();
@@ -50,9 +50,9 @@ public class BankOpenController extends BaseController {
 		String trueName = request.getTrueName();
 		String idNo = request.getIdNo();
 		String cardNO = request.getCardNo();
-		
+
 		boolean result = this.bankOpenService.updateUserAccountLog(userId, username, mobile, orderId, channel, trueName,idNo,cardNO);
-        
+
 		return new IntegerResponse(result?1:0);
 	}
 
@@ -86,7 +86,7 @@ public class BankOpenController extends BaseController {
 	@RequestMapping("/updateUserAccount")
 	public int updateUserAccount(@RequestBody @Valid BankOpenRequest request) {
 		logger.info("updateUserAccount...param is :{}", JSONObject.toJSONString(request));
-		
+
 		Integer userId = request.getUserId();
 		String orderId = request.getOrderId();
 		String accountId = request.getAccountId();
@@ -95,9 +95,9 @@ public class BankOpenController extends BaseController {
 		String idNo = request.getIdNo();
 		String mobile = request.getMobile();
 		Integer roleId = request.getRoleId();
-		
+
 		boolean result = this.bankOpenService.updateUserAccount(userId, trueName, orderId, accountId, idNo, bankAccountEsb, mobile,roleId);
-        
+
 		return result?1:0;
 	}
 
@@ -110,7 +110,7 @@ public class BankOpenController extends BaseController {
 	@RequestMapping("/updateCardNoToBank")
 	public int updateCardNoToBank(@RequestBody @Valid BankOpenRequest request) {
 		logger.info("updateCardNoToBank...param is :{}", JSONObject.toJSONString(request));
-		
+
 		Integer userId = request.getUserId();
 		String orderId = request.getOrderId();
 		String accountId = request.getAccountId();
@@ -118,10 +118,10 @@ public class BankOpenController extends BaseController {
 		String trueName = request.getTrueName();
 		String idNo = request.getIdNo();
 		String mobile = request.getMobile();
-		
+
 		// TODO:保留，业务继续。。
 //		boolean result = this.bankOpenService.updateCardNoToBank(userId, trueName, orderId, accountId, idNo, bankAccountEsb, mobile);
-        
+
 		return 1;
 	}
 
@@ -201,7 +201,7 @@ public class BankOpenController extends BaseController {
 	 * @Author sunss
 	 * @Date 2018/6/22 9:07
 	 */
-	@GetMapping("/bankopen/getBankOpenAccountFiledMess/{logOrdId}")
+	@GetMapping("/getBankOpenAccountFiledMess/{logOrdId}")
 	public String getBankOpenAccountFiledMess(@PathVariable String logOrdId){
 		return bankOpenService.getBankOpenAccountFiledMess(logOrdId);
 	}
@@ -232,13 +232,13 @@ public class BankOpenController extends BaseController {
 		}
 		return response;
 	}
-	
+
 	/**
-     * 获取用户账户信息byaccountId
-     * @auth libin
-     * @param accountId
-     * @return
-     */
+	 * 获取用户账户信息byaccountId
+	 * @auth libin
+	 * @param accountId
+	 * @return
+	 */
 	@RequestMapping("/getBankOpenAccountByAccountId/{accountId}")
 	public BankOpenAccountResponse getBankOpenAccountByAccountId(@PathVariable String accountId) {
 		BankOpenAccountExample accountExample = new BankOpenAccountExample();

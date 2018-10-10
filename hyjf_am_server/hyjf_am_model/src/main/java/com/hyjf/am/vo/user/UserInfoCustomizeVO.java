@@ -39,9 +39,18 @@ public class UserInfoCustomizeVO extends BaseVO implements Serializable{
      */
     private Integer roleId;
     /**
+     * 用户角色1投资人  2借款人 3垫付机构
+     */
+    private String roleName;
+    /**
      * 用户类型 0个人 1企业
      */
     private Integer userType;
+
+    /**
+     * 用户类型 0个人 1企业
+     */
+    private String userTypeName;
     /**
      * 合作机构编号
      */
@@ -213,5 +222,21 @@ public class UserInfoCustomizeVO extends BaseVO implements Serializable{
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public String getUserTypeName() {
+        return userTypeName;
+    }
+
+    public void setUserTypeName(String userTypeName) {
+        this.userTypeName = userTypeName;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

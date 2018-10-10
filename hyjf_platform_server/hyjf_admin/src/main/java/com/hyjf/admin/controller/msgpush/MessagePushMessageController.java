@@ -133,6 +133,9 @@ public class MessagePushMessageController extends BaseController {
             prepareDatas(response);
             return new AdminResult<>(response);
         }
+
+        MessagePushTagVO messagePushTagVO = messagePushTagService.getPushTagByTagId(templateRequest.getTagId());
+        templateRequest.setTagCode(messagePushTagVO.getTagCode());
         MessagePushMsgVO templateVO = new MessagePushMsgVO();
         BeanUtils.copyProperties(templateRequest, templateVO);
         String msgTerminal[] = templateRequest.getMsgTerminal().split(",");
@@ -153,7 +156,7 @@ public class MessagePushMessageController extends BaseController {
                     Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
                     if (time != 0) {
                         templateVO.setPreSendTime(time);
-                        templateVO.setSendTime(time);
+                        templateVO.setSendTime(GetDate.strYYYYMMDD2Timestamp2(GetDate.getDateMyTimeInMillis(time)));
                     }
                 } catch (Exception e) {
                 }

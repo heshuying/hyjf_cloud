@@ -17,6 +17,7 @@ import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
@@ -54,7 +55,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("borrowClass", borrowClass);
         params.put("limitStart", limitStart);
         params.put("limitEnd", limitEnd);
-
+        params.put("publishInstCode",StringUtils.isBlank(request.getPublishInstCode()) ? "" : request.getPublishInstCode());
         return webProjectListCustomizeMapper.searchProjectList(params);
     }
 
@@ -79,6 +80,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         params.put("borrowClass", borrowClass);
         params.put("limitStart",limitStart);
         params.put("limitEnd", limitEnd);
+        params.put("publishInstCode",StringUtils.isBlank(request.getPublishInstCode()) ? "" : request.getPublishInstCode());
         return webProjectListCustomizeMapper.countProjectList(params);
     }
 

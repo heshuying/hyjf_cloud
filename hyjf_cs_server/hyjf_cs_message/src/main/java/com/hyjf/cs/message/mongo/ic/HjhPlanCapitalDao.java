@@ -1,9 +1,10 @@
 package com.hyjf.cs.message.mongo.ic;
 
+import java.util.Date;
+import java.util.List;
+
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
-import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -11,8 +12,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.List;
+import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
+import com.hyjf.common.util.GetDate;
 
 /**
  * 汇计划-资金计划
@@ -110,8 +112,10 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
     public void deleteHjhPlanCapital(Date dateFrom, Date dateTo){
         Query query = new Query();
         Criteria criteria = new Criteria();
-        criteria.and("date").gte(dateFrom);
-        criteria.and("date").lte(dateTo);
+        criteria.andOperator(
+                Criteria.where("date").gte(dateFrom),
+                Criteria.where("date").lte(dateTo)
+        );
         query.addCriteria(criteria);
         this.del(query);
     }
@@ -121,14 +125,13 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
      * @param hjhPlanCapital
      * @return
      */
-    public List<HjhPlanCapitalVO> selectHjhPlanCapitalList(HjhPlanCapitalVO hjhPlanCapital) {
+    public Long countHjhPlanCapitalList(HjhPlanCapitalVO hjhPlanCapital) {
         Query query = new Query();
         Criteria criteria = new Criteria();
         criteria.and("date").is(hjhPlanCapital.getDate());
         criteria.and("planNid").is(hjhPlanCapital.getPlanNid());
         query.addCriteria(criteria);
-//        return this.find(query);
-        return null;
+        return this.count(query);
     }
 
     /**
@@ -143,21 +146,23 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
         criteria.and("planNid").is(hjhPlanCapital.getPlanNid());
 
         Update update = new Update();
-        update.inc("updateTime", GetDate.getNowTime10()).set("delFlg", 0);
-
+        update.set("reinvestAccount", hjhPlanCapital.getReinvestAccount())
+            .set("creditAccount", hjhPlanCapital.getCreditAccount())
+            .set("updateTime", GetDate.getDate()).set("delFlg", 0);
         this.update(query, update);
         return true;
     }
 
     /**
      * 插入记录（汇计划资本按天统计及预估表）
-     * @param hjhPlanCapital
+     * @param hjhPlanCapitalVO
      * @return
      */
-    public boolean insertHjhPlanCapital(HjhPlanCapitalVO hjhPlanCapital) {
+    public boolean insertHjhPlanCapital(HjhPlanCapitalVO hjhPlanCapitalVO) {
+        HjhPlanCapital hjhPlanCapital = CommonUtils.convertBean(hjhPlanCapitalVO, getEntityClass());
         hjhPlanCapital.setCreateTime(GetDate.getNowTime10());
         hjhPlanCapital.setDelFlg(0);
-//        this.insert(hjhPlanCapital);
+        this.insert(hjhPlanCapital);
         return true;
     }
 }

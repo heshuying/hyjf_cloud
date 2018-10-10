@@ -93,8 +93,6 @@
     <result column="files" property="files" jdbcType="LONGVARCHAR" />
     <result column="borrow_company_instruction" property="borrowCompanyInstruction" jdbcType="LONGVARCHAR" />
     <result column="borrow_operating_process" property="borrowOperatingProcess" jdbcType="LONGVARCHAR" />
-    <result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="DECIMAL" />
-    <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -166,17 +164,15 @@
     disposal_asset_origin, disposal_attachment_info, borrow_increase_money, borrow_interest_coupon, 
     borrow_taste_money, borrow_asset_number, borrow_project_source, borrow_interest_time, 
     borrow_due_time, borrow_safeguard_way, borrow_income_description, borrow_publisher, 
-    borrow_extra_yield, increase_interest_flag, contract_period, borrow_level, asset_attributes,
-    bank_raise_start_date, bank_raise_end_date, bank_regist_days, bank_borrow_days, project_name,
-    finance_purpose, monthly_income, payment, first_payment, second_payment, cost_introdution,
-    fiance_condition, is_new, publish_inst_code, remark, create_user_name, add_ip, create_time,
+    borrow_extra_yield, increase_interest_flag, contract_period, borrow_level, asset_attributes, 
+    bank_raise_start_date, bank_raise_end_date, bank_regist_days, bank_borrow_days, project_name, 
+    finance_purpose, monthly_income, payment, first_payment, second_payment, cost_introdution, 
+    fiance_condition, is_new, publish_inst_code, remark, create_user_name, add_ip, create_time, 
     update_time
   </sql>
   <sql id="Blob_Column_List" >
     account_contents, borrow_contents, borrow_running_use, borrow_running_soruce, borrow_measures_instit, 
-    borrow_measures_mort, borrow_measures_mea, files, borrow_company_instruction, borrow_operating_process,
-    borrow_operating_process,
-    borrow_extra_yield, increase_interest_flag
+    borrow_measures_mort, borrow_measures_mea, files, borrow_company_instruction, borrow_operating_process
   </sql>
   <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfoExample" >
     select
@@ -257,18 +253,18 @@
       borrow_asset_number, borrow_project_source, 
       borrow_interest_time, borrow_due_time, borrow_safeguard_way, 
       borrow_income_description, borrow_publisher, 
-      borrow_extra_yield, increase_interest_flag,
-      contract_period, borrow_level, asset_attributes,
-      bank_raise_start_date, bank_raise_end_date, bank_regist_days,
-      bank_borrow_days, project_name, finance_purpose,
-      monthly_income, payment, first_payment,
-      second_payment, cost_introdution, fiance_condition,
-      is_new, publish_inst_code, remark,
-      create_user_name, add_ip, create_time,
-      update_time, account_contents, borrow_contents,
-      borrow_running_use, borrow_running_soruce,
-      borrow_measures_instit, borrow_measures_mort,
-      borrow_measures_mea, files, borrow_company_instruction,
+      borrow_extra_yield, increase_interest_flag, 
+      contract_period, borrow_level, asset_attributes, 
+      bank_raise_start_date, bank_raise_end_date, bank_regist_days, 
+      bank_borrow_days, project_name, finance_purpose, 
+      monthly_income, payment, first_payment, 
+      second_payment, cost_introdution, fiance_condition, 
+      is_new, publish_inst_code, remark, 
+      create_user_name, add_ip, create_time, 
+      update_time, account_contents, borrow_contents, 
+      borrow_running_use, borrow_running_soruce, 
+      borrow_measures_instit, borrow_measures_mort, 
+      borrow_measures_mea, files, borrow_company_instruction, 
       borrow_operating_process)
     values (#{borrowNid,jdbcType=VARCHAR}, #{borrowPreNid,jdbcType=VARCHAR}, #{borrowPreNidNew,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{borrowUserName,jdbcType=VARCHAR}, 
@@ -291,18 +287,18 @@
       #{borrowAssetNumber,jdbcType=VARCHAR}, #{borrowProjectSource,jdbcType=VARCHAR}, 
       #{borrowInterestTime,jdbcType=VARCHAR}, #{borrowDueTime,jdbcType=VARCHAR}, #{borrowSafeguardWay,jdbcType=VARCHAR}, 
       #{borrowIncomeDescription,jdbcType=VARCHAR}, #{borrowPublisher,jdbcType=VARCHAR}, 
-      #{borrowExtraYield,jdbcType=DECIMAL}, #{increaseInterestFlag,jdbcType=TINYINT},
-      #{contractPeriod,jdbcType=INTEGER}, #{borrowLevel,jdbcType=VARCHAR}, #{assetAttributes,jdbcType=TINYINT},
-      #{bankRaiseStartDate,jdbcType=VARCHAR}, #{bankRaiseEndDate,jdbcType=VARCHAR}, #{bankRegistDays,jdbcType=TINYINT},
-      #{bankBorrowDays,jdbcType=INTEGER}, #{projectName,jdbcType=VARCHAR}, #{financePurpose,jdbcType=VARCHAR},
-      #{monthlyIncome,jdbcType=VARCHAR}, #{payment,jdbcType=VARCHAR}, #{firstPayment,jdbcType=VARCHAR},
-      #{secondPayment,jdbcType=VARCHAR}, #{costIntrodution,jdbcType=VARCHAR}, #{fianceCondition,jdbcType=VARCHAR},
-      #{isNew,jdbcType=TINYINT}, #{publishInstCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
-      #{createUserName,jdbcType=VARCHAR}, #{addIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-      #{updateTime,jdbcType=TIMESTAMP}, #{accountContents,jdbcType=LONGVARCHAR}, #{borrowContents,jdbcType=LONGVARCHAR},
-      #{borrowRunningUse,jdbcType=LONGVARCHAR}, #{borrowRunningSoruce,jdbcType=LONGVARCHAR},
-      #{borrowMeasuresInstit,jdbcType=LONGVARCHAR}, #{borrowMeasuresMort,jdbcType=LONGVARCHAR},
-      #{borrowMeasuresMea,jdbcType=LONGVARCHAR}, #{files,jdbcType=LONGVARCHAR}, #{borrowCompanyInstruction,jdbcType=LONGVARCHAR},
+      #{borrowExtraYield,jdbcType=DECIMAL}, #{increaseInterestFlag,jdbcType=TINYINT}, 
+      #{contractPeriod,jdbcType=INTEGER}, #{borrowLevel,jdbcType=VARCHAR}, #{assetAttributes,jdbcType=TINYINT}, 
+      #{bankRaiseStartDate,jdbcType=VARCHAR}, #{bankRaiseEndDate,jdbcType=VARCHAR}, #{bankRegistDays,jdbcType=TINYINT}, 
+      #{bankBorrowDays,jdbcType=INTEGER}, #{projectName,jdbcType=VARCHAR}, #{financePurpose,jdbcType=VARCHAR}, 
+      #{monthlyIncome,jdbcType=VARCHAR}, #{payment,jdbcType=VARCHAR}, #{firstPayment,jdbcType=VARCHAR}, 
+      #{secondPayment,jdbcType=VARCHAR}, #{costIntrodution,jdbcType=VARCHAR}, #{fianceCondition,jdbcType=VARCHAR}, 
+      #{isNew,jdbcType=TINYINT}, #{publishInstCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{createUserName,jdbcType=VARCHAR}, #{addIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{accountContents,jdbcType=LONGVARCHAR}, #{borrowContents,jdbcType=LONGVARCHAR}, 
+      #{borrowRunningUse,jdbcType=LONGVARCHAR}, #{borrowRunningSoruce,jdbcType=LONGVARCHAR}, 
+      #{borrowMeasuresInstit,jdbcType=LONGVARCHAR}, #{borrowMeasuresMort,jdbcType=LONGVARCHAR}, 
+      #{borrowMeasuresMea,jdbcType=LONGVARCHAR}, #{files,jdbcType=LONGVARCHAR}, #{borrowCompanyInstruction,jdbcType=LONGVARCHAR}, 
       #{borrowOperatingProcess,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfoWithBLOBs" >

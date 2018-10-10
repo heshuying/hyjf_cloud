@@ -50,4 +50,14 @@ public class JxBankConfigServiceImpl implements JxBankConfigService {
         cra.andDelFlagEqualTo(0);
         return jxBankConfigMapper.selectByExample(example);
     }
+
+    /**
+     * 获取银行列表
+     * @Author : huanghui
+     */
+    @Override
+    public List<JxBankConfig> selectBankConfigList(){
+        List<JxBankConfig> banks = jxBankConfigMapper.selectByExample(new JxBankConfigExample());
+        return banks;
+    }
 }

@@ -64,7 +64,12 @@ public class SyncRuserInterceptor implements Interceptor {
                 // 注册一般，更新用户表基本不需要同步rUser
             }else if(StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.insert")) {
                 sendToMq(boundSql, methodName, "ht_user");
-                
+
+                // 更新用户状态
+            }else if(StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.updateByPrimaryKey")) {
+
+                sendToMq(boundSql, methodName, "up_ht_user");
+
             }else if(StringUtils.containsIgnoreCase(realSql, "insert into ht_spreads_user") || StringUtils.containsIgnoreCase(realSql, "update ht_spreads_user")) {
                 sendToMq(boundSql, methodName, "ht_spreads_user");
                 
