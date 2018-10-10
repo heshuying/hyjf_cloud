@@ -91,7 +91,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
 
     @Override
     public boolean updateUserAccount(Integer userId, String trueName, String orderId, String accountId, String idNo, Integer bankAccountEsb, String mobile, Integer roleId) {
-        logger.info("开户成功后,更新用户账户信息");
+        logger.info("开户成功后,更新用户账户信息 ");
         // 当前日期
         Date nowDate = new Date();
         // 查询开户记录表
