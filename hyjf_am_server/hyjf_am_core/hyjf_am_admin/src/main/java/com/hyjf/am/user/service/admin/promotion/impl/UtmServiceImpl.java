@@ -61,7 +61,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     @Override
     public Utm insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
         Utm utm = new Utm();
-        if(StringUtils.isNotEmpty(channelCustomizeVO.getUtmId())){
+        if(StringUtils.isNotBlank(channelCustomizeVO.getUtmId())){
             //执行更新操作
             utm = changeUtm(utm,channelCustomizeVO);
             utm.setUtmId(Integer.parseInt(channelCustomizeVO.getUtmId()));
@@ -107,7 +107,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     public UtmPlat insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
         UtmPlat utmPlat = new UtmPlat();
         utmPlat = convertUtmPlat(utmPlat,utmPlatVO);
-        if(StringUtils.isNotBlank(utmPlatVO.getId()+"")){
+        if(null != utmPlatVO.getId() && !"".equals(utmPlatVO.getId())){
             utmPlat.setId(Integer.valueOf(utmPlatVO.getId()));
             utmPlatMapper.updateByPrimaryKeySelective(utmPlat);
         }else{
