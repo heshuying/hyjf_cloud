@@ -124,7 +124,7 @@ public class AppBorrowTenderController extends BaseTradeController {
             result.put("tenderUrl", url);
         }catch (CheckException e){
             e.printStackTrace();
-            result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_DESC_FAIL);
+            result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
             result.put(CustomConstants.APP_STATUS_DESC, e.getMessage());
             result.put(CustomConstants.APP_REQUEST,"/hyjf-app/user/invest/getTenderUrl");
         }
