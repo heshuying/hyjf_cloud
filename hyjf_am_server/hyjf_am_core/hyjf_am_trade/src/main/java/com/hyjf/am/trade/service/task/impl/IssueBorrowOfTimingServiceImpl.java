@@ -115,7 +115,9 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				String borrowNid = borrowCustomize.getBorrowNid();
 				logger.info("汇计划定时发标项目标的:[" + borrowNid + "]");
 
-				BorrowInfo borrowInfo = this.borrowInfoMapper.selectByPrimaryKey(borrowCustomize.getId());
+                BorrowInfoExample example = new BorrowInfoExample();
+                example.createCriteria().andBorrowNidEqualTo(borrowNid);
+                BorrowInfo borrowInfo = borrowInfoMapper.selectByExample(example).get(0);
 
 				// b.标的自动发标
 				boolean flag = this.updateHjhOntimeSendBorrow(borrowCustomize);
