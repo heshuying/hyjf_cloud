@@ -78,6 +78,11 @@ public class TenderCreditCustomizeVO extends BaseVO implements Serializable {
 	 * 融资期限
 	 */
 	private String borrowPeriod;
+
+	/**
+	 * 融资期限（纯数字）
+	 */
+	private String borrowPeriodNumber;
 	/**
 	 * 持有期限
 	 */
@@ -232,4 +237,11 @@ public class TenderCreditCustomizeVO extends BaseVO implements Serializable {
 		this.borrowStyleName = borrowStyleName;
 	}
 
+	public String getBorrowPeriodNumber() {
+		return borrowPeriodNumber;
+	}
+
+	public void setBorrowPeriodNumber(String borrowPeriodNumber) {
+		this.borrowPeriodNumber = borrowPeriodNumber;
+	}
 }
