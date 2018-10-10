@@ -28,7 +28,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -667,6 +666,18 @@ public class AllocationEngineController extends BaseController{
 		BeanUtils.copyProperties(viewRequest, form);
 		// 获取当前登陆者id
 		int userId = Integer.valueOf(this.getUser(request).getId());
+		
+		// 防止多次提交，做一次校验
+		if(StringUtils.isNotEmpty(form.getLabelName().trim())  && StringUtils.isNotEmpty(form.getPlanNid())){
+			int existflg = this.allocationEngineService.checkRepeat(form);
+			if(existflg>0){
+				jsonObject.put("error", "该标签已经被使用，无法再次添加!");
+				jsonObject.put("status", FAIL);
+				jsonObject.put("msg", FAIL_DESC);
+				return jsonObject;
+			}
+		}
+		
 		// 校验已经在前面异步校验了
 		// (1).从专区表中查出必要信息
 		HjhRegionVO record = this.allocationEngineService.getHjhRegionRecordByPlanNid(form.getPlanNid());
@@ -686,6 +697,7 @@ public class AllocationEngineController extends BaseController{
 			jsonObject.put("error", "此标签名称在标签列表不存在！请从标签列表选择已经存在的标签使用！");
 			jsonObject.put("status", FAIL);
 			jsonObject.put("msg", FAIL_DESC);
+			return jsonObject;
 		}
 		HjhLabelCustomizeVO  hjhLabelCustomizeVO = list.get(0);
 		//5.

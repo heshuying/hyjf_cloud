@@ -30,9 +30,8 @@ public class GroupInfoServiceImpl extends BaseServiceImpl implements GroupInfoSe
      */
     @Override
     public List<ROaDepartment> searchGroupInfo() {
-
-        ROaDepartmentExample example=new ROaDepartmentExample();
-		List<com.hyjf.am.trade.dao.model.auto.ROaDepartment> rOaDepartmentList = rOaDepartmentMapper.selectByExample(example);
-        return  CommonUtils.convertBeanList(rOaDepartmentList,ROaDepartment.class);
+        ROaDepartmentExample example = new ROaDepartmentExample();
+		List<ROaDepartment> rOaDepartmentList = rOaDepartmentMapper.selectByExample(example);
+        return rOaDepartmentList;
     }
 }
