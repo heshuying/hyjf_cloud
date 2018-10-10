@@ -1285,7 +1285,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         if (borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
             int lastDays = 0;
             String bidNid = borrow.getBorrowNid();
-            List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.selectBorrowRepayPlan(bidNid, borrow.getBorrowPeriod());
+            List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrowRecover.getRecoverPeriod());
 
             if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
                 try {
@@ -1321,8 +1321,10 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 BigDecimal interest = BeforeInterestAfterPrincipalUtils.getPerTermInterest(borrowCredit.getCreditCapital(), borrowCredit.getBidApr().divide(new BigDecimal(100)),
                         borrow.getBorrowPeriod(), borrow.getBorrowPeriod());
                 // 垫息总额=投资人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
+                logger.info("assignCapital:{}   getCreditCapital:{}  yearRate:{}  interest:{}  lastDays:{} ",assignCapital, borrowCredit.getCreditCapital(),yearRate,interest,lastDays);
                 assignInterestAdvance = BeforeInterestAfterPrincipalUtils.getAssignInterestAdvance(new BigDecimal(assignCapital), borrowCredit.getCreditCapital(), yearRate, interest,
                         new BigDecimal(lastDays + ""));
+                logger.info("assignInterestAdvance:{} ",assignInterestAdvance);
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = assignPrice.add(assignInterestAdvance);
             }

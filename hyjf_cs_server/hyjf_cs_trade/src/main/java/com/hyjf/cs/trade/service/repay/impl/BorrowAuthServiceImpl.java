@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -75,16 +76,24 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
             throw  new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
 
-        BorrowAndInfoVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         if(borrow == null){
             throw  new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
+        if(borrowInfo == null){
+            throw  new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        // 受托支付id是否存在
+        if(borrowInfo.getEntrustedUserId() == null){
+            throw  new ReturnMessageException(MsgEnum.ERR_USER_NOT_EXISTS);
         }
         // 检查标的状态, 待授权状态才可以
         if(!borrow.getStatus().equals(TradeConstant.BORROW_STATUS_WITE_AUTHORIZATION)){
             throw  new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_STATUS_ERROR);
         }
         // 受托支付用户校验
-        UserVO stzfUser=amUserClient.findUserById(borrow.getEntrustedUserId());
+        UserVO stzfUser=amUserClient.findUserById(borrowInfo.getEntrustedUserId());
         if(stzfUser == null){
             throw  new ReturnMessageException(MsgEnum.ERR_USER_NOT_EXISTS);
         }
@@ -114,11 +123,11 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
     @Override
     public Map<String,Object> callTrusteePay(String borrowNid, WebViewUserVO user) throws Exception {
         // 回调路径
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + BankCallConstant.PARAM_PRODUCTID + "=" + borrowNid;
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/autoplus/autoTenderFail?" + BankCallConstant.PARAM_PRODUCTID + "=" + borrowNid;
         // 商户后台应答地址(必须)
-        String bgRetUrl = systemConfig.getWebHost().trim() + "/web/borrowauth/auth_bgrturn";
+        String bgRetUrl = systemConfig.getWebHost().trim() + "/hyjf-web/borrowauth/auth_bgrturn";
         // 交易成功跳转链接
-        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim();
+        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/autoplus/autoTenderSuccess?";
 
         BorrowAndInfoVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
         STZHWhiteListVO whiteListVO = amTradeClient.getStzhWhiteListVO(user.getUserId(), borrow.getEntrustedUserId());
