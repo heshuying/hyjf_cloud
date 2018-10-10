@@ -73,7 +73,7 @@ public class SynBalanceController extends BaseTradeController {
             return resultBean;
         }
         //验签
-        if(SignUtil.verifyRequestSign(synBalanceRequestBean, "/synbalance")){
+        if(!SignUtil.verifyRequestSign(synBalanceRequestBean, "/synbalance")){
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
             logger.info("-------------------验签失败！--------------------");
             resultBean.setStatusDesc("验签失败！");

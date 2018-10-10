@@ -254,7 +254,7 @@ public class RedisConstants {
     /**
      * 定时发标key
      */
-    public static final String ON_TIME = "on_time:";
+    public static final String ONTIME = "ontime:";
 
     /**
      * 用户画像评分

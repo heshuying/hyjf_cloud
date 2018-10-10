@@ -54,7 +54,7 @@ public class AssetSearchController extends BaseController {
             return resultBean;
         }
 
-        if (SignUtil.verifyRequestSign(bean, "/status")) {
+        if (!SignUtil.verifyRequestSign(bean, "/status")) {
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
             logger.info("-------------------验签失败！--------------------");
             resultBean.setStatusDesc("验签失败！");
