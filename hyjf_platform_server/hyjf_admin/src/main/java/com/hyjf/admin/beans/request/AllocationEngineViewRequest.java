@@ -102,6 +102,9 @@ public class AllocationEngineViewRequest extends BaseRequest implements Serializ
 	
 	public int limit;
 	
+	@ApiModelProperty(value = "标签id(传值用)")
+	private Integer engineId;
+	
 	public int getPaginatorPage() {
 		return paginatorPage;
 	}
@@ -257,5 +260,11 @@ public class AllocationEngineViewRequest extends BaseRequest implements Serializ
 	}
 	public void setAddOrModify(String addOrModify) {
 		this.addOrModify = addOrModify;
+	}
+	public Integer getEngineId() {
+		return engineId;
+	}
+	public void setEngineId(Integer engineId) {
+		this.engineId = engineId;
 	}
 }
