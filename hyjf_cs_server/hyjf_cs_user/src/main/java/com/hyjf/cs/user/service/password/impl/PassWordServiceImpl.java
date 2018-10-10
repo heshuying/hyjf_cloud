@@ -12,7 +12,6 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
@@ -672,9 +671,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
         bean.setMobile(user.getMobile());
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+       /* LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(user.getUserId());
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
