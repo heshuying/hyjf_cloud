@@ -129,8 +129,9 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
         // 交易成功跳转链接
         String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/autoplus/autoTenderSuccess?";
 
-        BorrowAndInfoVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
-        STZHWhiteListVO whiteListVO = amTradeClient.getStzhWhiteListVO(user.getUserId(), borrow.getEntrustedUserId());
+//        BorrowAndInfoVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
+        STZHWhiteListVO whiteListVO = amTradeClient.getStzhWhiteListVO(user.getUserId(), borrowInfo.getEntrustedUserId());
         UserInfoVO userInfoVO = amUserClient.findUsersInfoById(user.getUserId());
 
         // 调用受托支付授权接口
