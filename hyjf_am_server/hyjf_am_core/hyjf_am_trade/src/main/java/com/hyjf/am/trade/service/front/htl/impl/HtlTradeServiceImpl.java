@@ -1,14 +1,14 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.htl.impl;
+package com.hyjf.am.trade.service.front.htl.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.ProductIntoRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.ProductRedeemCustomize;
-import com.hyjf.am.trade.service.htl.HtlTradeService;
+import com.hyjf.am.trade.service.front.htl.HtlTradeService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
