@@ -233,10 +233,10 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
         //todo wangjun rediskey暂时修改 后期如果有变动统一再修改
         if (borrow.getVerifyStatus() == 3) {
             //定时发标 写定时发标时间 redis 有效期10天
-            RedisUtils.set(RedisConstants.ON_TIME + borrow.getBorrowNid(), String.valueOf(borrow.getOntime()), 864000);
+            RedisUtils.set(RedisConstants.ONTIME + borrow.getBorrowNid(), String.valueOf(borrow.getOntime()), 864000);
         } else {
             //非定时发标 删redis
-            RedisUtils.del(RedisConstants.ON_TIME + borrow.getBorrowNid());
+            RedisUtils.del(RedisConstants.ONTIME + borrow.getBorrowNid());
         }
     }
 

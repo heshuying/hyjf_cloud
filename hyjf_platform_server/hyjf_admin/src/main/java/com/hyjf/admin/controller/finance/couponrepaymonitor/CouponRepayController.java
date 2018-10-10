@@ -132,6 +132,8 @@ public class CouponRepayController extends BaseController {
     public void exportAction(HttpServletResponse response,@RequestBody CouponRepayRequest form) throws UnsupportedEncodingException {
         // 表格sheet名称
         String sheetName = "优惠券还款监测";
+        form.setTimeStartSrch(null);
+        form.setTimeEndSrch(null);
         List<AdminCouponRepayMonitorCustomizeVO> resultList = this.couponRepayService.selectRecordList(form);
         String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] { "序号", "日期", "星期", "加息券待还统计", "加息券实际还款", "差额（实际-预测）"};

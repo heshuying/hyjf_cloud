@@ -453,13 +453,12 @@ public class AllocationEngineController extends BaseController{
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	// 注意 ：此 id 并非画面序号，而是计划引擎配置画面上 未显示的 计划引擎配置表主键
-	@ApiImplicitParam(name = "engineId", value = "计划引擎配置表主键", required = true, dataType = "String")
-	public AdminResult<String> labelStatusChange(HttpServletRequest request, @RequestBody String engineId) {  // 注意 ：这里的传值可以改为 form 形式
+	/*@ApiImplicitParam(name = "engineId", value = "计划引擎配置表主键", required = true, dataType = "String")*/
+	public AdminResult<String> labelStatusChange(HttpServletRequest request, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
 		// 修改状态
-		if (StringUtils.isNotEmpty(engineId)) {
-			Integer id = Integer.valueOf(engineId);
-			HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecord(id);
+		if (viewRequest.getEngineId() != null) {
+			HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecord(viewRequest.getEngineId());
 			if (vo.getLabelStatus() == 1) {//标签状态
 				vo.setLabelStatus(0);
 			} else {
