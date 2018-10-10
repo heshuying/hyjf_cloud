@@ -502,9 +502,9 @@ ORDER BY
 			FROM
 			ht_borrow hb
 			LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
-			JOIN ht_hjh_debt_credit ON credit_status IN (0, 1)
+			JOIN ht_hjh_debt_credit ON credit_status IN (0, 1) AND hb.borrow_nid = ht_hjh_debt_credit.borrow_nid
 			LEFT JOIN ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
-			AND hb.borrow_nid = ht_hjh_debt_credit.borrow_nid
+
 			WHERE
 			ht_hjh_debt_credit.plan_nid_new = #{planNid}
 			AND hb.STATUS = 4
