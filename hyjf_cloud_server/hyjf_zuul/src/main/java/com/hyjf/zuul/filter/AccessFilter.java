@@ -104,10 +104,11 @@ public class AccessFilter extends ZuulFilter {
         } else if (originalRequestPath.contains(GatewayConstant.WEB_CHANNEL)) {
             this.setUserIdByToken(request, ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
         } else if (originalRequestPath.contains(GatewayConstant.API_CHANNEL)) {
-            // api目前不能自带hyjf-api，在网关人为增加，统一访问路径
-            String modifiedRequestPath = GatewayConstant.API_VISIT_URL + originalRequestPath;
-            // 增加请求前缀识别渠道
-            ctx.put(FilterConstants.REQUEST_URI_KEY, modifiedRequestPath);
+        	// API 改成跟其它一样的方式
+//            // api目前不能自带hyjf-api，在网关人为增加，统一访问路径
+//            String modifiedRequestPath = GatewayConstant.API_VISIT_URL + originalRequestPath;
+//            // 增加请求前缀识别渠道
+//            ctx.put(FilterConstants.REQUEST_URI_KEY, modifiedRequestPath);
         } else {
             logger.error("error channel...");
             // 不对其进行路由

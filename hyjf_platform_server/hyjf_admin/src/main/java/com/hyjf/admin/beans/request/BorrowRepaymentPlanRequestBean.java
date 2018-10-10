@@ -17,7 +17,14 @@ public class BorrowRepaymentPlanRequestBean extends BaseRequest implements Seria
      * 应还日期 检索条件
      */
     private String repayLastTimeEndSrch;
-
+    /**
+     * 发布日期 检索条件
+     */
+    private String verifyTimeStartSrch;
+    /**
+     * 发布日期 检索条件
+     */
+    private String verifyTimeEndSrch;
 
     /**
      * 机构名称代号 检索条件
@@ -75,5 +82,21 @@ public class BorrowRepaymentPlanRequestBean extends BaseRequest implements Seria
 
     public void setStatusSrch(String statusSrch) {
         this.statusSrch = statusSrch;
+    }
+
+    public String getVerifyTimeStartSrch() {
+        return verifyTimeStartSrch;
+    }
+
+    public void setVerifyTimeStartSrch(String verifyTimeStartSrch) {
+        this.verifyTimeStartSrch = verifyTimeStartSrch;
+    }
+
+    public String getVerifyTimeEndSrch() {
+        return verifyTimeEndSrch;
+    }
+
+    public void setVerifyTimeEndSrch(String verifyTimeEndSrch) {
+        this.verifyTimeEndSrch = verifyTimeEndSrch;
     }
 }

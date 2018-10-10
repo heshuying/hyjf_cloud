@@ -1077,7 +1077,7 @@ public class AmUserClientImpl implements AmUserClient {
 		UserInfoRequest request = new UserInfoRequest();
 		BeanUtils.copyProperties(userInfoVO, request);
 		IntegerResponse result = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserInfoByUserInfo", request, IntegerResponse.class)
+				.postForEntity("http://AM-USER/am-user/userManager/updateUserInfoByUserInfo", request, IntegerResponse.class)
 				.getBody();
 		if (result == null || !Response.isSuccess(result)) {
 			return 0;
@@ -1088,7 +1088,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest) {
 		Integer body = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/wrb/register", wrbRegisterRequest, IntegerResponse.class)
+				.postForEntity("http://AM-USER/am-user/wrb/register", wrbRegisterRequest, IntegerResponse.class)
 				.getBody().getResultInt();
 		return body;
 	}

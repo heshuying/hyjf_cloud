@@ -32,10 +32,8 @@ public class SyncRUserServiceImpl implements SyncRUserService {
 
         String attribute = jsonObj.getString("attribute");
         String userId = jsonObj.getString("userId");
-        // String userName = jsonObj.getString("userName");
         String roleId = jsonObj.getString("roleId");
         String trueName = jsonObj.getString("trueName");
-        // String spreadUserId = jsonObj.getString("spreadUserId");
 
         if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(roleId)) {
             RUser record = new RUser();
@@ -53,7 +51,7 @@ public class SyncRUserServiceImpl implements SyncRUserService {
 
             int upRet = rUserMapper.updateByPrimaryKeySelective(record);
 
-            logger.info(userIdInt + " uid,更新userInfo " + upRet);
+            logger.info("uid:{},am_config.ht_r_user更新ht_user_info{}", userIdInt, upRet > 0 ? "成功" : "失败");
 
         }
 
@@ -62,13 +60,9 @@ public class SyncRUserServiceImpl implements SyncRUserService {
     @Override
     public void insertUser(JSONObject jsonObj) {
 
-        // String attribute = jsonObj.getString("attribute");
         String userId = jsonObj.getString("userId");
         String userName = jsonObj.getString("username");
         String mobile = jsonObj.getString("mobile");
-        // String roleId = jsonObj.getString("roleId");
-        // String trueName = jsonObj.getString("trueName");
-        // String spreadUserId = jsonObj.getString("spreadUserId");
         String userType = jsonObj.getString("userType");
 
         if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(userName)) {
@@ -86,14 +80,14 @@ public class SyncRUserServiceImpl implements SyncRUserService {
             }
             int upRet = rUserMapper.insertSelective(record);
 
-            logger.info(userIdInt + " uid,插入user " + upRet);
+            logger.info("uid:{},am_config.ht_r_user插入ht_user{}", userIdInt, upRet > 0 ? "成功" : "失败");
 
         }
 
     }
 
     /**
-     * 修改用户类型
+     * 修改用户类型和手机号
      * @param jsonObj
      * @author wgx
      * @date 2018/10/08
@@ -102,25 +96,27 @@ public class SyncRUserServiceImpl implements SyncRUserService {
     public void updateUser(JSONObject jsonObj) {
         String userId = jsonObj.getString("userId");
         String userType = jsonObj.getString("userType");
-        if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(userType)) {
+        String mobile = jsonObj.getString("mobile");
+        if (StringUtils.isNotBlank(userId) && (StringUtils.isNotBlank(userType) || StringUtils.isNotBlank(mobile))) {
             RUser record = new RUser();
             int userIdInt = Integer.parseInt(userId);
             record.setUserId(userIdInt);
-            int userTypeInt = Integer.parseInt(userType);
-            record.setUserType(userTypeInt);
+            if(StringUtils.isNotBlank(mobile)) {
+                record.setMobile(mobile);
+            }
+            if(StringUtils.isNotBlank(userType)){
+                int userTypeInt = Integer.parseInt(userType);
+                record.setUserType(userTypeInt);
+            }
             int upRet = rUserMapper.updateByPrimaryKeySelective(record);
-            logger.info("{} uid,更新user {}", userIdInt, upRet);
+            logger.info("uid:{},am_config.ht_r_user更新ht_user{}", userIdInt, upRet > 0 ? "成功" : "失败");
         }
     }
 
     @Override
     public void updateSpreadUser(JSONObject jsonObj) {
 
-        // String attribute = jsonObj.getString("attribute");
         String userId = jsonObj.getString("userId");
-        // String userName = jsonObj.getString("userName");
-        // String roleId = jsonObj.getString("roleId");
-        // String trueName = jsonObj.getString("trueName");
         String spreadUserId = jsonObj.getString("spreadsUserId");
 
         if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(spreadUserId)) {
@@ -134,7 +130,7 @@ public class SyncRUserServiceImpl implements SyncRUserService {
 
             int upRet = rUserMapper.updateByPrimaryKeySelective(record);
 
-            logger.info(userIdInt + " uid,更新SpreadsUser " + upRet);
+            logger.info("uid:{},am_config.ht_r_user更新ht_spreads_user{}", userIdInt, upRet > 0 ? "成功" : "失败");
 
         }
 
