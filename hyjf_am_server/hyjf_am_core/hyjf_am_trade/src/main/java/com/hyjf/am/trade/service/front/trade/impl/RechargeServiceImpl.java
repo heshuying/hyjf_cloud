@@ -84,37 +84,42 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 
 	@Override
 	public int insertSelective(BankRequest bankRequest){
-		String cardNo = bankRequest.getCardNo();
-		BigDecimal money = new BigDecimal(bankRequest.getTxAmount());
-		AccountRecharge record = new AccountRecharge();
-		record.setNid(bankRequest.getLogOrderId());
-		record.setUserId(Integer.parseInt(bankRequest.getLogUserId()));
-		record.setUsername(bankRequest.getLogUserName());
-		record.setTxDate(Integer.parseInt(bankRequest.getTxDate()));
-		record.setTxTime(Integer.parseInt(bankRequest.getTxTime()));
-		record.setSeqNo(Integer.parseInt(bankRequest.getSeqNo()));
-		record.setBankSeqNo(bankRequest.getTxDate() + bankRequest.getTxTime() + bankRequest.getSeqNo());
-		// 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
-		record.setStatus(RECHARGE_STATUS_WAIT);
-		record.setAccountId(bankRequest.getAccountId());
-		record.setMoney(money);
-		record.setCardid(cardNo);
-		record.setFee(BigDecimal.ZERO);
-		// 实际到账余额
-		record.setBalance(money);
-		record.setPayment(bankRequest == null ? "" : bankRequest.getBank());
-		record.setGateType("QP");
-		// 类型.1网上充值.0线下充值
-		record.setType(1);
-		record.setRemark("快捷充值");
-		record.setOperator(bankRequest.getLogUserId());
-		record.setAddIp(bankRequest.getUserIP());
-		// 0pc
-		record.setClient(bankRequest.getLogClient());
-		// 资金托管平台 0:汇付,1:江西银行
-		record.setIsBank(1);
-		// 插入用户充值记录表
-		return this.accountRechargeMapper.insertSelective(record);
+		if(bankRequest != null){
+			String cardNo = bankRequest.getCardNo();
+			BigDecimal money = new BigDecimal(bankRequest.getTxAmount());
+			AccountRecharge record = new AccountRecharge();
+			record.setNid(bankRequest.getLogOrderId());
+			record.setUserId(Integer.parseInt(bankRequest.getLogUserId()));
+			record.setUsername(bankRequest.getLogUserName());
+			record.setTxDate(Integer.parseInt(bankRequest.getTxDate()));
+			record.setTxTime(Integer.parseInt(bankRequest.getTxTime()));
+			record.setSeqNo(Integer.parseInt(bankRequest.getSeqNo()));
+			record.setBankSeqNo(bankRequest.getTxDate() + bankRequest.getTxTime() + bankRequest.getSeqNo());
+			// 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
+			record.setStatus(RECHARGE_STATUS_WAIT);
+			record.setAccountId(bankRequest.getAccountId());
+			record.setMoney(money);
+			record.setCardid(cardNo);
+			record.setFee(BigDecimal.ZERO);
+			// 实际到账余额
+			record.setBalance(money);
+			record.setPayment(null == bankRequest.getBank() ? "" : bankRequest.getBank());
+			record.setGateType("QP");
+			// 类型.1网上充值.0线下充值
+			record.setType(1);
+			record.setRemark("快捷充值");
+			record.setOperator(bankRequest.getLogUserId());
+			record.setAddIp(bankRequest.getUserIP());
+			// 0pc
+			record.setClient(bankRequest.getLogClient());
+			// 资金托管平台 0:汇付,1:江西银行
+			record.setIsBank(1);
+			// 插入用户充值记录表
+			return this.accountRechargeMapper.insertSelective(record);
+		}else{
+			return 0;
+		}
+
 	}
 
 	/**
