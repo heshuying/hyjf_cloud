@@ -64,8 +64,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
      */
     @Override
     public List<PushMoneyCustomize> selectPushMoneyList(PushMoneyRequest request) {
-        List<PushMoneyCustomize> listRecord = pushMoneyCustomizeMapper.queryPushMoneyList(request);
-        return listRecord;
+        return pushMoneyCustomizeMapper.queryPushMoneyList(request);
     }
 
     /**
@@ -75,8 +74,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
      */
     @Override
     public int countPushMoney(PushMoneyRequest request) {
-        Integer integerCount = pushMoneyCustomizeMapper.queryPushMoneyCount(request);
-        return integerCount.intValue();
+        return pushMoneyCustomizeMapper.queryPushMoneyCount(request);
     }
 
     /**
@@ -87,8 +85,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
      */
     @Override
     public int getPushMoneyListCount(PushMoneyRequest request) {
-        Integer integerCount = pushMoneyCustomizeMapper.queryPushMoneyDetailCount(request);
-        return integerCount.intValue();
+        return pushMoneyCustomizeMapper.queryPushMoneyDetailCount(request);
     }
 
     /**
@@ -99,8 +96,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
      */
     @Override
     public List<PushMoneyCustomize> searchPushMoneyList(PushMoneyRequest request) {
-        List<PushMoneyCustomize> listRecord = pushMoneyCustomizeMapper.queryPushMoneyDetail(request);
-        return listRecord;
+        return pushMoneyCustomizeMapper.queryPushMoneyDetail(request);
     }
 
     /**
@@ -111,8 +107,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
      */
     @Override
     public Map<String,Object> queryPushMoneyTotle(PushMoneyRequest request) {
-        Map<String,Object> result = pushMoneyCustomizeMapper.queryPushMoneyTotle(request);
-        return result;
+        return pushMoneyCustomizeMapper.queryPushMoneyTotle(request);
     }
 
     @Override

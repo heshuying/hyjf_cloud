@@ -132,7 +132,7 @@ public interface HjhPlanCustomizeMapper {
      * @param params
      * @return
      */
-    Integer selectPlanAccedeSum(Map<String,Object> params);
+    Long selectPlanAccedeSum(Map<String,Object> params);
 
     /**
      * 查询相应的计划的加入明细

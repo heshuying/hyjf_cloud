@@ -258,7 +258,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 // 包装资产信息
                 HjhPlanAssetVO record = new HjhPlanAssetVO();
                 // 信批需求新增字段属于选填(string)不加校验
-                BeanUtils.copyProperties(record, pushBean);
+                BeanUtils.copyProperties(pushBean, record);
                 // 性别,如果没传，用身份证的
                 String idCard = pushBean.getIdcard();
                 // 性别
@@ -655,7 +655,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 // 包装资产信息
                 HjhPlanAssetVO record = new HjhPlanAssetVO();
                 // 信批需求新增字段属于选填(string)不加校验
-                org.apache.commons.beanutils.BeanUtils.copyProperties(record, pushBean);
+                BeanUtils.copyProperties(pushBean, record);
                 // 状态
                 record.setVerifyStatus(1);// 默认审核通过
                 record.setStatus(0);
