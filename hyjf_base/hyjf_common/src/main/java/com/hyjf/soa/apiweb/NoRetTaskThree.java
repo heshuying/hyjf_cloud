@@ -31,7 +31,7 @@ public class NoRetTaskThree implements Runnable {
 	                break;
 	            }else if(i-2!=0){
 					logger.info("调用接口失败,url:["+requestUrl+"] , 参数:["+params.toString()+"] .循环次数："+(i+2));
-	                Thread.sleep(((i+1)*30)*1000);
+	                Thread.sleep(((i+1)*30)*1000L);
 	            }
             }
         } catch (Exception e) {

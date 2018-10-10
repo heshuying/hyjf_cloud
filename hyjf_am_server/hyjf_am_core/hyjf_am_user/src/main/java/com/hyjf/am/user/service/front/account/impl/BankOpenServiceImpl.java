@@ -118,20 +118,22 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         String userName = user.getUsername();
         logger.info("用户ID:" + userId + "],用户名:[" + userName + "],用户身份证号:[" + idNo + "]");
         // 根据身份证号获取用户相关信息
-        if (idNo != null && idNo.length() < 18) {
+        String birthDayTemp = "";
+        int sexInt = 1;
+        if (null !=idNo && idNo.length() < 18) {
             try {
                 idNo = IdCard15To18.getEighteenIDCard(idNo);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+             sexInt = Integer.parseInt(idNo.substring(16, 17));
+            if (sexInt % 2 == 0) {
+                sexInt = 2;
+            } else {
+                sexInt = 1;
+            }
+            birthDayTemp = idNo.substring(6, 14);
         }
-        int sexInt = Integer.parseInt(idNo.substring(16, 17));
-        if (sexInt % 2 == 0) {
-            sexInt = 2;
-        } else {
-            sexInt = 1;
-        }
-        String birthDayTemp = idNo.substring(6, 14);
         String birthDay = StringUtils.substring(birthDayTemp, 0, 4) + "-" + StringUtils.substring(birthDayTemp, 4, 6) + "-" + StringUtils.substring(birthDayTemp, 6, 8);
         user.setBankOpenAccount(1);
         user.setBankAccountEsb(bankAccountEsb);
