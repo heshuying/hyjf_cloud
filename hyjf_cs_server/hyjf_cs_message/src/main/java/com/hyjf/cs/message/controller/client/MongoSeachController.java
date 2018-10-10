@@ -202,7 +202,6 @@ public class MongoSeachController extends BaseController {
 
     @RequestMapping(value = "/queryWebCount")
     public AccountWebListResponse queryWebList(@RequestBody AccountWebListVO accountWebList) {
-        logger.info("pageSize...:"+accountWebList.getPageSize());
         AccountWebListResponse response = new AccountWebListResponse();
         int recordTotal = (int) accountWebListDao.queryWebCount(accountWebList);
         if (recordTotal > 0) {
