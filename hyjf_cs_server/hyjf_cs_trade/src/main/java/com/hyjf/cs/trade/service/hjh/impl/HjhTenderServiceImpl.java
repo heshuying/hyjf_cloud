@@ -34,6 +34,7 @@ import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.coupon.AppCouponService;
@@ -82,6 +83,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     private HjhCouponTenderProducer hjhCouponTenderProducer;
     @Autowired
     private AppCouponService appCouponService;
+    @Autowired
+    private CalculateInvestInterestProducer calculateInvestInterestProducer;
 
 
     /**
@@ -926,6 +929,22 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     RabbitMQConstants.ROUTINGKEY_POSTINTERFACE_CRM, JSON.toJSONString(planAccede));*/
             // 更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始
             this.updateUtm(request, plan);
+
+            // 网站累计投资追加
+            // 投资、收益统计表
+            JSONObject params = new JSONObject();
+            params.put("tenderSum", accountDecimal);
+            params.put("nowTime", GetDate.getDate(GetDate.getNowTime10()));
+            // 投资修改mongodb运营数据
+            params.put("type", 3);
+            params.put("money", accountDecimal);
+            try {
+                // 网站累计投资追加
+                // 投资修改mongodb运营数据
+                calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            } catch (MQException e) {
+                e.printStackTrace();
+            }
         }
         // 优惠券投资开始
         Integer couponGrantId = request.getCouponGrantId();
