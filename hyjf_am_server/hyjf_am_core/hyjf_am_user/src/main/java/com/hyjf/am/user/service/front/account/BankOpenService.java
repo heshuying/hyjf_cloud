@@ -32,7 +32,7 @@ public interface BankOpenService extends BaseService {
 	void updateUserAccountLog(Integer userId, String logOrderId, int status , String retCode , String retMsg);
 
 
-	boolean updateUserAccount(Integer userId, String trueName, String orderId, String accountId, String idNo, Integer bankAccountEsb, String mobile, Integer roleId);
+	boolean updateUserAccount(Integer userId, String trueName, String orderId, String accountId, String idNo, Integer bankAccountEsb, String mobile, Integer roleId,Integer isSetPassword);
 
 
 	UserInfo findUserInfoByCradId(String cardNo);
