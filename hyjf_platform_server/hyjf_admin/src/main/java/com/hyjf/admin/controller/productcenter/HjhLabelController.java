@@ -516,23 +516,28 @@ public class HjhLabelController extends BaseController{
 			if (list != null && list.size() > 0) {
 				HjhLabelCustomizeVO resultVO = list.get(0);
 				// 前面的入力校验已经校验了 labelName 的 非空
-				// 此处校验：如果info里面将要修改的标签名称与DB既存的标签名称一致，则不需要再修改，报消息
-				if(resultVO.getLabelName().trim().equals(viewRequest.getLabelName())){
-					jsonObject.put("errorMsg", "标签名称已存在!");
-				} else {
-					// 用info的修改后信息去修改标签表
+				// 如果 传过来的标签名跟DB的标签不一致,也就是修改了标签名称了，则要看这个而修改后的标签名称是否已存在
+				if(!resultVO.getLabelName().trim().equals(viewRequest.getLabelName())){
+					hjhLabelRequest.setLabelNameSrch(viewRequest.getLabelName());
+					List<HjhLabelCustomizeVO> alist = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
+					if(alist.size() > 0){
+						// 说明修改后的标签名已经在标签中存在
+						jsonObject.put("errorMsg", "标签名称已存在!");
+						return jsonObject;
+					}
+				} 
+				// 用info的修改后信息去修改标签表
+				infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
+				int flg = this.labelService.updateHjhLabelRecord(infoRequest);
+				if(flg > 0){
+					// 通过传入的标签id和标签名称查出一条引擎表的记录
 					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
-					int flg = this.labelService.updateHjhLabelRecord(infoRequest);
-					if(flg > 0){
-						// 通过传入的标签id和标签名称查出一条引擎表的记录
-						infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
-						// 传入标签id 和 标签名称 进  infoRequest
-						int allocation = this.labelService.updateAllocationRecord(infoRequest);
-						if(allocation > 0){
-							jsonObject.put("status", SUCCESS);
-						} else {
-							jsonObject.put("status", FAIL);
-						}
+					// 传入标签id 和 标签名称 进  infoRequest
+					int allocation = this.labelService.updateAllocationRecord(infoRequest);
+					if(allocation > 0){
+						jsonObject.put("status", SUCCESS);
+					} else {
+						jsonObject.put("status", FAIL);
 					}
 				}
 			}
