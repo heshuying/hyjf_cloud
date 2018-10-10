@@ -80,9 +80,9 @@ public class GetDate extends PropertyEditorSupport {
 	public static final SimpleDateFormat datesdf = new SimpleDateFormat(datesdf_key);
 
 	// 以毫秒表示的时间
-	private static final long DAY_IN_MILLIS = 24 * 3600 * 1000;
-	private static final long HOUR_IN_MILLIS = 3600 * 1000;
-	private static final long MINUTE_IN_MILLIS = 60 * 1000;
+	private static final long DAY_IN_MILLIS = (long) 24 * 3600 * 1000;
+	private static final long HOUR_IN_MILLIS = (long) 3600 * 1000;
+	private static final long MINUTE_IN_MILLIS = (long) 60 * 1000;
 	private static final long SECOND_IN_MILLIS = 1000;
 
 	/**
@@ -397,7 +397,8 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static Timestamp str2Timestamp(String str) {
-		Date date = str2Date(str, getDateFormat(date_sdf_key));
+		Date date = new Date();
+		date = str2Date(str, getDateFormat(date_sdf_key));
 		return new Timestamp(date.getTime());
 	}
 
@@ -431,9 +432,6 @@ public class GetDate extends PropertyEditorSupport {
 	 */
 	public static String date2Str(SimpleDateFormat date_sdf) {
 		Date date = getDate();
-		if (null == date) {
-			return null;
-		}
 		return date_sdf.format(date);
 	}
 
@@ -1177,7 +1175,7 @@ public class GetDate extends PropertyEditorSupport {
 	public static int getDayStart11(Date date){
 		String dayStartString = getDateFormat(date_sdf_key).format(date) + " 00:00:00";
 		SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date2 = null;
+		Date date2 = new Date();
 		try{
 			date2 = d.parse(dayStartString);
 		} catch (ParseException e) {
@@ -1199,7 +1197,7 @@ public class GetDate extends PropertyEditorSupport {
    public static int getDayStart10(String date){
         String dayStartString = date + " 00:00:00";
         SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date2 = null;
+        Date date2 = new Date();
         try{
             date2 = d.parse(dayStartString);
         } catch (ParseException e) {
@@ -1241,7 +1239,7 @@ public class GetDate extends PropertyEditorSupport {
    public static int getDayEnd10(String date){
        String dayStartString = date + " 23:59:59";
        SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-       Date date2 = null;
+       Date date2 = new Date();
        try{
            date2 = d.parse(dayStartString);
        } catch (ParseException e) {
@@ -1275,7 +1273,7 @@ public class GetDate extends PropertyEditorSupport {
    public static int getDayEnd10(Date date){
         String dayStartString = getDateFormat(date_sdf_key).format(date) + " 23:59:59";
         SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date2 = null;
+        Date date2 = new Date();
         try{
             date2 = d.parse(dayStartString);
         } catch (ParseException e) {

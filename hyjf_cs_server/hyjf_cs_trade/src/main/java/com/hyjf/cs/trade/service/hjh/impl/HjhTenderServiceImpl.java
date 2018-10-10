@@ -274,9 +274,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         String planNid = tender.getBorrowNid();
         AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
         if (StringUtils.isNotBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) > 0) {
-            // mod by nxl 智投服务 修改 确认加入->确认授权
-//            resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
-            resultVo.setButtonWord("确认授权" + CommonUtils.formatAmount(null, money) + "元");
+            resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
         }else if(StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0){
             resultVo.setButtonWord("确认");
         }
@@ -507,12 +505,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
-        String key = RedisConstants.HJH_TENDER_REPEAT + userId;
-        boolean checkTender = RedisUtils.tranactionSet(key, RedisConstants.TENDER_OUT_TIME);
-        if (!checkTender) {
-            // 用户正在投资
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
-        }
+
         if (StringUtils.isEmpty(request.getBorrowNid())) {
             // 项目编号不能为空
             throw new CheckException(MsgEnum.STATUS_CE000013);

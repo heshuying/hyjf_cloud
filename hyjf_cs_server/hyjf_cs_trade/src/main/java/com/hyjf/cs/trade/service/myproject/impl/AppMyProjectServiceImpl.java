@@ -845,7 +845,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	    // 总收入,
 	    borrowCredit.setCreditIncome(creditCreateMap.get("assignPay"));
 	    // 服务费
-	    borrowCredit.setCreditFee(creditCreateMap.get("assignPay").multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
+	    borrowCredit.setCreditFee(creditCreateMap.get("assignPay").multiply(BigDecimal.valueOf(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
 	    // 出让价格
 	    borrowCredit.setCreditPrice(creditCreateMap.get("creditPrice"));
 	    // 已认购本金

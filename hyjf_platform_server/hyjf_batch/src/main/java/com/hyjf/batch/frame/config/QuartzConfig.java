@@ -53,7 +53,6 @@ public class QuartzConfig {
 		prop.put("quartz.scheduler.instanceName", "ServerScheduler");
 		prop.put("org.quartz.scheduler.instanceId", "AUTO");
 		prop.put("org.quartz.scheduler.skipUpdateCheck", "true");
-		prop.put("org.quartz.scheduler.instanceId", "NON_CLUSTERED");
 		prop.put("org.quartz.scheduler.jobFactory.class", "org.quartz.simpl.SimpleJobFactory");
 		prop.put("org.quartz.jobStore.class", "org.quartz.impl.jdbcjobstore.JobStoreTX");
 		prop.put("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");

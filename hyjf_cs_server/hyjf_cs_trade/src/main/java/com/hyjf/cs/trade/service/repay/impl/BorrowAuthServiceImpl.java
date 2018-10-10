@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -75,16 +76,24 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
             throw  new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
 
-        BorrowAndInfoVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         if(borrow == null){
             throw  new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
+        if(borrowInfo == null){
+            throw  new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        // 受托支付id是否存在
+        if(borrowInfo.getEntrustedUserId() == null){
+            throw  new ReturnMessageException(MsgEnum.ERR_USER_NOT_EXISTS);
         }
         // 检查标的状态, 待授权状态才可以
         if(!borrow.getStatus().equals(TradeConstant.BORROW_STATUS_WITE_AUTHORIZATION)){
             throw  new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_STATUS_ERROR);
         }
         // 受托支付用户校验
-        UserVO stzfUser=amUserClient.findUserById(borrow.getEntrustedUserId());
+        UserVO stzfUser=amUserClient.findUserById(borrowInfo.getEntrustedUserId());
         if(stzfUser == null){
             throw  new ReturnMessageException(MsgEnum.ERR_USER_NOT_EXISTS);
         }
