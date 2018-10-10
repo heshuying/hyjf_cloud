@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.admin.trade;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AssetDetailCustomizeResponse;
 import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
@@ -12,12 +13,14 @@ import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * @author libin
@@ -62,6 +65,27 @@ public class AdminAssetListController extends BaseController {
 		}
 		return response;
 	}
+	
+	
+	/**
+	 * @Author: libin
+	 * @Desc :根据条件查询资产列表不分页
+	 */
+	@RequestMapping(value = "/findAssetListWithoutPage", method = RequestMethod.POST)
+	public AssetListCustomizeResponse findAssetListWithoutPage(@RequestBody @Valid AssetListRequest request){
+		AssetListCustomizeResponse response = new AssetListCustomizeResponse();
+		Map<String, Object> mapParam = paramSet(request);
+		List<AssetListCustomizeVO> assetList = assetListService.findAssetListWithoutPage(mapParam);
+        if(assetList.size() > 0){
+            if (!CollectionUtils.isEmpty(assetList)) {
+                response.setResultList(assetList);
+                //代表成功
+                response.setRtn(Response.SUCCESS);
+            }
+        }
+        return response;
+	}
+	
 	/**
 	 * @Author: libin
 	 * @Desc :根据条件查询详情

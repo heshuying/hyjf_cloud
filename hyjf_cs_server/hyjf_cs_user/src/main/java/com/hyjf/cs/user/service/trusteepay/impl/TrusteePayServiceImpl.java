@@ -10,6 +10,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.TrusteePayRequestBean;
 import com.hyjf.cs.user.bean.TrusteePayResultBean;
@@ -60,8 +61,8 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
             return modelAndView;
         }
 
-        // 验签  暂时去掉验签
-        if (!SignUtil.verifyRequestSign(payRequestBean, "/server/trusteePay/page")) {
+        // 验签
+        if (!SignUtil.verifyRequestSign(payRequestBean, BaseDefine.METHOD_SERVER_TRUSTEE_PAY)) {
             getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002);
             payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000002, "验签失败"));
             logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
