@@ -48,6 +48,7 @@ public class MessagePushHistoryController {
                 List<MessagePushMsgHistoryVO> voList = CommonUtils.convertBeanList(list,
                         MessagePushMsgHistoryVO.class);
                 response.setResultList(voList);
+                response.setRecordTotal(count);
             }
         }
         return response;
