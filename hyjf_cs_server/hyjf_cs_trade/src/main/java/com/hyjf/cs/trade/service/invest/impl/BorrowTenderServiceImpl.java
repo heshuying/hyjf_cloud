@@ -45,6 +45,7 @@ import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -1491,10 +1492,28 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (!checkTender) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_HANDING);
         }
-        // 操作数据库表
-        this.borrowTender(borrow, bean);
         // redis扣减
         redisTender(userId, borrowNid, txAmount);
+        // 操作数据库表
+        try{
+            this.borrowTender(borrow, bean);
+        }catch (Exception e){
+            // 回滚redis
+            logger.error("标的投资异常  开始回滚redis  userId:{}   borrowNid:{}",userId, borrowNid);
+            redisRecover(borrowNid,userId,txAmount);
+            logger.info("标的投资异常  结束回滚redis ");
+            // 投资失败,投资撤销
+            try {
+                boolean flag = bidCancel(userId, borrow.getBorrowNid(), bean.getOrderId(), txAmount);
+                if (!flag) {
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
+                }
+            } catch (Exception ee) {
+                logger.error("投标失败,请联系客服人员!userid:{} borrownid:{}  ordid:{}",userId, borrow.getBorrowNid(), bean.getOrderId());
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
+            }
+            throw e;
+        }
         logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
         // 如果用了优惠券
         if (StringUtils.isNotEmpty(couponGrantId) && !"0".equals(couponGrantId) && !"-1".equals(couponGrantId)) {
@@ -1522,6 +1541,130 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 投资撤销
+     * @param investUserId
+     * @param productId
+     * @param orgOrderId
+     * @param txAmount
+     * @return
+     * @throws Exception
+     */
+    public boolean bidCancel(int investUserId, String productId, String orgOrderId, String txAmount) throws Exception {
+        // 投资人的账户信息
+        AccountVO outCust = this.getAccountByUserId(investUserId);
+        if (outCust == null) {
+            throw new Exception("投资人未开户。[投资人ID：" + investUserId + "]，" + "[投资订单号：" + orgOrderId + "]");
+        }
+        String tenderAccountId = outCust.getAccountId();
+        logger.info("开始调用投资撤销接口  investUserId:{}  tenderAccountId:{}  productId:{}  orgOrderId:{}  txAmount:{} ",investUserId, tenderAccountId, productId, orgOrderId, txAmount);
+        // 调用交易查询接口(投资撤销)
+        BankCallBean queryTransStatBean = bankBidCancel(investUserId, tenderAccountId, productId, orgOrderId, txAmount);
+        if (queryTransStatBean == null) {
+            logger.error("调用投标申请撤销失败。" + ",[投资订单号：" + orgOrderId + "]");
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_HANDING);
+        } else {
+            String queryRespCode = queryTransStatBean.getRetCode();
+            logger.info("投资失败交易接口查询接口返回码：" + queryRespCode+ ",[投资订单号：" + orgOrderId + "]");
+            // 调用接口失败时(000以外)
+            if (!BankCallConstant.RESPCODE_SUCCESS.equals(queryRespCode)) {
+                String message = queryTransStatBean.getRetMsg();
+                logger.error(this.getClass().getName(), "bidCancel", "调用交易查询接口(解冻)失败。" + message + ",[投资订单号：" + orgOrderId + "]", null);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_HANDING);
+            } else if (queryRespCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST1) || queryRespCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST2)) {
+                logger.info("===============冻结记录不存在,不予处理========");
+                amTradeClient.deleteBorrowTenderTmp(orgOrderId);
+                return true;
+            } else if (queryRespCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_RIGHT)) {
+                logger.info("===============只能撤销投标状态为投标中的标的============");
+                return false;
+            } else {
+                amTradeClient.deleteBorrowTenderTmp(orgOrderId);
+                return true;
+            }
+        }
+    }
+
+    /**
+     * 投标失败后,调用投资撤销接口
+     * @param investUserId
+     * @param investUserAccountId
+     * @param productId
+     * @param orgOrderId
+     * @param txAmount
+     * @return
+     */
+    private BankCallBean bankBidCancel(Integer investUserId, String investUserAccountId, String productId,
+                                   String orgOrderId, String txAmount) {
+        String methodName = "bidCancel";
+        // 调用汇付接口(交易状态查询)
+        BankCallBean bean = new BankCallBean();
+        String orderId = GetOrderIdUtils.getOrderId2(investUserId);
+        String bankCode = systemConfig.getBankBankcode();
+        String instCode = systemConfig.getBankInstcode();
+        AccountVO investUser = this.getAccountByUserId(investUserId);
+        bean.setVersion(BankCallConstant.VERSION_10); // 版本号(必须)
+        bean.setTxCode(BankCallMethodConstant.TXCODE_BID_CANCEL); // 交易代码
+        bean.setInstCode(instCode);
+        bean.setBankCode(bankCode);
+        bean.setTxDate(GetOrderIdUtils.getTxDate());// 交易日期
+        bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6)); // 交易流水号
+        bean.setChannel(BankCallConstant.CHANNEL_PC); // 交易渠道
+        bean.setAccountId(investUserAccountId);// 电子账号
+        bean.setOrderId(orderId); // 订单号(必须)
+        bean.setTxAmount(CustomUtil.formatAmount(txAmount));// 交易金额
+        bean.setProductId(productId);// 标的号
+        bean.setOrgOrderId(orgOrderId);// 原标的订单号
+        bean.setLogOrderId(orderId);// 订单号
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单日期
+        bean.setLogUserId(String.valueOf(investUserId));// 用户Id
+        bean.setLogUserName(investUser == null ? "" : investUser.getUserName()); // 用户名
+        bean.setLogRemark("投标申请撤销"); // 备注
+        // 调用银行接口
+        BankCallBean chinapnrBean = BankCallUtils.callApiBg(bean);
+        if (chinapnrBean == null) {
+            logger.error(this.getClass().getName(), methodName, new Exception("调用交易状态查询接口失败![参数：" + bean.getAllParams() + "]"));
+            return null;
+        }
+        return chinapnrBean;
+    }
+
+    /**
+     * 回滚redis
+     * @param borrowNid
+     * @param userId
+     * @param account
+     * @return
+     */
+    private boolean redisRecover(String borrowNid, Integer userId, String account) {
+        JedisPool pool = RedisUtils.getPool();
+        Jedis jedis = pool.getResource();
+        BigDecimal accountBigDecimal = new BigDecimal(account);
+        while ("OK".equals(jedis.watch(borrowNid))) {
+            String balanceLast = RedisUtils.get(borrowNid);
+            if (StringUtils.isNotBlank(balanceLast)) {
+                logger.info("PC用户:" + userId + "***redis剩余金额：" + balanceLast);
+                BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
+                Transaction transaction = jedis.multi();
+                transaction.set(borrowNid, recoverAccount.toString());
+                List<Object> result = transaction.exec();
+                if (result == null || result.isEmpty()) {
+                    jedis.unwatch();
+                } else {
+                    String ret = (String) result.get(0);
+                    if (ret != null && ret.equals("OK")) {
+                        logger.info("用户:" + userId + "*******from redis恢复redis：" + account);
+                        return true;
+                    } else {
+                        jedis.unwatch();
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -1656,6 +1799,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             } catch (MQException e) {
                 e.printStackTrace();
             }
+        }else{
+            logger.error("投资失败  对象:{}",JSONObject.toJSONString(tenderBg));
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
         }
     }
 
