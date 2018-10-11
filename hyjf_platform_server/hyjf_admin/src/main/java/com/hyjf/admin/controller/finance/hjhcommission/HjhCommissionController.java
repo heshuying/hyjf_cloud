@@ -142,12 +142,15 @@ public class HjhCommissionController extends BaseController{
 		HjhCommissionResponse response = hjhCommissionService.selecthjhCommissionTotal(form);
 		if(response == null) {
 			jsonObject.put("error", FAIL);
+			return jsonObject;
 		}
 		if (!Response.isSuccess(response)) {
 			jsonObject.put("error", FAIL);
+			return jsonObject;
 		}
 		if(response.getTotalMap().isEmpty()){
 			jsonObject.put("error", FAIL);
+			return jsonObject;
 		}
 		jsonObject.put("totalMap", response.getTotalMap());
 		jsonObject.put("status", SUCCESS);
