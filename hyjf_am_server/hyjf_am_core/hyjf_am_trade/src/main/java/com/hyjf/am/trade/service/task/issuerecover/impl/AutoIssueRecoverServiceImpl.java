@@ -767,6 +767,9 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrowInfo.setInstCode(hjhPlanAsset.getInstCode());
         borrowInfo.setAssetType(hjhAssetBorrowType.getAssetType());
 
+        borrowInfo.setAccountContents("");
+
+
         // 受托支付
         if (hjhPlanAsset.getEntrustedFlg() != null && hjhPlanAsset.getEntrustedFlg().intValue() ==1) {
             borrowInfo.setEntrustedFlg(1);
@@ -934,6 +937,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrow.setBorrowUserName(hjhPlanAsset.getUserName());
 
         borrow.setBorrowEndTime("");
+        borrow.setRepayLastTime(0);
+
         // 项目申请人
 //		String applicant = hjhAssetBorrowType.getApplicant();
 

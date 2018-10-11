@@ -288,7 +288,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @return
 	 */
 	private User getRefferUsers(String mobile, String reffer) {
-		List<User> recommends = null;
+		List<User> recommends = new ArrayList<User>();
 		// 以下语句用来设置用户有无主单开始 2015年12月30日18:28:34 孙亮
 		// 1.注册成功时，推荐人关联
 		// B1、用户在注册时，没有填写推荐人，也没有预注册，或预注册时没有关联推荐人，则推荐人为空；
@@ -324,7 +324,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 			recommends = userMapper.selectByExample(exampleUser);
 		}
-		if (!CollectionUtils.isEmpty(recommends)) {
+		if (recommends!= null && !CollectionUtils.isEmpty(recommends)) {
 			return recommends.get(0);
 		}
 		return null;

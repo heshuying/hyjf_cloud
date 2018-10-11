@@ -342,7 +342,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         accountList.setRemark(request.getBorrowNid());
         accountList.setBankBalance(accedeAccount.getBankBalance());//江西银行账户余额
         accountList.setPlanBalance(accedeAccount.getPlanBalance());//汇计划账户可用余额
-        accountList.setBalance(accedeAccount.getBalance().subtract(accountDecimal));
+        accountList.setBalance(accedeAccount.getBalance());
         //accountList.setInterest(new BigDecimal(0));
         accountList.setAwait(accedeAccount.getAwait());
         accountList.setPlanFrost(accedeAccount.getPlanFrost());
@@ -359,7 +359,6 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         planUpdate.put("earnings", request.getEarnings());
         // 更新计划表
         boolean updateBorrowAccountFlag = hjhPlanCustomizeMapper.updateByDebtPlanId(planUpdate) > 0 ? true : false;
-        // TODO: 2018/6/22  更新  平台累积投资   开始
         /*(5)更新  平台累积投资   开始*/
        /* List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
         if (calculates != null && calculates.size() > 0) {

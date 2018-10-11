@@ -97,6 +97,7 @@ public class UserPortraitManagerController extends BaseController {
      */
     @RequestMapping("/selectUserPortraitByUserId/{userId}")
     public UserPortraitResponse userId(@PathVariable String userId) {
+        logger.info("---selectUserPortraitByUserId by userId---  " + userId);
         if (StringUtils.isNotBlank(userId)) {
             int intUserId = Integer.parseInt(userId);
             UserPortrait userPortrait = userPortraitManagerService.selectUsersPortraitByUserId(intUserId);
