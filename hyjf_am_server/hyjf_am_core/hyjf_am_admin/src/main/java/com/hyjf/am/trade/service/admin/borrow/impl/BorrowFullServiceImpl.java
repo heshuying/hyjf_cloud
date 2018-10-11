@@ -21,7 +21,6 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -137,7 +136,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
         // 标的编号
         String borrowNid = borrowFullRequest.getBorrowNidSrch();
         // 标的
-        Borrow borrow = getBorrowByBorrowNid(borrowNid);
+        Borrow borrow = getBorrow(borrowNid);
         // 借款人userId
         Integer borrowUserId = borrow.getUserId();
         // 借款人用户名
@@ -190,9 +189,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
 //                borrow.setBorrowSuccessTime(nowTime);
                 // 更新时间
                 borrow.setUpdatetime(GetDate.getNowTime());
-                Borrow updateBorrow = new Borrow();
-                BeanUtils.copyProperties(borrow, updateBorrow);
-                boolean borrowUpdateFlag = this.borrowMapper.updateByExampleSelective(updateBorrow, borrowExample) > 0 ? true : false;
+                boolean borrowUpdateFlag = this.borrowMapper.updateByExampleSelective(borrow, borrowExample) > 0 ? true : false;
                 if (borrowUpdateFlag) {
                     // 放款任务表
                     BorrowApicron borrowApicron = new BorrowApicron();
@@ -495,21 +492,5 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
         } else {
             return new Response(Response.FAIL, "标的编号为空！");
         }
-    }
-
-    /**
-     * 获取标的
-     * @param borrowNid
-     * @return
-     */
-    private Borrow getBorrowByBorrowNid(String borrowNid){
-        BorrowExample example = new BorrowExample();
-        BorrowExample.Criteria cra = example.createCriteria();
-        cra.andBorrowNidEqualTo(borrowNid);
-        List<Borrow> list=this.borrowMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(list)){
-            return list.get(0);
-        }
-        return null;
     }
 }

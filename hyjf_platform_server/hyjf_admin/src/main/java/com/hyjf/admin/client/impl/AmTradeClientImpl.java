@@ -1637,14 +1637,15 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @param borrowFireRequest
      */
     @Override
-    public boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
+    public AdminResult updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
         String url = "http://AM-ADMIN/am-trade/borrow_first/update_ontime_record";
-        BorrowFirstCustomizeResponse response =
+        Response response =
                 restTemplate.postForEntity(url, borrowFireRequest, BorrowFirstCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return response.getFlag();
+            return new AdminResult();
+        } else {
+            return new AdminResult(BaseResult.FAIL, response.getMessage());
         }
-        return false;
     }
 
     /**
