@@ -236,6 +236,9 @@ public class IdCard15To18 {
             }
         }
         String area = null;
+        if(city==null) {
+        	 return "";
+        }
         try {
             area = city.get(code);
         }catch (Exception e){

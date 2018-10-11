@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -228,7 +229,11 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
                         accountList.setType(2);
                         accountList.setTrade("cash_success");
                         accountList.setTradeCode("balance");
-                        accountList.setTotal(account.getTotal());
+                        if(account.getTotal()==null) {
+                        	accountList.setTotal(new BigDecimal(0));
+                        }else {
+                        	accountList.setTotal(account.getTotal());
+                        }
                         accountList.setBalance(account.getBalance());
                         accountList.setFrost(account.getFrost());
                         accountList.setAwait(account.getAwait());

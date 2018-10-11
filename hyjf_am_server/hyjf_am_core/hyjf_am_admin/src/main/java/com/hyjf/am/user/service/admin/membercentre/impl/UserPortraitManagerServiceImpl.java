@@ -215,7 +215,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                     }
 
                     //回款活跃评分
-                    int nowTime = new Long(System.currentTimeMillis() / 1000).intValue();
+                    int nowTime = new Long(System.currentTimeMillis() / (long)1000).intValue();
                     if (usersPortrait.getLastLoginTime() != null && usersPortrait.getLastRepayTime() != null) {
                         if (usersPortrait.getLastRepayTime() > nowTime - usersPortrait.getLastLoginTime() * (60 * 60 * 24)) {
                             customize.setReturnActive("100");
@@ -372,7 +372,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                     //竞争
                     double compete = Double.valueOf(customize.getInvestProcess()) * 0.5 + Double.valueOf(customize.getInviteActive()) * 0.5;
                     //流失
-                    double loss = customize.getFundRetentionPercent().multiply(new BigDecimal(0.6)).doubleValue() + Double.valueOf(customize.getReturnActive()) * 0.4;
+                    double loss = customize.getFundRetentionPercent().multiply(BigDecimal.valueOf(0.6)).doubleValue() + Double.valueOf(customize.getReturnActive()) * 0.4;
                     //意向
                     double intention = Double.valueOf(customize.getLoginActive()) * 0.6 + Double.valueOf(customize.getInviteActive()) * 0.4;
 
