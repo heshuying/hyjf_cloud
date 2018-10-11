@@ -37,8 +37,7 @@ public class MessagePushHistoryController extends BaseController {
     @PostMapping(value = "/init")
     @ResponseBody
     public JSONObject init(@RequestBody  MessagePushHistoryRequest form) {
-        JSONObject jsonObject = new JSONObject();
-        try {
+            JSONObject jsonObject = new JSONObject();
             MessagePushHistoryResponse prs = messagePushHistoryService.getRecordList(form);
             MessagePushTagResponse allPushTagList = messagePushHistoryService.getAllPushTagList();
             //String fileDomainUrl = http://test.hyjf.com:8083/hyjf-admin/
@@ -55,12 +54,7 @@ public class MessagePushHistoryController extends BaseController {
             jsonObject.put("list", prs.getResultList());
             jsonObject.put("allPushTagList", allPushTagList.getResultList());
             jsonObject.put("fileDomainUrl", url);
-
             return jsonObject;
-        } catch (Exception e) {
-            jsonObject.put(FAIL, FAIL_DESC);
-            return jsonObject;
-        }
     }
 
 

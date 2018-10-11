@@ -79,9 +79,10 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
 
     /**
      * 提成列表count
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     @Override
     public int getPushMoneyListCount(PushMoneyRequest request) {
@@ -90,9 +91,10 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
 
     /**
      * 提成列表list
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     @Override
     public List<PushMoneyCustomize> searchPushMoneyList(PushMoneyRequest request) {
@@ -101,12 +103,13 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
 
     /**
      * 直投提成列表
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     @Override
-    public Map<String,Object> queryPushMoneyTotle(PushMoneyRequest request) {
+    public Map<String, Object> queryPushMoneyTotle(PushMoneyRequest request) {
         return pushMoneyCustomizeMapper.queryPushMoneyTotle(request);
     }
 
@@ -117,9 +120,10 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
 
     /**
      * 发提成
-     * @auth sunpeikai
+     *
      * @param
      * @return
+     * @auth sunpeikai
      */
     @Override
     public int updateTenderCommissionRecord(PushMoneyRequest request) {
@@ -132,118 +136,120 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
 
         BankOpenAccountVO bankOpenAccountVO = request.getBankOpenAccountVO();
 
-        // 增加时间
-        Integer time = GetDate.getMyTimeInMillis();
-        // 发放人ID
-        Integer userId = tenderCommissionVO.getUserId();
-        // 投资人ID
-        Integer tenderUserId = tenderCommissionVO.getTenderUserId();
-        // 操作者用户名
-        String operator = request.getLoginUserName();
+        if (bankBean != null) {
+            // 增加时间
+            Integer time = GetDate.getMyTimeInMillis();
+            // 发放人ID
+            Integer userId = tenderCommissionVO.getUserId();
+            // 投资人ID
+            Integer tenderUserId = tenderCommissionVO.getTenderUserId();
+            // 操作者用户名
+            String operator = request.getLoginUserName();
 
-        // 更新发放状态
-        tenderCommissionVO.setStatus(1);// 已发放
-        tenderCommissionVO.setUpdateTime(GetDate.getNowTime());
-        tenderCommissionVO.setSendTime(time);
-        ret += tenderCommissionMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(tenderCommissionVO,TenderCommission.class));
+            // 更新发放状态
+            tenderCommissionVO.setStatus(1);// 已发放
+            tenderCommissionVO.setUpdateTime(GetDate.getNowTime());
+            tenderCommissionVO.setSendTime(time);
+            ret += tenderCommissionMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(tenderCommissionVO, TenderCommission.class));
 
-        // 写入发放记录表
-        CommissionLog commissionLog = new CommissionLog();
-        commissionLog.setUserId(tenderUserId);
-        commissionLog.setSpreadsUserId(userId);
-        commissionLog.setNid(bankBean.getLogOrderId());
-        commissionLog.setType("full");
-        commissionLog.setSpreadsType("tender");
-        commissionLog.setAccountType("capital");
-        commissionLog.setScales(getScales(tenderCommissionVO.getBorrowNid(), userId).toString());
-        commissionLog.setBorrowNid(tenderCommissionVO.getBorrowNid());
-        commissionLog.setTenderId(tenderCommissionVO.getTenderId());
-        commissionLog.setRepayId(0);
-        commissionLog.setAccountAll(BigDecimal.ZERO);
-        commissionLog.setAccountCapital(tenderCommissionVO.getAccountTender());
-        commissionLog.setAccountInterest(BigDecimal.ZERO);
-        commissionLog.setAccount(tenderCommissionVO.getCommission());
-        commissionLog.setRemark("");
-        commissionLog.setCreateTime(new Date());
-        commissionLog.setCreateIp("");
-        commissionLog.setPayStatus(1);
-        commissionLog.setIsValid(1);
-        ret += commissionLogMapper.insertSelective(commissionLog);
+            // 写入发放记录表
+            CommissionLog commissionLog = new CommissionLog();
+            commissionLog.setUserId(tenderUserId);
+            commissionLog.setSpreadsUserId(userId);
+            commissionLog.setNid(bankBean.getLogOrderId());
 
-        // 更新账户信息
-        AccountExample accountExample = new AccountExample();
-        AccountExample.Criteria accountCriteria = accountExample.createCriteria();
-        accountCriteria.andUserIdEqualTo(userId);
-        Account account = accountMapper.selectByExample(accountExample).get(0);
-        BigDecimal bankBalanceCash = account.getBankBalanceCash() == null ? BigDecimal.ZERO : account.getBankBalanceCash();
-        BigDecimal money = new BigDecimal(bankBean.getTxAmount());// 提成
-        if(bankBean != null){
+            commissionLog.setType("full");
+            commissionLog.setSpreadsType("tender");
+            commissionLog.setAccountType("capital");
+            commissionLog.setScales(getScales(tenderCommissionVO.getBorrowNid(), userId).toString());
+            commissionLog.setBorrowNid(tenderCommissionVO.getBorrowNid());
+            commissionLog.setTenderId(tenderCommissionVO.getTenderId());
+            commissionLog.setRepayId(0);
+            commissionLog.setAccountAll(BigDecimal.ZERO);
+            commissionLog.setAccountCapital(tenderCommissionVO.getAccountTender());
+            commissionLog.setAccountInterest(BigDecimal.ZERO);
+            commissionLog.setAccount(tenderCommissionVO.getCommission());
+            commissionLog.setRemark("");
+            commissionLog.setCreateTime(new Date());
+            commissionLog.setCreateIp("");
+            commissionLog.setPayStatus(1);
+            commissionLog.setIsValid(1);
+            ret += commissionLogMapper.insertSelective(commissionLog);
+
+            // 更新账户信息
+            AccountExample accountExample = new AccountExample();
+            AccountExample.Criteria accountCriteria = accountExample.createCriteria();
+            accountCriteria.andUserIdEqualTo(userId);
+            Account account = accountMapper.selectByExample(accountExample).get(0);
+            BigDecimal bankBalanceCash = account.getBankBalanceCash() == null ? BigDecimal.ZERO : account.getBankBalanceCash();
+            BigDecimal money = new BigDecimal(bankBean.getTxAmount());// 提成
             account.setBankBalance(account.getBankBalance().add(money));
             account.setBankTotal(account.getBankTotal().add(money)); // 累加到账户总资产
             account.setBankBalanceCash(bankBalanceCash.add(money));
-        }
-        ret += this.accountMapper.updateByExampleSelective(account, accountExample);
 
-        // 写入收支明细
-        AccountList accountList = new AccountList();
-        accountList.setNid(bankBean.getLogOrderId());
-        accountList.setSeqNo(bankBean.getSeqNo());
-        accountList.setTxDate(Integer.parseInt(bankBean.getTxDate()));
-        accountList.setTxTime(Integer.parseInt(bankBean.getTxTime()));
-        accountList.setBankSeqNo(bankBean.getTxDate() + bankBean.getTxTime() + bankBean.getSeqNo());
-        accountList.setCheckStatus(0);
-        accountList.setTradeStatus(1);
-        accountList.setUserId(userId);
-        accountList.setAccountId(bankOpenAccountVO.getAccount());
-        accountList.setAmount(money);
-        accountList.setType(1);// 1收入2支出3冻结
-        accountList.setTrade("borrow_spreads_tender");
-        accountList.setTradeCode("balance");
-        accountList.setBankTotal(account.getBankTotal()); // 银行总资产
-        accountList.setBankBalance(account.getBankBalance()); // 银行可用余额
-        accountList.setBankFrost(account.getBankFrost());// 银行冻结金额
-        accountList.setBankWaitCapital(account.getBankWaitCapital());// 银行待还本金
-        accountList.setBankWaitInterest(account.getBankWaitInterest());// 银行待还利息
-        accountList.setBankAwaitCapital(account.getBankAwaitCapital());// 银行待收本金
-        accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
-        accountList.setBankAwait(account.getBankAwait());// 银行待收总额
-        accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-        accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
-        accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
-        accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
-        accountList.setPlanFrost(account.getPlanFrost());
-        accountList.setTotal(account.getTotal());
-        accountList.setBalance(account.getBalance());
-        accountList.setFrost(account.getFrost());
-        accountList.setAwait(account.getAwait());
-        accountList.setRepay(account.getRepay());
-        accountList.setRemark(tenderCommissionVO.getBorrowNid());
-        accountList.setCreateTime(GetDate.getNowTime());
-        accountList.setOperator(operator);
-        accountList.setIp(bankBean.getLogIp());
+            ret += this.accountMapper.updateByExampleSelective(account, accountExample);
+
+            // 写入收支明细
+            AccountList accountList = new AccountList();
+            accountList.setNid(bankBean.getLogOrderId());
+            accountList.setSeqNo(bankBean.getSeqNo());
+            accountList.setTxDate(Integer.parseInt(bankBean.getTxDate()));
+            accountList.setTxTime(Integer.parseInt(bankBean.getTxTime()));
+            accountList.setBankSeqNo(bankBean.getTxDate() + bankBean.getTxTime() + bankBean.getSeqNo());
+            accountList.setCheckStatus(0);
+            accountList.setTradeStatus(1);
+            accountList.setUserId(userId);
+            accountList.setAccountId(bankOpenAccountVO.getAccount());
+            accountList.setAmount(money);
+            accountList.setType(1);// 1收入2支出3冻结
+            accountList.setTrade("borrow_spreads_tender");
+            accountList.setTradeCode("balance");
+            accountList.setBankTotal(account.getBankTotal()); // 银行总资产
+            accountList.setBankBalance(account.getBankBalance()); // 银行可用余额
+            accountList.setBankFrost(account.getBankFrost());// 银行冻结金额
+            accountList.setBankWaitCapital(account.getBankWaitCapital());// 银行待还本金
+            accountList.setBankWaitInterest(account.getBankWaitInterest());// 银行待还利息
+            accountList.setBankAwaitCapital(account.getBankAwaitCapital());// 银行待收本金
+            accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
+            accountList.setBankAwait(account.getBankAwait());// 银行待收总额
+            accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
+            accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+            accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
+            accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
+            accountList.setPlanFrost(account.getPlanFrost());
+            accountList.setTotal(account.getTotal());
+            accountList.setBalance(account.getBalance());
+            accountList.setFrost(account.getFrost());
+            accountList.setAwait(account.getAwait());
+            accountList.setRepay(account.getRepay());
+            accountList.setRemark(tenderCommissionVO.getBorrowNid());
+            accountList.setCreateTime(GetDate.getNowTime());
+            accountList.setOperator(operator);
+            accountList.setIp(bankBean.getLogIp());
 /*        accountList.setIsUpdate(0);
         accountList.setBaseUpdate(0);
         accountList.setInterest(null);*/
-        accountList.setWeb(2);
-        accountList.setIsBank(bankBean == null ? 0 : 1);
-        ret += this.accountListMapper.insertSelective(accountList);
+            accountList.setWeb(2);
+            //accountList.setIsBank(bankBean != null ? 1 : 0);
+            accountList.setIsBank(1);
+            ret += this.accountListMapper.insertSelective(accountList);
 
-        // 插入网站收支明细记录
-        AccountWebListVO accountWebList = new AccountWebListVO();
-        accountWebList.setOrdid(bankBean.getLogOrderId());// 订单号
-        accountWebList.setUserId(accountList.getUserId()); // 投资者
-        accountWebList.setAmount(Double.valueOf(accountList.getAmount().toString())); // 管理费
-        accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入 2支出
-        accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
-        accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成
-        accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 投资推广提成
-        accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
-        AccountWebListResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/accountweblist/insertaccountweblist", accountWebList, AccountWebListResponse.class).getBody();
-        if(Response.isSuccess(response)){
-            ret += response.getRecordTotal();
-        }
+            // 插入网站收支明细记录
+            AccountWebListVO accountWebList = new AccountWebListVO();
+            accountWebList.setOrdid(bankBean.getLogOrderId());// 订单号
+            accountWebList.setUserId(accountList.getUserId()); // 投资者
+            accountWebList.setAmount(Double.valueOf(accountList.getAmount().toString())); // 管理费
+            accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入 2支出
+            accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
+            accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成
+            accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 投资推广提成
+            accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
+            AccountWebListResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/accountweblist/insertaccountweblist", accountWebList, AccountWebListResponse.class).getBody();
+            if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+                ret += response.getRecordTotal();
+            }
 
-        if(bankBean !=null){
+
             BankMerchantAccount nowBankMerchantAccount = this.getBankMerchantAccount(bankBean.getAccountId());
             nowBankMerchantAccount.setAvailableBalance(nowBankMerchantAccount.getAvailableBalance().subtract(money));
             nowBankMerchantAccount.setAccountBalance(nowBankMerchantAccount.getAccountBalance().subtract(money));
@@ -251,7 +257,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
 
             // 更新红包账户信息
             int updateCount = bankMerchantAccountMapper.updateByPrimaryKeySelective(nowBankMerchantAccount);
-            if(updateCount > 0){
+            if (updateCount > 0) {
                 UserInfoCustomizeVO userInfoCustomize = pushMoneyCustomizeMapper.queryUserInfoByUserId(userId);
 
                 // 添加红包明细
@@ -285,46 +291,47 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
                 this.bankMerchantAccountListMapper.insertSelective(bankMerchantAccountList);
             }
 
-        }
 
-        // 纯发短信接口
-        Map<String, String> replaceMap = new HashMap<String, String>();
-        replaceMap.put("val_amount", tenderCommissionVO.getCommission().toString());
-        SmsMessage smsMessage =
-                new SmsMessage(userId, replaceMap, null, null,MessageConstant.SMS_SEND_FOR_USER, null,
-                        CustomConstants.PARAM_TPL_SDTGTC, CustomConstants.CHANNEL_TYPE_NORMAL);
-        try {
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-                    JSON.toJSONBytes(smsMessage)));
-        } catch (MQException e) {
-            e.printStackTrace();
-        }
-        //
-        UserInfoCustomizeVO userInfo = pushMoneyCustomizeMapper.queryUserInfoByUserId(userId);
-        if (userInfo != null) {
-            Map<String, String> param = new HashMap<String, String>();
-            if (userInfo.getTrueName() != null && userInfo.getTrueName().length() > 1) {
-                param.put("val_name", userInfo.getTrueName().substring(0, 1));
-            } else {
-                param.put("val_name", userInfo.getTrueName());
-            }
-            if ("1".equals(userInfo.getSex())) {
-                param.put("val_sex", "先生");
-            } else if ("2".equals(userInfo.getSex())) {
-                param.put("val_sex", "女士");
-            } else {
-                param.put("val_sex", "");
-            }
-            param.put("val_amount", tenderCommissionVO.getCommission().toString());
-            AppMsMessage appMsMessage = new AppMsMessage(null, param, userInfo.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE,
-                    CustomConstants.JYTZ_TPL_SDTGTC);
-
+            // 纯发短信接口
+            Map<String, String> replaceMap = new HashMap<String, String>();
+            replaceMap.put("val_amount", tenderCommissionVO.getCommission().toString());
+            SmsMessage smsMessage =
+                    new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
+                            CustomConstants.PARAM_TPL_SDTGTC, CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
-                appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-                        JSON.toJSONBytes(appMsMessage)));
+                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+                        JSON.toJSONBytes(smsMessage)));
             } catch (MQException e) {
-                logger.error("发送app消息失败..", e);
+                e.printStackTrace();
             }
+            //
+            UserInfoCustomizeVO userInfo = pushMoneyCustomizeMapper.queryUserInfoByUserId(userId);
+            if (userInfo != null) {
+                Map<String, String> param = new HashMap<String, String>();
+                if (userInfo.getTrueName() != null && userInfo.getTrueName().length() > 1) {
+                    param.put("val_name", userInfo.getTrueName().substring(0, 1));
+                } else {
+                    param.put("val_name", userInfo.getTrueName());
+                }
+                if ("1".equals(userInfo.getSex())) {
+                    param.put("val_sex", "先生");
+                } else if ("2".equals(userInfo.getSex())) {
+                    param.put("val_sex", "女士");
+                } else {
+                    param.put("val_sex", "");
+                }
+                param.put("val_amount", tenderCommissionVO.getCommission().toString());
+                AppMsMessage appMsMessage = new AppMsMessage(null, param, userInfo.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE,
+                        CustomConstants.JYTZ_TPL_SDTGTC);
+
+                try {
+                    appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+                            JSON.toJSONBytes(appMsMessage)));
+                } catch (MQException e) {
+                    logger.error("发送app消息失败..", e);
+                }
+            }
+
         }
 
         return ret;
@@ -390,8 +397,8 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
     }
 
     /**
-     *
      * 加载红包账户
+     *
      * @param accountCode
      * @return
      */
