@@ -950,7 +950,7 @@ public class FddHandle {
 			//计划债转是在事务内提交，可能获取不到数据，需要暂时休眠1秒，待数据提交
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("计划债转失败！");
 		}
 		Map<String, Object> resultMap = null;
 		List<HjhDebtCreditTenderVO> hjhCreditTenderList =
@@ -978,7 +978,10 @@ public class FddHandle {
 		}else{
 			logger.error("开始生成计划债转协议失败-----------汇计划债转投资表中无该记录----------承接订单号:" + bean.getAssignNid());
 		}
-
+		if(resultMap == null){
+			logger.error("获取模板参数对象(查新表)失败");
+			return;
+		}
 		BorrowAndInfoVO borrow = (BorrowAndInfoVO) resultMap.get("borrow");
 		UserInfoVO creditUsersInfo = (UserInfoVO) resultMap.get("usersInfoCredit");
 		UserVO creditUser = (UserVO) resultMap.get("usersCredit");
