@@ -64,16 +64,18 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 				continue;
 			}
 			Map<String, Object> map = this.json2map(result);
-			for (String ymStr : map.keySet()) {
-				Map<String, Object> detailMap = (Map<String, Object>) map.get(ymStr);
-				for (String dayStr : detailMap.keySet()) {
-					int holidaysFlag = Integer.parseInt((String) detailMap.get(dayStr));
-					for (HolidaysConfig holidaysConfig : list) {
-						String apiQueryStr = date.concat("-").concat(dayStr);
-						String sdfStr = sdf.format(holidaysConfig.getDayTime());
-						if (apiQueryStr.equals(sdfStr)) {
-							holidaysConfig.setHolidayFlag(holidaysFlag);
-							updateList.add(holidaysConfig);
+			if(map!=null) {
+				for (String ymStr : map.keySet()) {
+					Map<String, Object> detailMap = (Map<String, Object>) map.get(ymStr);
+					for (String dayStr : detailMap.keySet()) {
+						int holidaysFlag = Integer.parseInt((String) detailMap.get(dayStr));
+						for (HolidaysConfig holidaysConfig : list) {
+							String apiQueryStr = date.concat("-").concat(dayStr);
+							String sdfStr = sdf.format(holidaysConfig.getDayTime());
+							if (apiQueryStr.equals(sdfStr)) {
+								holidaysConfig.setHolidayFlag(holidaysFlag);
+								updateList.add(holidaysConfig);
+							}
 						}
 					}
 				}

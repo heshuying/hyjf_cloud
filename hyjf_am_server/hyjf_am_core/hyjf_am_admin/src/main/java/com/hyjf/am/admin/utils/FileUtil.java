@@ -73,7 +73,9 @@ public class FileUtil {
 			logger.error("Read the files failure! File: " + file.getPath());
 		} finally {
 			try {
-				raf.close();
+				if(raf!=null) {
+					raf.close();
+				}
 			} catch (Exception e) {
 			}// Endtry
 		}// Endtry
@@ -142,7 +144,9 @@ public class FileUtil {
 			logger.error("Save the files failure! File: " + file.getPath());
 		} finally {
 			try {
-				raf.close();
+				if(raf!=null) {
+					raf.close();
+				}
 			} catch (Exception e) {
 			}// Endtry
 		}// Endtry
@@ -398,9 +402,13 @@ public class FileUtil {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            output.flush();
-            output.close();
-            input.close();
+        	if(output!=null) {
+                output.flush();
+                output.close();
+        	}
+        	if(input!=null) {
+        		 input.close();
+        	}
         }
         return true;
     }
