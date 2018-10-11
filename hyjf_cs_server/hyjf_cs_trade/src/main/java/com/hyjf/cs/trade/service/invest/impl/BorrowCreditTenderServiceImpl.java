@@ -1228,7 +1228,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 获取标的借款人
         String borrowStyle = borrow.getBorrowStyle();
         // 债转本息
-        BigDecimal creditAccount = null;
+        BigDecimal creditAccount = BigDecimal.ZERO;
         // 债转期全部利息
         BigDecimal creditInterest = null;
         // 垫付利息 垫息总额=债权本金*年化收益÷360*融资期限-债权本金*年化收益÷360*剩余期限

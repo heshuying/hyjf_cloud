@@ -97,7 +97,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         // 查询开户记录表
         BankOpenAccountLogExample example = new BankOpenAccountLogExample();
         example.createCriteria().andUserIdEqualTo(userId).andOrderIdEqualTo(orderId);
-        BankOpenAccountLog openAccountLog = null;
+        BankOpenAccountLog openAccountLog = new BankOpenAccountLog();
         List<BankOpenAccountLog> bankOpenAccountLogs = this.bankOpenAccountLogMapper.selectByExample(example);
         if (bankOpenAccountLogs != null && bankOpenAccountLogs.size() == 1) {
             openAccountLog = bankOpenAccountLogs.get(0);
