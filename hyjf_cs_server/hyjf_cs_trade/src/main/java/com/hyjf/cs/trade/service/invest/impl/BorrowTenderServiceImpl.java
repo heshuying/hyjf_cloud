@@ -795,6 +795,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String creditNid = tender.getBorrowNid().substring(3);
         logger.info("investType:[{}]",investType);
         String money = tender.getMoney();
+        {
+            this.setProtocolsToResultVO(investInfo, investType);
+        }
         // 转让的
         if ("HZR".equals(investType) && StringUtils.isNotEmpty(creditNid)) {
             AppInvestInfoResultVO result = borrowTenderService.getInterestInfoApp(tender,creditNid,tender.getMoney());
@@ -1058,9 +1061,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setButtonWord("确认");
             } else {
                 investInfo.setRealAmount("");
-                investInfo.setButtonWord("确认投资"+CommonUtils.formatAmount(null, money)+"元");
+                investInfo.setButtonWord("确认投资" + CommonUtils.formatAmount(null, money) + "元");
             }
-            this.setProtocolsToResultVO(investInfo, investType);
 
             return investInfo;
         }
