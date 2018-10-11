@@ -10,6 +10,14 @@ public class SystemConfig {
     @Value("${hyjf.server.host}")
     public String serverHost;
 
+
+    /** 从系统配置中获取最新版本号 */
+    @Value("${hyjf.app.version.new}")
+    private String newVersion;
+    /** 从系统配置中获取测试环境地址 */
+    @Value("${hyjf.app.serverip.test}")
+    private String testServerIp;
+
     @Value("${aop.interface.accesskey}")
     public String aopAccesskey;
 
@@ -77,9 +85,6 @@ public class SystemConfig {
 
     @Value("${file.physical.path}")
     public String physicalPath;
-
-    @Value("${hyjf.app.version.new}")
-    private String newVersion;
 
     @Value("${hyjf.wechat.qrcode.url}")
     private String wechatQrcodeUrl;
@@ -317,5 +322,13 @@ public class SystemConfig {
 
     public void setSurongDeletecard(String surongDeletecard) {
         this.surongDeletecard = surongDeletecard;
+    }
+
+    public String getTestServerIp() {
+        return testServerIp;
+    }
+
+    public void setTestServerIp(String testServerIp) {
+        this.testServerIp = testServerIp;
     }
 }
