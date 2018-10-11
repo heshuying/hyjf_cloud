@@ -18,13 +18,12 @@
         <result column="modify_type" property="modifyType" jdbcType="TINYINT" />
         <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
         <result column="create_time" property="createTime" jdbcType="INTEGER" />
-        <result column="create_time_string" property="createTimeString" jdbcType="VARCHAR" />
         <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
         <result column="update_time" property="updateTime" jdbcType="INTEGER" />
         <result column="del_flag" property="delFlag" jdbcType="BIT" />
         <!-- 资产来源 -->
-        <!--<result column="inst_name" property="instName" jdbcType="VARCHAR" />-->
-        <!--<result column="asset_type_name" property="assetTypeName" jdbcType="VARCHAR" />-->
+        <result column="inst_name" property="instName" jdbcType="VARCHAR" />
+        <result column="asset_type_name" property="assetTypeName" jdbcType="VARCHAR" />
         <result column="true_name" property="name" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Where_Clause">
@@ -47,7 +46,7 @@
             </if>
             <!-- 操作人 -->
             <if test="userNameSrch != null and userNameSrch != ''">
-                AND hfml.create_user_id in(select id from ht_admin hui where hui.truename LIKE CONCAT( #{userNameSrch}, '%'))
+                AND hfml.create_user_id in(select hui.user_id from hyjf_config.ht_r_user hui where hui.truename LIKE CONCAT( 'admin', '%'))
             </if>
             <!-- 操作时间 -->
             <if test="recieveTimeStartSrch != null and recieveTimeStartSrch != ''">
@@ -70,35 +69,19 @@
         <if test="distinct" >
             distinct
         </if>
-        <!-- <include refid="Base_Column_List" /> -->
-        id,
-        inst_code,
-        asset_type,
+        id,inst_code,asset_type,
         CASE
         WHEN borrow_style = '天标' THEN
         CONCAT(borrow_period, '天')
         ELSE
         CONCAT(borrow_period, '个月')
         END borrow_periods,
-        borrow_style,
-        borrow_apr,
-        service_fee,
-        manage_fee,
-        revenue_diff_rate,
-        late_interest_rate,
-        late_free_days,
-        `status`,
-        modify_type,
-        create_user_id,
-        create_time,
-        update_user_id,
-        update_time,
-        del_flag,
+        borrow_style,borrow_apr,service_fee,manage_fee,revenue_diff_rate,late_interest_rate,late_free_days,
+        `status`,modify_type,create_user_id,create_time,update_user_id,update_time,del_flag,
+        (select distinct inst_name from hyjf_trade.ht_hjh_inst_config hhic where hfml.inst_code=hhic.inst_code) inst_name,
+        (select distinct asset_type_name from hyjf_trade.ht_hjh_asset_type hhat where hfml.inst_code=hhat.inst_code and hfml.asset_type=hhat.asset_type) asset_type_name,
         (
-        SELECT DISTINCT
-        truename
-        FROM
-        hyjf_config.ht_r_user hui
+        SELECT DISTINCT truename FROM hyjf_config.ht_r_user hui
         WHERE
         hfml.create_user_id = hui.user_id
         ) true_name,
@@ -107,7 +90,7 @@
         '%Y-%m-%d %H:%i:%s'
         ) AS create_time_string
         FROM
-        ht_feerate_modify_log hfml
+        hyjf_config.ht_feerate_modify_log hfml
         <include refid="Where_Clause" />
         ORDER BY create_time DESC
         <if test="limitStart != null and limitStart >= 0">
