@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
@@ -40,7 +41,7 @@ public interface AmTradeClient {
     /**
      * 根据userId获得填充userPortrait的info --用户画像定时任务用
      * */
-    List<BatchUserPortraitQueryVO> searchInfoForUserPortrait(String userIds);
+    List<BatchUserPortraitQueryVO> searchInfoForUserPortrait(BatchUserPortraitRequest batchUserPortraitRequest);
 
     Integer countCouponValid(Integer userId);
 

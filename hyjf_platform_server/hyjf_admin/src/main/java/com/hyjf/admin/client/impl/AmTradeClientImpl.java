@@ -5394,6 +5394,7 @@ public class AmTradeClientImpl implements AmTradeClient {
                 return response;
             }
             response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
             return response;
         }
         return null;

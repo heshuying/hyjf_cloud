@@ -232,10 +232,14 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (isMonth) {
 			// 取得分期还款计划表
 			BorrowRecoverPlan borrowRecoverPlan = getBorrowRecoverPlan(borrowNid, periodNow, tenderUserId, tenderOrderId);
-			borrowRecoverPlan.setRecoverStatus(2);
-			boolean flag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
-			if (!flag) {
-				throw new Exception("更新相应的还款明细失败！项目编号:" + borrowNid + "]");
+			if (Validator.isNull(borrowRecoverPlan)) {
+				throw new RuntimeException("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[投资订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
+			}else {
+				borrowRecoverPlan.setRecoverStatus(2);
+				boolean flag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
+				if (!flag) {
+					throw new Exception("更新相应的还款明细失败！项目编号:" + borrowNid + "]");
+				}
 			}
 		} else {
 			borrowRecover.setRecoverStatus(2);
@@ -1469,11 +1473,12 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			borrowRecoverPlan = getBorrowRecoverPlan(borrowNid, periodNow, tenderUserId, tenderOrderId);
 			if (Validator.isNull(borrowRecoverPlan)) {
 				throw new Exception("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[投资订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
+			}else {
+				// 还款订单号
+				repayOrderId = borrowRecoverPlan.getRepayOrderId();
+				// 应还款时间
+				recoverTime = borrowRecoverPlan.getRecoverTime();
 			}
-			// 还款订单号
-			repayOrderId = borrowRecoverPlan.getRepayOrderId();
-			// 应还款时间
-			recoverTime = borrowRecoverPlan.getRecoverTime();
 		}
 		// [endday: 按天计息, end:按月计息]
 		else {
@@ -1489,7 +1494,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			borrowRecover.setRecoverStatus(0); // 未还款
 			// 取得分期还款计划表下一期的还款
 			BorrowRecoverPlan borrowRecoverPlanNext = getBorrowRecoverPlan(borrowNid, periodNow + 1, tenderUserId, tenderOrderId);
-			borrowRecover.setRecoverTime(borrowRecoverPlanNext.getRecoverTime()); // 计算下期时间
+			borrowRecover.setRecoverTime(null==borrowRecoverPlanNext?null:borrowRecoverPlanNext.getRecoverTime()); // 计算下期时间
 			borrowRecover.setRecoverType(TYPE_WAIT);
 		} else {
 			borrowRecover.setRecoverStatus(1); // 已还款
@@ -1689,49 +1694,51 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			borrowRecoverPlan = getBorrowRecoverPlan(borrowNid, periodNow, tenderUserId, tenderOrderId);
 			if (Validator.isNull(borrowRecoverPlan)) {
 				throw new Exception("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[投资订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
-			}
-			//是否先息后本
+			}else{
+				//是否先息后本
 //			boolean isStyle = CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
-			// 还款订单号
-			repayOrderId = borrowRecoverPlan.getRepayOrderId();
-			// 应还款时间
-			recoverTime = borrowRecoverPlan.getRecoverTime();
+				// 还款订单号
+				repayOrderId = borrowRecoverPlan.getRepayOrderId();
+				// 应还款时间
+				recoverTime = borrowRecoverPlan.getRecoverTime();
 
-			// 应收管理费
-			recoverFee = borrowRecoverPlan.getRecoverFee();
+				// 应收管理费
+				recoverFee = borrowRecoverPlan.getRecoverFee();
 
-			// 已还款管理费
-			recoverFeeYes = borrowRecoverPlan.getRecoverFeeYes();
+				// 已还款管理费
+				recoverFeeYes = borrowRecoverPlan.getRecoverFeeYes();
 
-			// 待还款本息
-			recoverAccountWait = borrowRecoverPlan.getRecoverAccountWait();
+				// 待还款本息
+				recoverAccountWait = borrowRecoverPlan.getRecoverAccountWait();
 
-			// 待还款本金
-			recoverCapitalWait = borrowRecoverPlan.getRecoverCapitalWait();
-			// 应还款利息
-			recoverInterestWait = borrowRecoverPlan.getRecoverInterestWait();
-			// 逾期天数
-			lateDays = borrowRecoverPlan.getLateDays();
-			// 逾期利息
-			lateInterest = borrowRecoverPlan.getLateInterest();
-			// 延期天数
-			delayDays = borrowRecoverPlan.getDelayDays();
-			// 延期利息
-			delayInterest = borrowRecoverPlan.getDelayInterest();
-			// 提前天数
-			chargeDays = borrowRecoverPlan.getChargeDays();
+				// 待还款本金
+				recoverCapitalWait = borrowRecoverPlan.getRecoverCapitalWait();
+				// 应还款利息
+				recoverInterestWait = borrowRecoverPlan.getRecoverInterestWait();
+				// 逾期天数
+				lateDays = borrowRecoverPlan.getLateDays();
+				// 逾期利息
+				lateInterest = borrowRecoverPlan.getLateInterest();
+				// 延期天数
+				delayDays = borrowRecoverPlan.getDelayDays();
+				// 延期利息
+				delayInterest = borrowRecoverPlan.getDelayInterest();
+				// 提前天数
+				chargeDays = borrowRecoverPlan.getChargeDays();
 
-			// 提前还款少还利息
-			chargeInterest = borrowRecoverPlan.getChargeInterest().subtract(borrowRecoverPlan.getRepayChargeInterest());
+				// 提前还款少还利息
+				chargeInterest = borrowRecoverPlan.getChargeInterest().subtract(borrowRecoverPlan.getRepayChargeInterest());
 
-			// 实际还款本息
-			repayAccount = recoverAccountWait.add(lateInterest).add(delayInterest).add(chargeInterest);
-			// 实际还款本金
-			repayCapital = recoverCapitalWait;
-			// 实际还款利息
-			repayInterest = recoverInterestWait.add(lateInterest).add(delayInterest).add(chargeInterest);
-			// 还款管理费
-			manageFee = recoverFee.subtract(recoverFeeYes);
+				// 实际还款本息
+				repayAccount = recoverAccountWait.add(lateInterest).add(delayInterest).add(chargeInterest);
+				// 实际还款本金
+				repayCapital = recoverCapitalWait;
+				// 实际还款利息
+				repayInterest = recoverInterestWait.add(lateInterest).add(delayInterest).add(chargeInterest);
+				// 还款管理费
+				manageFee = recoverFee.subtract(recoverFeeYes);
+			}
+
 		}
 		// [endday: 按天计息, end:按月计息]
 		else {
@@ -1917,7 +1924,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			borrowRecover.setRecoverStatus(0); // 未还款
 			// 取得分期还款计划表下一期的还款
 			BorrowRecoverPlan borrowRecoverPlanNext = getBorrowRecoverPlan(borrowNid, periodNow + 1, tenderUserId, tenderOrderId);
-			borrowRecover.setRecoverTime(borrowRecoverPlanNext.getRecoverTime()); // 计算下期时间
+			borrowRecover.setRecoverTime(null==borrowRecoverPlanNext?null:borrowRecoverPlanNext.getRecoverTime()); // 计算下期时间
 			borrowRecover.setRecoverType(TYPE_WAIT);
 		} else {
 			borrowRecover.setRecoverStatus(1); // 已还款
@@ -4057,7 +4064,6 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	/**
 	 * 判断该收支明细是否存在
 	 *
-	 * @param accountList
 	 * @return
 	 */
 	private boolean countCreditAccountListByNid(String nid) {

@@ -4,16 +4,69 @@
 
 	<sql id="Where_Clause_Trade_List">
 		<where>
-			AND hydal.user_id = #{userId,jdbcType=INTEGER}
+			hydal.user_id = #{userId,jdbcType=INTEGER}
 			AND hydal.is_show = 0
-			<if test="trade != null and trade != ''">
-				AND hydat.`value`= #{trade,jdbcType=VARCHAR}
+
+			<if test="tradeYear != null and tradeYear != '' ">
+				AND FROM_UNIXTIME(hydal.create_time,'%Y')  = #{tradeYear,jdbcType=INTEGER}
 			</if>
-			<if test="startDate != null and startDate != ''">
-				AND unix_timestamp(hydal.create_time) <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
+			<if test="tradeMonth != null and tradeMonth != '' ">
+				AND FROM_UNIXTIME(hydal.create_time,'%m')  = #{tradeMonth,jdbcType=INTEGER}
 			</if>
-			<if test="endDate != null and endDate != ''">
-				AND unix_timestamp(hydal.create_time) <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
+
+			<if test="tradeType != null and tradeType != ''">
+				<if test="tradeType != '0'.toString()">
+					<if test="tradeType != 'coupon_profit'">
+						AND hydal.trade = #{tradeType,jdbcType=VARCHAR}
+					</if>
+					<if test="tradeType == 'coupon_profit'">
+						AND hydal.trade IN (
+						'increase_interest_profit',
+						'experience_profit',
+						'cash_coupon_profit'
+						)
+					</if>
+				</if>
+
+				<if test="tradeType == '0'.toString()">
+					AND hydal.trade IN (
+					'recharge',
+					'borrow_success',
+					'tender_recover_yes',
+					'cash_tiaozhang',
+					'borrow_spreads_tender',
+					'borrowactivity',
+					'redeem_huitianli',
+					'interest_huitianli',
+					'creditsell',
+					'recharge_success',
+					'credit_tender_recover_yes',
+					'increase_interest_profit',
+					'experience_profit',
+					'cash_coupon_profit',
+					'plan_spreads_accede',
+					'plan_repay',
+					'platform_transfer',
+					'increase_interest_repay_yes',
+					'directional_transfer_receive',
+					'recharge_offline',
+					'tender',
+					'repay_freeze',
+					'unFrz',
+					'tender_success',
+					'cash_success',
+					'tender_huitianli',
+					'account_change',
+					'repay_success',
+					'creditassign',
+					'user_transfer',
+					'apply_vip',
+					'directional_transfer_pay',
+					'accede_plan',
+					'hjh_quit',
+					'hjh_invest'
+					)
+				</if>
 			</if>
 		</where>
 	</sql>
