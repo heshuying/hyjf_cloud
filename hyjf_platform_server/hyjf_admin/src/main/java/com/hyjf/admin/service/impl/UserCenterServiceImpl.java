@@ -6,10 +6,12 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.UserInfosUpdCustomizeRequestBean;
 import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.mq.FddProducer;
 import com.hyjf.admin.mq.base.MessageContent;
@@ -20,6 +22,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -626,5 +629,56 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
             userCenterClient.getBankCardByUserId(Integer.parseInt(userId));
         }
         return null;
+    }
+
+
+    /**
+     * 调用江西银行查询联行号
+     * @param cardNo
+     * @return
+     */
+    @Override
+    public BankCallBean payAllianceCodeQuery(String cardNo,Integer userId) {
+        BankCallBean bean = new BankCallBean();
+        String channel = BankCallConstant.CHANNEL_PC;
+        String orderDate = GetOrderIdUtils.getOrderDate();
+        String txDate = GetOrderIdUtils.getTxDate();
+        String txTime = GetOrderIdUtils.getTxTime();
+        String seqNo = GetOrderIdUtils.getSeqNo(6);
+        bean.setVersion(BankCallConstant.VERSION_10);// 版本号
+        bean.setTxCode(BankCallConstant.TXCODE_PAY_ALLIANCE_CODE_QUERY);// 交易代码
+        bean.setTxDate(txDate);
+        bean.setTxTime(txTime);
+        bean.setSeqNo(seqNo);
+        bean.setChannel(channel);
+        bean.setAccountId(cardNo);
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+        bean.setLogOrderDate(orderDate);
+        bean.setLogUserId(String.valueOf(userId));
+        bean.setLogRemark("联行号查询");
+        bean.setLogClient(0);
+        return BankCallUtils.callApiBg(bean);
+    }
+
+    /**
+     * 根据银行名获取江西银行配置信息
+     * @param bankName
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public JxBankConfigVO getBankConfigByBankName(String bankName){
+        return amConfigClient.getBankConfigByBankName(bankName);
+    }
+    /**
+     * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+     *
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    @Override
+    public int updateUserBaseInfo(UserInfosUpdCustomizeRequest request){
+        return userCenterClient.updateUserBaseInfo(request);
     }
 }

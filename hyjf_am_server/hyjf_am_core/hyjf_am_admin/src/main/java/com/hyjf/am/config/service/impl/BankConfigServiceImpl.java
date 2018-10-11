@@ -337,4 +337,21 @@ public class BankConfigServiceImpl implements BankConfigService {
 		return  bankConfigCustomizeMapper.selectByQuickPayment(quickPayment);
 	}
 
+	/**
+	 * 根据银行名查找江西银行配置
+	 * @param bankName
+	 * @return
+	 */
+	@Override
+	public JxBankConfig getBankConfigByBankName(String bankName) {
+		if(StringUtils.isNotBlank(bankName)){
+			JxBankConfigExample example = new JxBankConfigExample();
+			example.createCriteria().andBankNameLike(bankName);
+			List<JxBankConfig> jxBankConfigList = jxBankConfigMapper.selectByExample(example);
+			if (!CollectionUtils.isEmpty(jxBankConfigList)) {
+				return jxBankConfigList.get(0);
+			}		}
+
+		return null;
+	}
 }

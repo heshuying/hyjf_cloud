@@ -21,10 +21,13 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +42,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.security.acl.LastOwnerException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -693,10 +697,63 @@ public class UserCenterController extends BaseController {
     }
 
     //查询银联号
-  /*  @ResponseBody
+    @ResponseBody
     @PostMapping(value = "/searchPayAllianceCode")
     @ApiOperation(value = "查找联行号", notes = "查找联行号")
-    public AdminResult<Response>  searchPayAllianceCode(@RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean){
+    public AdminResult<Response>  searchPayAllianceCode(@RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean) {
+        BankCallBean bankCallBean = userCenterService.payAllianceCodeQuery(userInfosUpdCustomizeRequestBean.getCardNo(), Integer.parseInt(userInfosUpdCustomizeRequestBean.getUserId()));
+        AdminResult<Response> result = new AdminResult<Response>();
+        Response response = new Response();
+        if (null != bankCallBean && BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankCallBean.getRetCode())) {
+            //如果调用银行接口没有返回联行号,则查找本地联行号
+            if (StringUtils.isBlank(bankCallBean.getPayAllianceCode())) {
+                JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(userInfosUpdCustomizeRequestBean.getBank());
+                if (null != banksConfig) {
+                    response.setResult(banksConfig.getPayAllianceCode());
+                    result.setStatus(SUCCESS);
+                    result.setStatusDesc("未查询到分行联行号已填充总行联行号");
+                    result.setData(response);
+                    logger.info("============本地银联号为:", banksConfig.getPayAllianceCode());
+                    return result;
+                } else {
+                    return new AdminResult<>(FAIL, "未查询到联行号");
+                }
+            } else {
+                //如果调用银行接口查找到银联号,则进行显示
+                response.setResult(bankCallBean.getPayAllianceCode());
+                result.setData(response);
+                result.setStatus(SUCCESS);
+                logger.info("============银行查询银联号为:", bankCallBean.getPayAllianceCode());
+                return result;
+            }
+        } else {
+            return new AdminResult<>(FAIL, "银行接口调用失败");
+        }
+    }
 
-    }*/
+    @ResponseBody
+    @PostMapping(value = "/updateUserBaseInfo")
+    @ApiOperation(value = "保存用户基本信息", notes = "保存用户基本信息")
+    public AdminResult<Response> updateUserBaseInfo(HttpServletRequest request, @RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean) {
+        AdminSystemVO  adminSystemVO = this.getUser(request);
+        UserInfosUpdCustomizeRequest userInfosUpdCustomizeRequest = new UserInfosUpdCustomizeRequest();
+        BeanUtils.copyProperties(userInfosUpdCustomizeRequestBean,userInfosUpdCustomizeRequest);
+        int instFlg = 0;
+        if(null!=adminSystemVO){
+            userInfosUpdCustomizeRequest.setLoginUserName(adminSystemVO.getUsername());
+            userInfosUpdCustomizeRequest.setLoginUserId(Integer.parseInt(adminSystemVO.getId()));
+            if(userInfosUpdCustomizeRequestBean.getUpdFlg().equals("bankCard")){
+
+            }else{
+                //修改用户基本信息(电话,邮箱,用户角色)
+               instFlg= userCenterService.updateUserBaseInfo(userInfosUpdCustomizeRequest);
+            }
+            if (instFlg<=0) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }else{
+                return new AdminResult<>();
+            }
+        }
+        return new AdminResult<>(FAIL, "后台用户未登录");
+    }
 }

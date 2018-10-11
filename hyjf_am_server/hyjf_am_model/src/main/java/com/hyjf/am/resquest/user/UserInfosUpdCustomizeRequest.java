@@ -2,51 +2,40 @@
  * Description:更改用户基本信息(电话,邮箱,角色等)PO
  */
 
-package com.hyjf.admin.beans.request;
-
-import io.swagger.annotations.ApiModelProperty;
-
+package com.hyjf.am.resquest.user;
 /**
  * @author nxl
  */
 
-public class UserInfosUpdCustomizeRequestBean {
-    @ApiModelProperty(value = "用户id")
+public class UserInfosUpdCustomizeRequest {
     private String userId;
 
-    @ApiModelProperty(value = "用户名")
     private String username;
 
-    @ApiModelProperty(value = "手机号")
     private String mobile;
 
-    @ApiModelProperty(value = "邮箱")
     private String email;
     //用戶角色
-    @ApiModelProperty(value = "用戶角色")
     private String userRole;
     //银行账户
-    @ApiModelProperty(value = "银行账户")
     private String account;
     //更新区分
-    @ApiModelProperty(value = "更新区分")
     private String updFlg;
 
     //用户状态
-    @ApiModelProperty(value = "用户状态")
     private String status;
     //说明
-    @ApiModelProperty(value = "说明")
     private String remark;
     //银行卡号
-    @ApiModelProperty(value = "银行卡号")
     private String cardNo;
     //联行号
-    @ApiModelProperty(value = "联行号")
     private String payAllianceCode;
     //银行名
-    @ApiModelProperty(value = "银行名")
     private String bank;
+    //当前登陆用户名
+    private String loginUserName;
+    //登陆用户id
+    private int loginUserId;
 
     public String getUserId() {
         return userId;
@@ -142,6 +131,22 @@ public class UserInfosUpdCustomizeRequestBean {
 
     public void setBank(String bank) {
         this.bank = bank;
+    }
+
+    public String getLoginUserName() {
+        return loginUserName;
+    }
+
+    public void setLoginUserName(String loginUserName) {
+        this.loginUserName = loginUserName;
+    }
+
+    public int getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId(int loginUserId) {
+        this.loginUserId = loginUserId;
     }
 }
 

@@ -1189,4 +1189,12 @@ public interface AmUserClient {
      * @return
      */
     BankCardVO getBankCardByUserId(int userId);
+    /**
+     * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+     *
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    int updateUserBaseInfo(UserInfosUpdCustomizeRequest request);
 }

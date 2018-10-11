@@ -2393,4 +2393,20 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+	/**
+	 * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+	 *
+	 * @param request
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int updateUserBaseInfo(UserInfosUpdCustomizeRequest request) {
+		IntegerResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserBaseInfo", request, IntegerResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getResultInt().intValue();
+	}
 }
