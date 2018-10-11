@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.manager;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -119,6 +120,7 @@ public class FinmanChargeNewController extends BaseController {
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertFinmanCharge(@RequestBody FinmanChargeNewRequest adminRequest,HttpServletRequest request){
+        AdminResult ress= new AdminResult();
         adminRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
 //        adminRequest.setCreateUserId(3);
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
@@ -140,7 +142,10 @@ public class FinmanChargeNewController extends BaseController {
             response.setAssetTypeList(assetTypeList);
             response.setRtn(Response.FAIL);
             response.setMessage(message);
-            return new AdminResult<FinmanChargeNewResponse>(response);
+            ress.setStatus(BaseResult.FAIL);
+            ress.setStatusDesc(BaseResult.FAIL_DESC);
+            ress.setData(response);
+            return ress;
         }
         //插入
         response= this.finmanChargeNewService.insertRecord(adminRequest);
@@ -150,7 +155,7 @@ public class FinmanChargeNewController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<>();
+        return ress;
     }
     @ApiOperation(value = "修改费率配置", notes = "修改费率配置")
     @PostMapping("/updateAction")

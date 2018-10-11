@@ -5,9 +5,7 @@ package com.hyjf.am.user.service.admin.membercentre.impl;
 
 import com.hyjf.am.resquest.admin.UserPortraitScoreRequest;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
-import com.hyjf.am.user.dao.model.auto.SpreadsUser;
-import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
-import com.hyjf.am.user.dao.model.auto.UserPortrait;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.UserPortraitScoreCustomize;
 import com.hyjf.am.user.service.admin.membercentre.UserPortraitManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -81,8 +79,14 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
      */
     @Override
     public UserPortrait selectUsersPortraitByUserId(Integer userId){
-        UserPortrait userPortrait = userPortraitMapper.selectByPrimaryKey(userId);
-        return userPortrait;
+        UserPortraitExample example = new UserPortraitExample();
+        UserPortraitExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<UserPortrait> userPortraitList = userPortraitMapper.selectByExample(example);
+        if(null!=userPortraitList&&userPortraitList.size()>0){
+            return userPortraitList.get(0);
+        }
+        return null;
     }
 
     /**
