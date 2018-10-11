@@ -6465,4 +6465,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 查询资产列表  AM-ADMIN
+     *
+     * @param request
+     * @return
+     */
+	@Override
+	public AssetListCustomizeResponse findAssetListWithoutPage(AssetListRequest request) {
+        AssetListCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/findAssetListWithoutPage", request,
+                        AssetListCustomizeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+	}
 }

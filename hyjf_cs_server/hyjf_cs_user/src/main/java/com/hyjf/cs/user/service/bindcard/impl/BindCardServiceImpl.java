@@ -197,18 +197,21 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			resultMap.put("key","CE000004");
 			resultMap.put("msg","没有根据电子银行卡找到用户");
 			logger.info("没有根据电子银行卡找到用户");
+			return resultMap;
 		}
 		UserVO userVO = this.getUsersById(openAccountVO.getUserId());
 		if(userVO.getIsSetPassword() != 1){
 			resultMap.put("key","TP000002");
 			resultMap.put("msg","用户未设置交易密码");
 			logger.info("用户未设置交易密码");
+			return resultMap;
 		}
 		int count = amUserClient.countUserCardValid(String.valueOf(userVO.getUserId()));
 		if(count > 0){
 			resultMap.put("key","BC000001");
 			resultMap.put("msg","用户已绑定银行卡,请先解除绑定,然后重新操作");
 			logger.info("用户已绑定银行卡,请先解除绑定,然后重新操作");
+			return resultMap;
 		}
 
 		return resultMap;
@@ -229,7 +232,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         // 交易成功跳转链接
         String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + "/user/bindCardSuccess?bind=true&unbind=false&msg=";
 		// 商户后台应答地址(必须)
-		String notifyUrl = systemConfig.getWebHost().trim() + "/hyjf-web/user/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
+		String notifyUrl = systemConfig.getServerHost().trim() + "/hyjf-web/user/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
         String forgotPwdUrl = systemConfig.getForgetpassword();
 
@@ -324,7 +327,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		String retUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/failed?logOrdId=" + orderId + "&sign=" + sign + "&token=1";
 		String successUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/success?sign=" + sign + "&token=1";
 		// 异步调用路
-		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/bindCardPage/notifyReturn?phone=" + userVO.getMobile();
+		String bgRetUrl = systemConfig.getServerHost() + "/bank/user/bindCardPage/notifyReturn?phone=" + userVO.getMobile();
 		// 拼装参数 调用江西银行
 		String forgetPassworedUrl = systemConfig.getForgetpassword();
 

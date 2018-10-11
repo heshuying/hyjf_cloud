@@ -240,7 +240,7 @@ public class ApiUserBindController extends BaseUserController {
 	        if (StringUtils.isNoneBlank(apiUserPostBean.getTarget_url())) {
 	        	jsonResult.put("retUrl", apiUserPostBean.getTarget_url());
 			}else {
-				jsonResult.put("retUrl", systemConfig.getWeChatHost()+"?sign=" + sign);
+				jsonResult.put("retUrl", systemConfig.getServerHost()+"?sign=" + sign);
 			}
 	        jsonResult.put("hyjfUserName",userName ); 
 	        jsonResult.put("userId",users.getUserId() ); 

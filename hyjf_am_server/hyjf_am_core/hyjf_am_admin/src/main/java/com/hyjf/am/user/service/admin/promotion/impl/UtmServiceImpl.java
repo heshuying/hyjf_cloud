@@ -61,7 +61,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     @Override
     public Utm insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
         Utm utm = new Utm();
-        if(StringUtils.isNotEmpty(channelCustomizeVO.getUtmId())){
+        if(StringUtils.isNotBlank(channelCustomizeVO.getUtmId())){
             //执行更新操作
             utm = changeUtm(utm,channelCustomizeVO);
             utm.setUtmId(Integer.parseInt(channelCustomizeVO.getUtmId()));
@@ -84,7 +84,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     public UtmPlatVO getUtmPlatById(Integer id) {
         UtmPlat utmPlat = utmPlatMapper.selectByPrimaryKey(id);
         UtmPlatVO utmPlatVO = new UtmPlatVO();
-        utmPlatVO = (UtmPlatVO)convertBean2Bean(utmPlat,utmPlatVO);
+        utmPlatVO = CommonUtils.convertBean(utmPlat,UtmPlatVO.class);
         return utmPlatVO;
     }
 
@@ -107,7 +107,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     public UtmPlat insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
         UtmPlat utmPlat = new UtmPlat();
         utmPlat = convertUtmPlat(utmPlat,utmPlatVO);
-        if(StringUtils.isNotBlank(utmPlatVO.getId()+"")){
+        if(null != utmPlatVO.getId() && !"".equals(utmPlatVO.getId())){
             utmPlat.setId(Integer.valueOf(utmPlatVO.getId()));
             utmPlatMapper.updateByPrimaryKeySelective(utmPlat);
         }else{
@@ -303,7 +303,9 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         }else {
             record.setLinkAddress("www.hyjf.com");
         }
-        record.setStatus(Integer.valueOf(channelCustomizeVO.getStatus()));
+        if(StringUtils.isNotBlank(channelCustomizeVO.getStatus())){
+            record.setStatus(Integer.valueOf(channelCustomizeVO.getStatus()));
+        }
 
         if (StringUtils.isNotEmpty(channelCustomizeVO.getRemark())) {
             record.setRemark(channelCustomizeVO.getRemark());

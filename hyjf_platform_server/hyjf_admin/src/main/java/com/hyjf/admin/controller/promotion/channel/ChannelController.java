@@ -64,23 +64,25 @@ public class ChannelController extends BaseController {
 
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
     @PostMapping("/infoaction")
-    public AdminResult info(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
+    public UtmResultResponse info(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
         UtmResultResponse adminResult = new UtmResultResponse();
         if (StringUtils.isNotEmpty(channelCustomizeVO.getUtmId())) {
             UtmChannelVO record = channelService.getRecord(channelCustomizeVO.getUtmId());
-            if (record.getUtmReferrer() == null || record.getUtmReferrer() == 0) {
+            if (null == record || record.getUtmReferrer() == null || record.getUtmReferrer() == 0) {
                 adminResult.setUtmReferrer("");
             } else {
                 UserVO user = this.channelService.getUser(StringUtils.EMPTY, String.valueOf(record.getUtmReferrer()));
                 adminResult.setUtmReferrer(user.getUsername());
             }
-            adminResult.setData(record);
             if (record != null) {
                 adminResult.setUrl(getUrl(record));
             }
             adminResult.setData(record);
+        }else{
+            adminResult.setStatus(UtmResultResponse.FAIL);
+            adminResult.setStatusDesc("查询条件异常！");
         }
-        return new AdminResult(adminResult);
+        return adminResult;
     }
 
     @ApiOperation(value = "添加或修改信息", notes = "添加或修改信息")

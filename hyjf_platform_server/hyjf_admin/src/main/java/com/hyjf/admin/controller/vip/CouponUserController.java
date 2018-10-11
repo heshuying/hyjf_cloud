@@ -279,9 +279,7 @@ public class CouponUserController extends BaseController {
         //被选中项目类型
         String projectSed[] = StringUtils.split(configVO.getProjectType(), ",");
         if (configVO.getProjectType().indexOf("-1") != -1) {
-            // mod by nxl 智投服务：修改汇计划->智投
-//            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
-            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/智投项目";
+            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
         } else {
             projectString = projectString + "所有";
             for (String project : projectSed) {
@@ -301,9 +299,7 @@ public class CouponUserController extends BaseController {
                     projectString = projectString + "汇添金/";
                 }
                 if ("6".equals(project)) {
-                    // mod by nxl 智投服务：修改汇计划->智投
-//                    projectString = projectString + "汇计划/";
-                    projectString = projectString + "智投/";
+                    projectString = projectString + "汇计划/";
                 }
             }
             projectString = StringUtils.removeEnd(
@@ -353,9 +349,7 @@ public class CouponUserController extends BaseController {
         //被选中项目类型
         String projectSed[] = StringUtils.split(detail.getProjectType(), ",");
         if (detail.getProjectType().indexOf("-1") != -1) {
-            // mod by nxl 智投服务：修改汇计划->智投
-//            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
-            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/智投项目";
+            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
         } else {
             projectString = projectString + "所有";
             for (String project : projectSed) {
@@ -375,9 +369,7 @@ public class CouponUserController extends BaseController {
                     projectString = projectString + "汇添金/";
                 }
                 if ("6".equals(project)) {
-                    // mod by nxl 智投服务：修改汇计划->智投
-//                    projectString = projectString + "汇计划/";
-                    projectString = projectString + "智投/";
+                    projectString = projectString + "汇计划/";
                 }
             }
             projectString = StringUtils.removeEnd(
@@ -427,9 +419,7 @@ public class CouponUserController extends BaseController {
         //被选中项目类型
         String projectSed[] = StringUtils.split(detail.getProjectType(), ",");
         if (detail.getProjectType().indexOf("-1") != -1) {
-            // mod by nxl 智投服务：修改汇计划->智投
-//            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
-            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/智投项目";
+            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
         } else {
             projectString = projectString + "所有";
             for (String project : projectSed) {
@@ -449,9 +439,7 @@ public class CouponUserController extends BaseController {
                     projectString = projectString + "汇添金/";
                 }
                 if ("6".equals(project)) {
-                    // mod by nxl 智投服务：修改汇计划->智投
-//                    projectString = projectString + "汇计划/";
-                    projectString = projectString + "智投/";
+                    projectString = projectString + "汇计划/";
                 }
             }
             projectString = StringUtils.removeEnd(
@@ -476,7 +464,7 @@ public class CouponUserController extends BaseController {
             return new AdminResult<>(FAIL,FAIL_DESC);
         }
         CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponUserBeanRequest.getCouponCode());
-        if (configResponse == null && configResponse.getResult() == null) {
+        if (configResponse == null || configResponse.getResult() == null) {
             return new AdminResult<>(FAIL,FAIL_DESC);
         }
         String message = this.validatorFieldCheckAudit(couponUserBeanRequest, record);
@@ -512,9 +500,7 @@ public class CouponUserController extends BaseController {
             //被选中项目类型
             String projectSed[] = StringUtils.split(detail.getProjectType(), ",");
             if (detail.getProjectType().indexOf("-1") != -1) {
-                // mod by nxl 智投服务：修改汇计划->智投
-//                projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
-                projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/智投项目";
+                projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
             } else {
                 projectString = projectString + "所有";
                 for (String project : projectSed) {
@@ -534,9 +520,7 @@ public class CouponUserController extends BaseController {
                         projectString = projectString + "汇添金/";
                     }
                     if ("6".equals(project)) {
-                        // mod by nxl 智投服务：修改汇计划->智投
-                       // projectString = projectString + "汇计划/";
-                        projectString = projectString + "智投/";
+                        projectString = projectString + "汇计划/";
                     }
                 }
                 projectString = StringUtils.removeEnd(
@@ -662,9 +646,7 @@ public class CouponUserController extends BaseController {
                         //被选中项目类型
                         String projectSed[] = StringUtils.split(couponUser.getProjectType(), ",");
                         if (couponUser.getProjectType().indexOf("-1") != -1) {
-                            // mod by nxl 智投服务：修改汇计划->智投
-        //                projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
-                            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/智投项目";
+                            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
                         } else {
                             projectString = projectString + "所有";
                             for (String project : projectSed) {
@@ -684,9 +666,7 @@ public class CouponUserController extends BaseController {
                                     projectString = projectString + "汇添金/";
                                 }
                                 if ("6".equals(project)) {
-                                    // mod by nxl 智投服务：修改汇计划->智投
-//                                    projectString = projectString + "汇计划/";
-                                    projectString = projectString + "智投/";
+                                    projectString = projectString + "汇计划/";
                                 }
 
                             }

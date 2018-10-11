@@ -85,4 +85,10 @@ public interface MyCreditListService extends BaseTradeService {
      * @return
      */
     WebResult checkCode(TenderBorrowCreditCustomize request, Integer userId);
+
+    Integer insertTenderToCredit(int userId, TenderBorrowCreditCustomize request);
+
+    void checkTenderToCreditParam(TenderBorrowCreditCustomize request, Integer userId) ;
+
+    void sendCode(Integer userId, String ip,String mobile,String platform);
 }

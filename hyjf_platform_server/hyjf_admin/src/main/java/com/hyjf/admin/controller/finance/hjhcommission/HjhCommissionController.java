@@ -146,6 +146,9 @@ public class HjhCommissionController extends BaseController{
 		if (!Response.isSuccess(response)) {
 			jsonObject.put("error", FAIL);
 		}
+		if(response.getTotalMap().isEmpty()){
+			jsonObject.put("error", FAIL);
+		}
 		jsonObject.put("totalMap", response.getTotalMap());
 		jsonObject.put("status", SUCCESS);
 		return jsonObject;
@@ -249,18 +252,12 @@ public class HjhCommissionController extends BaseController{
 		if(res != null) {
 			returnList = res.getResultList();
 		}
-		// mod by nxl 智投服务 修改计划名称为智投订单
 		// 列头
-        /*String[] titles =
+        String[] titles =
                 new String[] { "序号", "加入订单号", "计划编号", "还款方式", "锁定期", "预期年化收益率", "提成人", "提成人真实姓名", "提成人用户属性(投资时)", "投资人用户名", 
                 		"投资人用户属性(投资时)",
                 		"加入金额", "提成金额",
-                        "提成发放状态", "提成发放时间" ,"计划订单加入时间","计划订单锁定时间"};*/
-		String[] titles =
-				new String[] { "序号", "加入订单号", "计划编号", "还款方式", "锁定期", "预期年化收益率", "提成人", "提成人真实姓名", "提成人用户属性(投资时)", "投资人用户名",
-						"投资人用户属性(投资时)",
-						"加入金额", "提成金额",
-						"提成发放状态", "提成发放时间" ,"授权服务订单时间","智投订单锁定时间"};
+                        "提成发放状态", "提成发放时间" ,"计划订单加入时间","计划订单锁定时间"};
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
@@ -531,7 +528,7 @@ public class HjhCommissionController extends BaseController{
                 }
                 // IP地址
                 String ip = CustomUtil.getIpAddr(request);
-                String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
+                String orderId = GetOrderIdUtils.getOrderId2(userId);
                 BankCallBean bean = new BankCallBean();
                 bean.setVersion(BankCallConstant.VERSION_10);// 版本号
                 bean.setTxCode(BankCallMethodConstant.TXCODE_VOUCHER_PAY);// 交易代码

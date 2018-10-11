@@ -73,11 +73,11 @@ public class ApiBankOpenController extends BaseUserController {
         OpenAccountPageBean bean = new OpenAccountPageBean();
         BeanUtils.copyProperties(requestBean,bean);
         // 同步调用路径
-        String retUrl = systemConfig.getWebHost()
+        String retUrl = systemConfig.getServerHost()
                 + "/server/autoPlus/return?acqRes="
                 + requestBean.getAcqRes() + "&callback=" + requestBean.getRetUrl().replace("#", "*-*-*");
         // 异步调用路
-        String bgRetUrl =systemConfig.getWebHost()
+        String bgRetUrl =systemConfig.getServerHost()
                 + "/server/autoPlus/bgReturn?acqRes="
                 +  requestBean.getAcqRes() + "&phone"+requestBean.getMobile()+"&callback=" + requestBean.getBgRetUrl().replace("#", "*-*-*");
         bean.setRetUrl(retUrl);

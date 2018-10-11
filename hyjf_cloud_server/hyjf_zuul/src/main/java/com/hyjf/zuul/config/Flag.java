@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class Flag {
 	private boolean flag;
 
-	public boolean isFlag() {
+	public synchronized boolean isFlag() {
 		return flag;
 	}
 

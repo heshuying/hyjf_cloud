@@ -100,4 +100,10 @@ public interface AmConfigClient {
 	List<DebtConfigVO> getDebtConfigList();
 
     String getBankRetMsg(String retCode);
+
+	/**
+	 * 获取短信配置表-最大量，有效时间等 配置只有一条
+	 * @return
+	 */
+	SmsConfigVO findSmsConfig();
 }

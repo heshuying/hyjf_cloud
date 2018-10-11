@@ -68,9 +68,9 @@
 		FROM
 		ht_account_list l
 		LEFT JOIN ht_account_trade t ON l.trade = t.`value`
-		LEFT JOIN hyjf_user.ht_user hu ON l.user_id = hu.user_id
-		LEFT JOIN hyjf_user.ht_spreads_user hsu ON l.user_id = hsu.user_id
-		LEFT JOIN hyjf_user.ht_user hu2 on hsu.spreads_user_id = hu2.user_id
+		LEFT JOIN ht_r_user hu ON l.user_id = hu.user_id
+		LEFT JOIN ht_r_user hsu ON l.user_id = hsu.user_id
+		LEFT JOIN ht_r_user hu2 on hsu.spreads_user_id = hu2.user_id
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
 		ORDER BY l.create_time DESC, l.id DESC
@@ -82,9 +82,9 @@
 		SELECT COUNT(1)
 		FROM ht_account_list l
 		LEFT JOIN ht_account_trade t ON l.trade= t.`value`
-		LEFT JOIN hyjf_user.ht_user hu ON l.user_id = hu.user_id
-		LEFT JOIN hyjf_user.ht_spreads_user hsu ON l.user_id = hsu.user_id
-		LEFT JOIN hyjf_user.ht_user hu2 on hsu.spreads_user_id = hu2.user_id
+		LEFT JOIN ht_r_user hu ON l.user_id = hu.user_id
+		LEFT JOIN ht_r_user hsu ON l.user_id = hsu.user_id
+		LEFT JOIN ht_r_user hu2 on hsu.spreads_user_id = hu2.user_id
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
 	</select>

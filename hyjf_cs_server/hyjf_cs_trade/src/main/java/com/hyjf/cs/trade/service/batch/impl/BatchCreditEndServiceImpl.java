@@ -101,7 +101,8 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
             // 生成订单
             String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(bankCreditEnd.getBatchNo()));
             // 银行接口用bean
-            BankCallBean bean = new BankCallBean(orderId, Integer.getInteger(bankCreditEnd.getBatchNo()), BankCallConstant.TXCODE_BATCH_CREDIT_END, "批次结束债权(BatchNo)", 0);
+            BankCallBean bean = new BankCallBean(orderId, Integer.valueOf(bankCreditEnd.getBatchNo()), BankCallConstant.TXCODE_BATCH_CREDIT_END, "批次结束债权(BatchNo)", 0);
+
             // 调用放款接口
             bean.setBatchNo(bankCreditEnd.getBatchNo());
             bean.setTxCounts(String.valueOf(bankCreditEnd.getTxCounts()));

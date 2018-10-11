@@ -413,7 +413,16 @@ public class DateUtils {
 		}
 		return null;
 	}
-
+	/**
+	 * 设置时间加当前系统时间（小时）
+	 * @param loginLockTime
+	 * @return
+	 */
+	public static Date nowDateAddDate(int loginLockTime){
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.HOUR, loginLockTime);
+		return calendar.getTime();
+	}
 	/**
 	 * 获取当前月的结束日期
 	 * @param date 2018-01-01:当前日日期
