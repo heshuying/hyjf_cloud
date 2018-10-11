@@ -715,7 +715,7 @@ public interface AmTradeClient {
      *
      * @param borrowFireRequest
      */
-    boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest);
+    AdminResult updateOntimeRecord(BorrowFireRequest borrowFireRequest);
 
     /**
      * 借款复审总条数
