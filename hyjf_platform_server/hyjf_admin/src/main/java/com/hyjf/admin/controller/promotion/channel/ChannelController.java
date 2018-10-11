@@ -7,9 +7,11 @@ import com.hyjf.admin.service.promotion.channel.ChannelService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.admin.promotion.UtmResultResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -31,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,8 +52,8 @@ public class ChannelController extends BaseController {
 
     @ApiOperation(value = "页面初始化", notes = "推广列表")
     @PostMapping("/init")
-    public AdminResult channelListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO) {
-        AdminResult adminResult = new AdminResult();
+    public UtmResultResponse channelListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO) {
+        UtmResultResponse adminResult = new UtmResultResponse();
         Integer count = this.channelService.countList(channelCustomizeVO);
         if(null != count){
             channelCustomizeVO.setLimitStart(channelCustomizeVO.getLimitStart());
@@ -58,7 +61,9 @@ public class ChannelController extends BaseController {
             List<ChannelCustomizeVO> channelList = channelService.getByPageList(channelCustomizeVO);
             adminResult.setData(channelList);
         }
-        adminResult.setTotalCount(count);
+        List<UtmPlatVO> utmPlatVOList = channelService.getAllUtmPlat();
+        adminResult.setUtmPlatList(utmPlatVOList);
+        adminResult.setTotal(count);
         return adminResult;
     }
 
@@ -74,9 +79,11 @@ public class ChannelController extends BaseController {
                 UserVO user = this.channelService.getUser(StringUtils.EMPTY, String.valueOf(record.getUtmReferrer()));
                 adminResult.setUtmReferrer(user.getUsername());
             }
+            String url = "";
             if (record != null) {
-                adminResult.setUrl(getUrl(record));
+                url = getUrl(record);
             }
+            adminResult.setUrl(url);
             adminResult.setData(record);
         }else{
             adminResult.setStatus(UtmResultResponse.FAIL);

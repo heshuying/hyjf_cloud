@@ -2808,6 +2808,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * @Description 获取admin产品中心-汇直投-放款明细列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @Override
+    public List<BorrowRecoverCustomizeVO> exportBorrowRecoverList(BorrowRecoverRequest request) {
+        String url = "http://AM-ADMIN/am-trade/adminBorrowRecover/exportBorrowRecoverList";
+        AdminBorrowRecoverResponse response = restTemplate.postForEntity(url, request, AdminBorrowRecoverResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      * @Description 获取admin产品中心-汇直投-放款明细统计
      * @Author pangchengchao
      * @Version v0.1
