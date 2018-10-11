@@ -33,6 +33,7 @@ import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AmTradeProducer;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
@@ -85,6 +86,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     private AppCouponService appCouponService;
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
+    @Autowired
+    private AmTradeProducer amTradeProducer;
 
 
     /**
@@ -118,10 +121,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         CouponUserVO cuc = null;
         if (request.getCouponGrantId() != null && request.getCouponGrantId() > 0) {
             cuc = amTradeClient.getCouponUser(request.getCouponGrantId(), userId);
-        }
-        // 查询计划
-        if (StringUtils.isEmpty(request.getBorrowNid())) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
         }
         HjhPlanVO plan = amTradeClient.getPlanByNid(request.getBorrowNid());
         if (plan == null) {
@@ -917,12 +916,13 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         if (trenderFlag) {
             //加入明细表插表成功的前提下，继续
             //crm投资推送
-            // TODO: 2018/6/22  crm投资推送
-           /* rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME,
-                    RabbitMQConstants.ROUTINGKEY_POSTINTERFACE_CRM, JSON.toJSONString(planAccede));*/
+            try {
+                amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(planAccede)));
+            } catch (Exception e) {
+                logger.error("发送CRM消息失败:" + e.getMessage());
+            }
             // 更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始
             this.updateUtm(request, plan);
-
             // 网站累计投资追加
             // 投资、收益统计表
             JSONObject params = new JSONObject();
@@ -1144,6 +1144,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @Date 2018/6/19 11:37
      */
     private void checkUser(UserVO user, UserInfoVO userInfo) {
+        if (user == null || userInfo == null) {
+            throw new CheckException(MsgEnum.ERR_USER_NOT_EXISTS);
+        }
         if (userInfo.getRoleId() == 3) {// 担保机构用户
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
         }

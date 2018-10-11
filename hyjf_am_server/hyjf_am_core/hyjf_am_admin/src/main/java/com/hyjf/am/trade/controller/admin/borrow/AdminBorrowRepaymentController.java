@@ -228,7 +228,7 @@ public class AdminBorrowRepaymentController extends BaseController {
 
 
     // 更新用户的交易明细
-    @RequestMapping(value = "/updateBorrowRepayDelayDays/{borrowNid}/{delayDays}", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateBorrowRepayDelayDays/{borrowNid}/{delayDays}", method = RequestMethod.GET)
     public IntegerResponse updateBorrowRepayDelayDays(@PathVariable String borrowNid, @PathVariable String delayDays) {
         IntegerResponse response=new IntegerResponse();
         try {

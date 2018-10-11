@@ -56,7 +56,7 @@ public class LoanCoverUserManagerController extends BaseController {
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dateStart = null;
         Date dateEnd = null;
-        if (StringUtils.isNotBlank(request.getStartCreate()) || StringUtils.isNotBlank(request.getStartCreate())) {
+        if (StringUtils.isNotBlank(request.getStartCreate()) || StringUtils.isNotBlank(request.getEndCreate())) {
             try {
                 dateStart = smp.parse(request.getStartCreate()+" 00:00:00");
                 dateEnd = smp.parse(request.getEndCreate()+" 23:59:59");

@@ -303,7 +303,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
             money = "0";
             result.setRealAmount("");
-            result.setButtonWord("确认");
+            result.setButtonWord("实际支付0.00元");
         } else {
             result.setRealAmount("");
             result.setButtonWord("确认投资"+CommonUtils.formatAmount(null, money)+"元");
@@ -1228,7 +1228,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 获取标的借款人
         String borrowStyle = borrow.getBorrowStyle();
         // 债转本息
-        BigDecimal creditAccount = null;
+        BigDecimal creditAccount = BigDecimal.ZERO;
         // 债转期全部利息
         BigDecimal creditInterest = null;
         // 垫付利息 垫息总额=债权本金*年化收益÷360*融资期限-债权本金*年化收益÷360*剩余期限

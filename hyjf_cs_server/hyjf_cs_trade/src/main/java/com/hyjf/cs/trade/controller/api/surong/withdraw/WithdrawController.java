@@ -407,16 +407,26 @@ public class WithdrawController extends BaseController {
     @ResponseBody
     @RequestMapping("/callback")
     public Object cashCallBack(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
+        // 发送状态
+        String status = BankCallStatusConstant.STATUS_VERTIFY_OK;
+        // 结果返回码
+        String retCode = "";
+    	if(bean == null){
+    		retCode = "" ;
+            status = BankCallStatusConstant.STATUS_FAIL;
+            logger.info("提现后异步处理结束：提现失败：");
+    	}
         bean.convert();
         logger.info("--↓↓ 提现异步回调Start ↓↓-- orderId: " + bean.getLogOrderId() + " nid=" + request.getParameter("nid")
                 + " -retCode:" + bean.getRetCode());
         BankCallResult bankCallResult = new BankCallResult();
         String error = "0";
         String message = "";
-        // 发送状态
-        String status = BankCallStatusConstant.STATUS_VERTIFY_OK;
         // 结果返回码
-        String retCode = bean == null ? "" : bean.getRetCode();
+        /*String retCode = bean == null ? "" : bean.getRetCode();*/
+        if(bean.getRetCode() != null){
+        	retCode = bean.getRetCode();
+        }
         // 提现成功 大额提现是返回 CE999028
         if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(retCode) || "CE999028".equals(retCode)) {
             // 执行结果(成功)

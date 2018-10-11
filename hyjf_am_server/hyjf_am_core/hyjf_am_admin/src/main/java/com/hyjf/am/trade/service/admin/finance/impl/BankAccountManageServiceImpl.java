@@ -174,7 +174,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
                 traceNo = String.valueOf(lastResult.getTraceNo());
             }
             pageNum++;
-        } while (list.size() == pageSize);
+        } while (list != null &&list.size() == pageSize);
         logger.info(this.getClass().getName(), "-------------------" + recordList.size() + "同步余额总条数--------------------");
         logger.info(this.getClass().getName(), "-------------------" + pageNum + "同步余额请求次数--------------------");
         return recordList;
@@ -359,7 +359,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         updateAccount.setBankBalance(synBalanceBean.getTxAmount());
         boolean isAccountUpdateFlag = adminAccountCustomizeMapper.updateOfSynBalance(updateAccount) > 0 ? true : false;
         if (!isAccountUpdateFlag) {
-            new RuntimeException("同步线下充值,更新用户账户信息失败~~~~,用户ID:" + account.getUserId());
+            logger.error("同步线下充值,更新用户账户信息失败~~~~,用户ID:" + account.getUserId());
         }
         // TODO 上市活动 是否需要保留
 //        CommonSoaUtils.listedTwoRecharge(userId, synBalanceBean.getTxAmount());

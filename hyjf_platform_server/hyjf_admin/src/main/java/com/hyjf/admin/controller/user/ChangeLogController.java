@@ -174,7 +174,7 @@ public class ChangeLogController extends BaseController {
 //                    }
                     // 用户状态
                     else if (celLength == 7) {
-                        cell.setCellValue(changeLog.getStatus()==null?"":changeLog.getStatus()==1?"启用" : "禁用");
+                        cell.setCellValue(changeLog.getStatus()==null?"":changeLog.getStatus()==0?"启用" : "禁用");
                     }
                     // 修改人
                     else if (celLength == 8) {
