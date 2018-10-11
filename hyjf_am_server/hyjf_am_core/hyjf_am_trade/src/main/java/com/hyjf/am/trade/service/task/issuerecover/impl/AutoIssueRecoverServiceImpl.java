@@ -937,6 +937,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrow.setBorrowUserName(hjhPlanAsset.getUserName());
 
         borrow.setBorrowEndTime("");
+        borrow.setRepayLastTime(0);
+
         // 项目申请人
 //		String applicant = hjhAssetBorrowType.getApplicant();
 
