@@ -970,7 +970,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 }
             }
         }
-        CorpOpenAccountRecord record = null;
+        CorpOpenAccountRecord record = new CorpOpenAccountRecord();
         if (bankOpenFlag == 1) {//获取修改信息
             CorpOpenAccountRecord corpOpenAccountRecord = this.selectCorpOpenAccountRecordByUserId(user.getUserId());
             BeanUtils.copyProperties(corpOpenAccountRecord, record);
@@ -1007,7 +1007,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             }
         }
         //保存银行卡信息
-        BankCard bankCard = null;
+        BankCard bankCard = new BankCard();
         if (bankOpenFlag == 1) {
             List<BankCard> bankCardList = this.findBankCardByUserId(user.getUserId());
             if (null != bankCardList && bankCardList.size() > 0) {

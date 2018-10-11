@@ -45,10 +45,10 @@ public class CouponCheckController extends BaseController {
     public AdminResult couponInit(@RequestBody AdminCouponCheckRequest request) {
         CouponCheckResponse ccr = couponCheckService.serchCouponList(request);
         List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
-        ccr.setCouponType(couponType);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+        ccr.setCouponType(couponType);
         if (!Response.isSuccess(ccr)) {
             return new AdminResult<>(FAIL, ccr.getMessage());
 

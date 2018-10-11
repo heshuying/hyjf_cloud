@@ -97,7 +97,7 @@ public class AnRongCallController extends BaseController {
 		} catch (Exception e) {
 			logger.error(AnRongCallDefine.CONTROLLOR_CLASS_NAME, methodName, "订单号：" + logOrderId, e);
 		} finally {
-			logger.info(AnRongCallDefine.CONTROLLOR_CLASS_NAME, methodName, "[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+			logger.info(AnRongCallDefine.CONTROLLOR_CLASS_NAME, methodName, "[调用接口结束, 消息类型:" +bean.getTxCode() +"]");
 		}
 		return ret;
 	}

@@ -464,7 +464,7 @@ public class CouponUserController extends BaseController {
             return new AdminResult<>(FAIL,FAIL_DESC);
         }
         CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponUserBeanRequest.getCouponCode());
-        if (configResponse == null && configResponse.getResult() == null) {
+        if (configResponse == null || configResponse.getResult() == null) {
             return new AdminResult<>(FAIL,FAIL_DESC);
         }
         String message = this.validatorFieldCheckAudit(couponUserBeanRequest, record);

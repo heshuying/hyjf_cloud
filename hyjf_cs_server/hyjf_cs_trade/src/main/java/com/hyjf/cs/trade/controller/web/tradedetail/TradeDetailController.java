@@ -68,12 +68,18 @@ public class TradeDetailController  extends BaseTradeController {
                                                @RequestBody @Valid TradeDetailBeanRequest form) {
         logger.info("web获取用户收支明细列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
         WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
-        CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
-        form.setRoleId(user.getRoleId());
-        form.setUserId(user.getUserId().toString());
-        TradeDetailBean result  = tradeDetailService.searchUserTradeList(form);
-        result.setListType("trade");
+        TradeDetailBean result = new TradeDetailBean();
+        if(user != null){
+            CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+            if(user.getRoleId() != null){
+            	form.setRoleId(user.getRoleId());
+            }
+            form.setUserId(user.getUserId().toString());
+            result  = tradeDetailService.searchUserTradeList(form);
+            result.setListType("trade");
+        }
         return result;
+
     }
 
 
@@ -89,11 +95,16 @@ public class TradeDetailController  extends BaseTradeController {
                                                @RequestBody @Valid TradeDetailBeanRequest form) {
         logger.info("web获取用户充值记录列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
         WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
-        CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
-        form.setRoleId(user.getRoleId());
-        form.setUserId(user.getUserId().toString());
-        TradeDetailBean result  = tradeDetailService.searchUserRechargeList(form);
-        result.setListType("recharge");
+        TradeDetailBean result = new TradeDetailBean();
+        if(user != null){
+            CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+            if(user.getRoleId() != null){
+            	form.setRoleId(user.getRoleId());
+            }
+            form.setUserId(user.getUserId().toString());
+            result  = tradeDetailService.searchUserRechargeList(form);
+            result.setListType("recharge");
+        }
         return result;
     }
 
@@ -109,11 +120,16 @@ public class TradeDetailController  extends BaseTradeController {
                                                   @RequestBody @Valid TradeDetailBeanRequest form) {
         logger.info("web获取用户提现记录列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
         WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
-        CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
-        form.setRoleId(user.getRoleId());
-        form.setUserId(user.getUserId().toString());
-        TradeDetailBean result  = tradeDetailService.searchUserWithdrawList(form);
-        result.setListType("withdraw");
+        TradeDetailBean result = new TradeDetailBean();
+        if(user != null){
+            CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+            if(user.getRoleId()!= null){
+            	form.setRoleId(user.getRoleId());
+            }
+            form.setUserId(user.getUserId().toString());
+            result  = tradeDetailService.searchUserWithdrawList(form);
+            result.setListType("withdraw");	
+        }
         return result;
     }
 }

@@ -325,6 +325,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         // 更新用户计划账户
         boolean accountFlag = hjhPlanCustomizeMapper.updateOfPlanJoin(account)> 0 ? true : false;
         logger.info("加入计划账户 操作account结果 :{}",accountFlag);
+        accedeAccount = getAccount(request.getUserId());
         // 组装accountList
         AccountList accountList = new AccountList();
         accountList.setIsBank(1);

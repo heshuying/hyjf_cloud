@@ -1637,14 +1637,15 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @param borrowFireRequest
      */
     @Override
-    public boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
+    public AdminResult updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
         String url = "http://AM-ADMIN/am-trade/borrow_first/update_ontime_record";
-        BorrowFirstCustomizeResponse response =
+        Response response =
                 restTemplate.postForEntity(url, borrowFireRequest, BorrowFirstCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return response.getFlag();
+            return new AdminResult();
+        } else {
+            return new AdminResult(BaseResult.FAIL, response.getMessage());
         }
-        return false;
     }
 
     /**
@@ -2800,6 +2801,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BorrowRecoverCustomizeVO> selectBorrowRecoverList(BorrowRecoverRequest request) {
         String url = "http://AM-ADMIN/am-trade/adminBorrowRecover/selectBorrowRecoverList";
+        AdminBorrowRecoverResponse response = restTemplate.postForEntity(url, request, AdminBorrowRecoverResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * @Description 获取admin产品中心-汇直投-放款明细列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @Override
+    public List<BorrowRecoverCustomizeVO> exportBorrowRecoverList(BorrowRecoverRequest request) {
+        String url = "http://AM-ADMIN/am-trade/adminBorrowRecover/exportBorrowRecoverList";
         AdminBorrowRecoverResponse response = restTemplate.postForEntity(url, request, AdminBorrowRecoverResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -6197,7 +6214,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
         AdminProtocolResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/startuseexistprotocol",
                 adminProtocolRequest, AdminProtocolResponse.class);
-        if(response.getRtn() == Response.SUCCESS){
+        if(Response.SUCCESS.equals(response.getRtn())){
             return true;
         }
 

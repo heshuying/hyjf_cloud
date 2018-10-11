@@ -108,6 +108,9 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
                         cri.andUserIdEqualTo(accountChinapnr.getUserId());
                         // 如果接口调用成功
                         if (ChinaPnrConstant.RESPCODE_SUCCESS.equals(respCode)) {
+                        	if(chinapnrBean.getUsrCardInfolist()==null) {
+                        		return respCode;
+                        	}
                             String UsrCardInfolist = chinapnrBean.getUsrCardInfolist();
                             JSONArray array = JSONObject.parseArray(UsrCardInfolist);
                             if (array.size() != 0) {
@@ -245,6 +248,9 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
                             return respCode;
                         } else {
                             String respDesc = "";
+                            if(chinapnrBean.getRespDesc()==null) {
+                            	  return respDesc;
+                            }
                             if (StringUtils.isNotEmpty(chinapnrBean.getRespDesc())) {
                                 respDesc = chinapnrBean.getRespDesc();
                             }

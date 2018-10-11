@@ -54,9 +54,9 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
         Criteria criteria = createCriteria(accountWebList);
         query.with(new Sort(Sort.Direction.DESC, "createTime","id"));
         query.addCriteria(criteria);
-        if(0==start){
+        /*if(0==start){
             return mongoTemplate.find(query,getEntityClass());
-        }
+        }*/
         return mongoTemplate.find(query.skip(start-1).limit(end),getEntityClass());
     }
 
