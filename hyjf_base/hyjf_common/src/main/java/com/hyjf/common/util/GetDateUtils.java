@@ -688,7 +688,7 @@ public class GetDateUtils {
      * @return
      */
     public static int getAge(Date birth) {
-        if (birth == null || "".equals(birth)) {
+        if (birth == null) {
             return 0;
         }
         DateTime now = new DateTime();

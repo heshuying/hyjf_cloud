@@ -122,10 +122,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         if (request.getCouponGrantId() != null && request.getCouponGrantId() > 0) {
             cuc = amTradeClient.getCouponUser(request.getCouponGrantId(), userId);
         }
-        // 查询计划
-        if (StringUtils.isEmpty(request.getBorrowNid())) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
-        }
         HjhPlanVO plan = amTradeClient.getPlanByNid(request.getBorrowNid());
         if (plan == null) {
             throw new CheckException(MsgEnum.FIND_PLAN_ERROR);
@@ -1148,6 +1144,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @Date 2018/6/19 11:37
      */
     private void checkUser(UserVO user, UserInfoVO userInfo) {
+        if (user == null || userInfo == null) {
+            throw new CheckException(MsgEnum.ERR_USER_NOT_EXISTS);
+        }
         if (userInfo.getRoleId() == 3) {// 担保机构用户
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
         }
