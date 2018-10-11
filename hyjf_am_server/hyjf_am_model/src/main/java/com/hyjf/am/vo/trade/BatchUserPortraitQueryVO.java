@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private Integer id;
 
     private Integer userId;
 
@@ -71,6 +72,36 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
 
     private String mobile;
 
+    private BigDecimal bankTotal;
+
+    private BigDecimal fundRetention;
+
+    private Integer lastRepayTime;
+
+    private Integer inviteRegist;
+
+    private Integer inviteRecharge;
+
+    private Integer inviteTender;
+
+    private BigDecimal yield;
+
+    private Integer attribute;
+
+    private BigDecimal bankBalance;
+
+    private BigDecimal accountAwait;
+
+    private BigDecimal bankFrost;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Integer getUserId() {
         return userId;
     }
@@ -84,7 +115,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.userName = userName == null ? null : userName.trim();
     }
 
     public Integer getAge() {
@@ -100,7 +131,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setSex(String sex) {
-        this.sex = sex;
+        this.sex = sex == null ? null : sex.trim();
     }
 
     public String getEducation() {
@@ -108,7 +139,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setEducation(String education) {
-        this.education = education;
+        this.education = education == null ? null : education.trim();
     }
 
     public String getOccupation() {
@@ -116,7 +147,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setOccupation(String occupation) {
-        this.occupation = occupation;
+        this.occupation = occupation == null ? null : occupation.trim();
     }
 
     public String getCity() {
@@ -124,7 +155,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setCity(String city) {
-        this.city = city;
+        this.city = city == null ? null : city.trim();
     }
 
     public String getInterest() {
@@ -132,7 +163,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setInterest(String interest) {
-        this.interest = interest;
+        this.interest = interest == null ? null : interest.trim();
     }
 
     public BigDecimal getInterestSum() {
@@ -172,7 +203,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setLoginActive(String loginActive) {
-        this.loginActive = loginActive;
+        this.loginActive = loginActive == null ? null : loginActive.trim();
     }
 
     public String getCustomerSource() {
@@ -180,7 +211,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setCustomerSource(String customerSource) {
-        this.customerSource = customerSource;
+        this.customerSource = customerSource == null ? null : customerSource.trim();
     }
 
     public Integer getLastLoginTime() {
@@ -236,7 +267,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setCurrentOwner(String currentOwner) {
-        this.currentOwner = currentOwner;
+        this.currentOwner = currentOwner == null ? null : currentOwner.trim();
     }
 
     public String getAddWechat() {
@@ -244,7 +275,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setAddWechat(String addWechat) {
-        this.addWechat = addWechat;
+        this.addWechat = addWechat == null ? null : addWechat.trim();
     }
 
     public String getInvestProcess() {
@@ -252,7 +283,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setInvestProcess(String investProcess) {
-        this.investProcess = investProcess;
+        this.investProcess = investProcess == null ? null : investProcess.trim();
     }
 
     public String getCustomerComplaint() {
@@ -260,7 +291,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setCustomerComplaint(String customerComplaint) {
-        this.customerComplaint = customerComplaint;
+        this.customerComplaint = customerComplaint == null ? null : customerComplaint.trim();
     }
 
     public Integer getInviteCustomer() {
@@ -276,7 +307,7 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setRemark(String remark) {
-        this.remark = remark;
+        this.remark = remark == null ? null : remark.trim();
     }
 
     public String getMobile() {
@@ -284,9 +315,96 @@ public class BatchUserPortraitQueryVO extends BaseVO implements Serializable {
     }
 
     public void setMobile(String mobile) {
-        this.mobile = mobile;
+        this.mobile = mobile == null ? null : mobile.trim();
     }
 
+    public BigDecimal getBankTotal() {
+        return bankTotal;
+    }
+
+    public void setBankTotal(BigDecimal bankTotal) {
+        this.bankTotal = bankTotal;
+    }
+
+    public BigDecimal getFundRetention() {
+        return fundRetention;
+    }
+
+    public void setFundRetention(BigDecimal fundRetention) {
+        this.fundRetention = fundRetention;
+    }
+
+    public Integer getLastRepayTime() {
+        return lastRepayTime;
+    }
+
+    public void setLastRepayTime(Integer lastRepayTime) {
+        this.lastRepayTime = lastRepayTime;
+    }
+
+    public Integer getInviteRegist() {
+        return inviteRegist;
+    }
+
+    public void setInviteRegist(Integer inviteRegist) {
+        this.inviteRegist = inviteRegist;
+    }
+
+    public Integer getInviteRecharge() {
+        return inviteRecharge;
+    }
+
+    public void setInviteRecharge(Integer inviteRecharge) {
+        this.inviteRecharge = inviteRecharge;
+    }
+
+    public Integer getInviteTender() {
+        return inviteTender;
+    }
+
+    public void setInviteTender(Integer inviteTender) {
+        this.inviteTender = inviteTender;
+    }
+
+    public BigDecimal getYield() {
+        return yield;
+    }
+
+    public void setYield(BigDecimal yield) {
+        this.yield = yield;
+    }
+
+    public Integer getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Integer attribute) {
+        this.attribute = attribute;
+    }
+
+    public BigDecimal getBankBalance() {
+        return bankBalance;
+    }
+
+    public void setBankBalance(BigDecimal bankBalance) {
+        this.bankBalance = bankBalance;
+    }
+
+    public BigDecimal getAccountAwait() {
+        return accountAwait;
+    }
+
+    public void setAccountAwait(BigDecimal accountAwait) {
+        this.accountAwait = accountAwait;
+    }
+
+    public BigDecimal getBankFrost() {
+        return bankFrost;
+    }
+
+    public void setBankFrost(BigDecimal bankFrost) {
+        this.bankFrost = bankFrost;
+    }
     @Override
     public String toString() {
         return "BatchUserPortraitQueryVO{" +
