@@ -3737,9 +3737,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal getUserRepayFeeWaitTotal(Integer userId) {
-        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_user/" + userId, Response.class).getBody();
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_user/" + userId, BigDecimalResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return new BigDecimal(response.getResult());
+            return response.getResultDec();
         }
         return BigDecimal.ZERO;
     }
@@ -3751,9 +3751,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal getOrgRepayFeeWaitTotal(Integer userId) {
-        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_org/" + userId, Response.class).getBody();
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_org/" + userId, BigDecimalResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return new BigDecimal(response.getResult());
+            return response.getResultDec();
         }
         return BigDecimal.ZERO;
     }
@@ -3765,9 +3765,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal getOrgRepayWaitTotal(Integer userId) {
-        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, Response.class).getBody();
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, BigDecimalResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return new BigDecimal(response.getResult());
+            return response.getResultDec();
         }
         return BigDecimal.ZERO;
     }
