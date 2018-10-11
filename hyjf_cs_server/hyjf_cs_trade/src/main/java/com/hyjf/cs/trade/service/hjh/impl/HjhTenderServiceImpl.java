@@ -1034,11 +1034,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             throw new CheckException(MsgEnum.ERR_ACTIVITY_NOT_EXIST);
         }
         // 投资金额小数点后超过两位
-        if (account.contains(".")) {
-            String accountSubstr = account.substring(account.indexOf(".") + 1);
-            if (StringUtils.isNotEmpty(accountSubstr) && accountSubstr.length() > 2) {
-                // 金额格式错误
-                throw new CheckException(MsgEnum.ERR_FMT_MONEY);
+        if(!request.getPlatform().equals(ClientConstants.WEB_CLIENT+"")){
+            // 移动端需要校验
+            if (account.contains(".")) {
+                String accountSubstr = account.substring(account.indexOf(".") + 1);
+                if (StringUtils.isNotEmpty(accountSubstr) && accountSubstr.length() > 2) {
+                    // 金额格式错误
+                    throw new CheckException(MsgEnum.ERR_FMT_MONEY);
+                }
             }
         }
         BigDecimal accountBigDecimal = new BigDecimal(account);
