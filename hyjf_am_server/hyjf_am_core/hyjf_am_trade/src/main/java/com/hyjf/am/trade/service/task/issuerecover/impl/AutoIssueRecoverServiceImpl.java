@@ -224,6 +224,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
         Borrow borrow = this.setBorrowCommonData(hjhPlanAsset, hjhAssetBorrowType, borrowFinmanNewCharge);
 
+
         BorrowInfoWithBLOBs borrowInfo = this.setBorrowInfo(hjhPlanAsset, hjhAssetBorrowType, borrowFinmanNewCharge, borrow);
 
         // 获取标签ID
@@ -291,6 +292,12 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
             borrow.setRepayCapitalType(hjhBailConfigInfoList.get(0).getRepayCapitalType());
         }
 
+        String borrowStyle = borrow.getBorrowStyle();
+        Integer isMonth = 0;// 0:天标 1：月标
+        if(!CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)){
+            isMonth = 1;
+        }
+        borrow.setIsMonth(isMonth);
         // 借款表插入
         int id = this.borrowMapper.insertSelective(borrow);
         borrowInfo.setId(id);

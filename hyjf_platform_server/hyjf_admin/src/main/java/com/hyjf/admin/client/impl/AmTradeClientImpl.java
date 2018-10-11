@@ -6197,7 +6197,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
         AdminProtocolResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/startuseexistprotocol",
                 adminProtocolRequest, AdminProtocolResponse.class);
-        if(response.getRtn() == Response.SUCCESS){
+        if(Response.SUCCESS.equals(response.getRtn())){
             return true;
         }
 
