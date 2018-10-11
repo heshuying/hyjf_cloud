@@ -82,7 +82,7 @@
 	</sql>
 
 
-	<resultMap id="selectBorrowRecoverListMap" type="com.hyjf.am.trade.dao.model.customize.AdminBorrowRecoverCustomize">
+	<resultMap id="exportBorrowRecoverListMap" type="com.hyjf.am.trade.dao.model.customize.AdminBorrowRecoverCustomize">
 		<!-- 借款编号 -->
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<!-- add by LSY START -->
@@ -155,7 +155,7 @@
 		<!-- 受托支付用户名 -->
 		<result column="entrusted_user_name" property="entrustedUserName" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="selectBorrowRecoverList" resultMap="selectBorrowRecoverListMap" parameterType="com.hyjf.am.resquest.admin.BorrowRecoverRequest">
+	<select id="exportBorrowRecoverList" resultMap="exportBorrowRecoverListMap" parameterType="com.hyjf.am.resquest.admin.BorrowRecoverRequest">
 		SELECT
 		b.borrow_nid              AS borrow_nid,
 		hic.inst_name,
@@ -198,6 +198,72 @@
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 
+		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+		<include refid="Where_Clause" />
+		ORDER BY
+		bt.create_time DESC, br.id DESC
+	</select>
+
+	<resultMap id="selectBorrowRecoverListMap" type="com.hyjf.am.trade.dao.model.customize.AdminBorrowRecoverCustomize">
+		<!-- 借款标题 -->
+		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
+		<!-- 借款编号 -->
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<!-- add by LSY START -->
+		<!-- 资产来源 -->
+		<result column="inst_name" property="instName" jdbcType="VARCHAR" />
+		<!-- add by LSY END -->
+		<!-- 投资订单号 -->
+		<result column="order_num" property="orderNum" jdbcType="VARCHAR" />
+		<!-- 合作机构编号 -->
+		<result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+		<!-- 投资人 -->
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<!-- 投资金额 -->
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<!-- 应收服务费 -->
+		<result column="service_price" property="servicePrice" jdbcType="VARCHAR" />
+		<!-- 应放款 -->
+		<result column="recover_price" property="recoverPrice" jdbcType="VARCHAR" />
+		<!-- 已放款 -->
+		<result column="recover_price_over" property="recoverPriceOver" jdbcType="VARCHAR" />
+		<!-- 放款状态 -->
+		<result column="is_recover" property="isRecover" jdbcType="VARCHAR" />
+		<!-- 放款时间 -->
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<!-- 投资时间 -->
+		<result column="time_recover" property="timeRecover" jdbcType="VARCHAR" />
+		<!-- 放款订单号-->
+		<result column="loanOrdid" property="loanOrdid" jdbcType="VARCHAR" />
+		<!-- 放款订单号-->
+		<result column="loan_batch_no" property="loanBatchNo" jdbcType="VARCHAR" />
+		<!--  计划编号 -->
+		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectBorrowRecoverList" resultMap="selectBorrowRecoverListMap" parameterType="com.hyjf.am.resquest.admin.BorrowRecoverRequest">
+		SELECT
+		binfo.`name` AS borrow_name,
+		bt.borrow_nid,
+		hic.inst_name,
+		bt.nid AS order_num,
+		hic.inst_code AS inst_code,
+		bt.user_name AS username,
+		bt.account AS account,
+		bt.loan_fee AS service_price,
+		bt.loan_ordid AS loanOrdid,
+		bt.loan_amount AS recover_price,
+		CASE WHEN bt.`status` = 1 THEN bt.loan_amount ELSE '0.00' END AS recover_price_over,
+		bt.status AS is_recover,
+		date_format( bt.create_time, '%Y-%m-%d %H:%i:%s' ) AS time_recover,
+		date_format( br.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+		br.loan_batch_no AS loan_batch_no,
+		b.plan_nid
+		FROM
+		ht_borrow_tender bt
+		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
+		INNER JOIN ht_borrow_info binfo ON binfo.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_borrow_recover br ON br.borrow_nid = bt.borrow_nid AND br.nid = bt.nid
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
 		<include refid="Where_Clause" />
 		ORDER BY

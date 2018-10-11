@@ -66,7 +66,7 @@ public class BorrowRecoverServiceImpl implements BorrowRecoverService {
      */
     @Override
     public List<BorrowRecoverCustomizeVO> exportBorrowRecoverList(BorrowRecoverRequest request) {
-        List<BorrowRecoverCustomizeVO> recordList = this.amTradeClient.selectBorrowRecoverList(request);
+        List<BorrowRecoverCustomizeVO> recordList = this.amTradeClient.exportBorrowRecoverList(request);
         return recordList;
     }
 
