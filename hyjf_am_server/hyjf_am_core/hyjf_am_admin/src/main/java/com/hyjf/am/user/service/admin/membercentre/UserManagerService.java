@@ -303,4 +303,10 @@ public interface UserManagerService extends BaseService {
      * @return
      */
     BankCallBean payAllianceCodeQuery(String cardNo, Integer userId);
+    /**
+     * 根据用户id查找银行卡信息
+     * @param userId
+     * @return
+     */
+    BankCard getBankCardByUserId(int userId);
 }

@@ -879,4 +879,22 @@ public class UserManagerController extends BaseController {
         }
         return response;
     }
+    /**
+     * 根据用户id获取开户信息
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/getBankCardByUserId/{userId}")
+    public BankCardResponse getBankCardByUserId(@PathVariable int userId){
+        BankCardResponse response = new BankCardResponse();
+        response.setRtn(Response.FAIL);
+        BankCard bankCard = userManagerService.getBankCardByUserId(userId);
+        if(null!=bankCard){
+            BankCardVO bankCardVO = new BankCardVO();
+            BeanUtils.copyProperties(bankCard,bankCardVO);
+            response.setRtn(Response.SUCCESS);
+            response.setResult(bankCardVO);
+        }
+        return response;
+    }
 }

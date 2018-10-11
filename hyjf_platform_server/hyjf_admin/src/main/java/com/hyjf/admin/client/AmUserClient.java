@@ -1181,4 +1181,12 @@ public interface AmUserClient {
      * @auther: nxl
      */
     List<OADepartmentCustomizeVO> getDeptInfoByDeptId(int deptId);
+    /**
+     * 根据用户id获取开户信息
+     *
+     * @auther: nxl
+     * @param userId
+     * @return
+     */
+    BankCardVO getBankCardByUserId(int userId);
 }

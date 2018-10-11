@@ -208,4 +208,12 @@ public interface UserCenterService {
      * @return
      */
     JSONArray getCrmDepartmentList(String[] list);
+    /**
+     * 根据用户id获取开户信息
+     *
+     * @auther: nxl
+     * @param userId
+     * @return
+     */
+    BankCardVO getBankCardByUserId(String userId);
 }

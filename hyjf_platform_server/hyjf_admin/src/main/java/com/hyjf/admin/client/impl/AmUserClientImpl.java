@@ -2374,4 +2374,23 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 根据用户id获取开户信息
+	 *
+	 * @auther: nxl
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BankCardVO getBankCardByUserId(int userId) {
+		BankCardResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userManager/getBankCardByUserId/" + userId,
+						BankCardResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

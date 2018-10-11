@@ -613,4 +613,18 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         }
         return keysList;
     }
+    /**
+     * 根据用户id获取开户信息
+     *
+     * @auther: nxl
+     * @param userId
+     * @return
+     */
+    @Override
+    public BankCardVO getBankCardByUserId(String userId) {
+        if(StringUtils.isNotBlank(userId)){
+            userCenterClient.getBankCardByUserId(Integer.parseInt(userId));
+        }
+        return null;
+    }
 }

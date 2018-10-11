@@ -1332,4 +1332,19 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return bankCallBean;
     }
 
+    /**
+     * 根据用户id查找银行卡信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public BankCard getBankCardByUserId(int userId){
+        BankCardExample example = new BankCardExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
+        if (bankCardList!=null && bankCardList.size()>0) {
+            return bankCardList.get(0);
+        }
+        return null;
+    }
 }
