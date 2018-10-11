@@ -1643,13 +1643,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         JedisPool pool = RedisUtils.getPool();
         Jedis jedis = pool.getResource();
         BigDecimal accountBigDecimal = new BigDecimal(account);
-        while ("OK".equals(jedis.watch(borrowNid))) {
-            String balanceLast = RedisUtils.get(borrowNid);
+        while ("OK".equals(jedis.watch(RedisConstants.BORROW_NID+borrowNid))) {
+            String balanceLast = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
             if (StringUtils.isNotBlank(balanceLast)) {
                 logger.info("PC用户:" + userId + "***redis剩余金额：" + balanceLast);
                 BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
                 Transaction transaction = jedis.multi();
-                transaction.set(borrowNid, recoverAccount.toString());
+                transaction.set(RedisConstants.BORROW_NID+borrowNid, recoverAccount.toString());
                 List<Object> result = transaction.exec();
                 if (result == null || result.isEmpty()) {
                     jedis.unwatch();
@@ -1822,7 +1822,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             Jedis jedis = pool.getResource();
             MsgCode redisMsgCode = null;
             try {
-                while ("OK".equals(jedis.watch(borrowNid))) {
+                while ("OK".equals(jedis.watch(RedisConstants.BORROW_NID+borrowNid))) {
                     accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
                     if (StringUtils.isNotBlank(accountRedisWait)) {
                         logger.info("用户:" + userId + "***冻结前可投金额：" + accountRedisWait);
@@ -1837,7 +1837,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                             } else {
                                 Transaction transaction = jedis.multi();
                                 BigDecimal lastAccount = new BigDecimal(accountRedisWait).subtract(accountDecimal);
-                                transaction.set(borrowNid, lastAccount.toString());
+                                transaction.set(RedisConstants.BORROW_NID+borrowNid, lastAccount.toString());
                                 List<Object> result = transaction.exec();
                                 if (result == null || result.isEmpty()) {
                                     jedis.unwatch();
