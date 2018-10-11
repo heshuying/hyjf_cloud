@@ -6,9 +6,6 @@
 	<update id="updateOfPlanJoin" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update ht_account
 		set
-		plan_account_wait = IFNULL(plan_account_wait,0) + #{planAccountWait,jdbcType=DECIMAL},
-		plan_capital_wait = IFNULL(plan_capital_wait,0) + #{planCapitalWait,jdbcType=DECIMAL},
-		plan_interest_wait = IFNULL(plan_interest_wait,0) + #{planInterestWait,jdbcType=DECIMAL},
 		bank_invest_sum = IFNULL(bank_invest_sum,0) + #{bankInvestSum,jdbcType=DECIMAL},
 		bank_balance = IFNULL(bank_balance,0) - #{bankBalance,jdbcType=DECIMAL},
 		plan_balance = IFNULL(plan_balance,0) + #{planBalance,jdbcType=DECIMAL}
