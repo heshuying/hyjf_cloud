@@ -19,7 +19,7 @@
 	    <result column="used_flag" property="usedFlag" />
 	    <result column="used_flag_View" property="usedFlagView" />
 	    <result column="end_time" property="endTime" />
-	    <result column="create_time" property="addTime" />
+	    <result column="add_time" property="addTime" />
 	    <result column="create_user_id" property="addUser" />
 	    <result column="update_time" property="updateTime" />
 	    <result column="update_user_id" property="updateUser" />
@@ -135,7 +135,7 @@
 		WHEN cu.used_flag = 4 THEN
 			'已失效'
 		END used_flag_View,
-		 FROM_UNIXTIME(
+		DATE_FORMAT(
 			cu.create_time,
 			'%Y-%m-%d %H:%i:%S'
 		) AS add_time,
@@ -200,7 +200,7 @@
 		FROM
 			ht_coupon_user cu
 		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
-		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flag = 0
+		LEFT JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flag = 0
 		<include refid="Where_Clause" />
 		ORDER BY cu.id DESC
 		<if test="limitStart !=null and limitStart >= 0" >

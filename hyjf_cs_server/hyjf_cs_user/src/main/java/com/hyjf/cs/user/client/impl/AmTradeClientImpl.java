@@ -17,6 +17,7 @@ import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
@@ -91,9 +92,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public List<BatchUserPortraitQueryVO> searchInfoForUserPortrait(String userIds) {
-        String url = tradeService+"/batch/search_user_portrait_list/" + userIds;
-        BatchUserPortraitQueryResponse response = restTemplate.getForEntity(url, BatchUserPortraitQueryResponse.class).getBody();
+    public List<BatchUserPortraitQueryVO> searchInfoForUserPortrait(BatchUserPortraitRequest batchUserPortraitRequest) {
+        String url = tradeService+"/batch/search_user_portrait_list";
+        BatchUserPortraitQueryResponse response = restTemplate.postForEntity(url,batchUserPortraitRequest,BatchUserPortraitQueryResponse.class).getBody();
         if(response != null){
             return response.getResultList();
         }

@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.front.batch;
 
+import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 
 import java.util.List;
@@ -15,5 +16,5 @@ public interface BatchUserPortraitQueryService {
     /**
      * 查询用户画像所需要的投资相关参数
      * */
-    List<BatchUserPortraitQueryVO> selectInfoForUserPortrait(List<Integer> userIds);
+    List<BatchUserPortraitQueryVO> selectInfoForUserPortrait(BatchUserPortraitRequest batchUserPortraitRequest);
 }

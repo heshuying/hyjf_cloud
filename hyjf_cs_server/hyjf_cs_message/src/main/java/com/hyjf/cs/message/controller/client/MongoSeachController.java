@@ -260,9 +260,11 @@ public class MongoSeachController extends BaseController {
      */
 	@RequestMapping(value = "/gettotalinvestmentamount")
 	public CalculateInvestInterestResponse getTotalInvestmentAmount() {
-		CalculateInvestInterestResponse response = new CalculateInvestInterestResponse();
-		BigDecimal totalInvestmentAmount = calculateInvestInterestDao.getTotalInvestmentAmount();
-		response.setInterestSum(totalInvestmentAmount);
+        CalculateInvestInterestResponse response = new CalculateInvestInterestResponse();
+        TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
+        if (entity != null) {
+            response.setInterestSum(entity.getTotalInterestAmount());
+        }
 		return response;
 	}
 

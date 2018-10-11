@@ -10,7 +10,7 @@ public enum ProtocolEnum {
     PTYSTK("《平台隐私条款》","ptystk"),
     TZZXYGLFWXY("《投资咨询与管理服务协议》","tzzxyglfwxy"),
     KHXY("《开户协议》","khxy"),
-    YHSQXY("《用户授权协议》","yhsqxy"),
+    YHSQXY("《协议》","yhsqxy"),
     JJFWJKXY("《居间服务借款协议》","jjfwjkxy"),
     TZFXQRS("《投资风险确认书》","tzfxqrs"),
     TZFWXY("《投资服务协议》","tzfwxy"),

@@ -4,7 +4,9 @@
 package com.hyjf.cs.user.service.batch.Impl;
 
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
+import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
+import com.hyjf.am.vo.user.UserAndSpreadsUserVO;
 import com.hyjf.am.vo.user.UserLoginLogVO;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.client.AmTradeClient;
@@ -38,18 +40,15 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
     public void userPortraitBatch() {
         logger.info("用户画像(每日)定时任务开始....");
         // 查询出需要更新用户画像的用户信息
-        List<UserLoginLogVO> userLoginLogVOList = amUserClient.searchUserIdForUserPortrait();
-        String userId = "";
+        List<UserAndSpreadsUserVO> userAndSpreadsUserVOList = amUserClient.searchUserIdForUserPortrait();
+        //
         // list不为空就进行更新
-        if(!CollectionUtils.isEmpty(userLoginLogVOList)){
-            // 组装userId，去am-trade查询用户画像的相关信息
-            for(UserLoginLogVO userLoginLogVO:userLoginLogVOList){
-                userId += userLoginLogVO.getUserId() + ",";
-            }
-            // 去掉最后的,
-            userId = userId.substring(0,userId.lastIndexOf(","));
+        if(!CollectionUtils.isEmpty(userAndSpreadsUserVOList)){
+            BatchUserPortraitRequest batchUserPortraitRequest = new BatchUserPortraitRequest();
+            batchUserPortraitRequest.setUserAndSpreadsUserVOList(userAndSpreadsUserVOList);
+
             // 去am-trade查询用户画像的相关信息
-            List<BatchUserPortraitQueryVO> batchUserPortraitQueryVOList = amTradeClient.searchInfoForUserPortrait(userId);
+            List<BatchUserPortraitQueryVO> batchUserPortraitQueryVOList = amTradeClient.searchInfoForUserPortrait(batchUserPortraitRequest);
             // 如果信息不为空，就去am-user更新用户画像
             if(!CollectionUtils.isEmpty(batchUserPortraitQueryVOList)){
                 BatchUserPortraitQueryRequest request = new BatchUserPortraitQueryRequest();
@@ -57,6 +56,7 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                 // 保存用户画像
                 amUserClient.saveUserPortrait(request);
             }
+
         }
     }
 }
