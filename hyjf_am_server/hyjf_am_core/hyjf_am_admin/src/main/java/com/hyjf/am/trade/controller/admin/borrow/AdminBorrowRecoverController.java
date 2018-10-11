@@ -39,6 +39,19 @@ public class AdminBorrowRecoverController extends BaseController {
         return response;
     }
 
+    @RequestMapping(value = "/exportBorrowRecoverList")
+    public AdminBorrowRecoverResponse exportBorrowRecoverList(@RequestBody @Valid BorrowRecoverRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        AdminBorrowRecoverResponse response = new AdminBorrowRecoverResponse();
+
+        List<AdminBorrowRecoverCustomize> list = adminBorrowRecoverService.exportBorrowRecoverList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<BorrowRecoverCustomizeVO> voList = CommonUtils.convertBeanList(list, BorrowRecoverCustomizeVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
     @RequestMapping(value = "/selectBorrowRecoverList")
     public AdminBorrowRecoverResponse selectBorrowRecoverList(@RequestBody @Valid BorrowRecoverRequest request){
         logger.info("请求参数:" +JSONObject.toJSON(request));

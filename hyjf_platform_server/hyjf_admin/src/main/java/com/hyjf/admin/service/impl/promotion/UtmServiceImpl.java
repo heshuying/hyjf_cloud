@@ -52,7 +52,7 @@ public class UtmServiceImpl implements UtmService {
         map.clear();
         UtmPlatResponse utmPlatResponse = amUserClient.getAllUtmPlat(map);
         List<UtmPlatVO> utmPlatVOList = new ArrayList<UtmPlatVO>();
-        if(null != utmResponse){
+        if(null != utmPlatResponse){
             utmPlatVOList = utmPlatResponse.getResultList();
         }
         utmResultResponse.setUtmPlatList(utmPlatVOList);

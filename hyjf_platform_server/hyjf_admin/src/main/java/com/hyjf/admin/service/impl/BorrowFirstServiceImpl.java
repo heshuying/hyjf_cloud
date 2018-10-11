@@ -196,18 +196,18 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         if (borrowVO == null || borrowInfoVO == null) {
             return new AdminResult(BaseResult.FAIL, "未查询到标的信息");
         }
-        //借款有效时间
-        borrowVO.setBorrowValidTime(borrowInfoVO.getBorrowValidTime());
 
         BorrowFireRequest borrowFireRequest = new BorrowFireRequest();
         borrowFireRequest.setBorrowNid(borrowNid);
         borrowFireRequest.setVerifyStatus(verifyStatus);
         borrowFireRequest.setOntime(ontime);
 
-        boolean updateFlag = amTradeClient.updateOntimeRecord(borrowFireRequest);
-        if(!updateFlag){
-            return new AdminResult(BaseResult.FAIL,"数据更新失败");
+        AdminResult onTimeResult = amTradeClient.updateOntimeRecord(borrowFireRequest);
+        if(!onTimeResult.getStatus().equals(BaseResult.SUCCESS)){
+            //初审失败直接返回错误信息
+            return onTimeResult;
         } else {
+            //初审成功 && 是计划标的 && 立即发标 发送关联计划MQ
             if (borrowVO.getIsEngineUsed().equals(1) && verifyStatus.equals("4")) {
                 // 成功后到关联计划队列
                 JSONObject params = new JSONObject();
@@ -220,9 +220,8 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
                     logger.error("标的编号：" + borrowNid + "-----发送自动关联计划MQ异常", e);
                 }
             }
+            return onTimeResult;
         }
-
-        return new AdminResult();
     }
 
     private String checkItems(String borrowNid, String verifyStatus, String ontime) {
