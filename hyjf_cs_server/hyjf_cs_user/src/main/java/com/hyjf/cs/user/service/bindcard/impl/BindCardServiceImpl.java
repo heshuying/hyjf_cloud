@@ -197,18 +197,21 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			resultMap.put("key","CE000004");
 			resultMap.put("msg","没有根据电子银行卡找到用户");
 			logger.info("没有根据电子银行卡找到用户");
+			return resultMap;
 		}
 		UserVO userVO = this.getUsersById(openAccountVO.getUserId());
 		if(userVO.getIsSetPassword() != 1){
 			resultMap.put("key","TP000002");
 			resultMap.put("msg","用户未设置交易密码");
 			logger.info("用户未设置交易密码");
+			return resultMap;
 		}
 		int count = amUserClient.countUserCardValid(String.valueOf(userVO.getUserId()));
 		if(count > 0){
 			resultMap.put("key","BC000001");
 			resultMap.put("msg","用户已绑定银行卡,请先解除绑定,然后重新操作");
 			logger.info("用户已绑定银行卡,请先解除绑定,然后重新操作");
+			return resultMap;
 		}
 
 		return resultMap;

@@ -117,12 +117,20 @@ public class AppBorrowTenderController extends BaseTradeController {
     public JSONObject getTenderUrl(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端获取投资URL,请求参数：",JSONObject.toJSONString(tender));
         tender.setUserId(userId);
-        String url = borrowTenderService.getAppTenderUrl(tender);
         JSONObject result = new JSONObject();
-        result.put("tenderUrl", url);
-        result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
-        result.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
-        result.put(CustomConstants.APP_REQUEST,"/hyjf-app/user/invest/getTenderUrl");
+        try{
+            String url = borrowTenderService.getAppTenderUrl(tender);
+
+            result.put("tenderUrl", url);
+            result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
+            result.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
+            result.put(CustomConstants.APP_REQUEST,"/hyjf-app/user/invest/getTenderUrl");
+        }catch (CheckException e){
+            e.printStackTrace();
+            result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
+            result.put(CustomConstants.APP_STATUS_DESC, e.getMessage());
+            result.put(CustomConstants.APP_REQUEST,"/hyjf-app/user/invest/getTenderUrl");
+        }
         return result;
     }
 }
