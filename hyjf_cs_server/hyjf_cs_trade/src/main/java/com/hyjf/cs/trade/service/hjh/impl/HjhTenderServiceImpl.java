@@ -33,6 +33,7 @@ import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AmTradeProducer;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
@@ -85,6 +86,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     private AppCouponService appCouponService;
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
+    @Autowired
+    private AmTradeProducer amTradeProducer;
 
 
     /**
@@ -917,12 +920,13 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         if (trenderFlag) {
             //加入明细表插表成功的前提下，继续
             //crm投资推送
-            // TODO: 2018/6/22  crm投资推送
-           /* rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME,
-                    RabbitMQConstants.ROUTINGKEY_POSTINTERFACE_CRM, JSON.toJSONString(planAccede));*/
+            try {
+                amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(planAccede)));
+            } catch (Exception e) {
+                logger.error("发送CRM消息失败:" + e.getMessage());
+            }
             // 更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始
             this.updateUtm(request, plan);
-
             // 网站累计投资追加
             // 投资、收益统计表
             JSONObject params = new JSONObject();

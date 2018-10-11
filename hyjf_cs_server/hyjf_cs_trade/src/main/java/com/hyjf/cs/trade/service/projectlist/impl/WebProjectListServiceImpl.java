@@ -559,7 +559,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 other.put("updateTime", ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime()));
             } else {
                 //其他信息
-                other.put("otherTableData", otherTableData);
+                other.put("otherTableData",  new ArrayList<>());
             }
 
         }

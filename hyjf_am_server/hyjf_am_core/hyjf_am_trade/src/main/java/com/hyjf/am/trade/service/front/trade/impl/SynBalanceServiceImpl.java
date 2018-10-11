@@ -71,7 +71,7 @@ public class SynBalanceServiceImpl implements SynBalanceService {
             // 更新账户信息
             boolean isAccountUpdateFlag = adminAccountCustomizeMapper.updateOfSynBalance(updateAccount) > 0 ? true : false;
             if(!isAccountUpdateFlag){
-                new RuntimeException("同步线下充值,更新用户账户信息失败~~~~,用户ID:"+account.getUserId());
+            	throw new RuntimeException("同步线下充值,更新用户账户信息失败~~~~,用户ID:"+account.getUserId());
             }
             // 重新获取用户账户信息
             Account accountNew = this.getAccount(account.getUserId());
