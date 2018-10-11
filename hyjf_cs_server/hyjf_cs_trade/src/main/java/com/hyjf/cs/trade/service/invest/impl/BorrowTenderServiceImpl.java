@@ -801,11 +801,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 转让的
         if ("HZR".equals(investType) && StringUtils.isNotEmpty(creditNid)) {
             AppInvestInfoResultVO result = borrowTenderService.getInterestInfoApp(tender,creditNid,tender.getMoney());
+            this.setProtocolsToResultVO(result, investType);
             return result;
         }
         // 计划的
         if ("HJH".equals(investType)) {
-            return hjhTenderService.getInvestInfoApp(tender);
+            AppInvestInfoResultVO result = hjhTenderService.getInvestInfoApp(tender);
+            this.setProtocolsToResultVO(result, investType);
+            return result;
         }
 
         if ((!("HZR".equals(investType))) && (!("HJH".equals(investType)))) {

@@ -1115,8 +1115,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // "项目太抢手了！剩余可加入金额只有" + balance + "元"
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_REMAIN,balance);
         }
-        // 开放额度和阀值（1000）判断逻辑
-        if (new BigDecimal(balance).compareTo(new BigDecimal(CustomConstants.TENDER_THRESHOLD)) == -1) {
+        // web端有全投
+        if(request.getPlatform().equals(ClientConstants.WEB_CLIENT)){
             // 投资金额 != 开放额度
             if (accountBigDecimal.compareTo(new BigDecimal(balance)) != 0) {
                 // 使用递增的逻辑
@@ -1126,13 +1126,26 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
                 }
             }
-        } else {
-            // (用户投资额度 - 起投额度)%增量 = 0
-            if (plan.getInvestmentIncrement() != null
-                    && BigDecimal.ZERO.compareTo(accountBigDecimal.subtract(minInvest).remainder(plan.getInvestmentIncrement())) != 0
-                    && accountBigDecimal.compareTo(new BigDecimal(balance)) == -1) {
-                // 加入递增金额须为" + plan.getInvestmentIncrement() + " 元的整数倍
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
+        }else{
+            // 开放额度和阀值（1000）判断逻辑
+            if (new BigDecimal(balance).compareTo(new BigDecimal(CustomConstants.TENDER_THRESHOLD)) == -1) {
+                // 投资金额 != 开放额度
+                if (accountBigDecimal.compareTo(new BigDecimal(balance)) != 0) {
+                    // 使用递增的逻辑
+                    if (plan.getInvestmentIncrement() != null
+                            && BigDecimal.ZERO.compareTo((accountBigDecimal.subtract(minInvest)).remainder(plan.getInvestmentIncrement())) != 0) {
+                        // 加入递增金额须为" + plan.getInvestmentIncrement() + " 元的整数倍
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
+                    }
+                }
+            } else {
+                // (用户投资额度 - 起投额度)%增量 = 0
+                if (plan.getInvestmentIncrement() != null
+                        && BigDecimal.ZERO.compareTo(accountBigDecimal.subtract(minInvest).remainder(plan.getInvestmentIncrement())) != 0
+                        && accountBigDecimal.compareTo(new BigDecimal(balance)) == -1) {
+                    // 加入递增金额须为" + plan.getInvestmentIncrement() + " 元的整数倍
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
+                }
             }
         }
     }
