@@ -48,10 +48,11 @@ public class UserPortraitScoreController extends BaseController {
         request.setParamNameVOList(paramNameVOList);
 
         UserPortraitScoreResponse response = userPortraitScoreService.selectRecordList(request);
-        List<UserPortraitScoreCustomizeVO> list = response.getResultList();
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+        List<UserPortraitScoreCustomizeVO> list = response.getResultList();
+
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }

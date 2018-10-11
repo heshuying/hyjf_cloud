@@ -39,6 +39,22 @@ public class AdminBorrowRecoverServiceImpl extends BaseServiceImpl implements Ad
     }
 
     @Override
+    public List<AdminBorrowRecoverCustomize> exportBorrowRecoverList(BorrowRecoverRequest request) {
+        List<AdminBorrowRecoverCustomize> list=this.borrowRecoverCustomizeMapper.exportBorrowRecoverList(request);
+        for (AdminBorrowRecoverCustomize customize:list) {
+            customize.setIsRecover(CacheUtil.getParamName("LOAN_STATUS",customize.getIsRecover()));
+
+            if(customize.getTenderUserAttribute()!=null){
+                customize.setTenderUserAttribute(CacheUtil.getParamName("USER_PROPERTY",customize.getTenderUserAttribute()));
+            }
+            if(customize.getInviteUserAttribute()!=null){
+                customize.setInviteUserAttribute(CacheUtil.getParamName("USER_PROPERTY",customize.getInviteUserAttribute()));
+            }
+        }
+        return list;
+    }
+
+    @Override
     public AdminBorrowRecoverCustomize sumBorrowRecoverList(BorrowRecoverRequest request) {
         return this.borrowRecoverCustomizeMapper.sumBorrowRecoverList(request);
     }

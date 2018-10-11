@@ -106,6 +106,7 @@ public class FtpUtil {
                         Thread.sleep(interval);
                     } catch (InterruptedException e) {
                         logger.error(e.getMessage());
+                        Thread.currentThread().interrupt();
                         break;
                     }
                 }

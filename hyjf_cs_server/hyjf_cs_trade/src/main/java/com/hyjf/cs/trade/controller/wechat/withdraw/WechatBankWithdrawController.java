@@ -142,7 +142,10 @@ public class WechatBankWithdrawController extends BaseTradeController {
         BankCardBean bankCardBean = new BankCardBean();
         BeanUtils.copyProperties(bank, bankCardBean);
 
-        String cardNo = bank.getCardNo();
+        String cardNo = "";
+        if(bank.getCardNo()!= null){
+        	cardNo = bank.getCardNo();
+        }
         String cardNoInfo = BankCardUtil.getCardNo(cardNo);
         bankCardBean.setCardNoInfo(cardNoInfo);
         bankCardBean.setIsDefault("2");// 卡类型
