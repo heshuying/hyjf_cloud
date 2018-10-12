@@ -743,7 +743,7 @@ public class UserCenterController extends BaseController {
             userInfosUpdCustomizeRequest.setLoginUserName(adminSystemVO.getUsername());
             userInfosUpdCustomizeRequest.setLoginUserId(Integer.parseInt(adminSystemVO.getId()));
             if(userInfosUpdCustomizeRequestBean.getUpdFlg().equals("bankCard")){
-
+                instFlg = userCenterService.updateUserBankInfo(userInfosUpdCustomizeRequest);
             }else{
                 //修改用户基本信息(电话,邮箱,用户角色)
                instFlg= userCenterService.updateUserBaseInfo(userInfosUpdCustomizeRequest);

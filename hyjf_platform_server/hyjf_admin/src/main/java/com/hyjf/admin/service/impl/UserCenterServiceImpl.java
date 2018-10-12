@@ -681,4 +681,15 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     public int updateUserBaseInfo(UserInfosUpdCustomizeRequest request){
         return userCenterClient.updateUserBaseInfo(request);
     }
+    /**
+     * 更新银行卡信息
+     *
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    @Override
+    public int updateUserBankInfo(UserInfosUpdCustomizeRequest request){
+        return userCenterClient.updateUserBaseInfo(request);
+    }
 }

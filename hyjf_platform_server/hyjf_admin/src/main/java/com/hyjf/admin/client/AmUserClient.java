@@ -1197,4 +1197,12 @@ public interface AmUserClient {
      * @return
      */
     int updateUserBaseInfo(UserInfosUpdCustomizeRequest request);
+    /**
+     * 更新银行卡信息
+     *
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    int updateUserBankInfo(UserInfosUpdCustomizeRequest request);
 }

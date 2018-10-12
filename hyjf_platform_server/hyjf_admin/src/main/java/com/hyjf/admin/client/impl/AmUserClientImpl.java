@@ -2409,4 +2409,20 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return response.getResultInt().intValue();
 	}
+	/**
+	 * 更新银行卡信息
+	 *
+	 * @param request
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int updateUserBankInfo(UserInfosUpdCustomizeRequest request) {
+		IntegerResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserBankInfo", request, IntegerResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getResultInt().intValue();
+	}
 }
