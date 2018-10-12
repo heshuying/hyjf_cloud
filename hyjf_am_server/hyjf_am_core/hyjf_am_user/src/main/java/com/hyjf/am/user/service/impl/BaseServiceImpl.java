@@ -162,10 +162,13 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 
     @Override
     public List<BankOpenAccount> selectByListExample(List<Integer> user) {
-        List<BankOpenAccount> bankOpenAccountList = bankOpenAccountMapper.selectByListExample(user);
-        if (bankOpenAccountList != null && bankOpenAccountList.size() == 1) {
-            return bankOpenAccountList;
-        }
+    // todo wenxin UserManagerServiceImpl 410行
+//        List<BankOpenAccount> bankOpenAccountList = bankOpenAccountMapper.selectByListExample(user);
+//        if (bankOpenAccountList != null && bankOpenAccountList.size() == 1) {
+//            return bankOpenAccountList;
+//        }
         return null;
     }
+
+
 }

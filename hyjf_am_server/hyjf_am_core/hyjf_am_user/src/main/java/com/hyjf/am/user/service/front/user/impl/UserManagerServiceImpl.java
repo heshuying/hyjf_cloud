@@ -1229,4 +1229,10 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         return null;
     }
+
+    @Override
+    public List<BankOpenAccount> selectByListExample(List<Integer> user) {
+        //todo wenxin
+        return null;
+    }
 }
