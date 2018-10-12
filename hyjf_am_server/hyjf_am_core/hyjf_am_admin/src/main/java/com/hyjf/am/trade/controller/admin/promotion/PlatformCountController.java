@@ -10,6 +10,7 @@ import com.hyjf.am.trade.dao.model.customize.PlatformCountCustomize;
 import com.hyjf.am.trade.service.admin.promotion.PlatformCountService;
 import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,8 +36,10 @@ public class PlatformCountController extends BaseController {
      */
     @RequestMapping("/search_action")
     public PlatformCountCustomizeResponse searchAction(@RequestBody PlatformCountRequest request) {
-            PlatformCountCustomizeResponse response = new PlatformCountCustomizeResponse();
-            List<PlatformCountCustomize> list = platformCountService.searchAction(request);
+        PlatformCountCustomizeResponse response = new PlatformCountCustomizeResponse();
+        request.setTimeStartSrch(GetDate.getDayStart(request.getTimeStartSrch()));
+        request.setTimeEndSrch(GetDate.getDayEnd(request.getTimeEndSrch()));
+        List<PlatformCountCustomize> list = platformCountService.searchAction(request);
             if (!CollectionUtils.isEmpty(list)) {
                     List<PlatformCountCustomizeVO> voList = CommonUtils.convertBeanList(list, PlatformCountCustomizeVO.class);
                     response.setResultList(voList);
