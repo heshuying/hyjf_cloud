@@ -18,11 +18,13 @@ import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.AppMessageProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.account.BankCreditTenderService;
+import com.hyjf.am.trade.service.front.borrow.BorrowRecoverService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -71,6 +73,9 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	private AppMessageProducer appMsProcesser;
 	@Autowired
     private BorrowCreditTenderCustomizeMapper creditTenderCustomizeMapper;
+
+	@Autowired
+	private BorrowRecoverService borrowRecoverService;
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
 
@@ -1456,6 +1461,10 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 			creditRepayMapper.insertSelective(creditRepay);
 		}
 
+		// 分期的
+		if (creditTender.getAssignRepayPeriod() > 0) {
+			updateCreditPlan(request);
+		}
 		// 更新Borrow_recover
 		logger.info("更新Borrow_recover");
 		BorrowRecover borrowRecover = CommonUtils.convertBean(request.getBorrowRecover(),BorrowRecover.class);
@@ -1477,6 +1486,181 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
 			logger.info("调用银行结束债转接口");
 			this.requestDebtEnd(borrowRecover, request.getSellerBankAccount().getAccount());
+		}
+	}
+
+	// 分期的标的
+	private void updateCreditPlan(CreditTenderBgVO request) {
+		String BorrowNid = request.getCreditTenderLog().getBidNid();
+		Borrow borrow = getBorrow(BorrowNid);
+		String borrowStyle = borrow.getBorrowStyle();
+		BorrowRecoverVO borrowRecover = request.getBorrowRecover();
+		boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
+				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
+		if (isMonth) {
+			logger.info("开始操作 分期的 债转  request  {} ",JSONObject.toJSONString(request));
+			CreditTenderVO creditTender = request.getCreditTender();
+			BorrowCreditVO borrowCredit = request.getBorrowCredit();
+			Integer userId = request.getCreditTenderLog().getUserId();
+			// 项目总期数
+			Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
+			// 管理费率
+			BigDecimal feeRate = Validator.isNull(borrow.getManageFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getManageFeeRate());
+			// 差异费率
+			BigDecimal differentialRate = Validator.isNull(borrow.getDifferentialRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getDifferentialRate());
+			// 初审时间
+			int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : borrow.getVerifyTime();
+			String authCode = request.getCreditTender().getAuthCode();
+			// 管理费
+			if (creditTender.getAssignRepayPeriod() > 0) {
+				// 先息后本
+				if (CalculatesUtil.STYLE_ENDMONTH.equals(borrowStyle)) {
+					// 总的利息
+					BigDecimal sumMonthInterest = BigDecimal.ZERO;
+					// 每月偿还的利息
+					BigDecimal perMonthInterest = BigDecimal.ZERO;
+					for (int i = 1; i <= creditTender.getAssignRepayPeriod(); i++) {
+						BigDecimal perManage = BigDecimal.ZERO;
+						int periodNow = borrow.getBorrowPeriod() - borrowRecover.getRecoverPeriod() + i;
+						// 获取borrow_recover_plan更新每次还款时间
+						BorrowRecoverPlan borrowRecoverPlan = this.borrowRecoverService.getPlanByBidTidPeriod(creditTender.getBidNid(), creditTender.getCreditTenderNid(), periodNow);
+						if (borrowRecoverPlan != null) {
+							CreditRepay creditRepay = new CreditRepay();
+							if (borrowCredit.getCreditStatus() == 2) {
+								// 如果是最后一笔
+								perManage = borrowRecoverPlan.getRecoverFee().subtract(borrowRecoverPlan.getCreditManageFee());
+								perMonthInterest = borrowRecoverPlan.getRecoverInterest().subtract(borrowRecoverPlan.getCreditInterest());
+								if (i == creditTender.getAssignRepayPeriod()) {
+									// 应还本金
+									creditRepay.setAssignCapital(creditTender.getAssignCapital());
+									// 应还总额
+									creditRepay.setAssignAccount(creditTender.getAssignCapital().add(perMonthInterest));
+									// 应还利息
+									creditRepay.setAssignInterest(perMonthInterest);
+								} else {
+									// 应还本金
+									creditRepay.setAssignCapital(BigDecimal.ZERO);
+									// 应还总额
+									creditRepay.setAssignAccount(perMonthInterest);
+									// 应还利息
+									creditRepay.setAssignInterest(perMonthInterest);
+								}
+							} else {
+								// 如果不是最后一笔
+								if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
+									if (periodNow == borrowPeriod.intValue()) {
+										perManage = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate, borrowPeriod,
+												borrowPeriod, differentialRate, 1, borrowVerifyTime);
+									} else {
+										perManage = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate, borrowPeriod,
+												borrowPeriod, differentialRate, 0, borrowVerifyTime);
+									}
+								}
+								if (i == creditTender.getAssignRepayPeriod()) {
+									BigDecimal lastPeriodInterest = creditTender.getAssignInterest().subtract(sumMonthInterest);
+									// 应还本金
+									creditRepay.setAssignCapital(creditTender.getAssignCapital());
+									// 应还总额
+									creditRepay.setAssignAccount(creditTender.getAssignCapital().add(lastPeriodInterest));
+									// 应还利息
+									creditRepay.setAssignInterest(lastPeriodInterest);
+								} else {
+									// 每月偿还的利息
+									perMonthInterest = BeforeInterestAfterPrincipalUtils.getPerTermInterest(creditTender.getAssignCapital(),
+											borrow.getBorrowApr().divide(new BigDecimal(100)), borrow.getBorrowPeriod(), borrow.getBorrowPeriod());
+									// 总的还款利息
+									sumMonthInterest = sumMonthInterest.add(perMonthInterest);
+									// 应还本金
+									creditRepay.setAssignCapital(BigDecimal.ZERO);
+									// 应还总额
+									creditRepay.setAssignAccount(perMonthInterest);
+									// 应还利息
+									creditRepay.setAssignInterest(perMonthInterest);
+								}
+							}
+							// 用户名称
+							creditRepay.setUserId(userId);
+							// 出让人id
+							creditRepay.setCreditUserId(creditTender.getCreditUserId());
+							// 状态
+							creditRepay.setStatus(0);
+							// 原标标号
+							creditRepay.setBidNid(creditTender.getBidNid());
+							// 债转标号
+							creditRepay.setCreditNid(creditTender.getCreditNid());
+							// 债转投标单号
+							creditRepay.setCreditTenderNid(creditTender.getCreditTenderNid());
+							// 认购单号
+							creditRepay.setAssignNid(creditTender.getAssignNid());
+
+							if (i == 1) {
+								// 垫付利息
+								creditRepay.setAssignInterestAdvance(creditTender.getAssignInterestAdvance());
+							} else {
+								// 垫付利息
+								creditRepay.setAssignInterestAdvance(BigDecimal.ZERO);
+							}
+							// 购买价格
+							creditRepay.setAssignPrice(creditTender.getAssignPrice());
+							// 支付金额
+							creditRepay.setAssignPay(creditTender.getAssignPay());
+							// 已还总额
+							creditRepay.setAssignRepayAccount(BigDecimal.ZERO);
+							// 已还本金
+							creditRepay.setAssignRepayCapital(BigDecimal.ZERO);
+							// 已还利息
+							creditRepay.setAssignRepayInterest(BigDecimal.ZERO);
+							// 最终实际还款时间
+							creditRepay.setAssignRepayYesTime(0);
+							// 还款期数
+							creditRepay.setAssignRepayPeriod(i);
+							// 认购日期
+							creditRepay.setAssignCreateDate(creditTender.getAssignCreateDate());
+							// ip
+							creditRepay.setAddIp(creditTender.getAddip());
+							// 客户端
+							creditRepay.setClient(creditTender.getClient());
+							// 管理费
+							creditRepay.setManageFee(BigDecimal.ZERO);
+							// 唯一nid
+							//creditRepay.setUniqueNid(creditTender.getAssignNid() + "_" + String.valueOf(i));
+							// 授权码
+							creditRepay.setAuthCode(authCode);
+							creditRepay.setAdvanceStatus(0);
+							creditRepay.setChargeDays(0);
+							creditRepay.setChargeInterest(BigDecimal.ZERO);
+							creditRepay.setDelayDays(0);
+							creditRepay.setDelayInterest(BigDecimal.ZERO);
+							creditRepay.setLateDays(0);
+							creditRepay.setLateInterest(BigDecimal.ZERO);
+							// 最后还款日
+							creditRepay.setAssignRepayEndTime(creditTender.getAssignRepayEndTime());
+							// 上次还款时间
+							creditRepay.setAssignRepayLastTime(creditTender.getAssignRepayLastTime());
+							// 下次还款时间
+							creditRepay.setAssignRepayNextTime(borrowRecoverPlan.getRecoverTime());
+							// 原标还款期数
+							creditRepay.setRecoverPeriod(borrowRecoverPlan.getRecoverPeriod());
+							// 管理费
+							creditRepay.setUserName(creditTender.getUserName());
+							creditRepay.setCreditUserName(creditTender.getCreditUserName());
+							creditRepay.setManageFee(perManage);
+							creditRepayMapper.insertSelective(creditRepay);
+							// 更新borrowRecover
+							// 承接本金
+							borrowRecoverPlan.setCreditAmount(borrowRecoverPlan.getCreditAmount().add(creditRepay.getAssignCapital()));
+							// 垫付利息
+							borrowRecoverPlan.setCreditInterestAmount(borrowRecoverPlan.getCreditInterestAmount().add(creditRepay.getAssignInterestAdvance()));
+							// 债转状态
+							borrowRecoverPlan.setCreditStatus(borrowCredit.getCreditStatus());
+							borrowRecoverPlan.setCreditManageFee(borrowRecoverPlan.getCreditManageFee().add(perManage));
+							borrowRecoverPlan.setCreditInterest(borrowRecoverPlan.getCreditInterest().add(perMonthInterest));
+							this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan);
+						}
+					}
+				}
+			}
+			logger.info("操作分期债转完成");
 		}
 	}
 

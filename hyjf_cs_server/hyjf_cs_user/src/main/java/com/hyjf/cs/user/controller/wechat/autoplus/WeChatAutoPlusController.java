@@ -87,11 +87,11 @@ public class WeChatAutoPlusController extends BaseUserController {
             bankBean = autoPlusService.callSendCode(userId,mobile,srvTxCode, ClientConstants.CHANNEL_WEI,null);
         } catch (Exception e) {
             logger.error("请求验证码接口发生异常", e);
-            throw new CheckException(MsgEnum.ERR_BANK_CALL);
+            throw new CheckException(MsgEnum.ERROR_BANK_SEND_CODE);
         }
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
             logger.error("请求验证码接口发生异常");
-            throw new CheckException(MsgEnum.ERR_BANK_CALL);
+            throw new CheckException(MsgEnum.ERROR_BANK_SEND_CODE);
         }else {
             result.setSrvAuthCode(bankBean.getSrvAuthCode());
             result.setStatus("000");
@@ -247,7 +247,7 @@ public class WeChatAutoPlusController extends BaseUserController {
         baseMapBean.set("autoInvesStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoInvesStatus()==null?"0":hjhUserAuth.getAutoInvesStatus()+ "");
         baseMapBean.set("autoCreditStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoCreditStatus()==null?"0":hjhUserAuth.getAutoCreditStatus() + "");
         baseMapBean.set("userAutoType", type);
-        baseMapBean.setCallBackAction(systemConfig.getWeChatHost() + CommonConstant.JUMP_HTML_ERROR_PATH);
+        baseMapBean.setCallBackAction(systemConfig.getServerHost() + CommonConstant.JUMP_HTML_ERROR_PATH);
         Map<String,Object> map = new HashMap<>();
         map.put("callBackForm", baseMapBean);
         result.setData(map);

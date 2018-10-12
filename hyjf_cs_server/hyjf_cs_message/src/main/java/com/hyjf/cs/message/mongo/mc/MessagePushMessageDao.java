@@ -33,13 +33,10 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
     public List<MessagePushMsg> selectMessagePushMsg(MessagePushMsgRequest request) {
         Query query = new Query();
         Criteria criteria = new Criteria();
-        if (request.getStartDateSrch() != null) {
-            Date startTime = GetDate.stringToDate2(request.getStartDateSrch());
-            criteria.and("createTime").gte((int) (startTime.getTime() / 1000));
-        }
-        if (request.getEndDateSrch() != null) {
-            Date endTime = GetDate.stringToDate2(request.getEndDateSrch());
-            criteria.and("createTime").lte((int) (endTime.getTime() / 1000));
+        if (request.getStartDateSrch() != null || request.getEndDateSrch() != null) {
+            int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartDateSrch());
+            int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndDateSrch());
+            criteria.and("sendTime").gte(startTime).lte(endTime);
         }
         if (request.getTagId() != null) {
             criteria.and("tagId").is(request.getTagId());
@@ -54,7 +51,8 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
             criteria.and("createUserName").is(request.getCreateUserName());
         }
         if (request.getMsgTerminal() != null) {
-            criteria.and("msgTerminal").is(request.getMsgTerminal());
+            String[] msgTerminal = {request.getMsgTerminal()};
+            criteria.and("msgTerminal").is(msgTerminal);
         }
         if (request.getMsgSendStatus() != null) {
             criteria.and("msgSendStatus").is(request.getMsgSendStatus());

@@ -3,15 +3,14 @@
  */
 package com.hyjf.am.trade.service.front.batch.impl;
 
+import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountWithdrawMapper;
-import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
-import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
-import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
-import com.hyjf.am.trade.dao.model.auto.AccountWithdrawExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.batch.BatchUserPortraitQueryService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
+import com.hyjf.am.vo.user.UserAndSpreadsUserVO;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -20,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,24 +39,29 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
     private AccountWithdrawMapper accountWithdrawMapper;
     /**
      * 查询用户画像所需要的投资相关参数
-     * @param userIds 需要查询的userId的list
+     * @param batchUserPortraitRequest 需要查询的userId的list
      * @return 结构与UserPortrait相同的封装对象list
      * */
     @Override
-    public List<BatchUserPortraitQueryVO> selectInfoForUserPortrait(List<Integer> userIds) {
-        log.info("BatchUserPortraitQueryServiceImpl............userIds=========={}",userIds);
+    public List<BatchUserPortraitQueryVO> selectInfoForUserPortrait(BatchUserPortraitRequest batchUserPortraitRequest) {
         List<BatchUserPortraitQueryVO> resultList = new ArrayList<>();
+        List<UserAndSpreadsUserVO> userAndSpreadsUserVOList = batchUserPortraitRequest.getUserAndSpreadsUserVOList();
 
-        for(Integer userId:userIds){
+        for(UserAndSpreadsUserVO userAndSpreadsUserVO:userAndSpreadsUserVOList){
+            Integer userId = userAndSpreadsUserVO.getUserId();
+            List<Integer> spreadsUserIdList = userAndSpreadsUserVO.getSpreadsUserId();
             if(userId != null){ // userId有值
                 BatchUserPortraitQueryVO batchUserPortraitQueryVO = new BatchUserPortraitQueryVO();
                 // 累计收益
                 BigDecimal interestSum =  batchUserPortraitQueryCustomizeMapper.getInterestSum(userId);
+                if(interestSum == null){
+                    interestSum = new BigDecimal(0.00);
+                }
 
                 //散标累计年化投资金额
                 BigDecimal investSum = batchUserPortraitQueryCustomizeMapper.getInvestSum(userId);
                 if (investSum == null) {
-                    investSum = new BigDecimal("0.00");
+                    investSum = new BigDecimal(0.00);
                 }
                 //计划累计年化投资金额
                 BigDecimal planSum = batchUserPortraitQueryCustomizeMapper.getPlanSum(userId);
@@ -71,8 +76,11 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 //累计提现金额
                 BigDecimal withdrawSum = batchUserPortraitQueryCustomizeMapper.getWithdrawSum(userId);
                 if (withdrawSum == null) {
-                    withdrawSum = new BigDecimal("0.00");
+                    batchUserPortraitQueryVO.setWithdrawSum(new BigDecimal(0.00));
+                }else{
+                    batchUserPortraitQueryVO.setWithdrawSum(withdrawSum);
                 }
+
                 //交易笔数
                 int tradeNumber = batchUserPortraitQueryCustomizeMapper.getTradeNumber(userId);
 
@@ -115,12 +123,102 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                     int addTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(createTime);
                     batchUserPortraitQueryVO.setLastRechargeTime(addTime);
                 }
+
+                // 最后一笔回款时间
+                BorrowRecoverExample borrowRecoverExample = new BorrowRecoverExample();
+                borrowRecoverExample.createCriteria().andUserIdEqualTo(userId);
+                borrowRecoverExample.setOrderByClause("create_time desc");
+                List<BorrowRecover> borrowRecovers = borrowRecoverMapper.selectByExample(borrowRecoverExample);
+                if (!CollectionUtils.isEmpty(borrowRecovers)) {
+                    batchUserPortraitQueryVO.setLastRepayTime(borrowRecovers.get(0).getRecoverTime());
+                }
+
+                //账户余额
+                AccountExample accountExample = new AccountExample();
+                accountExample.createCriteria().andUserIdEqualTo(userId);
+                List<Account> accounts = accountMapper.selectByExample(accountExample);
+                Account account = accounts.get(0);
+                BigDecimal bankTotal = account.getBankTotal();
+                BigDecimal bankInterestSum = account.getBankInterestSum();
+                batchUserPortraitQueryVO.setBankTotal(bankTotal);
+
+                //账户可用余额
+                BigDecimal bankBalance = account.getBankBalance();
+                batchUserPortraitQueryVO.setBankBalance(bankBalance);
+
+                //账户待还金额
+                BigDecimal bankAwait = account.getBankAwait();
+                BigDecimal planAccountWait = account.getPlanAccountWait();
+                batchUserPortraitQueryVO.setAccountAwait(bankAwait.add(planAccountWait));
+
+                //账户冻结金额
+                BigDecimal bankFrost = account.getBankFrost();
+                batchUserPortraitQueryVO.setBankFrost(bankFrost);
+
+                //资金存留比
+                BigDecimal balance = new BigDecimal(0);
+                AccountRechargeExample rechargeExample = new AccountRechargeExample();
+                AccountRechargeExample.Criteria criteria4 = rechargeExample.createCriteria();
+                criteria4.andUserIdEqualTo(userId).andStatusEqualTo(2);
+                List<AccountRecharge> recharges = accountRechargeMapper.selectByExample(rechargeExample);
+                if (!org.springframework.util.CollectionUtils.isEmpty(recharges)) {
+                    for (AccountRecharge accountRecharge : recharges) {
+                        balance = balance.add(accountRecharge.getBalance());
+                    }
+                }
+                if (bankInterestSum != null && balance != null && bankInterestSum.add(balance).compareTo(new BigDecimal(0)) > 0 ) {
+                    BigDecimal fundRetention = (account.getBankBalance().divide(bankInterestSum.add(balance), 4, RoundingMode.HALF_UP).multiply(new BigDecimal(100)));
+                    batchUserPortraitQueryVO.setFundRetention(fundRetention);
+                } else {
+                    batchUserPortraitQueryVO.setFundRetention(new BigDecimal(0));
+                }
+
+                //邀约客户注册数
+                batchUserPortraitQueryVO.setInviteRegist(spreadsUserIdList.size());
+
+                //邀约充值客户数
+                int rechargeCount = 0;
+                int tenderCount = 0;
+                for (Integer spreadsUserId : spreadsUserIdList) {
+                    AccountRechargeExample accountRechargeExample2 = new AccountRechargeExample();
+                    accountRechargeExample2.createCriteria().andUserIdEqualTo(spreadsUserId).andStatusEqualTo(2);
+
+                    BorrowTenderExample borrowTenderExample = new BorrowTenderExample();
+                    borrowTenderExample.createCriteria().andUserIdEqualTo(spreadsUserId);
+                    int count4 = borrowTenderMapper.countByExample(borrowTenderExample);
+
+                    int count3 = accountRechargeMapper.countByExample(accountRechargeExample2);
+                    if (count3 > 0) {
+                        rechargeCount++;
+                    }
+                    if (count4 > 4) {
+                        tenderCount++;
+                    }
+                }
+                batchUserPortraitQueryVO.setInviteRecharge(rechargeCount);
+                batchUserPortraitQueryVO.setInviteTender(tenderCount);
+
+
+                //客均收益率
+                BigDecimal tenderSum = new BigDecimal(0);
+                BorrowTenderExample borrowTenderExample1 = new BorrowTenderExample();
+                borrowTenderExample1.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo(1);
+                List<BorrowTender> borrowTenders = borrowTenderMapper.selectByExample(borrowTenderExample1);
+                for (BorrowTender borrowTender : borrowTenders) {
+                    tenderSum = tenderSum.add(borrowTender.getAccount());
+                }
+                if (tenderSum.compareTo(new BigDecimal(0)) > 0) {
+                    BigDecimal yield = interestSum.divide(tenderSum, 4, RoundingMode.HALF_UP).multiply(new BigDecimal(100));
+                    batchUserPortraitQueryVO.setYield(yield);
+                } else {
+                    batchUserPortraitQueryVO.setYield(new BigDecimal(0));
+                }
+
                 // 组装参数
                 batchUserPortraitQueryVO.setUserId(userId);
                 batchUserPortraitQueryVO.setInterestSum(interestSum);
                 batchUserPortraitQueryVO.setInvestSum(investSum.add(planSum));
                 batchUserPortraitQueryVO.setRechargeSum(rechargeSum);
-                batchUserPortraitQueryVO.setWithdrawSum(withdrawSum);
                 batchUserPortraitQueryVO.setTradeNumber(tradeNumber);
                 resultList.add(batchUserPortraitQueryVO);
             }

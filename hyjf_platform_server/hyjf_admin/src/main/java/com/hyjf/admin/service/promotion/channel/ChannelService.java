@@ -78,4 +78,18 @@ public interface ChannelService {
      */
     boolean deleteAction(ChannelCustomizeVO channelCustomizeVO);
 
+    /**
+     * @Author walter.limeng
+     * @Description  获取所有得utmPlat
+     * @Date 11:50 2018/10/11
+     * @Param null
+     * @return
+     */
+    List<UtmPlatVO> getAllUtmPlat();
+
+    /**
+     * 新增信息
+     * @param voList
+     */
+    void insertUtmList(List<ChannelCustomizeVO> voList);
 }

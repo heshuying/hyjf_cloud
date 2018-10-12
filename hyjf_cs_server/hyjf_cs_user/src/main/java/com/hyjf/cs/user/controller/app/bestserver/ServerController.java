@@ -36,16 +36,6 @@ import java.util.Date;
 public class ServerController extends BaseUserController {
 	private Logger logger = LoggerFactory.getLogger(ServerController.class);
 
-	/** 从系统配置中获取最新版本号 */
-	@Value("${hyjf.app.version.new}")
-	private String newVersion;
-	/** 从系统配置中获取测试环境地址 */
-	@Value("${hyjf.app.serverip.test}")
-	private String testServerIp;
-
-	@Value("${hyjf.front.app.host}")
-	private String hyjf_app_server_host;
-
 	@Autowired
 	SystemConfig systemConfig;
 
@@ -83,7 +73,7 @@ public class ServerController extends BaseUserController {
 			boolean isSafe = SecretUtil.checkSecretKey(appId, appKey, randomString, secretKey);
 
 			if (isSafe) {
-				if (version.substring(0, 5).equals(newVersion)) {
+				if (version.substring(0, 5).equals(systemConfig.getNewVersion())) {
 					logger.info("-------------version格式化：" + version.substring(0, 5));
 					// 唯一标识
 					String sign = "6bcbd50a-27c4-4aac-b448-ea6b1b9228f43GYE604";
@@ -96,7 +86,7 @@ public class ServerController extends BaseUserController {
 					signValue.setVersion(version);
 					RedisUtils.set(RedisConstants.SIGN + sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
-					resultBean.setServerIp(DES.encryptDES_ECB(testServerIp, initKey));
+					resultBean.setServerIp(DES.encryptDES_ECB(systemConfig.getTestServerIp(), initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
 					resultBean.setSign(sign);
 					// 保存InitKey
@@ -112,7 +102,7 @@ public class ServerController extends BaseUserController {
 					signValue.setVersion(version);
 					RedisUtils.set(RedisConstants.SIGN + sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
-					resultBean.setServerIp(DES.encryptDES_ECB(hyjf_app_server_host, initKey));
+					resultBean.setServerIp(DES.encryptDES_ECB(systemConfig.getAppFrontHost(), initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
 					resultBean.setSign(sign);
 					// 保存InitKey
@@ -140,7 +130,7 @@ public class ServerController extends BaseUserController {
 		ServerResultBean resultBean = new ServerResultBean();
 
 		try {
-			if (version.substring(0, 5).equals(newVersion)
+			if (version.substring(0, 5).equals(systemConfig.getNewVersion())
 					&& "6bcbd50a-27c4-4aac-b448-ea6b1b9228f43GYE604".equals(sign)) {
 				String key = "iUq3OGYv";
 				// 保存Key

@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_config.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -1914,9 +1914,35 @@
             <columnOverride column="config_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
         
-          <table tableName="ht_debt_config_log" domainObjectName="DebtConfigLog">
+        <table tableName="ht_debt_config_log" domainObjectName="DebtConfigLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="toggle" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_user_loginerror_lock" domainObjectName="LockedUserInfo">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="front" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="unlocked" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_bank_repay_org_freeze_log" domainObjectName="BankRepayOrgFreezeLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="all_repay_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_hjh_user_auth_config" domainObjectName="HjhUserAuthConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="auth_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auth_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="enabled_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_hjh_user_auth_config_log" domainObjectName="HjhUserAuthConfigLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="auth_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="auth_period" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="enabled_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <!-- 销售日报邮件配置表 -->

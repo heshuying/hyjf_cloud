@@ -181,18 +181,6 @@ public class MspController extends BaseController {
         	return mr;
         }
     }
-    	
-
-	//判断合同金额是否大于100
-	public boolean bigDecimalMix(BigDecimal bigDecimal){
-		BigDecimal b = new BigDecimal(100);
-		if (bigDecimal.compareTo(b)==-1) {
-			return false;
-		}
-		return true;
-		
-	}
-
 	/**
 	 * 删除安融查询数据
 	 *

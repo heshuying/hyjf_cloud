@@ -1,6 +1,7 @@
 package com.hyjf.am.user.service.admin.promotion.impl;
 
 import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
+import com.hyjf.am.resquest.admin.ChannelRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.admin.promotion.UtmService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -8,14 +9,11 @@ import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -213,6 +211,17 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         return CommonUtils.convertBeanList(list, UtmPlatVO.class);
     }
 
+    @Override
+    public void insertUtmList(ChannelRequest request) {
+        List<ChannelCustomizeVO> list = request.getList();
+        for (ChannelCustomizeVO vo : list) {
+            Utm utm = changeUtm(new Utm(), vo);
+            utm.setStatus(0);
+            utmMapper.insertSelective(utm);
+        }
+
+    }
+
     /**
      * @Author walter.limeng
      * @Description  转换utmplat对象
@@ -303,7 +312,9 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         }else {
             record.setLinkAddress("www.hyjf.com");
         }
-        record.setStatus(Integer.valueOf(channelCustomizeVO.getStatus()));
+        if(StringUtils.isNotBlank(channelCustomizeVO.getStatus())){
+            record.setStatus(Integer.valueOf(channelCustomizeVO.getStatus()));
+        }
 
         if (StringUtils.isNotEmpty(channelCustomizeVO.getRemark())) {
             record.setRemark(channelCustomizeVO.getRemark());

@@ -837,9 +837,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return userInfo
 	 * */
 	@Override
-	public List<UserLoginLogVO> searchUserIdForUserPortrait() {
+	public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait() {
 		String url = "http://AM-USER/user_batch/portrait/search_user_id_for_user_portrait";
-		UserLoginLogResponse response = restTemplate.getForEntity(url, UserLoginLogResponse.class).getBody();
+		UserAndSpreadsUserResponse response = restTemplate.getForEntity(url, UserAndSpreadsUserResponse.class).getBody();
 		if(response != null){
 			return response.getResultList();
 		}
@@ -956,9 +956,28 @@ public class AmUserClientImpl implements AmUserClient {
 		return restTemplate.getForEntity(userService+"/userManager/getBindUniqueIdByUserId/"+userId+"/"+bindPlatformId, String.class).getBody();
 	}
 
+	/**
+	 * 获取第三方绑定用户
+	 * @param userId
+	 * @param bindPlatformId
+	 * @return
+	 */
 	@Override
-	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid) {
-		return restTemplate.getForEntity(userService+"/userManager/bindThirdUser/"+userId+"/"+bindUniqueId+"/"+pid, Boolean.class).getBody();
+	public BindUserVo getBindUser(int userId, int bindPlatformId) {
+		BindUserResponse response = restTemplate.getForEntity(userService+"/userManager/getBindUser/"+userId+"/"+bindPlatformId, BindUserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public Boolean bindThirdUser(Integer userId, Integer bindUniqueId, Integer pid) {
+		BooleanResponse response = restTemplate.getForEntity(userService+"/userManager/bindThirdUser/"+userId+"/"+bindUniqueId+"/"+pid, BooleanResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultBoolean();
+		}
+		return null;
 	}
 
 	/**
@@ -1083,6 +1102,23 @@ public class AmUserClientImpl implements AmUserClient {
 				.postForEntity("http://AM-USER/am-user/wrb/register", wrbRegisterRequest, IntegerResponse.class)
 				.getBody().getResultInt();
 		return body;
+	}
+
+	/**
+	 * @param userId
+	 * @Description 根据userId查询开户信息
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/19 15:32
+	 */
+	@Override
+	public BankOpenAccountVO selectBankAccountById(Integer userId) {
+		String url = "http://AM-USER/am-user/bankopen/selectById/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 
 }

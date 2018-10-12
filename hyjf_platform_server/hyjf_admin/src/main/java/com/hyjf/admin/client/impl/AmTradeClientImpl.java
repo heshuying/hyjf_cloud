@@ -1637,14 +1637,15 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @param borrowFireRequest
      */
     @Override
-    public boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
+    public AdminResult updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
         String url = "http://AM-ADMIN/am-trade/borrow_first/update_ontime_record";
-        BorrowFirstCustomizeResponse response =
+        Response response =
                 restTemplate.postForEntity(url, borrowFireRequest, BorrowFirstCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return response.getFlag();
+            return new AdminResult();
+        } else {
+            return new AdminResult(BaseResult.FAIL, response.getMessage());
         }
-        return false;
     }
 
     /**
@@ -2800,6 +2801,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BorrowRecoverCustomizeVO> selectBorrowRecoverList(BorrowRecoverRequest request) {
         String url = "http://AM-ADMIN/am-trade/adminBorrowRecover/selectBorrowRecoverList";
+        AdminBorrowRecoverResponse response = restTemplate.postForEntity(url, request, AdminBorrowRecoverResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * @Description 获取admin产品中心-汇直投-放款明细列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @Override
+    public List<BorrowRecoverCustomizeVO> exportBorrowRecoverList(BorrowRecoverRequest request) {
+        String url = "http://AM-ADMIN/am-trade/adminBorrowRecover/exportBorrowRecoverList";
         AdminBorrowRecoverResponse response = restTemplate.postForEntity(url, request, AdminBorrowRecoverResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -5377,6 +5394,7 @@ public class AmTradeClientImpl implements AmTradeClient {
                 return response;
             }
             response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
             return response;
         }
         return null;
@@ -5410,6 +5428,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public FinmanChargeNewResponse deleteFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest){
+        Integer userId = adminRequest.getCreateUserId();
         FinmanChargeNewResponse response = null;
         //根据manChargeCd查询费率配置
         FinmanChargeNewResponse selectResponse = restTemplate.getForEntity("http://AM-ADMIN/am-admin/config/finmanchargenew/getRecordInfo/"+adminRequest.getManChargeCd(),FinmanChargeNewResponse.class)
@@ -5417,16 +5436,17 @@ public class AmTradeClientImpl implements AmTradeClient {
         if (selectResponse != null) {
             BorrowFinmanNewChargeVO vo = selectResponse.getResult();
             adminRequest = CommonUtils.convertBean(vo,FinmanChargeNewRequest.class);
-        }
-        //此处删除是插入日志，记录新动作而不是修改原动作
-        FinmanChargeNewResponse count =restTemplate.postForEntity("http://AM-ADMIN/am-admin/feerateModifyLog/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
-        if(count != null){
-            response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/finmanchargenew/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
-            if (response != null) {
-                response.setRtn(Response.SUCCESS);
+            adminRequest.setCreateUserId(userId);
+            //此处删除是插入日志，记录新动作而不是修改原动作
+            FinmanChargeNewResponse count =restTemplate.postForEntity("http://AM-ADMIN/am-admin/feerateModifyLog/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
+            if(count != null){
+                response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/finmanchargenew/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
+                if (response != null) {
+                    response.setRtn(Response.SUCCESS);
+                    return response;
+                }
                 return response;
             }
-            return response;
         }
         return null;
     }
@@ -6197,7 +6217,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
         AdminProtocolResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/startuseexistprotocol",
                 adminProtocolRequest, AdminProtocolResponse.class);
-        if(response.getRtn() == Response.SUCCESS){
+        if(Response.SUCCESS.equals(response.getRtn())){
             return true;
         }
 
@@ -6465,4 +6485,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 查询资产列表  AM-ADMIN
+     *
+     * @param request
+     * @return
+     */
+	@Override
+	public AssetListCustomizeResponse findAssetListWithoutPage(AssetListRequest request) {
+        AssetListCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/findAssetListWithoutPage", request,
+                        AssetListCustomizeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+	}
 }

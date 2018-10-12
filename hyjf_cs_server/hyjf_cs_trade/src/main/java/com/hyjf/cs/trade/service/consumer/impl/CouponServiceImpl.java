@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.service.consumer.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -15,6 +16,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CustomConstants;
@@ -24,6 +26,8 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.*;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.CouponLoansHjhMessageProducer;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -41,6 +45,7 @@ import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @Description 优惠券投资相关
@@ -56,6 +61,9 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
 
     @Autowired
     private AmUserClient amUserClient;
+
+    @Autowired
+    private CouponLoansHjhMessageProducer couponLoansHjhMessageProducer;
 
     /**
      * 加入计划  体验金投资
@@ -294,8 +302,12 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             params.put("orderIdCoupon", tenderNid);
             // 如果是计划类的
             if (CustomConstants.COUPON_TENDER_TYPE_HJH.equals(bean.getTenderType())) {
-                // TODO: 2018/6/23  如果优惠券单独投资的话就调用进入锁定期  PlanCouponServiceImpl 1323行
-                //rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS_HJH, JSONObject.toJSONString(params));
+                try{
+                    couponLoansHjhMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                }catch (Exception e){
+                    logger.error("优惠券放款失败  {} ",JSONObject.toJSONString(params));
+                    e.printStackTrace();
+                }
             }
         }
         // 设置优惠券的预期收益

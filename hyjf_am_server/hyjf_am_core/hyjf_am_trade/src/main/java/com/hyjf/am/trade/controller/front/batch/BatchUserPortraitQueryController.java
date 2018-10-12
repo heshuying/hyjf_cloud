@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.front.batch;
 
 import com.hyjf.am.response.trade.BatchUserPortraitQueryResponse;
+import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.batch.BatchUserPortraitQueryService;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
@@ -11,9 +12,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,15 +30,15 @@ public class BatchUserPortraitQueryController extends BaseController {
 
     /**
      * 查询用户画像所需要的投资相关参数
-     * @param userIds 需要查询的userId的list
+     * @param batchUserPortraitRequest 需要查询的userId的list
      * @return 返回与UserPortrait相同参数
      * */
-    @RequestMapping("/search_user_portrait_list/{userIds}")
-    public BatchUserPortraitQueryResponse searchUserPortraitList(@PathVariable List<Integer> userIds){
+    @PostMapping("/search_user_portrait_list")
+    public BatchUserPortraitQueryResponse searchUserPortraitList(@RequestBody BatchUserPortraitRequest batchUserPortraitRequest){
         BatchUserPortraitQueryResponse response = new BatchUserPortraitQueryResponse();
-        logger.info("员工画像.....searchUserPortraitList:::::::userIds===={}",userIds);
+        logger.info("员工画像.....searchUserPortraitList:::::::batchUserPortraitRequest===={}",batchUserPortraitRequest);
 
-        List<BatchUserPortraitQueryVO> list = batchUserPortraitQueryService.selectInfoForUserPortrait(userIds);
+        List<BatchUserPortraitQueryVO> list = batchUserPortraitQueryService.selectInfoForUserPortrait(batchUserPortraitRequest);
         if(!CollectionUtils.isEmpty(list)){
             response.setResultList(list);
         }

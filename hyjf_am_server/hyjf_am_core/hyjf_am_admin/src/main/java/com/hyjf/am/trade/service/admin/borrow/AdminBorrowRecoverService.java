@@ -13,6 +13,7 @@ public interface AdminBorrowRecoverService {
     int countBorrowRecover(BorrowRecoverRequest request);
 
     List<AdminBorrowRecoverCustomize> selectBorrowRecoverList(BorrowRecoverRequest request);
+    List<AdminBorrowRecoverCustomize> exportBorrowRecoverList(BorrowRecoverRequest request);
 
     AdminBorrowRecoverCustomize sumBorrowRecoverList(BorrowRecoverRequest request);
 }

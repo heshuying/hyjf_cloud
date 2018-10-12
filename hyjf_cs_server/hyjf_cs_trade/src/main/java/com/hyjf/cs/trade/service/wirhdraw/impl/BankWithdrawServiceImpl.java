@@ -672,10 +672,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_RETRY);
         }
         // 检查数据是否完整
-        if (Validator.isNull(transAmt) || Validator.isNull(transAmt)) {
+        if (Validator.isNull(transAmt)) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_AMOUNT);
         }
-        if (Validator.isNull(cardNo) || Validator.isNull(cardNo)) {
+        if (Validator.isNull(cardNo)) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
@@ -747,6 +747,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         BankCardVO bankCard = this.amUserClient.queryUserCardValid(user.getUserId()+"", cardNo);
         if (bankCard != null) {
             bank = bankCard.getBank();
+        } else {
+        	 return;
         }
         AccountWithdrawVO record = new AccountWithdrawVO();
         record.setUserId(userId);
@@ -756,7 +758,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         record.setStatus(WITHDRAW_STATUS_DEFAULT); // 状态: 0:初始值
         record.setAccount(cardNo);// 提现银行卡号
         record.setBank(bank); // 提现银行
-        record.setBankId(bankCard.getId());
+        if(bankCard.getId() != null){
+        	record.setBankId(bankCard.getId());
+        }
         record.setBranch(null);
         record.setProvince(0);
         record.setCity(0);
@@ -920,6 +924,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         BankCardVO bankCard = getBankInfo(userId, cardNo);
         if (bankCard != null) {
             bank = bankCard.getBank();
+        }else{
+        	return ret;
         }
         AccountWithdrawVO record = new AccountWithdrawVO();
         record.setUserId(userId);
@@ -929,7 +935,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         record.setStatus(WITHDRAW_STATUS_DEFAULT); // 状态: 0:初始值
         record.setAccount(cardNo);// 提现银行卡号
         record.setBank(bank); // 提现银行
-        record.setBankId(bankCard.getId());
+        if(bankCard.getId() != null){
+        	record.setBankId(bankCard.getId());
+        }
         record.setBranch(null);
         record.setProvince(0);
         record.setCity(0);

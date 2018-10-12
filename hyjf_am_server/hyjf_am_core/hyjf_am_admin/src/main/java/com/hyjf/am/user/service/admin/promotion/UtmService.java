@@ -1,6 +1,7 @@
 package com.hyjf.am.user.service.admin.promotion;
 
 import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
+import com.hyjf.am.resquest.admin.ChannelRequest;
 import com.hyjf.am.user.dao.model.auto.Utm;
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
 import com.hyjf.am.user.service.BaseService;
@@ -190,4 +191,10 @@ public interface UtmService extends BaseService {
      * @return
      */
     List<UtmPlatVO> getUtmPlatByParam(Map<String,Object> map);
+
+    /**
+     * 新增操作
+     * @param request
+     */
+    void insertUtmList(ChannelRequest request);
 }

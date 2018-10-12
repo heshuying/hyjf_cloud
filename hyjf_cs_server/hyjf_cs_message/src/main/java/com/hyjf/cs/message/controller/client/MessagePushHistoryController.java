@@ -38,8 +38,7 @@ public class MessagePushHistoryController {
      * @return
      */
     @RequestMapping("/get_message_list")
-    public MessagePushHistoryResponse getMessageList(
-            @RequestBody MessagePushHistoryRequest request) {
+    public MessagePushHistoryResponse getMessageList(@RequestBody MessagePushHistoryRequest request) {
         MessagePushHistoryResponse response = new MessagePushHistoryResponse();
         Integer count = messagePushHistoryService.getRecordCount(request);
         if (count > 0) {
@@ -49,6 +48,7 @@ public class MessagePushHistoryController {
                 List<MessagePushMsgHistoryVO> voList = CommonUtils.convertBeanList(list,
                         MessagePushMsgHistoryVO.class);
                 response.setResultList(voList);
+                response.setRecordTotal(count);
             }
         }
         return response;

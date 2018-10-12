@@ -71,7 +71,7 @@
 		hydb.borrow_apr,
 		CASE WHEN hydb.borrow_style = 'endday' THEN CONCAT(hydb.borrow_period, '天') ELSE CONCAT(hydb.borrow_period, '个月') END borrow_period,
 		hydb.account AS borrow_account,
-		hydb.create_time AS add_time,
+		date_format(hydb.create_time, '%Y-%m-%d %H:%i:%s') AS add_time,
 		hydb.repay_account_all AS repay_account_all,
 		hbi.entrusted_user_name AS entrusted_user_name,
 		CASE
@@ -114,7 +114,7 @@
 		hydb.borrow_apr,
 		CASE WHEN hydb.borrow_style = 'endday' THEN CONCAT(hydb.borrow_period, '天') ELSE CONCAT(hydb.borrow_period, '个月') END borrow_period,
 		hydb.account AS borrow_account,
-		hydb.create_time AS add_time,
+		date_format(hydb.create_time, '%Y-%m-%d %H:%i:%s') AS add_time,
 		hydb.repay_account_all AS repay_account_all,
 		hbi.entrusted_user_name AS entrusted_user_name,
 		CASE

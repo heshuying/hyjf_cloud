@@ -18,6 +18,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -255,7 +257,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
      * @return
      */
     @Override
-    public Integer selectPlanAccedeSum(Map<String, Object> params) {
+    public Long selectPlanAccedeSum(Map<String, Object> params) {
         return hjhPlanCustomizeMapper.selectPlanAccedeSum(params);
     }
 
@@ -325,6 +327,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         // 更新用户计划账户
         boolean accountFlag = hjhPlanCustomizeMapper.updateOfPlanJoin(account)> 0 ? true : false;
         logger.info("加入计划账户 操作account结果 :{}",accountFlag);
+        accedeAccount = getAccount(request.getUserId());
         // 组装accountList
         AccountList accountList = new AccountList();
         accountList.setIsBank(1);
@@ -341,7 +344,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         accountList.setRemark(request.getBorrowNid());
         accountList.setBankBalance(accedeAccount.getBankBalance());//江西银行账户余额
         accountList.setPlanBalance(accedeAccount.getPlanBalance());//汇计划账户可用余额
-        accountList.setBalance(accedeAccount.getBalance().subtract(accountDecimal));
+        accountList.setBalance(accedeAccount.getBalance());
         //accountList.setInterest(new BigDecimal(0));
         accountList.setAwait(accedeAccount.getAwait());
         accountList.setPlanFrost(accedeAccount.getPlanFrost());
@@ -358,7 +361,10 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         planUpdate.put("earnings", request.getEarnings());
         // 更新计划表
         boolean updateBorrowAccountFlag = hjhPlanCustomizeMapper.updateByDebtPlanId(planUpdate) > 0 ? true : false;
-        // TODO: 2018/6/22  更新  平台累积投资   开始
+        if(!updateBorrowAccountFlag){
+            logger.error("更新计划表失败   {} ",JSONObject.toJSONString(planUpdate));
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
+        }
         /*(5)更新  平台累积投资   开始*/
        /* List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
         if (calculates != null && calculates.size() > 0) {
@@ -369,11 +375,4 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
             this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
         }*/
     }
-
-
-
-
-
-
-
 }

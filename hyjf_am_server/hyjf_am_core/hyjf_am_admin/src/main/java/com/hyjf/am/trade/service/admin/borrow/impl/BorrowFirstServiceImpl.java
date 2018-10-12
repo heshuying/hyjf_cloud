@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service.admin.borrow.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.admin.mq.producer.AutoPreAuditMessageProducer;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -131,10 +132,11 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
      * @param borrowFireRequest
      */
     @Override
-    public boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
+    public Response updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
         String borrowNid = borrowFireRequest.getBorrowNid();
-        Borrow borrow = getBorrowByBorrowNid(borrowNid);
-        if (borrow != null) {
+        Borrow borrow = getBorrow(borrowNid);
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
+        if (borrow != null && borrowInfo != null) {
             // 插入时间
             int systemNowDateLong = GetDate.getNowTime10();
             Date systemNowDate = GetDate.getDate(systemNowDateLong);
@@ -142,7 +144,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
             borrow.setBorrowAccountWait(borrow.getAccount());
             // 当发标状态为立即发标时插入系统时间
             if (StringUtils.isNotBlank(borrowFireRequest.getVerifyStatus())) {
-                // 发标方式为”暂不发标2“或者”定时发标 3“时，项目状态变为”待发布“
+                // 发标方式为"暂不发标 2"或者"定时发标 3"时，项目状态变为 待发布
                 if (Integer.valueOf(borrowFireRequest.getVerifyStatus()) == 2 || Integer.valueOf(borrowFireRequest.getVerifyStatus()) == 3) {
                     // 定时发标
                     if (Integer.valueOf(borrowFireRequest.getVerifyStatus()) == 3) {
@@ -157,7 +159,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     // 初审状态
                     borrow.setVerifyStatus(Integer.valueOf(borrowFireRequest.getVerifyStatus()));
                 }
-                // 发标方式为”立即发标 2“时，项目状态变为”投资中
+                // 发标方式为"立即发标 4"时，项目状态变为 投资中
                 else if (Integer.valueOf(borrowFireRequest.getVerifyStatus()) == 4) {
                     // 是否可以进行借款
                     borrow.setBorrowStatus(1);
@@ -176,6 +178,24 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                         //todo wangjun rediskey暂时修改 后期如果有变动统一再修改
                         RedisUtils.set(RedisConstants.BORROW_NID + borrow.getBorrowNid(), borrow.getAccount().toString());
                     }
+
+                    if (!CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
+                        // 三方资产更新资产表状态
+                        HjhPlanAsset hjhPlanAssetnew = this.selectHjhPlanAssetByBorrowNid(borrowNid);
+                        if(hjhPlanAssetnew != null){
+                            //7 投资中
+                            hjhPlanAssetnew.setStatus(7);
+                            //获取当前时间
+                            hjhPlanAssetnew.setUpdateTime(GetDate.getNowTime());
+                            hjhPlanAssetnew.setUpdateUserId(1);
+                            int planAssetUpdCount = hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetnew);
+                            if(planAssetUpdCount == 0){
+                                return new Response(Response.FAIL, "更新第三方资产失败");
+                            }
+                        } else {
+                            return new Response(Response.FAIL, "获取第三方资产失败");
+                        }
+                    }
                 }
                 // 更新时间
                 borrow.setUpdatetime(systemNowDate);
@@ -186,11 +206,13 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                 if (updateCount > 0) {
                     // 更新redis的定时发标时间
                     changeOntimeOfRedis(borrow);
-                    return true;
+                    return new Response();
+                } else {
+                    return new Response(Response.FAIL, "标的信息更新失败");
                 }
             }
         }
-        return false;
+        return new Response(Response.FAIL,"未查询到标的信息");
     }
 
     /**
@@ -238,21 +260,5 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
             //非定时发标 删redis
             RedisUtils.del(RedisConstants.ONTIME + borrow.getBorrowNid());
         }
-    }
-
-    /**
-     * 获取标的
-     * @param borrowNid
-     * @return
-     */
-    private Borrow getBorrowByBorrowNid(String borrowNid){
-        BorrowExample example = new BorrowExample();
-        BorrowExample.Criteria cra = example.createCriteria();
-        cra.andBorrowNidEqualTo(borrowNid);
-        List<Borrow> list=this.borrowMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(list)){
-            return list.get(0);
-        }
-        return null;
     }
 }

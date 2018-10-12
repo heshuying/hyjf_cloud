@@ -2,9 +2,8 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.LockedUserInfo;
 import com.hyjf.am.user.dao.model.auto.LockedUserInfoExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface LockedUserInfoMapper {
     int countByExample(LockedUserInfoExample example);

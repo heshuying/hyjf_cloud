@@ -370,4 +370,15 @@ public interface AmUserClient {
 	String selectBankSmsLog(BankSmsLogRequest bankSmsLogRequest);
 
 	boolean updateBankSmsLog(BankSmsLogRequest request);
+
+	/**
+	 * 保存短信信息
+	 * @param mobile
+	 * @param checkCode
+	 * @param validCodeType
+	 * @param status
+	 * @param platform
+	 * @return
+	 */
+	int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 }

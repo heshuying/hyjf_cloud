@@ -30,6 +30,8 @@
 		<result column="last_days" property="lastDays" jdbcType="VARCHAR" />
 		<!-- 融资期限 -->
 		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<!-- 融资期限(纯数字) -->
+		<result column="borrow_period_number" property="borrowPeriodNumber" jdbcType="VARCHAR" />
 		<!-- 持有期限 -->
 		<result column="tender_period" property="tenderPeriod" jdbcType="VARCHAR" />
 		<!-- 时间 -->
@@ -98,6 +100,7 @@
 			hb.borrow_apr AS borrow_apr,
 			hb.account AS borrow_account,
 			CASE WHEN hb.borrow_style = 'endday' THEN CONCAT(hb.borrow_period, '天') ELSE CONCAT(hb.borrow_period, '个月') END borrow_period,
+			hb.borrow_period as borrow_period_number,
 			hb.borrow_style AS borrow_style,
 			CASE WHEN hb.borrow_style = 'endday' OR hb.borrow_style = 'end' THEN 1
 			WHEN hb.borrow_style = 'endmonth' THEN hbr.recover_period END AS period_now,
@@ -555,7 +558,7 @@
 			'%Y-%m-%d %H:%i:%s'
 		) AS creditTime,
 		 hbc.add_time AS creditTimeInt,
-		 hui.truename AS creditUserTrueName,
+		 hru.truename AS creditUserTrueName,
 		 hbc.credit_user_id AS creditUserId,
 		 hbc.credit_repay_end_time AS creditRepayEndTime,
 		 	CASE
@@ -606,8 +609,7 @@
 			ht_borrow_credit hbc
 		LEFT JOIN ht_credit_tender hhh ON hbc.credit_nid = hhh.credit_nid
 		LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
-		LEFT JOIN ht_users hu ON hu.user_id = hbc.credit_user_id
-		LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
+		LEFT JOIN ht_r_user hru ON hru.user_id = hbc.credit_user_id
 		WHERE
 			hbc.credit_nid = #{creditNid}
 			AND

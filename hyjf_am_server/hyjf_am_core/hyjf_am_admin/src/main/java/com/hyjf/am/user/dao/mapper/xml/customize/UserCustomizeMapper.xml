@@ -38,4 +38,60 @@
 			LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
 		WHERE hydu.user_id =#{userId,jdbcType=INTEGER}
 	</select>
+
+	<resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.User" >
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="CHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="salt" property="salt" jdbcType="CHAR" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="open_account" property="openAccount" jdbcType="TINYINT" />
+		<result column="recharge_sms" property="rechargeSms" jdbcType="TINYINT" />
+		<result column="withdraw_sms" property="withdrawSms" jdbcType="TINYINT" />
+		<result column="icon_url" property="iconUrl" jdbcType="VARCHAR" />
+		<result column="if_receive_notice" property="ifReceiveNotice" jdbcType="TINYINT" />
+		<result column="invest_sms" property="investSms" jdbcType="TINYINT" />
+		<result column="recieve_sms" property="recieveSms" jdbcType="TINYINT" />
+		<result column="reg_esb" property="regEsb" jdbcType="TINYINT" />
+		<result column="eprovince" property="eprovince" jdbcType="VARCHAR" />
+		<result column="send_sms" property="sendSms" jdbcType="TINYINT" />
+		<result column="is_inst_flag" property="isInstFlag" jdbcType="TINYINT" />
+		<result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+		<result column="account_esb" property="accountEsb" jdbcType="TINYINT" />
+		<result column="user_type" property="userType" jdbcType="TINYINT" />
+		<result column="payment_auth_status" property="paymentAuthStatus" jdbcType="TINYINT" />
+		<result column="is_set_password" property="isSetPassword" jdbcType="TINYINT" />
+		<result column="bank_open_account" property="bankOpenAccount" jdbcType="TINYINT" />
+		<result column="bank_account_esb" property="bankAccountEsb" jdbcType="TINYINT" />
+		<result column="is_evaluation_flag" property="isEvaluationFlag" jdbcType="TINYINT" />
+		<result column="evaluation_expired_time" property="evaluationExpiredTime" jdbcType="TIMESTAMP" />
+		<result column="is_ca_flag" property="isCaFlag" jdbcType="TINYINT" />
+		<result column="is_smtp" property="isSmtp" jdbcType="TINYINT" />
+		<result column="reg_ip" property="regIp" jdbcType="VARCHAR" />
+		<result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+    user_id, username, mobile, email, `password`, salt, `status`, open_account, recharge_sms,
+    withdraw_sms, icon_url, if_receive_notice, invest_sms, recieve_sms, reg_esb, eprovince,
+    send_sms, is_inst_flag, inst_code, account_esb, user_type, payment_auth_status, is_set_password,
+    bank_open_account, bank_account_esb, is_evaluation_flag, evaluation_expired_time,
+    is_ca_flag, is_smtp, reg_ip, reg_time, create_time, update_time
+  </sql>
+	<select id="selectUserByListUserId" resultMap="BaseResultMap" parameterType="list" >
+		select
+		<include refid="Base_Column_List" />
+		from ht_user
+		<where>
+			<if test="list != null">
+				user_id in
+				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
 </mapper>

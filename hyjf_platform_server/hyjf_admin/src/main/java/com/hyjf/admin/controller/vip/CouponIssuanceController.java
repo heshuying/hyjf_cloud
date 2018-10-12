@@ -69,11 +69,12 @@ public class CouponIssuanceController extends BaseController {
         couponStatus.add("已发行");
         couponStatus.add("审核不通过");
         List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
-        ccr.setCouponStatus(couponStatus);
-        ccr.setCouponTypes(couponType);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+        ccr.setCouponStatus(couponStatus);
+        ccr.setCouponTypes(couponType);
+
         if (!Response.isSuccess(ccr)) {
             return new AdminResult<>(FAIL, ccr.getMessage());
 

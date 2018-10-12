@@ -184,7 +184,7 @@ public class SubConfigController extends BaseController {
             UserInfoCustomizeVO user =userMap.getResult();
             if(user != null){
                 if (Response.isSuccess(res)&&!CollectionUtils.isEmpty(res.getResultList())) {
-                    userMapNullMap.put("info", "该用户白名单信息已经存在");
+                    userMapNullMap.put("info", "该用户分账名单信息已经存在");
                     userMapNullMap.put("status", "n");
                     return new AdminResult<Map>(userMapNullMap);
                 }else {

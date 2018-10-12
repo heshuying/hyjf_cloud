@@ -87,32 +87,32 @@ public class FddHandle {
 	 * 
 	 * @param bean
 	 */
-	public void tenderGenerateContract(FddGenerateContractBean bean) throws Exception {
+	public void tenderGenerateContract(FddGenerateContractBean bean) {
 		logger.info("--------------开始生成居间投资协议----订单号：" + bean.getOrdid());
 		// 投资人用户ID
 		Integer tenderUserId = bean.getTenderUserId();
 		if (tenderUserId == null || tenderUserId == 0) {
-			throw new Exception("投资人用户ID为空.");
+			throw new RuntimeException("投资人用户ID为空.");
 		}
 		// 投资人代收利息
 		BigDecimal tenderInterest = bean.getTenderInterest();
 		if (tenderInterest == null) {
-			throw new Exception("投资人代收利息为空.");
+			throw new RuntimeException("投资人代收利息为空.");
 		}
 		// 投资订单号
 		String tenderNid = bean.getOrdid();
 		if (StringUtils.isBlank(tenderNid)) {
-			throw new Exception("投资订单号为空.");
+			throw new RuntimeException("投资订单号为空.");
 		}
 		// 标的编号
 		String borrowNid = bean.getBorrowNid();
 		if (StringUtils.isBlank(borrowNid)) {
-			throw new Exception("标的编号为空.");
+			throw new RuntimeException("标的编号为空.");
 		}
 		// 借款详情
 		BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
 		if (borrow == null) {
-			throw new Exception("根据标的编号检索借款详情失败,借款编号:[" + borrowNid + "].");
+			throw new RuntimeException("根据标的编号检索借款详情失败,借款编号:[" + borrowNid + "].");
 		}
 		String planNid = borrow.getPlanNid();
 		// 借款方真实姓名或企业名称
@@ -129,13 +129,13 @@ public class FddHandle {
 			// 借款人用户信息
 			UserVO borrowUser = this.amUserClient.findUserById(borrowUserId);
 			if (borrowUser == null) {
-				throw new Exception("根据借款人用户ID,查询借款人信息失败,借款人用户ID:[" + borrowUserId + "].");
+				throw new RuntimeException("根据借款人用户ID,查询借款人信息失败,借款人用户ID:[" + borrowUserId + "].");
 			}
 
 			// 借款人用户详情信息
 			UserInfoVO borrowUserInfo = this.amUserClient.findUsersInfoById(borrowUserId);
 			if (borrowUserInfo == null) {
-				throw new Exception("根据借款人用户ID,查询借款人详情信息失败,借款人用户ID:[" + borrowUserId + "].");
+				throw new RuntimeException("根据借款人用户ID,查询借款人详情信息失败,借款人用户ID:[" + borrowUserId + "].");
 			}
 
 			// 如果是企业用户
@@ -158,28 +158,28 @@ public class FddHandle {
 				// 借款主体为企业借款
 				BorrowUserVO borrowUsers = this.amTradeClient.getBorrowUser(borrowNid);
 				if (borrowUsers == null) {
-					throw new Exception("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:[" + borrowNid + "]");
+					throw new RuntimeException("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:[" + borrowNid + "]");
 				}
 				borrowTrueName = borrowUsers.getUsername();
 				borrowIdCard = borrowUsers.getSocialCreditCode();
 				// 获取CA认证客户编号
 				borrowerCustomerID = this.getCACustomerID(borrowUsers);
 				if (StringUtils.isBlank(borrowerCustomerID)) {
-					throw new Exception("企业借款获取CA认证客户编号失败,企业名称:[" + borrowUsers.getUsername() + "],社会统一信用代码:["
+					throw new RuntimeException("企业借款获取CA认证客户编号失败,企业名称:[" + borrowUsers.getUsername() + "],社会统一信用代码:["
 							+ borrowUsers.getSocialCreditCode() + "].");
 				}
 			} else if ("2".equals(borrow.getCompanyOrPersonal())) {
 				// 借款主体为个人借款
 				BorrowManinfoVO borrowManinfo = this.amTradeClient.getBorrowManinfo(borrowNid);
 				if (borrowManinfo == null) {
-					throw new Exception("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
+					throw new RuntimeException("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
 				}
 				borrowTrueName = borrowManinfo.getName();
 				borrowIdCard = borrowManinfo.getCardNo();
 				// 获取CA认证客户编号
 				borrowerCustomerID = this.getPersonCACustomerID(borrowManinfo);
 				if (StringUtils.isBlank(borrowerCustomerID)) {
-					throw new Exception("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:["
+					throw new RuntimeException("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:["
 							+ borrowManinfo.getCardNo() + "].");
 				}
 			}
@@ -188,12 +188,12 @@ public class FddHandle {
 		// 投资人用户信息
 		UserVO tenderUser = this.amUserClient.findUserById(tenderUserId);
 		if (tenderUser == null) {
-			throw new Exception("根据投资人用户ID,查询投资人信息失败,投资人用户ID:[" + tenderUserId + "].");
+			throw new RuntimeException("根据投资人用户ID,查询投资人信息失败,投资人用户ID:[" + tenderUserId + "].");
 		}
 		// 投资人用户详情信息
 		UserInfoVO tenderUsersInfo = this.amUserClient.findUsersInfoById(tenderUserId);
 		if (tenderUsersInfo == null) {
-			throw new Exception("根据投资人用户ID,查询投资人详情信息失败,投资人用户ID:[" + tenderUserId + "].");
+			throw new RuntimeException("根据投资人用户ID,查询投资人详情信息失败,投资人用户ID:[" + tenderUserId + "].");
 		}
 		// 查询投资记录
 		BorrowTenderRequest btRequest = new BorrowTenderRequest();
@@ -202,7 +202,7 @@ public class FddHandle {
 		btRequest.setTenderNid(tenderNid);
 		BorrowTenderVO borrowTender = this.amTradeClient.selectBorrowTender(btRequest);
 		if (borrowTender == null) {
-			throw new Exception(
+			throw new RuntimeException(
 					"投资记录不存在,投资订单号:[" + tenderNid + "],投资人用户ID:[" + tenderUserId + "],标的编号:[" + borrowNid + "].");
 		}
 
@@ -269,6 +269,7 @@ public class FddHandle {
                 callBean.setFont_size("12");
                 callBean.setFont_type("1");
                 DzqzCallBean dzqzCallBean = DzqzCallUtil.callApiBg(callBean);
+                logger.info("--------------法大大生成居间服务协议请求银行接口返回数据："+JSONObject.toJSONString(dzqzCallBean));
                 String result = dzqzCallBean.getResult();
                 String code = dzqzCallBean.getCode();
                 dzqzCallBean.setTemplate_id(templetId);
@@ -688,33 +689,33 @@ public class FddHandle {
 	 * 
 	 * @param bean
 	 */
-	public void creditGenerateContract(FddGenerateContractBean bean) throws Exception {
+	public void creditGenerateContract(FddGenerateContractBean bean){
         JSONObject paramter = new JSONObject();
         // 承接订单号
         String assignOrderId = bean.getAssignOrderId();
         if (StringUtils.isBlank(assignOrderId)) {
             logger.info("债转承接订单号为空");
-            throw new Exception("债转承接订单号为空");
+            throw new RuntimeException("债转承接订单号为空");
         }
         // 承接人用户ID
         Integer tenderUserId = bean.getTenderUserId();
         if (tenderUserId == null || tenderUserId == 0) {
-            throw new Exception("承接用户ID为空");
+            throw new RuntimeException("承接用户ID为空");
         }
         // 标的编号
         String borrowNid = bean.getBorrowNid();
         if (StringUtils.isBlank(borrowNid)) {
-            throw new Exception("借款编号为空");
+            throw new RuntimeException("借款编号为空");
         }
         // 原始投资订单号
         String creditTenderNid = bean.getCreditTenderNid();
         if (StringUtils.isBlank(creditTenderNid)) {
-            throw new Exception("原始投资订单号");
+            throw new RuntimeException("原始投资订单号");
         }
         // 债转编号
         String creditNid = bean.getCreditNid();
         if (StringUtils.isBlank(creditNid)) {
-            throw new Exception("债转编号为空");
+            throw new RuntimeException("债转编号为空");
         }
 
         // 获取债转投资信息
@@ -759,8 +760,8 @@ public class FddHandle {
             // 获取借款标的信息
             BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
             if (borrow == null) {
-                logger.info("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
-                throw new Exception("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
+                //logger.info("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
+                throw new RuntimeException("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
             }
 
             // 借款人用户ID
@@ -775,7 +776,7 @@ public class FddHandle {
 			List<BorrowCreditVO> borrowCredit=this.amTradeClient.getBorrowCreditList(request1);
 
             if (borrowCredit == null || borrowCredit.size() != 1) {
-                throw new Exception("根据债转编号查询债转信息失败,债转编号:[" + creditNid + "].");
+                throw new RuntimeException("根据债转编号查询债转信息失败,债转编号:[" + creditNid + "].");
             }
             // 出让人用户ID
             Integer creditUserId = creditTender.getCreditUserId();
@@ -783,32 +784,32 @@ public class FddHandle {
             // 获取承接人平台信息
             UserVO tenderUser = this.amUserClient.findUserById(tenderUserId);
             if (tenderUser == null) {
-                throw new Exception("根据用户ID查询用户信息失败, 承接人用户ID:[" + tenderUserId + "]");
+                throw new RuntimeException("根据用户ID查询用户信息失败, 承接人用户ID:[" + tenderUserId + "]");
             }
             // 获取承接人身份信息
             UserInfoVO tenderUserInfo = this.amUserClient.findUsersInfoById(tenderUserId);
             if (tenderUserInfo == null) {
-                throw new Exception("根据用户ID查询用户详情信息失败, 承接人用户ID:[" + tenderUserId + "]");
+                throw new RuntimeException("根据用户ID查询用户详情信息失败, 承接人用户ID:[" + tenderUserId + "]");
             }
             // 获取融资方平台信息
             UserVO borrowUsers =this.amUserClient.findUserById(borrowUserId);
             if (borrowUsers == null) {
-                throw new Exception("根据借款人用户ID,查询借款人用户信息失败,借款人用户ID:[" + borrowUserId + "].");
+                throw new RuntimeException("根据借款人用户ID,查询借款人用户信息失败,借款人用户ID:[" + borrowUserId + "].");
             }
             // 获取借款人信息
             UserInfoVO borrowUsersInfo=this.amUserClient.findUsersInfoById(borrowUserId);
             if (borrowUsersInfo == null) {
-                throw new Exception("根据借款人用户ID,查询借款人用户详情信息失败,借款人用户ID:[" + borrowUserId + "].");
+                throw new RuntimeException("根据借款人用户ID,查询借款人用户详情信息失败,借款人用户ID:[" + borrowUserId + "].");
             }
             // 获取出让人平台信息
             UserVO creditUser =this.amUserClient.findUserById(creditUserId);
             if (creditUser == null) {
-                throw new Exception("根据出让人用户ID,查询出让人用户信息失败,出让人用户ID:[" + creditUserId + "].");
+                throw new RuntimeException("根据出让人用户ID,查询出让人用户信息失败,出让人用户ID:[" + creditUserId + "].");
             }
             // 获取债转人身份信息
             UserInfoVO creditUsersInfo = this.amUserClient.findUsersInfoById(creditUserId);
             if (creditUsersInfo == null) {
-                throw new Exception("根据出让人用户ID,查询出让人用户信息详情失败,出让人用户ID:[" + creditUserId + "].");
+                throw new RuntimeException("根据出让人用户ID,查询出让人用户信息详情失败,出让人用户ID:[" + creditUserId + "].");
             }
 
             if (borrow.getReverifyTime() != null) {
@@ -940,16 +941,16 @@ public class FddHandle {
 
 	/**
 	 * 计划债转
-	 * 
+	 *
 	 * @param bean
 	 */
-	public void planCreditGenerateContract(FddGenerateContractBean bean) throws Exception {
+	public void planCreditGenerateContract(FddGenerateContractBean bean) {
 		logger.info("开始生成计划债转协议---------------------承接订单号:" + bean.getAssignNid());
 		try {
 			//计划债转是在事务内提交，可能获取不到数据，需要暂时休眠1秒，待数据提交
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("计划债转失败！");
 		}
 		Map<String, Object> resultMap = null;
 		List<HjhDebtCreditTenderVO> hjhCreditTenderList =
@@ -977,7 +978,11 @@ public class FddHandle {
 		}else{
 			logger.error("开始生成计划债转协议失败-----------汇计划债转投资表中无该记录----------承接订单号:" + bean.getAssignNid());
 		}
-
+		if(resultMap == null){
+			//logger.error("获取模板参数对象(查新表)失败");
+			//return;
+			throw new RuntimeException("获取模板参数对象(查新表)失败");
+		}
 		BorrowAndInfoVO borrow = (BorrowAndInfoVO) resultMap.get("borrow");
 		UserInfoVO creditUsersInfo = (UserInfoVO) resultMap.get("usersInfoCredit");
 		UserVO creditUser = (UserVO) resultMap.get("usersCredit");
@@ -1274,17 +1279,20 @@ public class FddHandle {
 						Integer borrowUserId = borrow.getUserId();
 						borrowerCustomerID = getCustomerIDByUserID(borrowUserId);
 						if(org.apache.commons.lang.StringUtils.isBlank(borrowerCustomerID)){
-							logger.info("企业借款获取CA认证客户编号失败,用户ID" + borrowUserId);
+							//logger.info("企业借款获取CA认证客户编号失败,用户ID" + borrowUserId);
+							throw new RuntimeException("企业借款获取CA认证客户编号失败,用户ID" + borrowUserId);
 						}
 					}else{
 						// 借款主体为企业借款
 						BorrowUserVO borrowUsers=this.amTradeClient.getBorrowUser(borrowNid);
 						if (borrowUsers == null){
-							logger.info("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:["+borrowNid+"]");
+							//logger.info("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:["+borrowNid+"]");
+							throw new RuntimeException("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:["+borrowNid+"]");
 						}
 						borrowerCustomerID = this.getCACustomerID(borrowUsers);
 						if(org.apache.commons.lang.StringUtils.isBlank(borrowerCustomerID)){
-							logger.info("企业借款获取CA认证客户编号失败,企业名称:["+borrowUsers.getUsername()+"],社会统一信用代码:["+borrowUsers.getSocialCreditCode()+"].");
+							//logger.info("企业借款获取CA认证客户编号失败,企业名称:["+borrowUsers.getUsername()+"],社会统一信用代码:["+borrowUsers.getSocialCreditCode()+"].");
+							throw new RuntimeException("企业借款获取CA认证客户编号失败,企业名称:["+borrowUsers.getUsername()+"],社会统一信用代码:["+borrowUsers.getSocialCreditCode()+"].");
 						}
 					}
 
@@ -1293,18 +1301,21 @@ public class FddHandle {
 						Integer borrowUserId = borrow.getUserId();
 						borrowerCustomerID = getCustomerIDByUserID(borrowUserId);
 						if(org.apache.commons.lang.StringUtils.isBlank(borrowerCustomerID)){
-							logger.info("个人借款获取CA认证客户编号失败,用户ID" + borrowUserId);
+							//logger.info("个人借款获取CA认证客户编号失败,用户ID" + borrowUserId);
+							throw new RuntimeException("个人借款获取CA认证客户编号失败,用户ID" + borrowUserId);
 						}
 					}else {
 						// 借款主体为个人借款
 						BorrowManinfoVO borrowManinfo=this.amTradeClient.getBorrowManinfo(borrowNid);
 						if (borrowManinfo == null) {
-							logger.info("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
+							//logger.info("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
+							throw new RuntimeException("借款主体为个人借款时,获取个人借款信息失败,标的编号:[" + borrowNid + "].");
 						}
 						// 获取CA认证客户编号
 						borrowerCustomerID = this.getPersonCACustomerID(borrowManinfo);
 						if (org.apache.commons.lang.StringUtils.isBlank(borrowerCustomerID)) {
-							logger.info("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:[" + borrowManinfo.getCardNo() + "].");
+							//logger.info("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:[" + borrowManinfo.getCardNo() + "].");
+							throw new RuntimeException("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:[" + borrowManinfo.getCardNo() + "].");
 						}
 					}
 				}
@@ -1374,8 +1385,9 @@ public class FddHandle {
 		if (callBean != null) {
 			String sign_status = callBean.getSign_status();
 			if (!"1".equals(sign_status)) {
-				logger.info("--------------------合同编号：" + contract_id + "，甲方签署失败-------");
-				return;
+				//logger.info("--------------------合同编号：" + contract_id + "，甲方签署失败-------");
+				//return;
+				throw new RuntimeException("--------------------合同编号：" + contract_id + "，甲方签署失败-------");
 			}
 			logger.info("--------------------合同编号：" + contract_id + "，甲方签署完成-------");
 		} else {
@@ -1390,8 +1402,9 @@ public class FddHandle {
 			if (borrowCallBean != null) {
 				String sign_status = borrowCallBean.getSign_status();
 				if (!"1".equals(sign_status)) {
-					logger.info("--------------------合同编号：" + contract_id + "，乙方签署失败-------");
-					return;
+					//logger.info("--------------------合同编号：" + contract_id + "，乙方签署失败-------");
+					//return;
+					throw new RuntimeException("--------------------合同编号：" + contract_id + "，乙方签署失败-------");
 				}
 				logger.info("--------------------合同编号：" + contract_id + "，乙方签署完成-------");
 			} else {
@@ -1409,8 +1422,9 @@ public class FddHandle {
 			if (platerCallBean != null) {
 				String sign_status = platerCallBean.getSign_status();
 				if (!"1".equals(sign_status)) {
-					logger.info("--------------------合同编号：" + contract_id + "，平台签署失败-------");
-					return;
+					//logger.info("--------------------合同编号：" + contract_id + "，平台签署失败-------");
+					//return;
+					throw new RuntimeException("--------------------合同编号：" + contract_id + "，平台签署失败-------");
 				} else {
 					logger.info("--------------------合同编号：" + contract_id + "，签署完成，开始更新-------");
 					//三方均签署成功，更新数据库
@@ -1655,10 +1669,7 @@ public class FddHandle {
 				String[] emails = { email };
 				//先用EMAILPARAM_TPL_LOANS测试，后期改成EMAITPL_EMAIL_LOCK_REPAY
 				logger.info("sendMail***************************下载法大大协议--投资filePath:"+filePath + fileName);
-				// mod by nxl 修改计划->智投服务
-				/*MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "汇计划投资服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
-						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);*/
-				MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "智投服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
+				MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "汇计划投资服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
 						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 				// 发送邮件
 				mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));

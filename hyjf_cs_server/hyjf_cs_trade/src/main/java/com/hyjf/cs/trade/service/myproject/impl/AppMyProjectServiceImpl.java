@@ -26,15 +26,14 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.BorrowProjectDetailBean;
@@ -43,8 +42,11 @@ import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
+import com.hyjf.cs.trade.service.smscode.SmsCodeService;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,6 +82,12 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     @Autowired
     private SmsProducer smsProducer;
+
+    @Autowired
+    private SmsCodeService sendSmsCode;
+
+    @Autowired
+    private MyCreditListService myCreditListService;
     
     /**
      * 折让率格式
@@ -627,20 +635,8 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             throw new CheckException(MsgEnum.STATUS_ZC000001);
         }
         AppResult result = new AppResult();
-        String checkCode = GetCode.getRandomSMSCode(6);
-        if(systemConfig.isHyjfEnvTest()){
-            // 测试环境验证码111111
-            checkCode = "111111";
-        }
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("val_code", checkCode);
-        SmsMessage smsMessage = new SmsMessage(userId, param, user.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
-                CustomConstants.PARAM_TPL_ZHUCE, CustomConstants.CHANNEL_TYPE_NORMAL);
-        try{
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-        }catch (Exception e){
-            throw new CheckException(MsgEnum.ERROR_SMS_SEND);
-        }
+        logger.info("开始发送验证码。。。。。userId:{},mobile:{},platform:{}",user.getUserId(),user.getMobile(),request.getParameter("platform"));
+        myCreditListService.sendCode(userId,GetCilentIP.getIpAddr(request),user.getMobile(),request.getParameter("platform"));
 		return result;
 	}
 
@@ -659,15 +655,15 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         String endTimeStr = "{endTime}";  //结束时间替换字符
         result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
         result.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
-        Integer creditNid = null;
         // 检查是否能债转
         String resultUrl = systemConfig.getAppFrontHost() + "/user/borrow/{borrowNid}/transfer/result/{state}?status={status}&statusDesc={statusDesc}&endTime={endTime}&price={price}&account={account}";
         try {
             try{
-                checkCanCredit(request,userId);
-                checkTenderToCreditParam(request,userId);
+                request.setTelcode(request.getCode());
+                myCreditListService.checkCanCredit(request,userId);
+                myCreditListService.checkTenderToCreditParam(request,userId);
                 // 债转保存
-                creditNid = insertTenderToCredit(userId, request);
+                myCreditListService.insertTenderToCredit(userId, request);
                 resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}","success").replace("{status}",CustomConstants.APP_STATUS_SUCCESS).replace("{statusDesc}",CustomConstants.APP_STATUS_DESC_SUCCESS).replace(accountStr,request.getCreditCapital()).replace(priceStr,request.getCreditPrice()).replace(endTimeStr, GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getCreditEndTime()));
                 // 业务手动抛出的异常
             }catch (CheckException e){
@@ -684,223 +680,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         result.put("resultUrl",resultUrl);
         return result;
 	}
-	
-    /**
-	 * 检查是否可债转
-	 *
-	 * @param request
-	 * @param userId
-	 * @return
-	 */
-	/*@Override*/
-	public AppResult checkCanCredit(CreditDetailsRequestBean request, Integer userId) {
-		AppResult webResult = new AppResult();
-	    if (StringUtils.isEmpty(request.getBorrowNid()) || StringUtils.isEmpty(request.getTenderNid())) {
-	        // 转让失败,无法获取借款和投资编号
-	        throw  new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
-	    }
-	    Integer creditedNum = amTradeClient.tenderAbleToCredit(userId);
-	    if (creditedNum != null && creditedNum >= 3) {
-	        // 今天的转让次数已满3次,请明天再试
-	        throw  new CheckException(MsgEnum.ERROR_CREDIT_THREE);
-	    }
-	    return webResult;
-	}
-	
-    /**
-	 * 检查债转提交保存的参数
-	 * @param request
-	 * @param userId
-	 */
-	private void checkTenderToCreditParam(TenderBorrowCreditCustomize request, Integer userId) {
-	    // 验证折让率
-	    if (StringUtils.isEmpty(request.getCreditDiscount())) {
-	        // 折让率不能为空
-	        throw  new CheckException(MsgEnum.ERROR_CREDIT_CREDIT_DISCOUNT_NULL);
-	    } else {
-	        if (request.getCreditDiscount().matches(regex)) {
-	            float creditDiscount = Float.parseFloat(request.getCreditDiscount());
-	            if (creditDiscount > creditDiscountEnd || creditDiscount < creditDiscountStart) {
-	                // 折让率范围错误
-	                throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);
-	            }
-	        } else {
-	            // 折让率格式错误
-	            throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_FORMAT_ERROR);
-	        }
-	    }
-	    // 验证手机验证码
-	    if (StringUtils.isEmpty(request.getCode())) {
-	        // 手机验证码不能为空
-	        throw  new CheckException(MsgEnum.STATUS_ZC000010);
-	    } else {
-	        UserVO user = amUserClient.findUserById(userId);
-	        int result = amUserClient.checkMobileCode(user.getMobile(), request.getCode(), CommonConstant.PARAM_TPL_ZHUCE
-	                , request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-            // TODO: 2018/9/14  zyk  债转验证码不好用 暂时注释掉  跑流程  后期打开
-	        /*if (result == 0) {
-	            throw new CheckException(MsgEnum.STATUS_ZC000015);
-	        }*/
-	    }
-	}
-	
-    /**
-	 * 插入转让信息
-	 * @param userId
-	 * @param request
-	 * @return
-	 */
-	private Integer insertTenderToCredit(int userId, TenderBorrowCreditCustomize request) {
-	    // 当前日期
-	    Integer nowTime = GetDate.getNowTime10();
-	    // 查询borrow 和 BorrowRecover
-	    BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
-	    if (borrow == null) {
-	        throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
-	    }
-	    BorrowRecoverVO recover = this.amTradeClient.getBorrowRecoverByTenderNid(request.getTenderNid());
-	    if (recover == null) {
-	        throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
-	    }
-	    // 债转计算
-	    Map<String, BigDecimal> creditCreateMap = selectExpectCreditFeeForBigDecimal(borrow, recover,
-	            request.getCreditDiscount(), nowTime);
-	    // 声明要保存的债转对象
-	    BorrowCreditVO borrowCredit = new BorrowCreditVO();
-	    // 生成creditNid
-	    // 获取当前时间的日期
-	    String nowDate = (GetDate.yyyyMMdd.format(new Date()) != null && !"".equals(GetDate.yyyyMMdd.format(new Date()))) ? GetDate.yyyyMMdd.format(new Date()) : "0";
-	    Integer creditedNum = amTradeClient.tenderAbleToCredit(userId);
-	    Integer creditNumToday = (creditedNum == null ? 0 : creditedNum);
-	    String creditNid = nowDate.substring(2) + String.format("%04d", (creditNumToday + 1));
-	    // 获取待债转数据
-	    TenderCreditCustomizeVO tenderToCreditDetail = amTradeClient.selectTenderToCreditDetail(userId, request.getBorrowNid(),
-	            request.getTenderNid());
-	    // 债转nid
-	    borrowCredit.setCreditNid(Integer.parseInt(creditNid));
-	    // 转让用户id
-	    borrowCredit.setCreditUserId(userId);
-	    UserVO userVO  = amUserClient.findUserById(userId);
-	    borrowCredit.setCreditUserName(userVO != null ? userVO.getUsername(): "");
-	    int lastdays = 0;
-	    int holddays = 0;
-	    String borrowStyle = borrow.getBorrowStyle();
-	    // 到期还本还息和按天计息，到期还本还息
-	    if (borrowStyle.equals(CalculatesUtil.STYLE_END) || borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {
-	        try {
-	            String nowDateStr = GetDate.getDateTimeMyTimeInMillis(nowTime);
-	            String recoverDate = GetDate.getDateTimeMyTimeInMillis(recover.getRecoverTime());
-	            String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getCreateTime());
-	            lastdays = GetDate.daysBetween(nowDateStr, recoverDate);
-	            holddays = GetDate.daysBetween(hodeDate, nowDateStr);
-	        } catch (Exception e) {
-	            // 债转数据错误
-	            throw new CheckException(MsgEnum.ERROR_CREDIT_DATA_ERROR);
-	        }
-	    }
-	    // 等额本息和等额本金和先息后本
-	    if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
-	        String bidNid = borrow.getBorrowNid();
-	        List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrow.getBorrowPeriod());
-	        if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
-	            try {
-	                String hodeDate = GetDate.date2Str(recover.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-	                lastdays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(borrowRepayPlans.get(0).getRepayTime()));
-	                holddays = GetDate.daysBetween(hodeDate, GetDate.getDateTimeMyTimeInMillis(nowTime));
-	            } catch (Exception e) {
-	                // 债转数据错误
-	                throw new CheckException(MsgEnum.ERROR_CREDIT_DATA_ERROR);
-	            }
-	        }
-	    }
-	    // 原标nid
-	    borrowCredit.setBidNid(tenderToCreditDetail.getBorrowNid());
-	    // 原标年化利率
-	    borrowCredit.setBidApr(new BigDecimal(tenderToCreditDetail.getBorrowApr()));
-	    // 原标标题
-	    borrowCredit.setBidName(tenderToCreditDetail.getBorrowName());
-	    // 投标nid
-	    borrowCredit.setTenderNid(tenderToCreditDetail.getTenderNid());
-	    // 转让状态 0.进行中,1.停止
-	    borrowCredit.setCreditStatus(0);
-	    // 排序
-	    borrowCredit.setCreditOrder(0);
-	    // 债转期限-天
-	    borrowCredit.setCreditTerm(lastdays);
-	    borrowCredit.setCreditTermHold(holddays);
-	    // 剩余的债转期数-期
-	    borrowCredit.setCreditPeriod(recover.getRecoverPeriod());
-	    // 客户端
-	    borrowCredit.setClient(request.getPlatform());
-	    // 债转本金
-	    borrowCredit.setCreditCapital(creditCreateMap.get("creditCapital"));
-	    // 债转总额
-	    borrowCredit.setCreditAccount(creditCreateMap.get("creditAccount"));
-	    // 债转总利息
-	    borrowCredit.setCreditInterest(creditCreateMap.get("creditInterest"));
-	    // 需垫付利息
-	    borrowCredit.setCreditInterestAdvance(creditCreateMap.get("assignInterestAdvance"));
-	    // 折价率
-	    borrowCredit.setCreditDiscount(new BigDecimal(request.getCreditDiscount()));
-	    // 总收入,
-	    borrowCredit.setCreditIncome(creditCreateMap.get("assignPay"));
-	    // 服务费
-	    borrowCredit.setCreditFee(creditCreateMap.get("assignPay").multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
-	    // 出让价格
-	    borrowCredit.setCreditPrice(creditCreateMap.get("creditPrice"));
-	    // 已认购本金
-	    borrowCredit.setCreditCapitalAssigned(BigDecimal.ZERO);
-	    // 已承接部分的利息
-	    borrowCredit.setCreditInterestAssigned(BigDecimal.ZERO);
-	    // 已垫付利息
-	    borrowCredit.setCreditInterestAdvanceAssigned(BigDecimal.ZERO);
-	    // 已还款总额
-	    borrowCredit.setCreditRepayAccount(BigDecimal.ZERO);
-	    // 已还本金
-	    borrowCredit.setCreditRepayCapital(BigDecimal.ZERO);
-	    // 已还利息
-	    borrowCredit.setCreditRepayInterest(BigDecimal.ZERO);
-	    // 债转最后还款日
-	    borrowCredit.setCreditRepayEndTime(Integer.parseInt(GetDate.get10Time(tenderToCreditDetail.getRepayLastTime())));
-	    // 上次还款日
-	    borrowCredit.setCreditRepayLastTime(recover.getRecoverYestime() != null ? recover.getRecoverYestime() : nowTime);
-	    // 下次还款日
-	    borrowCredit.setCreditRepayNextTime(recover.getRecoverTime() != null ? recover.getRecoverTime() : nowTime);
-	    // 最终实际还款日
-	    borrowCredit.setCreditRepayYesTime(0);
-	    // 创建日期
-	    borrowCredit.setCreateDate(Integer.parseInt(GetDate.yyyyMMdd.format(new Date())));
-	    // 创建时间
-	    borrowCredit.setAddTime(nowTime);
-	    // 结束时间
-	    borrowCredit.setEndTime(nowTime + 24 * 3600 * 3);
-	    // 认购时间
-	    borrowCredit.setAssignTime(0);
-	    // 投资次数
-	    borrowCredit.setAssignNum(0);
-	    // 还款状态 0还款中、1已还款、2还款失败
-	    borrowCredit.setRepayStatus(0);
-	    // 给前端展示用
-        request.setCreditCapital(DF_COM_VIEW.format(borrowCredit.getCreditPrice().setScale(2, BigDecimal.ROUND_DOWN)));
-	    request.setCreditEndTime(borrowCredit.getEndTime());
-	    request.setCreditPrice(DF_COM_VIEW.format(borrowCredit.getCreditPrice().setScale(2, BigDecimal.ROUND_DOWN)));
-	    if (borrow != null) {
-	        if ("endmonth".equals(borrow.getBorrowStyle())) {
-	            // 从第几期开始
-	            borrowCredit.setRecoverPeriod(borrow.getBorrowPeriod() - recover.getRecoverPeriod());
-	        } else {
-	            // 从第几期开始
-	            borrowCredit.setRecoverPeriod(0);
-	        }
-	    } else {
-	        // 从第几期开始
-	        borrowCredit.setRecoverPeriod(0);
-	    }
-	
-	    // 操作数据库表
-	    return amTradeClient.insertCredit(borrowCredit);
-	}
-	
+
     /**
      * 债转各项金额计算
      * @param borrow
@@ -1228,7 +1008,6 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         // 获取债转详情信息
         TenderCreditCustomizeVO appTenderToCreditDetail =amTradeClient.selectTenderToCreditDetail(userId,borrowId,tenderNid);
         //债转费率配置 开始
-        // TODO: 2018/9/12  后续处理折让率配置
         List<DebtConfigVO> config = amConfigClient.getDebtConfigList();
         if(!CollectionUtils.isEmpty(config)){
             projectInfo.put("attornRate",config.get(0).getAttornRate().setScale(2, BigDecimal.ROUND_DOWN));
@@ -1275,7 +1054,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }
 
             projectInfo.put("borrowApr", appTenderToCreditDetail.getBorrowApr());
-            projectInfo.put("borrowPeriod", appTenderToCreditDetail.getBorrowPeriod());
+            projectInfo.put("borrowPeriod", appTenderToCreditDetail.getBorrowPeriodNumber());
             projectInfo.put("borrowPeriodUnit", "endday".equals(borrowVO.getBorrowStyle())?"天":"个月");
             projectInfo.put("account", creditCreateMap.get("creditCapital"));
             projectInfo.put("borrowId", appTenderToCreditDetail.getBorrowNid());

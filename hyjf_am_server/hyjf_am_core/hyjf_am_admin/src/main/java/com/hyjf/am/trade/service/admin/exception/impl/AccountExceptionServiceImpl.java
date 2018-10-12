@@ -37,8 +37,7 @@ public class AccountExceptionServiceImpl extends BaseServiceImpl implements Acco
     @Override
     public Integer getAccountExceptionCount(AccountExceptionRequest request) {
         AccountExceptionExample example = convertExample(request);
-        Integer count = accountExceptionMapper.countByExample(example);
-        return count;
+        return accountExceptionMapper.countByExample(example);
     }
 
     /**
@@ -50,8 +49,7 @@ public class AccountExceptionServiceImpl extends BaseServiceImpl implements Acco
     @Override
     public List<AccountException> searchAccountExceptionList(AccountExceptionRequest request) {
         AccountExceptionExample example = convertExample(request);
-        List<AccountException> accountExceptionList = accountExceptionMapper.selectByExample(example);
-        return accountExceptionList;
+        return accountExceptionMapper.selectByExample(example);
     }
 
     /**

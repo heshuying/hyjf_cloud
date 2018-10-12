@@ -236,7 +236,9 @@ public interface UserManagerService extends BaseService {
 
 	Integer getUserIdByBind(int bindUniqueId, int bindPlatformId);
 
-	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId);
+    BindUser getUsersByUniqueId(Integer bindUniqueId, Integer bind_platform_id);
+
+    Boolean bindThirdUser(Integer userId, Integer bindUniqueId, Integer bindPlatformId);
 
 	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
     /**

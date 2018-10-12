@@ -69,18 +69,20 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
         BigDecimal total = money.add(fee); // 实际出账金额
         Integer userId = GetterUtil.getInteger(params.get("userId")); // 用户ID
         String cardNo = params.get("cardNo"); // 银行卡号
-        String bank = null;
+        String bank = "";
+
+        AccountWithdraw record = new AccountWithdraw();
         // 取得银行信息
         if (bankCard != null) {
             bank = bankCard.getBank();
+            record.setBankId(bankCard.getId());
         }
-        AccountWithdraw record = new AccountWithdraw();
         record.setUserId(userId);
         record.setNid(bean.getLogOrderId()); // 订单号
         record.setStatus(WITHDRAW_STATUS_WAIT); // 状态: 0:处理中
         record.setAccount(cardNo);// 提现银行卡号
         record.setBank(bank); // 提现银行
-        record.setBankId(bankCard.getId());
+
 /*        record.setBranch(null);
         record.setProvince(0);
         record.setCity(0);*/

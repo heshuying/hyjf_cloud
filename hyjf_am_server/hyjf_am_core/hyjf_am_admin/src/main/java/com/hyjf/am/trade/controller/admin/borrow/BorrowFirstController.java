@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.admin.borrow;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowFirstCustomizeResponse;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
@@ -101,10 +102,7 @@ public class BorrowFirstController extends BaseController {
      * @param borrowFireRequest
      */
     @RequestMapping("/update_ontime_record")
-    public BorrowFirstCustomizeResponse updateOntimeRecord(@RequestBody @Valid BorrowFireRequest borrowFireRequest) {
-        BorrowFirstCustomizeResponse response = new BorrowFirstCustomizeResponse();
-        boolean flag = borrowFirstService.updateOntimeRecord(borrowFireRequest);
-        response.setFlag(flag);
-        return response;
+    public Response updateOntimeRecord(@RequestBody @Valid BorrowFireRequest borrowFireRequest) {
+        return borrowFirstService.updateOntimeRecord(borrowFireRequest);
     }
 }

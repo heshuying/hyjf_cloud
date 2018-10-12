@@ -230,6 +230,9 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
                         AccountList accountList = new AccountList();
                         // 重新获取用户信息
                         account = this.getAccountByUserId(userId);
+                        if(account == null){
+                        	throw new Exception("重新获取用户信息失败!");
+                        }
                         accountList.setNid(nid);
                         accountList.setUserId(userId);
                         accountList.setAmount(accountwithdraw.getTotal());

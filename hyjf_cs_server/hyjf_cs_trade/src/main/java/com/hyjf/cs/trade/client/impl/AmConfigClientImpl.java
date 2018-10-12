@@ -249,4 +249,14 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
 		return StringUtils.isNotBlank(vo.getRetMsg()) ? vo.getRetMsg() : Response.ERROR_MSG;
 	}
+
+	@Override
+	public SmsConfigVO findSmsConfig() {
+		SmsConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/smsConfig/findOne", SmsConfigResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
 }
