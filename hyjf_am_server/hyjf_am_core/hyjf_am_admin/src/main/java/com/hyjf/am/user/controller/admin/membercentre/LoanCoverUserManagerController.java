@@ -103,7 +103,7 @@ public class LoanCoverUserManagerController extends BaseController {
      */
     @RequestMapping("/selectIsExistsRecordByIdNo/{strIdNo}/{userName}")
     public LoanCoverUserResponse selectIsExistsRecordByIdNo(@PathVariable String strIdNo,@PathVariable String userName){
-        logger.info("====selectIsExistsRecordByIdNo by param:strIdNo="+strIdNo+"userName="+userName+"====");
+        logger.info("====selectIsExistsRecordByIdNo by param:strIdNo="+strIdNo+"& userName="+userName+"====");
         LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = loanCoverUserManagerService.selectIsExistsRecordByIdNo(strIdNo,userName);
         LoanCoverUserResponse response = new LoanCoverUserResponse();
         String status = Response.FAIL;
