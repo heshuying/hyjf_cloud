@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.AdminRoleMenuPermissionsCustomizeMapper">
+
+	<resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions" >
+		<result column="role_id" property="roleId" jdbcType="INTEGER" />
+		<result column="menu_uuid" property="menuUuid" jdbcType="VARCHAR" />
+		<result column="permission_uuid" property="permissionUuid" jdbcType="VARCHAR" />
+		<result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+		<result column="create_time" property="createtime" jdbcType="VARCHAR" />
+		<result column="update_time" property="updatetime" jdbcType="VARCHAR" />
+		<result column="create_user_id" property="createuserId" jdbcType="INTEGER" />
+		<result column="update_user_id" property="updateuserId" jdbcType="INTEGER" />
+	</resultMap>
+	<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions">
+		select
+			*
+		from t_admin_role_menu_permissions r
+		where 1=1
+		<if test="roleId != null" >
+		 AND 	r.role_id=#{roleId}
+		</if>
+	</select>
+
+	<update id="updateByRoleId" parameterType="com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions">
+		update
+		 t_admin_role_menu_permissions
+		<set>
+			<if test="menuUuid != null" >
+				menu_uuid = #{menuUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="permissionUuid != null" >
+				permission_uuid = #{permissionUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="delFlag != null" >
+				del_flag = #{delFlag,jdbcType=INTEGER},
+			</if>
+			<if test="createtime != null" >
+				create_time = #{createtime,jdbcType=DATE},
+			</if>
+			<if test="updatetime != null" >
+				update_time = #{updatetime,jdbcType=DATE},
+			</if>
+			<if test="createuserId != null" >
+				create_user_id = #{createuserId,jdbcType=VARCHAR},
+			</if>
+			<if test="updateuserId != null" >
+				update_user_id = #{updateuserId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where 1=1
+		<if test="roleId != null" >
+			AND role_id=#{roleId}
+		</if>
+	</update>
+
+	<insert id="insertSelective"  parameterType="com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions">
+		insert into  t_admin_role_menu_permissions
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="menuUuid != null" >
+				menu_uuid,
+			</if>
+			<if test="permissionUuid != null" >
+				permission_uuid,
+			</if>
+			<if test="delFlag != null" >
+				del_flag,
+			</if>
+			<if test="createtime != null" >
+				createtime,
+			</if>
+			<if test="updatetime != null" >
+				updatetime,
+			</if>
+			<if test="createuser != null" >
+				createuser,
+			</if>
+			<if test="updateuser != null" >
+				updateuser,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="menuUuid != null" >
+				menu_uuid = #{menuUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="permissionUuid != null" >
+				permission_uuid = #{permissionUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="delFlag != null" >
+				del_flag = #{delFlag,jdbcType=INTEGER},
+			</if>
+			<if test="createtime != null" >
+				createtime = #{createtime,jdbcType=DATE},
+			</if>
+			<if test="updatetime != null" >
+				updatetime = #{updatetime,jdbcType=DATE},
+			</if>
+			<if test="createuser != null" >
+				createuser = #{createuser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateuser != null" >
+				updateuser = #{updateuser,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertMenuPerssion"  parameterType="java.util.List">
+		insert into  t_admin_role_menu_permissions(
+				role_id,
+				menu_uuid,
+				permission_uuid)
+		values
+		 <foreach collection ="list" item="perm" index= "index" separator =",">
+			 (
+				 #{perm.roleId,jdbcType=VARCHAR},
+				 #{perm.menuUuid,jdbcType=VARCHAR},
+				 #{perm.permissionUuid,jdbcType=VARCHAR}
+			 )
+		 </foreach >
+	</insert>
+
+	<select id="checkLevel" resultType="java.lang.String">
+		select
+			 menu_puuid
+		from t_admin_menu
+		where
+			menu_uuid = #{menuUuid,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectMenuPerssion" resultType="java.lang.String">
+		select
+			permission_id
+		from t_admin_menu_permssions
+		where
+			menu_id=#{menuUuid,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectChildMenu" resultType="java.lang.String">
+		select
+			menu_uuid
+		from	t_admin_menu
+		where menu_puuid=#{menuPuuid,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteMenubyRoleId" >
+		delete  from  t_admin_role_menu_permissions where  	role_id=#{id,jdbcType=VARCHAR}
+	</delete>
+</mapper>
