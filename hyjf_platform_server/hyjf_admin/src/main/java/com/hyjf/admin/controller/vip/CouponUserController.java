@@ -167,6 +167,8 @@ public class CouponUserController extends BaseController {
             couponUserRequest.setEndTime((int) (endDate.getTime() / 1000));
         }
         couponUserRequest.setUserId(userId);
+        couponUserRequest.setCouponCode(configVO.getCouponCode());
+        couponUserRequest.setContent(couponUserBeanRequest.getContent());
         couponUserRequest.setCouponUserCode(GetCode.getCouponUserCode(configVO.getCouponType()));
         couponUserRequest.setCreateUserId(Integer.parseInt(loginUserId));
         couponUserRequest.setCreateTime(GetDate.getDate());
