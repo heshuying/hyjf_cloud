@@ -14,7 +14,6 @@ import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
-import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -25,20 +24,16 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -53,15 +48,6 @@ import java.util.*;
 @RequestMapping("/hyjf-admin/promotion/channel")
 public class ChannelController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(ChannelController.class);
-
-    @Value("${file.domain.url}")
-    private String DOMAIN_URL;
-
-    @Value("${file.physical.path}")
-    private String PHYSICAL_PATH;
-
-    @Value("${file.upload.temp.path}")
-    private String TEMP_PATH;
 
     @Resource
     private ChannelService channelService;
@@ -277,59 +263,10 @@ public class ChannelController extends BaseController {
         logger.info(ChannelController.class.toString(), "startLog -- /hyjf-admin/promotion/channel/upload");
         AdminResult adminResult = new AdminResult();
 
-        LinkedList<BorrowCommonImage> list = upload((MultipartHttpServletRequest) request);
+        LinkedList<BorrowCommonImage> list = fileUpLoadUtil.upLoad((MultipartHttpServletRequest) request);
 
-        adminResult.setData(list);
-        adminResult.setStatus(SUCCESS);
-        adminResult.setStatusDesc(SUCCESS_DESC);
-        logger.info(ChannelController.class.toString(), "endLog -- /hyjf-admin/promotion/channel/upload");
-        return adminResult;
-    }
-
-    private LinkedList<BorrowCommonImage> upload(MultipartHttpServletRequest request) {
-        BorrowCommonImage fileMeta = null;
-        LinkedList<BorrowCommonImage> files = new LinkedList<>();
-        MultipartHttpServletRequest multipartRequest = request;
-        String logoRealPathDir = PHYSICAL_PATH + TEMP_PATH;
-
-        File logoSaveFile = new File(logoRealPathDir);
-        if (!logoSaveFile.exists()) {
-            logoSaveFile.mkdirs();
-        }
-        Iterator<String> itr = multipartRequest.getFileNames();
-        MultipartFile multipartFile = null;
-
-        while (itr.hasNext()) {
-            multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(System.currentTimeMillis());
-            String originalFilename = multipartFile.getOriginalFilename();
-            fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-
-            // 文件大小
-            String errorMessage = null;
-            try {
-                errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            fileMeta = new BorrowCommonImage();
-            int index = originalFilename.lastIndexOf(".");
-            if (index != -1) {
-                fileMeta.setImageName(originalFilename.substring(0, index));
-            } else {
-                fileMeta.setImageName(originalFilename);
-            }
-
-            fileMeta.setImageRealName(fileRealName);
-            fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");
-            fileMeta.setImageType(multipartFile.getContentType());
-            fileMeta.setErrorMessage(errorMessage);
-            // 获取文件路径
-            fileMeta.setImagePath(TEMP_PATH + fileRealName);
-            fileMeta.setImageSrc(DOMAIN_URL + TEMP_PATH + fileRealName);
-            files.add(fileMeta);
-
+        for (BorrowCommonImage borrowCommonImage : list) {
+            String fileRealName = borrowCommonImage.getImagePath();
             Map<String, String> nameMaps = new HashMap<>();
             nameMaps.put("utmSource", "utmSource");
             nameMaps.put("utmMedium", "utmMedium");
@@ -339,29 +276,36 @@ public class ChannelController extends BaseController {
             nameMaps.put("utmReferrer", "utmReferrer");
             nameMaps.put("remark", "remark");
             ReadExcel readExcel = new ReadExcel();
-            List<JSONObject> list = new ArrayList<>();
-			try {
-				list = readExcel.readExcel(TEMP_PATH + fileRealName, nameMaps);
+            List<JSONObject> lists = new ArrayList<>();
+            try {
+                lists = readExcel.readExcel(fileRealName, nameMaps);
 
-				for (JSONObject jsonObject : list) {
-					ChannelCustomizeVO vo = new ChannelCustomizeVO();
-					vo.setSourceName(jsonObject.getString("utmSource"));
-					vo.setUtmMedium(jsonObject.getString("utmMedium"));
-					vo.setUtmContent(jsonObject.getString("utmContent"));
-					vo.setUtmCampaign(jsonObject.getString("utmCampaign"));
-					vo.setUtmTerm(jsonObject.getString("utmTerm"));
-					vo.setUtmReferrer(jsonObject.getString("utmReferrer"));
-					vo.setRemark(jsonObject.getString("remark"));
-					channelService.insertOrUpdateUtm(vo);
-				}
+                List<ChannelCustomizeVO> voList = new ArrayList<>();
 
-			} catch (Exception e) {
-				logger.error("推广管理导入数据失败！", e);
-				return null;
-			}
+                for (JSONObject jsonObject : lists) {
+                    ChannelCustomizeVO vo = new ChannelCustomizeVO();
+                    vo.setSourceName(jsonObject.getString("utmSource"));
+                    vo.setUtmMedium(jsonObject.getString("utmMedium"));
+                    vo.setUtmContent(jsonObject.getString("utmContent"));
+                    vo.setUtmCampaign(jsonObject.getString("utmCampaign"));
+                    vo.setUtmTerm(jsonObject.getString("utmTerm"));
+                    vo.setUtmReferrer(jsonObject.getString("utmReferrer"));
+                    vo.setRemark(jsonObject.getString("remark"));
+                    voList.add(vo);
+                }
+                channelService.insertUtmList(voList);
+
+            } catch (Exception e) {
+                logger.error("推广管理导入数据失败！", e);
+                return null;
+            }
         }
 
-        return files;
+        adminResult.setData(list);
+        adminResult.setStatus(SUCCESS);
+        adminResult.setStatusDesc(SUCCESS_DESC);
+        logger.info(ChannelController.class.toString(), "endLog -- /hyjf-admin/promotion/channel/upload");
+        return adminResult;
     }
 
     /**

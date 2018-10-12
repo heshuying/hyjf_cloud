@@ -407,10 +407,16 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      */
     @Override
     public List<User> selectUserByListUserId(List userId) {
-        List<User> usersList = this.userMapper.selectUserByListUserId(userId);
-        if (null!= usersList && usersList.size() > 0) {
-            return usersList;
-        }
+        /** todo wenxin 20181012
+         *  1.方法写在auto包的userMapper
+         *  2. UserMapper只有List<User> selectUserByListUserId(List userId); 没有相应xml
+         *  3. List userId  这种参数，用复数   userIds
+         */
+
+        //List<User> usersList = this.userMapper.selectUserByListUserId(userId);
+//        if (null!= usersList && usersList.size() > 0) {
+//            return usersList;
+//        }
         return null;
     }
 
@@ -1101,6 +1107,24 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return 0;
     }
 
+    /**
+     * 根据第三方用户id查询绑定关系
+     * @param bindUniqueId
+     * @param bind_platform_id
+     * @return
+     */
+    @Override
+    public BindUser getUsersByUniqueId(Integer bindUniqueId, Integer bind_platform_id) {
+
+        BindUserExample example = new BindUserExample();
+        BindUserExample.Criteria cra = example.createCriteria();
+        cra.andBindUniqueIdEqualTo(bindUniqueId).andBindPlatformIdEqualTo(bind_platform_id);
+        List<BindUser> bindUsers = bindUserMapper.selectByExample(example);
+        if (org.springframework.util.CollectionUtils.isEmpty(bindUsers))
+            return null;
+        return bindUsers.get(0);
+    }
+
 	@Override
 	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId) {
 		BindUser bindUsers = new BindUser();
@@ -1203,6 +1227,12 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         if(null!=adminEmployeeLeaveCustomizeList&&adminEmployeeLeaveCustomizeList.size()>0){
             return adminEmployeeLeaveCustomizeList.get(0);
         }
+        return null;
+    }
+
+    @Override
+    public List<BankOpenAccount> selectByListExample(List<Integer> user) {
+        //todo wenxin
         return null;
     }
 }

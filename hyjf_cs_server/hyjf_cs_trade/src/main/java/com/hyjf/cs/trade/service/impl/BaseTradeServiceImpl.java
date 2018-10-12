@@ -122,7 +122,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         if (0 == userEvaluationResultFlag) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
         } else {
-            //是否完成风险测评
+            //是否完成风险测评2
             if (user.getIsEvaluationFlag()==1) {
                 //测评到期日
                 Long lCreate = user.getEvaluationExpiredTime().getTime();
@@ -130,11 +130,11 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
                 Long lNow = System.currentTimeMillis();
                 if (lCreate <= lNow) {
                     //已过期需要重新评测
-                    String message = "根据监管要求，投资前必须进行风险测评。";
+                    throw new ReturnMessageException(MsgEnum.STATUS_EV000004);
                 }
             } else {
                 //未获取到评测数据或者评测时间
-                String message = "根据监管要求，投资前必须进行风险测评。";
+                throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
             }
         }
     }

@@ -666,6 +666,25 @@ public class UserManagerController extends BaseController {
     public Integer getUserIdByBind(@PathVariable Integer bindUniqueId,@PathVariable Integer bindPlatformId){
     	return userManagerService.getUserIdByBind(bindUniqueId, bindPlatformId);
     }
+
+    /**
+     * 查询第三方绑定用户信息
+     * @param bindUniqueId
+     * @param bindPlatformId
+     * @return
+     */
+    @RequestMapping("/getBindUser/{bindUniqueId}/{bindPlatformId}")
+    public BindUserResponse getBindUser(@PathVariable Integer bindUniqueId,@PathVariable Integer bindPlatformId){
+        BindUserResponse response = new BindUserResponse();
+        BindUser bindUser = userManagerService.getUsersByUniqueId(bindUniqueId, bindPlatformId);
+        if(null!=bindUser){
+            BindUserVo bindUserVo = new BindUserVo();
+            BeanUtils.copyProperties(bindUser,bindUserVo);
+            response.setResult(bindUserVo);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
     /**
      * 根据绑定信息取得用户id
      * @param userId

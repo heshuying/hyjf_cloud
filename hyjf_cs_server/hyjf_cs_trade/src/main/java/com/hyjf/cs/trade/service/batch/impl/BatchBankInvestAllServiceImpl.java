@@ -83,6 +83,10 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				String accountId = bankOpenAccount == null ? "" : bankOpenAccount.getAccount();
 				// 根据相应信息接口查询订单
 				BankCallBean bean = queryBorrowTenderList(accountId, orderid, String.valueOf(userId));
+				if(bean == null){
+					logger.error("调用银行失败！");
+					return;
+				}
 				// 获得银行信息开始进行掉单处理
 				BorrowTenderTmpRequest request = new BorrowTenderTmpRequest();
 				request.setBankCallBean(CommonUtils.convertBean(bean,BankCallBeanVO.class));

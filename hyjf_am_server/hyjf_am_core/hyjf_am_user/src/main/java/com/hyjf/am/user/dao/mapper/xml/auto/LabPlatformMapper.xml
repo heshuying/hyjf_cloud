@@ -6,7 +6,7 @@
     <result column="pid" property="pid" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="username" property="username" jdbcType="VARCHAR" />
-    <result column="password" property="password" jdbcType="CHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
     <result column="p_name" property="pName" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="TINYINT" />
@@ -112,11 +112,13 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_lab_platform (pid, user_id, username, 
-      `password`, ip, p_name, `status`, 
-      create_time, update_time)
+      `password`, ip, p_name, 
+      `status`, create_time, update_time
+      )
     values (#{pid,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
-      #{password,jdbcType=CHAR}, #{ip,jdbcType=VARCHAR}, #{pName,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{password,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{pName,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.LabPlatform" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -163,7 +165,7 @@
         #{username,jdbcType=VARCHAR},
       </if>
       <if test="password != null" >
-        #{password,jdbcType=CHAR},
+        #{password,jdbcType=VARCHAR},
       </if>
       <if test="ip != null" >
         #{ip,jdbcType=VARCHAR},
@@ -204,7 +206,7 @@
         username = #{record.username,jdbcType=VARCHAR},
       </if>
       <if test="record.password != null" >
-        `password` = #{record.password,jdbcType=CHAR},
+        `password` = #{record.password,jdbcType=VARCHAR},
       </if>
       <if test="record.ip != null" >
         ip = #{record.ip,jdbcType=VARCHAR},
@@ -232,7 +234,7 @@
       pid = #{record.pid,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       username = #{record.username,jdbcType=VARCHAR},
-      `password` = #{record.password,jdbcType=CHAR},
+      `password` = #{record.password,jdbcType=VARCHAR},
       ip = #{record.ip,jdbcType=VARCHAR},
       p_name = #{record.pName,jdbcType=VARCHAR},
       `status` = #{record.status,jdbcType=TINYINT},
@@ -255,7 +257,7 @@
         username = #{username,jdbcType=VARCHAR},
       </if>
       <if test="password != null" >
-        `password` = #{password,jdbcType=CHAR},
+        `password` = #{password,jdbcType=VARCHAR},
       </if>
       <if test="ip != null" >
         ip = #{ip,jdbcType=VARCHAR},
@@ -280,7 +282,7 @@
     set pid = #{pid,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER},
       username = #{username,jdbcType=VARCHAR},
-      `password` = #{password,jdbcType=CHAR},
+      `password` = #{password,jdbcType=VARCHAR},
       ip = #{ip,jdbcType=VARCHAR},
       p_name = #{pName,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=TINYINT},

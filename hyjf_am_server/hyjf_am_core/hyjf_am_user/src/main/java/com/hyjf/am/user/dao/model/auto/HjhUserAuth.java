@@ -26,6 +26,8 @@ public class HjhUserAuth implements Serializable {
 
     private Integer autoCreditTime;
 
+    private String autoCreditEndTime;
+
     private Integer autoBidTime;
 
     private String autoBidEndTime;
@@ -148,6 +150,14 @@ public class HjhUserAuth implements Serializable {
 
     public void setAutoCreditTime(Integer autoCreditTime) {
         this.autoCreditTime = autoCreditTime;
+    }
+
+    public String getAutoCreditEndTime() {
+        return autoCreditEndTime;
+    }
+
+    public void setAutoCreditEndTime(String autoCreditEndTime) {
+        this.autoCreditEndTime = autoCreditEndTime == null ? null : autoCreditEndTime.trim();
     }
 
     public Integer getAutoBidTime() {

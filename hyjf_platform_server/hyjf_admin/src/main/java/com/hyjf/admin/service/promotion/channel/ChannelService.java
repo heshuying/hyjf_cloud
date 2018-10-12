@@ -86,4 +86,10 @@ public interface ChannelService {
      * @return
      */
     List<UtmPlatVO> getAllUtmPlat();
+
+    /**
+     * 新增信息
+     * @param voList
+     */
+    void insertUtmList(List<ChannelCustomizeVO> voList);
 }

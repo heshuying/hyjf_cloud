@@ -39,6 +39,8 @@ public class BankOpenRequest extends BaseVO {
 
 	private Integer isSetPassword;
 
+	private String srvAuthCode;
+
 	public Integer getUserId() {
 		return userId;
 	}
@@ -157,5 +159,13 @@ public class BankOpenRequest extends BaseVO {
 
 	public void setIsSetPassword(Integer isSetPassword) {
 		this.isSetPassword = isSetPassword;
+	}
+
+	public String getSrvAuthCode() {
+		return srvAuthCode;
+	}
+
+	public void setSrvAuthCode(String srvAuthCode) {
+		this.srvAuthCode = srvAuthCode;
 	}
 }

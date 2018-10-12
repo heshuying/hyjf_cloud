@@ -172,9 +172,13 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 out.write(buffer, 0, len);
             }
             // 关闭文件流
-            in.close();
+            if(in!= null){
+            	in.close();
+            }
             // 关闭输出流
-            out.close();
+            if(out!=null){
+            	out.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

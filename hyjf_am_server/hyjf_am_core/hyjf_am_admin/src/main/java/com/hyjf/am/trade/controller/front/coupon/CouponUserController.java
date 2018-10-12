@@ -61,7 +61,6 @@ public class CouponUserController extends BaseController {
     public CouponUserCustomizeResponse getCouponUserList(@RequestBody @Valid CouponUserBeanRequest request) {
         logger.info("后台优惠券用户列表" + JSONObject.toJSON(request));
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
-        String returnCode = Response.FAIL;
         Integer recordCount = couponUserService.countCouponUser(request);
         Paginator paginator = new Paginator(request.getCurrPage(), recordCount, request.getPageSize());
         if (request.getPageSize() == 0) {
@@ -73,10 +72,8 @@ public class CouponUserController extends BaseController {
                 List<CouponUserCustomizeVO> couponUserCustomizeVOS = CommonUtils.convertBeanList(couponUserCustomizes, CouponUserCustomizeVO.class);
                 response.setResultList(couponUserCustomizeVOS);
                 response.setCount(recordCount);
-                returnCode = Response.SUCCESS;
             }
         }
-        response.setRtn(returnCode);
         return response;
     }
 

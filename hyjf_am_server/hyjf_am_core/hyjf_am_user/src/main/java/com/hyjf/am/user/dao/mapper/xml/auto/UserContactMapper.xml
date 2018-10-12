@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.UserContact" >
     <id column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="relation" property="relation" jdbcType="INTEGER" />
-    <result column="rl_name" property="rlName" jdbcType="CHAR" />
+    <result column="rl_name" property="rlName" jdbcType="VARCHAR" />
     <result column="rl_phone" property="rlPhone" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -107,7 +107,7 @@
     insert into ht_user_contact (user_id, relation, rl_name, 
       rl_phone, create_time, update_time
       )
-    values (#{userId,jdbcType=INTEGER}, #{relation,jdbcType=INTEGER}, #{rlName,jdbcType=CHAR}, 
+    values (#{userId,jdbcType=INTEGER}, #{relation,jdbcType=INTEGER}, #{rlName,jdbcType=VARCHAR}, 
       #{rlPhone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -141,7 +141,7 @@
         #{relation,jdbcType=INTEGER},
       </if>
       <if test="rlName != null" >
-        #{rlName,jdbcType=CHAR},
+        #{rlName,jdbcType=VARCHAR},
       </if>
       <if test="rlPhone != null" >
         #{rlPhone,jdbcType=VARCHAR},
@@ -170,7 +170,7 @@
         relation = #{record.relation,jdbcType=INTEGER},
       </if>
       <if test="record.rlName != null" >
-        rl_name = #{record.rlName,jdbcType=CHAR},
+        rl_name = #{record.rlName,jdbcType=VARCHAR},
       </if>
       <if test="record.rlPhone != null" >
         rl_phone = #{record.rlPhone,jdbcType=VARCHAR},
@@ -190,7 +190,7 @@
     update ht_user_contact
     set user_id = #{record.userId,jdbcType=INTEGER},
       relation = #{record.relation,jdbcType=INTEGER},
-      rl_name = #{record.rlName,jdbcType=CHAR},
+      rl_name = #{record.rlName,jdbcType=VARCHAR},
       rl_phone = #{record.rlPhone,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
@@ -205,7 +205,7 @@
         relation = #{relation,jdbcType=INTEGER},
       </if>
       <if test="rlName != null" >
-        rl_name = #{rlName,jdbcType=CHAR},
+        rl_name = #{rlName,jdbcType=VARCHAR},
       </if>
       <if test="rlPhone != null" >
         rl_phone = #{rlPhone,jdbcType=VARCHAR},
@@ -222,7 +222,7 @@
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.UserContact" >
     update ht_user_contact
     set relation = #{relation,jdbcType=INTEGER},
-      rl_name = #{rlName,jdbcType=CHAR},
+      rl_name = #{rlName,jdbcType=VARCHAR},
       rl_phone = #{rlPhone,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}

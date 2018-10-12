@@ -123,7 +123,7 @@ public class MyProjectController extends BaseUserController {
                 throw new IllegalArgumentException("not support type=" + type);
         }
 
-        AccountVO account = myProjectService.getAccount(Integer.valueOf(userId));
+        AccountVO account = myProjectService.getAccount(userId);
         Preconditions.checkArgument(account != null, "userId=【" + userId + "】没有账户信息！");
         vo.setAwait(account.getPlanAccountWait() == null ? "0.00" : CommonUtils.formatAmount(account.getPlanAccountWait()));
 
