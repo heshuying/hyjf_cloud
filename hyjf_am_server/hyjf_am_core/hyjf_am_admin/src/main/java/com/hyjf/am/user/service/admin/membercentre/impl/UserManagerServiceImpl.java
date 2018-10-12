@@ -402,22 +402,6 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     }
 
     /**
-     * 根据用户List id查找用户表
-     *
-     * @param userId
-     * @param userId
-     * @return
-     */
-    @Override
-    public List<User> selectUserByListUserId(List userId) {
-        List<User> usersList = this.userMapper.selectUserByListUserId(userId);
-        if (null!= usersList && usersList.size() > 0) {
-            return usersList;
-        }
-        return null;
-    }
-
-    /**
      * 根據accounId獲取開戶信息
      *
      * @param accountId
