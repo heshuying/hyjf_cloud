@@ -407,10 +407,16 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      */
     @Override
     public List<User> selectUserByListUserId(List userId) {
-        List<User> usersList = this.userMapper.selectUserByListUserId(userId);
-        if (null!= usersList && usersList.size() > 0) {
-            return usersList;
-        }
+        /** todo wenxin 20181012
+         *  1.方法写在auto包的userMapper
+         *  2. UserMapper只有List<User> selectUserByListUserId(List userId); 没有相应xml
+         *  3. List userId  这种参数，用复数   userIds
+         */
+
+        //List<User> usersList = this.userMapper.selectUserByListUserId(userId);
+//        if (null!= usersList && usersList.size() > 0) {
+//            return usersList;
+//        }
         return null;
     }
 
@@ -1221,6 +1227,12 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         if(null!=adminEmployeeLeaveCustomizeList&&adminEmployeeLeaveCustomizeList.size()>0){
             return adminEmployeeLeaveCustomizeList.get(0);
         }
+        return null;
+    }
+
+    @Override
+    public List<BankOpenAccount> selectByListExample(List<Integer> user) {
+        //todo wenxin
         return null;
     }
 }
