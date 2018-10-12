@@ -129,7 +129,7 @@
 	<select id="sumCreditRepayInfo" resultType="Map">
 		select
 		  SUM(cr.assign_capital) AS sumAssignCapital,
-		  SUM(cr.assign_interest) AS sumAssigninterest,
+		  SUM(cr.assign_interest) AS sumAssignInterest,
 		  SUM(cr.assign_account) AS sumAssignAccount,
 		  SUM(cr.manage_fee) AS sumManageFee
    		 from ht_credit_repay cr
