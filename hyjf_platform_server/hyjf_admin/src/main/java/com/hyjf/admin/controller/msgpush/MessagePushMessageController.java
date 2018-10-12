@@ -143,8 +143,11 @@ public class MessagePushMessageController extends BaseController {
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setMsgActionUrl("");
         }
-        if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1 || templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
+        if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1) {
             templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl1());
+        }
+        if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
+            templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl3());
         }
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
             if(templateRequest.getMsgActionUrl2().equals("尊享汇")){
