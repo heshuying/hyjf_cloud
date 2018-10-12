@@ -2,9 +2,8 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.UtmReg;
 import com.hyjf.am.user.dao.model.auto.UtmRegExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UtmRegMapper {
     int countByExample(UtmRegExample example);

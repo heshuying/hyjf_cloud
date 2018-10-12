@@ -815,6 +815,76 @@ public class HjhUserAuthExample {
             return (Criteria) this;
         }
 
+        public Criteria andAutoCreditEndTimeIsNull() {
+            addCriterion("auto_credit_end_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeIsNotNull() {
+            addCriterion("auto_credit_end_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeEqualTo(String value) {
+            addCriterion("auto_credit_end_time =", value, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeNotEqualTo(String value) {
+            addCriterion("auto_credit_end_time <>", value, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeGreaterThan(String value) {
+            addCriterion("auto_credit_end_time >", value, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeGreaterThanOrEqualTo(String value) {
+            addCriterion("auto_credit_end_time >=", value, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeLessThan(String value) {
+            addCriterion("auto_credit_end_time <", value, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeLessThanOrEqualTo(String value) {
+            addCriterion("auto_credit_end_time <=", value, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeLike(String value) {
+            addCriterion("auto_credit_end_time like", value, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeNotLike(String value) {
+            addCriterion("auto_credit_end_time not like", value, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeIn(List<String> values) {
+            addCriterion("auto_credit_end_time in", values, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeNotIn(List<String> values) {
+            addCriterion("auto_credit_end_time not in", values, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeBetween(String value1, String value2) {
+            addCriterion("auto_credit_end_time between", value1, value2, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andAutoCreditEndTimeNotBetween(String value1, String value2) {
+            addCriterion("auto_credit_end_time not between", value1, value2, "autoCreditEndTime");
+            return (Criteria) this;
+        }
+
         public Criteria andAutoBidTimeIsNull() {
             addCriterion("auto_bid_time is null");
             return (Criteria) this;

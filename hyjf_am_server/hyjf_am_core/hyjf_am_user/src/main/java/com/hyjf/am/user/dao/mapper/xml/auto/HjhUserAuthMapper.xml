@@ -13,6 +13,7 @@
     <result column="auto_order_id" property="autoOrderId" jdbcType="VARCHAR" />
     <result column="auto_credit_order_id" property="autoCreditOrderId" jdbcType="VARCHAR" />
     <result column="auto_credit_time" property="autoCreditTime" jdbcType="INTEGER" />
+    <result column="auto_credit_end_time" property="autoCreditEndTime" jdbcType="VARCHAR" />
     <result column="auto_bid_time" property="autoBidTime" jdbcType="INTEGER" />
     <result column="auto_bid_end_time" property="autoBidEndTime" jdbcType="VARCHAR" />
     <result column="auto_payment_status" property="autoPaymentStatus" jdbcType="TINYINT" />
@@ -92,10 +93,10 @@
   <sql id="Base_Column_List" >
     id, user_id, user_name, auto_inves_status, auto_credit_status, auto_withdraw_status, 
     auto_consume_status, auto_create_time, auto_order_id, auto_credit_order_id, auto_credit_time, 
-    auto_bid_time, auto_bid_end_time, auto_payment_status, auto_payment_time, auto_payment_end_time, 
-    auto_repay_status, auto_repay_time, auto_repay_end_time, inves_cancel_time, credit_cancel_time, 
-    payment_cancel_time, repay_cancel_time, del_flag, create_user_id, update_user_id, 
-    create_time, update_time
+    auto_credit_end_time, auto_bid_time, auto_bid_end_time, auto_payment_status, auto_payment_time, 
+    auto_payment_end_time, auto_repay_status, auto_repay_time, auto_repay_end_time, inves_cancel_time, 
+    credit_cancel_time, payment_cancel_time, repay_cancel_time, del_flag, create_user_id, 
+    update_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuthExample" >
     select
@@ -137,23 +138,23 @@
     insert into ht_hjh_user_auth (user_id, user_name, auto_inves_status, 
       auto_credit_status, auto_withdraw_status, auto_consume_status, 
       auto_create_time, auto_order_id, auto_credit_order_id, 
-      auto_credit_time, auto_bid_time, auto_bid_end_time, 
-      auto_payment_status, auto_payment_time, auto_payment_end_time, 
-      auto_repay_status, auto_repay_time, auto_repay_end_time, 
-      inves_cancel_time, credit_cancel_time, payment_cancel_time, 
-      repay_cancel_time, del_flag, create_user_id, 
-      update_user_id, create_time, update_time
-      )
+      auto_credit_time, auto_credit_end_time, auto_bid_time, 
+      auto_bid_end_time, auto_payment_status, auto_payment_time, 
+      auto_payment_end_time, auto_repay_status, auto_repay_time, 
+      auto_repay_end_time, inves_cancel_time, credit_cancel_time, 
+      payment_cancel_time, repay_cancel_time, del_flag, 
+      create_user_id, update_user_id, create_time, 
+      update_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{autoInvesStatus,jdbcType=TINYINT}, 
       #{autoCreditStatus,jdbcType=TINYINT}, #{autoWithdrawStatus,jdbcType=TINYINT}, #{autoConsumeStatus,jdbcType=TINYINT}, 
       #{autoCreateTime,jdbcType=INTEGER}, #{autoOrderId,jdbcType=VARCHAR}, #{autoCreditOrderId,jdbcType=VARCHAR}, 
-      #{autoCreditTime,jdbcType=INTEGER}, #{autoBidTime,jdbcType=INTEGER}, #{autoBidEndTime,jdbcType=VARCHAR}, 
-      #{autoPaymentStatus,jdbcType=TINYINT}, #{autoPaymentTime,jdbcType=INTEGER}, #{autoPaymentEndTime,jdbcType=VARCHAR}, 
-      #{autoRepayStatus,jdbcType=TINYINT}, #{autoRepayTime,jdbcType=INTEGER}, #{autoRepayEndTime,jdbcType=VARCHAR}, 
-      #{invesCancelTime,jdbcType=VARCHAR}, #{creditCancelTime,jdbcType=VARCHAR}, #{paymentCancelTime,jdbcType=VARCHAR}, 
-      #{repayCancelTime,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
-      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{autoCreditTime,jdbcType=INTEGER}, #{autoCreditEndTime,jdbcType=VARCHAR}, #{autoBidTime,jdbcType=INTEGER}, 
+      #{autoBidEndTime,jdbcType=VARCHAR}, #{autoPaymentStatus,jdbcType=TINYINT}, #{autoPaymentTime,jdbcType=INTEGER}, 
+      #{autoPaymentEndTime,jdbcType=VARCHAR}, #{autoRepayStatus,jdbcType=TINYINT}, #{autoRepayTime,jdbcType=INTEGER}, 
+      #{autoRepayEndTime,jdbcType=VARCHAR}, #{invesCancelTime,jdbcType=VARCHAR}, #{creditCancelTime,jdbcType=VARCHAR}, 
+      #{paymentCancelTime,jdbcType=VARCHAR}, #{repayCancelTime,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.HjhUserAuth" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -190,6 +191,9 @@
       </if>
       <if test="autoCreditTime != null" >
         auto_credit_time,
+      </if>
+      <if test="autoCreditEndTime != null" >
+        auto_credit_end_time,
       </if>
       <if test="autoBidTime != null" >
         auto_bid_time,
@@ -273,6 +277,9 @@
       </if>
       <if test="autoCreditTime != null" >
         #{autoCreditTime,jdbcType=INTEGER},
+      </if>
+      <if test="autoCreditEndTime != null" >
+        #{autoCreditEndTime,jdbcType=VARCHAR},
       </if>
       <if test="autoBidTime != null" >
         #{autoBidTime,jdbcType=INTEGER},
@@ -369,6 +376,9 @@
       <if test="record.autoCreditTime != null" >
         auto_credit_time = #{record.autoCreditTime,jdbcType=INTEGER},
       </if>
+      <if test="record.autoCreditEndTime != null" >
+        auto_credit_end_time = #{record.autoCreditEndTime,jdbcType=VARCHAR},
+      </if>
       <if test="record.autoBidTime != null" >
         auto_bid_time = #{record.autoBidTime,jdbcType=INTEGER},
       </if>
@@ -438,6 +448,7 @@
       auto_order_id = #{record.autoOrderId,jdbcType=VARCHAR},
       auto_credit_order_id = #{record.autoCreditOrderId,jdbcType=VARCHAR},
       auto_credit_time = #{record.autoCreditTime,jdbcType=INTEGER},
+      auto_credit_end_time = #{record.autoCreditEndTime,jdbcType=VARCHAR},
       auto_bid_time = #{record.autoBidTime,jdbcType=INTEGER},
       auto_bid_end_time = #{record.autoBidEndTime,jdbcType=VARCHAR},
       auto_payment_status = #{record.autoPaymentStatus,jdbcType=TINYINT},
@@ -491,6 +502,9 @@
       </if>
       <if test="autoCreditTime != null" >
         auto_credit_time = #{autoCreditTime,jdbcType=INTEGER},
+      </if>
+      <if test="autoCreditEndTime != null" >
+        auto_credit_end_time = #{autoCreditEndTime,jdbcType=VARCHAR},
       </if>
       <if test="autoBidTime != null" >
         auto_bid_time = #{autoBidTime,jdbcType=INTEGER},
@@ -558,6 +572,7 @@
       auto_order_id = #{autoOrderId,jdbcType=VARCHAR},
       auto_credit_order_id = #{autoCreditOrderId,jdbcType=VARCHAR},
       auto_credit_time = #{autoCreditTime,jdbcType=INTEGER},
+      auto_credit_end_time = #{autoCreditEndTime,jdbcType=VARCHAR},
       auto_bid_time = #{autoBidTime,jdbcType=INTEGER},
       auto_bid_end_time = #{autoBidEndTime,jdbcType=VARCHAR},
       auto_payment_status = #{autoPaymentStatus,jdbcType=TINYINT},

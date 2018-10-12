@@ -102,7 +102,7 @@ public class AppBankOpenController extends BaseUserController {
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean,sign);
         result.setData(data);
         //保存开户日志  银行卡号不必传了
-        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), bankOpenVO.getPlatform(), openBean.getTrueName(), openBean.getIdNo(), "");
+        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), bankOpenVO.getPlatform(), openBean.getTrueName(), openBean.getIdNo(), "", "");
         if (uflag == 0) {
             logger.error("App端保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             throw new ReturnMessageException(MsgEnum.ERR_SYSTEM_UNUSUAL);

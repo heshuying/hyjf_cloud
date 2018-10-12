@@ -27,7 +27,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
     private Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
 
     @Override
-    public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name, String idno, String cardNo) {
+    public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name, String idno, String cardNo, String srvAuthCode) {
         Date date = new Date();
         BankOpenAccountLogExample example = new BankOpenAccountLogExample();
         example.createCriteria().andUserIdEqualTo(userId).andOrderIdEqualTo(logOrderId);
@@ -36,6 +36,9 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             BankOpenAccountLog openAccountLog = bankOpenAccountLogs.get(0);
             openAccountLog.setMobile(mobile);
             openAccountLog.setStatus(0);
+            if(StringUtils.isNotBlank(srvAuthCode)){
+                openAccountLog.setLastSrvAuthCode(srvAuthCode);
+            }
             openAccountLog.setUpdateTime(date);
             openAccountLog.setUpdateUserId(userId);
             boolean updateFlag = this.bankOpenAccountLogMapper.updateByPrimaryKeySelective(openAccountLog) > 0 ? true
@@ -51,6 +54,9 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             bankOpenAccountLog.setUserName(userName);
             bankOpenAccountLog.setMobile(mobile);
             bankOpenAccountLog.setStatus(0);
+            if(StringUtils.isNotBlank(srvAuthCode)){
+                bankOpenAccountLog.setLastSrvAuthCode(srvAuthCode);
+            }
             bankOpenAccountLog.setOrderId(logOrderId);
             bankOpenAccountLog.setCreateTime(date);
             bankOpenAccountLog.setCreateUserId(userId);

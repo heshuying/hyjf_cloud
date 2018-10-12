@@ -2,9 +2,8 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.VipAuth;
 import com.hyjf.am.user.dao.model.auto.VipAuthExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface VipAuthMapper {
     int countByExample(VipAuthExample example);

@@ -69,7 +69,7 @@ public class MessagePushTemplateStaticsDao extends BaseMongoDao<MessagePushTempl
 		Query query = new Query();
 		Criteria criteria = new Criteria();
 		if (StringUtils.isNotBlank(request.getStartDateSrch()) && StringUtils.isNotBlank(request.getEndDateSrch())) {
-			criteria.and("createTime").gte(request.getStartDateSrch() + " 00:00:00")
+			criteria.and("sendTime").gte(request.getStartDateSrch() + " 00:00:00")
 					.lte(request.getEndDateSrch() + " 23:59:59");
 		}
 		if (StringUtils.isNotBlank(request.getMsgTitleSrch())) {
