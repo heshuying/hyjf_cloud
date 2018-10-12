@@ -8,10 +8,10 @@
 			AND hydal.is_show = 0
 
 			<if test="tradeYear != null and tradeYear != '' ">
-				AND FROM_UNIXTIME(hydal.create_time,'%Y')  = #{tradeYear,jdbcType=INTEGER}
+				AND DATE_FORMAT(hydal.create_time,'%Y')  = #{tradeYear,jdbcType=INTEGER}
 			</if>
 			<if test="tradeMonth != null and tradeMonth != '' ">
-				AND FROM_UNIXTIME(hydal.create_time,'%m')  = #{tradeMonth,jdbcType=INTEGER}
+				AND DATE_FORMAT(hydal.create_time,'%m')  = #{tradeMonth,jdbcType=INTEGER}
 			</if>
 
 			<if test="tradeType != null and tradeType != ''">
@@ -160,7 +160,10 @@
 	<select id="searchUserRechargeList" resultMap="UserRechargeListMap" parameterType="Map" >
 		SELECT
 		hydar.id,
-		hydar.create_time AS time,
+		DATE_FORMAT(
+		hydar.create_time,
+		'%Y-%m-%d %H:%i:%s'
+		) AS time,
 		hydar.money AS money,
 		hydar.balance AS balance,
 		hydar.fee AS fee,
@@ -207,7 +210,10 @@
 	<select id="selectUserWithdrawList" resultMap="UserWithdrawListMap" parameterType="Map" >
 		SELECT
 		hydaw.id,
-		hydaw.create_time AS time,
+		DATE_FORMAT(
+		hydaw.create_time,
+		'%Y-%m-%d %H:%i:%s'
+		) time,
 		hydaw.total AS money,
 		hydaw.fee AS fee,
 		hydaw.credited AS balance,
@@ -242,8 +248,10 @@
 	</resultMap>
 	<select id="searchAppTradeDetailList" resultMap="AppUserTradeListMap" parameterType="Map" >
 		SELECT
-		hydal.create_time tradeTime,
-
+		DATE_FORMAT(
+		hydal.create_time,
+		'%Y-%m-%d %H:%i:%s'
+		) tradeTime,
 		SUBSTRING(FORMAT(IF(hydal.is_bank=0,hydal.balance,hydal.bank_balance),4),1,LENGTH(FORMAT(IF(hydal.is_bank=0,hydal.balance,hydal.bank_balance),4))-2)
 		bankBalance,
 		date_format(hydal.create_time,

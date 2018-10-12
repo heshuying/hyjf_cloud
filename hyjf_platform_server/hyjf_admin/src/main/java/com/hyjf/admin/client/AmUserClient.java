@@ -1190,4 +1190,10 @@ public interface AmUserClient {
      * @return
      */
     UtmPlatResponse getAllUtmPlat(Map<String,Object> map);
+
+    /**
+     * 新增操作
+     * @param voList
+     */
+    void insertUtmList(List<ChannelCustomizeVO> voList);
 }

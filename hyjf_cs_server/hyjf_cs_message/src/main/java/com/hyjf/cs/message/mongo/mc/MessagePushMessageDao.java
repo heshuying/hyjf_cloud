@@ -51,7 +51,8 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
             criteria.and("createUserName").is(request.getCreateUserName());
         }
         if (request.getMsgTerminal() != null) {
-            criteria.and("msgTerminal").is(request.getMsgTerminal());
+            String[] msgTerminal = {request.getMsgTerminal()};
+            criteria.and("msgTerminal").is(msgTerminal);
         }
         if (request.getMsgSendStatus() != null) {
             criteria.and("msgSendStatus").is(request.getMsgSendStatus());
