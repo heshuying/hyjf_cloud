@@ -136,9 +136,9 @@
 		LEFT JOIN ht_borrow_info  hbi on hbi.borrow_nid = cr.bid_nid
 		LEFT JOIN ht_borrow hb on hb.borrow_nid = cr.bid_nid
 		WHERE assign_nid = #{assignNid}
-		<if test="limitStart != null and limitEnd !=null" >
-			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
-		</if>
+		<!--<if test="limitStart != null and limitEnd !=null" >-->
+			<!-- LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}-->
+		<!--</if>-->
 	</select>
 
 	<!-- **********************************        承接列表       *********************************************************-->
