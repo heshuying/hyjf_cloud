@@ -241,7 +241,6 @@ public class AccessFilter extends ZuulFilter {
         }
         ctx.setResponseBody(result.toJSONString());
         ctx.getResponse().setContentType("application/json;charset=UTF-8");
-        ctx.getResponse().setCharacterEncoding("UTF-8");
         return ctx;
     }
 
