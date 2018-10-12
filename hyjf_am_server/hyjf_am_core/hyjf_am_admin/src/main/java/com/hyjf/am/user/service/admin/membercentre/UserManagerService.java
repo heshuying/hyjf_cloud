@@ -6,13 +6,13 @@ package com.hyjf.am.user.service.admin.membercentre;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
+import com.hyjf.am.resquest.user.UserInfosUpdCustomizeRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-
 import java.util.List;
 import java.util.Map;
 
@@ -294,4 +294,31 @@ public interface UserManagerService extends BaseService {
      * @return
      */
     BankCallBean payAllianceCodeQuery(String cardNo, Integer userId);
+    /**
+     * 根据用户id查找银行卡信息
+     * @param userId
+     * @return
+     */
+    BankCard getBankCardByUserId(int userId);
+    /**
+     * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+     *
+     * @param request
+     * @return
+     */
+    int updateUserInfos(UserInfosUpdCustomizeRequest request);
+    /**
+     * 根据用户id查找开户信息
+     * @param userId
+     * @return
+     */
+    BankCard selectBankCardByUserId(Integer userId);
+
+    /**
+     * 更新银行卡信息(合规四期)
+     * @param bankCard
+     * @param bankAccountLog
+     * @return
+     */
+   int updateUserBankInfo(BankCard bankCard, BankCardLog bankAccountLog);
 }

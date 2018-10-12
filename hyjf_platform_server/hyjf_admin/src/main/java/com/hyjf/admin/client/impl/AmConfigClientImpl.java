@@ -1950,7 +1950,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<JxBankConfigVO> getBankcardList() {
-        JxBankConfigResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/jxBankConfig/selectBankConfigList", JxBankConfigResponse.class).getBody();
+        JxBankConfigResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/config/JxBank/selectBankConfigList", JxBankConfigResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResultList();
         }
@@ -2136,4 +2136,21 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+    /**
+     * 根据银行名获取江西银行配置信息
+     * @param bankName
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public JxBankConfigVO getBankConfigByBankName(String bankName) {
+        String url = "http://AM-ADMIN/am-config/config/getBankConfigByBankName/"+bankName;
+        JxBankConfigResponse response = restTemplate.getForEntity(url,JxBankConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+
 }

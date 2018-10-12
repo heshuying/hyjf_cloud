@@ -574,6 +574,24 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 根据用户List id查找用户信息
+	 *
+	 * @auther: nxl
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public List<UserVO> selectUserByListUserId(List userId) {
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userManager/selectUserByListUserId/" + userId, UserResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
 	 * 根据用户id查找用户信息
 	 * 
 	 * @auther: nxl
@@ -2372,5 +2390,56 @@ public class AmUserClientImpl implements AmUserClient {
 		ChannelRequest request = new ChannelRequest();
 		request.setList(voList);
 		restTemplate.postForObject("http:/AM-USER/am-user/promotion/utm/insert_utm_list", request, UtmResponse.class);
+	}
+
+	/**
+	 * 根据用户id获取开户信息
+	 *
+	 * @auther: nxl
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BankCardVO getBankCardByUserId(int userId) {
+		BankCardResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userManager/getBankCardByUserId/" + userId,
+						BankCardResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+	/**
+	 * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+	 *
+	 * @param request
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int updateUserBaseInfo(UserInfosUpdCustomizeRequest request) {
+		IntegerResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserBaseInfo", request, IntegerResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getResultInt().intValue();
+	}
+	/**
+	 * 更新银行卡信息
+	 *
+	 * @param request
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int updateUserBankInfo(UserInfosUpdCustomizeRequest request) {
+		IntegerResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserBankInfo", request, IntegerResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getResultInt().intValue();
 	}
 }

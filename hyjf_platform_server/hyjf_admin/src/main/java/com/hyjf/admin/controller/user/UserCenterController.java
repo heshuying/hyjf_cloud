@@ -5,10 +5,7 @@ package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.AdminUserRecommendRequestBean;
-import com.hyjf.admin.beans.request.CompanyInfoInstRequesetBean;
-import com.hyjf.admin.beans.request.UserManagerRequestBean;
-import com.hyjf.admin.beans.request.UserManagerUpdateRequestBean;
+import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.beans.response.*;
 import com.hyjf.admin.beans.vo.*;
 import com.hyjf.admin.common.result.AdminResult;
@@ -24,10 +21,13 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.security.acl.LastOwnerException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -637,5 +638,122 @@ public class UserCenterController extends BaseController {
         userManagerInitResponseBean.setBorrowTypes(listBorrowTypes);
         userManagerInitResponseBean.setListHjhInstConfig(dropDownVOList);
         return userManagerInitResponseBean;
+    }
+    //修改用户信息
+    @ResponseBody
+    @PostMapping(value = "/initUpdateUserInfos")
+    @ApiOperation(value = "初始化用户信息", notes = "初始化用户信息(修改手机号,邮箱,用户角色,银行卡)")
+    public AdminResult<InitUserBaseInfoResponseBean> initUpdateUserInfos(@RequestParam(value = "userId") String userId,@RequestParam(value = "updType") String updType) {
+        InitUserBaseInfoResponseBean initUserBaseInfoResponseBean = new InitUserBaseInfoResponseBean();
+        initUserBaseInfoResponseBean.setUpdType(updType);
+        // 根据用户id查询用户详情信息
+        UserManagerUpdateVO userManagerUpdateVo = userCenterService.selectUserUpdateInfoByUserId(userId);
+        if(null!=userManagerUpdateVo){
+            UserManagerUpdateCustomizeVO userManagerUpdateCustomizeVO = new UserManagerUpdateCustomizeVO();
+            BeanUtils.copyProperties(userManagerUpdateVo, userManagerUpdateCustomizeVO);
+            initUserBaseInfoResponseBean.setUserManagerDetailCustomizeVO(userManagerUpdateCustomizeVO);
+        }
+        //开户信息
+        BankCardVO bankCardVO = userCenterService.getBankCardByUserId(userId);
+        if(null!=bankCardVO){
+            BankCardCustomizeVO bankCardCustomizeVO = new BankCardCustomizeVO();
+            BeanUtils.copyProperties(bankCardVO,bankCardCustomizeVO);
+            initUserBaseInfoResponseBean.setBankCardInfo(bankCardCustomizeVO);
+        }
+        int changeType = 0;
+        switch(updType){
+            //修改手机号
+            case "mobile":
+                changeType = 4;
+                break;
+            //修改邮箱
+            case "email":
+                changeType = 5;
+                break;
+            //修改用户角色
+            case "userRole":
+                changeType =6;
+                break;
+            //修改银行卡信息
+            case "bankCard":
+                changeType = 7;
+                break;
+        }
+        //修改日志
+        UserChangeLogRequest userChangeLogRequest = new UserChangeLogRequest();
+        if(StringUtils.isNotEmpty(userId)){
+            int intUserId = Integer.parseInt(userId);
+            userChangeLogRequest.setUserId(intUserId);
+            //查找日志类型
+            userChangeLogRequest.setChangeType(changeType);
+            List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
+            List<UserChangeLogCustomizeVO> userChangeLogCustomizeVOList = new ArrayList<UserChangeLogCustomizeVO>();
+            if(null!=userChangeLogVOList&&userChangeLogVOList.size()>0){
+                userChangeLogCustomizeVOList = CommonUtils.convertBeanList(userChangeLogVOList, UserChangeLogCustomizeVO.class);
+            }
+            initUserBaseInfoResponseBean.setUsersChangeLogForm(userChangeLogCustomizeVOList);
+        }
+        return new AdminResult<InitUserBaseInfoResponseBean>(initUserBaseInfoResponseBean);
+    }
+
+    //查询银联号
+    @ResponseBody
+    @PostMapping(value = "/searchPayAllianceCode")
+    @ApiOperation(value = "查找联行号", notes = "查找联行号")
+    public AdminResult<Response>  searchPayAllianceCode(@RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean) {
+        BankCallBean bankCallBean = userCenterService.payAllianceCodeQuery(userInfosUpdCustomizeRequestBean.getCardNo(), Integer.parseInt(userInfosUpdCustomizeRequestBean.getUserId()));
+        AdminResult<Response> result = new AdminResult<Response>();
+        Response response = new Response();
+        if (null != bankCallBean && BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankCallBean.getRetCode())) {
+            //如果调用银行接口没有返回联行号,则查找本地联行号
+            if (StringUtils.isBlank(bankCallBean.getPayAllianceCode())) {
+                JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(userInfosUpdCustomizeRequestBean.getBank());
+                if (null != banksConfig) {
+                    response.setResult(banksConfig.getPayAllianceCode());
+                    result.setStatus(SUCCESS);
+                    result.setStatusDesc("未查询到分行联行号已填充总行联行号");
+                    result.setData(response);
+                    logger.info("============本地银联号为:", banksConfig.getPayAllianceCode());
+                    return result;
+                } else {
+                    return new AdminResult<>(FAIL, "未查询到联行号");
+                }
+            } else {
+                //如果调用银行接口查找到银联号,则进行显示
+                response.setResult(bankCallBean.getPayAllianceCode());
+                result.setData(response);
+                result.setStatus(SUCCESS);
+                logger.info("============银行查询银联号为:", bankCallBean.getPayAllianceCode());
+                return result;
+            }
+        } else {
+            return new AdminResult<>(FAIL, "银行接口调用失败");
+        }
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/updateUserBaseInfo")
+    @ApiOperation(value = "保存用户基本信息", notes = "保存用户基本信息")
+    public AdminResult<Response> updateUserBaseInfo(HttpServletRequest request, @RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean) {
+        AdminSystemVO  adminSystemVO = this.getUser(request);
+        UserInfosUpdCustomizeRequest userInfosUpdCustomizeRequest = new UserInfosUpdCustomizeRequest();
+        BeanUtils.copyProperties(userInfosUpdCustomizeRequestBean,userInfosUpdCustomizeRequest);
+        int instFlg = 0;
+        if(null!=adminSystemVO){
+            userInfosUpdCustomizeRequest.setLoginUserName(adminSystemVO.getUsername());
+            userInfosUpdCustomizeRequest.setLoginUserId(Integer.parseInt(adminSystemVO.getId()));
+            if(userInfosUpdCustomizeRequestBean.getUpdFlg().equals("bankCard")){
+                instFlg = userCenterService.updateUserBankInfo(userInfosUpdCustomizeRequest);
+            }else{
+                //修改用户基本信息(电话,邮箱,用户角色)
+               instFlg= userCenterService.updateUserBaseInfo(userInfosUpdCustomizeRequest);
+            }
+            if (instFlg<=0) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }else{
+                return new AdminResult<>();
+            }
+        }
+        return new AdminResult<>(FAIL, "后台用户未登录");
     }
 }

@@ -287,6 +287,16 @@ public interface AmUserClient {
     UserVO selectUserByUserId(int userId);
 
     /**
+     * 根据用户List id查找用户表
+     *
+     * @param userId
+     * @param userId
+     * @return
+     * @auth nxl
+     */
+    List<UserVO> selectUserByListUserId(List userId);
+
+    /**
      * 根据用户id查找用户信息
      *
      * @param userId
@@ -1186,4 +1196,28 @@ public interface AmUserClient {
      * @param voList
      */
     void insertUtmList(List<ChannelCustomizeVO> voList);
+    /**
+     * 根据用户id获取开户信息
+     *
+     * @auther: nxl
+     * @param userId
+     * @return
+     */
+    BankCardVO getBankCardByUserId(int userId);
+    /**
+     * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+     *
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    int updateUserBaseInfo(UserInfosUpdCustomizeRequest request);
+    /**
+     * 更新银行卡信息
+     *
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    int updateUserBankInfo(UserInfosUpdCustomizeRequest request);
 }
