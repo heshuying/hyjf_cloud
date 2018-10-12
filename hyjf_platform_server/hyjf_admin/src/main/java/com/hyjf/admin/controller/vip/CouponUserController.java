@@ -534,13 +534,13 @@ public class CouponUserController extends BaseController {
             response.setDetail(detail);
             response.setCouponUser(couponUserVO);
         } else {
-//            AdminSystemVO user = getUser(request);
-//            String loginUserId = user.getId();
+            AdminSystemVO user = getUser(request);
+            String loginUserId = user.getId();
             AdminCouponUserRequestBean adminCouponUserRequestBean = new AdminCouponUserRequestBean();
             adminCouponUserRequestBean.setCouponUserBeanRequest(couponUserBeanRequest);
             adminCouponUserRequestBean.setCouponConfigVO(configResponse.getResult());
             adminCouponUserRequestBean.setUserId(record.getUserId());
-            adminCouponUserRequestBean.setLoginUserId("3");
+            adminCouponUserRequestBean.setLoginUserId(loginUserId);
             response = couponUserService.auditRecord(adminCouponUserRequestBean);
         }
         return new AdminResult<>(response);
