@@ -2,9 +2,8 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BankOpenAccountMapper {
     int countByExample(BankOpenAccountExample example);
@@ -28,6 +27,4 @@ public interface BankOpenAccountMapper {
     int updateByPrimaryKeySelective(BankOpenAccount record);
 
     int updateByPrimaryKey(BankOpenAccount record);
-
-    List<BankOpenAccount> selectByListExample(List<Integer> user);
 }
