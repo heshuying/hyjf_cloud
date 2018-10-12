@@ -137,7 +137,7 @@ public class TradeDetailController extends BaseController {
 
 
     /**
-     * @Description "获取用户提现记录列表
+     * @Description "获取app用户交易记录列表
      * @Author pangchengchao
      * @Version v0.1
      * @Date
