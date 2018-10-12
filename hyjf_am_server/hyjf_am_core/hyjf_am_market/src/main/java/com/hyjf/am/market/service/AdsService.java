@@ -17,7 +17,7 @@ public interface AdsService {
     Ads findActivityById(Integer id);
 
 
-    AppAdsCustomize searchBanner(Map<String, Object> ads);
+    List<AppAdsCustomize> searchBanner(Map<String, Object> ads);
 
     List<Ads> getBannerList(AdsRequest request);
 }

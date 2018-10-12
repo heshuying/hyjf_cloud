@@ -27,7 +27,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
     private Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
 
     @Override
-    public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name, String idno, String cardNo) {
+    public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name, String idno, String cardNo, String srvAuthCode) {
         Date date = new Date();
         BankOpenAccountLogExample example = new BankOpenAccountLogExample();
         example.createCriteria().andUserIdEqualTo(userId).andOrderIdEqualTo(logOrderId);
@@ -36,6 +36,9 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             BankOpenAccountLog openAccountLog = bankOpenAccountLogs.get(0);
             openAccountLog.setMobile(mobile);
             openAccountLog.setStatus(0);
+            if(StringUtils.isNotBlank(srvAuthCode)){
+                openAccountLog.setLastSrvAuthCode(srvAuthCode);
+            }
             openAccountLog.setUpdateTime(date);
             openAccountLog.setUpdateUserId(userId);
             boolean updateFlag = this.bankOpenAccountLogMapper.updateByPrimaryKeySelective(openAccountLog) > 0 ? true
@@ -51,6 +54,9 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             bankOpenAccountLog.setUserName(userName);
             bankOpenAccountLog.setMobile(mobile);
             bankOpenAccountLog.setStatus(0);
+            if(StringUtils.isNotBlank(srvAuthCode)){
+                bankOpenAccountLog.setLastSrvAuthCode(srvAuthCode);
+            }
             bankOpenAccountLog.setOrderId(logOrderId);
             bankOpenAccountLog.setCreateTime(date);
             bankOpenAccountLog.setCreateUserId(userId);
@@ -108,10 +114,11 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
 
         BankOpenAccountLogExample accountLogExample = new BankOpenAccountLogExample();
         accountLogExample.createCriteria().andUserIdEqualTo(userId);
-        boolean deleteLogFlag = this.bankOpenAccountLogMapper.deleteByExample(accountLogExample) > 0 ? true : false;
-        if (!deleteLogFlag) {
-            throw new RuntimeException("删除用户开户日志表失败，用户开户订单号：" + orderId + ",用户userId:" + userId);
-        }
+        //todo wangjun 开户掉单测试 暂时删除
+//        boolean deleteLogFlag = this.bankOpenAccountLogMapper.deleteByExample(accountLogExample) > 0 ? true : false;
+//        if (!deleteLogFlag) {
+//            throw new RuntimeException("删除用户开户日志表失败，用户开户订单号：" + orderId + ",用户userId:" + userId);
+//        }
         // 获取用户信息
         User user = this.getUsers(userId);
         // 用户名

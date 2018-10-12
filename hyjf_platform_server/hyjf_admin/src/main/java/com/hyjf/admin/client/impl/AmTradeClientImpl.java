@@ -5428,6 +5428,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public FinmanChargeNewResponse deleteFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest){
+        Integer userId = adminRequest.getCreateUserId();
         FinmanChargeNewResponse response = null;
         //根据manChargeCd查询费率配置
         FinmanChargeNewResponse selectResponse = restTemplate.getForEntity("http://AM-ADMIN/am-admin/config/finmanchargenew/getRecordInfo/"+adminRequest.getManChargeCd(),FinmanChargeNewResponse.class)
@@ -5435,16 +5436,17 @@ public class AmTradeClientImpl implements AmTradeClient {
         if (selectResponse != null) {
             BorrowFinmanNewChargeVO vo = selectResponse.getResult();
             adminRequest = CommonUtils.convertBean(vo,FinmanChargeNewRequest.class);
-        }
-        //此处删除是插入日志，记录新动作而不是修改原动作
-        FinmanChargeNewResponse count =restTemplate.postForEntity("http://AM-ADMIN/am-admin/feerateModifyLog/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
-        if(count != null){
-            response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/finmanchargenew/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
-            if (response != null) {
-                response.setRtn(Response.SUCCESS);
+            adminRequest.setCreateUserId(userId);
+            //此处删除是插入日志，记录新动作而不是修改原动作
+            FinmanChargeNewResponse count =restTemplate.postForEntity("http://AM-ADMIN/am-admin/feerateModifyLog/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
+            if(count != null){
+                response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/finmanchargenew/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
+                if (response != null) {
+                    response.setRtn(Response.SUCCESS);
+                    return response;
+                }
                 return response;
             }
-            return response;
         }
         return null;
     }
