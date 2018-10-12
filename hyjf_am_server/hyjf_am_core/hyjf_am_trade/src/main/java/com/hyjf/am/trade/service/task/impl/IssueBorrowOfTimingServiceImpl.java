@@ -1,10 +1,12 @@
 package com.hyjf.am.trade.service.task.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
+import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoIssueMessageProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.IssueBorrowOfTimingService;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
@@ -20,11 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author xiasq
@@ -35,6 +35,9 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 	@Autowired
 	SmsProducer smsProducer;
+
+	@Resource
+	private AutoIssueMessageProducer autoIssueMessageProducer;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -112,7 +115,9 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				String borrowNid = borrowCustomize.getBorrowNid();
 				logger.info("汇计划定时发标项目标的:[" + borrowNid + "]");
 
-				BorrowInfo borrowInfo = this.borrowInfoMapper.selectByPrimaryKey(borrowCustomize.getId());
+                BorrowInfoExample example = new BorrowInfoExample();
+                example.createCriteria().andBorrowNidEqualTo(borrowNid);
+                BorrowInfo borrowInfo = borrowInfoMapper.selectByExample(example).get(0);
 
 				// b.标的自动发标
 				boolean flag = this.updateHjhOntimeSendBorrow(borrowCustomize);
@@ -128,9 +133,15 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 					}
 				}
 				// 散标进计划
-				// 成功后到关联计划队列 todo 实现？？？
-				// this.hjhOntimeSendService.sendToMQ(borrow,
-				// RabbitMQConstants.ROUTINGKEY_BORROW_ISSUE);
+				// 成功后到关联计划队列
+				try {
+					JSONObject params = new JSONObject();
+					params.put("borrowNid", borrowNid);
+					//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+					autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+				} catch (MQException e) {
+					logger.error("发送【散标进计划自动发标进入计划】MQ失败...");
+				}
 				logger.info(borrowNid + "已发送至MQ");
 
 				// 发送发标短信
@@ -336,8 +347,15 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				this.AfterIssueBorrowSuccessSendSms(borrow.getBorrowNid(), null, CustomConstants.PARAM_TPL_ZDFB);
 				logger.info("定时发标自动任务 " + String.valueOf(borrow.getBorrowNid()) + "标的已经自动发标！");
 			} else if ("1".equals(borrow.getIsEngineUsed())) {
-				// 进计划的拆分标发送加入计划消息队列 todo 加入计划mq
-				// this.sendToMQ(borrow, RabbitMQConstants.ROUTINGKEY_BORROW_ISSUE);
+				// 进计划的拆分标发送加入计划消息队列
+				try {
+					JSONObject params = new JSONObject();
+					params.put("borrowNid", borrow.getBorrowNid());
+					//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+					autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+				} catch (MQException e) {
+					logger.error("发送【拆分标自动发标进入计划】MQ失败...");
+				}
 			}
 			return true;
 		} else {

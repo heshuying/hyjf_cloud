@@ -247,7 +247,7 @@ public class WeChatAutoPlusController extends BaseUserController {
         baseMapBean.set("autoInvesStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoInvesStatus()==null?"0":hjhUserAuth.getAutoInvesStatus()+ "");
         baseMapBean.set("autoCreditStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoCreditStatus()==null?"0":hjhUserAuth.getAutoCreditStatus() + "");
         baseMapBean.set("userAutoType", type);
-        baseMapBean.setCallBackAction(systemConfig.getWeChatHost() + CommonConstant.JUMP_HTML_ERROR_PATH);
+        baseMapBean.setCallBackAction(systemConfig.getServerHost() + CommonConstant.JUMP_HTML_ERROR_PATH);
         Map<String,Object> map = new HashMap<>();
         map.put("callBackForm", baseMapBean);
         result.setData(map);

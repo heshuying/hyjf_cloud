@@ -3737,9 +3737,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal getUserRepayFeeWaitTotal(Integer userId) {
-        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_user/" + userId, Response.class).getBody();
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_user/" + userId, BigDecimalResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return new BigDecimal(response.getResult());
+            return response.getResultDec();
         }
         return BigDecimal.ZERO;
     }
@@ -3751,9 +3751,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal getOrgRepayFeeWaitTotal(Integer userId) {
-        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_org/" + userId, Response.class).getBody();
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_org/" + userId, BigDecimalResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return new BigDecimal(response.getResult());
+            return response.getResultDec();
         }
         return BigDecimal.ZERO;
     }
@@ -3765,9 +3765,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal getOrgRepayWaitTotal(Integer userId) {
-        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, Response.class).getBody();
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, BigDecimalResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return new BigDecimal(response.getResult());
+            return response.getResultDec();
         }
         return BigDecimal.ZERO;
     }
@@ -3787,6 +3787,21 @@ public class AmTradeClientImpl implements AmTradeClient {
                 list.add(response.getResult());
             }
             return list;
+        }
+        return null;
+    }
+
+
+    /**
+     * 查询移动端首页bannerlist
+     * @author zhangyk
+     * @date 2018/10/12 11:08
+     */
+    @Override
+    public List<AppAdsCustomizeVO> getHomeBannerList(AdsRequest request) {
+        AppAdsCustomizeResponse response = restTemplate.postForEntity("http://AM-MARKET/am-market/ads/searchHomeBanner",request,AppAdsCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+           return response.getResultList();
         }
         return null;
     }

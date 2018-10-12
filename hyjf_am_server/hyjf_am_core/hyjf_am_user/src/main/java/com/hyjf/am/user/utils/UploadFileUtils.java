@@ -223,21 +223,26 @@ public abstract class UploadFileUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String upload4CopyFile(File tempFile, String realPath) throws Exception {
+	private static String upload4CopyFile(File tempFile, String realPath) throws Exception {
 		String fileName = "";
-		if (tempFile != null && tempFile.exists()) {
-			String realDoPath = getDoPath(realPath);
-			mkDir(realDoPath);
-			fileName = realDoPath + tempFile.getName();
-			File realFile = new File(fileName);
-			if (!realFile.exists()) {
-				FileUtils.copyFile(tempFile, realFile);
-			} else {
-				return "";
-			}
+		if(tempFile != null){
+			if (tempFile.exists()) {
+				String realDoPath = getDoPath(realPath);
+				mkDir(realDoPath);
+				fileName = realDoPath + tempFile.getName();
+				File realFile = new File(fileName);
+				if (!realFile.exists()) {
+					FileUtils.copyFile(tempFile, realFile);
+				} else {
+					return "";
+				}
 
+			}
+			return tempFile.getName();
+		}else{
+			return "";
 		}
-		return tempFile.getName();
+
 	}
 
 	/**

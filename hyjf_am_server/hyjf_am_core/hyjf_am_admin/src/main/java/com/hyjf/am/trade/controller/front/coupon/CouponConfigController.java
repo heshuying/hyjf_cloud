@@ -211,6 +211,7 @@ public class CouponConfigController extends BaseController {
         couponConfig.setUpdateUserId(Integer.parseInt(request.getAuditUser()));
         couponConfig.setAuditTime((int)nowTime);
         couponConfig.setUpdateTime(GetDate.getDate());
+        couponConfig.setExpirationDate(GetDate.strYYYYMMDD2Timestamp2(request.getExpirationDate()));
         int result = couponConfigService.saveCouponConfig(couponConfig);
         if (result > 0) {
             configResponse.setRtn(Response.SUCCESS);

@@ -123,7 +123,7 @@ public class WrbParseParamUtil {
      * @return Field对象
      */
     private static Field getClassField(Class<?> clazz, String fieldName) {
-        if (Object.class.getName().equals(clazz.getName())) {
+        if (Object.class.isAssignableFrom(clazz.getClass())) {
             return null;
         }
         Field[] declaredFields = clazz.getDeclaredFields();
@@ -151,17 +151,17 @@ public class WrbParseParamUtil {
      */
     private static Object convertValType(Object value, Class<?> fieldTypeClass) {
         Object retVal = null;
-        if (Long.class.getName().equals(fieldTypeClass.getName())
-                || long.class.getName().equals(fieldTypeClass.getName())) {
+        if (Long.class.isAssignableFrom(fieldTypeClass)
+                || long.class.isAssignableFrom(fieldTypeClass)) {
             retVal = Long.parseLong(value + "");
-        } else if (Integer.class.getName().equals(fieldTypeClass.getName())
-                || int.class.getName().equals(fieldTypeClass.getName())) {
+        } else if (Integer.class.isAssignableFrom(fieldTypeClass)
+                || int.class.isAssignableFrom(fieldTypeClass)){
             retVal = Integer.parseInt(value + "");
-        } else if (Float.class.getName().equals(fieldTypeClass.getName())
-                || float.class.getName().equals(fieldTypeClass.getName())) {
+        } else if (Float.class.isAssignableFrom(fieldTypeClass)
+                || float.class.isAssignableFrom(fieldTypeClass)) {
             retVal = Float.parseFloat(value + "");
-        } else if (Double.class.getName().equals(fieldTypeClass.getName())
-                || double.class.getName().equals(fieldTypeClass.getName())) {
+        } else if (Double.class.isAssignableFrom(fieldTypeClass)
+                || double.class.isAssignableFrom(fieldTypeClass)) {
             retVal = Double.parseDouble(value + "");
         } else {
             retVal = value;

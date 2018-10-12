@@ -251,12 +251,10 @@ public class HjhPlanController extends BaseController {
      * @return
      */
     @PostMapping("/selectPlanAccedeSum")
-    public IntegerResponse selectPlanAccedeSum(@RequestBody Map<String, Object> params){
-        Integer count = hjhPlanService.selectPlanAccedeSum(params);
-        IntegerResponse integerResponse = new IntegerResponse();
-        integerResponse.setResultInt(count);
-        return integerResponse;
+    public Long selectPlanAccedeSum(@RequestBody Map<String, Object> params){
+        return hjhPlanService.selectPlanAccedeSum(params);
     }
+
 
 
     /**

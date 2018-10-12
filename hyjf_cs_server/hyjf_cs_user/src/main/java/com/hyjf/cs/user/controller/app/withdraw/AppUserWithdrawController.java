@@ -88,7 +88,7 @@ public class AppUserWithdrawController extends BaseUserController {
 
                         BankConfigVO bankConfig = userWithdrawService.getBankInfo(bank.getBank());
                         // 应前台要求，logo路径给绝对路径
-                        bankCardBean.setLogo(systemConfig.webHost + bankConfig.getAppLogo());
+                        bankCardBean.setLogo(systemConfig.getServerHost() + bankConfig.getAppLogo());
                         bankCardBean.setBankCode(bankConfig.getCode());
                         // 银行名称 汉字
                         bankCardBean.setBank(bankConfig.getName());
@@ -115,9 +115,9 @@ public class AppUserWithdrawController extends BaseUserController {
                         JxBankConfigVO jxBankConfigVO = userWithdrawService.getJxBankConfigByBankId(bankId);
 
                         if (jxBankConfigVO != null && StringUtils.isNotEmpty(jxBankConfigVO.getBankIcon())) {
-                            bankCardBean.setLogo(systemConfig.webHost + jxBankConfigVO.getBankLogo());
+                            bankCardBean.setLogo(systemConfig.getServerHost() + jxBankConfigVO.getBankLogo());
                         } else {
-                            bankCardBean.setLogo(systemConfig.webHost + "/data/upfiles/filetemp/image/bank_log.png");// 应前台要求，logo路径给绝对路径
+                            bankCardBean.setLogo(systemConfig.getServerHost() + "/data/upfiles/filetemp/image/bank_log.png");// 应前台要求，logo路径给绝对路径
                         }
 
                         // 是否快捷卡

@@ -195,10 +195,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int countNewUserTotal(Integer userId) {
-		IntegerResponse result = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/countNewUserTotal/" + userId,  IntegerResponse.class).getBody();
-		if (IntegerResponse.isSuccess(result)) {
-			return result.getResultInt();
+		Integer result = restTemplate
+				.getForEntity("http://AM-TRADE/am-trade/borrowTender/countNewUserTotal/" + userId,  Integer.class).getBody();
+		if (result != null) {
+			return result;
 		}
 		return 0;
 	}

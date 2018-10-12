@@ -64,7 +64,8 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 				logger.error("{}月份节假日查询失败....", month);
 				continue;
 			}
-			Map<String, Object> map = this.json2map(result);
+			Map<String, Object> map = new HashMap<>();
+			map = this.json2map(result);
 			for (String ymStr : map.keySet()) {
 				Map<String, Object> detailMap = (Map<String, Object>) map.get(ymStr);
 				for (String dayStr : detailMap.keySet()) {
@@ -159,7 +160,7 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 	}
 
 	private Map<String, Object> json2map(String str_json) {
-		Map<String, Object> res = null;
+		Map<String, Object> res = new HashMap<>();
 		try {
 			Gson gson = new Gson();
 			res = gson.fromJson(str_json, new TypeToken<Map<String, Object>>() {

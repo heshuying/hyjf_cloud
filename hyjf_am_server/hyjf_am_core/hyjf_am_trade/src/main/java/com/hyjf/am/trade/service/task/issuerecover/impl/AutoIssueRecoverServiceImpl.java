@@ -224,6 +224,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
         Borrow borrow = this.setBorrowCommonData(hjhPlanAsset, hjhAssetBorrowType, borrowFinmanNewCharge);
 
+
         BorrowInfoWithBLOBs borrowInfo = this.setBorrowInfo(hjhPlanAsset, hjhAssetBorrowType, borrowFinmanNewCharge, borrow);
 
         // 获取标签ID
@@ -277,6 +278,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrowInfo.setProjectName(borrowNid);
         // 借款编号
         borrow.setBorrowNid(borrowNid);
+        borrowInfo.setBorrowNid(borrowNid);
         // 借款预编码
         borrowInfo.setBorrowPreNid(borrowPreNidNew);
         // 新借款预编码
@@ -291,9 +293,16 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
             borrow.setRepayCapitalType(hjhBailConfigInfoList.get(0).getRepayCapitalType());
         }
 
+        String borrowStyle = borrow.getBorrowStyle();
+        Integer isMonth = 0;// 0:天标 1：月标
+        if(!CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)){
+            isMonth = 1;
+        }
+        borrow.setIsMonth(isMonth);
+
         // 借款表插入
-        int id = this.borrowMapper.insertSelective(borrow);
-        borrowInfo.setId(id);
+        this.borrowMapper.insertSelective(borrow);
+//        borrowInfo.setId(id);
         borrowInfoMapper.insertSelective(borrowInfo);
         // 个人信息
         this.insertBorrowManinfo(borrowNid, hjhPlanAsset,borrowInfo.getBorrowPreNid(), borrow);
@@ -759,6 +768,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrowInfo.setInstCode(hjhPlanAsset.getInstCode());
         borrowInfo.setAssetType(hjhAssetBorrowType.getAssetType());
 
+        borrowInfo.setAccountContents("");
+
         // 受托支付
         if (hjhPlanAsset.getEntrustedFlg() != null && hjhPlanAsset.getEntrustedFlg().intValue() ==1) {
             borrowInfo.setEntrustedFlg(1);
@@ -925,6 +936,9 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         // 借款人用户名
         borrow.setBorrowUserName(hjhPlanAsset.getUserName());
 
+        borrow.setBorrowEndTime("");
+        borrow.setRepayLastTime(0);
+
         // 项目申请人
 //		String applicant = hjhAssetBorrowType.getApplicant();
 
@@ -946,8 +960,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         // 借款总金额
         borrow.setAccount(new BigDecimal(hjhPlanAsset.getAccount()));
         borrow.setBorrowAccountWait(new BigDecimal(hjhPlanAsset.getAccount()));
-
-
+        borrow.setCreateUserName("admin");
+        borrow.setCreateTime(systemNowDate);
         // 财务状况
 //		if (StringUtils.isEmpty(hjhPlanAsset.getAccountContents())) {
 //			borrow.setAccountContents(StringUtils.EMPTY);
@@ -1048,6 +1062,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 //		// 抵押物信息 风险控制措施-抵押物
 //		borrow.setBorrowMeasuresMort(hjhPlanAsset.getBorrowMeasuresMort());
 //		// 本息保障 险控制措施-措施  风控措施  现在默认写死
+        // 项目类型
+        borrow.setProjectType(hjhAssetBorrowType.getBorrowCd());
         // 融资服务费
         borrow.setServiceFeeRate(borrowFinmanNewCharge.getChargeRate());
         // 账户管理费率

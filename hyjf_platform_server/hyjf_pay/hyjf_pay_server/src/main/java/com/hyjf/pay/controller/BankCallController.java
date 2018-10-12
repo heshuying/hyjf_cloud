@@ -148,6 +148,7 @@ public class BankCallController extends BaseController {
         String logOrderId = request.getParameter(BankCallConstant.PARAM_LOGORDERID);
         logger.info("[调用接口结束, 消息类型:" + (logOrderId == null ? "" : logOrderId) + "]");
         String retUrl="";
+        String redirectUrl="";
         // 真实的返回URL
         // 获取主键
         BankExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
@@ -161,8 +162,11 @@ public class BankCallController extends BaseController {
             retUrl = jo.getString(BankCallConstant.PARAM_SUCCESSFULURL);
 
         }
-        String redirectUrl="redirect:"+retUrl;
-        logger.info("[调用接口结束, 消息类型:" + (redirectUrl == null ? "" : redirectUrl) + "]");
+        if(StringUtils.isNotEmpty(retUrl)){
+        	redirectUrl="redirect:"+retUrl;
+        }
+        /*logger.info("[调用接口结束, 消息类型:" + (redirectUrl == null ? "" : redirectUrl) + "]");*/
+        logger.info("[调用接口结束, 消息类型:" +  redirectUrl + "]");
         return new ModelAndView(redirectUrl);
     }
 

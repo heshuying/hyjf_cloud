@@ -105,7 +105,7 @@ public class BorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "web端散标投资获取投资结果", notes = "web端散标投资获取投资结果")
     @PostMapping(value = "/getBorrowTenderResult", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") Integer userId,
+    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId",required = false) Integer userId,
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid,
                                                                HttpServletRequest request) {
@@ -125,7 +125,7 @@ public class BorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "web端获取投资信息", notes = "web端获取投资信息")
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
-    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId,
+    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId", required = false) Integer userId,
                                                      @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端获取投资信息");
         tender.setUserId(userId);

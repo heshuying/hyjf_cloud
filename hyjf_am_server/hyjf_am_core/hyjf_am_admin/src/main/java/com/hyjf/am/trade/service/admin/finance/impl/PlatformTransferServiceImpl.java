@@ -12,12 +12,9 @@ import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.finance.PlatformTransferService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
-import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.common.constants.MQConstant;
@@ -80,8 +77,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     @Override
     public Integer getPlatformTransferCount(PlatformTransferListRequest request) {
         AccountRechargeExample example = convertExample(request);
-        Integer count = accountRechargeMapper.countByExample(example);
-        return count;
+        return accountRechargeMapper.countByExample(example);
     }
 
     /**
@@ -94,8 +90,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     @Override
     public List<AccountRecharge> searchPlatformTransferList(PlatformTransferListRequest request) {
         AccountRechargeExample example = convertExample(request);
-        List<AccountRecharge> accountRechargeList = accountRechargeMapper.selectByExample(example);
-        return accountRechargeList;
+        return accountRechargeMapper.selectByExample(example);
     }
 
     /**
@@ -400,8 +395,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         AccountExample example = new AccountExample();
         AccountExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(userId);
-        List<Account> accountList = accountMapper.selectByExample(example);
-        return accountList;
+        return accountMapper.selectByExample(example);
     }
 
     private AccountRechargeExample convertExample(PlatformTransferListRequest request) {
@@ -499,7 +493,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
                 bankMerchantAccountList.setStatus(CustomConstants.BANK_MER_TRANS_STATUS_SUCCESS);
                 bankMerchantAccountList.setUpdateUserId(userId);
                 bankMerchantAccountList.setUpdateTime(new Date());
-                boolean isBankMerchantAccountListFlag = bankMerchantAccountListMapper.updateByPrimaryKeySelective(bankMerchantAccountList) > 0 ? true : false;
+                boolean isBankMerchantAccountListFlag = bankMerchantAccountListMapper.updateByPrimaryKeySelective(bankMerchantAccountList) > 0;
                 if (!isBankMerchantAccountListFlag) {
                     throw new RuntimeException("圈存成功后，查询红包明细表失败,操作回滚");
                 }
@@ -523,8 +517,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         bankMerchantAccountList.setStatus(CustomConstants.BANK_MER_TRANS_STATUS_FAIL);
         bankMerchantAccountList.setUpdateUserName("0");
         bankMerchantAccountList.setUpdateTime(new Date());
-        int ret = bankMerchantAccountListMapper.updateByExampleSelective(bankMerchantAccountList, accountWithdrawExample);
-        return ret > 0 ? true : false;
+        return bankMerchantAccountListMapper.updateByExampleSelective(bankMerchantAccountList, accountWithdrawExample) > 0;
     }
 
 
@@ -568,7 +561,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
                 bankMerchantAccount.setAvailableBalance(bankMerchantAccount.getAvailableBalance().subtract(outAmt));
                 bankMerchantAccountCriteria.andUpdateTimeEqualTo(bankMerchantAccount.getUpdateTime());
                 bankMerchantAccount.setUpdateTime(new Date());
-                boolean isAccountUpdateFlag = this.bankMerchantAccountMapper.updateByExampleSelective(bankMerchantAccount, bankMerchantAccountExample) > 0 ? true : false;
+                boolean isAccountUpdateFlag = this.bankMerchantAccountMapper.updateByExampleSelective(bankMerchantAccount, bankMerchantAccountExample) > 0;
 
                 if (!isAccountUpdateFlag) {
                     throw new RuntimeException("圈提成功后,插入交易明细表失败~!, 操作回滚");
@@ -582,7 +575,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
                 bankMerchantAccountList.setStatus(CustomConstants.BANK_MER_TRANS_STATUS_SUCCESS);
                 bankMerchantAccountList.setUpdateUserId(userId);
                 bankMerchantAccountList.setUpdateTime(new Date());
-                boolean isBankMerchantAccountListFlag = bankMerchantAccountListMapper.updateByPrimaryKeySelective(bankMerchantAccountList) > 0 ? true : false;
+                boolean isBankMerchantAccountListFlag = bankMerchantAccountListMapper.updateByPrimaryKeySelective(bankMerchantAccountList) > 0;
                 if (!isBankMerchantAccountListFlag) {
                     throw new RuntimeException("圈提成功后，查询红包明细表失败,操作回滚");
                 }

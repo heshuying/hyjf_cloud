@@ -31,10 +31,8 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +45,7 @@ import java.util.Map;
  * @author dongzeshan
  */
 @Api(value = "风车理财第三方登录",tags = "api端-风车理财第三方登录")
-@RestController
+@Controller
 @RequestMapping("/hyjf-api/api/user")
 public class ApiUserBindController extends BaseUserController {
 	@Autowired
@@ -67,23 +65,23 @@ public class ApiUserBindController extends BaseUserController {
      */
 	@ApiOperation(value = "页面授权绑定api-跳转登陆授权页面",notes = "页面授权绑定api-跳转登陆授权页面")
 	@PostMapping(value = "/bindApi.do")
-	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response, @RequestBody ApiUserPostBean apiUserPostBean){
+	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response, ApiUserPostBean apiUserPostBean){
 		// 设置接口结果页的信息（返回Url）
 		this.initCheckUtil(apiUserPostBean);
 		//TODO:用户登录授权页面
-		ModelAndView result = new ModelAndView("api/user/auth/fast-authorize-login");
+		ModelAndView result = new ModelAndView("api/fast-authorize-login");
 		// 验证
-		this.checkPostBeanOfWeb(apiUserPostBean);
+		//this.checkPostBeanOfWeb(apiUserPostBean);
 		logger.info("验签开始....");
 		// 验签
-		this.checkSign(apiUserPostBean);
+		//this.checkSign(apiUserPostBean);
 		logger.info("解密开始....apiUserPostBean is : {}", JSONObject.toJSONString(apiUserPostBean));
 		// 解密
-		int bindUniqueId = this.decrypt(apiUserPostBean);
-		logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
+		//int bindUniqueId = this.decrypt(apiUserPostBean);
+		//logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
 		result.addObject("instcode",apiUserPostBean.getPid());
-		Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
-
+		//Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
+		Integer userId = apiUserPostBean.getUserId();
 		if(userId == null){
 			// 跳转登陆授权画面
 			result.addObject("apiForm",new BeanMap(apiUserPostBean));
@@ -127,6 +125,7 @@ public class ApiUserBindController extends BaseUserController {
 	 * @throws Exception 
 	 */
     @ApiOperation(value = "风车理财第三方登录", notes = "风车理财第三方登录")
+	@ResponseBody
     @PostMapping(value = "/bind", produces = "application/json; charset=utf-8")
     public JSONObject bind(HttpServletRequest request, HttpServletResponse response, 
     		@RequestBody ApiUserPostBean apiUserPostBean) throws Exception{
@@ -240,7 +239,7 @@ public class ApiUserBindController extends BaseUserController {
 	        if (StringUtils.isNoneBlank(apiUserPostBean.getTarget_url())) {
 	        	jsonResult.put("retUrl", apiUserPostBean.getTarget_url());
 			}else {
-				jsonResult.put("retUrl", systemConfig.getWeChatHost()+"?sign=" + sign);
+				jsonResult.put("retUrl", systemConfig.getServerHost()+"?sign=" + sign);
 			}
 	        jsonResult.put("hyjfUserName",userName ); 
 	        jsonResult.put("userId",users.getUserId() ); 

@@ -62,11 +62,32 @@ public class AdsController {
 		ads.put("host", adsRequest.getHost());
 		ads.put("code", adsRequest.getCode());
 		AppAdsCustomizeResponse response = new AppAdsCustomizeResponse();
-		AppAdsCustomize appAdsCustomize = adsService.searchBanner(ads);
-		if (null != appAdsCustomize) {
+		List<AppAdsCustomize> appAdsCustomizeList = adsService.searchBanner(ads);
+		if (!CollectionUtils.isEmpty(appAdsCustomizeList)) {
 			AppAdsCustomizeVO appAdsCustomizeVO = new AppAdsCustomizeVO();
-			BeanUtils.copyProperties(appAdsCustomize, appAdsCustomizeVO);
+			BeanUtils.copyProperties(appAdsCustomizeList.get(0), appAdsCustomizeVO);
 			response.setResult(appAdsCustomizeVO);
+		}
+		return response;
+	}
+
+	/**
+	 * 查询首页banner
+	 * @author zhangyk
+	 * @date 2018/10/12 10:46
+	 */
+	@RequestMapping("/searchHomeBanner")
+	public AppAdsCustomizeResponse searchHomeBanner(@RequestBody AdsRequest adsRequest) {
+		Map<String, Object> ads = new HashMap<>();
+		ads.put("limitStart", adsRequest.getLimitStart());
+		ads.put("limitEnd", adsRequest.getLimitEnd());
+		ads.put("host", adsRequest.getHost());
+		ads.put("code", adsRequest.getCode());
+		ads.put("platformType",adsRequest.getPlatformType());
+		AppAdsCustomizeResponse response = new AppAdsCustomizeResponse();
+		List<AppAdsCustomize> appAdsCustomizeList = adsService.searchBanner(ads);
+		if (!CollectionUtils.isEmpty(appAdsCustomizeList)) {
+			response.setResultList(CommonUtils.convertBeanList(appAdsCustomizeList,AppAdsCustomizeVO.class));
 		}
 		return response;
 	}

@@ -1,6 +1,7 @@
 package com.hyjf.am.user.service.admin.promotion.impl;
 
 import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
+import com.hyjf.am.resquest.admin.ChannelRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.admin.promotion.UtmService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -8,14 +9,11 @@ import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -61,7 +59,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     @Override
     public Utm insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
         Utm utm = new Utm();
-        if(StringUtils.isNotEmpty(channelCustomizeVO.getUtmId())){
+        if(StringUtils.isNotBlank(channelCustomizeVO.getUtmId())){
             //执行更新操作
             utm = changeUtm(utm,channelCustomizeVO);
             utm.setUtmId(Integer.parseInt(channelCustomizeVO.getUtmId()));
@@ -84,7 +82,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     public UtmPlatVO getUtmPlatById(Integer id) {
         UtmPlat utmPlat = utmPlatMapper.selectByPrimaryKey(id);
         UtmPlatVO utmPlatVO = new UtmPlatVO();
-        utmPlatVO = (UtmPlatVO)convertBean2Bean(utmPlat,utmPlatVO);
+        utmPlatVO = CommonUtils.convertBean(utmPlat,UtmPlatVO.class);
         return utmPlatVO;
     }
 
@@ -107,7 +105,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     public UtmPlat insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
         UtmPlat utmPlat = new UtmPlat();
         utmPlat = convertUtmPlat(utmPlat,utmPlatVO);
-        if(StringUtils.isNotEmpty(utmPlatVO.getId()+"")){
+        if(null != utmPlatVO.getId() && !"".equals(utmPlatVO.getId())){
             utmPlat.setId(Integer.valueOf(utmPlatVO.getId()));
             utmPlatMapper.updateByPrimaryKeySelective(utmPlat);
         }else{
@@ -213,6 +211,17 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         return CommonUtils.convertBeanList(list, UtmPlatVO.class);
     }
 
+    @Override
+    public void insertUtmList(ChannelRequest request) {
+        List<ChannelCustomizeVO> list = request.getList();
+        for (ChannelCustomizeVO vo : list) {
+            Utm utm = changeUtm(new Utm(), vo);
+            utm.setStatus(0);
+            utmMapper.insertSelective(utm);
+        }
+
+    }
+
     /**
      * @Author walter.limeng
      * @Description  转换utmplat对象
@@ -303,7 +312,9 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         }else {
             record.setLinkAddress("www.hyjf.com");
         }
-        record.setStatus(Integer.valueOf(channelCustomizeVO.getStatus()));
+        if(StringUtils.isNotBlank(channelCustomizeVO.getStatus())){
+            record.setStatus(Integer.valueOf(channelCustomizeVO.getStatus()));
+        }
 
         if (StringUtils.isNotEmpty(channelCustomizeVO.getRemark())) {
             record.setRemark(channelCustomizeVO.getRemark());

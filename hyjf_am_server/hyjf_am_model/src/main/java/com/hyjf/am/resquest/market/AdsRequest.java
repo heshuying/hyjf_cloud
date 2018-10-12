@@ -17,6 +17,15 @@ public class AdsRequest {
 
     private Integer isIndex;
 
+    private String platformType;
+
+    public String getPlatformType() {
+        return platformType;
+    }
+
+    public void setPlatformType(String platformType) {
+        this.platformType = platformType;
+    }
 
     public int getLimitStart() {
         return limitStart;

@@ -715,7 +715,7 @@ public interface AmTradeClient {
      *
      * @param borrowFireRequest
      */
-    boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest);
+    AdminResult updateOntimeRecord(BorrowFireRequest borrowFireRequest);
 
     /**
      * 借款复审总条数
@@ -1383,6 +1383,14 @@ public interface AmTradeClient {
      * @Date
      */
     List<BorrowRecoverCustomizeVO> selectBorrowRecoverList(BorrowRecoverRequest borrowRecoverCustomize);
+    /**
+     * @Description 获取admin产品中心-汇直投-放款明细列表导出
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRecoverCustomizeVO> exportBorrowRecoverList(BorrowRecoverRequest borrowRecoverCustomize);
+
     /**
      * @Description 获取admin产品中心-汇直投-放款明细统计
      * @Author pangchengchao
@@ -3125,5 +3133,12 @@ public interface AmTradeClient {
      */
     List<IncreaseInterestRepayDetailVO> getIncreaseInterestRepayPlanList(IncreaseInterestRepayPlanRequest request);
     /** 加息接口结束*/
+    
+    /**
+     * 查询资产列表不分页
+     * @param request
+     * @return
+     */
+    AssetListCustomizeResponse findAssetListWithoutPage(AssetListRequest request);
 }
 

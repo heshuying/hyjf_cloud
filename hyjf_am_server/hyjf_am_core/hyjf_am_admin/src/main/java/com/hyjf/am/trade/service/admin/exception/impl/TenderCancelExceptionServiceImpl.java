@@ -45,8 +45,7 @@ public class TenderCancelExceptionServiceImpl extends BaseServiceImpl implements
     @Override
     public Integer getTenderCancelExceptionCount(TenderCancelExceptionRequest request) {
         BorrowTenderTmpExample example = convertExample(request);
-        Integer count = borrowTenderTmpMapper.countByExample(example);
-        return count;
+        return borrowTenderTmpMapper.countByExample(example);
     }
 
     /**
@@ -58,8 +57,7 @@ public class TenderCancelExceptionServiceImpl extends BaseServiceImpl implements
     @Override
     public List<BorrowTenderTmp> searchTenderCancelExceptionList(TenderCancelExceptionRequest request) {
         BorrowTenderTmpExample example = convertExample(request);
-        List<BorrowTenderTmp> borrowTenderTmpList = borrowTenderTmpMapper.selectByExample(example);
-        return borrowTenderTmpList;
+        return borrowTenderTmpMapper.selectByExample(example);
     }
 
     /**

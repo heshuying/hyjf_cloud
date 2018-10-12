@@ -71,8 +71,9 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                 AppChannelStatisticsDetail appChannelStatisticsDetails = dao.findByUserId(userId);
                 if (appChannelStatisticsDetails != null) {
                     if (Validator.isNotNull(entity)) {
-                        Integer investFlag = entity.getInteger("investFlag");
-                        if (investFlag == 1) {
+                        Integer investFlag = amUserClient.countNewUserTotal(userId);
+                        if (investFlag >0) {
+                            // 累计投资
                             Query query = new Query();
                             Criteria criteria = Criteria.where("userId").is(userId);
                             query.addCriteria(criteria);
@@ -81,6 +82,7 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                             update.inc("cumulativeInvest", accountDecimal);
                             dao.update(query, update);
                         } else if (investFlag == 0) {
+                            // 首次投资
                             Query query = new Query();
                             Criteria criteria = Criteria.where("userId").is(userId);
                             query.addCriteria(criteria);

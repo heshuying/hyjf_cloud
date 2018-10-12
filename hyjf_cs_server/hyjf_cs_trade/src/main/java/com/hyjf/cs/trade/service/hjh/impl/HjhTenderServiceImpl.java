@@ -33,7 +33,9 @@ import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AmTradeProducer;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.coupon.AppCouponService;
@@ -82,6 +84,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     private HjhCouponTenderProducer hjhCouponTenderProducer;
     @Autowired
     private AppCouponService appCouponService;
+    @Autowired
+    private CalculateInvestInterestProducer calculateInvestInterestProducer;
+    @Autowired
+    private AmTradeProducer amTradeProducer;
 
 
     /**
@@ -115,10 +121,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         CouponUserVO cuc = null;
         if (request.getCouponGrantId() != null && request.getCouponGrantId() > 0) {
             cuc = amTradeClient.getCouponUser(request.getCouponGrantId(), userId);
-        }
-        // 查询计划
-        if (StringUtils.isEmpty(request.getBorrowNid())) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
         }
         HjhPlanVO plan = amTradeClient.getPlanByNid(request.getBorrowNid());
         if (plan == null) {
@@ -271,9 +273,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         String planNid = tender.getBorrowNid();
         AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
         if (StringUtils.isNotBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) > 0) {
-            // mod by nxl 智投服务 修改 确认加入->确认授权
-//            resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
-            resultVo.setButtonWord("确认授权" + CommonUtils.formatAmount(null, money) + "元");
+            resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
         }else if(StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0){
             resultVo.setButtonWord("确认");
         }
@@ -504,12 +504,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
-        String key = RedisConstants.HJH_TENDER_REPEAT + userId;
-        boolean checkTender = RedisUtils.tranactionSet(key, RedisConstants.TENDER_OUT_TIME);
-        if (!checkTender) {
-            // 用户正在投资
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
-        }
+
         if (StringUtils.isEmpty(request.getBorrowNid())) {
             // 项目编号不能为空
             throw new CheckException(MsgEnum.STATUS_CE000013);
@@ -551,6 +546,35 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 检查投资金额
         checkTenderMoney(request, plan, account, cuc, tenderAccount);
         logger.info("加入计划投资校验通过userId:{},ip:{},平台{},优惠券为:{}", userId, request.getIp(), request.getPlatform(), request.getCouponGrantId());
+    }
+
+    /**
+     * 加入计划失败  恢复redis
+     *
+     * @param tender
+     */
+    @Override
+    public void recoverRedis(TenderRequest tender) {
+        String redisKey = RedisConstants.HJH_PLAN + tender.getBorrowNid();
+        JedisPool pool = RedisUtils.getPool();
+        Jedis jedis = pool.getResource();
+        BigDecimal accountBigDecimal = new BigDecimal(tender.getAccount());
+        String balanceLast = RedisUtils.get(redisKey);
+        if (StringUtils.isNotBlank(balanceLast)) {
+            while ("OK".equals(jedis.watch(redisKey))) {
+                BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
+                Transaction tx = jedis.multi();
+                tx.set(redisKey, recoverAccount + "");
+                List<Object> result = tx.exec();
+                if (result == null || result.isEmpty()) {
+                    jedis.unwatch();
+                } else {
+                    logger.info("加入计划用户:" + tender.getUserId() + "***********from redis恢复redis："
+                            + tender.getAccount());
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -700,8 +724,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 生成冻结订单-----------------------
         boolean afterDealFlag = false;
         // 插入数据库  真正开始操作加入计划表
-        afterDealFlag = updateAfterPlanRedis(request, plan);
-        logger.info("加入计划updateAfterPlanRedis 操作结果 ", afterDealFlag);
+        try{
+            afterDealFlag = updateAfterPlanRedis(request, plan);
+            logger.info("加入计划updateAfterPlanRedis 操作结果 ", afterDealFlag);
+        }catch (Exception e){
+            // 恢复redis
+            recoverRedis(request);
+            throw e;
+        }
         if(afterDealFlag){
             // 计算收益
             Map<String, Object> tenderEarnings = getTenderEarnings(request,plan,cuc);
@@ -886,11 +916,28 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         if (trenderFlag) {
             //加入明细表插表成功的前提下，继续
             //crm投资推送
-            // TODO: 2018/6/22  crm投资推送
-           /* rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME,
-                    RabbitMQConstants.ROUTINGKEY_POSTINTERFACE_CRM, JSON.toJSONString(planAccede));*/
+            try {
+                amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(planAccede)));
+            } catch (Exception e) {
+                logger.error("发送CRM消息失败:" + e.getMessage());
+            }
             // 更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始
             this.updateUtm(request, plan);
+            // 网站累计投资追加
+            // 投资、收益统计表
+            JSONObject params = new JSONObject();
+            params.put("tenderSum", accountDecimal);
+            params.put("nowTime", GetDate.getDate(GetDate.getNowTime10()));
+            // 投资修改mongodb运营数据
+            params.put("type", 3);
+            params.put("money", accountDecimal);
+            try {
+                // 网站累计投资追加
+                // 投资修改mongodb运营数据
+                calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            } catch (MQException e) {
+                e.printStackTrace();
+            }
         }
         // 优惠券投资开始
         Integer couponGrantId = request.getCouponGrantId();
@@ -987,11 +1034,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             throw new CheckException(MsgEnum.ERR_ACTIVITY_NOT_EXIST);
         }
         // 投资金额小数点后超过两位
-        if (account.contains(".")) {
-            String accountSubstr = account.substring(account.indexOf(".") + 1);
-            if (StringUtils.isNotEmpty(accountSubstr) && accountSubstr.length() > 2) {
-                // 金额格式错误
-                throw new CheckException(MsgEnum.ERR_FMT_MONEY);
+        if(!request.getPlatform().equals(ClientConstants.WEB_CLIENT+"")){
+            // 移动端需要校验
+            if (account.contains(".")) {
+                String accountSubstr = account.substring(account.indexOf(".") + 1);
+                if (StringUtils.isNotEmpty(accountSubstr) && accountSubstr.length() > 2) {
+                    // 金额格式错误
+                    throw new CheckException(MsgEnum.ERR_FMT_MONEY);
+                }
             }
         }
         BigDecimal accountBigDecimal = new BigDecimal(account);
@@ -1068,10 +1118,11 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // "项目太抢手了！剩余可加入金额只有" + balance + "元"
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_REMAIN,balance);
         }
-        // 开放额度和阀值（1000）判断逻辑
-        if (new BigDecimal(balance).compareTo(new BigDecimal(CustomConstants.TENDER_THRESHOLD)) == -1) {
+        // web端有全投
+        if(request.getPlatform().equals(ClientConstants.WEB_CLIENT+"")){
             // 投资金额 != 开放额度
             if (accountBigDecimal.compareTo(new BigDecimal(balance)) != 0) {
+                logger.info("accountBigDecimal:{}   balance:{} ",accountBigDecimal,balance);
                 // 使用递增的逻辑
                 if (plan.getInvestmentIncrement() != null
                         && BigDecimal.ZERO.compareTo((accountBigDecimal.subtract(minInvest)).remainder(plan.getInvestmentIncrement())) != 0) {
@@ -1079,13 +1130,26 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
                 }
             }
-        } else {
-            // (用户投资额度 - 起投额度)%增量 = 0
-            if (plan.getInvestmentIncrement() != null
-                    && BigDecimal.ZERO.compareTo(accountBigDecimal.subtract(minInvest).remainder(plan.getInvestmentIncrement())) != 0
-                    && accountBigDecimal.compareTo(new BigDecimal(balance)) == -1) {
-                // 加入递增金额须为" + plan.getInvestmentIncrement() + " 元的整数倍
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
+        }else{
+            // 开放额度和阀值（1000）判断逻辑
+            if (new BigDecimal(balance).compareTo(new BigDecimal(CustomConstants.TENDER_THRESHOLD)) == -1) {
+                // 投资金额 != 开放额度
+                if (accountBigDecimal.compareTo(new BigDecimal(balance)) != 0) {
+                    // 使用递增的逻辑
+                    if (plan.getInvestmentIncrement() != null
+                            && BigDecimal.ZERO.compareTo((accountBigDecimal.subtract(minInvest)).remainder(plan.getInvestmentIncrement())) != 0) {
+                        // 加入递增金额须为" + plan.getInvestmentIncrement() + " 元的整数倍
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
+                    }
+                }
+            } else {
+                // (用户投资额度 - 起投额度)%增量 = 0
+                if (plan.getInvestmentIncrement() != null
+                        && BigDecimal.ZERO.compareTo(accountBigDecimal.subtract(minInvest).remainder(plan.getInvestmentIncrement())) != 0
+                        && accountBigDecimal.compareTo(new BigDecimal(balance)) == -1) {
+                    // 加入递增金额须为" + plan.getInvestmentIncrement() + " 元的整数倍
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE,plan.getInvestmentIncrement());
+                }
             }
         }
     }
@@ -1097,6 +1161,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @Date 2018/6/19 11:37
      */
     private void checkUser(UserVO user, UserInfoVO userInfo) {
+        if (user == null || userInfo == null) {
+            throw new CheckException(MsgEnum.ERR_USER_NOT_EXISTS);
+        }
         if (userInfo.getRoleId() == 3) {// 担保机构用户
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
         }

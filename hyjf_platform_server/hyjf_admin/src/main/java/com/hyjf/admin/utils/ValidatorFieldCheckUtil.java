@@ -984,7 +984,7 @@ public class ValidatorFieldCheckUtil {
 
 		if (retValue) {
 			BigDecimal bigDecimal = new BigDecimal(value);
-			if (bigDecimal.compareTo(new BigDecimal(0.00)) == -1) {
+			if (bigDecimal.compareTo(BigDecimal.valueOf(0.00)) < 0) {
 				CustomErrors.add(mav, itemname, SIGNLESSNUMLENGTH,
 						getErrorMessage(SIGNLESSNUMLENGTH, integerMaxLength, decimalsMaxLength));
 			}

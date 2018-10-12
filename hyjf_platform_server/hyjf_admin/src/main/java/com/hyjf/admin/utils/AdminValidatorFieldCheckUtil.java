@@ -184,7 +184,7 @@ public class AdminValidatorFieldCheckUtil {
 
 		if (retValue) {
 			BigDecimal bigDecimal = new BigDecimal(value);
-			if (bigDecimal.compareTo(new BigDecimal(0.00)) == -1) {
+			if (bigDecimal.compareTo(BigDecimal.valueOf(0.00)) == -1) {
 				CustomErrors.add(jsonObject, itemname, SIGNLESSNUMLENGTH,
 						getErrorMessage(SIGNLESSNUMLENGTH, integerMaxLength, decimalsMaxLength));
 			}

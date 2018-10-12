@@ -1576,6 +1576,13 @@ public interface AmTradeClient {
     List<AppAdsCustomizeVO> getBannerList(AdsRequest request);
 
     /**
+     * 查询移动端首页bannerlist
+     * @author zhangyk
+     * @date 2018/10/12 10:57
+     */
+    List<AppAdsCustomizeVO> getHomeBannerList(AdsRequest request);
+
+    /**
      * 获取承接中的总额度
      * @author zhangyk
      * @date 2018/8/9 11:48

@@ -50,8 +50,9 @@ public class BankOpenController extends BaseController {
 		String trueName = request.getTrueName();
 		String idNo = request.getIdNo();
 		String cardNO = request.getCardNo();
+		String srvAuthCode = request.getSrvAuthCode();
 
-		boolean result = this.bankOpenService.updateUserAccountLog(userId, username, mobile, orderId, channel, trueName,idNo,cardNO);
+		boolean result = this.bankOpenService.updateUserAccountLog(userId, username, mobile, orderId, channel, trueName,idNo,cardNO,srvAuthCode);
 
 		return new IntegerResponse(result?1:0);
 	}

@@ -351,7 +351,7 @@ public interface AmUserClient {
 	/**
 	 * 获取需要更新用户画像的userInfo --用户画像定时任务用
 	 * */
-	List<UserLoginLogVO> searchUserIdForUserPortrait();
+	List<UserAndSpreadsUserVO> searchUserIdForUserPortrait();
 	/**
 	 * 保存用户画像信息 --用户画像定时任务用
 	 * */
@@ -456,7 +456,9 @@ public interface AmUserClient {
 	 */
 	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
 
-	/**
+    BindUserVo getBindUser(int userId, int bindPlatformId);
+
+    /**
 	 * 授权
 	 * @param userId
 	 * @param bindUniqueId
@@ -536,4 +538,6 @@ public interface AmUserClient {
 	 * @return
 	 */
 	Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest);
+
+    BankOpenAccountVO selectBankAccountById(Integer userId);
 }

@@ -725,7 +725,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
 		UserVO users = request.getLogUser();
 		// 生成额外利息订单
-		String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
+		String orderId = GetOrderIdUtils.getOrderId2(userId);
 		// 根据orderid查询投资信息tender
 		BorrowTender tender = this.getBorrowTenderByNidUserIdBorrowNid(tenderOrderId, userId, borrowNid);
 		if (tender != null) {
