@@ -90,10 +90,11 @@ public class AutoPreAuditMessageConsumer extends Consumer {
 
                 // --> 消息处理
 
-                Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
-                BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
+
 
                 if(null != borrowNid){
+                    Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
+                    BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
                     // 自动初审
                     logger.info(borrow.getBorrowNid() + " 开始自动初审 " + borrowInfo.getInstCode());
                     if (borrow == null) {
@@ -143,63 +144,62 @@ public class AutoPreAuditMessageConsumer extends Consumer {
                             RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
                         }
                     }
-                }
-
                     logger.info(borrow.getBorrowNid() + " 结束自动初审");
+                }
 
                     /*--------------upd by liushouyi HJH3 End--------------*/
 
-                    if (StringUtils.isNotBlank(autoIssuerecoverVO.getAssetId())) {
-                        // 资产自动初审
-                        logger.info(autoIssuerecoverVO.getAssetId() + " 开始自动初审 " + autoIssuerecoverVO.getInstCode());
-                        HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(autoIssuerecoverVO.getAssetId(), autoIssuerecoverVO.getInstCode());
-                        if (hjhPlanAsset == null) {
-                            logger.info(autoIssuerecoverVO.getAssetId() + " 该资产在表里不存在！！");
-                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                        }
-
-                        // redis 放重复检查
-                        String redisKeys = "borrowpreaudit:" + hjhPlanAsset.getInstCode() + hjhPlanAsset.getAssetId();
-                        boolean results = RedisUtils.tranactionSet(redisKeys, 300);
-                        if (!results) {
-                            logger.info(hjhPlanAsset.getInstCode() + " 正在初审(redis) " + hjhPlanAsset.getAssetId());
-                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                        }
-
-                        // 业务校验
-                        if (hjhPlanAsset.getStatus() != null && hjhPlanAsset.getStatus().intValue() != 5 &&
-                                hjhPlanAsset.getVerifyStatus() != null && hjhPlanAsset.getVerifyStatus().intValue() == 1) {
-                            logger.info(autoIssuerecoverVO.getAssetId() + " 该资产状态不是初审状态");
-                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                        }
-
-                        //判断该资产是否可以自动初审，是否关联计划t
-                        HjhAssetBorrowtype hjhAssetBorrowType = autoPreAuditMessageService.selectAssetBorrowType(hjhPlanAsset);
-                        boolean flags = autoPreAuditMessageService.updateRecordBorrow(hjhPlanAsset, hjhAssetBorrowType);
-                        if (!flags) {
-                            logger.error("自动初审失败！" + "[资产编号：" + hjhPlanAsset.getAssetId() + "]");
-                        } else {
-                            // 成功后到关联计划队列
-                            try {
-                                JSONObject params = new JSONObject();
-                                params.put("borrowNid", borrow.getBorrowNid());
-                                autoIssueMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
-                            } catch (MQException e) {
-                                logger.error("发送【关联计划队列】MQ失败...");
-                            }
-                        }
-
-                        logger.info(hjhPlanAsset.getAssetId() + " 结束自动初审");
-
-                        // 如果没有return success ，consumer会重新消费该消息，直到return success
+                if (StringUtils.isNotBlank(autoIssuerecoverVO.getAssetId())) {
+                    // 资产自动初审
+                    logger.info(autoIssuerecoverVO.getAssetId() + " 开始自动初审 " + autoIssuerecoverVO.getInstCode());
+                    HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(autoIssuerecoverVO.getAssetId(), autoIssuerecoverVO.getInstCode());
+                    if (hjhPlanAsset == null) {
+                        logger.info(autoIssuerecoverVO.getAssetId() + " 该资产在表里不存在！！");
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
-                } catch (Exception e) {
-                    logger.error("自动初审异常！",e);
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                } finally {
+
+                    // redis 放重复检查
+                    String redisKeys = "borrowpreaudit:" + hjhPlanAsset.getInstCode() + hjhPlanAsset.getAssetId();
+                    boolean results = RedisUtils.tranactionSet(redisKeys, 300);
+                    if (!results) {
+                        logger.info(hjhPlanAsset.getInstCode() + " 正在初审(redis) " + hjhPlanAsset.getAssetId());
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }
+
+                    // 业务校验
+                    if (hjhPlanAsset.getStatus() != null && hjhPlanAsset.getStatus().intValue() != 5 &&
+                            hjhPlanAsset.getVerifyStatus() != null && hjhPlanAsset.getVerifyStatus().intValue() == 1) {
+                        logger.info(autoIssuerecoverVO.getAssetId() + " 该资产状态不是初审状态");
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }
+
+                    //判断该资产是否可以自动初审，是否关联计划t
+                    HjhAssetBorrowtype hjhAssetBorrowType = autoPreAuditMessageService.selectAssetBorrowType(hjhPlanAsset);
+                    boolean flags = autoPreAuditMessageService.updateRecordBorrow(hjhPlanAsset, hjhAssetBorrowType);
+                    if (!flags) {
+                        logger.error("自动初审失败！" + "[资产编号：" + hjhPlanAsset.getAssetId() + "]");
+                    } else {
+                        // 成功后到关联计划队列
+                        try {
+                            JSONObject params = new JSONObject();
+                            params.put("borrowNid", hjhPlanAsset.getBorrowNid());
+                            autoIssueMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                        } catch (MQException e) {
+                            logger.error("发送【关联计划队列】MQ失败...");
+                        }
+                    }
+
+                    logger.info(hjhPlanAsset.getAssetId() + " 结束自动初审");
+
+                    // 如果没有return success ，consumer会重新消费该消息，直到return success
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
+            } catch (Exception e) {
+                logger.error("自动初审异常！",e);
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            } finally {
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            }
         }
     }
 }

@@ -104,4 +104,7 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected AccountChinapnrCustomizeMapper accountChinapnrCustomizeMapper;
+
+    @Autowired
+    protected BankOpenAccountCustomizeMapper bankOpenAccountCustomerMapper;
 }
