@@ -147,6 +147,23 @@ public class MessagePushMessageController extends BaseController {
             templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl1());
         }
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+            if(templateRequest.getMsgActionUrl2().equals("尊享汇")){
+                templateRequest.setMsgActionUrl2("hyjf://jumpZXH" );
+            }else if (templateRequest.getMsgActionUrl2().equals("我的投资")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpInvest");
+            }else if (templateRequest.getMsgActionUrl2().equals("新手汇")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpXSH");
+            }else if (templateRequest.getMsgActionUrl2().equals("我的账户")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpMine");
+            }else if (templateRequest.getMsgActionUrl2().equals("优惠券列表")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpCouponsList");
+            }else if (templateRequest.getMsgActionUrl2().equals("交易记录")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpTransactionDetail");
+            }else if (templateRequest.getMsgActionUrl2().equals("债券转让-已承接")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpTransfer");
+            }else if (templateRequest.getMsgActionUrl2().equals("债权转让-转让记录")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpTransferRecord");
+            }
             templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl2());
         }
         if (templateRequest.getMsgSendType() == CustomConstants.MSG_PUSH_SEND_TYPE_1) {

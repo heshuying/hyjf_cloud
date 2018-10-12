@@ -457,11 +457,13 @@ public class AppHomeServiceImpl implements AppHomeService {
         String code = "";
         if ("2".equals(platform)) {
             code = "android_banner";
+            adsRequest.setPlatformType("1");
         } else if ("3".equals(platform)) {
             code = "ios_banner";
+            adsRequest.setPlatformType("2");
         }
         adsRequest.setCode(code);
-        List<AppAdsCustomizeVO> picList =amTradeClient.getBannerList(adsRequest);
+        List<AppAdsCustomizeVO> picList =amTradeClient.getHomeBannerList(adsRequest);
         if (picList != null && picList.size() > 0) {
             for(AppAdsCustomizeVO appAdsCustomize : picList){
                 appAdsCustomize.setPicUrl(appAdsCustomize.getImage());
@@ -493,7 +495,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
         request.setHost(systemConfig.fileDomainUrl);
         request.setCode("bannerlittle");
-        List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(request);
+        List<AppAdsCustomizeVO> picList = amTradeClient.getHomeBannerList(request);
         if (picList != null && picList.size() > 0) {
             AppAdsCustomizeVO appads = picList.get(0);
             System.out.println("adImageUrl: " + appads.getImage());
@@ -529,7 +531,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setCode("popup");
 
         Integer userId = info.get("userId") == null? null: (Integer)info.get("userId");
-        List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(request);
+        List<AppAdsCustomizeVO> picList = amTradeClient.getHomeBannerList(request);
         if (picList != null && picList.size() > 0) {
             AppAdsCustomizeVO appads = picList.get(0);
             info.put("imageUrl", appads.getImage());
@@ -621,11 +623,13 @@ public class AppHomeServiceImpl implements AppHomeService {
         String code = "";
         if ("2".equals(platform)) {
             code = android;
+            adsRequest.setPlatformType("1");
         } else if ("3".equals(platform)) {
             code = ios;
+            adsRequest.setPlatformType("1");
         }
         adsRequest.setCode(code);
-        List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(adsRequest);
+        List<AppAdsCustomizeVO> picList = amTradeClient.getHomeBannerList(adsRequest);
         if (picList != null && picList.size() > 0) {
             AppModuleBean appModule = new AppModuleBean();
             appModule.setModuleUrl(picList.get(0).getImage());
@@ -790,7 +794,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             }
         }
         adsRequest.setCode(code);
-        List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(adsRequest);
+        List<AppAdsCustomizeVO> picList = amTradeClient.getHomeBannerList(adsRequest);
         if (!CollectionUtils.isEmpty(picList)) {
             info.put("adPicUrl", picList.get(0).getImage());
             info.put("adClickPicUrl", picList.get(0).getUrl());

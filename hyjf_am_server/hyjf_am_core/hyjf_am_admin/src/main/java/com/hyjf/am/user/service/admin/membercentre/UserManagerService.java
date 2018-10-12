@@ -129,15 +129,6 @@ public interface UserManagerService extends BaseService {
      */
     User selectUserByUserId(int userId);
 
-    /**
-     * 根据用户List id查找用户表
-     *
-     * @param userId
-     * @param userId
-     * @return
-     */
-    List<User> selectUserByListUserId (List userId);
-
     BankOpenAccount selectBankOpenAccountByAccountId(String accountId);
 
     /**
