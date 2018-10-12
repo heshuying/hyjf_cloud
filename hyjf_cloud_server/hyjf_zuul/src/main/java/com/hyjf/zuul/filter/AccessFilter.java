@@ -237,7 +237,7 @@ public class AccessFilter extends ZuulFilter {
             result.put("statusDesc", "need login");
         } else {
             result.put("status", "999");
-            result.put("statusDesc", "need login");
+            result.put("statusDesc", "登录过期，请重新登录");
         }
         ctx.setResponseBody(result.toJSONString());
         return ctx;

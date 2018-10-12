@@ -122,7 +122,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         if (0 == userEvaluationResultFlag) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
         } else {
-            //是否完成风险测评
+            //是否完成风险测评2
             if (user.getIsEvaluationFlag()==1) {
                 //测评到期日
                 Long lCreate = user.getEvaluationExpiredTime().getTime();
