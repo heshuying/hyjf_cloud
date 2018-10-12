@@ -134,7 +134,7 @@ public class TransPasswordController extends BaseUserController{
         // + TransPasswordDefine.REQUEST_MAPPING + TransPasswordDefine.RETURN_ASY_PASSWORD_ACTION + ".do";
         
         // 现 同步调用路径
-        String bgRetUrl = systemConfig.getWebHost() + request.getContextPath() + REQUEST_MAPPING + RETURN_ASY_PASSWORD_ACTION;
+        String bgRetUrl = systemConfig.getServerHost() + request.getContextPath() + REQUEST_MAPPING + RETURN_ASY_PASSWORD_ACTION;
         
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
@@ -337,7 +337,7 @@ public class TransPasswordController extends BaseUserController{
 /*        String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + request.getContextPath() +  TransPasswordDefine.REQUEST_MAPPING
                 + TransPasswordDefine.RETURN_ASY_RESETPASSWORD_ACTION + ".do";*/
         // 新 异步调用路径
-        String bgRetUrl = systemConfig.getWebHost() + request.getContextPath() + REQUEST_MAPPING + RETURN_ASY_RESETPASSWORD_ACTION;
+        String bgRetUrl = systemConfig.getServerHost() + request.getContextPath() + REQUEST_MAPPING + RETURN_ASY_RESETPASSWORD_ACTION;
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         // 接口版本号

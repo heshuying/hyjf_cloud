@@ -453,7 +453,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
 
                 // IP地址
                 String ip = CustomUtil.getIpAddr(request);
-                String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
+                String orderId = GetOrderIdUtils.getOrderId2(userId);
 
                 BankCallBean bean = new BankCallBean();
                 bean.setVersion(BankCallConstant.VERSION_10);// 版本号

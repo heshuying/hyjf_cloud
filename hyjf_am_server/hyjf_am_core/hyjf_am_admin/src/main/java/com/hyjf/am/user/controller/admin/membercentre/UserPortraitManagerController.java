@@ -97,6 +97,7 @@ public class UserPortraitManagerController extends BaseController {
      */
     @RequestMapping("/selectUserPortraitByUserId/{userId}")
     public UserPortraitResponse userId(@PathVariable String userId) {
+        logger.info("---selectUserPortraitByUserId by userId---  " + userId);
         if (StringUtils.isNotBlank(userId)) {
             int intUserId = Integer.parseInt(userId);
             UserPortrait userPortrait = userPortraitManagerService.selectUsersPortraitByUserId(intUserId);
@@ -148,9 +149,9 @@ public class UserPortraitManagerController extends BaseController {
     public UserPortraitScoreResponse selectUserPortraitScoreRecordList(@RequestBody @Valid UserPortraitScoreRequest request) {
         UserPortraitScoreResponse response = new UserPortraitScoreResponse();
         Map<String, Object> userPortrait = new HashMap<>();
-        if (null != request) {
+//        if (null != request) {
             userPortrait.put("userName", request.getUserName());
-        }
+//        }
         int count = userPortraitManagerService.countLoanSubjectCertificateAuthority(userPortrait);
         Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
         if (request.getPageSize() == 0) {

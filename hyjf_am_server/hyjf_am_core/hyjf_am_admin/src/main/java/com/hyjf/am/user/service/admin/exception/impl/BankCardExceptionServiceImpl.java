@@ -101,13 +101,16 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
 
                     // 调用汇付接口 4.4.11 银行卡查询接口
                     ChinapnrBean chinapnrBean = ChinapnrUtil.callApiBg(bean);
-                    respCode = chinapnrBean == null ? "" : chinapnrBean.getRespCode();
-                    {
+                    if(chinapnrBean != null){
+                        respCode = chinapnrBean.getRespCode() == null ? "" : chinapnrBean.getRespCode();
                         AccountBankExample AccountBankExample = new AccountBankExample();
                         AccountBankExample.Criteria cri = AccountBankExample.createCriteria();
                         cri.andUserIdEqualTo(accountChinapnr.getUserId());
                         // 如果接口调用成功
                         if (ChinaPnrConstant.RESPCODE_SUCCESS.equals(respCode)) {
+                        	if(chinapnrBean.getUsrCardInfolist()==null) {
+                        		return respCode;
+                        	}
                             String UsrCardInfolist = chinapnrBean.getUsrCardInfolist();
                             JSONArray array = JSONObject.parseArray(UsrCardInfolist);
                             if (array.size() != 0) {
@@ -245,6 +248,9 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
                             return respCode;
                         } else {
                             String respDesc = "";
+                            if(chinapnrBean.getRespDesc()==null) {
+                            	  return respDesc;
+                            }
                             if (StringUtils.isNotEmpty(chinapnrBean.getRespDesc())) {
                                 respDesc = chinapnrBean.getRespDesc();
                             }

@@ -1485,4 +1485,13 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     /** 汇添金+汇天利交易笔数 */
     public static final Integer HTJ_HTL_COUNT = 47083;
+
+    /** @RequestMapping值 */
+    public static final String REQUEST_HOME = "/hyjf-app";
+
+    /** 首页接口  @RequestMapping值 */
+    public static final String REQUEST_MAPPING = "/homepage";
+
+    /** 首页项目列表  @RequestMapping值 */
+    public static final String START_PAGE_ACTION = "/getStartPage";
 }

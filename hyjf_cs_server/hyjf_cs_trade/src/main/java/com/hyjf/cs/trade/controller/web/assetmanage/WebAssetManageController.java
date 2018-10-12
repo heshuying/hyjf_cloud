@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -186,6 +187,10 @@ public class WebAssetManageController extends BaseTradeController {
         logger.info("web端获取用户还款计划页面数据, borrowNid:{}, nid:{}, type:{}", requestVO.getBorrowNid(), requestVO.getNid(), requestVO.getTypeStr());
         WebResult<Object> result = new WebResult<Object>();
         RepayPlanInfoBean repayPlanInfo = assetManageService.getRepayPlanInfo(requestVO);
+        //初始化list
+        if (repayPlanInfo.getCurrentHoldRepayMentPlanList() == null){
+            repayPlanInfo.setCurrentHoldRepayMentPlanList(new ArrayList<>());
+        }
         result.setData(repayPlanInfo);
         return result;
     }
@@ -201,6 +206,10 @@ public class WebAssetManageController extends BaseTradeController {
         logger.info("web端获取用户散标转让记录详情, userId:{}, creditNid:{}", userId, creditNid);
         WebResult<Object> result = new WebResult<Object>();
         MyCreditDetailBean myCreditDetailBean = assetManageService.getMyCreditAssignDetail(creditNid);
+        //初始化list
+        if(myCreditDetailBean.getRecordList() == null){
+            myCreditDetailBean.setRecordList(new ArrayList<>());
+        }
         result.setData(myCreditDetailBean);
         return result;
     }

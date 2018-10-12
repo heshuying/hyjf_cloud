@@ -103,4 +103,15 @@ public class AssetListServiceImpl implements AssetListService {
 		BigDecimal sum = amTradeClient.sumAccount(request);
 		return sum;
 	}
+
+	/**
+	 * 资产列表查询不分页
+	 *
+	 * @return List<HjhAssetTypeVO>
+	 */
+	@Override
+	public AssetListCustomizeResponse findAssetListWithoutPage(AssetListRequest request) {
+		AssetListCustomizeResponse response = amTradeClient.findAssetListWithoutPage(request);
+		return response;
+	}
 }

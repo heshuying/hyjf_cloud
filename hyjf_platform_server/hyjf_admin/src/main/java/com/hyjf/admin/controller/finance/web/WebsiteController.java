@@ -137,18 +137,17 @@ public class WebsiteController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportWeblistExcel(HttpServletResponse response, @RequestBody WebBean form) throws Exception {
         AccountWebListVO accountWebList = new AccountWebListVO();
+        BeanUtils.copyProperties(form, accountWebList);
         // 表格sheet名称
         String sheetName = "网站收支";
-
         // 取得数据
-        form.setLimitStart(-1);
-        form.setLimitEnd(-1);
+        accountWebList.setPageSize(-1);
         //设置默认查询时间
         if(StringUtils.isEmpty(form.getStartDate())){
-            form.setStartDate(GetDate.getDate("yyyy-MM-dd"));
+            accountWebList.setStartDate(GetDate.getDate("yyyy-MM-dd"));
         }
         if(StringUtils.isEmpty(form.getEndDate())){
-            form.setEndDate(GetDate.getDate("yyyy-MM-dd"));
+            accountWebList.setEndDate(GetDate.getDate("yyyy-MM-dd"));
         }
         AccountWebListResponse accountWebListResponse = websiteService.queryAccountWebList(accountWebList);
         List<AccountWebListVO> recordList = accountWebListResponse.getResultList();
@@ -221,9 +220,15 @@ public class WebsiteController extends BaseController {
                     }
                     // 发生时间
                     else if (celLength == 11) {
-
+                        logger.debug("CreateTime...:"+bean.getCreateTime());
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        cell.setCellValue(sdf.format(bean.getCreateTime()));
+                        if(bean.getCreateTime()!=null){
+                            Date data = new Date(bean.getCreateTime()*1000L);
+                            cell.setCellValue(sdf.format(data));
+                        }else {
+                            cell.setCellValue("");
+                        }
+
                     }
                 }
             }

@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.borrow;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.trade.dao.model.customize.BorrowFirstCustomize;
@@ -51,7 +52,7 @@ public interface BorrowFirstService {
      *
      * @param borrowFireRequest
      */
-    boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest);
+    Response updateOntimeRecord(BorrowFireRequest borrowFireRequest);
 
     /**
      * 根据流程配置判断是否发送mq到自动初审

@@ -1,8 +1,11 @@
 package com.hyjf.admin.controller.promotion.channel;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.excel.ReadExcel;
 import com.hyjf.admin.service.promotion.channel.ChannelService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
@@ -10,6 +13,7 @@ import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -31,8 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Auther: walter.limeng
@@ -44,13 +48,14 @@ import java.util.List;
 @RequestMapping("/hyjf-admin/promotion/channel")
 public class ChannelController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(ChannelController.class);
+
     @Resource
     private ChannelService channelService;
 
     @ApiOperation(value = "页面初始化", notes = "推广列表")
     @PostMapping("/init")
-    public AdminResult channelListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO) {
-        AdminResult adminResult = new AdminResult();
+    public UtmResultResponse channelListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO) {
+        UtmResultResponse adminResult = new UtmResultResponse();
         Integer count = this.channelService.countList(channelCustomizeVO);
         if(null != count){
             channelCustomizeVO.setLimitStart(channelCustomizeVO.getLimitStart());
@@ -58,7 +63,9 @@ public class ChannelController extends BaseController {
             List<ChannelCustomizeVO> channelList = channelService.getByPageList(channelCustomizeVO);
             adminResult.setData(channelList);
         }
-        adminResult.setTotalCount(count);
+        List<UtmPlatVO> utmPlatVOList = channelService.getAllUtmPlat();
+        adminResult.setUtmPlatList(utmPlatVOList);
+        adminResult.setTotal(count);
         return adminResult;
     }
 
@@ -74,9 +81,11 @@ public class ChannelController extends BaseController {
                 UserVO user = this.channelService.getUser(StringUtils.EMPTY, String.valueOf(record.getUtmReferrer()));
                 adminResult.setUtmReferrer(user.getUsername());
             }
+            String url = "";
             if (record != null) {
-                adminResult.setUrl(getUrl(record));
+                url = getUrl(record);
             }
+            adminResult.setUrl(url);
             adminResult.setData(record);
         }else{
             adminResult.setStatus(UtmResultResponse.FAIL);
@@ -253,7 +262,46 @@ public class ChannelController extends BaseController {
     public AdminResult uploadFile(HttpServletRequest request) throws Exception {
         logger.info(ChannelController.class.toString(), "startLog -- /hyjf-admin/promotion/channel/upload");
         AdminResult adminResult = new AdminResult();
-        adminResult.setData(fileUpLoadUtil.upLoad(request));
+
+        LinkedList<BorrowCommonImage> list = fileUpLoadUtil.upLoad((MultipartHttpServletRequest) request);
+
+        for (BorrowCommonImage borrowCommonImage : list) {
+            String fileRealName = borrowCommonImage.getImagePath();
+            Map<String, String> nameMaps = new HashMap<>();
+            nameMaps.put("utmSource", "utmSource");
+            nameMaps.put("utmMedium", "utmMedium");
+            nameMaps.put("utmContent", "utmContent");
+            nameMaps.put("utmCampaign", "utmCampaign");
+            nameMaps.put("utmTerm", "utmTerm");
+            nameMaps.put("utmReferrer", "utmReferrer");
+            nameMaps.put("remark", "remark");
+            ReadExcel readExcel = new ReadExcel();
+            List<JSONObject> lists = new ArrayList<>();
+            try {
+                lists = readExcel.readExcel(fileRealName, nameMaps);
+
+                List<ChannelCustomizeVO> voList = new ArrayList<>();
+
+                for (JSONObject jsonObject : lists) {
+                    ChannelCustomizeVO vo = new ChannelCustomizeVO();
+                    vo.setSourceName(jsonObject.getString("utmSource"));
+                    vo.setUtmMedium(jsonObject.getString("utmMedium"));
+                    vo.setUtmContent(jsonObject.getString("utmContent"));
+                    vo.setUtmCampaign(jsonObject.getString("utmCampaign"));
+                    vo.setUtmTerm(jsonObject.getString("utmTerm"));
+                    vo.setUtmReferrer(jsonObject.getString("utmReferrer"));
+                    vo.setRemark(jsonObject.getString("remark"));
+                    voList.add(vo);
+                }
+                channelService.insertUtmList(voList);
+
+            } catch (Exception e) {
+                logger.error("推广管理导入数据失败！", e);
+                return null;
+            }
+        }
+
+        adminResult.setData(list);
         adminResult.setStatus(SUCCESS);
         adminResult.setStatusDesc(SUCCESS_DESC);
         logger.info(ChannelController.class.toString(), "endLog -- /hyjf-admin/promotion/channel/upload");
@@ -274,7 +322,7 @@ public class ChannelController extends BaseController {
 
         String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-        String[] titles = new String[] { "渠道(utm_source)", "推广方式(utm_medium)", "推广单元(utm_content)", "推广计划(utm_campaign)", "关键字(utm_term)", "推荐人(utm_referrer)", "备注" };
+        String[] titles = new String[] { "utmSource", "utmMedium", "utmContent", "utmCampaign", "utmTerm", "utmReferrer", "remark" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 

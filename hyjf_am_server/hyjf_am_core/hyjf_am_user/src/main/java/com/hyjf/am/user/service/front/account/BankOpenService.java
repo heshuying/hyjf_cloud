@@ -18,7 +18,7 @@ public interface BankOpenService extends BaseService {
 	 * @param
 	 * @return
 	 */
-	public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc,String name,String idno,String cardNo);
+	public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc,String name,String idno,String cardNo, String srvAuthCode);
 
 
 

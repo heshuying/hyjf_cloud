@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.admin;
+package com.hyjf.am.trade.service.front.user;
 
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 

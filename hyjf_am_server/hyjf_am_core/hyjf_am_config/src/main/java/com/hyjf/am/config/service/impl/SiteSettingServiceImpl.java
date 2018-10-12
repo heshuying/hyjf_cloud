@@ -66,9 +66,7 @@ public class SiteSettingServiceImpl implements SiteSettingService {
 
             Random r = new Random();
             int num = r.nextInt(10);
-            
-            Thread.sleep(num*1000);
-            
+            Thread.sleep(num*1000L);
            // updateTest2();
 	    
 	    

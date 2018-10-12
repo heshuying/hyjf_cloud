@@ -75,6 +75,7 @@ public class FeerateModifyLogServiceImpl implements FeerateModifyLogService {
         record.setLateInterestRate(form.getLateInterest());
         record.setLateFreeDays(form.getLateFreeDays());
         record.setStatus(form.getStatus());
+        record.setCreateUserId(form.getCreateUserId());
         record.setUpdateUserId(form.getCreateUserId());
         record.setModifyType(2);//修改类型 0:全部 1：增加 2:修改 3:删除
         record.setCreateTime(new Date());
@@ -106,6 +107,8 @@ public class FeerateModifyLogServiceImpl implements FeerateModifyLogService {
         record.setLateInterestRate("0");
         record.setLateFreeDays(0);
         record.setStatus(form.getStatus());
+        record.setCreateUserId(form.getCreateUserId());
+        record.setUpdateUserId(form.getCreateUserId());
         record.setModifyType(3);//修改类型 0:全部 1：增加 2:修改 3:删除
         record.setCreateTime(new Date());
         record.setDelFlag(1);//0 未删除 ，1 已删除

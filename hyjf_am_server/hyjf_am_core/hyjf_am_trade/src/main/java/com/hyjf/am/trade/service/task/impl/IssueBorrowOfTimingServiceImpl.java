@@ -115,7 +115,9 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				String borrowNid = borrowCustomize.getBorrowNid();
 				logger.info("汇计划定时发标项目标的:[" + borrowNid + "]");
 
-				BorrowInfo borrowInfo = this.borrowInfoMapper.selectByPrimaryKey(borrowCustomize.getId());
+                BorrowInfoExample example = new BorrowInfoExample();
+                example.createCriteria().andBorrowNidEqualTo(borrowNid);
+                BorrowInfo borrowInfo = borrowInfoMapper.selectByExample(example).get(0);
 
 				// b.标的自动发标
 				boolean flag = this.updateHjhOntimeSendBorrow(borrowCustomize);
@@ -135,7 +137,8 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				try {
 					JSONObject params = new JSONObject();
 					params.put("borrowNid", borrowNid);
-					autoIssueMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+					//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+					autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
 				} catch (MQException e) {
 					logger.error("发送【散标进计划自动发标进入计划】MQ失败...");
 				}
@@ -348,7 +351,8 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				try {
 					JSONObject params = new JSONObject();
 					params.put("borrowNid", borrow.getBorrowNid());
-					autoIssueMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+					//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+					autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
 				} catch (MQException e) {
 					logger.error("发送【拆分标自动发标进入计划】MQ失败...");
 				}

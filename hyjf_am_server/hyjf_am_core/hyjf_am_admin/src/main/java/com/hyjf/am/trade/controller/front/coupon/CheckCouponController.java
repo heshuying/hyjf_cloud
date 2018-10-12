@@ -33,9 +33,9 @@ public class CheckCouponController extends BaseController {
     @Autowired
     CheckCouponService checkCouponService;
     @Value("${release.coupon.accesskey}")
-    public static String SOA_COUPON_KEY;
+    public String SOA_COUPON_KEY;
     @Value("${hyjf.api.web.url}")
-    public static String HYJF_API_WEB_URL;
+    public String HYJF_API_WEB_URL;
 
     /**
      * 批量上传发券接口

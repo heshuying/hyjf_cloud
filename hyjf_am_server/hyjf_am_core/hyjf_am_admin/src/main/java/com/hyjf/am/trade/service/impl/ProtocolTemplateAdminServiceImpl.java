@@ -318,14 +318,17 @@ public class ProtocolTemplateAdminServiceImpl implements ProtocolTemplateAdminSe
                 //根据protocolId查询正在启用的版本号
                 ProtocolVersionExample protocolVersionExample=  new ProtocolVersionExample();
                 ProtocolVersionExample.Criteria create=protocolVersionExample.createCriteria();
-                create.andProtocolIdEqualTo(protocolId).andDisplayFlagEqualTo(1);
+                create.andProtocolIdEqualTo(protocolId).andDisplayFlagEqualTo(2);
                 List<ProtocolVersion> protocolVersions =protocolVersionMapper.selectByExample(protocolVersionExample);
                 if( !CollectionUtils.isEmpty(protocolVersions)){
-                    //启用的版本设置为不启用状态
-                    ProtocolVersion persion=protocolVersions.get(0);
-                    persion.setUpdateUser(Integer.valueOf(request.getIds()));
-                    persion.setDisplayFlag(0);
-                    protocolVersionMapper.updateByPrimaryKey(persion);
+
+                    //模板对应的所有版本设置为删除状态
+                    for (int i = 0 ; i < protocolVersions.size() ; i++){
+                        ProtocolVersion persion = protocolVersions.get(i);
+                        persion.setUpdateUser(Integer.valueOf(request.getIds()));
+                        persion.setDisplayFlag(2);
+                        protocolVersionMapper.updateByPrimaryKey(persion);
+                    }
                 }
 
                 BeanUtils.copyProperties(protocolTemplate,protocolTemplateVO);

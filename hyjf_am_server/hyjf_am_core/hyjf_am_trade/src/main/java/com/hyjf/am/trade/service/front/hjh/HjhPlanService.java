@@ -141,7 +141,7 @@ public interface HjhPlanService {
      * @param params
      * @return
      */
-    Integer selectPlanAccedeSum(Map<String,Object> params);
+    Long selectPlanAccedeSum(Map<String,Object> params);
 
     /**
      * 查询计划的加入记录

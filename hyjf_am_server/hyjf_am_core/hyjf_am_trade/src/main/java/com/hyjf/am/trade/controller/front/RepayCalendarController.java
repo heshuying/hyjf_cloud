@@ -1,12 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.admin.user;
+package com.hyjf.am.trade.controller.front;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.config.AppReapyCalendarResponse;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.admin.RepayCalendarService;
+import com.hyjf.am.trade.service.front.user.RepayCalendarService;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

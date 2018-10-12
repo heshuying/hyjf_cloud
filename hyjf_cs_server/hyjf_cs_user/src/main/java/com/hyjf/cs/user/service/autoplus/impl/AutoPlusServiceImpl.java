@@ -872,8 +872,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String remark = "";
         String txcode = "";
         // 同步调用路径
-        String retUrl = systemConfig.getApiWebUrl()
-                + "/server/autoPlus";
+        String retUrl = "http://CS-USER/server/autoPlus";
         // 异步调用路
         String bgRetUrl = "http://CS-USER/server/autoPlus";
         // 版本号  交易代码  机构代码  银行代码  交易日期  交易时间  交易流水号   交易渠道

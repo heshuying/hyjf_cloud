@@ -2,6 +2,7 @@ package com.hyjf.admin.service.impl.promotion.channel;
 
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.promotion.channel.ChannelService;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -12,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: walter.limeng
@@ -65,5 +69,21 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public boolean deleteAction(ChannelCustomizeVO channelCustomizeVO) {
         return amUserClient.deleteAction(channelCustomizeVO);
+    }
+
+    @Override
+    public List<UtmPlatVO> getAllUtmPlat() {
+        Map<String, Object> map = new HashMap<>();
+        UtmPlatResponse utmPlatResponse = amUserClient.getAllUtmPlat(map);
+        List<UtmPlatVO> utmPlatVOList = new ArrayList<UtmPlatVO>();
+        if(null != utmPlatResponse){
+            utmPlatVOList = utmPlatResponse.getResultList();
+        }
+        return utmPlatVOList;
+    }
+
+    @Override
+    public void insertUtmList(List<ChannelCustomizeVO> voList) {
+        amUserClient.insertUtmList(voList);
     }
 }
