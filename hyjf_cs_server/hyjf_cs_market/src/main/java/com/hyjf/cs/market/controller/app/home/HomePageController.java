@@ -56,7 +56,7 @@ public class HomePageController extends BaseMarketController {
         if (StringUtils.isBlank(platformT)) {
             platformT = platform;
         }
-        result.put("request", "/hyjf-app/homepage/getStartPage");
+        result.put(CustomConstants.APP_REQUEST, CustomConstants.REQUEST_HOME + CustomConstants.REQUEST_MAPPING + CustomConstants.START_PAGE_ACTION);
         try {
             Map<String, Object> ads = new HashMap<String, Object>();
             ads.put("limitStart",0 );

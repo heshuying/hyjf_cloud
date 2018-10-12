@@ -9,13 +9,17 @@ import com.hyjf.am.user.service.front.user.UserPortraitBatchService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.user.utils.IdCard15To18;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
+import com.hyjf.am.vo.user.UserAndSpreadsUserVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -32,7 +36,7 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
      * 查询需要更新用户画像的userInfo的list
      * */
     @Override
-    public List<UserLoginLog> searchUserIdForUserPortrait() {
+    public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         String yesterday = GetDate.date_sdf.format(cal.getTime());
@@ -45,8 +49,39 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
         UserLoginLogExample.Criteria criteria = example.createCriteria();
         criteria.andLoginTimeBetween(GetDate.stringToDate(yesterdayBegin), GetDate.stringToDate(yesterdayEnd));
         List<UserLoginLog> userLoginLogList = userLoginLogMapper.selectByExample(example);
-        return userLoginLogList;
+        List<UserAndSpreadsUserVO> result = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(userLoginLogList)){
+            for(UserLoginLog userLoginLog:userLoginLogList){
+                UserAndSpreadsUserVO userAndSpreadsUserVO = new UserAndSpreadsUserVO();
+                Integer userId = userLoginLog.getUserId();
+                userAndSpreadsUserVO.setUserId(userId);
+                List<Integer> spreadsUserId = selectSpreadsUserId(userId);
+                userAndSpreadsUserVO.setSpreadsUserId(spreadsUserId);
+                result.add(userAndSpreadsUserVO);
+            }
+        }
+        return result;
     }
+
+    /**
+     * 根据userId查询他的邀约客户id
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    private List<Integer> selectSpreadsUserId(Integer userId){
+        List<Integer> result = new ArrayList<>();
+        SpreadsUserExample example = new SpreadsUserExample();
+        example.createCriteria().andSpreadsUserIdEqualTo(userId);
+        List<SpreadsUser> spreadsUserList = spreadsUserMapper.selectByExample(example);
+        if(!CollectionUtils.isEmpty(spreadsUserList)){
+            for(SpreadsUser spreadsUser:spreadsUserList){
+                result.add(spreadsUser.getUserId());
+            }
+        }
+        return result;
+    }
+
     /**
      * 保存用户画像
      * */
@@ -59,7 +94,8 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
 
             UserPortrait userPortrait = new UserPortrait();
             // bean转换
-            convertBean(userPortraitQueryVO, userPortrait);
+            //convertBean(userPortraitQueryVO, userPortrait);
+            userPortrait = CommonUtils.convertBean(userPortraitQueryVO,UserPortrait.class);
             // 如果投资进程在trade上未赋值，说明不是投资或者充值
             if (userPortrait.getInvestProcess() == null) {
                 BankCardExample bankCardExample = new BankCardExample();
@@ -75,20 +111,19 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
 
             // 从userInfo赋值 性别，年龄，身份证号码，城市，最后登录时间
             UserInfoExample userInfoExample = new UserInfoExample();
-            userInfoExample.setOrderByClause("update_time desc");
-            UserInfoExample.Criteria cra = userInfoExample.createCriteria();
-            cra.andUserIdEqualTo(userId);
+            userInfoExample.createCriteria().andUserIdEqualTo(userId);
             List<UserInfo> userInfoList = userInfoMapper.selectByExample(userInfoExample);
-            UserInfo userInfo = null;
             if(userInfoList != null && userInfoList.size() > 0){
-                userInfo = userInfoList.get(0);
+                UserInfo userInfo = userInfoList.get(0);
                 if(userInfo != null){
                     // 赋值性别
                     if (userInfo.getSex() != null) {
                         if (userInfo.getSex() == 1) {
                             userPortrait.setSex("男");
-                        } else {
+                        } else if (userInfo.getSex() == 2){
                             userPortrait.setSex("女");
+                        } else {
+                            userPortrait.setSex("未知");
                         }
                     }
                     // 赋值身份证号码和城市
@@ -120,17 +155,30 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                                 userPortrait.setCity("");
                             }
 
+                            if(null != userInfo.getAttribute()){
+                                userPortrait.setAttribute(userInfo.getAttribute());
+                            }
+
                         } catch (Exception e) {
                             continue;
                         }
                     }
+
                     // 最后登录时间
-                    String time = GetDate.date2Str(userInfo.getUpdateTime(),GetDate.datetimeFormat);
-                    Integer lastLoginTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(time);
-                    userPortrait.setLastLoginTime(lastLoginTime);
+                    UserLoginLogExample userLoginLogExample = new UserLoginLogExample();
+                    userLoginLogExample.createCriteria().andUserIdEqualTo(userId);
+                    List<UserLoginLog> userLoginLogList = userLoginLogMapper.selectByExample(userLoginLogExample);
+                    if(!CollectionUtils.isEmpty(userLoginLogList)){
+                        UserLoginLog userLoginLog = userLoginLogList.get(0);
+                        String time = GetDate.date2Str(userLoginLog.getLoginTime(),GetDate.datetimeFormat);
+                        Integer lastLoginTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(time);
+                        userPortrait.setLastLoginTime(lastLoginTime);
+                    }
+
 
                 }
             }
+
 
             // 从user中获取用户名，手机号
             User user = this.findUserByUserId(userId);

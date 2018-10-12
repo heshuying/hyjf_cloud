@@ -1,11 +1,11 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.admin.impl;
+package com.hyjf.am.trade.service.front.user.impl;
 
 import com.hyjf.am.trade.dao.mapper.customize.AssetManageCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.AppRepayCalendarCustomize;
-import com.hyjf.am.trade.service.admin.RepayCalendarService;
+import com.hyjf.am.trade.service.front.user.RepayCalendarService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import org.apache.commons.lang3.StringUtils;

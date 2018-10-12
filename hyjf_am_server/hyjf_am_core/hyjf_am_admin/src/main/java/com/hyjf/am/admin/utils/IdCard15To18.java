@@ -1,5 +1,8 @@
 package com.hyjf.am.admin.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -10,6 +13,7 @@ import java.util.regex.Pattern;
 
 public class IdCard15To18 {
 
+    private final static Logger logger = LoggerFactory.getLogger(IdCard15To18.class);
     /**
      * 省、直辖市代码表：
      *     11 : 北京  12 : 天津  13 : 河北   14 : 山西  15 : 内蒙古
@@ -22,22 +26,22 @@ public class IdCard15To18 {
      *     81 : 香港  82 : 澳门
      *     91 : 国外
      */
-    final static String CITY_CODE[] = {"11", "12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65", "71", "81", "82", "91"};
+    private final static String CITY_CODE[] = {"11", "12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65", "71", "81", "82", "91"};
 
     /**
      * 效验码
      */
-    final static char[] VERIFYCODE = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
+    private final static char[] VERIFYCODE = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
 
     /**
      * 加权因子
      * Math.pow(2,  i - 1) % 11
      */
-    final static int[] WI = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+    private final static int[] WI = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
     /**
      * 身份证前4位对应的城市名称
      * */
-    static Map<String,String> city = new HashMap<>();
+    private static Map<String,String> city = new HashMap<>();
     
     private static Pattern IDCARD_18_PATTERN = Pattern.compile("\\d{6}(\\d{4})\\d{6}(\\d{1})[\\dxX]{1}");
 
@@ -212,37 +216,37 @@ public class IdCard15To18 {
      * */
     public static String getCityFromCode(String code){
         // 如果map中没有数据，就从city.properties文件中载入一次
-        if(city != null && city.size() == 0){
-            try {
-                Properties properties = new Properties();
-                InputStream inputStream = IdCard15To18.class.getClassLoader().getResourceAsStream("city.properties");
-                properties.load(inputStream);
-                String json = properties.toString();
-                String area = json.substring(1, json.length() -1);
-                if(area != null && !"".equals(area)){
-                    String[] text = area.split(";");
-                    for(String str:text){
-                        String[] keyValue = str.split("=");
-                        if (keyValue.length < 1) {
-                            continue;
+        String area = "";
+        if(city != null){
+            if(city.size() == 0){
+                try {
+                    Properties properties = new Properties();
+                    InputStream inputStream = IdCard15To18.class.getClassLoader().getResourceAsStream("city.properties");
+                    properties.load(inputStream);
+                    String json = properties.toString();
+                    area = json.substring(1, json.length() -1);
+                    if(area != null && !"".equals(area)){
+                        String[] text = area.split(";");
+                        for(String str:text){
+                            String[] keyValue = str.split("=");
+                            if (keyValue.length < 1) {
+                                continue;
+                            }
+                            String key = keyValue[0]; // key
+                            String value = keyValue[1]; // value
+                            city.put(key,value);
                         }
-                        String key = keyValue[0]; // key
-                        String value = keyValue[1]; // value
-                        city.put(key,value);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
-        String area = null;
-        if(city==null) {
-        	 return "";
-        }
-        try {
-            area = city.get(code);
-        }catch (Exception e){
-            area = "";
+
+            try {
+                area = city.get(code);
+            }catch (Exception e){
+                logger.info("根据身份证前4位获取对应的城市名称失败,4位code:[{}]",code);
+            }
         }
         return area;
     }

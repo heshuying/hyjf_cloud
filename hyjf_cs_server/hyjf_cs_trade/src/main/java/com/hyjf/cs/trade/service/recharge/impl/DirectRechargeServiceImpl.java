@@ -314,7 +314,8 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
                 CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*", "#"), params);
                 return result;
             } else {
-                logger.info("充值失败,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],冲值金额:[" + bean.getTxAmount() + "],失败原因:[" + msg.get("data") + "].");
+                String data = (msg == null)?"参数msg为空":msg.get("data").toString();
+                logger.info("充值失败,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],冲值金额:[" + bean.getTxAmount() + "],失败原因:[" + data + "].");
                 params = setResult(resultBean,result,ErrorCodeConstant.STATUS_CE999999,"充值失败",request.getParameter("acqRes"),false);
                 params.put("ip", bean.getUserIP());
                 params.put("mobile",bean.getMobile());

@@ -1103,7 +1103,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 计划的
             hjhTenderService.checkPlan(tender);
             requestType = "9";
-            requestMapping = "/join/plan?requestType=";
+            url = baseUrl + "/join/plan?requestType=" + requestType;
+            url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
+            return url;
         }else if (CommonConstant.TENDER_TYPE_CREDIT.equalsIgnoreCase(borrowType)){
             // 债转的
             String creditNid = (StringUtils.isNotBlank(tender.getBorrowNid()) && tender.getBorrowNid().length() >3) ? tender.getBorrowNid().substring(3) : "";

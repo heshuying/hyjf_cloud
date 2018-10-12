@@ -4,10 +4,13 @@
 package com.hyjf.cs.message.service.msgpush.impl;
 
 import com.hyjf.am.resquest.message.MessagePushMsgRequest;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.mongo.mc.MessagePushMessageDao;
 import com.hyjf.cs.message.service.msgpush.MessagePushMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,5 +50,37 @@ public class MessagePushMsgServiceImpl implements MessagePushMsgService {
     public Integer deleteMessagePushMsg(List<MessagePushMsg> recordList) {
         messagePushMessageDao.deleteBatch(recordList);
         return 1;
+    }
+
+    @Override
+    public long countMessagePushMsg(MessagePushMsgRequest request) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        if (request.getStartDateSrch() != null || request.getEndDateSrch() != null) {
+            int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartDateSrch());
+            int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndDateSrch());
+            criteria.and("sendTime").gte(startTime).lte(endTime);
+        }
+        if (request.getTagId() != null) {
+            criteria.and("tagId").is(request.getTagId());
+        }
+        if (request.getMsgTitle() != null) {
+            criteria.and("msgTitle").is(request.getMsgTitle());
+        }
+        if (request.getMsgCode() != null) {
+            criteria.and("msgCode").is(request.getMsgCode());
+        }
+        if (request.getCreateUserName() != null) {
+            criteria.and("createUserName").is(request.getCreateUserName());
+        }
+        if (request.getMsgTerminal() != null) {
+            String[] msgTerminal = {request.getMsgTerminal()};
+            criteria.and("msgTerminal").is(msgTerminal);
+        }
+        if (request.getMsgSendStatus() != null) {
+            criteria.and("msgSendStatus").is(request.getMsgSendStatus());
+        }
+        query.addCriteria(criteria);
+        return messagePushMessageDao.count(query);
     }
 }
