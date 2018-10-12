@@ -2384,4 +2384,11 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	@Override
+	public void insertUtmList(List<ChannelCustomizeVO> voList) {
+		ChannelRequest request = new ChannelRequest();
+		request.setList(voList);
+		restTemplate.postForObject("http:/AM-USER/am-user/promotion/utm/insert_utm_list", request, UtmResponse.class);
+	}
 }

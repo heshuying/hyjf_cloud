@@ -122,10 +122,12 @@ public class MessagePushMsgController extends BaseController {
 	@RequestMapping("/selectmessagepushmsg")
 	public MessagePushMsgResponse selectMessagePushMsg(@RequestBody MessagePushMsgRequest request) {
 		MessagePushMsgResponse response = new MessagePushMsgResponse();
+		long count = messagePushMsgService.countMessagePushMsg(request);
 		List<MessagePushMsg> list = messagePushMsgService.selectMessagePushMsg(request);
 		if (!CollectionUtils.isEmpty(list)) {
 			List<MessagePushMsgVO> msgVOS = CommonUtils.convertBeanList(list,MessagePushMsgVO.class);
 			response.setResultList(msgVOS);
+			response.setCount((int)count);
 		}
 		return response;
 	}
