@@ -163,7 +163,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_BANK_ACCOUNT_IDCARDNO_REQUIRED("EBK000008","身份证不能为空"),
 	ERR_BANK_ACCOUNT_IDCARDNO_EXIST("EBK000009","身份证号已存在"),
 	ERR_BANK_ACCOUNT_NOT_EXIST("EBK0000010","userId={0}没有账户信息！"),
-
+	ERROR_BANK_SEND_CODE("EBK0000010", "短信验证码发送失败，请稍后再试！"),
 
 	// 银行卡相关错误信息ERR_CARD_
 	ERR_CARD_UNBIND_HAVE_BALANCE("ECD000001", "账户尚有余额，不能解绑银行卡"),
