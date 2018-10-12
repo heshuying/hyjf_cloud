@@ -115,7 +115,7 @@
 			cr.assign_account as assignAccount,
 			cr.manage_fee as manageFee,
 			cr.status,
-		    CASE WHEN  cr.assign_repay_next_time > 0 THEN FROM_UNIXTIME( cr.assign_repay_next_time, '%Y-%m-%d %H:%i:%s' )
+		    CASE WHEN  cr.assign_repay_next_time > 0 THEN FROM_UNIXTIME( cr.assign_repay_next_time, '%Y-%m-%d' )
 		    ELSE '' END as assignRepayNextTime
 		FROM ht_credit_repay cr
 		LEFT JOIN ht_borrow_info  hbi on hbi.borrow_nid = cr.bid_nid
@@ -128,11 +128,17 @@
 
 	<select id="sumCreditRepayInfo" resultType="Map">
 		select
-		  SUM(assign_capital) AS sumAssignCapital,
-		  SUM(assign_interest) AS sumAssigninterest,
-		  SUM(assign_account) AS sumAssignAccount,
-		  SUM(manage_fee) AS sumManageFee
-    from ht_credit_repay
+		  SUM(cr.assign_capital) AS sumAssignCapital,
+		  SUM(cr.assign_interest) AS sumAssignInterest,
+		  SUM(cr.assign_account) AS sumAssignAccount,
+		  SUM(cr.manage_fee) AS sumManageFee
+		 from ht_credit_repay cr
+		 LEFT JOIN ht_borrow_info  hbi on hbi.borrow_nid = cr.bid_nid
+		 LEFT JOIN ht_borrow hb on hb.borrow_nid = cr.bid_nid
+		WHERE assign_nid = #{assignNid}
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
 	</select>
 
 	<!-- **********************************        承接列表       *********************************************************-->
