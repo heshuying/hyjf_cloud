@@ -6,7 +6,7 @@ import java.util.Date;
 public class MessagePushTemplate implements Serializable {
     private Integer id;
 
-    private Integer tagId;
+    private String tagId;
 
     private String tagCode;
 
@@ -44,12 +44,12 @@ public class MessagePushTemplate implements Serializable {
         this.id = id;
     }
 
-    public Integer getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
-    public void setTagId(Integer tagId) {
-        this.tagId = tagId;
+    public void setTagId(String tagId) {
+        this.tagId = tagId == null ? null : tagId.trim();
     }
 
     public String getTagCode() {
