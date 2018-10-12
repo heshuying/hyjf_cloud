@@ -25,7 +25,7 @@ import java.util.Arrays;
  * @author hesy
  */
 @RestController
-@RequestMapping("/server/user/plus/openaccountplus")
+@RequestMapping("/hyjf-api/server/user/plus/openaccountplus")
 public class OpenAccountPlusController extends BaseUserController {
 
     private final Logger logger = LoggerFactory.getLogger(OpenAccountPlusController.class);
@@ -65,7 +65,7 @@ public class OpenAccountPlusController extends BaseUserController {
 
         String ip = GetCilentIP.getIpAddr(request);
 
-        logger.info("入参 resultBean:" + JSONObject.toJSONString(resultBean));
+        logger.info("入参 resultBean:" + JSONObject.toJSONString(openAccountRequestBean));
 
         resultBean = checkParameters(mobile, trueName, idNo, utmId, channel, platform, instCode);
         if(resultBean != null){

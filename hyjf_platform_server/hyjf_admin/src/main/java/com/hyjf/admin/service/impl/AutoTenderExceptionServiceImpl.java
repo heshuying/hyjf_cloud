@@ -295,7 +295,6 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     if (StringUtils.isNotBlank(state)) {
                         if ("1".equals(state)) {
                             bankQueryisOK = true;
-                        } else if ("2".equals(state)) {
                         }
                     }
                 }
