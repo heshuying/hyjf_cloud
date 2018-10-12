@@ -152,7 +152,7 @@ public class BorrowAuthController extends BaseTradeController {
      */
     @ApiOperation(value = "受托支付授权异步回调", notes = "受托支付授权异步回调")
     @PostMapping(value = "/auth_bgrturn", produces = "application/json; charset=utf-8")
-    public BankCallResult authBgReturn(@RequestBody BankCallBean bean, HttpServletRequest request) {
+    public BankCallResult authBgReturn(BankCallBean bean, HttpServletRequest request) {
 
         BankCallResult result = new BankCallResult();
         String phone = request.getParameter("phone");
