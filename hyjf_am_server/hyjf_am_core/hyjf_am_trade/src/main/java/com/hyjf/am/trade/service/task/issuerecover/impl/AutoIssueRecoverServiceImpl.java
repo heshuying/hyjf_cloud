@@ -278,6 +278,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrowInfo.setProjectName(borrowNid);
         // 借款编号
         borrow.setBorrowNid(borrowNid);
+        borrowInfo.setBorrowNid(borrowNid);
         // 借款预编码
         borrowInfo.setBorrowPreNid(borrowPreNidNew);
         // 新借款预编码
@@ -768,7 +769,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrowInfo.setAssetType(hjhAssetBorrowType.getAssetType());
 
         borrowInfo.setAccountContents("");
-
 
         // 受托支付
         if (hjhPlanAsset.getEntrustedFlg() != null && hjhPlanAsset.getEntrustedFlg().intValue() ==1) {
