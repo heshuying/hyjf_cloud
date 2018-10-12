@@ -70,7 +70,8 @@ public class SmsConfigController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        RedisUtils.setObjEx(RedisConstants.SMS_CONFIG, response.getResult(), 24 * 60 * 60);
+        SmsConfigResponse smsConfigResponse=smsConfigService.initSmsConfig(new SmsConfigRequest());
+        RedisUtils.setObjEx(RedisConstants.SMS_CONFIG, smsConfigResponse.getResult(), 24 * 60 * 60);
         return new AdminResult<SmsConfigRequest>(request) ;
     }
 }
