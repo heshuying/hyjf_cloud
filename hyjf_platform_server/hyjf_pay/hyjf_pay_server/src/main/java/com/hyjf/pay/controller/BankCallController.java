@@ -449,8 +449,10 @@ public class BankCallController extends BaseController {
                                 bean.setVersion(null);
                                 notifyUrl = StringEscapeUtils.unescapeHtml(notifyUrl);
 //                                content = HttpDeal.post(notifyUrl, bean.getAllParams());
+                                logger.info("开始请求回调地址：" + notifyUrl);
                                 content = restTemplate
                                         .postForEntity(notifyUrl, bean.getAllParams(), String.class).getBody();
+                                logger.info("返回值content：" + content);
                                 if (StringUtils.isNotBlank(content)) {
                                     BankCallResult callResult = JSONObject.parseObject(content, BankCallResult.class);
                                     if (callResult.isStatus()) {
