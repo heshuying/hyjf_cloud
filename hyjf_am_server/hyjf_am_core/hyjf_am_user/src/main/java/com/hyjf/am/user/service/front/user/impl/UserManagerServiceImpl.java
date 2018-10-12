@@ -1101,6 +1101,24 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return 0;
     }
 
+    /**
+     * 根据第三方用户id查询绑定关系
+     * @param bindUniqueId
+     * @param bind_platform_id
+     * @return
+     */
+    @Override
+    public BindUser getUsersByUniqueId(Integer bindUniqueId, Integer bind_platform_id) {
+
+        BindUserExample example = new BindUserExample();
+        BindUserExample.Criteria cra = example.createCriteria();
+        cra.andBindUniqueIdEqualTo(bindUniqueId).andBindPlatformIdEqualTo(bind_platform_id);
+        List<BindUser> bindUsers = bindUserMapper.selectByExample(example);
+        if (org.springframework.util.CollectionUtils.isEmpty(bindUsers))
+            return null;
+        return bindUsers.get(0);
+    }
+
 	@Override
 	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId) {
 		BindUser bindUsers = new BindUser();
