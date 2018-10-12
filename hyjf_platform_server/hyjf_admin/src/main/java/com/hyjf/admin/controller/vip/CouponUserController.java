@@ -465,7 +465,7 @@ public class CouponUserController extends BaseController {
         if (record == null || StringUtils.isEmpty(record.getCouponCode())) {
             return new AdminResult<>(FAIL,FAIL_DESC);
         }
-        CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponUserBeanRequest.getCouponCode());
+        CouponConfigResponse configResponse = couponUserService.getCouponConfig(record.getCouponCode());
         if (configResponse == null || configResponse.getResult() == null) {
             return new AdminResult<>(FAIL,FAIL_DESC);
         }
@@ -534,13 +534,13 @@ public class CouponUserController extends BaseController {
             response.setDetail(detail);
             response.setCouponUser(couponUserVO);
         } else {
-            AdminSystemVO user = getUser(request);
-            String loginUserId = user.getId();
+//            AdminSystemVO user = getUser(request);
+//            String loginUserId = user.getId();
             AdminCouponUserRequestBean adminCouponUserRequestBean = new AdminCouponUserRequestBean();
             adminCouponUserRequestBean.setCouponUserBeanRequest(couponUserBeanRequest);
             adminCouponUserRequestBean.setCouponConfigVO(configResponse.getResult());
             adminCouponUserRequestBean.setUserId(record.getUserId());
-            adminCouponUserRequestBean.setLoginUserId(loginUserId);
+            adminCouponUserRequestBean.setLoginUserId("3");
             response = couponUserService.auditRecord(adminCouponUserRequestBean);
         }
         return new AdminResult<>(response);
