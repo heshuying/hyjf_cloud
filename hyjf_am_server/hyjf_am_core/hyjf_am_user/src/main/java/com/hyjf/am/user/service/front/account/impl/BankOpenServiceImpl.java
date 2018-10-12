@@ -114,10 +114,11 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
 
         BankOpenAccountLogExample accountLogExample = new BankOpenAccountLogExample();
         accountLogExample.createCriteria().andUserIdEqualTo(userId);
-        boolean deleteLogFlag = this.bankOpenAccountLogMapper.deleteByExample(accountLogExample) > 0 ? true : false;
-        if (!deleteLogFlag) {
-            throw new RuntimeException("删除用户开户日志表失败，用户开户订单号：" + orderId + ",用户userId:" + userId);
-        }
+        //todo wangjun 开户掉单测试 暂时删除
+//        boolean deleteLogFlag = this.bankOpenAccountLogMapper.deleteByExample(accountLogExample) > 0 ? true : false;
+//        if (!deleteLogFlag) {
+//            throw new RuntimeException("删除用户开户日志表失败，用户开户订单号：" + orderId + ",用户userId:" + userId);
+//        }
         // 获取用户信息
         User user = this.getUsers(userId);
         // 用户名
