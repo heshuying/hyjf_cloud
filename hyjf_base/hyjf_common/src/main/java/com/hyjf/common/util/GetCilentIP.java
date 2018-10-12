@@ -29,7 +29,9 @@ public class GetCilentIP {
 				InetAddress inet = null;
 				try {
 					inet = InetAddress.getLocalHost();
-					ipAddress = inet.getHostAddress();
+					if(inet!= null){
+						ipAddress = inet.getHostAddress();
+					}
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
 				}
