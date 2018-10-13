@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.SecretUtil;
@@ -95,5 +96,24 @@ public class BaseUserController extends BaseController {
             return sysConfig.getWeiFrontHost();
         }
         return null;
+    }
+
+    public String getForgotPwdUrl(String platform, HttpServletRequest request,SystemConfig sysConfig) {
+
+
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WEB_CLIENT == client) {
+            String token=request.getHeader("token");
+            return sysConfig.getFrontHost()+"/user/setTradePassword";
+        }
+        if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+            String sign=request.getParameter("sign");
+            return sysConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD;
+        }
+        if (ClientConstants.WECHAT_CLIENT == client) {
+            String sign=request.getParameter("sign");
+            return sysConfig.getWeiFrontHost()+"/submitForm?queryType=6";
+        }
+        return "";
     }
 }

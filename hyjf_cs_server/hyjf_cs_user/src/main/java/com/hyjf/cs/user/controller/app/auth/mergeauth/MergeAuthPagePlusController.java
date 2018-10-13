@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.controller.web.auth.mergeauth;
+package com.hyjf.cs.user.controller.app.auth.mergeauth;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.AuthorizedVO;
@@ -10,7 +10,6 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -20,13 +19,10 @@ import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.auth.AuthService;
-import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +42,7 @@ import java.util.Map;
 @Api(tags = {"web端-多合一授权（新）"})
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/hyjf-web/user/auth/mergeauthpageplus")
+@RequestMapping("/hyjf-app/bank/user/auth/mergeauthpageplus")
 public class MergeAuthPagePlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(MergeAuthPagePlusController.class);
@@ -62,27 +58,28 @@ public class MergeAuthPagePlusController extends BaseUserController {
      * @param userId
      * @return
      */
+    @ResponseBody
     @ApiOperation(value = "用户合并授权", notes = "用户合并授权")
     @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
-    public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
+    public  WebResult<Object> page(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
-
+        String platform = request.getParameter("platform");
         //检查用户信息
         checkUserMessage(user);
 
         // 拼装参数 调用江西银行
         // 失败页面
-        String errorPath = "/user/openError";
+        String errorPath = "/user/setting/mergeauth/result/failed";
         // 成功页面
-        String successPath = "/user/openSuccess";
+        String successPath = "/user/setting/mergeauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + errorPath +"?logOrdId="+orderId;
-        String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + successPath;
-        String bgRetUrl = "http://CS-USER/hyjf-web/user/auth/mergeauthpageplus/mergeAuthBgreturn" ;
+        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId;
+        String successUrl = super.getFrontHost(systemConfig,platform) + successPath;
+        String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/mergeauthpageplus/mergeAuthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO=authService.getBankOpenAccount(userId);
@@ -96,10 +93,10 @@ public class MergeAuthPagePlusController extends BaseUserController {
         authBean.setSuccessUrl(successUrl);
         authBean.setNotifyUrl(bgRetUrl);
         // 0：PC 1：微官网 2：Android 3：iOS 4：其他
-        authBean.setPlatform(CustomConstants.CLIENT_PC);
+        authBean.setPlatform(platform);
         authBean.setAuthType(AuthBean.AUTH_TYPE_MERGE_AUTH);
-        authBean.setChannel(BankCallConstant.CHANNEL_PC);
-        authBean.setForgotPwdUrl(super.getForgotPwdUrl(CustomConstants.CLIENT_PC,request,systemConfig));
+        authBean.setChannel(BankCallConstant.CHANNEL_APP);
+        authBean.setForgotPwdUrl(super.getForgotPwdUrl(platform,request,systemConfig));
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(usersInfo.getRoleId() + "");
