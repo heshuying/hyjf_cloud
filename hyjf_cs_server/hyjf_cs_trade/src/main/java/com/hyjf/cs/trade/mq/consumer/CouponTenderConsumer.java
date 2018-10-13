@@ -86,6 +86,7 @@ public class CouponTenderConsumer extends Consumer {
                 bean.setLogClient(Integer.parseInt(platform));
                 bean.setTxAmount(money);
                 BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+                logger.info("borrow:"+JSONObject.toJSONString(borrow));
                 couponService.borrowTenderCouponUse(couponGrantId, borrow, bean);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
