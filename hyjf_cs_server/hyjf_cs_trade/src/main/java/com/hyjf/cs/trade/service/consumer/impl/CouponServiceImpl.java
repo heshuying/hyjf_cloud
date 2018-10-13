@@ -336,6 +336,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             return result;
         }
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
+        logger.info("couponUser:"+JSONObject.toJSONString(couponUser));
         if (couponUser == null) {
             result.put("statusDesc", "当前优惠券不存在或已使用");
             return result;
@@ -489,7 +490,6 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         if (moneyCoupon == 1) {
             config += "1,";
         }
-        logger.info("开始调用优惠券投资校验   ");
         Map<String, String> validateMap = this.validateCoupon(userId, account, Integer.parseInt(couponGrantId), platform + "", borrow.getBorrowPeriod(), config);
         logger.info("优惠券投资校验完毕  结果：{}" , validateMap);
         if (MapUtils.isEmpty(validateMap)) {
