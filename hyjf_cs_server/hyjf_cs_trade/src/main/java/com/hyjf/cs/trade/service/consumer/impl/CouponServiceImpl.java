@@ -109,6 +109,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         CouponTenderVO couponTender = new CouponTenderVO();
         int nowTime = GetDate.getNowTime10();
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
+        CouponConfigVO configVO = amTradeClient.selectCouponConfig(couponUser.getCouponCode());
         //汇计划只支持按天和按月
         if (CustomConstants.COUPON_TENDER_TYPE_HJH.equals(bean.getTenderType())) {
             if (!"endday".equals(borrowStyle)) {
@@ -116,9 +117,9 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             }
         }
         // 优惠券类别
-        int couponType = couponUser.getCouponType();
+        int couponType = configVO.getCouponType();
         // 面值
-        BigDecimal couponQuota = couponUser.getCouponQuota();
+        BigDecimal couponQuota = configVO.getCouponQuota();
         // 排他校验
         if (couponUser.getUsedFlag() != 0) {
             logger.info("此优惠券已被使用。。。。。。券编号：" + couponGrantId);
@@ -174,8 +175,8 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         BigDecimal recoverAccountCapitalWait = BigDecimal.ZERO;
         BigDecimal recoverAccountInterestWait = BigDecimal.ZERO;
         BigDecimal couponInterest = BigDecimal.ZERO;
-        if (couponUser.getCouponType() == 1) {
-            couponInterest = this.getInterestDj(accountDecimal, couponUser.getCouponProfitTime(), planApr);
+        if (configVO.getCouponType() == 1) {
+            couponInterest = this.getInterestDj(accountDecimal, configVO.getCouponProfitTime().intValue(), planApr);
         } else {
             couponInterest = this.calculateCouponInterest(borrowStyle, accountDecimal, planApr,
                     bean.getPeriod());
