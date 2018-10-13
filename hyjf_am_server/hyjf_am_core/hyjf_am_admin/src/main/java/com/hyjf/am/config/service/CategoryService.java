@@ -2,9 +2,12 @@ package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.Category;
 import com.hyjf.am.config.dao.model.auto.ContentHelp;
+import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
+import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
 import com.hyjf.am.resquest.admin.CategoryBeanRequest;
 import com.hyjf.am.resquest.admin.ContentHelpBeanRequest;
 import com.hyjf.am.vo.admin.CategoryVO;
+import com.hyjf.am.vo.admin.ContentHelpCustomizeVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
 
 import java.util.List;
@@ -217,4 +220,50 @@ public interface CategoryService {
      * @return
      */
     Integer updateHelpAction(ContentHelp con);
+
+    /**
+     * @Author walter.tanyy
+     * @user walter.tanyy
+     * @Description  智齿客服问题默认取5条
+     * @Date 14:26 2018/7/24
+     * @Param con
+     * @return
+     */
+    public List<ContentHelpCustomizeVO> queryContentCustomize(ContentHelpCustomizeVO contentHelpCustomize);
+
+    /**
+     * @Author walter.tanyy
+     * @user walter.tanyy
+     * @Description  智齿客服help类型
+     * @Date 14:26 2018/7/24
+     * @Param con
+     * @return
+     */
+
+    List<HelpCategoryCustomize> selectCategory(String group);
+
+    /**
+     *
+     * @method: selectSunCategory
+     * @description: 	根据大类id查询子类
+     *  @param pageName 大类id
+     *  @return
+     * @return: List<Map<String,Object>>
+     * @mender: tanyy
+     * @date:
+     */
+    List<HelpCategoryCustomize> selectSunCategory(String pageName);
+
+    /**
+     *
+     * @method: selectSunContentCategory
+     * @description: 根据子类id和直属于大类的id查询出所属帮助内容
+     *  @param type   子类id
+     *  @param pid   直属于大类的id
+     *  @return
+     * @return: List<Map<String,Object>>
+     * @mender:tanyy
+     * @date:   2
+     */
+    List<HelpContentCustomize> selectSunContentCategory(String type, String pid);
 }
