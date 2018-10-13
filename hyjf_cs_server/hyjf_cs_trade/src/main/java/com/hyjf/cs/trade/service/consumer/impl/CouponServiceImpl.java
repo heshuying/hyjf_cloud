@@ -327,6 +327,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      */
     @Override
     public Map<String, String> validateCoupon(Integer userId, String accountStr, Integer couponGrantId, String platform, Integer period, String config) {
+        logger.info("开始调用优惠券投资校验  {}   {}   {}   {}",couponGrantId ,userId ,period,config);
         Map<String, String> result = new HashedMap();
         result.put("status", "0");
         if (couponGrantId == null || couponGrantId == 0) {
@@ -488,6 +489,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             config += "1,";
         }
         Map<String, String> validateMap = this.validateCoupon(userId, account, Integer.parseInt(couponGrantId), platform + "", borrow.getBorrowPeriod(), config);
+        logger.info("优惠券投资校验完毕  结果：{}" , validateMap);
         if (MapUtils.isEmpty(validateMap)) {
             CouponTenderUsedVO couponTender = new CouponTenderUsedVO();
             couponTender.setAccount(account);
