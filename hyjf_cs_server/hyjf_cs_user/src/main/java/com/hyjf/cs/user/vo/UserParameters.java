@@ -123,6 +123,15 @@ public class UserParameters {
 	
 	private String paymentAuthStatus; // 缴费授权状态  0: 未授权    1:已授权
 	private String paymentAuthUrl; // 缴费授权Url
+	// 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
+	private String exitLabelShowFlag;
+	// add by pcc app3.1.1追加 20180823 end
+	// 是否开启修改手机号  true可以  false  不行
+	private String isUpdateMobile;
+	// 是否校验用户角色
+	private String isCheckUserRole;
+	// 校验用户角色的描述
+	private String checkUserRoleDesc;
 	/**
 	 * 缴费授权固定消息
 	 */
@@ -789,4 +798,35 @@ public class UserParameters {
         this.roleId = roleId;
     }
 
+	public String getExitLabelShowFlag() {
+		return exitLabelShowFlag;
+	}
+
+	public void setExitLabelShowFlag(String exitLabelShowFlag) {
+		this.exitLabelShowFlag = exitLabelShowFlag;
+	}
+
+	public String getIsUpdateMobile() {
+		return isUpdateMobile;
+	}
+
+	public void setIsUpdateMobile(String isUpdateMobile) {
+		this.isUpdateMobile = isUpdateMobile;
+	}
+
+	public String getIsCheckUserRole() {
+		return isCheckUserRole;
+	}
+
+	public void setIsCheckUserRole(String isCheckUserRole) {
+		this.isCheckUserRole = isCheckUserRole;
+	}
+
+	public String getCheckUserRoleDesc() {
+		return checkUserRoleDesc;
+	}
+
+	public void setCheckUserRoleDesc(String checkUserRoleDesc) {
+		this.checkUserRoleDesc = checkUserRoleDesc;
+	}
 }

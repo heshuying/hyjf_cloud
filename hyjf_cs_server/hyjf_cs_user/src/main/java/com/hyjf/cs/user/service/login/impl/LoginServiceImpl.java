@@ -68,6 +68,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	@Autowired
 	private RestTemplate restTemplate;
 
+	private static final String checkUserRoleDesc = "仅限出借人进行投资";
+
 	/**
 	 * 登录
 	 *
@@ -243,6 +245,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			} else {
 				result.setEmailOpenStatus("0");
 			}
+			// 是否允许修改手机号 by sunss
+			result.setIsUpdateMobile(systemConfig.getIsUpdateMobile());
 			// 开户了
 			if (user.getBankOpenAccount() != null && user.getBankOpenAccount() == 1) {
 				BigDecimal principal = new BigDecimal("0.00");
@@ -285,9 +289,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					result.setHtlDescription(DF_FOR_VIEW.format(principal) + "元");
 				}
 				// 银行已开户，江西银行账户描述
-				result.setJiangxiDesc(
-						account.substring(0, 3) + "************" + account.substring(account.length() - 4));
-
+				/*result.setJiangxiDesc(
+						account.substring(0, 3) + "************" + account.substring(account.length() - 4));*/
+				// 产品说江西银行电子帐号不加密显示
+				result.setJiangxiDesc(account);
 				// 用户已开户，显示某先生/女士
 				UserInfoVO usersInfo = this.getUserInfo(userId);
 				if (usersInfo.getSex() != null && usersInfo.getTruename() != null && usersInfo.getSex() == 1) {
@@ -746,6 +751,12 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		result.setRewardUrl(
 				CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + ClientConstants.REWARD_URL));
 		{
+			// 是否校验用户角色
+			result.setIsCheckUserRole(systemConfig.getRoleIsOpen());
+			// 校验用户角色的描述
+			result.setCheckUserRoleDesc(checkUserRoleDesc);
+			// 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
+			result.setExitLabelShowFlag(systemConfig.getExitLabelShowFlag());
 			// 自动投标授权状态 0: 未授权 1:已授权
 			HjhUserAuthVO hjhUserAuthVO = this.getHjhUserAuth(userId);
 			if (hjhUserAuthVO != null && hjhUserAuthVO.getAutoInvesStatus() == 1) {
