@@ -187,12 +187,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             successUrl += "&sign=" + request.getSign();
         }
         // 异步调用路
-        String bgRetUrl = "";
-        if(cuc != null){
-            bgRetUrl = "http://CS-TRADE/hyjf-web/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + cuc.getId();
-        }else{
-            bgRetUrl = "http://CS-TRADE/hyjf-web/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
-        }
+        String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
+        logger.info("异步调用路径为：{}",bgRetUrl);
         //忘记密码url
         String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
         callBean.setRetUrl(retUrl);
