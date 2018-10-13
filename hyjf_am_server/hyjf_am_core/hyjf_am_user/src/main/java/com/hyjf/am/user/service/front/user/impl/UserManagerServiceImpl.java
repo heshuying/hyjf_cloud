@@ -401,13 +401,12 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     /**
      * 根据用户List id查找用户表
      *
-     * @param userId
-     * @param userId
+     * @param userIds
      * @return
      */
     @Override
-    public List<User> selectUserByListUserId(List userId) {
-        List<User> usersList = this.userMapper.selectUserByListUserId(userId);
+    public List<User> selectUserByListUserId(List userIds) {
+        List<User> usersList = this.userCustomizeMapper.selectUserByListUserId(userIds);
         if (null!= usersList && usersList.size() > 0) {
             return usersList;
         }
@@ -1099,6 +1098,24 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             return list.get(0).getUserId();
         }
         return 0;
+    }
+
+    /**
+     * 根据第三方用户id查询绑定关系
+     * @param bindUniqueId
+     * @param bind_platform_id
+     * @return
+     */
+    @Override
+    public BindUser getUsersByUniqueId(Integer bindUniqueId, Integer bind_platform_id) {
+
+        BindUserExample example = new BindUserExample();
+        BindUserExample.Criteria cra = example.createCriteria();
+        cra.andBindUniqueIdEqualTo(bindUniqueId).andBindPlatformIdEqualTo(bind_platform_id);
+        List<BindUser> bindUsers = bindUserMapper.selectByExample(example);
+        if (org.springframework.util.CollectionUtils.isEmpty(bindUsers))
+            return null;
+        return bindUsers.get(0);
     }
 
 	@Override

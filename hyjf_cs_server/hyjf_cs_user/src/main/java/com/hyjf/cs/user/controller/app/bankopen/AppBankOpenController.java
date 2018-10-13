@@ -102,7 +102,7 @@ public class AppBankOpenController extends BaseUserController {
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean,sign);
         result.setData(data);
         //保存开户日志  银行卡号不必传了
-        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), bankOpenVO.getPlatform(), openBean.getTrueName(), openBean.getIdNo(), "");
+        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), bankOpenVO.getPlatform(), openBean.getTrueName(), openBean.getIdNo(), "", "");
         if (uflag == 0) {
             logger.error("App端保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             throw new ReturnMessageException(MsgEnum.ERR_SYSTEM_UNUSUAL);
@@ -119,9 +119,9 @@ public class AppBankOpenController extends BaseUserController {
     @ApiOperation(value = "开户查询开户失败原因", notes = "查询开户失败原因")
     @PostMapping("/seachFiledMess")
     @ResponseBody
-    public AppResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
+    public AppResult<Object> seachFiledMess(@RequestHeader(value = "userId") int userId,@RequestParam("logOrdId") String logOrdId) {
         logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);
-        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId);
+        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId,userId);
         AppResult<Object> appResult = new AppResult<>();
         appResult.setData(result.getData());
         appResult.setStatus(result.getStatus());

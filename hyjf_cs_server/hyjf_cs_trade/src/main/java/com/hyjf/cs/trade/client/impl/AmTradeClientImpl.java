@@ -3791,6 +3791,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+
+    /**
+     * 查询移动端首页bannerlist
+     * @author zhangyk
+     * @date 2018/10/12 11:08
+     */
+    @Override
+    public List<AppAdsCustomizeVO> getHomeBannerList(AdsRequest request) {
+        AppAdsCustomizeResponse response = restTemplate.postForEntity("http://AM-MARKET/am-market/ads/searchHomeBanner",request,AppAdsCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+           return response.getResultList();
+        }
+        return null;
+    }
+
     /**
      * 获取承接中的总额度
      * @author zhangyk

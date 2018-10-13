@@ -68,11 +68,11 @@ public class AdsServiceImpl implements AdsService {
 
 
 	@Override
-	public AppAdsCustomize searchBanner(Map<String, Object> ads) {
+	public List<AppAdsCustomize> searchBanner(Map<String, Object> ads) {
 		List<AppAdsCustomize> adsList = adsCustomizeMapper.selectAdsList(ads);
 		if(adsList != null && !adsList.isEmpty()) {
 			// 注册成功发券提示
-			return adsList.get(0);
+			return adsList;
 		}else{
 			return null;
 		}

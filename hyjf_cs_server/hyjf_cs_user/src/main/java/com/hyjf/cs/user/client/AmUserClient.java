@@ -456,7 +456,9 @@ public interface AmUserClient {
 	 */
 	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
 
-	/**
+    BindUserVo getBindUser(int userId, int bindPlatformId);
+
+    /**
 	 * 授权
 	 * @param userId
 	 * @param bindUniqueId
@@ -536,4 +538,10 @@ public interface AmUserClient {
 	 * @return
 	 */
 	Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest);
+
+    BankOpenAccountVO selectBankAccountById(Integer userId);
+
+    void updateUserAuth(UserAuthRequest request);
+
+    void updateUserAuthLog(String logOrderId, String message);
 }

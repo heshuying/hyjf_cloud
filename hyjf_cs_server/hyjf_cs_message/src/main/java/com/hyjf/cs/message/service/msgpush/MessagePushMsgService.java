@@ -23,4 +23,5 @@ public interface MessagePushMsgService {
 
     Integer deleteMessagePushMsg(List<MessagePushMsg> recordList);
 
+    long countMessagePushMsg(MessagePushMsgRequest request);
 }

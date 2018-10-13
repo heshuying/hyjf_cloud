@@ -87,11 +87,11 @@ public class WeChatAutoPlusController extends BaseUserController {
             bankBean = autoPlusService.callSendCode(userId,mobile,srvTxCode, ClientConstants.CHANNEL_WEI,null);
         } catch (Exception e) {
             logger.error("请求验证码接口发生异常", e);
-            throw new CheckException(MsgEnum.ERR_BANK_CALL);
+            throw new CheckException(MsgEnum.ERROR_BANK_SEND_CODE);
         }
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
             logger.error("请求验证码接口发生异常");
-            throw new CheckException(MsgEnum.ERR_BANK_CALL);
+            throw new CheckException(MsgEnum.ERROR_BANK_SEND_CODE);
         }else {
             result.setSrvAuthCode(bankBean.getSrvAuthCode());
             result.setStatus("000");

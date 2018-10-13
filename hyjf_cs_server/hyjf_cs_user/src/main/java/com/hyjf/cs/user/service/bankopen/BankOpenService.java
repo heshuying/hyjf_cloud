@@ -4,6 +4,8 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
+import com.hyjf.cs.user.bean.OpenAccountPlusRequest;
+import com.hyjf.cs.user.bean.OpenAccountPlusResult;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -22,7 +24,7 @@ public interface BankOpenService extends BaseUserService {
 	boolean checkIdNo(String idNo);
 
 	int updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name,
-			String idno, String cardNo);
+			String idno, String cardNo, String srvAuthCode);
 
 	/**
 	 * @Description 检查请求参数
@@ -55,7 +57,7 @@ public interface BankOpenService extends BaseUserService {
 	 * @Author sunss
 	 * @Date 2018/6/21 15:34
 	 */
-	WebResult<Object> getFiledMess(String logOrdId);
+	WebResult<Object> getFiledMess(String logOrdId,int userId);
 
 	/**
 	 * 获得担保机构开户调用银行的参数
@@ -70,4 +72,8 @@ public interface BankOpenService extends BaseUserService {
 	 * @return
 	 */
 	Map<String,Object> getLoanOpenAccountMV(OpenAccountPageBean openBean);
+
+    OpenAccountPlusResult checkAndUpdateForSendCode(OpenAccountPlusRequest openAccountRequestBean, String ipAddr);
+
+    BankCallBean sendOpenAccountSms(Integer userId, String orderId, String srvTxCode, String mobile, String channel);
 }

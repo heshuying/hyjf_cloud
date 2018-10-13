@@ -26,6 +26,8 @@ public class HjhUserAuth implements Serializable {
 
     private Integer autoCreditTime;
 
+    private String autoCreditEndTime;
+
     private Integer autoBidTime;
 
     private String autoBidEndTime;
@@ -50,7 +52,19 @@ public class HjhUserAuth implements Serializable {
 
     private String repayCancelTime;
 
+    private String invesMaxAmt;
+
+    private String creditMaxAmt;
+
+    private String paymentMaxAmt;
+
+    private String repayMaxAmt;
+
     private Integer delFlag;
+
+    private Integer txAmount;
+
+    private Integer totAmount;
 
     private Integer createUserId;
 
@@ -150,6 +164,14 @@ public class HjhUserAuth implements Serializable {
         this.autoCreditTime = autoCreditTime;
     }
 
+    public String getAutoCreditEndTime() {
+        return autoCreditEndTime;
+    }
+
+    public void setAutoCreditEndTime(String autoCreditEndTime) {
+        this.autoCreditEndTime = autoCreditEndTime == null ? null : autoCreditEndTime.trim();
+    }
+
     public Integer getAutoBidTime() {
         return autoBidTime;
     }
@@ -246,12 +268,60 @@ public class HjhUserAuth implements Serializable {
         this.repayCancelTime = repayCancelTime == null ? null : repayCancelTime.trim();
     }
 
+    public String getInvesMaxAmt() {
+        return invesMaxAmt;
+    }
+
+    public void setInvesMaxAmt(String invesMaxAmt) {
+        this.invesMaxAmt = invesMaxAmt == null ? null : invesMaxAmt.trim();
+    }
+
+    public String getCreditMaxAmt() {
+        return creditMaxAmt;
+    }
+
+    public void setCreditMaxAmt(String creditMaxAmt) {
+        this.creditMaxAmt = creditMaxAmt == null ? null : creditMaxAmt.trim();
+    }
+
+    public String getPaymentMaxAmt() {
+        return paymentMaxAmt;
+    }
+
+    public void setPaymentMaxAmt(String paymentMaxAmt) {
+        this.paymentMaxAmt = paymentMaxAmt == null ? null : paymentMaxAmt.trim();
+    }
+
+    public String getRepayMaxAmt() {
+        return repayMaxAmt;
+    }
+
+    public void setRepayMaxAmt(String repayMaxAmt) {
+        this.repayMaxAmt = repayMaxAmt == null ? null : repayMaxAmt.trim();
+    }
+
     public Integer getDelFlag() {
         return delFlag;
     }
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public Integer getTxAmount() {
+        return txAmount;
+    }
+
+    public void setTxAmount(Integer txAmount) {
+        this.txAmount = txAmount;
+    }
+
+    public Integer getTotAmount() {
+        return totAmount;
+    }
+
+    public void setTotAmount(Integer totAmount) {
+        this.totAmount = totAmount;
     }
 
     public Integer getCreateUserId() {

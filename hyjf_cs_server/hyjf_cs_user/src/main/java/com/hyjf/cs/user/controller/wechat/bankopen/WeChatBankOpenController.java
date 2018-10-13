@@ -7,7 +7,9 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WeChatResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -103,13 +105,30 @@ public class WeChatBankOpenController extends BaseUserController {
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean,sign);
         reuslt.setObject(data);
         //保存开户日志  银行卡号不必传了
-        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), CustomConstants.CLIENT_WECHAT, openBean.getTrueName(), openBean.getIdNo(), "");
+        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), CustomConstants.CLIENT_WECHAT, openBean.getTrueName(), openBean.getIdNo(), "", "");
         if (uflag == 0) {
             logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             throw new ReturnMessageException(MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
         logger.info("开户end");
         return reuslt;
+    }
+
+    /**
+     * @Description 查询开户失败原因
+     * @Author sunss
+     */
+    @ApiOperation(value = "开户查询开户失败原因", notes = "查询开户失败原因")
+    @PostMapping("/seachFiledMess")
+    @ResponseBody
+    public WeChatResult<Object> seachFiledMess(@RequestHeader(value = "userId") int userId,@RequestParam("logOrdId") String logOrdId) {
+        logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);
+        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId,userId);
+        WeChatResult<Object> weChatResult = new WeChatResult<>();
+        weChatResult.setData(result.getData());
+        weChatResult.setStatus(result.getStatus());
+        weChatResult.setStatusDesc(result.getStatusDesc());
+        return weChatResult;
     }
 
 }
