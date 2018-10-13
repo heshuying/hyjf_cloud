@@ -115,12 +115,14 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 }
                 // 检查用户角色是否能投资  合规接口改造之后需要判断
                 UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
-                // 担保机构用户
-                if (userInfo.getRoleId() == 3) {
-                    //borrowDetailResultBean.setStatus("99");
-                    //borrowDetailResultBean.setStatusDesc("担保机构用户不能进行投资");
-                    //borrowDetailResultBean.setIsAllowedTender(Boolean.FALSE);
-                    borrowDetailResultBean.put("isAllowedTender", Boolean.FALSE);
+                Integer roleId=userInfo.getRoleId();
+                String roleIsOpen =systemConfig.getRoleIsOpen();
+                if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+                    if (userInfo.getRoleId() != 1) {// 担保机构用户
+                        borrowDetailResultBean.put("status", "99");
+                        borrowDetailResultBean.put("statusDesc", "仅限出借人进行投资");
+                        borrowDetailResultBean.put("isAllowedTender", Boolean.FALSE);
+                    }
                 }
                 //判断是否设置交易密码
                 if (users.getIsSetPassword() != null && users.getIsSetPassword() == 1) {
@@ -985,7 +987,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             userLoginInfo.setOpened(userVO.getBankOpenAccount() == 0 ? Boolean.FALSE : Boolean.TRUE);
             // 4. 是否设置过交易密码
             userLoginInfo.setSetPassword(userVO.getIsSetPassword() == 1 ? Boolean.TRUE : Boolean.FALSE);
-
+            userLoginInfo.setIsCheckUserRole(Boolean.parseBoolean(systemConfig.getRoleIsOpen()));
             // 7.缴费授权状态
             userLoginInfo.setPaymentAuthStatus(userVO.getPaymentAuthStatus());
 

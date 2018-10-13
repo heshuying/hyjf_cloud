@@ -41,6 +41,9 @@ public class UserLoginInfo {
 
     private Integer roleId;
 
+    //角色认证是否打开,true认证,false不认证
+    private Boolean isCheckUserRole;
+
     public Boolean getLogined() {
         return isLogined;
     }
@@ -159,5 +162,13 @@ public class UserLoginInfo {
 
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
+    }
+
+    public Boolean getIsCheckUserRole() {
+        return isCheckUserRole;
+    }
+
+    public void setIsCheckUserRole(Boolean isCheckUserRole) {
+        this.isCheckUserRole = isCheckUserRole;
     }
 }
