@@ -140,6 +140,10 @@ public class SystemConfig {
     @Value("${release.coupon.accesskey}")
     private String couponAccesskey;
 
+    /*需要在cs-trade的工程配置里面添加 hyjf.role.isopen */
+    @Value("${hyjf.role.isopen}")
+    private String roleIsOpen;
+
     public String getWechatHost() {
         return wechatHost;
     }
@@ -456,5 +460,13 @@ public class SystemConfig {
 
     public void setIosNoticeVersion(String iosNoticeVersion) {
         this.iosNoticeVersion = iosNoticeVersion;
+    }
+
+    public String getRoleIsOpen() {
+        return roleIsOpen;
+    }
+
+    public void setRoleIsOpen(String roleIsOpen) {
+        this.roleIsOpen = roleIsOpen;
     }
 }

@@ -312,13 +312,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @param userInfo
      */
     private void checkUser(UserVO user, UserInfoVO userInfo) {
-        // 担保机构用户
-        if (userInfo.getRoleId() == 3) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
-        }
-        // 借款人不能投资
-        if (userInfo.getRoleId() == 2) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+        if (null != userInfo) {
+            // 合规校验角色
+            String roleIsOpen = systemConfig.getRoleIsOpen();
+            if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+                if (userInfo.getRoleId() != 1) {
+                    // 仅限出借人进行投资
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+                }
+            }
         }
         // 判断用户是否禁用// 0启用，1禁用
         if (user.getStatus() == 1) {
