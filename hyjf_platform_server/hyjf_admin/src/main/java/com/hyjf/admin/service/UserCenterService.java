@@ -117,14 +117,6 @@ public interface UserCenterService {
     UserVO selectUserByUserId(String userId);
 
     /**
-     * 根据用户list id查找用户表
-     * @param userId
-     * @param userId
-     * @return
-     */
-    List<UserVO> selectUserByListUserId(List userId);
-
-    /**
      * 根据用户id查找企业信息
      * @param userId
      * @return

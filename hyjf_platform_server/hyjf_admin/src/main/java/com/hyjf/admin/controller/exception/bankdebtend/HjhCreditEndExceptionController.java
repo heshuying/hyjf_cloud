@@ -47,7 +47,7 @@ public class HjhCreditEndExceptionController extends BaseController {
             if (null != listAccountDetail && listAccountDetail.size() > 0) {
                 hjhDebtCreditVoList.addAll(listAccountDetail);
             }
-            if (null != hjhDebtCreditVoList) {
+            if (!hjhDebtCreditVoList.isEmpty()) {
                 hjhCreditEndExceptionService.queryHjhDebtCreditListStatusName(hjhDebtCreditVoList);
                 jsonObject = this.success(String.valueOf(recordCount), hjhDebtCreditVoList);
             } else {

@@ -137,8 +137,8 @@ public class AppRewardController {
             return ret;
         }
         try {
-            page = Integer.valueOf(page);
-            pageSize = Integer.valueOf(pageSize);
+//            page = Integer.valueOf(page);
+//            pageSize = Integer.valueOf(pageSize);
             int limitStart = pageSize * (page - 1);
             int count = rewardService.selectMyRewardCount(String.valueOf(userId));
             double lastpage = Math.ceil((double) count / (double) pageSize);

@@ -762,24 +762,13 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		if(StringUtils.isNotBlank(borrowBean.getIsEngineUsed()) && "1".equals(borrowBean.getIsEngineUsed())){
 			borrow.setLabelId(borrowBean.getLabelId());
 		}
-		this.borrowMapper.insertSelective(borrow);
-		
 		BorrowInfoWithBLOBs borrowinfo=new BorrowInfoWithBLOBs();
-		BeanUtils.copyProperties(borrow, borrowinfo);
-		borrowinfo.setEntrustedFlg(Integer.valueOf(borrowBean.getEntrustedFlg()));
-		if("1".equals(borrowBean.getEntrustedFlg())){
-			borrowinfo.setEntrustedUserName(borrowBean.getEntrustedUsername().trim());
-			borrowinfo.setEntrustedUserId(this.getRUser(borrowBean.getEntrustedUsername().trim()).getUserId());
-		} else {
-			borrowinfo.setEntrustedUserName("");
-			borrowinfo.setEntrustedUserId(0);
-		}
-		borrowinfo.setTrusteePayTime(0);
 		// 产品加息 add by liuyang 20180730 start
 		// 根据项目编号查询项目类型配置
 		BorrowProjectType borrowProjectType = this.getBrrowProjectTpyeByProjectType(String.valueOf(borrowBean.getProjectType()));
 		if (borrowProjectType.getIncreaseInterestFlag() == 1 && !StringUtils.isEmpty(borrowBean.getBorrowExtraYield()) && new BigDecimal(borrowBean.getBorrowExtraYield()).compareTo(BigDecimal.ZERO) > 0) {
 			// 是否加息
+			borrow.setIncreaseInterestFlag(1);
 			borrowinfo.setIncreaseInterestFlag(1);
 			// 产品加息率
 			borrowinfo.setBorrowExtraYield(new BigDecimal(borrowBean.getBorrowExtraYield()));
@@ -794,6 +783,18 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 		}
 		// 产品加息 add by liuyang 20180730 end
+		this.borrowMapper.insertSelective(borrow);
+		BeanUtils.copyProperties(borrow, borrowinfo);
+		borrowinfo.setEntrustedFlg(Integer.valueOf(borrowBean.getEntrustedFlg()));
+		if("1".equals(borrowBean.getEntrustedFlg())){
+			borrowinfo.setEntrustedUserName(borrowBean.getEntrustedUsername().trim());
+			borrowinfo.setEntrustedUserId(this.getRUser(borrowBean.getEntrustedUsername().trim()).getUserId());
+		} else {
+			borrowinfo.setEntrustedUserName("");
+			borrowinfo.setEntrustedUserId(0);
+		}
+		borrowinfo.setTrusteePayTime(0);
+
 		this.borrowInfoMapper.insert(borrowinfo);
 		// 个人信息(信批新增字段)
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);

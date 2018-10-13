@@ -81,4 +81,9 @@ public class ChannelServiceImpl implements ChannelService {
         }
         return utmPlatVOList;
     }
+
+    @Override
+    public void insertUtmList(List<ChannelCustomizeVO> voList) {
+        amUserClient.insertUtmList(voList);
+    }
 }

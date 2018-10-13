@@ -4,6 +4,7 @@
 package com.hyjf.am.user.controller.front.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
@@ -666,6 +667,25 @@ public class UserManagerController extends BaseController {
     public Integer getUserIdByBind(@PathVariable Integer bindUniqueId,@PathVariable Integer bindPlatformId){
     	return userManagerService.getUserIdByBind(bindUniqueId, bindPlatformId);
     }
+
+    /**
+     * 查询第三方绑定用户信息
+     * @param bindUniqueId
+     * @param bindPlatformId
+     * @return
+     */
+    @RequestMapping("/getBindUser/{bindUniqueId}/{bindPlatformId}")
+    public BindUserResponse getBindUser(@PathVariable Integer bindUniqueId,@PathVariable Integer bindPlatformId){
+        BindUserResponse response = new BindUserResponse();
+        BindUser bindUser = userManagerService.getUsersByUniqueId(bindUniqueId, bindPlatformId);
+        if(null!=bindUser){
+            BindUserVo bindUserVo = new BindUserVo();
+            BeanUtils.copyProperties(bindUser,bindUserVo);
+            response.setResult(bindUserVo);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
     /**
      * 根据绑定信息取得用户id
      * @param userId
@@ -684,8 +704,11 @@ public class UserManagerController extends BaseController {
 	 * @return
 	 */
     @RequestMapping("/bindThirdUser/{userId}/{bindUniqueId}/{bindPlatformId}")
-    public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId) {
-    	return userManagerService. bindThirdUser( userId,  bindUniqueId,  bindPlatformId);
+    public BooleanResponse bindThirdUser(@PathVariable Integer userId, @PathVariable Integer bindUniqueId, @PathVariable Integer bindPlatformId) {
+        BooleanResponse response = new BooleanResponse();
+    	Boolean result =  userManagerService.bindThirdUser( userId,  bindUniqueId,  bindPlatformId);
+    	response.setResultBoolean(result);
+    	return response;
     }
 
     /**

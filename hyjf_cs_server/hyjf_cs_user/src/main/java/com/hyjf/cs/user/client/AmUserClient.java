@@ -456,14 +456,16 @@ public interface AmUserClient {
 	 */
 	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
 
-	/**
+    BindUserVo getBindUser(int userId, int bindPlatformId);
+
+    /**
 	 * 授权
 	 * @param userId
 	 * @param bindUniqueId
 	 * @param pid
 	 * @return
 	 */
-	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
+	Boolean bindThirdUser(Integer userId, Integer bindUniqueId, Integer pid);
 
 	/**
 	 * 获取银行卡信息
@@ -536,4 +538,6 @@ public interface AmUserClient {
 	 * @return
 	 */
 	Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest);
+
+    BankOpenAccountVO selectBankAccountById(Integer userId);
 }

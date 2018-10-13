@@ -556,7 +556,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             if (borrow.getStatusOrginal() >= 4 && borrowRepay != null) {
                 //其他信息
                 other.put("otherTableData", otherTableData);
-                other.put("updateTime", ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime()));
+                other.put("updateTime", ProjectConstant.getUpdateTime(GetDate.getTime10(borrowRepay.getCreateTime()), borrowRepay.getRepayYestime()));
             } else {
                 //其他信息
                 other.put("otherTableData",  new ArrayList<>());

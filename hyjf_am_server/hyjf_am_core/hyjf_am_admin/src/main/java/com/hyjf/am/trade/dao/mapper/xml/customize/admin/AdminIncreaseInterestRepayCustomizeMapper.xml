@@ -93,7 +93,7 @@
 	</select>
 
 
-	<select id="countBorrowRepaymentInfoList" resultType="java.lang.Long" parameterType="Map">
+	<select id="countBorrowRepaymentInfoList" resultType="java.lang.Integer" parameterType="Map">
 		SELECT
 		COUNT(1)
 		FROM ht_borrow AS b
