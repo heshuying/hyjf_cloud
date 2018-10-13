@@ -89,7 +89,7 @@ public class CouponTenderConsumer extends Consumer {
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
                 e.printStackTrace();
-                logger.info("操作失败");
+                logger.info("操作失败了:"+e.getMessage());
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
         }
