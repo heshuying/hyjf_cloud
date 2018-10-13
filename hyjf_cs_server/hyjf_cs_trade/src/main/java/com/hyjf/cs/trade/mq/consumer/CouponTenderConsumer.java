@@ -74,7 +74,7 @@ public class CouponTenderConsumer extends Consumer {
                 String borrowNid = (String) map.get("borrowNid");
                 String money = (String) map.get("money");
                 String platform = (String) map.get("platform");
-                String ip = (String) map.get("ip");
+                String ip = (String) (map.get("ip")==null?"":map.get("ip"));
                 String ordId = (String) map.get("ordId");
                 String userId = (String) map.get("userId");
 
