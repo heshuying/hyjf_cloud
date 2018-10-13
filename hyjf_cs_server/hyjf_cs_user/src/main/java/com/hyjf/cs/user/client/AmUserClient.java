@@ -540,4 +540,8 @@ public interface AmUserClient {
 	Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest);
 
     BankOpenAccountVO selectBankAccountById(Integer userId);
+
+    void updateUserAuth(UserAuthRequest request);
+
+    void updateUserAuthLog(String logOrderId, String message);
 }

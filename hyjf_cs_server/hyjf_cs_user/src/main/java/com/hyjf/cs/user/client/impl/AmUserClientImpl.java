@@ -1124,4 +1124,14 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	@Override
+	public void updateUserAuth(UserAuthRequest request) {
+		restTemplate.postForEntity(userService+"/userauth/updateUserAuth", request,IntegerResponse.class) ;
+	}
+
+	@Override
+	public void updateUserAuthLog(String logOrderId, String message) {
+		restTemplate.getForEntity(userService+"/userauth/updateUserAuthLog/"+logOrderId+"/"+message, IntegerResponse.class);
+	}
+
 }
