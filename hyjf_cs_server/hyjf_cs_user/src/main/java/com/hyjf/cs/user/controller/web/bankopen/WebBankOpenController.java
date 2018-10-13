@@ -2,6 +2,9 @@ package com.hyjf.cs.user.controller.web.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
@@ -11,6 +14,7 @@ import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
@@ -135,8 +139,15 @@ public class WebBankOpenController extends BaseUserController {
     @ApiOperation(value = "查询开户失败原因", notes = "查询开户失败原因")
     @PostMapping("/seachFiledMess")
     @ResponseBody
-    public WebResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
-        logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);
+    public WebResult<Object> seachFiledMess(@RequestHeader(value = "userId") int userId,@RequestParam("logOrdId") String logOrdId) {
+        logger.info("查询开户失败原因start,logOrdId:{}   userId:{}", logOrdId,userId);
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
+        if(user!=null){
+            if(user.isBankOpenAccount()&&"0".equals(user.getIsSetPassword()+"")){
+                // 已经开户  未设置交易密码  开户成功，设置交易密码失败
+               throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_ERROR);
+            }
+        }
         WebResult<Object> result = bankOpenService.getFiledMess(logOrdId);
         return result;
     }
