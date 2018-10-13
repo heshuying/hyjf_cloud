@@ -340,17 +340,17 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             return result;
         }
         // 验证项目加息券或体验金是否可用    1：体验金，2：加息券 3代金券
-        if (couponUser.getCouponType() == 1) {
+        if (configVO.getCouponType() == 1) {
             if (config.indexOf("1") == -1) {
                 result.put("statusDesc", "您选择的优惠券不满足使用条件，请核对后重新选择！");
                 return result;
             }
-        } else if (couponUser.getCouponType() == 2) {
+        } else if (configVO.getCouponType() == 2) {
             if (config.indexOf("2") == -1) {
                 result.put("statusDesc", "您选择的优惠券不满足使用条件，请核对后重新选择！");
                 return result;
             }
-        } else if (couponUser.getCouponType() == 3) {
+        } else if (configVO.getCouponType() == 3) {
             if (config.indexOf("3") == -1) {
                 result.put("statusDesc", "您选择的优惠券不满足使用条件，请核对后重新选择！");
                 return result;
@@ -362,31 +362,31 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             return result;
         }
         // 加息券不能单独投资
-        if ((StringUtils.isEmpty(accountStr) || StringUtils.equals(accountStr, "0")) && couponUser.getCouponType() == 2) {
+        if ((StringUtils.isEmpty(accountStr) || StringUtils.equals(accountStr, "0")) && configVO.getCouponType() == 2) {
             result.put("statusDesc", "加息券投资，真实投资金额不能为空！");
             return result;
         }
         // 平台
-        if (!StringUtils.contains(couponUser.getCouponSystem(), platform)) {
+        if (!StringUtils.contains(configVO.getCouponSystem(), platform)) {
             result.put("statusDesc", "对不起，当前平台不能使用此优惠券！");
             return result;
         }
         // 项目类型
-        if (couponUser.getProjectType().indexOf("6") == -1) {
+        if (configVO.getProjectType().indexOf("6") == -1) {
             result.put("statusDesc", "对不起，您选择的优惠券不能用于当前类别标的！");
             return result;
         }
         // 项目金额
         // 金额类别
-        int tenderQuotaType = couponUser.getTenderQuotaType();
+        int tenderQuotaType = configVO.getTenderQuotaType();
         // 投资金额
         BigDecimal tenderAccount = new BigDecimal(accountStr);
         // 金额范围
         if (tenderQuotaType == 1) {
             // 投资金额最小额度
-            BigDecimal tenderQuotaMin = new BigDecimal(couponUser.getTenderQuotaMin());
+            BigDecimal tenderQuotaMin = new BigDecimal(configVO.getTenderQuotaMin());
             // 投资金额最大额度
-            BigDecimal tenderQuotaMax = new BigDecimal(couponUser.getTenderQuotaMax());
+            BigDecimal tenderQuotaMax = new BigDecimal(configVO.getTenderQuotaMax());
             // 比较投资金额（-1表示小于,0是等于,1是大于）
             int minCheck = tenderAccount.compareTo(tenderQuotaMin);
             int maxCheck = tenderAccount.compareTo(tenderQuotaMax);
@@ -396,7 +396,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             }
         } else if (tenderQuotaType == 2) {
             // 大于等于
-            BigDecimal tenderQuota = new BigDecimal(couponUser.getTenderQuota());
+            BigDecimal tenderQuota = new BigDecimal(configVO.getTenderQuota());
             // 比较投资金额（-1表示小于,0是等于,1是大于）
             int chkFlg = tenderAccount.compareTo(tenderQuota);
             if (chkFlg == -1) {
@@ -406,13 +406,13 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         }
         // 期限
         int planPeriod = period;
-        int couponExType = couponUser.getProjectExpirationType();
+        int couponExType = configVO.getProjectExpirationType();
         int expirationLength =
-                couponUser.getProjectExpirationLength() == null ? 0 : couponUser.getProjectExpirationLength();
+                configVO.getProjectExpirationLength() == null ? 0 : configVO.getProjectExpirationLength();
         int expirationMin =
-                couponUser.getProjectExpirationLengthMin() == null ? 0 : couponUser.getProjectExpirationLengthMin();
+                configVO.getProjectExpirationLengthMin() == null ? 0 : configVO.getProjectExpirationLengthMin();
         int expirationMax =
-                couponUser.getProjectExpirationLengthMax() == null ? 0 : couponUser.getProjectExpirationLengthMax();
+                configVO.getProjectExpirationLengthMax() == null ? 0 : configVO.getProjectExpirationLengthMax();
 
         // 等于
         if (couponExType == 1) {
