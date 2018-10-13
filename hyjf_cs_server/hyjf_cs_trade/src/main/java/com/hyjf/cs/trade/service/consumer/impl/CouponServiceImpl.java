@@ -451,7 +451,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             result.put("statusDesc", "当前优惠券不能与本金共用！");
             return result;
         }
-        return result;
+        return null;
     }
 
     /**
