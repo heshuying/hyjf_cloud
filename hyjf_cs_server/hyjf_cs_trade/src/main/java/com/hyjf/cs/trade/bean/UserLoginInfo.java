@@ -30,6 +30,16 @@ public class UserLoginInfo {
      * 缴费授权状态
      */
     private Integer paymentAuthStatus;
+    /**
+     * 缴费授权开关
+     */
+    private Integer paymentAuthOn;
+    // 自动投资授权开关
+    private Integer invesAuthOn;
+    // 自动债转授权开关
+    private Integer creditAuthOn;
+
+    private Integer roleId;
 
     public Boolean getLogined() {
         return isLogined;
@@ -101,5 +111,53 @@ public class UserLoginInfo {
 
     public void setIsAllowedTender(Boolean isAllowedTender) {
         this.isAllowedTender = isAllowedTender;
+    }
+
+    public String getIsRiskTested() {
+        return isRiskTested;
+    }
+
+    public void setIsRiskTested(String isRiskTested) {
+        this.isRiskTested = isRiskTested;
+    }
+
+    public Boolean getAllowedTender() {
+        return isAllowedTender;
+    }
+
+    public void setAllowedTender(Boolean allowedTender) {
+        isAllowedTender = allowedTender;
+    }
+
+    public Integer getPaymentAuthOn() {
+        return paymentAuthOn;
+    }
+
+    public void setPaymentAuthOn(Integer paymentAuthOn) {
+        this.paymentAuthOn = paymentAuthOn;
+    }
+
+    public Integer getInvesAuthOn() {
+        return invesAuthOn;
+    }
+
+    public void setInvesAuthOn(Integer invesAuthOn) {
+        this.invesAuthOn = invesAuthOn;
+    }
+
+    public Integer getCreditAuthOn() {
+        return creditAuthOn;
+    }
+
+    public void setCreditAuthOn(Integer creditAuthOn) {
+        this.creditAuthOn = creditAuthOn;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 }

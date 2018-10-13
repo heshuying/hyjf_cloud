@@ -223,6 +223,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         userValidation.put("isInvested", isInvested);
         userValidation.put("paymentAuthStatus", paymentAuthStatus);
         userValidation.put("roleId", roleId);
+        // 角色验证开关
+        userValidation.put("isCheckUserRole", systemConfig.getRoleIsOpen());
 
         jsonObject.put("userValidation", userValidation);
         if (borrow == null) {
@@ -1353,6 +1355,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 userValidation.put("roleId", 0);
             }
 
+            // 角色验证开关
+            userValidation.put("isCheckUserRole", Boolean.parseBoolean(systemConfig.getRoleIsOpen()));
+
             // 是否是新手0新手 1老手
           /*  if ( null != userVO.getInvestflag() && userVO.getInvestflag() == 0) {
                 userValidation.put("investflag", true);
@@ -1800,11 +1805,17 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             userLoginInfo.setSetPassword(userVO.getIsSetPassword() == 1 ? Boolean.TRUE : Boolean.FALSE);
             // 检查用户角色是否能投资  合规接口改造之后需要判断
             UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
+            // 返回前端角色
+            userLoginInfo.setRoleId(userInfo.getRoleId());
             if (null != userInfo) {
                 userLoginInfo.setIsAllowedTender(Boolean.TRUE);
-                // 担保机构用户
-                if (userInfo.getRoleId() == 3) {
+                if (userInfo.getRoleId() == 3) {// 担保机构用户
                     userLoginInfo.setIsAllowedTender(Boolean.FALSE);
+                }
+                if("true".equals(systemConfig.getRoleIsOpen())){
+                    if (userInfo.getRoleId() == 2) {// 借款人不能投资
+                        userLoginInfo.setIsAllowedTender(Boolean.FALSE);
+                    }
                 }
             } else {
                 userLoginInfo.setIsAllowedTender(Boolean.FALSE);

@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.bean.HjhPlanAccedeResultBean;
 import com.hyjf.cs.trade.bean.HjhPlanBorrowResultBean;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.projectlist.AppProjectListService;
 import com.hyjf.cs.trade.util.ProjectConstant;
@@ -36,6 +37,8 @@ public class AppProjectListController extends BaseTradeController {
 
     @Autowired
     private AppProjectListService appProjectListService;
+    @Autowired
+    private SystemConfig systemConfig;
 
     /**
      * app端获取散标投资列表
