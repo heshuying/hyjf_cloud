@@ -493,7 +493,14 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @Date 2018/6/21 15:34
      */
     @Override
-    public WebResult<Object> getFiledMess(String logOrdId) {
+    public WebResult<Object> getFiledMess(String logOrdId,int userId) {
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
+        if(user!=null){
+            if(user.isBankOpenAccount()&&"0".equals(user.getIsSetPassword()+"")){
+                // 已经开户  未设置交易密码  开户成功，设置交易密码失败
+                throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_ERROR);
+            }
+        }
         WebResult<Object> result = new WebResult<Object>();
         String errorMess = amUserClient.getBankOpenAccountFiledMess(logOrdId);
         result.setStatus(WebResult.SUCCESS);

@@ -141,14 +141,7 @@ public class WebBankOpenController extends BaseUserController {
     @ResponseBody
     public WebResult<Object> seachFiledMess(@RequestHeader(value = "userId") int userId,@RequestParam("logOrdId") String logOrdId) {
         logger.info("查询开户失败原因start,logOrdId:{}   userId:{}", logOrdId,userId);
-        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
-        if(user!=null){
-            if(user.isBankOpenAccount()&&"0".equals(user.getIsSetPassword()+"")){
-                // 已经开户  未设置交易密码  开户成功，设置交易密码失败
-               throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_ERROR);
-            }
-        }
-        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId);
+        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId,userId);
         return result;
     }
 }
