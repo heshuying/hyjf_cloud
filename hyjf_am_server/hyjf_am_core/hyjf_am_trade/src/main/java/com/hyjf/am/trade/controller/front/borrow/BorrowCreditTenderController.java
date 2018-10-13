@@ -21,6 +21,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -115,7 +116,9 @@ public class BorrowCreditTenderController extends BaseController {
     public BorrowCreditRepayResponse getCreditTenderInfoSum(@RequestBody BorrowCreditRepayAmRequest request){
         BorrowCreditRepayResponse response = new BorrowCreditRepayResponse();
         Map<String,Object> map = borrowCreditTenderService.getCreditRepayInfoListSum(request);
-        response.setSumData(map);
+        Map<String,String> result = new HashMap<>();
+        map.forEach((k,v) -> result.put(k,String.valueOf(v)));
+        response.setSumData(result);
         return response;
     }
 

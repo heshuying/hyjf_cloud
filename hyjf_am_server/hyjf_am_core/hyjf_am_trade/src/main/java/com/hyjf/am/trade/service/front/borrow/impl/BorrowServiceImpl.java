@@ -341,7 +341,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
 
         // 插入产品加息
-        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+        if (Validator.isIncrease(borrowInfo.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
             boolean increaseFlag = this.insertIncreaseInterest(borrow, borrowInfo, tenderBg, borrowTender);
             if (!increaseFlag) {
                 throw new RuntimeException("插入产品加息表失败！");

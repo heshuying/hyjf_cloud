@@ -90,7 +90,7 @@ public class CouponUserVO extends BaseVO implements Serializable {
     private Integer delFlag;
 
     // 使用截止时间
-    private int endTime;
+    private Integer endTime;
     // 优惠券状态
     private int usedFlag;
     // 更新时间
@@ -362,11 +362,11 @@ public class CouponUserVO extends BaseVO implements Serializable {
         this.delFlag = delFlg;
     }
 
-    public int getEndTime() {
+    public Integer getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(Integer endTime) {
         this.endTime = endTime;
     }
 

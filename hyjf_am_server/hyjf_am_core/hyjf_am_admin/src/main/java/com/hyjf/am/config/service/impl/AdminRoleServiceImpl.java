@@ -5,12 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.mapper.auto.AdminRoleMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminRoleMenuPermissionsMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminRoleCustomizeMapper;
+import com.hyjf.am.config.dao.mapper.customize.AdminRoleMenuPermissionsCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.AdminRole;
 import com.hyjf.am.config.dao.model.auto.AdminRoleExample;
 import com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions;
 import com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissionsExample;
 import com.hyjf.am.config.dao.model.customize.AdminRoleCustomize;
 import com.hyjf.am.config.service.AdminRoleService;
+import com.hyjf.am.resquest.admin.UserRoleRequest;
 import com.hyjf.am.resquest.config.AdminRoleRequest;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.StringPool;
@@ -31,7 +33,13 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
 	AdminRoleCustomizeMapper adminRoleCustomizeMapper;
 	@Autowired
 	AdminRoleMenuPermissionsMapper adminRoleMenuPermissionsMapper;
+	@Autowired
+	AdminRoleMenuPermissionsCustomizeMapper adminRoleMenuPermissionsCustomizeMapper;
     private static final String TOP_MEN_UID = "0";
+    /**
+     * 查看权限
+     */
+    public static final String VIEW = "PE0001";
 
     /**
      * 获取角色数
@@ -264,7 +272,10 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
 
                 jo.put("id", menuTreeRecord.getMenuUuid());
                 jo.put("menuUuid", menuTreeRecord.getMenuUuid());
+                jo.put("key", menuTreeRecord.getMenuUuid());
+                jo.put("value", menuTreeRecord.getMenuUuid());
                 jo.put("text", menuTreeRecord.getMenuName());
+                jo.put("title", menuTreeRecord.getMenuName());
                 jo.put("icon", menuTreeRecord.getMenuIcon());
                 joAttr = new JSONObject();
                 joAttr.put("menuUuid", menuTreeRecord.getMenuUuid());
@@ -281,9 +292,13 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
                             for (AdminRoleCustomize perm : permList) {
                                 joPerm = new JSONObject();
                                 joPerm.put("id", perm.getMenuUuid() + "_" + perm.getPermissionUuid());
+                                joPerm.put("key", perm.getMenuUuid() + "-" + perm.getPermissionUuid());
+                                joPerm.put("value", perm.getMenuUuid() + "-" + perm.getPermissionUuid());
                                 joPerm.put("text", perm.getPermissionName());
+                                joPerm.put("title", perm.getPermissionName());
                                 joPerm.put("type", "lock");
                                 if (Validator.isNotNull(perm.getRoleId())) {
+                                	joPerm.put("selected", true);
                                     JSONObject selectObj = new JSONObject();
                                     selectObj.put("selected", true);
                                     selectObj.put("opened", true);
@@ -394,6 +409,79 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
   //      criteria.andRoleNameEqualTo(roleName).andDelFlagEqualTo(CustomConstants.FLAG_NORMAL);
         int cnt = adminRoleMapper.countByExample(example);
         return cnt;
+    }
+    /**
+     * 为角色授权
+     *
+     * @param userRoleRequest
+     * @return
+     */
+    @Override
+    public void setRolePermission(UserRoleRequest userRoleRequest) throws Exception {
+        Integer roleId = userRoleRequest.getId();
+        if (roleId != null) {
+            List<AdminRoleMenuPermissions> adminList = new ArrayList<>();
+            //先删除已有的权限
+            adminRoleMenuPermissionsCustomizeMapper.deleteMenubyRoleId(roleId);
+            //放入一级菜单的信息
+            HashSet<String> firstClass = new HashSet<>();
+            String[] permList = userRoleRequest.getPermList();
+            for (String perm : permList) {
+                boolean contains = perm.contains("-");
+                //参数是三级菜单
+                if (contains) {
+                    String[] split = perm.split("-");
+                    String menuUuid = split[0];
+                    String permissionUuid = split[1];
+                    String s = adminRoleMenuPermissionsCustomizeMapper.checkLevel(menuUuid);
+                    firstClass.add(s);
+                    AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
+                    permissions.setRoleId(roleId);
+                    permissions.setMenuUuid(menuUuid);
+                    permissions.setPermissionUuid(permissionUuid);
+                    adminList.add(permissions);
+                } else {
+                    String s = adminRoleMenuPermissionsCustomizeMapper.checkLevel(perm);
+                    //参数是一级菜单
+                    if (StringUtils.equals(s, "0")) {
+                        firstClass.add(perm);
+                        List<String> list = adminRoleMenuPermissionsCustomizeMapper.selectChildMenu(perm);
+                        for (String s1 : list) {
+                            List<String> permissionId = adminRoleMenuPermissionsCustomizeMapper.selectMenuPerssion(s1);
+                            for (String pId : permissionId) {
+                                AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
+                                permissions.setRoleId(roleId);
+                                permissions.setMenuUuid(s1);
+                                permissions.setPermissionUuid(pId);
+                                adminList.add(permissions);
+                            }
+                        }
+                        //参数是二级菜单
+                    } else {
+                        String s1 = adminRoleMenuPermissionsCustomizeMapper.checkLevel(perm);
+                        firstClass.add(s1);
+                        List<String> permissionId = adminRoleMenuPermissionsCustomizeMapper.selectMenuPerssion(perm);
+                        for (String pId : permissionId) {
+                            AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
+                            permissions.setRoleId(roleId);
+                            permissions.setMenuUuid(perm);
+                            permissions.setPermissionUuid(pId);
+                            adminList.add(permissions);
+                        }
+                    }
+                }
+            }
+            //插入一级菜单
+            for (String s : firstClass) {
+                AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
+                permissions.setRoleId(roleId);
+                permissions.setMenuUuid(s);
+                permissions.setPermissionUuid(VIEW);
+                adminList.add(permissions);
+            }
+            //将所有条件拼接好一次插入
+            adminRoleMenuPermissionsCustomizeMapper.insertMenuPerssion(adminList);
+        }
     }
 
 }

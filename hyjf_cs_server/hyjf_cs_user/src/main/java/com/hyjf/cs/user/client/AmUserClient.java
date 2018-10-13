@@ -465,7 +465,7 @@ public interface AmUserClient {
 	 * @param pid
 	 * @return
 	 */
-	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
+	Boolean bindThirdUser(Integer userId, Integer bindUniqueId, Integer pid);
 
 	/**
 	 * 获取银行卡信息

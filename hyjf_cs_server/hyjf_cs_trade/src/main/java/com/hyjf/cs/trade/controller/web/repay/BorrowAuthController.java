@@ -157,6 +157,7 @@ public class BorrowAuthController extends BaseTradeController {
         BankCallResult result = new BankCallResult();
         String phone = request.getParameter("phone");
         logger.info("受托支付申请异步回调start");
+        logger.info("请求参数：" + JSON.toJSONString(bean));
         bean.setMobile(phone);
         bean.convert();
         int userId = Integer.parseInt(bean.getLogUserId());

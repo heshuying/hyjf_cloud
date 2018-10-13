@@ -1119,7 +1119,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     }
 
 	@Override
-	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId) {
+	public Boolean bindThirdUser(Integer userId, Integer bindUniqueId, Integer bindPlatformId) {
 		BindUser bindUsers = new BindUser();
 		bindUsers.setUserId(userId);
 		bindUsers.setBindUniqueId(bindUniqueId);

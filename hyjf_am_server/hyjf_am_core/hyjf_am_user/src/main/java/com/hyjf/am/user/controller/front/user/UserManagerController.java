@@ -4,6 +4,7 @@
 package com.hyjf.am.user.controller.front.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
@@ -703,8 +704,11 @@ public class UserManagerController extends BaseController {
 	 * @return
 	 */
     @RequestMapping("/bindThirdUser/{userId}/{bindUniqueId}/{bindPlatformId}")
-    public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId) {
-    	return userManagerService. bindThirdUser( userId,  bindUniqueId,  bindPlatformId);
+    public BooleanResponse bindThirdUser(@PathVariable Integer userId, @PathVariable Integer bindUniqueId, @PathVariable Integer bindPlatformId) {
+        BooleanResponse response = new BooleanResponse();
+    	Boolean result =  userManagerService.bindThirdUser( userId,  bindUniqueId,  bindPlatformId);
+    	response.setResultBoolean(result);
+    	return response;
     }
 
     /**
