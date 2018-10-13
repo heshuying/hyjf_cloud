@@ -1537,6 +1537,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             params.put("ordId", bean.getLogOrderId());
             // 用户编号
             params.put("userId", userId+"");
+            // 多少期
+            params.put("borrowPeriod", borrow.getBorrowPeriod()+"");
+
             try {
                 couponTenderProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
             } catch (MQException e) {

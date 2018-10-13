@@ -80,6 +80,7 @@ public class CouponTenderConsumer extends Consumer {
                 }
                 String ordId = (String) map.get("ordId");
                 String userId = (String) map.get("userId");
+                String borrowPeriod = (String) map.get("borrowPeriod");
                 BankCallBean bean = new BankCallBean();
                 bean.setLogOrderId(ordId);
                 bean.setLogIp(ip);
@@ -88,9 +89,8 @@ public class CouponTenderConsumer extends Consumer {
                 bean.setTxAmount(money);
                 BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
                 BorrowInfoVO borrowInfoVO = borrowClient.getBorrowInfoByNid(borrowNid);
-                logger.info("borrow:"+JSONObject.toJSONString(borrow));
                 logger.info("borrowInfoVO:"+JSONObject.toJSONString(borrowInfoVO));
-                couponService.borrowTenderCouponUse(couponGrantId, borrow, bean);
+                couponService.borrowTenderCouponUse(couponGrantId, borrow, bean,borrowInfoVO);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
                 e.printStackTrace();

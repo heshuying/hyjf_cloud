@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderUsedVO;
@@ -462,7 +463,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      * @param bean
      */
     @Override
-    public void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean) {
+    public void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean, BorrowInfoVO borrowInfoVO) {
         boolean isUsed = RedisUtils.tranactionSet(RedisConstants.COUPON_TENDER_KEY, 300);
         if (!isUsed) {
             logger.error("当前优惠券正在使用....");
@@ -473,19 +474,15 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         // 金额
         String account = bean.getTxAmount();
         String ip = bean.getLogIp();
-        logger.info("222222 ");
         String borrowNid = borrow.getBorrowNid();
         String ordId = bean.getLogOrderId();
-        logger.info("4444 ");
         Integer userId = Integer.parseInt(bean.getLogUserId());
-        logger.info("33333 ");
         Integer platform = bean.getLogClient();
         String config = "";
-        logger.info("11111 ");
         // 加息券标识（0：禁用，1：可用）    1：体验金，2：加息券 3代金券
-        int interestCoupon = borrow.getBorrowInterestCoupon();
+        int interestCoupon = borrowInfoVO.getBorrowInterestCoupon();
         // 体验金标识（0：禁用，1：可用）
-        int moneyCoupon = borrow.getBorrowTasteMoney();
+        int moneyCoupon = borrowInfoVO.getBorrowTasteMoney();
         if (interestCoupon == 1) {
             config += "2,";
         }
