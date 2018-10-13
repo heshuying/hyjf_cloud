@@ -447,7 +447,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             return result;
         }
         // 优惠券不能和本金公用
-        if (configVO.getAddFlag() == 1 && !"0".equals(accountStr)) {
+        if (configVO.getAddFlag()!=null&&configVO.getAddFlag() == 1 && !"0".equals(accountStr)) {
             result.put("statusDesc", "当前优惠券不能与本金共用！");
             return result;
         }
