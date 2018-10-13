@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.front.coupon;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.CoupUserResponse;
@@ -63,9 +64,12 @@ public class CouponController extends BaseController {
     @PostMapping("/updateCouponTender")
     public Integer updateCouponTender(CouponTenderVO couponTender) {
         try{
+            logger.info("优惠券投资开始。。。。。。。");
             couponService.updateCouponTender(couponTender);
             return 1;
         }catch (Exception e ) {
+            e.printStackTrace();
+            logger.info("chucuole :::"+JSONObject.toJSONString(e));
             return 0;
         }
     }
