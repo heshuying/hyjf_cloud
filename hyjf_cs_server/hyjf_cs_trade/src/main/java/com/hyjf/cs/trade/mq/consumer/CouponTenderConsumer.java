@@ -88,6 +88,7 @@ public class CouponTenderConsumer extends Consumer {
                 couponService.borrowTenderCouponUse(couponGrantId, borrow, bean);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
+                e.printStackTrace();
                 logger.info("操作失败");
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
