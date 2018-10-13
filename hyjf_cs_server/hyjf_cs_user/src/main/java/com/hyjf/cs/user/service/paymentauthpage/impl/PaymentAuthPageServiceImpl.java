@@ -173,11 +173,11 @@ public class PaymentAuthPageServiceImpl extends BaseUserServiceImpl implements P
         }
 
         hjhUserAuthLog.setOperateEsb(client);
-        hjhUserAuthLog.setCreateUser(userVO.getUserId());
+        hjhUserAuthLog.setCreateUserId(userVO.getUserId());
         hjhUserAuthLog.setCreateTime(nowTime);
         hjhUserAuthLog.setUpdateTime(nowTime);
-        hjhUserAuthLog.setUpdateUser(userId);
-        hjhUserAuthLog.setDelFlg(0);
+        hjhUserAuthLog.setUpdateUserId(userId);
+        hjhUserAuthLog.setDelFlag(0);
         amUserClient.insertUserAuthLog(hjhUserAuthLog);
     }
 
@@ -189,16 +189,16 @@ public class PaymentAuthPageServiceImpl extends BaseUserServiceImpl implements P
     @Override
     public void updateUserAuth(int userId, BankCallBean retBean) {
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthByUserId(userId);
-        Integer nowTime = GetDate.getNowTime10();
+        Date nowTime = GetDate.getNowTime();
         String orderId = retBean.getOrderId();
         if (StringUtils.isNotBlank(orderId)) {
             HjhUserAuthLogVO hjhUserAuthLog = amUserClient.selectByExample(orderId);
             // 更新用户签约授权日志表
             if (null!=hjhUserAuthLog) {
                 hjhUserAuthLog.setUpdateTime(new Date());
-                hjhUserAuthLog.setUpdateUser(userId);
+                hjhUserAuthLog.setUpdateUserId(userId);
                 hjhUserAuthLog.setOrderStatus(1);
-                hjhUserAuthLog.setAuthCreateTime(new Date());
+                hjhUserAuthLog.setAuthCreateTime(GetDate.getNowTime10());
                 HjhUserAuthLogRequest hjhUserAuthLogRequest = new HjhUserAuthLogRequest();
                 BeanUtils.copyProperties(hjhUserAuthLog,hjhUserAuthLogRequest);
                 amUserClient.updateHjhUserAuthLog(hjhUserAuthLogRequest);
@@ -219,11 +219,11 @@ public class PaymentAuthPageServiceImpl extends BaseUserServiceImpl implements P
                 setAuthType(hjhUserAuth,retBean);
                 hjhUserAuth.setUserId(user.getUserId());
                 hjhUserAuth.setUserName(user.getUsername());
-                hjhUserAuth.setCreateUser(user.getUserId());
+                hjhUserAuth.setCreateUserId(user.getUserId());
                 hjhUserAuth.setCreateTime(nowTime);
                 hjhUserAuth.setUpdateTime(nowTime);
-                hjhUserAuth.setUpdateUser(userId);
-                hjhUserAuth.setDelFlg(0);
+                hjhUserAuth.setUpdateUserId(userId);
+                hjhUserAuth.setDelFlag(0);
                 HjhUserAuthRequest hjhUserAuthRequest = new HjhUserAuthRequest();
                 BeanUtils.copyProperties(hjhUserAuth,hjhUserAuthRequest);
                 amUserClient.insertHjhUserAuth(hjhUserAuthRequest);
@@ -233,7 +233,7 @@ public class PaymentAuthPageServiceImpl extends BaseUserServiceImpl implements P
                 setAuthType(hjhUserAuth,retBean);
                 updateHjhUserAuth.setId(hjhUserAuth.getId());
                 updateHjhUserAuth.setUpdateTime(nowTime);
-                updateHjhUserAuth.setUpdateUser(userId);
+                updateHjhUserAuth.setUpdateUserId(userId);
                 HjhUserAuthRequest hjhUserAuthRequest = new HjhUserAuthRequest();
                 BeanUtils.copyProperties(hjhUserAuth,hjhUserAuthRequest);
                 amUserClient.updateHjhUserAuth(hjhUserAuthRequest);

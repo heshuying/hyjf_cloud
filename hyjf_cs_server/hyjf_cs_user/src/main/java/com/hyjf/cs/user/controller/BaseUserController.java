@@ -4,10 +4,12 @@
 package com.hyjf.cs.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.user.config.SystemConfig;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -72,5 +74,26 @@ public class BaseUserController extends BaseController {
         }
 
         return ret;
+    }
+
+    /**
+     * 获取前端的地址
+     * @param sysConfig
+     * @param platform
+     * @return
+     */
+    public String getFrontHost(SystemConfig sysConfig, String platform) {
+
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WEB_CLIENT == client) {
+            return sysConfig.getFrontHost();
+        }
+        if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+            return sysConfig.getAppFrontHost();
+        }
+        if (ClientConstants.WECHAT_CLIENT == client) {
+            return sysConfig.getWeiFrontHost();
+        }
+        return null;
     }
 }
