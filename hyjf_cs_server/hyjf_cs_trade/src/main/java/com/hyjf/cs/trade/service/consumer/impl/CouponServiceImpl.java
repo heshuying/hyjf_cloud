@@ -334,7 +334,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         }
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
         CouponConfigVO configVO = amTradeClient.selectCouponConfig(couponUser.getCouponCode());
-        logger.info("couponUser:"+JSONObject.toJSONString(couponUser));
+        logger.info("configVO:"+JSONObject.toJSONString(configVO));
         if (couponUser == null) {
             result.put("statusDesc", "当前优惠券不存在或已使用");
             return result;
