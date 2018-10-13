@@ -9,10 +9,7 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
-import com.hyjf.am.vo.trade.coupon.CouponTenderUsedVO;
-import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -336,6 +333,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             return result;
         }
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
+        CouponConfigVO configVO = amTradeClient.selectCouponConfig(couponUser.getCouponCode());
         logger.info("couponUser:"+JSONObject.toJSONString(couponUser));
         if (couponUser == null) {
             result.put("statusDesc", "当前优惠券不存在或已使用");
@@ -449,7 +447,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             return result;
         }
         // 优惠券不能和本金公用
-        if (couponUser.getAddFlg() == 1 && !"0".equals(accountStr)) {
+        if (configVO.getAddFlag() == 1 && !"0".equals(accountStr)) {
             result.put("statusDesc", "当前优惠券不能与本金共用！");
             return result;
         }
