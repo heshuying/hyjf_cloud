@@ -11,23 +11,23 @@ import com.hyjf.admin.beans.BaseRequest;
  */
 public class PlatformCountRequestBean extends BaseRequest {
     /** 开始时间 */
-    private String startTime;
+    private String timeStartSrch;
     /** 结束时间 */
-    private String endTime;
+    private String timeEndSrch;
 
-    public String getStartTime() {
-        return startTime;
+    public String getTimeStartSrch() {
+        return timeStartSrch;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setTimeStartSrch(String timeStartSrch) {
+        this.timeStartSrch = timeStartSrch;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getTimeEndSrch() {
+        return timeEndSrch;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setTimeEndSrch(String timeEndSrch) {
+        this.timeEndSrch = timeEndSrch;
     }
 }

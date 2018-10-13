@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.IncreaseInterestRepayService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.response.admin.IncreaseInterestRepayResponse;
 import com.hyjf.am.resquest.admin.IncreaseInterestRepayRequest;
 import com.hyjf.am.vo.admin.IncreaseInterestRepayVO;
@@ -31,11 +32,18 @@ public class IncreaseInterestRepayServiceImpl implements IncreaseInterestRepaySe
     @Override
     public IncreaseInterestRepayResponse searchPage(IncreaseInterestRepayRequest request){
         IncreaseInterestRepayResponse response = new IncreaseInterestRepayResponse();
-        //获取返回参数
-        EnumMap<AmTradeClient.IncreaseProperty,Object> voList = increaseInterestRepayClient.getIncreaseInterestRepayList(request);
-        voList.entrySet().iterator();
-        response.setResultList((List<IncreaseInterestRepayVO>) voList.get(AmTradeClient.IncreaseProperty.VO));
-        response.setSumAccount((String) voList.get(AmTradeClient.IncreaseProperty.STR));
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        request.setLimitStart(page.getOffset());
+        request.setLimitEnd(page.getLimit());
+        Integer count = increaseInterestRepayClient.getIncreaseInterestRepayCount(request);
+        if (count != null && count > 0) {
+            //获取返回参数
+            EnumMap<AmTradeClient.IncreaseProperty,Object> voList = increaseInterestRepayClient.getIncreaseInterestRepayList(request);
+            voList.entrySet().iterator();
+            response.setResultList((List<IncreaseInterestRepayVO>) voList.get(AmTradeClient.IncreaseProperty.VO));
+            response.setSumAccount((String) voList.get(AmTradeClient.IncreaseProperty.STR));
+            response.setTotal(count);
+        }
         return response;
     }
 

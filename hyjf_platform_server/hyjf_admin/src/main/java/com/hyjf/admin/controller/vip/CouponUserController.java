@@ -167,6 +167,8 @@ public class CouponUserController extends BaseController {
             couponUserRequest.setEndTime((int) (endDate.getTime() / 1000));
         }
         couponUserRequest.setUserId(userId);
+        couponUserRequest.setCouponCode(configVO.getCouponCode());
+        couponUserRequest.setContent(couponUserBeanRequest.getContent());
         couponUserRequest.setCouponUserCode(GetCode.getCouponUserCode(configVO.getCouponType()));
         couponUserRequest.setCreateUserId(Integer.parseInt(loginUserId));
         couponUserRequest.setCreateTime(GetDate.getDate());
@@ -463,7 +465,7 @@ public class CouponUserController extends BaseController {
         if (record == null || StringUtils.isEmpty(record.getCouponCode())) {
             return new AdminResult<>(FAIL,FAIL_DESC);
         }
-        CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponUserBeanRequest.getCouponCode());
+        CouponConfigResponse configResponse = couponUserService.getCouponConfig(record.getCouponCode());
         if (configResponse == null || configResponse.getResult() == null) {
             return new AdminResult<>(FAIL,FAIL_DESC);
         }

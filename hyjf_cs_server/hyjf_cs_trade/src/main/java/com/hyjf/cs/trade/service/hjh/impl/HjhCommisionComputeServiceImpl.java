@@ -88,7 +88,7 @@ public class HjhCommisionComputeServiceImpl extends BaseTradeServiceImpl impleme
             return record.getUserId();
         }else if(pushMoneyOnline == 1 && record.getInviteUserAttribute() != null && record.getInviteUserAttribute() == 3){
             return record.getInviteUserId();
-        }else if(pushMoney51 == 1 && userInfoInvite.getIs51() != null && userInfoInvite.getIs51() == 1 && userInfoInvite.getAttribute() <2){
+        }else if(pushMoney51 == 1 && userInfoInvite != null && userInfoInvite.getIs51() != null && userInfoInvite.getIs51() == 1 && userInfoInvite.getAttribute() <2){
             return record.getInviteUserId();
         }
         return null;

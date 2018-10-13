@@ -61,7 +61,7 @@ public class IncreaseInterestRepayController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<List2Result<IncreaseInterestRepayVO,String>>(List2Result.build(response.getResultList(), response.getCount(),response.getSumAccount())) ;
+		return new AdminResult<List2Result<IncreaseInterestRepayVO,String>>(List2Result.build(response.getResultList(), response.getTotal() == null ? 0 : response.getTotal(),response.getSumAccount())) ;
 	}
 
 	/**

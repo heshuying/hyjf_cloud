@@ -93,16 +93,18 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
 
         // 计算提成用户id
         UserInfoVO userInfoCommision = hjhLockVo.getCommissioUserInfoVO();
+        if(userInfoCommision == null){
+            statusUpdate(record, 1);
+            return;
+        }
         commisionUserId = userInfoCommision.getUserId();
         if(commisionUserId == null){
             statusUpdate(record, 1);
-
             return;
         }
 
         if(userInfoCommision.getAttribute() != 3 && userInfoCommision.getIs51() ==1 && pushMoney51.getRewardSend() == 0){
             statusUpdate(record, 1);
-
             return;
         }
         BankOpenAccountVO bankOpenAccountInfo = hjhLockVo.getBankOpenAccountVO();

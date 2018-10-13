@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.IncreaseInterestRepayPlanService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.response.admin.IncreaseInterestRepayPlanResponse;
 import com.hyjf.am.resquest.admin.IncreaseInterestRepayPlanRequest;
 import com.hyjf.am.vo.admin.IncreaseInterestRepayDetailVO;
@@ -30,8 +31,16 @@ public class IncreaseInterestRepayPlanServiceImpl implements IncreaseInterestRep
     @Override
     public IncreaseInterestRepayPlanResponse searchPage(IncreaseInterestRepayPlanRequest request){
         IncreaseInterestRepayPlanResponse response = new IncreaseInterestRepayPlanResponse();
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        request.setLimitStart(page.getOffset());
+        request.setLimitEnd(page.getLimit());
+        Integer count = increaseInterestRepayPlanClient.getIncreaseInterestRepayPlanCount(request);
+        if (count != null && count > 0) {
+            //获取返回参数
             List<IncreaseInterestRepayDetailVO> voList = increaseInterestRepayPlanClient.getIncreaseInterestRepayPlanList(request);
             response.setResultList(voList);
+            response.setTotal(count);
+        }
         return response;
     }
 

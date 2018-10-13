@@ -239,8 +239,15 @@ public class ApiBindCardController extends BaseUserController {
             return ret;
         }
 
+        if(retBean == null){
+            logger.info("userBindCardPlus:调用银行接口失败，返回null");
+            ret.setStatus(BaseResultBean.STATUS_FAIL);
+            ret.setStatusDesc("调用银行接口失败，返回null");
+            return ret;
+        }
+
         // 回调数据处理
-        if (retBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode()))) {
+        if (!(BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode()))) {
             // 执行结果(失败)
             String message = this.bindCardService.getBankRetMsg(retBean.getRetCode());
             logger.info("userBindCardPlus", "银行返码:" + retBean.getRetCode() + "绑卡失败:" + message);
@@ -363,11 +370,19 @@ public class ApiBindCardController extends BaseUserController {
             resultBean.setStatusDesc("调用银行接口失败~!");
             return resultBean;
         }
+
+        if(retBean == null){
+            logger.info("调用银行接口失败，返回null");
+            resultBean.setStatus(BaseResultBean.STATUS_FAIL);
+            resultBean.setStatusDesc("调用银行接口失败，返回null");
+            return resultBean;
+        }
+
         // 回调数据处理
-        if (retBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode()))) {
+        if (!(BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode()))) {
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            logger.info((retBean == null ? "" : retBean.getRetMsg())+bankCardRequestBean.getAccountId());
-            resultBean.setStatusDesc((retBean == null ? "" : retBean.getRetMsg()));
+            logger.info(retBean.getRetMsg()+bankCardRequestBean.getAccountId());
+            resultBean.setStatusDesc(retBean.getRetMsg());
             return resultBean;
         }
         // 执行删除卡后处理,判断银行卡状态，删除平台本地银行卡信息
@@ -375,7 +390,7 @@ public class ApiBindCardController extends BaseUserController {
             boolean isUpdateFlag = this.bindCardService.updateAfterDeleteCard(userId,user.getUsername(),bankCardRequestBean.getCardNo());
             if (!isUpdateFlag) {
                 resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-                logger.info((retBean == null ? "" : retBean.getRetMsg())+bankCardRequestBean.getAccountId());
+                logger.info((retBean.getRetMsg())+bankCardRequestBean.getAccountId());
                 resultBean.setStatusDesc("系统异常,请稍后再试!");
             } else {
                 resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
