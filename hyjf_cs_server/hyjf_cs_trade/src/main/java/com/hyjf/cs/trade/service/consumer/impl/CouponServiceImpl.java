@@ -474,7 +474,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         String account = bean.getTxAmount();
         String ip = bean.getLogIp();
         String borrowNid = borrow.getBorrowNid();
-        String ordId = bean.getOrderId();
+        String ordId = bean.getLogOrderId();
         Integer userId = Integer.parseInt(bean.getLogUserId());
         Integer platform = bean.getLogClient();
         String config = "";
