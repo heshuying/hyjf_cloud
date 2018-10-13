@@ -473,11 +473,15 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         // 金额
         String account = bean.getTxAmount();
         String ip = bean.getLogIp();
+        logger.info("222222 ");
         String borrowNid = borrow.getBorrowNid();
         String ordId = bean.getLogOrderId();
+        logger.info("4444 ");
         Integer userId = Integer.parseInt(bean.getLogUserId());
+        logger.info("33333 ");
         Integer platform = bean.getLogClient();
         String config = "";
+        logger.info("11111 ");
         // 加息券标识（0：禁用，1：可用）    1：体验金，2：加息券 3代金券
         int interestCoupon = borrow.getBorrowInterestCoupon();
         // 体验金标识（0：禁用，1：可用）
@@ -488,6 +492,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         if (moneyCoupon == 1) {
             config += "1,";
         }
+        logger.info("开始调用优惠券投资校验   ");
         Map<String, String> validateMap = this.validateCoupon(userId, account, Integer.parseInt(couponGrantId), platform + "", borrow.getBorrowPeriod(), config);
         logger.info("优惠券投资校验完毕  结果：{}" , validateMap);
         if (MapUtils.isEmpty(validateMap)) {
