@@ -67,17 +67,18 @@ public class CouponTenderConsumer extends Consumer {
             Map<String, Object> map = new HashMap<>();
             String msgBody = new String(paramBean.getBody());
             map = JSONObject.parseObject(msgBody, Map.class);
-            logger.info("散标优惠券投资请求参数：{}",msgBody);
-            JSONObject result = new JSONObject();
+            logger.info("散标优惠券投资请求参数：{}",JSONObject.toJSONString(map));
             try {
                 String couponGrantId = (String) map.get("couponGrantId");
                 String borrowNid = (String) map.get("borrowNid");
                 String money = (String) map.get("money");
                 String platform = (String) map.get("platform");
-                String ip = (String) (map.get("ip")==null?"":map.get("ip"));
+                String ip = "";
+                if(map.containsKey("ip")){
+                    ip = (String) map.get("ip");
+                }
                 String ordId = (String) map.get("ordId");
                 String userId = (String) map.get("userId");
-
                 BankCallBean bean = new BankCallBean();
                 bean.setLogOrderId(ordId);
                 bean.setLogIp(ip);
