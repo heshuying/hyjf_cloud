@@ -235,7 +235,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         int accountInt = Integer.parseInt(account);
         // 该优惠券只能单独使用
-        if (accountInt != 0 && cuc != null && cuc.getCouponType() == 1 && cuc.getAddFlg() == 1) {
+        if (accountInt != 0 && cuc != null && cuc.getCouponType() == 1 && cuc.getAddFlg()!=null&& cuc.getAddFlg() == 1) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_COUPON_USE_ALONE);
         }
         // 投资金额不能为负数
