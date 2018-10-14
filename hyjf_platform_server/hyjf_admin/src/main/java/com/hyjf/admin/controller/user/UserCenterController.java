@@ -28,6 +28,10 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -637,5 +641,80 @@ public class UserCenterController extends BaseController {
         userManagerInitResponseBean.setBorrowTypes(listBorrowTypes);
         userManagerInitResponseBean.setListHjhInstConfig(dropDownVOList);
         return userManagerInitResponseBean;
+    }
+
+
+
+    /**
+     * 同步用户角色 add by jijun 20181014
+     */
+    @PostMapping(value = "/syncRoleAction/{userId}")
+    @ApiOperation(value = "同步用户角色", notes = "同步用户角色")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    public AdminResult syncRoleAction(HttpServletRequest request,@PathVariable String userId){
+        if (StringUtils.isBlank(userId)){
+            return new AdminResult<>(FAIL, "获取用户userId失败!");
+        }
+
+        UserVO user = userCenterService.selectUserByUserId(userId);
+        //获取共同参数start
+        String bankInstCode = systemConfig.getBANK_INSTCODE();
+        String bankCode = systemConfig.getBANK_BANKCODE();
+        String txDate = GetOrderIdUtils.getTxDate();
+        String txTime = GetOrderIdUtils.getTxTime();
+        String seqNo = GetOrderIdUtils.getSeqNo(6);
+        //获取共同参数end
+        BankCallBean selectbean = new BankCallBean();
+        //共同参数封装start
+        selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+        selectbean.setInstCode(bankInstCode);// 机构代码
+        selectbean.setBankCode(bankCode);
+        selectbean.setTxDate(txDate);
+        selectbean.setTxTime(txTime);
+        selectbean.setSeqNo(seqNo);
+        //000001手机APP,000002网页,000003微信,000004柜面
+        selectbean.setChannel("000002");
+        //共同参数封装end
+
+        //非共同参数封装start
+        selectbean.setTxCode(BankCallMethodConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE);
+        selectbean.setMobile(user.getMobile());
+        //非共同参数封装end
+
+        BankCallBean retBean;
+        try {
+            retBean=BankCallUtils.callApiBg(selectbean);
+        }catch (Exception e){
+            logger.error("请求银行接口出错!手机号:"+user.getMobile());
+            return new AdminResult<>(FAIL, "请求银行接口出错!");
+        }
+
+        if (Validator.isNull(retBean)){
+            //获取银行账户信息失败
+            return new AdminResult<>(FAIL, "获取银行账户信息失败!");
+        }
+        //获取userInfo
+        UserInfoVO userInfo = userCenterService.selectUserInfoByUserId(userId);
+        if (Validator.isNotNull(userInfo)){
+            UserManagerUpdateRequest userRequest = new UserManagerUpdateRequest();
+            AdminSystemVO adminSystemVO = this.getUser(request);
+
+            userRequest.setUserId(userId);
+            userRequest.setLoginUserName(adminSystemVO.getUsername());
+            userRequest.setLogingUserId(adminSystemVO.getId());
+            userRequest.setUserRole(retBean.getIdentity());
+            userRequest.setBorrowerType(userInfo.getBorrowerType());
+            userRequest.setStatus(user.getStatus()==null?"":String.valueOf(user.getStatus()));
+            userRequest.setMobile(user.getMobile());
+            userRequest.setRemark("会员管理-同步用户角色");
+
+            int result=userCenterService.updataUserInfo(userRequest);
+            if (result<=0) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+        }else {
+            return new AdminResult<>(FAIL, "查询不到对应的用户信息!");
+        }
+        return new AdminResult<>(SUCCESS,"同步用户角色成功!");
     }
 }

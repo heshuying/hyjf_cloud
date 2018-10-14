@@ -599,4 +599,14 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         }
         return keysList;
     }
+
+    /**
+     * 根据userId获取userInfo对象
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserInfoVO selectUserInfoByUserId(String userId) {
+        return userCenterClient.findUsersInfoById(Integer.parseInt(userId));
+    }
 }

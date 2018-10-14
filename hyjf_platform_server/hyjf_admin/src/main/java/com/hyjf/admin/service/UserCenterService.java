@@ -200,4 +200,11 @@ public interface UserCenterService {
      * @return
      */
     JSONArray getCrmDepartmentList(String[] list);
+
+    /**
+     * 根据userId获取userInfo
+     * @param userId
+     * @return
+     */
+    UserInfoVO selectUserInfoByUserId(String userId);
 }
