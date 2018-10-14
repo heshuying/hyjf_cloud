@@ -98,6 +98,13 @@ public class CouponUserVO extends BaseVO implements Serializable {
     // 发放给用户的优惠券编号
     private String couponUserCode;
 
+    /**
+     * 优惠券收益
+     */
+    private String couponInterest;
+
+
+
     public Integer getId() {
         return id;
     }
@@ -432,5 +439,13 @@ public class CouponUserVO extends BaseVO implements Serializable {
 
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+
+    public String getCouponInterest() {
+        return couponInterest;
+    }
+
+    public void setCouponInterest(String couponInterest) {
+        this.couponInterest = couponInterest;
     }
 }
