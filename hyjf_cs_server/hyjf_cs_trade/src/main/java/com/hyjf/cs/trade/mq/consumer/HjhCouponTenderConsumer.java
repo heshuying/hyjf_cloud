@@ -93,6 +93,7 @@ public class HjhCouponTenderConsumer extends Consumer {
                     // 校验通过 进行优惠券投资投资
                     logger.info("优惠券投资校验成功,userId{},券为:{}", userId, couponGrantId);
                     CouponUserVO cuc = borrowClient.getCouponUser(couponGrantId, userId);
+                    cuc.setId(couponGrantId);
                     logger.info("优惠券投资开始,userId{},平台{},券为:{}", userId, platform, couponGrantId);
                     TenderRequest request = new TenderRequest();
                     request.setIp(ip);
