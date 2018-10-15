@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +57,7 @@ public class WechatTradeDetailController extends BaseTradeController {
     @ApiOperation(value = "用户收支明细", notes = "用户收支明细")
     @ResponseBody
     @PostMapping(value = "/queryTradeList.do",  produces = "application/json; charset=utf-8")
-    public Map<String, Object> searchTradeDetailList(@RequestHeader(value = "userId" , required = false )Integer userId, AppTradeDetailBeanRequest trade) {
+    public Map<String, Object> searchTradeDetailList(@RequestHeader(value = "userId" , required = false )Integer userId, @RequestBody @Valid AppTradeDetailBeanRequest trade) {
 
         SimpleResultBean<Map<String, Object>> resultBean = new SimpleResultBean<>();
 

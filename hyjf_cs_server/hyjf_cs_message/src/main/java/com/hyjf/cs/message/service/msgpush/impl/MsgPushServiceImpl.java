@@ -358,7 +358,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 		criteria.and("tagId").is(messagePushTagVO.getId()).and("staDate").is((GetDate.dateToString(today)));
 		query.addCriteria(criteria);
 		List<MessagePushPlatStatics> msgPushPlatStaticsList = msgPushPlatStaticsDao.find(query);
-		if (!CollectionUtils.isEmpty(msgHistoryList)) {
+		if (!CollectionUtils.isEmpty(msgPushPlatStaticsList)) {
 			platStatics.setId(msgPushPlatStaticsList.get(0).getId());
 
 			msgPushPlatStaticsDao.update(query, new Update());
