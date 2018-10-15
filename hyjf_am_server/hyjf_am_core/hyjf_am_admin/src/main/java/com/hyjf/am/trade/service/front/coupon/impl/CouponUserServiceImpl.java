@@ -181,10 +181,10 @@ public class CouponUserServiceImpl implements CouponUserService {
         paraMap.put("couponFrom", request.getCouponFrom());
         paraMap.put("couponSource", request.getCouponSource());
         if (StringUtils.isNotEmpty(request.getTimeStartAddSrch())) {
-            paraMap.put("timeStartAddSrch", GetDate.getDayStart10(request.getTimeStartAddSrch()));
+            paraMap.put("timeStartAddSrch", request.getTimeStartAddSrch() + " 00:00:00");
         }
         if (StringUtils.isNotEmpty(request.getTimeEndAddSrch())) {
-            paraMap.put("timeEndAddSrch", GetDate.getDayEnd10(request.getTimeEndAddSrch()));
+            paraMap.put("timeEndAddSrch", request.getTimeEndAddSrch() + " 23:59:59");
         }
         if (StringUtils.isNotEmpty(request.getTimeStartSrch())) {
             paraMap.put("timeStartSrch", GetDate.getDayStart10(request.getTimeStartSrch()));
@@ -234,10 +234,10 @@ public class CouponUserServiceImpl implements CouponUserService {
             map.put("timeEndSrch", GetDate.getDayEnd10(request.getTimeEndSrch()));
         }
         if (request.getTimeStartAddSrch() != null) {
-            map.put("timeStartAddSrch", request.getTimeStartAddSrch());
+            map.put("timeStartAddSrch", request.getTimeStartAddSrch() + " 00:00:00");
         }
         if (request.getTimeEndAddSrch() != null) {
-            map.put("timeEndAddSrch", request.getTimeEndAddSrch());
+            map.put("timeEndAddSrch", request.getTimeEndAddSrch() + " 23:59:59");
         }
         List<CouponUserCustomize> couponUserCustomizes = couponUserCustomizeMapper.selectCouponUserList(map);
         return couponUserCustomizes;
