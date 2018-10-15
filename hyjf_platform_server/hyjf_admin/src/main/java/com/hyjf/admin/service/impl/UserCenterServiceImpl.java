@@ -678,4 +678,14 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     public int updateUserBankInfo(UserInfosUpdCustomizeRequest request){
         return userCenterClient.updateUserBaseInfo(request);
     }
+
+    /**
+     * 根据userId获取userInfo对象
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserInfoVO selectUserInfoByUserId(String userId) {
+        return userCenterClient.findUsersInfoById(Integer.parseInt(userId));
+    }
 }

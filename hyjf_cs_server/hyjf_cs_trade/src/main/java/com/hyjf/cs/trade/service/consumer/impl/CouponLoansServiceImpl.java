@@ -222,7 +222,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
             }else if(couponConfig.getCouponType() == 1 && couponConfig.getRepayTimeConfig()==2){
                 recoverTime = interestInfo.getRepayTime();
             }else{
-                recoverTime = interestInfo.getRepayTime() + (3 * 24 * 60 * 60); // 估计还款时间
+                recoverTime = interestInfo.getRepayTime() ; // 估计还款时间
             }
         }
 
@@ -242,7 +242,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     }else if(couponConfig.getCouponType() == 1 && couponConfig.getRepayTimeConfig()==2){
                         recoverTime = monthly.getRepayTime();
                     }else{
-                        recoverTime = monthly.getRepayTime() + (3 * 24 * 60 * 60); // 估计还款时间
+                        recoverTime = monthly.getRepayTime() ; // 估计还款时间
                     }
                     CouponRecoverVO cr = new CouponRecoverVO();
                     // 投资订单编号

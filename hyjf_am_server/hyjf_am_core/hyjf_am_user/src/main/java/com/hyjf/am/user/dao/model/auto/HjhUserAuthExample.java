@@ -1675,6 +1675,286 @@ public class HjhUserAuthExample {
             return (Criteria) this;
         }
 
+        public Criteria andInvesMaxAmtIsNull() {
+            addCriterion("inves_max_amt is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtIsNotNull() {
+            addCriterion("inves_max_amt is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtEqualTo(String value) {
+            addCriterion("inves_max_amt =", value, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtNotEqualTo(String value) {
+            addCriterion("inves_max_amt <>", value, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtGreaterThan(String value) {
+            addCriterion("inves_max_amt >", value, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtGreaterThanOrEqualTo(String value) {
+            addCriterion("inves_max_amt >=", value, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtLessThan(String value) {
+            addCriterion("inves_max_amt <", value, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtLessThanOrEqualTo(String value) {
+            addCriterion("inves_max_amt <=", value, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtLike(String value) {
+            addCriterion("inves_max_amt like", value, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtNotLike(String value) {
+            addCriterion("inves_max_amt not like", value, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtIn(List<String> values) {
+            addCriterion("inves_max_amt in", values, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtNotIn(List<String> values) {
+            addCriterion("inves_max_amt not in", values, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtBetween(String value1, String value2) {
+            addCriterion("inves_max_amt between", value1, value2, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvesMaxAmtNotBetween(String value1, String value2) {
+            addCriterion("inves_max_amt not between", value1, value2, "invesMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtIsNull() {
+            addCriterion("credit_max_amt is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtIsNotNull() {
+            addCriterion("credit_max_amt is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtEqualTo(String value) {
+            addCriterion("credit_max_amt =", value, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtNotEqualTo(String value) {
+            addCriterion("credit_max_amt <>", value, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtGreaterThan(String value) {
+            addCriterion("credit_max_amt >", value, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtGreaterThanOrEqualTo(String value) {
+            addCriterion("credit_max_amt >=", value, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtLessThan(String value) {
+            addCriterion("credit_max_amt <", value, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtLessThanOrEqualTo(String value) {
+            addCriterion("credit_max_amt <=", value, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtLike(String value) {
+            addCriterion("credit_max_amt like", value, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtNotLike(String value) {
+            addCriterion("credit_max_amt not like", value, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtIn(List<String> values) {
+            addCriterion("credit_max_amt in", values, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtNotIn(List<String> values) {
+            addCriterion("credit_max_amt not in", values, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtBetween(String value1, String value2) {
+            addCriterion("credit_max_amt between", value1, value2, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreditMaxAmtNotBetween(String value1, String value2) {
+            addCriterion("credit_max_amt not between", value1, value2, "creditMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtIsNull() {
+            addCriterion("payment_max_amt is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtIsNotNull() {
+            addCriterion("payment_max_amt is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtEqualTo(String value) {
+            addCriterion("payment_max_amt =", value, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtNotEqualTo(String value) {
+            addCriterion("payment_max_amt <>", value, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtGreaterThan(String value) {
+            addCriterion("payment_max_amt >", value, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtGreaterThanOrEqualTo(String value) {
+            addCriterion("payment_max_amt >=", value, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtLessThan(String value) {
+            addCriterion("payment_max_amt <", value, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtLessThanOrEqualTo(String value) {
+            addCriterion("payment_max_amt <=", value, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtLike(String value) {
+            addCriterion("payment_max_amt like", value, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtNotLike(String value) {
+            addCriterion("payment_max_amt not like", value, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtIn(List<String> values) {
+            addCriterion("payment_max_amt in", values, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtNotIn(List<String> values) {
+            addCriterion("payment_max_amt not in", values, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtBetween(String value1, String value2) {
+            addCriterion("payment_max_amt between", value1, value2, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentMaxAmtNotBetween(String value1, String value2) {
+            addCriterion("payment_max_amt not between", value1, value2, "paymentMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtIsNull() {
+            addCriterion("repay_max_amt is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtIsNotNull() {
+            addCriterion("repay_max_amt is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtEqualTo(String value) {
+            addCriterion("repay_max_amt =", value, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtNotEqualTo(String value) {
+            addCriterion("repay_max_amt <>", value, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtGreaterThan(String value) {
+            addCriterion("repay_max_amt >", value, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtGreaterThanOrEqualTo(String value) {
+            addCriterion("repay_max_amt >=", value, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtLessThan(String value) {
+            addCriterion("repay_max_amt <", value, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtLessThanOrEqualTo(String value) {
+            addCriterion("repay_max_amt <=", value, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtLike(String value) {
+            addCriterion("repay_max_amt like", value, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtNotLike(String value) {
+            addCriterion("repay_max_amt not like", value, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtIn(List<String> values) {
+            addCriterion("repay_max_amt in", values, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtNotIn(List<String> values) {
+            addCriterion("repay_max_amt not in", values, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtBetween(String value1, String value2) {
+            addCriterion("repay_max_amt between", value1, value2, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayMaxAmtNotBetween(String value1, String value2) {
+            addCriterion("repay_max_amt not between", value1, value2, "repayMaxAmt");
+            return (Criteria) this;
+        }
+
         public Criteria andDelFlagIsNull() {
             addCriterion("del_flag is null");
             return (Criteria) this;
@@ -1732,6 +2012,126 @@ public class HjhUserAuthExample {
 
         public Criteria andDelFlagNotBetween(Integer value1, Integer value2) {
             addCriterion("del_flag not between", value1, value2, "delFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountIsNull() {
+            addCriterion("tx_amount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountIsNotNull() {
+            addCriterion("tx_amount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountEqualTo(Integer value) {
+            addCriterion("tx_amount =", value, "txAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountNotEqualTo(Integer value) {
+            addCriterion("tx_amount <>", value, "txAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountGreaterThan(Integer value) {
+            addCriterion("tx_amount >", value, "txAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("tx_amount >=", value, "txAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountLessThan(Integer value) {
+            addCriterion("tx_amount <", value, "txAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountLessThanOrEqualTo(Integer value) {
+            addCriterion("tx_amount <=", value, "txAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountIn(List<Integer> values) {
+            addCriterion("tx_amount in", values, "txAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountNotIn(List<Integer> values) {
+            addCriterion("tx_amount not in", values, "txAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountBetween(Integer value1, Integer value2) {
+            addCriterion("tx_amount between", value1, value2, "txAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTxAmountNotBetween(Integer value1, Integer value2) {
+            addCriterion("tx_amount not between", value1, value2, "txAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountIsNull() {
+            addCriterion("tot_amount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountIsNotNull() {
+            addCriterion("tot_amount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountEqualTo(Integer value) {
+            addCriterion("tot_amount =", value, "totAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountNotEqualTo(Integer value) {
+            addCriterion("tot_amount <>", value, "totAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountGreaterThan(Integer value) {
+            addCriterion("tot_amount >", value, "totAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("tot_amount >=", value, "totAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountLessThan(Integer value) {
+            addCriterion("tot_amount <", value, "totAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountLessThanOrEqualTo(Integer value) {
+            addCriterion("tot_amount <=", value, "totAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountIn(List<Integer> values) {
+            addCriterion("tot_amount in", values, "totAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountNotIn(List<Integer> values) {
+            addCriterion("tot_amount not in", values, "totAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountBetween(Integer value1, Integer value2) {
+            addCriterion("tot_amount between", value1, value2, "totAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotAmountNotBetween(Integer value1, Integer value2) {
+            addCriterion("tot_amount not between", value1, value2, "totAmount");
             return (Criteria) this;
         }
 

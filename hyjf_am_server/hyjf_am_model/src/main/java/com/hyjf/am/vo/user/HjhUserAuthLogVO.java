@@ -20,17 +20,19 @@ public class HjhUserAuthLogVO extends BaseVO implements Serializable {
 
     private Integer operateEsb;
 
-    private Date authCreateTime;
+    private Integer authCreateTime;
 
-    private Integer delFlg;
+    private Integer delFlag;
 
-    private Integer createUser;
+    private Integer createUserId;
 
-    private Integer updateUser;
+    private Integer updateUserId;
 
     private Date createTime;
 
     private Date updateTime;
+
+    private String remark;
 
     private static final long serialVersionUID = 1L;
 
@@ -90,40 +92,36 @@ public class HjhUserAuthLogVO extends BaseVO implements Serializable {
         this.operateEsb = operateEsb;
     }
 
-    public Date getAuthCreateTime() {
+    public Integer getAuthCreateTime() {
         return authCreateTime;
     }
 
-    public void setAuthCreateTime(Date authCreateTime) {
+    public void setAuthCreateTime(Integer authCreateTime) {
         this.authCreateTime = authCreateTime;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public Integer getCreateUser() {
-        return createUser;
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public Integer getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {
@@ -140,5 +138,13 @@ public class HjhUserAuthLogVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 }

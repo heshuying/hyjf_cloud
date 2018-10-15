@@ -171,7 +171,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 成功页面
         String successPath = "/user/openSuccess";
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId();
+        String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
         String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
         // 如果是移动端  返回别的url
         if((ClientConstants.APP_CLIENT+"").equals(openBean.getPlatform())||(ClientConstants.APP_CLIENT_IOS+"").equals(openBean.getPlatform())||(ClientConstants.WECHAT_CLIENT+"").equals(openBean.getPlatform())){
@@ -239,6 +239,11 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 更新redis里面的值
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         user.setBankOpenAccount(true);
+        // 开户+设密的话   状态改为已设置交易密码
+        if (BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE.equals(bean.getTxCode())
+                && "1".equals(bean.getStatus())) {
+            user.setIsSetPassword(1);
+        }
         RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
 
         // 查询银行卡绑定信息
@@ -488,7 +493,14 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @Date 2018/6/21 15:34
      */
     @Override
-    public WebResult<Object> getFiledMess(String logOrdId) {
+    public WebResult<Object> getFiledMess(String logOrdId,int userId) {
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
+        if(user!=null){
+            if(user.isBankOpenAccount()&&"0".equals(user.getIsSetPassword()+"")){
+                // 已经开户  未设置交易密码  开户成功，设置交易密码失败
+                throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_ERROR);
+            }
+        }
         WebResult<Object> result = new WebResult<Object>();
         String errorMess = amUserClient.getBankOpenAccountFiledMess(logOrdId);
         result.setStatus(WebResult.SUCCESS);

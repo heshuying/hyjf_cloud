@@ -239,4 +239,11 @@ public interface UserCenterService {
      * @return
      */
     int updateUserBankInfo(UserInfosUpdCustomizeRequest request);
+
+    /**
+     * 根据userId获取userInfo
+     * @param userId
+     * @return
+     */
+    UserInfoVO selectUserInfoByUserId(String userId);
 }
