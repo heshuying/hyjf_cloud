@@ -1856,9 +1856,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     userRepayDetail.setRepayTotal(total.toString());
                     userRepayDetail.setStatus(userRecover.getRecoverStatus().toString());
                     userRepayDetail.setUserId(userRecover.getUserId().toString());
-//   todo 暂时注释掉                 String userName = this.getRUser(userRecover.getUserId()).getUsername();
-//                    String userNameStr = userName.substring(0, 1).concat("**");
-//                    userRepayDetail.setUserName(userNameStr);
+                    String userName = this.getRUser(userRecover.getUserId()).getUsername();
+                    String userNameStr = userName.substring(0, 1).concat("**");
+                    userRepayDetail.setUserName(userNameStr);
                     userRepayDetails.add(userRepayDetail);
                 }
             }
