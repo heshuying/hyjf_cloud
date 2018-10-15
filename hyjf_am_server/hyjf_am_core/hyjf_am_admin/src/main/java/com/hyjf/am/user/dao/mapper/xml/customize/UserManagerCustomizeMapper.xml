@@ -515,7 +515,8 @@
         hydur.username AS recommend_name,
         hydur.user_id AS recommend_user_id,
         hydui.idcard,
-        hydu.reg_time
+        hydu.reg_time,
+        hydu.email
         FROM
         ht_user hydu
         LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
