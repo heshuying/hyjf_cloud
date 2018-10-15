@@ -5,10 +5,7 @@ package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.AdminUserRecommendRequestBean;
-import com.hyjf.admin.beans.request.CompanyInfoInstRequesetBean;
-import com.hyjf.admin.beans.request.UserManagerRequestBean;
-import com.hyjf.admin.beans.request.UserManagerUpdateRequestBean;
+import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.beans.response.*;
 import com.hyjf.admin.beans.vo.*;
 import com.hyjf.admin.common.result.AdminResult;
@@ -24,10 +21,16 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -796,7 +799,7 @@ public class UserCenterController extends BaseController {
 
         BankCallBean retBean;
         try {
-            retBean=BankCallUtils.callApiBg(selectbean);
+            retBean= BankCallUtils.callApiBg(selectbean);
         }catch (Exception e){
             logger.error("请求银行接口出错!手机号:"+user.getMobile());
             return new AdminResult<>(FAIL, "请求银行接口出错!");
