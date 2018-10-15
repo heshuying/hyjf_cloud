@@ -174,7 +174,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         tender.setUser(loginUser);
         BigDecimal couponInterest = BigDecimal.ZERO;
-        BestCouponListVO couponConfig = new BestCouponListVO();
+        CouponUserVO couponUser = null;
+        if (couponId != null || couponId > 0) {
+            //couponConfig = amTradeClient.selectHJHBestCoupon(request);
+            couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
+        }
+        //BestCouponListVO couponConfig = new BestCouponListVO();
         if (!"0".equals(plan.getCouponConfig()) && loginUser != null) {
             BigDecimal borrowApr = plan.getExpectApr();
             /** 计算最优优惠券开始 isThereCoupon 1是有最优优惠券，0无最有优惠券 */
@@ -182,31 +187,29 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             request.setBorrowNid(tender.getBorrowNid());
             request.setUserId(String.valueOf(loginUser.getUserId()));
             request.setPlatform(tender.getPlatform());
-            if (couponId == null || couponId == 0) {
-                couponConfig = amTradeClient.selectHJHBestCoupon(request);
-            }
-            if (couponConfig != null) {
+
+            if (couponUser != null) {
                 investInfo.setIsThereCoupon(1);
-                if (couponConfig != null) {
-                    if (couponConfig.getCouponType() == 1) {
-                        couponInterest = couponService.getInterestDj(couponConfig.getCouponQuota(), couponConfig.getCouponProfitTime().intValue(), plan.getExpectApr());
+                if (couponUser != null) {
+                    if (couponUser.getCouponType() == 1) {
+                        couponInterest = couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), plan.getExpectApr());
                     } else {
-                        couponInterest = couponService.getInterest(plan.getBorrowStyle(), couponConfig.getCouponType(), plan.getExpectApr(), couponConfig.getCouponQuota(), money, plan.getLockPeriod());
+                        couponInterest = couponService.getInterest(plan.getBorrowStyle(), couponUser.getCouponType(), plan.getExpectApr(), couponUser.getCouponQuota(), money, plan.getLockPeriod());
                     }
 
-                    couponConfig.setCouponInterest(df.format(couponInterest));
-                    if (couponConfig.getCouponType() == 2) {
-                        borrowApr = borrowApr.add(couponConfig.getCouponQuota());
+                    couponUser.setCouponInterest(df.format(couponInterest));
+                    if (couponUser.getCouponType() == 2) {
+                        borrowApr = borrowApr.add(couponUser.getCouponQuota());
                     }
-                    if (couponConfig.getCouponType() == 3) {
-                        money = new BigDecimal(money).add(couponConfig.getCouponQuota()).toString();
+                    if (couponUser.getCouponType() == 3) {
+                        money = new BigDecimal(money).add(couponUser.getCouponQuota()).toString();
                     }
                 }
-                couponConfig.setCouponInterest(df.format(couponInterest));
+                couponUser.setCouponInterest(df.format(couponInterest));
             } else {
                 investInfo.setIsThereCoupon(0);
             }
-            investInfo.setCouponConfig(couponConfig);
+            investInfo.setCouponUser(couponUser);
             /** 计算最优优惠券结束 */
 
             /** 可用优惠券张数开始 */
@@ -225,7 +228,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         BigDecimal earnings = new BigDecimal("0");
         // 如果投资金额不为空
-        if (!StringUtils.isBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) == 1 ||!(StringUtils.isEmpty(money) && couponConfig != null && couponConfig.getCouponType() == 1 && couponConfig.getAddFlag() == 1)) {
+        if (!StringUtils.isBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) == 1 ||!(StringUtils.isEmpty(money) && couponUser != null && couponUser.getCouponType() == 1 && couponUser.getAddFlg()!=null&& couponUser.getAddFlg() == 1)) {
             // 收益率
             BigDecimal borrowApr = plan.getExpectApr();
             // 周期
@@ -249,8 +252,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 投资金额错误
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_FORMAT);
         }
-        if(couponConfig!=null && couponConfig.getCouponType()==3){
-            investInfo.setCapitalInterest(df.format(earnings.add(couponInterest).subtract(couponConfig.getCouponQuota())));
+        if(couponUser!=null && couponUser.getCouponType()==3){
+            investInfo.setCapitalInterest(df.format(earnings.add(couponInterest).subtract(couponUser.getCouponQuota())));
         }else{
             investInfo.setCapitalInterest(df.format(earnings.add(couponInterest)));
         }
