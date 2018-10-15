@@ -143,10 +143,30 @@ public class MessagePushMessageController extends BaseController {
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setMsgActionUrl("");
         }
-        if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1 || templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
+        if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1) {
             templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl1());
         }
+        if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
+            templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl3());
+        }
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+            if(templateRequest.getMsgActionUrl2().equals("尊享汇")){
+                templateRequest.setMsgActionUrl2("hyjf://jumpZXH" );
+            }else if (templateRequest.getMsgActionUrl2().equals("我的投资")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpInvest");
+            }else if (templateRequest.getMsgActionUrl2().equals("新手汇")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpXSH");
+            }else if (templateRequest.getMsgActionUrl2().equals("我的账户")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpMine");
+            }else if (templateRequest.getMsgActionUrl2().equals("优惠券列表")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpCouponsList");
+            }else if (templateRequest.getMsgActionUrl2().equals("交易记录")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpTransactionDetail");
+            }else if (templateRequest.getMsgActionUrl2().equals("债券转让-已承接")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpTransfer");
+            }else if (templateRequest.getMsgActionUrl2().equals("债权转让-转让记录")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpTransferRecord");
+            }
             templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl2());
         }
         if (templateRequest.getMsgSendType() == CustomConstants.MSG_PUSH_SEND_TYPE_1) {
@@ -156,7 +176,7 @@ public class MessagePushMessageController extends BaseController {
                     Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
                     if (time != 0) {
                         templateVO.setPreSendTime(time);
-                        templateVO.setSendTime(GetDate.strYYYYMMDD2Timestamp2(GetDate.getDateMyTimeInMillis(time)));
+                        templateVO.setSendTime(time);
                     }
                 } catch (Exception e) {
                 }

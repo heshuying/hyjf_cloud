@@ -833,12 +833,14 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 	/**
-	 * 查询需要更新用户画像的userInfo
-	 * @return userInfo
-	 * */
+	 * 更新用户画像 99:更新三个月的用户画像,else:更新昨日登录的用户画像
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
 	@Override
-	public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait() {
-		String url = "http://AM-USER/user_batch/portrait/search_user_id_for_user_portrait";
+	public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait(int flag) {
+		String url = "http://AM-USER/user_batch/portrait/search_user_id_for_user_portrait/" + flag;
 		UserAndSpreadsUserResponse response = restTemplate.getForEntity(url, UserAndSpreadsUserResponse.class).getBody();
 		if(response != null){
 			return response.getResultList();
@@ -972,8 +974,12 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid) {
-		return restTemplate.getForEntity(userService+"/userManager/bindThirdUser/"+userId+"/"+bindUniqueId+"/"+pid, Boolean.class).getBody();
+	public Boolean bindThirdUser(Integer userId, Integer bindUniqueId, Integer pid) {
+		BooleanResponse response = restTemplate.getForEntity(userService+"/userManager/bindThirdUser/"+userId+"/"+bindUniqueId+"/"+pid, BooleanResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultBoolean();
+		}
+		return null;
 	}
 
 	/**

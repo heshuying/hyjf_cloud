@@ -10,7 +10,7 @@ import com.hyjf.common.util.GetDate;
 public class MessagePushMsgHistoryVO {
     private String id;
 
-    private Integer tagId;
+    private String  tagId;
 
     private String tagCode;
 
@@ -127,11 +127,11 @@ public class MessagePushMsgHistoryVO {
         this.id = id;
     }
 
-    public Integer getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
-    public void setTagId(Integer tagId) {
+    public void setTagId(String tagId) {
         this.tagId = tagId;
     }
 

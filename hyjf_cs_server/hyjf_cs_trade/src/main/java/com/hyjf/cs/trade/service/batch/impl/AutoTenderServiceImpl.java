@@ -404,8 +404,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                                 bean, tenderUsrcustid, sellerUsrcustid, resultMap);
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
-                        logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。");
-                        e.printStackTrace();
+                        logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
+                                       , e);
                         return false;
                     }
 
@@ -533,8 +533,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         this.amTradeClient.updateBorrowForAutoTender(borrow.getBorrowNid(), hjhAccede.getAccedeOrderId(), bean);
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
-                        logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。");
-                        e.printStackTrace();
+                        logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
+                                    , e);
                         return false;
                     }
                 } else {
@@ -543,8 +543,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                 }
             } catch (Exception e) {
                 this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
-                logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_ERR + "，请后台异常处理。");
-                e.printStackTrace();
+                logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_ERR + "，请后台异常处理。"
+                             , e);
                 return false;
             } finally {
                 //删除债转中的redis，可以还款

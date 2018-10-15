@@ -17,6 +17,7 @@ public interface IdCardCustomizeMapper {
 	 */
 	IdCardCustomize getIdCardCustomize (IdCardCustomize idCardCustomize);
 
+	List<IdCardCustomize> getIdCardList();
 
 	/**
 	 * 按照省份统计投资人的分布  上个月的最后一天

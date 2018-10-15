@@ -349,9 +349,12 @@ public interface AmUserClient {
 	 * */
 	List<OrganizationStructureVO> searchGroupInfo();
 	/**
-	 * 获取需要更新用户画像的userInfo --用户画像定时任务用
-	 * */
-	List<UserAndSpreadsUserVO> searchUserIdForUserPortrait();
+	 * 更新用户画像 99:更新三个月的用户画像,else:更新昨日登录的用户画像
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	List<UserAndSpreadsUserVO> searchUserIdForUserPortrait(int flag);
 	/**
 	 * 保存用户画像信息 --用户画像定时任务用
 	 * */
@@ -465,7 +468,7 @@ public interface AmUserClient {
 	 * @param pid
 	 * @return
 	 */
-	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
+	Boolean bindThirdUser(Integer userId, Integer bindUniqueId, Integer pid);
 
 	/**
 	 * 获取银行卡信息

@@ -430,7 +430,13 @@ public class RepayManageController extends BaseTradeController {
             bean.setLogIp(ip);
             bean.setProductId(requestBean.getBorrowNid());
             BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
-            String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
+            if(callBackBean == null){
+                logger.info("调用还款申请冻结资金接口失败:");
+                webResult.setStatus(WebResult.ERROR);
+                webResult.setStatusDesc("还款失败，请稍后再试...");
+                return webResult;
+            }
+            String respCode = callBackBean.getRetCode();
             // 申请冻结资金失败
             if (StringUtils.isBlank(respCode) || !BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
                 if (!"".equals(respCode)) {
@@ -671,7 +677,12 @@ public class RepayManageController extends BaseTradeController {
                         bean.setLogIp(ip);
                         bean.setProductId(borrowNid);
                         BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
-                        String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
+                        if(callBackBean == null){
+                            webResult.setStatus(WebResult.ERROR);
+                            webResult.setStatusDesc("批量还款调用银行接口失败，返回值为null");
+                            return webResult;
+                        }
+                        String respCode = callBackBean.getRetCode();
                         // 申请冻结资金失败
                         if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
                             if (!"".equals(respCode)) {
@@ -768,7 +779,7 @@ public class RepayManageController extends BaseTradeController {
 
     private boolean comperToOrgUserBalance(Integer userId, String accountId,  BigDecimal repayTotal) {
         BigDecimal userBankBalance = this.repayManageService.getBankBalancePay(userId, accountId);
-        if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) == -1) {
+        if (repayTotal.compareTo(userBankBalance) <= 0) {
             return true;
         }
         return false;

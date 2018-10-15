@@ -30,6 +30,8 @@ public class HjhUserAuthLog implements Serializable {
 
     private Date updateTime;
 
+    private String remark;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -134,5 +136,13 @@ public class HjhUserAuthLog implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 }

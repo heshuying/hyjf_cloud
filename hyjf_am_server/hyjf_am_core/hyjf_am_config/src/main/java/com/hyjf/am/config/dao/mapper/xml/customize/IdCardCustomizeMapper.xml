@@ -23,6 +23,10 @@
 		</if>
 	</select>
 
+	<select id="getIdCardList" resultMap="BaseResultMap">
+		SELECT bm,area FROM ht_idcard
+	</select>
+
 	<!-- 	投资人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
 	<select  id="getTenderCityGroupBy" resultMap="cityResultMap"  parameterType="java.util.List">
 		SELECT

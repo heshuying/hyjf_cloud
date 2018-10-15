@@ -90,13 +90,20 @@ public class CouponUserVO extends BaseVO implements Serializable {
     private Integer delFlag;
 
     // 使用截止时间
-    private int endTime;
+    private Integer endTime;
     // 优惠券状态
     private int usedFlag;
     // 更新时间
     private int userUpdateTime;
     // 发放给用户的优惠券编号
     private String couponUserCode;
+
+    /**
+     * 优惠券收益
+     */
+    private String couponInterest;
+
+
 
     public Integer getId() {
         return id;
@@ -362,11 +369,11 @@ public class CouponUserVO extends BaseVO implements Serializable {
         this.delFlag = delFlg;
     }
 
-    public int getEndTime() {
+    public Integer getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(Integer endTime) {
         this.endTime = endTime;
     }
 
@@ -432,5 +439,13 @@ public class CouponUserVO extends BaseVO implements Serializable {
 
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+
+    public String getCouponInterest() {
+        return couponInterest;
+    }
+
+    public void setCouponInterest(String couponInterest) {
+        this.couponInterest = couponInterest;
     }
 }

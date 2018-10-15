@@ -1306,6 +1306,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             // 计划详情头部(结束)
 
             PlanDetailBean detailBean = CommonUtils.convertBean(planDetail, PlanDetailBean.class);
+            if (StringUtils.isNotBlank(detailBean.getDebtMinInvestment())){
+                detailBean.setDebtMinInvestment(String.valueOf(new BigDecimal(detailBean.getDebtMinInvestment()).intValue()));
+            }
+            if (StringUtils.isNotBlank(detailBean.getDebtInvestmentIncrement())){
+                detailBean.setDebtInvestmentIncrement(String.valueOf(new BigDecimal(detailBean.getDebtInvestmentIncrement()).intValue()));
+            }
             result.put("planDetail", detailBean);
             // 获取计划介绍
             String planIntroduce = planDetail.getPlanConcept();

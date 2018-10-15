@@ -1856,9 +1856,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     userRepayDetail.setRepayTotal(total.toString());
                     userRepayDetail.setStatus(userRecover.getRecoverStatus().toString());
                     userRepayDetail.setUserId(userRecover.getUserId().toString());
-//   todo 暂时注释掉                 String userName = this.getRUser(userRecover.getUserId()).getUsername();
-//                    String userNameStr = userName.substring(0, 1).concat("**");
-//                    userRepayDetail.setUserName(userNameStr);
+                    String userName = this.getRUser(userRecover.getUserId()).getUsername();
+                    String userNameStr = userName.substring(0, 1).concat("**");
+                    userRepayDetail.setUserName(userNameStr);
                     userRepayDetails.add(userRepayDetail);
                 }
             }
@@ -4730,9 +4730,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         throw new Exception("重复还款");
                     }
                     int nowTime = GetDate.getNowTime10();
-                    nid = repay.getBorrowNid() + "_" + repay.getUserId() + "_" + period;
+                    String nid2 = repay.getBorrowNid() + "_" + repay.getUserId() + "_" + period;
                     BorrowApicron borrowApicron = new BorrowApicron();
-                    borrowApicron.setNid(nid);
+                    borrowApicron.setNid(nid2);
                     borrowApicron.setUserId(repayUserId);
                     borrowApicron.setUserName(userName);
                     borrowApicron.setBorrowNid(borrowNid);

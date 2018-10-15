@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.exception.openaccountenquiryexception;
 
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
+import com.hyjf.admin.beans.OpenAccountEnquiryErrorResultBean;
 import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
@@ -31,6 +32,17 @@ public class OpenAccountEnquiryController extends BaseController {
 
     /** 权限 */
     public static final String PERMISSIONS = "openaccountexception";
+
+    @ApiOperation(value = "ajax用户按照手机号和身份证号查询开户掉单校验", notes = "ajax用户按照手机号和身份证号查询开户掉单校验")
+    @PostMapping("/openAccountEnquiryError")
+    public AdminResult<OpenAccountEnquiryErrorResultBean> enquiryError(HttpServletRequest request, @RequestBody OpenAccountEnquiryDefineRequestBean requestBean) {
+        AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
+        OpenAccountEnquiryErrorResultBean resultBean = openAccountEnquiryService.openAccountEnquiryError(currUser,requestBean);
+        return new AdminResult<>(resultBean);
+    }
 
     @ApiOperation(value = "用户按照手机号和身份证号查询开户掉单", notes = "用户按照手机号和身份证号查询开户掉单")
     @PostMapping("/openaccountenquiryAction")
