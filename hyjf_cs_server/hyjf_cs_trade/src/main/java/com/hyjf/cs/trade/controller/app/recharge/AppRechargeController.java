@@ -17,6 +17,7 @@ import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
 import com.hyjf.cs.trade.vo.AppRechargeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -52,7 +53,8 @@ public class AppRechargeController extends BaseTradeController{
 
 	@Autowired
 	private RechargeService userRechargeService;
-
+	@Autowired
+	private AuthService authService;
 	@Autowired
 	SystemConfig systemConfig;
 
@@ -114,6 +116,9 @@ public class AppRechargeController extends BaseTradeController{
 			}
 			// 解密
 			mobile = DES.decodeValue(key, mobile);
+		}
+		if (!this.authService.checkPaymentAuthStatus(userId)) {
+			throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
 		}
 		logger.info("充值手机号为["+mobile+"],充值金额:[" + money + "]");
 		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);

@@ -30,7 +30,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 
 	@Override
 	public HjhUserAuthVO getHjhUserAuthByUserId(Integer userId) {
-		HjhUserAuthVO hjhUserAuth = getHjhUserAuthByUserId(userId);
+		HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthByUserId(userId);
 		return hjhUserAuth;
 	}
 

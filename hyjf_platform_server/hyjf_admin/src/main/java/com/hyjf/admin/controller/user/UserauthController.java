@@ -1,9 +1,11 @@
 package com.hyjf.admin.controller.user;
 
+import com.hyjf.admin.beans.AuthBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.AuthService;
 import com.hyjf.admin.service.UserauthService;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
@@ -14,6 +16,8 @@ import com.hyjf.am.vo.user.AdminUserAuthLogListVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -45,6 +49,9 @@ public class UserauthController extends BaseController {
 	private Logger logger = LoggerFactory.getLogger(UserauthController.class);
 	@Autowired
 	private UserauthService userauthService;
+
+	@Autowired
+	private AuthService authService;
 
 	/**
 	 * 权限维护画面初始化
@@ -142,6 +149,33 @@ public class UserauthController extends BaseController {
 		return new AdminResult<ListResult<AdminUserAuthLogListVO>>(ListResult.build(list2, rqes.getRecordTotal()));
 		
 	}
+
+	/**
+	 * 自动授权查询 - 调用江西银行接口查询
+	 *
+	 * @param userId
+	 */
+	@ResponseBody
+	@PostMapping("userauthquery")
+	public AdminResult queryUserAuth(@RequestParam Integer userId) {
+		// 返回结果
+		logger.info("授权查询开始，查询用户：{}", userId);
+		BankCallBean retBean = authService.getTermsAuthQuery(userId, BankCallConstant.CHANNEL_PC);
+		try {
+			if(authService.checkDefaultConfig(retBean,AuthBean.AUTH_TYPE_AUTO_BID)){
+				return new AdminResult();
+			}
+
+			if (retBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
+				return new AdminResult();
+			} else {
+				return new AdminResult<>(FAIL, "请求银行接口失败");
+			}
+		} catch (Exception e) {
+			return new AdminResult<>(FAIL, "授权查询出错");
+		}
+	}
+
 	 /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
      * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题

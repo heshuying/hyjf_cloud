@@ -1220,4 +1220,8 @@ public interface AmUserClient {
      * @return
      */
     int updateUserBankInfo(UserInfosUpdCustomizeRequest request);
+
+    void updateUserAuth(UserAuthRequest request);
+
+    HjhUserAuthLogVO selectByExample(String orderId);
 }
