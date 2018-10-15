@@ -452,9 +452,9 @@ public class CouponIssuanceController extends BaseController {
                                 cell.setCellValue("代金券");
                             }
                         } else if (celLength == 4) {
-                            if ("加息券".equals(config.getCouponType())) {
+                            if ("2".equals(config.getCouponType())) {
                                 cell.setCellValue(config.getCouponQuota() + "%");
-                            } else if ("体验金".equals(config.getCouponType()) || "代金券".equals(config.getCouponType())) {
+                            } else if ("1".equals(config.getCouponType()) || "3".equals(config.getCouponType())) {
                                 cell.setCellValue(config.getCouponQuota() + "元");
                             }
                         } else if (celLength == 5) {

@@ -447,6 +447,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             result.put("statusDesc", "当前优惠券无法使用，优惠券已过期！");
             return result;
         }
+        logger.info("configVO.getAddFlag()::: {}",configVO.getAddFlag());
         // 优惠券不能和本金公用
         if (configVO.getAddFlag()!=null&&configVO.getAddFlag() == 1 && !"0".equals(accountStr)) {
             result.put("statusDesc", "当前优惠券不能与本金共用！");
