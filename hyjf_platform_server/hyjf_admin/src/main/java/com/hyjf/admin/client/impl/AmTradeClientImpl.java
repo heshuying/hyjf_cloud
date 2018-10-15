@@ -1354,11 +1354,12 @@ public class AmTradeClientImpl implements AmTradeClient {
     public Map<String, Object> saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
         String url = "http://AM-ADMIN/am-trade/autoTenderController/saveCreditTenderLogNoSave";
         SaveCreditTenderLogRequest request = new SaveCreditTenderLogRequest(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
-        Response<Map<String, Object>> response = restTemplate.postForEntity(url, request, Response.class).getBody();
-        if (response != null) {
-            return response.getResult();
+        MapResponse response = restTemplate.postForEntity(url, request, MapResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
         }
-        return null;
+        // MapResponse的元素类型转换（String→BigDecimal）
+        return response.resultMapToBigDecimalAll();
     }
 
     /**
