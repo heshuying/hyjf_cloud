@@ -231,7 +231,7 @@ public class CouponUserServiceImpl implements CouponUserService {
             map.put("timeStartSrch", GetDate.getDayStart10(request.getTimeStartSrch()));
         }
         if (request.getTimeEndSrch() != null) {
-            map.put("timeEndSrch", GetDate.getDayEnd(request.getTimeEndSrch()));
+            map.put("timeEndSrch", GetDate.getDayEnd10(request.getTimeEndSrch()));
         }
         if (request.getTimeStartAddSrch() != null) {
             map.put("timeStartAddSrch", request.getTimeStartAddSrch());
