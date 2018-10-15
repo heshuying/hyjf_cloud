@@ -131,7 +131,7 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("batch 单笔标的更新发生异常 ", e);
 		} finally {
 			
 		}
@@ -160,24 +160,24 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 			String bankSeqNo = apicron.getBankSeqNo();
 			BankCallBean queryResult = autoLendQuery(apicron);
 			if (queryResult == null) {
-				throw new Exception("放款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+				logger.error("放款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+//				throw new Exception("放款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+				return false;
 			}
 			logger.info(apicron.getBorrowNid()+" 满标自动放款查:"+queryResult.getRetCode());
 			
 			// 这里利用了重复提交失败的原因,暂时不用
-			if (queryResult != null && BankCallConstant.RESPCODE_SUCCESS.equals(queryResult.getRetCode())) {
-				
+			if (BankCallConstant.RESPCODE_SUCCESS.equals(queryResult.getRetCode())) {
+				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_SENDED);
 			}else {
-				
+				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_SENDING);
 			}
-			
-			apicron.setStatus(1); 
 			this.borrowApicronMapper.updateByPrimaryKey(apicron);
 			return true;
 		} catch (Exception e) {
+			logger.error("放款失败处理异常:" + borrowNid, e);
 			apicron.setFailTimes(failTimes + 1);
 			this.borrowApicronMapper.updateByPrimaryKey(apicron);
-			logger.info("放款失败处理异常:" + borrowNid + e.getMessage());
 			sendSmsForManager(borrowNid);
 		}
 		return false;

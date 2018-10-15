@@ -398,11 +398,11 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		
 		// 放款成功后后续操作
 		try {
-//			apicron = borrowApicronMapper.selectByPrimaryKey(apicron.getId());
+			// 更新每个投资人信息，如还款计划，资金信息
 			boolean loanFlag = this.borrowLoans(apicron, borrow, borrowInfo, bean);
 			if (loanFlag) {
 				try {
-//					apicron = borrowApicronMapper.selectByPrimaryKey(apicron.getId());
+					// 更新借款人相关资金信息
 					boolean borrowFlag = this.updateBorrowStatus(apicron, borrow, borrowInfo);
 					if (borrowFlag) {
 						return true;
@@ -426,7 +426,6 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	 */
 	private boolean borrowLoans(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BankCallBean bean) throws Exception {
 		/** 基本变量 */
-		int nowTime = GetDate.getNowTime10();
 		String borrowNid = apicron.getBorrowNid();// 借款编号
 		BorrowApicronExample example = new BorrowApicronExample();
 		example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
@@ -461,6 +460,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		BigDecimal curServiceFee = BigDecimal.ZERO;		
 		boolean isLast= false;
 		BigDecimal recoverInterestSum = BigDecimal.ZERO;
+		int tenderChkCnt = 0;
 		if (tenderList != null && tenderList.size() > 0) {
 			for (int i = 0; i < tenderList.size(); i++) {
 				try {
@@ -498,6 +498,9 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 						}
 						// 生成投资人居间服务协议
 						createTenderGenerateContract(borrow, borrowInfo, borrowTender, recoverInterest);
+						
+						// 累加成功的投资更新
+						tenderChkCnt = tenderChkCnt + 1;
 					}
 				} catch (Exception e) {
 					logger.info("================cwyang 还款变更投资人数据异常!异常:" + e.getMessage());
@@ -514,10 +517,17 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				calculateNew.setId(calculates.get(0).getId());
 				this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
 			}*/
-			return true;
+
+			logger.info("======== 放款变更投资人数据共" + tenderList.size() + "正常笔数："+tenderChkCnt);
+			// 全部失败，部分成功不更新借款人数据
+			if(tenderChkCnt == tenderList.size()) {
+				return true;
+			}else {
+				return false;
+			}
 		} else {
 			logger.info("未查询到相应的投资记录，项目编号:" + borrowNid + "]");
-			return true;
+			return false;
 		}
 	}
 	
