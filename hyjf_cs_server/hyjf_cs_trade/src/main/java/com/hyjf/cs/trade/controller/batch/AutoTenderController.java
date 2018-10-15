@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.controller.batch;
 
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.batch.AutoTenderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,16 @@ public class AutoTenderController extends BaseTradeController {
 
     @RequestMapping("/autotender")
     public BooleanResponse AutoTender() {
+        // add 汇计划三期 0点前后停止自动投资设定 liubin 20180515 start
+        if (!GetDate.belongCalendar(GetDate.getShortTimeDate(),
+                GetDate.getDateFromShortTime("00:30"),
+                GetDate.getDateFromShortTime("23:30"))
+                ) {
+            logger.info("汇计划自动投资任务 任务时间外...");
+            return new BooleanResponse(true);
+        }
+        // add 汇计划三期 0点前后停止自动投资设定 liubin 20180515 end
+
         logger.info("自动投资任务开始start...");
         boolean flag = false;
 
