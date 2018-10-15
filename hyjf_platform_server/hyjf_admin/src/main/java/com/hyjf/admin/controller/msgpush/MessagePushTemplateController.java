@@ -67,33 +67,35 @@ public class MessagePushTemplateController extends BaseController {
     @RequestMapping(value = "/infoAction", method = RequestMethod.POST)
     public AdminResult<MessagePushTemplateResponse> infoAction(@RequestBody MsgPushTemplateRequest form) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
-        try {
-            response = messagePushTemplateService.getRecord(form.getId());
-            if (response.getResult() != null) {
-                MessagePushTemplateVO record = response.getResult();
-                BeanUtils.copyProperties(record, form);
-                if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
-                    form.setTemplateActionUrl1("");
-                    form.setTemplateActionUrl2("");
+        if (form.getId() != null) {
+            try {
+                response = messagePushTemplateService.getRecord(form.getId());
+                if (response.getResult() != null) {
+                    MessagePushTemplateVO record = response.getResult();
+                    BeanUtils.copyProperties(record, form);
+                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
+                        form.setTemplateActionUrl1("");
+                        form.setTemplateActionUrl2("");
+                    }
+                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1) {
+                        form.setTemplateActionUrl1(record.getTemplateActionUrl());
+                        form.setTemplateActionUrl2("");
+                    }
+                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
+                        form.setTemplateActionUrl3(record.getTemplateActionUrl());
+                        form.setTemplateActionUrl2("");
+                    }
+                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+                        form.setTemplateActionUrl1("");
+                        form.setTemplateActionUrl2(record.getTemplateActionUrl());
+                    }
+                    if (StringUtils.isNotEmpty(record.getTemplateCode()) && record.getTemplateCode().contains("_")) {
+                        form.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
+                    }
                 }
-                if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1) {
-                    form.setTemplateActionUrl1(record.getTemplateActionUrl());
-                    form.setTemplateActionUrl2("");
-                }
-                if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
-                    form.setTemplateActionUrl3(record.getTemplateActionUrl());
-                    form.setTemplateActionUrl2("");
-                }
-                if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
-                    form.setTemplateActionUrl1("");
-                    form.setTemplateActionUrl2(record.getTemplateActionUrl());
-                }
-                if (StringUtils.isNotEmpty(record.getTemplateCode()) && record.getTemplateCode().contains("_")) {
-                    form.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
         response.setTemplatePushTags(templatePushTags);
