@@ -2442,4 +2442,20 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return response.getResultInt().intValue();
 	}
+
+	@Override
+	public void updateUserAuth(UserAuthRequest request) {
+		restTemplate.postForEntity("http://AM-ADMIN/am-user//userauth/updateUserAuth", request,IntegerResponse.class) ;
+	}
+
+	@Override
+	public HjhUserAuthLogVO selectByExample(String orderId) {
+		HjhUserAuthLogResponse response = restTemplate
+				.getForEntity(userService+"/user/selectByExample/"+orderId, HjhUserAuthLogResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }
