@@ -620,7 +620,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             if (!ifcouponSystem) {
                 // 验证项目金额
                 String tenderQuota = userCouponConfigCustomize.getCouponType();
-                if ("1".equals(tenderQuota)) {
+                if ("1".equals(tenderQuota) && !"不限".equals(userCouponConfigCustomize.getTenderQuota())) {
                     if (userCouponConfigCustomize.getTenderQuotaMin() > new Double(money)
                             || userCouponConfigCustomize.getTenderQuotaMax() < new Double(money)) {
 
@@ -629,7 +629,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
                         continue;
                     }
                 } else if ("2".equals(tenderQuota)) {
-                    if ("不限".equals(userCouponConfigCustomize.getTenderQuota()) || new Double(userCouponConfigCustomize.getTenderQuotaAmount()) > new Double(money)) {
+                    if (!"不限".equals(userCouponConfigCustomize.getTenderQuota()) || new Double(userCouponConfigCustomize.getTenderQuotaAmount()) > new Double(money)) {
                         couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getProjectExpirationType());
                         notAvailableCouponList.add(couponBeanVo);
                         continue;
