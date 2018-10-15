@@ -98,6 +98,7 @@ public class HjhCouponTenderConsumer extends Consumer {
                     request.setIp(ip);
                     request.setMainTenderNid(mainTenderNid);
                     request.setAccount(account);
+                    request.setPlatform(platform);
                     couponService.couponTender(request, plan, cuc , userId);
                 } else {
                     logger.error("优惠券投资校验失败返回结果{},userId{},券为:{}", validateMap.get("statusDesc"), userId, couponGrantId);
