@@ -1,7 +1,6 @@
 package com.hyjf.am.user.service.admin.exception.impl;
 
 import com.hyjf.am.resquest.user.BankOpenAccountLogRequest;
-import com.hyjf.am.user.dao.mapper.customize.AdminAccountCustomizeQuiryMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.OpenAccountEnquiryCustomize;
 import com.hyjf.am.user.service.admin.exception.BankOpenAccountLogService;
