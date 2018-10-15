@@ -888,7 +888,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         }
         request.setCode(code);
         request.setPlatformType("3");
-        List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(request);
+        List<AppAdsCustomizeVO> picList = amTradeClient.getHomeBannerList(request);
         if (picList != null && picList.size() > 0) {
             vo.setAdPicUrl(picList.get(0).getImage());
             vo.setAdClickPicUrl(picList.get(0).getUrl());
@@ -912,7 +912,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         String code = "wechat_banner";
         request.setCode(code);
         request.setPlatformType("3");
-        List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(request);
+        List<AppAdsCustomizeVO> picList = amTradeClient.getHomeBannerList(request);
         if (picList != null && picList.size() > 0) {
             for (AppAdsCustomizeVO appAdsCustomize : picList) {
                 appAdsCustomize.setPicUrl(appAdsCustomize.getImage());
@@ -939,7 +939,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         request.setHost(systemConfig.getWebHost());
         request.setCode(module);
         request.setPlatformType("3");
-        List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(request);
+        List<AppAdsCustomizeVO> picList = amTradeClient.getHomeBannerList(request);
         if (picList != null && picList.size() > 0) {
             AppModuleBean appModule = new AppModuleBean();
             appModule.setModuleUrl(picList.get(0).getImage() == null ? "" : picList.get(0).getImage());
