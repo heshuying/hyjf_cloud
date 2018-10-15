@@ -313,7 +313,7 @@ public class MessagePushMessageController extends BaseController {
      * @param response
      */
     private MessagePushMsgResponse prepareDatas(MessagePushMsgResponse response) {
-        String nameClass = "MSG_PUSH_STATUS";
+        String nameClass = "MSG_PUSH_MSG_STATUS";
         String nameClass2 = "MSG_PUSH_TEMP_ACT";
         String nameClass3 = "MSG_PUSH_NATUREURLS";
         // ======================拼接枚举======================

@@ -110,6 +110,7 @@ public class MessagePushTemplateController extends BaseController {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         AdminSystemVO user = getUser(request);
         String userId = user.getId();
+        templateRequest.setStatus(0);
 
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
@@ -152,6 +153,7 @@ public class MessagePushTemplateController extends BaseController {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
+            response.setMessage(message);
             prepareDatas(response);
             return new AdminResult<>(response);
         }
