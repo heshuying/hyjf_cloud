@@ -43,7 +43,7 @@ public class AppUserWithdrawController extends BaseUserController {
     /**
      * 卡片描述
      */
-    private final String CARD_DESC = "限额:单笔{0}，单日{1}，单月{2}";
+    private final String CARD_DESC = "限额:{0}{1}{2}";
     /**
      * 温馨提示URL
      */
@@ -146,8 +146,18 @@ public class AppUserWithdrawController extends BaseUserController {
                         }
                         // 是否支持快捷支付1:支持 2:不支持
                         //Integer quickPayment = jxBankConfigVO.getQuickPayment();
-                        bankCardBean.setDesc(MessageFormat.format(CARD_DESC, (BigDecimal.ZERO.compareTo(timesLimitAmount) == 0) ? "不限" : timesLimitAmount.toString() + "万元",
-                                (BigDecimal.ZERO.compareTo(dayLimitAmount) == 0) ? "不限" : dayLimitAmount.toString() + "万元", (BigDecimal.ZERO.compareTo(monthLimitAmount) == 0) ? "不限" : monthLimitAmount.toString() + "万元"));
+                        // modify by yangchangwei app3.1.1 迁移 2018-10-15
+                        String symbol = ",";
+                        String symBol2 = ",";
+                        if(BigDecimal.ZERO.compareTo(dayLimitAmount)==0 && BigDecimal.ZERO.compareTo(monthLimitAmount)==0){
+                            symbol = "";
+                            symBol2 = "";
+                        }
+                        if(BigDecimal.ZERO.compareTo(monthLimitAmount)==0){
+                            symBol2 = "";
+                        }
+                        bankCardBean.setDesc(MessageFormat.format(CARD_DESC, (BigDecimal.ZERO.compareTo(timesLimitAmount) == 0) ? "" : "单笔" + timesLimitAmount.toString() + "万元" + symbol,
+                                (BigDecimal.ZERO.compareTo(dayLimitAmount) == 0) ? "" : "单日" + dayLimitAmount.toString() + "万元" + symBol2, (BigDecimal.ZERO.compareTo(monthLimitAmount) == 0) ? "" : "单月" + monthLimitAmount.toString() + "万元"));
                         bankCardBean.setNotice(WARM_AND_SWEET_REMINDERS_URL);
                         // add by xiashuqing 20171205 app2.1改版新增 end
 
