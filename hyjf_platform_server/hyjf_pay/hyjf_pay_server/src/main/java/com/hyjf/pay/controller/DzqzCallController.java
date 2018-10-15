@@ -6,6 +6,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.base.BaseController;
 import com.hyjf.pay.bean.DzqzCallDefine;
+import com.hyjf.pay.config.SystemConfig;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.call.DzqzCallApi;
 import com.hyjf.pay.lib.fadada.call.impl.DzqzCallApiImpl;
@@ -31,6 +32,10 @@ public class DzqzCallController extends BaseController {
     @Autowired
     private FddProducer fddProducer;
 
+    @Autowired
+    SystemConfig systemConfig;
+
+
     Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
@@ -46,7 +51,12 @@ public class DzqzCallController extends BaseController {
         String ret = "";
         String orderId = "";
         try {
-            bean.setCommonItem();
+
+            bean.setApp_id(systemConfig.getFaaAppUrl());
+            bean.setSecret(systemConfig.getFddSecret());
+            bean.setV(systemConfig.getFddVersion());
+            bean.setUrl(systemConfig.getFddUrl());
+
             bean.setAllParams(new TreeMap<String, String>());
             // 参数转换成Map
             bean.convert();

@@ -495,7 +495,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	/**
 	 * 自动扣款（还款）(调用汇付天下接口)
 	 *
-	 * @param outCustId
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -659,7 +658,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * @param borrowNid
 	 * @param tenderOrderId
 	 * @param periodNow
-	 * @param i
 	 * @return
 	 */
 	private List<CreditRepay> selectCreditRepay(String borrowNid, String tenderOrderId, Integer periodNow) {
@@ -676,7 +674,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	/**
 	 * 判断是否完全承接  true:未完全承接
 	 * @param borrowRecover
-	 * @param borrowRecoverPlan
 	 * @param isMonth
 	 * @return
 	 */
@@ -1501,7 +1498,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	/**
 	 * 判断该收支明细是否存在
 	 *
-	 * @param accountList
+	 * @param
 	 * @return
 	 */
 	private boolean countAccountListByNid(String nid) {
@@ -1513,7 +1510,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	/**
 	 * 判断该收支明细是否存在
 	 *
-	 * @param accountList
+	 * @param
 	 * @return
 	 */
 	private boolean countCreditAccountListByNid(String nid) {
@@ -1525,7 +1522,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	/**
 	 * 取得总的还款计划表
 	 *
-	 * @param borrowRepayPlan
+	 * @param
 	 * @param borrowNid
 	 * @param period
 	 * @return
@@ -1561,9 +1558,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	/**
 	 * 结束相应的债权
 	 * 
-	 * @param integer
-	 * @param string
-	 * @param assignRepayDetail
+	 * @param
+	 * @param
+	 * @param
 	 * @return
 	 */
 	private boolean requestDebtEnd(Integer userId, JSONObject repayDetail,String orgOrderId, Borrow borrow, BorrowInfo borrowInfo) {
@@ -1775,8 +1772,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * 
 	 * @param borrow
 	 *
-	 * @param borrowNid
-	 * @param periodNow
 	 * @throws Exception
 	 */
 	private boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception {
@@ -2921,11 +2916,16 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		if (isMonth) {
 			// 取得分期还款计划表
 			BorrowRecoverPlan borrowRecoverPlan = getBorrowRecoverPlan(borrowNid, periodNow, tenderUserId, tenderOrderId);
-			borrowRecoverPlan.setRecoverStatus(2);
-			boolean flag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
-			if (!flag) {
-				throw new Exception("更新相应的还款明细失败！项目编号:" + borrowNid + "]");
+			if (Validator.isNull(borrowRecoverPlan)) {
+				throw new RuntimeException("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[投资订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
+			}else {
+				borrowRecoverPlan.setRecoverStatus(2);
+				boolean flag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
+				if (!flag) {
+					throw new Exception("更新相应的还款明细失败！项目编号:" + borrowNid + "]");
+				}
 			}
+
 		} else {
 			borrowRecover.setRecoverStatus(2);
 			boolean flag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
@@ -3092,8 +3092,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * 发送短信(还款成功)
 	 *
 	 * @param userId
-	 * @param bigDecimal
-	 * @param string
 	 */
 	private void sendSms(int userId, String borrowNid, BigDecimal repayCapital, BigDecimal repayInterest) {
 		if (Validator.isNotNull(userId) && Validator.isNotNull(repayCapital)) {
@@ -3115,10 +3113,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	/**
 	 * 推送消息
 	 * 
-	 * @param msgList
 	 * @author Administrator
-	 * @param bigDecimal
-	 * @param string
 	 */
 	private void sendMessage(int userId, String borrowNid, BigDecimal repayAccount, BigDecimal repayInterest) {
 		if (Validator.isNotNull(userId) && Validator.isNotNull(repayAccount)) {

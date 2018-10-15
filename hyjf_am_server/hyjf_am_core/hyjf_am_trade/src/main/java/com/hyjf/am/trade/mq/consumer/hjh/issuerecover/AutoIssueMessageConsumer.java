@@ -98,12 +98,13 @@ public class AutoIssueMessageConsumer extends Consumer {
 
                 // --> 消息处理
 
-                Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
-                BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
 
                 // 原始标的情况
                 if(StringUtils.isNotBlank(autoIssuerecoverVO.getBorrowNid())){
                     logger.info(autoIssuerecoverVO.getBorrowNid()+" 原始标开始关联计划 ");
+                    Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
+                    BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
+
 
                     // redis 放重复检查
                     String redisKey = "borrowissue:" + autoIssuerecoverVO.getBorrowNid();

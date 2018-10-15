@@ -331,7 +331,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         // 电子账号
         bean.setAccountId(accountId);
         // 订单号
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(userId)));
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
         // 订单时间(必须)格式为yyyyMMdd，例如：20130307
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         bean.setLogUserId(String.valueOf(userId));

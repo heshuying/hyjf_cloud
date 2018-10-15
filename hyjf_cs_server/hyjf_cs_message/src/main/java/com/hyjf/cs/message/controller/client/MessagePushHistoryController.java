@@ -38,17 +38,17 @@ public class MessagePushHistoryController {
      * @return
      */
     @RequestMapping("/get_message_list")
-    public MessagePushHistoryResponse getMessageList(
-            @RequestBody MessagePushHistoryRequest request) {
+    public MessagePushHistoryResponse getMessageList(@RequestBody MessagePushHistoryRequest request) {
         MessagePushHistoryResponse response = new MessagePushHistoryResponse();
         Integer count = messagePushHistoryService.getRecordCount(request);
         if (count > 0) {
-            Paginator paginator = new Paginator(request.getCurrPage(), count);
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
             List<MessagePushMsgHistory> list = messagePushHistoryService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(list)) {
                 List<MessagePushMsgHistoryVO> voList = CommonUtils.convertBeanList(list,
                         MessagePushMsgHistoryVO.class);
                 response.setResultList(voList);
+                response.setRecordTotal(count);
             }
         }
         return response;

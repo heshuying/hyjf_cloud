@@ -1,37 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.hyjf</groupId>
-        <artifactId>hyjf_am_server</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>com.hyjf</groupId>
+		<artifactId>hyjf_am_server</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 
-    <groupId>com.hyjf</groupId>
-    <artifactId>hyjf_am_core</artifactId>
-    <packaging>pom</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+	<groupId>com.hyjf</groupId>
+	<artifactId>hyjf_am_core</artifactId>
+	<packaging>pom</packaging>
+	<version>0.0.1-SNAPSHOT</version>
 
-    <name>hyjf_am_core</name>
-    <description>hyjf am core project</description>
+	<name>hyjf_am_core</name>
+	<description>hyjf am core project</description>
 
-    <modules>
-        <module>hyjf_am_config</module>
-        <module>hyjf_am_market</module>
-        <module>hyjf_am_user</module>
-        <module>hyjf_am_trade</module>
-        <module>hyjf_am_admin</module>
-    </modules>
-<dependencies>
+	<modules>
+		<module>hyjf_am_config</module>
+		<module>hyjf_am_market</module>
+		<module>hyjf_am_user</module>
+		<module>hyjf_am_trade</module>
+		<module>hyjf_am_admin</module>
+	</modules>
+	<dependencies>
 
-    <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-starter-config</artifactId>
-    </dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
 
-</dependencies>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-zipkin</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+
+	</dependencies>
 
 </project>

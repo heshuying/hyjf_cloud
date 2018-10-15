@@ -574,24 +574,6 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
-	 * 根据用户List id查找用户信息
-	 *
-	 * @auther: nxl
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public List<UserVO> selectUserByListUserId(List userId) {
-		UserResponse response = restTemplate
-				.getForEntity("http://AM-ADMIN/am-user/userManager/selectUserByListUserId/" + userId, UserResponse.class)
-				.getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResultList();
-		}
-		return null;
-	}
-
-	/**
 	 * 根据用户id查找用户信息
 	 * 
 	 * @auther: nxl
@@ -2373,5 +2355,22 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResultList();
 		}
 		return null;
+	}
+
+	@Override
+	public UtmPlatResponse getAllUtmPlat(Map<String, Object> map) {
+		UtmPlatResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmplat", map, UtmPlatResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public void insertUtmList(List<ChannelCustomizeVO> voList) {
+		ChannelRequest request = new ChannelRequest();
+		request.setList(voList);
+		restTemplate.postForObject("http:/AM-USER/am-user/promotion/utm/insert_utm_list", request, UtmResponse.class);
 	}
 }

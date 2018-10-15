@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.admin.promotion.UtmResultResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.slf4j.Logger;
@@ -25,8 +27,8 @@ public class UtmServiceImpl implements UtmService {
     @Autowired
     private AmUserClient amUserClient;
     @Override
-    public JSONObject getByPageList(Map<String,Object> map, Integer currPage, Integer pageSize){
-        JSONObject jsonObject = new JSONObject();
+    public UtmResultResponse getByPageList(Map<String,Object> map, Integer currPage, Integer pageSize){
+        UtmResultResponse utmResultResponse = new UtmResultResponse();
         Object object =map.get("recordTotal");
         Integer recodeTotal = 0;
         //处理前端传递到后台总条数，如为空或为0，则重新查询总条数
@@ -47,13 +49,16 @@ public class UtmServiceImpl implements UtmService {
         if(null != utmResponse){
             list = utmResponse.getResultList();
         }
-        jsonObject.put("currPage",currPage);
-        jsonObject.put("pageSize",pageSize);
-        jsonObject.put("resultList",list);
-        jsonObject.put("recordTotal",recodeTotal);
-        jsonObject.put("status", "00");
-        jsonObject.put("msg", "成功");
-        return jsonObject;
+        map.clear();
+        UtmPlatResponse utmPlatResponse = amUserClient.getAllUtmPlat(map);
+        List<UtmPlatVO> utmPlatVOList = new ArrayList<UtmPlatVO>();
+        if(null != utmPlatResponse){
+            utmPlatVOList = utmPlatResponse.getResultList();
+        }
+        utmResultResponse.setUtmPlatList(utmPlatVOList);
+        utmResultResponse.setResultList(list);
+        utmResultResponse.setTotal(recodeTotal);
+        return utmResultResponse;
     }
 
     @Override

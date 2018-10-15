@@ -40,10 +40,7 @@ public class WeChatBindCardController extends BaseUserController {
     @Autowired
     SystemConfig systemConfig;
 
-    /**
-     * 页面请求绑卡
-     * @param request
-     */
+
 //    @PostMapping("/bindCardPage")
 //    @ApiOperation(value = "绑卡", notes = "绑卡")
 //    public ModelAndView bindCardPage(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
@@ -99,7 +96,7 @@ public class WeChatBindCardController extends BaseUserController {
         BaseMapBean baseMapBean = new BaseMapBean();
         baseMapBean.set(CustomConstants.APP_STATUS, param.getStatus());
         baseMapBean.set(CustomConstants.APP_STATUS_DESC, param.getStatusDesc());
-        baseMapBean.setCallBackAction(systemConfig.weChatHost + "/user/bankCard/bind/result/failed");
+        baseMapBean.setCallBackAction(systemConfig.getServerHost() + "/user/bankCard/bind/result/failed");
         modelAndView.addObject("callBackForm", baseMapBean);
         return modelAndView;
     }
@@ -153,7 +150,7 @@ public class WeChatBindCardController extends BaseUserController {
             modelAndView = new ModelAndView("/jumpHTML");
             baseMapBean.set(CustomConstants.APP_STATUS, ResultEnum.SUCCESS5.getStatus());
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, ResultEnum.SUCCESS5.getStatusDesc());
-            baseMapBean.setCallBackAction(systemConfig.weChatHost + "/user/bankCard/bind/result/success");
+            baseMapBean.setCallBackAction(systemConfig.getServerHost() + "/user/bankCard/bind/result/success");
             modelAndView.addObject("callBackForm", baseMapBean);
             return modelAndView;
         } else {

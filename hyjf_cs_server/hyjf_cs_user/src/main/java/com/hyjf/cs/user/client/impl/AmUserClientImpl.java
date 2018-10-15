@@ -191,7 +191,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-			Integer searchStatus, Integer updateStatus,boolean isUpdate) {
+							   Integer searchStatus, Integer updateStatus,boolean isUpdate) {
 		SmsCodeRequest request = new SmsCodeRequest();
 		request.setMobile(mobile);
 		request.setVerificationCode(verificationCode);
@@ -275,8 +275,8 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-    public void updateUserAuthInves(BankRequest bean){
-		 restTemplate.put(userService+"/user/updateUserAuthInves", bean) ;
+	public void updateUserAuthInves(BankRequest bean){
+		restTemplate.put(userService+"/user/updateUserAuthInves", bean) ;
 	}
 
 	/**
@@ -337,7 +337,7 @@ public class AmUserClientImpl implements AmUserClient {
 		return result;
 	}
 
-	
+
 	@Override
 	public AccountChinapnrVO getAccountChinapnr(Integer userId) {
 		AccountChinapnrResponse response = restTemplate
@@ -347,7 +347,7 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 校验邮箱是否存在
 	 */
@@ -360,7 +360,7 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 插入绑卡记录
 	 * @param bean
@@ -374,7 +374,7 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * 获取绑定邮箱记录
 	 * @param userId
@@ -389,7 +389,7 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 更新绑定邮箱
 	 * @param bean
@@ -403,7 +403,7 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * 保存、更新紧急联系人
 	 * @param bean
@@ -521,12 +521,12 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public EvalationVO getEvalationByEvalationType(String evalationType) {
-	EvalationResponse response = restTemplate
-			.getForEntity(userService+"/user/getEvalationByEvalationType/" + evalationType, EvalationResponse.class).getBody();
-	if (response != null) {
-		return response.getResult();
-	}
-	return null;
+		EvalationResponse response = restTemplate
+				.getForEntity(userService+"/user/getEvalationByEvalationType/" + evalationType, EvalationResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 	@Override
 	public UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest) {
@@ -837,9 +837,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return userInfo
 	 * */
 	@Override
-	public List<UserLoginLogVO> searchUserIdForUserPortrait() {
+	public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait() {
 		String url = "http://AM-USER/user_batch/portrait/search_user_id_for_user_portrait";
-		UserLoginLogResponse response = restTemplate.getForEntity(url, UserLoginLogResponse.class).getBody();
+		UserAndSpreadsUserResponse response = restTemplate.getForEntity(url, UserAndSpreadsUserResponse.class).getBody();
 		if(response != null){
 			return response.getResultList();
 		}
@@ -956,9 +956,28 @@ public class AmUserClientImpl implements AmUserClient {
 		return restTemplate.getForEntity(userService+"/userManager/getBindUniqueIdByUserId/"+userId+"/"+bindPlatformId, String.class).getBody();
 	}
 
+	/**
+	 * 获取第三方绑定用户
+	 * @param userId
+	 * @param bindPlatformId
+	 * @return
+	 */
 	@Override
-	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid) {
-		return restTemplate.getForEntity(userService+"/userManager/bindThirdUser/"+userId+"/"+bindUniqueId+"/"+pid, Boolean.class).getBody();
+	public BindUserVo getBindUser(int userId, int bindPlatformId) {
+		BindUserResponse response = restTemplate.getForEntity(userService+"/userManager/getBindUser/"+userId+"/"+bindPlatformId, BindUserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public Boolean bindThirdUser(Integer userId, Integer bindUniqueId, Integer pid) {
+		BooleanResponse response = restTemplate.getForEntity(userService+"/userManager/bindThirdUser/"+userId+"/"+bindUniqueId+"/"+pid, BooleanResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultBoolean();
+		}
+		return null;
 	}
 
 	/**
@@ -1036,26 +1055,26 @@ public class AmUserClientImpl implements AmUserClient {
 		return response;
 	}
 
-    @Override
-    public boolean updateMobileSynch(AccountMobileSynchRequest accountMobileAynch) {
-        String url = userService+"/batch/updateMobileSynch";
-        AccountMobileSynchResponse response =
-                restTemplate.postForEntity(url,accountMobileAynch, AccountMobileSynchResponse.class).getBody();
-        if(Response.isSuccess(response)){
-            return response.getUpdateFlag();
-        }
-        return false;
-    }
+	@Override
+	public boolean updateMobileSynch(AccountMobileSynchRequest accountMobileAynch) {
+		String url = userService+"/batch/updateMobileSynch";
+		AccountMobileSynchResponse response =
+				restTemplate.postForEntity(url,accountMobileAynch, AccountMobileSynchResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getUpdateFlag();
+		}
+		return false;
+	}
 
-    @Override
-    public boolean updateByPrimaryKey(UserVO userVO) {
-        IntegerResponse result = restTemplate
-                .postForEntity("http://AM-USER/am-user/user/updateByUserId", userVO, IntegerResponse.class).getBody();
-        if (result != null) {
-            return result.getResultInt() == 0 ? false : true;
-        }
-        return false;
-    }
+	@Override
+	public boolean updateByPrimaryKey(UserVO userVO) {
+		IntegerResponse result = restTemplate
+				.postForEntity("http://AM-USER/am-user/user/updateByUserId", userVO, IntegerResponse.class).getBody();
+		if (result != null) {
+			return result.getResultInt() == 0 ? false : true;
+		}
+		return false;
+	}
 
 
 	/**
@@ -1069,7 +1088,7 @@ public class AmUserClientImpl implements AmUserClient {
 		UserInfoRequest request = new UserInfoRequest();
 		BeanUtils.copyProperties(userInfoVO, request);
 		IntegerResponse result = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserInfoByUserInfo", request, IntegerResponse.class)
+				.postForEntity("http://AM-USER/am-user/userManager/updateUserInfoByUserInfo", request, IntegerResponse.class)
 				.getBody();
 		if (result == null || !Response.isSuccess(result)) {
 			return 0;
@@ -1080,9 +1099,26 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest) {
 		Integer body = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/wrb/register", wrbRegisterRequest, IntegerResponse.class)
+				.postForEntity("http://AM-USER/am-user/wrb/register", wrbRegisterRequest, IntegerResponse.class)
 				.getBody().getResultInt();
 		return body;
+	}
+
+	/**
+	 * @param userId
+	 * @Description 根据userId查询开户信息
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/19 15:32
+	 */
+	@Override
+	public BankOpenAccountVO selectBankAccountById(Integer userId) {
+		String url = "http://AM-USER/am-user/bankopen/selectById/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 
 }

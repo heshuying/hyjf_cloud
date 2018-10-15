@@ -162,7 +162,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 
     @Override
     public List<BankOpenAccount> selectByListExample(List<Integer> user) {
-        List<BankOpenAccount> bankOpenAccountList = bankOpenAccountMapper.selectByListExample(user);
+        List<BankOpenAccount> bankOpenAccountList = bankOpenAccountCustomerMapper.selectByUserList(user);
         if (bankOpenAccountList != null && bankOpenAccountList.size() == 1) {
             return bankOpenAccountList;
         }

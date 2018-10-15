@@ -232,7 +232,7 @@ public class ActivityListController extends BaseController {
             message = "活动名称不能为空";
             return message;
         }
-        if (request.getQr() == null) {
+        if (request.getImg() == null) {
             message = "主图不能为空";
             return message;
         }

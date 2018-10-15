@@ -8,6 +8,7 @@ import com.hyjf.admin.beans.request.TenderExceptionSolveRequestBean;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.AutoTenderExceptionService;
 import com.hyjf.am.response.admin.AutoTenderExceptionResponse;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
@@ -48,6 +49,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
     private AmTradeClient amTradeClient;
     @Autowired
     private AmUserClient amUserClient;
+    @Autowired
+    private SystemConfig systemConfig;
 
     /**
      * 检索汇计划加入明细列表
@@ -107,8 +110,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
         //银行代码
         bean.setBankCode(PropUtils.getSystem(BankCallConstant.BANK_BANKCODE));*/
         //暂定
-        bean.setBankCode("30050000");
-        bean.setInstCode("00810001");// 机构代码
+        bean.setBankCode(systemConfig.getBANK_BANKCODE());
+        bean.setInstCode(systemConfig.getBANK_INSTCODE());// 机构代码
         bean.setTxDate(GetOrderIdUtils.getTxDate());
         bean.setTxTime(GetOrderIdUtils.getTxTime());
         bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
@@ -292,7 +295,6 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     if (StringUtils.isNotBlank(state)) {
                         if ("1".equals(state)) {
                             bankQueryisOK = true;
-                        } else if ("2".equals(state)) {
                         }
                     }
                 }

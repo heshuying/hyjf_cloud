@@ -402,22 +402,6 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     }
 
     /**
-     * 根据用户List id查找用户表
-     *
-     * @param userId
-     * @param userId
-     * @return
-     */
-    @Override
-    public List<User> selectUserByListUserId(List userId) {
-        List<User> usersList = this.userMapper.selectUserByListUserId(userId);
-        if (null!= usersList && usersList.size() > 0) {
-            return usersList;
-        }
-        return null;
-    }
-
-    /**
      * 根據accounId獲取開戶信息
      *
      * @param accountId
@@ -970,7 +954,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 }
             }
         }
-        CorpOpenAccountRecord record = null;
+        CorpOpenAccountRecord record = new CorpOpenAccountRecord();
         if (bankOpenFlag == 1) {//获取修改信息
             CorpOpenAccountRecord corpOpenAccountRecord = this.selectCorpOpenAccountRecordByUserId(user.getUserId());
             BeanUtils.copyProperties(corpOpenAccountRecord, record);
@@ -1007,7 +991,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             }
         }
         //保存银行卡信息
-        BankCard bankCard = null;
+        BankCard bankCard = new BankCard();
         if (bankOpenFlag == 1) {
             List<BankCard> bankCardList = this.findBankCardByUserId(user.getUserId());
             if (null != bankCardList && bankCardList.size() > 0) {

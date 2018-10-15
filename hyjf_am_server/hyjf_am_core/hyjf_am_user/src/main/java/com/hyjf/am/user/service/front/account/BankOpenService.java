@@ -8,7 +8,7 @@ import com.hyjf.am.user.service.BaseService;
 import java.util.List;
 
 public interface BankOpenService extends BaseService {
-	
+
 	/**
 	 * 保存用户的初始开户记录
 	 * @param userId
@@ -18,21 +18,21 @@ public interface BankOpenService extends BaseService {
 	 * @param
 	 * @return
 	 */
-	public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc,String name,String idno,String cardNo);
+	public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc,String name,String idno,String cardNo, String srvAuthCode);
 
 
-    
-    /**
-     * 更新开户日志表
-     *
-     * @param userId
-     * @param logOrderId
-     * @param status
-     */
-    void updateUserAccountLog(Integer userId, String logOrderId, int status , String retCode , String retMsg);
+
+	/**
+	 * 更新开户日志表
+	 *
+	 * @param userId
+	 * @param logOrderId
+	 * @param status
+	 */
+	void updateUserAccountLog(Integer userId, String logOrderId, int status , String retCode , String retMsg);
 
 
-    boolean updateUserAccount(Integer userId, String trueName, String orderId, String accountId, String idNo, Integer bankAccountEsb, String mobile, Integer roleId);
+	boolean updateUserAccount(Integer userId, String trueName, String orderId, String accountId, String idNo, Integer bankAccountEsb, String mobile, Integer roleId);
 
 
 	UserInfo findUserInfoByCradId(String cardNo);
@@ -65,7 +65,7 @@ public interface BankOpenService extends BaseService {
 	 * @Author sunss
 	 * @Date 2018/6/21 15:52
 	 */
-    String getBankOpenAccountFiledMess(String logOrdId);
+	String getBankOpenAccountFiledMess(String logOrdId);
 
 	/**
 	 * 获取银行卡信息

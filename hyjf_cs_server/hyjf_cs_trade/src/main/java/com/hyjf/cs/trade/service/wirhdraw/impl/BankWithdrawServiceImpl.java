@@ -672,10 +672,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_RETRY);
         }
         // 检查数据是否完整
-        if (Validator.isNull(transAmt) || Validator.isNull(transAmt)) {
+        if (Validator.isNull(transAmt)) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_AMOUNT);
         }
-        if (Validator.isNull(cardNo) || Validator.isNull(cardNo)) {
+        if (Validator.isNull(cardNo)) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
@@ -747,6 +747,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         BankCardVO bankCard = this.amUserClient.queryUserCardValid(user.getUserId()+"", cardNo);
         if (bankCard != null) {
             bank = bankCard.getBank();
+        } else {
+        	 return;
         }
         AccountWithdrawVO record = new AccountWithdrawVO();
         record.setUserId(userId);
@@ -756,7 +758,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         record.setStatus(WITHDRAW_STATUS_DEFAULT); // 状态: 0:初始值
         record.setAccount(cardNo);// 提现银行卡号
         record.setBank(bank); // 提现银行
-        record.setBankId(bankCard.getId());
+        if(bankCard.getId() != null){
+        	record.setBankId(bankCard.getId());
+        }
         record.setBranch(null);
         record.setProvince(0);
         record.setCity(0);
@@ -834,15 +838,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 成功跳转的url
         bean.setSuccessfulUrl(successfulUrl);
         // 提现金额大于五万,走人行通道,路由代码传2
-        if ((new BigDecimal(transAmt).compareTo(new BigDecimal(50000)) > 0) && StringUtils.isNotBlank(payAllianceCode)) {
+        if ((new BigDecimal(transAmt).compareTo(new BigDecimal(50001)) > 0) && StringUtils.isNotBlank(payAllianceCode)) {
             routeCode = "2";// 路由代码
             bean.setCardBankCnaps(payAllianceCode);// 绑定银行联行号
         }
         if ("2".equals(routeCode)) {
             bean.setRouteCode(routeCode);
-            LogAcqResBean logAcq = new LogAcqResBean();
-            logAcq.setPayAllianceCode(payAllianceCode);
-            bean.setLogAcqResBean(logAcq);
         }
         // 企业用户提现
         if (user.getUserType() == 1) { // 企业用户 传组织机构代码
@@ -923,6 +924,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         BankCardVO bankCard = getBankInfo(userId, cardNo);
         if (bankCard != null) {
             bank = bankCard.getBank();
+        }else{
+        	return ret;
         }
         AccountWithdrawVO record = new AccountWithdrawVO();
         record.setUserId(userId);
@@ -932,7 +935,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         record.setStatus(WITHDRAW_STATUS_DEFAULT); // 状态: 0:初始值
         record.setAccount(cardNo);// 提现银行卡号
         record.setBank(bank); // 提现银行
-        record.setBankId(bankCard.getId());
+        if(bankCard.getId() != null){
+        	record.setBankId(bankCard.getId());
+        }
         record.setBranch(null);
         record.setProvince(0);
         record.setCity(0);

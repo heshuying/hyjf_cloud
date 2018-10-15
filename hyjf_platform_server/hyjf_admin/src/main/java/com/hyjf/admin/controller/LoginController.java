@@ -50,8 +50,7 @@ public class LoginController extends BaseController {
     @ApiOperation(value = "admin登陆验证密码", notes = "admin登陆验证密码")
     @PostMapping(value = "/login")
 	@ResponseBody
-
-	@AuthorityAnnotation(key = key, value = ShiroConstants.PERMISSION_AUTH)
+//	@AuthorityAnnotation(key=key, value = ShiroConstants.PERMISSION_AUTH)
 	public AdminResult<Map<String,Object>> login(HttpServletRequest request, @ApiParam(required = true, value = "{\"username\": \"\",\"password\":\"\"}") @RequestBody Map<String, String> map) {
 		String username=map.get("username");
 		logger.info("登陆开始用户:"+username);

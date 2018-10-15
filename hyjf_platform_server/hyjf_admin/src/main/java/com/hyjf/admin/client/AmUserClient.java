@@ -287,16 +287,6 @@ public interface AmUserClient {
     UserVO selectUserByUserId(int userId);
 
     /**
-     * 根据用户List id查找用户表
-     *
-     * @param userId
-     * @param userId
-     * @return
-     * @auth nxl
-     */
-    List<UserVO> selectUserByListUserId(List userId);
-
-    /**
      * 根据用户id查找用户信息
      *
      * @param userId
@@ -1181,4 +1171,19 @@ public interface AmUserClient {
      * @auther: nxl
      */
     List<OADepartmentCustomizeVO> getDeptInfoByDeptId(int deptId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  获取所有得UtmPlat
+     * @Date 18:38 2018/10/9
+     * @Param map
+     * @return
+     */
+    UtmPlatResponse getAllUtmPlat(Map<String,Object> map);
+
+    /**
+     * 新增操作
+     * @param voList
+     */
+    void insertUtmList(List<ChannelCustomizeVO> voList);
 }

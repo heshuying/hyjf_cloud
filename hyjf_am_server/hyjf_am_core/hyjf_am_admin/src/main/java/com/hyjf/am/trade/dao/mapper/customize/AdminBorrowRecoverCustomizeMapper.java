@@ -15,4 +15,6 @@ public interface AdminBorrowRecoverCustomizeMapper {
     List<AdminBorrowRecoverCustomize> selectBorrowRecoverList(BorrowRecoverRequest request);
 
     AdminBorrowRecoverCustomize sumBorrowRecoverList(BorrowRecoverRequest request);
+
+    List<AdminBorrowRecoverCustomize> exportBorrowRecoverList(BorrowRecoverRequest request);
 }

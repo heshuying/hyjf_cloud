@@ -1896,6 +1896,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 // 当前期
                 if (period == borrowRepayPlan.getRepayPeriod()) {
 
+
                     // 当前期已经还款
                     if (borrowRepayPlan.getRepayStatus() == 1) {
 
@@ -4729,9 +4730,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         throw new Exception("重复还款");
                     }
                     int nowTime = GetDate.getNowTime10();
-                    nid = repay.getBorrowNid() + "_" + repay.getUserId() + "_" + period;
+                    String nid2 = repay.getBorrowNid() + "_" + repay.getUserId() + "_" + period;
                     BorrowApicron borrowApicron = new BorrowApicron();
-                    borrowApicron.setNid(nid);
+                    borrowApicron.setNid(nid2);
                     borrowApicron.setUserId(repayUserId);
                     borrowApicron.setUserName(userName);
                     borrowApicron.setBorrowNid(borrowNid);

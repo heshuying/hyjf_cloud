@@ -12,7 +12,7 @@ import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
@@ -260,9 +260,11 @@ public class MongoSeachController extends BaseController {
      */
 	@RequestMapping(value = "/gettotalinvestmentamount")
 	public CalculateInvestInterestResponse getTotalInvestmentAmount() {
-		CalculateInvestInterestResponse response = new CalculateInvestInterestResponse();
-		BigDecimal totalInvestmentAmount = calculateInvestInterestDao.getTotalInvestmentAmount();
-		response.setInterestSum(totalInvestmentAmount);
+        CalculateInvestInterestResponse response = new CalculateInvestInterestResponse();
+        TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
+        if (entity != null) {
+            response.setInterestSum(entity.getTotalInterestAmount());
+        }
 		return response;
 	}
 
@@ -315,7 +317,7 @@ public class MongoSeachController extends BaseController {
         logger.info("searchDirectionalTransferList::::::::::limitStart=[{}],limitEnd=[{}]",request.getLimitStart(),request.getLimitEnd());
         List<DirectionalTransferAssociatedRecords> directionalTransferAssociatedRecords = directionalTransferAssociatedRecordsDao.searchDirectionalTransferList(request);
         if(!CollectionUtils.isEmpty(directionalTransferAssociatedRecords)){
-            List<AssociatedRecordListVo> associatedRecordListVoList = CommonUtils.convertBeanList(directionalTransferAssociatedRecords,AssociatedRecordListVo.class);
+            List<AssociatedRecordListVO> associatedRecordListVoList = CommonUtils.convertBeanList(directionalTransferAssociatedRecords,AssociatedRecordListVO.class);
             response.setRtn(Response.SUCCESS);
             response.setResultList(associatedRecordListVoList);
         }

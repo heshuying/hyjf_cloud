@@ -27,7 +27,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
     private Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
 
     @Override
-    public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name, String idno, String cardNo) {
+    public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name, String idno, String cardNo, String srvAuthCode) {
         Date date = new Date();
         BankOpenAccountLogExample example = new BankOpenAccountLogExample();
         example.createCriteria().andUserIdEqualTo(userId).andOrderIdEqualTo(logOrderId);
@@ -36,6 +36,9 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             BankOpenAccountLog openAccountLog = bankOpenAccountLogs.get(0);
             openAccountLog.setMobile(mobile);
             openAccountLog.setStatus(0);
+            if(StringUtils.isNotBlank(srvAuthCode)){
+                openAccountLog.setLastSrvAuthCode(srvAuthCode);
+            }
             openAccountLog.setUpdateTime(date);
             openAccountLog.setUpdateUserId(userId);
             boolean updateFlag = this.bankOpenAccountLogMapper.updateByPrimaryKeySelective(openAccountLog) > 0 ? true
@@ -51,6 +54,9 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             bankOpenAccountLog.setUserName(userName);
             bankOpenAccountLog.setMobile(mobile);
             bankOpenAccountLog.setStatus(0);
+            if(StringUtils.isNotBlank(srvAuthCode)){
+                bankOpenAccountLog.setLastSrvAuthCode(srvAuthCode);
+            }
             bankOpenAccountLog.setOrderId(logOrderId);
             bankOpenAccountLog.setCreateTime(date);
             bankOpenAccountLog.setCreateUserId(userId);
@@ -97,7 +103,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         // 查询开户记录表
         BankOpenAccountLogExample example = new BankOpenAccountLogExample();
         example.createCriteria().andUserIdEqualTo(userId).andOrderIdEqualTo(orderId);
-        BankOpenAccountLog openAccountLog = null;
+        BankOpenAccountLog openAccountLog = new BankOpenAccountLog();
         List<BankOpenAccountLog> bankOpenAccountLogs = this.bankOpenAccountLogMapper.selectByExample(example);
         if (bankOpenAccountLogs != null && bankOpenAccountLogs.size() == 1) {
             openAccountLog = bankOpenAccountLogs.get(0);
@@ -118,20 +124,22 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         String userName = user.getUsername();
         logger.info("用户ID:" + userId + "],用户名:[" + userName + "],用户身份证号:[" + idNo + "]");
         // 根据身份证号获取用户相关信息
-        if (idNo != null && idNo.length() < 18) {
+        String birthDayTemp = "";
+        int sexInt = 1;
+        if (null !=idNo && idNo.length() < 18) {
             try {
                 idNo = IdCard15To18.getEighteenIDCard(idNo);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            sexInt = Integer.parseInt(idNo.substring(16, 17));
+            if (sexInt % 2 == 0) {
+                sexInt = 2;
+            } else {
+                sexInt = 1;
+            }
+            birthDayTemp = idNo.substring(6, 14);
         }
-        int sexInt = Integer.parseInt(idNo.substring(16, 17));
-        if (sexInt % 2 == 0) {
-            sexInt = 2;
-        } else {
-            sexInt = 1;
-        }
-        String birthDayTemp = idNo.substring(6, 14);
         String birthDay = StringUtils.substring(birthDayTemp, 0, 4) + "-" + StringUtils.substring(birthDayTemp, 4, 6) + "-" + StringUtils.substring(birthDayTemp, 6, 8);
         user.setBankOpenAccount(1);
         user.setBankAccountEsb(bankAccountEsb);

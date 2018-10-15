@@ -825,6 +825,13 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     @Override
     public WechatHomePageResult getHomeProejctList(int currPage, int pageSize, String showPlanFlag, Integer userId) {
         WechatHomePageResult result = new WechatHomePageResult();
+
+        if(currPage<=0){
+            currPage=1;
+        }
+        if(pageSize<=0){
+            pageSize=10;
+        }
         Page page = Page.initPage(currPage, pageSize);
         WechatHomePageResult vo = new WechatHomePageResult();
         vo.setCurrentPage(currPage);
@@ -880,6 +887,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             code = "wechat_open_888";
         }
         request.setCode(code);
+        request.setPlatformType("3");
         List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(request);
         if (picList != null && picList.size() > 0) {
             vo.setAdPicUrl(picList.get(0).getImage());
@@ -903,7 +911,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         request.setHost("");
         String code = "wechat_banner";
         request.setCode(code);
-
+        request.setPlatformType("3");
         List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(request);
         if (picList != null && picList.size() > 0) {
             for (AppAdsCustomizeVO appAdsCustomize : picList) {
@@ -930,7 +938,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
         request.setHost(systemConfig.getWebHost());
         request.setCode(module);
-
+        request.setPlatformType("3");
         List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(request);
         if (picList != null && picList.size() > 0) {
             AppModuleBean appModule = new AppModuleBean();
@@ -1208,7 +1216,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                     //补两条
                     hjhList.addAll(list);
                     list = hjhList;
-                } else if (list.size() > 1 && !"HJH".equals(list.get(1).getBorrowType())) {
+                } else if (list.size() > 1 && !"HJH".equals(list.get(1).getBorrowType()) && !CollectionUtils.isEmpty(hjhList)) {
                     //补一条
                     list.add(1, hjhList.get(0));
                 }

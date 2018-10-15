@@ -1,10 +1,7 @@
 package com.hyjf.am.trade.controller.front.repay;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.response.*;
 import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
@@ -44,11 +41,11 @@ public class RepayManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/feewait_total_user/{userId}")
-    public Response<BigDecimal> userRepayFeeWaitTotal(@PathVariable Integer userId) {
+    public BigDecimalResponse userRepayFeeWaitTotal(@PathVariable Integer userId) {
         logger.info("普通借款人管理费总待还feewait_total_user，userId：" + userId);
-        Response<BigDecimal> response = new Response<>();
+        BigDecimalResponse response = new BigDecimalResponse();
         BigDecimal waitTotal = repayManageService.selectUserRepayFeeWaitTotal(userId);
-        response.setResult(waitTotal);
+        response.setResultDec(waitTotal);
         logger.info("response: {}", JSON.toJSONString(response));
         return response;
     }
@@ -58,13 +55,13 @@ public class RepayManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/feewait_total_org/{userId}")
-    public Response<BigDecimal> orgRepayFeeWaitTotal(@PathVariable Integer userId) {
-        Response<BigDecimal> response = new Response<>();
+    public BigDecimalResponse orgRepayFeeWaitTotal(@PathVariable Integer userId) {
+        BigDecimalResponse response = new BigDecimalResponse();
         BigDecimal waitTotal = repayManageService.selectOrgRepayFeeWaitTotal(userId);
         if(null==waitTotal){
-            response.setResult(new BigDecimal(0));
+            response.setResultDec(new BigDecimal(0));
         }
-        response.setResult(waitTotal);
+        response.setResultDec(waitTotal);
         return response;
     }
 
@@ -74,10 +71,10 @@ public class RepayManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/repaywait_total_org/{userId}")
-    public Response<BigDecimal> orgRepayWaitTotal(@PathVariable Integer userId) {
-        Response<BigDecimal> response = new Response<>();
+    public BigDecimalResponse orgRepayWaitTotal(@PathVariable Integer userId) {
+        BigDecimalResponse response = new BigDecimalResponse();
         BigDecimal waitTotal = repayManageService.selectRepayOrgRepaywait(userId);
-        response.setResult(waitTotal);
+        response.setResultDec(waitTotal);
         return response;
     }
 

@@ -159,7 +159,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         }
         logger.info(mobile + "----------MaxPhoneCount-----------" + count);
         if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
-            CheckUtil.check(Integer.valueOf(count).equals(smsConfig.getMaxPhoneCount()), MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
+            CheckUtil.check(Integer.valueOf(count)<(smsConfig.getMaxPhoneCount()), MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
             try {
                 // 发送短信通知
                 Map<String, String> replaceStrs = new HashMap<String, String>();
@@ -177,8 +177,8 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
             } catch (Exception e) {
                 CheckUtil.check(false, MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
             }
-            RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
         }
+        RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
 
         // 发送checkCode最大时间间隔，默认60秒
         RedisUtils.set(mobile + ":" + validCodeType + ":IntervalTime", mobile,

@@ -142,7 +142,10 @@ public class WechatBankWithdrawController extends BaseTradeController {
         BankCardBean bankCardBean = new BankCardBean();
         BeanUtils.copyProperties(bank, bankCardBean);
 
-        String cardNo = bank.getCardNo();
+        String cardNo = "";
+        if(bank.getCardNo()!= null){
+        	cardNo = bank.getCardNo();
+        }
         String cardNoInfo = BankCardUtil.getCardNo(cardNo);
         bankCardBean.setCardNoInfo(cardNoInfo);
         bankCardBean.setIsDefault("2");// 卡类型
@@ -197,7 +200,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
         String retUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/failed";
         String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/bank/withdraw/bgreturn.do";
         String successfulUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/success";
-        String forgotPwdUrl=super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request);
+        String forgotPwdUrl=super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl);
         Map<String,Object> map = new HashMap<>();
         try {

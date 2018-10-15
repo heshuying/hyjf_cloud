@@ -85,7 +85,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_NOT_LOGIN("EUS000001", "用户未登录"),
 	ERR_USER_LOGIN("EUS000002", "登录失败,账号或密码错误"),
 	ERR_USER_NOT_EXISTS("EUS000003", "不存在用户"),
-	ERR_USER_INVALID("EUS000004", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
+	ERR_USER_INVALID("EUS000004", "该用户已被禁用"),
 	ERR_USER_REGISTER("1","注册失败"),
 	ERR_USER_LOGIN_RETRY("EUS000006", "登录失败,请重新登陆"),
 	ERR_USER_UNUSUAL("EUS000007", "你的账户信息存在异常，请联系客服人员处理"),
@@ -163,7 +163,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_BANK_ACCOUNT_IDCARDNO_REQUIRED("EBK000008","身份证不能为空"),
 	ERR_BANK_ACCOUNT_IDCARDNO_EXIST("EBK000009","身份证号已存在"),
 	ERR_BANK_ACCOUNT_NOT_EXIST("EBK0000010","userId={0}没有账户信息！"),
-
+	ERROR_BANK_SEND_CODE("EBK0000010", "短信验证码发送失败，请稍后再试！"),
 
 	// 银行卡相关错误信息ERR_CARD_
 	ERR_CARD_UNBIND_HAVE_BALANCE("ECD000001", "账户尚有余额，不能解绑银行卡"),
@@ -333,23 +333,23 @@ public enum MsgEnum implements MsgCode {
 
 
 	//   优惠券相关
-	COUPON_TENDER_FAIL_ERROR("EV000001","优惠券投资失败"),
-	FIND_BORROW_ERROR("EV000001","未查询到该项目"),
-	FIND_PLAN_ERROR("EV000001","未查询到该计划"),
+	COUPON_TENDER_FAIL_ERROR("EV100001","优惠券投资失败"),
+	FIND_BORROW_ERROR("EV100002","未查询到该项目"),
+	FIND_PLAN_ERROR("EV100003","未查询到该计划"),
 
 
 
-	ERR_TRADE_BORROR_USER_NOT_EXIST("EV000001","借款人不存在"),
-	ERR_TRADE_BORROR_PROJECTTYPE_NOT_EXIST("EV000001","未设置该投资项目的项目类型"),
-	ERR_TRADE_51_OLD_USER("EV000001","该项目只能51老用户投资"),
-	ERR_TRADE_NEW_USER("EV000001","该项目只能新手投资"),
-	ERR_TENDER_ALLOWED_PC("EV000001","该项目只能在PC端投资"),
-	ERR_TENDER_ALLOWED_IOS("EV000001","该项目只能在IOS端投资"),
-	ERR_TENDER_ALLOWED_WEI("EV000001","该项目只能在微信端投资"),
-	ERR_TENDER_ALLOWED_ANDROID("EV000001","该项目只能在Android端投资"),
-	ERR_TENDER_YOURSELF("EV000001","借款人不可以自己投资项目"),
-	ERR_TENDER_BIDDERS("EV000001","此项目已经流标"),
-	ERR_TENDER_FULL_STANDARD("EV000001","此项目已经满标"),
+	ERR_TRADE_BORROR_USER_NOT_EXIST("EV100004","借款人不存在"),
+	ERR_TRADE_BORROR_PROJECTTYPE_NOT_EXIST("EV100005","未设置该投资项目的项目类型"),
+	ERR_TRADE_51_OLD_USER("EV100006","该项目只能51老用户投资"),
+	ERR_TRADE_NEW_USER("EV100007","该项目只能新手投资"),
+	ERR_TENDER_ALLOWED_PC("EV100008","该项目只能在PC端投资"),
+	ERR_TENDER_ALLOWED_IOS("EV100009","该项目只能在IOS端投资"),
+	ERR_TENDER_ALLOWED_WEI("EV100010","该项目只能在微信端投资"),
+	ERR_TENDER_ALLOWED_ANDROID("EV100011","该项目只能在Android端投资"),
+	ERR_TENDER_YOURSELF("EV100012","借款人不可以自己投资项目"),
+	ERR_TENDER_BIDDERS("EV100013","此项目已经流标"),
+	ERR_TENDER_FULL_STANDARD("EV100014","此项目已经满标"),
 	ERR_AMT_TENDER_MONEY_FORMAT("EAM000209","投资金额格式错误"),
 	ERR_AMT_TENDER_MONEY_INT("EAM000209","投资金额必须为整数"),
 	ERR_AMT_TENDER_MONEY_NEGATIVE("EAM000209","投资金额不能为负数"),
@@ -375,6 +375,7 @@ public enum MsgEnum implements MsgCode {
 	ERROR_CREDIT_UPDATE_ERROR("1","更新债转数据异常"),
 	ERROR_CREDIT_FIND_LOG_ERROR("1","未查询到债转承接记录"),
 	ERROR_CREDIT_AUTH_CODE_ERROR("1","未查询到债转授权码"),
+	ERROR_CREDIT_CONFIG_NULL_ERROR("1","配置表无数据请配置"),
 
 	ERROR_SMS_SEND("1","发送验证码失败，请稍后再试"),
 	ERROR_CREDIT_NID_CAPITAL_NULL("1","债转编号和承接本金不能为空"),

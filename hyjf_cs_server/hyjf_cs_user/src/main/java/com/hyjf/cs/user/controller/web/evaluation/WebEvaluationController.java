@@ -117,11 +117,14 @@ public class WebEvaluationController extends BaseUserController {
         String userAnswer = qo.getUserAnswer();
         Map<String, Object> returnMap = evaluationService.answerAnalysisAndCoupon(userAnswer, userId, CustomConstants.CLIENT_PC,null);
         //优惠券发放
-        if (null!=returnMap&&returnMap.get("sendCount") != null) {
-            int sendCount = (int) returnMap.get("sendCount");
-            resultMap.put("sendCount", sendCount);
+        UserEvalationResultVO userEvalationResult = new UserEvalationResultVO();
+        if (null!=returnMap) {
+            if (returnMap.get("sendCount") != null){
+                int sendCount = (int) returnMap.get("sendCount");
+                resultMap.put("sendCount", sendCount);
+            }
+            userEvalationResult = (UserEvalationResultVO) returnMap.get("userEvalationResult");
         }
-        UserEvalationResultVO userEvalationResult = (UserEvalationResultVO) returnMap.get("userEvalationResult");
         // userEvalationResult 测评结果
         resultMap.put("userEvalationResult", userEvalationResult);
         result.setData(resultMap);

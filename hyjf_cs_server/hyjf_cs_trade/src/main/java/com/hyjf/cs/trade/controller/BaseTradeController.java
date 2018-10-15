@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller;
 
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -35,21 +36,21 @@ public class BaseTradeController extends BaseController {
         }
         return null;
     }
-    public String getForgotPwdUrl(String platform, HttpServletRequest request) {
+    public String getForgotPwdUrl(String platform, HttpServletRequest request,SystemConfig sysConfig) {
 
 
         Integer client = Integer.parseInt(platform);
         if (ClientConstants.WEB_CLIENT == client) {
-            String token=request.getParameter("token");
-            return "http://CS-USER/hyjf-web/user/password/resetTeaderPassword?token="+token;
+            String token=request.getHeader("token");
+            return sysConfig.getFrontHost()+"/user/setTradePassword";
         }
         if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
             String sign=request.getParameter("sign");
-            return "http://CS-USER/hyjf-app/bank/user/transpassword/resetPassword?sign="+sign;
+            return sysConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD;
         }
         if (ClientConstants.WECHAT_CLIENT == client) {
             String sign=request.getParameter("sign");
-            return "http://CS-USER/hyjf-wechat/wx/transpassword/resetPassword.page?sign="+sign;
+            return sysConfig.getWeiFrontHost()+"/submitForm?queryType=6";
         }
         return "";
     }

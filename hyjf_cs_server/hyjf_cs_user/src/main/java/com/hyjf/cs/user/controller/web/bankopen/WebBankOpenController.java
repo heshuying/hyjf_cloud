@@ -32,7 +32,7 @@ import javax.validation.Valid;
 import java.util.Map;
 
 /**
- * 
+ *
  * @author sunss
  *
  */
@@ -41,18 +41,18 @@ import java.util.Map;
 @Controller
 @RequestMapping("/hyjf-web/user/secure/open")
 public class WebBankOpenController extends BaseUserController {
-	private static final Logger logger = LoggerFactory.getLogger(WebBankOpenController.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebBankOpenController.class);
 
-	@Autowired
-	private BankOpenService bankOpenService;
+    @Autowired
+    private BankOpenService bankOpenService;
 
-	@Autowired
-	SystemConfig systemConfig;
+    @Autowired
+    SystemConfig systemConfig;
 
     @ApiOperation(value = "获取开户信息", notes = "获取开户信息")
-	@GetMapping(value = "/init")
+    @GetMapping(value = "/init")
     @ResponseBody
-	public WebResult<Object> init(@RequestHeader(value = "userId") int userId) {
+    public WebResult<Object> init(@RequestHeader(value = "userId") int userId) {
         UserVO user = this.bankOpenService.getUsersById(userId);
         WebResult<Object> result = new WebResult<Object>();
         if(user==null){
@@ -65,19 +65,19 @@ public class WebBankOpenController extends BaseUserController {
         Map<String,String> map = new HashedMap();
         map.put("mobile",user.getMobile());
         result.setData(map);
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * @Description 开户
-	 * @Author sunss
-	 * @Version v0.1
-	 * @Date 2018/6/12 10:17
-	 */
+    /**
+     * @Description 开户
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/12 10:17
+     */
     @ApiOperation(value = "用户开户", notes = "用户开户")
-	@PostMapping(value = "/openBankAccount")
+    @PostMapping(value = "/openBankAccount")
     @ResponseBody
-	public WebResult<Object> openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public WebResult<Object> openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("web  openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = this.bankOpenService.getUsersById(userId);
@@ -86,10 +86,10 @@ public class WebBankOpenController extends BaseUserController {
 
         OpenAccountPageBean openBean = new OpenAccountPageBean();
         try {
-			PropertyUtils.copyProperties(openBean, bankOpenVO);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+            PropertyUtils.copyProperties(openBean, bankOpenVO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         openBean.setChannel(BankCallConstant.CHANNEL_PC);
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
@@ -101,14 +101,14 @@ public class WebBankOpenController extends BaseUserController {
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean, null);
         result.setData(data);
         //保存开户日志
-        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),"");
+        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),"", "");
         if (uflag == 0) {
             logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             throw new CheckException(MsgEnum.STATUS_CE999999);
         }
         logger.info("开户end");
-		return result;
-	}
+        return result;
+    }
 
     /**
      * web页面开户异步处理

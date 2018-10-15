@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller.front.statistics;
 import com.hyjf.am.response.trade.OperationReportJobResponse;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.admin.statistics.OperationReportJobService;
+import com.hyjf.am.trade.service.front.hjh.statistics.OperationReportJobService;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

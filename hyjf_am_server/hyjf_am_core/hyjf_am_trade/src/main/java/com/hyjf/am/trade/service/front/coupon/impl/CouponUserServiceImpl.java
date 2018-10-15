@@ -106,7 +106,7 @@ public class CouponUserServiceImpl implements CouponUserService {
     public Integer getUserCouponCount(Integer userId, String useFlag) {
         Map<String, Object> param = new HashMap<>();
         param.put("userId", userId);
-        param.put("useFlag", useFlag);
+        param.put("usedFlag", useFlag);
         Integer count = couponUserCustomizeMapper.countCouponUser(param);
         return count;
     }

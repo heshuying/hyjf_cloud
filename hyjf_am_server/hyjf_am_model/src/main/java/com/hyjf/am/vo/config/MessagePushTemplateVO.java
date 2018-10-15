@@ -11,7 +11,7 @@ import java.util.Date;
  * @version MessagePushTemplateVO, v0.1 2018/5/4 10:42
  */
 public class MessagePushTemplateVO extends BaseVO implements Serializable {
-    private String id;
+    private Integer id;
 
     private String tagId;
 
@@ -47,11 +47,11 @@ public class MessagePushTemplateVO extends BaseVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

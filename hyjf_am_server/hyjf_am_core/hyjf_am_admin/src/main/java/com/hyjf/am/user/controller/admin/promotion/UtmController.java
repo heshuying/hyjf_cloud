@@ -2,7 +2,9 @@ package com.hyjf.am.user.controller.admin.promotion;
 
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
+import com.hyjf.am.resquest.admin.ChannelRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.Utm;
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
@@ -60,6 +62,18 @@ public class UtmController extends BaseController {
         if (size != null) {
             response.setRecordTotal(size);
         }
+        return response;
+    }
+    /**
+     * 获取所有的UtmPlat
+     * @param map 查s询参数
+     * @return UtmPlatResponse
+     */
+    @RequestMapping("/getutmplat")
+    public UtmPlatResponse getUtmPlat(@RequestBody @Valid Map<String, Object> map) {
+        UtmPlatResponse response = new UtmPlatResponse();
+        List<UtmPlatVO> list = utmService.getUtmPlatByParam(map);
+        response.setResultList(list);
         return response;
     }
 
@@ -313,5 +327,16 @@ public class UtmController extends BaseController {
         int count = utmService.selectAppChannelReconciliationHjhCount(request);
         response.setCount(count);
         return response;
+    }
+
+    /**
+     * 新增操作
+     * @param request
+     * @return
+     */
+    @RequestMapping("/insert_utm_list")
+    public UtmResponse insertUtmList(@RequestBody ChannelRequest request) {
+        utmService.insertUtmList(request);
+        return new UtmResponse();
     }
 }

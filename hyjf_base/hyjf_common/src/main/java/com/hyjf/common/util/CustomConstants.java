@@ -1407,10 +1407,10 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 	public static final int HJH_ASSIGN_SERIAL_FAILE_COUNT = 5;
 
     /** 汇计划可以投资的最小金额 */
-	public static final BigDecimal HJH_TENDER_MIN_ACCOUNT = new BigDecimal(0.01).setScale(2, BigDecimal.ROUND_DOWN);
+	public static final BigDecimal HJH_TENDER_MIN_ACCOUNT = BigDecimal.valueOf(0.01).setScale(2, BigDecimal.ROUND_DOWN);
 
     /** 汇计划可以复投的最小金额 */
-	public static final BigDecimal HJH_RETENDER_MIN_ACCOUNT = new BigDecimal(10).setScale(2, BigDecimal.ROUND_DOWN);
+	public static final BigDecimal HJH_RETENDER_MIN_ACCOUNT = BigDecimal.valueOf(10).setScale(2, BigDecimal.ROUND_DOWN);
 
     /** 投资页面的阈值 - 目前固定1000元 */
 	public static final String TENDER_THRESHOLD = "1000";
@@ -1485,4 +1485,13 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     /** 汇添金+汇天利交易笔数 */
     public static final Integer HTJ_HTL_COUNT = 47083;
+
+    /** @RequestMapping值 */
+    public static final String REQUEST_HOME = "/hyjf-app";
+
+    /** 首页接口  @RequestMapping值 */
+    public static final String REQUEST_MAPPING = "/homepage";
+
+    /** 首页项目列表  @RequestMapping值 */
+    public static final String START_PAGE_ACTION = "/getStartPage";
 }

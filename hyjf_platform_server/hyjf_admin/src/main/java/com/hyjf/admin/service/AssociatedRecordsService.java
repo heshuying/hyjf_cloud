@@ -4,7 +4,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 
 import java.util.List;
 
@@ -27,5 +27,5 @@ public interface AssociatedRecordsService {
      * @param request 筛选条件
      * @return
      */
-    List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request);
+    List<AssociatedRecordListVO> getAssociatedRecordList(AssociatedRecordListRequest request);
 }

@@ -38,6 +38,8 @@ public class ProjectListRequest extends BasePage {
 
     private String status;
 
+    private String publishInstCode;
+
     /**
      * 翻页机能用的隐藏变量（app原来的参数）
      */
@@ -134,5 +136,13 @@ public class ProjectListRequest extends BasePage {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPublishInstCode() {
+        return publishInstCode;
+    }
+
+    public void setPublishInstCode(String publishInstCode) {
+        this.publishInstCode = publishInstCode;
     }
 }

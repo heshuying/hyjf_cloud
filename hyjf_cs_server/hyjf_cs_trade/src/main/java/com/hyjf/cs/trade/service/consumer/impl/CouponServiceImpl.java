@@ -3,18 +3,18 @@
  */
 package com.hyjf.cs.trade.service.consumer.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
-import com.hyjf.am.vo.trade.coupon.CouponTenderUsedVO;
-import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CustomConstants;
@@ -24,6 +24,8 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.*;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.CouponLoansHjhMessageProducer;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -41,6 +43,7 @@ import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @Description 优惠券投资相关
@@ -56,6 +59,9 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
 
     @Autowired
     private AmUserClient amUserClient;
+
+    @Autowired
+    private CouponLoansHjhMessageProducer couponLoansHjhMessageProducer;
 
     /**
      * 加入计划  体验金投资
@@ -103,6 +109,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         CouponTenderVO couponTender = new CouponTenderVO();
         int nowTime = GetDate.getNowTime10();
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
+        CouponConfigVO configVO = amTradeClient.selectCouponConfig(couponUser.getCouponCode());
         //汇计划只支持按天和按月
         if (CustomConstants.COUPON_TENDER_TYPE_HJH.equals(bean.getTenderType())) {
             if (!"endday".equals(borrowStyle)) {
@@ -110,9 +117,9 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             }
         }
         // 优惠券类别
-        int couponType = couponUser.getCouponType();
+        int couponType = configVO.getCouponType();
         // 面值
-        BigDecimal couponQuota = couponUser.getCouponQuota();
+        BigDecimal couponQuota = configVO.getCouponQuota();
         // 排他校验
         if (couponUser.getUsedFlag() != 0) {
             logger.info("此优惠券已被使用。。。。。。券编号：" + couponGrantId);
@@ -168,8 +175,8 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         BigDecimal recoverAccountCapitalWait = BigDecimal.ZERO;
         BigDecimal recoverAccountInterestWait = BigDecimal.ZERO;
         BigDecimal couponInterest = BigDecimal.ZERO;
-        if (couponUser.getCouponType() == 1) {
-            couponInterest = this.getInterestDj(accountDecimal, couponUser.getCouponProfitTime(), planApr);
+        if (configVO.getCouponType() == 1) {
+            couponInterest = this.getInterestDj(accountDecimal, configVO.getCouponProfitTime().intValue(), planApr);
         } else {
             couponInterest = this.calculateCouponInterest(borrowStyle, accountDecimal, planApr,
                     bean.getPeriod());
@@ -294,8 +301,12 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             params.put("orderIdCoupon", tenderNid);
             // 如果是计划类的
             if (CustomConstants.COUPON_TENDER_TYPE_HJH.equals(bean.getTenderType())) {
-                // TODO: 2018/6/23  如果优惠券单独投资的话就调用进入锁定期  PlanCouponServiceImpl 1323行
-                //rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS_HJH, JSONObject.toJSONString(params));
+                try{
+                    couponLoansHjhMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                }catch (Exception e){
+                    logger.error("优惠券放款失败  {} ",JSONObject.toJSONString(params));
+                    e.printStackTrace();
+                }
             }
         }
         // 设置优惠券的预期收益
@@ -315,6 +326,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      */
     @Override
     public Map<String, String> validateCoupon(Integer userId, String accountStr, Integer couponGrantId, String platform, Integer period, String config) {
+        logger.info("开始调用优惠券投资校验  {}   {}   {}   {}",couponGrantId ,userId ,period,config);
         Map<String, String> result = new HashedMap();
         result.put("status", "0");
         if (couponGrantId == null || couponGrantId == 0) {
@@ -322,22 +334,24 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             return result;
         }
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
+        CouponConfigVO configVO = amTradeClient.selectCouponConfig(couponUser.getCouponCode());
+        logger.info("configVO:"+JSONObject.toJSONString(configVO));
         if (couponUser == null) {
             result.put("statusDesc", "当前优惠券不存在或已使用");
             return result;
         }
         // 验证项目加息券或体验金是否可用    1：体验金，2：加息券 3代金券
-        if (couponUser.getCouponType() == 1) {
+        if (configVO.getCouponType() == 1) {
             if (config.indexOf("1") == -1) {
                 result.put("statusDesc", "您选择的优惠券不满足使用条件，请核对后重新选择！");
                 return result;
             }
-        } else if (couponUser.getCouponType() == 2) {
+        } else if (configVO.getCouponType() == 2) {
             if (config.indexOf("2") == -1) {
                 result.put("statusDesc", "您选择的优惠券不满足使用条件，请核对后重新选择！");
                 return result;
             }
-        } else if (couponUser.getCouponType() == 3) {
+        } else if (configVO.getCouponType() == 3) {
             if (config.indexOf("3") == -1) {
                 result.put("statusDesc", "您选择的优惠券不满足使用条件，请核对后重新选择！");
                 return result;
@@ -349,31 +363,31 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             return result;
         }
         // 加息券不能单独投资
-        if ((StringUtils.isEmpty(accountStr) || StringUtils.equals(accountStr, "0")) && couponUser.getCouponType() == 2) {
+        if ((StringUtils.isEmpty(accountStr) || StringUtils.equals(accountStr, "0")) && configVO.getCouponType() == 2) {
             result.put("statusDesc", "加息券投资，真实投资金额不能为空！");
             return result;
         }
         // 平台
-        if (!StringUtils.contains(couponUser.getCouponSystem(), platform)) {
+        if (!StringUtils.contains(configVO.getCouponSystem(), platform)) {
             result.put("statusDesc", "对不起，当前平台不能使用此优惠券！");
             return result;
         }
         // 项目类型
-        if (couponUser.getProjectType().indexOf("6") == -1) {
+        if (configVO.getProjectType().indexOf("6") == -1) {
             result.put("statusDesc", "对不起，您选择的优惠券不能用于当前类别标的！");
             return result;
         }
         // 项目金额
         // 金额类别
-        int tenderQuotaType = couponUser.getTenderQuotaType();
+        int tenderQuotaType = configVO.getTenderQuotaType();
         // 投资金额
         BigDecimal tenderAccount = new BigDecimal(accountStr);
         // 金额范围
         if (tenderQuotaType == 1) {
             // 投资金额最小额度
-            BigDecimal tenderQuotaMin = new BigDecimal(couponUser.getTenderQuotaMin());
+            BigDecimal tenderQuotaMin = new BigDecimal(configVO.getTenderQuotaMin());
             // 投资金额最大额度
-            BigDecimal tenderQuotaMax = new BigDecimal(couponUser.getTenderQuotaMax());
+            BigDecimal tenderQuotaMax = new BigDecimal(configVO.getTenderQuotaMax());
             // 比较投资金额（-1表示小于,0是等于,1是大于）
             int minCheck = tenderAccount.compareTo(tenderQuotaMin);
             int maxCheck = tenderAccount.compareTo(tenderQuotaMax);
@@ -383,7 +397,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             }
         } else if (tenderQuotaType == 2) {
             // 大于等于
-            BigDecimal tenderQuota = new BigDecimal(couponUser.getTenderQuota());
+            BigDecimal tenderQuota = new BigDecimal(configVO.getTenderQuota());
             // 比较投资金额（-1表示小于,0是等于,1是大于）
             int chkFlg = tenderAccount.compareTo(tenderQuota);
             if (chkFlg == -1) {
@@ -393,13 +407,13 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         }
         // 期限
         int planPeriod = period;
-        int couponExType = couponUser.getProjectExpirationType();
+        int couponExType = configVO.getProjectExpirationType();
         int expirationLength =
-                couponUser.getProjectExpirationLength() == null ? 0 : couponUser.getProjectExpirationLength();
+                configVO.getProjectExpirationLength() == null ? 0 : configVO.getProjectExpirationLength();
         int expirationMin =
-                couponUser.getProjectExpirationLengthMin() == null ? 0 : couponUser.getProjectExpirationLengthMin();
+                configVO.getProjectExpirationLengthMin() == null ? 0 : configVO.getProjectExpirationLengthMin();
         int expirationMax =
-                couponUser.getProjectExpirationLengthMax() == null ? 0 : couponUser.getProjectExpirationLengthMax();
+                configVO.getProjectExpirationLengthMax() == null ? 0 : configVO.getProjectExpirationLengthMax();
 
         // 等于
         if (couponExType == 1) {
@@ -434,11 +448,11 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             return result;
         }
         // 优惠券不能和本金公用
-        if (couponUser.getAddFlg() == 1 && !"0".equals(accountStr)) {
+        if (configVO.getAddFlag()!=null&&configVO.getAddFlag() == 1 && !"0".equals(accountStr)) {
             result.put("statusDesc", "当前优惠券不能与本金共用！");
             return result;
         }
-        return result;
+        return null;
     }
 
     /**
@@ -449,7 +463,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      * @param bean
      */
     @Override
-    public void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean) {
+    public void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean, BorrowInfoVO borrowInfoVO) {
         boolean isUsed = RedisUtils.tranactionSet(RedisConstants.COUPON_TENDER_KEY, 300);
         if (!isUsed) {
             logger.error("当前优惠券正在使用....");
@@ -461,14 +475,14 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         String account = bean.getTxAmount();
         String ip = bean.getLogIp();
         String borrowNid = borrow.getBorrowNid();
-        String ordId = bean.getOrderId();
+        String ordId = bean.getLogOrderId();
         Integer userId = Integer.parseInt(bean.getLogUserId());
         Integer platform = bean.getLogClient();
         String config = "";
         // 加息券标识（0：禁用，1：可用）    1：体验金，2：加息券 3代金券
-        int interestCoupon = borrow.getBorrowInterestCoupon();
+        int interestCoupon = borrowInfoVO.getBorrowInterestCoupon();
         // 体验金标识（0：禁用，1：可用）
-        int moneyCoupon = borrow.getBorrowTasteMoney();
+        int moneyCoupon = borrowInfoVO.getBorrowTasteMoney();
         if (interestCoupon == 1) {
             config += "2,";
         }
@@ -476,6 +490,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             config += "1,";
         }
         Map<String, String> validateMap = this.validateCoupon(userId, account, Integer.parseInt(couponGrantId), platform + "", borrow.getBorrowPeriod(), config);
+        logger.info("优惠券投资校验完毕  结果：{}" , validateMap);
         if (MapUtils.isEmpty(validateMap)) {
             CouponTenderUsedVO couponTender = new CouponTenderUsedVO();
             couponTender.setAccount(account);

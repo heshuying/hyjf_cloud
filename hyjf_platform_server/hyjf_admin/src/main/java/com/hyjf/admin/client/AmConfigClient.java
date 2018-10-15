@@ -1,5 +1,6 @@
 package com.hyjf.admin.client;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
@@ -1430,7 +1431,32 @@ public interface AmConfigClient {
 	AdminUserResponse adminUserDeleteRecordAction(AdminRequest adminRequest);
 	
 	AdminUserResponse adminUserResetPwdAction(AdminRequest adminRequest);
-	
+
 	AdminUserResponse adminUsercCheckAction(AdminRequest adminRequest);
 
+    MessagePushTagVO getTagByTagId(Integer tagId);
+
+
+	/**
+	 * 根据bankId查询江西银行配置
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	JxBankConfigVO selectJxBankConfigByBankId(Integer bankId);
+	AdminRoleResponse search(AdminRoleRequest form);
+
+	AdminRoleResponse moveToInfoAction(AdminRoleRequest form);
+
+	AdminRoleResponse insertRecord(AdminRoleRequest form);
+
+	AdminRoleResponse updateRecord(AdminRoleRequest form);
+
+	AdminRoleResponse deleteRecord(AdminRoleRequest form);
+
+	JSONArray getAdminRoleMenu(String roleId);
+
+	AdminRoleResponse checkAction(AdminRoleRequest bean);
+
+	AdminRoleResponse modifyPermissionAction(UserRoleRequest bean);
 }

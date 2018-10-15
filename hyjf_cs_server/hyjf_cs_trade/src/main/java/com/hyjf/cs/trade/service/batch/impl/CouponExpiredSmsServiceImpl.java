@@ -23,10 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author yaoy
@@ -69,7 +66,7 @@ public class CouponExpiredSmsServiceImpl implements CouponExpiredSmsService {
 //        paramMapThr.put("startTime", threeBeginDate);
 //        paramMapThr.put("endTime", threeEndDate);
         List<BatchCouponTimeoutCommonCustomizeVO> userCouponThrList = couponExpiredSmsClient.selectCouponQuota(threeBeginDate, threeEndDate);
-        List<BatchCouponTimeoutCommonCustomizeVO> userCouponThrs = null;
+        List<BatchCouponTimeoutCommonCustomizeVO> userCouponThrs = new ArrayList<>();  // 排除空指针
         if (!CollectionUtils.isEmpty(userCouponThrList)) {
             for (BatchCouponTimeoutCommonCustomizeVO userCoupon : userCouponThrList) {
                 UserVO user = amUserClient.findUserById(userCoupon.getUserId());

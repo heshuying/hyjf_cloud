@@ -24,6 +24,8 @@ public class UtmResultResponse<T>{
     private String url;
     private String utmReferrer;
     private T data;
+    private Integer total;
+    private List<T> utmPlatList;
 
     public List<T> getResultList() {
         return resultList;
@@ -71,5 +73,21 @@ public class UtmResultResponse<T>{
 
     public void setStatusDesc(String statusDesc) {
         this.statusDesc = statusDesc;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
+    public List<T> getUtmPlatList() {
+        return utmPlatList;
+    }
+
+    public void setUtmPlatList(List<T> utmPlatList) {
+        this.utmPlatList = utmPlatList;
     }
 }

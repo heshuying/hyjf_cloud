@@ -1,5 +1,6 @@
 package com.hyjf.admin.client.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.am.response.BooleanResponse;
@@ -2106,5 +2107,106 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
+    /**
+     * 根据标签id查询标签
+     * @param tagId
+     * @return
+     */
+    @Override
+    public MessagePushTagVO getTagByTagId(Integer tagId) {
+        String url = "http://AM-ADMIN/am-config/messagePushTag/getTagByTagId/" + tagId;
+        MessagePushTagResponse response = restTemplate.getForEntity(url,MessagePushTagResponse.class).getBody();
+        if (null != response.getResult()) {
+            return response.getResult();
+        }
+        return null;
+    }
 
+    /**
+     * 根据bankId查询江西银行配置
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public JxBankConfigVO selectJxBankConfigByBankId(Integer bankId) {
+        String url = "http://AM-ADMIN/am-config/jxBankConfig/selectJxBankConfigByBankId/" + bankId;
+        JxBankConfigResponse response = restTemplate.getForEntity(url,JxBankConfigResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+	@Override
+	public AdminRoleResponse search(AdminRoleRequest form) {
+        String url = "http://AM-ADMIN/am-config/role/search";
+        AdminRoleResponse response = restTemplate.postForEntity(url, form, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse moveToInfoAction(AdminRoleRequest form) {
+        String url = "http://AM-ADMIN/am-config/role/moveToInfoAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, form, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse insertRecord(AdminRoleRequest form) {
+        String url = "http://AM-ADMIN/am-config/role/insertAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, form, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse updateRecord(AdminRoleRequest form) {
+        String url = "http://AM-ADMIN/am-config/role/updateAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, form, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse deleteRecord(AdminRoleRequest form) {
+        String url = "http://AM-ADMIN/am-config/role/deleteRecordAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, form, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public JSONArray getAdminRoleMenu(String roleId) {
+        String url = "http://AM-ADMIN/am-config/role/getAdminRoleMenu/" + roleId;
+        JSONArray response = restTemplate.getForEntity(url,JSONArray.class).getBody();
+        if (null != response) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse checkAction(AdminRoleRequest bean) {
+        String url = "http://AM-ADMIN/am-config/role/checkAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, bean, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse modifyPermissionAction(UserRoleRequest bean) {
+        String url = "http://AM-ADMIN/am-config/role/modifyPermissionAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, bean, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
 }

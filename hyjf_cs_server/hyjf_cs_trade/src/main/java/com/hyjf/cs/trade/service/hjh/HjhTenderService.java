@@ -43,4 +43,10 @@ public interface HjhTenderService extends BaseTradeService {
      * @param tender
      */
     void checkPlan(TenderRequest tender);
+
+    /**
+     * 加入计划失败  恢复redis
+     * @param tender
+     */
+    void recoverRedis(TenderRequest tender);
 }

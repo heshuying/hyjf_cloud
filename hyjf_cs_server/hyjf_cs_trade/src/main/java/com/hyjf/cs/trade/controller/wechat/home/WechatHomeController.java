@@ -41,6 +41,11 @@ public class WechatHomeController {
     }
 
 
+    /**
+     * 微信首页项目列表
+     * @author zhangyk
+     * @date 2018/10/9 17:51
+     */
     @ApiOperation(value = "首页项目列表" , notes = "首页项目了列表")
     @GetMapping(value = HomePageDefine.WECHAT_HOME_PROJECT_LIST_METHOD,produces = "application/json; charset=utf-8")
     public BaseResultBean getHomeProjectList(HttpServletRequest request,

@@ -43,7 +43,7 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 	private String labelNameSrch;
     
     @ApiModelProperty(value = "标签状态查询")
-	private Integer labelStateSrch;
+	private String labelStateSrch;
     
     @ApiModelProperty(value = "操作开始时间查询")
 	private String createTimeStartSrch;
@@ -55,7 +55,7 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 	private String instCodeSrch;
     
     @ApiModelProperty(value = "机构产品类型查询")
-	private Integer assetTypeSrch;
+	private String assetTypeSrch;
     
     @ApiModelProperty(value = "项目类型查询")
 	private Integer projectTypeSrch;
@@ -178,11 +178,11 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 		this.labelNameSrch = labelNameSrch;
 	}
 
-	public Integer getLabelStateSrch() {
+	public String getLabelStateSrch() {
 		return labelStateSrch;
 	}
 
-	public void setLabelStateSrch(Integer labelStateSrch) {
+	public void setLabelStateSrch(String labelStateSrch) {
 		this.labelStateSrch = labelStateSrch;
 	}
 
@@ -210,11 +210,11 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 		this.instCodeSrch = instCodeSrch;
 	}
 
-	public Integer getAssetTypeSrch() {
+	public String getAssetTypeSrch() {
 		return assetTypeSrch;
 	}
 
-	public void setAssetTypeSrch(Integer assetTypeSrch) {
+	public void setAssetTypeSrch(String assetTypeSrch) {
 		this.assetTypeSrch = assetTypeSrch;
 	}
 

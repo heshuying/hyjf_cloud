@@ -59,7 +59,7 @@
                    </#if>
 
         },
-        "userName": "${datas.data.userName!''}",
+        "userName": "${datas.data.username!''}",
         "recoverLatestList": [
                 <#if datas.data.recoverLatestList??>
                     <#assign recoverLatestList = datas.data.recoverLatestList >

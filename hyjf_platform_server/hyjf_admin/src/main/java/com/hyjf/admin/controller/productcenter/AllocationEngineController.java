@@ -28,7 +28,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -453,13 +452,12 @@ public class AllocationEngineController extends BaseController{
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	// 注意 ：此 id 并非画面序号，而是计划引擎配置画面上 未显示的 计划引擎配置表主键
-	@ApiImplicitParam(name = "engineId", value = "计划引擎配置表主键", required = true, dataType = "String")
-	public AdminResult<String> labelStatusChange(HttpServletRequest request, @RequestBody String engineId) {  // 注意 ：这里的传值可以改为 form 形式
+	/*@ApiImplicitParam(name = "engineId", value = "计划引擎配置表主键", required = true, dataType = "String")*/
+	public AdminResult<String> labelStatusChange(HttpServletRequest request, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
 		// 修改状态
-		if (StringUtils.isNotEmpty(engineId)) {
-			Integer id = Integer.valueOf(engineId);
-			HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecord(id);
+		if (viewRequest.getEngineId() != null) {
+			HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecord(viewRequest.getEngineId());
 			if (vo.getLabelStatus() == 1) {//标签状态
 				vo.setLabelStatus(0);
 			} else {
@@ -668,6 +666,18 @@ public class AllocationEngineController extends BaseController{
 		BeanUtils.copyProperties(viewRequest, form);
 		// 获取当前登陆者id
 		int userId = Integer.valueOf(this.getUser(request).getId());
+		
+		// 防止多次提交，做一次校验
+		if(StringUtils.isNotEmpty(form.getLabelName().trim())  && StringUtils.isNotEmpty(form.getPlanNid())){
+			int existflg = this.allocationEngineService.checkRepeat(form);
+			if(existflg>0){
+				jsonObject.put("error", "该标签已经被使用，无法再次添加!");
+				jsonObject.put("status", FAIL);
+				jsonObject.put("msg", FAIL_DESC);
+				return jsonObject;
+			}
+		}
+		
 		// 校验已经在前面异步校验了
 		// (1).从专区表中查出必要信息
 		HjhRegionVO record = this.allocationEngineService.getHjhRegionRecordByPlanNid(form.getPlanNid());
@@ -683,6 +693,12 @@ public class AllocationEngineController extends BaseController{
 		hjhLabelRequest.setLabelNameSrch(form.getLabelName().trim());
 		// 通过标签名称只能查到一条记录，因为标签名称在标签表时唯一的
 		List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
+		if(CollectionUtils.isEmpty(list)){
+			jsonObject.put("error", "此标签名称在标签列表不存在！请从标签列表选择已经存在的标签使用！");
+			jsonObject.put("status", FAIL);
+			jsonObject.put("msg", FAIL_DESC);
+			return jsonObject;
+		}
 		HjhLabelCustomizeVO  hjhLabelCustomizeVO = list.get(0);
 		//5.
 		newForm.setLabelId(hjhLabelCustomizeVO.getId());

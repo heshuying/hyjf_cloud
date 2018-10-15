@@ -6,7 +6,6 @@ package com.hyjf.admin.controller.finance.merchant.transfer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.response.TransferResponse;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
@@ -83,7 +82,7 @@ public class TransferController extends BaseController {
         response.setMerchantAccountListIn(merchantAccounts.getResultList());
         MerchantTransferResponse recordList = transferService.selectMerchantTransfer(form);
         if(recordList == null||recordList.getRecordTotal()==0) {
-            return new AdminResult<>(ListResult.build(null,0));
+            new AdminResult(response);
         }
         response.setUserTransferVOList(recordList.getResultList());
         response.setTotal(recordList.getRecordTotal());
@@ -248,6 +247,7 @@ public class TransferController extends BaseController {
         if(StringUtils.isEmpty(form.getTransferTimeEnd())){
             form.setTransferTimeEnd(GetDate.getDate("yyyy-MM-dd"));
         }
+        form.setPageSize(-1);
         // 需要输出的结果列表
         MerchantTransferResponse merchantTransferResponse = this.transferService.selectMerchantTransfer(form);
         List<MerchantTransferVO> recordList = merchantTransferResponse.getResultList();

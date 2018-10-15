@@ -100,22 +100,24 @@ public class DzqzCallApiBean implements Serializable{
         try {
             // 得到对象
             Class c = this.getClass();
+            // 当前对象的实例
             Object obj = this;
-            // 得到方法
+            // 得到声明的属性
             Field[] fieldlist = c.getDeclaredFields();
             for (int i = 0; i < fieldlist.length; i++) {
-                // 获取类属性
+                // 遍历获取单个属性
                 Field f = fieldlist[i];
-                // 得到方法名
+                // 获取属性名
                 String fName = f.getName();
                 try {
                     // 方法名是get开头的话
                     if (StringUtils.isNotBlank(fName)) {
-                        // 参数方法获取
+                        // 获取方法后缀
                         String paramName = fName.substring(0, 1).toUpperCase() + fName.substring(1, fName.length());
-                        // 取得结果
+                        // 获取get方法
                         Method getMethod = c.getMethod(DzqzConstant.GET + paramName);
                         if (getMethod != null) {
+                            //执行get方法
                             Object result = getMethod.invoke(obj);
                             // 结果不为空时
                             if (Validator.isNotNull(result)) {

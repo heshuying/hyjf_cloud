@@ -98,7 +98,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     public JSONObject searchAppProjectList(ProjectListRequest request) {
         //CheckUtil.check(CustomConstants.HZT.equals(request.getProjectType()), MsgEnum.ERR_OBJECT_VALUE, "peojectType");
         // 初始化分页参数，并组合到请求参数
-        Page page = Page.initPage(request.getPage(), request.getPageSize());
+        // 所有产品列表只查2页之内的数据(app默认写死每页20条)
+        int pageSizeCheck = 20;
+        Page page = Page.initPage(1, pageSizeCheck);
         JSONObject info = new JSONObject();
         AppProjectListRequest req = new AppProjectListRequest();
         req.setLimitStart(page.getOffset());
@@ -113,6 +115,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             logger.error("app端查询散标投资列表原子层count异常");
             throw new RuntimeException("app端查询散标投资列表原子层count异常");
         }
+        if (count > pageSizeCheck){
+            count = pageSizeCheck;
+        }
+
         //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
         info.put(ProjectConstant.APP_PROJECT_LIST, new ArrayList<>());
         info.put(ProjectConstant.APP_PROJECT_TOTAL, 0);
@@ -1445,27 +1451,18 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 appProjectListCustomize = new AppProjectListCustomizeVO();
                 /*重构整合 开始*/
                 appProjectListCustomize.setBorrowTheFirst(entity.getPlanApr() + "%");
-                // mod by nxl 智投服务修改历史年回报率->参考年回报率
                 appProjectListCustomize.setBorrowTheFirstDesc("历史年回报率");
-                appProjectListCustomize.setBorrowTheFirstDesc("参考年回报率");
                 appProjectListCustomize.setBorrowTheSecond(entity.getPlanPeriod());
-                // mod by nxl 智投服务修改锁定期限->服务回报期限
                 appProjectListCustomize.setBorrowTheSecondDesc("锁定期限");
-                appProjectListCustomize.setBorrowTheSecondDesc("服务回报期限");
                 appProjectListCustomize.setStatusNameDesc(StringUtils.isNotBlank(entity.getAvailableInvestAccount()) ? "额度"+ entity.getAvailableInvestAccount() : "");
 
                 if ("稍后开启".equals(entity.getStatusName())){    //1.启用  2.关闭
                     // 20.立即加入  21.稍后开启
                     appProjectListCustomize.setStatus("21");
                     appProjectListCustomize.setStatusName("稍后开启");
-                }/*else if("立即加入".equals(entity.getStatusName())){  //1.启用  2.关闭
+                }else if("立即加入".equals(entity.getStatusName())){  //1.启用  2.关闭
                     appProjectListCustomize.setStatus("20");
                     appProjectListCustomize.setStatusName("立即加入");
-                }*/
-                //mod by nxl 智投服务 修改立即加入->授权服务
-                else if("授权服务".equals(entity.getStatusName())){  //1.启用  2.关闭
-                    appProjectListCustomize.setStatus("20");
-                    appProjectListCustomize.setStatusName("授权服务");
                 }
                 /*重构整合 结束*/
                 appProjectListCustomize.setBorrowName(entity.getPlanName());
@@ -1976,7 +1973,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             appProjectType.setStatus(listCustomize.getStatus());
             appProjectType.setOnTime(listCustomize.getOnTime());
 
-            appProjectType.setMark("");
+            if ("ZXH".equals(listCustomize.getBorrowType())){
+                appProjectType.setMark("尊享");
+            }else if("RTB".equals(listCustomize.getBorrowType())){
+                appProjectType.setMark("优选");
+            }
             appProjectType.setBorrowType(listCustomize.getBorrowType());
             // 应客户端要求，返回空串
             CommonUtils.convertNullToEmptyString(appProjectType);

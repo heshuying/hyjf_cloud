@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,11 +42,14 @@ public class ApiOrganizationStructureServiceImpl extends BaseUserServiceImpl imp
         CheckUtil.check(Validator.isNotNull(bean.getInstCode()),MsgEnum.STATUS_CE000001);
         //校验签名
         CheckUtil.check(this.verifyRequestSign(bean,BaseDefine.ORGANIZATION_LIST),MsgEnum.ERR_SIGN);
-        // 获取信息
-        List<OrganizationStructureVO> resultBean = amUserClient.searchGroupInfo();
-        // 拼接参数
-        log.info("集团组织机构查询返回参数："+ JSONObject.toJSONString(resultBean));
 
+        List<OrganizationStructureVO> resultBean = new ArrayList<>();
+        // 获取信息
+        try{
+            resultBean = amUserClient.searchGroupInfo();
+        }catch (Exception e){
+            log.info("查询异常",e);
+        }
         return resultBean;
     }
 }

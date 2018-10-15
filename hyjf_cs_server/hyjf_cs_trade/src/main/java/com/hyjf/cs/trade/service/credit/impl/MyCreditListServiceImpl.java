@@ -20,10 +20,12 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
@@ -31,6 +33,8 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
@@ -45,6 +49,7 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.smscode.SmsCodeService;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +92,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     private SystemConfig systemConfig;
     @Autowired
     private AmConfigClient amConfigClient;
+
+    @Autowired
+    private SmsCodeService sendSmsCode;
 
     /**
      * 我要债转列表页 获取参数
@@ -213,7 +221,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
 
         // 等额本息和等额本金和先息后本
         if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
-            List<BorrowRepayPlanVO> list = this.amTradeClient.selectBorrowRepayPlan(borrowNid, borrow.getBorrowPeriod());
+            List<BorrowRepayPlanVO> list = this.amTradeClient.getBorrowRepayPlansByPeriod(borrowNid, borrow.getBorrowPeriod());
             if (list != null && list.size() > 0) {
                 try {
                     lastdays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(list.get(0).getRepayTime()));
@@ -320,7 +328,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     /**
      * 用户中心查询 债转详细预计服务费计算
      *
-     * @param request
+     * @param requestcreditFee
      * @param userId
      * @return
      */
@@ -359,23 +367,19 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             throw new CheckException(MsgEnum.STATUS_ZC000001);
         }
         WebResult result = new WebResult();
-        String checkCode = GetCode.getRandomSMSCode(6);
-
-
-        if(systemConfig.isHyjfEnvTest()){
-            // 测试环境验证码111111
-            checkCode = "111111";
-        }
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("val_code", checkCode);
-        SmsMessage smsMessage = new SmsMessage(userId, param, user.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
-                CustomConstants.PARAM_TPL_ZHUCE, CustomConstants.CHANNEL_TYPE_NORMAL);
-        try{
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-        }catch (Exception e){
-            throw new CheckException(MsgEnum.ERROR_SMS_SEND);
-        }
+        sendCode(user.getUserId(),request.getIp(),user.getMobile(),request.getPlatform()+"");
         return result;
+    }
+
+    @Override
+    public void sendCode(Integer userId, String ip,String mobile,String platform){
+        String validCodeType = CustomConstants.PARAM_TPL_ZHUCE;
+        sendSmsCode.sendSmsCodeCheckParam(validCodeType, mobile, userId, ip);
+        try{
+            sendSmsCode.sendSmsCode(validCodeType, mobile,platform,ip);
+        }catch (MQException e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -388,20 +392,20 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     @Override
     public WebResult checkCode(TenderBorrowCreditCustomize request, Integer userId) {
     	
-//        UserVO user = amUserClient.findUserById(userId);
-//        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-//        // 短信验证码
-//        String code = request.getTelcode();
-//        // 手机号码(必须,数字,最大长度)
-//        String mobile = user.getMobile();
-//        CheckUtil.check(StringUtils.isNotBlank(verificationType), MsgEnum.STATUS_CE000001);
-//        CheckUtil.check(StringUtils.isNotBlank(mobile), MsgEnum.STATUS_CE000001);
-//        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
-//        CheckUtil.check(StringUtils.isNotBlank(code), MsgEnum.ERR_SMSCODE_BLANK);
-//        int result = amUserClient.onlyCheckMobileCode(mobile, code, verificationType, request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-//        if (result == 0) {
-//            throw new CheckException(MsgEnum.STATUS_ZC000015);
-//        }
+        UserVO user = amUserClient.findUserById(userId);
+        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
+        // 短信验证码
+        String code = request.getTelcode();
+        // 手机号码(必须,数字,最大长度)
+       String mobile = user.getMobile();
+        CheckUtil.check(StringUtils.isNotBlank(verificationType), MsgEnum.STATUS_CE000001);
+        CheckUtil.check(StringUtils.isNotBlank(mobile), MsgEnum.STATUS_CE000001);
+        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
+        CheckUtil.check(StringUtils.isNotBlank(code), MsgEnum.ERR_SMSCODE_BLANK);
+        int result = amUserClient.onlyCheckMobileCode(mobile, code, verificationType, request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
+        if (result == 0) {
+            throw new CheckException(MsgEnum.STATUS_ZC000015);
+        }
         return new WebResult();
     }
 
@@ -410,7 +414,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      * @param request
      * @param userId
      */
-    private void checkTenderToCreditParam(TenderBorrowCreditCustomize request, Integer userId) {
+    @Override
+    public void checkTenderToCreditParam(TenderBorrowCreditCustomize request, Integer userId) {
         // 验证折让率
         //新增配置表校验add tanyy2018-9-27
         DebtConfigVO config = amConfigClient.getDebtConfig().getResult();
@@ -426,33 +431,18 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             }
 
         }
-//        if (StringUtils.isEmpty(request.getCreditDiscount())) {
-//            // 折让率不能为空
-//            throw  new CheckException(MsgEnum.ERROR_CREDIT_CREDIT_DISCOUNT_NULL);
-//        } else {
-//            if (request.getCreditDiscount().matches(regex)) {
-//                float creditDiscount = Float.parseFloat(request.getCreditDiscount());
-//                if (creditDiscount > creditDiscountEnd || creditDiscount < creditDiscountStart) {
-//                    // 折让率范围错误
-//                    throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_ERROR);
-//                }
-//            } else {
-//                // 折让率格式错误
-//                throw  new CheckException(MsgEnum.ERROR_CREDIT_DISCOUNT_FORMAT_ERROR);
-//            }
-//        }
         // 验证手机验证码
-//        if (StringUtils.isEmpty(request.getTelcode())) {
-//            // 手机验证码不能为空
-//            throw  new CheckException(MsgEnum.STATUS_ZC000010);
-//        } else {
-//            UserVO user = amUserClient.findUserById(userId);
-//            int result = amUserClient.checkMobileCode(user.getMobile(), request.getTelcode(), CommonConstant.PARAM_TPL_ZHUCE
-//                    , request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-//            if (result == 0) {
-//                throw new CheckException(MsgEnum.STATUS_ZC000015);
-//            }
-//        }
+        if (StringUtils.isEmpty(request.getTelcode())) {
+            // 手机验证码不能为空
+            throw  new CheckException(MsgEnum.STATUS_ZC000010);
+        } else {
+            UserVO user = amUserClient.findUserById(userId);
+            int result = amUserClient.checkMobileCode(user.getMobile(), request.getTelcode(), CommonConstant.PARAM_TPL_ZHUCE
+                    , request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
+            if (result == 0) {
+                throw new CheckException(MsgEnum.STATUS_ZC000015);
+            }
+        }
     }
 
     /**
@@ -461,7 +451,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      * @param request
      * @return
      */
-    private Integer insertTenderToCredit(int userId, TenderBorrowCreditCustomize request) {
+    @Override
+    public Integer insertTenderToCredit(int userId, TenderBorrowCreditCustomize request) {
         // 当前日期
         Integer nowTime = GetDate.getNowTime10();
         // 查询borrow 和 BorrowRecover
@@ -514,7 +505,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrow.getBorrowPeriod());
             if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
                 try {
-                    String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getAddTime());
+                    String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getCreateTime());
                     lastdays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(borrowRepayPlans.get(0).getRepayTime()));
                     holddays = GetDate.daysBetween(hodeDate, GetDate.getDateTimeMyTimeInMillis(nowTime));
                 } catch (Exception e) {
@@ -652,6 +643,15 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         creditPrice = creditCapital.multiply(new BigDecimal(1).subtract(new BigDecimal(creditDiscount).divide(new BigDecimal(100)))).setScale(2, BigDecimal.ROUND_DOWN);
         // 年利率
         BigDecimal yearRate = borrow.getBorrowApr().divide(new BigDecimal("100"));
+        // 服务费
+        BigDecimal creditFee = BigDecimal.ZERO;
+
+        DebtConfigResponse response = amConfigClient.getDebtConfig();
+        DebtConfigVO config = response.getResult();
+        if(config==null){
+            throw new CheckException(MsgEnum.ERROR_CREDIT_CONFIG_NULL_ERROR);
+        }
+
         // 到期还本还息和按天计息，到期还本还息
         if (borrowStyle.equals(CalculatesUtil.STYLE_END) || borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {
             int lastDays = 0;
@@ -732,6 +732,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             // 预计收益 承接人债转本息—实付金额
             assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
         }
+        // 服务费
+        creditFee = assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN);
         resultMap.put("creditAccount", creditAccount.setScale(2, BigDecimal.ROUND_DOWN));// 债转本息
         resultMap.put("creditInterest", creditInterest.setScale(2, BigDecimal.ROUND_DOWN));// 预计收益
         resultMap.put("assignInterestAdvance", assignInterestAdvance.setScale(2, BigDecimal.ROUND_DOWN));// 垫付利息
@@ -740,6 +742,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         resultMap.put("assignInterest", assignInterest.setScale(2, BigDecimal.ROUND_DOWN));// 债转期全部利息
         resultMap.put("creditCapital", creditCapital.setScale(2, BigDecimal.ROUND_DOWN));// 可转本金
         resultMap.put("creditPrice", creditPrice.setScale(2, BigDecimal.ROUND_DOWN));// 折后价格
+        resultMap.put("creditFee", creditFee.setScale(2, BigDecimal.ROUND_DOWN));// 服务费
         return resultMap;
     }
 

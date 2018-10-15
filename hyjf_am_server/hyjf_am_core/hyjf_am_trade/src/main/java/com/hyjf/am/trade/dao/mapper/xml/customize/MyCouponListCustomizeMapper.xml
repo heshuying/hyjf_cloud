@@ -227,7 +227,7 @@
 
 		<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
 
-		<result column="add_flg" property="addFlg" jdbcType="INTEGER" />
+		<result column="add_flag" property="addFlag" jdbcType="INTEGER" />
 		<result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />
 	</resultMap>
 	<select id="getCouponConfigList" resultMap="UserCouponConfigMap" parameterType="java.util.Map">
@@ -265,7 +265,7 @@
 			FROM_UNIXTIME(hcu.end_time,'%Y.%m.%d') end_time,
 			hcu.create_time as coupon_add_time,
 			hcu.coupon_user_code coupon_user_code,
-		    hcc.add_flag add_flg,
+		    hcc.add_flag add_flag,
 			hcc.coupon_profit_time coupon_profit_time
 		FROM
 			ht_coupon_user hcu

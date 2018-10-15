@@ -8,21 +8,26 @@ import com.hyjf.am.config.dao.model.auto.CategoryExample;
 import com.hyjf.am.config.dao.model.auto.ContentHelp;
 import com.hyjf.am.config.dao.model.auto.ContentHelpExample;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
+import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
 import com.hyjf.am.config.service.CategoryService;
 import com.hyjf.am.resquest.admin.CategoryBeanRequest;
 import com.hyjf.am.resquest.admin.ContentHelpBeanRequest;
 import com.hyjf.am.vo.admin.CategoryVO;
+import com.hyjf.am.vo.admin.ContentHelpCustomizeVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: walter.limeng
@@ -277,5 +282,48 @@ public class CategoryServiceImpl implements CategoryService {
             crit.andGroupEqualTo("help");
         }
         return exam;
+    }
+
+    @Override
+    public List<ContentHelpCustomizeVO> queryContentCustomize(ContentHelpCustomizeVO contentHelpCustomize){
+        ContentHelpExample con = new ContentHelpExample();
+        ContentHelpExample.Criteria conCriteria = con.createCriteria();
+        if (contentHelpCustomize.getStatus() != null) {
+            conCriteria.andStatusEqualTo(contentHelpCustomize.getStatus());
+        }
+        //智齿客服状态
+        if (contentHelpCustomize.getZhiChiStatus() != null) {
+            conCriteria.andZhichiStatusEqualTo(contentHelpCustomize.getZhiChiStatus());
+        }
+        con.setLimitStart(0);
+        con.setLimitEnd(5);
+        List<ContentHelpCustomizeVO> voList = new ArrayList<>();
+        List<ContentHelp> list = contentHelpMapper.selectByExample(con);
+        for (ContentHelp contentHelp:list){
+            ContentHelpCustomizeVO vo = new ContentHelpCustomizeVO();
+            BeanUtils.copyProperties(contentHelp,vo);
+            voList.add(vo);
+        }
+        return voList;
+    }
+
+    @Override
+    public List<HelpCategoryCustomize> selectCategory(String group){
+        return   helpCustomizeMapper.selectCategory(group);
+    }
+
+    @Override
+    public List<HelpCategoryCustomize> selectSunCategory(String pageName){
+        return   helpCustomizeMapper.selectSunCategory(pageName);
+
+    }
+
+    @Override
+    public List<HelpContentCustomize> selectSunContentCategory(String type, String pid){
+        Map<String, Object> map = new HashMap<>();
+        map.put("type",type);
+        map.put("pid",pid);
+        return   helpCustomizeMapper.selectSunContentCategory(map);
+
     }
 }

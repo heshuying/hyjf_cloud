@@ -59,7 +59,7 @@ public class ApiBankOpenController extends BaseUserController {
         openAccountPageBean.setClientHeader(ClientConstants.CLIENT_HEADER_API);
         //modelAndView = bankOpenService.getOpenAccountMV(openAccountPageBean);
         //保存开户日志  银行卡号不必传了
-        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), requestBean.getMobile(), openAccountPageBean.getOrderId(), requestBean.getPlatform(), requestBean.getTrueName(), requestBean.getIdNo(), "");
+        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), requestBean.getMobile(), openAccountPageBean.getOrderId(), requestBean.getPlatform(), requestBean.getTrueName(), requestBean.getIdNo(), "", "");
         if (uflag == 0) {
             logger.info("保存开户日志失败,手机号:[" + requestBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             modelAndView.addObject("callBackForm", paramMap);
@@ -73,11 +73,11 @@ public class ApiBankOpenController extends BaseUserController {
         OpenAccountPageBean bean = new OpenAccountPageBean();
         BeanUtils.copyProperties(requestBean,bean);
         // 同步调用路径
-        String retUrl = systemConfig.getWebHost()
+        String retUrl = systemConfig.getServerHost()
                 + "/server/autoPlus/return?acqRes="
                 + requestBean.getAcqRes() + "&callback=" + requestBean.getRetUrl().replace("#", "*-*-*");
         // 异步调用路
-        String bgRetUrl =systemConfig.getWebHost()
+        String bgRetUrl =systemConfig.getServerHost()
                 + "/server/autoPlus/bgReturn?acqRes="
                 +  requestBean.getAcqRes() + "&phone"+requestBean.getMobile()+"&callback=" + requestBean.getBgRetUrl().replace("#", "*-*-*");
         bean.setRetUrl(retUrl);

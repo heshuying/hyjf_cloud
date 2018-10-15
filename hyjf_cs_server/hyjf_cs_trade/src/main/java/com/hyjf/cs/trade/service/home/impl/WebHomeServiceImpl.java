@@ -238,7 +238,7 @@ public class WebHomeServiceImpl implements WebHomeService {
             list2 = new ArrayList<>();
         }
         result.setCompanyDynamicsList(list2);
-        result.setNowTime(GetDate.formatDate(System.currentTimeMillis()));
+        result.setNowTime(String.valueOf(System.currentTimeMillis()/1000));
          /*首页原来接口 有推广session部分,此处暂时不做处理，如果需要再加*/
         webResult.setData(result);
         return webResult;

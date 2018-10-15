@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.List;
 public class SellDailyDistributionServiceImpl implements SellDailyDistributionService {
     @Autowired
     SellDailyDistributionMapper sellDailyDistributionMapper;
-    public static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public Integer queryTotal(EmailRecipientRequest form) {
@@ -95,7 +96,7 @@ public class SellDailyDistributionServiceImpl implements SellDailyDistributionSe
 
 
     @Override
-    public boolean updateRecord(EmailRecipientRequest form) {
+    public boolean updateRecord(EmailRecipientRequest form)  {
         SellDailyDistributionExample example = new SellDailyDistributionExample();
         SellDailyDistributionExample.Criteria criteria = example.createCriteria();
         criteria.andIdEqualTo(form.getId());
@@ -103,13 +104,20 @@ public class SellDailyDistributionServiceImpl implements SellDailyDistributionSe
         if (StringUtils.isNotBlank(form.getBusinessName())) {
             SellDailyDistribution.setBusinessName(form.getBusinessName());
         }
-        if (StringUtils.isNotBlank(String.valueOf(form.getTimePoint()))) {
+        if (form.getTimePoint()!=null) {
             SellDailyDistribution.setTimePoint(form.getTimePoint());
         }
-        if (StringUtils.isNotBlank(String.valueOf(form.getSendTime() ))) {
-            SellDailyDistribution.setSendTime(new Date(form.getSendTime()));
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        try {
+            Date parse = format.parse(form.getSendTime());
+            if (form.getSendTime()!=null) {
+                SellDailyDistribution.setSendTime(parse);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        if (StringUtils.isNotBlank(String.valueOf(form.getEmail()))) {
+
+        if (StringUtils.isNotBlank(form.getEmail())) {
             SellDailyDistribution.setEmail(form.getEmail());
         }
 
@@ -141,19 +149,23 @@ public class SellDailyDistributionServiceImpl implements SellDailyDistributionSe
      */
     @Override
     public boolean insertRecord(EmailRecipientRequest form) {
-        SellDailyDistributionExample example = new SellDailyDistributionExample();
-        SellDailyDistributionExample.Criteria criteria = example.createCriteria();
         SellDailyDistribution SellDailyDistribution = new SellDailyDistribution();
         if (StringUtils.isNotBlank(form.getBusinessName())) {
             SellDailyDistribution.setBusinessName(form.getBusinessName());
         }
-        if (StringUtils.isNotBlank(String.valueOf(form.getTimePoint()))) {
+        if (form.getTimePoint()!=null) {
             SellDailyDistribution.setTimePoint(form.getTimePoint());
         }
-        if (StringUtils.isNotBlank(String.valueOf(form.getSendTime()))) {
-            SellDailyDistribution.setSendTime(new Date(form.getSendTime()));
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+            Date parse = format.parse(form.getSendTime());
+            if (form.getSendTime()!=null) {
+                SellDailyDistribution.setSendTime(parse);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        if (StringUtils.isNotBlank(String.valueOf(form.getEmail()))) {
+        if (StringUtils.isNotBlank(form.getEmail())) {
             SellDailyDistribution.setEmail(form.getEmail());
         }
         SellDailyDistribution.setStatus(1);

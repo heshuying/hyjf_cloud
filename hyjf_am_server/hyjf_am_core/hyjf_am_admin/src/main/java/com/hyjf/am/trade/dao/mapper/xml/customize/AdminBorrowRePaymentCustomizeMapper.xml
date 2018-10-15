@@ -352,9 +352,9 @@
 		SELECT
 		br.nid AS nid,
 		br.borrow_nid AS borrowNid,
-		b.user_id AS userId,
-		b.borrow_user_name AS borrowUserName,
-		binfo. NAME AS borrowName,
+		u.user_id AS userId,
+		u.username AS borrowUserName,
+		binfo.NAME AS borrowName,
 		hic.inst_name AS instName,
 		bpt.borrow_name AS projectTypeName,
 		CASE
@@ -426,33 +426,33 @@
 		''
 		) AS repayMoneySource
 		FROM ht_borrow AS b
+		INNER JOIN ht_borrow_info AS binfo  on b.borrow_nid=binfo.borrow_nid
 		INNER JOIN ht_borrow_repay AS br on b.borrow_nid=br.borrow_nid
-		INNER JOIN ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
+		LEFT JOIN ht_r_user u ON b.user_id = u.user_id
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(binfo.project_type AS CHAR)
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 		LEFT JOIN ht_borrow_apicron as ba on b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
 		LEFT JOIN ht_hjh_inst_config hic on binfo.inst_code = hic.inst_code
-		where
 		<include refid="RepaymentInfoList_Where_Clause" />
 		AND b.borrow_style in ('end','endday')
 		UNION ALL
 		SELECT
 		rp.nid AS nid,
 		b.borrow_nid AS borrowNid,
-		b.user_id AS userId,
-		b.borrow_user_name AS borrowUserName,
-		binfo. NAME AS borrowName,
+		u.user_id AS userId,
+		u.username AS borrowUserName,
+		binfo.NAME AS borrowName,
 		hic.inst_name AS instName,
 		CASE
-		WHEN binfo.project_Type = 0 THEN
+		WHEN b.project_Type = 0 THEN
 		'汇保贷'
-		WHEN binfo.project_Type = 1 THEN
+		WHEN b.project_Type = 1 THEN
 		'汇典贷'
-		WHEN binfo.project_Type = 2 THEN
+		WHEN b.project_Type = 2 THEN
 		'汇小贷'
-		WHEN binfo.project_Type = 3 THEN
+		WHEN b.project_Type = 3 THEN
 		'汇车贷'
-		WHEN binfo.project_Type = 4 THEN
+		WHEN b.project_Type = 4 THEN
 		'新手标'
 		END AS projectTypeName,
 		CONCAT(b.borrow_period, '个月') AS borrowPeriod,
@@ -515,17 +515,15 @@
 		ht_borrow_repay_plan AS rp
 		INNER JOIN ht_borrow AS b ON
 		rp.borrow_nid=b.borrow_nid
-		INNER JOIN ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
+		INNER JOIN ht_borrow_info AS binfo  on b.borrow_nid=binfo.borrow_nid
 		LEFT JOIN ht_borrow_style AS bs on
 		b.borrow_style=bs.nid
+		LEFT JOIN ht_r_user u ON b.user_id =
+		u.user_id
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
-		where
 		<include refid="RepaymentInfoList_Where_Clause" />
 		AND b.borrow_style in ('principal','month','endmonth')
-		ORDER BY verify_time DESC,borrowNid ASC, repayPeriod+0 ASC;
-		<if test="limitStart >= 0">
-			LIMIT #{limitStart} , #{limitEnd}
-		</if>
+		ORDER BY verify_time DESC,borrowNid ASC, repayPeriod+0 ASC
 	</select>
 	<sql id="RepaymentInfoList_Where_Clause">
 		<where>

@@ -68,9 +68,11 @@ public class SellDailyDistributionController {
         EmailRecipientResponse response = new EmailRecipientResponse();
         if (sellDaily.updateRecord(form)) {
             response.setRtn(Response.SUCCESS);
+            response.setMessage(Response.SUCCESS_MSG);
             return response;
         }
         response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -83,9 +85,11 @@ public class SellDailyDistributionController {
         EmailRecipientResponse response = new EmailRecipientResponse();
         if (sellDaily.updateForbidden(form)) {
             response.setRtn(Response.SUCCESS);
+            response.setMessage(Response.SUCCESS_MSG);
             return response;
         }
         response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -98,9 +102,11 @@ public class SellDailyDistributionController {
         EmailRecipientResponse response = new EmailRecipientResponse();
         if (sellDaily.insertRecord(form)) {
             response.setRtn(Response.SUCCESS);
+            response.setMessage(Response.SUCCESS_MSG);
             return response;
         }
         response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 }
