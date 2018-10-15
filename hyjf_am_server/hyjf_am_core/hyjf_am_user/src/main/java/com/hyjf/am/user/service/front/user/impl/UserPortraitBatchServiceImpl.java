@@ -36,19 +36,27 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
      * 查询需要更新用户画像的userInfo的list
      * */
     @Override
-    public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        String yesterday = GetDate.date_sdf.format(cal.getTime());
-        // 获取到昨天的开始和结束时间，格式:yyyy-MM-dd HH:mm:ss
-        String yesterdayBegin = yesterday + " 00:00:00";
-        String yesterdayEnd = yesterday + " 23:59:59";
+    public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait(int flag) {
+        List<UserLoginLog> userLoginLogList = new ArrayList<>();
+        if(flag == 99){
+            //更新所有用户画像，数据缺失或数据有误等极其特殊的情况下才能调用，因为数据量特别大
+            userLoginLogList = userLoginLogMapper.selectByExample(new UserLoginLogExample());
+        }else{
+            //更新昨日的用户画像，正常情况下调用
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, -1);
+            String yesterday = GetDate.date_sdf.format(cal.getTime());
+            // 获取到昨天的开始和结束时间，格式:yyyy-MM-dd HH:mm:ss
+            String yesterdayBegin = yesterday + " 00:00:00";
+            String yesterdayEnd = yesterday + " 23:59:59";
 
-        // 从UserInfo中获得所有昨天登录过的userId
-        UserLoginLogExample example = new UserLoginLogExample();
-        UserLoginLogExample.Criteria criteria = example.createCriteria();
-        criteria.andLoginTimeBetween(GetDate.stringToDate(yesterdayBegin), GetDate.stringToDate(yesterdayEnd));
-        List<UserLoginLog> userLoginLogList = userLoginLogMapper.selectByExample(example);
+            // 从UserInfo中获得所有昨天登录过的userId
+            UserLoginLogExample example = new UserLoginLogExample();
+            UserLoginLogExample.Criteria criteria = example.createCriteria();
+            criteria.andLoginTimeBetween(GetDate.stringToDate(yesterdayBegin), GetDate.stringToDate(yesterdayEnd));
+            userLoginLogList = userLoginLogMapper.selectByExample(example);
+        }
+
         List<UserAndSpreadsUserVO> result = new ArrayList<>();
         if(!CollectionUtils.isEmpty(userLoginLogList)){
             for(UserLoginLog userLoginLog:userLoginLogList){

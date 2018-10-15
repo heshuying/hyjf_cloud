@@ -833,12 +833,14 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 	/**
-	 * 查询需要更新用户画像的userInfo
-	 * @return userInfo
-	 * */
+	 * 更新用户画像 99:更新所有时间的用户画像,else:更新昨日登录的用户画像
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
 	@Override
-	public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait() {
-		String url = "http://AM-USER/user_batch/portrait/search_user_id_for_user_portrait";
+	public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait(int flag) {
+		String url = "http://AM-USER/user_batch/portrait/search_user_id_for_user_portrait/" + flag;
 		UserAndSpreadsUserResponse response = restTemplate.getForEntity(url, UserAndSpreadsUserResponse.class).getBody();
 		if(response != null){
 			return response.getResultList();

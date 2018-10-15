@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,14 +35,17 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
     @Autowired
     private AmUserClient amUserClient;
     /**
-     * 用户画像定时任务
-     * */
+     * 更新用户画像 99:更新所有时间的用户画像,else:更新昨日登录的用户画像
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
     @Override
-    public void userPortraitBatch() {
+    public void userPortraitBatch(int flag) {
         logger.info("用户画像(每日)定时任务开始....");
         // 查询出需要更新用户画像的用户信息
-        List<UserAndSpreadsUserVO> userAndSpreadsUserVOList = amUserClient.searchUserIdForUserPortrait();
-        //
+        List<UserAndSpreadsUserVO> userAndSpreadsUserVOList = amUserClient.searchUserIdForUserPortrait(flag);
+
         // list不为空就进行更新
         if(!CollectionUtils.isEmpty(userAndSpreadsUserVOList)){
             BatchUserPortraitRequest batchUserPortraitRequest = new BatchUserPortraitRequest();

@@ -28,6 +28,17 @@ public class UserPortraitBatchController{
      * */
     @GetMapping(value = "/user_portrait_batch", produces = "application/json; charset=utf-8")
     public void userPortraitBatch() {
-        userPortraitBatchService.userPortraitBatch();
+        userPortraitBatchService.userPortraitBatch(1);
+    }
+
+    /**
+     * 更新所有时间的用户画像
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @GetMapping(value = "/update_all_user_portrait")
+    public void updateAllUserPortrait(){
+        userPortraitBatchService.userPortraitBatch(99);
     }
 }

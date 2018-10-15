@@ -9,8 +9,10 @@ package com.hyjf.cs.user.service.batch;
  */
 public interface UserPortraitBatchService {
     /**
-     * 用户画像定时任务
-     * 由hyjf-batch调用
-     * */
-    void userPortraitBatch();
+     * 更新用户画像 99:更新所有时间的用户画像,else:更新昨日登录的用户画像
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    void userPortraitBatch(int flag);
 }
