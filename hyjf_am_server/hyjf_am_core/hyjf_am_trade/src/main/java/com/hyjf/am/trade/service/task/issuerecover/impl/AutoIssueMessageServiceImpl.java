@@ -258,7 +258,7 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
             //获取当前时间
             hjhPlanAssetnew.setUpdateTime(new Date());
             hjhPlanAssetnew.setUpdateUserId(1);
-            hjhPlanAssetMapper.updateByPrimaryKey(hjhPlanAssetnew);
+            hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetnew);
         }
 
 
