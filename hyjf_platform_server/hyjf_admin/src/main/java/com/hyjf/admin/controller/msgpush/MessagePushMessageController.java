@@ -176,7 +176,7 @@ public class MessagePushMessageController extends BaseController {
                     Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
                     if (time != 0) {
                         templateVO.setPreSendTime(time);
-                        templateVO.setSendTime(GetDate.strYYYYMMDD2Timestamp2(GetDate.getDateMyTimeInMillis(time)));
+                        templateVO.setSendTime(time);
                     }
                 } catch (Exception e) {
                 }
