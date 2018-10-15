@@ -86,7 +86,10 @@ public class UserPortraitCustomizeVO implements Serializable {
     private BigDecimal accountAwait;
     @ApiModelProperty(value = "银行冻结金额")
     private BigDecimal bankFrost;
-
+    @ApiModelProperty(value = "最后一笔回款时间")
+    private String lastRepayTimeS;
+    @ApiModelProperty(value = "注册时间")
+    private String regTime;
     private static final long serialVersionUID = 1L;
 
     public Integer getUserId() {
@@ -391,5 +394,21 @@ public class UserPortraitCustomizeVO implements Serializable {
 
     public void setBankFrost(BigDecimal bankFrost) {
         this.bankFrost = bankFrost;
+    }
+
+    public String getLastRepayTimeS() {
+        return lastRepayTimeS;
+    }
+
+    public void setLastRepayTimeS(String lastRepayTimeS) {
+        this.lastRepayTimeS = lastRepayTimeS;
+    }
+
+    public String getRegTime() {
+        return regTime;
+    }
+
+    public void setRegTime(String regTime) {
+        this.regTime = regTime;
     }
 }

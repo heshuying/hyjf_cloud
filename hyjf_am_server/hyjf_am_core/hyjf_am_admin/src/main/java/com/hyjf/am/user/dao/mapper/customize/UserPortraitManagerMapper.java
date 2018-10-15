@@ -1,6 +1,6 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
-import com.hyjf.am.user.dao.model.auto.UserPortrait;
+import com.hyjf.am.vo.user.UserPortraitVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,7 +20,7 @@ public interface UserPortraitManagerMapper {
 	 * @param mapParam
 	 * @return
 	 */
-	List<UserPortrait> selectUserPortraitList(Map<String,Object> mapParam) ;
+	List<UserPortraitVO> selectUserPortraitList(Map<String,Object> mapParam) ;
 
 	/**
 	 * 根据条件获取用户记录数
