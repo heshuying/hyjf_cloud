@@ -142,7 +142,7 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                             }
 
                             if (isIdCard) {
-                                String area = IdCard15To18.getCityFromCode(idcard.substring(0, 4));
+                                String area = IdCard15To18.getCityFromCode(idcard.substring(0, 6));
                                 if (area != null) {
                                     userPortrait.setCity(area);
                                 } else {
