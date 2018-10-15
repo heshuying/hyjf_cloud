@@ -175,7 +175,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         tender.setUser(loginUser);
         BigDecimal couponInterest = BigDecimal.ZERO;
         CouponUserVO couponUser = null;
-        if (couponId != null || couponId > 0) {
+        if (couponId != null && couponId > 0) {
             //couponConfig = amTradeClient.selectHJHBestCoupon(request);
             couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
         }
