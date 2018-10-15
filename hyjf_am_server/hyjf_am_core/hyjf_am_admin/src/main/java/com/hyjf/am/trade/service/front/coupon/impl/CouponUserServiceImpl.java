@@ -209,6 +209,36 @@ public class CouponUserServiceImpl implements CouponUserService {
         Map<String, Object> map = new HashMap<>();
         map.put("limitStart", offset);
         map.put("limitEnd", limit);
+        if (request.getCouponCode() != null) {
+            map.put("couponCode", request.getCouponCode());
+        }
+        if (request.getCouponUserCode() != null) {
+            map.put("couponUserCode", request.getCouponUserCode());
+        }
+        if (request.getUserName() != null) {
+            map.put("username", request.getUserName());
+        }
+        if (request.getCouponType() != null) {
+            map.put("couponType", request.getCouponType());
+        }
+        if (request.getUsedFlag() != null) {
+            map.put("usedFlag", request.getUsedFlag());
+        }
+        if (request.getCouponSource() != null) {
+            map.put("couponSource", request.getCouponSource());
+        }
+        if (request.getTimeStartSrch() != null) {
+            map.put("timeStartSrch", GetDate.getDayStart10(request.getTimeStartSrch()));
+        }
+        if (request.getTimeEndSrch() != null) {
+            map.put("timeEndSrch", GetDate.getDayEnd(request.getTimeEndSrch()));
+        }
+        if (request.getTimeStartAddSrch() != null) {
+            map.put("timeStartAddSrch", request.getTimeStartAddSrch());
+        }
+        if (request.getTimeEndAddSrch() != null) {
+            map.put("timeEndAddSrch", request.getTimeEndAddSrch());
+        }
         List<CouponUserCustomize> couponUserCustomizes = couponUserCustomizeMapper.selectCouponUserList(map);
         return couponUserCustomizes;
     }
