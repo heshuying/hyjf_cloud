@@ -142,7 +142,13 @@ public class AppBankWithdrawController extends BaseTradeController {
         WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
 
         // 获取用户信息
-        logger.info("提现可用余额："+result.getTotal());
+
+        // 服务费授权状态
+        if (!authService.checkPaymentAuthStatus(userId)) {
+            result.setStatus("1");
+            result.setStatusDesc("请先进行服务费授权。");
+            return result;
+        }
         // 取得用户当前余额
         AccountVO account = this.bankWithdrawService.getAccountByUserId(userId);
 
@@ -151,16 +157,9 @@ public class AppBankWithdrawController extends BaseTradeController {
             result.setStatus(CustomConstants.APP_STATUS_FAIL);
             result.setStatusDesc("您的账户信息存在异常，请联系客服人员处理。");
             return result;
-        } /*else {
-            //先判断取现金额是否大于可用余额
-            if (StringUtils.isNotBlank(getcash) && new BigDecimal(getcash).compareTo(account.getBankBalance()) > 0) {
-                result.setStatus("1");
-                result.setStatusDesc("提现金额大于可用余额");
-                return result;
-            }
-
-        }*/
+        }
         result.setTotal(CommonUtils.formatAmount(version, account.getBankBalance()));
+        logger.info("提现可用余额："+result.getTotal());
         String phoneNum = "";
         // 取得银行卡信息
         BankCardVO bankCard = bankWithdrawService.getBankCardVOByUserId(userId);

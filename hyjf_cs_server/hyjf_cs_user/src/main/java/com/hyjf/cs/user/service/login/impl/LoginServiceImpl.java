@@ -20,6 +20,7 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;
@@ -28,6 +29,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.config.locked.LockedConfigManager;
 import com.hyjf.cs.user.constants.VipImageUrlEnum;
+import com.hyjf.cs.user.service.auth.AuthService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.vo.UserParameters;
@@ -50,6 +52,12 @@ import java.util.*;
 public class LoginServiceImpl extends BaseUserServiceImpl implements LoginService {
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
+
+	// 服务费授权描述
+	private static final String paymentAuthDesc = "部分交易过程中，会收取相应费用，请进行授权。\n例如：提现手续费，债转服务费等。";
+	//三合一授权描述
+	private static final String mergeAuthDesc = "智投服务需进行以下授权：\n自动投标，自动债转，服务费授权。";
+	private static final String checkUserRoleDesc = "仅限出借人进行投资";
 	@Autowired
 	private AmUserClient amUserClient;
 
@@ -67,7 +75,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
 	@Autowired
 	private RestTemplate restTemplate;
-
+	@Autowired
+	private AuthService authService;
 	/**
 	 * 登录
 	 *
@@ -746,37 +755,82 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		result.setRewardUrl(
 				CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + ClientConstants.REWARD_URL));
 		{
-			// 自动投标授权状态 0: 未授权 1:已授权
-			HjhUserAuthVO hjhUserAuthVO = this.getHjhUserAuth(userId);
-			if (hjhUserAuthVO != null && hjhUserAuthVO.getAutoInvesStatus() == 1) {
-				result.setAutoInvesStatus("1");
-				result.setNewAutoInvesStatus("1");
+			//自动投标授权状态 0: 未授权    1:已授权
+			if (authService.checkIsAuth(userId,AuthBean.AUTH_TYPE_AUTO_BID)) {
+				result.setAutoInvesStatus("1");//1:已授权
+				result.setNewAutoInvesStatus("1"); //1:已授权
 				result.setToubiaoDesc("已授权");
 			} else {
-				result.setAutoInvesStatus("0");
-				result.setNewAutoInvesStatus("0");
+				result.setAutoInvesStatus("0");//0:未授权
+				result.setNewAutoInvesStatus("0");//0:未授权
 				result.setToubiaoDesc("未授权");
 			}
-			// 自动债转授权状态 0：未授权 1：已授权
-			if (hjhUserAuthVO != null && hjhUserAuthVO.getAutoCreditStatus() == 1) {
-				result.setNewAutoCreditStatus("1");
+			//自动债转授权状态 0：未授权    1：已授权
+			if (authService.checkIsAuth(userId,AuthBean.AUTH_TYPE_AUTO_CREDIT)) {
+				result.setNewAutoCreditStatus("1");//1:已授权
 			} else {
-				result.setNewAutoCreditStatus("0");
+				result.setNewAutoCreditStatus("0");//0:未授权
 			}
-			// 缴费授权 0：未授权 1：已授权
-			if (hjhUserAuthVO != null && hjhUserAuthVO.getAutoPaymentStatus() == 1) {
-				result.setPaymentAuthStatus("1");
+
+			// 缴费授权 0：未授权    1：已授权
+			if (authService.checkIsAuth(userId,AuthBean.AUTH_TYPE_PAYMENT_AUTH)) {
+				result.setPaymentAuthStatus("1");//1:已授权
 			} else {
-				result.setPaymentAuthStatus("0");
+				result.setPaymentAuthStatus("0");//0:未授权
+			}
+			if (authService.checkIsAuth(userId,AuthBean.AUTH_TYPE_REPAY_AUTH)) {
+				result.setRepayStatus("1");//1:已授权
+			} else {
+				result.setRepayStatus("0");//0:未授权
 			}
 		}
 		{
+
+			// 服务费授权
+			HjhUserAuthConfigVO paymenthCconfig = authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH);
+			HjhUserAuthConfigVO invesCconfig = authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH);;
+			HjhUserAuthConfigVO creditCconfig = authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH);;
+			// 设置服务费授权开关
+			result.setPaymentAuthOn(paymenthCconfig.getEnabledStatus() + "");
+			// 设置自动投资授权开关
+			result.setInvesAuthOn(invesCconfig.getEnabledStatus() + "");
+			// 设置自动债转授权开关
+			result.setCreditAuthOn(creditCconfig.getEnabledStatus() + "");
+			// 是否校验用户角色
+			/*result.setIsCheckUserRole(PropUtils.getSystem(CustomConstants.HYJF_ROLE_ISOPEN));*/
+			// 校验用户角色的描述
+			result.setCheckUserRoleDesc(checkUserRoleDesc);
+
+
+			//三合一授权过期标识0未授权，1正常，2即将过期，3已过期
+			result.setMergeAuthExpire(authService.checkAuthExpire(userId, AuthBean.AUTH_TYPE_MERGE_AUTH)+"");
+			//三合一授权过期标识0未授权，1正常，2即将过期，3已过期
+			result.setPaymentAuthExpire(authService.checkAuthExpire(userId, AuthBean.AUTH_TYPE_PAYMENT_AUTH)+"");
+			String imminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
+			String expireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";
+			// 三合一授权描述
+			result.setMergeAuthDesc(mergeAuthDesc);
+			if("3".equals(result.getMergeAuthExpire())){
+				result.setMergeAuthDesc(expireDesc);
+			}else if("2".equals(result.getMergeAuthExpire())){
+				result.setMergeAuthDesc(imminentExpiryDesc);
+			}
+			// 服务费授权描述
+			result.setPaymentAuthDesc(paymentAuthDesc);
+			if("3".equals(result.getPaymentAuthExpire())){
+				result.setPaymentAuthDesc(expireDesc);
+			}else if("2".equals(result.getPaymentAuthExpire())){
+				result.setPaymentAuthDesc(imminentExpiryDesc);
+			}
+			String sign=request.getParameter("sign");
 			// 自动投标授权URL
-			result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
-					+ "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+ packageStrForm(request)));
-			// 缴费授权Url
-			result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
-					+ BaseDefine.REQUEST_HOME + ClientConstants.PAYMENT_AUTH_ACTION + ".do?1=1"));
+			result.setAutoInvesUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD);// 0:未授权
+			// 自动投标授权URL
+			result.setMergeAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD);// 0:未授权
+			// 服务费授权Url
+			result.setPaymentAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD);
+			// 还款授权URL
+			result.setRepayAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD);
 		}
 		result.setInvitationCode(userId);
 		return result;

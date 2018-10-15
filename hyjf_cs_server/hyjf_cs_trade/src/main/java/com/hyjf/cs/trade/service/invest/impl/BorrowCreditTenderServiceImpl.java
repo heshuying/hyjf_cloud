@@ -35,6 +35,7 @@ import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.*;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -71,7 +72,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
     @Autowired
     private AppMessageProducer appMsProcesser;
-
+    @Autowired
+    private AuthService authService;
     @Autowired
     private SmsProducer smsProducer;
     @Autowired
@@ -1343,6 +1345,12 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         if(borrowCredit.getCreditUserId().intValue()==user.getUserId().intValue()){
             // 不可以承接自己出让的债权
             throw new CheckException(MsgEnum.ERROR_CREDIT_CANT_BBY_YOURSELF);
+        }
+
+        if (!authService.checkPaymentAuthStatus(user.getUserId())) {
+            // 未进行服务费授权
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
+
         }
     }
 

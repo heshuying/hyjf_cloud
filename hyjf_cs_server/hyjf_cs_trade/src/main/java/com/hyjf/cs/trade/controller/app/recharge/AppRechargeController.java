@@ -117,9 +117,7 @@ public class AppRechargeController extends BaseTradeController{
 			// 解密
 			mobile = DES.decodeValue(key, mobile);
 		}
-		if (!this.authService.checkPaymentAuthStatus(userId)) {
-			throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
-		}
+
 		logger.info("充值手机号为["+mobile+"],充值金额:[" + money + "]");
 		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
 		UserVO userVO=userRechargeService.getUserByUserId(user.getUserId());
@@ -132,6 +130,9 @@ public class AppRechargeController extends BaseTradeController{
 		}
 		if(userVO.getBankOpenAccount()==0){
 			throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+		}
+		if (!this.authService.checkPaymentAuthStatus(userId)) {
+			throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
 		}
 		logger.info("user is :{}", JSONObject.toJSONString(user));
 		String ipAddr = CustomUtil.getIpAddr(request);
