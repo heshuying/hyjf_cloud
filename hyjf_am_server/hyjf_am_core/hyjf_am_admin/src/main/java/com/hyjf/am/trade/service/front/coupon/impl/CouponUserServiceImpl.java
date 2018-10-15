@@ -238,6 +238,8 @@ public class CouponUserServiceImpl implements CouponUserService {
     @Override
     public int insertCouponUser(CouponUserRequest request) {
         CouponUser couponUser = new CouponUser();
+        couponUser.setCouponCode(request.getCouponCode());
+        couponUser.setContent(request.getContent());
         couponUser.setEndTime(request.getEndTime());
         couponUser.setUserId(request.getUserId());
         couponUser.setCouponUserCode(request.getCouponUserCode());
