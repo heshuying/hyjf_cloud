@@ -12,7 +12,7 @@
 						FROM
 							ht_borrow_tender
 						WHERE
-						DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(addtime)) 
+						DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(create_time))
 					),
 					0
 				) +IFNULL(
@@ -22,7 +22,7 @@
 						FROM
 							ht_credit_tender
 						WHERE
-							 DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(add_time)) 
+							 DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(create_time))
 					),
 					0
 				) + IFNULL(
@@ -63,7 +63,7 @@
 						FROM
 							ht_borrow_tender
 						WHERE
-								DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(addtime)) 
+								DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(create_time))
 					),
 					0
 				)+IFNULL(
@@ -73,7 +73,7 @@
 						FROM
 							ht_credit_tender
 						WHERE
-								DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(add_time)) 
+								DATE_SUB(CURDATE(), INTERVAL #{value} DAY) <![CDATA[<]]> DATE(FROM_UNIXTIME(create_time))
 					),
 					0
 				)+IFNULL(
@@ -112,12 +112,12 @@
 	
 			SELECT
 			ceil((SUM(account)/10000)) money,
-			FROM_UNIXTIME(addtime, '%Y-%m') time
+			FROM_UNIXTIME(create_time, '%Y-%m') time
 		FROM
 			ht_borrow_tender
 		WHERE
-				 DATE_SUB(DATE_FORMAT(CURDATE(),'%Y-%m-01'), INTERVAL 1 YEAR) <![CDATA[<=]]> DATE(FROM_UNIXTIME(addtime)) 
-				 and DATE(FROM_UNIXTIME(addtime)) <![CDATA[<]]> DATE(DATE_FORMAT(CURDATE(),'%Y-%m-01'))
+				 DATE_SUB(DATE_FORMAT(CURDATE(),'%Y-%m-01'), INTERVAL 1 YEAR) <![CDATA[<=]]> DATE(FROM_UNIXTIME(create_time))
+				 and DATE(FROM_UNIXTIME(create_time)) <![CDATA[<]]> DATE(DATE_FORMAT(CURDATE(),'%Y-%m-01'))
 					
 		GROUP BY
 			time ASC
@@ -125,12 +125,12 @@
 	<select id="selectDataCreditInfo"  resultType="java.util.HashMap">
 			SELECT
 			ceil(sum(assign_pay)/10000) money,
-			FROM_UNIXTIME(add_time, '%Y-%m') time
+			FROM_UNIXTIME(create_time, '%Y-%m') time
 		FROM
 			ht_credit_tender
 		WHERE
-			 DATE_SUB(DATE_FORMAT(CURDATE(),'%Y-%m-01'), INTERVAL 1 YEAR) <![CDATA[<=]]> DATE(FROM_UNIXTIME(add_time)) 
-			  and DATE(FROM_UNIXTIME(add_time)) <![CDATA[<]]> DATE(DATE_FORMAT(CURDATE(),'%Y-%m-01'))
+			 DATE_SUB(DATE_FORMAT(CURDATE(),'%Y-%m-01'), INTERVAL 1 YEAR) <![CDATA[<=]]> DATE(FROM_UNIXTIME(create_time))
+			  and DATE(FROM_UNIXTIME(create_time)) <![CDATA[<]]> DATE(DATE_FORMAT(CURDATE(),'%Y-%m-01'))
 		GROUP BY
 			time ASC
 	</select>
@@ -278,27 +278,27 @@ FROM
 			LIMIT 12
 	</select>
 	<insert id="insertHyjfTenderMonthInfo">
-		insert into ht_tender_monthinfo (tender_money,tender_type,tender_time,addtime)
+		insert into ht_tender_monthinfo (tender_money,tender_type,tender_time,create_time)
 	SELECT
 				ceil((SUM(account)/10000)) money,0,
-				FROM_UNIXTIME(addtime, '%Y-%m') time,NOW()
+				FROM_UNIXTIME(create_time, '%Y-%m') time,NOW()
 			FROM
 				ht_borrow_tender
 			WHERE
-					 DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-01'), INTERVAL 1 MONTH) <![CDATA[<=]]> DATE(FROM_UNIXTIME(addtime))
-				AND DATE_FORMAT(NOW(),'%Y-%m-01') <![CDATA[>]]> FROM_UNIXTIME(addtime)
+					 DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-01'), INTERVAL 1 MONTH) <![CDATA[<=]]> DATE(FROM_UNIXTIME(create_time))
+				AND DATE_FORMAT(NOW(),'%Y-%m-01') <![CDATA[>]]> FROM_UNIXTIME(create_time)
 						
 			GROUP BY
 				time ASC
 	UNION
 	SELECT
 				ceil((SUM(assign_pay)/10000)) money,1,
-				FROM_UNIXTIME(add_time, '%Y-%m') time,NOW()
+				FROM_UNIXTIME(create_time, '%Y-%m') time,NOW()
 			FROM
 				ht_credit_tender
 			WHERE
-					 DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-01'), INTERVAL 1 MONTH) <![CDATA[<=]]> DATE(FROM_UNIXTIME(add_time))
-				AND DATE_FORMAT(NOW(),'%Y-%m-01') <![CDATA[>]]> FROM_UNIXTIME(add_time)
+					 DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-01'), INTERVAL 1 MONTH) <![CDATA[<=]]> DATE(FROM_UNIXTIME(create_time))
+				AND DATE_FORMAT(NOW(),'%Y-%m-01') <![CDATA[>]]> FROM_UNIXTIME(create_time)
 						
 			GROUP BY
 				time ASC

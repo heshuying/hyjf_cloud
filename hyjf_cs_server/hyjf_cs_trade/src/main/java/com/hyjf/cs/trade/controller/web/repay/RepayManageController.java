@@ -6,9 +6,11 @@ import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -368,7 +370,18 @@ public class RepayManageController extends BaseTradeController {
     @PostMapping(value = "/repay_request", produces = "application/json; charset=utf-8")
     public WebResult repayRequest(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayRequest requestBean, HttpServletRequest request){
         WebResult webResult = new WebResult();
+        Map<String,String> resultMap = new HashMap<>();
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+
+        BorrowInfoVO borrowInfoVO = repayManageService.getBorrowInfoByNid(requestBean.getBorrowNid());
+        if(borrowInfoVO == null){
+            webResult.setStatus(WebResult.ERROR);
+            webResult.setStatusDesc("标的不存在，borrowNid：" + requestBean.getBorrowNid());
+            return webResult;
+        }
+        resultMap.put("borrowNid", borrowInfoVO.getBorrowNid());
+        resultMap.put("borrowName", borrowInfoVO.getName());
+        webResult.setData(resultMap);
 
         /** redis 锁 */
         boolean reslut = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_REPAY_REQUEST + requestBean.getBorrowNid(), 60);

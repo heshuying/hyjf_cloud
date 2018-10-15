@@ -71,27 +71,21 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      * @param cuc
      */
     @Override
-    public void couponTender(TenderRequest request, HjhPlanVO plan, CouponUserVO cuc,Integer userId) {
-        String accountStr = request.getAccount();
-        Map<String, String> validateMap = this.validateCoupon(userId, accountStr, cuc.getId(), request.getPlatform(), plan.getLockPeriod(), plan.getCouponConfig());
-        if (MapUtils.isEmpty(validateMap)) {
-            CouponTenderUsedVO couponTender = new CouponTenderUsedVO();
-            couponTender.setAccount(request.getAccount());
-            couponTender.setBorrowNid(plan.getPlanNid());
-            couponTender.setBorrowStyle(plan.getBorrowStyle());
-            couponTender.setCouponGrantId(cuc.getId());
-            couponTender.setExpectApr(plan.getExpectApr());
-            couponTender.setIp(request.getIp());
-            couponTender.setMainTenderNid(request.getMainTenderNid());
-            couponTender.setPeriod(plan.getLockPeriod());
-            couponTender.setPlatform(Integer.parseInt(request.getPlatform()));
-            couponTender.setTenderType(CustomConstants.COUPON_TENDER_TYPE_HJH);
-            couponTender.setUserId(userId);
-            boolean couponSuccess = this.updateCouponTender(couponTender);
-            request.setCouponInterest(couponTender.getCouponInterest());
-        } else {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT_WITH_COUPON);
-        }
+    public void couponTender(TenderRequest request, HjhPlanVO plan, CouponUserVO cuc, Integer userId) {
+        CouponTenderUsedVO couponTender = new CouponTenderUsedVO();
+        couponTender.setAccount(request.getAccount());
+        couponTender.setBorrowNid(plan.getPlanNid());
+        couponTender.setBorrowStyle(plan.getBorrowStyle());
+        couponTender.setCouponGrantId(cuc.getId());
+        couponTender.setExpectApr(plan.getExpectApr());
+        couponTender.setIp(request.getIp());
+        couponTender.setMainTenderNid(request.getMainTenderNid());
+        couponTender.setPeriod(plan.getLockPeriod());
+        couponTender.setPlatform(Integer.parseInt(request.getPlatform()));
+        couponTender.setTenderType(CustomConstants.COUPON_TENDER_TYPE_HJH);
+        couponTender.setUserId(userId);
+        boolean couponSuccess = this.updateCouponTender(couponTender);
+        request.setCouponInterest(couponTender.getCouponInterest());
     }
 
     /**
