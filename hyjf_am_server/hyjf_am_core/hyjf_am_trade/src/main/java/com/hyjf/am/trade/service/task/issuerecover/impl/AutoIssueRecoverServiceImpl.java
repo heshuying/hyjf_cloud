@@ -283,6 +283,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrowInfo.setBorrowPreNid(borrowPreNidNew);
         // 新借款预编码
         borrowInfo.setBorrowPreNidNew(borrowPreNidNew);
+        borrowInfo.setBorrowUserName(borrow.getBorrowUserName());
 
         // 标的还款后的回滚方式
         HjhBailConfigInfoExample example = new HjhBailConfigInfoExample();

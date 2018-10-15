@@ -36,7 +36,7 @@ public class HjhLabelRequest extends BasePage implements Serializable {
 	// 还款方式
 	private String borrowStyleSrch;
 	// 使用状态 Integer
-	private String engineIdSrch;
+	private Integer engineIdSrch;
 	
 	public int limit;
 
@@ -100,10 +100,10 @@ public class HjhLabelRequest extends BasePage implements Serializable {
 	public void setBorrowStyleSrch(String borrowStyleSrch) {
 		this.borrowStyleSrch = borrowStyleSrch;
 	}
-	public String getEngineIdSrch() {
+	public Integer getEngineIdSrch() {
 		return engineIdSrch;
 	}
-	public void setEngineIdSrch(String engineIdSrch) {
+	public void setEngineIdSrch(Integer engineIdSrch) {
 		this.engineIdSrch = engineIdSrch;
 	}
 	public int getLimit() {

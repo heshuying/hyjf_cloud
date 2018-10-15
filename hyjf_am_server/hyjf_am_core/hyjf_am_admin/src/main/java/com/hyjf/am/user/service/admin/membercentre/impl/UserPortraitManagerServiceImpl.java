@@ -93,14 +93,19 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
      * 修改用户画像
      */
     @Override
-    public int updateUserPortrait(UserPortraitRequest request){
+    public int updateUserPortrait(UserPortraitRequest request) {
         UserPortrait usersPortrait = this.selectUsersPortraitByUserId(request.getUserId());
-        BeanUtils.copyProperties(request,usersPortrait);
-        int intInsertFlg = userPortraitMapper.updateByPrimaryKeySelective(usersPortrait);
-        if(intInsertFlg > 0){
-            logger.info("==================用户画像变更保存成功!======");
+        int intInsertFlg = 0;
+        if (null != usersPortrait) {
+            BeanUtils.copyProperties(request, usersPortrait);
+            intInsertFlg = userPortraitMapper.updateByPrimaryKeySelective(usersPortrait);
+            if (intInsertFlg > 0) {
+                logger.info("==================用户画像变更保存成功!======");
+            } else {
+                throw new RuntimeException("============用户画像变更失败!========");
+            }
         }else{
-            throw new RuntimeException("============用户画像变更失败!========");
+            logger.info("========根据用户id查找用户画像为空======");
         }
         return intInsertFlg;
     }
