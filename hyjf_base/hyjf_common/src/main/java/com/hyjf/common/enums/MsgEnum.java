@@ -173,6 +173,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_CARD_DELETE("ECD000004", "银行卡删除失败"),
 	ERR_CARD_NOT_BIND("ECD000005","用户未绑卡"),
 	ERR_CARD_BLANK("ECD000006","银行卡号未填写"),
+	//add by nxl 企业用户解绑信息提示
+	ERR_CARD_ENTERPRISE("ECD000007","企业用户解绑请联系客服"),
 
 	ERR_AUTH_USER_PAYMENT("EAU000001","请先进行服务费授权"),
 	ERR_AUTH_USER_REPAYMENT("EAU000002","请先进行还款授权"),
