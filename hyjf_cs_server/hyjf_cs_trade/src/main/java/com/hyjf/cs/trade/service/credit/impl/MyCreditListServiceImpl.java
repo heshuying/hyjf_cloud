@@ -18,6 +18,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.constants.CommonConstant;
@@ -47,9 +49,11 @@ import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.smscode.SmsCodeService;
+import com.jcraft.jsch.UserInfo;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +99,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
 
     @Autowired
     private SmsCodeService sendSmsCode;
-
+    @Autowired
+    private AuthService authService;
     /**
      * 我要债转列表页 获取参数
      *
@@ -182,6 +187,14 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         UserVO user = amUserClient.findUserById(userId);
         DebtConfigResponse response = amConfigClient.getDebtConfig();
         DebtConfigVO config = response.getResult();
+        // 缴费授权
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+        creditResultBean.setPaymentAuthStatus(hjhUserAuth==null?0:hjhUserAuth.getAutoPaymentStatus());
+        creditResultBean.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+        creditResultBean.setIsCheckUserRole("");
+        /*modelAndView.addObject("isCheckUserRole",PropUtils.getSystem(CustomConstants.HYJF_ROLE_ISOPEN));*/
+        UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
+        creditResultBean.setRoleId(userInfoVO==null?"0":userInfoVO.getRoleId()+"");
         if(config!=null){
             creditResultBean.setDebtConfigVO(config);
         }else{
@@ -328,7 +341,6 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     /**
      * 用户中心查询 债转详细预计服务费计算
      *
-     * @param requestcreditFee
      * @param userId
      * @return
      */
@@ -442,6 +454,11 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             if (result == 0) {
                 throw new CheckException(MsgEnum.STATUS_ZC000015);
             }
+        }
+
+        // 服务费授权校验
+        if (!authService.checkPaymentAuthStatus(userId)) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
         }
     }
 

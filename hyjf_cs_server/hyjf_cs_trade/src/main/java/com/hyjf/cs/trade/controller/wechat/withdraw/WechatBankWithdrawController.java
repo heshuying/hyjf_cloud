@@ -22,6 +22,7 @@ import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.bean.BankCardBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.vo.BaseResultBean;
 import com.hyjf.cs.trade.vo.SimpleResultBean;
@@ -57,7 +58,8 @@ public class WechatBankWithdrawController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(WechatBankWithdrawController.class);
     @Autowired
     private BankWithdrawService bankWithdrawService;
-
+    @Autowired
+    private AuthService authService;
     @Autowired
     SystemConfig systemConfig;
 
@@ -82,10 +84,6 @@ public class WechatBankWithdrawController extends BaseTradeController {
         SimpleResultBean<WxQueryWIthdrawInfoVO> resultBean = new SimpleResultBean<>();
 
         WxQueryWIthdrawInfoVO vo = new WxQueryWIthdrawInfoVO();
-
-
-
-
         AccountVO account = bankWithdrawService.getAccountByUserId(userId);
         CheckUtil.check(null!=account,MsgEnum.ERR_USER_NOT_EXISTS);
 
@@ -99,7 +97,9 @@ public class WechatBankWithdrawController extends BaseTradeController {
 
         BankCardVO bank = bankWithdrawService.getBankCardVOByUserId(userId);
         CheckUtil.check(null!=bank,MsgEnum.ERR_CARD_NOT_BIND);
-
+        if (!this.authService.checkPaymentAuthStatus(userId)) {
+            throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+        }
         //预留手机号
         String phoneNum = "";
         if(bank!=null){

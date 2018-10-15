@@ -13,6 +13,7 @@ import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.vo.BankWithdrawVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -45,7 +46,8 @@ public class WebBankWithdrawController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(WebBankWithdrawController.class);
     @Autowired
     private BankWithdrawService bankWithdrawService;
-
+    @Autowired
+    private AuthService authService;
     @Autowired
     SystemConfig systemConfig;
     /**
@@ -61,6 +63,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         CheckUtil.check(null!=user,MsgEnum.ERR_OBJECT_GET,"用户信息");
         CheckUtil.check(user.isBankOpenAccount(),MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         WebResult<Object> objectWebResult=bankWithdrawService.toWithdraw(user);
+
         return objectWebResult;
     }
 
@@ -82,6 +85,9 @@ public class WebBankWithdrawController extends BaseTradeController {
         WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
+        if (!this.authService.checkPaymentAuthStatus(userId)) {
+            throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+        }
         String ip=CustomUtil.getIpAddr(request);
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawError";
         String bgRetUrl ="http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn";

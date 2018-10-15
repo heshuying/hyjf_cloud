@@ -18,6 +18,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.vo.AppWithdrawResultVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -56,6 +57,8 @@ public class AppBankWithdrawController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(AppBankWithdrawController.class);
     @Autowired
     private BankWithdrawService bankWithdrawService;
+    @Autowired
+    private AuthService authService;
     @Autowired
     SystemConfig systemConfig;
     /**
@@ -439,6 +442,11 @@ public class AppBankWithdrawController extends BaseTradeController {
         if(userVO.getBankOpenAccount()==0){
             throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
+
+        if (!this.authService.checkPaymentAuthStatus(userId)) {
+            throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+        }
+
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         // (提现)

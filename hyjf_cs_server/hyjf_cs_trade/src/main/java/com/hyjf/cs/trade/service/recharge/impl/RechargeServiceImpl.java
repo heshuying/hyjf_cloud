@@ -30,6 +30,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -78,6 +79,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	SmsProducer smsProducer;
 	@Autowired
 	AmConfigClient amConfigClient;
+	@Autowired
+	private AuthService authService;
 
 	// 充值状态:充值中
 	private static final int RECHARGE_STATUS_WAIT = 1;
@@ -469,7 +472,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		// 是否开启服务费授权 0未开启  1已开启
 		ret.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
 		// 是否开启服务费授权 0未开启  1已开启
-		//ret.put("paymentAuthOn", CommonUtils.getAuthConfigFromCache(CommonUtils.KEY_PAYMENT_AUTH).getEnabledStatus());
+		ret.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
 		ret.put("paymentAuthOn","");
 
 		// 是否设置交易密码
@@ -522,6 +525,9 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		}
 		if (users.getIsSetPassword() == 0) {
 			throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+		}
+		if (!this.authService.checkPaymentAuthStatus(userId)) {
+			throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
 		}
 		if (bankCard == null) {
 			throw new ReturnMessageException(MsgEnum.ERR_AMT_RECHARGE_BANK_CARD_GET);
