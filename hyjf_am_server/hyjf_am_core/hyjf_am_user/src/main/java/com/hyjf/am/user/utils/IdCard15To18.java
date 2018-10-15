@@ -216,36 +216,60 @@ public class IdCard15To18 {
         // 如果map中没有数据，就从city.properties文件中载入一次
         String area = "";
         if(city != null){
-            if(city.size() == 0){
-                try {
-                    Properties properties = new Properties();
-                    InputStream inputStream = IdCard15To18.class.getClassLoader().getResourceAsStream("city.properties");
-                    properties.load(inputStream);
-                    String json = properties.toString();
-                    area = json.substring(1, json.length() -1);
-                    if(area != null && !"".equals(area)){
-                        String[] text = area.split(";");
-                        for(String str:text){
-                            String[] keyValue = str.split("=");
-                            if (keyValue.length < 1) {
-                                continue;
-                            }
-                            String key = keyValue[0]; // key
-                            String value = keyValue[1]; // value
-                            city.put(key,value);
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
+            cityInit();
             try {
-                area = city.get(code);
+                area = unicodeToString(city.get(code));
             }catch (Exception e){
-                logger.info("根据身份证前4位获取对应的城市名称失败,4位code:[{}]",code);
+                logger.info("根据身份证前6位获取对应的城市名称失败,6位code:[{}]",code);
             }
         }
         return area;
+    }
+
+    //字符串转换unicode
+    public static String stringToUnicode(String string) {
+        StringBuffer unicode = new StringBuffer();
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);  // 取出每一个字符
+            unicode.append("\\u" +Integer.toHexString(c));// 转换为unicode
+        }
+        return unicode.toString();
+    }
+
+    //unicode 转字符串
+    public static String unicodeToString(String unicode) {
+        StringBuffer string = new StringBuffer();
+        String[] hex = unicode.split("\\\\u");
+        for (int i = 1; i < hex.length; i++) {
+            int data = Integer.parseInt(hex[i], 16);// 转换出每一个代码点
+            string.append((char) data);// 追加成string
+        }
+        return string.toString();
+    }
+    private static void cityInit(){
+        String area = "";
+        if(city.size() == 0){
+            try {
+                Properties properties = new Properties();
+                InputStream inputStream = IdCard15To18.class.getClassLoader().getResourceAsStream("city.properties");
+                properties.load(inputStream);
+                String json = properties.toString();
+                area = json.substring(1, json.length() -1);
+                if(area != null && !"".equals(area)){
+                    String[] text = area.split(";");
+                    for(String str:text){
+                        String[] keyValue = str.split("=");
+                        if (keyValue.length < 1) {
+                            continue;
+                        }
+                        String key = keyValue[0]; // key
+                        String value = keyValue[1]; // value
+                        city.put(key,value);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

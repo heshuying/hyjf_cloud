@@ -167,6 +167,8 @@ public class CouponUserController extends BaseController {
             couponUserRequest.setEndTime((int) (endDate.getTime() / 1000));
         }
         couponUserRequest.setUserId(userId);
+        couponUserRequest.setCouponCode(configVO.getCouponCode());
+        couponUserRequest.setContent(couponUserBeanRequest.getContent());
         couponUserRequest.setCouponUserCode(GetCode.getCouponUserCode(configVO.getCouponType()));
         couponUserRequest.setCreateUserId(Integer.parseInt(loginUserId));
         couponUserRequest.setCreateTime(GetDate.getDate());
@@ -463,7 +465,7 @@ public class CouponUserController extends BaseController {
         if (record == null || StringUtils.isEmpty(record.getCouponCode())) {
             return new AdminResult<>(FAIL,FAIL_DESC);
         }
-        CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponUserBeanRequest.getCouponCode());
+        CouponConfigResponse configResponse = couponUserService.getCouponConfig(record.getCouponCode());
         if (configResponse == null || configResponse.getResult() == null) {
             return new AdminResult<>(FAIL,FAIL_DESC);
         }
@@ -560,8 +562,8 @@ public class CouponUserController extends BaseController {
 
     @ApiOperation(value = "导出", notes = "导出")
     @RequestMapping(value = "/exportAction", method = RequestMethod.POST)
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public AdminResult exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponUserBeanRequest beanRequest) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponUserBeanRequest beanRequest) throws Exception {
+        logger.info("优惠券列表导出开始！");
         // 表格sheet名称
         String sheetName = "优惠券用户列表";
         CouponUserCustomizeResponse customizeResponse = couponUserService.searchList(beanRequest);
@@ -685,9 +687,9 @@ public class CouponUserController extends BaseController {
                 }
             }
         }
+        logger.info("优惠券列表导出结束！");
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-        return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }
 
     /**
