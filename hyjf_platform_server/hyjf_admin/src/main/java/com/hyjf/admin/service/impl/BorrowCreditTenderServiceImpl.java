@@ -194,7 +194,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
             List<BorrowCreditRepayInfoVO> list = response.getResultList();
             bean.setRecordList(list);
             response = baseClient.postExe(REPAY_INFO_SUM_URL, req, BorrowCreditRepayResponse.class);
-            Map<String, Object> sumVo = response.getSumData();
+            Map<String, String> sumVo = response.getSumData();
             bean.setSumData(sumVo);
         }
         bean.setTotal(count);

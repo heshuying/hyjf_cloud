@@ -7,6 +7,7 @@ import com.hyjf.am.config.dao.model.customize.AdminRoleCustomize;
 import com.hyjf.am.config.service.AdminRoleService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminRoleResponse;
+import com.hyjf.am.resquest.admin.UserRoleRequest;
 import com.hyjf.am.resquest.config.AdminRoleRequest;
 import com.hyjf.am.vo.admin.AdminRoleMenuPermissionsVO;
 import com.hyjf.am.vo.admin.AdminRoleVO;
@@ -16,6 +17,7 @@ import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -274,7 +276,7 @@ public class AdminRoleController {
      * @param form
      * @return
      */
-    @RequestMapping("/getAdminRoleMenu")
+    @GetMapping("/getAdminRoleMenu/{roleId}")
     public String getAdminRoleMenu(@PathVariable String roleId) {
 //        LogUtil.startLog(THIS_CLASS, AdminRoleDefine.MENU_INFO_ACTION);
 
@@ -299,33 +301,40 @@ public class AdminRoleController {
      * @return
      */
     @RequestMapping("/modifyPermissionAction")
-    public AdminRoleResponse modifyPermissionAction(@RequestBody AdminRoleRequest bean) {
+    public AdminRoleResponse modifyPermissionAction(@RequestBody UserRoleRequest userRoleRequest) {
 //        LogUtil.startLog(THIS_CLASS, AdminRoleDefine.MODIFY_PERMISSION_ACTION);
 //
 //        JSONObject ret = new JSONObject();
-        int cnt = -1;
-            Integer roleId = GetterUtil.getInteger(bean.getRoleId());
-            List<AdminRoleMenuPermissionsVO> list = bean.getPermList();
-//            // 维护角色是当前用户角色时,不能禁用
-//            if (roleId == ShiroUtil.getLoginUserRoleId() && (list == null || list.size() == 0)) {
-//                ret.put(ReturncashDefine.JSON_STATUS_KEY, ReturncashDefine.JSON_STATUS_NG);
-//                ret.put(ReturncashDefine.JSON_RESULT_KEY, "该角色正在被当前用户使用中,不能删除所有的权限,请重新操作!");
-//                return ret.toString();
+//        int cnt = -1;
+//            Integer roleId = GetterUtil.getInteger(bean.getRoleId());
+//            List<AdminRoleMenuPermissionsVO> list = bean.getPermList();
+////            // 维护角色是当前用户角色时,不能禁用
+////            if (roleId == ShiroUtil.getLoginUserRoleId() && (list == null || list.size() == 0)) {
+////                ret.put(ReturncashDefine.JSON_STATUS_KEY, ReturncashDefine.JSON_STATUS_NG);
+////                ret.put(ReturncashDefine.JSON_RESULT_KEY, "该角色正在被当前用户使用中,不能删除所有的权限,请重新操作!");
+////                return ret.toString();
+////            }
+//            
+//            if (Validator.isNotNull(roleId)) {
+//                cnt = this.adminRoleService.updatePermission(roleId, CommonUtils.convertBeanList(list, AdminRoleMenuPermissions.class),bean.getAdminId());
 //            }
-            
-            if (Validator.isNotNull(roleId)) {
-                cnt = this.adminRoleService.updatePermission(roleId, CommonUtils.convertBeanList(list, AdminRoleMenuPermissions.class),bean.getAdminId());
-            }
             AdminRoleResponse arr=new AdminRoleResponse();
+            
+            try {
+                adminRoleService.setRolePermission(userRoleRequest);
+            } catch (Exception e) {
+            	arr.setRtn(Response.FAIL);
+            	arr.setMessage("角色权限修改时发生错误,请重新操作!");
+            }
         // 操作成功
-        if(cnt > -1) {
-
-        } else {
-        	arr.setRtn(Response.FAIL);
-        	arr.setMessage("角色权限修改时发生错误,请重新操作!");
+//        if(cnt > -1) {
+//
+//        } else {
+//        	arr.setRtn(Response.FAIL);
+//        	arr.setMessage("角色权限修改时发生错误,请重新操作!");
 //            ret.put(ReturncashDefine.JSON_STATUS_KEY, ReturncashDefine.JSON_STATUS_NG);
 //            ret.put(ReturncashDefine.JSON_RESULT_KEY, "角色权限修改时发生错误,请重新操作!");
-        }
+    //    }
 
 //        LogUtil.endLog(THIS_CLASS, AdminRoleDefine.MODIFY_PERMISSION_ACTION);
         return arr;

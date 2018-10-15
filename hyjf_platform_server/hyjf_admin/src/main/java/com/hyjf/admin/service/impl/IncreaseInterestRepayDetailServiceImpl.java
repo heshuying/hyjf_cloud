@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.IncreaseInterestRepayDetailService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.response.admin.IncreaseInterestRepayDetailResponse;
 import com.hyjf.am.resquest.admin.IncreaseInterestRepayDetailRequest;
 import com.hyjf.am.vo.admin.AdminIncreaseInterestRepayCustomizeVO;
@@ -31,12 +32,19 @@ public class IncreaseInterestRepayDetailServiceImpl implements IncreaseInterestR
     @Override
     public IncreaseInterestRepayDetailResponse searchPage(IncreaseInterestRepayDetailRequest request){
         IncreaseInterestRepayDetailResponse response = new IncreaseInterestRepayDetailResponse();
-        //获取返回参数
-        EnumMap<AmTradeClient.IncreaseProperty,Object> voList = increaseInterestRepayDetailClient.getIncreaseInterestRepayDetailList(request);
-        voList.entrySet().iterator();
-        response.setResultList((List<AdminIncreaseInterestRepayCustomizeVO>) voList.get(AmTradeClient.IncreaseProperty.VO));
-        response.setSumRepayCapital((String) voList.get(AmTradeClient.IncreaseProperty.STR));
-        response.setSumRepayInterest((String) voList.get(AmTradeClient.IncreaseProperty.STR1));
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        request.setLimitStart(page.getOffset());
+        request.setLimitEnd(page.getLimit());
+        Integer count = increaseInterestRepayDetailClient.getIncreaseInterestRepayDetailCount(request);
+        if (count != null && count > 0) {
+            //获取返回参数
+            EnumMap<AmTradeClient.IncreaseProperty,Object> voList = increaseInterestRepayDetailClient.getIncreaseInterestRepayDetailList(request);
+            voList.entrySet().iterator();
+            response.setResultList((List<AdminIncreaseInterestRepayCustomizeVO>) voList.get(AmTradeClient.IncreaseProperty.VO));
+            response.setSumRepayCapital((String) voList.get(AmTradeClient.IncreaseProperty.STR));
+            response.setSumRepayInterest((String) voList.get(AmTradeClient.IncreaseProperty.STR1));
+            response.setTotal(count);
+        }
         return response;
     }
 

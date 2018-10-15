@@ -13,7 +13,15 @@ import com.hyjf.am.vo.admin.IncreaseInterestRepayVO;
  */
 public class IncreaseInterestRepayResponse extends Response<IncreaseInterestRepayVO>{
     private int count;
+    private Integer total;
 
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
     public int getCount() {
         return count;
     }

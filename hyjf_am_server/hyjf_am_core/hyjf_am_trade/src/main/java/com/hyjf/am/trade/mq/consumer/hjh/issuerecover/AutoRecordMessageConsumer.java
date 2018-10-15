@@ -133,7 +133,8 @@ public class AutoRecordMessageConsumer extends Consumer {
                                     logger.info(mqHjhPlanAsset.getAssetId()+"  未推送，等待授权");
                                 }else{
                                     JSONObject params = new JSONObject();
-                                    params.put("borrowNid", mqHjhPlanAsset.getBorrowNid());
+                                    params.put("assetId", mqHjhPlanAsset.getAssetId());
+                                    params.put("instCode",mqHjhPlanAsset.getInstCode());
                                     autoBailMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
 
                                     logger.info(mqHjhPlanAsset.getAssetId()+" 成功发送到初审队列");
