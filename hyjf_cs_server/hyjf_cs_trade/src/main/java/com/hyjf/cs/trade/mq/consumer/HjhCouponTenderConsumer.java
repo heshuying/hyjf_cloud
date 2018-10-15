@@ -72,13 +72,13 @@ public class HjhCouponTenderConsumer extends Consumer {
             logger.info("计划类优惠券使用 收到消息，参数为: {} " , JSONObject.toJSONString(map));
             JSONObject result = new JSONObject();
             try {
-                Integer couponGrantId = (Integer) map.get("couponGrantId");
+                Integer couponGrantId = Integer.parseInt((String) map.get("couponGrantId"));
                 String borrowNid = (String) map.get("borrowNid");
                 String money = (String) map.get("money");
                 String platform = (String) map.get("platform");
                 String ip = (String) map.get("ip");
                 // 真实订单号
-                Integer userId = (Integer) map.get("userId");
+                Integer userId =  Integer.parseInt((String) map.get("userId"));
                 String mainTenderNid = (String) map.get("ordId");
                 String account = (String) map.get("account");
 
