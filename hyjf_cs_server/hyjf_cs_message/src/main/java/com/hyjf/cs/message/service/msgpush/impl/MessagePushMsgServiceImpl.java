@@ -57,8 +57,8 @@ public class MessagePushMsgServiceImpl implements MessagePushMsgService {
         Query query = new Query();
         Criteria criteria = new Criteria();
         if (request.getStartDateSrch() != null || request.getEndDateSrch() != null) {
-            int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartDateSrch());
-            int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndDateSrch());
+            int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartDateSrch() + " 00:00:00");
+            int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndDateSrch() + " 23:59:59");
             criteria.and("sendTime").gte(startTime).lte(endTime);
         }
         if (request.getTagId() != null) {

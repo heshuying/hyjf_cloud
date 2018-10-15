@@ -35,10 +35,10 @@
 			</if>
 			<!-- 时间 -->
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( c.audit_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND c.create_time <![CDATA[>=]]> #{timeStartSrch}
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( c.audit_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND c.create_time <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 			
 		</where>
