@@ -11,6 +11,7 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.IssueBorrowOfTimingService;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -164,6 +165,8 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		// 当前时间
 		int nowTime = GetDate.getNowTime10();
 		Borrow borrow = this.borrowMapper.selectByPrimaryKey(borrowCustomize.getId());
+		//董泽杉要求加redis  add by yagnchangwei 2018-10-15
+		RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
 		// DB验证
 		// 有投资金额发生异常
 		BigDecimal zero = new BigDecimal("0");
@@ -211,6 +214,8 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		int nowTime = GetDate.getNowTime10();
 		Borrow borrow = this.borrowMapper.selectByPrimaryKey(borrowCustomize.getId());
 
+		//董泽杉要求加redis  add by yagnchangwei 2018-10-15
+		RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
 		// 有投资金额发生异常
 		BigDecimal zero = new BigDecimal("0");
 		BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
@@ -314,6 +319,8 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 	}
 
 	public boolean updateFireBorrow(Borrow borrow, int nowTime) throws MQException {
+		//董泽杉要求加redis  add by yagnchangwei 2018-10-15
+		RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
 		BorrowInfoExample example = new BorrowInfoExample();
 		example.createCriteria().andBorrowNidEqualTo(borrow.getBorrowNid());
 		BorrowInfo borrowInfo = this.borrowInfoMapper.selectByExample(example).get(0);

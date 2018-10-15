@@ -353,7 +353,7 @@ public class CouponConfigVO extends BaseVO implements Serializable {
 
     public String getExpirationdate() {
         if (expirationDate != null) {
-            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(expirationDate);
+            return GetDate.timestamptoStrYYYYMMDD(expirationDate);
         }
         return null;
     }

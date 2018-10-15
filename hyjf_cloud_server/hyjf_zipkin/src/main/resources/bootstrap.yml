@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ZIPKIN-SERVER
+    name: ZIPKIN
   cloud:
     config:
       uri: http://micoserver:2222/

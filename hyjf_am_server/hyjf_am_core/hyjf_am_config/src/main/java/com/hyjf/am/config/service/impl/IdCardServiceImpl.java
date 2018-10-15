@@ -27,6 +27,11 @@ public class IdCardServiceImpl implements IdCardService {
 	}
 
 	@Override
+	public List<IdCardCustomize> getIdCardList() {
+		return idCardCustomizeMapper.getIdCardList();
+	}
+
+	@Override
 	public List<OperationReportJobVO> getTenderCityGroupBy(List<OperationReportJobVO> bms){
 		return  idCardCustomizeMapper.getTenderCityGroupBy(bms);
 	}

@@ -209,45 +209,4 @@ public class IdCard15To18 {
         }
         return false;
     }
-    /**
-     * 根据身份证前4位获取对应的城市名称
-     * @param code 身份证前4位
-     * @return area 身份证前4位对应的城市名称
-     * */
-    public static String getCityFromCode(String code){
-        // 如果map中没有数据，就从city.properties文件中载入一次
-        String area = "";
-        if(city != null){
-            if(city.size() == 0){
-                try {
-                    Properties properties = new Properties();
-                    InputStream inputStream = IdCard15To18.class.getClassLoader().getResourceAsStream("city.properties");
-                    properties.load(inputStream);
-                    String json = properties.toString();
-                    area = json.substring(1, json.length() -1);
-                    if(area != null && !"".equals(area)){
-                        String[] text = area.split(";");
-                        for(String str:text){
-                            String[] keyValue = str.split("=");
-                            if (keyValue.length < 1) {
-                                continue;
-                            }
-                            String key = keyValue[0]; // key
-                            String value = keyValue[1]; // value
-                            city.put(key,value);
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            try {
-                area = city.get(code);
-            }catch (Exception e){
-                logger.info("根据身份证前4位获取对应的城市名称失败,4位code:[{}]",code);
-            }
-        }
-        return area;
-    }
 }

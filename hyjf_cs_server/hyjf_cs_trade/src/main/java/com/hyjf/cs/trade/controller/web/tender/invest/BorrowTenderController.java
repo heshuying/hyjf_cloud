@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.web.tender.invest;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -127,7 +128,7 @@ public class BorrowTenderController extends BaseTradeController {
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId", required = false) Integer userId,
                                                      @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
-        logger.info("web端获取投资信息");
+        logger.info("web端获取投资信息 userId:{}  tender:{} ",userId,JSONObject.toJSONString(tender));
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
         return borrowTenderService.getInvestInfo(tender);

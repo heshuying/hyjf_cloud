@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.config.dao.model.auto.AdminRole;
 import com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions;
 import com.hyjf.am.config.dao.model.customize.AdminRoleCustomize;
+import com.hyjf.am.resquest.admin.UserRoleRequest;
 import com.hyjf.am.resquest.config.AdminRoleRequest;
 
 import java.util.List;
@@ -84,4 +85,6 @@ public interface AdminRoleService {
      * @param username
      */
     public int countRoleByname(Integer id, String roleName);
+
+	void setRolePermission(UserRoleRequest userRoleRequest) throws Exception;
 }

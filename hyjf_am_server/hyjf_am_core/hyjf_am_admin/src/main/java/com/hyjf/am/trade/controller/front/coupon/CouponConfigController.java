@@ -232,6 +232,12 @@ public class CouponConfigController extends BaseController {
         CouponConfigExportCustomizeResponse response = new CouponConfigExportCustomizeResponse();
         CouponConfigCustomize configCustomize = new CouponConfigCustomize();
         BeanUtils.copyProperties(request,configCustomize);
+        if (request.getTimeStartSrch() != null) {
+            configCustomize.setTimeStartSrch(request.getTimeStartSrch() + " 00:00:00");
+        }
+        if (request.getTimeEndSrch() != null) {
+            configCustomize.setTimeEndSrch(request.getTimeEndSrch() + " 23:59:59");
+        }
         List<CouponConfigExportCustomize> configExportCustomizes = couponConfigService.exoportRecordList(configCustomize);
         if (!CollectionUtils.isEmpty(configExportCustomizes)) {
             List<CouponConfigExportCustomizeVO> configExportCustomizeVOS = CommonUtils.convertBeanList(configExportCustomizes,CouponConfigExportCustomizeVO.class);
