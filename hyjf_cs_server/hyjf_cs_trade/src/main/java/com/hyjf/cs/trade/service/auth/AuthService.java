@@ -71,5 +71,7 @@ public interface AuthService extends BaseTradeService {
      * @return
      */
 	boolean checkDefaultConfig(BankCallBean bean, String authType);
+
+	Integer checkAuthStatus(Integer autoRepayStatus,Integer paymentAuthStatus);
     HjhUserAuthConfigVO getAuthConfigFromCache(String key);
 }

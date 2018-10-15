@@ -403,7 +403,43 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 		return false;
 	}
 
-
+	/**
+	 *
+	 * 检查还款授权和服务费授权状态
+	 * @author sunss
+	 * @param autoRepayStatus
+	 * @param paymentAuthStatus
+	 * @return
+	 */
+	@Override
+	public Integer checkAuthStatus(Integer autoRepayStatus,Integer paymentAuthStatus){
+		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(KEY_PAYMENT_AUTH);
+		HjhUserAuthConfigVO repayCconfig = getAuthConfigFromCache(KEY_REPAYMENT_AUTH);
+		if (paymenthCconfig != null && repayCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0
+				&& repayCconfig.getEnabledStatus() - 1 == 0) {
+			// 如果两个都开启了
+			if ((paymentAuthStatus == null || paymentAuthStatus - 1 != 0)
+					&& (autoRepayStatus == null || autoRepayStatus - 1 != 0)) {
+				// 借款人必须服务费授权
+				return 7;
+			}
+		}
+		// 服务费授权
+		if (paymenthCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0) {
+			if (paymentAuthStatus == null || paymentAuthStatus - 1 != 0) {
+				// 借款人必须服务费授权
+				return 5;
+			}
+		}
+		// 还款授权
+		if (repayCconfig != null && repayCconfig.getEnabledStatus() - 1 == 0) {
+			if (autoRepayStatus == null || autoRepayStatus - 1 != 0) {
+				// 借款人必须还款授权
+				return 6;
+			}
+		}
+		return 0;
+	}
 
 
 	/**

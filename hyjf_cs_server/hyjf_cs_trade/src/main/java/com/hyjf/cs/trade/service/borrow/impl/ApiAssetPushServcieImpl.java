@@ -14,6 +14,7 @@ import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
@@ -28,6 +29,7 @@ import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AutoSendProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.borrow.ApiAssetPushService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
@@ -62,7 +64,8 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
     @Autowired
     private AutoSendProducer autoSendProducer;
-
+    @Autowired
+    private AuthService authService;
     @Override
     public void sendToMQ(HjhPlanAssetVO hjhPlanAsset) {
         JSONObject params = new JSONObject();
@@ -203,8 +206,35 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                         continue;
                     }
 
-                }
+                    // 校验受托人是否授权
+                    if(authService.checkPaymentAuthStatus(stzAccount.getUserId())){
+                        pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
+                        pushBean.setRetMsg("受托账户未进行服务费授权");
+                        retassets.add(pushBean);// 返回提示
+                        continue;
+                    }
 
+                }
+                Integer paymentAuth = users.getPaymentAuthStatus();
+                HjhUserAuthVO hjhUserAuth = this.amUserClient.getHjhUserAuthByUserId(users.getUserId());
+                Integer repayAuth = hjhUserAuth == null ? 0 : hjhUserAuth.getAutoRepayStatus();
+                Integer authResult = authService.checkAuthStatus(repayAuth, paymentAuth);
+                if (authResult == 5) {
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
+                    pushBean.setRetMsg("借款人必须服务费授权");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                } else if (authResult == 6) {
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000012);
+                    pushBean.setRetMsg("借款人必须还款授权");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                } else if (authResult == 7) {
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000014);
+                    pushBean.setRetMsg("借款人必须服务费授权和还款授权");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                }
                 // 信批需求(资产只有个人,若第三方不传则为默认值插入资产表中) start
                 // 年收入
                 if (StringUtils.isBlank(pushBean.getAnnualIncome())) {
@@ -603,7 +633,16 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                         retassets.add(pushBean);// 返回提示
                         continue;
                     }
+
+                    // 校验受托人是否授权
+                    if(authService.checkPaymentAuthStatus(stzAccount.getUserId())){
+                        pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
+                        pushBean.setRetMsg("受托账户未进行服务费授权");
+                        retassets.add(pushBean);// 返回提示
+                        continue;
+                    }
                 }
+
                 // 征信报告逾期情况
                 if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getOverdueReport())){
                     pushBean.setOverdueReport("暂无数据");
@@ -738,6 +777,27 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     if(!userCorpOpenAccountRecordInfo.getBusiName().equals(pushBean.getBorrowCompanyName())){
                         pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
                         pushBean.setRetMsg("借款人用户名所属企业与传入的企业名称不一致！");
+                        retassets.add(pushBean);// 返回提示
+                        continue;
+                    }
+
+                    Integer paymentAuth = users.getPaymentAuthStatus();
+                    HjhUserAuthVO hjhUserAuth = this.amUserClient.getHjhUserAuthByUserId(users.getUserId());
+                    Integer repayAuth = hjhUserAuth == null ? 0 : hjhUserAuth.getAutoRepayStatus();
+                    Integer authResult = authService.checkAuthStatus(repayAuth, paymentAuth);
+                    if (authResult == 5) {
+                        pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
+                        pushBean.setRetMsg("借款人必须服务费授权");
+                        retassets.add(pushBean);// 返回提示
+                        continue;
+                    } else if (authResult == 6) {
+                        pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000012);
+                        pushBean.setRetMsg("借款人必须还款授权");
+                        retassets.add(pushBean);// 返回提示
+                        continue;
+                    } else if (authResult == 7) {
+                        pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000014);
+                        pushBean.setRetMsg("借款人必须服务费授权和还款授权");
                         retassets.add(pushBean);// 返回提示
                         continue;
                     }
