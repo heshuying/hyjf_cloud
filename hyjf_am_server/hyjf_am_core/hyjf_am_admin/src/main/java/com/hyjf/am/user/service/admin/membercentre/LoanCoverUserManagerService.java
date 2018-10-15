@@ -73,4 +73,5 @@ public interface LoanCoverUserManagerService extends BaseService {
      */
     CertificateAuthority selectCertificateAuthorityByIdNoName( String tureName);
 	boolean isCAIdNoCheck(String idNo, String name);
+	LoanSubjectCertificateAuthority selectCertificateAuthorityByCAName(String tureName);
 }
