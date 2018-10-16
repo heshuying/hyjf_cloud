@@ -809,8 +809,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			String imminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
 			String expireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";
 			// 三合一授权描述
-			result.
-					setMergeAuthDesc(mergeAuthDesc);
+			result.setMergeAuthDesc(mergeAuthDesc);
 			if("3".equals(result.getMergeAuthExpire())){
 				result.setMergeAuthDesc(expireDesc);
 			}else if("2".equals(result.getMergeAuthExpire())){
