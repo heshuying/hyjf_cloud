@@ -40,6 +40,11 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 		if (request.getStatus() != null) {
 			criteria.andStatusEqualTo(request.getStatus());
 		}
+		if (request.getPartnerType() != null) {
+			criteria.andStatusEqualTo(1);// 启用状态
+			criteria.andTypeEqualTo(2);// 合作伙伴
+			criteria.andPartnerTypeEqualTo(request.getPartnerType());
+		}
 		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
 			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
 			int limitEnd = request.getPageSize();

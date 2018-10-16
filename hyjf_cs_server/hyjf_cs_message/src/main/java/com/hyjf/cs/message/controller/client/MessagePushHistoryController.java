@@ -4,7 +4,7 @@ import com.hyjf.am.response.admin.MessagePushHistoryResponse;
 import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
-import com.hyjf.am.vo.admin.MessagePushTagVO;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
@@ -55,22 +55,7 @@ public class MessagePushHistoryController {
     }
 
 
-    /**
-     * 获取所有标签列表
-     *
-     * @return
-     */
-    @RequestMapping("/get_push_tag_list")
-    public MessagePushTagResponse getAllPushTagList() {
-        MessagePushTagResponse response = new MessagePushTagResponse();
-            List<MessagePushTag> list = messagePushHistoryService.getPushTagList();
-            if (!CollectionUtils.isEmpty(list)) {
-                List<MessagePushTagVO> voList = CommonUtils.convertBeanList(list,
-                        MessagePushTagVO.class);
-                response.setResultList(voList);
-            }
-        return response;
-    }
+
 
 
     /**

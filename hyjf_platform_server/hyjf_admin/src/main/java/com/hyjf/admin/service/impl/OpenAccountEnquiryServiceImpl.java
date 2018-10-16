@@ -1,7 +1,9 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
+import com.hyjf.admin.beans.OpenAccountEnquiryErrorResultBean;
 import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
@@ -36,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -256,6 +259,102 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
 
         }
         return resultBean;
+    }
+
+    /**
+     * ajax用户按照手机号和身份证号查询开户掉单校验
+     *
+     * @param currUser
+     * @param requestBean
+     * @return com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean
+     * @author Zha Daojian
+     * @date 2018/8/20 16:26
+     **/
+    @Override
+    public OpenAccountEnquiryErrorResultBean openAccountEnquiryError(AdminSystemVO currUser, OpenAccountEnquiryDefineRequestBean requestBean) {
+        OpenAccountEnquiryErrorResultBean resultBean = new OpenAccountEnquiryErrorResultBean();
+        String userId = currUser.getId();
+        //选择1为手机号查询，2为身份证号查询
+        String num = requestBean.getNum();
+        String phone =requestBean.getLastname().trim();
+        // 调用查询电子账户
+        BankCallBean selectbean = new BankCallBean();
+        selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+        selectbean.setInstCode(systemConfig.getBANK_INSTCODE());// 机构代码
+        selectbean.setBankCode(systemConfig.getBANK_BANKCODE());
+        selectbean.setTxDate(GetOrderIdUtils.getTxDate());
+        selectbean.setTxTime(GetOrderIdUtils.getTxTime());
+        selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+        selectbean.setChannel("000002");
+        // 操作者ID
+        selectbean.setLogUserId(String.valueOf(userId));
+        selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.parseInt(userId)));
+        selectbean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+        selectbean.setLogClient(0);
+        // 返回参数
+        BankCallBean retBean = null;
+        if (Integer.parseInt(num)==1) {//手机号查询
+
+            // 画面验证
+            // 身份证号码格式以及长度的校验
+            CheckUtil.check(Validator.isNotNull(phone) && Validator.isIdcard(phone), MsgEnum.ERR_FMT_IDCARDNO);
+            boolean booleans=ValidatorFieldCheckUtil.isIDCard(phone);
+            if (!booleans) {
+                resultBean.setStatus("n");
+                resultBean.setInfo("输入验证失败！");
+                return resultBean;
+            }else{
+                //获取掉单用户信息
+                BankOpenAccountLogRequest bankOpenAccountLog=new BankOpenAccountLogRequest();
+                bankOpenAccountLog.setIdcard(phone);
+                selectbean.setTxCode(BankCallConstant.TXCODE_ACCOUNTID_QUERY);
+                OpenAccountEnquiryCustomizeVO accountMap=this.amUserClient.searchAccountEnquiry(bankOpenAccountLog);
+                if (accountMap==null) {
+                    resultBean.setStatus("n");
+                    resultBean.setInfo("该用户不存在,输入身份证号码不存在！");
+                    return resultBean;
+                }
+                selectbean.setIdType("01");
+                selectbean.setIdNo(phone);
+                // 调用接口
+                retBean = BankCallUtils.callApiBg(selectbean);
+
+                if (retBean!=null) {
+                    resultBean.setStatus("y");
+                    resultBean.setInfo("验证通过！");
+                    return resultBean;
+
+                }else{
+                    resultBean.setStatus("n");
+                    resultBean.setInfo("该用户无银行开户信息！");
+                    return resultBean;
+                }
+            }
+
+        }else{//手机号码验证成功
+            selectbean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE);
+            //获取掉单用户信息
+            BankOpenAccountLogRequest bankOpenAccountLog=new BankOpenAccountLogRequest();
+            bankOpenAccountLog.setMobile(phone);
+            OpenAccountEnquiryCustomizeVO accountMap=this.amUserClient.searchAccountEnquiry(bankOpenAccountLog);
+            if (accountMap==null) {
+                resultBean.setStatus("n");
+                resultBean.setInfo("该用户不存在！");
+                return resultBean;
+            }
+            selectbean.setMobile(phone);
+            // 调用接口
+            retBean = BankCallUtils.callApiBg(selectbean);
+            if (retBean!=null) {
+                resultBean.setStatus("y");
+                resultBean.setInfo("验证通过！");
+                return resultBean;
+            }else{
+                resultBean.setStatus("n");
+                resultBean.setInfo("该用户无银行开户信息！");
+                return resultBean;
+            }
+        }
     }
 
     /**

@@ -6,17 +6,11 @@ package com.hyjf.am.user.controller.front.user;
 import com.hyjf.am.response.user.UserAndSpreadsUserResponse;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.dao.model.auto.UserLoginLog;
 import com.hyjf.am.user.service.front.user.UserPortraitBatchService;
 import com.hyjf.am.vo.user.UserAndSpreadsUserVO;
-import com.hyjf.am.vo.user.UserLoginLogVO;
-import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,11 +30,11 @@ public class UserPortraitBatchController extends BaseController {
     /**
      * 查询需要更新用户画像的userInfo的list
      * */
-    @RequestMapping("/search_user_id_for_user_portrait")
-    public UserAndSpreadsUserResponse searchUserIdForUserPortrait(){
+    @GetMapping("/search_user_id_for_user_portrait/{flag}")
+    public UserAndSpreadsUserResponse searchUserIdForUserPortrait(@PathVariable int flag){
         logger.info("员工画像.....searchUserInfoList");
         UserAndSpreadsUserResponse response = new UserAndSpreadsUserResponse();
-        List<UserAndSpreadsUserVO> userAndSpreadsUserVOList = userPortraitBatchService.searchUserIdForUserPortrait();
+        List<UserAndSpreadsUserVO> userAndSpreadsUserVOList = userPortraitBatchService.searchUserIdForUserPortrait(flag);
         if(!CollectionUtils.isEmpty(userAndSpreadsUserVOList)){
             response.setResultList(userAndSpreadsUserVOList);
         }

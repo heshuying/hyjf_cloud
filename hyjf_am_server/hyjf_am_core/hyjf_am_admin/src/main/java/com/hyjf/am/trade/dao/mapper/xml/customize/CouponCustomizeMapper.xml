@@ -108,7 +108,7 @@
 			cu.end_time,
 			cu.used_flag,
 			cu.update_time,
-			cc.add_flg add_flg,
+			cc.add_flag add_flg,
 			cc.coupon_profit_time coupon_profit_time,
 			cc.repay_time_config repayTimeConfig,
 			cc.coupon_profit_time couponProfitTime

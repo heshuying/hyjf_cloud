@@ -562,8 +562,8 @@ public class CouponUserController extends BaseController {
 
     @ApiOperation(value = "导出", notes = "导出")
     @RequestMapping(value = "/exportAction", method = RequestMethod.POST)
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public AdminResult exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponUserBeanRequest beanRequest) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponUserBeanRequest beanRequest) throws Exception {
+        logger.info("优惠券列表导出开始！");
         // 表格sheet名称
         String sheetName = "优惠券用户列表";
         CouponUserCustomizeResponse customizeResponse = couponUserService.searchList(beanRequest);
@@ -687,9 +687,9 @@ public class CouponUserController extends BaseController {
                 }
             }
         }
+        logger.info("优惠券列表导出结束！");
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-        return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }
 
     /**

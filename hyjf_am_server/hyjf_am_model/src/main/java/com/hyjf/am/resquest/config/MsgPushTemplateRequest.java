@@ -17,7 +17,7 @@ public class MsgPushTemplateRequest extends BasePage implements Serializable {
 
     private Integer id;
 
-    private String tagId;
+    private Integer tagId;
 
     private String tagCode;
 
@@ -63,11 +63,11 @@ public class MsgPushTemplateRequest extends BasePage implements Serializable {
         this.id = id;
     }
 
-    public String getTagId() {
+    public Integer getTagId() {
         return tagId;
     }
 
-    public void setTagId(String tagId) {
+    public void setTagId(Integer tagId) {
         this.tagId = tagId;
     }
 

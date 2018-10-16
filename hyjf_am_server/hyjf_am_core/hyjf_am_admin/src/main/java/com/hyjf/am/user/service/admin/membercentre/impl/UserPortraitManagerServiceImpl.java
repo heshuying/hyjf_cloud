@@ -10,6 +10,7 @@ import com.hyjf.am.user.dao.model.customize.UserPortraitScoreCustomize;
 import com.hyjf.am.user.service.admin.membercentre.UserPortraitManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.user.UserPortraitVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
@@ -48,7 +49,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
      * @return
      */
     @Override
-    public List<UserPortrait> selectRecordList(Map<String, Object> userPortrait, int limitStart, int limitEnd) {
+    public List<UserPortraitVO> selectRecordList(Map<String, Object> userPortrait, int limitStart, int limitEnd) {
 
         if (limitStart == 0 || limitStart > 0) {
             userPortrait.put("limitStart", limitStart);
@@ -57,7 +58,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
             userPortrait.put("limitEnd", limitEnd);
         }
 
-        List<UserPortrait> usersPortraits = userPortraitManagerMapper.selectUserPortraitList(userPortrait);
+        List<UserPortraitVO> usersPortraits = userPortraitManagerMapper.selectUserPortraitList(userPortrait);
         return usersPortraits;
     }
 
@@ -93,14 +94,19 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
      * 修改用户画像
      */
     @Override
-    public int updateUserPortrait(UserPortraitRequest request){
-        UserPortrait usersPortrait = new UserPortrait();
-        BeanUtils.copyProperties(request,usersPortrait);
-        int intInsertFlg = userPortraitMapper.updateByPrimaryKeySelective(usersPortrait);
-        if(intInsertFlg> 0){
-            logger.info("==================用户画像变更保存成功!======");
+    public int updateUserPortrait(UserPortraitRequest request) {
+        UserPortrait usersPortrait = this.selectUsersPortraitByUserId(request.getUserId());
+        int intInsertFlg = 0;
+        if (null != usersPortrait) {
+            BeanUtils.copyProperties(request, usersPortrait);
+            intInsertFlg = userPortraitMapper.updateByPrimaryKeySelective(usersPortrait);
+            if (intInsertFlg > 0) {
+                logger.info("==================用户画像变更保存成功!======");
+            } else {
+                throw new RuntimeException("============用户画像变更失败!========");
+            }
         }else{
-            throw new RuntimeException("============用户画像变更失败!========");
+            logger.info("========根据用户id查找用户画像为空======");
         }
         return intInsertFlg;
     }
@@ -128,10 +134,10 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
 
         Jedis jedis = getJedis(redisKey,request);
 
-        List<UserPortrait> usersPortraits = userPortraitManagerMapper.selectUserPortraitList(userPortrait);
+        List<UserPortraitVO> usersPortraits = userPortraitManagerMapper.selectUserPortraitList(userPortrait);
         if (!CollectionUtils.isEmpty(usersPortraits)) {
             try {
-                for (UserPortrait usersPortrait : usersPortraits) {
+                for (UserPortraitVO usersPortrait : usersPortraits) {
                     UserPortraitScoreCustomize customize = new UserPortraitScoreCustomize();
                     //性别&年龄评分
                     String sex = usersPortrait.getSex();
