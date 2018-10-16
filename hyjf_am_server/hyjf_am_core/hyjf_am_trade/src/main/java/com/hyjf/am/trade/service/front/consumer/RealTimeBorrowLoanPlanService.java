@@ -3,10 +3,14 @@
  */
 package com.hyjf.am.trade.service.front.consumer;
 
+import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -24,5 +28,9 @@ public interface RealTimeBorrowLoanPlanService extends BaseService {
 	boolean updateBorrowApicron(BorrowApicron apicron, int status) throws Exception;
 
 	BorrowApicron selApiCronByPrimaryKey(int id);
+
+	boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
+
+	Map updateTenderMuti(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal serviceFee, BorrowTender borrowTender) throws Exception;
 
 }

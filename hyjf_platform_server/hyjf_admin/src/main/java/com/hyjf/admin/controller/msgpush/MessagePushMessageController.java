@@ -92,7 +92,21 @@ public class MessagePushMessageController extends BaseController {
                 }
                 if (record.getMsgAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
                     form.setMsgActionUrl1("");
-                    form.setMsgActionUrl2(record.getMsgActionUrl());
+                    if ("hyjf://jumpZXH".equals(record.getMsgActionUrl())) {
+                        form.setMsgActionUrl2("1");
+                    }
+                    if ("hyjf://jumpMine".equals(record.getMsgActionUrl())) {
+                        form.setMsgActionUrl2("2");
+                    }
+                    if ("hyjf://jumpCouponsList".equals(record.getMsgActionUrl())) {
+                        form.setMsgActionUrl2("3");
+                    }
+                    if ("hyjf://jumpTransactionDetail".equals(record.getMsgActionUrl())) {
+                        form.setMsgActionUrl2("4");
+                    }
+                    if ("hyjf://jumpInvest".equals(record.getMsgActionUrl())) {
+                        form.setMsgActionUrl2("5");
+                    }
                 }
                 // 如果是转发,则form的id应置为空
                 if (StringUtils.isNotEmpty(form.getUpdateOrReSend()) && form.getUpdateOrReSend().equals("2")) {
@@ -236,7 +250,7 @@ public class MessagePushMessageController extends BaseController {
                     Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
                     if (time != 0) {
                         templateRequest.setPreSendTime(time);
-                        templateRequest.setSendTime(GetDate.strYYYYMMDD2Timestamp2(GetDate.getDateMyTimeInMillis(time)));
+                        templateRequest.setSendTime(time);
                     }
                 } catch (Exception e) {
                 }

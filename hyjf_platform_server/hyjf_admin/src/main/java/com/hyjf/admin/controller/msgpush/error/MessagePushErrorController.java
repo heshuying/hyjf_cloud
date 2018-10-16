@@ -7,10 +7,11 @@ import com.hyjf.admin.beans.request.MessagePushErrorRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MessagePushErrorService;
+import com.hyjf.admin.service.MessagePushHistoryService;
 import com.hyjf.am.response.admin.MessagePushErrorResponse;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
-import com.hyjf.am.vo.admin.MessagePushTagVO;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.paginator.Paginator;
@@ -38,6 +39,9 @@ public class MessagePushErrorController extends BaseController {
 
     @Autowired
     private MessagePushErrorService messagePushErrorService;
+    @Autowired
+    MessagePushHistoryService messagePushHistoryService;
+
 
     @PostMapping("/getListByConditions")
     @ApiParam(required = false, name = "requestBean", value = "查询条件")
@@ -57,7 +61,7 @@ public class MessagePushErrorController extends BaseController {
                 response.setFileDomainUrl(fileDomainUrl);
             }
             // 标签
-            List<MessagePushTagVO> tagList = this.messagePushErrorService.getTagList();
+            List<MessagePushTagVO> tagList =  messagePushHistoryService.getAllPushTagList();
             response.setTagList(tagList);
             // 发送状态
             List<ParamNameVO> messagesSendStatus = this.messagePushErrorService.getParamNameList("MSG_PUSH_SEND_STATUS");

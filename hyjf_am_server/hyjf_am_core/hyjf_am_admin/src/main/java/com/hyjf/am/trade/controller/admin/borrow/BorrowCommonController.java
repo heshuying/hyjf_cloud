@@ -321,11 +321,14 @@ public class BorrowCommonController extends BaseController {
 
 			// 标的进计划 产品额外加息不能>0 add by liuyang 20180729
 			BorrowInfo borrowInfo = this.borrowCommonService.getBorrowInfoByNid(form.getBorrowNid());
-			if (borrowInfo.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
-				bcr.setRtn(Response.FAIL);
-				bcr.setMessage("汇计划底层资产的标的不能设置产品额外加息。");
-				return bcr;
+			if(borrowInfo.getBorrowExtraYield()!=null) {
+				if (borrowInfo.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
+					bcr.setRtn(Response.FAIL);
+					bcr.setMessage("汇计划底层资产的标的不能设置产品额外加息。");
+					return bcr;
+				}
 			}
+
 			// 标的进计划 产品额外加息不能>0 add by liuyang 20180729
 		}
 		if ("BORROW_LIST".equals(form.getMoveFlag())) {

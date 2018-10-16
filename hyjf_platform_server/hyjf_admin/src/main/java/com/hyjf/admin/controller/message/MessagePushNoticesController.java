@@ -9,12 +9,11 @@ import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushNoticesResponse;
-import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
-import com.hyjf.am.vo.admin.MessagePushTagVO;
 import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -57,7 +56,7 @@ public class MessagePushNoticesController extends BaseController {
         JSONObject jsonObject = new JSONObject();
         try {
             MessagePushNoticesResponse prs = messagePushNoticesService.getRecordList(messagePushNoticesRequest);
-            MessagePushTagResponse allPushTagList = messagePushHistoryService.getAllPushTagList();
+            List<MessagePushTagVO> allPushTagList = messagePushHistoryService.getAllPushTagList();
             if (prs == null) {
                 jsonObject.put(FAIL, FAIL_DESC);
                 return jsonObject;
@@ -67,12 +66,12 @@ public class MessagePushNoticesController extends BaseController {
                 return jsonObject;
             }
             prepareDatas(jsonObject);
-            MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
-            List<MessagePushTagVO> resultList = tagList.getResultList();
-            jsonObject.put("noticesPushTags", resultList);
+            //MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
+            //List<MessagePushTagVO> resultList = tagList.getResultList();
+            //jsonObject.put("noticesPushTags", resultList);
             jsonObject.put("totalCount", prs.getRecordTotal());
             jsonObject.put("list", prs.getResultList());
-            jsonObject.put("allPushTagList", allPushTagList.getResultList());
+            jsonObject.put("allPushTagList", allPushTagList);
             jsonObject.put("fileDomainUrl", url);
             return jsonObject;
         } catch (Exception e) {
@@ -86,7 +85,7 @@ public class MessagePushNoticesController extends BaseController {
     @ApiOperation(value = "发送列表添加", notes = "发送列表添加")
     @PostMapping(value = "/add")
     @ResponseBody
-    public AdminResult<MessagePushMsgVO> add(@RequestBody MessagePushNoticesRequest form,HttpServletRequest request) {
+    public AdminResult<MessagePushMsgVO> add(@RequestBody MessagePushNoticesRequest form, HttpServletRequest request) {
             AdminSystemVO user = getUser(request);
             if (user != null) {
                 String username = user.getUsername();
@@ -175,8 +174,9 @@ public class MessagePushNoticesController extends BaseController {
             }
             jsonObject.put("msgPushNoticesForm", form);
             // 标签类型
-            MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
-            List<MessagePushTagVO> resultList = tagList.getResultList();
+           // MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
+           // List<MessagePushTagVO> resultList = tagList.getResultList();
+            List<MessagePushTagVO> resultList = messagePushHistoryService.getAllPushTagList();
             jsonObject.put("noticesPushTags", resultList);
             prepareDatas(jsonObject);
             return jsonObject;
