@@ -37,7 +37,7 @@ public class HtlTradeServiceImpl extends BaseServiceImpl implements HtlTradeServ
         List<ProductList> productLists = productListMapper.selectByExample(example);
         List<ProductIntoRecordCustomize> productIntoRecordCustomizes = CommonUtils.convertBeanList(productLists,ProductIntoRecordCustomize.class);
         for(ProductIntoRecordCustomize productIntoRecordCustomize:productIntoRecordCustomizes){
-            logger.info(JSON.toJSONString(productIntoRecordCustomize));
+            logger.debug(JSON.toJSONString(productIntoRecordCustomize));
             logger.info("数据库获取并转换bean以后的时间戳[{}]",productIntoRecordCustomize.getInvestTime());
             productIntoRecordCustomize.setInvestTimeStr(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(productIntoRecordCustomize.getInvestTime()));
             // 获取部门名称
