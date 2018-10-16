@@ -187,52 +187,6 @@ public class ApiUserPostBean  extends BaseBean {
 	public String toString() {
 		return "ApiUserPostBean [bindUniqueIdScy=" + bindUniqueIdScy + ", retUrl=" + retUrl + ", pid=" + pid + ", timestamp=" + super.getTimestamp() +", chkValue=" + super.getChkValue() + "]";
 	}
-
-    private String loginUserName;
-
-    private String loginPassword;
-    
-    /** 同意协议 */
-    private boolean readAgreement;
-    
-    
-    
-    public boolean getReadAgreement() {
-        return readAgreement;
-    }
-
-    public void setReadAgreement(boolean readAgreement) {
-        this.readAgreement = readAgreement;
-    }
-
-    private String captcha;
-
-
-	public String getLoginUserName() {
-		return loginUserName;
-	}
-
-	public void setLoginUserName(String loginUserName) {
-		this.loginUserName = loginUserName;
-	}
-
-	public String getLoginPassword() {
-		return loginPassword;
-	}
-
-	public void setLoginPassword(String loginPassword) {
-		this.loginPassword = loginPassword;
-	}
-
-	public String getCaptcha() {
-		return captcha;
-	}
-
-	public void setCaptcha(String captcha) {
-		this.captcha = captcha;
-	}
-
-
 }
 
 	

@@ -3,33 +3,95 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>汇盈金服 - 真诚透明自律的互联网金融服务平台</title>
+    <link rel="stylesheet" th:href="@{/templates/api/fast-authorize.css}" type="text/css" />
+    <style>
+        @media screen and (max-width: 768px) {
+            .container{
+                width: 90%;
+                max-width: 1100px;
+                margin:0 5%;
+                padding:0 20px;
+            }
+            a.logo{
+                margin-left:-20px;
+            }
+            .fast-sq .fast-login label {
+                width: 100%;
+                max-width: 320px;
+            }
+            .fast-sq .check{
+                padding:0;
+                height:auto;
+                min-height: 25px;
+                text-align:center;
+                width: 100%;
+                max-width: 386px;
+                font-size: 13px;
+            }
+            .fast-sq .check label{
+                display: inline-block;
+                vertical-align: top;
+            }
+            .fast-sq .check a {
+                display: inline-block;
+                vertical-align: top;
+                float: none;
+            }
+            .fast-sq .btn-sq{
+                width: 100%;
+                max-width: 320px;
+                background-color: #b3d4fc;
+            }
+            .forget{
+                display: none;
+            }
+            .fast-sq .welcome{
+                line-height: 20px;
+            }
+            .fast-sq .tit{
+                padding-top: 25px;
+            }
+            .container.result{
+                height: auto;
+                min-height: 300px;
+                padding-bottom:30px;
+            }
+        }
+        .btn-sq{
+            border: blue;
+        }
+    </style>
 </head>
 <body style="background:#f2f2f2">
 <header id="header">
     <div class="nav-main">
         <div class="container">
-            <a href="javascript:;" class="logo" itemid="hd1"><img src="${cdn}/dist/images/logo.png?v=20171123" alt="汇盈金服" /></a>
+            <a href="javascript:;" class="logo" itemid="hd1"><img src="/logo.png" alt="汇盈金服" /></a>
         </div>
     </div>
 </header>
-<section class="main-content">
+<script type="text/javascript">
+    var webPath = "${ctx}";//全局路径配置
+    var countDown = 60;
+</script>
+<section class="main-content" style="text-align: center;">
     <div class="container result">
         <div class="fast-sq">
-            <form action="" id="loginForm">
+            <form action="/hyjf-api/api/user/bind" th:method="post" id="loginForm">
                 <div th:each='record:${apiForm}'>
-                    <input th:value=${record.key}/>
-                    <input type="hidden" size=800 name='apiUserPostBean_${record.key }' id='apiUserPostBean_${record.key }' value='${record.value}' escapeXml="true" />'/>
+                    <!--<input th:value="${record.key}"/><input th:value="${record.value}"/>-->
+                    <input th:value="${record.key}"/><input type="text" th:name='${record.key}' th:id='${record.key}' th:value='${record.value}'/>
                 </div>
-                <input type="hidden" name="loginBean_loginUserName" id="loginBean_loginUserName" value="${mobile}"/>
+                <input type="text" name="loginUserName" id="loginUserName" th:value="${mobile}"/>
                 <p class="tit">账号密码授权</p>
                 <p class="welcome">欢迎使用汇盈金服账户进行安全授权，并同时登录汇盈金服</p>
                 <div class="fast-login" style="margin-bottom:30px">
-                    <label><span>账号</span><input type="text" placeholder="请输入手机号或用户名" name="loginBean_loginUserName_Text" value="" class="text" id="loginBean_loginUserName_Text" maxlength="16"/></label>
-                    <label><span>密码</span><input type="password" placeholder="请输入密码"  class="text" name="loginBean_loginPassword" id="loginBean_loginPassword" maxlength="20"/></label>
+                    <label><span>账号</span><input type="text" placeholder="请输入手机号或用户名" name="loginUserName_Text" value="" class="text" id="loginUserName_Text" maxlength="16"/></label>
+                    <label><span>密码</span><input type="password" placeholder="请输入密码"  class="text" name="loginPassword" id="loginPassword" value="" maxlength="20"/></label>
                     <div><p style="text-align:right;line-height:25px;width:320px;margin:0 auto;position:relative;top:10px"><a href="${ctx }/user/findpassword/init.do" style="text-decoration:none;color: #666;" class="forget">忘记密码</a></p></div>
                 </div>
-                <div class="check"><label><input type="checkbox" name="loginBean_readAgreement" id="loginBean_readAgreement" checked/><span>我已阅读并同意</span></label><a href="${ctx}/agreement/authagreement.do" target="_blank">《汇盈金服授权协议》</a></div>
-                <a class="btn-sq">立即授权</a>
+                <div class="check"><label><input type="checkbox" name="readAgreement" id="readAgreement" checked/><span>我已阅读并同意</span></label><a href="${ctx}/agreement/authagreement.do" target="_blank">《汇盈金服授权协议》</a></div>
+                <button type="submit" value="立即授权">立即授权</button>
                 <span th:if ="${instcode}!='11000002'">
                     <div class="otherway"><a href="${ctx }/user/regist/init.do">注册新账号</a></div>
                 </span>
@@ -37,14 +99,14 @@
         </div>
     </div>
 </section>
-<script src="${cdn }/dist/js/lib/jquery.min.js"></script>
-<script src="${cdn}/dist/js/lib/jquery-migrate-1.2.1.js"></script>
-<script src="${cdn }/dist/js/lib/jquery.validate.js"></script>
-<script src="${cdn }/dist/js/lib/jquery.metadata.js" type="text/javascript" charset="utf-8"></script>
-<script src="${cdn }/js/jquery.md5.js" type="text/javascript" charset="utf-8"></script>
-<script src="${cdn }/dist/js/lib/nprogress.js"></script>
-<script src="${cdn }/dist/js/utils.js"></script>
-<script src="${cdn }/js/common/common.js"></script>
-<script src="fast-authorize-login.js"></script>
+<script src="/templates/api/jquery.min.js"></script>
+<script src="/templates/api/jquery-migrate-1.2.1.js"></script>
+<script src="/templates/api/jquery.validate.js"></script>
+<script src="/templates/api/jquery.metadata.js" type="text/javascript" charset="utf-8"></script>
+<script src="/templates/api/jquery.md5.js" type="text/javascript" charset="utf-8"></script>
+<script src="/templates/api/nprogress.js"></script>
+<script src="/templates/api/utils.js"></script>
+<script src="/common.js"></script>
+<script src="/fast-authorize-login.js"></script>
 </body>
 </html>
