@@ -78,12 +78,12 @@ public class PlatformTransferController extends BaseController {
     @PostMapping(value = "/getuserinfobyusername")
     public AdminResult getUserInfoByUserName(@RequestBody Map<String,String> requestMap){
         String userName = requestMap.get("userName");
-        logger.info("getuserinfobyusername======userName=[{}]",userName);
+        logger.info("平台转账--> getuserinfobyusername======userName=[{}]",userName);
         JSONObject result = new JSONObject();
         if(StringUtils.isNotEmpty(userName)){
             result = platformTransferService.checkTransfer(userName);
         }else{
-            logger.error("getUserInfoByUserName,,,,userName=null");
+            logger.error("平台转账--> getUserInfoByUserName,,,,userName=null");
             result.put("status","99");
             result.put("info","用户账号不能为空");
         }
