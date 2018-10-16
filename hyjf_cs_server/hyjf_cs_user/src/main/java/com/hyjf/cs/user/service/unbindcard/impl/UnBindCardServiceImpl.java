@@ -575,7 +575,8 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 	 * @param accountId
 	 * @return
 	 */
-	private BigDecimal queryBankBlance(Integer userId, String accountId) {
+	@Override
+	public BigDecimal queryBankBlance(Integer userId, String accountId) {
 		BigDecimal balance = BigDecimal.ZERO;
 		BankCallBean bean = new BankCallBean();
 		bean.setVersion(BankCallConstant.VERSION_10);// 版本号
@@ -803,7 +804,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 	 * @return
 	 */
 	@Override
-	public Map<String,Object> callUnBindCardPage(WebViewUserVO user, BankOpenAccountVO accountChinapnrTender,BankCardVO bankCardVO, UserInfoVO userInfoVO,String channel){
+	public Map<String,Object> callUnBindCardPage(WebViewUserVO user, BankOpenAccountVO accountChinapnrTender,BankCardVO bankCardVO, UserInfoVO userInfoVO,String channel,String sign){
 		// 失败页面
 		String errorPath = "/user/unBindCardError";
 		// 成功页面
@@ -811,15 +812,15 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 		// 回调路径
 		String retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath ;
 		String successUrl = super.getFrontHost(systemConfig,channel) + successPath;
-		if(channel.contains(BankCallConstant.CHANNEL_APP)){
+		if(!channel.contains(BankCallConstant.CHANNEL_PC)){
 			//todo 返回路径
 			errorPath = "/user/open/result/failed";
 			successPath = "/user/open/result/success";
 			// 同步地址  是否跳转到前端页面
 			retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath +"?status=99&statusDesc=&logOrdId=";
 			successUrl = super.getFrontHost(systemConfig,channel+"") + successPath+"?status=000&statusDesc=";
-			/*retUrl += "&token=1&sign=" +sign;
-			successUrl += "&token=1&sign=" +sign;*/
+			retUrl += "&token=1&sign=" +sign;
+			successUrl += "&token=1&sign=" +sign;
 		}
 		// 异步调用路
 		String bgRetUrl = "http://CS-USER/hyjf-web/user/deleteCardPage/bgReturn?userId=" + user.getUserId();

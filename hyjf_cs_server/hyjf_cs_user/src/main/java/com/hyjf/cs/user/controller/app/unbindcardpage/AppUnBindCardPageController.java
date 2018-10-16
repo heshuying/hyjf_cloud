@@ -1,0 +1,179 @@
+package com.hyjf.cs.user.controller.app.unbindcardpage;
+
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.controller.web.bindcard.WebBindCardPageController;
+import com.hyjf.cs.user.service.unbindcard.UnBindCardService;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.Map;
+
+/**
+ * 合规四期-解绑银行卡
+ * @author nxl
+ * @version WebUnBindCardPageController, v0.1 2018/10/15 14:26
+ */
+@Api(value = "app端-用户解绑卡接口(页面调用)",tags = "app端-用户解绑卡接口(页面调用)")
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("/hyjf-web/user/deleteCardPage")
+public class AppUnBindCardPageController extends BaseUserController{
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebBindCardPageController.class);
+
+    @Autowired
+    UnBindCardService unBindCardService;
+    @Autowired
+    SystemConfig systemConfig;
+
+
+    @PostMapping("/deleteCard")
+    @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
+    public JSONObject getCashUrl(HttpServletRequest request, HttpServletResponse response,@RequestHeader(value = "userId") Integer userId) {
+        JSONObject ret = new JSONObject();
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // token
+        String token = request.getParameter("token");
+        // order
+        String order = request.getParameter("order");
+        // card 银行卡号
+        String cardNo = request.getParameter("bankNumber");// 银行卡号
+
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString)
+                || Validator.isNull(order) || Validator.isNull(cardNo)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        if (userId == null || userId <= 0) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "用户未登录！");
+            return ret;
+        }
+        // 取得用户在汇付天下的客户号
+        BankOpenAccountVO accountChinapnrTender = unBindCardService.getBankOpenAccount(userId);
+        if (accountChinapnrTender == null || org.apache.commons.lang3.StringUtils.isEmpty(accountChinapnrTender.getAccount())) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "用户未开户！");
+            return ret;
+        }
+        // 用户余额大于零不让解绑
+        AccountVO account = unBindCardService.getAccountByUserId(userId);
+        // 用户在银行的账户余额
+        BigDecimal bankBalance = unBindCardService.queryBankBlance(userId,accountChinapnrTender.getAccount());
+        if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
+                || ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "抱歉，银行卡解绑错误，请联系客服！");
+            return ret;
+        }
+        // 根据银行卡Id获取用户的银行卡信息
+        BankCardVO bankCardVO =unBindCardService.queryUserCardValid(userId.toString(),cardNo);
+        if (bankCardVO == null || StringUtils.isEmpty(bankCardVO.getCardNo())) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "获取用户银行卡信息失败！");
+            return ret;
+        }
+        try {
+            ret.put("status", "0");
+            ret.put("statusDesc", "成功");
+            StringBuffer sbUrl = new StringBuffer();
+            sbUrl.append(systemConfig.getServerHost());
+            sbUrl.append(request.getContextPath());
+            sbUrl.append("/user/deleteCardPage");
+            sbUrl.append("/deleteCardPage");
+            sbUrl.append("?").append("version").append("=").append(version);
+            sbUrl.append("&").append("netStatus").append("=").append(netStatus);
+            sbUrl.append("&").append("platform").append("=").append(platform);
+            sbUrl.append("&").append("randomString").append("=").append(randomString);
+            sbUrl.append("&").append("sign").append("=").append(sign);
+            sbUrl.append("&").append("token").append("=").append(strEncode(token));
+            sbUrl.append("&").append("order").append("=").append(strEncode(order));
+            sbUrl.append("&").append("bankNumber").append("=").append(cardNo);
+            logger.info("返回的解卡url为: {}", sbUrl.toString());
+            ret.put("url", sbUrl.toString());
+        } catch (Exception e) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "获取解卡URL失败");
+        }
+        return ret;
+    }
+    /**
+     * 绑卡接口
+     */
+    @PostMapping("/deleteCardPage")
+    @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
+    public AppResult<Object> bindCardPage(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign,@RequestHeader(value = "bankNumber") String bankNumber,HttpServletRequest request) {
+        AppResult<Object> result = new AppResult<Object>();
+        if (userId == null) {
+            throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
+        }
+        if(StringUtils.isBlank(bankNumber)){
+            throw new ReturnMessageException(MsgEnum.STATUS_ZC000009);
+        }
+        WebViewUserVO user = unBindCardService.getUserFromCache(userId);
+        // 取得用户在汇付天下的客户号
+        BankOpenAccountVO accountChinapnrTender = unBindCardService.getBankOpenAccount(userId);
+        // 根据用户id查找账户信息管理
+        AccountVO accountVO = unBindCardService.getAccountByUserId(userId);
+        // 根据银行卡Id获取用户的银行卡信息
+        BankCardVO bankCardVO =unBindCardService.queryUserCardValid(userId.toString(),bankNumber);
+        // 条件校验
+        unBindCardService.checkParamUnBindCardPage(user,accountChinapnrTender,accountVO,bankCardVO);
+        //获取用户info信息
+        UserInfoVO userInfoVO = unBindCardService.getUserInfo(user.getUserId());
+        //调用解绑银行卡接口
+        unBindCardService.callUnBindCardPage(user, accountChinapnrTender, bankCardVO, userInfoVO, BankCallConstant.CHANNEL_APP,sign);
+        return result;
+    }
+
+     /**
+     * @Description 调用银行失败原因
+     * @Author
+     */
+    @ApiOperation(value = "调用银行失败原因", notes = "查询调用银行失败原因")
+    @PostMapping("/searchFiledMess")
+    @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
+    @ResponseBody
+    public WebResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
+        logger.info("调用银行失败原因start,logOrdId:{}", param);
+        WebResult<Object> result = new WebResult<Object>();
+        String retMsg = unBindCardService.getFailedMess(param.get("logOrdId"));
+        Map<String,String> map = new HashedMap();
+        map.put("error",retMsg);
+        result.setData(map);
+        return result;
+    }
+
+
+}

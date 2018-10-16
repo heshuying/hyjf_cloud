@@ -30,8 +30,19 @@ public class HjhPlanCustomizeVO extends BaseVO {
 	private String couponEnable;
 	// add by xiashuqing 20171108 end app使用
 
+	/**未格式化的开放金额*/
+	private String availableInvestAccountNew;
+
 	public HjhPlanCustomizeVO() {
 		super();
+	}
+
+	public String getAvailableInvestAccountNew() {
+		return availableInvestAccountNew;
+	}
+
+	public void setAvailableInvestAccountNew(String availableInvestAccountNew) {
+		this.availableInvestAccountNew = availableInvestAccountNew;
 	}
 
 	public String getPlanNid() {

@@ -149,7 +149,7 @@ public interface UnBindCardService extends BaseUserService {
      * @param channel
      * @return
      */
-    Map<String,Object> callUnBindCardPage(WebViewUserVO user, BankOpenAccountVO accountChinapnrTender, BankCardVO bankCardVO, UserInfoVO userInfoVO, String channel);
+    Map<String,Object> callUnBindCardPage(WebViewUserVO user, BankOpenAccountVO accountChinapnrTender, BankCardVO bankCardVO, UserInfoVO userInfoVO, String channel,String sign);
     /**
      * 解绑银行卡后(异步回调删除)
      * 合规四期(解卡页面调用)
@@ -158,6 +158,13 @@ public interface UnBindCardService extends BaseUserService {
      * @throws Exception
      */
     boolean updateAfterUnBindCard(BankCallBean bean, Integer userId);
+    /**
+     * 查询用户电子账户可用余额
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    BigDecimal queryBankBlance(Integer userId, String accountId);
 }
 
 	

@@ -16,6 +16,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -38,10 +39,7 @@ import org.springframework.util.CollectionUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * APP首页service
@@ -201,12 +199,42 @@ public class AppHomeServiceImpl implements AppHomeService {
         //美国上市
         createModule(moduleList, platform, "android_module2", "ios_module2", HOST);
         //运营数据
-        createModule(moduleList, platform, "android_module3", "ios_module3", HOST);
+        AppAdsCustomizeVO appAdsCustomize = getOperationalDataUrl(platform, "android_module3", "ios_module3", HOST);
+        String url = "";
+        if(appAdsCustomize != null){
+            url = appAdsCustomize.getUrl();
+        }
+        info.put("operationalDataURL",url);
         //关于我们
         createModule(moduleList, platform, "android_module4", "ios_module4", HOST);
 
+        // 为3.1.0加的判断
+        String verson3 = "";
+        boolean is310 = false;
+        if (version!=null&&version.length() >= 5) {
+            verson3 = version.substring(0, 5);
+        }
+        if("3.1.0".equals(verson3)){
+            is310 = true;
+            if(moduleList.size()<4){
+                moduleList.add(moduleList.get(0));
+            }
+            info.put("projectList", new ArrayList<>());
+        }
         info.put("moduleList", moduleList);
 
+        //add by yangchangwei 2018-06-26 app3.0.9 增加协议相关参数
+//        systemConfig.get
+//        String agreementUrl = PropUtils.getSystem("hyjf.app.regist.agreement.url");
+        Map protocalInfo = new HashMap();
+        protocalInfo.put("name","《相关协议》");
+//        protocalInfo.put("URL",HOST + agreementUrl);
+        info.put("registerProtocol",protocalInfo);
+        //增加公告内容
+//        this.getAnnouncements(info,HOST);
+        Integer days = GetDate.countDate(GetDate.stringToDate("2013-12-23 00:00:00"), new Date());
+        info.put("survivalDays",days);//安全运营天数
+        //end
         //添加顶部活动图片总数和顶部活动图片数组
         this.createBannerPage(info, platform, request, HOST);
         this.createBannerlittlePage(info,getNewProjectFlag);
@@ -221,6 +249,43 @@ public class AppHomeServiceImpl implements AppHomeService {
         return info;
     }
 
+    /**
+     * 获取运营数据连接
+     * @param platform
+     * @param android
+     * @param ios
+     */
+    private AppAdsCustomizeVO getOperationalDataUrl(String platform, String android, String ios, String HOST) {
+        Map<String, Object> ads = new HashMap<String, Object>();
+        ads.put("limitStart", HomePageDefine.BANNER_SIZE_LIMIT_START);
+        ads.put("limitEnd", HomePageDefine.BANNER_SIZE_LIMIT_END);
+        ads.put("host", HOST);
+        String code = "";
+        if (platform.equals("2")) {
+            code = android;
+        } else if (platform.equals("3")) {
+            code = ios;
+        }
+        ads.put("code", code);
+        List<AppAdsCustomizeVO> picList = this.searchBannerList(ads);
+        if(picList!=null&&picList.size()>0){
+            return picList.get(0);
+        }
+        return null;
+
+    }
+
+    /**
+     * 查询首页的bannner列表
+     * @param ads
+     * @return
+     */
+    public List<AppAdsCustomizeVO> searchBannerList(Map<String, Object> ads) {
+
+        AdsRequest request = (AdsRequest) ConvertUtils.convertMapToObject(ads, AdsRequest.class);
+        List<AppAdsCustomizeVO> homeBannerList = amTradeClient.getHomeBannerList(request);
+        return homeBannerList;
+    }
 
     /**
      *3.0.9 版本重新填充首页推荐标的
