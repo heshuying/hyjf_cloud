@@ -1142,7 +1142,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public BankCardVO getBankCardById(String userId, String cardId) {
+	public BankCardVO getBankCardById(int userId, String cardId) {
 		BankCardResponse response = restTemplate
 				.getForEntity(userService+"/card/getBankCardById/" + userId + "/" + cardId, BankCardResponse.class).getBody();
 		if (response != null) {

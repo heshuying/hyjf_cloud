@@ -551,5 +551,5 @@ public interface AmUserClient {
 	 * @auther: nxl
 	 * @return
 	 */
-	BankCardVO getBankCardById(String userId, String cardId);
+	BankCardVO getBankCardById(int userId, String cardId);
 }
