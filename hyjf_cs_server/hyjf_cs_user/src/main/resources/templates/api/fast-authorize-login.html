@@ -1,88 +1,43 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <meta http-equiv="content-Type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="edge" />
+    <meta name="keywords" content="互联网金融,投资理财,网络理财,互联网理财,汇盈金服,网贷平台,个人理财,网络借贷,HYJF.com" />
+    <meta name="description" content="汇盈金服hyjf.com - 提供专业、可信赖的投融资交易信息服务。汇盈金服拥有信息保障措施、合作机构保障措施、资金托管措施、风险保证金措施等，多重措施打造严格风险防控机制。" />
+    <meta name="mobile-agent" content="format=xhtml;url=http://weixin.huiyingdai.com" />
+    <meta name="renderer" content="webkit" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="copyright" content="汇盈金服" />
     <title>汇盈金服 - 真诚透明自律的互联网金融服务平台</title>
-    <link rel="stylesheet" th:href="@{/templates/api/fast-authorize.css}" type="text/css" />
-    <style>
-        @media screen and (max-width: 768px) {
-            .container{
-                width: 90%;
-                max-width: 1100px;
-                margin:0 5%;
-                padding:0 20px;
-            }
-            a.logo{
-                margin-left:-20px;
-            }
-            .fast-sq .fast-login label {
-                width: 100%;
-                max-width: 320px;
-            }
-            .fast-sq .check{
-                padding:0;
-                height:auto;
-                min-height: 25px;
-                text-align:center;
-                width: 100%;
-                max-width: 386px;
-                font-size: 13px;
-            }
-            .fast-sq .check label{
-                display: inline-block;
-                vertical-align: top;
-            }
-            .fast-sq .check a {
-                display: inline-block;
-                vertical-align: top;
-                float: none;
-            }
-            .fast-sq .btn-sq{
-                width: 100%;
-                max-width: 320px;
-                background-color: #b3d4fc;
-            }
-            .forget{
-                display: none;
-            }
-            .fast-sq .welcome{
-                line-height: 20px;
-            }
-            .fast-sq .tit{
-                padding-top: 25px;
-            }
-            .container.result{
-                height: auto;
-                min-height: 300px;
-                padding-bottom:30px;
-            }
-        }
-        .btn-sq{
-            border: blue;
-        }
-    </style>
+    <link rel="shortcut icon" href="/templates/api/favicon.ico" type='image/x-icon' />
+    <link rel="icon" href="/templates/api/favicon.ico" type='image/x-icon' />
+    <link rel="stylesheet" href="/templates/api/all.css" type="text/css" />
+    <link rel="stylesheet" href="/templates/api/fast-authorize.css" type="text/css" />
+
 </head>
 <body style="background:#f2f2f2">
 <header id="header">
     <div class="nav-main">
         <div class="container">
-            <a href="javascript:;" class="logo" itemid="hd1"><img src="/logo.png" alt="汇盈金服" /></a>
+            <a href="javascript:;" class="logo" itemid="hd1"><img src="/templates/api/logo.png" alt="汇盈金服" /></a>
         </div>
     </div>
 </header>
 <script type="text/javascript">
-    var webPath = "${ctx}";//全局路径配置
-    var countDown = 60;
+    //var webPath = "${ctx}";//全局路径配置
+    //var countDown = 60;
 </script>
-<section class="main-content" style="text-align: center;">
+<section class="main-content">
     <div class="container result">
         <div class="fast-sq">
             <form action="/hyjf-api/api/user/bind" th:method="post" id="loginForm">
                 <div th:each='record:${apiForm}'>
                     <!--<input th:value="${record.key}"/><input th:value="${record.value}"/>-->
-                    <input th:value="${record.key}"/><input type="text" th:name='${record.key}' th:id='${record.key}' th:value='${record.value}'/>
+                    <input type="hidden" th:value="${record.key}"/><input type="hidden" th:name='${record.key}' th:id='${record.key}' th:value='${record.value}'/>
                 </div>
-                <input type="text" name="loginUserName" id="loginUserName" th:value="${mobile}"/>
+                <input type="hidden" name="loginUserName" id="loginUserName" th:value="${mobile}"/>
                 <p class="tit">账号密码授权</p>
                 <p class="welcome">欢迎使用汇盈金服账户进行安全授权，并同时登录汇盈金服</p>
                 <div class="fast-login" style="margin-bottom:30px">
@@ -91,7 +46,7 @@
                     <div><p style="text-align:right;line-height:25px;width:320px;margin:0 auto;position:relative;top:10px"><a href="${ctx }/user/findpassword/init.do" style="text-decoration:none;color: #666;" class="forget">忘记密码</a></p></div>
                 </div>
                 <div class="check"><label><input type="checkbox" name="readAgreement" id="readAgreement" checked/><span>我已阅读并同意</span></label><a href="${ctx}/agreement/authagreement.do" target="_blank">《汇盈金服授权协议》</a></div>
-                <button type="submit" value="立即授权">立即授权</button>
+                <button type="submit" class="btn-sq" value="立即授权">立即授权</button>
                 <span th:if ="${instcode}!='11000002'">
                     <div class="otherway"><a href="${ctx }/user/regist/init.do">注册新账号</a></div>
                 </span>
@@ -106,7 +61,7 @@
 <script src="/templates/api/jquery.md5.js" type="text/javascript" charset="utf-8"></script>
 <script src="/templates/api/nprogress.js"></script>
 <script src="/templates/api/utils.js"></script>
-<script src="/common.js"></script>
-<script src="/fast-authorize-login.js"></script>
+<script src="/templates/api/common.js"></script>
+<script src="/templates/api/fast-authorize-login.js"></script>
 </body>
 </html>

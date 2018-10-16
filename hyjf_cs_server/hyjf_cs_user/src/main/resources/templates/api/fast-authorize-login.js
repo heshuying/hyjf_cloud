@@ -1,9 +1,9 @@
 $(function() {
 	alert("hello me");
 	// 真实传值隐藏域
-	var mobileinput = $("#loginBean_loginUserName");
+	var mobileinput = $("#loginUserName");
 	// 展示数据文本框
-    var mobilelabel = $("#loginBean_loginUserName_Text");
+    var mobilelabel = $("#loginUserName_Text");
 
     // 有mobile值格式化展示
 	if( mobileinput.val() != '' ){
@@ -18,7 +18,7 @@ $(function() {
 		})
 	}
 	$('.check label').click(function(){
-		if($('#loginBean_readAgreement').is(':checked')){
+		if($('#readAgreement').is(':checked')){
 			$('.btn-sq').removeClass('disabled');
 			
 		}else{
@@ -43,7 +43,7 @@ $(function() {
 				// errorLabelContainer:".error-box",
 				onkeyup : false,
 				groups : {
-					form : "loginBean_loginUserName loginBean_loginPassword"
+					form : "loginUserName loginPassword"
 				},
 				submitHandler : function(form) {
 					var successCallback = function(data) {
@@ -77,23 +77,23 @@ $(function() {
 					
 					//params.loginUserName = $("#loginBean\\.loginUserName").val();
 					
-					params['loginBean_loginPassword'] = $.md5($("#loginBean_loginPassword").val());
+					params['loginPassword'] = $.md5($("#loginPassword").val());
 					
 					doRequest(successCallback, errorCallback, webPath
 							+ "/api/user/bind.do", params);
 				},
 				rules : {
-                    loginBean_loginUserName_Text : {
+                    loginUserName_Text : {
 						required : true
 						
 					// maxlength : 16
 					},
-					loginBean_loginUserName : {
+					loginUserName : {
 						required : true,
 						isMobile : true
 						// maxlength : 16
 					},
-					loginBean_loginPassword : {
+					loginPassword : {
 						required : true,
 					// ispwd:true,
 					// minlength : 6,
@@ -101,14 +101,14 @@ $(function() {
 					}
 				},
 				messages : {
-					loginBean_loginUserName_Text : {
+					loginUserName_Text : {
 						required : '请输入手机号/用户名'
 					},
-					loginBean_loginUserName : {
+					loginUserName : {
 						required : '请输入手机号/用户名',
 						isMobile : "请输入正确的手机号码"
 					},
-					loginBean_loginPassword : {
+					loginPassword : {
 						required : '请输入密码',
 					// ispwd:'请输入正确的密码',
 					// minlength : "请输入正确的密码",
