@@ -28,8 +28,5 @@ public class MessagePushTemplateStaticsServiceImpl implements MessagePushTemplat
 		return csMessageClient.selectTemplateStatics(request);
 	}
 
-	@Override
-	public MessagePushTagResponse getMsgTagList() {
-		return amMarketClient.getTagList();
-	}
+
 }

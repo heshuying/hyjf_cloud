@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.CategoryResponse;
 import com.hyjf.am.response.config.*;
+import com.hyjf.am.resquest.config.MessagePushTagRequest;
 import com.hyjf.am.resquest.config.SmsNoticeConfigRequest;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
 import com.hyjf.am.vo.admin.ContentHelpCustomizeVO;
@@ -185,8 +186,8 @@ public class AmConfigClientImpl implements AmConfigClient {
 
 	@Override
 	public List<MessagePushTagVO> getPushTags() {
-		MessagePushTagResponse response = restTemplate.postForObject(
-				"http://AM-CONFIG/am-config/messagePushTag/searchList", null, MessagePushTagResponse.class);
+		MessagePushTagResponse response = restTemplate.postForEntity(
+				"http://AM-CONFIG/am-config/messagePushTag/searchList", new MessagePushTagRequest(), MessagePushTagResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}

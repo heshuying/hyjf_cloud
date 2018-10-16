@@ -1029,7 +1029,7 @@ public class AmAdminClientImpl implements AmAdminClient {
 
         LockedConfigResponse response=restTemplate.getForObject("http://AM-ADMIN/am-admin/lockedconfig/webconfig",LockedConfigResponse.class);
 
-        return response.getResult();
+        return response.getData();
     }
 
     @Override
@@ -1037,7 +1037,7 @@ public class AmAdminClientImpl implements AmAdminClient {
 
         LockedConfigResponse response=restTemplate.getForObject("http://AM-ADMIN/am-admin/lockedconfig/adminconfig",LockedConfigResponse.class);
 
-        return response.getResult();
+        return response.getData();
     }
 
     @Override
