@@ -9,7 +9,6 @@ import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushNoticesResponse;
-import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.admin.coupon.ParamName;
@@ -67,9 +66,9 @@ public class MessagePushNoticesController extends BaseController {
                 return jsonObject;
             }
             prepareDatas(jsonObject);
-            MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
-            List<MessagePushTagVO> resultList = tagList.getResultList();
-            jsonObject.put("noticesPushTags", resultList);
+            //MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
+            //List<MessagePushTagVO> resultList = tagList.getResultList();
+            //jsonObject.put("noticesPushTags", resultList);
             jsonObject.put("totalCount", prs.getRecordTotal());
             jsonObject.put("list", prs.getResultList());
             jsonObject.put("allPushTagList", allPushTagList);
@@ -175,8 +174,9 @@ public class MessagePushNoticesController extends BaseController {
             }
             jsonObject.put("msgPushNoticesForm", form);
             // 标签类型
-            MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
-            List<MessagePushTagVO> resultList = tagList.getResultList();
+           // MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
+           // List<MessagePushTagVO> resultList = tagList.getResultList();
+            List<MessagePushTagVO> resultList = messagePushHistoryService.getAllPushTagList();
             jsonObject.put("noticesPushTags", resultList);
             prepareDatas(jsonObject);
             return jsonObject;
