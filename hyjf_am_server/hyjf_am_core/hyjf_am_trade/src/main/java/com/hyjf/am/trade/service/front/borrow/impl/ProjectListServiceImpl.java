@@ -13,9 +13,11 @@ import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.front.borrow.ProjectListService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
+import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -465,4 +467,37 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         return webProjectListCustomizeMapper.getApiBorrowList(params);
     }
     /*--------------------------------------------  api end  -------------------------------------------*/
+
+    /**
+     *首页汇计划推广计划列表 - 首页显示 ②	若没有可投计划，则显示锁定期限短的
+     * @Author yangchangwei 2018/10/16
+     * @param map
+     * @return
+     */
+    @Override
+    public List<HjhPlanCustomizeVO> getIndexHjhExtensionPlanListByLockTime(Map map) {
+        return this.appProjectListCustomizeMapper.getIndexHjhExtensionPlanListByLockTime(map);
+    }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     * @Author yangchangwei 2018/10/16
+     * @param map
+     * @return
+     */
+    @Override
+    public List<HjhPlanCustomizeVO> getIndexHjhExtensionPlanList(Map map) {
+        return this.appProjectListCustomizeMapper.getIndexHjhExtensionPlanList(map);
+    }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     * @Author yangchangwei 2018/10/16
+     * @param map
+     * @return
+     */
+    @Override
+    public List<AppProjectListCustomizeVO> getHomeProjectList(Map map) {
+        return this.appProjectListCustomizeMapper.selectHomeProjectList(map);
+    }
 }
