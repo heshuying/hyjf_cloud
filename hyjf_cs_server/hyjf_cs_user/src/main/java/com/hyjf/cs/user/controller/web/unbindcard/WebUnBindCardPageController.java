@@ -42,7 +42,7 @@ public class WebUnBindCardPageController extends BaseUserController{
      */
     @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
     @ApiImplicitParam(name = "paraMap",value = "{urlstatus:string}", dataType = "Map")
-    @PostMapping(value = "/bindCardPage", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/deleteCardPage", produces = "application/json; charset=utf-8")
     public WebResult<Object> bindCardPage(@RequestHeader(value = "userId") int userId, @RequestBody Map<String,String> param, HttpServletRequest request) {
         // 银行卡id
         String cardId = param.get("cardId");
@@ -59,7 +59,7 @@ public class WebUnBindCardPageController extends BaseUserController{
         //获取用户info信息
         UserInfoVO userInfoVO = unBindCardService.getUserInfo(user.getUserId());
         //调用解绑银行卡接口
-        unBindCardService.callUnBindCardPage(user, accountChinapnrTender, bankCardVO, userInfoVO, BankCallConstant.CHANNEL_PC);
+        unBindCardService.callUnBindCardPage(user, accountChinapnrTender, bankCardVO, userInfoVO, BankCallConstant.CHANNEL_PC,null);
         return result;
     }
 
