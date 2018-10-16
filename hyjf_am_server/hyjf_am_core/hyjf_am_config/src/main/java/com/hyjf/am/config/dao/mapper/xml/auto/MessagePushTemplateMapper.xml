@@ -3,7 +3,7 @@
 <mapper namespace="com.hyjf.am.config.dao.mapper.auto.MessagePushTemplateMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.MessagePushTemplate" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="tag_id" property="tagId" jdbcType="VARCHAR" />
+    <result column="tag_id" property="tagId" jdbcType="INTEGER" />
     <result column="tag_code" property="tagCode" jdbcType="VARCHAR" />
     <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
     <result column="template_title" property="templateTitle" jdbcType="VARCHAR" />
@@ -123,7 +123,7 @@
       template_terminal, template_action, template_action_url, 
       `status`, create_user_id, update_user_id, 
       create_time, update_time)
-    values (#{tagId,jdbcType=VARCHAR}, #{tagCode,jdbcType=VARCHAR}, #{templateCode,jdbcType=VARCHAR}, 
+    values (#{tagId,jdbcType=INTEGER}, #{tagCode,jdbcType=VARCHAR}, #{templateCode,jdbcType=VARCHAR}, 
       #{templateTitle,jdbcType=VARCHAR}, #{templateImageUrl,jdbcType=VARCHAR}, #{templateContent,jdbcType=VARCHAR}, 
       #{templateTerminal,jdbcType=VARCHAR}, #{templateAction,jdbcType=TINYINT}, #{templateActionUrl,jdbcType=VARCHAR}, 
       #{status,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
@@ -180,7 +180,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tagId != null" >
-        #{tagId,jdbcType=VARCHAR},
+        #{tagId,jdbcType=INTEGER},
       </if>
       <if test="tagCode != null" >
         #{tagCode,jdbcType=VARCHAR},
@@ -236,7 +236,7 @@
         id = #{record.id,jdbcType=INTEGER},
       </if>
       <if test="record.tagId != null" >
-        tag_id = #{record.tagId,jdbcType=VARCHAR},
+        tag_id = #{record.tagId,jdbcType=INTEGER},
       </if>
       <if test="record.tagCode != null" >
         tag_code = #{record.tagCode,jdbcType=VARCHAR},
@@ -285,7 +285,7 @@
   <update id="updateByExample" parameterType="map" >
     update ht_message_push_template
     set id = #{record.id,jdbcType=INTEGER},
-      tag_id = #{record.tagId,jdbcType=VARCHAR},
+      tag_id = #{record.tagId,jdbcType=INTEGER},
       tag_code = #{record.tagCode,jdbcType=VARCHAR},
       template_code = #{record.templateCode,jdbcType=VARCHAR},
       template_title = #{record.templateTitle,jdbcType=VARCHAR},
@@ -307,7 +307,7 @@
     update ht_message_push_template
     <set >
       <if test="tagId != null" >
-        tag_id = #{tagId,jdbcType=VARCHAR},
+        tag_id = #{tagId,jdbcType=INTEGER},
       </if>
       <if test="tagCode != null" >
         tag_code = #{tagCode,jdbcType=VARCHAR},
@@ -353,7 +353,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.MessagePushTemplate" >
     update ht_message_push_template
-    set tag_id = #{tagId,jdbcType=VARCHAR},
+    set tag_id = #{tagId,jdbcType=INTEGER},
       tag_code = #{tagCode,jdbcType=VARCHAR},
       template_code = #{templateCode,jdbcType=VARCHAR},
       template_title = #{templateTitle,jdbcType=VARCHAR},

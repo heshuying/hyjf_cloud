@@ -69,16 +69,16 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
         	crt.andProjectTypeEqualTo(Integer.valueOf(request.getProjectTypeSrch()));
         }
         // 还款方式
-        if (StringUtils.isNotEmpty(request.getProjectTypeSrch())) {
-        	crt.andBorrowStyleEqualTo(request.getProjectTypeSrch());
+        if (StringUtils.isNotEmpty(request.getBorrowStyleSrch())) {
+        	crt.andBorrowStyleEqualTo(request.getBorrowStyleSrch());
         }
         // 标签状态
         if (StringUtils.isNotEmpty(request.getLabelStateSrch())) {
         	crt.andLabelStateEqualTo(Integer.valueOf(request.getLabelStateSrch()));
         }
         // 使用状态(DB中已经没有 isEngine 字段了)
-/*        if (StringUtils.isNotEmpty(request.getEngineIdSrch())) {
-        }*/
+
+        
         if (StringUtils.isNotEmpty(request.getCreateTimeStartSrch()) && StringUtils.isNotEmpty(request.getCreateTimeEndSrch())) {
         	crt.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getCreateTimeStartSrch()), "yyyy-MM-dd HH:mm:ss"));
         }
@@ -115,8 +115,8 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
         	crt.andProjectTypeEqualTo(Integer.valueOf(request.getProjectTypeSrch()));
         }
         // 还款方式
-        if (StringUtils.isNotEmpty(request.getProjectTypeSrch())) {
-        	crt.andBorrowStyleEqualTo(request.getProjectTypeSrch());
+        if (StringUtils.isNotEmpty(request.getBorrowStyleSrch())) {
+        	crt.andBorrowStyleEqualTo(request.getBorrowStyleSrch());
         }
         // 标签状态
         if (StringUtils.isNotEmpty(request.getLabelStateSrch())) {

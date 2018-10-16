@@ -20,6 +20,7 @@ import com.hyjf.am.trade.service.front.batch.AutoTenderService;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,13 +68,16 @@ public class AutoTenderController extends BaseController {
     @RequestMapping("/saveCreditTenderLog")
     public MapResponse saveCreditTenderLog(@RequestBody SaveCreditTenderLogRequest request) {
         MapResponse response = new MapResponse();
-        response.setResultMap(this.autoTenderService.saveCreditTenderLog(
-                                                        request.getCredit(),
-                                                        request.getHjhAccede(),
-                                                        request.getOrderId(),
-                                                        request.getOrderDate(),
-                                                        request.getYujiAmoust(),
-                                                        request.isLast()));
+        Map<String, Object> resultMap = this.autoTenderService.saveCreditTenderLog(
+                request.getCredit(),
+                request.getHjhAccede(),
+                request.getOrderId(),
+                request.getOrderDate(),
+                request.getYujiAmoust(),
+                request.isLast());
+        //防止失精度，把Map<String, (BigDecimal)Object>转成Map<String, (String)Object>
+        resultMap = ConvertUtils.convertToMapValString(resultMap);
+        response.setResultMap(resultMap);
         return response;
     }
 
@@ -160,13 +164,16 @@ public class AutoTenderController extends BaseController {
     @RequestMapping("/saveCreditTenderLogNoSave")
     public MapResponse saveCreditTenderLogNoSave(@RequestBody SaveCreditTenderLogRequest request) {
         MapResponse response = new MapResponse();
-        response.setResultMap(this.autoTenderService.saveCreditTenderLogNoSave(
+        Map<String, Object> resultMap = this.autoTenderService.saveCreditTenderLogNoSave(
                 request.getCredit(),
                 request.getHjhAccede(),
                 request.getOrderId(),
                 request.getOrderDate(),
                 request.getYujiAmoust(),
-                request.isLast()));
+                request.isLast());
+        //防止失精度，把Map<String, (BigDecimal)Object>转成Map<String, (String)Object>
+        resultMap = ConvertUtils.convertToMapValString(resultMap);
+        response.setResultMap(resultMap);
         return response;
     }
 }

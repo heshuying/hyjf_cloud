@@ -36,19 +36,33 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
      * 查询需要更新用户画像的userInfo的list
      * */
     @Override
-    public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait() {
+    public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait(int flag) {
+
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        String yesterday = GetDate.date_sdf.format(cal.getTime());
+        String startDay = "";
+        if(flag == 99){
+            //更新三个月内用户画像，数据缺失或数据有误等极其特殊的情况下才能调用，因为数据量特别大
+            cal.add(Calendar.MONTH, -3);
+            startDay = GetDate.date_sdf.format(cal.getTime());
+        }else{
+            //更新昨日的用户画像，正常情况下调用
+            cal.add(Calendar.DATE, -1);
+            startDay = GetDate.date_sdf.format(cal.getTime());
+        }
+        cal = Calendar.getInstance();
+        cal.add(Calendar.DATE,-1);
+        String endDay = GetDate.date_sdf.format(cal.getTime());
         // 获取到昨天的开始和结束时间，格式:yyyy-MM-dd HH:mm:ss
-        String yesterdayBegin = yesterday + " 00:00:00";
-        String yesterdayEnd = yesterday + " 23:59:59";
+        String yesterdayBegin = startDay + " 00:00:00";
+        String yesterdayEnd = endDay + " 23:59:59";
 
         // 从UserInfo中获得所有昨天登录过的userId
         UserLoginLogExample example = new UserLoginLogExample();
         UserLoginLogExample.Criteria criteria = example.createCriteria();
         criteria.andLoginTimeBetween(GetDate.stringToDate(yesterdayBegin), GetDate.stringToDate(yesterdayEnd));
         List<UserLoginLog> userLoginLogList = userLoginLogMapper.selectByExample(example);
+
+
         List<UserAndSpreadsUserVO> result = new ArrayList<>();
         if(!CollectionUtils.isEmpty(userLoginLogList)){
             for(UserLoginLog userLoginLog:userLoginLogList){
@@ -90,12 +104,9 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
         List<BatchUserPortraitQueryVO> userPortraitQueryVOList = request.getBatchUserPortraitQueryVOList();
         for (BatchUserPortraitQueryVO userPortraitQueryVO : userPortraitQueryVOList) {
             Integer userId = userPortraitQueryVO.getUserId();
-            // 根据userId获取到userInfo，然后给userPortrait赋值
 
-            UserPortrait userPortrait = new UserPortrait();
             // bean转换
-            //convertBean(userPortraitQueryVO, userPortrait);
-            userPortrait = CommonUtils.convertBean(userPortraitQueryVO,UserPortrait.class);
+            UserPortrait userPortrait = CommonUtils.convertBean(userPortraitQueryVO,UserPortrait.class);
             // 如果投资进程在trade上未赋值，说明不是投资或者充值
             if (userPortrait.getInvestProcess() == null) {
                 BankCardExample bankCardExample = new BankCardExample();
@@ -145,7 +156,7 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                             }
 
                             if (isIdCard) {
-                                String area = IdCard15To18.getCityFromCode(idcard.substring(0, 4));
+                                String area = IdCard15To18.getCityFromCode(idcard.substring(0, 6));
                                 if (area != null) {
                                     userPortrait.setCity(area);
                                 } else {
@@ -203,61 +214,19 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
 
 
     }
-    /**
-     * 将BatchUserPortraitQueryVO值  赋值给  UserPortrait
-     * */
-    private void convertBean(BatchUserPortraitQueryVO userPortraitQueryVO, UserPortrait userPortrait) {
-        // 用户id
-        userPortrait.setUserId(userPortraitQueryVO.getUserId());
-        // 累计收益
-        userPortrait.setInterestSum(userPortraitQueryVO.getInterestSum());
-        // 散标累计年化投资金额
-        userPortrait.setInvestSum(userPortraitQueryVO.getInvestSum());
-        // 累计充值金额
-        userPortrait.setRechargeSum(userPortraitQueryVO.getRechargeSum());
-        // 累计提现金额
-        userPortrait.setWithdrawSum(userPortraitQueryVO.getWithdrawSum());
-        // 交易笔数
-        userPortrait.setTradeNumber(userPortraitQueryVO.getTradeNumber());
-        // 投资进程
-        if (userPortraitQueryVO.getInvestProcess() != null && !"".equals(userPortraitQueryVO.getInvestProcess())) {
-            userPortrait.setInvestProcess(userPortraitQueryVO.getInvestProcess());
-        }
-        // 最后提现时间
-        if (userPortraitQueryVO.getLastWithdrawTime() != null) {
-            userPortrait.setLastWithdrawTime(userPortraitQueryVO.getLastWithdrawTime());
-        }
-        // 最后充值时间
-        if (userPortraitQueryVO.getLastRechargeTime() != null) {
-            userPortrait.setLastRechargeTime(userPortraitQueryVO.getLastRechargeTime());
-        }
-        // 投龄
-        if(userPortraitQueryVO.getInvestAge() != null){
-            userPortrait.setInvestAge(userPortraitQueryVO.getInvestAge());
-        }else{
-            userPortrait.setInvestAge(0);
-        }
-        // 同时投资平台数
-        if(userPortraitQueryVO.getInvestPlatform() != null){
-            userPortrait.setInvestPlatform(userPortraitQueryVO.getInvestPlatform());
-        }else{
-            userPortrait.setInvestPlatform(0);
-        }
-    }
+
     /**
      * 更新用户画像
      * */
     private int updateInformation(UserPortrait userPortrait) {
         UserPortraitExample example = new UserPortraitExample();
         example.createCriteria().andUserIdEqualTo(userPortrait.getUserId());
-        int count = userPortraitMapper.updateByExampleSelective(userPortrait,example);
-        return count;
+        return userPortraitMapper.updateByExampleSelective(userPortrait,example);
     }
     /**
      * 插入用户画像
      * */
     private int insertInformation(UserPortrait userPortrait) {
-        int count = userPortraitMapper.insertSelective(userPortrait);
-        return count;
+        return userPortraitMapper.insertSelective(userPortrait);
     }
 }

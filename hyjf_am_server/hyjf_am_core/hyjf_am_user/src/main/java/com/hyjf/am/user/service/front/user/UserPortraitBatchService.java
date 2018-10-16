@@ -17,7 +17,7 @@ public interface UserPortraitBatchService {
     /**
      * 查询需要更新用户画像的userInfo的list
      * */
-    List<UserAndSpreadsUserVO> searchUserIdForUserPortrait();
+    List<UserAndSpreadsUserVO> searchUserIdForUserPortrait(int flag);
     /**
      * 保存用户画像
      * */

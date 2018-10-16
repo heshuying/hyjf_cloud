@@ -1304,6 +1304,46 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 余额不足
             throw new CheckException(MsgEnum.ERROR_CREDIT_NO_MONEY);
         }
+        try {
+            // 投资金额必须是整数
+            long accountInt = Long.parseLong(request.getAssignCapital());
+            if (accountInt == 0) {
+                // 投资金额不能为0元
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_ZERO);
+            }
+            if (accountInt < 0) {
+                // 投资金额不能为负数
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NEGATIVE);
+            }
+        } catch (Exception e) {
+            // 投资金额不能为整数
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INT);
+        }
+        // 将投资金额转化为BigDecimal
+        BigDecimal accountBigDecimal = new BigDecimal(request.getAssignCapital());
+        BigDecimal creditCapital = new BigDecimal(creditAssign.getCreditCapital());
+        // 剩余可投金额
+        Integer min = 1;
+        if (min != null && min != 0 && accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {
+            if (accountBigDecimal.compareTo(creditCapital) == 1) {
+                // 剩余可投只剩{0}元，须全部购买
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_LESS,creditCapital);
+            }
+            if (accountBigDecimal.compareTo(accountBigDecimal) != 0) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_MONEY_LESS_NEED_BUY_ALL,creditCapital);
+            }
+        } else {
+            // 项目的剩余金额大于最低起投金额
+            if (accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {
+                // {0}元起投
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,"1");
+            } else {
+                if (accountBigDecimal.compareTo(accountBigDecimal) == 1) {
+                    // 项目最大投资金额为{0}元
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT,creditCapital);
+                }
+            }
+        }
     }
 
     /**

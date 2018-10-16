@@ -9,6 +9,7 @@ import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -34,8 +35,8 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
         Query query = new Query();
         Criteria criteria = new Criteria();
         if (request.getStartDateSrch() != null || request.getEndDateSrch() != null) {
-            int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartDateSrch());
-            int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndDateSrch());
+            int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartDateSrch() + " 00:00:00");
+            int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndDateSrch() + " 23:59:59");
             criteria.and("sendTime").gte(startTime).lte(endTime);
         }
         if (request.getTagId() != null) {
@@ -63,6 +64,7 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
         int limitEnd = limitStart + pageSize;
         query.addCriteria(criteria);
         query.skip(limitStart).limit(limitEnd);
+        query.with(new Sort(Sort.Direction.DESC, "createTime"));
         return mongoTemplate.find(query, getEntityClass());
     }
 

@@ -72,16 +72,15 @@ public class HjhCouponTenderConsumer extends Consumer {
             logger.info("计划类优惠券使用 收到消息，参数为: {} " , JSONObject.toJSONString(map));
             JSONObject result = new JSONObject();
             try {
-                Integer couponGrantId = (Integer) map.get("couponGrantId");
+                Integer couponGrantId = Integer.parseInt((String) map.get("couponGrantId"));
                 String borrowNid = (String) map.get("borrowNid");
                 String money = (String) map.get("money");
                 String platform = (String) map.get("platform");
                 String ip = (String) map.get("ip");
                 // 真实订单号
-                Integer userId = (Integer) map.get("userId");
+                Integer userId =  Integer.parseInt((String) map.get("userId"));
                 String mainTenderNid = (String) map.get("ordId");
                 String account = (String) map.get("account");
-
 
                 HjhPlanVO plan = borrowClient.getPlanByNid(borrowNid);
 
@@ -89,15 +88,18 @@ public class HjhCouponTenderConsumer extends Consumer {
                 logger.info("优惠券投资校验开始,userId{},平台{},券为:{}", userId, platform, couponGrantId);
                 Map<String, String> validateMap = couponService.validateCoupon(userId, money, couponGrantId,
                         platform, plan.getLockPeriod(),plan.getCouponConfig());
+                logger.info("优惠券投资校验结果  "+JSONObject.toJSONString(validateMap));
                 if (MapUtils.isEmpty(validateMap)) {
                     // 校验通过 进行优惠券投资投资
                     logger.info("优惠券投资校验成功,userId{},券为:{}", userId, couponGrantId);
                     CouponUserVO cuc = borrowClient.getCouponUser(couponGrantId, userId);
+                    cuc.setId(couponGrantId);
                     logger.info("优惠券投资开始,userId{},平台{},券为:{}", userId, platform, couponGrantId);
                     TenderRequest request = new TenderRequest();
                     request.setIp(ip);
                     request.setMainTenderNid(mainTenderNid);
                     request.setAccount(account);
+                    request.setPlatform(platform);
                     couponService.couponTender(request, plan, cuc , userId);
                 } else {
                     logger.error("优惠券投资校验失败返回结果{},userId{},券为:{}", validateMap.get("statusDesc"), userId, couponGrantId);
@@ -106,6 +108,7 @@ public class HjhCouponTenderConsumer extends Consumer {
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
                 logger.info("操作失败");
+                logger.info("计划优惠券投资失败    "+JSONObject.toJSONString(e));
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
         }
