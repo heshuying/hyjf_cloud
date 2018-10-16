@@ -1493,6 +1493,7 @@
 		ht_borrow_recover hydbr
 		INNER JOIN ht_borrow hydb ON hydbr.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		WHERE
 		(hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
 		AND hydbr.user_id = #{userId,jdbcType=INTEGER}
 		AND hydbr.recover_status = 1

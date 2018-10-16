@@ -71,7 +71,7 @@ public class TyjCouponRepayConsumer extends Consumer {
                     tyjCouponRepayService.updateCouponOnlyRecover(recoverNid);
                 }
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
             return null;
         }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.message.bean.ic.AccountWebList;
 import com.hyjf.cs.message.client.AmUserClient;
@@ -60,14 +61,19 @@ public class AccountWebListConsumer extends Consumer {
 			logger.info("AccountWebListConsumer 收到消息，开始处理....msgs is :{}", msgs);
 			for (MessageExt msg : msgs) {
 				AccountWebListVO accountWebListVO = JSONObject.parseObject(msg.getBody(), AccountWebListVO.class);
-				AccountWebList accountWebList = null;
+				AccountWebList accountWebList = new AccountWebList();
 				if (accountWebListVO != null) {
-					accountWebList = new AccountWebList();
 					BeanUtils.copyProperties(accountWebListVO, accountWebList);
+				}else {
+					return ConsumeConcurrentlyStatus.RECONSUME_LATER;
 				}
 				UserInfoVO usersInfo = amUserClient.findUsersInfoById(accountWebListVO.getUserId());
 				// 承接人
 				UserInfoCustomizeVO userInfoCustomize = amUserClient.queryUserInfoCustomizeByUserId(accountWebListVO.getUserId());
+				if(null==accountWebList.getUsername()){
+					UserVO user = amUserClient.findUserById(accountWebListVO.getUserId());
+					accountWebList.setUsername(user.getUsername());
+				}
 				if (usersInfo != null) {
 					Integer attribute = usersInfo.getAttribute();
 					if (attribute != null) {
