@@ -72,4 +72,6 @@ public interface RealTimeBorrowLoanService extends BaseService {
 	 */
 	BorrowApicron selApiCronByPrimaryKey(int id);
 
+	boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
+
 }

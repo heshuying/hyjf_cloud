@@ -374,7 +374,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 				try {
 //					apicron = borrowApicronMapper.selectByPrimaryKey(apicron.getId());
 					// 更新借款人相关资金信息
-					boolean borrowFlag = this.updateBorrowStatus(apicron, borrow, borrowInfo);
+					boolean borrowFlag = ((RealTimeBorrowLoanService)AopContext.currentProxy()).updateBorrowStatus(apicron, borrow, borrowInfo);
 					if (borrowFlag) {
 						return true;
 					} else {
@@ -486,7 +486,9 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 								logger.error("发送CRM消息失败:" + e.getMessage());
 							}
 						}else {
-							logger.info("放款已经成功：" + borrowNid + " 订单: "+tenderOrderId);
+							BigDecimal recoverInterest = (BigDecimal) result.get("recoverInterest");
+							recoverInterestSum = recoverInterestSum.add(recoverInterest);
+							logger.info("放款已经成功：" + borrowNid + " 订单: "+tenderOrderId+" 应收利息 "+recoverInterest+" 已收 "+recoverInterestSum);
 						}
 						
 						// 累加成功的投资更新
@@ -523,13 +525,14 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		// 如果更新已经成功则认为成功
 		if(borrowTender.getStatus().intValue() == 1) {
 			result.put("areadySuccess", true);
+			result.put("recoverInterest", borrowTender.getRecoverAccountInterest());
 			return result;
 		}
 		
 		//生成每个投资人的还款计划
 		boolean repayFlag = this.upsertRepayPlanInfo(borrow, borrowInfo, borrowTender,serviceFee);
 		// 更新投资人的账户，资金明细信息  生成投资人居间服务协议
-		result = this.upsertBorrowLoans(apicron, borrow, borrowInfo, borrowTender);
+		result = this.upsertLoansAccount(apicron, borrow, borrowInfo, borrowTender);
 		
 		return result;
 	}
@@ -1221,7 +1224,8 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 	 * @param borrow
 	 * @throws Exception
 	 */
-	private boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception {
+	@Override
+	public boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception {
 
 		int nowTime = GetDate.getNowTime10();// 当前时间
 		String borrowNid = apicron.getBorrowNid();// 项目编号
@@ -1467,7 +1471,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 	 * @throws Exception
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Map upsertBorrowLoans(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowTender borrowTender) throws Exception {
+	private Map upsertLoansAccount(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowTender borrowTender) throws Exception {
 
 		Map result = new HashMap<>();
 		String borrowNid = apicron.getBorrowNid();// 借款编号
