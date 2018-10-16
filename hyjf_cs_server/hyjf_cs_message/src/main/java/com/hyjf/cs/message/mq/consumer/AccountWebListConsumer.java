@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.message.bean.ic.AccountWebList;
 import com.hyjf.cs.message.client.AmUserClient;
@@ -68,6 +69,10 @@ public class AccountWebListConsumer extends Consumer {
 				UserInfoVO usersInfo = amUserClient.findUsersInfoById(accountWebListVO.getUserId());
 				// 承接人
 				UserInfoCustomizeVO userInfoCustomize = amUserClient.queryUserInfoCustomizeByUserId(accountWebListVO.getUserId());
+				if(null==accountWebList.getUsername()){
+					UserVO user = amUserClient.findUserById(accountWebListVO.getUserId());
+					accountWebList.setUsername(user.getUsername());
+				}
 				if (usersInfo != null) {
 					Integer attribute = usersInfo.getAttribute();
 					if (attribute != null) {
