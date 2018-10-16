@@ -178,7 +178,6 @@ public class ApiUnBindCardPageController extends BaseUserController {
     public ModelAndView getCallbankMV(DeleteCardPageBean bean) {
         ModelAndView mv = new ModelAndView();
         // 获取共同参数
-
         String bankCode =systemConfig.getBankCode();;
         String bankInstCode =systemConfig.getBankInstcode();
         String orderDate = GetOrderIdUtils.getOrderDate();

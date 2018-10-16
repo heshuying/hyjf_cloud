@@ -228,4 +228,6 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 
 	/**（加密）开户设密页面*/
 	public static final String TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE = "accountOpenEncryptPage";
+	/**解绑银行卡*/
+	public  static final String TXCODE_ACCOUNT_UNBINDCARD_PAGE = "unbindCardPage";
 }

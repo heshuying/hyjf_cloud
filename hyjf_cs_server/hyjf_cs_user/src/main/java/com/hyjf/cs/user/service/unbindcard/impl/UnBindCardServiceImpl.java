@@ -829,7 +829,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 		DeleteCardPageBean bean = new DeleteCardPageBean();
 		//
 		bean.setUserId(user.getUserId());
-		bean.setTxCode(BankCallConstant.TXCODE_BIND_CARD_PAGE);
+		bean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_UNBINDCARD_PAGE);
 		bean.setAccountId(accountChinapnrTender.getAccount());
 		bean.setName(userInfoVO.getTruename());
 		bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
