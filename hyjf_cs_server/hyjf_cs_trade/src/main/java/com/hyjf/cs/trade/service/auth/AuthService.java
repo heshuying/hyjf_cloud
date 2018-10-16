@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.service.auth;
 
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
