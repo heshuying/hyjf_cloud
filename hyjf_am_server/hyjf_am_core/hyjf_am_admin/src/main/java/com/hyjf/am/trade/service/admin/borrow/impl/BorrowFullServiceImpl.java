@@ -245,20 +245,10 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
                         //2018-10-15 复审之后之后发送MQ进行放款
                         if (StringUtils.isNotBlank(borrow.getPlanNid())) {
                             //计划标的放款
-                            try {
-                                borrowLoanRepayProducer.messageSend(
-                                        new MessageContent(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
-                            } catch (MQException e) {
-                                logger.error("[编号：" + borrowNid + "]发送计划放款MQ失败！", e);
-                            }
+                            sendRealTimeLoanMQ(borrowNid, borrowApicron, MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC);
                         } else {
                             //直投标的放款
-                            try {
-                                borrowLoanRepayProducer.messageSend(
-                                        new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
-                            } catch (MQException e) {
-                                logger.error("[编号：" + borrowNid + "]发送直投放款MQ失败！", e);
-                            }
+                            sendRealTimeLoanMQ(borrowNid, borrowApicron, MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC);
                         }
 
                         return new Response();
@@ -275,6 +265,21 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
         } else {
             return new Response(Response.FAIL,
                     "[编号：" + borrowNid + "]标的记录存在没有授权码的记录，请确认！");
+        }
+    }
+
+    /**
+     * 复审完成之后即时发送放款MQ
+     * @param borrowNid
+     * @param borrowApicron
+     * @param borrowRealtimeloanPlanRequestTopic
+     */
+    private void sendRealTimeLoanMQ(String borrowNid, BorrowApicron borrowApicron, String borrowRealtimeloanPlanRequestTopic) {
+        try {
+            borrowLoanRepayProducer.messageSend(
+                    new MessageContent(borrowRealtimeloanPlanRequestTopic, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
+        } catch (MQException e) {
+            logger.error("[编号：" + borrowNid + "]发送放款MQ失败！", e);
         }
     }
 
