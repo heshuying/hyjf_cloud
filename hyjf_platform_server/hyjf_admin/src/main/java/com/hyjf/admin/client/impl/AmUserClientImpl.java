@@ -2373,4 +2373,21 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setList(voList);
 		restTemplate.postForObject("http:/AM-USER/am-user/promotion/utm/insert_utm_list", request, UtmResponse.class);
 	}
+	/**
+	 * 根据证件号码和姓名查找用户CA认证记录表
+	 * 
+	 * @param tureName
+	 * @return
+	 */
+	@Override
+	public CertificateAuthorityResponse selectCertificateAuthorityByCAName(String tureName) {
+		CertificateAuthorityResponse response = restTemplate.getForEntity(
+				"http://AM-ADMIN/am-user/loanCoverUser/selectCertificateAuthorityByCAName/" + tureName,
+				CertificateAuthorityResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
 }

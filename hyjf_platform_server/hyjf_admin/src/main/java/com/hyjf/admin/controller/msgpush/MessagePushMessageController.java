@@ -92,7 +92,21 @@ public class MessagePushMessageController extends BaseController {
                 }
                 if (record.getMsgAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
                     form.setMsgActionUrl1("");
-                    form.setMsgActionUrl2(record.getMsgActionUrl());
+                    if ("hyjf://jumpZXH".equals(record.getMsgActionUrl())) {
+                        form.setMsgActionUrl2("1");
+                    }
+                    if ("hyjf://jumpMine".equals(record.getMsgActionUrl())) {
+                        form.setMsgActionUrl2("2");
+                    }
+                    if ("hyjf://jumpCouponsList".equals(record.getMsgActionUrl())) {
+                        form.setMsgActionUrl2("3");
+                    }
+                    if ("hyjf://jumpTransactionDetail".equals(record.getMsgActionUrl())) {
+                        form.setMsgActionUrl2("4");
+                    }
+                    if ("hyjf://jumpInvest".equals(record.getMsgActionUrl())) {
+                        form.setMsgActionUrl2("5");
+                    }
                 }
                 // 如果是转发,则form的id应置为空
                 if (StringUtils.isNotEmpty(form.getUpdateOrReSend()) && form.getUpdateOrReSend().equals("2")) {
@@ -150,17 +164,17 @@ public class MessagePushMessageController extends BaseController {
             templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl3());
         }
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
-            if(templateRequest.getMsgActionUrl2().equals("尊享汇")){
+            if(templateRequest.getMsgActionUrl2().equals("1")){
                 templateRequest.setMsgActionUrl2("hyjf://jumpZXH" );
-            }else if (templateRequest.getMsgActionUrl2().equals("我的投资")) {
+            }else if (templateRequest.getMsgActionUrl2().equals("5")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpInvest");
             }else if (templateRequest.getMsgActionUrl2().equals("新手汇")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpXSH");
-            }else if (templateRequest.getMsgActionUrl2().equals("我的账户")) {
+            }else if (templateRequest.getMsgActionUrl2().equals("2")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpMine");
-            }else if (templateRequest.getMsgActionUrl2().equals("优惠券列表")) {
+            }else if (templateRequest.getMsgActionUrl2().equals("3")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpCouponsList");
-            }else if (templateRequest.getMsgActionUrl2().equals("交易记录")) {
+            }else if (templateRequest.getMsgActionUrl2().equals("4")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpTransactionDetail");
             }else if (templateRequest.getMsgActionUrl2().equals("债券转让-已承接")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpTransfer");
@@ -313,7 +327,7 @@ public class MessagePushMessageController extends BaseController {
      * @param response
      */
     private MessagePushMsgResponse prepareDatas(MessagePushMsgResponse response) {
-        String nameClass = "MSG_PUSH_STATUS";
+        String nameClass = "MSG_PUSH_MSG_STATUS";
         String nameClass2 = "MSG_PUSH_TEMP_ACT";
         String nameClass3 = "MSG_PUSH_NATUREURLS";
         // ======================拼接枚举======================
@@ -336,6 +350,7 @@ public class MessagePushMessageController extends BaseController {
         response.setPlats(plats);
         // 原生页面
         List<ParamNameVO> naturePages = this.messagePushTemplateService.getParamNameList(nameClass3);
+        naturePages.remove(0);
         response.setNaturePages(naturePages);
         return response;
     }

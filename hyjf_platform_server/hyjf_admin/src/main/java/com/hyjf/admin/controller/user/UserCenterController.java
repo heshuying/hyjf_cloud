@@ -481,7 +481,7 @@ public class UserCenterController extends BaseController {
     }
 
     public String getAge(String birthday) {
-        if (StringUtils.isBlank(birthday)) {
+        if (StringUtils.isBlank(birthday)||birthday.contains("--")) {
             return "";
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");

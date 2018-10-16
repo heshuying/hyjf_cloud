@@ -54,6 +54,10 @@ public class BorrowRepaymentRequest extends BasePage {
      */
     private String borrowNid;
     /**
+     * 借款编号 检索条件
+     */
+    private String borrowName;
+    /**
      * 借款期限 检索条件
      */
     private String borrowPeriod;
@@ -204,5 +208,13 @@ public class BorrowRepaymentRequest extends BasePage {
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getBorrowName() {
+        return borrowName;
+    }
+
+    public void setBorrowName(String borrowName) {
+        this.borrowName = borrowName;
     }
 }

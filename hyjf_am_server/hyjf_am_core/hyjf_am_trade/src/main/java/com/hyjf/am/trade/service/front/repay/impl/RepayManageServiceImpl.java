@@ -243,11 +243,15 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectOrgRepayList(param);
         if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
+                RepayListCustomizeVO info = list.get(i);
+                //获得标的类型
+                String borrowStyle = info.getBorrowStyle();
+
                 BigDecimal accountFee = BigDecimal.ZERO;
                 BigDecimal borrowTotal = BigDecimal.ZERO;
                 BigDecimal realAccountTotal = BigDecimal.ZERO;
                 BigDecimal allAccountFee = BigDecimal.ZERO;
-                BigDecimal serviceFee = BigDecimal.ZERO;
+//                BigDecimal serviceFee = BigDecimal.ZERO;
                 if (StringUtils.isNotBlank(list.get(i).getRepayFee())) {
                     accountFee = new BigDecimal(list.get(i).getRepayFee());
                 }
@@ -260,14 +264,29 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 if (StringUtils.isNotBlank(list.get(i).getAllRepayFee())) {
                     allAccountFee = new BigDecimal(list.get(i).getAllRepayFee());
                 }
-                if (StringUtils.isNotBlank(list.get(i).getServiceFee())) {
-                    serviceFee = new BigDecimal(list.get(i).getServiceFee());
-                }
-                BigDecimal oldYesAccount = new BigDecimal(list.get(i).getYesAccount()==null?"0":list.get(i).getYesAccount());
-                BigDecimal yesAccount = oldYesAccount.subtract(serviceFee);
-                list.get(i).setYesAccount(yesAccount.toString());
+//                if (StringUtils.isNotBlank(list.get(i).getServiceFee())) {
+//                    serviceFee = new BigDecimal(list.get(i).getServiceFee());
+//                }
+//                BigDecimal oldYesAccount = new BigDecimal(list.get(i).getYesAccount()==null?"0":list.get(i).getYesAccount());
+//                BigDecimal yesAccount = oldYesAccount.subtract(serviceFee);
+//                list.get(i).setYesAccount(yesAccount.toString());
                 list.get(i).setBorrowTotal(borrowTotal.add(allAccountFee).toString());
                 list.get(i).setRealAccountYes(realAccountTotal.add(accountFee).toString());
+
+                if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)||CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {//日标
+                    info.setOrgBorrowPeriod("1");
+                }else{//月标 获取当前应还期数
+                    if (org.apache.commons.lang3.StringUtils.isBlank(info.getBorrowAllPeriod())) {
+                        info.setBorrowAllPeriod("0");
+                    }
+                    if (org.apache.commons.lang3.StringUtils.isBlank(info.getRepayPeriod())) {
+                        info.setRepayPeriod("0");
+                    }
+                    int borrowPeriod = Integer.parseInt(info.getBorrowAllPeriod());
+                    int repayPeriod = Integer.parseInt(info.getRepayPeriod());
+                    int orgBorrowPeriod = borrowPeriod - repayPeriod + 1;
+                    info.setOrgBorrowPeriod(orgBorrowPeriod+"");
+                }
             }
         }
 

@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.user.UserPortraitRequest;
 import com.hyjf.am.user.dao.model.auto.UserPortrait;
 import com.hyjf.am.user.dao.model.customize.UserPortraitScoreCustomize;
 import com.hyjf.am.user.service.BaseService;
+import com.hyjf.am.vo.user.UserPortraitVO;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public interface UserPortraitManagerService extends BaseService {
      * @param limitEnd
      * @return
      */
-    List<UserPortrait> selectRecordList(Map<String, Object> userPortrait, int limitStart, int limitEnd);
+    List<UserPortraitVO> selectRecordList(Map<String, Object> userPortrait, int limitStart, int limitEnd);
 
     /**
      * 根据条件获取记录数

@@ -226,19 +226,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
     }
 
-	/**
-	 * 获取标签
-	 * @return
-	 */
-	@Override
-	public MessagePushTagResponse getAllPushTagList() {
-		MessagePushTagResponse response = restTemplate
-				.getForEntity("http://CS-MESSAGE/cs-message/history_message/get_push_tag_list",
-						MessagePushTagResponse.class)
-				.getBody();
-		return response;
 
-	}
 
     @Override
     public MessagePushNoticesResponse getRecord(MessagePushNoticesRequest bean) {
