@@ -8,7 +8,7 @@ import com.hyjf.am.response.admin.MessagePushHistoryResponse;
 import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
-import com.hyjf.am.vo.admin.MessagePushTagVO;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTag;

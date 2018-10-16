@@ -1161,7 +1161,6 @@ public interface AmConfigClient {
 	/**
 	 * 根据id查询数据
 	 *
-	 * @param requestBean
 	 * @return
 	 */
 	LinkResponse infoInfoAction(Integer id);

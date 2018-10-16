@@ -195,62 +195,52 @@ public class MessagePushTemplateExample {
             return (Criteria) this;
         }
 
-        public Criteria andTagIdEqualTo(String value) {
+        public Criteria andTagIdEqualTo(Integer value) {
             addCriterion("tag_id =", value, "tagId");
             return (Criteria) this;
         }
 
-        public Criteria andTagIdNotEqualTo(String value) {
+        public Criteria andTagIdNotEqualTo(Integer value) {
             addCriterion("tag_id <>", value, "tagId");
             return (Criteria) this;
         }
 
-        public Criteria andTagIdGreaterThan(String value) {
+        public Criteria andTagIdGreaterThan(Integer value) {
             addCriterion("tag_id >", value, "tagId");
             return (Criteria) this;
         }
 
-        public Criteria andTagIdGreaterThanOrEqualTo(String value) {
+        public Criteria andTagIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("tag_id >=", value, "tagId");
             return (Criteria) this;
         }
 
-        public Criteria andTagIdLessThan(String value) {
+        public Criteria andTagIdLessThan(Integer value) {
             addCriterion("tag_id <", value, "tagId");
             return (Criteria) this;
         }
 
-        public Criteria andTagIdLessThanOrEqualTo(String value) {
+        public Criteria andTagIdLessThanOrEqualTo(Integer value) {
             addCriterion("tag_id <=", value, "tagId");
             return (Criteria) this;
         }
 
-        public Criteria andTagIdLike(String value) {
-            addCriterion("tag_id like", value, "tagId");
-            return (Criteria) this;
-        }
-
-        public Criteria andTagIdNotLike(String value) {
-            addCriterion("tag_id not like", value, "tagId");
-            return (Criteria) this;
-        }
-
-        public Criteria andTagIdIn(List<String> values) {
+        public Criteria andTagIdIn(List<Integer> values) {
             addCriterion("tag_id in", values, "tagId");
             return (Criteria) this;
         }
 
-        public Criteria andTagIdNotIn(List<String> values) {
+        public Criteria andTagIdNotIn(List<Integer> values) {
             addCriterion("tag_id not in", values, "tagId");
             return (Criteria) this;
         }
 
-        public Criteria andTagIdBetween(String value1, String value2) {
+        public Criteria andTagIdBetween(Integer value1, Integer value2) {
             addCriterion("tag_id between", value1, value2, "tagId");
             return (Criteria) this;
         }
 
-        public Criteria andTagIdNotBetween(String value1, String value2) {
+        public Criteria andTagIdNotBetween(Integer value1, Integer value2) {
             addCriterion("tag_id not between", value1, value2, "tagId");
             return (Criteria) this;
         }

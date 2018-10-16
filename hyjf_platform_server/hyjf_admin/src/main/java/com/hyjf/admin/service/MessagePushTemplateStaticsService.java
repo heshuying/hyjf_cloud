@@ -18,9 +18,4 @@ public interface MessagePushTemplateStaticsService {
      */
     MessagePushTemplateStaticsResponse selectTemplateStatics(MessagePushTemplateStaticsRequest request);
 
-    /**
-     * 获取所有标签列表
-     * @return
-     */
-    MessagePushTagResponse getMsgTagList();
 }

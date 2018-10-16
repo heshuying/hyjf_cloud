@@ -7,7 +7,7 @@ package com.hyjf.am.response.admin;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.vo.admin.MessagePushErrorVO;
-import com.hyjf.am.vo.admin.MessagePushTagVO;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import io.swagger.annotations.ApiModelProperty;
 
