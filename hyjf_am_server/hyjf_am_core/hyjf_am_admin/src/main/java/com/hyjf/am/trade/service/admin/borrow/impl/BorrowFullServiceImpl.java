@@ -3,6 +3,9 @@
  */
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.admin.mq.producer.BorrowLoanRepayProducer;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowFullRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -10,6 +13,8 @@ import com.hyjf.am.trade.dao.model.customize.BorrowFullCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFullService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
@@ -21,6 +26,7 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -36,6 +42,8 @@ import java.util.Map;
 @Service
 public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFullService {
 
+    @Autowired
+    BorrowLoanRepayProducer borrowLoanRepayProducer;
 
     /**
      * 获取借款复审列表count
@@ -234,6 +242,15 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
                     }
                     boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                     if (apicronFlag) {
+                        //2018-10-15 复审之后之后发送MQ进行放款
+                        if (StringUtils.isNotBlank(borrow.getPlanNid())) {
+                            //计划标的放款
+                            sendRealTimeLoanMQ(borrowNid, borrowApicron, MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC);
+                        } else {
+                            //直投标的放款
+                            sendRealTimeLoanMQ(borrowNid, borrowApicron, MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC);
+                        }
+
                         return new Response();
                     } else {
                         return new Response(Response.FAIL,
@@ -248,6 +265,21 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
         } else {
             return new Response(Response.FAIL,
                     "[编号：" + borrowNid + "]标的记录存在没有授权码的记录，请确认！");
+        }
+    }
+
+    /**
+     * 复审完成之后即时发送放款MQ
+     * @param borrowNid
+     * @param borrowApicron
+     * @param borrowRealtimeloanPlanRequestTopic
+     */
+    private void sendRealTimeLoanMQ(String borrowNid, BorrowApicron borrowApicron, String borrowRealtimeloanPlanRequestTopic) {
+        try {
+            borrowLoanRepayProducer.messageSend(
+                    new MessageContent(borrowRealtimeloanPlanRequestTopic, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
+        } catch (MQException e) {
+            logger.error("[编号：" + borrowNid + "]发送放款MQ失败！", e);
         }
     }
 

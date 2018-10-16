@@ -31,7 +31,7 @@ public class AdminRoleRequest extends AdminRoleVO {
     private String roleNameSrch;
     /** 角色状态 */
     private int stateSrch;
-    private int stateSrchOn;
+    private String stateSrchOn;
     private int stateSrchOff;
 
    
@@ -76,11 +76,11 @@ public class AdminRoleRequest extends AdminRoleVO {
         this.stateSrch = stateSrch;
     }
 
-    public int getStateSrchOn() {
+    public String getStateSrchOn() {
         return stateSrchOn;
     }
 
-    public void setStateSrchOn(int stateSrchOn) {
+    public void setStateSrchOn(String stateSrchOn) {
         this.stateSrchOn = stateSrchOn;
     }
 
