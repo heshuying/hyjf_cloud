@@ -117,7 +117,7 @@ public class MessagePushTemplateController extends BaseController {
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
         }
-        templateVO.setTagCode(templateRequest.getTemplateCode().substring(0, 3));
+        templateVO.setTagCode(templateRequest.getTemplateCode().substring(0, 4));
         templateVO.setTemplateCode(templateRequest.getTemplateCode());
         templateVO.setCreateUserId(Integer.parseInt(userId));
         templateVO.setLastupdateUserId(Integer.parseInt(userId));
