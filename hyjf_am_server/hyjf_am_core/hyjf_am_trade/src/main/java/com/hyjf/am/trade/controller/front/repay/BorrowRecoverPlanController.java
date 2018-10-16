@@ -73,11 +73,11 @@ public class BorrowRecoverPlanController extends BaseController{
 	 * @return
 	 */
 	@GetMapping("/select_borrow_recover_plan_list/{nid}")
-	public BorrowRepayPlanResponse selectBorrowRecoverPlanListByNid(@PathVariable String nid){
-		BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
-		List<BorrowRecoverPlan> borrowRepayPlanList = borrowRecoverPlanService.selectBorrowRecoverPlanListByNid(nid);
-		if (!CollectionUtils.isEmpty(borrowRepayPlanList)) {
-			List<BorrowRepayPlanVO> voList = CommonUtils.convertBeanList(borrowRepayPlanList, BorrowRepayPlanVO.class);
+	public BorrowRecoverPlanResponse selectBorrowRecoverPlanListByNid(@PathVariable String nid){
+		BorrowRecoverPlanResponse response = new BorrowRecoverPlanResponse();
+		List<BorrowRecoverPlan> borrowRecoverPlanList = borrowRecoverPlanService.selectBorrowRecoverPlanListByNid(nid);
+		if (!CollectionUtils.isEmpty(borrowRecoverPlanList)) {
+			List<BorrowRecoverPlanVO> voList = CommonUtils.convertBeanList(borrowRecoverPlanList, BorrowRecoverPlanVO.class);
 			response.setResultList(voList);
 		}
 		return response;

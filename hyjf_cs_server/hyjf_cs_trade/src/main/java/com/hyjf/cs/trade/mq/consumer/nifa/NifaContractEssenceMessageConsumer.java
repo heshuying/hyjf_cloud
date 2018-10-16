@@ -16,7 +16,6 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.mq.base.Consumer;
 import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import org.apache.commons.lang3.StringUtils;
@@ -263,7 +262,7 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                         // 是否按月还款
                         boolean isMonth = false;
                         // 到期日
-                        String lasterDay = "";
+                        Integer lasterDay;
                         // 还款方式 去还款表取数据
                         if ("month".equals(borrow.getBorrowStyle())) {
                             isMonth = true;
@@ -294,20 +293,15 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                                 continue;
                             }
                             // 最后一期还款日
-                            lasterDay = GetDate.timestamptoStrYYYYMMDD(borrowRecoverPlanList.get(borrowRecoverPlanList.size() - 1).getRecoverTime());
+                            lasterDay = borrowRecoverPlanList.get(borrowRecoverPlanList.size() - 1).getRecoverTime();
                             // json数据生成
                             for (BorrowRecoverPlanVO borrowRecoverPlan : borrowRecoverPlanList) {
                                 Map<String, String> map = new HashMap<String, String>();
-                                if (Validator.isNumber(lasterDay)) {
-                                    try {
-                                        map.put("date", GetDate.timestamptoStrYYYYMMDD(borrowRecoverPlan.getRecoverTime()));
-                                    } catch (Exception e) {
-                                        logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowNid + " 还款日期：" + borrowRecoverPlan.getRecoverTime());
-                                        e.printStackTrace();
-                                        continue;
-                                    }
-                                } else {
+                                try {
+                                    map.put("date", GetDate.timestamptoStrYYYYMMDD(lasterDay));
+                                } catch (Exception e) {
                                     logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowNid + " 还款日期：" + borrowRecoverPlan.getRecoverTime());
+                                    e.printStackTrace();
                                     continue;
                                 }
                                 map.put("principal", borrowRecoverPlan.getRecoverCapital().toString());
@@ -324,19 +318,14 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                                 continue;
                             }
                             // 最后还款日
-                            lasterDay = GetDate.timestamptoStrYYYYMMDD(borrowRecover.getRecoverTime());
+                            lasterDay = borrowRecover.getRecoverTime();
                             // json数据生成
                             Map<String, String> map = new HashMap<String, String>();
-                            if (Validator.isNumber(lasterDay)) {
-                                try {
-                                    map.put("date", GetDate.timestamptoStrYYYYMMDD(borrowRecover.getRecoverTime()));
-                                } catch (Exception e) {
-                                    logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowNid + " 还款日期：" + borrowRecover.getRecoverTime());
-                                    e.printStackTrace();
-                                    continue;
-                                }
-                            } else {
+                            try {
+                                map.put("date", GetDate.timestamptoStrYYYYMMDD(lasterDay));
+                            } catch (Exception e) {
                                 logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowNid + " 还款日期：" + borrowRecover.getRecoverTime());
+                                e.printStackTrace();
                                 continue;
                             }
                             map.put("principal", borrowRecover.getRecoverCapital().toString());
@@ -349,16 +338,11 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                         nifaContractEssence.setRepayPlan(jsonObject.toString());
 
                         // 到期日设定
-                        if (Validator.isNumber(lasterDay)) {
-                            try {
-                                nifaContractEssence.setExpiryDate(GetDate.timestamptoStrYYYYMMDD(Integer.parseInt(lasterDay)));
-                            } catch (Exception e) {
-                                logger.error(thisMessName + "最后一期还款日格式化失败，borrowNid:" + borrowNid);
-                                e.printStackTrace();
-                                continue;
-                            }
-                        } else {
+                        try {
+                            nifaContractEssence.setExpiryDate(GetDate.timestamptoStrYYYYMMDD(lasterDay));
+                        } catch (Exception e) {
                             logger.error(thisMessName + "最后一期还款日格式化失败，borrowNid:" + borrowNid);
+                            e.printStackTrace();
                             continue;
                         }
                         // 还款方式含义及计算公式
