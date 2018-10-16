@@ -421,6 +421,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         if (StringUtils.isNotEmpty(request.getEndDate())) {
             criteria.andCreateTimeLessThan(GetDate.stringToDate(GetDate.getDayEnd(request.getEndDate())));
         }
+        criteria.andGateTypeEqualTo("ADMIN");
         example.setOrderByClause("create_time desc");
         if (request.getLimitStart() != -1) {
             example.setLimitStart(request.getLimitStart());

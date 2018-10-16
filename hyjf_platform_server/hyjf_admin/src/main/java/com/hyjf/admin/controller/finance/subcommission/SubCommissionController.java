@@ -65,7 +65,7 @@ public class SubCommissionController extends BaseController {
         Integer count = subCommissionService.getSubCommissionCount(request);
         count = (count == null)?0:count;
         List<SubCommissionVO> subCommissionVOList = subCommissionService.searchSubCommissionList(request);
-        logger.info(JSON.toJSONString(subCommissionVOList));
+        logger.debug(JSON.toJSONString(subCommissionVOList));
         return new AdminResult<>(ListResult.build(subCommissionVOList,count));
     }
 

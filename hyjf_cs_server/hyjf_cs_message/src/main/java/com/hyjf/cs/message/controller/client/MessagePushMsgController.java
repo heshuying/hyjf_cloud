@@ -161,6 +161,7 @@ public class MessagePushMsgController extends BaseController {
 		MessagePushMsg msg = new MessagePushMsg();
 		BeanUtils.copyProperties(msgVO,msg);
 		msg.setCreateTime(GetDate.getNowTime10());
+		msg.setLastupdateTime(GetDate.getNowTime10());
 		Integer count = messagePushMsgService.insertMessagePushMsg(msg);
 		response.setCount(count);
 		return response;

@@ -29,6 +29,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -219,7 +220,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		return borrowApicronMapper.selectByPrimaryKey(id);
 	}
 
-	private boolean updateRecover(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception {
+	@Override
+	public boolean updateRecover(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception {
 		int periodNow = apicron.getPeriodNow();
 		// 还款方式
 		String borrowStyle = borrow.getBorrowStyle();
@@ -489,7 +491,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			boolean repayFlag = this.debtRepays(apicron, borrow, borrowInfo, resultBeans);
 			if (repayFlag) {
 				try {
-					boolean borrowFlag = this.updateBorrowStatus(apicron, borrow, borrowInfo);
+					boolean borrowFlag = ((BatchBorrowRepayPlanService)AopContext.currentProxy()).updateBorrowStatus(apicron, borrow, borrowInfo);
 					if (borrowFlag) {
 						return true;
 					}
@@ -513,7 +515,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 * @return
 	 * @throws Exception
 	 */
-	private boolean updateCreditRepay(BorrowApicron apicron, HjhDebtCreditRepay creditRepay) throws Exception {
+	@Override
+	public boolean updateCreditRepay(BorrowApicron apicron, HjhDebtCreditRepay creditRepay) throws Exception {
 		// 更新投资详情表
 		creditRepay.setRepayStatus(2);// 状态 0未还款1已还款2还款失败
 		int flag = this.hjhDebtCreditRepayMapper.updateByPrimaryKeySelective(creditRepay);
@@ -1068,7 +1071,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 									// 如果处理状态为成功
 									if (txState.equals(BankCallConstant.BATCH_TXSTATE_TYPE_SUCCESS)) {
 										// 调用债转还款
-										boolean creditRepayFlag = this.updateCreditRepay(apicron, borrow, borrowInfo, borrowRecover, creditRepay, assignRepayDetail);
+										boolean creditRepayFlag = ((BatchBorrowRepayPlanService)AopContext.currentProxy()).updateCreditRepay(apicron, borrow, borrowInfo, borrowRecover, creditRepay, assignRepayDetail);
 										if (creditRepayFlag) {
 											if (!isMonth || (isMonth && periodNext == 0)) {
 												// 结束债权
@@ -1091,7 +1094,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 									} else {
 										creditRepayAllFlag = false;
 										// 更新投资详情表
-										boolean borrowTenderFlag = this.updateCreditRepay(apicron, creditRepay);
+										boolean borrowTenderFlag = ((BatchBorrowRepayPlanService)AopContext.currentProxy()).updateCreditRepay(apicron, creditRepay);
 										if (!borrowTenderFlag) {
 											throw new Exception("更新相应的creditrepay失败!" + "[承接订单号：" + assignOrderId + "]" + "[还款期数：" + periodNow + "]");
 										}
@@ -1116,7 +1119,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 									// 如果处理状态为成功
 									if (txState.equals(BankCallConstant.BATCH_TXSTATE_TYPE_SUCCESS)) {
 										try {
-											boolean tenderRepayFlag = this.updateTenderRepay(apicron, borrow, borrowInfo, borrowRecover, repayDetail, true, sumCreditCapital);
+											boolean tenderRepayFlag = ((BatchBorrowRepayPlanService)AopContext.currentProxy()).updateTenderRepay(apicron, borrow, borrowInfo, borrowRecover, repayDetail, true, sumCreditCapital);
 											if (tenderRepayFlag) {
 												if (!isMonth || (isMonth && periodNext == 0)) {
 													// 结束债权
@@ -1143,7 +1146,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 									} else {
 										try {
 											// 更新投资详情表
-											boolean recoverFlag = this.updateRecover(apicron, borrow, borrowRecover);
+											boolean recoverFlag = ((BatchBorrowRepayPlanService)AopContext.currentProxy()).updateRecover(apicron, borrow, borrowRecover);
 											if (!recoverFlag) {
 												throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 											}
@@ -1155,7 +1158,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 								} else {
 									logger.info("非完全承接!" + "[投资订单号：" + tenderOrderId + "],原始金额：" + recoverPlanAccount + "，债转金额：" + sumCreditAccount);
 									try {
-										boolean tenderRepayFlag = this.updateTenderRepayStatus(apicron, borrow, borrowRecover);
+										boolean tenderRepayFlag = ((BatchBorrowRepayPlanService)AopContext.currentProxy()).updateTenderRepayStatus(apicron, borrow, borrowRecover);
 										if (!tenderRepayFlag) {
 											throw new Exception("更新相应的还款信息失败!" + "[投资订单号：" + tenderOrderId + "]");
 										}
@@ -1177,7 +1180,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 						// 如果处理状态为成功
 						if (txState.equals(BankCallConstant.BATCH_TXSTATE_TYPE_SUCCESS)) {
 							try {
-								boolean tenderRepayFlag = this.updateTenderRepay(apicron, borrow, borrowInfo, borrowRecover, repayDetail, false, null);
+								boolean tenderRepayFlag = ((BatchBorrowRepayPlanService)AopContext.currentProxy()).updateTenderRepay(apicron, borrow, borrowInfo, borrowRecover, repayDetail, false, null);
 								if (tenderRepayFlag) {
 									if (!isMonth || (isMonth && periodNext == 0)) {
 										boolean debtOverFlag = this.requestDebtEnd(borrowRecover.getUserId(), repayDetail,borrowRecover.getNid(),borrow);
@@ -1201,7 +1204,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 						} else {
 							try {
 								// 更新投资详情表
-								boolean recoverFlag = this.updateRecover(apicron, borrow, borrowRecover);
+								boolean recoverFlag = ((BatchBorrowRepayPlanService)AopContext.currentProxy()).updateRecover(apicron, borrow, borrowRecover);
 								if (!recoverFlag) {
 									throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 								}
@@ -1430,7 +1433,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		return null;
 	}
 
-	private boolean updateTenderRepayStatus(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception {
+	@Override
+	public boolean updateTenderRepayStatus(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception {
 
 		logger.info("-----------还款开始---" + apicron.getBorrowNid() + "---------");
 		/** 还款信息 */
@@ -1594,7 +1598,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 * @return
 	 * @throws Exception
 	 */
-	private boolean updateTenderRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover, JSONObject repayDetail, boolean isCredit, BigDecimal sumCreditCapital) throws Exception {
+	@Override
+	public boolean updateTenderRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover, JSONObject repayDetail, boolean isCredit, BigDecimal sumCreditCapital) throws Exception {
 
 		logger.info("-----------还款开始---" + apicron.getBorrowNid() + "---------");
 
@@ -2566,7 +2571,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 * @return
 	 * @throws Exception
 	 */
-	private boolean updateCreditRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover, HjhDebtCreditRepay creditRepay, JSONObject assignRepayDetail) throws Exception {
+	@Override
+	public boolean updateCreditRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover, HjhDebtCreditRepay creditRepay, JSONObject assignRepayDetail) throws Exception {
 
 		logger.info("------债转还款承接部分开始---承接订单号：" + creditRepay.getCreditNid() + "---------");
 
@@ -3175,7 +3181,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 * @param apicron
 	 * @throws Exception
 	 */
-	private boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception {
+	@Override
+	public boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception {
 
 		int nowTime = GetDate.getNowTime10();
 		String borrowNid = borrow.getBorrowNid();
