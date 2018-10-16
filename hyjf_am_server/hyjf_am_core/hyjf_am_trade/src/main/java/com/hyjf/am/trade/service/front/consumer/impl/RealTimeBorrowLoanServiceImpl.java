@@ -29,6 +29,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -471,7 +472,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 						curServiceFee = curServiceFee.add(serviceFee);
 						
 						// 更新投资信息
-						Map result = updateTenderMuti(apicron, borrow, borrowInfo,serviceFee, borrowTender);
+						Map result = ((RealTimeBorrowLoanService)AopContext.currentProxy()).updateTenderMuti(apicron, borrow, borrowInfo,serviceFee, borrowTender);
 						
 						if(result.get("areadySuccess") == null) {
 							BigDecimal recoverInterest = (BigDecimal) result.get("recoverInterest");
@@ -514,6 +515,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 
 
 	//TODO: 处理tender,判定成功状态，recover 无需要重复获取
+	@Override
 	public Map updateTenderMuti(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal serviceFee, BorrowTender borrowTender) throws Exception {
 		
 		Map result = new HashMap<>();
