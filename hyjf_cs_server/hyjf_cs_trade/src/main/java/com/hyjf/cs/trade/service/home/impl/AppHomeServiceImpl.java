@@ -16,7 +16,6 @@ import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -32,6 +31,8 @@ import com.hyjf.cs.trade.service.home.AppHomeService;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -68,6 +69,7 @@ public class AppHomeServiceImpl implements AppHomeService {
     /** 首页汇计划显示条数*/
     private final int INDEX_HJH_SHOW_SIZE = 1;
 
+    Logger logger = LoggerFactory.getLogger(getClass());
     /**
      * 获取app首页各项数据
      *
@@ -224,14 +226,13 @@ public class AppHomeServiceImpl implements AppHomeService {
         info.put("moduleList", moduleList);
 
         //add by yangchangwei 2018-06-26 app3.0.9 增加协议相关参数
-//        systemConfig.get
-//        String agreementUrl = PropUtils.getSystem("hyjf.app.regist.agreement.url");
+        String agreementUrl = systemConfig.getAppRegistAgreementUrl();
         Map protocalInfo = new HashMap();
         protocalInfo.put("name","《相关协议》");
-//        protocalInfo.put("URL",HOST + agreementUrl);
+        protocalInfo.put("URL",HOST + agreementUrl);
         info.put("registerProtocol",protocalInfo);
         //增加公告内容
-//        this.getAnnouncements(info,HOST);
+        this.getAnnouncements(info,HOST);
         Integer days = GetDate.countDate(GetDate.stringToDate("2013-12-23 00:00:00"), new Date());
         info.put("survivalDays",days);//安全运营天数
         //end
@@ -247,6 +248,37 @@ public class AppHomeServiceImpl implements AppHomeService {
                 ProjectConstant.REQUEST_HOME + HomePageDefine.REQUEST_MAPPING + HomePageDefine.PROJECT_LIST_ACTION);
         CommonUtils.convertNullToEmptyString(info);
         return info;
+    }
+
+    /**
+     * TODO 获取有效的公告内容
+     * @param info
+     * @param HOST
+     */
+    private void getAnnouncements(JSONObject info, String HOST) {
+
+//        List<AppPushManage> manageInfoList = this.homePageService.getAnnouncenments();
+//        if(manageInfoList != null){
+//
+//            List<Map> announMap = new ArrayList<>();
+//            for (AppPushManage manager : manageInfoList) {
+//                Map cements = new HashMap();
+//                String title = manager.getTitle();//标题
+//                String jumpUrl = manager.getJumpUrl();//跳转URL
+//                Integer jumpType = manager.getJumpType();//跳转类型
+//                Integer jumpContent = manager.getJumpContent();//内容类型
+//                if(2 == jumpContent){//跳转H5页面
+//                    jumpUrl = HOST + PropUtils.getSystem("hyjf.app.push.manager.url");
+//                    jumpUrl = jumpUrl + manager.getId();
+//                }
+//                cements.put("title",title);
+//                cements.put("URL", jumpUrl);
+//                announMap.add(cements);
+//            }
+//            info.put("announcements",announMap);
+//        }else{
+//            logger.info("-------------获取首页列表时，未获得有效公告！---------");
+//        }
     }
 
     /**
