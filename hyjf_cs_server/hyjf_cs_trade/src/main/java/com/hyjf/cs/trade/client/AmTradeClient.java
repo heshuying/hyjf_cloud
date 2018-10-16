@@ -39,10 +39,7 @@ import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
-import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
-import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
-import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.*;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -2255,4 +2252,25 @@ public interface AmTradeClient {
      * @return
      */
     List<AppProjectListCustomizeVO> selectHomeProjectList(AppHomePageRequest request);
+
+    /**
+     * 插入垫付机构冻结日志信息
+     * @author wgx
+     * @date 2018/10/16
+     */
+    Integer addOrgFreezeLog(BankRepayOrgFreezeLogRequest requestBean);
+
+    /**
+     * 删除垫付机构冻结日志信息
+     * @author wgx
+     * @date 2018/10/16
+     */
+    Integer deleteOrgFreezeLog(String orderId, String borrowNid);
+
+    /**
+     * 根据条件查询垫付机构冻结日志
+     * @author wgx
+     * @date 2018/10/16
+     */
+    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId, String borrowNid);
 }

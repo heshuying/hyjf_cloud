@@ -7,8 +7,8 @@ import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -27,6 +27,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
@@ -36,8 +37,6 @@ import com.hyjf.cs.trade.vo.RepayDetailRequestVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -45,9 +44,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
@@ -61,6 +62,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/hyjf-web/repay")
 public class RepayManageController extends BaseTradeController {
+    private static final String REQUSET_MAPPING = "/hyjf-web/repay";
     /** 用户ID */
     private static final String VAL_USERID = "userId";
     /**总还款数量*/
@@ -70,6 +72,12 @@ public class RepayManageController extends BaseTradeController {
     /**失败数量*/
     private static final String VAL_FAILCOUNT = "failCount";
 
+    /** 批次代偿的同步回调 */
+    public static final String REPAY_SYNC_RETURN_ACTION = "/getRepaySyncReturn";
+
+    /** 批次代偿的异步回调 */
+    public static final String REPAY_ASYNC_RETURN_ACTION = "/getRepayAsyncReturn";
+
     // 根据用户ID和模版号给某用户发短信
     public static final String SMSSENDFORUSER = "smsSendForUser";
 
@@ -78,6 +86,8 @@ public class RepayManageController extends BaseTradeController {
     @Autowired
     RepayManageService repayManageService;
 
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * 用户还款页面统计数据查询
      */
@@ -349,7 +359,7 @@ public class RepayManageController extends BaseTradeController {
             result.setData(Collections.emptyMap());
             return result;
         }
-
+        // TODO 合规四期服务费授权
         resultMap.put("isAllRepay", isAllRepay);
         resultMap.put("paymentAuthStatus", "");
         resultMap.put("repayAuthStatus", "");
@@ -383,12 +393,12 @@ public class RepayManageController extends BaseTradeController {
         if(pAllRepay != null && "1".equals(pAllRepay)) {
             isAllRepay = true;
         }
-
+        String roleId = userVO.getRoleId();
         RepayBean repayBean = repayManageService.getRepayBean(userVO.getUserId(), userVO.getRoleId(), requestBean.getBorrowNid(), isAllRepay);
-        if ("3".equals(userVO.getRoleId())) {// 垫付机构还款校验
-            repayManageService.checkForRepayRequest(requestBean.getBorrowNid(), requestBean.getPassword(),userVO, repayBean);
-        } else { // 借款人还款校验
+        if ("3".equals(roleId)) {// 垫付机构还款校验
             repayManageService.checkForRepayRequestOrg(requestBean.getBorrowNid(), requestBean.getPassword(),userVO, repayBean,0);
+        } else { // 借款人还款校验
+            repayManageService.checkForRepayRequest(requestBean.getBorrowNid(), requestBean.getPassword(),userVO, repayBean);
         }
         int errflag = repayBean.getFlag();
         if (1 == errflag) {
@@ -399,63 +409,40 @@ public class RepayManageController extends BaseTradeController {
         String ip = GetCilentIP.getIpAddr(request);
         repayBean.setIp(ip);
         BigDecimal repayTotal = repayBean.getRepayAccountAll();
-
+        String account = userVO.getBankAccount();
         // 用户还款
         try {
-            String orderId = GetOrderIdUtils.getOrderId2(userVO.getUserId());
-            String account = userVO.getBankAccount();
-            //add by cwyang 2017-07-25 还款去重
-            boolean result = repayManageService.checkRepayInfo(userVO.getUserId(), requestBean.getBorrowNid());
-            if (!result) {
-                webResult.setStatus(WebResult.ERROR);
-                webResult.setStatusDesc("项目正在还款中...");
-                return webResult;
-            }
-            //插入冻结信息日志表 add by cwyang 2017-07-08
-            repayManageService.addFreezeLog(userVO.getUserId(),orderId,account,requestBean.getBorrowNid(),repayTotal,userVO.getUsername());
-            // 申请还款冻结资金
-            // 调用江西银行还款申请冻结资金
-            BankCallBean bean = new BankCallBean();
-            bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_FREEZE);// 交易代码
-            bean.setAccountId(account);// 电子账号
-            bean.setOrderId(orderId); // 订单号
-            bean.setTxAmount(String.valueOf(repayTotal));// 交易金额
-            bean.setProductId(requestBean.getBorrowNid());
-            bean.setFrzType("0");
-            bean.setLogOrderId(orderId);// 订单号
-            bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
-            bean.setLogUserId(String.valueOf(userVO.getUserId()));
-            bean.setLogUserName(userVO.getUsername());
-            bean.setLogClient(0);
-            bean.setLogIp(ip);
-            bean.setProductId(requestBean.getBorrowNid());
-            BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
-            String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
-            // 申请冻结资金失败
-            if (StringUtils.isBlank(respCode) || !BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
-                if (!"".equals(respCode)) {
-                    this.repayManageService.deleteFreezeLogByOrderId(orderId);
-                }
-                logger.info("调用还款申请冻结资金接口失败:" + callBackBean.getRetMsg() + "订单号:" + callBackBean.getOrderId());
-                webResult.setStatus(WebResult.ERROR);
-                webResult.setStatusDesc("还款失败，请稍后再试...");
-                return webResult;
-            }
-            //还款后变更数据
-            boolean updateResult = this.repayManageService.updateForRepayRequest(repayBean, callBackBean);
-            if(updateResult){
-                updateResult = this.repayManageService.updateBorrowCreditStautus(requestBean.getBorrowNid());
-                if(!updateResult){
+            if(StringUtils.isNotEmpty(roleId) && "3".equals(roleId)){// 垫付机构还款
+                String txDate = GetOrderIdUtils.getTxDate();// 交易日期
+                String txTime = GetOrderIdUtils.getTxTime();// 交易时间
+                String seqNo = GetOrderIdUtils.getSeqNo(6);// 交易流水号
+                String orderId = txDate + txTime + seqNo;// 交易日期+交易时间+交易流水号
+                //add by cwyang 2017-07-25 还款去重
+                boolean result = repayManageService.checkRepayInfo(null, requestBean.getBorrowNid());
+                if (!result) {
                     webResult.setStatus(WebResult.ERROR);
-                    webResult.setStatusDesc("还款失败，请稍后再试...");
-                }else {
-                    webResult.setStatus(WebResult.SUCCESS);
-                    webResult.setStatusDesc(WebResult.SUCCESS_DESC);
+                    webResult.setStatusDesc("项目正在还款中...");
                     return webResult;
                 }
-            }else {
-                webResult.setStatus(WebResult.ERROR);
-                webResult.setStatusDesc("还款失败，请稍后再试...");
+                //插入垫付机构冻结信息日志表 add by wgx 2018-09-11
+                repayManageService.insertRepayOrgFreezeLof(userId, orderId, account, requestBean.getBorrowNid(), repayBean, userVO.getUsername(), isAllRepay);
+                Map<String, Object> map = repayManageService.getBankRefinanceFreezePage(userId, userVO.getUsername(), ip, orderId, requestBean.getBorrowNid(), repayTotal, account);
+                webResult.setData(map);
+                return webResult;
+            } else {
+                String orderId = GetOrderIdUtils.getOrderId2(userVO.getUserId());
+                //add by cwyang 2017-07-25 还款去重
+                boolean result = repayManageService.checkRepayInfo(null, requestBean.getBorrowNid());
+                if (!result) {
+                    webResult.setStatus(WebResult.ERROR);
+                    webResult.setStatusDesc("项目正在还款中...");
+                    return webResult;
+                }
+                //插入冻结信息日志表 add by cwyang 2017-07-08
+                repayManageService.addFreezeLog(userVO.getUserId(), orderId, account, requestBean.getBorrowNid(), repayTotal, userVO.getUsername());
+                // 申请还款冻结资金
+                // 调用江西银行还款申请冻结资金
+                return repayManageService.getBalanceFreeze(userVO, requestBean.getBorrowNid(), repayBean, orderId, account);
             }
         } catch (Exception e) {
             logger.error("还款申请冻结资金异常", e);
@@ -463,7 +450,6 @@ public class RepayManageController extends BaseTradeController {
             webResult.setStatusDesc("还款申请冻结资金异常");
             return webResult;
         }
-        return webResult;
     }
 
     /**
@@ -532,7 +518,7 @@ public class RepayManageController extends BaseTradeController {
 //        }
 
         resultMap.put("repayAuthStatus","");
-
+        // TODO 合规四期缴费授权
         webResult.setData(resultMap);
         return webResult;
     }
@@ -590,141 +576,27 @@ public class RepayManageController extends BaseTradeController {
     public WebResult orgUserStartBatchRepay(@RequestHeader(value = "userId") Integer userId, @RequestBody BatchRepayPageRequestVO requestBean, HttpServletRequest request) {
         WebResult webResult = new WebResult();
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
-
         String startDate = requestBean.getStartDate();
         String endDate = requestBean.getEndDate();
-        String msg = "";
-
         //查询该时间段的所有担保户的待还款记录并进行还款
         // 还款方法10分钟只能一次
-        boolean reslut = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId, 600);
-        if(!reslut){
-            msg = "999";
-            logger.info("==============垫付机构:" + userId + "批量还款失败,项目正在还款中!");
-            webResult.setStatus(WebResult.ERROR);
-            webResult.setStatusDesc("批量还款失败,项目正在还款中!");
-            webResult.setData(msg);
-            return webResult;
-        }
-        BankOpenAccountVO userBankOpenAccount = this.repayManageService.getBankOpenAccount(userId);
-
-        RepayListRequest form = new RepayListRequest();
-        form.setUserId(userId + "");
-        form.setRoleId("3");
-        form.setStartDate(startDate);
-        form.setEndDate(endDate);
-        form.setStatus("0");
-        form.setRepayStatus("0");
-        int allRepaySize = 0;//所有还款标的数目
-        int successRepaySize = 0;//成功数目
-        List<RepayListCustomizeVO> list = repayManageService.selectOrgRepayList(form);
-        if (list != null && list.size() > 0) {
-            allRepaySize = list.size();
-            logger.info("=================cwyang 总还款笔数:" + allRepaySize + ",还款id:" + userId);
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject info = new JSONObject();
-                RepayListCustomizeVO repayInfo = list.get(i);
-                String borrowNid = repayInfo.getBorrowNid();
-                try {
-                    BorrowAndInfoVO borrow = repayManageService.getBorrowByNid(borrowNid);
-                    RepayBean repayBean = repayManageService.getRepayBean(userVO.getUserId(), userVO.getRoleId(), borrowNid, false);
-                    Integer repayUserId = borrow.getUserId();
-                    int isOrg = 1;//垫付机构不校验单笔标的的冻结余额
-                    repayManageService.checkForRepayRequestOrg(borrowNid, requestBean.getPassword(), userVO, repayBean, isOrg);
-
-                    //防止汇计划还款时正在发生债转操作
-                    int errflag = repayBean.getFlag();
-                    if (1 == errflag) {
-                        webResult.setStatus(WebResult.ERROR);
-                        webResult.setStatusDesc(repayBean.getMessage());
-                        return webResult;
-                    }
-
-                    String ip = GetCilentIP.getIpAddr(request);
-                    repayBean.setIp(ip);
-                    BigDecimal repayTotal = repayBean.getRepayAccountAll();
-                    // 用户还款
-                    try {
-                        String orderId = GetOrderIdUtils.getOrderId2(userId);
-                        String account = userBankOpenAccount.getAccount();
-                        //插入冻结信息日志表 add by cwyang 2017-07-08
-                        repayManageService.addFreezeLog(userVO.getUserId(), orderId, account, borrowNid, repayTotal, userVO.getUsername());
-                        // 申请还款冻结资金
-                        // 调用江西银行还款申请冻结资金
-                        BankCallBean bean = new BankCallBean();
-                        bean.setVersion(BankCallConstant.VERSION_10);// 版本号
-                        bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_FREEZE);// 交易代码
-                        bean.setTxDate(GetOrderIdUtils.getTxDate()); // 交易日期
-                        bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
-                        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号
-                        bean.setChannel(BankCallConstant.CHANNEL_PC); // 交易渠道
-                        bean.setAccountId(account);// 电子账号
-                        bean.setOrderId(orderId); // 订单号
-                        bean.setTxAmount(String.valueOf(repayTotal));// 交易金额
-                        bean.setProductId(borrowNid);
-                        bean.setFrzType("0");
-                        bean.setLogOrderId(orderId);// 订单号
-                        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
-                        bean.setLogUserId(String.valueOf(userId));
-                        bean.setLogUserName(userVO.getUsername());
-                        bean.setLogClient(0);
-                        bean.setLogIp(ip);
-                        bean.setProductId(borrowNid);
-                        BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
-                        String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
-                        // 申请冻结资金失败
-                        if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
-                            if (!"".equals(respCode)) {
-                                this.repayManageService.deleteFreezeLogByOrderId(orderId);
-                            }
-                            logger.info("调用还款申请冻结资金接口失败:" + callBackBean.getRetMsg() + "订单号:" + callBackBean.getOrderId());
-                        } else {
-                            //还款后变更数据
-                            boolean updateResult = this.repayManageService.updateForRepayRequest(repayBean, callBackBean);
-                            if (updateResult) {
-                                String planNid = borrow.getPlanNid();
-                                if (StringUtils.isNotBlank(planNid)) {
-                                    updateResult = this.repayManageService.updateBorrowCreditStautus(borrowNid);
-                                    if (!updateResult) {
-                                        webResult.setStatus(WebResult.ERROR);
-                                        webResult.setStatusDesc("还款失败，请稍后再试...");
-                                        return webResult;
-                                    } else {
-                                        webResult.setStatus(WebResult.SUCCESS);
-                                        webResult.setStatusDesc(WebResult.SUCCESS_DESC);
-                                        logger.info("==============垫付机构:" + userId + "批量还款申请成功,标的号:" + borrowNid);
-                                        successRepaySize++;
-                                        return webResult;
-                                    }
-                                }
-                            } else {
-                                webResult.setStatus(WebResult.ERROR);
-                                webResult.setStatusDesc("还款失败，请稍后再试...");
-                                logger.error("==============垫付机构:" + userId + "批量还款跟新数据失败,标的号:" + borrowNid);
-                                return webResult;
-                            }
-                        }
-                    } catch (Exception e) {
-                        logger.info("==============垫付机构:" + userId + "批量还款调用银行接口异常,标的号:" + borrowNid);
-                        e.printStackTrace();
-                        webResult.setStatus(WebResult.ERROR);
-                        webResult.setStatusDesc("批量还款调用银行接口异常");
-                        return webResult;
-                    }
-
-                } catch (Exception e) {
-                    logger.error("==============垫付机构:" + userId + "批量还款存在失败标的,标的号:" + borrowNid, e);
-                    webResult.setStatus(WebResult.ERROR);
-                    webResult.setStatusDesc("批量还款存在失败标的");
-                    return webResult;
-                }
-
+        // 合规四期修改  wgx 2018/10/16
+        if (userVO != null) {
+            // 还款方法10分钟只能一次
+            boolean result = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId, 600);
+            if (result) {
+                BankOpenAccountVO userBankOpenAccount = this.repayManageService.getBankOpenAccount(userId);
+                Map<String, Object> map = repayManageService.startOrgRepay(startDate, endDate, userId, requestBean.getPassword(), GetCilentIP.getIpAddr(request), userBankOpenAccount);
+                webResult.setData(map);
+            }else{
+                webResult.setStatus(WebResult.ERROR);
+                webResult.setStatusDesc("批量还款失败,项目正在还款中!");
+                webResult.setData(Collections.emptyMap());
             }
-            logger.info("==============垫付机构:" + userId + "还款申请处理完成!");
-            sendMessage(allRepaySize,successRepaySize,userId);
+        }else{
+            webResult.setStatus(WebResult.ERROR);
+            webResult.setData(Collections.emptyMap());
         }
-
-        webResult.setData("");
         return webResult;
     }
 
@@ -753,11 +625,11 @@ public class RepayManageController extends BaseTradeController {
                                 CustomConstants.CHANNEL_TYPE_NORMAL);
                         smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
                                 UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-                    }else{
-                        SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, SMSSENDFORUSER, null, CustomConstants.JYTZ_PLAN_REPAYPART_SUCCESS,
-                                CustomConstants.CHANNEL_TYPE_NORMAL);
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
-                                UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    }else{// 改批次代偿，失败不发短信 2018-9-13 wgx
+                        //SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, SMSSENDFORUSER, null, CustomConstants.JYTZ_PLAN_REPAYPART_SUCCESS,
+                        //        CustomConstants.CHANNEL_TYPE_NORMAL);
+                        //smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+                        //        UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
                     }
                 }
             } catch (MQException e) {
@@ -955,5 +827,113 @@ public class RepayManageController extends BaseTradeController {
         }
         result.setStatus(true);
         return JSONObject.toJSONString(result, true);
+    }
+
+    /**
+     * 机构垫付还款同步回调
+     *
+     * @param request
+     * @param callBackBean
+     * @auther: wgx
+     * @date: 2018/10/13
+     * @return
+     */
+    @ApiOperation(value = "代偿冻结的同步回调", notes = "代偿冻结的同步回调")
+    @PostMapping("/getRepaySyncReturn")
+    public ModelAndView repayReturn(HttpServletRequest request, @ModelAttribute BankCallBean callBackBean) {
+        logger.debug("代偿冻结同步回调开始");
+        String orderId = request.getParameter("orderId");
+        ModelAndView modelAndView = new ModelAndView();
+        if (StringUtils.isBlank(orderId)) {
+            modelAndView.addObject("message", "还款失败,失败原因：" + repayManageService.getBankRetMsg(callBackBean.getRetCode()));
+            logger.info("【代偿冻结同步回调】垫付机构还款失败,错误码：{}", callBackBean.getRetCode());
+            return modelAndView;
+        }
+        logger.info("【代偿冻结同步回调】垫付机构还款申请成功,订单号:{}", orderId);
+        return modelAndView;
+    }
+
+    /**
+     * 机构垫付还款异步回调
+     *
+     * @param request
+     * @param callBackBean
+     * @auther: wgx
+     * @date: 2018/10/13
+     * @return
+     */
+    @ResponseBody
+    @ApiOperation(value = "代偿冻结的异步回调", notes = "代偿冻结的异步回调")
+    @PostMapping("/getRepayAsyncReturn")
+    public BankCallResult repayAsyncReturn(HttpServletRequest request, @ModelAttribute BankCallBean callBackBean) throws IOException {
+        BankCallResult result = new BankCallResult();
+        result.setStatus(false);
+        String orderId = request.getParameter("orderId");
+        boolean isBatchRepay = Boolean.parseBoolean(request.getParameter("isBatchRepay"));// 是否批量还款
+        if (StringUtils.isBlank(orderId)) {
+            logger.info("【代偿冻结异步回调】获取冻结订单号失败！");
+            return result;
+        }
+        List<BankRepayOrgFreezeLogVO> orgLogList = repayManageService.getBankRepayOrgFreezeLogList(null, orderId);
+        if (orgLogList == null || orgLogList.size() == 0) {
+            logger.info("【代偿冻结异步回调】还款申请资金已解冻,订单号：{}", orderId);
+            return result;
+        }
+        logger.info("【代偿冻结异步回调】{}还款冻结开始处理，订单号：{}", isBatchRepay ? "批量" : "", orderId);
+        String accountId = callBackBean.getAccountId();//电子账号
+        Integer userId = orgLogList.get(0).getRepayUserId();
+        String userName = orgLogList.get(0).getRepayUserName();
+        // 垫付机构还款冻结状态查询
+        boolean hasFreeze = repayManageService.queryBalanceFreeze(Integer.valueOf(userId), userName, orderId, accountId);
+        if (hasFreeze) {
+            for (BankRepayOrgFreezeLogVO orgFreezeLog : orgLogList) {
+                String borrowNid = orgFreezeLog.getBorrowNid();
+                boolean isAllRepay = orgFreezeLog.getAllRepayFlag() == 1;
+                try {
+                    // 垫付机构的还款
+                    RepayBean repay = repayManageService.getRepayBean(userId, "3", borrowNid, isAllRepay);
+                    if (repay != null) {
+                        // 还款后变更数据
+                        callBackBean.setOrderId(orderId);
+                        //还款后变更数据
+                        boolean updateResult = this.repayManageService.updateForRepayRequest(repay, callBackBean);
+                        if (updateResult) {
+                            // 如果有正在出让的债权,先去把出让状态停止
+                            this.repayManageService.updateBorrowCreditStautus(borrowNid);
+                            repayManageService.deleteOrgFreezeTempLogs(orderId, borrowNid);
+                            logger.info("【代偿冻结异步回调】垫付机构:" + userId + "还款申请成功,标的号:{},订单号:{}", borrowNid, orderId);
+                        } else {
+                            logger.error("【代偿冻结异步回调】垫付机构:" + userId + "还款更新数据失败,标的号:{},订单号:{}", borrowNid, orderId);
+                            if (!isBatchRepay) {
+                                return result;
+                            }
+                        }
+                    } else {
+                        logger.info("【代偿冻结异步回调】获取垫付机构:" + userId + "还款信息失败,标的号:{},订单号:{}", borrowNid, orderId);
+                        if (!isBatchRepay) {
+                            return result;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    logger.info("【代偿冻结异步回调】垫付机构:" + userId + "还款调用银行接口异常,标的号:{},订单号:{}", borrowNid, orderId);
+                    if (!isBatchRepay) {
+                        return result;
+                    }
+                }
+                if (!isBatchRepay) {
+                    break;
+                }
+            }
+            logger.info("【代偿冻结异步回调】垫付机构:{}还款申请处理完成,订单号:{}", userId, orderId);
+            if (isBatchRepay) {
+                sendMessage(orgLogList.size(), orgLogList.size(), userId);
+                //RedisUtils.del("batchOrgRepayUserid_" + userId);
+            }
+        } else {
+            logger.info("【代偿冻结异步回调】垫付机构还款未冻结,订单号:{}", orderId);
+        }
+        result.setStatus(true);
+        return result;
     }
 }
