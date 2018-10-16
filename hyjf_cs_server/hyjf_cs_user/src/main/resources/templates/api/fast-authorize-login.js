@@ -1,5 +1,4 @@
 $(function() {
-	alert("hello me");
 	// 真实传值隐藏域
 	var mobileinput = $("#loginUserName");
 	// 展示数据文本框
