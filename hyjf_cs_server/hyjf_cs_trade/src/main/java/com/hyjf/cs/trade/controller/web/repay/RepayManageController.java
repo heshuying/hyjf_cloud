@@ -524,6 +524,8 @@ public class RepayManageController extends BaseTradeController {
         }else{
             String startDate  = GetDate.formatDate(new java.util.Date());
             String endDate = GetDate.formatDate(new java.util.Date());
+            requestBean.setStartDate(startDate);
+            requestBean.setEndDate(endDate);
 
             resultMap.put("startDate",startDate);
             resultMap.put("endDate",endDate);
