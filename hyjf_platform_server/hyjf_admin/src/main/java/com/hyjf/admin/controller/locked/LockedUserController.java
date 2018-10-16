@@ -3,12 +3,16 @@
  */
 package com.hyjf.admin.controller.locked;
 
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.locked.LockedUserService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,57 +35,73 @@ public class LockedUserController extends BaseController {
     @ApiOperation(value = "前台锁定用户列表",notes = "前台账户锁定用户列表")
     @PostMapping(value = "/frontlist")
     @ResponseBody
-    public LockedUserMgrResponse frontList(@RequestBody LockedeUserListRequest request){
+    public BaseResult<LockedUserMgrResponse> frontList(@RequestBody LockedeUserListRequest request){
 
-        return lockedUserService.getLockedUserList(request,true);
+        LockedUserMgrResponse response= lockedUserService.getLockedUserList(request,true);
 
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+
+        return new BaseResult(response);
     }
 
     @ApiOperation(value = "后台锁定用户列表",notes = "后台锁定用户列表")
     @PostMapping(value = "/adminlist")
     @ResponseBody
-    public LockedUserMgrResponse adminList(@RequestBody LockedeUserListRequest request){
+    public BaseResult<LockedUserMgrResponse> adminList(@RequestBody LockedeUserListRequest request){
 
-        return lockedUserService.getLockedUserList(request,false);
+        LockedUserMgrResponse response = lockedUserService.getLockedUserList(request,false);
 
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+
+        return new BaseResult(response);
     }
 
     @ApiOperation(value = "前台解锁",notes = "前台解锁")
     @PostMapping(value = "/frontunlock")
     @ResponseBody
-    public Response<?> frontUnlock(@RequestBody String lockedUserId, HttpServletRequest request){
+    public BaseResult<Boolean> frontUnlock(@RequestBody String lockedUserId, HttpServletRequest request){
 
         LockedUserInfoVO vo=buildVO(lockedUserId, request);
 
-        return lockedUserService.unlock(vo,false);
+        Response response = lockedUserService.unlock(vo,false);
 
+        Boolean isSuccess=response.getRtn().equals(Response.SUCCESS);
+
+        if(isSuccess){
+            return new BaseResult<>(true);
+        }else{
+            return new BaseResult<>(BaseResult.ERROR,response.getMessage());
+        }
     }
 
     @ApiOperation(value = "后台解锁",notes = "后台解锁")
     @PostMapping(value = "/adminunlock")
     @ResponseBody
-    public Response<?> adminUnlock(@RequestBody String lockedUserId,HttpServletRequest request){
+    public BaseResult<Boolean> adminUnlock(@RequestBody String lockedUserId,HttpServletRequest request){
 
         LockedUserInfoVO vo=buildVO(lockedUserId, request);
 
-        return lockedUserService.unlock(vo,false);
+        Response response= lockedUserService.unlock(vo,false);
 
+        Boolean isSuccess=response.getRtn().equals(Response.SUCCESS);
+
+        if(isSuccess){
+            return new BaseResult<>(true);
+        }else{
+            return new BaseResult<>(BaseResult.ERROR,response.getMessage());
+        }
     }
 
     private LockedUserInfoVO buildVO(String lockedUserId, HttpServletRequest request) {
-//        AdminSystemVO user=getUser(request);
-//
-//        String operatorId=user.getId();
-//
-//        LockedUserInfoVO vo=new LockedUserInfoVO();
-//
-//        vo.setId(Integer.valueOf(lockedUserId));
-//        vo.setOperator(Integer.valueOf(operatorId));
-
+        AdminSystemVO user=getUser(request);
+        String operatorId=user.getId();
         LockedUserInfoVO vo=new LockedUserInfoVO();
         vo.setId(Integer.valueOf(lockedUserId));
-        vo.setOperator(250);
-
+        vo.setOperator(Integer.valueOf(operatorId));
         return vo;
     }
 }

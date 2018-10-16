@@ -32,7 +32,7 @@ public class LockedConfigController {
 
         LockedConfigResponse Response = new LockedConfigResponse();
 
-        Response.setResult(LockedConfigManager.getInstance().getWebConfig());
+        Response.setData(LockedConfigManager.getInstance().getWebConfig());
 
         return Response;
 
@@ -44,7 +44,7 @@ public class LockedConfigController {
 
         LockedConfigResponse response = new LockedConfigResponse();
 
-        response.setResult(LockedConfigManager.getInstance().getAdminConfig());
+        response.setData(LockedConfigManager.getInstance().getAdminConfig());
 
         return response;
     }
