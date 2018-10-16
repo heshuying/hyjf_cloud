@@ -88,6 +88,9 @@ public class UserPortraitVO  extends BaseVO implements Serializable {
 
     private BigDecimal bankFrost;
 
+    private String lastRepayTimeS;
+    private String regTime;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -400,5 +403,21 @@ public class UserPortraitVO  extends BaseVO implements Serializable {
 
     public void setBankFrost(BigDecimal bankFrost) {
         this.bankFrost = bankFrost;
+    }
+
+    public String getLastRepayTimeS() {
+        return lastRepayTimeS;
+    }
+
+    public void setLastRepayTimeS(String lastRepayTimeS) {
+        this.lastRepayTimeS = lastRepayTimeS;
+    }
+
+    public String getRegTime() {
+        return regTime;
+    }
+
+    public void setRegTime(String regTime) {
+        this.regTime = regTime;
     }
 }

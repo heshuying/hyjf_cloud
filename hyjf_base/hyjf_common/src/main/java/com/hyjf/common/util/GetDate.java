@@ -2057,6 +2057,56 @@ public class GetDate extends PropertyEditorSupport {
 		return Integer.parseInt(enddateStr);
 	}
 
+	// add 汇计划三期 汇计划自动投资 liubin 20180515 start
+	/**
+	 * 根据HH:mm得到日期
+	 *
+	 * @param hhmm (HH:mm)
+	 *            指定的时分 按“时：分“格式
+	 * @return
+	 */
+	public static Date getDateFromShortTime(String hhmm) {
+		try {
+			return short_time_sdf.parse(hhmm);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据当前时间得到只有HH:mm部分的日期
+	 * @return
+	 */
+	public static Date getShortTimeDate() {
+		return getDateFromShortTime(short_time_sdf.format(getDate()));
+	}
+
+	/**
+	 * 判断时间是否属于该时间段
+	 * @param nowTime
+	 * @param beginTime
+	 * @param endTime
+	 * @return
+	 */
+	public static boolean belongCalendar(Date nowTime, Date beginTime, Date endTime) {
+		Calendar date = Calendar.getInstance();
+		date.setTime(nowTime);
+
+		Calendar begin = Calendar.getInstance();
+		begin.setTime(beginTime);
+
+		Calendar end = Calendar.getInstance();
+		end.setTime(endTime);
+
+		if (date.compareTo(begin) >= 0 && date.compareTo(end) <= 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// add 汇计划三期 汇计划自动投资 liubin 20180515 end
+
 	public static void main(String[] args) {
 		System.out.println(getDateTimeMyTimeInMillis(1483163187));
 	}

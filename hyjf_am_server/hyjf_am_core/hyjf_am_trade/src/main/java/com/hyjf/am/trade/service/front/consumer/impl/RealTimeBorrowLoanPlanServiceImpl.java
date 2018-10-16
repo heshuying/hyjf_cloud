@@ -1145,7 +1145,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 					debtDetail.setUserId(borrowTender.getUserId());// 投资人用户ID
                     debtDetail.setUserName(borrowTender.getUserName());//投资人用户名
                     debtDetail.setBorrowUserId(borrowUserid);// 原标的的用户ID
-                    debtDetail.setBorrowUserName(borrowInfo.getBorrowUserName());// 原标的借款人用户名
+                    debtDetail.setBorrowUserName(borrow.getBorrowUserName());// 原标的借款人用户名
                     debtDetail.setBorrowNid(borrowNid);// 原标标的编号
                     debtDetail.setPlanNid(borrow.getPlanNid());// 计划编号
                     debtDetail.setPlanOrderId(borrowTender.getAccedeOrderId());// 加入计划订单号 borrow_tender表的accede_order_id
