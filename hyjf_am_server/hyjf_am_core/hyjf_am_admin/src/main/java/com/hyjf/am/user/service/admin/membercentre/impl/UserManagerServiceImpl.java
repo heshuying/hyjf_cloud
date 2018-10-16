@@ -1353,7 +1353,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 changeLog.setRole(logRecord.getUserRole());
                 changeLog.setStatus(logRecord.getUserStatus());
                 changeLog.setIdcard(logRecord.getIdCard());
-//                changeLog.setEmail(logRecord.getEmail());
+                changeLog.setEmail(logRecord.getEmail());
                 changeLog.setMobile(logRecord.getMobile());
                 changeLog.setBorrowerType(userInfoType.getBorrowerType());
                 switch (request.getUpdFlg()) {

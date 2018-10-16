@@ -18,6 +18,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.vo.AppWithdrawResultVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -56,6 +57,8 @@ public class AppBankWithdrawController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(AppBankWithdrawController.class);
     @Autowired
     private BankWithdrawService bankWithdrawService;
+    @Autowired
+    private AuthService authService;
     @Autowired
     SystemConfig systemConfig;
     /**
@@ -139,7 +142,13 @@ public class AppBankWithdrawController extends BaseTradeController {
         WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
 
         // 获取用户信息
-        logger.info("提现可用余额："+result.getTotal());
+
+        // 服务费授权状态
+        if (!authService.checkPaymentAuthStatus(userId)) {
+            result.setStatus("1");
+            result.setStatusDesc("请先进行服务费授权。");
+            return result;
+        }
         // 取得用户当前余额
         AccountVO account = this.bankWithdrawService.getAccountByUserId(userId);
 
@@ -148,16 +157,9 @@ public class AppBankWithdrawController extends BaseTradeController {
             result.setStatus(CustomConstants.APP_STATUS_FAIL);
             result.setStatusDesc("您的账户信息存在异常，请联系客服人员处理。");
             return result;
-        } /*else {
-            //先判断取现金额是否大于可用余额
-            if (StringUtils.isNotBlank(getcash) && new BigDecimal(getcash).compareTo(account.getBankBalance()) > 0) {
-                result.setStatus("1");
-                result.setStatusDesc("提现金额大于可用余额");
-                return result;
-            }
-
-        }*/
+        }
         result.setTotal(CommonUtils.formatAmount(version, account.getBankBalance()));
+        logger.info("提现可用余额："+result.getTotal());
         String phoneNum = "";
         // 取得银行卡信息
         BankCardVO bankCard = bankWithdrawService.getBankCardVOByUserId(userId);
@@ -439,6 +441,11 @@ public class AppBankWithdrawController extends BaseTradeController {
         if(userVO.getBankOpenAccount()==0){
             throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
+
+        if (!this.authService.checkPaymentAuthStatus(userId)) {
+            throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+        }
+
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         // (提现)

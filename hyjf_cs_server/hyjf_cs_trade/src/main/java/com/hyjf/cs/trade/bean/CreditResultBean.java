@@ -18,6 +18,10 @@ public class CreditResultBean implements Serializable
 	//债转新配置表
 	private DebtConfigVO debtConfigVO;
 
+	private Integer paymentAuthStatus;
+	private Integer paymentAuthOn;
+	private String isCheckUserRole;
+	private String roleId;
 
 	public String getResultFlag() {
 		return resultFlag;
@@ -65,5 +69,37 @@ public class CreditResultBean implements Serializable
 
 	public void setDebtConfigVO(DebtConfigVO debtConfigVO) {
 		this.debtConfigVO = debtConfigVO;
+	}
+
+	public Integer getPaymentAuthStatus() {
+		return paymentAuthStatus;
+	}
+
+	public void setPaymentAuthStatus(Integer paymentAuthStatus) {
+		this.paymentAuthStatus = paymentAuthStatus;
+	}
+
+	public Integer getPaymentAuthOn() {
+		return paymentAuthOn;
+	}
+
+	public void setPaymentAuthOn(Integer paymentAuthOn) {
+		this.paymentAuthOn = paymentAuthOn;
+	}
+
+	public String getIsCheckUserRole() {
+		return isCheckUserRole;
+	}
+
+	public void setIsCheckUserRole(String isCheckUserRole) {
+		this.isCheckUserRole = isCheckUserRole;
+	}
+
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
 	}
 }
