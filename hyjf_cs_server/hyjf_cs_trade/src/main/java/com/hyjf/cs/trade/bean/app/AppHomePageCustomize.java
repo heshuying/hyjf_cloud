@@ -11,6 +11,10 @@ public class AppHomePageCustomize implements Serializable {
 
 	private static final long serialVersionUID = 8721262544424025910L;
 
+	//推荐项目标题
+	private String title;
+	//标签文案
+	private String tag;
 	// 项目id
 	private String borrowNid;
 	// 项目标题
@@ -52,6 +56,22 @@ public class AppHomePageCustomize implements Serializable {
 	private String borrowPeriodType;
 	// 产品加息
 	private String borrowExtraYield;
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
 	public String getBorrowApr() {
 		return borrowApr;
