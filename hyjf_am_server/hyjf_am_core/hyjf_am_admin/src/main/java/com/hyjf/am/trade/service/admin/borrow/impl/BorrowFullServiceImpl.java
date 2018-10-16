@@ -242,13 +242,25 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
                     }
                     boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                     if (apicronFlag) {
-                        //2018-10-15 复审之后之后发送MQ进行放款 从业务上来说手动复审只有散标
-                        try {
-                            borrowLoanRepayProducer.messageSend(
-                                    new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
-                        } catch (MQException e) {
-                            logger.error("[编号：" + borrowNid + "]发送直投放款MQ失败！", e);
+                        //2018-10-15 复审之后之后发送MQ进行放款
+                        if (StringUtils.isNotBlank(borrow.getPlanNid())) {
+                            //计划标的放款
+                            try {
+                                borrowLoanRepayProducer.messageSend(
+                                        new MessageContent(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
+                            } catch (MQException e) {
+                                logger.error("[编号：" + borrowNid + "]发送计划放款MQ失败！", e);
+                            }
+                        } else {
+                            //直投标的放款
+                            try {
+                                borrowLoanRepayProducer.messageSend(
+                                        new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
+                            } catch (MQException e) {
+                                logger.error("[编号：" + borrowNid + "]发送直投放款MQ失败！", e);
+                            }
                         }
+
                         return new Response();
                     } else {
                         return new Response(Response.FAIL,
