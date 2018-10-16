@@ -52,12 +52,10 @@
 
 	<sql id="Select_Clause">
 		SELECT
-		case  tender_number.client  when	'0' then 'PC'
-		when	'1' then '微官网'
-		when	'2' then 'Android'
-		when	'3' then 'iOS'
-		when	'4' then '其他' end source_name,
+		pn.source_name,
 		0 AS access_number,
+		regist_number.regist_number,
+		account_number.account_number,
 		tender_number.tender_number,
 		recharge_price.recharge_price,
 		IF(hzt_tender_price.amount IS null,0, hzt_tender_price.amount)
@@ -74,6 +72,38 @@
 		hzr_tender_price.amount AS hzr_tender_price
 		FROM
 		(
+		SELECT DISTINCT
+		n.name_cd AS client,
+		n.`name` AS source_name
+		FROM
+		hyjf_config.ht_param_name n
+		WHERE
+		n.name_class = 'CLIENT'
+		) pn
+
+		LEFT JOIN
+		(
+		SELECT temp.reg_esb AS client, COUNT(temp.user_id) AS regist_number FROM hyjf_user.ht_user temp
+		<where>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND  temp.create_time <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND  temp.create_time <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+		GROUP BY temp.reg_esb
+		) regist_number ON pn.client = regist_number.client
+
+		LEFT JOIN
+		(
+		SELECT u.account_esb AS client, COUNT(temp.user_id) AS account_number FROM hyjf_user.ht_user u INNER JOIN hyjf_user.ht_bank_open_account temp ON temp.user_id = u.user_id
+		<include refid="Where_Invest_htj_time" />
+		GROUP BY u.account_esb
+		) account_number ON pn.client = account_number.client
+
+		LEFT JOIN
+		(
 		SELECT t.client AS client, COUNT(DISTINCT t.user_id) tender_number
 		FROM
 		(
@@ -87,7 +117,7 @@
 		<include refid="Where_Invest_htj_time" />
 		) t
 		GROUP BY t.client
-		) tender_number
+		) tender_number ON pn.client = tender_number.client
 
 		LEFT JOIN
 		(
@@ -95,7 +125,7 @@
 		WHERE temp.`status` = 1
 		<include refid="And_Addtime" />
 		GROUP BY temp.client
-		) recharge_price on recharge_price.client=tender_number.client
+		) recharge_price ON pn.client = recharge_price.client
 
 		LEFT JOIN
 		(
@@ -105,7 +135,7 @@
 		AND temp.accede_order_id IS NULL
 		<include refid="Where_Addtime" />
 		GROUP BY temp.client
-		) hzt_tender_price on hzt_tender_price.client=recharge_price.client
+		) hzt_tender_price ON pn.client = hzt_tender_price.client
 
 		LEFT JOIN
 		(
@@ -113,20 +143,20 @@
 		FROM ht_borrow_tender temp INNER JOIN ht_borrow borrow ON borrow.borrow_nid = temp.borrow_nid AND borrow.`status` IN ( 1, 3 ) AND borrow.project_type = 8
 		<include refid="Where_Addtime" />
 		GROUP BY temp.client
-		) hxf_tender_price on hxf_tender_price.client=hzt_tender_price.client
+		) hxf_tender_price ON pn.client = hxf_tender_price.client
 
 		LEFT JOIN
 		(
 		SELECT temp.client AS client, SUM(temp.amount) amount FROM ht_product_list temp
 		<include refid="Where_Invest_time" />
 		GROUP BY temp.client
-		) htl_tender_price on htl_tender_price.client=hxf_tender_price.client
+		) htl_tender_price ON pn.client = htl_tender_price.client
 		LEFT JOIN
 		(
 		SELECT temp.client AS client, SUM(temp.accede_account) amount FROM ht_debt_plan_accede temp
 		<include refid="Where_Invest_htj_time" />
 		GROUP BY temp.client
-		) htj_tender_price on htj_tender_price.client=htl_tender_price.client
+		) htj_tender_price ON pn.client = htj_tender_price.client
 		LEFT JOIN
 		(
 		<!-- 汇计划投资金额修改 20180613 mod by nxl-->
@@ -147,14 +177,14 @@
 		GROUP BY accede.client
 		) ss
 		GROUP BY ss.client
-		) hjh_tender_price on hjh_tender_price.client=htj_tender_price.client
+		) hjh_tender_price ON pn.client = hjh_tender_price.client
 		LEFT JOIN
 		(
 		<!-- 新增汇转让投资金额 20180817 add by yaoyong -->
 		SELECT temp.client AS client, sum(temp.assign_capital) amount FROM ht_credit_tender temp
 		<include refid="Where_add_time"/>
 		GROUP BY temp.client
-		)hzr_tender_price on hzr_tender_price.client=hjh_tender_price.client
+		)hzr_tender_price ON pn.client = hzr_tender_price.client
 	</sql>
 
 	<resultMap id="selectListMap" type="com.hyjf.am.trade.dao.model.customize.PlatformCountCustomize">
@@ -177,23 +207,15 @@
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
 	</select>
-
 	<select id="selectRegistNumber"  resultMap="selectListMap" parameterType="com.hyjf.am.resquest.admin.PlatformCountRequest">
-		SELECT temp.reg_esb AS client, COUNT(temp.user_id) AS regist_number FROM ht_user temp
-		<where>
-			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND  temp.reg_time <![CDATA[>=]]> #{timeStartSrch}
-			</if>
-			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND temp.reg_time <![CDATA[<=]]> #{timeEndSrch}
-			</if>
-		</where>
-		GROUP BY temp.reg_esb
-
-	</select>
-	<select id="selectAccountNumber" resultMap="selectListMap" parameterType="com.hyjf.am.resquest.admin.PlatformCountRequest">
-		SELECT u.account_esb AS client, COUNT(temp.user_id) AS account_number FROM ht_user u INNER JOIN ht_bank_open_account temp ON temp.user_id = u.user_id
-		<include refid="Where_Invest_htj_time" />
-		GROUP BY u.account_esb
+	SELECT temp.reg_esb AS client, COUNT(temp.user_id) AS regist_number FROM ht_user temp
+	<where>
+		<if test="timeStartSrch != null and timeStartSrch != ''">
+			AND  temp.reg_time <![CDATA[>=]]> #{timeStartSrch}
+		</if>
+		<if test="timeEndSrch != null and timeEndSrch != ''">
+			AND temp.reg_time <![CDATA[<=]]> #{timeEndSrch}
+		</if>
+	</where>
 	</select>
 </mapper>
