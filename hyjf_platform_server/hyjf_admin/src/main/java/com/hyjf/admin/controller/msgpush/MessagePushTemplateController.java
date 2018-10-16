@@ -72,25 +72,8 @@ public class MessagePushTemplateController extends BaseController {
                 response = messagePushTemplateService.getRecord(form.getId());
                 if (response.getResult() != null) {
                     MessagePushTemplateVO record = response.getResult();
-                    BeanUtils.copyProperties(record, form);
-                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
-                        form.setTemplateActionUrl1("");
-                        form.setTemplateActionUrl2("");
-                    }
-                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1) {
-                        form.setTemplateActionUrl1(record.getTemplateActionUrl());
-                        form.setTemplateActionUrl2("");
-                    }
-                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
-                        form.setTemplateActionUrl3(record.getTemplateActionUrl());
-                        form.setTemplateActionUrl2("");
-                    }
-                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
-                        form.setTemplateActionUrl1("");
-                        form.setTemplateActionUrl2(record.getTemplateActionUrl());
-                    }
                     if (StringUtils.isNotEmpty(record.getTemplateCode()) && record.getTemplateCode().contains("_")) {
-                        form.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
+                        record.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
                     }
                 }
             } catch (Exception e) {
@@ -134,7 +117,7 @@ public class MessagePushTemplateController extends BaseController {
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
         }
-        templateVO.setTagCode(templateRequest.getTemplateCode().substring(0,3));
+        templateVO.setTagCode(templateRequest.getTemplateCode().substring(0, 3));
         templateVO.setTemplateCode(templateRequest.getTemplateCode());
         templateVO.setCreateUserId(Integer.parseInt(userId));
         templateVO.setLastupdateUserId(Integer.parseInt(userId));
@@ -174,7 +157,7 @@ public class MessagePushTemplateController extends BaseController {
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
             templateRequest.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
         }
-        templateRequest.setTagCode(templateRequest.getTemplateCode().substring(0,3));
+        templateRequest.setTagCode(templateRequest.getTemplateCode().substring(0, 3));
         templateRequest.setTemplateCode(templateRequest.getTemplateCode());
         templateRequest.setCreateUserName(username);
         response = this.messagePushTemplateService.updateRecord(templateRequest);
@@ -240,7 +223,7 @@ public class MessagePushTemplateController extends BaseController {
         if (response.getCount() > 0) {
             String message = "标签重复";
             response.setMessage(message);
-            return new AdminResult(FAIL,response.getMessage());
+            return new AdminResult(FAIL, response.getMessage());
         }
         return new AdminResult<>(response);
     }
@@ -258,6 +241,7 @@ public class MessagePushTemplateController extends BaseController {
         }
         return new AdminResult<>(response);
     }
+
     @Autowired
     private FileUpLoadUtil fileUpLoadUtil;
 
@@ -279,6 +263,7 @@ public class MessagePushTemplateController extends BaseController {
 
     /**
      * 画面校验
+     *
      * @param request
      * @return
      */
@@ -324,7 +309,7 @@ public class MessagePushTemplateController extends BaseController {
             }
         }
 
-       return message;
+        return message;
     }
 
 
