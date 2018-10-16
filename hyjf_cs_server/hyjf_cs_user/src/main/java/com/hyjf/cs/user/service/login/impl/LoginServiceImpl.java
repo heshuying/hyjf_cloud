@@ -811,7 +811,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			// 三合一授权描述
 			result.setMergeAuthDesc(mergeAuthDesc);
 			if("3".equals(result.getMergeAuthExpire())){
-				result.setMergeAuthDesc(expireDesc);
+				result.
+						setMergeAuthDesc(expireDesc);
 			}else if("2".equals(result.getMergeAuthExpire())){
 				result.setMergeAuthDesc(imminentExpiryDesc);
 			}
