@@ -134,7 +134,8 @@ public class MessagePushTemplateController extends BaseController {
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
         }
-        templateVO.setTemplateCode(templateRequest.getTagCode() + "_" + templateRequest.getTemplateCode());
+        templateVO.setTagCode(templateRequest.getTemplateCode().substring(0,3));
+        templateVO.setTemplateCode(templateRequest.getTemplateCode());
         templateVO.setCreateUserId(Integer.parseInt(userId));
         templateVO.setLastupdateUserId(Integer.parseInt(userId));
         response = messagePushTemplateService.insertAction(templateVO);
@@ -173,7 +174,8 @@ public class MessagePushTemplateController extends BaseController {
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
             templateRequest.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
         }
-        templateRequest.setTemplateCode(templateRequest.getTagCode() + "_" + templateRequest.getTemplateCode());
+        templateRequest.setTagCode(templateRequest.getTemplateCode().substring(0,3));
+        templateRequest.setTemplateCode(templateRequest.getTemplateCode());
         templateRequest.setCreateUserName(username);
         response = this.messagePushTemplateService.updateRecord(templateRequest);
         return new AdminResult<>(response);

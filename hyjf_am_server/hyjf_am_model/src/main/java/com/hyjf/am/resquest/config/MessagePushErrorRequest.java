@@ -68,7 +68,7 @@ public class MessagePushErrorRequest extends BasePage implements Serializable {
     private Integer id;
 
     @ApiModelProperty("消息标签,外键,消息标签表的id")
-    private Integer tagId;
+    private String tagId;
 
     @ApiModelProperty("消息标签编码,消息标签表的编码")
     private String tagCode;
@@ -209,11 +209,11 @@ public class MessagePushErrorRequest extends BasePage implements Serializable {
         this.id = id;
     }
 
-    public Integer getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
-    public void setTagId(Integer tagId) {
+    public void setTagId(String tagId) {
         this.tagId = tagId;
     }
 
