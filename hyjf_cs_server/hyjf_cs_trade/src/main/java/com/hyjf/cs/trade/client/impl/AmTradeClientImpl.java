@@ -5373,4 +5373,39 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示 ②	若没有可投计划，则显示锁定期限短的
+     * @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    @Override
+    public List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanListByLockTime(AppHomePageRequest request) {
+        return null;
+    }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     *  @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    @Override
+    public List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanList(AppHomePageRequest request) {
+        return null;
+    }
+
+    /**
+     * 查询首页定时发标,投资中,复审中的项目
+     * @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    @Override
+    public List<AppProjectListCustomizeVO> selectHomeProjectList(AppHomePageRequest request) {
+        return null;
+    }
+
+
 }
