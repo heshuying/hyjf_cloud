@@ -873,6 +873,9 @@
 	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 	    </if>
 	</select>
+
+
+
 	<select id="countProjectInvestRecordTotal" resultType="java.lang.Integer" parameterType="Map">
 		SELECT
 			COUNT(hydbt.id)
@@ -1068,5 +1071,98 @@
 	    )
 	</select>
 
-	
+	<resultMap id="HjhPlanMap" type="com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO">
+		<id column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+		<result column="plan_name" property="planName" jdbcType="VARCHAR" />
+		<result column="expect_apr" property="planApr" jdbcType="VARCHAR" />
+		<result column="lock_period" property="planPeriod" jdbcType="VARCHAR" />
+		<result column="is_month" property="isMonth" jdbcType="VARCHAR" />
+		<result column="available_invest_account" property="availableInvestAccount" jdbcType="VARCHAR" />
+		<result column="plan_invest_status" property="status" jdbcType="VARCHAR" />
+		<result column="plan_invest_status_name" property="statusName" jdbcType="VARCHAR" />
+		<result column="coupon_config" property="couponEnable" jdbcType="VARCHAR" />
+		<result column="order_by_available_invest_account" property="availableInvestAccountNew" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getIndexHjhExtensionPlanListByLockTime" resultMap="HjhPlanMap" parameterType="java.util.Map">
+
+		<include refid="selectAppIndexTemplate" />
+		ORDER BY t.order_by_lock_period ASC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="getIndexHjhExtensionPlanList" resultMap="HjhPlanMap" parameterType="java.util.Map">
+		<include refid="selectAppIndexTemplate" />
+		ORDER BY t.order_by_status_name,t.order_by_available_invest_account ASC, t.order_by_lock_period ASC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+
+
+	<sql id="selectAppIndexTemplate">
+		SELECT t.* FROM (SELECT
+		hp.id as order_by_id,
+		hp.plan_nid AS plan_nid,
+		hp.plan_name AS plan_name,
+		hp.expect_apr AS expect_apr,
+		CASE
+		WHEN hp.borrow_style = 'endday'
+		THEN CONCAT(hp.lock_period, '天')
+		ELSE CONCAT(hp.lock_period, '个月')
+		END AS lock_period,
+		CASE
+		WHEN hp.plan_invest_status = 1  AND FORMAT(hp.available_invest_account, 2) <![CDATA[>=]]> 0.00
+		THEN CONCAT(
+		FORMAT(
+		hp.available_invest_account / 10000,
+		2
+		),
+		'万'
+		)
+		WHEN hp.plan_invest_status = 2
+		THEN '0.00 万'
+		ELSE '0.00 万'
+		END AS available_invest_account,
+		CASE
+		WHEN hp.plan_invest_status = 1 AND FORMAT(hp.available_invest_account, 2) <![CDATA[>=]]> 0.00
+		THEN hp.available_invest_account
+		ELSE 0
+		END AS order_by_available_invest_account,
+		hp.plan_invest_status AS plan_invest_status,
+		CASE
+		WHEN hp.plan_invest_status = 1
+		AND FORMAT(hp.available_invest_account, 2) <![CDATA[<=]]> 0.00
+		THEN '稍后开启'
+		WHEN hp.plan_invest_status = 1
+		<!--THEN '立即加入'-->
+		<!-- mod by nxl 修改立即加入->授权服务 -->
+		THEN '授权服务'
+		WHEN hp.plan_invest_status = 2
+		THEN '稍后开启'
+		ELSE ''
+		END AS plan_invest_status_name,
+		CASE
+		WHEN hp.plan_invest_status = 1
+		AND FORMAT(hp.available_invest_account, 2) <![CDATA[<=]]> 0.00
+		THEN 2
+		WHEN hp.plan_invest_status = 1
+		THEN 1
+		WHEN hp.plan_invest_status = 2
+		THEN 2
+		ELSE 2
+		END AS order_by_status_name,
+		CASE
+		WHEN hp.borrow_style = 'endday'
+		THEN hp.lock_period
+		ELSE hp.lock_period * 30
+		END AS order_by_lock_period,
+		coupon_config
+		FROM
+		ht_hjh_plan hp
+		WHERE hp.del_flag = 0 AND hp.plan_display_status = 1) t
+	</sql>
+
 </mapper>

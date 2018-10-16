@@ -12,11 +12,11 @@ import com.hyjf.am.response.config.AppReapyCalendarResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
+import com.hyjf.am.response.trade.HjhPlanResponse;
 import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.user.*;
-import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
@@ -486,7 +486,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanVO getPlanByNid(String borrowNid) {
         String url = urlBase + "hjhPlan/getHjhPlanByPlanNid/" + borrowNid;
-        HjhPlanResponse response = restTemplate.getForEntity(url, HjhPlanResponse.class).getBody();
+        com.hyjf.am.response.user.HjhPlanResponse response = restTemplate.getForEntity(url, com.hyjf.am.response.user.HjhPlanResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return null;
         }
@@ -5382,6 +5382,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanListByLockTime(AppHomePageRequest request) {
+        String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/selectIndexHjhExtensionPlanListByLockTime";
+        HjhPlanResponse response = restTemplate.postForEntity(url,request, HjhPlanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
         return null;
     }
 
@@ -5393,6 +5398,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanList(AppHomePageRequest request) {
+        String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/selectIndexHjhExtensionPlanList";
+        HjhPlanResponse response = restTemplate.postForEntity(url,request, HjhPlanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
         return null;
     }
 
@@ -5404,6 +5414,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<AppProjectListCustomizeVO> selectHomeProjectList(AppHomePageRequest request) {
+        String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/selectHomeProjectList";
+        AppProjectListResponse response = restTemplate.postForEntity(url,request,AppProjectListResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
         return null;
     }
 
