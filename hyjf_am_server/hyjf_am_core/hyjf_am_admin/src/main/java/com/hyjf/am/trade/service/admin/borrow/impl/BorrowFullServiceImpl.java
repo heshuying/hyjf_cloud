@@ -227,6 +227,11 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
                     }
                     borrowApicron.setCreateTime(GetDate.getNowTime());
                     borrowApicron.setUpdateTime(GetDate.getNowTime());
+                    // add by liushouyi HJH3
+                    // 汇计划的复审带上计划编号
+                    if (StringUtils.isNotBlank(borrow.getPlanNid())) {
+                        borrowApicron.setPlanNid(borrow.getPlanNid());//计划编号
+                    }
                     boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                     if (apicronFlag) {
                         return new Response();

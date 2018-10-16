@@ -82,6 +82,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
 		UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
+		CheckUtil.check(userVO!=null, MsgEnum.ERR_USER_NOT_EXISTS);
 		// 获取密码错误次数
 		String errCount = RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT + userVO.getUserId());
 		//2.获取用户允许输入的最大错误次数

@@ -5,16 +5,20 @@ package com.hyjf.admin.controller.message;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.MessagePushHistoryService;
 import com.hyjf.admin.service.MessagePushPlatStaticsService;
 import com.hyjf.admin.service.MessagePushTemplateStaticsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushPlatStaticsResponse;
 import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author fq
@@ -28,6 +32,8 @@ public class MessagePushPlatStaticsController extends BaseController {
     private MessagePushPlatStaticsService tagService;
     @Autowired
     private MessagePushTemplateStaticsService msgTemplateService;
+    @Autowired
+    MessagePushHistoryService messagePushHistoryService;
 
     @ApiOperation(value = "查询平台消息统计报表", notes = "查询平台消息统计报表")
     @PostMapping("/select")
@@ -46,7 +52,9 @@ public class MessagePushPlatStaticsController extends BaseController {
     @ApiOperation(value = "获取标签列表", notes = "获取标签列表")
     @GetMapping("/get_tag_list")
     public AdminResult getMsgTagList() {
-        MessagePushTagResponse response = msgTemplateService.getMsgTagList();
+        MessagePushTagResponse response = new MessagePushTagResponse();
+        List<MessagePushTagVO> allPushTagList = messagePushHistoryService.getAllPushTagList();
+        response.setResultList(allPushTagList);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }

@@ -131,10 +131,11 @@ public class AdminRoleController {
 //            LogUtil.errorLog(THIS_CLASS, AdminRoleDefine.INSERT_ACTION, "输入内容验证失败", null);
 //            return modelAndView;
 //        }
-
- 
-
-        this.adminRoleService.insertRecord(form);
+			if(form.getId()==-1) {
+				this.adminRoleService.insertRecord(form);
+			}else {
+				this.adminRoleService.updateRecord(form);
+			}        
 //        // 创建分页
 //        this.createPage(request, modelAndView, form);
 //

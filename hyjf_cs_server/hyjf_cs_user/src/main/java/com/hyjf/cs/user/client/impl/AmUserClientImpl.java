@@ -833,7 +833,7 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 	/**
-	 * 更新用户画像 99:更新所有时间的用户画像,else:更新昨日登录的用户画像
+	 * 更新用户画像 99:更新三个月的用户画像,else:更新昨日登录的用户画像
 	 * @auth sunpeikai
 	 * @param
 	 * @return

@@ -95,4 +95,24 @@ public  class ConvertUtils {
         }
         return obj;
     }
+
+    /**
+     * 把Map<String, Object>转成Map<String, (String)Object>
+     * @param mapParam
+     * @return
+     */
+    public static Map<String, Object> convertToMapValString(Map<String, Object> mapParam) {
+        if (mapParam == null) {
+            return null;
+        }
+        Map<String, Object> newMap = new HashMap<String, Object>();
+        for (Map.Entry<String, Object> entry : mapParam.entrySet()) {
+            if (entry.getValue() == null) {
+                newMap.put(entry.getKey(), null);
+            } else {
+                newMap.put(entry.getKey(), entry.getValue().toString());
+            }
+        }
+        return newMap;
+    }
 }

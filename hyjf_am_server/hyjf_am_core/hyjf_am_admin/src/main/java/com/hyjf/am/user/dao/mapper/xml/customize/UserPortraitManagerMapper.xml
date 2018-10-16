@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserPortraitManagerMapper">
-	<resultMap id="UsersPortraitMap" type="com.hyjf.am.user.dao.model.auto.UserPortrait">
+	<resultMap id="UsersPortraitMap" type="com.hyjf.am.vo.user.UserPortraitVO">
 		<id column="user_id" jdbcType="INTEGER" property="userId" />
 		<result column="user_name" jdbcType="VARCHAR" property="userName" />
 		<result column="age" jdbcType="INTEGER" property="age" />
@@ -40,6 +40,8 @@
 		<result column="bank_balance" jdbcType="DECIMAL" property="bankBalance" />
 		<result column="account_await" jdbcType="DECIMAL" property="accountAwait" />
 		<result column="bank_frost" jdbcType="DECIMAL" property="bankFrost" />
+		<result column="lastRepayTimes" jdbcType="VARCHAR" property="lastRepayTimeS" />
+		<result column="regTime" jdbcType="VARCHAR" property="regTime" />
 	</resultMap>
 	<sql id="Where_Clause_UserPortrait">
 		<where>
@@ -66,9 +68,11 @@
 		ROUND((unix_timestamp(now())-last_withdraw_time)/(60*60*24)) AS last_withdraw_time,
 		invest_platform,invest_age,trade_number,current_owner,add_wechat,invest_process,customer_complaint,invite_customer,remark,
 		INSERT(hup.mobile, 4, 4, '****') as mobile,bank_total,ROUND((hup.fund_retention),2) AS fund_retention,hup.last_repay_time,
+		from_unixtime(hup.last_repay_time,'%Y-%m-%d %H:%i:%s') as lastRepayTimes,date_format(hydur.reg_time,'%Y-%m-%d %H:%i:%s') as regTime,
 		invite_regist,invite_recharge,invite_tender,hup.yield,attribute,hup.bank_balance,hup.account_await,hup.bank_frost
 		FROM
 			ht_user_portrait hup
+		LEFT JOIN hyjf_user.ht_user hydur ON hydur.user_id = hup.user_id
 		<include refid="Where_Clause_UserPortrait"/>
 		ORDER BY hup.user_id DESC
 		<if test="limitStart != null and limitEnd !=null ">
