@@ -4,6 +4,7 @@ spring:
   cloud:
     config:
       uri: http://micoserver:2222/
+      name: zipkin
   boot:
     admin:
       client:
