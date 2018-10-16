@@ -1320,7 +1320,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INT);
         }
         // 将投资金额转化为BigDecimal
-        BigDecimal accountBigDecimal = new BigDecimal(request.getAssignCapital());
+        BigDecimal accountBigDecimal = new BigDecimal(request.getAssignCapital().replaceAll(",",""));
         BigDecimal creditCapital = new BigDecimal(creditAssign.getCreditCapital());
         // 剩余可投金额
         Integer min = 1;
