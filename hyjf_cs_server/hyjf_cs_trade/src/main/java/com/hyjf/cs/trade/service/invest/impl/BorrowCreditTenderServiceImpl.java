@@ -1321,7 +1321,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         }
         // 将投资金额转化为BigDecimal
         BigDecimal accountBigDecimal = new BigDecimal(request.getAssignCapital().replaceAll(",",""));
-        BigDecimal creditCapital = new BigDecimal(creditAssign.getCreditCapital());
+        BigDecimal creditCapital = new BigDecimal(creditAssign.getCreditCapital().replaceAll(",",""));
         // 剩余可投金额
         Integer min = 1;
         if (min != null && min != 0 && accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {
