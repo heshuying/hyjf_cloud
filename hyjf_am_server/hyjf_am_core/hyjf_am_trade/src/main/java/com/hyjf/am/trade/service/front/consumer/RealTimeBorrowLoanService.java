@@ -3,10 +3,14 @@
  */
 package com.hyjf.am.trade.service.front.consumer;
 
+import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -39,6 +43,18 @@ public interface RealTimeBorrowLoanService extends BaseService {
 	boolean loanBatchUpdateDetails(BorrowApicron apicron, BankCallBean bean);
 
 	/**
+	 * 处理tender,判定成功状态，recover 无需要重复获取
+	 * @param apicron
+	 * @param borrow
+	 * @param borrowInfo
+	 * @param serviceFee
+	 * @param borrowTender
+	 * @return
+	 * @throws Exception
+	 */
+	Map updateTenderMuti(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal serviceFee, BorrowTender borrowTender) throws Exception;
+
+	/**
 	 * 更新借款API任务表
 	 *
 	 * @param apicron
@@ -55,5 +71,7 @@ public interface RealTimeBorrowLoanService extends BaseService {
 	 * @return
 	 */
 	BorrowApicron selApiCronByPrimaryKey(int id);
+
+	boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
 
 }

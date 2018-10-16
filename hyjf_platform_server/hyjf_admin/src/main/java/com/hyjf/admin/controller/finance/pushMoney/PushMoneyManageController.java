@@ -240,7 +240,7 @@ public class PushMoneyManageController extends BaseController {
         String sheetName = "推广提成发放列表";
 
         List<PushMoneyVO> recordList = pushMoneyManageService.searchPushMoneyList(pushMoneyRequest);
-        logger.info(JSON.toJSONString(recordList));
+        logger.debug(JSON.toJSONString(recordList));
 /*
         PushMoneyCustomize pushMoneyCustomize = new PushMoneyCustomize();
         BeanUtils.copyProperties(form, pushMoneyCustomize);

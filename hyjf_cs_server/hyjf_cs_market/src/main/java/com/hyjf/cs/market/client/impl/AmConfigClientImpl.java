@@ -91,7 +91,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 */
 	@Override
 	public EventVO getEventDetailById(Integer id) {
-		EventResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentevent/getEventDetail/" + id, EventResponse.class);
+		EventResponse response = restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentevent/getEventDetail/" + id, EventResponse.class);
 		if (response != null){
 			return response.getResult();
 		}

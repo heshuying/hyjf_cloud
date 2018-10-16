@@ -298,7 +298,7 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
 				return null;
 			}
 			if(certificateAuthority != null ) {
-				return loanSubjectCertificateAuthority;
+				return new LoanSubjectCertificateAuthority();
 			}
 	        return new LoanSubjectCertificateAuthority();
 	}
