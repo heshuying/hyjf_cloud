@@ -13,9 +13,11 @@ import java.util.List;
  * @author cui
  * @version LockedUserMgrResponse, v0.1 2018/9/21 10:38
  */
-public class LockedUserMgrResponse extends Response<LockedUserInfoVO> {
+public class LockedUserMgrResponse {
 
 	private int count;
+
+	private List<LockedUserInfoVO> resultList;
 
 	public int getCount() {
 		return count;
@@ -25,12 +27,14 @@ public class LockedUserMgrResponse extends Response<LockedUserInfoVO> {
 		this.count = count;
 	}
 
-	@Override
 	public List<LockedUserInfoVO> getResultList() {
-		if (super.getResultList() == null) {
-			List<LockedUserInfoVO> resultList = Lists.newArrayList();
-			setResultList(resultList);
+		if (resultList == null) {
+			resultList = Lists.newArrayList();
 		}
-		return super.getResultList();
+		return resultList;
+	}
+
+	public void setResultList(List<LockedUserInfoVO> resultList) {
+		this.resultList = resultList;
 	}
 }
