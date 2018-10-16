@@ -245,6 +245,46 @@
 	</resultMap>
 
 
+	<sql id="Borrow_Repayment_Plan_Where_Clause">
+		<where>
+			<!-- 借款编号 -->
+			<if test="borrowNid != null and borrowNid != ''">
+				AND b.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
+			</if>
+			<!-- 借款编号 -->
+			<if test="borrowName != null and borrowName != ''">
+				AND binfo.name LIKE CONCAT( #{borrowNid}, '%')
+			</if>
+			<!-- 资产来源 -->
+			<if test="instCodeSrch != null and instCodeSrch != ''">
+				AND binfo.inst_code = #{instCodeSrch}
+			</if>
+			<!-- 还款方式 -->
+			<if test="repayStyleType != null and repayStyleType != ''">
+				AND bs.nid = #{repayStyleType}
+			</if>
+
+			<!-- 还款状态0还款中,1已还款 -->
+			<if test="statusSrch != null and statusSrch != ''">
+				<if test="statusSrch ==0">
+					AND b.status= 4
+				</if>
+				<if test="statusSrch ==1">
+					AND b.status= 5
+				</if>
+			</if>
+			<!-- 最后还款日 -->
+			<if test="repayLastTimeStartSrch != null and repayLastTimeStartSrch != ''">
+				AND rp.repay_time <![CDATA[>=]]>
+				unix_timestamp(#{repayLastTimeStartSrch})
+			</if>
+			<if test="repayLastTimeEndSrch != null and repayLastTimeEndSrch != ''">
+				AND rp.repay_time <![CDATA[<=]]>
+				unix_timestamp(#{repayLastTimeEndSrch})+86399
+			</if>
+		</where>
+	</sql>
+
 	<select id="countBorrowRepaymentPlan" resultType="java.lang.Integer"
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest">
 		SELECT
@@ -254,7 +294,7 @@
 		INNER JOIN
 		ht_borrow AS b ON rp.borrow_nid=b.borrow_nid
 		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
-		<include refid="Where_Clause" />
+		<include refid="Borrow_Repayment_Plan_Where_Clause" />
 	</select>
 
 
@@ -323,7 +363,7 @@
 		LEFT JOIN ht_r_user u ON b.user_id =
 		u.user_id
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
-		<include refid="Where_Clause" />
+		<include refid="Borrow_Repayment_Plan_Where_Clause" />
 		ORDER BY
 		rp.repay_time ASC,b.id ASC
 		<if test="limitStart >= 0">
@@ -344,7 +384,7 @@
 		from
 		ht_borrow_repay_plan AS rp
 		INNER JOIN ht_borrow AS b ON rp.borrow_nid=b.borrow_nid
-		<include refid="Where_Clause" />
+		<include refid="Borrow_Repayment_Plan_Where_Clause" />
 	</select>
 
 	<select id="exportRepayClkActBorrowRepaymentInfoList" resultMap="searchBorrowRepaymentPlanListResultMap"

@@ -5,9 +5,9 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MessagePushHistoryService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushHistoryResponse;
-import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
 import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
@@ -39,8 +39,7 @@ public class MessagePushHistoryController extends BaseController {
     public JSONObject init(@RequestBody  MessagePushHistoryRequest form) {
             JSONObject jsonObject = new JSONObject();
             MessagePushHistoryResponse prs = messagePushHistoryService.getRecordList(form);
-            MessagePushTagResponse allPushTagList = messagePushHistoryService.getAllPushTagList();
-            //String fileDomainUrl = http://test.hyjf.com:8083/hyjf-admin/
+            List<MessagePushTagVO> allPushTagList = messagePushHistoryService.getAllPushTagList();
             if (prs == null) {
                 jsonObject.put(FAIL, FAIL_DESC);
                 return jsonObject;
@@ -52,7 +51,7 @@ public class MessagePushHistoryController extends BaseController {
             prepareDatas(jsonObject);
             jsonObject.put("totalCount", prs.getRecordTotal());
             jsonObject.put("list", prs.getResultList());
-            jsonObject.put("allPushTagList", allPushTagList.getResultList());
+            jsonObject.put("allPushTagList",allPushTagList);
             jsonObject.put("fileDomainUrl", url);
             return jsonObject;
     }

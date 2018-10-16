@@ -137,40 +137,47 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 AccountExample accountExample = new AccountExample();
                 accountExample.createCriteria().andUserIdEqualTo(userId);
                 List<Account> accounts = accountMapper.selectByExample(accountExample);
-                Account account = accounts.get(0);
-                BigDecimal bankTotal = account.getBankTotal();
-                BigDecimal bankInterestSum = account.getBankInterestSum();
-                batchUserPortraitQueryVO.setBankTotal(bankTotal);
+                if(!CollectionUtils.isEmpty(accounts)){
+                    Account account = accounts.get(0);
+                    BigDecimal bankTotal = account.getBankTotal();
+                    bankTotal = (bankTotal==null)?BigDecimal.ZERO:bankTotal;
+                    BigDecimal bankInterestSum = account.getBankInterestSum();
+                    bankInterestSum = (bankInterestSum==null)?BigDecimal.ZERO:bankInterestSum;
+                    batchUserPortraitQueryVO.setBankTotal(bankTotal);
 
-                //账户可用余额
-                BigDecimal bankBalance = account.getBankBalance();
-                batchUserPortraitQueryVO.setBankBalance(bankBalance);
+                    //账户可用余额
+                    BigDecimal bankBalance = account.getBankBalance();
+                    batchUserPortraitQueryVO.setBankBalance(bankBalance);
 
-                //账户待还金额
-                BigDecimal bankAwait = account.getBankAwait();
-                BigDecimal planAccountWait = account.getPlanAccountWait();
-                batchUserPortraitQueryVO.setAccountAwait(bankAwait.add(planAccountWait));
+                    //账户待还金额
+                    BigDecimal bankAwait = account.getBankAwait();
+                    bankAwait = (bankAwait==null)?BigDecimal.ZERO:bankAwait;
+                    BigDecimal planAccountWait = account.getPlanAccountWait();
+                    planAccountWait = (planAccountWait==null)?BigDecimal.ZERO:planAccountWait;
+                    batchUserPortraitQueryVO.setAccountAwait(bankAwait.add(planAccountWait));
 
-                //账户冻结金额
-                BigDecimal bankFrost = account.getBankFrost();
-                batchUserPortraitQueryVO.setBankFrost(bankFrost);
+                    //账户冻结金额
+                    BigDecimal bankFrost = account.getBankFrost();
+                    batchUserPortraitQueryVO.setBankFrost(bankFrost);
 
-                //资金存留比
-                BigDecimal balance = new BigDecimal(0);
-                AccountRechargeExample rechargeExample = new AccountRechargeExample();
-                AccountRechargeExample.Criteria criteria4 = rechargeExample.createCriteria();
-                criteria4.andUserIdEqualTo(userId).andStatusEqualTo(2);
-                List<AccountRecharge> recharges = accountRechargeMapper.selectByExample(rechargeExample);
-                if (!org.springframework.util.CollectionUtils.isEmpty(recharges)) {
-                    for (AccountRecharge accountRecharge : recharges) {
-                        balance = balance.add(accountRecharge.getBalance());
+                    //资金存留比
+                    BigDecimal balance = new BigDecimal(0);
+                    AccountRechargeExample rechargeExample = new AccountRechargeExample();
+                    AccountRechargeExample.Criteria criteria4 = rechargeExample.createCriteria();
+                    criteria4.andUserIdEqualTo(userId).andStatusEqualTo(2);
+                    List<AccountRecharge> recharges = accountRechargeMapper.selectByExample(rechargeExample);
+                    if (!CollectionUtils.isEmpty(recharges)) {
+                        for (AccountRecharge accountRecharge : recharges) {
+                            balance = balance.add(accountRecharge.getBalance());
+                        }
                     }
-                }
-                if (bankInterestSum != null && balance != null && bankInterestSum.add(balance).compareTo(new BigDecimal(0)) > 0 ) {
-                    BigDecimal fundRetention = (account.getBankBalance().divide(bankInterestSum.add(balance), 4, RoundingMode.HALF_UP).multiply(new BigDecimal(100)));
-                    batchUserPortraitQueryVO.setFundRetention(fundRetention);
-                } else {
-                    batchUserPortraitQueryVO.setFundRetention(new BigDecimal(0));
+                    if (bankInterestSum != null && balance != null && bankInterestSum.add(balance).compareTo(new BigDecimal(0)) > 0 ) {
+                        BigDecimal fundRetention = (account.getBankBalance().divide(bankInterestSum.add(balance), 4, RoundingMode.HALF_UP).multiply(new BigDecimal(100)));
+                        batchUserPortraitQueryVO.setFundRetention(fundRetention);
+                    } else {
+                        batchUserPortraitQueryVO.setFundRetention(new BigDecimal(0));
+                    }
+
                 }
 
                 //邀约客户注册数

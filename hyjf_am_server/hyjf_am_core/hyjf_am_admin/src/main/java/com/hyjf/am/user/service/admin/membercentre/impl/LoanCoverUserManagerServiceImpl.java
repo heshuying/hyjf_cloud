@@ -272,4 +272,21 @@ public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements 
   		}
   		return true;
   	}
+
+	@Override
+	public LoanSubjectCertificateAuthority selectCertificateAuthorityByCAName(String tureName) {
+		LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = null;
+		LoanSubjectCertificateAuthorityExample example2 = new LoanSubjectCertificateAuthorityExample();
+		LoanSubjectCertificateAuthorityExample.Criteria cra = example2.createCriteria();
+		cra.andNameEqualTo(tureName);
+		List<LoanSubjectCertificateAuthority> loanSubjectlist = this.loanSubjectCertificateAuthorityMapper.selectByExample(example2);
+		if (loanSubjectlist != null && loanSubjectlist.size()>0){
+			loanSubjectCertificateAuthority  = loanSubjectlist.get(0);
+		}
+
+		if ( loanSubjectCertificateAuthority == null){
+			return null;
+		}
+        return loanSubjectlist.get(0);
+	}
 }

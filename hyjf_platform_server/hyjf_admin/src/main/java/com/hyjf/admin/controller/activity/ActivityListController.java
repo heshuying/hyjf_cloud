@@ -19,6 +19,7 @@ import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,6 +136,9 @@ public class ActivityListController extends BaseController {
             response.setMessage(message);
             return new AdminResult<>(FAIL,response.getMessage());
         }
+        if (StringUtils.isBlank(request.getQr())) {
+            request.setQr("");
+        }
         response = activityListService.insertRecord(request);
 
         if (response == null) {
@@ -230,10 +234,6 @@ public class ActivityListController extends BaseController {
         String message = null;
         if (request.getTitle() == null) {
             message = "活动名称不能为空";
-            return message;
-        }
-        if (request.getImg() == null) {
-            message = "主图不能为空";
             return message;
         }
         if (request.getStartTime() == null) {
