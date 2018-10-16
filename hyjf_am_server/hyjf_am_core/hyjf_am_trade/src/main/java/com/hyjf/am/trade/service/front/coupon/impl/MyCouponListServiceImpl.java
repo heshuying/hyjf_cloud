@@ -629,10 +629,12 @@ public class MyCouponListServiceImpl implements MyCouponListService {
                         continue;
                     }
                 } else if ("2".equals(tenderQuota)) {
-                    if (!"不限".equals(userCouponConfigCustomize.getTenderQuota()) || new Double(userCouponConfigCustomize.getTenderQuotaAmount()) > new Double(money)) {
-                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getProjectExpirationType());
-                        notAvailableCouponList.add(couponBeanVo);
-                        continue;
+                    if (!"不限".equals(userCouponConfigCustomize.getTenderQuota()) && null != userCouponConfigCustomize.getTenderQuotaAmount()) {
+                        if(new Double(userCouponConfigCustomize.getTenderQuotaAmount()) > new Double(money)){
+                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getProjectExpirationType());
+                            notAvailableCouponList.add(couponBeanVo);
+                            continue;
+                        }
                     }
                 }
                 couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo, "");
