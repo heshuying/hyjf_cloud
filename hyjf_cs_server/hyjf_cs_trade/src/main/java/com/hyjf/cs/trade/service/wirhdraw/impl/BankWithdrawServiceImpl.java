@@ -39,6 +39,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
@@ -80,7 +81,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     @Autowired
     AmTradeClient amTradeClient;
 
-
+    @Autowired
+    private AuthService authService;
 
 
     @Autowired
@@ -398,9 +400,11 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         ret.put("bankType", bankType);
         ret.put("feeWithdraw", DF_FOR_VIEW.format(new BigDecimal(feeWithdraw)));
         ret.put("roleId", userRoId);
-//		modelAndView.addObject("paymentAuthStatus", user.getPaymentAuthStatus());
-        //update by jijun 2018/04/09 合规接口改造一期
-        ret.put("paymentAuthStatus", "");
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+        // 是否开启服务费授权 0未开启  1已开启
+        ret.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        ret.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
         ret.put("bankBalance", CustomConstants.DF_FOR_VIEW.format(bankBalance));
         result.setData(ret);
         return result;

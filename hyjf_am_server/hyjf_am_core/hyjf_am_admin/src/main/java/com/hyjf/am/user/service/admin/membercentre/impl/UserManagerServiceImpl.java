@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
+import com.hyjf.am.resquest.user.UserInfosUpdCustomizeRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
@@ -902,8 +903,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         //更新log表
         // 插入一条用户信息修改日志
         changeLog.setIdcard(request.getIdCard());
-//        changeLog.setUpdateType(2);//2用户信息修改
-        changeLog.setUpdateType(3);
+        changeLog.setUpdateType(3);//修改用户身份证
         changeLog.setUpdateUserId(Integer.parseInt(request.getLoginUserId()));
         changeLog.setUpdateUser(request.getLoginUserName());
         changeLog.setRemark(request.getRemark());
@@ -1311,4 +1311,182 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return bankCallBean;
     }
 
+    /**
+     * 根据用户id查找银行卡信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public BankCard getBankCardByUserId(int userId){
+        BankCardExample example = new BankCardExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
+        if (bankCardList!=null && bankCardList.size()>0) {
+            return bankCardList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateUserInfos(UserInfosUpdCustomizeRequest request) {
+        if (null != request) {
+            if (StringUtils.isNotBlank(request.getUserId())) {
+                // 插入操作日志表
+                UserChangeLog changeLog = new UserChangeLog();
+                UserInfo userInfoType = this.getUsersInfoByUserId(Integer.parseInt(request.getUserId()));
+                List<UserInfoForLogCustomize> users = userManagerCustomizeMapper.selectUserInfoByUserId(Integer.parseInt(request.getUserId()));
+                UserInfoForLogCustomize logRecord = users.get(0);
+                changeLog.setUserId(logRecord.getUserId());
+                changeLog.setUsername(logRecord.getUserName());
+                changeLog.setAttribute(logRecord.getAttribute());
+                changeLog.setIs51(logRecord.getIs51());
+                changeLog.setRealName(logRecord.getRealName());
+                changeLog.setRecommendUser(logRecord.getRecommendName());
+                changeLog.setMobile(logRecord.getMobile());
+                changeLog.setRole(logRecord.getUserRole());
+                changeLog.setStatus(logRecord.getUserStatus());
+                changeLog.setIdcard(logRecord.getIdCard());
+                changeLog.setEmail(logRecord.getEmail());
+                changeLog.setMobile(logRecord.getMobile());
+                changeLog.setBorrowerType(userInfoType.getBorrowerType());
+                switch (request.getUpdFlg()) {
+                    case "mobile":
+                        changeLog.setUpdateType(4);//修改手机号
+                        break;
+                    case "email":
+                        changeLog.setUpdateType(5);//修改邮箱
+                        break;
+                    case "userRole":
+                        changeLog.setUpdateType(6);//修改用户角色
+                        break;
+                }
+                UserChangeLogExample logExample = new UserChangeLogExample();
+                UserChangeLogExample.Criteria logCriteria = logExample.createCriteria();
+                logCriteria.andUserIdEqualTo(Integer.parseInt(request.getUserId()));
+                int count = usersChangeLogMapper.countByExample(logExample);
+                if (count <= 0) {
+                    // 如果从来没有添加过操作日志，则将原始信息插入修改日志中
+                    if (users != null && !users.isEmpty()) {
+                        changeLog.setRemark("初始注册");
+                        changeLog.setUpdateUser("system");
+                        changeLog.setUpdateTime(logRecord.getRegTime());
+                        usersChangeLogMapper.insertSelective(changeLog);
+                    }
+                }
+
+                // 根据主键查询用户信息
+                User user = usersMapper.selectByPrimaryKey(Integer.parseInt(request.getUserId()));
+                // 更新相应的用户的信息
+                //用户状态
+                if (StringUtils.isNotBlank(request.getStatus())) {
+                    user.setStatus(Integer.parseInt(request.getStatus()));
+                }
+                //修改手机号
+                if (StringUtils.isNotBlank(request.getMobile())) {
+                    user.setMobile(request.getMobile());
+                }
+                //修改邮箱
+                if (StringUtils.isNotBlank(request.getEmail())) {
+                    user.setEmail(request.getEmail());
+                }
+                int usersUpdateFlag = usersMapper.updateByPrimaryKey(user);
+                // 查询用户详情
+                UserInfoExample usersInfoE = new UserInfoExample();
+                UserInfoExample.Criteria uipec = usersInfoE.createCriteria();
+                uipec.andUserIdEqualTo(user.getUserId());
+                List<UserInfo> usersInfoList = usersInfoMapper.selectByExample(usersInfoE);
+                // 更新用户详情信息
+                if (usersInfoList != null && usersInfoList.size() == 1) {
+                    UserInfo userInfo = usersInfoList.get(0);
+                    //修改角色
+                    if (StringUtils.isNotBlank(request.getUserRole())) {
+                        userInfo.setRoleId(Integer.parseInt(request.getUserRole()));
+                    }
+
+                    // 更新用户详情信息
+                    usersInfoMapper.updateByPrimaryKey(userInfo);
+                    //设置log表的用户角色
+                    if (StringUtils.isNotBlank(request.getUserRole())) {
+                        changeLog.setRole(Integer.parseInt(request.getUserRole()));
+                    } else {
+                        changeLog.setRole(userInfo.getRoleId());
+                    }
+                }
+                // 插入一条用户信息修改日志
+                //用户状态
+                if (StringUtils.isNotBlank(request.getStatus())) {
+                    changeLog.setStatus(Integer.parseInt(request.getStatus()));
+                }
+                //手机号
+                if (StringUtils.isNotBlank(request.getMobile())) {
+                    changeLog.setMobile(request.getMobile());
+                }
+                //邮箱
+                if (StringUtils.isNotBlank(request.getEmail())) {
+//                    changeLog.setEmail(request.getEmail());
+                }
+                changeLog.setUpdateUser(request.getLoginUserName());
+                changeLog.setUpdateUserId(request.getLoginUserId());
+                changeLog.setRemark(request.getRemark());
+                changeLog.setUpdateTime(new Date());
+                changeLog.setBorrowerType(userInfoType.getBorrowerType());
+                usersChangeLogMapper.insertSelective(changeLog);
+                return usersUpdateFlag;
+            }
+        }
+        // 插入操作日志表
+        return 0;
+    }
+
+    /**
+     * 根据用户ID取得用户信息
+     *
+     * @param userId
+     * @return
+     */
+    public UserInfo getUsersInfoByUserId(Integer userId) {
+        if (userId != null) {
+            UserInfoExample example = new UserInfoExample();
+            example.createCriteria().andUserIdEqualTo(userId);
+            List<UserInfo> usersInfoList = this.usersInfoMapper.selectByExample(example);
+            if (usersInfoList != null && usersInfoList.size() > 0) {
+                return usersInfoList.get(0);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateUserBankInfo(BankCard bankCard, BankCardLog bankAccountLog) {
+        if (null != bankCard && null != bankAccountLog) {
+            //修改银行卡信息
+            bankCardMapper.updateByPrimaryKey(bankCard);
+            bankCardLogMapper.insert(bankAccountLog);
+            return 1;
+        }
+        return 0;
+    }
+    /**
+     * 根据用户id查找开户信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public BankCard selectBankCardByUserId(Integer userId){
+        BankCardExample example = new BankCardExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
+        if (bankCardList!=null && bankCardList.size()>0) {
+            return bankCardList.get(0);
+        }
+        return null;
+    }
 }

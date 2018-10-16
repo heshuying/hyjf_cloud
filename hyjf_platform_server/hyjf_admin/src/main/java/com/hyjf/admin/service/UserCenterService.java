@@ -9,7 +9,9 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.List;
 
@@ -200,4 +202,48 @@ public interface UserCenterService {
      * @return
      */
     JSONArray getCrmDepartmentList(String[] list);
+    /**
+     * 根据用户id获取开户信息
+     *
+     * @auther: nxl
+     * @param userId
+     * @return
+     */
+    BankCardVO getBankCardByUserId(String userId);
+    /**
+     * 调用江西银行查询联行号
+     * @param cardNo
+     * @return
+     */
+    BankCallBean payAllianceCodeQuery(String cardNo, Integer userId);
+    /**
+     * 根据银行名获取江西银行配置信息
+     * @param bankName
+     * @return
+     * @auth nxl
+     */
+    JxBankConfigVO getBankConfigByBankName(String bankName);
+    /**
+     * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+     *
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    int updateUserBaseInfo(UserInfosUpdCustomizeRequest request);
+    /**
+     * 更新银行卡信息
+     *
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    int updateUserBankInfo(UserInfosUpdCustomizeRequest request);
+
+    /**
+     * 根据userId获取userInfo
+     * @param userId
+     * @return
+     */
+    UserInfoVO selectUserInfoByUserId(String userId);
 }

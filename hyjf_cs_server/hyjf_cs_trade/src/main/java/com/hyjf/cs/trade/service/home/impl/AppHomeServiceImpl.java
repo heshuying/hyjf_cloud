@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.message.UserDeviceUniqueCodeResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.resquest.trade.AppHomePageRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.vo.UserDeviceUniqueCodeVO;
@@ -16,10 +17,12 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.app.AppHomePageCustomize;
+import com.hyjf.cs.trade.bean.app.AppHomePageRecommendProject;
 import com.hyjf.cs.trade.bean.app.AppModuleBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -36,7 +39,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * APP首页service
@@ -61,6 +66,9 @@ public class AppHomeServiceImpl implements AppHomeService {
 
     @Autowired
     private BaseClient baseClient;
+
+    /** 首页汇计划显示条数*/
+    private final int INDEX_HJH_SHOW_SIZE = 1;
 
     /**
      * 获取app首页各项数据
@@ -113,7 +121,9 @@ public class AppHomeServiceImpl implements AppHomeService {
 
             //获取首页项目列表
             /*this.createProjectListPage(info, version, list, HOST);*/
-            this.createHjhExtensionProjectListPage(info, list, HOST);
+//            this.createHjhExtensionProjectListPage(info, list, HOST);
+            //add by yangchangwei app3.1.1 迁移 2018-10-16
+            this.creatNoSignProjectListPage(info,list,HOST);
         } else {
 
             //查询用户是否开户
@@ -132,19 +142,28 @@ public class AppHomeServiceImpl implements AppHomeService {
                 this.createProjectNewPage(info, list, HOST);
 
                 //获取首页项目列表
-                this.createHjhExtensionProjectListPage(info, list, HOST);
+//                this.createHjhExtensionProjectListPage(info, list, HOST);
+                //add by yangchangwei app3.1.1 迁移 2018-10-16
+                this.creatNoSignProjectListPage(info,list,HOST);
             } else if (userType == 1) {//已开户
                 info.put("userType", "2");
 
+                boolean isnew =false;
                 //获取用户累计投资条数
                 Integer count = amTradeClient.getTotalInverestCount(userId);
                 if (count <= 0 || count == null) {
                     //获取新手标
                     this.createProjectNewPage(info, list, HOST);
+                    isnew = true;
                 }
 
                 //获取首页项目列表
-                this.createHjhExtensionProjectListPage(info, list, HOST);
+//                this.createHjhExtensionProjectListPage(info, list, HOST);
+                if(isnew){
+                    this.creatNoSignProjectListPage(info,list,HOST);
+                }else{
+                    this.createHjhExtensionProjectListPage_new(info, list, HOST,version);
+                }
                 //获取用户资产总额
                 AccountVO accountVO = amTradeClient.getAccountByUserId(Integer.valueOf(userId));
                 info.put("totalAssets", accountVO != null ? DF_FOR_VIEW.format(accountVO.getBankTotal()) : "0.00");
@@ -203,7 +222,165 @@ public class AppHomeServiceImpl implements AppHomeService {
     }
 
 
+    /**
+     *3.0.9 版本重新填充首页推荐标的
+     * @param info
+     * @param list
+     * @param host
+     */
+    private void createHjhExtensionProjectListPage_new(JSONObject info, List<AppProjectListCustomizeVO> list, String host,String version) {
 
+        List<AppHomePageCustomize> homeHjhPageCustomizes=convertToAppHomePageHJHCustomize(this.createAppExtensionListInfoPage_new(info,version,host),host);//计划
+        AppHomePageCustomize appHomePageCustomize = new AppHomePageCustomize();
+        if(homeHjhPageCustomizes != null && homeHjhPageCustomizes.size() > 0){
+            appHomePageCustomize = homeHjhPageCustomizes.get(0);
+        }
+        appHomePageCustomize.setTitle("推荐产品");
+        CommonUtils.convertNullToEmptyString(appHomePageCustomize);
+        AppHomePageRecommendProject recommendProject = convertToAppHomePageRecommendProject(appHomePageCustomize);
+        info.put("recommendProject", recommendProject);
+    }
+
+    /**
+     * 首页推荐标的 3.0.9
+     */
+    private List<AppProjectListCustomizeVO> createAppExtensionListInfoPage_new(JSONObject info,String version,String HOST) {
+
+        // 构造分页信息 首页只取第一条
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("limitStart", 0);
+        params.put("limitEnd", INDEX_HJH_SHOW_SIZE);
+        List<HjhPlanCustomizeVO> planList = this.searchIndexHjhExtensionPlanList(params);
+        boolean hasInvestment = false;
+        //判断是否有可投资计划
+        for (HjhPlanCustomizeVO hjhPlanCustomize:planList){
+            if("立即加入".equals(hjhPlanCustomize.getStatusName())){
+                hasInvestment = true;
+                break;
+            }
+
+        }
+        //无可投计划
+        if(!hasInvestment){
+            List<AppProjectListCustomizeVO> projectList = this.createAppOldUserProject(info, version, HOST);
+            if(projectList.size() > 0){
+                List<AppProjectListCustomizeVO> list = new ArrayList<AppProjectListCustomizeVO>();
+                AppProjectListCustomizeVO customize = projectList.get(0);
+                customize.setTag("优质资产");
+                customize.setBorrowDesc("项目剩余" + customize.getBorrowAccountWait());
+                list.add(customize);
+                return  list;
+            }else{
+                planList = this.selectIndexHjhExtensionPlanListByLockTime(params);
+            }
+
+        }
+        List<AppProjectListCustomizeVO> projectListCustomizes = convertToAppProjectList(planList,HOST);
+        for (AppProjectListCustomizeVO appInfo :
+                projectListCustomizes) {
+            appInfo.setTag("稳健回报");
+            appInfo.setBorrowDesc("开放额度" + appInfo.getAvailableInvestAccount());
+        }
+        return projectListCustomizes;
+    }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示 ②	若没有可投计划，则显示锁定期限短的
+     */
+    public List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanListByLockTime(Map<String, Object> params) {
+        AppHomePageRequest request = (AppHomePageRequest) ConvertUtils.convertMapToObject(params, AppHomePageRequest.class);
+        List<HjhPlanCustomizeVO> hjhPlanList = this.amTradeClient.selectIndexHjhExtensionPlanListByLockTime(request);
+        return hjhPlanList;
+    }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     */
+    public List<HjhPlanCustomizeVO> searchIndexHjhExtensionPlanList(Map<String, Object> params) {
+        AppHomePageRequest request  = (AppHomePageRequest) ConvertUtils.convertMapToObject(params,AppHomePageRequest.class);
+        List<HjhPlanCustomizeVO> hjhPlanList = this.amTradeClient.selectIndexHjhExtensionPlanList(request);
+        return hjhPlanList;
+    }
+
+    /**
+     * 查询已登录投资用户的项目详情
+     * @param info
+     * @param version
+     * @param HOST
+     */
+    private List<AppProjectListCustomizeVO> createAppOldUserProject(JSONObject info, String version, String HOST) {
+        Map<String, Object> projectMap = new HashMap<String, Object>();
+        projectMap.put("host", HOST + HomePageDefine.REQUEST_HOME + HomePageDefine.PROJECT_REQUEST_MAPPING
+                + HomePageDefine.PROJECT_DETAIL_ACTION);
+        projectMap.put("userId", info.getString("userId"));
+        projectMap.put("version", StringUtils.isEmpty(version)?"":version);
+
+        // 汇盈金服app首页定向标过滤
+        projectMap.put("publishInstCode", CustomConstants.HYJF_INST_CODE);
+        List<AppProjectListCustomizeVO> list = this.searchProjectList_new(projectMap);
+        return list;
+    }
+
+    /***
+     * 查询首页项目列表 3.0.9
+     */
+    public List<AppProjectListCustomizeVO> searchProjectList_new(Map<String, Object> projectMap) {
+
+        List<AppProjectListCustomizeVO> projectList = new ArrayList<>();
+
+        AppHomePageRequest request = (AppHomePageRequest) ConvertUtils.convertMapToObject(projectMap, AppHomePageRequest.class);
+        //查询首页定时发标,投资中,复审中的项目
+        List<AppProjectListCustomizeVO> list = amTradeClient.selectHomeProjectList(request);
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                AppProjectListCustomizeVO appProjec = list.get(i);
+                String status = appProjec.getStatus();
+                if("10".equals(status) || "11".equals(status)){
+                    projectList.add(appProjec);
+                }
+            }
+        }
+        return projectList;
+    }
+
+    /**
+     * 填充新手标信息
+     * @param info
+     * @param list
+     * @param host
+     */
+    private void creatNoSignProjectListPage(JSONObject info, List<AppProjectListCustomizeVO> list, String host) {
+        List<AppHomePageCustomize> homePageCustomizes = convertToAppHomePageCustomize(list,host);//新手标
+        AppHomePageCustomize pageCustomize = homePageCustomizes.get(0);
+        pageCustomize.setTitle("新手专享");
+        pageCustomize.setTag("新手限投1次");
+        pageCustomize.setBorrowDesc("100起投，最高投资5000");
+        CommonUtils.convertNullToEmptyString(pageCustomize);
+        AppHomePageRecommendProject recommendProject = convertToAppHomePageRecommendProject(pageCustomize);
+        info.put("recommendProject", recommendProject);
+    }
+
+
+    /**
+     * app3.0.9 组装推荐项目 add by cwyang
+     * @param appHomePageCustomize
+     * @return
+     */
+    private AppHomePageRecommendProject convertToAppHomePageRecommendProject(AppHomePageCustomize appHomePageCustomize) {
+        AppHomePageRecommendProject project = new AppHomePageRecommendProject();
+        project.setTitle(appHomePageCustomize.getTitle());
+        project.setTag(appHomePageCustomize.getTag());
+        project.setBorrowNid(appHomePageCustomize.getBorrowNid());
+        project.setStatus(appHomePageCustomize.getStatus());
+        project.setBorrowUrl(appHomePageCustomize.getBorrowUrl());
+        project.setBorrowName(appHomePageCustomize.getBorrowName());
+        project.setBorrowType(appHomePageCustomize.getBorrowType());
+        project.setBorrowApr(appHomePageCustomize.getBorrowApr());
+        project.setBorrowPeriod(appHomePageCustomize.getBorrowTheSecondDesc() + appHomePageCustomize.getBorrowTheSecond());
+        project.setBorrowDesc(appHomePageCustomize.getBorrowDesc());
+        project.setButtonText(appHomePageCustomize.getStatusName());
+        return project;
+    }
 
     /**
      * 查询首页项目列表
@@ -314,7 +491,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             AppHomePageCustomize homePageCustomize = new AppHomePageCustomize();
             homePageCustomize.setBorrowNid(listCustomize.getBorrowNid());
             homePageCustomize.setBorrowName( listCustomize.getBorrowName());
-            homePageCustomize.setBorrowDesc("计划");
+            homePageCustomize.setBorrowDesc(listCustomize.getBorrowDesc());
             homePageCustomize.setBorrowType(listCustomize.getBorrowType());
             homePageCustomize.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
             homePageCustomize.setBorrowTheFirstDesc("历史年回报率");

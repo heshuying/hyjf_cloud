@@ -34,10 +34,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author nxl
@@ -857,5 +854,64 @@ public class UserManagerController extends BaseController {
             response.setResultList(oaDepartmentCustomizeVOList);
         }
         return response;
+    }
+    /**
+     * 根据用户id获取开户信息
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/getBankCardByUserId/{userId}")
+    public BankCardResponse getBankCardByUserId(@PathVariable int userId){
+        BankCardResponse response = new BankCardResponse();
+        response.setRtn(Response.FAIL);
+        BankCard bankCard = userManagerService.getBankCardByUserId(userId);
+        if(null!=bankCard){
+            BankCardVO bankCardVO = new BankCardVO();
+            BeanUtils.copyProperties(bankCard,bankCardVO);
+            response.setRtn(Response.SUCCESS);
+            response.setResult(bankCardVO);
+        }
+        return response;
+    }
+
+    /**
+     * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateUserBaseInfo")
+    public IntegerResponse updateUserInfos(@RequestBody UserInfosUpdCustomizeRequest request) {
+        logger.info("---updateUserBaseInfo---  " + JSONObject.toJSONString(request));
+        IntegerResponse integerResponse = new IntegerResponse();
+        int updateUser = userManagerService.updateUserInfos(request);
+        return new IntegerResponse(updateUser);
+    }
+
+    @RequestMapping("/updateUserBankInfo")
+    public IntegerResponse updateUserBankInfo(@RequestBody UserInfosUpdCustomizeRequest request) {
+        logger.info("---updateUserBankInfo---  " + JSONObject.toJSONString(request));
+        //更新银行卡信息
+        BankCard bankCard = userManagerService.selectBankCardByUserId(Integer.parseInt(request.getUserId()));
+        User user = userManagerService.selectUserByUserId(Integer.parseInt(request.getUserId()));
+        // 银行卡操作记录
+        BankCardLog bankAccountLog = new BankCardLog();
+        bankAccountLog.setUserId(Integer.parseInt(request.getUserId()));
+        bankAccountLog.setUserName(user.getUsername());
+        bankAccountLog.setBankCode(String.valueOf(bankCard.getBankId()));
+        bankAccountLog.setCardNo(bankCard.getCardNo());
+        List<JxBankConfig> config = jxBankConfigService.getJxBankConfigByBankId(bankCard.getBankId());
+        if (null!=config&&config.size()>0) {
+            bankAccountLog.setBankName(config.get(0).getBankName());
+        } else {
+            bankAccountLog.setBankName("");
+        }
+        bankAccountLog.setCardType(0);// 卡类型// 0普通提现卡1默认卡2快捷支付卡
+        bankAccountLog.setOperationType(2);// 操作类型 0绑定 1删除 2:修改银行卡
+        bankAccountLog.setStatus(0);// 成功
+        bankAccountLog.setCreateTime(new Date());// 操作时间
+
+        int updateUser = userManagerService.updateUserBankInfo(bankCard,bankAccountLog);
+        return new IntegerResponse(updateUser);
     }
 }

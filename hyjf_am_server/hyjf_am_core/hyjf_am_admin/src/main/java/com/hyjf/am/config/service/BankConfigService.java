@@ -82,4 +82,10 @@ public interface BankConfigService {
      * @return
      */
     List<JxBankConfig> getBankRecordList(Integer quickPayment);
+    /**
+     * 根据银行名查找江西银行配置
+     * @param bankName
+     * @return
+     */
+    JxBankConfig getBankConfigByBankName(String bankName);
 }

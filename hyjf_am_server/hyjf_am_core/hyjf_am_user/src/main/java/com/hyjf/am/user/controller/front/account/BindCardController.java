@@ -172,4 +172,22 @@ public class BindCardController extends BaseController {
 
 		return new Response<>(Response.SUCCESS, Response.SUCCESS_MSG, true);
 	}
+	/**
+	 * 根据用户Id,银行卡Id查询用户银行卡信息
+	 * @auther: nxl
+	 * @date: 2018/10/15
+	 */
+	@RequestMapping("/getBankCardById/{userId}/{cardId}")
+	public BankCardResponse getBankCardById(@PathVariable Integer userId, @PathVariable String cardId) {
+		BankCardResponse response = new BankCardResponse();
+		BankCard card = bindCardService.getBankCardById(userId, cardId);
+		if (card != null) {
+			BankCardVO bankCardVO = new BankCardVO();
+			BeanUtils.copyProperties(card, bankCardVO);
+			response.setResult(bankCardVO);
+		}
+		return response;
+	}
+
+
 }

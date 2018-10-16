@@ -22,12 +22,14 @@ import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.repay.RepayManageService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -44,7 +46,8 @@ import java.util.Map;
  */
 @Service
 public class RepayManageServiceImpl extends BaseTradeServiceImpl implements RepayManageService {
-
+    @Autowired
+    private AuthService authService;
     /**
      * 普通用户管理费总待还
      * @param userId
@@ -218,7 +221,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         if(borrow == null){
             throw  new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
-
+        // 服务费授权
+        boolean isPaymentAuth = this.authService.checkPaymentAuthStatus(user.getUserId());
+        if (!isPaymentAuth) {
+            throw  new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+        }
         boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(),300);
         if (!tranactionSetFlag) {//设置失败
             throw  new CheckException(MsgEnum.ERR_SYSTEM_BUSY);
@@ -260,7 +267,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         if (!mdPassword.equals(userVO.getPassword())) {
             throw  new CheckException(MsgEnum.ERR_PASSWORD_INVALID);
         }
-
+        // 服务费授权和还款授权校验
+        boolean isPaymentAuth = this.authService.checkPaymentAuthStatus(user.getUserId());
+        if (!isPaymentAuth) {
+            throw  new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+        }
         // 开户校验
         if(!user.isBankOpenAccount()){
             throw  new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);

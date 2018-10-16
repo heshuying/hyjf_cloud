@@ -37,6 +37,7 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.CouponTenderProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -91,7 +92,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private HjhTenderService hjhTenderService;
     @Autowired
     private BorrowCreditTenderService borrowTenderService;
-
+    @Autowired
+    private AuthService authService;
     /**
      * @param request
      * @Description 散标投资
@@ -334,6 +336,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 风险测评校验
         this.checkEvaluation(user);
+        // 缴费授权状态
+        if (!authService.checkPaymentAuthStatus(user.getUserId())) {
+            // 未进行服务费授权
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
+        }
     }
 
     /**
