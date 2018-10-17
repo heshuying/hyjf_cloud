@@ -39,10 +39,7 @@ import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
-import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
-import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
-import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.*;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -2231,4 +2228,49 @@ public interface AmTradeClient {
      * @date 2018/10/9 15:52
      */
     List<BorrowProjectTypeVO> getProjectTypeList();
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示 ②	若没有可投计划，则显示锁定期限短的
+     * @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanListByLockTime(AppHomePageRequest request);
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     * @param request
+     * @Author yangchangwei 2018/10/16
+     * @return
+     */
+    List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanList(AppHomePageRequest request);
+
+    /**
+     * 查询首页定时发标,投资中,复审中的项目
+     * @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    List<AppProjectListCustomizeVO> selectHomeProjectList(AppHomePageRequest request);
+
+    /**
+     * 插入垫付机构冻结日志信息
+     * @author wgx
+     * @date 2018/10/16
+     */
+    Integer addOrgFreezeLog(BankRepayOrgFreezeLogRequest requestBean);
+
+    /**
+     * 删除垫付机构冻结日志信息
+     * @author wgx
+     * @date 2018/10/16
+     */
+    Integer deleteOrgFreezeLog(String orderId, String borrowNid);
+
+    /**
+     * 根据条件查询垫付机构冻结日志
+     * @author wgx
+     * @date 2018/10/16
+     */
+    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId, String borrowNid);
 }

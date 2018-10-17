@@ -134,9 +134,9 @@ public class AssureBankOpenController extends BaseUserController {
     @ApiOperation(value = "担保账户开户查询开户失败原因", notes = "查询开户失败原因")
     @PostMapping("/seachFiledMess")
     @ResponseBody
-    public WebResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
-        logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);
-        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId);
+    public WebResult<Object> seachFiledMess(@RequestHeader(value = "userId") int userId,@RequestParam("logOrdId") String logOrdId) {
+        logger.info("查询开户失败原因start,logOrdId:{},userid{}", logOrdId,userId);
+        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId,userId);
         return result;
     }
 }

@@ -4,10 +4,18 @@ package com.hyjf.cs.trade.util;
 /**
  * 首页属性定义
  */
-public class HomePageDefine {
+public class HomePageDefine{
 
 	/** 首页接口  @RequestMapping值 */
 	public static final String REQUEST_MAPPING = "/hyjf-app/homepage";
+
+	public static final String REQUEST_HOME = "/hyjf-app";
+
+	/** 指定类型的项目 @RequestMapping值 */
+	public static final String PROJECT_REQUEST_MAPPING = "/project";
+
+	/** 项目详情 @RequestMapping值 */
+	public static final String PROJECT_DETAIL_ACTION = "/getProjectDetail";
 
 	/** 首页项目列表  @RequestMapping值 */
 	public static final String PROJECT_LIST_ACTION = "/getProjectList";

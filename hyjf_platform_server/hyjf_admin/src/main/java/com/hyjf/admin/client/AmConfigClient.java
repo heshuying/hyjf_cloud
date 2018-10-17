@@ -1443,4 +1443,11 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	JxBankConfigVO selectJxBankConfigByBankId(Integer bankId);
+	/**
+	 * 根据银行名获取江西银行配置信息
+	 * @param bankName
+	 * @return
+	 * @auth nxl
+	 */
+	JxBankConfigVO getBankConfigByBankName(String bankName);
 }

@@ -19,6 +19,7 @@
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -81,7 +82,7 @@
   <sql id="Base_Column_List" >
     id, user_id, username, real_name, mobile, idcard, `role`, `attribute`, recommend_user, 
     is51, `status`, remark, borrower_type, update_type, update_user_id, update_user, 
-    update_time
+    update_time, email
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserChangeLogExample" >
     select
@@ -125,13 +126,13 @@
       `attribute`, recommend_user, is51, 
       `status`, remark, borrower_type, 
       update_type, update_user_id, update_user, 
-      update_time)
+      update_time, email)
     values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
       #{mobile,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{role,jdbcType=TINYINT}, 
       #{attribute,jdbcType=TINYINT}, #{recommendUser,jdbcType=VARCHAR}, #{is51,jdbcType=TINYINT}, 
       #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{borrowerType,jdbcType=TINYINT}, 
       #{updateType,jdbcType=TINYINT}, #{updateUserId,jdbcType=INTEGER}, #{updateUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{updateTime,jdbcType=TIMESTAMP}, #{email,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserChangeLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -187,6 +188,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="email != null" >
+        email,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
@@ -236,6 +240,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -299,6 +306,9 @@
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -322,7 +332,8 @@
       update_type = #{record.updateType,jdbcType=TINYINT},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user = #{record.updateUser,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      email = #{record.email,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -378,6 +389,9 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -398,7 +412,8 @@
       update_type = #{updateType,jdbcType=TINYINT},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user = #{updateUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      email = #{email,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

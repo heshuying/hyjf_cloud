@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
@@ -13,6 +16,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hesy
@@ -148,4 +152,59 @@ public interface RepayManageService extends BaseTradeService {
      * 获取批量还款页面数据
      */
     ProjectBean getOrgBatchRepayData(String userId, String startDate, String endDate);
+
+    /**
+     * 获取失败信息
+     * @param retCode
+     * @return
+     */
+    String getBankRetMsg(String retCode);
+
+    /**
+     * 插入垫付机构冻结日志信息
+     * @author wgx
+     * @date 2018/10/11
+     */
+    Integer insertRepayOrgFreezeLof(Integer userId, String orderId, String account, String borrowNid, RepayBean repay,
+                                 String userName, boolean isAllRepay);
+    /**
+     * 根据条件查询垫付机构冻结日志
+     * @author wgx
+     * @date 2018/10/11
+     */
+    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String borrowNid, String orderId);
+
+    /**
+     * 删除垫付机构还款冻结日志
+     * @author wgx
+     * @date 2018/10/11
+     */
+    Integer deleteOrgFreezeTempLogs(String orderId, String borrowNid);
+
+    /**
+     * 单笔还款申请冻结查询
+     * @auther: wgx
+     * @date: 2018/10/11
+     */
+    boolean queryBalanceFreeze(Integer userId, String userName, String orderId, String account);
+
+    /**
+     * 还款申请冻结资金
+     * @auther: wgx
+     * @date: 2018/10/16
+     */
+    WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account);
+    /**
+     * 代偿冻结（合规要求）
+     * @auther: wgx
+     * @date: 2018/10/11
+     */
+    Map<String, Object> getBankRefinanceFreezePage(Integer userId, String userName, String ip, String orderId, String borrowNid, BigDecimal repayTotal, String account);
+
+    /**
+     * 担保机构批量还款
+     * @auther: wgx
+     * @date: 2018/10/16
+     */
+    Map<String, Object> startOrgRepay(String startDate, String endDate, Integer userId, String password, String ip, BankOpenAccountVO userBankOpenAccount);
 }

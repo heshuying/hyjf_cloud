@@ -544,4 +544,12 @@ public interface AmUserClient {
     void updateUserAuth(UserAuthRequest request);
 
     void updateUserAuthLog(String logOrderId, String message);
+	/**
+	 * 根据用户Id,银行卡Id查询用户银行卡信息
+	 * @param userId
+	 * @param cardId
+	 * @auther: nxl
+	 * @return
+	 */
+	BankCardVO getBankCardById(int userId, String cardId);
 }

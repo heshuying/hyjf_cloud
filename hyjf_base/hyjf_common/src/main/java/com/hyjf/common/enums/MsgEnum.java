@@ -173,9 +173,13 @@ public enum MsgEnum implements MsgCode {
 	ERR_CARD_DELETE("ECD000004", "银行卡删除失败"),
 	ERR_CARD_NOT_BIND("ECD000005","用户未绑卡"),
 	ERR_CARD_BLANK("ECD000006","银行卡号未填写"),
+	//add by nxl 企业用户解绑信息提示
+	ERR_CARD_ENTERPRISE("ECD000007","企业用户解绑请联系客服"),
 
-
-
+	ERR_AUTH_USER_PAYMENT("EAU000001","请先进行服务费授权"),
+	ERR_AUTH_USER_REPAYMENT("EAU000002","请先进行还款授权"),
+	ERR_AUTH_USER_AUTO_BID("EAU000003","请先进行自动投资授权"),
+	ERR_AUTH_USER_AUTO_CREDIT("EAU000004","请先进行自动债转授权"),
 
 	// 邮件相关错误信息ERR_EMAIL_
 	ERR_EMAIL_USED("EEM000001", "邮箱已被占用"),
@@ -397,6 +401,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_USERNAME_NOT_IN("99","受托人用户名不在配置表中。"),
 	ERR_USERNAME_NOT_RELEVANT("99","受托人用户名与资产来源不一致。"),
 	ERR_USERNAME_IS_DISABLE("99","受托人在白名单中被禁用。"),
+
+
 	// 枚举终结
 	ERR_ENUM("", "");
 

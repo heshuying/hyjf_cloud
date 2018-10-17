@@ -60,12 +60,11 @@ public class MergeAuthPagePlusController extends BaseUserController {
     /**
      * 用户合并授权
      * @param userId
-     * @param authorizedVO
      * @return
      */
     @ApiOperation(value = "用户合并授权", notes = "用户合并授权")
     @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
-    public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId,@RequestBody AuthorizedVO authorizedVO, HttpServletRequest request) {
+    public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
@@ -100,7 +99,7 @@ public class MergeAuthPagePlusController extends BaseUserController {
         authBean.setPlatform(CustomConstants.CLIENT_PC);
         authBean.setAuthType(AuthBean.AUTH_TYPE_MERGE_AUTH);
         authBean.setChannel(BankCallConstant.CHANNEL_PC);
-        authBean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+        authBean.setForgotPwdUrl(super.getForgotPwdUrl(CustomConstants.CLIENT_PC,request,systemConfig));
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(usersInfo.getRoleId() + "");
@@ -161,6 +160,7 @@ public class MergeAuthPagePlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户合并授权异步回调", notes = "用户合并授权异步回调")
     @PostMapping(value = "/mergeAuthBgreturn")
+    @ResponseBody
     public String mergeAuthBgreturn(@RequestBody BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         logger.info("[合并授权异步回调开始]");

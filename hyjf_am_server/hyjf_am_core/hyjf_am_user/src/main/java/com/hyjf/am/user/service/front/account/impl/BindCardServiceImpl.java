@@ -212,5 +212,25 @@ public class BindCardServiceImpl extends BaseServiceImpl implements BindCardServ
 		this.bankCardLogMapper.insertSelective(bankCardLog);
 		return true;
 	}
-	
+	/**
+	 * 根据用户Id,银行卡Id查询用户银行卡信息
+	 *
+	 * @param userId
+	 * @auther: nxl
+	 * @param cardId
+	 * @return
+	 */
+	@Override
+	public BankCard getBankCardById(Integer userId, String cardId) {
+		BankCardExample example = new BankCardExample();
+		BankCardExample.Criteria cra = example.createCriteria();
+		cra.andUserIdEqualTo(userId).andIdEqualTo(Integer.parseInt(cardId));
+		List<BankCard> list = bankCardMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
 }

@@ -120,18 +120,34 @@ public class UserParameters {
 	// add by yaoyong 20171204 app2.1改版 end
 	// 用户角色：1投资人2借款人3担保机构
 	private String roleId;
-	
-	private String paymentAuthStatus; // 缴费授权状态  0: 未授权    1:已授权
-	private String paymentAuthUrl; // 缴费授权Url
-	// 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
-	private String exitLabelShowFlag;
-	// add by pcc app3.1.1追加 20180823 end
-	// 是否开启修改手机号  true可以  false  不行
-	private String isUpdateMobile;
+	// 缴费授权状态  0: 未授权    1:已授权
+	private String paymentAuthStatus;
+	// 缴费授权Url
+	private String paymentAuthUrl;
+	// 三合一授权Url
+	private String mergeAuthUrl;
+	// 自动投资授权是否开启  0未开启  1已开启
+	private String invesAuthOn;
+	// 自动债转费授权是否开启  0未开启  1已开启
+	private String creditAuthOn;
+	// 服务费授权是否开启  0未开启  1已开启
+	private String paymentAuthOn;
+	// 还款授权状态  0: 未授权    1:已授权
+	private String repayStatus;
+	// 还款授权Url
+	private String repayAuthUrl;
 	// 是否校验用户角色
 	private String isCheckUserRole;
 	// 校验用户角色的描述
 	private String checkUserRoleDesc;
+	/**
+	 * 三合一授权固定消息
+	 */
+	private String mergeAuthDesc = "自动投标，自动债转，服务费授权。";
+	//三合一授权过期标识0未授权，1正常，2即将过期，3已过期
+	private String mergeAuthExpire;
+	//缴费授权过期标识0未授权，1正常，2即将过期，3已过期
+	private String paymentAuthExpire;
 	/**
 	 * 缴费授权固定消息
 	 */
@@ -798,20 +814,52 @@ public class UserParameters {
         this.roleId = roleId;
     }
 
-	public String getExitLabelShowFlag() {
-		return exitLabelShowFlag;
+	public String getMergeAuthUrl() {
+		return mergeAuthUrl;
 	}
 
-	public void setExitLabelShowFlag(String exitLabelShowFlag) {
-		this.exitLabelShowFlag = exitLabelShowFlag;
+	public void setMergeAuthUrl(String mergeAuthUrl) {
+		this.mergeAuthUrl = mergeAuthUrl;
 	}
 
-	public String getIsUpdateMobile() {
-		return isUpdateMobile;
+	public String getInvesAuthOn() {
+		return invesAuthOn;
 	}
 
-	public void setIsUpdateMobile(String isUpdateMobile) {
-		this.isUpdateMobile = isUpdateMobile;
+	public void setInvesAuthOn(String invesAuthOn) {
+		this.invesAuthOn = invesAuthOn;
+	}
+
+	public String getCreditAuthOn() {
+		return creditAuthOn;
+	}
+
+	public void setCreditAuthOn(String creditAuthOn) {
+		this.creditAuthOn = creditAuthOn;
+	}
+
+	public String getPaymentAuthOn() {
+		return paymentAuthOn;
+	}
+
+	public void setPaymentAuthOn(String paymentAuthOn) {
+		this.paymentAuthOn = paymentAuthOn;
+	}
+
+	public String getRepayStatus() {
+		return repayStatus;
+	}
+
+	public void setRepayStatus(String repayStatus) {
+		this.repayStatus = repayStatus;
+	}
+
+	public String getRepayAuthUrl() {
+		return repayAuthUrl;
+	}
+
+	public void setRepayAuthUrl(String repayAuthUrl) {
+		this.repayAuthUrl = repayAuthUrl;
 	}
 
 	public String getIsCheckUserRole() {
@@ -828,5 +876,29 @@ public class UserParameters {
 
 	public void setCheckUserRoleDesc(String checkUserRoleDesc) {
 		this.checkUserRoleDesc = checkUserRoleDesc;
+	}
+
+	public String getMergeAuthDesc() {
+		return mergeAuthDesc;
+	}
+
+	public void setMergeAuthDesc(String mergeAuthDesc) {
+		this.mergeAuthDesc = mergeAuthDesc;
+	}
+
+	public String getMergeAuthExpire() {
+		return mergeAuthExpire;
+	}
+
+	public void setMergeAuthExpire(String mergeAuthExpire) {
+		this.mergeAuthExpire = mergeAuthExpire;
+	}
+
+	public String getPaymentAuthExpire() {
+		return paymentAuthExpire;
+	}
+
+	public void setPaymentAuthExpire(String paymentAuthExpire) {
+		this.paymentAuthExpire = paymentAuthExpire;
 	}
 }

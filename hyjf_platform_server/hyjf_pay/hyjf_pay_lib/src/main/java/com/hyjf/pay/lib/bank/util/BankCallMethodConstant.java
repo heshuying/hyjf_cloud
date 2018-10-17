@@ -232,6 +232,10 @@ public class BankCallMethodConstant implements Serializable {
 	 */
 	public static final String TXCODE_BALANCE_UNFREEZE = "balanceUnfreeze";
 	/**
+	 * 代偿冻结
+	 */
+	public static final String TXCODE_REFINANCE_FREEZE_PAGE = "refinanceFreezePage";
+	/**
 	 * 电子账户余额查询
 	 */
 	public static final String TXCODE_BALANCE_QUERY = "balanceQuery";
@@ -369,4 +373,6 @@ public class BankCallMethodConstant implements Serializable {
 
 	/**2.2.5绑定银行卡（页面）*/
 	public static final String TXCODE_BIND_CARD_PAGE = "bindCardPage";
+	/**解绑银行卡*/
+	public  static final String TXCODE_ACCOUNT_UNBINDCARD_PAGE = "unbindCardPage";
 }

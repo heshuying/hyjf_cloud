@@ -38,6 +38,7 @@ import com.hyjf.cs.trade.mq.producer.AmTradeProducer;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.coupon.AppCouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
@@ -92,7 +93,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     @Autowired
     private AmTradeProducer amTradeProducer;
 
-
+    @Autowired
+    private AuthService authService ;
     /**
      * @param request
      * @Description 检查加入计划的参数
@@ -1203,10 +1205,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_DEBT);
             }
         }
-        // TODO: 2018/9/19  服务费授权校验
-//        if (userAuth.getAutoPaymentStatus() == 0) {
-//            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
-//        }
+        // 自动投资授权
+        if (!authService.checkInvesAuthStatus(user.getUserId())) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_INVEST);
+        }
+        // 自动债转授权
+        if (!authService.checkCreditAuthStatus(user.getUserId())) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_DEBT);
+        }
+        // 缴费授权
+        if (!authService.checkPaymentAuthStatus(user.getUserId())) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
+        }
         // 风险测评校验
         this.checkEvaluation(user);
     }

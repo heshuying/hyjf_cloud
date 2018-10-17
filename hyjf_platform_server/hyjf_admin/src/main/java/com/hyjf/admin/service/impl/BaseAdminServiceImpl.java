@@ -38,6 +38,12 @@ public class BaseAdminServiceImpl extends BaseServiceImpl implements BaseAdminSe
 		UserVO user = amUserClient.getUserByUserName(userName);
 		return user;
 	}
+
+	public UserVO getUsersById(Integer userId) {
+		UserVO userVO = amUserClient.findUserById(userId);
+		return userVO;
+	}
+
 	/**
 	 * 获取银行账户余额
 	 * @auth sunpeikai

@@ -78,7 +78,11 @@ public class BankRepayFreezeLogServiceImpl extends BaseServiceImpl implements Ba
     @Override
     public BankRepayFreezeLog getFreezeLog(Integer userId, String borrowNid){
         BankRepayFreezeLogExample example = new BankRepayFreezeLogExample();
-        example.createCriteria().andUserIdEqualTo(userId).andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
+        BankRepayFreezeLogExample.Criteria criteria = example.createCriteria();
+        if(userId != null){
+            criteria.andUserIdEqualTo(userId);
+        }
+        criteria.andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
         List<BankRepayFreezeLog> list = bankRepayFreezeLogMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
             return list.get(0);

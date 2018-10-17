@@ -9,6 +9,11 @@ public class SystemConfig {
     public String webHost;
     @Value("${hyjf.app.host}")
     public String appHost;
+    /**
+     * TODO app 3.1.1 注册协议链接
+     */
+//    @Value("${hyjf.app.regist.agreement.url}")
+    public String appRegistAgreementUrl;
 
     @Value("${hyjf.weChat.host}")
     public String wechatHost;
@@ -140,9 +145,13 @@ public class SystemConfig {
     @Value("${release.coupon.accesskey}")
     private String couponAccesskey;
 
-    /*需要在cs-trade的工程配置里面添加 hyjf.role.isopen */
-    @Value("${hyjf.role.isopen}")
-    private String roleIsOpen;
+    public String getAppRegistAgreementUrl() {
+        return appRegistAgreementUrl;
+    }
+
+    public void setAppRegistAgreementUrl(String appRegistAgreementUrl) {
+        this.appRegistAgreementUrl = appRegistAgreementUrl;
+    }
 
     public String getWechatHost() {
         return wechatHost;
@@ -460,13 +469,5 @@ public class SystemConfig {
 
     public void setIosNoticeVersion(String iosNoticeVersion) {
         this.iosNoticeVersion = iosNoticeVersion;
-    }
-
-    public String getRoleIsOpen() {
-        return roleIsOpen;
-    }
-
-    public void setRoleIsOpen(String roleIsOpen) {
-        this.roleIsOpen = roleIsOpen;
     }
 }

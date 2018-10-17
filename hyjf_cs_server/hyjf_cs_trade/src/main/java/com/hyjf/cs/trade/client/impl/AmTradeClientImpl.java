@@ -12,11 +12,11 @@ import com.hyjf.am.response.config.AppReapyCalendarResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
+import com.hyjf.am.response.trade.HjhPlanResponse;
 import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.user.*;
-import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
@@ -53,10 +53,7 @@ import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
-import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
-import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
-import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.*;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -72,6 +69,7 @@ import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -486,7 +484,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanVO getPlanByNid(String borrowNid) {
         String url = urlBase + "hjhPlan/getHjhPlanByPlanNid/" + borrowNid;
-        HjhPlanResponse response = restTemplate.getForEntity(url, HjhPlanResponse.class).getBody();
+        com.hyjf.am.response.user.HjhPlanResponse response = restTemplate.getForEntity(url, com.hyjf.am.response.user.HjhPlanResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return null;
         }
@@ -3062,8 +3060,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BankRepayFreezeLogVO getFreezeLogValid(Integer userId, String borrowNid) {
-        String url = "http://AM-TRADE/am-trade/repayfreezelog/get_logvalid/"+userId + "/" + borrowNid;
-        BankRepayFreezeLogResponse response = restTemplate.getForEntity(url,BankRepayFreezeLogResponse.class).getBody();
+        StringBuilder url = new StringBuilder("http://AM-TRADE/am-trade/repayfreezelog/get_logvalid/");
+        if(userId != null){
+            url.append(userId).append("/");
+        }
+        url.append(borrowNid);
+        BankRepayFreezeLogResponse response = restTemplate.getForEntity(url.toString(),BankRepayFreezeLogResponse.class).getBody();
         if (Validator.isNotNull(response)){
             return response.getResult();
         }
@@ -5369,6 +5371,109 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/config/projecttype/getProjectType";
         BorrowProjectTypeResponse response = restTemplate.getForEntity(url,BorrowProjectTypeResponse.class).getBody();
         if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示 ②	若没有可投计划，则显示锁定期限短的
+     * @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    @Override
+    public List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanListByLockTime(AppHomePageRequest request) {
+        String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/selectIndexHjhExtensionPlanListByLockTime";
+        HjhPlanResponse response = restTemplate.postForEntity(url,request, HjhPlanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     *  @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    @Override
+    public List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanList(AppHomePageRequest request) {
+        String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/selectIndexHjhExtensionPlanList";
+        HjhPlanResponse response = restTemplate.postForEntity(url,request, HjhPlanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 查询首页定时发标,投资中,复审中的项目
+     * @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    @Override
+    public List<AppProjectListCustomizeVO> selectHomeProjectList(AppHomePageRequest request) {
+        String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/selectHomeProjectList";
+        AppProjectListResponse response = restTemplate.postForEntity(url,request,AppProjectListResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+
+    /**
+     * 添加
+     * @author wgx
+     * @date 2018/10/16
+     */
+    @Override
+    public Integer addOrgFreezeLog(BankRepayOrgFreezeLogRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/repayOrgFreezeLog/add";
+        IntegerResponse response = restTemplate.postForEntity(url, requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据orderId删除
+     * @author wgx
+     * @date 2018/10/16
+     */
+    @Override
+    public Integer deleteOrgFreezeLog(String orderId, String borrowNid) {
+        StringBuilder url = new StringBuilder("http://AM-TRADE/am-trade/repayOrgFreezeLog/delete/");
+        url.append(orderId);
+        if (StringUtils.isNotBlank(borrowNid)) {
+            url.append("/").append(borrowNid);
+        }
+        IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据条件查询垫付机构冻结日志
+     * @author wgx
+     * @date 2018/10/16
+     */
+    @Override
+    public List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId, String borrowNid) {
+        StringBuilder url = new StringBuilder("http://AM-TRADE/am-trade/repayOrgFreezeLog/getValid/");
+        url.append(orderId);
+        if(StringUtils.isNotBlank(borrowNid)){
+            url.append("/").append(borrowNid);
+        }
+        IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
             return response.getResultList();
         }
         return null;

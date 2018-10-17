@@ -56,12 +56,11 @@ public class CreditAuthPagePlusController extends BaseUserController {
     /**
      * 用户自动债转授权
      * @param userId
-     * @param authorizedVO
      * @return
      */
     @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
     @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
-    public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId,@RequestBody AuthorizedVO authorizedVO, HttpServletRequest request) {
+    public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
@@ -79,7 +78,7 @@ public class CreditAuthPagePlusController extends BaseUserController {
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + errorPath +"?logOrdId="+orderId;
         String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + successPath;
-        String bgRetUrl = "http://CS-USER/hyjf-web/user/auth/invesauthpageplus/invesAuthBgreturn" ;
+        String bgRetUrl = "http://CS-USER/hyjf-web/user/auth/creditauthpageplus/creditAuthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO=authService.getBankOpenAccount(userId);
@@ -96,7 +95,7 @@ public class CreditAuthPagePlusController extends BaseUserController {
         authBean.setPlatform(CustomConstants.CLIENT_PC);
         authBean.setAuthType(AuthBean.AUTH_TYPE_AUTO_CREDIT);
         authBean.setChannel(BankCallConstant.CHANNEL_PC);
-        authBean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+        authBean.setForgotPwdUrl(super.getForgotPwdUrl(CustomConstants.CLIENT_PC,request,systemConfig));
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(usersInfo.getRoleId() + "");
@@ -105,7 +104,7 @@ public class CreditAuthPagePlusController extends BaseUserController {
         try {
             authBean.setOrderId(orderId);
             Map<String,Object> map = authService.getCallbankMV(authBean);
-            authService.insertUserAuthLog(authBean.getUserId(), orderId,Integer.parseInt(authBean.getPlatform()), "6");
+            authService.insertUserAuthLog(authBean.getUserId(), orderId,Integer.parseInt(authBean.getPlatform()), "4");
             result.setData(map);
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,6 +131,7 @@ public class CreditAuthPagePlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户自动债转授权异步回调", notes = "用户自动债转授权异步回调")
     @PostMapping(value = "/creditAuthBgreturn")
+    @ResponseBody
     public String creditAuthBgreturn(@RequestBody BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         logger.info("[用户自动债转授权回调开始]");
@@ -150,7 +150,7 @@ public class CreditAuthPagePlusController extends BaseUserController {
         // 成功
         if (user != null && bean != null
                 && (BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))
-                && "1".equals(bean.getRepayAuth()))) {
+                && "1".equals(bean.getPaymentAuth()))) {
             try {
                 bean.setOrderId(bean.getLogOrderId());
                 // 更新签约状态和日志表
