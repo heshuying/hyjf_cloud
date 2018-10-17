@@ -142,7 +142,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                     CheckUtil.check(false,MsgEnum.ERR_BANK_CALL);
                 }
                 // 银行返回响应代码
-                String retCode = resultBean == null ? "" : resultBean.getRetCode();
+                String retCode = resultBean.getRetCode() == null ? "" : resultBean.getRetCode();
                 if("CA51".equals(retCode)){
                     // 更新订单状态:失败
                     request.setCallBankSuccess(false);
