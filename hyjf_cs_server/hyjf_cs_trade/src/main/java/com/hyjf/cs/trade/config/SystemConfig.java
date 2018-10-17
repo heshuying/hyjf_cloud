@@ -144,7 +144,9 @@ public class SystemConfig {
     /*需要在cs-trade的工程配置里面添加 CouponAccesskey */
     @Value("${release.coupon.accesskey}")
     private String couponAccesskey;
-
+    /*角色验证是否开启 add by cwyang 合规角色验证需求 */
+    @Value("${hyjf.role.isopen}")
+    private String roleIsopen;
     public String getAppRegistAgreementUrl() {
         return appRegistAgreementUrl;
     }
@@ -469,5 +471,13 @@ public class SystemConfig {
 
     public void setIosNoticeVersion(String iosNoticeVersion) {
         this.iosNoticeVersion = iosNoticeVersion;
+    }
+
+    public String getRoleIsopen() {
+        return roleIsopen;
+    }
+
+    public void setRoleIsopen(String roleIsopen) {
+        this.roleIsopen = roleIsopen;
     }
 }
