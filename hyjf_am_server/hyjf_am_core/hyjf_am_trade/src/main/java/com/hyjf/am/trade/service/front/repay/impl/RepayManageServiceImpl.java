@@ -4161,7 +4161,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         int period = Integer.parseInt(periodTotal) - remainRepayPeriod + 1;
         int userId = repay.getUserId();// 借款人id
         Integer repayUserId = repay.getRepayUserId();
+        logger.info("borrowNid:" + borrowNid + " repayUserId:" + repayUserId);
         RUser repayUser = this.getRUser(repayUserId);
+        logger.info("repayUser:" + repayUser);
         String userName = repayUser.getUsername();
         Integer roleId = repayUser.getRoleId();
         BigDecimal repayTotal = repay.getRepayAccountAll();// 用户还款总额
