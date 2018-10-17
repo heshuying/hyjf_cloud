@@ -1952,5 +1952,12 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <table tableName="ht_app_push_manage" domainObjectName="AppPushManage">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="jump_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="jump_content" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
     </context>
 </generatorConfiguration>
