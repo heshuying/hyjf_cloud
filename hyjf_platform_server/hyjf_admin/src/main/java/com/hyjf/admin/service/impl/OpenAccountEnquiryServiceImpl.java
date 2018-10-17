@@ -340,6 +340,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                 }
             } else if ("2".equals(type)) {
                 // 根据身份证查询
+                CheckUtil.check(Validator.isNotNull(nums) && Validator.isIdcard(nums), MsgEnum.ERR_FMT_IDCARDNO);
                 // 根据身份证查询时候必须验证用户名不能为空
                 if (nums==null||"".equals(nums)) {
                     resultBean.setStatus("n");
