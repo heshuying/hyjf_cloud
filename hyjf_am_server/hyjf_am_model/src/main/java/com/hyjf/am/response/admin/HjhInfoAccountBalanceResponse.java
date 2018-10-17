@@ -18,6 +18,9 @@ public class HjhInfoAccountBalanceResponse  extends Response<HjhAccountBalanceVO
     @ApiModelProperty(value = "列表")
     private List<HjhAccountBalanceVO> recordList;
 
+    @ApiModelProperty(value = "总计")
+    private HjhAccountBalanceVO sum;
+
     public Integer getCount() {
         return count;
     }
@@ -32,5 +35,13 @@ public class HjhInfoAccountBalanceResponse  extends Response<HjhAccountBalanceVO
 
     public void setRecordList(List<HjhAccountBalanceVO> recordList) {
         this.recordList = recordList;
+    }
+
+    public HjhAccountBalanceVO getSum() {
+        return sum;
+    }
+
+    public void setSum(HjhAccountBalanceVO sum) {
+        this.sum = sum;
     }
 }

@@ -2110,6 +2110,68 @@ public class GetDate extends PropertyEditorSupport {
 			return false;
 		}
 	}
+
+	/**
+	 * 获取某日期的月份的第一天
+	 *
+	 * @param date
+	 * @return
+	 */
+	public static Date getFirstDayOnMonth(Date date) {
+		Calendar calander = Calendar.getInstance();
+		calander.setTime(date);
+		calander.set(Calendar.DATE, 1);
+		return getSomeDayStart(calander.getTime());
+	}
+
+	/**
+	 * 获取某日期的月份的最后一天
+	 *
+	 * @param date
+	 * @return
+	 */
+	public static Date getLastDayOnMonth(Date date) {
+		Calendar calander = Calendar.getInstance();
+		calander.setTime(date);
+		calander.set(Calendar.DATE,
+				calander.getActualMaximum(Calendar.DAY_OF_MONTH));
+		return getSomeDayEnd(calander.getTime());
+	}
+
+	/**
+	 *
+	 * 获取某一天的开始时间
+	 * @author hsy
+	 * @param date（2017-07-10）
+	 * @return
+	 */
+	public static Date getSomeDayStart(Date date){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTime();
+	}
+
+	/**
+	 *
+	 * 获取某一天的结束时间
+	 * @author hsy
+	 * @param date（2017-07-10）
+	 * @return
+	 */
+	public static Date getSomeDayEnd(Date date){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+		return calendar.getTime();
+	}
+
 	// add 汇计划三期 汇计划自动投资 liubin 20180515 end
 
 	public static void main(String[] args) {

@@ -5,9 +5,12 @@ import com.hyjf.am.trade.dao.mapper.customize.HjhInfoAccountBalanceCustomizeMapp
 import com.hyjf.am.trade.service.admin.AccountBalanceService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +44,31 @@ public class AccountBalanceServiceImpl extends BaseServiceImpl implements Accoun
             e.printStackTrace();
         }
         return list;
+    }
+
+    /**
+     *
+     * 查询月和日合计数据
+     */
+    @Override
+    public HjhAccountBalanceVO getHjhAccountBalanceMonthSum(HjhAccountBalanceRequest request) {
+        if (request.getAddTimeStart() != null
+                && request.getAddTimeEnd() != null) {
+            try {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+                Date start = formatter.parse(request.getAddTimeStart());
+                Date end = formatter.parse(request.getAddTimeEnd());
+                Date firstDay = GetDate.getFirstDayOnMonth(start);
+                Date lastDay = GetDate.getLastDayOnMonth(end);
+
+                request.setYuechu(firstDay);
+                request.setYuemo(lastDay);
+                return hjhInfoAccountBalanceCustomizeMapper.getHjhAccountBalanceSum(request);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return hjhInfoAccountBalanceCustomizeMapper.getHjhAccountBalanceSum(request);
     }
 
     @Override
