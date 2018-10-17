@@ -14,6 +14,11 @@ public class SystemConfig {
      */
 //    @Value("${hyjf.app.regist.agreement.url}")
     public String appRegistAgreementUrl;
+    /**
+     *TODO app 3.1.1 公告内容链接
+     */
+//    @Value("${hyjf.app.push.manager.url}")
+    public String appPushManagerUrl;
 
     @Value("${hyjf.weChat.host}")
     public String wechatHost;
@@ -153,6 +158,14 @@ public class SystemConfig {
 
     public void setAppRegistAgreementUrl(String appRegistAgreementUrl) {
         this.appRegistAgreementUrl = appRegistAgreementUrl;
+    }
+
+    public String getAppPushManagerUrl() {
+        return appPushManagerUrl;
+    }
+
+    public void setAppPushManagerUrl(String appPushManagerUrl) {
+        this.appPushManagerUrl = appPushManagerUrl;
     }
 
     public String getWechatHost() {
