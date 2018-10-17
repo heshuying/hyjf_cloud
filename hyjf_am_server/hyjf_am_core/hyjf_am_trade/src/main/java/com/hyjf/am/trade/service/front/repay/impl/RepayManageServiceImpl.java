@@ -4171,6 +4171,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         Boolean repayFlag = false;
         int errorCount = 0;
         Borrow borrow = this.getBorrow(borrowNid);
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
         /** 标的基本数据 */
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
         String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
@@ -4391,9 +4392,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         borrowApicron.setCreditRepayStatus(0);
                         borrowApicron.setCreateTime(GetDate.getNowTime());
                         borrowApicron.setUpdateTime(GetDate.getNowTime());
-                        if (projectType == 13) {
+                        boolean increase = Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield());
+                        if (increase) {
                             borrowApicron.setExtraYieldStatus(0);// 融通宝加息相关的放款状态
                             borrowApicron.setExtraYieldRepayStatus(0);// 融通宝相关的加息还款状态
+
                         } else {
                             borrowApicron.setExtraYieldStatus(1);// 融通宝加息相关的放款状态
                             borrowApicron.setExtraYieldRepayStatus(1);// 融通宝相关的加息还款状态
@@ -4578,6 +4581,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 boolean isAllRepay) throws Exception {
 
         Map map = new HashMap();
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrow.getBorrowNid());
         BorrowRepayPlan borrowRepayPlan = this.searchRepayPlan(userId, borrowNid, period);
         BorrowApicronExample example = new BorrowApicronExample();
         BorrowApicronExample.Criteria crt = example.createCriteria();
@@ -4775,7 +4779,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     if(isAllRepay){
                         borrowApicron.setIsAllrepay(1);
                     }
-                    if (projectType == 13) {
+                    boolean increase = Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield());
+                    if (increase) {
                         borrowApicron.setExtraYieldStatus(0);// 融通宝加息相关的放款状态
                         borrowApicron.setExtraYieldRepayStatus(0);// 融通宝相关的加息还款状态
                     } else {
