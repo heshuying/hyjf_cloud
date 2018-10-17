@@ -63,6 +63,7 @@ public class CashDepositeController extends BaseController {
 		}else if(!Response.isSuccess(response)){
             return new AdminResult<>(FAIL, response.getMessage());
         }else{
+            initCashDepositResponse.setAssetCount(response.getCount());
             initCashDepositResponse.setAssetList(CommonUtils.convertBeanList(response.getResultList(),AdminAssetListCustomizeVO.class));
         }
         // 资金来源 下拉框
