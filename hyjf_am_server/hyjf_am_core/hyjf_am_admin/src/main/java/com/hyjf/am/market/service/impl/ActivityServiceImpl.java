@@ -58,10 +58,14 @@ public class ActivityServiceImpl implements ActivityService {
             criteria.andTitleEqualTo(request.getTitle());
         }
         if (request.getStartTime() != null && request.getEndTime() != null) {
-            criteria.andTimeEndEqualTo(GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartTime())).andTimeEndEqualTo(GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndTime()));
+            String startTime = request.getStartTime() + " 00:00:00";
+            String endTime = request.getEndTime() + " 23:59:59";
+            criteria.andTimeStartBetween(GetDate.strYYYYMMDDHHMMSS2Timestamp2(startTime), GetDate.strYYYYMMDDHHMMSS2Timestamp2(endTime));
         }
         if (request.getStartCreate() != null && request.getEndCreate() != null) {
-            criteria.andCreateTimeBetween(GetDate.str2Timestamp(request.getStartCreate()), GetDate.str2Timestamp(request.getEndCreate()));
+            String startCreate = request.getStartCreate() + " 00:00:00";
+            String endCreate = request.getEndCreate() + " 23:59:59";
+            criteria.andCreateTimeBetween(GetDate.stringToDate(startCreate), GetDate.stringToDate(endCreate));
         }
         activitycount = activityListMapper.countByExample(example);
         return activitycount;
@@ -86,7 +90,17 @@ public class ActivityServiceImpl implements ActivityService {
         if (request.getTitle() != null) {
             example.createCriteria().andTitleEqualTo(request.getTitle());
         }
-        example.setOrderByClause("`create_time` Desc");
+        if (request.getStartTime() != null && request.getEndTime() != null) {
+            String startTime = request.getStartTime() + " 00:00:00";
+            String endTime = request.getEndTime() + " 23:59:59";
+            example.createCriteria().andTimeStartBetween(GetDate.strYYYYMMDDHHMMSS2Timestamp2(startTime), GetDate.strYYYYMMDDHHMMSS2Timestamp2(endTime));
+        }
+        if (request.getStartCreate() != null && request.getEndCreate() != null) {
+            String startCreate = request.getStartCreate() + " 00:00:00";
+            String endCreate = request.getEndCreate() + " 23:59:59";
+            example.createCriteria().andCreateTimeBetween(GetDate.stringToDate(startCreate), GetDate.stringToDate(endCreate));
+        }
+        example.setOrderByClause("create_time Desc");
         return activityListMapper.selectByExample(example);
     }
 
