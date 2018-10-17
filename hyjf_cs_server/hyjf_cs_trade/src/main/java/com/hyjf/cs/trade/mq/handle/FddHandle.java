@@ -250,6 +250,7 @@ public class FddHandle {
 
 		boolean isSign = this.isCreatContract(borrowTender.getNid());
 		if (isSign) {// 单独走签署接口
+			logger.info("-------------nid:" + borrowTender.getNid() + ",合同已生成，开始签署合同--------");
 			this.updateSignContract(bean);
 		} else {
 			String paramStr = paramter.toJSONString();

@@ -59,7 +59,7 @@ public class MessagePushTagController extends BaseController {
         }
         List<ParamNameVO> tagStatus = messagePushTagService.getParamNameList(nameClass);
         response.setParamNameVOS(tagStatus);
-
+        response.setFileDomainUrl(FILEDOMAINURL);
         return new AdminResult<MessagePushTagResponse>(response);
     }
 
