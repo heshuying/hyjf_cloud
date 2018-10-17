@@ -4113,7 +4113,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public List<BorrowRepayPlan> searchRepayPlan(int userId, String borrowNid) {
         BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
-// todo 暂时注释掉       borrowRepayPlanCrt.andUserIdEqualTo(userId);
+        borrowRepayPlanCrt.andUserIdEqualTo(userId);
         borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
         List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
         return borrowRepayPlans;
@@ -4122,7 +4122,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public List<BorrowRepayPlan> searchRepayPlanAll(int userId, String borrowNid) {
         BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
-//todo 暂时删除       borrowRepayPlanCrt.andUserIdEqualTo(userId);
+        borrowRepayPlanCrt.andUserIdEqualTo(userId);
         borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
         borrowRepayPlanExample.setOrderByClause("repay_period");
         List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);

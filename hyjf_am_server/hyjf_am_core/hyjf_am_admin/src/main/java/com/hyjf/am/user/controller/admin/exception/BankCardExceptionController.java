@@ -68,7 +68,6 @@ public class BankCardExceptionController extends BaseController {
         }
         logger.info("searchBankCardExceptionList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
         List<AdminBankCardExceptionCustomize> bankCardExceptionCustomizeList = bankCardExceptionService.searchBankCardExceptionList(request);
-        JSON.toJSONString(bankCardExceptionCustomizeList);
         if(!CollectionUtils.isEmpty(bankCardExceptionCustomizeList)){
             List<AdminBankCardExceptionCustomizeVO> bankCardExceptionCustomizeVOList = CommonUtils.convertBeanList(bankCardExceptionCustomizeList,AdminBankCardExceptionCustomizeVO.class);
             response.setResultList(bankCardExceptionCustomizeVOList);

@@ -242,7 +242,7 @@ public class CustomerTransferController extends BaseController {
         AdminSystemVO adminSystemVO = getUser(request);
         customerTransferRequest.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
         customerTransferRequest.setCreateUserName(adminSystemVO.getUsername());
-        logger.info("request:[{}]", JSON.toJSONString(customerTransferRequest));
+        logger.debug("request:[{}]", JSON.toJSONString(customerTransferRequest));
         boolean success = customerTransferService.insertTransfer(customerTransferRequest);
         if(success){
             logger.info("success");
