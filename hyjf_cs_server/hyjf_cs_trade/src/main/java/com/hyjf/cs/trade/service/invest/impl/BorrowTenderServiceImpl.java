@@ -593,7 +593,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if(borrowTenderCpn!=null){
                     data.put("couponQuota",borrowTenderCpn.getAccount());
                     data.put("couponType",couponUser.getCouponType());
-                    data.put("couponInterest",couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod()));
+                    BigDecimal couponInterest = BigDecimal.ZERO;
+                    if (couponUser.getCouponType() == 1) {
+                        couponInterest =couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
+                    } else {
+                        couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), borrowTender.getAccount().toString(), borrow.getBorrowPeriod());
+                    }
+                    //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
+                    data.put("income",earnings.add(couponInterest));
+                    data.put("couponInterest",df.format(couponInterest));
                 }else{
                     data.put("couponQuota","");
                     data.put("couponType","");
