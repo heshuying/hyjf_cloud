@@ -30,6 +30,14 @@ public class UserLoginInfo {
      * 缴费授权状态
      */
     private Integer paymentAuthStatus;
+    // 缴费授权开关
+    private Integer paymentAuthOn;
+    // 自动投资授权开关
+    private Integer invesAuthOn;
+    // 自动债转授权开关
+    private Integer creditAuthOn;
+    //角色认证是否打开,true认证,false不认证
+    private Boolean isCheckUserRole;
 
     public Boolean getLogined() {
         return isLogined;
@@ -101,5 +109,37 @@ public class UserLoginInfo {
 
     public void setIsAllowedTender(Boolean isAllowedTender) {
         this.isAllowedTender = isAllowedTender;
+    }
+
+    public Integer getPaymentAuthOn() {
+        return paymentAuthOn;
+    }
+
+    public void setPaymentAuthOn(Integer paymentAuthOn) {
+        this.paymentAuthOn = paymentAuthOn;
+    }
+
+    public Integer getInvesAuthOn() {
+        return invesAuthOn;
+    }
+
+    public void setInvesAuthOn(Integer invesAuthOn) {
+        this.invesAuthOn = invesAuthOn;
+    }
+
+    public Integer getCreditAuthOn() {
+        return creditAuthOn;
+    }
+
+    public void setCreditAuthOn(Integer creditAuthOn) {
+        this.creditAuthOn = creditAuthOn;
+    }
+
+    public Boolean getIsCheckUserRole() {
+        return isCheckUserRole;
+    }
+
+    public void setIsCheckUserRole(Boolean checkUserRole) {
+        isCheckUserRole = checkUserRole;
     }
 }

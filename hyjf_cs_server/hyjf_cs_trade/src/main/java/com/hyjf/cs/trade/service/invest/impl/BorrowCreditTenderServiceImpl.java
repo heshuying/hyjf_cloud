@@ -1316,13 +1316,12 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @param borrowCredit
      */
     private void checkUser(UserVO user, UserInfoVO userInfo, BankOpenAccountVO bankOpenAccount, BorrowCreditVO borrowCredit) {
-        // 担保机构用户
-        if (userInfo.getRoleId() == 3) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
-        }
-        // 借款人不能投资
-        if (userInfo.getRoleId() == 2) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+
+        String roleIsOpen = systemConfig.getRoleIsopen();
+        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+            if (userInfo.getRoleId() != 1) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+            }
         }
         // 判断用户是否禁用  0启用，1禁用
         if (user.getStatus() == 1) {

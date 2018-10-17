@@ -116,6 +116,10 @@ public class SystemConfig {
     @Value("${wrb.callback.bind.url}")
     private String wrncallbackbindurl;
 
+    /*角色验证是否开启 add by cwyang 合规角色验证需求 */
+    @Value("${hyjf.role.isopen}")
+    private String roleIsopen;
+
     public String getWrncallbackbindurl() {
         return wrncallbackbindurl;
     }
@@ -330,5 +334,13 @@ public class SystemConfig {
 
     public void setTestServerIp(String testServerIp) {
         this.testServerIp = testServerIp;
+    }
+
+    public String getRoleIsopen() {
+        return roleIsopen;
+    }
+
+    public void setRoleIsopen(String roleIsopen) {
+        this.roleIsopen = roleIsopen;
     }
 }

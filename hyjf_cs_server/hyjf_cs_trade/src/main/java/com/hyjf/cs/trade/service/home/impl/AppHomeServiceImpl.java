@@ -24,6 +24,7 @@ import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.app.AppHomePageCustomize;
 import com.hyjf.cs.trade.bean.app.AppHomePageRecommendProject;
 import com.hyjf.cs.trade.bean.app.AppModuleBean;
+import com.hyjf.cs.trade.bean.app.AppPushManageVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -251,34 +252,35 @@ public class AppHomeServiceImpl implements AppHomeService {
     }
 
     /**
-     * TODO 获取有效的公告内容
+     * 获取有效的公告内容
      * @param info
      * @param HOST
      */
     private void getAnnouncements(JSONObject info, String HOST) {
 
-//        List<AppPushManage> manageInfoList = this.homePageService.getAnnouncenments();
-//        if(manageInfoList != null){
-//
-//            List<Map> announMap = new ArrayList<>();
-//            for (AppPushManage manager : manageInfoList) {
-//                Map cements = new HashMap();
-//                String title = manager.getTitle();//标题
-//                String jumpUrl = manager.getJumpUrl();//跳转URL
-//                Integer jumpType = manager.getJumpType();//跳转类型
-//                Integer jumpContent = manager.getJumpContent();//内容类型
-//                if(2 == jumpContent){//跳转H5页面
-//                    jumpUrl = HOST + PropUtils.getSystem("hyjf.app.push.manager.url");
-//                    jumpUrl = jumpUrl + manager.getId();
-//                }
-//                cements.put("title",title);
-//                cements.put("URL", jumpUrl);
-//                announMap.add(cements);
-//            }
-//            info.put("announcements",announMap);
-//        }else{
-//            logger.info("-------------获取首页列表时，未获得有效公告！---------");
-//        }
+        List<AppPushManageVO> manageInfoList = new ArrayList<>();
+        //TODO 从am_trade层获取有效公告信息
+        if(manageInfoList != null){
+
+            List<Map> announMap = new ArrayList<>();
+            for (AppPushManageVO manager : manageInfoList) {
+                Map cements = new HashMap();
+                String title = manager.getTitle();//标题
+                String jumpUrl = manager.getJumpUrl();//跳转URL
+                Integer jumpType = manager.getJumpType();//跳转类型
+                Integer jumpContent = manager.getJumpContent();//内容类型
+                if(2 == jumpContent){//跳转H5页面
+                    jumpUrl = HOST + systemConfig.getAppPushManagerUrl();
+                    jumpUrl = jumpUrl + manager.getId();
+                }
+                cements.put("title",title);
+                cements.put("URL", jumpUrl);
+                announMap.add(cements);
+            }
+            info.put("announcements",announMap);
+        }else{
+            logger.info("-------------获取首页列表时，未获得有效公告！---------");
+        }
     }
 
     /**

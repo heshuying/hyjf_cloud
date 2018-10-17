@@ -42,6 +42,7 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
@@ -103,7 +104,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     @Autowired
     private SmsProducer smsProducer;
 
-
+    @Autowired
+    private SystemConfig systemConfig;
     /**
      * 获取Web端项目列表
      *
@@ -306,7 +308,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             // 是否开启服务费授权 0未开启 1已开启
             other.put("paymentAuthOn",
                     authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-            /*other.put("isCheckUserRole",PropUtils.getSystem(CustomConstants.HYJF_ROLE_ISOPEN));*/
+            other.put("isCheckUserRole",systemConfig.getRoleIsopen());
         }
         WebResult webResult = new WebResult();
        // detailCsVO.setOther(other);
@@ -1411,7 +1413,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 // 是否开启服务费授权 0未开启  1已开启
                 result.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
                 result.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-                /*result.put("isCheckUserRole",PropUtils.getSystem(CustomConstants.HYJF_ROLE_ISOPEN));*/
+                result.put("isCheckUserRole",systemConfig.getRoleIsopen());
             } else {
                 //状态位用于判断tab的是否可见
                 result.put("paymentAuthStatus", "0");

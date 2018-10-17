@@ -37,6 +37,7 @@ import com.hyjf.cs.trade.bean.app.AppModuleBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.home.WechatProjectListService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -75,6 +76,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     private RepayPlanService repayPlanService;
 
     @Autowired
+    private AuthService authService;
+    @Autowired
     private BaseClient baseClient;
 
 
@@ -102,8 +105,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         String isRiskTested = "0";
         boolean isAutoInves = false;
         boolean isInvested = false;
-        boolean isPaymentAuth = false;
-
+        Integer isPaymentAuth = 0;
+        Integer roleId = 0;
 
         if (userId != null && userId > 0) {
             UserVO users = amUserClient.findUserById(userId);
@@ -115,27 +118,27 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 }
                 // 检查用户角色是否能投资  合规接口改造之后需要判断
                 UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
-                // 担保机构用户
-                if (userInfo.getRoleId() == 3) {
-                    //borrowDetailResultBean.setStatus("99");
-                    //borrowDetailResultBean.setStatusDesc("担保机构用户不能进行投资");
-                    //borrowDetailResultBean.setIsAllowedTender(Boolean.FALSE);
-                    borrowDetailResultBean.put("isAllowedTender", Boolean.FALSE);
+                roleId=userInfo.getRoleId();
+                String roleIsOpen = systemConfig.getRoleIsopen();
+                if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+                    if (userInfo.getRoleId() != 1) {// 担保机构用户
+                        borrowDetailResultBean.put("isAllowedTender", Boolean.FALSE);
+                    }
                 }
+
                 //判断是否设置交易密码
                 if (users.getIsSetPassword() != null && users.getIsSetPassword() == 1) {
                     isSetPassword = true;
                 }
-
-                // TODO: 2018/7/2   字段不全  后期处理 //是否授权
+                //是否授权
                 /*if (users.getAuthStatus() != null && users.getAuthStatus() == 1) {
                     isAutoInves = true;
                 }*/
 
-                // TODO: 2018/7/2 字段类型不一致待处理 //缴费授权状态
-               /* if(users.getPaymentAuthStatus()!=null && users.getPaymentAuthStatus()==1){
-                    isPaymentAuth = true;
-                }*/
+                //服务费权状态
+                if(users.getPaymentAuthStatus()!=null && users.getPaymentAuthStatus()==1){
+                    isPaymentAuth = users.getPaymentAuthStatus();
+                }
 
                 //是否允许使用
                 if (users.getStatus() != null && users.getStatus() == 0) {
@@ -188,7 +191,15 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         userValidation.put("isAutoInves", isAutoInves);
         userValidation.put("isInvested", isInvested);
         //是否缴费授权
-        userValidation.put("isPaymentAuth", isPaymentAuth);
+        userValidation.put("paymentAuthStatus", isPaymentAuth);
+        //角色认证是否打开
+        userValidation.put("isCheckUserRole", Boolean.parseBoolean(systemConfig.getRoleIsopen()));
+        userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+        //自动投资开关
+        userValidation.put("invesAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+        //自动债转开关
+        userValidation.put("creditAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+        userValidation.put("roleId", roleId);
 
 
         //获取标的信息
@@ -723,6 +734,13 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             if (userVO != null) {
                 result.setIsOpenAccount(userVO.getBankOpenAccount());
                 result.setIsSetPassword(userVO.getIsSetPassword());
+                result.setIsCheckUserRole(Boolean.parseBoolean(systemConfig.getRoleIsopen()));
+
+                result.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+                result.setInvesAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+                result.setCreditAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+                UserInfoVO usersInfo=amUserClient.findUsersInfoById(Integer.valueOf(userId));
+                result.setRoleId(usersInfo.getRoleId());
                 if (userVO.getIsEvaluationFlag() == 1 && null != userVO.getEvaluationExpiredTime()) {
                     // 测评到期日
                     long lCreate = userVO.getEvaluationExpiredTime().getTime();
@@ -742,16 +760,20 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 result.setUserStatus(userVO.getStatus());
 
                 HjhUserAuthVO hjhUserAuthVO = amTradeClient.getUserAuthByUserId(Integer.valueOf(userId));
-                if (hjhUserAuthVO != null) {
+                if(hjhUserAuthVO!=null){
                     //自动投标授权状态
                     result.setAutoInvesStatus(hjhUserAuthVO.getAutoInvesStatus());
                     //自动债转授权状态
                     result.setAutoCreditStatus(hjhUserAuthVO.getAutoCreditStatus());
-                } else {
+                    //缴费授权状态
+                    result.setPaymentAuthStatus(hjhUserAuthVO.getAutoPaymentStatus());
+                }else{
                     //自动投标授权状态
                     result.setAutoInvesStatus(0);
                     //自动债转授权状态
                     result.setAutoCreditStatus(0);
+                    //缴费授权状态
+                    result.setPaymentAuthStatus(0);
                 }
 
                 Integer openFlag = userVO.getBankOpenAccount();
@@ -978,6 +1000,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         if (!loginFlag) {
             userLoginInfo.setLogined(Boolean.FALSE);
         } else {
+            //角色认证是否打开
+            userLoginInfo.setIsCheckUserRole(Boolean.parseBoolean(systemConfig.getRoleIsopen()));
             userLoginInfo.setLogined(Boolean.TRUE);
             // 2. 用户是否被禁用
             userLoginInfo.setAllowed(userVO.getStatus() == 0 ? Boolean.TRUE : Boolean.FALSE);
@@ -988,6 +1012,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
             // 7.缴费授权状态
             userLoginInfo.setPaymentAuthStatus(userVO.getPaymentAuthStatus());
+            userLoginInfo.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+            userLoginInfo.setInvesAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            userLoginInfo.setCreditAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
 
             // 5. 用户是否完成风险测评标识：0未测评 1已测评
             if (userVO.getIsEvaluationFlag() == 1 && null != userVO.getEvaluationExpiredTime()) {
