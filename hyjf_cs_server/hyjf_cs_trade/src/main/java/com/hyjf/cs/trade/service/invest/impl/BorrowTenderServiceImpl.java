@@ -420,6 +420,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_WEI);
             }
         }
+        UserInfoVO usersInfo = amUserClient.findUsersInfoById(borrow.getUserId());
+        if (null != usersInfo) {
+            String roleIsOpen = systemConfig.getRoleIsopen();
+            if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+                if (usersInfo.getRoleId() != 1) {// 非投资用户
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+                }
+            }
+        }
         // 借款人不可以自己投资项目
         if (userId.equals(String.valueOf(borrow.getUserId()))) {
             throw new CheckException(MsgEnum.ERR_TENDER_YOURSELF);
@@ -1196,6 +1205,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         Integer recordTotal = 0;
         // 可用优惠券张数
         Integer couponAvailableCount;
+
+        UserInfoVO userInfo = amUserClient.findUserInfoById(tender.getUserId());
+        String roleIsOpen = systemConfig.getRoleIsopen();
+        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+            if (userInfo.getRoleId() != 1) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+            }
+        }
+
         BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(tender.getBorrowNid());
         if (null == borrow) {
             // 标的不存在

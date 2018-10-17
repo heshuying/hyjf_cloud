@@ -191,8 +191,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
         creditResultBean.setPaymentAuthStatus(hjhUserAuth==null?0:hjhUserAuth.getAutoPaymentStatus());
         creditResultBean.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-        creditResultBean.setIsCheckUserRole("");
-        /*modelAndView.addObject("isCheckUserRole",PropUtils.getSystem(CustomConstants.HYJF_ROLE_ISOPEN));*/
+        creditResultBean.setIsCheckUserRole(systemConfig.getRoleIsopen());
         UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
         creditResultBean.setRoleId(userInfoVO==null?"0":userInfoVO.getRoleId()+"");
         if(config!=null){

@@ -51,4 +51,19 @@ public interface AdminHjhCreditTenderService {
 	*/
 	HjhCreditTenderSumVO getHjhCreditTenderCalcSumByParam(HjhCreditTenderRequest request);
 
+	/**
+	 * 查找用户是否未回款的债权
+	 * @param userid
+	 * @auther: nxl
+	 * @return
+	 */
+	int isDismissPay(int userid);
+	/**
+	 * 存在持有中计划
+	 * @param userid
+	 * @auther: nxl
+	 * @return
+	 */
+	int isDismissRePay(int userid);
+
 }

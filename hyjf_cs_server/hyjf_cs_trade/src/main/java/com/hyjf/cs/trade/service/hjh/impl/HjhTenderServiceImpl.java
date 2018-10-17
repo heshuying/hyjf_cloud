@@ -32,6 +32,7 @@ import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AmTradeProducer;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
@@ -89,7 +90,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
     @Autowired
     private AmTradeProducer amTradeProducer;
-
+    @Autowired
+    private SystemConfig systemConfig;
     @Autowired
     private AuthService authService ;
     /**
@@ -1166,12 +1168,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         if (user == null || userInfo == null) {
             throw new CheckException(MsgEnum.ERR_USER_NOT_EXISTS);
         }
-        if (userInfo.getRoleId() == 3) {// 担保机构用户
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+
+        String roleIsOpen = systemConfig.getRoleIsopen();
+        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+            if (userInfo.getRoleId() != 1) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+            }
         }
-        if (userInfo.getRoleId() == 2) {// 借款人不能投资
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
-        }
+
         // 判断用户是否禁用
         if (user.getStatus() == 1) {// 0启用，1禁用
             throw new CheckException(MsgEnum.ERR_USER_INVALID);

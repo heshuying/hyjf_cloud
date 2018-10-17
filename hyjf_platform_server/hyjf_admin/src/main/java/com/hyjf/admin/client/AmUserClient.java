@@ -1224,4 +1224,46 @@ public interface AmUserClient {
     void updateUserAuth(UserAuthRequest request);
 
     HjhUserAuthLogVO selectByExample(String orderId);
+    /**
+     * 根据用户的查询条件查询用户缴费授权列表
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    UserPayAuthResponse selectUserPayAuthList(UserPayAuthRequest request);
+    /**
+     * 根据用户id查询用户签约授权信息
+     * @param userId
+     * @auther: nxl
+     * @return
+     */
+    HjhUserAuthResponse selectUserPayAuthByUserId(int userId);
+    /**
+     * 查看该用户在投资表和标的放款记录中是否存在
+     * @param userId
+     * @auther: nxl
+     * @return
+     */
+    int isDismissPay(int userId);
+    /**
+     * 查看该用户在投标的还款记录中是否存在
+     * @param userId
+     * @auther: nxl
+     * @return
+     */
+    int isDismissRePay(int userId);
+    /**
+     * 缴费授权解约
+     * @param userId
+     * @return
+     * @auther: nxl
+     */
+   boolean updateCancelPayAuth(int userId);
+    /**
+     * 插入授权记录表
+     * @param hjhUserAuthLogRequest
+     * @return
+     * @auther: nxl
+     */
+    boolean insertUserAuthLog2(HjhUserAuthLogRequest hjhUserAuthLogRequest);
 }

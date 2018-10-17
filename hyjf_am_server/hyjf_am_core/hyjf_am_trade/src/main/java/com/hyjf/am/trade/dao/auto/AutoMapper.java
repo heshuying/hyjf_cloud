@@ -53,6 +53,9 @@ public class AutoMapper {
     protected BankRepayFreezeLogMapper bankRepayFreezeLogMapper;
 
     @Resource
+    protected BankRepayOrgFreezeLogMapper bankRepayOrgFreezeLogMapper;
+
+    @Resource
     protected BorrowMapper borrowMapper;
 
     @Resource

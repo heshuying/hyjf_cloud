@@ -53,10 +53,7 @@ import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
-import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
-import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
-import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.*;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -72,6 +69,7 @@ import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -3062,8 +3060,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BankRepayFreezeLogVO getFreezeLogValid(Integer userId, String borrowNid) {
-        String url = "http://AM-TRADE/am-trade/repayfreezelog/get_logvalid/"+userId + "/" + borrowNid;
-        BankRepayFreezeLogResponse response = restTemplate.getForEntity(url,BankRepayFreezeLogResponse.class).getBody();
+        StringBuilder url = new StringBuilder("http://AM-TRADE/am-trade/repayfreezelog/get_logvalid/");
+        if(userId != null){
+            url.append(userId).append("/");
+        }
+        url.append(borrowNid);
+        BankRepayFreezeLogResponse response = restTemplate.getForEntity(url.toString(),BankRepayFreezeLogResponse.class).getBody();
         if (Validator.isNotNull(response)){
             return response.getResult();
         }
@@ -5423,4 +5425,57 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
 
+
+    /**
+     * 添加
+     * @author wgx
+     * @date 2018/10/16
+     */
+    @Override
+    public Integer addOrgFreezeLog(BankRepayOrgFreezeLogRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/repayOrgFreezeLog/add";
+        IntegerResponse response = restTemplate.postForEntity(url, requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据orderId删除
+     * @author wgx
+     * @date 2018/10/16
+     */
+    @Override
+    public Integer deleteOrgFreezeLog(String orderId, String borrowNid) {
+        StringBuilder url = new StringBuilder("http://AM-TRADE/am-trade/repayOrgFreezeLog/delete/");
+        url.append(orderId);
+        if (StringUtils.isNotBlank(borrowNid)) {
+            url.append("/").append(borrowNid);
+        }
+        IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据条件查询垫付机构冻结日志
+     * @author wgx
+     * @date 2018/10/16
+     */
+    @Override
+    public List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId, String borrowNid) {
+        StringBuilder url = new StringBuilder("http://AM-TRADE/am-trade/repayOrgFreezeLog/getValid/");
+        url.append(orderId);
+        if(StringUtils.isNotBlank(borrowNid)){
+            url.append("/").append(borrowNid);
+        }
+        IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }
