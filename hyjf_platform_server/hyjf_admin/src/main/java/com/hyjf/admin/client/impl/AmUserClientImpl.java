@@ -2458,4 +2458,22 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+
+	/**
+	 * 根据用户的查询条件查询用户缴费授权列表
+	 * @param request
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public UserPayAuthResponse selectUserPayAuthList(UserPayAuthRequest request) {
+		UserPayAuthResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userPayAuth/userPayAuthList", request, UserPayAuthResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 }
