@@ -34,13 +34,14 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 		if (response != null) {
 			List<FddTempletCustomizeVO> voList = response.getResultList();
 			if (!CollectionUtils.isEmpty(voList)) {
+				List<ParamNameVO> typeList = amConfigClient.getParamNameList("PROTOCOL_TYPE");
 				for (FddTempletCustomizeVO vo : voList) {
-					List<ParamNameVO> typeList = amConfigClient.getParamNameList("PROTOCOL_TYPE");
 					if (!CollectionUtils.isEmpty(typeList)) {
-						ParamNameVO typeVo = typeList.get(0);
-						if (Objects.equals(typeVo.getNameCd(), vo.getProtocolType().toString())) {
-							vo.setProtocolTypeName(typeVo.getName());
-						}
+                        for (ParamNameVO typeVo:typeList) {
+                            if (Objects.equals(typeVo.getNameCd(), vo.getProtocolType().toString())) {
+                                vo.setProtocolTypeName(typeVo.getName());
+                            }
+                        }
 					}
 					List<ParamNameVO> flagList = amConfigClient.getParamNameList("CA_FLAG");
 					if (!CollectionUtils.isEmpty(flagList)) {
