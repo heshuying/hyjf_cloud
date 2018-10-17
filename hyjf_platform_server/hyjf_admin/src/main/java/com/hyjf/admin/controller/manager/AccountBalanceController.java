@@ -1,7 +1,6 @@
 package com.hyjf.admin.controller.manager;
 
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AccountBalanceService;
@@ -41,7 +40,7 @@ public class AccountBalanceController extends BaseController {
 
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 查询")
     @PostMapping("/search")
-    public AdminResult<ListResult<HjhAccountBalanceVO>> search(@RequestBody HjhAccountBalanceRequest request) {
+    public AdminResult search(@RequestBody HjhAccountBalanceRequest request) {
         String time = request.getTime();
         HjhInfoAccountBalanceResponse response = null;
         if (("month").equals(time)) {
@@ -63,7 +62,7 @@ public class AccountBalanceController extends BaseController {
 
             }
         }
-        return new AdminResult<ListResult<HjhAccountBalanceVO>>(ListResult.build(response.getResultList(), response.getCount()));
+        return new AdminResult(response);
     }
 
     /**

@@ -44,9 +44,10 @@ public class TenderAgreementController extends BaseController {
         if(!CollectionUtils.isEmpty(list)){
             logger.info("nid:" + nid + ",获得符合条件的协议！=================================");
             List<CurrentHoldObligatoryRightListCustomizeVO> voList = CommonUtils.convertBeanList(list, CurrentHoldObligatoryRightListCustomizeVO.class);
+            List<TenderAgreementVO> tenderAgreementVOS = CommonUtils.convertBeanList(list, TenderAgreementVO.class);
             response.setCurrentHoldObligatoryRightList(voList);
+            response.setTenderAggementList(tenderAgreementVOS);
         }
-        logger.info("nid:" + nid + ",列表为空，未获得符合条件的协议！=================================");
         return response;
     }
 

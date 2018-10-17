@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.UserAuthExceptionService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
 import org.springframework.stereotype.Service;
@@ -45,10 +46,13 @@ public class UserAuthExceptionServiceImpl extends BaseAdminServiceImpl implement
         if(null != jsonObject && jsonObject.containsKey("status")){
             String status = jsonObject.get("status").toString();
             String msg = jsonObject.get("msg").toString();
-            // 如果status != 00   且返回值中有retCode，说明调用银行接口出现错误
-            if(!"00".equals(status) && jsonObject.containsKey("retCode")){
+            // 如果status != 0   且返回值中有retCode，说明调用银行接口出现错误
+            if(!Response.SUCCESS.equals(status) && jsonObject.containsKey("retCode")){
                 String retCode = jsonObject.get("retCode").toString();
-                msg = amConfigClient.getBankRetMsg(retCode);
+                logger.debug("msg:[{}],retCode:[{}]",msg,retCode);
+                if(!"".equals(retCode.trim())){
+                    msg = amConfigClient.getBankRetMsg(retCode);
+                }
             }
             response.setRtn(status);
             response.setMessage(msg);

@@ -150,7 +150,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public String getBankRetMsg(String retCode) {
         BankReturnCodeConfigResponse response = restTemplate
-                .getForEntity("http://AM-ADMIN/config/getBankReturnCodeConfig/" + retCode,
+                .getForEntity("http://AM-ADMIN/am-config/config/getBankReturnCodeConfig/" + retCode,
                         BankReturnCodeConfigResponse.class)
                 .getBody();
         if (response != null) {
