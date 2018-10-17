@@ -90,7 +90,7 @@ public class BorrowRegistExceptionController extends BaseController {
     public AdminResult borrowRegistHandleException(HttpServletRequest request, @RequestBody BorrowRegistListRequest borrowRegistListRequest){
         Integer userId = Integer.valueOf(getUser(request).getId());
         JSONObject jsonObject = new JSONObject();
-        String borrowNid = borrowRegistListRequest.getBorrowNidSrch();
+        String borrowNid = borrowRegistListRequest.getBorrowNid();
         logger.info("borrowRegistHandleException::::::::::userId=[{}],borrowNid=[{}]",userId,borrowNid);
         if(StringUtils.isBlank(borrowNid)){
             return new AdminResult(FAIL,"项目编号为空");
