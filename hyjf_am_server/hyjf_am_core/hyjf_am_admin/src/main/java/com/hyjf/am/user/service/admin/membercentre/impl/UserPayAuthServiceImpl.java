@@ -37,7 +37,7 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
     @Autowired
     private HjhUserAuthMapper hjhUserAuthMapper;
     /**
-     * 根据筛选条件查找会员列表
+     * 根据筛选条件查找缴费授权列表
      *
      * @param mapParam 筛选条件
      * @return
@@ -56,7 +56,7 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
     }
 
     /**
-     * 根据条件获取用户列表总数
+     * 根据条件获取缴费授权总数
      *
      * @return
      */
@@ -120,5 +120,48 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
             throw new RuntimeException("插入授权记录表更新异常");
         }
         return instFlg;
+    }
+    /**
+     * 根据筛选条件查找还款授权列表
+     *
+     * @param mapParam 筛选条件
+     * @return
+     */
+    @Override
+    public List<AdminUserPayAuthCustomize> selectUserRePayAuthList(Map<String, Object> mapParam, int limitStart, int limitEnd) {
+        // 封装查询条件
+        if (limitStart == 0 || limitStart > 0) {
+            mapParam.put("limitStart", limitStart);
+        }
+        if (limitEnd > 0) {
+            mapParam.put("limitEnd", limitEnd);
+        }
+        List<AdminUserPayAuthCustomize> adminUserPayAuthCustomizeList = userPayAuthCustomizeMapper.selectUserRePayAuthList(mapParam);
+        return adminUserPayAuthCustomizeList;
+    }
+
+    /**
+     * 根据条件获取还款授权总数
+     *
+     * @return
+     */
+    @Override
+    public int countRecordTotalRePay(Map<String, Object> mapParam) {
+        int integerCount = userPayAuthCustomizeMapper.countRecordTotalRePay(mapParam);
+        return integerCount;
+    }
+
+    /**
+     * 更新授权表
+     * @param hjhUserAuth
+     * @return
+     */
+    @Override
+    public int updateCancelRePayAuth(HjhUserAuth hjhUserAuth){
+        int intFlg =hjhUserAuthMapper.updateByPrimaryKeySelective(hjhUserAuth);
+        if(intFlg<=0){
+            throw new RuntimeException("updateCancelRePayAuth 更新失败!");
+        }
+        return intFlg;
     }
 }

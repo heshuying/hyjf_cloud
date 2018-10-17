@@ -54,4 +54,23 @@ public interface UserPayAuthService extends BaseService {
      * @return
      */
     boolean insertUserAuthLog2(HjhUserAuthLog hjhUserAuthLogRequest);
+    /**
+     * 根据筛选条件查找还款授权列表
+     *
+     * @param mapParam 筛选条件
+     * @return
+     */
+    List<AdminUserPayAuthCustomize> selectUserRePayAuthList(Map<String, Object> mapParam, int limitStart, int limitEnd);
+    /**
+     * 根据条件获取还款授权总数
+     *
+     * @return
+     */
+   int countRecordTotalRePay(Map<String, Object> mapParam);
+    /**
+     * 更新授权表
+     * @param hjhUserAuth
+     * @return
+     */
+    int updateCancelRePayAuth(HjhUserAuth hjhUserAuth);
 }

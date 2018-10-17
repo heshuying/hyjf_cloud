@@ -26,4 +26,20 @@ public interface UserPayAuthCustomizeMapper {
      * @return
      */
     int countRecordTotalPay(Map<String, Object> userAuth);
+    /**
+     * 获取还款记录数
+     * @param userAuth
+     * @return
+     */
+    int countRecordTotalRePay(Map<String, Object> userAuth);
+
+    /**
+     * 查找还款记录
+     * @param authUser
+     * @return
+     */
+    List<AdminUserPayAuthCustomize> selectUserRePayAuthList(Map<String, Object> authUser);
+
+
+
 }
