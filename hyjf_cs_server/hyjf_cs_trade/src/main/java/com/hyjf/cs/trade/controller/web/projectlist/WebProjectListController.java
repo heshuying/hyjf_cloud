@@ -92,6 +92,16 @@ public class WebProjectListController extends BaseTradeController {
     }
 
 
+    @ApiOperation(value = "散标详情预览", notes = "散标详情预览")
+    @PostMapping(value = "/getBorrowDetailPreview", produces = "application/json; charset=utf-8")
+    public Object webBorrowDetailPreview(@RequestBody Map map, @RequestHeader(value = "userId",required = false) String userId){
+        map.put("isPreview","1");  // 和散标详情公用方法，加入标志位进行判别
+        WebResult result =  webProjectListService.getBorrowDetail(map,userId);
+        return result;
+    }
+
+
+
     /**
      * 散标投资记录
      * @author zhangyk

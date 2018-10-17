@@ -140,7 +140,6 @@ public class WrbCallBackConsumer extends Consumer {
                     throw new RuntimeException();
                 }
                 allParams.put("param","test");
-                allParams.put("param","test");
             }catch (Exception e){
                 logger.error("风车理财处理异常！",e);
             }
