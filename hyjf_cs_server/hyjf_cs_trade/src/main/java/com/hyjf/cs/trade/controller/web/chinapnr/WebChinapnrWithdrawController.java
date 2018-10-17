@@ -122,7 +122,7 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
      */
     @ApiIgnore
     @RequestMapping("/return")
-    public ModelAndView cashReturn(HttpServletRequest request, ChinapnrBean bean) {
+    public ModelAndView cashReturn(HttpServletRequest request,@ModelAttribute ChinapnrBean bean) {
         logger.info("[交易完成后,回调开始]");
         ModelAndView modelAndView = new ModelAndView(WITHDRAW_SUCCESS);
         String callback = request.getParameter("callback");

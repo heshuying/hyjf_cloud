@@ -1679,7 +1679,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                 retResult = bean.get(ChinaPnrConstant.PARAM_PROID);
             }
             // 标的信息补录输入接口
-            else if (ChinaPnrConstant.CMDID_ADD_BID_INFO.equals(cmdId)) {
+            else if (ChinaPnrConstant.CMDID_ADD_BID_ATTACH_INFO.equals(cmdId)) {
                 forEncryptionStr =
                         ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),true, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_PROID,
