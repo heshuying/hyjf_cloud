@@ -19,8 +19,19 @@ public class InitCashDepositListResponse {
 	@ApiModelProperty(value = "资金列表")
 	List<AdminAssetListCustomizeVO> assetList;
 
+	@ApiModelProperty(value = "资金总条数")
+	Integer assetCount;
+
 	@ApiModelProperty(value = "汇计划机构配置列表")
 	List<AdminHjhInstConfigAPIVO>  HjhInstConfigList;
+
+	public Integer getAssetCount() {
+		return assetCount;
+	}
+
+	public void setAssetCount(Integer assetCount) {
+		this.assetCount = assetCount;
+	}
 
 	public List<AdminAssetListCustomizeVO> getAssetList() {
 		return assetList;

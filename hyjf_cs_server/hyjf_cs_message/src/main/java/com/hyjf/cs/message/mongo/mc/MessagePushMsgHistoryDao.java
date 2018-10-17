@@ -157,26 +157,13 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		if (form.getHistorySendStatusSrch() != null) {
 			criteria.and("msgSendStatus").is(form.getHistorySendStatusSrch());
 		}
-		if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
-			try {
-				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getHistoryCreateUserNameSrch());
-				criteria.and("sendTime").gte(time);
-			} catch (Exception e) {
-
-			}
-		}
-			if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
-			try {
-				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
-				criteria.and("sendTime").lte(time);
-			} catch (Exception e) {
-			}
+		if (form.getStartSendTimeSrch() != null || form.getEndSendTimeSrch() != null) {
+			int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch() + " 00:00:00");
+			int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch() + " 23:59:59");
+			criteria.and("sendTime").gte(startTime).lte(endTime);
 		}
 		if (form.getHistoryFirstReadTerminalSrch() != null) {
-			try {
-				criteria.and("msgFirstreadPlat").is(Integer.parseInt(form.getHistoryFirstReadTerminalSrch()));
-			} catch (NumberFormatException e) {
-			}
+				criteria.and("msgFirstreadPlat").is(Integer.valueOf(form.getHistoryFirstReadTerminalSrch()));
 		}
 		criteria.and("msgDestinationType").ne(CustomConstants.MSG_PUSH_SEND_STATUS_0);
 		Query query = new Query(criteria);
@@ -208,19 +195,10 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		if (form.getHistorySendStatusSrch() != null) {
 			criteria.and("msgSendStatus").is(form.getHistorySendStatusSrch());
 		}
-		if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
-			try {
-				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getHistoryCreateUserNameSrch());
-				criteria.and("sendTime").gte(time);
-			} catch (Exception e) {
-			}
-		}
-		if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
-			try {
-				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
-				criteria.and("sendTime").lte(time);
-			} catch (Exception e) {
-			}
+		if (form.getStartSendTimeSrch() != null || form.getEndSendTimeSrch() != null) {
+			int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch() + " 00:00:00");
+			int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch() + " 23:59:59");
+			criteria.and("sendTime").gte(startTime).lte(endTime);
 		}
 		if (form.getHistoryFirstReadTerminalSrch() != null) {
 			try {

@@ -2336,9 +2336,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<TenderAgreementVO> selectTenderAgreementByNid(String nid) {
         String url = urlBase +"tenderagreement/selectTenderAgreementByNid/"+nid;
-        TenderAgreementResponse response = restTemplate.getForEntity(url,TenderAgreementResponse.class).getBody();
+        AssetManageResponse response = restTemplate.getForEntity(url,AssetManageResponse.class).getBody();
         if (response != null) {
-            return response.getResultList();
+            return response.getTenderAggementList();
         }
         return null;
     }

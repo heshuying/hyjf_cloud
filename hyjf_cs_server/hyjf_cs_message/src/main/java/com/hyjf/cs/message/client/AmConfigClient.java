@@ -116,4 +116,11 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	SmsNoticeConfigVO findSmsNotice(SmsNoticeConfigRequest request);
+
+	/**
+	 * 根据tagId获取标签名
+	 * @param tagId
+	 * @return
+	 */
+	MessagePushTagVO selectMsgTagByTagId(String tagId);
 }
