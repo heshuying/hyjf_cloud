@@ -3495,7 +3495,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhAccedeResponse canCancelAuth(Integer userId) {
         HjhAccedeResponse response = restTemplate.
-                getForEntity("http://AM-ADMIN/am-trade/hjhAccede/canCancelAuth/" + userId, HjhAccedeResponse.class).
+                getForEntity("http://AM-ADMIN/am-trade/accedeList/canCancelAuth/" + userId, HjhAccedeResponse.class).
                 getBody();
         return response;
     }

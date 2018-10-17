@@ -13,6 +13,7 @@ import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;
 import com.hyjf.am.vo.trade.hjh.UserHjhInvistDetailVO;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -301,4 +302,22 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		UserHjhInvistDetailVO vo = this.adminPlanAccedeListCustomizeMapper.selectUserHjhInvistDetail(request);
 		return vo;
 	}
+	/**
+	 * 判断用户是否有持有中的计划。如果有，则不能解除投资授权和债转授权
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public boolean canCancelAuth(int userId) {
+		HjhAccedeExample example = new HjhAccedeExample();
+		HjhAccedeExample.Criteria criteria = example.createCriteria();
+		criteria.andUserIdEqualTo(userId);
+		criteria.andOrderStatusNotEqualTo(7);
+		List<HjhAccede> list = hjhAccedeMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(list)) {
+			return false;
+		}
+		return true;
+	}
+
 }

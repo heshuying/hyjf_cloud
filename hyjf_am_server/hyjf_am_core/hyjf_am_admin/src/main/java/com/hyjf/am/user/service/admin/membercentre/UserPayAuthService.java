@@ -3,7 +3,9 @@
  */
 package com.hyjf.am.user.service.admin.membercentre;
 
-import com.hyjf.am.user.dao.model.customize.*;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
+import com.hyjf.am.user.dao.model.customize.AdminUserPayAuthCustomize;
 import com.hyjf.am.user.service.BaseService;
 
 import java.util.List;
@@ -30,4 +32,26 @@ public interface UserPayAuthService extends BaseService {
      *
      * @return
      */
-    int countRecordTotalPay(Map<String, Object> mapParam);}
+    int countRecordTotalPay(Map<String, Object> mapParam);
+    /**
+     *
+     * 根据用户id查询用户签约授权信息
+     * @param userId
+     * @return
+     */
+    HjhUserAuth selectHjhUserAuthByUserId(Integer userId);
+
+    /**
+     * 缴费授权解约
+     * @param userId
+     * @return
+     */
+    boolean updateCancelPayAuth(int userId);
+
+    /**
+     * 插入授权记录表
+     * @param hjhUserAuthLogRequest
+     * @return
+     */
+    boolean insertUserAuthLog2(HjhUserAuthLog hjhUserAuthLogRequest);
+}

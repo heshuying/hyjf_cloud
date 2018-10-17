@@ -3,9 +3,10 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.user.HjhUserAuthResponse;
 import com.hyjf.am.response.user.UserPayAuthResponse;
-import com.hyjf.am.resquest.user.*;
-import java.util.List;
+import com.hyjf.am.resquest.user.UserPayAuthRequest;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 /**
  * @author nxl
@@ -20,4 +21,51 @@ public interface UserPayAuthService {
      * @return
      */
     UserPayAuthResponse selectUserMemberList(UserPayAuthRequest request);
+    /**
+     * 根据用户id查询用户签约授权信息
+     * @param userId
+     * @return
+     */
+    HjhUserAuthResponse selectUserPayAuthByUserId(int userId);
+    /**
+     * 获取银行错误返回码
+     * @param retCode
+     * @return
+     */
+    String getBankRetMsg(String retCode);
+    /**
+     * 查看该用户在投资表和标的放款记录中是否存在
+     * @param userId
+     * @auther: nxl
+     * @return
+     */
+    int isDismissPay(int userId);
+    /**
+     * 查看该用户在投标的还款记录中是否存在
+     * @param userId
+     * @auther: nxl
+     * @return
+     */
+    int isDismissRePay(int userId);
+
+    /**
+     * 缴费授权解约
+     * @param userId
+     * @param channel
+     * @return
+     */
+    BankCallBean cancelPayAuth(int userId, String channel);
+
+    /**
+     * 更新授权表
+     * @param userId
+     * @return
+     */
+    boolean updateCancelPayAuth(int userId);
+    /**
+     * 解约插入授权记录表
+     * @param userId
+     * @param retBean
+     */
+   boolean insertUserAuthLog2(int userId,BankCallBean retBean,String authType);
 }
