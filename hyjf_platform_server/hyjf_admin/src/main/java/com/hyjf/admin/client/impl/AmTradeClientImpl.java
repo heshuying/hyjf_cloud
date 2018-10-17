@@ -6068,6 +6068,16 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
+    public HjhAccountBalanceVO getHjhAccountBalanceSum(HjhAccountBalanceRequest request){
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalanceSum";
+        HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url,request,HjhInfoAccountBalanceResponse.class).getBody();
+        if(response != null){
+            return response.getSum();
+        }
+        return null;
+    }
+
+    @Override
     public int getHjhAccountBalancecountByDay (HjhAccountBalanceRequest request) {
         String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalancecountByDay";
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url, request, HjhInfoAccountBalanceResponse.class).getBody();
