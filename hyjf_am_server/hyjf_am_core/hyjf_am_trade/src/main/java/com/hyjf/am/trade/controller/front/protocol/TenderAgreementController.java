@@ -42,10 +42,11 @@ public class TenderAgreementController extends BaseController {
         AssetManageResponse response = new AssetManageResponse();
         List<TenderAgreement> list = tenderAgreementService.selectTenderAgreementByNid(nid);
         if(!CollectionUtils.isEmpty(list)){
-            logger.info("nid:" + nid + ",未获得符合条件的协议！=================================");
+            logger.info("nid:" + nid + ",获得符合条件的协议！=================================");
             List<CurrentHoldObligatoryRightListCustomizeVO> voList = CommonUtils.convertBeanList(list, CurrentHoldObligatoryRightListCustomizeVO.class);
             response.setCurrentHoldObligatoryRightList(voList);
         }
+        logger.info("nid:" + nid + ",列表为空，未获得符合条件的协议！=================================");
         return response;
     }
 
