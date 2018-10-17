@@ -2,7 +2,9 @@ package com.hyjf.cs.message.mongo.mc;
 
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.common.util.GetMessageIdUtil;
 import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +28,6 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      */
     public Integer countRecordList(MessagePushNoticesRequest form){
         Criteria criteria = new Criteria();
-
         if (form.getTagId() != null) {
             criteria.and("tagId").is(form.getTagId());
         }
@@ -126,11 +127,11 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      */
     public void insertRecord(MessagePushNoticesRequest request){
         MessagePushMsg messagePushMsg = CommonUtils.convertBean(request, MessagePushMsg.class);
-       // AdminSystem users = (AdminSystem) session.getAttribute(CustomConstants.LOGIN_USER_INFO);
         messagePushMsg.setCreateTime(GetDate.getNowTime10());
         messagePushMsg.setCreateUserName(request.getUserName());
         messagePushMsg.setLastupdateTime(GetDate.getNowTime10());
         messagePushMsg.setLastupdateUserName(request.getUserName());
+        this.createData(request,messagePushMsg);
         mongoTemplate.save(messagePushMsg);
     }
 
@@ -177,13 +178,52 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         if(record.getMsgSendType()!=null){
             update.set("msgSendType", record.getMsgSendType());
         }
+        if(record.getSendTime()!=null){
+            update.set("sendTime", record.getSendTime());
+        }
+        if(record.getPreSendTime()!=null){
+            update.set("preSendTime", record.getPreSendTime());
+        }
         update.set("msgTerminal",record.getMsgTerminal());
         this.update(query, update);
     }
 
     @Override
     protected Class<MessagePushMsg> getEntityClass() {
-
         return MessagePushMsg.class;
+    }
+
+
+    private void createData(MessagePushNoticesRequest form,MessagePushMsg record) {
+        if (form.getMsgAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
+            record.setMsgActionUrl("");
+        }
+        if (form.getMsgAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_1 || form.getMsgAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
+            record.setMsgActionUrl(form.getNoticesActionUrl1());
+        }
+        if (form.getMsgAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+            record.setMsgActionUrl(form.getNoticesActionUrl2());
+        }
+        if (form.getMsgSendType().intValue() == CustomConstants.MSG_PUSH_SEND_TYPE_1) {
+            record.setSendTime(GetDate.getMyTimeInMillis());
+            if (org.apache.commons.lang.StringUtils.isNotEmpty(form.getNoticesPreSendTimeStr())) {
+                try {
+                    Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getNoticesPreSendTimeStr());
+                    if (time != 0) {
+                        record.setPreSendTime(time);
+                        record.setSendTime(time);
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        } else {
+            record.setPreSendTime(null);
+            record.setSendTime(GetDate.getNowTime10());
+        }
+        String msgCode = GetMessageIdUtil.getNewMsgCode(record.getTagCode());
+        record.setMsgCode(msgCode);// 设置ID
+        record.setMsgSendStatus(CustomConstants.MSG_PUSH_MSG_STATUS_0);// 设置默认状态
+        record.setMsgDestinationType(CustomConstants.MSG_PUSH_DESTINATION_TYPE_0);
     }
 }

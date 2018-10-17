@@ -116,6 +116,11 @@ public class AboutUsController extends BaseController {
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
 			List<EventVO> eventVOList = aboutUsService.getEventsList();
+			if (!CollectionUtils.isEmpty(eventVOList)) {
+				for (EventVO vo : eventVOList) {
+					vo.setActTime(GetDate.dateString2Timestamp(vo.getEventTime()));
+				}
+			}
 			resultMap.put("eventsList", eventVOList);
 			result.setData(resultMap);
 			return result;

@@ -47,7 +47,7 @@ public class CouponController extends BaseController {
     CouponService couponService;
 
     @ApiOperation(value = " 根据用户ID和优惠券编号查询优惠券")
-    @GetMapping("/getCouponUser/{couponId}/{userId}")
+    @GetMapping("/{couponId}/{userId}")
     public CoupUserResponse getCouponUser(@PathVariable(value = "couponId") String couponId,
                                                        @PathVariable(value = "userId") Integer userId) {
         CoupUserResponse response = new CoupUserResponse();
@@ -76,7 +76,10 @@ public class CouponController extends BaseController {
 
     @ApiOperation(value = "获取优惠券投资信息")
     @GetMapping("/getCouponTenderByTender/{userId}/{borrowNid}/{logOrdId}/{couponGrantId}")
-    public BorrowTenderCpnResponse getCouponTenderByTender(Integer userId, String borrowNid, String logOrdId, Integer couponGrantId) {
+    public BorrowTenderCpnResponse getCouponTenderByTender(@PathVariable("userId") Integer userId,
+                                                           @PathVariable("borrowNid") String borrowNid,
+                                                           @PathVariable("logOrdId") String logOrdId,
+                                                           @PathVariable("couponGrantId") Integer couponGrantId) {
         BorrowTenderCpnResponse response = new BorrowTenderCpnResponse();
         BorrowTenderCpn cpn = couponService.getCouponTenderByTender(userId,borrowNid,logOrdId,couponGrantId);
         if(null != cpn){

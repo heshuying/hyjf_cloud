@@ -36,19 +36,33 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
      * 查询需要更新用户画像的userInfo的list
      * */
     @Override
-    public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait() {
+    public List<UserAndSpreadsUserVO> searchUserIdForUserPortrait(int flag) {
+
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        String yesterday = GetDate.date_sdf.format(cal.getTime());
+        String startDay = "";
+        if(flag == 99){
+            //更新三个月内用户画像，数据缺失或数据有误等极其特殊的情况下才能调用，因为数据量特别大
+            cal.add(Calendar.MONTH, -3);
+            startDay = GetDate.date_sdf.format(cal.getTime());
+        }else{
+            //更新昨日的用户画像，正常情况下调用
+            cal.add(Calendar.DATE, -1);
+            startDay = GetDate.date_sdf.format(cal.getTime());
+        }
+        cal = Calendar.getInstance();
+        cal.add(Calendar.DATE,-1);
+        String endDay = GetDate.date_sdf.format(cal.getTime());
         // 获取到昨天的开始和结束时间，格式:yyyy-MM-dd HH:mm:ss
-        String yesterdayBegin = yesterday + " 00:00:00";
-        String yesterdayEnd = yesterday + " 23:59:59";
+        String yesterdayBegin = startDay + " 00:00:00";
+        String yesterdayEnd = endDay + " 23:59:59";
 
         // 从UserInfo中获得所有昨天登录过的userId
         UserLoginLogExample example = new UserLoginLogExample();
         UserLoginLogExample.Criteria criteria = example.createCriteria();
         criteria.andLoginTimeBetween(GetDate.stringToDate(yesterdayBegin), GetDate.stringToDate(yesterdayEnd));
         List<UserLoginLog> userLoginLogList = userLoginLogMapper.selectByExample(example);
+
+
         List<UserAndSpreadsUserVO> result = new ArrayList<>();
         if(!CollectionUtils.isEmpty(userLoginLogList)){
             for(UserLoginLog userLoginLog:userLoginLogList){

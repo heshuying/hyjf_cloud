@@ -1,8 +1,10 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.MessagePushHistoryResponse;
-import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
+import com.hyjf.am.vo.config.MessagePushTagVO;
+
+import java.util.List;
 
 /**
  * @author lisheng
@@ -21,6 +23,6 @@ public interface MessagePushHistoryService {
      * 获取消息推送标签列表
      * @return
      */
-    MessagePushTagResponse getAllPushTagList();
+    List<MessagePushTagVO> getAllPushTagList();
 
 }

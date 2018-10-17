@@ -537,7 +537,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         data.put("investDesc","恭喜您，投资成功！");
         logger.info("获取投资成功结果参数 userId {}  logOrdId {} borrowNid {}",userId,logOrdId,borrowNid);
         BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
-        logger.info("获取投资成功结果为:"+borrowTender);
+        logger.info("获取投资成功结果为:"+JSONObject.toJSONString(borrowTender));
 
         if(borrowTender!=null){
             BigDecimal earnings = new BigDecimal("0");
@@ -606,6 +606,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 data.put("couponInterest","");
             }
         }
+        logger.info("返回给前端结果为：{} ",JSONObject.toJSONString(data));
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);
         return result;
@@ -859,7 +860,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     investInfo.setCouponType("代金券");
                 }
                 investInfo.setCouponQuota(couponConfig.getCouponQuota().toString());
-                investInfo.setCouponId(couponConfig.getId() + "");
+                investInfo.setCouponId(tender.getCouponGrantId()+"");
                 investInfo.setIsUsedCoupon("1");
             } else {
                 investInfo.setCouponDescribe("暂无可用");
@@ -1535,6 +1536,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             params.put("ordId", bean.getLogOrderId());
             // 用户编号
             params.put("userId", userId+"");
+            params.put("userName", bean.getLogUserName());
 
             try {
                 couponTenderProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
@@ -1697,6 +1699,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         tenderBg.setTenderUserAttribute(userInfo.getAttribute());
         tenderBg.setClient(bean.getLogClient());
         tenderBg.setUserName(user.getUsername());
+        bean.setLogUserName(user.getUsername());
         Integer attribute = null;
         if (userInfo != null) {
             // 获取投资用户的用户属性

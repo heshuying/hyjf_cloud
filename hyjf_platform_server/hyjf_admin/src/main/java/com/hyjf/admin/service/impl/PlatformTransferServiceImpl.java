@@ -67,7 +67,7 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
             }
         }
         userIds = userIds.substring(0,userIds.lastIndexOf(","));
-        logger.info("userIds=====[{}]",userIds);
+        logger.info("平台转账--> userIds=====[{}]",userIds);
         List<UserVO> userVOList = amUserClient.findUserListByUserIds(userIds);
         for(AccountRechargeVO accountRechargeVO:accountRechargeVOList){
             //txTime时间格式化
@@ -80,7 +80,7 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
                 }
             }
         }
-        logger.info("accountRechargeVOList:[{}]",JSON.toJSONString(accountRechargeVOList));
+        logger.debug("accountRechargeVOList:[{}]",JSON.toJSONString(accountRechargeVOList));
         return accountRechargeVOList;
     }
 
@@ -112,7 +112,6 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
      */
     @Override
     public JSONObject checkTransfer(String userName) {
-        logger.info("entry service:[PlatformTransferServiceImpl]....userName:[{}]",userName);
         JSONObject result = new JSONObject();
         List<UserVO> userVOList = amUserClient.searchUserByUsername(userName);
         if (userVOList != null && userVOList.size() == 1) {
@@ -209,7 +208,7 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
                 resultBean = BankCallUtils.callApiBg(bean);
             } catch (Exception e) {
                 e.printStackTrace();
-                logger.info("调用银行出错,e:[{}]",e.getMessage());
+                logger.debug("调用银行出错,e:[{}]",e.getMessage());
                 result.put("status", "error");
                 result.put("result", "平台转账发生错误,请重新操作!");
                 return result;
@@ -240,7 +239,6 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
                 result.put("result", "平台转账发生错误,请重新操作!");
             }
         } else {
-            logger.info("密码错误");
             result.put("status", "error");
             result.put("result", "密码错误,请重新操作!");
         }
@@ -281,9 +279,9 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
         bean.setLogClient(0);
         try{
             BankCallBean resultBean = BankCallUtils.callApiBg(bean);
-            logger.info("银行返回的报文:[{}]",JSON.toJSONString(resultBean));
+            logger.debug("银行返回的报文:[{}]",JSON.toJSONString(resultBean));
             if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
-                logger.info("银行返回的code:[{}]",resultBean.getRetCode());
+                logger.debug("银行返回的code:[{}]",resultBean.getRetCode());
                 balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
             }
         } catch (Exception e) {

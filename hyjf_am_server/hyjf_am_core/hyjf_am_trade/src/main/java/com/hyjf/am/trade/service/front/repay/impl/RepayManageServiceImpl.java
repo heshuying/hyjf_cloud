@@ -243,11 +243,15 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectOrgRepayList(param);
         if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
+                RepayListCustomizeVO info = list.get(i);
+                //获得标的类型
+                String borrowStyle = info.getBorrowStyle();
+
                 BigDecimal accountFee = BigDecimal.ZERO;
                 BigDecimal borrowTotal = BigDecimal.ZERO;
                 BigDecimal realAccountTotal = BigDecimal.ZERO;
                 BigDecimal allAccountFee = BigDecimal.ZERO;
-                BigDecimal serviceFee = BigDecimal.ZERO;
+//                BigDecimal serviceFee = BigDecimal.ZERO;
                 if (StringUtils.isNotBlank(list.get(i).getRepayFee())) {
                     accountFee = new BigDecimal(list.get(i).getRepayFee());
                 }
@@ -260,14 +264,29 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 if (StringUtils.isNotBlank(list.get(i).getAllRepayFee())) {
                     allAccountFee = new BigDecimal(list.get(i).getAllRepayFee());
                 }
-                if (StringUtils.isNotBlank(list.get(i).getServiceFee())) {
-                    serviceFee = new BigDecimal(list.get(i).getServiceFee());
-                }
-                BigDecimal oldYesAccount = new BigDecimal(list.get(i).getYesAccount()==null?"0":list.get(i).getYesAccount());
-                BigDecimal yesAccount = oldYesAccount.subtract(serviceFee);
-                list.get(i).setYesAccount(yesAccount.toString());
+//                if (StringUtils.isNotBlank(list.get(i).getServiceFee())) {
+//                    serviceFee = new BigDecimal(list.get(i).getServiceFee());
+//                }
+//                BigDecimal oldYesAccount = new BigDecimal(list.get(i).getYesAccount()==null?"0":list.get(i).getYesAccount());
+//                BigDecimal yesAccount = oldYesAccount.subtract(serviceFee);
+//                list.get(i).setYesAccount(yesAccount.toString());
                 list.get(i).setBorrowTotal(borrowTotal.add(allAccountFee).toString());
                 list.get(i).setRealAccountYes(realAccountTotal.add(accountFee).toString());
+
+                if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)||CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {//日标
+                    info.setOrgBorrowPeriod("1");
+                }else{//月标 获取当前应还期数
+                    if (org.apache.commons.lang3.StringUtils.isBlank(info.getBorrowAllPeriod())) {
+                        info.setBorrowAllPeriod("0");
+                    }
+                    if (org.apache.commons.lang3.StringUtils.isBlank(info.getRepayPeriod())) {
+                        info.setRepayPeriod("0");
+                    }
+                    int borrowPeriod = Integer.parseInt(info.getBorrowAllPeriod());
+                    int repayPeriod = Integer.parseInt(info.getRepayPeriod());
+                    int orgBorrowPeriod = borrowPeriod - repayPeriod + 1;
+                    info.setOrgBorrowPeriod(orgBorrowPeriod+"");
+                }
             }
         }
 
@@ -1856,9 +1875,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     userRepayDetail.setRepayTotal(total.toString());
                     userRepayDetail.setStatus(userRecover.getRecoverStatus().toString());
                     userRepayDetail.setUserId(userRecover.getUserId().toString());
-//   todo 暂时注释掉                 String userName = this.getRUser(userRecover.getUserId()).getUsername();
-//                    String userNameStr = userName.substring(0, 1).concat("**");
-//                    userRepayDetail.setUserName(userNameStr);
+                    String userName = this.getRUser(userRecover.getUserId()).getUsername();
+                    String userNameStr = userName.substring(0, 1).concat("**");
+                    userRepayDetail.setUserName(userNameStr);
                     userRepayDetails.add(userRepayDetail);
                 }
             }
@@ -4094,7 +4113,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public List<BorrowRepayPlan> searchRepayPlan(int userId, String borrowNid) {
         BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
-// todo 暂时注释掉       borrowRepayPlanCrt.andUserIdEqualTo(userId);
+        borrowRepayPlanCrt.andUserIdEqualTo(userId);
         borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
         List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
         return borrowRepayPlans;
@@ -4103,7 +4122,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public List<BorrowRepayPlan> searchRepayPlanAll(int userId, String borrowNid) {
         BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
-//todo 暂时删除       borrowRepayPlanCrt.andUserIdEqualTo(userId);
+        borrowRepayPlanCrt.andUserIdEqualTo(userId);
         borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
         borrowRepayPlanExample.setOrderByClause("repay_period");
         List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
@@ -4142,7 +4161,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         int period = Integer.parseInt(periodTotal) - remainRepayPeriod + 1;
         int userId = repay.getUserId();// 借款人id
         Integer repayUserId = repay.getRepayUserId();
+        logger.info("borrowNid:" + borrowNid + " repayUserId:" + repayUserId);
         RUser repayUser = this.getRUser(repayUserId);
+        logger.info("repayUser:" + repayUser);
         String userName = repayUser.getUsername();
         Integer roleId = repayUser.getRoleId();
         BigDecimal repayTotal = repay.getRepayAccountAll();// 用户还款总额
@@ -4150,6 +4171,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         Boolean repayFlag = false;
         int errorCount = 0;
         Borrow borrow = this.getBorrow(borrowNid);
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
         /** 标的基本数据 */
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
         String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
@@ -4370,9 +4392,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         borrowApicron.setCreditRepayStatus(0);
                         borrowApicron.setCreateTime(GetDate.getNowTime());
                         borrowApicron.setUpdateTime(GetDate.getNowTime());
-                        if (projectType == 13) {
+                        boolean increase = Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield());
+                        if (increase) {
                             borrowApicron.setExtraYieldStatus(0);// 融通宝加息相关的放款状态
                             borrowApicron.setExtraYieldRepayStatus(0);// 融通宝相关的加息还款状态
+
                         } else {
                             borrowApicron.setExtraYieldStatus(1);// 融通宝加息相关的放款状态
                             borrowApicron.setExtraYieldRepayStatus(1);// 融通宝相关的加息还款状态
@@ -4557,6 +4581,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 boolean isAllRepay) throws Exception {
 
         Map map = new HashMap();
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrow.getBorrowNid());
         BorrowRepayPlan borrowRepayPlan = this.searchRepayPlan(userId, borrowNid, period);
         BorrowApicronExample example = new BorrowApicronExample();
         BorrowApicronExample.Criteria crt = example.createCriteria();
@@ -4754,7 +4779,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     if(isAllRepay){
                         borrowApicron.setIsAllrepay(1);
                     }
-                    if (projectType == 13) {
+                    boolean increase = Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield());
+                    if (increase) {
                         borrowApicron.setExtraYieldStatus(0);// 融通宝加息相关的放款状态
                         borrowApicron.setExtraYieldRepayStatus(0);// 融通宝相关的加息还款状态
                     } else {

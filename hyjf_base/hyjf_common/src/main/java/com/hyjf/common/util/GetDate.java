@@ -50,7 +50,7 @@ public class GetDate extends PropertyEditorSupport {
 
 	public static final String yyyymmddhhmmss_key = "yyyyMMddHHmmss";
 
-	public static final String yyyymmddhhmmssSS_key = "yyyyMMddHHmmssSS";
+	public static final String yyyymmddhhmmSS_key = "yyyyMMddHHmmSS";
 
 	public static final String short_time_sdf_key = "HH:mm";
 
@@ -73,7 +73,7 @@ public class GetDate extends PropertyEditorSupport {
 	public static final SimpleDateFormat date_sdf_wz = new SimpleDateFormat(date_sdf_wz_key);
 	public static final SimpleDateFormat time_sdf = new SimpleDateFormat(time_sdf_key);
 	public static final SimpleDateFormat yyyymmddhhmmss = new SimpleDateFormat(yyyymmddhhmmss_key);
-	public static final SimpleDateFormat yyyymmddhhmmssSS = new SimpleDateFormat(yyyymmddhhmmssSS_key);
+	public static final SimpleDateFormat yyyymmddhhmmssSS = new SimpleDateFormat(yyyymmddhhmmSS_key);
 	public static final SimpleDateFormat short_time_sdf = new SimpleDateFormat(short_time_sdf_key);
 	public static final SimpleDateFormat datetimeFormat = new SimpleDateFormat(datetimeFormat_key);
 	public static final SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat(datetimeFormathhmm_key);
@@ -397,8 +397,10 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static Timestamp str2Timestamp(String str) {
-		Date date = new Date();
-		date = str2Date(str, getDateFormat(date_sdf_key));
+		Date date = str2Date(str, getDateFormat(date_sdf_key));
+		if(date == null){
+			date = str2Date(str,getDateFormat(datetimeFormat_key));
+		}
 		return new Timestamp(date.getTime());
 	}
 
@@ -1309,6 +1311,9 @@ public class GetDate extends PropertyEditorSupport {
 		}
 		//SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date date = str2Date(dateParam, getDateFormat(yyyymmddhhmmss_key));
+		if(date == null){
+			date = str2Date(dateParam,getDateFormat(yyyymmddhhmmSS_key));
+		}
 		long timestamp = new Timestamp(date.getTime()).getTime() / 1000;
 		return Integer.valueOf(String.valueOf(timestamp));
 	}
@@ -2056,6 +2061,118 @@ public class GetDate extends PropertyEditorSupport {
 		String enddateStr = getDateFormat(yyyyMMdd_key).format(repayEndDate);
 		return Integer.parseInt(enddateStr);
 	}
+
+	// add 汇计划三期 汇计划自动投资 liubin 20180515 start
+	/**
+	 * 根据HH:mm得到日期
+	 *
+	 * @param hhmm (HH:mm)
+	 *            指定的时分 按“时：分“格式
+	 * @return
+	 */
+	public static Date getDateFromShortTime(String hhmm) {
+		try {
+			return short_time_sdf.parse(hhmm);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据当前时间得到只有HH:mm部分的日期
+	 * @return
+	 */
+	public static Date getShortTimeDate() {
+		return getDateFromShortTime(short_time_sdf.format(getDate()));
+	}
+
+	/**
+	 * 判断时间是否属于该时间段
+	 * @param nowTime
+	 * @param beginTime
+	 * @param endTime
+	 * @return
+	 */
+	public static boolean belongCalendar(Date nowTime, Date beginTime, Date endTime) {
+		Calendar date = Calendar.getInstance();
+		date.setTime(nowTime);
+
+		Calendar begin = Calendar.getInstance();
+		begin.setTime(beginTime);
+
+		Calendar end = Calendar.getInstance();
+		end.setTime(endTime);
+
+		if (date.compareTo(begin) >= 0 && date.compareTo(end) <= 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * 获取某日期的月份的第一天
+	 *
+	 * @param date
+	 * @return
+	 */
+	public static Date getFirstDayOnMonth(Date date) {
+		Calendar calander = Calendar.getInstance();
+		calander.setTime(date);
+		calander.set(Calendar.DATE, 1);
+		return getSomeDayStart(calander.getTime());
+	}
+
+	/**
+	 * 获取某日期的月份的最后一天
+	 *
+	 * @param date
+	 * @return
+	 */
+	public static Date getLastDayOnMonth(Date date) {
+		Calendar calander = Calendar.getInstance();
+		calander.setTime(date);
+		calander.set(Calendar.DATE,
+				calander.getActualMaximum(Calendar.DAY_OF_MONTH));
+		return getSomeDayEnd(calander.getTime());
+	}
+
+	/**
+	 *
+	 * 获取某一天的开始时间
+	 * @author hsy
+	 * @param date（2017-07-10）
+	 * @return
+	 */
+	public static Date getSomeDayStart(Date date){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTime();
+	}
+
+	/**
+	 *
+	 * 获取某一天的结束时间
+	 * @author hsy
+	 * @param date（2017-07-10）
+	 * @return
+	 */
+	public static Date getSomeDayEnd(Date date){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+		return calendar.getTime();
+	}
+
+	// add 汇计划三期 汇计划自动投资 liubin 20180515 end
 
 	public static void main(String[] args) {
 		System.out.println(getDateTimeMyTimeInMillis(1483163187));

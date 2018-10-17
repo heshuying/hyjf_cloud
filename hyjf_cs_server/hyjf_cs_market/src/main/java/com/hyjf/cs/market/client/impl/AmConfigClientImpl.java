@@ -8,6 +8,7 @@ import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
+import com.hyjf.am.resquest.admin.ContentPartnerRequest;
 import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
@@ -55,7 +56,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
 	public List<EventVO> getEventsList() {
 		EventResponse response = restTemplate.postForObject(
-				"http://AM-CONFIG/am-config/content/contentevent/searchaction", new EventsRequest(), EventResponse.class);
+				"http://AM-ADMIN/am-config/content/contentevent/searchaction", new EventsRequest(), EventResponse.class);
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -90,7 +91,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 */
 	@Override
 	public EventVO getEventDetailById(Integer id) {
-		EventResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentevent/getEventDetail/" + id, EventResponse.class);
+		EventResponse response = restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentevent/getEventDetail/" + id, EventResponse.class);
 		if (response != null){
 			return response.getResult();
 		}
@@ -128,8 +129,10 @@ public class AmConfigClientImpl implements AmConfigClient {
 
 	@Override
 	public List<LinkVO> getPartnersList(Integer partnerType) {
-		LinkResponse response = restTemplate.getForObject(
-				"http://AM-ADMIN/am-config/content/contentpartner/getbypartnertype/" + partnerType,
+		ContentPartnerRequest request = new ContentPartnerRequest();
+		request.setPartnerType(partnerType);
+		LinkResponse response = restTemplate.postForObject(
+				"http://AM-ADMIN/am-config/content/contentpartner/searchaction", request,
 				LinkResponse.class);
 		if (response != null) {
 			return response.getResultList();

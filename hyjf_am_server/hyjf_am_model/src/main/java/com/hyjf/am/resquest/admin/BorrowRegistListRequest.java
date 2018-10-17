@@ -19,6 +19,9 @@ public class BorrowRegistListRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "借款编号(检索用)")
     private String borrowNidSrch;
 
+    @ApiModelProperty(value = "借款编号(异常处理用)")
+    private String borrowNid;
+
     @ApiModelProperty(value = "借款标题(检索用)")
     private String borrowNameSrch;
 
@@ -147,5 +150,13 @@ public class BorrowRegistListRequest extends BasePage implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 }

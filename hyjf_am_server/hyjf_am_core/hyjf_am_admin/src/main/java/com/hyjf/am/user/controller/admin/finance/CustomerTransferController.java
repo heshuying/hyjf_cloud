@@ -47,7 +47,7 @@ public class CustomerTransferController extends BaseController {
     public UserResponse searchUserByUsername(@PathVariable String userName){
         UserResponse response = new UserResponse();
         List<User> userList = customerTransferService.searchUserByUsername(userName);
-        logger.info("userList=[{}]", JSON.toJSONString(userList));
+        logger.debug("userList=[{}]", JSON.toJSONString(userList));
         if(!CollectionUtils.isEmpty(userList)){
             logger.info("am-user searchUserByUserName 查询出来的userList.size=[{}]",userList.size());
             List<UserVO> userVOList = CommonUtils.convertBeanList(userList,UserVO.class);

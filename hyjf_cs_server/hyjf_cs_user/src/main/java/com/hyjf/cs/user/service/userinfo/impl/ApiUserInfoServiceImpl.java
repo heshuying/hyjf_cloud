@@ -38,7 +38,7 @@ public class ApiUserInfoServiceImpl extends BaseUserServiceImpl implements ApiUs
      */
     @Override
     public SyncUserInfoResultBean syncUserInfo(SyncUserInfoRequestBean requestBean) {
-        logger.info(JSON.toJSONString(requestBean));
+        logger.debug(JSON.toJSONString(requestBean));
         SyncUserInfoResultBean result = new SyncUserInfoResultBean();
         //机构编号
         String instCode = requestBean.getInstCode();

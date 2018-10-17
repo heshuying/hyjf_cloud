@@ -370,7 +370,8 @@ public class AmTradeClientImpl implements AmTradeClient {
         if (response == null || !Response.isSuccess(response)) {
             return null;
         }
-        return response.getResultMap();
+        // MapResponse的元素类型转换（String→BigDecimal）
+        return response.resultMapToBigDecimalAll();
     }
 
     /**

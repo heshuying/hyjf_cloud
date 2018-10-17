@@ -43,6 +43,7 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
 
             List<HjhAccountBalanceVO> voList = client.getHjhAccountBalanceMonthList(request);
             response.setResultList(voList);
+            response.setSum(client.getHjhAccountBalanceSum(request));
         }
         return response;
     }
@@ -67,6 +68,7 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
 
             List<HjhAccountBalanceVO> voList = client.getHjhAccountBalanceListByDay(request);
             response.setResultList(voList);
+            response.setSum(client.getHjhAccountBalanceSum(request));
         }
         return response;
     }

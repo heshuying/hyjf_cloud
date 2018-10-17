@@ -6,9 +6,11 @@ import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -349,8 +351,11 @@ public class RepayManageController extends BaseTradeController {
             result.setData(Collections.emptyMap());
             return result;
         }
+        if(detaiResult!= null && "1".equals(detaiResult.getString("onlyAllRepay"))) {
+            isAllRepay = true;
+        }
 
-        resultMap.put("isAllRepay", isAllRepay);
+        resultMap.put("isAllRepay", isAllRepay ? "1" : "0");
         resultMap.put("paymentAuthStatus", "");
         resultMap.put("repayAuthStatus", "");
         resultMap.put("repayProject", detaiResult);
@@ -368,7 +373,18 @@ public class RepayManageController extends BaseTradeController {
     @PostMapping(value = "/repay_request", produces = "application/json; charset=utf-8")
     public WebResult repayRequest(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayRequest requestBean, HttpServletRequest request){
         WebResult webResult = new WebResult();
+        Map<String,String> resultMap = new HashMap<>();
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+
+        BorrowInfoVO borrowInfoVO = repayManageService.getBorrowInfoByNid(requestBean.getBorrowNid());
+        if(borrowInfoVO == null){
+            webResult.setStatus(WebResult.ERROR);
+            webResult.setStatusDesc("标的不存在，borrowNid：" + requestBean.getBorrowNid());
+            return webResult;
+        }
+        resultMap.put("borrowNid", borrowInfoVO.getBorrowNid());
+        resultMap.put("borrowName", borrowInfoVO.getName());
+        webResult.setData(resultMap);
 
         /** redis 锁 */
         boolean reslut = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_REPAY_REQUEST + requestBean.getBorrowNid(), 60);
@@ -386,9 +402,9 @@ public class RepayManageController extends BaseTradeController {
 
         RepayBean repayBean = repayManageService.getRepayBean(userVO.getUserId(), userVO.getRoleId(), requestBean.getBorrowNid(), isAllRepay);
         if ("3".equals(userVO.getRoleId())) {// 垫付机构还款校验
-            repayManageService.checkForRepayRequest(requestBean.getBorrowNid(), requestBean.getPassword(),userVO, repayBean);
-        } else { // 借款人还款校验
             repayManageService.checkForRepayRequestOrg(requestBean.getBorrowNid(), requestBean.getPassword(),userVO, repayBean,0);
+        } else { // 借款人还款校验
+            repayManageService.checkForRepayRequest(requestBean.getBorrowNid(), requestBean.getPassword(),userVO, repayBean);
         }
         int errflag = repayBean.getFlag();
         if (1 == errflag) {
@@ -511,6 +527,8 @@ public class RepayManageController extends BaseTradeController {
         }else{
             String startDate  = GetDate.formatDate(new java.util.Date());
             String endDate = GetDate.formatDate(new java.util.Date());
+            requestBean.setStartDate(startDate);
+            requestBean.setEndDate(endDate);
 
             resultMap.put("startDate",startDate);
             resultMap.put("endDate",endDate);

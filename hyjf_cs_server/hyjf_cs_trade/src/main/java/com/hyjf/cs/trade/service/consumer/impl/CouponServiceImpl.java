@@ -71,27 +71,21 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      * @param cuc
      */
     @Override
-    public void couponTender(TenderRequest request, HjhPlanVO plan, CouponUserVO cuc,Integer userId) {
-        String accountStr = request.getAccount();
-        Map<String, String> validateMap = this.validateCoupon(userId, accountStr, cuc.getId(), request.getPlatform(), plan.getLockPeriod(), plan.getCouponConfig());
-        if (MapUtils.isEmpty(validateMap)) {
-            CouponTenderUsedVO couponTender = new CouponTenderUsedVO();
-            couponTender.setAccount(request.getAccount());
-            couponTender.setBorrowNid(plan.getPlanNid());
-            couponTender.setBorrowStyle(plan.getBorrowStyle());
-            couponTender.setCouponGrantId(cuc.getId());
-            couponTender.setExpectApr(plan.getExpectApr());
-            couponTender.setIp(request.getIp());
-            couponTender.setMainTenderNid(request.getMainTenderNid());
-            couponTender.setPeriod(plan.getLockPeriod());
-            couponTender.setPlatform(Integer.parseInt(request.getPlatform()));
-            couponTender.setTenderType(CustomConstants.COUPON_TENDER_TYPE_HJH);
-            couponTender.setUserId(userId);
-            boolean couponSuccess = this.updateCouponTender(couponTender);
-            request.setCouponInterest(couponTender.getCouponInterest());
-        } else {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT_WITH_COUPON);
-        }
+    public void couponTender(TenderRequest request, HjhPlanVO plan, CouponUserVO cuc, Integer userId) {
+        CouponTenderUsedVO couponTender = new CouponTenderUsedVO();
+        couponTender.setAccount(request.getAccount());
+        couponTender.setBorrowNid(plan.getPlanNid());
+        couponTender.setBorrowStyle(plan.getBorrowStyle());
+        couponTender.setCouponGrantId(cuc.getId());
+        couponTender.setExpectApr(plan.getExpectApr());
+        couponTender.setIp(request.getIp());
+        couponTender.setMainTenderNid(request.getMainTenderNid());
+        couponTender.setPeriod(plan.getLockPeriod());
+        couponTender.setPlatform(Integer.parseInt(request.getPlatform()));
+        couponTender.setTenderType(CustomConstants.COUPON_TENDER_TYPE_HJH);
+        couponTender.setUserId(userId);
+        boolean couponSuccess = this.updateCouponTender(couponTender);
+        request.setCouponInterest(couponTender.getCouponInterest());
     }
 
     /**
@@ -218,6 +212,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         borrowTenderCpn.setUserId(userId);
         borrowTenderCpn.setRemark("");
         borrowTenderCpn.setWebStatus(0);
+        borrowTenderCpn.setTenderUserName(bean.getUserName());
         borrowTenderCpn.setClient(bean.getPlatform());
         // 投资类别：1：直投类，2：汇添金 3：汇计划
         borrowTenderCpn.setTenderType(bean.getTenderType());
@@ -447,6 +442,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             result.put("statusDesc", "当前优惠券无法使用，优惠券已过期！");
             return result;
         }
+        logger.info("configVO.getAddFlag()::: {}",configVO.getAddFlag());
         // 优惠券不能和本金公用
         if (configVO.getAddFlag()!=null&&configVO.getAddFlag() == 1 && !"0".equals(accountStr)) {
             result.put("statusDesc", "当前优惠券不能与本金共用！");
@@ -464,7 +460,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      */
     @Override
     public void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean, BorrowInfoVO borrowInfoVO) {
-        boolean isUsed = RedisUtils.tranactionSet(RedisConstants.COUPON_TENDER_KEY, 300);
+        boolean isUsed = RedisUtils.tranactionSet(RedisConstants.COUPON_TENDER_KEY+couponGrantId, 300);
         if (!isUsed) {
             logger.error("当前优惠券正在使用....");
             return;
@@ -504,6 +500,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             couponTender.setPlatform(bean.getLogClient());
             couponTender.setTenderType(CustomConstants.COUPON_TENDER_TYPE_HZT);
             couponTender.setUserId(userId);
+            couponTender.setUserName(bean.getLogUserName());
             // 开始使用优惠券投资
             this.updateCouponTender(couponTender);
         }

@@ -31,6 +31,12 @@ public class HjhAccountBalanceRequest  implements Serializable {
 
     public int limitEnd = -1;
 
+    //查询用变量
+    private Date yuechu;
+    private Date yuemo;
+
+
+
     public int getPaginatorPage() {
         if (paginatorPage == 0) {
             paginatorPage = 1;
@@ -210,5 +216,21 @@ public class HjhAccountBalanceRequest  implements Serializable {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public Date getYuechu() {
+        return yuechu;
+    }
+
+    public void setYuechu(Date yuechu) {
+        this.yuechu = yuechu;
+    }
+
+    public Date getYuemo() {
+        return yuemo;
+    }
+
+    public void setYuemo(Date yuemo) {
+        this.yuemo = yuemo;
     }
 }

@@ -708,7 +708,6 @@ public class ProjectConstant {
                 }
 
             } catch (Exception e) {
-                logger.error("数据转换异常[{}]",e);
                 continue;
             }
         }

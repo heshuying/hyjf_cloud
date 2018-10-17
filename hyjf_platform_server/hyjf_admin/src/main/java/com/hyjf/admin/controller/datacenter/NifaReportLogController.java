@@ -162,13 +162,15 @@ public class NifaReportLogController extends BaseController {
      * @param response
      */
     public void download(String filePath,String fileName, HttpServletResponse response) {
+        FileInputStream in = null;
+        OutputStream out = null;
         try {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
             response.setContentType("multipart/form-data");
-            FileInputStream in = new FileInputStream(filePath);
+            in = new FileInputStream(filePath);
             // 创建输出流
-            OutputStream out = response.getOutputStream();
+            out = response.getOutputStream();
             // 创建缓冲区
             byte buffer[] = new byte[1024];
             int len = 0;
@@ -177,12 +179,32 @@ public class NifaReportLogController extends BaseController {
                 // 输出缓冲区内容到浏览器，实现文件下载
                 out.write(buffer, 0, len);
             }
-            // 关闭文件流
-            in.close();
+            out.flush();
             // 关闭输出流
             out.close();
+            // 关闭文件流
+            in.close();
         } catch (Exception e) {
             logger.error(NifaReportLogController.class.getName(), "NifaReportLogDown", e);
+        }finally {
+            // 关闭输出流
+            try{
+                if(out != null){
+                    out.flush();
+                    out.close();
+                }
+            }catch (Exception e){
+                logger.info("关闭输出流失败");
+            }
+            // 关闭输入流
+            try{
+                if(in != null){
+                    in.close();
+                }
+            }catch (Exception e){
+                logger.info("关闭输入流失败");
+            }
+
         }
     }
 }

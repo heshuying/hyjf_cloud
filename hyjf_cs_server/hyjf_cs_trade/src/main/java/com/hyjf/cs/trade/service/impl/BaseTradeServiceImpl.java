@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -206,6 +207,16 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     @Override
     public BorrowAndInfoVO getBorrowByNid(String borrowNid) {
         return amTradeClient.selectBorrowByNid(borrowNid);
+    }
+
+    /**
+     * BorrowNid获取borrowInfo
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowInfoVO getBorrowInfoByNid(String borrowNid){
+        return amTradeClient.getBorrowInfoByNid(borrowNid);
     }
 
 

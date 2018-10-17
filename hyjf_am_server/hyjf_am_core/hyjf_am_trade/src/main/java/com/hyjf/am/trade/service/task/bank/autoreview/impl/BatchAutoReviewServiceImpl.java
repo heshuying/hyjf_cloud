@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.bank.autoreview.BatchAutoReviewService;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
@@ -63,6 +64,8 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
     private BorrowTenderTmpMapper borrowTenderTmpMapper;
     @Resource
     private FreezeHistoryMapper freezeHistoryMapper;
+    @Resource
+    BorrowLoanRepayProducer borrowLoanRepayProducer;
 
     @Override
     public void sendMsgToNotFullBorrow() {
@@ -215,6 +218,13 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                                 borrowApicron.setUpdateTime(new Date());// 更新时间
                                 boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                                 if (!apicronFlag) {
+                                    //2018-10-15 复审之后之后发送MQ进行放款
+                                    try {
+                                        borrowLoanRepayProducer.messageSend(
+                                                new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
+                                    } catch (MQException e) {
+                                        logger.error("[编号：" + borrowNid + "]发送直投放款MQ失败！", e);
+                                    }
                                     throw new Exception("更新borrow表失败,项目编号：" + borrow.getBorrowNid());
                                 }
                             }

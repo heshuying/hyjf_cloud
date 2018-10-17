@@ -241,6 +241,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 查询垫付机构的账户余额信息
         if (account == null) {
             info.put(REPAY_ERROR,"未查询到账户余额信息");
+            return null;
         }
         // 获取用户在平台的账户余额
         BigDecimal balance = account.getBankBalance();
@@ -249,6 +250,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 判断用户当前还款的项目是否存在
         if (borrow == null) {
             info.put(REPAY_ERROR,"未查询到项目信息");
+            return null;
         }
         // 获取项目还款方式
         String borrowStyle = StringUtils.isNotEmpty(borrow.getBorrowStyle()) ? borrow.getBorrowStyle() : null;
@@ -273,7 +275,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 一次性还款
         if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
             BigDecimal repayTotal = this.repayManageService.searchRepayTotal(repayUserId, borrow);
-            if (repayTotal.compareTo(balance) == 0 || repayTotal.compareTo(balance) == -1) {
+            if (repayTotal.compareTo(balance) == 0 || repayTotal.compareTo(balance) < 0) {
                 // ** 垫付机构符合还款条件，可以还款 *//*
                 // 获取用户在银行的电子账户余额
                 if (flag == 1) {//垫付机构批量还款
@@ -282,7 +284,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                     return repayByTerm;
                 }else{
                     BigDecimal userBankBalance = this.getBankBalance(userId, account.getAccountId());
-                    if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) == -1) {
+                    if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) < 0) {
                         // ** 垫付机构符合还款条件，可以还款 *//*
                         RepayBean repayByTerm = this.repayManageService.calculateRepay(repayUserId, borrow);
                         repayByTerm.setRepayUserId(userId);// 垫付机构id
@@ -298,7 +300,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         } // 分期还款
         else {
             BigDecimal repayTotal = this.repayManageService.searchRepayByTermTotal(repayUserId, borrow, borrowApr, borrowStyle, borrow.getBorrowPeriod());
-            if (repayTotal.compareTo(balance) == 0 || repayTotal.compareTo(balance) == -1) {
+            if (repayTotal.compareTo(balance) == 0 || repayTotal.compareTo(balance) < 0) {
                 // ** 垫付机构符合还款条件，可以还款 *//*
                 // 获取用户在银行的电子账户余额
                 if (flag ==1) {//垫付机构批量还款
@@ -308,7 +310,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                     return repayByTerm;
                 }else{
                     BigDecimal userBankBalance = this.getBankBalance(userId, account.getAccountId());
-                    if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) == -1) {
+                    if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) < 0) {
                         // ** 用户符合还款条件，可以还款 *//*
                         RepayBean repayByTerm = this.repayManageService.calculateRepayByTerm(repayUserId, borrow);
                         repayByTerm.setRepayUserId(userId);// 垫付机构id
@@ -341,6 +343,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 检查用户是否存在
         if (user == null) {
             info.put(REPAY_ERROR,"未查询到相应的用户信息");
+            return null;
         }
         // 画面需要密码验证，定时任务不需要密码验证
 //		String sort = user.getSalt();
@@ -354,6 +357,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 查询用户的账户余额信息
         if (account == null) {
             info.put(REPAY_ERROR,"未查询到账户余额信息");
+            return null;
         }
         // 获取用户的余额
         BigDecimal balance = account.getBankBalance();
@@ -362,6 +366,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 判断用户当前还款的项目是否存在
         if (borrow == null) {
             info.put(REPAY_ERROR,"未查询到项目信息");
+            return null;
         }
         // 获取项目还款方式
         String borrowStyle = StringUtils.isNotEmpty(borrow.getBorrowStyle()) ? borrow.getBorrowStyle() : null;
@@ -386,11 +391,11 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 一次性还款
         if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
             BigDecimal repayTotal = this.repayManageService.searchRepayTotal(userId, borrow);
-            if (repayTotal.compareTo(balance) == 0 || repayTotal.compareTo(balance) == -1) {
+            if (repayTotal.compareTo(balance) == 0 || repayTotal.compareTo(balance) < 0) {
                 // ** 用户符合还款条件，可以还款 *//*
                 // 查询用户在银行电子账户的余额
                 BigDecimal userBankBalance = this.getBankBalance(userId, account.getAccountId());
-                if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) == -1) {
+                if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) < 0) {
                     // ** 用户符合还款条件，可以还款 *//*
                     RepayBean repayByTerm = this.repayManageService.calculateRepay(userId, borrow);
                     return repayByTerm;
@@ -403,10 +408,10 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         } // 分期还款
         else {
             BigDecimal repayTotal = this.repayManageService.searchRepayByTermTotal(userId, borrow, borrowApr, borrowStyle, borrow.getBorrowPeriod());
-            if (repayTotal.compareTo(balance) == 0 || repayTotal.compareTo(balance) == -1) {
+            if (repayTotal.compareTo(balance) == 0 || repayTotal.compareTo(balance) < 0) {
                 // 查询用户在银行电子账户的可用余额
                 BigDecimal userBalance = this.getBankBalance(userId, account.getAccountId());
-                if (repayTotal.compareTo(userBalance) == 0 || repayTotal.compareTo(userBalance) == -1) {
+                if (repayTotal.compareTo(userBalance) == 0 || repayTotal.compareTo(userBalance) < 0) {
                     // ** 用户符合还款条件，可以还款 *//*
                     RepayBean repayByTerm = this.repayManageService.calculateRepayByTerm(userId, borrow);
                     return repayByTerm;

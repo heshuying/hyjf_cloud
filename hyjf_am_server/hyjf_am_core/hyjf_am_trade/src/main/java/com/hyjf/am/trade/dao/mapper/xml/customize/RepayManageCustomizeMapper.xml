@@ -317,7 +317,7 @@
 		hydb.borrow_period - hydbr.repay_period + 1
 		)
 		<include refid="Where_Clause_Repay_Org_List" />
-		ORDER BY repay_status, hydbr.repay_time
+		ORDER BY hydbr.repay_status, hydbr.repay_time
 		<if test="repayTimeOrder == 1" >
 			DESC
 		</if>
@@ -353,10 +353,10 @@
 				</if>
 			</if>
 			<if test="startDate != null and startDate != ''">
-				AND hydbr.repay_time <![CDATA[>=]]> unix_timestamp(CONCAT(#{startDate,jdbcType=VARCHAR},' 0:0:0'))
+				AND hydbr.repay_time <![CDATA[>=]]> unix_timestamp(CONCAT(#{startDate},' 0:0:0'))
 			</if>
 			<if test="endDate != null and endDate != ''">
-				AND hydbr.repay_time <![CDATA[<=]]> unix_timestamp(CONCAT(#{endDate,jdbcType=VARCHAR},' 23:59:59')
+				AND hydbr.repay_time <![CDATA[<=]]> unix_timestamp(CONCAT(#{endDate},' 23:59:59'))
 			</if>
 
 			<if test="repayStatus != null and repayStatus != ''">

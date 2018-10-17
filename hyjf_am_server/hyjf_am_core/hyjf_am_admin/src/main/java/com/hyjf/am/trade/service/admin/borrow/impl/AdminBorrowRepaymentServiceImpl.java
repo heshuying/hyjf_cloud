@@ -228,7 +228,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
                     if (listLast != null && listLast.size() > 0) {
                         repayTimeStart = listLast.get(0).getRepayTime()+"";
                     } else {
-                        repayTimeStart = String.valueOf(repayPlanBean.getCreateTime());
+                        repayTimeStart = GetDate.getDateTimeMyTimeInMillis(repayPlanBean.getCreateTime());
                     }
                     calculateRepayPlanAdvance(repayPlanBean, borrowNid, new BigDecimal(borrowApr), advanceDays,
                             repayTimeStart);
@@ -340,9 +340,8 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
                 BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(i);
                 String recoverTime = GetDate
                         .getDateTimeMyTimeInMillis(borrowRecoverPlan.getRecoverTime());
-                String repayStartTime = GetDate.getDateTimeMyTimeInMillis(Integer.parseInt(repayTimeStart));
                 // 获取这两个时间之间有多少天
-                int totalDays = GetDate.daysBetween(repayStartTime, recoverTime);
+                int totalDays = GetDate.daysBetween(repayTimeStart, recoverTime);
                 // 获取未还款前用户能够获取的本息和
                 BigDecimal userAccount = borrowRecoverPlan.getRecoverAccount();
                 // 获取用户投资项目分期后的投资本金

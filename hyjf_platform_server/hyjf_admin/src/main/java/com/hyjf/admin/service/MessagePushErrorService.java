@@ -5,7 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
-import com.hyjf.am.vo.admin.MessagePushTagVO;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.util.List;
@@ -30,12 +30,6 @@ public interface MessagePushErrorService {
      */
     List<MessagePushMsgHistoryVO> getRecordList(MessagePushErrorRequest request, int limitStart, int limitEnd);
 
-    /**
-     * 获取标签列表
-     *
-     * @return
-     */
-    List<MessagePushTagVO> getTagList();
 
     /**
      * 获取数据字典名称
