@@ -82,12 +82,14 @@ public class CouponTenderConsumer extends Consumer {
                 }
                 String ordId = (String) map.get("ordId");
                 String userId = (String) map.get("userId");
+                String userName = (String) map.get("userName");
                 BankCallBean bean = new BankCallBean();
                 bean.setLogOrderId(ordId);
                 bean.setLogIp(ip);
                 bean.setLogUserId(userId);
                 bean.setLogClient(Integer.parseInt(platform));
                 bean.setTxAmount(money);
+                bean.setLogUserName(userName);
                 BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
                 BorrowInfoVO borrowInfoVO = borrowClient.getBorrowInfoByNid(borrowNid);
                 couponService.borrowTenderCouponUse(couponGrantId, borrow, bean,borrowInfoVO);
