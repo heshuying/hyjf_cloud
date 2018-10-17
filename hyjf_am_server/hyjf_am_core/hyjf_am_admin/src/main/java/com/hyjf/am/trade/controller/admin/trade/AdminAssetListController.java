@@ -145,19 +145,19 @@ public class AdminAssetListController extends BaseController {
 	 */
 	private Map<String, Object> paramSet(AssetListRequest request) {
 	    Map<String, Object> mapParam = new HashMap<String, Object>();
-	    mapParam.put("assetIdSrch", request.getAssetIdSrch());
-	    mapParam.put("instCodeSrch", request.getInstCodeSrch());
-	    mapParam.put("assetTypeSrch", request.getAssetTypeSrch());
-	    mapParam.put("borrowNidSrch", request.getBorrowNidSrch());
-	    mapParam.put("planNidSrch", request.getPlanNidSrch());
-	    mapParam.put("userNameSrch", request.getUserNameSrch());
-	    mapParam.put("labelNameSrch", request.getLabelNameSrch());
-	    mapParam.put("bankOpenAccountSrch", request.getBankOpenAccountSrch());
-	    mapParam.put("verifyStatusSrch", request.getVerifyStatusSrch());
-	    mapParam.put("statusSrch", request.getStatusSrch());
-	    mapParam.put("recieveTimeStartSrch", request.getRecieveTimeStartSrch());
-	    mapParam.put("recieveTimeEndSrch", request.getRecieveTimeEndSrch());
-		mapParam.put("userTypeSrch", request.getUserTypeSrch());
+	    mapParam.put("assetIdSrch", request.getAssetIdSrch()==null?"":request.getAssetIdSrch());
+	    mapParam.put("instCodeSrch", request.getInstCodeSrch()==null?"":request.getInstCodeSrch());
+	    mapParam.put("assetTypeSrch", request.getAssetTypeSrch()==null?"":request.getAssetTypeSrch());
+	    mapParam.put("borrowNidSrch", request.getBorrowNidSrch()==null?"":request.getBorrowNidSrch());
+	    mapParam.put("planNidSrch", request.getPlanNidSrch()==null?"":request.getPlanNidSrch());
+	    mapParam.put("userNameSrch", request.getUserNameSrch()==null?"":request.getUserNameSrch());
+	    mapParam.put("labelNameSrch", request.getLabelNameSrch()==null?"":request.getLabelNameSrch());
+	    mapParam.put("bankOpenAccountSrch", request.getBankOpenAccountSrch()==null?"":request.getBankOpenAccountSrch());
+	    mapParam.put("verifyStatusSrch", request.getVerifyStatusSrch()==null?"":request.getVerifyStatusSrch());
+	    mapParam.put("statusSrch", request.getStatusSrch()==null?"":request.getStatusSrch());
+	    mapParam.put("recieveTimeStartSrch", request.getRecieveTimeStartSrch()==null?"":request.getRecieveTimeStartSrch());
+	    mapParam.put("recieveTimeEndSrch", request.getRecieveTimeEndSrch()==null?"":request.getRecieveTimeEndSrch());
+		mapParam.put("userTypeSrch", request.getUserTypeSrch()==null?"":request.getUserTypeSrch());
 	    return mapParam;
 	}
 }

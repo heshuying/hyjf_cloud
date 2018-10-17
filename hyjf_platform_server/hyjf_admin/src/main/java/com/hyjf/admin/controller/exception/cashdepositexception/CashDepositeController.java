@@ -21,6 +21,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,7 +48,7 @@ public class CashDepositeController extends BaseController {
      */
     @ApiOperation(value = "保证金不足的资产列表", notes = "保证金不足的资产列表")
     @PostMapping("/searchList")
-    public AdminResult<InitCashDepositListResponse> searchList(AssetListViewRequest viewRequest) {
+    public AdminResult<InitCashDepositListResponse> searchList(@RequestBody AssetListViewRequest viewRequest) {
     	JSONObject jsonObject = new JSONObject();
     	List<AssetListCustomizeVO> list = null ;
     	// 总条数
@@ -85,7 +86,7 @@ public class CashDepositeController extends BaseController {
      */
     @ApiOperation(value = "批量处理", notes = "批量处理")
     @PostMapping("/modifyAsset")
-    private JSONObject modifyAction(AssetListViewRequest form,String menuHide){
+    private JSONObject modifyAction(@RequestBody AssetListViewRequest form){
         JSONObject ret = new JSONObject();
         String assetId = form.getAssetIdSrch();
         String[] split = assetId.split(",");
@@ -93,9 +94,9 @@ public class CashDepositeController extends BaseController {
         for (String asid : split) {
             try {
             	
-                this.cashDepositeService.updateCashDepositeStatus(asid, menuHide);
+                this.cashDepositeService.updateCashDepositeStatus(asid, form.getMenuHide());
             }catch (Exception e){
-                logger.info("==>" + "保证金不足处理失败（资产编号assetId）："+asid+"处理方式（1重验，0 流标）："+menuHide);
+                logger.info("==>" + "保证金不足处理失败（资产编号assetId）："+asid+"处理方式（1重验，0 流标）："+form.getMenuHide());
                 flag=false;
             }
         }
