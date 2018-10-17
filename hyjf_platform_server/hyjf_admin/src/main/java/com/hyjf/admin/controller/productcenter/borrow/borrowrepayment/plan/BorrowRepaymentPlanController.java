@@ -228,7 +228,7 @@ public class BorrowRepaymentPlanController extends BaseController {
                     // 还款状态
                     else if (celLength == 24) {
                         if (StringUtils.isNotEmpty(record.getStatus())) {
-                            cell.setCellValue(record.getStatus().equals("0") ? "还款中" : "已还款");
+                            cell.setCellValue(record.getStatus().equals("0") ? "未还款" : "已还款");
                         }
                     }
                     // 实际还款日

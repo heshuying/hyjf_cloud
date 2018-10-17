@@ -39,4 +39,10 @@ public interface HjhInfoAccountBalanceCustomizeMapper {
 
     int getHjhAccountBalanceMonthCountNew(HjhAccountBalanceRequest request);
 
+    /**
+     *按日查询总计
+     * @return
+     */
+    public HjhAccountBalanceVO getHjhAccountBalanceSum(HjhAccountBalanceRequest request);
+
 }
