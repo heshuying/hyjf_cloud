@@ -1224,4 +1224,11 @@ public interface AmUserClient {
     void updateUserAuth(UserAuthRequest request);
 
     HjhUserAuthLogVO selectByExample(String orderId);
+    /**
+     * 根据用户的查询条件查询用户缴费授权列表
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    UserPayAuthResponse selectUserPayAuthList(UserPayAuthRequest request);
 }

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserPayAuthCustomizeMapper">
+    <resultMap id="BaseResultPayMap" type="com.hyjf.am.user.dao.model.customize.UserPayAuthCustomize" >
+        <id column="user_id" property="userid" jdbcType="INTEGER" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="auto_payment_end_time" property="signEndDate" jdbcType="VARCHAR" />
+        <result column="auto_payment_status" property="authType" jdbcType="INTEGER" />
+        <result column="account" property="bankid" jdbcType="VARCHAR" />
+        <result column="auto_payment_time" property="signDate" jdbcType="VARCHAR" />
+        <result column="payment_max_amt" property="paymentMaxAmt" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="countRecordTotalPay" resultType="java.lang.Integer" parameterType="Map">
+        SELECT
+        COUNT(hydual.user_id)
+        FROM
+        ht_hjh_user_auth hydual,ht_bank_open_account bank
+        <include refid="Where_Clause_Pay" />
+    </select>
+
+
+    <select id="selectUserPayAuthList" resultMap="BaseResultPayMap" parameterType="Map">
+        SELECT
+        hydual.user_id,
+        hydual.user_name,
+        hydur.mobile,
+        CASE
+        WHEN hydual.auto_payment_status = 0 and (hydual.payment_cancel_time is not null or  <![CDATA[ hydual.payment_cancel_time <>'' ]]> )  then 2
+        WHEN hydual.auto_payment_status = 0 and (hydual.payment_cancel_time is null or hydual.payment_cancel_time='') then 0
+        WHEN (hydual.auto_payment_status = 1)  then 1
+        END AS auto_payment_status,
+        CASE
+        WHEN hydual.auto_payment_status = 0 THEN ''
+        ELSE
+        DATE_FORMAT(STR_TO_DATE(hydual.auto_payment_end_time, '%Y%m%d'),'%Y-%m-%d') END AS auto_payment_end_time,
+        CASE
+        WHEN hydual.auto_payment_status = 0 THEN ''
+        ELSE
+        FROM_UNIXTIME(hydual.auto_payment_time,'%Y-%m-%d') END AS auto_payment_time,
+        bank.account,
+        hydual.payment_max_amt
+        FROM
+        ht_hjh_user_auth hydual
+        LEFT JOIN ht_bank_open_account bank ON bank.user_id = hydual.user_id
+        LEFT JOIN ht_user hydur ON hydur.user_id = hydual.user_id
+        <include refid="Where_Clause_Pay" />
+        ORDER BY bank.create_time DESC
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+    <sql id="Where_Clause_Pay">
+        <where>
+            hydual.user_id = bank.user_id
+            <if test="userName != null and userName !='' ">
+                AND hydual.user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="bankid != null and bankid !='' ">
+                AND bank.account  LIKE CONCAT('%', #{bankid}, '%')
+            </if>
+            <if test="authType != null and authType !='' and authType !=2 ">
+                AND hydual.auto_payment_status = #{authType,jdbcType=INTEGER} and (hydual.payment_cancel_time is null or hydual.payment_cancel_time='')
+            </if>
+            <if test="authTimeStart != null and authTimeStart != '' ">
+                AND FROM_UNIXTIME( hydual.auto_payment_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{authTimeStart}
+                AND auto_payment_status = 1
+            </if>
+            <if test="authTimeEnd != null and authTimeEnd != ''">
+                AND FROM_UNIXTIME( hydual.auto_payment_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{authTimeEnd}
+                AND auto_payment_status = 1
+            </if>
+
+            <if test="authType ==2">
+                AND (hydual.payment_cancel_time is not null or <![CDATA[ hydual.payment_cancel_time <>'' ]]>) AND hydual.auto_payment_status = 0
+            </if>
+
+            <if test="signTimeStart != null and signTimeStart != '' ">
+                AND DATE_FORMAT(STR_TO_DATE(hydual.auto_payment_end_time, '%Y%m%d'),'%Y-%m-%d') <![CDATA[>=]]> #{signTimeStart}
+                <!--         AND FROM_UNIXTIME( hydual.auto_payment_end_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{signTimeStart} -->
+            </if>
+            <if test="signTimeEnd != null and signTimeEnd != ''">
+                AND DATE_FORMAT(STR_TO_DATE(hydual.auto_payment_end_time, '%Y%m%d'),'%Y-%m-%d') <![CDATA[<=]]> #{signTimeEnd}
+                <!--         AND FROM_UNIXTIME( hydual.auto_payment_end_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{signTimeEnd} -->
+            </if>
+        </where>
+    </sql>
+
+</mapper>
