@@ -606,6 +606,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 data.put("couponInterest","");
             }
         }
+        logger.info("返回给前端结果为：{} ",JSONObject.toJSONString(data));
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);
         return result;
