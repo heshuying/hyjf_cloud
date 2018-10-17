@@ -1763,6 +1763,7 @@ public class BorrowCommonController extends BaseController {
 			for (BorrowCustomizeVO borrowCustomizeVO : vo) {
 				BorrowCustomizeVO bvo=new BorrowCustomizeVO();
 				bvo=borrowCustomizeVO;
+				bvo.setDelFlag(bvo.getStatus());
 				bvo.setStatus(map.get(bvo.getStatus()));
 				vo2.add(bvo);
 			}
