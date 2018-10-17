@@ -359,9 +359,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             resultVo.setCouponType("");
             JSONObject counts =  userCoupon;
             String couponAvailableCount = "0";
-            if(counts.containsKey("availableCouponListCount")){
+            if(counts!=null&&counts.containsKey("availableCouponListCount")){
                 couponAvailableCount = counts.getString("availableCouponListCount");
+            }else{
+                couponAvailableCount = "0";
             }
+
             if (couponConfig != null) {
                 if (couponConfig != null && couponConfig.getId() > 0 && couponConfig.getCouponType() == 1) {
                     resultVo.setCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");
