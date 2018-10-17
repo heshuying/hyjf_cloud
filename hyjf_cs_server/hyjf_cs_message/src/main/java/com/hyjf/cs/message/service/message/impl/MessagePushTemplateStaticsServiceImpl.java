@@ -4,7 +4,9 @@
 package com.hyjf.cs.message.service.message.impl;
 
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
+import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.mongo.mc.MessagePushTagDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.service.message.MessagePushTemplateStaticsService;
@@ -24,6 +26,8 @@ public class MessagePushTemplateStaticsServiceImpl implements MessagePushTemplat
 	private MessagePushTemplateStaticsDao staticsDao;
 	@Autowired
 	private MessagePushTagDao messagePushTagDao;
+	@Autowired
+	private AmConfigClient amConfigClient;
 
 	@Override
 	public List<MessagePushTemplateStatics> selectTemplateStatics(MessagePushTemplateStaticsRequest request) {
@@ -42,6 +46,10 @@ public class MessagePushTemplateStaticsServiceImpl implements MessagePushTemplat
 
 	@Override
 	public String selectTagName(String tagId) {
-		return messagePushTagDao.selectTagName(tagId);
+		MessagePushTagVO vo = amConfigClient.selectMsgTagByTagId(tagId);
+		if (vo != null) {
+			return vo.getTagName();
+		}
+		return null;
 	}
 }
