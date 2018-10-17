@@ -64,7 +64,7 @@ public class ParamNameController extends BaseConfigController {
         }
         logger.info("searchParamNamesList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
         List<ParamName> paramNameList = paramNameService.searchParamNamesList(request);
-        logger.info(JSON.toJSONString(paramNameList));
+        logger.debug(JSON.toJSONString(paramNameList));
         if(!CollectionUtils.isEmpty(paramNameList)){
             List<ParamNameVO> paramNameVOList = CommonUtils.convertBeanList(paramNameList,ParamNameVO.class);
             response.setResultList(paramNameVOList);

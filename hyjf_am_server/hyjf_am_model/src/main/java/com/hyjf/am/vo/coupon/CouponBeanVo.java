@@ -17,6 +17,8 @@ public class CouponBeanVo implements Serializable {
     private String operationPlatform;
     //优惠券额度
     private String couponQuota;
+    //优惠券额度
+    private String couponQuotaStr;
     //投资金额
     private String investQuota;
     //优惠券有效期
@@ -193,5 +195,13 @@ public class CouponBeanVo implements Serializable {
 
     public void setCouponUserCode(String couponUserCode) {
         this.couponUserCode = couponUserCode;
+    }
+
+    public String getCouponQuotaStr() {
+        return couponQuotaStr;
+    }
+
+    public void setCouponQuotaStr(String couponQuotaStr) {
+        this.couponQuotaStr = couponQuotaStr;
     }
 }

@@ -64,7 +64,7 @@ public class PermissionsController extends BaseConfigController {
         }
         logger.info("searchPermissionsList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
         List<AdminPermissions> adminPermissionsList = permissionsService.searchPermissionsList(request);
-        logger.info(JSON.toJSONString(adminPermissionsList));
+        logger.debug(JSON.toJSONString(adminPermissionsList));
         if(!CollectionUtils.isEmpty(adminPermissionsList)){
             List<AdminPermissionsVO> adminPermissionsVOList = CommonUtils.convertBeanList(adminPermissionsList,AdminPermissionsVO.class);
             response.setResultList(adminPermissionsVOList);

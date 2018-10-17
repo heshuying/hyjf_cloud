@@ -58,14 +58,12 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
         // 角色状态
         List<Integer> state = new ArrayList<Integer>();
         if (Validator.isNotNull(adminRole.getStateSrchOn())) {
-            state.add(adminRole.getStateSrchOn());
-        }
-        if (Validator.isNotNull(adminRole.getStateSrchOff())) {
-            state.add(adminRole.getStateSrchOff());
+            state.add(Integer.valueOf(adminRole.getStateSrchOn()));
         }
         if (state.size() > 0) {
             cra.andStatusIn(state);
         }
+        cra.andDelFlagEqualTo(0);
         return adminRoleMapper.countByExample(example);
     }
 
@@ -88,14 +86,9 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
         // 角色状态
         List<Integer> state = new ArrayList<Integer>();
         if (Validator.isNotNull(adminRole.getStateSrchOn())) {
-            state.add(adminRole.getStateSrchOn());
+        	state.add(Integer.valueOf(adminRole.getStateSrchOn()));
         }
-        if (Validator.isNotNull(adminRole.getStateSrchOff())) {
-            state.add(adminRole.getStateSrchOff());
-        }
-        if (Validator.isNotNull(adminRole.getStateSrch())) {
-            state.add(adminRole.getStateSrch());
-        }
+
         if (state.size() > 0) {
             cra.andStatusIn(state);
         }
@@ -105,6 +98,7 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
             example.setLimitEnd(limitEnd);
         }
         example.setOrderByClause(" sort ");
+        cra.andDelFlagEqualTo(0);
         return adminRoleMapper.selectByExample(example);
     }
 
@@ -116,7 +110,7 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
     public AdminRole getRecord(Integer id) {
         if (Validator.isNotNull(id)) {
             AdminRole adminRole = adminRoleMapper.selectByPrimaryKey(id);
-            if (adminRole != null && CustomConstants.FLAG_NORMAL.equals(adminRole.getDelFlag())) {
+            if (adminRole != null && adminRole.getDelFlag()==0) {
                 return adminRole;
             }
         }
@@ -292,8 +286,8 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
                             for (AdminRoleCustomize perm : permList) {
                                 joPerm = new JSONObject();
                                 joPerm.put("id", perm.getMenuUuid() + "_" + perm.getPermissionUuid());
-                                joPerm.put("key", perm.getMenuUuid() + "-" + perm.getPermissionUuid());
-                                joPerm.put("value", perm.getMenuUuid() + "-" + perm.getPermissionUuid());
+                                joPerm.put("key", perm.getMenuUuid() + "_" + perm.getPermissionUuid());
+                                joPerm.put("value", perm.getMenuUuid() + "_" + perm.getPermissionUuid());
                                 joPerm.put("text", perm.getPermissionName());
                                 joPerm.put("title", perm.getPermissionName());
                                 joPerm.put("type", "lock");
@@ -406,7 +400,7 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
         if (Validator.isNotNull(id)) {
             criteria.andIdNotEqualTo(id);
         }
-  //      criteria.andRoleNameEqualTo(roleName).andDelFlagEqualTo(CustomConstants.FLAG_NORMAL);
+        criteria.andRoleNameEqualTo(roleName).andDelFlagEqualTo(0);
         int cnt = adminRoleMapper.countByExample(example);
         return cnt;
     }

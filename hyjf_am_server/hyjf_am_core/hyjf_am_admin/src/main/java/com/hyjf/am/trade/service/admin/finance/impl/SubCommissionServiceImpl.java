@@ -110,9 +110,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
     @Override
     public List<SubCommission> searchSubCommissionList(SubCommissionRequest request) {
         SubCommissionExample example = convertExample(request);
-        List<SubCommission> subCommissionList = subCommissionMapper.selectByExample(example);
-        logger.info(JSON.toJSONString(subCommissionList));
-        return subCommissionList;
+        return subCommissionMapper.selectByExample(example);
     }
 
     @Override

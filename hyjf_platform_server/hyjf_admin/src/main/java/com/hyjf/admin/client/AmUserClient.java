@@ -1186,4 +1186,6 @@ public interface AmUserClient {
      * @param voList
      */
     void insertUtmList(List<ChannelCustomizeVO> voList);
+
+	CertificateAuthorityResponse selectCertificateAuthorityByCAName(String tureName);
 }

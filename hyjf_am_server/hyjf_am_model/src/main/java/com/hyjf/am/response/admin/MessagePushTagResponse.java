@@ -1,7 +1,7 @@
 package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.admin.MessagePushTagVO;
+import com.hyjf.am.vo.config.MessagePushTagVO;
 
 /**
  * @author lisheng

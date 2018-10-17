@@ -351,8 +351,11 @@ public class RepayManageController extends BaseTradeController {
             result.setData(Collections.emptyMap());
             return result;
         }
+        if(detaiResult!= null && "1".equals(detaiResult.getString("onlyAllRepay"))) {
+            isAllRepay = true;
+        }
 
-        resultMap.put("isAllRepay", isAllRepay);
+        resultMap.put("isAllRepay", isAllRepay ? "1" : "0");
         resultMap.put("paymentAuthStatus", "");
         resultMap.put("repayAuthStatus", "");
         resultMap.put("repayProject", detaiResult);
@@ -399,9 +402,9 @@ public class RepayManageController extends BaseTradeController {
 
         RepayBean repayBean = repayManageService.getRepayBean(userVO.getUserId(), userVO.getRoleId(), requestBean.getBorrowNid(), isAllRepay);
         if ("3".equals(userVO.getRoleId())) {// 垫付机构还款校验
-            repayManageService.checkForRepayRequest(requestBean.getBorrowNid(), requestBean.getPassword(),userVO, repayBean);
-        } else { // 借款人还款校验
             repayManageService.checkForRepayRequestOrg(requestBean.getBorrowNid(), requestBean.getPassword(),userVO, repayBean,0);
+        } else { // 借款人还款校验
+            repayManageService.checkForRepayRequest(requestBean.getBorrowNid(), requestBean.getPassword(),userVO, repayBean);
         }
         int errflag = repayBean.getFlag();
         if (1 == errflag) {
@@ -524,6 +527,8 @@ public class RepayManageController extends BaseTradeController {
         }else{
             String startDate  = GetDate.formatDate(new java.util.Date());
             String endDate = GetDate.formatDate(new java.util.Date());
+            requestBean.setStartDate(startDate);
+            requestBean.setEndDate(endDate);
 
             resultMap.put("startDate",startDate);
             resultMap.put("endDate",endDate);

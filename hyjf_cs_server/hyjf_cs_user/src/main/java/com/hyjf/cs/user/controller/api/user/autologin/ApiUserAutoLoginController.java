@@ -80,7 +80,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
      */
     @RequestMapping(value = "/thirdLogin")
     public ModelAndView thirdLogin(HttpServletRequest request, HttpServletResponse response, @ModelAttribute ApiUserPostBean bean){
-        logger.info("请求进来啦:【{}】", JSON.toJSONString(bean));
+        logger.debug("请求进来啦:【{}】", JSON.toJSONString(bean));
         // 验证
         checkPostBeanOfWeb(bean);
         // 验签
