@@ -452,38 +452,40 @@
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = htbi.project_type
         LEFT JOIN ht_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
 
-        WHERE
-        (
-        hydbpt.borrow_project_type = 'HZT'
-        OR hydbpt.borrow_project_type = 'HXF'
-        )
-        AND (
-        (
-        (
-        hydb.`status` = 1
-        AND hydb.verify_status = 3
-        )
-        )
-        OR (
-        hydb.`status` = 2
-        AND hydb.borrow_full_status = 0
-        AND (
-        hydb.verify_time + (
-        hydb.borrow_valid_time * 24 * 60 * 60
-        ) > UNIX_TIMESTAMP(NOW())
-        )
-        )
-        OR (
-        hydb.`status` = 3
-        )
-        OR (
-        hydb.`status` = 4
-        )
-        OR (
-        hydb.`status` = 5
-        )
+        WHERE 1=1
+        <if test="isPreview == null or isPreview == ''">
+           AND (
+            hydbpt.borrow_project_type = 'HZT'
+            OR hydbpt.borrow_project_type = 'HXF'
+            )
+            AND (
+            (
+            (
+            hydb.`status` = 1
+            AND hydb.verify_status = 3
+            )
+            )
+            OR (
+            hydb.`status` = 2
+            AND hydb.borrow_full_status = 0
+            AND (
+            hydb.verify_time + (
+            hydb.borrow_valid_time * 24 * 60 * 60
+            ) > UNIX_TIMESTAMP(NOW())
+            )
+            )
+            OR (
+            hydb.`status` = 3
+            )
+            OR (
+            hydb.`status` = 4
+            )
+            OR (
+            hydb.`status` = 5
+            )
 
-        )
+            )
+        </if>
         AND hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
     </select>
 

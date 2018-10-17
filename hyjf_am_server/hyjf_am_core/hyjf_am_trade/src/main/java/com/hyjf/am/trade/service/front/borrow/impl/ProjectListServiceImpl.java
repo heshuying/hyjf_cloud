@@ -94,6 +94,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     public ProjectCustomeDetailVO getProjectDetail(@Valid Map map) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("borrowNid",map.get("borrowNid"));
+        params.put("isPreview",map.get("isPreview") == null ? "" : map.get("isPreview"));
         return  webProjectListCustomizeMapper.getProjectDetail(map);
     }
 

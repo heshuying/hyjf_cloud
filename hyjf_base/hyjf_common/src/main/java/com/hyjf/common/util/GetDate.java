@@ -50,7 +50,7 @@ public class GetDate extends PropertyEditorSupport {
 
 	public static final String yyyymmddhhmmss_key = "yyyyMMddHHmmss";
 
-	public static final String yyyymmddhhmmssSS_key = "yyyyMMddHHmmssSS";
+	public static final String yyyymmddhhmmSS_key = "yyyyMMddHHmmSS";
 
 	public static final String short_time_sdf_key = "HH:mm";
 
@@ -73,7 +73,7 @@ public class GetDate extends PropertyEditorSupport {
 	public static final SimpleDateFormat date_sdf_wz = new SimpleDateFormat(date_sdf_wz_key);
 	public static final SimpleDateFormat time_sdf = new SimpleDateFormat(time_sdf_key);
 	public static final SimpleDateFormat yyyymmddhhmmss = new SimpleDateFormat(yyyymmddhhmmss_key);
-	public static final SimpleDateFormat yyyymmddhhmmssSS = new SimpleDateFormat(yyyymmddhhmmssSS_key);
+	public static final SimpleDateFormat yyyymmddhhmmssSS = new SimpleDateFormat(yyyymmddhhmmSS_key);
 	public static final SimpleDateFormat short_time_sdf = new SimpleDateFormat(short_time_sdf_key);
 	public static final SimpleDateFormat datetimeFormat = new SimpleDateFormat(datetimeFormat_key);
 	public static final SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat(datetimeFormathhmm_key);
@@ -397,8 +397,10 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static Timestamp str2Timestamp(String str) {
-		Date date = new Date();
-		date = str2Date(str, getDateFormat(date_sdf_key));
+		Date date = str2Date(str, getDateFormat(date_sdf_key));
+		if(date == null){
+			date = str2Date(str,getDateFormat(datetimeFormat_key));
+		}
 		return new Timestamp(date.getTime());
 	}
 
@@ -1309,6 +1311,9 @@ public class GetDate extends PropertyEditorSupport {
 		}
 		//SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date date = str2Date(dateParam, getDateFormat(yyyymmddhhmmss_key));
+		if(date == null){
+			date = str2Date(dateParam,getDateFormat(yyyymmddhhmmSS_key));
+		}
 		long timestamp = new Timestamp(date.getTime()).getTime() / 1000;
 		return Integer.valueOf(String.valueOf(timestamp));
 	}

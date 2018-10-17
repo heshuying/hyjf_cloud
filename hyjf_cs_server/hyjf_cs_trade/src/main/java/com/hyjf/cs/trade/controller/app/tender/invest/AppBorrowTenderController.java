@@ -107,7 +107,7 @@ public class AppBorrowTenderController extends BaseTradeController {
     public AppInvestInfoResultVO getInvestInfo(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端获取投资信息,请求参数：",JSONObject.toJSONString(tender));
         tender.setUserId(userId);
-        if(tender.getCouponId()!=null){
+        if(tender.getCouponId()!=null&&!"".equals(tender.getCouponId())){
             tender.setCouponGrantId(Integer.parseInt(tender.getCouponId()));
         }
         // 前端要求改成bean，不要封装
