@@ -251,27 +251,19 @@
 			<if test="borrowNid != null and borrowNid != ''">
 				AND b.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 			</if>
-			<!-- 借款编号 -->
+			<!-- 借款标题 -->
 			<if test="borrowName != null and borrowName != ''">
-				AND binfo.name LIKE CONCAT( #{borrowNid}, '%')
+				AND binfo.name LIKE CONCAT( #{borrowName}, '%')
 			</if>
 			<!-- 资产来源 -->
 			<if test="instCodeSrch != null and instCodeSrch != ''">
 				AND binfo.inst_code = #{instCodeSrch}
 			</if>
-			<!-- 还款方式 -->
-			<if test="repayStyleType != null and repayStyleType != ''">
-				AND bs.nid = #{repayStyleType}
-			</if>
 
 			<!-- 还款状态0还款中,1已还款 -->
-			<if test="statusSrch != null and statusSrch != ''">
-				<if test="statusSrch ==0">
-					AND b.status= 4
-				</if>
-				<if test="statusSrch ==1">
-					AND b.status= 5
-				</if>
+			<!-- 还款状态 -->
+			<if test="status != null and status != ''">
+				AND rp.repay_status = #{status}
 			</if>
 			<!-- 最后还款日 -->
 			<if test="repayLastTimeStartSrch != null and repayLastTimeStartSrch != ''">
@@ -281,6 +273,15 @@
 			<if test="repayLastTimeEndSrch != null and repayLastTimeEndSrch != ''">
 				AND rp.repay_time <![CDATA[<=]]>
 				unix_timestamp(#{repayLastTimeEndSrch})+86399
+			</if>
+			<!-- 发布日期 -->
+			<if test="verifyTimeStartSrch != null and verifyTimeStartSrch != ''">
+				AND b.verify_time <![CDATA[>=]]>
+				unix_timestamp(#{verifyTimeStartSrch})
+			</if>
+			<if test="verifyTimeEndSrch != null and verifyTimeEndSrch != ''">
+				AND b.verify_time <![CDATA[<=]]>
+				unix_timestamp(#{verifyTimeEndSrch})+86399
 			</if>
 		</where>
 	</sql>
