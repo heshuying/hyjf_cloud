@@ -62,6 +62,7 @@ public class BankRepayFreezeServiceImpl extends BaseServiceImpl implements com.h
     @Override
     public boolean repayUnfreeze(BankRepayFreezeLogVO repayFreezeFlog) {
         BankCallBean bean = new BankCallBean();
+        bean.setTxCode(BankCallConstant.TXCODE_BALANCE_UNFREEZE);
         bean.setAccountId(repayFreezeFlog.getAccount());// 电子账号
         bean.setOrderId(GetOrderIdUtils.getUsrId(repayFreezeFlog.getUserId()));// 订单号
         bean.setOrgOrderId(repayFreezeFlog.getOrderId());// 原订单号
