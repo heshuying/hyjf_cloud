@@ -83,7 +83,6 @@ public class BorrowRegistExceptionController extends BaseController {
      * 标的备案异常处理
      * @auth sunpeikai
      * @param request 异常列表筛选检索条件
-     * @param  admin项目-当前登录用户id
      * @return
      */
     @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")

@@ -173,7 +173,7 @@ public class MessagePushTagController {
      * @return
      */
     @GetMapping("/countByTagCode/{id}/{tagCode}")
-    public MessagePushTagResponse countByTagCode(@PathVariable Integer id,@PathVariable String tagCode) {
+    public MessagePushTagResponse countByTagCode(Integer id, @PathVariable String tagCode) {
         MessagePushTagResponse response = new MessagePushTagResponse();
         int result = 0;
         try {

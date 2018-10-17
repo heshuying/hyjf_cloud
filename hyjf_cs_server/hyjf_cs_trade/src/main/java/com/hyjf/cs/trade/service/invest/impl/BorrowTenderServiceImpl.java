@@ -1536,6 +1536,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             params.put("ordId", bean.getLogOrderId());
             // 用户编号
             params.put("userId", userId+"");
+            params.put("userName", bean.getLogUserName());
 
             try {
                 couponTenderProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
@@ -1698,6 +1699,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         tenderBg.setTenderUserAttribute(userInfo.getAttribute());
         tenderBg.setClient(bean.getLogClient());
         tenderBg.setUserName(user.getUsername());
+        bean.setLogUserName(user.getUsername());
         Integer attribute = null;
         if (userInfo != null) {
             // 获取投资用户的用户属性

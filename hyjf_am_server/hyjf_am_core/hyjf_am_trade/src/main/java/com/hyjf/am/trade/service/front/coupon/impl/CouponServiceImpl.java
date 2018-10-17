@@ -80,6 +80,8 @@ public class CouponServiceImpl extends CustomizeMapper implements CouponService{
 
 		CouponRealTender crt = new CouponRealTender();
 		BeanUtils.copyProperties(couponRealTender,crt);
+		crt.setCreateUserId(borrowTenderCpn.getUserId());
+		crt.setUpdateUserId(borrowTenderCpn.getUserId());
 		logger.info("散标优惠券投资  开始插入 couponRealTender 参数为 {} ",JSONObject.toJSONString(crt));
 		couponRealTenderMapper.insertSelective(crt);
 

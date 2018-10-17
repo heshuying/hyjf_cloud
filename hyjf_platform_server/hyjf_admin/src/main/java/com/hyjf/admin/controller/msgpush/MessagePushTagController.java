@@ -160,7 +160,7 @@ public class MessagePushTagController extends BaseController {
     @ApiOperation(value = "检查名称唯一性", notes = "检查名称唯一")
     @RequestMapping(value = "/checkAction", method = RequestMethod.POST)
     public AdminResult checkAction(@RequestBody MessagePushTagRequest request) {
-        Integer id = 0;
+        Integer id = null;
         if (request.getId() != null) {
             id = request.getId();
         }
