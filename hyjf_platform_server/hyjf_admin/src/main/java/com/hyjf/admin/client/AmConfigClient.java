@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
+import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -1450,4 +1451,17 @@ public interface AmConfigClient {
 	 * @auth nxl
 	 */
 	JxBankConfigVO getBankConfigByBankName(String bankName);
+	/**
+	 * 授權配置
+	 * @return
+	 */
+	AdminAuthConfigResponse getAuthConfigList();
+
+	/**
+	 * 操作记录
+	 * @return
+	 */
+	AdminAuthConfigLogResponse getAuthConfigLogList(HjhUserAuthConfigLogCustomizeVO request);
+
+
 }

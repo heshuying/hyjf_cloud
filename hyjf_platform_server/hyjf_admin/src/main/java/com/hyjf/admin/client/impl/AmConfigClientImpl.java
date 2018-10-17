@@ -17,6 +17,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
+import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -2151,6 +2152,36 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+
+
+    /**
+     * 授權配置
+     * @return
+     */
+    @Override
+    public AdminAuthConfigResponse getAuthConfigList() {
+        String url = "http://AM-ADMIN/am-config/configCenter/authConfig/getAuthConfigList";
+        AdminAuthConfigResponse response = restTemplate.getForEntity(url,AdminAuthConfigResponse.class).getBody();
+        if (Validator.isNotNull(response)) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 授权操作记录
+     * @return
+     */
+    @Override
+    public AdminAuthConfigLogResponse getAuthConfigLogList(HjhUserAuthConfigLogCustomizeVO request) {
+        String url = "http://AM-ADMIN/am-config/configCenter/authConfig/getAuthConfigLogList";
+        AdminAuthConfigLogResponse response = restTemplate.postForEntity(url,request,AdminAuthConfigLogResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response;
+        }
+        return null;
+    }
+
 
 
 }
