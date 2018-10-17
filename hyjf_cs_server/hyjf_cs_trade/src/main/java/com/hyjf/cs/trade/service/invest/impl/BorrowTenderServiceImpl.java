@@ -859,7 +859,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     investInfo.setCouponType("代金券");
                 }
                 investInfo.setCouponQuota(couponConfig.getCouponQuota().toString());
-                investInfo.setCouponId(couponConfig.getId() + "");
+                investInfo.setCouponId(tender.getCouponGrantId()+"");
                 investInfo.setIsUsedCoupon("1");
             } else {
                 investInfo.setCouponDescribe("暂无可用");

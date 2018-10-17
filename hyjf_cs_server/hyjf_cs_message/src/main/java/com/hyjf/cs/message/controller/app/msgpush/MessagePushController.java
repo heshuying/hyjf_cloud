@@ -61,8 +61,6 @@ public class MessagePushController extends BaseController {
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");
 
-		page = Integer.valueOf(page);
-		pageSize = Integer.valueOf(pageSize);
 		int count = msgPushService.countMsgHistoryRecord(1, userId, null);
 		ret.put("count", count);
 		int limitStart = pageSize * (page - 1);
@@ -128,8 +126,6 @@ public class MessagePushController extends BaseController {
 
 		// 返回列表
 		List<MsgPushBean> msgPushList = new ArrayList<MsgPushBean>();
-		page = Integer.valueOf(page);
-		pageSize = Integer.valueOf(pageSize);
 		int limitStart = pageSize * (page - 1);
 		try {
 			List<MessagePushMsgHistory> list = msgPushService.getMsgHistoryList(0, userId, null, limitStart, pageSize);
