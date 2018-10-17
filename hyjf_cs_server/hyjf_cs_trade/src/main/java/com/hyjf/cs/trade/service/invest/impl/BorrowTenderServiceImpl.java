@@ -537,7 +537,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         data.put("investDesc","恭喜您，投资成功！");
         logger.info("获取投资成功结果参数 userId {}  logOrdId {} borrowNid {}",userId,logOrdId,borrowNid);
         BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
-        logger.info("获取投资成功结果为:"+borrowTender);
+        logger.info("获取投资成功结果为:"+JSONObject.toJSONString(borrowTender));
 
         if(borrowTender!=null){
             BigDecimal earnings = new BigDecimal("0");
