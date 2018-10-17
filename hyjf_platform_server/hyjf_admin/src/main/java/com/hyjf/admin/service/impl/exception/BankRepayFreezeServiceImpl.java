@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl.exception;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
@@ -73,6 +74,7 @@ public class BankRepayFreezeServiceImpl extends BaseServiceImpl implements com.h
         bean.setLogClient(0);
         // 调用接口
         BankCallBean callApiBg = BankCallUtils.callApiBg(bean);
+        logger.info("还款冻结撤销请求银行接口返回：" + JSON.toJSONString(callApiBg));
         if (Validator.isNotNull(callApiBg)) {
             logger.info("记录状态: {}", callApiBg.getState());
 

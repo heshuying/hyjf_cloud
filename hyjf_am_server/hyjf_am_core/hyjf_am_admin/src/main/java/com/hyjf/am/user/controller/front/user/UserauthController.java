@@ -108,7 +108,7 @@ public class UserauthController extends BaseController {
 		try {
 			if (retBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
 				this.userauthService.updateUserAuthState(userId, retBean);
-				jsonObject.put("status","00");
+				jsonObject.put("status",Response.SUCCESS);
 				jsonObject.put("msg","查询成功");
 			} else {
 				String retCode = retBean != null ? retBean.getRetCode() : "";
