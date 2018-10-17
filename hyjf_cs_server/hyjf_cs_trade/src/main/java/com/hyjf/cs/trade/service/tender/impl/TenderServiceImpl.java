@@ -106,12 +106,12 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 		UserInfoVO usersInfo = amUserClient.findUsersInfoById(userIdInt);// andUserIdEqualTo(userId);
 		
 		if (null != usersInfo) {
-			if (usersInfo.getRoleId() == 3) {// 担保机构用户
-				return jsonMessage("担保机构用户不能进行投资", "1");
+			String roleIsOpen = systemConfig.getRoleIsopen();
+			if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+				if (usersInfo.getRoleId() != 1) {// 非投资用户
+					return jsonMessage("仅限出借人进行投资", "1");
+				}
 			}
-			/*if (usersInfo.getRoleId() == 2) {// 借款人不能投资
-			    return jsonMessage("仅限出借人进行投资业务", "1");
-            }*/
 		} else {
 			return jsonMessage("账户信息异常", "1");
 		}
@@ -433,12 +433,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 	/**
 	 * 
 	 * 投资预插入
-	 * 
-	 * @param borrowNid
-	 * @param orderId
-	 * @param userId
-	 * @param account
-	 * @param ip
+	 *
 	 * @return
 	 * @author Administrator
 	 * @throws Exception
@@ -451,10 +446,8 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 
 	/**
 	 * 投资失败后,投标申请撤销
-	 * 
-	 * @param borrowUserId
+	 *
 	 * @param investUserId
-	 * @param bean
 	 * @return
 	 * @throws Exception
 	 */

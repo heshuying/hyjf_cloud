@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.bean.RedisBorrow;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -18,6 +19,7 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.batch.AutoTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -50,6 +52,9 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
     private AmTradeClient amTradeClient;
     @Autowired
     private AmUserClient amUserClient;
+
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 取得自动投资用加入计划列表
@@ -153,6 +158,17 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         if (bankOpenAccount == null) {
             logger.error("====[" + accedeOrderId + "]" + "用户没开户 " + hjhAccede.getUserId());
             return false;
+        }
+
+        UserInfoVO usersInfo = amUserClient.findUsersInfoById(hjhAccede.getUserId());
+        if (null != usersInfo) {
+            String roleIsOpen = systemConfig.getRoleIsopen();
+            if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+                if (usersInfo.getRoleId() != 1) {// 非投资用户
+                    logger.error("====[" + accedeOrderId + "]" + "仅限出借人进行投资 " + hjhAccede.getUserId());
+                    return false;
+                }
+            }
         }
         String tenderUsrcustid = bankOpenAccount.getAccount();//获取江西银行电子账号
 

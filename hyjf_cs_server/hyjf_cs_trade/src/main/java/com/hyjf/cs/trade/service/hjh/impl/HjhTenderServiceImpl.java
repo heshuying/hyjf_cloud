@@ -75,8 +75,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     public static final String PROSPECTIVE_EARNINGS = "历史回报 ";
 
     @Autowired
-    private SystemConfig systemConfig;
-    @Autowired
     private AmUserClient amUserClient;
     @Autowired
     private AmTradeClient amTradeClient;
@@ -92,7 +90,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
     @Autowired
     private AmTradeProducer amTradeProducer;
-
+    @Autowired
+    private SystemConfig systemConfig;
     @Autowired
     private AuthService authService ;
     /**
@@ -137,7 +136,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         logger.info("加入计划投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
         // 查询用户信息
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
-
         UserVO user = amUserClient.findUserById(userId);
         // 检查用户状态  角色  授权状态等  是否允许投资
         checkUser(user, userInfo);
@@ -1170,16 +1168,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         if (user == null || userInfo == null) {
             throw new CheckException(MsgEnum.ERR_USER_NOT_EXISTS);
         }
-        if (null != userInfo) {
-            // 合规校验角色
-            String roleIsOpen = systemConfig.getRoleIsOpen();
-            if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-                if (userInfo.getRoleId() != 1) {// 非投资人
-                    // 仅限出借人进行投资
-                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
-                }
+
+        String roleIsOpen = systemConfig.getRoleIsopen();
+        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+            if (userInfo.getRoleId() != 1) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
             }
         }
+
         // 判断用户是否禁用
         if (user.getStatus() == 1) {// 0启用，1禁用
             throw new CheckException(MsgEnum.ERR_USER_INVALID);

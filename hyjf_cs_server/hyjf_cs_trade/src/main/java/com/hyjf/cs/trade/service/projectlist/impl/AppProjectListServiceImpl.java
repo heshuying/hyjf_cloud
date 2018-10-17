@@ -37,6 +37,7 @@ import com.hyjf.cs.trade.bean.app.AppTransferDetailBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.projectlist.AppProjectListService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
@@ -82,7 +83,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
     @Autowired
     private RepayPlanService repayPlanService;
-
+    @Autowired
+    private AuthService authService;
     @Autowired
     private SystemConfig systemConfig;
 
@@ -221,10 +223,17 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         userValidation.put("isRiskTested", isRiskTested);
         userValidation.put("isAutoInves", isAutoInves);
         userValidation.put("isInvested", isInvested);
+        // 服务费授权状态
         userValidation.put("paymentAuthStatus", paymentAuthStatus);
-        userValidation.put("roleId", roleId);
         // 角色验证开关
-        userValidation.put("isCheckUserRole", systemConfig.getRoleIsOpen());
+        userValidation.put("isCheckUserRole", Boolean.parseBoolean(systemConfig.getRoleIsopen()));
+        // 服务费授权开关
+        userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+        // 自动投资授权开关
+        userValidation.put("invesAuthOn",authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+        // 自动债转授权开关
+        userValidation.put("creditAuthOn",authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+        userValidation.put("roleId", roleId);
 
         jsonObject.put("userValidation", userValidation);
         if (borrow == null) {
@@ -1355,9 +1364,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 userValidation.put("roleId", 0);
             }
 
-            // 角色验证开关
-            userValidation.put("isCheckUserRole", Boolean.parseBoolean(systemConfig.getRoleIsOpen()));
-
             // 是否是新手0新手 1老手
           /*  if ( null != userVO.getInvestflag() && userVO.getInvestflag() == 0) {
                 userValidation.put("investflag", true);
@@ -1372,6 +1378,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }
             // 缴费授权状态
             userValidation.put("paymentAuthStatus", userVO.getPaymentAuthStatus());
+            // 角色验证开关
+            userValidation.put("isCheckUserRole", Boolean.parseBoolean(systemConfig.getRoleIsopen()));
+            // 服务费授权开关
+            userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
 
             try {
 
@@ -1589,7 +1599,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     /**
      * 创建计划的标的组成分页信息
      * @param result
-     * @param planId
+     * @param planNid
      * @param pageNo
      * @param pageSize
      */
@@ -1644,8 +1654,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     /**
      * app 端汇计划加入记录
      * @param result
-     * @param planId
-     * @param currentPage
+     * @param planNid
+     * @param pageNo
      * @param pageSize
      */
     @Override
@@ -1779,7 +1789,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     /**
      * 检查当前访问用户是否登录、是否开户、是否设置交易密码、是否允许使用、是否完成风险测评、是否授权
      *
-     * @param token
      */
     private void setUserValidationInfo(JSONObject resultMap, Integer userId) {
 
@@ -1805,14 +1814,13 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             userLoginInfo.setSetPassword(userVO.getIsSetPassword() == 1 ? Boolean.TRUE : Boolean.FALSE);
             // 检查用户角色是否能投资  合规接口改造之后需要判断
             UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
-            // 返回前端角色
-            userLoginInfo.setRoleId(userInfo.getRoleId());
             if (null != userInfo) {
                 userLoginInfo.setIsAllowedTender(Boolean.TRUE);
-                if (userInfo.getRoleId() == 3) {// 担保机构用户
+                // 担保机构用户
+                if (userInfo.getRoleId() == 3) {
                     userLoginInfo.setIsAllowedTender(Boolean.FALSE);
                 }
-                if("true".equals(systemConfig.getRoleIsOpen())){
+                if("true".equals(systemConfig.getRoleIsopen())){
                     if (userInfo.getRoleId() == 2) {// 借款人不能投资
                         userLoginInfo.setIsAllowedTender(Boolean.FALSE);
                     }

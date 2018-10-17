@@ -116,17 +116,9 @@ public class SystemConfig {
     @Value("${wrb.callback.bind.url}")
     private String wrncallbackbindurl;
 
-    /*需要在cs-user的工程配置里面添加 hyjf.role.isopen */
-    // 是否开启修改手机号  true可以  false  不行
-    @Value("${hyjf.app.allowed.update.mobile}")
-    private String isUpdateMobile;
-    /*需要在cs-user的工程配置里面添加 hyjf.app.exit.label.show.flag */
-    // 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
-    @Value("${hyjf.app.exit.label.show.flag}")
-    private String exitLabelShowFlag;
-    /*需要在cs-user的工程配置里面添加 hyjf.role.isopen */
+    /*角色验证是否开启 add by cwyang 合规角色验证需求 */
     @Value("${hyjf.role.isopen}")
-    private String roleIsOpen;
+    private String roleIsopen;
 
     public String getWrncallbackbindurl() {
         return wrncallbackbindurl;
@@ -344,27 +336,11 @@ public class SystemConfig {
         this.testServerIp = testServerIp;
     }
 
-    public String getIsUpdateMobile() {
-        return isUpdateMobile;
+    public String getRoleIsopen() {
+        return roleIsopen;
     }
 
-    public void setIsUpdateMobile(String isUpdateMobile) {
-        this.isUpdateMobile = isUpdateMobile;
-    }
-
-    public String getExitLabelShowFlag() {
-        return exitLabelShowFlag;
-    }
-
-    public void setExitLabelShowFlag(String exitLabelShowFlag) {
-        this.exitLabelShowFlag = exitLabelShowFlag;
-    }
-
-    public String getRoleIsOpen() {
-        return roleIsOpen;
-    }
-
-    public void setRoleIsOpen(String roleIsOpen) {
-        this.roleIsOpen = roleIsOpen;
+    public void setRoleIsopen(String roleIsopen) {
+        this.roleIsopen = roleIsopen;
     }
 }

@@ -30,17 +30,12 @@ public class UserLoginInfo {
      * 缴费授权状态
      */
     private Integer paymentAuthStatus;
-    /**
-     * 缴费授权开关
-     */
+    // 缴费授权开关
     private Integer paymentAuthOn;
     // 自动投资授权开关
     private Integer invesAuthOn;
     // 自动债转授权开关
     private Integer creditAuthOn;
-
-    private Integer roleId;
-
     //角色认证是否打开,true认证,false不认证
     private Boolean isCheckUserRole;
 
@@ -116,22 +111,6 @@ public class UserLoginInfo {
         this.isAllowedTender = isAllowedTender;
     }
 
-    public String getIsRiskTested() {
-        return isRiskTested;
-    }
-
-    public void setIsRiskTested(String isRiskTested) {
-        this.isRiskTested = isRiskTested;
-    }
-
-    public Boolean getAllowedTender() {
-        return isAllowedTender;
-    }
-
-    public void setAllowedTender(Boolean allowedTender) {
-        isAllowedTender = allowedTender;
-    }
-
     public Integer getPaymentAuthOn() {
         return paymentAuthOn;
     }
@@ -156,19 +135,11 @@ public class UserLoginInfo {
         this.creditAuthOn = creditAuthOn;
     }
 
-    public Integer getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
-    }
-
     public Boolean getIsCheckUserRole() {
         return isCheckUserRole;
     }
 
-    public void setIsCheckUserRole(Boolean isCheckUserRole) {
-        this.isCheckUserRole = isCheckUserRole;
+    public void setIsCheckUserRole(Boolean checkUserRole) {
+        isCheckUserRole = checkUserRole;
     }
 }

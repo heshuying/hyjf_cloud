@@ -797,7 +797,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			// 设置自动债转授权开关
 			result.setCreditAuthOn(creditCconfig.getEnabledStatus() + "");
 			// 是否校验用户角色
-			/*result.setIsCheckUserRole(PropUtils.getSystem(CustomConstants.HYJF_ROLE_ISOPEN));*/
+			result.setIsCheckUserRole(systemConfig.getRoleIsopen());
 			// 校验用户角色的描述
 			result.setCheckUserRoleDesc(checkUserRoleDesc);
 
