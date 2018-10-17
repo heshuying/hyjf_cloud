@@ -91,6 +91,7 @@
 
     <select id="getCouponUser" resultMap="BaseResultMap" parameterType="java.util.Map">
 	    SELECT
+	    	cc.id id,
 			cc.coupon_code,
 			cc.coupon_type,
 			cc.coupon_system,
