@@ -10,9 +10,9 @@ import com.hyjf.am.config.service.BankSettingService;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 public class BankSettingServiceImpl implements BankSettingService {
 
-    @Autowired
+    @Resource
     JxBankConfigMapper jxBankConfigMapper;
 
     /**
@@ -80,6 +80,7 @@ public class BankSettingServiceImpl implements BankSettingService {
         adminRequest.setCreateTime(GetDate.getNowTime10());
         adminRequest.setUpdateTime(GetDate.getNowTime10());
         BeanUtils.copyProperties(adminRequest,jxBankConfig);
+        jxBankConfig.setSortId(adminRequest.getSortId().shortValue());
         return jxBankConfigMapper.insertSelective(jxBankConfig);
     }
 
@@ -93,6 +94,7 @@ public class BankSettingServiceImpl implements BankSettingService {
         JxBankConfig record = new JxBankConfig();
         BeanUtils.copyProperties(adminRequest,record);
         record.setUpdateTime(GetDate.getDate());
+        record.setSortId(adminRequest.getSortId().shortValue());
         return  jxBankConfigMapper.updateByPrimaryKeySelective(record);
     }
 

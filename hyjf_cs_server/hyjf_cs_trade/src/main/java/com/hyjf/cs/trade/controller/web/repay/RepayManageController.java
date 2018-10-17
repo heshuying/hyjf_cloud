@@ -351,8 +351,11 @@ public class RepayManageController extends BaseTradeController {
             result.setData(Collections.emptyMap());
             return result;
         }
+        if(detaiResult!= null && "1".equals(detaiResult.getString("onlyAllRepay"))) {
+            isAllRepay = true;
+        }
 
-        resultMap.put("isAllRepay", isAllRepay);
+        resultMap.put("isAllRepay", isAllRepay ? "1" : "0");
         resultMap.put("paymentAuthStatus", "");
         resultMap.put("repayAuthStatus", "");
         resultMap.put("repayProject", detaiResult);

@@ -6,6 +6,8 @@ package com.hyjf.cs.trade.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.mq.base.Consumer;
@@ -69,8 +71,8 @@ public class CouponTenderConsumer extends Consumer {
             String msgBody = new String(paramBean.getBody());
             map = JSONObject.parseObject(msgBody, Map.class);
             logger.info("散标优惠券投资请求参数：{}",JSONObject.toJSONString(map));
+            String couponGrantId = (String) map.get("couponGrantId");
             try {
-                String couponGrantId = (String) map.get("couponGrantId");
                 String borrowNid = (String) map.get("borrowNid");
                 String money = (String) map.get("money");
                 String platform = (String) map.get("platform");
@@ -94,6 +96,10 @@ public class CouponTenderConsumer extends Consumer {
                 e.printStackTrace();
                 logger.info("操作失败了:"+JSONObject.toJSONString(e));
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            }finally {
+                if(couponGrantId!=null){
+                    RedisUtils.del(RedisConstants.COUPON_TENDER_KEY+couponGrantId);
+                }
             }
         }
     }

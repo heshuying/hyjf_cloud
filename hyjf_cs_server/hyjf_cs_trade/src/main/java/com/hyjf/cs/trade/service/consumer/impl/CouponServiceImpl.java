@@ -459,7 +459,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      */
     @Override
     public void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean, BorrowInfoVO borrowInfoVO) {
-        boolean isUsed = RedisUtils.tranactionSet(RedisConstants.COUPON_TENDER_KEY, 300);
+        boolean isUsed = RedisUtils.tranactionSet(RedisConstants.COUPON_TENDER_KEY+couponGrantId, 300);
         if (!isUsed) {
             logger.error("当前优惠券正在使用....");
             return;
