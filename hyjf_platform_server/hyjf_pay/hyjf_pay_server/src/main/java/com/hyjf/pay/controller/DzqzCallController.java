@@ -118,8 +118,10 @@ public class DzqzCallController extends BaseController {
                 fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_AUTO_SIGN_TAG,JSON.toJSONBytes(bean)));
             }
         } catch (Exception e) {
-            log.info("---------------合同签署异步返回异常，txcode:" + bean.getResult_code() + ",logordid:" + orderId);
             e.printStackTrace();
+            log.info("--------------合同签署异步返回异常" + e.getMessage());
+            log.info("---------------合同签署异步返回异常，txcode:" + bean.getResult_code() + ",logordid:" + orderId);
+
         }
         return "success";
     }
