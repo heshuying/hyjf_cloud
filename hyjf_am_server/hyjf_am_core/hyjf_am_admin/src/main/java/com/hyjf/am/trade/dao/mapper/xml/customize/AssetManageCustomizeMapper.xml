@@ -2094,7 +2094,14 @@
         hcr.recover_account repay_account_wait,
         hcr.recover_account received_interest,
 
-        IFNULL(FROM_UNIXTIME( IF(hcr.recover_time='',NULL,hcr.recover_time), '%Y-%m-%d' ),'--') AS last_payment_time,
+        <choose>
+            <when test="type == 2">
+                IFNULL(FROM_UNIXTIME( IF(hcr.recover_yestime='',NULL,hcr.recover_yestime), '%Y-%m-%d' ),'--') AS last_payment_time,
+            </when>
+            <otherwise>
+                IFNULL(FROM_UNIXTIME( IF(hcr.recover_time='',NULL,hcr.recover_time), '%Y-%m-%d' ),'--') AS last_payment_time,
+            </otherwise>
+        </choose>
 
         FROM_UNIXTIME(hbtc.create_time,'%Y-%m-%d') as create_time,
         hbtc.create_time as order_by_addtime,
@@ -2129,7 +2136,7 @@
                 ORDER BY t.order_by_addtime desc, t.order_id asc
             </when>
             <when test="type == 2">
-                ORDER BY t.orderby_quit_time desc, t.order_id asc
+                ORDER BY t.last_payment_time desc, t.order_id asc
             </when>
         </choose>
         LIMIT #{limitStart} , #{limitEnd}
