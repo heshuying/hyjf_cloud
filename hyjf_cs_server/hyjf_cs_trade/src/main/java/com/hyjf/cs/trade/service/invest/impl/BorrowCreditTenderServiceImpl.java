@@ -1316,7 +1316,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NEGATIVE);
             }
         } catch (Exception e) {
-            logger.error("格式化错误 {}----- {}",request.getAssignCapital(),e);
+            logger.error("格式化错误 ",e);
             // 投资金额不能为整数
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INT);
         }
