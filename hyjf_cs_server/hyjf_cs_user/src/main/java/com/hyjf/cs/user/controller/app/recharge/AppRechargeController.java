@@ -49,6 +49,8 @@ public class AppRechargeController extends BaseUserController {
     private AppRechargeService appRechargeService;
     @Autowired
     private SystemConfig systemConfig;
+
+
     /** 充值描述 */
     private final String CARD_DESC = "限额:单笔{0}，单日{1}，单月{2}";
     private final String RECHARGE_KINDLY_REMINDER = "注：网银转账时，银行请选择（城市商业银行）江西银行或南昌银行。线下充值的到账时间一般为1-3天（具体到账时间以银行的实际到账时间为准）。";
@@ -289,6 +291,9 @@ public class AppRechargeController extends BaseUserController {
                 result.setStatus(MsgEnum.ERR_DATA_VERIFICATION.getCode());
                 result.setStatusDesc(MsgEnum.ERR_DATA_VERIFICATION.getMsg());
             }
+            //add by cwyang 20180629 增加app3.0.9的转账指南
+            String transferUrl = systemConfig.getAppRechangeGuideUrl();
+            result.setTransferGuideURL(systemConfig.getWebHost() + transferUrl);
         }
         /** 充值描述 */
         result.setRcvAccountName(RCV_ACCOUNT_NAME);

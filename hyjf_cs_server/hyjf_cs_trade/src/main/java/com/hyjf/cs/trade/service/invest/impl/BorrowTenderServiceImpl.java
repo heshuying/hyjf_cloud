@@ -58,6 +58,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -793,6 +794,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         return earnings;
     }
+
+
     /**
      * 获取APP端投资信息
      *
@@ -811,6 +814,23 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 投资类型
         String investType = tender.getBorrowNid().substring(0, 3);
         String creditNid = tender.getBorrowNid().substring(3);
+        String isConfirm = tender.getIsConfirm();//是否最后确认
+
+
+        //add by cwyang APP3.0.9 确认是否为最后一次确认，如果是最后一次确认则必须进行投资校验
+        if(isConfirm != null && "1".equals(isConfirm)){
+            AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
+
+            try{
+                appTenderCheck(tender);
+            }catch (Exception e){
+                resultVo.setStatus("1");
+                resultVo.setStatusDesc("投资校验失败！");
+                return resultVo;
+            }
+
+        }
+
         logger.info("investType:[{}]",investType);
         String money = tender.getMoney();
         {
@@ -820,12 +840,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if ("HZR".equals(investType) && StringUtils.isNotEmpty(creditNid)) {
             AppInvestInfoResultVO result = borrowTenderService.getInterestInfoApp(tender,creditNid,tender.getMoney());
             this.setProtocolsToResultVO(result, investType);
+
             return result;
         }
         // 计划的
         if ("HJH".equals(investType)) {
             AppInvestInfoResultVO result = hjhTenderService.getInvestInfoApp(tender);
             this.setProtocolsToResultVO(result, investType);
+
             return result;
         }
 
@@ -881,6 +903,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if (couponConfig.getCouponType() == 3) {
                     investInfo.setCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     investInfo.setCouponType("代金券");
+                    investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
                 }
                 investInfo.setCouponQuota(couponConfig.getCouponQuota().toString());
                 investInfo.setCouponId(couponConfig.getId() + "");
@@ -951,6 +974,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             BigDecimal earnings = new BigDecimal("0");
 
             if (!StringUtils.isBlank(money) && Double.parseDouble(money) >= 0) {
+                if( "1".equals(isConfirm)){
+                    investInfo.setRealAmount(money);
+                }
                 String borrowStyle = borrow.getBorrowStyle();
                 // 收益率
                 BigDecimal borrowApr = borrow.getBorrowApr();
@@ -1076,12 +1102,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setEndTime("");
             investInfo.setButtonWord("");
             investInfo.setStandardValues("");
+            investInfo.setUsedCouponDes("未使用");
             // 投资协议
             if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
-                investInfo.setRealAmount("");
+                investInfo.setRealAmount("0");
                 investInfo.setButtonWord("确认");
             } else {
-                investInfo.setRealAmount("");
+                investInfo.setRealAmount("¥" + money);
                 investInfo.setButtonWord("确认投资" + CommonUtils.formatAmount(null, money) + "元");
             }
 
@@ -1100,6 +1127,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         list.add(newAgreementBean);
         investInfo.setProtocols(list);
         investInfo.setProtocolUrlDesc("协议列表");
+        investInfo.setUsedCouponDes("未使用");
+        investInfo.setIsUsedCoupon("0");
     }
 
     /**

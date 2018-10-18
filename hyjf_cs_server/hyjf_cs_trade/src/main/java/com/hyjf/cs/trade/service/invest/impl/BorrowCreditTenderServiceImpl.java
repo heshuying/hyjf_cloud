@@ -307,7 +307,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setRealAmount("");
             result.setButtonWord("实际支付0.00元");
         } else {
-            result.setRealAmount("");
+            result.setRealAmount("¥" + CommonUtils.formatAmount(null, money));
             result.setButtonWord("确认投资"+CommonUtils.formatAmount(null, money)+"元");
         }
         result.setBorrowNid(creditNid);
