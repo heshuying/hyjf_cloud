@@ -1,16 +1,14 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.controller.app.auth.invesauth;
+package com.hyjf.cs.user.controller.app.auth.mergeauth;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.AuthorizedVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
@@ -39,13 +37,13 @@ import java.util.Map;
  * @Version v0.1
  * @Date
  */
-@Api(tags = {"web端-自动投资授权（新）"})
+@Api(tags = {"app端-多合一授权（新）"})
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/hyjf-web/user/auth/invesauthpageplus")
-public class InvesAuthPagePlusController extends BaseUserController {
+@RequestMapping("/hyjf-app/bank/user/auth/mergeauthpageplus")
+public class AppMergeAuthPagePlusController extends BaseUserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(InvesAuthPagePlusController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppMergeAuthPagePlusController.class);
 
     @Autowired
     private AuthService authService;
@@ -54,15 +52,14 @@ public class InvesAuthPagePlusController extends BaseUserController {
     SystemConfig systemConfig;
 
     /**
-     * 用户自动投资授权
+     * 用户合并授权
      * @param userId
-     * @param authorizedVO
      * @return
      */
-    @ApiOperation(value = "用户自动投资授权", notes = "用户自动投资授权")
-    @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId,@RequestBody AuthorizedVO authorizedVO, HttpServletRequest request) {
+    @ApiOperation(value = "用户合并授权", notes = "用户合并授权")
+    @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
+    public  WebResult<Object> page(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
@@ -73,14 +70,14 @@ public class InvesAuthPagePlusController extends BaseUserController {
 
         // 拼装参数 调用江西银行
         // 失败页面
-        String errorPath = "/user/openError";
+        String errorPath = "/user/setting/mergeauth/result/failed";
         // 成功页面
-        String successPath = "/user/openSuccess";
+        String successPath = "/user/setting/mergeauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId;
         String successUrl = super.getFrontHost(systemConfig,platform) + successPath;
-        String bgRetUrl = "http://CS-USER/hyjf-web/user/auth/invesauthpageplus/invesAuthBgreturn" ;
+        String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/mergeauthpageplus/mergeAuthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO=authService.getBankOpenAccount(userId);
@@ -95,7 +92,7 @@ public class InvesAuthPagePlusController extends BaseUserController {
         authBean.setNotifyUrl(bgRetUrl);
         // 0：PC 1：微官网 2：Android 3：iOS 4：其他
         authBean.setPlatform(platform);
-        authBean.setAuthType(AuthBean.AUTH_TYPE_AUTO_BID);
+        authBean.setAuthType(AuthBean.AUTH_TYPE_MERGE_AUTH);
         authBean.setChannel(BankCallConstant.CHANNEL_APP);
         authBean.setForgotPwdUrl(super.getForgotPwdUrl(platform,request,systemConfig));
         authBean.setName(usersInfo.getTruename());
@@ -104,9 +101,34 @@ public class InvesAuthPagePlusController extends BaseUserController {
         authBean.setUserType(user.getUserType());
         // 跳转到江西银行画面
         try {
+
             authBean.setOrderId(orderId);
             Map<String,Object> map = authService.getCallbankMV(authBean);
-            authService.insertUserAuthLog(authBean.getUserId(), orderId,Integer.parseInt(authBean.getPlatform()), "1");
+            if(authBean.getAutoBidStatus()&&authBean.getAutoCreditStatus()&&authBean.getPaymentAuthStatus()){
+                //开通自动投资、自动债转、缴费授权
+                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "14");
+            }else if(authBean.getAutoBidStatus()&&authBean.getAutoCreditStatus()){
+                //开通自动投资、自动债转
+                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "11");
+            }else if(authBean.getAutoBidStatus()&&authBean.getPaymentAuthStatus()){
+                //开通自动投资、缴费授权
+                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "12");
+            }else if(authBean.getPaymentAuthStatus()&&authBean.getAutoCreditStatus()){
+                //开通自动债转、缴费授权
+                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "13");
+            }else if(authBean.getAutoBidStatus()){
+                //开通自动投资
+                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "1");
+            }else if(authBean.getAutoCreditStatus()){
+                //开通自动债转
+                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "4");
+            }else if(authBean.getPaymentAuthStatus()){
+                //开通缴费授权
+                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "5");
+            }else{
+                //开通自动投资、自动债转、缴费授权
+                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "14");
+            }
             result.setData(map);
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,40 +145,39 @@ public class InvesAuthPagePlusController extends BaseUserController {
         // 判断用户是否设置过交易密码
         CheckUtil.check(user.getIsSetPassword() != 0,MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         // 判断是否授权过
-        CheckUtil.check(!authService.checkIsAuth(user.getUserId(), AuthBean.AUTH_TYPE_AUTO_BID),MsgEnum.STATUS_CE000009);
+        CheckUtil.check(!authService.checkIsAuth(user.getUserId(), AuthBean.AUTH_TYPE_MERGE_AUTH),MsgEnum.STATUS_CE000009);
     }
 
     /**
-     * 用户自动投资授权异步回调
+     * 用户合并授权异步回调
      * @param bean
      * @return
      */
-    @ApiOperation(value = "用户自动投资授权异步回调", notes = "用户自动投资授权异步回调")
-    @PostMapping(value = "/invesAuthBgreturn")
+    @ApiOperation(value = "用户合并授权异步回调", notes = "用户合并授权异步回调")
+    @PostMapping(value = "/mergeAuthBgreturn")
     @ResponseBody
-    public String invesAuthBgreturn(@RequestBody BankCallBean bean) {
+    public String mergeAuthBgreturn(@RequestBody BankCallBean bean) {
         BankCallResult result = new BankCallResult();
-        logger.info("[用户自动投资授权回调开始]");
+        logger.info("[合并授权异步回调开始]");
         bean.convert();
         Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID
         // 查询用户开户状态
         UserVO user = this.authService.getUsersById(userId);
-        if(authService.checkDefaultConfig(bean, AuthBean.AUTH_TYPE_AUTO_BID)){
+        if(authService.checkDefaultConfig(bean, AuthBean.AUTH_TYPE_MERGE_AUTH)){
 
             authService.updateUserAuthLog(bean.getLogOrderId(),"授权期限过短或额度过低，<br>请重新授权！");
-            logger.info("[用户自动投资授权完成后,回调结束]");
-            result.setMessage("自动投资授权成功");
+            logger.info("[用户合并授权完成后,回调结束]");
+            result.setMessage("合并授权成功");
             result.setStatus(true);
             return JSONObject.toJSONString(result, true);
         }
         // 成功
         if (user != null && bean != null
-                && (BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))
-                && "1".equals(bean.getAutoBid()))) {
+                && (BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE)))) {
             try {
                 bean.setOrderId(bean.getLogOrderId());
                 // 更新签约状态和日志表
-                this.authService.updateUserAuth(Integer.parseInt(bean.getLogUserId()), bean, AuthBean.AUTH_TYPE_AUTO_BID);
+                this.authService.updateUserAuth(Integer.parseInt(bean.getLogUserId()), bean, AuthBean.AUTH_TYPE_MERGE_AUTH);
             } catch (Exception e) {
                 e.printStackTrace();
                 authService.updateUserAuthLog(bean.getLogOrderId(),authService.getBankRetMsg(bean.getRetCode()));
@@ -164,8 +185,8 @@ public class InvesAuthPagePlusController extends BaseUserController {
         }else{
             authService.updateUserAuthLog(bean.getLogOrderId(),authService.getBankRetMsg(bean.getRetCode()));
         }
-        logger.info("[用户自动投资授权完成后,回调结束]");
-        result.setMessage("自动投资授权成功");
+        logger.info("[用户合并授权完成后,回调结束]");
+        result.setMessage("合并授权成功");
         result.setStatus(true);
         return JSONObject.toJSONString(result, true);
     }
