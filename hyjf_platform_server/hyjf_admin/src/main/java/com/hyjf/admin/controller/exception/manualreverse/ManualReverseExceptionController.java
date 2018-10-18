@@ -57,9 +57,8 @@ public class ManualReverseExceptionController extends BaseController {
     @ApiOperation(value = "手动冲正更新", notes = "手动冲正更新")
     @PostMapping("/update_manualreverse")
     public AdminResult manualReverse(HttpServletRequest request, @RequestBody ManualReverseAddRequest requestBean){
-//        AdminSystemVO adminSystemVO = this.getUser(request);
-//        requestBean.setLoginUserId(adminSystemVO.getId());
-        requestBean.setLoginUserId("123");
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        requestBean.setLoginUserId(adminSystemVO.getId());
         // 请求参数校验
         boolean checkResult = manualReverseExceptionService.checkForManualReverse(requestBean);
         if(!checkResult){
