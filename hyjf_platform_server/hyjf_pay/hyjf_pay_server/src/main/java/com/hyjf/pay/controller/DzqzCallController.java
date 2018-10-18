@@ -11,6 +11,7 @@ import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.call.DzqzCallApi;
 import com.hyjf.pay.lib.fadada.call.impl.DzqzCallApiImpl;
 import com.hyjf.pay.mq.FddProducer;
+import com.hyjf.pay.mq.MessageContent;
 import com.hyjf.pay.mq.Producer;
 import com.hyjf.pay.service.DzqzPayLogService;
 import org.slf4j.Logger;
@@ -117,7 +118,7 @@ public class DzqzCallController extends BaseController {
             if (!"3000".equals(result_code)){//未签署成功
                 log.info("--------------合同签署异步返回签署失败-----------交易号：" + orderId + "--交易描述：" + bean.getResult_desc());
             }else{
-                fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_AUTO_SIGN_TAG,JSON.toJSONBytes(bean)));
+                fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_AUTO_SIGN_TAG,JSON.toJSONBytes(bean)));
             }
         } catch (Exception e) {
             e.printStackTrace();
