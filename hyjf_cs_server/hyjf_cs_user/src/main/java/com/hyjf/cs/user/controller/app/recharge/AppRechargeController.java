@@ -52,12 +52,12 @@ public class AppRechargeController extends BaseUserController {
 
 
     /** 充值描述 */
-    private final String CARD_DESC = "限额:单笔{0}，单日{1}，单月{2}";
+    private final String CARD_DESC = "限额:{0}{1}{2}";
     private final String RECHARGE_KINDLY_REMINDER = "注：网银转账时，银行请选择（城市商业银行）江西银行或南昌银行。线下充值的到账时间一般为1-3天（具体到账时间以银行的实际到账时间为准）。";
     private final String RCV_ACCOUNT_NAME = "惠众商务顾问（北京）有限公司";
     private final String RCV_ACCOUNT = "791913149300306";
     private final String RCV_OPEN_BANK_NAME = "江西银行南昌铁路支行";
-    private final String KINDLY_REMINDER = "温馨提示：\n①线下充值使用网银转账时，付款账户须与平台绑定银行卡一致，不支持非平台绑定银行卡的网银转账充值功能，即“同卡进出”原则；\n②银行转账时，请选择（城市商业银行）江西银行或者南昌银行；\n③线下充值在工作日17:00前完成操作，当日到账，否则资金最晚将于下个工作日到账；\n④线下充值不符合“同卡进出”原则的，充值资金最长T+1工作日会被退回至付款账户；\n⑤不支持支付宝、微信等第三方支付平台的转账充值功能。";
+    private final String KINDLY_REMINDER = "温馨提示：\n①转账充值使用网银转账时，付款账户须与平台绑定银行卡一致，不支持非平台绑定银行卡的网银转账充值功能，即“同卡进出”原则；\n②银行转账时，请选择（城市商业银行）江西银行或者南昌银行；\n③转账充值在工作日17:00前完成操作，当日到账，否则资金最晚将于下个工作日到账；\n④转账充值不符合“同卡进出”原则的，充值资金最长T+1工作日会被退回至付款账户；\n⑤不支持支付宝、微信等第三方支付平台的转账充值功能。";
     private final String IMPORTANT_HINTS = "请务必使用该卡作为付款账户进行转账";
 
     /** 金额单位 万元 */
@@ -202,7 +202,7 @@ public class AppRechargeController extends BaseUserController {
                         result.setBank(StringUtils.isBlank(bankCard.getBank()) ? StringUtils.EMPTY : bankCard.getBank());
                         // 银行卡号
                         result.setCardNo(bankCard.getCardNo());
-                        result.setCardNo_info(BankCardUtil.getCardNo(bankCard.getCardNo()));
+                        result.setCardNo_info(BankCardUtil.getFormatCardNo(bankCard.getCardNo()));
                         result.setMobile(bankCard.getMobile());//成功充值手机号码
                         // 银行代码
                         result.setCode("");
@@ -267,9 +267,18 @@ public class AppRechargeController extends BaseUserController {
                                 if (monthLimitAmount == null) {
                                     monthLimitAmount = BigDecimal.ZERO;
                                 }
-                                String moneyInfo = MessageFormat.format(CARD_DESC, (BigDecimal.ZERO.compareTo(timesLimitAmount) == 0)?"不限":timesLimitAmount.toString() + "万元",
-                                        (BigDecimal.ZERO.compareTo(dayLimitAmount)==0)?"不限":dayLimitAmount.toString() + "万元",
-                                        (BigDecimal.ZERO.compareTo(monthLimitAmount)==0)?"不限":monthLimitAmount.toString() + "万元");
+                                String symbol = ",";
+                                String symBol2 = ",";
+                                if(BigDecimal.ZERO.compareTo(dayLimitAmount)==0 && BigDecimal.ZERO.compareTo(monthLimitAmount)==0){
+                                    symbol = "";
+                                }
+                                if(BigDecimal.ZERO.compareTo(monthLimitAmount)==0){
+                                    symBol2 = "";
+                                }
+                                String moneyInfo = MessageFormat.format(CARD_DESC, (BigDecimal.ZERO.compareTo(timesLimitAmount) == 0)?"":"单笔 "+timesLimitAmount.toString() + "万元" + symbol,
+                                        (BigDecimal.ZERO.compareTo(dayLimitAmount)==0)?"":"单日 " + dayLimitAmount.toString() + "万元" + symBol2,
+                                        (BigDecimal.ZERO.compareTo(monthLimitAmount)==0)?"":"单月 " + monthLimitAmount.toString() + "万元");
+
                                 result.setMoneyInfo(moneyInfo);
                             }
                         }
