@@ -100,6 +100,10 @@ public class AccountExceptionServiceImpl extends BaseServiceImpl implements Acco
         if(StringUtils.isNotBlank(request.getMobile())){
             criteria.andMobileLike("%"+request.getMobile()+"%");
         }
+        if (request.getLimitStart() != -1) {
+            exceptionExample.setLimitStart(request.getLimitStart());
+            exceptionExample.setLimitEnd(request.getLimitEnd());
+        }
         return exceptionExample;
     }
 }
