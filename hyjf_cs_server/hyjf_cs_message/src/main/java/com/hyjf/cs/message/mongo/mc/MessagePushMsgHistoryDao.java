@@ -220,26 +220,25 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 */
 	public Integer getRecordCount(MessagePushErrorRequest request) {
 		Criteria criteria = new Criteria();
-		Query query = new Query();
 		// 条件查询
-		if (StringUtils.isNotEmpty(request.getMsgTitleSrch())) {
+		if (StringUtils.isNoneBlank(request.getMsgTitleSrch())) {
 			criteria.and("msgTitle").is(request.getMsgTitleSrch());
 		}
-		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
+		if(StringUtils.isNoneBlank(request.getTagIdSrch())){
 			criteria.and("tagId").is(request.getTagIdSrch());
 		}
-		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
+		if(StringUtils.isNoneBlank(request.getMsgCodeSrch())){
 			criteria.and("msgCode").is(request.getMsgCodeSrch());
 		}
-		if(StringUtils.isNotEmpty(request.getStartDateSrch())){
-			criteria.and("createTime").gte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
-		}
-		if(StringUtils.isNotEmpty(request.getEndDateSrch())){
-			criteria.and("createTime").lte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
+
+		// 发送时间
+		if (request.getStartDateSrch() != null || request.getEndDateSrch() != null) {
+			int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartDateSrch() + " 00:00:00");
+			int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndDateSrch() + " 23:59:59");
+			criteria.and("sendTime").gte(startTime).lte(endTime);
 		}
 		criteria.and("msgSendStatus").is(2);//发送失败
-
-		query.addCriteria(criteria);
+		Query query = new Query(criteria);
 		return (int) mongoTemplate.count(query, MessagePushMsgHistory.class);
 	}
 

@@ -70,6 +70,7 @@ public class MessagePushErrorController extends BaseController {
             //返回状态
             response.setCount(count);
         }catch (Exception e){
+            e.printStackTrace();
             return new AdminResult(FAIL, FAIL_DESC);
         }
         return new AdminResult(response);
