@@ -11,6 +11,7 @@ import com.hyjf.am.vo.UserDeviceUniqueCodeVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.AppPushManageVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
@@ -24,7 +25,6 @@ import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.app.AppHomePageCustomize;
 import com.hyjf.cs.trade.bean.app.AppHomePageRecommendProject;
 import com.hyjf.cs.trade.bean.app.AppModuleBean;
-import com.hyjf.cs.trade.bean.app.AppPushManageVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -258,8 +258,9 @@ public class AppHomeServiceImpl implements AppHomeService {
      */
     private void getAnnouncements(JSONObject info, String HOST) {
 
-        List<AppPushManageVO> manageInfoList = new ArrayList<>();
-        //TODO 从am_trade层获取有效公告信息
+        List<AppPushManageVO> manageInfoList = amTradeClient.getAnnouncements();
+
+        // 从am_trade层获取有效公告信息
         if(manageInfoList != null){
 
             List<Map> announMap = new ArrayList<>();

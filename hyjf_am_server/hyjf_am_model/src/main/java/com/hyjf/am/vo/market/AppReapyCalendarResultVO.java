@@ -28,6 +28,17 @@ public class AppReapyCalendarResultVO {
     private String isMonth;
     // 月份标题
     private String month;
+    //退出标记
+    private int isExiting;
+
+
+    public int getIsExiting() {
+        return isExiting;
+    }
+
+    public void setIsExiting(int isExiting) {
+        this.isExiting = isExiting;
+    }
 
     public String getIsMonth() {
         return isMonth;

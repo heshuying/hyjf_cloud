@@ -5,24 +5,23 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
-import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvestExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.front.borrow.ProjectListService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
-import com.hyjf.am.vo.trade.CreditListVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.ConvertUtils;
+import com.hyjf.common.util.GetDate;
+import com.sun.tools.javac.util.Convert;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -499,5 +498,28 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     @Override
     public List<AppProjectListCustomizeVO> getHomeProjectList(Map map) {
         return this.appProjectListCustomizeMapper.selectHomeProjectList(map);
+    }
+
+
+
+    /**
+     * app首页获取有效公告
+     * @author cwyang 2018-10-18
+     * @return
+     */
+    @Override
+    public List<AppPushManageVO> getAnnouncements() {
+        AppPushManageExample example = new AppPushManageExample();
+        AppPushManageExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(1);
+        criteria.andTimeStartLessThanOrEqualTo(new Date());
+        criteria.andTimeEndGreaterThanOrEqualTo(new Date());
+        example.setOrderByClause(" `order` asc ,create_time desc");
+        List<AppPushManage> pushManageList = this.appPushManageMapper.selectByExample(example);
+        if(pushManageList != null && pushManageList.size() > 0){
+            List<AppPushManageVO> appPushManageVOS = CommonUtils.convertBeanList(pushManageList, AppPushManageVO.class);
+            return appPushManageVOS;
+        }
+        return null;
     }
 }

@@ -10,15 +10,17 @@ public class SystemConfig {
     @Value("${hyjf.app.host}")
     public String appHost;
     /**
-     * TODO app 3.1.1 注册协议链接
+     *  app 3.1.1 注册协议链接
      */
-//    @Value("${hyjf.app.regist.agreement.url}")
+    @Value("${hyjf.app.regist.agreement.url}")
     public String appRegistAgreementUrl;
     /**
-     *TODO app 3.1.1 公告内容链接
+     *app 3.1.1 公告内容链接
      */
-//    @Value("${hyjf.app.push.manager.url}")
+    @Value("${hyjf.app.push.manager.url}")
     public String appPushManagerUrl;
+
+
 
     @Value("${hyjf.weChat.host}")
     public String wechatHost;
@@ -493,4 +495,6 @@ public class SystemConfig {
     public void setRoleIsopen(String roleIsopen) {
         this.roleIsopen = roleIsopen;
     }
+
+
 }

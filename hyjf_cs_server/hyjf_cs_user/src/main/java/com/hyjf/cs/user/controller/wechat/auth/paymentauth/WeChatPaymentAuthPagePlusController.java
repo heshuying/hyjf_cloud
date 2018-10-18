@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.controller.app.auth.paymentauth;
+package com.hyjf.cs.user.controller.wechat.auth.paymentauth;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.AuthorizedVO;
@@ -42,10 +42,10 @@ import java.util.Map;
 @Api(tags = {"web端-缴费授权（新）"})
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/hyjf-web/bank/user/auth/paymentauthpageplus")
-public class PaymentAuthPagePlusController extends BaseUserController {
+@RequestMapping("/hyjf-wechat/bank/user/auth/paymentauthpageplus")
+public class WeChatPaymentAuthPagePlusController extends BaseUserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PaymentAuthPagePlusController.class);
+    private static final Logger logger = LoggerFactory.getLogger(WeChatPaymentAuthPagePlusController.class);
 
     @Autowired
     private AuthService authService;
@@ -67,7 +67,6 @@ public class PaymentAuthPagePlusController extends BaseUserController {
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
-        String platform = request.getParameter("platform");
         //检查用户信息
         checkUserMessage(user);
 
@@ -78,8 +77,8 @@ public class PaymentAuthPagePlusController extends BaseUserController {
         String successPath = "/user/setting/paymentauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId;
-        String successUrl = super.getFrontHost(systemConfig,platform) + successPath;
+        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + errorPath +"?logOrdId="+orderId;
+        String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + successPath;
         String bgRetUrl = "http://CS-USER/hyjf-web/bank/user/auth/paymentauthpageplus/paymentauthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
@@ -94,10 +93,10 @@ public class PaymentAuthPagePlusController extends BaseUserController {
         authBean.setSuccessUrl(successUrl);
         authBean.setNotifyUrl(bgRetUrl);
         // 0：PC 1：微官网 2：Android 3：iOS 4：其他
-        authBean.setPlatform(platform);
+        authBean.setPlatform(CustomConstants.CLIENT_WECHAT);
         authBean.setAuthType(AuthBean.AUTH_TYPE_PAYMENT_AUTH);
-        authBean.setChannel(BankCallConstant.CHANNEL_APP);
-        authBean.setForgotPwdUrl(super.getForgotPwdUrl(platform,request,systemConfig));
+        authBean.setChannel(BankCallConstant.CHANNEL_WEI);
+        authBean.setForgotPwdUrl(super.getForgotPwdUrl(CustomConstants.CLIENT_WECHAT,request,systemConfig));
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setIdentity(usersInfo.getRoleId() + "");

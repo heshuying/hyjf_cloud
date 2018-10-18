@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.bean.app;
+package com.hyjf.am.vo.trade;
 
 import java.io.Serializable;
 import java.util.Date;

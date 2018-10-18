@@ -9,6 +9,7 @@ import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
+import com.hyjf.admin.mq.FddCertificateProducer;
 import com.hyjf.admin.mq.SmsProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.OpenAccountEnquiryService;
@@ -69,6 +70,9 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
 
     @Autowired
     private SmsProducer smsProducer;
+
+    @Autowired
+    private FddCertificateProducer fddCertificateProducer;
 
     /**
      * 用户按照手机号和身份证号查询开户掉单
@@ -300,8 +304,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         params.put("userId", String.valueOf(userId));
         try {
             logger.info("开户异步处理，发送MQ，userId:[{}],mqMgId:[{}]",userId,params.get("mqMsgId"));
-            // TODO: 2018/10/17 调用法大大
-            //fddCertificateProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
+            fddCertificateProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
         } catch (Exception e) {
             logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]",userId);
         }

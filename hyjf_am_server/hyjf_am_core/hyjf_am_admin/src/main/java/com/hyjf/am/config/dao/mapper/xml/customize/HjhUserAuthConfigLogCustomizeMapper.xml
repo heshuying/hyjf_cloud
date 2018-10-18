@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.HjhUserAuthConfigLogCustomizeMapper" >
+
+  <select id="selectCustomizeAuthConfigLogList" parameterType="com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO" resultType="com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigLogCustomize">
+    select
+    a.id,
+    a.auth_config_id authConfigId,
+    a.auth_type authType,
+    ROUND(a.personal_max_amount/10000,2) personalMaxAmount,
+    ROUND(a.enterprise_max_amount/10000,2) enterpriseMaxAmount,
+    a.auth_period authPeriod,
+    a.enabled_status enabledStatus,
+    b.truename createUserStr,
+    FROM_UNIXTIME(a.create_time,'%Y-%m-%d %H:%i:%S') createTimeStr,
+    a.ip,
+    a.mac,
+    a.remark
+    from ht_hjh_user_auth_config_log a left join ht_admin b on a.create_user = b.id
+    order by a.create_time desc
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+
+
+</mapper>

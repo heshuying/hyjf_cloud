@@ -9,10 +9,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
-import com.hyjf.am.vo.trade.CreditListVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
@@ -243,4 +240,12 @@ public interface ProjectListService {
      * @return
      */
     List<AppProjectListCustomizeVO> getHomeProjectList(Map map);
+
+    /**
+     * app首页获取有效公告
+     * @author cwyang 2018-10-18
+     * @return
+     */
+    List<AppPushManageVO> getAnnouncements();
+
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.HjhUserAuthConfigCustomizeMapper" >
+
+  <select id="selectCustomizeAuthConfigList" resultType="com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigCustomize">
+      select
+      a.id,
+      a.auth_type authType,
+      ROUND(a.personal_max_amount/10000,2) personalMaxAmount,
+      ROUND(a.enterprise_max_amount/10000,2) enterpriseMaxAmount,
+      a.auth_period authPeriod,
+      a.enabled_status enabledStatus,
+      a.remark,
+      a.create_user createUser,
+      a.create_time createTime,
+      a.update_user updateUser,
+      FROM_UNIXTIME(a.update_time,'%Y-%m-%d %H:%i:%S') updateTimeStr,
+      b.truename updateUserStr
+      from ht_hjh_user_auth_config a left join ht_admin b on a.update_user = b.id
+  </select>
+
+
+</mapper>
