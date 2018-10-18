@@ -263,25 +263,25 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
      * @param hjhPlanAsset
      * @return
      */
-    private boolean checkAssetCanSend(HjhPlanAsset hjhPlanAsset) {
-        String instCode = hjhPlanAsset.getInstCode();
-
-        String capitalToplimit = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+instCode);
-        BigDecimal lcapitalToplimit = new BigDecimal(capitalToplimit);
-        BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
-
-        if (BigDecimal.ZERO.compareTo(lcapitalToplimit) >= 0) {
-            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 风险保证金小于等于零 "+capitalToplimit);
-            // 风险保证金小于等于0不能发标
-            return false;
-        }
-
-        if(assetAcount.compareTo(lcapitalToplimit) > 0){
-            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 金额： "+assetAcount+" 风险保证金小于等于零 "+capitalToplimit);
-            // 风险保证金不够不能发标
-            return false;
-        }
-
-        return true;
-    }
+//    private boolean checkAssetCanSend(HjhPlanAsset hjhPlanAsset) {
+//        String instCode = hjhPlanAsset.getInstCode();
+//
+//        String capitalToplimit = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+instCode);
+//        BigDecimal lcapitalToplimit = new BigDecimal(capitalToplimit);
+//        BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
+//
+//        if (BigDecimal.ZERO.compareTo(lcapitalToplimit) >= 0) {
+//            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 风险保证金小于等于零 "+capitalToplimit);
+//            // 风险保证金小于等于0不能发标
+//            return false;
+//        }
+//
+//        if(assetAcount.compareTo(lcapitalToplimit) > 0){
+//            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 金额： "+assetAcount+" 风险保证金小于等于零 "+capitalToplimit);
+//            // 风险保证金不够不能发标
+//            return false;
+//        }
+//
+//        return true;
+//    }
 }
