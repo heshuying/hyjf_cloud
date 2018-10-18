@@ -88,15 +88,15 @@ public class PlatformCountCustomize implements Serializable {
      */
     private String timeEndSrch;
 
-    /**
-     * 检索条件 limitStart
-     */
-    private int limitStart = -1;
+    private String client;
 
-    /**
-     * 检索条件 limitEnd
-     */
-    private int limitEnd = -1;
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
+    }
 
     /**
      * sourceName
@@ -326,43 +326,6 @@ public class PlatformCountCustomize implements Serializable {
         this.timeEndSrch = timeEndSrch;
     }
 
-    /**
-     * limitStart
-     *
-     * @return the limitStart
-     */
-
-    public int getLimitStart() {
-        return limitStart;
-    }
-
-    /**
-     * @param limitStart
-     *            the limitStart to set
-     */
-
-    public void setLimitStart(int limitStart) {
-        this.limitStart = limitStart;
-    }
-
-    /**
-     * limitEnd
-     *
-     * @return the limitEnd
-     */
-
-    public int getLimitEnd() {
-        return limitEnd;
-    }
-
-    /**
-     * @param limitEnd
-     *            the limitEnd to set
-     */
-
-    public void setLimitEnd(int limitEnd) {
-        this.limitEnd = limitEnd;
-    }
 
     public String getHtjTenderPrice() {
         return htjTenderPrice;

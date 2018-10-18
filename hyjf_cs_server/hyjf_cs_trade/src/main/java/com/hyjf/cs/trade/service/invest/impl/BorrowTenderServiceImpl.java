@@ -586,24 +586,27 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
             // 查询优惠券信息
             CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
-            if(couponUser!=null){
+            if (couponUser != null) {
                 // 查询优惠券的投资
-                BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
+                //BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
                 // 优惠券收益
-                if(borrowTenderCpn!=null){
-                    data.put("couponQuota",borrowTenderCpn.getAccount());
-                    data.put("couponType",couponUser.getCouponType());
-                    data.put("couponInterest",couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod()));
-                }else{
-                    data.put("couponQuota","");
-                    data.put("couponType","");
-                    data.put("couponInterest","");
+                data.put("couponQuota", couponUser.getCouponQuota());
+                data.put("couponType", couponUser.getCouponType());
+                BigDecimal couponInterest = BigDecimal.ZERO;
+                if (couponUser.getCouponType() == 1) {
+                    couponInterest = couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
+                } else {
+                    couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), borrowTender.getAccount().toString(), borrow.getBorrowPeriod());
                 }
-            }else{
-                data.put("couponQuota","");
-                data.put("couponType","");
-                data.put("couponAll","");
-                data.put("couponInterest","");
+                //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
+                data.put("income", earnings.add(couponInterest));
+                data.put("couponInterest", df.format(couponInterest));
+
+            } else {
+                data.put("couponQuota", "");
+                data.put("couponType", "");
+                data.put("couponAll", "");
+                data.put("couponInterest", "");
             }
         }
         logger.info("返回给前端结果为：{} ",JSONObject.toJSONString(data));
