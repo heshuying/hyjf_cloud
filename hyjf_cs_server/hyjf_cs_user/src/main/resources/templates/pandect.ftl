@@ -33,7 +33,7 @@
          "account": {
                     <#if datas.data.account??>
                         <#assign account = datas.data.account >
-                    "balance": ${(account.balance)!'0'},
+                    "balance": ${(account.balance)?c!'0'},
                   "planAccountWait": ${(account.planAccountWait!0)?c!'0'},
                   "planCapitalWait": ${(account.planCapitalWait!0)?c},
                   "planInterestWait": ${(account.planInterestWait!0)?c!'0'},
@@ -60,6 +60,7 @@
 
         },
         "userName": "${datas.data.username!''}",
+        "accountChinapnr":"${datas.data.accountChinapnr!''}",
         "recoverLatestList": [
                 <#if datas.data.recoverLatestList??>
                     <#assign recoverLatestList = datas.data.recoverLatestList >

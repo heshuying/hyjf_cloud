@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.service.invest.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -78,6 +79,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private AccountWebListProducer accountWebListProducer;
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
+    @Autowired
+    private FddProducer fddProducer;
 
     private static String regex = "^[-+]?(([0-9]+)(([0-9]+))?|(([0-9]+))?)$";
     private static DecimalFormat DF_COM_VIEW = new DecimalFormat("######0.00");
@@ -303,7 +306,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
             money = "0";
             result.setRealAmount("");
-            result.setButtonWord("实际支付0.00元");
+            result.setButtonWord("确认");
         } else {
             result.setRealAmount("");
             result.setButtonWord("确认投资"+CommonUtils.formatAmount(null, money)+"元");
@@ -887,9 +890,13 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     creditTenderBg.setBorrowRecover(borrowRecover);
                     creditTenderBg.setSellerBankAccount(sellerBankAccount);
                     // 保存债转主数据
-                    logger.info("保存债转主数据  {}" , JSONObject.toJSONString(creditTenderBg));
-                    this.amTradeClient.saveCreditBgData(creditTenderBg);
-
+                    Integer result = this.amTradeClient.saveCreditBgData(creditTenderBg);
+                    if(result==0){
+                        logger.error("抱歉，投资失败，请重试  {}",JSONObject.toJSONString(creditTenderBg));
+                        throw  new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
+                    }
+                    // 发送法大大协议
+                    this.sendPdfMQ(userId, creditTender.getBidNid(),creditTender.getAssignNid(), creditTender.getCreditNid(), creditTender.getCreditTenderNid());
                     //----------------------------------准备开始操作运营数据等  用mq----------------------------------
                     logger.info("开始更新运营数据等 updateUtm ");
                     updateUtm(userId, creditTenderLog.getAssignCapital(), GetDate.getNowTime10(), borrowCredit.getCreditTerm() + "天");
@@ -941,9 +948,34 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             }else{
                 throw new CheckException(MsgEnum.ERROR_CREDIT_NOT_EXIST);
             }
-
         }
         return true;
+    }
+
+    /**
+     * 发送法大大协议
+     * @param tenderUserId
+     * @param borrowNid
+     * @param assignOrderId
+     * @param creditNid
+     * @param creditTenderNid
+     */
+    private void sendPdfMQ(Integer tenderUserId, String borrowNid, String assignOrderId, String creditNid, String creditTenderNid) {
+        FddGenerateContractBean bean = new FddGenerateContractBean();
+        bean.setOrdid(assignOrderId);
+        bean.setAssignOrderId(assignOrderId);
+        bean.setCreditNid(creditNid);
+        bean.setCreditTenderNid(creditTenderNid);
+        bean.setTenderUserId(tenderUserId);
+        bean.setBorrowNid(borrowNid);
+        bean.setTransType(3);
+        bean.setTenderType(1);
+        try{
+            logger.info("债转承接发送法大大协议----ing");
+            fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,JSON.toJSONBytes(bean)));
+        }catch (Exception e){
+            logger.error("债转承接发送法大大协议失败  {}",JSONObject.toJSONString(bean));
+        }
     }
 
     private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, String investProjectPeriod) {
@@ -1304,21 +1336,22 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 余额不足
             throw new CheckException(MsgEnum.ERROR_CREDIT_NO_MONEY);
         }
+        long accountInt = 0L;
         try {
             // 投资金额必须是整数
-            long accountInt = Long.parseLong(request.getAssignCapital());
-            if (accountInt == 0) {
-                // 投资金额不能为0元
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_ZERO);
-            }
-            if (accountInt < 0) {
-                // 投资金额不能为负数
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NEGATIVE);
-            }
+            accountInt = Long.parseLong(request.getAssignCapital());
         } catch (Exception e) {
             logger.error("格式化错误 ",e);
             // 投资金额不能为整数
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INT);
+        }
+        if (accountInt == 0) {
+            // 投资金额不能为0元
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_ZERO);
+        }
+        if (accountInt < 0) {
+            // 投资金额不能为负数
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NEGATIVE);
         }
         // 将投资金额转化为BigDecimal
         BigDecimal accountBigDecimal = new BigDecimal(request.getAssignCapital().replaceAll(",",""));
