@@ -881,7 +881,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         // 项目类型
         borrowInfo.setProjectType(hjhAssetBorrowType.getBorrowCd());
 
-
+        borrowInfo.setBorrowExtraYield(BigDecimal.ZERO);
         //默认全选
         // 可投资平台_PC
         borrowInfo.setCanTransactionPc("1");
