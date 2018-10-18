@@ -126,7 +126,7 @@ public class AuthConfigController extends BaseController {
     public AdminResult updateAuthConfig(HttpServletRequest request,@RequestBody HjhUserAuthConfigCustomizeAPIVO form) {
 
         AdminSystemVO loginUser=getUser(request);
-        form.setUpdateUser(Integer.parseInt(loginUser.getId()));
+        form.setUpdateUserId(Integer.parseInt(loginUser.getId()));
         form.setUpdateTime(GetDate.getNowTime10());
         form.setIp(GetCilentIP.getIpAddr(request));
 

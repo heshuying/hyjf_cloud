@@ -22,11 +22,11 @@ public class HjhUserAuthConfigCustomizeAPIVO implements Serializable {
     @ApiModelProperty(value = "IP地址")
     private String ip;
 
-    private Integer createUser;
+    private Integer createUserId;
 
     private Integer createTime;
 
-    private Integer updateUser;
+    private Integer updateUserId;
 
     private String updateUserStr;
 
@@ -116,14 +116,6 @@ public class HjhUserAuthConfigCustomizeAPIVO implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
-    }
-
     public Integer getCreateTime() {
         return createTime;
     }
@@ -132,19 +124,27 @@ public class HjhUserAuthConfigCustomizeAPIVO implements Serializable {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
-    }
-
     public Integer getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 }
