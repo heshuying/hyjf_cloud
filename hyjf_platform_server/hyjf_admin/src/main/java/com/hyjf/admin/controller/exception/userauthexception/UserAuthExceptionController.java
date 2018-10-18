@@ -67,9 +67,9 @@ public class UserAuthExceptionController extends BaseController {
         AdminUserAuthListResponse response = userAuthExceptionService.synUserAuth(userId, type);
 
         if(AdminResponse.isSuccess(response)){
-            return new AdminResult(SUCCESS,SUCCESS_DESC);
+            return new AdminResult(SUCCESS,response.getMessage());
         }else{
-            return new AdminResult(FAIL,FAIL_DESC);
+            return new AdminResult(FAIL,response.getMessage());
         }
     }
 

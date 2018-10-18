@@ -54,22 +54,22 @@
 		SELECT
 		pn.source_name,
 		0 AS access_number,
-		regist_number.regist_number,
-		account_number.account_number,
-		tender_number.tender_number,
-		recharge_price.recharge_price,
+		IF(regist_number.regist_number IS null,0,regist_number.regist_number) AS regist_number,
+		IF(account_number.account_number IS null,0,account_number.account_number) AS account_number,
+		IF(tender_number.tender_number IS null,0,tender_number.tender_number) AS tender_number,
+		IF(recharge_price.recharge_price IS null,0,recharge_price.recharge_price) AS recharge_price,
 		IF(hzt_tender_price.amount IS null,0, hzt_tender_price.amount)
 		+ IF(hxf_tender_price.amount IS null,0,hxf_tender_price.amount)
 		+ IF(htl_tender_price.amount IS null,0,htl_tender_price.amount)
 		+ IF(htj_tender_price.amount IS NULL,0,htj_tender_price.amount)
 		+ IF(hjh_tender_price.amount IS NULL,0,hjh_tender_price.amount)
 		+ IF(hzr_tender_price.amount IS NULL,0,hzr_tender_price.amount) AS tender_price,
-		hzt_tender_price.amount AS hzt_tender_price,
-		hxf_tender_price.amount AS hxf_tender_price,
-		htl_tender_price.amount AS htl_tender_price,
-		htj_tender_price.amount AS htj_tender_price,
-		hjh_tender_price.amount AS hjh_tender_price,
-		hzr_tender_price.amount AS hzr_tender_price
+		IF(hzt_tender_price.amount IS null,0, hzt_tender_price.amount) AS hzt_tender_price,
+		IF(hxf_tender_price.amount IS null,0,hxf_tender_price.amount) AS hxf_tender_price,
+		IF(htl_tender_price.amount IS null,0,htl_tender_price.amount) AS htl_tender_price,
+		IF(htj_tender_price.amount IS NULL,0,htj_tender_price.amount) AS htj_tender_price,
+		IF(hjh_tender_price.amount IS NULL,0,hjh_tender_price.amount) AS hjh_tender_price,
+		IF(hzr_tender_price.amount IS NULL,0,hzr_tender_price.amount) AS hzr_tender_price
 		FROM
 		(
 		SELECT DISTINCT
@@ -190,6 +190,8 @@
 	<resultMap id="selectListMap" type="com.hyjf.am.trade.dao.model.customize.PlatformCountCustomize">
 		<result column="source_name" property="sourceName" jdbcType="VARCHAR" />
 		<result column="access_number" property="accessNumber" jdbcType="VARCHAR" />
+		<result column="regist_number" property="registNumber" jdbcType="VARCHAR" />
+		<result column="account_number" property="accountNumber" jdbcType="VARCHAR" />
 		<result column="tender_number" property="tenderNumber" jdbcType="VARCHAR" />
 		<result column="recharge_price" property="rechargePrice" jdbcType="VARCHAR" />
 		<result column="tender_price" property="tenderPrice" jdbcType="VARCHAR" />

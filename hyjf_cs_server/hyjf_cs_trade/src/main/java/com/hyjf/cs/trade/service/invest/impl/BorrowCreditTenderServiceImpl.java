@@ -1304,20 +1304,22 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 余额不足
             throw new CheckException(MsgEnum.ERROR_CREDIT_NO_MONEY);
         }
+        long accountInt = 0L;
         try {
             // 投资金额必须是整数
-            long accountInt = Long.parseLong(request.getAssignCapital());
-            if (accountInt == 0) {
-                // 投资金额不能为0元
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_ZERO);
-            }
-            if (accountInt < 0) {
-                // 投资金额不能为负数
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NEGATIVE);
-            }
+            accountInt = Long.parseLong(request.getAssignCapital());
         } catch (Exception e) {
+            logger.error("格式化错误 ",e);
             // 投资金额不能为整数
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INT);
+        }
+        if (accountInt == 0) {
+            // 投资金额不能为0元
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_ZERO);
+        }
+        if (accountInt < 0) {
+            // 投资金额不能为负数
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NEGATIVE);
         }
         // 将投资金额转化为BigDecimal
         BigDecimal accountBigDecimal = new BigDecimal(request.getAssignCapital().replaceAll(",",""));

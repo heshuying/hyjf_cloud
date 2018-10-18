@@ -54,6 +54,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -676,6 +677,11 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             result.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_FAIL);
             result.put(CustomConstants.APP_STATUS_DESC,MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg());
             resultUrl =  resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}", "failed").replace("{status}",CustomConstants.APP_STATUS_FAIL).replace("{statusDesc}",MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg()).replace(accountStr,"").replace(priceStr,"").replace(endTimeStr,"");
+        }
+        try{
+            resultUrl = URLEncoder.encode(resultUrl,"utf-8");
+        }catch (Exception e){
+
         }
         result.put("resultUrl",resultUrl);
         return result;

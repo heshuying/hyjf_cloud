@@ -52,18 +52,21 @@ public class BankRepayFreezeExceptionController extends BaseController {
     @ApiOperation(value = "冻结撤销", notes = "冻结撤销")
     @GetMapping("/cancel/{orderId}")
     public AdminResult repayFreezeCancel(@PathVariable String orderId){
+        logger.info("还款冻结撤销开始，orderId：" + orderId);
         if(StringUtils.isBlank(orderId)){
             return new AdminResult<>(FAIL, "请求参数错误");
         }
 
         BankRepayFreezeLogVO freezeLogVO = bankRepayFreezeService.getFreezeLogByOrderId(orderId);
         if(freezeLogVO == null){
+            logger.info("还款解冻失败，还款冻结可能已经解冻！");
             return new AdminResult<>(FAIL, "还款解冻失败，还款冻结可能已经解冻！");
         }
         boolean repayUnFreezeFlag = this.bankRepayFreezeService.repayUnfreeze(freezeLogVO);
         if(repayUnFreezeFlag){
             boolean unfreezeFlag = this.bankRepayFreezeService.updateBankRepayFreeze(freezeLogVO);
             if (unfreezeFlag) {
+                logger.info("还款冻结撤销成功");
                 return new AdminResult<>();
             }
         }

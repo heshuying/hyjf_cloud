@@ -122,16 +122,21 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/findById/{userId}")
-    public UserResponse findUserByUserId(@PathVariable int userId) {
-        logger.info("findUserByUserId run...userId is :{}", userId);
+    public UserResponse findUserByUserId(@PathVariable String userId) {
+        logger.debug("findUserByUserId run...userId is :{}", userId);
         UserResponse response = new UserResponse();
-        User user = userService.findUserByUserId(userId);
-        if (user != null) {
-            UserVO userVO = new UserVO();
-            BeanUtils.copyProperties(user, userVO);
-            response.setResult(userVO);
+        if(StringUtils.isNotBlank(userId) && !"null".equals(userId) && !"NULL".equals(userId)){
+            Integer userIdInt = Integer.valueOf(userId);
+            User user = userService.findUserByUserId(userIdInt);
+            if (user != null) {
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(user, userVO);
+                response.setResult(userVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
         }
-        return response;
+        return null;
     }
 
     /**
