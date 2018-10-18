@@ -54,7 +54,7 @@ public abstract class Producer {
 		}
 	}
 
-	protected boolean messageSend(MassageContent messageContent) throws MQException {
+	protected boolean messageSend(MessageContent messageContent) throws MQException {
 		try {
 			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
 					messageContent.body);
@@ -67,24 +67,6 @@ public abstract class Producer {
 		}
 	}
 
-	public static class MassageContent implements Serializable {
-		private static final long serialVersionUID = -6846413929342308237L;
-		public final String topic;
-		public final String tag;
-		public final String keys;
-		public final byte[] body;
-
-		public MassageContent(String topic, String tag, String keys, byte[] body) {
-			this.topic = topic;
-			this.tag = tag;
-			this.keys = keys;
-			this.body = body;
-		}
-
-		public MassageContent(String topic, String keys, byte[] body) {
-			this(topic, MQConstant.HYJF_DEFAULT_TAG, keys, body);
-		}
-	}
 
 	protected static class ProducerFieldsWrapper {
 		private String group;
