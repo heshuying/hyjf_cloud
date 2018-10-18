@@ -27,9 +27,6 @@ public class BailConfigLogServiceImpl extends BaseServiceImpl implements BailCon
     @Autowired
     AmAdminClient amAdminClient;
 
-    @Autowired
-    AmTradeClient amTradeClient;
-
     /**
      * 资产来源下拉列表
      *
@@ -37,7 +34,7 @@ public class BailConfigLogServiceImpl extends BaseServiceImpl implements BailCon
      */
     @Override
     public List<DropDownVO> selectHjhInstConfigList() {
-        List<HjhInstConfigVO> hjhInstConfigVOList = amTradeClient.selectCommonHjhInstConfigList();
+        List<HjhInstConfigVO> hjhInstConfigVOList = amAdminClient.selectHjhInstConfigList();
         return ConvertUtils.convertListToDropDown(hjhInstConfigVOList,"instCode","instName");
     }
 
