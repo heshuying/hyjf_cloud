@@ -306,7 +306,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
             money = "0";
             result.setRealAmount("");
-            result.setButtonWord("实际支付0.00元");
+            result.setButtonWord("确认");
         } else {
             result.setRealAmount("");
             result.setButtonWord("确认投资"+CommonUtils.formatAmount(null, money)+"元");
