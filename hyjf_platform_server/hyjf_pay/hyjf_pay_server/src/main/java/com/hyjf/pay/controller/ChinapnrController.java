@@ -357,6 +357,7 @@ public class ChinapnrController extends BaseController {
                                 HttpDeal.post(callBackUrl, bean.getAllParams());
                             }
                         } else {
+                            logger.info("callBackUrl："+callBackUrl);
                             // 用户绑卡回调
                             if (ChinaPnrConstant.CMDID_USER_BIND_CARD.equals(bean.getCmdId())) {
                                 HttpDeal.post(callBackUrl, bean.getAllParams());

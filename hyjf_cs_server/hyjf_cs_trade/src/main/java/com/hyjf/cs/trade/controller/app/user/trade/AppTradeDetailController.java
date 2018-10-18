@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.controller.app.user.trade;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Strings;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
@@ -48,15 +49,13 @@ public class  AppTradeDetailController extends BaseTradeController {
     /**
      * 用户收支明细
      *
-     * @param trade
      * @return
      */
     @ApiOperation(value = "用户收支明细", notes = "用户收支明细")
     @ResponseBody
     @PostMapping(value = "/getTradeList",  produces = "application/json; charset=utf-8")
-    public AppTradeDetailBean searchTradeDetailList(@RequestHeader(value = "userId" , required = false )Integer userId, AppTradeDetailBeanRequest trade) {
-
-        trade.setUserId(userId);
+    public AppTradeDetailBean searchTradeDetailList(HttpServletRequest request,@RequestHeader(value = "userId" , required = false )Integer userId) {
+        AppTradeDetailBeanRequest trade=createBean(request,userId);
         AppTradeDetailBean appTradeDetailBean=tradeDetailService.createTradeDetailListPage(trade);
         appTradeDetailBean.setStatus(CustomConstants.APP_STATUS_SUCCESS);
         appTradeDetailBean.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
@@ -64,6 +63,23 @@ public class  AppTradeDetailController extends BaseTradeController {
         return appTradeDetailBean;
     }
 
+    private AppTradeDetailBeanRequest createBean(HttpServletRequest request, Integer userId) {
+        AppTradeDetailBeanRequest trade=new AppTradeDetailBeanRequest();
 
+        String currentPageStr = request.getParameter("page");
+        String pageSizeStr = request.getParameter("pageSize");
+        String tradeType = request.getParameter("tradeType");
+        String year = request.getParameter("year");
+        String month = request.getParameter("month");
+        int currentPage = Strings.isNullOrEmpty(currentPageStr) ? 1 : Integer.valueOf(currentPageStr);
+        int pageSize = Strings.isNullOrEmpty(currentPageStr) ? 10 : Integer.valueOf(pageSizeStr);
+        trade.setUserId(userId);
+        trade.setYear(year);
+        trade.setMonth(month);
+        trade.setTradeType(tradeType);
+        trade.setCurrPage(currentPage);
+        trade.setPageSize(pageSize);
+        return trade;
+    }
 
 }

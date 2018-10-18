@@ -130,7 +130,12 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         if (chinapnr != null) {
             webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
         }
-        result.put("webViewUser", user);
+        if(user.getBankOpenAccount()==1){
+            webViewUserVO.setBankOpenAccount(true);
+        }else {
+            webViewUserVO.setBankOpenAccount(false);
+        }
+        result.put("webViewUser", webViewUserVO);
         // 获取用户的银行电子账户信息
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
         result.put("bankOpenAccount", bankAccount);
