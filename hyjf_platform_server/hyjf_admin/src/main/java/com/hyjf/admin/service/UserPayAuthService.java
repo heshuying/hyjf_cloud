@@ -68,4 +68,23 @@ public interface UserPayAuthService {
      * @param retBean
      */
    boolean insertUserAuthLog2(int userId,BankCallBean retBean,String authType);
+    /**
+     * 查找还款授权列表
+     * @param request
+     * @return
+     */
+    UserPayAuthResponse selectRecordListRePay(UserPayAuthRequest request);
+    /**
+     * 还款授权解约
+     * @param userId
+     * @param channel
+     * @return
+     */
+    BankCallBean cancelRePayAuth(int userId, String channel);
+    /**
+     * 还款解约授权
+     * @param userId
+     * @return
+     */
+    int updateCancelRePayAuth(int userId);
 }

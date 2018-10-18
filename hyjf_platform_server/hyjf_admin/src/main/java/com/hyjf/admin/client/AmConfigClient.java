@@ -13,12 +13,14 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
+import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
+import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1450,4 +1452,29 @@ public interface AmConfigClient {
 	 * @auth nxl
 	 */
 	JxBankConfigVO getBankConfigByBankName(String bankName);
+	/**
+	 * 授權配置
+	 * @return
+	 */
+	AdminAuthConfigCustomizeResponse getAuthConfigList();
+
+	/**
+	 * 操作记录
+	 * @return
+	 */
+	AdminAuthConfigLogResponse getAuthConfigLogList(HjhUserAuthConfigLogCustomizeVO request);
+
+	/**
+	 * 授权配置详情
+	 * @param id
+	 * @return
+	 */
+	AdminAuthConfigResponse getAuthConfigById(Integer id);
+
+	/**
+	 * 修改授权信息
+	 * @param form
+	 * @return
+	 */
+	int updateAuthConfig(HjhUserAuthConfigVO form);
 }

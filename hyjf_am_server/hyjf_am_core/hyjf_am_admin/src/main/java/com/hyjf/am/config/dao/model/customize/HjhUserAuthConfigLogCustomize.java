@@ -1,12 +1,11 @@
-package com.hyjf.am.vo.user;
-
-import com.hyjf.am.vo.BaseVO;
+package com.hyjf.am.config.dao.model.customize;
 
 import java.io.Serializable;
-import java.util.Date;
 
-public class HjhUserAuthConfigVO extends BaseVO implements Serializable {
+public class HjhUserAuthConfigLogCustomize implements Serializable {
     private Integer id;
+
+    private Integer authConfigId;
 
     private Integer authType;
 
@@ -20,22 +19,32 @@ public class HjhUserAuthConfigVO extends BaseVO implements Serializable {
 
     private String remark;
 
-    private Integer createUserId;
-
-    private Integer updateUserId;
-
-    private Date createTime;
-
-    private Date updateTime;
-
     private String ip;
 
-    public String getIp() {
-        return ip;
+    private String mac;
+
+    private Integer createUser;
+
+    private String createUserStr;
+
+    private Integer createTime;
+
+    private String  createTimeStr;
+
+    public String getCreateUserStr() {
+        return createUserStr;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setCreateUserStr(String createUserStr) {
+        this.createUserStr = createUserStr;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
     }
 
     private static final long serialVersionUID = 1L;
@@ -46,6 +55,14 @@ public class HjhUserAuthConfigVO extends BaseVO implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getAuthConfigId() {
+        return authConfigId;
+    }
+
+    public void setAuthConfigId(Integer authConfigId) {
+        this.authConfigId = authConfigId;
     }
 
     public Integer getAuthType() {
@@ -96,35 +113,35 @@ public class HjhUserAuthConfigVO extends BaseVO implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateUserId() {
-        return createUserId;
+    public String getIp() {
+        return ip;
     }
 
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
+    public void setIp(String ip) {
+        this.ip = ip == null ? null : ip.trim();
     }
 
-    public Integer getUpdateUserId() {
-        return updateUserId;
+    public String getMac() {
+        return mac;
     }
 
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
+    public void setMac(String mac) {
+        this.mac = mac == null ? null : mac.trim();
     }
 
-    public Date getCreateTime() {
+    public Integer getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
+    }
+
+    public Integer getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Integer createTime) {
         this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

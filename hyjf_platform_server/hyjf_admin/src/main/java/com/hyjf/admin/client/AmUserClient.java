@@ -1266,4 +1266,18 @@ public interface AmUserClient {
      * @auther: nxl
      */
     boolean insertUserAuthLog2(HjhUserAuthLogRequest hjhUserAuthLogRequest);
+    /**
+     * 根据用户的查询条件查询用户还款授权列表
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    UserPayAuthResponse selectRecordListRePay(UserPayAuthRequest request);
+    /**
+     * 还款授权解约
+     * @param userId
+     * @return
+     * @auther: nxl
+     */
+    int updateCancelRePayAuth(int userId);
 }

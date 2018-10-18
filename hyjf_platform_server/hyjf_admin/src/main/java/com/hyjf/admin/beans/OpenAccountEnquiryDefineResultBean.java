@@ -15,7 +15,7 @@ public class OpenAccountEnquiryDefineResultBean implements Serializable {
     private String mobile;
     @ApiModelProperty(value = "身份证")
     private String idcard;
-    @ApiModelProperty(value = "查询返回结果,success")
+    @ApiModelProperty(value = "查询返回结果,y 是可以提交保存")
     private String status;
     @ApiModelProperty(value = "查询返回结果说明")
     private String result;
@@ -35,6 +35,15 @@ public class OpenAccountEnquiryDefineResultBean implements Serializable {
     private String accountId;
     @ApiModelProperty(value = "开户平台")
     private String platform;
+    @ApiModelProperty(value = "姓名")
+    private String name;
+    @ApiModelProperty(value = "地址")
+    private String addr;
+    @ApiModelProperty(value = "是否开户  0否1 是")
+    private String isOpen;
+    @ApiModelProperty(value = "角色")
+    private String roleId;
+
 
     public String getMobile() {
         return mobile;
@@ -130,5 +139,37 @@ public class OpenAccountEnquiryDefineResultBean implements Serializable {
 
     public void setPlatform(String platform) {
         this.platform = platform;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
+    public String getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(String isOpen) {
+        this.isOpen = isOpen;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 }

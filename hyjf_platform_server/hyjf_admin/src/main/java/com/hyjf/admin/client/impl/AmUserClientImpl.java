@@ -2558,4 +2558,36 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return response.getResultBoolean().booleanValue();
 	}
+	/**
+	 * 根据用户的查询条件查询用户还款授权列表
+	 * @param request
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public UserPayAuthResponse selectRecordListRePay(UserPayAuthRequest request) {
+		UserPayAuthResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userPayAuth/selectRecordListRePay", request, UserPayAuthResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 还款授权解约
+	 * @param userId
+	 * @return
+	 * @auther: nxl
+	 */
+	@Override
+	public int updateCancelRePayAuth(int userId) {
+		IntegerResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userPayAuth/updateCancelRePayAuth/"+userId, IntegerResponse.class)
+				.getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getResultInt().intValue();
+	}
 }

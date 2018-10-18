@@ -14,6 +14,7 @@ import com.hyjf.am.response.user.UserPayAuthResponse;
 import com.hyjf.am.resquest.user.HjhUserAuthLogRequest;
 import com.hyjf.am.resquest.user.UserPayAuthRequest;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -43,7 +44,7 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
 
 
     /**
-     * 查找用户信息
+     * 查找缴费授权列表
      *
      * @param request
      * @return
@@ -82,7 +83,7 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
         return amUserClient.isDismissPay(userId);
     }
     /**
-     * 查看该用户在投标的还款记录中是否存在
+     * 查看该用户是否存在未还款标的
      * @param userId
      * @auther: nxl
      * @return
@@ -130,6 +131,48 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
         BankCallBean retBean = BankCallUtils.callApiBg(selectbean);
         return retBean;
     }
+
+    /**
+     * 还款授权解约
+     * @param userId
+     * @param channel
+     * @return
+     */
+    @Override
+    public BankCallBean cancelRePayAuth(int userId, String channel) {
+        String orderId=GetOrderIdUtils.getOrderId2(userId);
+        BankCallBean selectbean = new BankCallBean();
+        selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+        selectbean.setTxCode(BankCallConstant.TXCODE_AUTO_REPAY_AUTH_CANCEL);
+        selectbean.setInstCode(systemConfig.getBANK_INSTCODE());// 机构代码
+        selectbean.setBankCode(systemConfig.getBANK_BANKCODE());
+        selectbean.setTxDate(GetOrderIdUtils.getTxDate());
+        selectbean.setTxTime(GetOrderIdUtils.getTxTime());
+        selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+        selectbean.setChannel(channel);
+
+        BankOpenAccountVO bankOpenAccount = this.getBankOpenAccount(userId);
+        if (bankOpenAccount != null) {
+            selectbean.setAccountId(bankOpenAccount.getAccount());// 电子账号
+        }
+        selectbean.setOrderId(orderId);// 订单号
+        selectbean.setMaxAmt("2000000");
+        selectbean.setTxType("2");
+        HjhUserAuthResponse hjhUserAuthResponse = this.selectUserPayAuthByUserId(userId);
+        if (hjhUserAuthResponse == null) {
+            return null;
+        }
+        HjhUserAuthVO hjhUserAuth = hjhUserAuthResponse.getResult();
+        if (hjhUserAuth != null) {
+            selectbean.setDeadline(hjhUserAuth.getAutoRepayEndTime());
+        }
+        // 操作者IDX
+        selectbean.setLogUserId(String.valueOf(userId));
+        selectbean.setLogOrderId(orderId);
+        // 调用接口
+        BankCallBean retBean = BankCallUtils.callApiBg(selectbean);
+        return retBean;
+    }
     /**
      * 更新授权表
      * @param userId
@@ -160,6 +203,24 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
         hjhUserAuthRequest.setUpdateUserId(userId);
         hjhUserAuthRequest.setDelFlag(0);
         return amUserClient.insertUserAuthLog2(hjhUserAuthRequest);
-
+    }
+    /**
+     * 查找还款授权列表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public UserPayAuthResponse selectRecordListRePay(UserPayAuthRequest request) {
+        return amUserClient.selectRecordListRePay(request);
+    }
+    /**
+     * 还款解约授权
+     * @param userId
+     * @return
+     */
+    @Override
+    public int updateCancelRePayAuth(int userId){
+        return amUserClient.updateCancelRePayAuth(userId);
     }
 }

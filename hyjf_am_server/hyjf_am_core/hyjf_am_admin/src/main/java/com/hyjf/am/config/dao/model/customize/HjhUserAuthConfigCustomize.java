@@ -1,11 +1,8 @@
-package com.hyjf.am.vo.user;
-
-import com.hyjf.am.vo.BaseVO;
+package com.hyjf.am.config.dao.model.customize;
 
 import java.io.Serializable;
-import java.util.Date;
 
-public class HjhUserAuthConfigVO extends BaseVO implements Serializable {
+public class HjhUserAuthConfigCustomize implements Serializable {
     private Integer id;
 
     private Integer authType;
@@ -20,25 +17,35 @@ public class HjhUserAuthConfigVO extends BaseVO implements Serializable {
 
     private String remark;
 
-    private Integer createUserId;
+    private Integer createUser;
 
-    private Integer updateUserId;
+    private Integer createTime;
 
-    private Date createTime;
+    private Integer updateUser;
 
-    private Date updateTime;
+    private String updateUserStr;
 
-    private String ip;
+    private Integer updateTime;
 
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
+    private String updateTimeStr;
 
     private static final long serialVersionUID = 1L;
+
+    public String getUpdateUserStr() {
+        return updateUserStr;
+    }
+
+    public void setUpdateUserStr(String updateUserStr) {
+        this.updateUserStr = updateUserStr;
+    }
+
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
+    }
 
     public Integer getId() {
         return id;
@@ -96,35 +103,35 @@ public class HjhUserAuthConfigVO extends BaseVO implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateUserId() {
-        return createUserId;
+    public Integer getCreateUser() {
+        return createUser;
     }
 
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
     }
 
-    public Integer getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
-    }
-
-    public Date getCreateTime() {
+    public Integer getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Integer createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public Integer getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(Integer updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public Integer getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
     }
 }

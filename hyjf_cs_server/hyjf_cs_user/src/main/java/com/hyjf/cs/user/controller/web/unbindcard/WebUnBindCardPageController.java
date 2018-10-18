@@ -41,11 +41,11 @@ public class WebUnBindCardPageController extends BaseUserController{
      * 绑卡接口
      */
     @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
-    @ApiImplicitParam(name = "paraMap",value = "{urlstatus:string}", dataType = "Map")
+//    @ApiImplicitParam(name = "paraMap",value = "{urlstatus:string}", dataType = "Map")
     @PostMapping(value = "/deleteCardPage", produces = "application/json; charset=utf-8")
-    public WebResult<Object> bindCardPage(@RequestHeader(value = "userId") int userId, @RequestBody Map<String,String> param, HttpServletRequest request) {
+    public WebResult<Object> bindCardPage(@RequestParam(value = "userId") int userId, @RequestParam(value = "cardId") String cardId, HttpServletRequest request) {
         // 银行卡id
-        String cardId = param.get("cardId");
+//        String cardId = param.get("cardId");
         WebResult<Object> result = new WebResult<>();
         WebViewUserVO user = unBindCardService.getUserFromCache(userId);
         // 取得用户在汇付天下的客户号
