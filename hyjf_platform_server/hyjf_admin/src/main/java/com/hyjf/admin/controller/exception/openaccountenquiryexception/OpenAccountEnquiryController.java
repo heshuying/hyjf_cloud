@@ -47,7 +47,7 @@ public class OpenAccountEnquiryController extends BaseController {
     @ApiOperation(value = "用户按照手机号和身份证号查询开户掉单后同步系统掉单信息，更改用户状态", notes = "用户按照手机号和身份证号查询开户掉单后同步系统掉单信息，更改用户状态")
     @PostMapping("/openAccountEnquiryUpdate")
     //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-    public AdminResult<OpenAccountEnquiryDefineResultBean> enquiryUpdate(HttpServletRequest request,@RequestBody OpenAccountEnquiryDefineRequestBean requestBean) {
+    public AdminResult<OpenAccountEnquiryDefineResultBean> enquiryUpdate(HttpServletRequest request,@RequestBody OpenAccountEnquiryDefineResultBean requestBean) {
         AdminSystemVO currUser = getUser(request);
         if(currUser == null){
             return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
