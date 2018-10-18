@@ -386,28 +386,57 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if(request.getPlatform()==null){
             throw new CheckException(MsgEnum.STATUS_ZC000018);
         }
-        if ("2".equals(request.getPlatform()) && "0".equals(borrowInfoVO.getCanTransactionAndroid())) {
+        String platform = request.getPlatform();
+        if (platform.equals("0") && borrow.getCanTransactionPc().equals("0")) {
             String tmpInfo = "";
-            if ("1".equals(borrowInfoVO.getCanTransactionPc())) {
-                throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PC);
+            if (borrow.getCanTransactionAndroid().equals("1")) {
+                tmpInfo += " Android端  ";
             }
-            if ("1".equals(borrowInfoVO.getCanTransactionIos())) {
-                throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_IOS);
+            if (borrow.getCanTransactionIos().equals("1")) {
+                tmpInfo += " Ios端  ";
             }
-            if ("1".equals(borrowInfoVO.getCanTransactionWei())) {
-                throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_WEI);
+            if (borrow.getCanTransactionWei().equals("1")) {
+                tmpInfo += " 微信端  ";
             }
-        } else if ("3".equals(request.getPlatform()) && "0".equals(borrowInfoVO.getCanTransactionIos())) {
-            if ("1".equals(borrowInfoVO.getCanTransactionPc())) {
-                throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PC);
+            throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PLAT,tmpInfo);
+        } else if (platform.equals("1") && borrow.getCanTransactionWei().equals("0")) {
+            String tmpInfo = "";
+            if (borrow.getCanTransactionAndroid().equals("1")) {
+                tmpInfo += " Android端  ";
             }
-            if ("1".equals(borrowInfoVO.getCanTransactionAndroid())) {
-                throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_ANDROID);
+            if (borrow.getCanTransactionIos().equals("1")) {
+                tmpInfo += " Ios端  ";
             }
-            if ("1".equals(borrowInfoVO.getCanTransactionWei())) {
-                throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_WEI);
+            if (borrow.getCanTransactionPc().equals("1")) {
+                tmpInfo += " Pc端  ";
             }
+            throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PLAT,tmpInfo);
+        } else if (platform.equals("2") && borrow.getCanTransactionAndroid().equals("0")) {
+            String tmpInfo = "";
+            if (borrow.getCanTransactionPc().equals("1")) {
+                tmpInfo += " PC端  ";
+            }
+            if (borrow.getCanTransactionIos().equals("1")) {
+                tmpInfo += " Ios端  ";
+            }
+            if (borrow.getCanTransactionWei().equals("1")) {
+                tmpInfo += " 微信端  ";
+            }
+            throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PLAT,tmpInfo);
+        } else if (platform.equals("3") && borrow.getCanTransactionIos().equals("0")) {
+            String tmpInfo = "";
+            if (borrow.getCanTransactionPc().equals("1")) {
+                tmpInfo += " PC端  ";
+            }
+            if (borrow.getCanTransactionAndroid().equals("1")) {
+                tmpInfo += " Android端  ";
+            }
+            if (borrow.getCanTransactionWei().equals("1")) {
+                tmpInfo += " 微信端  ";
+            }
+            throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PLAT,tmpInfo);
         }
+
         // 借款人不可以自己投资项目
         if (userId.equals(String.valueOf(borrow.getUserId()))) {
             throw new CheckException(MsgEnum.ERR_TENDER_YOURSELF);
