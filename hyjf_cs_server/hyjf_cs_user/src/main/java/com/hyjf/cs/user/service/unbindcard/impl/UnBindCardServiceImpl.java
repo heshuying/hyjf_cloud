@@ -148,7 +148,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 	 */
 	@Override
 	public void checkParamUnBindCardPage(WebViewUserVO user,BankOpenAccountVO accountChinapnrTender,AccountVO accountVO,BankCardVO bankCardVO){
-		if(null!=user){
+		if(null == user){
 			CheckUtil.check(false,MsgEnum.ERR_OBJECT_GET,"用户信息");// 获取用户信息失败
 		}
 		//企业用户解绑请联系客服
