@@ -334,7 +334,7 @@
         -- 	''
         -- END AS coupon_content,
         -- IF(hcu.add_user=040 ,'系统', ha.username) grant_way,
-        hcu.create_user_id grant_way,
+        u.username grant_way,
         DATE_FORMAT(hcu.create_time, '%Y-%m-%d') add_time,
         DATE_FORMAT(hcu.create_time, '%Y-%m-%d %H:%i') add_time_full,
         hbt.nid nid,
@@ -383,6 +383,7 @@
         LEFT JOIN ht_coupon_tender hct ON hcu.id = hct.coupon_grant_id
         LEFT JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid
         INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
+        LEFT JOIN ht_r_user u ON hcu.update_user_id = u.user_id
         -- LEFT JOIN ht_activity_list hal ON hcu.activity_id = hal.id
         LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
         LEFT JOIN ht_hjh_plan hhp ON hbt.borrow_nid = hhp.plan_nid
