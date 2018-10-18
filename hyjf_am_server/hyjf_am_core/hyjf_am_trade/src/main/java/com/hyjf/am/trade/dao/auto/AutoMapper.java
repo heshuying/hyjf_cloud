@@ -507,5 +507,8 @@ public class AutoMapper {
 
     @Resource
     protected HjhBailConfigInfoMapper hjhBailConfigInfoMapper;
+
+    @Resource
+    protected AppPushManageMapper appPushManageMapper;
 }
 

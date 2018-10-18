@@ -494,4 +494,18 @@ public class ProjectListController extends BaseController {
         response.setResultList(resultList);
         return response;
     }
+
+    /**
+     * app首页获取有效公告
+     * @Author yangchangwei 2018/10/18
+     * @return
+     */
+    @GetMapping("/apphomepage/getAnnouncements")
+    public AppPushManageReponse selectAnnouncements(){
+
+        AppPushManageReponse reponse = new AppPushManageReponse();
+        List<AppPushManageVO> resultList = projectListService.getAnnouncements();
+        reponse.setResultList(resultList);
+        return reponse;
+    }
 }
