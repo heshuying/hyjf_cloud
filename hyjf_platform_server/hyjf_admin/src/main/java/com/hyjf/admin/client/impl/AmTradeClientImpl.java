@@ -1315,7 +1315,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-ADMIN/am-trade/manualreverse/getlist";
         ManualReverseCustomizeResponse response = restTemplate.postForEntity(url, requestBean, ManualReverseCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            response.getResultList();
+            return response.getResultList();
         }
         return null;
     }
