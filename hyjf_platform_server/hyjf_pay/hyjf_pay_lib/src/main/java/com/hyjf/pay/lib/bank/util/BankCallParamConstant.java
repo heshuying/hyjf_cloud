@@ -101,6 +101,8 @@ public class BankCallParamConstant extends BankCallMethodConstant implements Ser
 	public static final String PARAM_VERIFYORDERURL = "verifyOrderUrl";
 	/** 交易流水号 */
 	public static final String PARAM_SEQNO = "seqNo";
+	/** 流水是否经过借款人标志 1：经过; 空：不经过 */
+	public static final String PARAM_SEQFLAG = "seqFlag";
 	/** 前台跳转链接 */
 	public static final String PARAM_RETURL = "retUrl";
 	/** 后台通知连接 */
@@ -276,6 +278,8 @@ public class BankCallParamConstant extends BankCallMethodConstant implements Ser
 	public static final String PARAM_STATE = "state";
 	/** 交易利息 */
 	public static final String PARAM_INTAMOUNT = "intAmount";
+	/** 罚息金额 */
+	public static final String PARAM_FINEAMOUNT = "fineAmount";
 	/** 还款手续费 */
 	public static final String PARAM_TXFEEOUT = "txFeeOut";
 	/** 收款手续费 */

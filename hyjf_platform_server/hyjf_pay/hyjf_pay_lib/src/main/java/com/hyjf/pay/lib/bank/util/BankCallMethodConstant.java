@@ -204,6 +204,10 @@ public class BankCallMethodConstant implements Serializable {
 	 */
 	public static final String TXCODE_BATCH_REPAY = "batchRepay";
 	/**
+	 * 批次代偿
+	 */
+	public static final String TXCODE_BATCH_SUBST_REPAY = "batchSubstRepay";
+	/**
 	 * 批次融资人还担保账户垫款
 	 */
 	public static final String TXCODE_BATCH_REPAY_BAIL = "batchRepayBail";
