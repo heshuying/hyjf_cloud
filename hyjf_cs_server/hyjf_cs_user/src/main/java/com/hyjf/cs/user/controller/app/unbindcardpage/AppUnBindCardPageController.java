@@ -37,7 +37,7 @@ import java.util.Map;
 @Api(value = "app端-用户解绑卡接口(页面调用)",tags = "app端-用户解绑卡接口(页面调用)")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/hyjf-web/user/deleteCardPage")
+@RequestMapping("/hyjf-app/user/deleteCardPage")
 public class AppUnBindCardPageController extends BaseUserController{
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebBindCardPageController.class);
 
