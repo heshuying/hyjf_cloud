@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.resquest.admin.AssetExceptionRequest;
 import com.hyjf.am.vo.admin.AssetExceptionCustomizeVO;
@@ -61,4 +62,11 @@ public interface AssetExceptionService extends BaseService {
      * @return
      */
     boolean updateAssetException(AssetExceptionRequest assetExceptionRequest);
+
+    /**
+     * 资产来源下拉列表
+     *
+     * @return
+     */
+    List<DropDownVO> selectHjhInstConfigList();
 }

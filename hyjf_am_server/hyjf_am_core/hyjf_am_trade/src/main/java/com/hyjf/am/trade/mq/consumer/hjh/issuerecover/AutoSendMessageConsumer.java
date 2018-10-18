@@ -91,7 +91,7 @@ public class AutoSendMessageConsumer extends Consumer {
 //                    logger.info(mqHjhPlanAsset.getAssetId()+" 开始自动录标 "+ mqHjhPlanAsset.getInstCode());
 //                    HjhPlanAsset hjhPlanAsset = autoIssueRecoverService.selectPlanAsset(mqHjhPlanAsset.getAssetId(), mqHjhPlanAsset.getInstCode());
                     if(mqHjhPlanAsset == null){
-                        logger.info(mqHjhPlanAsset.getAssetId()+" 该资产在表里不存在！！");
+                        logger.info(" 该资产在表里不存在！！");
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
 
@@ -114,7 +114,7 @@ public class AutoSendMessageConsumer extends Consumer {
                     //判断该资产是否可以自动录标，是否关联计划
                     HjhAssetBorrowtype hjhAssetBorrowType = autoIssueRecoverService.selectAssetBorrowType(mqHjhPlanAsset);
                     if(hjhAssetBorrowType==null || hjhAssetBorrowType.getAutoAdd() != 1){
-                        logger.info(mqHjhPlanAsset.getAssetId()+" 该资产不能自动录标,流程配置未启用");
+                        logger.info(" 该资产不能自动录标,流程配置未启用");
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
 
@@ -126,7 +126,8 @@ public class AutoSendMessageConsumer extends Consumer {
                         try {
                             JSONObject params = new JSONObject();
                             params.put("planId", mqHjhPlanAsset.getId());
-                            autoIssueRecoverProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                            //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+                            autoIssueRecoverProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
                         } catch (MQException e) {
                             logger.error("发送【自动录标】MQ失败...");
                         }

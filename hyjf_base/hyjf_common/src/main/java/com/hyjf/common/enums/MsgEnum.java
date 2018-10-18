@@ -347,6 +347,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_TENDER_ALLOWED_IOS("EV100009","该项目只能在IOS端投资"),
 	ERR_TENDER_ALLOWED_WEI("EV100010","该项目只能在微信端投资"),
 	ERR_TENDER_ALLOWED_ANDROID("EV100011","该项目只能在Android端投资"),
+	ERR_TENDER_ALLOWED_PLAT("EV100015","该项目只能在{0}端投资"),
 	ERR_TENDER_YOURSELF("EV100012","借款人不可以自己投资项目"),
 	ERR_TENDER_BIDDERS("EV100013","此项目已经流标"),
 	ERR_TENDER_FULL_STANDARD("EV100014","此项目已经满标"),

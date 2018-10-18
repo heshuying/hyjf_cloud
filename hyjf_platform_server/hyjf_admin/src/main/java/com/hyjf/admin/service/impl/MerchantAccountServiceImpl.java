@@ -61,7 +61,7 @@ public class MerchantAccountServiceImpl implements MerchantAccountService {
             // 如果接口调用成功
             if (null!=resultBean&&ChinaPnrConstant.RESPCODE_SUCCESS.equals(respCode)) {
                 //如果接口返回的账户结果串不为空
-                if (StringUtils.isNotBlank(resultBean.getAcctDetails())) {
+                if (resultBean != null&&StringUtils.isNotBlank(resultBean.getAcctDetails())) {
                     try {
                         String acctDetails = resultBean.getAcctDetails();
                         //转换账户结果串为json数组

@@ -11,7 +11,7 @@
 		<where>
 			<!-- 用户名 -->
 			<if test="userNameSrch != null and userNameSrch != ''">
-				hu.username LIKE CONCAT( #{userNameSrch}, '%')
+				AND hu.username LIKE CONCAT( #{userNameSrch}, '%')
 			</if>
 			<!-- 电子账户号 -->
 			<if test="accountIdSrch != null and accountIdSrch != ''">
@@ -19,7 +19,7 @@
 			</if>
 			<!-- 手机号 -->
 			<if test="mobileSrch!=null and mobileSrch != ''">
-				hu.mobile LIKE CONCAT(#{mobileSrch},'%')
+				AND hu.mobile LIKE CONCAT(#{mobileSrch},'%')
 			</if>
 		</where>
 	</sql>

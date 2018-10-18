@@ -23,6 +23,7 @@ public class CouponTenderUsedVO {
     private BigDecimal expectApr;
     private  String borrowStyle;
     private BigDecimal couponInterest;
+    private String userName;
 
     public Integer getCouponGrantId() {
         return couponGrantId;
@@ -118,5 +119,13 @@ public class CouponTenderUsedVO {
 
     public void setCouponInterest(BigDecimal couponInterest) {
         this.couponInterest = couponInterest;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

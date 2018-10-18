@@ -167,7 +167,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             // add 汇计划三期 汇计划自动投资(投资笔数累计) liubin 20180515 end
 
             // ketouplanAmoust小于1元时报警告信息
-            if (ketouplanAmoust.compareTo(new BigDecimal(1)) == -1) {
+            if (ketouplanAmoust.compareTo(new BigDecimal(1)) < 0) {
                 logger.warn("警告====[" + accedeOrderId + "]" + "的可投资金额为" + ketouplanAmoust.toString() + ",小于1元");
             }
 
@@ -560,7 +560,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
         //投资完成更新计划明细
         // 如果计划成功，则更新计划表为投资完成
-        if (ketouplanAmoust.compareTo(minAccountEnable) == -1) {
+        if (ketouplanAmoust.compareTo(minAccountEnable) < 0) {
             // 0投资
             if (hjhAccede.getOrderStatus() == 0) {
                 this.updateHjhAccedeOfOrderStatus(hjhAccede, 2);

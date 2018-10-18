@@ -44,8 +44,8 @@ public class CouponController extends BaseTradeController {
      */
     @ApiOperation(value = "获取我的优惠券列表", notes = "获取我的优惠券列表")
     @PostMapping("/getUserCoupons")
-    public WebResult<Map<String,Object>> getUserCoupons(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) throws Exception {
-        WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
+    public JSONObject getUserCoupons(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) throws Exception {
+        JSONObject result = new JSONObject();
         logger.info("获取我的优惠券列表");
         String couponStatus = "0";
         Integer page = 1;
@@ -55,15 +55,15 @@ public class CouponController extends BaseTradeController {
             Map<String,Object> resultMap = new HashMap<String,Object>();
             Integer count =  appCouponService.countMyCoupon(userId,couponStatus);
             List<CouponUserForAppCustomizeVO> couponList = appCouponService.getMyCoupon(userId,page,pageSize,couponStatus);
-            resultMap.put("couponTotal",count);
-            resultMap.put("couponStatus",couponStatus);
-            resultMap.put("couponList",couponList);
-            resultMap.put("request","/hyjf-app/coupon/getUserCoupons");
-            result.setData(resultMap);
-            result.setStatus("0");
+            result.put("couponTotal",count);
+            result.put("couponStatus",couponStatus);
+            result.put("couponList",couponList);
+            result.put("request","/hyjf-app/coupon/getUserCoupons");
+            result.put("status","0");
+            result.put("statusDesc","用户未登录");
         }else{
-            result.setStatus(WebResult.FAIL);
-            result.setStatusDesc("用户未登录");
+            result.put("status",WebResult.FAIL);
+            result.put("statusDesc","用户未登录");
             logger.info("用户未登录！");
         }
         return result;

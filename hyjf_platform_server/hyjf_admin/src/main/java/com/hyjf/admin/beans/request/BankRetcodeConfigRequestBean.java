@@ -150,4 +150,16 @@ public class BankRetcodeConfigRequestBean extends BasePage implements Serializab
         }
         return paginatorPage;
     }
+
+    public void setPaginatorPage(int paginatorPage) {
+        this.paginatorPage = paginatorPage;
+    }
+
+    public Paginator getPaginator() {
+        return paginator;
+    }
+
+    public void setPaginator(Paginator paginator) {
+        this.paginator = paginator;
+    }
 }

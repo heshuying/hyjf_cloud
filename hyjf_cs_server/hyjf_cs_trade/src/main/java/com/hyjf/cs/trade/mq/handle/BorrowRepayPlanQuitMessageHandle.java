@@ -37,9 +37,9 @@ public class BorrowRepayPlanQuitMessageHandle {
     public void sendMessage(String accedeOrderId, Integer orderStatus, Integer creditCompleteFlag) {
 
         if (orderStatus == 2) {
-            logger.info("--------------计划订单号：" + accedeOrderId + "，开始进入锁定期！------");
+            logger.debug("--------------计划订单号：" + accedeOrderId + "，开始进入锁定期！------");
         } else if (orderStatus == 5 && creditCompleteFlag == 1) {
-            logger.info("--------------计划订单号：" + accedeOrderId + "，开始退出计划！------");
+            logger.debug("--------------计划订单号：" + accedeOrderId + "，开始退出计划！------");
         }
         // 生成任务key 校验并发请求
         String redisKey = RedisConstants.PLAN_REPAY_TASK + accedeOrderId;
@@ -66,7 +66,7 @@ public class BorrowRepayPlanQuitMessageHandle {
         }
         RedisUtils.srem(RedisConstants.HJH_LOCK_REPEAT, accedeOrderId);
         RedisUtils.del(redisKey);
-        logger.info("----------------------------计划退出结束--------------------------------");
+        logger.debug("----------------------------计划退出结束--------------------------------");
 
     }
 

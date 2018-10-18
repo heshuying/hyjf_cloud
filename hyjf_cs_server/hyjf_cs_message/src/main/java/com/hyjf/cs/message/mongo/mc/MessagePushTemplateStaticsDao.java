@@ -86,8 +86,7 @@ public class MessagePushTemplateStaticsDao extends BaseMongoDao<MessagePushTempl
 			int currPage = request.getCurrPage();
 			int pageSize = request.getPageSize();
 			int limitStart = (currPage - 1) * pageSize;
-			int limitEnd = limitStart + pageSize;
-			query.skip(limitStart).limit(limitEnd);
+			query.skip(limitStart).limit(pageSize);
 		}
 		return mongoTemplate.find(query, getEntityClass());
 	}

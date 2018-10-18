@@ -122,7 +122,7 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
      */
     @ApiIgnore
     @RequestMapping("/return")
-    public ModelAndView cashReturn(HttpServletRequest request, ChinapnrBean bean) {
+    public ModelAndView cashReturn(HttpServletRequest request,@ModelAttribute ChinapnrBean bean) {
         logger.info("[交易完成后,回调开始]");
         ModelAndView modelAndView = new ModelAndView(WITHDRAW_SUCCESS);
         String callback = request.getParameter("callback");
@@ -284,11 +284,13 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
      */
     @ApiIgnore
     @RequestMapping("/callback")
-    public ModelAndView cashCallBack(HttpServletRequest request, @ModelAttribute ChinapnrBean bean) {
+    public WebResult cashCallBack(HttpServletRequest request, @RequestBody ChinapnrBean bean) {
+        WebResult result = new WebResult();
+        Map<String,Object> map = new HashMap<>();
         logger.info("[交易完成后,回调开始]");
-        ModelAndView modelAndView = new ModelAndView(WITHDRAW_SUCCESS);
+        logger.debug("参数1: " + bean == null ? "无" : bean.getAllParams() + "]");
         bean.convert();
-        logger.debug("参数: " + bean == null ? "无" : bean.getAllParams() + "]");
+        logger.debug("参数2: " + bean == null ? "无" : bean.getAllParams() + "]");
         // 取得更新用UUID
         boolean updateFlag = false;
         String uuid = request.getParameter("uuid");
@@ -310,10 +312,10 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
         }
         // 其他程序正在处理中,或者返回值错误
         if (!updateFlag) {
-            modelAndView = new ModelAndView(WITHDRAW_SUCCESS);
-            modelAndView.addObject("amt", bean.getTransAmt());
-            modelAndView.addObject("info", "恭喜您，提现成功");
-            return modelAndView;
+            map.put("amt", bean.getTransAmt());
+            map.put("info", "恭喜您，提现成功");
+            result.setData(map);
+            return result;
         }
         // 发送状态
         String status = ChinaPnrConstant.STATUS_VERTIFY_OK;
@@ -404,17 +406,17 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
             this.chinapnrService.updateChinapnrExclusiveLogStatus(Long.parseLong(uuid), status);
         }
         if (ChinaPnrConstant.STATUS_SUCCESS.equals(status)) {
-            modelAndView = new ModelAndView(WITHDRAW_SUCCESS);
-            modelAndView.addObject("amt", bean.getTransAmt());
-            modelAndView.addObject("info", "恭喜您，提现成功");
+            map.put("amt", bean.getTransAmt());
+            map.put("info", "恭喜您，提现成功");
+            result.setData(map);
         } else if (ChinaPnrConstant.RESPCODE_CHECK.equals(status)) {
-            modelAndView = new ModelAndView(WITHDRAW_INFO);
-            modelAndView.addObject("info", "汇付处理中，请稍后查询交易明细");
+            map.put("info", "汇付处理中，请稍后查询交易明细");
+            result.setData(map);
         } else {
-            modelAndView = new ModelAndView(WITHDRAW_INFO);
-            modelAndView.addObject("info", "汇付处理中，请稍后查询交易明细");
+            map.put("info", "汇付处理中，请稍后查询交易明细");
+            result.setData(map);
         }
-        return modelAndView;
+        return result;
     }
 
 }

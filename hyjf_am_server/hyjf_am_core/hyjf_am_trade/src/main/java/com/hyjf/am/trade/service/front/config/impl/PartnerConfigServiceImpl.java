@@ -87,9 +87,9 @@ public class PartnerConfigServiceImpl extends BaseServiceImpl implements Partner
             record = this.getInstConfigRecordById(req.getIds());
             record.setDelFlag(1);
             int result = hjhInstConfigMapper.updateByPrimaryKeySelective(record);
-            if(result > 0 && RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode())){
-                RedisUtils.del(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode());
-            }
+//            if(result > 0 && RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode())){
+//                RedisUtils.del(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode());
+//            }
         }
     }
     /**
