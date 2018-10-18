@@ -61,6 +61,17 @@ public class AssetListViewRequest extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "用户类型(选传)查询")
 	private int userType;
 
+	@ApiModelProperty(value = "1 重新验证保证金 0 流标")
+	private String menuHide;
+
+	public String getMenuHide() {
+		return menuHide;
+	}
+
+	public void setMenuHide(String menuHide) {
+		this.menuHide = menuHide;
+	}
+
 	public int getUserType() {
 		return userType;
 	}

@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @EnableDiscoveryClient
-@ComponentScan(basePackages={"com.hyjf.cs"})
+@ComponentScan(basePackages={"com.hyjf"})
 public class CsMessageApplication {
 	@Bean
 	@LoadBalanced

@@ -117,11 +117,6 @@ public interface AmMarketClient {
      * @return
      */
     MessagePushHistoryResponse getRecordList(MessagePushHistoryRequest request);
-    /**
-     * 获取消息推送标签列表
-     * @return
-     */
-    MessagePushTagResponse getAllPushTagList();
 
     /**
      * 根据id查询单条消息

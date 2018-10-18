@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +57,14 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
 
     @Override
     public List<EventVO> getEventsList() {
-        return amConfigClient.getEventsList();
+        List<EventVO> eventsList = amConfigClient.getEventsList();
+        List<EventVO> list = new ArrayList<>();
+        for (EventVO vo : eventsList) {
+            if (vo.getStatus() == 1) {
+                list.add(vo);
+            }
+        }
+        return list;
     }
 
     @Override

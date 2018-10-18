@@ -129,6 +129,11 @@ public class OperationalDataController {
 				detail.put("fullScaleHour", oe.getHour(time));
 				detail.put("fullScaleMinute", oe.getMinutes(time));
 				detail.put("fullScaleSecond", oe.getSeconds(time));
+				detail.put("TotalBorrower", oe.getBorrowuserCountTotal());
+				detail.put("NowBorrower", oe.getBorrowuserCountCurrent());
+				detail.put("CurrentInvestor", oe.getTenderuserCountCurrent());
+				detail.put("MaxBorrowerRate", oe.getBorrowuserMoneyTopone());
+				detail.put("Top10BorrowerRate", oe.getBorrowuserMoneyTopten());
 			}
 
 			detail.put("relationshipTotal", 0);
@@ -137,12 +142,6 @@ public class OperationalDataController {
 			detail.put("overdueNum", 0);
 			detail.put("overdue90Total", 0);
 			detail.put("overdue90Num", 0);
-
-			detail.put("TotalBorrower", oe.getBorrowuserCountTotal());
-			detail.put("NowBorrower", oe.getBorrowuserCountCurrent());
-			detail.put("CurrentInvestor", oe.getTenderuserCountCurrent());
-			detail.put("MaxBorrowerRate", oe.getBorrowuserMoneyTopone());
-			detail.put("Top10BorrowerRate", oe.getBorrowuserMoneyTopten());
 
 			result.put("info", detail);
 
@@ -282,6 +281,6 @@ public class OperationalDataController {
 	}
 	
 	public String trim(float input,int fenzi){
-		return new BigDecimal((float)input/fenzi).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+		return  BigDecimal.valueOf((float)input/fenzi).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 	}
 }

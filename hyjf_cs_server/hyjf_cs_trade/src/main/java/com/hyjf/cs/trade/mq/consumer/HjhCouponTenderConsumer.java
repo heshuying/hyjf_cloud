@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.mq.base.Consumer;
@@ -71,8 +73,8 @@ public class HjhCouponTenderConsumer extends Consumer {
             map = JSONObject.parseObject(msgBody, Map.class);
             logger.info("计划类优惠券使用 收到消息，参数为: {} " , JSONObject.toJSONString(map));
             JSONObject result = new JSONObject();
+            Integer couponGrantId = Integer.parseInt((String) map.get("couponGrantId"));
             try {
-                Integer couponGrantId = Integer.parseInt((String) map.get("couponGrantId"));
                 String borrowNid = (String) map.get("borrowNid");
                 String money = (String) map.get("money");
                 String platform = (String) map.get("platform");
@@ -81,7 +83,11 @@ public class HjhCouponTenderConsumer extends Consumer {
                 Integer userId =  Integer.parseInt((String) map.get("userId"));
                 String mainTenderNid = (String) map.get("ordId");
                 String account = (String) map.get("account");
-
+                boolean isUsed = RedisUtils.tranactionSet(RedisConstants.COUPON_TENDER_KEY+couponGrantId, 300);
+                if (!isUsed) {
+                    logger.error("当前优惠券正在使用....");
+                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                }
                 HjhPlanVO plan = borrowClient.getPlanByNid(borrowNid);
 
                 // 检查优惠券能用不
@@ -93,11 +99,13 @@ public class HjhCouponTenderConsumer extends Consumer {
                     // 校验通过 进行优惠券投资投资
                     logger.info("优惠券投资校验成功,userId{},券为:{}", userId, couponGrantId);
                     CouponUserVO cuc = borrowClient.getCouponUser(couponGrantId, userId);
+                    cuc.setId(couponGrantId);
                     logger.info("优惠券投资开始,userId{},平台{},券为:{}", userId, platform, couponGrantId);
                     TenderRequest request = new TenderRequest();
                     request.setIp(ip);
                     request.setMainTenderNid(mainTenderNid);
                     request.setAccount(account);
+                    request.setPlatform(platform);
                     couponService.couponTender(request, plan, cuc , userId);
                 } else {
                     logger.error("优惠券投资校验失败返回结果{},userId{},券为:{}", validateMap.get("statusDesc"), userId, couponGrantId);
@@ -108,6 +116,10 @@ public class HjhCouponTenderConsumer extends Consumer {
                 logger.info("操作失败");
                 logger.info("计划优惠券投资失败    "+JSONObject.toJSONString(e));
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            } finally {
+                if(couponGrantId!=null){
+                    RedisUtils.del(RedisConstants.COUPON_TENDER_KEY+couponGrantId);
+                }
             }
         }
     }

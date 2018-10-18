@@ -132,7 +132,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 		msgSta.setMsgId(msg.getId());
 		msgSta.setMsgCode(msg.getMsgCode());
 		msgSta.setMsgTitle(msg.getMsgTitle());
-		msgSta.setTagId(msg.getTagId());
+		msgSta.setTagId(msg.getTagId().toString());
 		msgSta.setSendTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(msg.getSendTime()));
 		msgSta.setAndroidDestinationCount(0);
 		msgSta.setIosDestinationCount(0);
@@ -358,7 +358,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 		criteria.and("tagId").is(messagePushTagVO.getId()).and("staDate").is((GetDate.dateToString(today)));
 		query.addCriteria(criteria);
 		List<MessagePushPlatStatics> msgPushPlatStaticsList = msgPushPlatStaticsDao.find(query);
-		if (!CollectionUtils.isEmpty(msgHistoryList)) {
+		if (!CollectionUtils.isEmpty(msgPushPlatStaticsList)) {
 			platStatics.setId(msgPushPlatStaticsList.get(0).getId());
 
 			msgPushPlatStaticsDao.update(query, new Update());
@@ -378,7 +378,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 		msgSta.setMsgId(template.getId().toString());
 		msgSta.setMsgCode(template.getTemplateCode());
 		msgSta.setMsgTitle(template.getTemplateTitle());
-		msgSta.setTagId(String.valueOf(template.getTagId()));
+		msgSta.setTagId(template.getTagId().toString());
 		msgSta.setSendTime(GetDate.date2Str(template.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
 		msgSta.setAndroidDestinationCount(0);
 		msgSta.setIosDestinationCount(0);

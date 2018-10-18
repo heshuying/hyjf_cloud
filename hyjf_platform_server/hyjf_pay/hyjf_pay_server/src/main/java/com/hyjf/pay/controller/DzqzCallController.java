@@ -47,7 +47,7 @@ public class DzqzCallController extends BaseController {
     @PostMapping(value = DzqzCallDefine.FDD_CALL_APIBG)
     public String callApiBg(@RequestBody DzqzCallBean bean) {
         log.info("--------------开始调用pay工程-------------");
-        log.info("-------fdd-------ca参数-----[{}]",JSON.toJSONString(bean));
+        log.debug("-------fdd-------ca参数-----[{}]",JSON.toJSONString(bean));
         String ret = "";
         String orderId = "";
         try {

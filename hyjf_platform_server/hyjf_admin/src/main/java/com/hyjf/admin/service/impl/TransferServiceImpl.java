@@ -136,7 +136,7 @@ public class TransferServiceImpl extends BaseAdminServiceImpl implements Transfe
                                             BigDecimal avlBal = StringUtils.isBlank(acctObject.getString("AvlBal")) ? new BigDecimal("0") : acctObject.getBigDecimal("AvlBal");
                                             if(StringUtils.isNotBlank(accType)&&StringUtils.isNotBlank(accCode)&&accType.equals(subAccountType)&&accCode.equals(subAccountCode)){
                                                 flag = true;
-                                                if(avlBal.compareTo(amount)==-1){
+                                                if(avlBal.compareTo(amount)<0){
                                                     ret.put("info", "转出账户余额不足!");
                                                 }else{
                                                     ret.put("status", "y");

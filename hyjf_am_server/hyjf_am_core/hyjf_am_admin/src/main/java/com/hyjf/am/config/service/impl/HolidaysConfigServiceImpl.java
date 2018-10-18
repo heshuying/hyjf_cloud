@@ -20,10 +20,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author yaoy
@@ -119,7 +116,7 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 
 
 	private Map<String, Object> json2map(String str_json) {
-		Map<String, Object> res = null;
+		Map<String, Object> res = new HashMap<>();
 		try {
 			Gson gson = new Gson();
 			res = gson.fromJson(str_json, new TypeToken<Map<String, Object>>() {

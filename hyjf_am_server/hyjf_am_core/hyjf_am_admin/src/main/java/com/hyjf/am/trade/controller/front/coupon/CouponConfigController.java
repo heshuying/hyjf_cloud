@@ -315,8 +315,8 @@ public class CouponConfigController extends BaseController {
         map.put("couponCode", couponConfigRequest.getCouponCode());
         map.put("couponType", couponConfigRequest.getCouponType());
         map.put("status", couponConfigRequest.getStatus());
-        map.put("timeStartSrch", couponConfigRequest.getTimeStartSrch());
-        map.put("timeEndSrch", couponConfigRequest.getTimeEndSrch());
+        map.put("timeStartSrch", couponConfigRequest.getTimeStartSrch() + " 00:00:00");
+        map.put("timeEndSrch", couponConfigRequest.getTimeEndSrch() + " 23:59:59");
         return map;
     }
 }

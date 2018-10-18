@@ -537,7 +537,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         data.put("investDesc","恭喜您，投资成功！");
         logger.info("获取投资成功结果参数 userId {}  logOrdId {} borrowNid {}",userId,logOrdId,borrowNid);
         BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
-        logger.info("获取投资成功结果为:"+borrowTender);
+        logger.info("获取投资成功结果为:"+JSONObject.toJSONString(borrowTender));
 
         if(borrowTender!=null){
             BigDecimal earnings = new BigDecimal("0");
@@ -586,26 +586,30 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
             // 查询优惠券信息
             CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
-            if(couponUser!=null){
+            if (couponUser != null) {
                 // 查询优惠券的投资
-                BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
+                //BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
                 // 优惠券收益
-                if(borrowTenderCpn!=null){
-                    data.put("couponQuota",borrowTenderCpn.getAccount());
-                    data.put("couponType",couponUser.getCouponType());
-                    data.put("couponInterest",couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod()));
-                }else{
-                    data.put("couponQuota","");
-                    data.put("couponType","");
-                    data.put("couponInterest","");
+                data.put("couponQuota", couponUser.getCouponQuota());
+                data.put("couponType", couponUser.getCouponType());
+                BigDecimal couponInterest = BigDecimal.ZERO;
+                if (couponUser.getCouponType() == 1) {
+                    couponInterest = couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
+                } else {
+                    couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), borrowTender.getAccount().toString(), borrow.getBorrowPeriod());
                 }
-            }else{
-                data.put("couponQuota","");
-                data.put("couponType","");
-                data.put("couponAll","");
-                data.put("couponInterest","");
+                //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
+                data.put("income", earnings.add(couponInterest));
+                data.put("couponInterest", df.format(couponInterest));
+
+            } else {
+                data.put("couponQuota", "");
+                data.put("couponType", "");
+                data.put("couponAll", "");
+                data.put("couponInterest", "");
             }
         }
+        logger.info("返回给前端结果为：{} ",JSONObject.toJSONString(data));
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);
         return result;
@@ -859,7 +863,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     investInfo.setCouponType("代金券");
                 }
                 investInfo.setCouponQuota(couponConfig.getCouponQuota().toString());
-                investInfo.setCouponId(couponConfig.getId() + "");
+                investInfo.setCouponId(tender.getCouponGrantId()+"");
                 investInfo.setIsUsedCoupon("1");
             } else {
                 investInfo.setCouponDescribe("暂无可用");
@@ -1535,6 +1539,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             params.put("ordId", bean.getLogOrderId());
             // 用户编号
             params.put("userId", userId+"");
+            params.put("userName", bean.getLogUserName());
 
             try {
                 couponTenderProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
@@ -1697,6 +1702,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         tenderBg.setTenderUserAttribute(userInfo.getAttribute());
         tenderBg.setClient(bean.getLogClient());
         tenderBg.setUserName(user.getUsername());
+        bean.setLogUserName(user.getUsername());
         Integer attribute = null;
         if (userInfo != null) {
             // 获取投资用户的用户属性

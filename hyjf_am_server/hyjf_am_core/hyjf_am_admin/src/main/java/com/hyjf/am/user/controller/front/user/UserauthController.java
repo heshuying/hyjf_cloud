@@ -104,11 +104,11 @@ public class UserauthController extends BaseController {
 		JSONObject jsonObject = new JSONObject();
 		logger.info("同步用户[{}]的授权状态,同步类型[{}]",userId,type);
 		BankCallBean retBean = userauthService.getUserAuthQuery(userId, String.valueOf(type));
-		logger.info(JSON.toJSONString(retBean));
+		logger.debug(JSON.toJSONString(retBean));
 		try {
 			if (retBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
 				this.userauthService.updateUserAuthState(userId, retBean);
-				jsonObject.put("status","00");
+				jsonObject.put("status",Response.SUCCESS);
 				jsonObject.put("msg","查询成功");
 			} else {
 				String retCode = retBean != null ? retBean.getRetCode() : "";

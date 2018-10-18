@@ -65,6 +65,9 @@ public class AdminUserAuthListRequest extends BasePage {
 	@ApiModelProperty(value = "签约到期日结束时间")
 	private String investEndTimeEnd;
 
+	@ApiModelProperty(value = "同步类型(1自动投资授权,2债转授权)")
+	private Integer type;
+
 	/**
 	 * userId
 	 *
@@ -206,6 +209,14 @@ public class AdminUserAuthListRequest extends BasePage {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 }
 

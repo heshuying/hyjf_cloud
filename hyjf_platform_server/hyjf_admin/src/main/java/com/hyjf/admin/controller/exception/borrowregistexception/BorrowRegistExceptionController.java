@@ -83,7 +83,6 @@ public class BorrowRegistExceptionController extends BaseController {
      * 标的备案异常处理
      * @auth sunpeikai
      * @param request 异常列表筛选检索条件
-     * @param  admin项目-当前登录用户id
      * @return
      */
     @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")
@@ -91,7 +90,7 @@ public class BorrowRegistExceptionController extends BaseController {
     public AdminResult borrowRegistHandleException(HttpServletRequest request, @RequestBody BorrowRegistListRequest borrowRegistListRequest){
         Integer userId = Integer.valueOf(getUser(request).getId());
         JSONObject jsonObject = new JSONObject();
-        String borrowNid = borrowRegistListRequest.getBorrowNidSrch();
+        String borrowNid = borrowRegistListRequest.getBorrowNid();
         logger.info("borrowRegistHandleException::::::::::userId=[{}],borrowNid=[{}]",userId,borrowNid);
         if(StringUtils.isBlank(borrowNid)){
             return new AdminResult(FAIL,"项目编号为空");

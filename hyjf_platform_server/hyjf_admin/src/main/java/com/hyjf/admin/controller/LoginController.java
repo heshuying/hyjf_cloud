@@ -8,6 +8,7 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.LoginService;
+import com.hyjf.admin.utils.PictureInitUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
@@ -23,8 +24,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -55,6 +63,12 @@ public class LoginController extends BaseController {
 		String username=map.get("username");
 		logger.info("登陆开始用户:"+username);
 		String password=map.get("password");
+        String captcha =map.get("code");
+        Long loginCaptcha = (Long) request.getSession().getAttribute("LoginCaptcha");
+        if (captcha == null || captcha.isEmpty() || loginCaptcha == null
+                || !loginCaptcha.toString().equals(captcha)) {
+        	return new AdminResult<>(FAIL, "验证码错误");
+        }
 		AdminSystemRequest adminSystemRequest=new AdminSystemRequest();
 		adminSystemRequest.setUsername(username);
 		adminSystemRequest.setPassword(password);
@@ -124,5 +138,44 @@ public class LoginController extends BaseController {
 		request.getSession().setAttribute("permission", perm);
 		return new AdminResult<Map<String,Object>>(permission);
 	}
-    
+    /**
+     * 验证码
+     * @param response
+     * @param request
+     */
+    @ApiOperation(value = "admin获取验证码", notes = "admin获取验证码")
+    @GetMapping(value = "/getPicture")
+	@ResponseBody
+    public void getPicture(HttpServletResponse response, HttpServletRequest request) {
+        // 设置不缓存图片
+        response.setHeader("Pragma", "No-cache");
+        response.setHeader("Cache-Control", "No-cache");
+        response.setDateHeader("Expires", 0);
+        // 指定生成的相应图片
+        response.setContentType("image/jpeg;charset=UTF-8");
+        PictureInitUtil pu = new PictureInitUtil();
+        BufferedImage image = new BufferedImage(pu.getWidth(), pu.getHeight(),
+                BufferedImage.TYPE_INT_BGR);
+        Graphics2D g = image.createGraphics();
+        // 定义字体样式
+        Font myFont = new Font("Times New Roman", Font.BOLD, 16);
+        // 设置字体
+        g.setFont(myFont);
+
+        g.setColor(pu.getRandomColor(200, 250));
+        // 绘制背景
+        g.fillRect(0, 0, pu.getWidth(), pu.getHeight());
+
+        g.setColor(pu.getRandomColor(180, 200));
+        pu.drawRandomLines(g, 160);
+        // 将验证码放入会话中
+        Long r = pu.drawRandomLong(10L, g);
+        HttpSession session = request.getSession();
+        session.setAttribute("LoginCaptcha", r);
+        g.dispose();
+        try {
+            ImageIO.write(image, "JPEG", response.getOutputStream());
+        } catch (IOException e) {
+        }
+    }
 }
