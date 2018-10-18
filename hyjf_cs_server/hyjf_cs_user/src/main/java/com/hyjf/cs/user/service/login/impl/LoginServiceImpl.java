@@ -141,7 +141,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
 		String codeSalt = userVO.getSalt();
-		logger.info("salt:"+codeSalt);
 		String passwordDb = userVO.getPassword();
 		// 页面传来的密码
 		String password = "";

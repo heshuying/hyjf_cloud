@@ -111,7 +111,7 @@ public class AmUserClientImpl implements AmUserClient {
 //				UtmResponse.class);
 		HttpEntity httpEntity = new HttpEntity(params);
 		ResponseEntity<UtmResponse<UtmVO>> response =
-				restTemplate.exchange("http://AM-USER/am-user/promotion/utm/getbypagelist",
+				restTemplate.exchange("http://AM-ADMIN/am-user/promotion/utm/getbypagelist",
 						HttpMethod.POST, httpEntity, new ParameterizedTypeReference<UtmResponse<UtmVO>>() {});
 
 		if (response.getBody() != null) {

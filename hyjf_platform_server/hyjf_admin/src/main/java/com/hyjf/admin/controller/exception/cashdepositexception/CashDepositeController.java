@@ -86,7 +86,7 @@ public class CashDepositeController extends BaseController {
      */
     @ApiOperation(value = "批量处理", notes = "批量处理")
     @PostMapping("/modifyAsset")
-    private JSONObject modifyAction(@RequestBody AssetListViewRequest form){
+    private AdminResult modifyAction(@RequestBody AssetListViewRequest form){
         JSONObject ret = new JSONObject();
         String assetId = form.getAssetIdSrch();
         String[] split = assetId.split(",");
@@ -101,13 +101,10 @@ public class CashDepositeController extends BaseController {
             }
         }
         if(flag){
-            ret.put("success",true);
-            ret.put("msg","保证金不足处理成功");
+            return new AdminResult<>(SUCCESS, "保证金不足处理成功");
         }else{
-            ret.put("success",false);
-            ret.put("msg","保证金不足处理失败");
+            return new AdminResult<>(FAIL, "保证金不足处理失败");
         }
-        return ret;
     }
 
 
