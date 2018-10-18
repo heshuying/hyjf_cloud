@@ -14,9 +14,6 @@ import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.ConvertUtils;
-import com.hyjf.common.util.GetDate;
-import com.sun.tools.javac.util.Convert;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
