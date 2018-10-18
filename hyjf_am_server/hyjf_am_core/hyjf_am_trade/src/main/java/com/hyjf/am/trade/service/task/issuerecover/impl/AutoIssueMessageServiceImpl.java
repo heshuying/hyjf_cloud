@@ -263,9 +263,9 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
 
 
         redisAdd(RedisConstants.HJH_PLAN+planNid,borrow.getAccount().toString());//增加redis相应计划可投金额
-        if (!CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
-            redisSubstrack(RedisConstants.CAPITAL_TOPLIMIT_+borrowInfo.getInstCode(),borrow.getAccount().toString());//减少风险保证金可投金额
-        }
+//        if (!CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
+//            redisSubstrack(RedisConstants.CAPITAL_TOPLIMIT_+borrowInfo.getInstCode(),borrow.getAccount().toString());//减少风险保证金可投金额
+//        }
         RedisBorrow redisBorrow = new RedisBorrow();
         redisBorrow.setBorrowNid(borrow.getBorrowNid());
         redisBorrow.setBorrowAccountWait(borrow.getAccount());

@@ -159,6 +159,7 @@ public class ContentAdsServiceImpl implements ContentAdsService {
 
     @Override
     public boolean insertAction(ContentAdsRequest request) {
+        Integer now = GetDate.getMyTimeInMillis();
         AdsVO vo = request.getAds();
         if(vo == null){
             return false;
@@ -170,10 +171,19 @@ public class ContentAdsServiceImpl implements ContentAdsService {
             record.setCode("");
         }
 
+        // 结束时间<当前时间
+        if (GetDate.dateString2Timestamp(record.getEndTime()) <= now) {
+            // 已结束
+            record.setIsEnd(1);
+        } else {
+            // 未结束
+            record.setIsEnd(0);
+        }
+
         if(record.getIsIndex()==null){
             record.setIsIndex(new Integer("0"));
         }
-        record.setClientType(1);
+        record.setClientType(0);
         record.setCreateTime(new Date());
         record.setUpdateTime(new Date());
         return adsMapper.insertSelective(record)>0?true:false;

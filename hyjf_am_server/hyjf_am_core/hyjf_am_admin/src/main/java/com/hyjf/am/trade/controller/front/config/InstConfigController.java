@@ -61,13 +61,13 @@ public class InstConfigController {
                 HjhInstConfigWrapVo recordWrap = new HjhInstConfigWrapVo();
                 BeanUtils.copyProperties(instConfigVO, recordWrap);
                 //获取发标额度余额
-                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
-                if(StringUtils.isNotEmpty(capitalAvailable)){
-                    recordWrap.setCapitalAvailable(capitalAvailable);
-                }else{
-                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
-                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
-                }
+//                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
+//                if(StringUtils.isNotEmpty(capitalAvailable)){
+//                    recordWrap.setCapitalAvailable(capitalAvailable);
+//                }else{
+//                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
+//                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
+//                }
                 resList.add(recordWrap);
             }
             response.setResultList(resList);
@@ -88,13 +88,13 @@ public class InstConfigController {
             if(null != record){
                 BeanUtils.copyProperties(record, recordWrap);
                 //获取发标额度余额
-                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
-                if(StringUtils.isNotEmpty(capitalAvailable)){
-                    recordWrap.setCapitalAvailable(capitalAvailable);
-                }else{
-                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
-                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
-                }
+//                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
+//                if(StringUtils.isNotEmpty(capitalAvailable)){
+//                    recordWrap.setCapitalAvailable(capitalAvailable);
+//                }else{
+//                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
+//                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
+//                }
                 response.setResult(recordWrap);
                 response.setRtn(Response.SUCCESS);
             }
