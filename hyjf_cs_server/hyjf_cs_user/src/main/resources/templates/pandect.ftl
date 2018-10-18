@@ -20,8 +20,8 @@
                     <#assign webViewUser = datas.data.webViewUser >
                 </#if>
                 "email": "${(webViewUser.email)!''}",
-                "bankOpenAccount": ${(webViewUser.bankOpenAccount)!'0'},
-                "chinapnrUsrid":"${(webViewUser.chinapnrUsrid)!''}"
+                "bankOpenAccount": ${(webViewUser.bankOpenAccount)?string('true', 'false')},
+                "chinapnrUsrid":"${(webViewUser.chinapnrUsrcustid)?c!''}"
         },
         "user": {
                 <#if datas.data.user??>
@@ -60,7 +60,15 @@
 
         },
         "userName": "${datas.data.username!''}",
-        "accountChinapnr":"${datas.data.accountChinapnr!''}",
+       <#-- "accountChinapnr":{
+            <#if datas.data.accountChinapnr??>
+                <#assign accountChinapnr = datas.data.accountChinapnr >
+                <#list accountChinapnr?accountChinapnr.keySet()  as key>
+                      "${key}":"${accountChinapnr.get(key)}"
+                    <#if key_has_next>,</#if>
+                </#list>
+            </#if>
+        },-->
         "recoverLatestList": [
                 <#if datas.data.recoverLatestList??>
                     <#assign recoverLatestList = datas.data.recoverLatestList >
