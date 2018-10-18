@@ -312,17 +312,23 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			}
 		}
 		if (StringUtils.isNotEmpty(reffer)) {
+            boolean isRefferValid = false;
 			UserExample exampleUser = new UserExample();
 			if (Validator.isMobile(reffer)) {
 				UserExample.Criteria criteria = exampleUser.createCriteria();
 				criteria.andMobileEqualTo(reffer);
+                isRefferValid = true;
 			} else {
-				UserExample.Criteria criteria1 = exampleUser.createCriteria();
-				Integer recommend = Integer.valueOf(reffer);
-				criteria1.andUserIdEqualTo(recommend);
+                if(Validator.isNumber(reffer) && Long.valueOf(reffer)<=Integer.MAX_VALUE) {
+                    UserExample.Criteria criteria1 = exampleUser.createCriteria();
+                    Integer recommend = Integer.valueOf(reffer);
+                    criteria1.andUserIdEqualTo(recommend);
+                    isRefferValid = true;
+                }
 			}
-
-			recommends = userMapper.selectByExample(exampleUser);
+            if(isRefferValid) {
+                recommends = userMapper.selectByExample(exampleUser);
+            }
 		}
 		if (recommends!= null && !CollectionUtils.isEmpty(recommends)) {
 			return recommends.get(0);

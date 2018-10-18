@@ -3,11 +3,14 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.AssetExceptionService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.AssetExceptionRequest;
 import com.hyjf.am.vo.admin.AssetExceptionCustomizeVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,5 +90,16 @@ public class AssetExceptionServiceImpl extends BaseServiceImpl implements AssetE
     @Override
     public boolean updateAssetException(AssetExceptionRequest assetExceptionRequest) {
         return amAdminClient.updateAssetException(assetExceptionRequest);
+    }
+
+    /**
+     * 资产来源下拉列表
+     *
+     * @return
+     */
+    @Override
+    public List<DropDownVO> selectHjhInstConfigList() {
+        List<HjhInstConfigVO> hjhInstConfigVOList = amAdminClient.selectHjhInstConfigList();
+        return ConvertUtils.convertListToDropDown(hjhInstConfigVOList,"instCode","instName");
     }
 }

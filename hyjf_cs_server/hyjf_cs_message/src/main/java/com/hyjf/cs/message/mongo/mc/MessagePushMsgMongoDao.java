@@ -178,6 +178,12 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         if(record.getMsgSendType()!=null){
             update.set("msgSendType", record.getMsgSendType());
         }
+        if(record.getSendTime()!=null){
+            update.set("sendTime", record.getSendTime());
+        }
+        if(record.getPreSendTime()!=null){
+            update.set("preSendTime", record.getPreSendTime());
+        }
         update.set("msgTerminal",record.getMsgTerminal());
         this.update(query, update);
     }

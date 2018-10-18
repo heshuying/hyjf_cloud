@@ -23,7 +23,7 @@ public class FddProducer extends Producer {
     }
 
     @Override
-    public boolean messageSend(MassageContent messageContent) throws MQException {
+    public boolean messageSend(MessageContent messageContent) throws MQException {
         return super.messageSend(messageContent);
     }
 }

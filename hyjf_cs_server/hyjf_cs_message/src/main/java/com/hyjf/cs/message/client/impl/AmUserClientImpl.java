@@ -121,7 +121,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int countAliasByClient(String clientAndroid) {
 		UserAliasResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findSmsTemplateByCode/" + clientAndroid,
+				.getForEntity("http://AM-USER/am-user/userAlias/countAliasByClient/" + clientAndroid,
 						UserAliasResponse.class)
 				.getBody();
 		if (response != null) {

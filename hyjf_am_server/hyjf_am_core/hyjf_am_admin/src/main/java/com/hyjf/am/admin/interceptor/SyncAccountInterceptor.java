@@ -1,7 +1,9 @@
 package com.hyjf.am.admin.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.admin.mq.producer.SyncAccountProducer;
+import com.hyjf.common.constants.MQConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;
+import java.util.UUID;
 
 /**
  * 账户余额mybatis同步拦截器
@@ -55,8 +58,7 @@ public class SyncAccountInterceptor implements Interceptor {
                 logger.info("====="+INTERCEPTOR_NAME+" paramObj=[{}] =====", JSON.toJSON(paramObj));
                 jsonStr = JSON.toJSONString(boundSql.getParameterObject());
                 // 延迟等级为9 (5分钟)
-                // TODO: 2018/9/27 张晴晴为了查问题，暂时注释掉后去业务 
-                //syncAccountProducer.messageSendDelay(new MessageContent(MQConstant.SYNC_ACCOUNT_TOPIC,UUID.randomUUID().toString(),jsonStr.getBytes()) , 9);
+                syncAccountProducer.messageSendDelay(new MessageContent(MQConstant.SYNC_ACCOUNT_TOPIC, UUID.randomUUID().toString(),jsonStr.getBytes()) , 9);
                 logger.info("=====" + INTERCEPTOR_NAME + "发送账户信息[{}]到mq [成功]=====", jsonStr);
             }
         } catch (Exception e) {

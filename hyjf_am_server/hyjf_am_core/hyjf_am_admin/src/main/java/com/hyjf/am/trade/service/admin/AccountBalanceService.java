@@ -17,6 +17,8 @@ public interface AccountBalanceService {
 
     List<HjhAccountBalanceVO> getHjhAccountBalanceMonthList(HjhAccountBalanceRequest request);
 
+    HjhAccountBalanceVO getHjhAccountBalanceMonthSum(HjhAccountBalanceRequest request);
+
     int getHjhAccountBalancecountByDay (HjhAccountBalanceRequest request);
 
     List<HjhAccountBalanceVO> getHjhAccountBalanceListByDay(HjhAccountBalanceRequest request);
