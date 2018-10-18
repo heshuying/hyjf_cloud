@@ -39,15 +39,15 @@ public class HjhSmsNoticeServiceImpl extends BaseTradeServiceImpl implements Hjh
 	 */
 	@Override
 	public void overdueSmsNotice() {
-		logger.info("-------------------逾期未还款标的统计发短信任务开始------------------");
+		logger.debug("-------------------逾期未还款标的统计发短信任务开始------------------");
 		List<BorrowAndInfoVO> borrowList = amTradeClient.selectOverdueBorrowList();
 		if (CollectionUtils.isEmpty(borrowList)) {
-			logger.info("当前没有逾期的标的信息");
+			logger.debug("当前没有逾期的标的信息");
 			return;
 		}
 
 		for (BorrowAndInfoVO record : borrowList) {
-			logger.info("逾期未还款标的：" + record.getBorrowNid());
+			logger.debug("逾期未还款标的：" + record.getBorrowNid());
 
 			try {
 				this.sendSmsForManager(record.getBorrowNid(), record.getUserId());
@@ -57,7 +57,7 @@ public class HjhSmsNoticeServiceImpl extends BaseTradeServiceImpl implements Hjh
 
 		}
 
-		logger.info("-------------------逾期未还款标的统计发短信任务结束------------------");
+		logger.debug("-------------------逾期未还款标的统计发短信任务结束------------------");
 	}
 
 	/**
