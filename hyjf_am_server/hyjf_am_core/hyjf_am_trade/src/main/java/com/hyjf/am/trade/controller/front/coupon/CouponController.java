@@ -47,7 +47,7 @@ public class CouponController extends BaseController {
     CouponService couponService;
 
     @ApiOperation(value = " 根据用户ID和优惠券编号查询优惠券")
-    @GetMapping("/{couponId}/{userId}")
+    @GetMapping("/getCouponUser/{couponId}/{userId}")
     public CoupUserResponse getCouponUser(@PathVariable(value = "couponId") String couponId,
                                                        @PathVariable(value = "userId") Integer userId) {
         CoupUserResponse response = new CoupUserResponse();
