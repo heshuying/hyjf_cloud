@@ -123,7 +123,7 @@ public class UserController extends BaseController {
      */
     @RequestMapping("/findById/{userId}")
     public UserResponse findUserByUserId(@PathVariable int userId) {
-        logger.info("findUserByUserId run...userId is :{}", userId);
+        logger.debug("findUserByUserId run...userId is :{}", userId);
         UserResponse response = new UserResponse();
         User user = userService.findUserByUserId(userId);
         if (user != null) {
