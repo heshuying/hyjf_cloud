@@ -1,5 +1,6 @@
 package com.hyjf.common.util;
 
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,14 @@ import java.util.stream.Collectors;
  * @version CommonUtils, v0.1 2017/11/11 11:51
  */
 public class CommonUtils {
+
 	private final static Logger logger = LoggerFactory.getLogger(CommonUtils.class);
+
+	public final static String KEY_PAYMENT_AUTH = "AUTHCONFIG:paymentAuth"; // 缴费授权
+	public final static String KEY_REPAYMENT_AUTH = "AUTHCONFIG:repaymentAuth"; // 还款授权
+	public final static String KEY_AUTO_TENDER_AUTH = "AUTHCONFIG:autoTenderAuth"; // 自动投标
+	public final static String KEY_AUTO_CREDIT_AUTH = "AUTHCONFIG:autoCreditAuth"; // 自动债转
+	public final static String KEY_IS_CHECK_USER_ROLES = "CHECKE:ISCHECKUSERROLES"; // 是否校验用户角色
 
 	/**
 	 * 提供对象属性null转""方法，目前只支持String的属性
@@ -355,5 +363,17 @@ public class CommonUtils {
 			throw new RuntimeException("拷贝属性异常");
 		}
 	}
+
+
+	/**
+	 * 从redis里面获取授权配置
+	 * @param key
+	 * @return
+	 */
+	public static HjhUserAuthConfigVO getAuthConfigFromCache(String key){
+		HjhUserAuthConfigVO hjhUserAuthConfig=RedisUtils.getObj(key,HjhUserAuthConfigVO.class);
+		return hjhUserAuthConfig;
+	}
+
 
 }

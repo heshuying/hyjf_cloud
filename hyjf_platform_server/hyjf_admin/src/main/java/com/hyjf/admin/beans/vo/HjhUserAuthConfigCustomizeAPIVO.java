@@ -19,6 +19,8 @@ public class HjhUserAuthConfigCustomizeAPIVO implements Serializable {
     private Integer enabledStatus;
     @ApiModelProperty(value = "备注")
     private String remark;
+    @ApiModelProperty(value = "IP地址")
+    private String ip;
 
     private Integer createUser;
 
@@ -33,6 +35,14 @@ public class HjhUserAuthConfigCustomizeAPIVO implements Serializable {
     private String updateTimeStr;
 
     private static final long serialVersionUID = 1L;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public String getUpdateUserStr() {
         return updateUserStr;

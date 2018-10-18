@@ -1,17 +1,20 @@
-package com.hyjf.am.vo.admin;
-
-import io.swagger.annotations.ApiModelProperty;
+package com.hyjf.common.util;
 
 import java.io.Serializable;
 
-public class HjhUserAuthConfigCustomizeVO implements Serializable {
-
+public class HjhUserAuthConfigVO implements Serializable {
     private Integer id;
+
     private Integer authType;
+
     private Integer personalMaxAmount;
+
     private Integer enterpriseMaxAmount;
+
     private Integer authPeriod;
+
     private Integer enabledStatus;
+
     private String remark;
 
     private Integer createUser;
@@ -20,31 +23,9 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
 
     private Integer updateUser;
 
-    private String updateUserStr;
-
     private Integer updateTime;
 
-    private String updateTimeStr;
-
-    private String ip;
-
     private static final long serialVersionUID = 1L;
-
-    public String getUpdateUserStr() {
-        return updateUserStr;
-    }
-
-    public void setUpdateUserStr(String updateUserStr) {
-        this.updateUserStr = updateUserStr;
-    }
-
-    public String getUpdateTimeStr() {
-        return updateTimeStr;
-    }
-
-    public void setUpdateTimeStr(String updateTimeStr) {
-        this.updateTimeStr = updateTimeStr;
-    }
 
     public Integer getId() {
         return id;
@@ -132,13 +113,5 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
     }
 }

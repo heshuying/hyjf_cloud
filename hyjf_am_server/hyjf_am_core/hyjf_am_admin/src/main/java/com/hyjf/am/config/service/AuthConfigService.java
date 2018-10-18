@@ -3,9 +3,11 @@
  */
 package com.hyjf.am.config.service;
 
+import com.hyjf.am.config.dao.model.auto.HjhUserAuthConfig;
 import com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigCustomize;
 import com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigLogCustomize;
 import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
+import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 
 import java.util.List;
 
@@ -38,4 +40,18 @@ public interface AuthConfigService {
      * @return
      */
     List<HjhUserAuthConfigLogCustomize> getAuthConfigLogList(HjhUserAuthConfigLogCustomizeVO request);
+
+    /**
+     * 授权配置详情
+     * @param id
+     * @return
+     */
+    HjhUserAuthConfig getAuthConfigById(Integer id);
+
+    /**
+     * 修改授权配置
+     * @param form
+     * @return
+     */
+    Integer updateAuthConfig(HjhUserAuthConfig form);
 }

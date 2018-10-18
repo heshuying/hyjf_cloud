@@ -16,10 +16,7 @@
       a.update_user updateUser,
       FROM_UNIXTIME(a.update_time,'%Y-%m-%d %H:%i:%S') updateTimeStr,
       b.truename updateUserStr
-      from hyjf_hjh_user_auth_config a left join hyjf_admin b on a.update_user = b.id
-      <if test="limitStart >= 0" >
-      limit #{limitStart} , #{limitEnd}
-    </if>
+      from ht_hjh_user_auth_config a left join ht_admin b on a.update_user = b.id
   </select>
 
 

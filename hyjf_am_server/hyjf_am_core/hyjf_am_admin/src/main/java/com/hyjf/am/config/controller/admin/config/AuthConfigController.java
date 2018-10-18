@@ -1,37 +1,32 @@
 package com.hyjf.am.config.controller.admin.config;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.controller.BaseConfigController;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
-import com.hyjf.am.config.dao.model.auto.Version;
+import com.hyjf.am.config.dao.model.auto.HjhUserAuthConfig;
 import com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigCustomize;
 import com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigLogCustomize;
 import com.hyjf.am.config.service.AuthConfigService;
-import com.hyjf.am.config.service.VersionConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminAuthConfigLogResponse;
+import com.hyjf.am.response.admin.AdminAuthConfigCustomizeResponse;
 import com.hyjf.am.response.admin.AdminAuthConfigResponse;
-import com.hyjf.am.response.admin.AdminVersionResponse;
-import com.hyjf.am.response.config.VersionConfigBeanResponse;
-import com.hyjf.am.resquest.admin.AdminVersionRequest;
 import com.hyjf.am.vo.admin.HjhUserAuthConfigCustomizeVO;
 import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
-import com.hyjf.am.vo.admin.VersionVO;
+import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * am-admin授权配置
  * @author by jijun on 2018/10/16.
  */
 @RestController
-@RequestMapping("/am-admin/configCenter/authConfig")
+@RequestMapping("/am-config/configCenter/authConfig")
 public class AuthConfigController extends BaseConfigController {
 
     @Autowired
@@ -43,8 +38,8 @@ public class AuthConfigController extends BaseConfigController {
      * @return
      */
     @GetMapping("/getAuthConfigList")
-    public AdminAuthConfigResponse getAuthConfigList() {
-        AdminAuthConfigResponse  response =new AdminAuthConfigResponse();
+    public AdminAuthConfigCustomizeResponse getAuthConfigList() {
+        AdminAuthConfigCustomizeResponse response =new AdminAuthConfigCustomizeResponse();
         //查询版本配置列表条数
         int recordTotal = authConfigService.getAuthConfigCount();
         List<HjhUserAuthConfigCustomize> recordList = authConfigService.getAuthConfigList();
@@ -58,7 +53,11 @@ public class AuthConfigController extends BaseConfigController {
         return response;
     }
 
-
+    /**
+     * 授权配置操作记录
+     * @param request
+     * @return
+     */
     @PostMapping("/getAuthConfigLogList")
     public AdminAuthConfigLogResponse getAuthConfigLogList(@RequestBody HjhUserAuthConfigLogCustomizeVO request){
         AdminAuthConfigLogResponse response = new AdminAuthConfigLogResponse();
@@ -80,10 +79,34 @@ public class AuthConfigController extends BaseConfigController {
             response.setRtn(returnCode);
         }
         return response;
-
-
-
     }
 
+    /**
+     * 授权配置详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/getAuthConfigById/{id}")
+    public AdminAuthConfigResponse getAuthConfigById(@PathVariable Integer id){
+        AdminAuthConfigResponse response = new AdminAuthConfigResponse();
+        HjhUserAuthConfig authConfig = authConfigService.getAuthConfigById(id);
+        String returnCode = "0";
+        if (Validator.isNotNull(authConfig)){
+            response.setResult(CommonUtils.convertBean(authConfig,HjhUserAuthConfigVO.class));
+            response.setRtn(returnCode);
+        }
+        return response;
+    }
+
+    /**
+     * 修改授权配置
+     * @param form
+     * @return
+     */
+    @PostMapping("/updateAuthConfig")
+    public Integer updateAuthConfig(@RequestBody HjhUserAuthConfigVO form){
+
+      return authConfigService.updateAuthConfig(CommonUtils.convertBean(form,HjhUserAuthConfig.class));
+    }
 
 }
