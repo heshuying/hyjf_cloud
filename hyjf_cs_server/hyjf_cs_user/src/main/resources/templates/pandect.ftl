@@ -8,31 +8,34 @@
         "vipName":"${(datas.data.vipName)!''}",
         "couponValidCount":"${(datas.data.couponValidCount)!''}",
         "bankOpenAccount": {
-                <#if datas.data.bankOpenAccount??>
-                     <#assign bankOpenAccount = datas.data.bankOpenAccount >
-                </#if>
+    <#if datas.data.bankOpenAccount??>
+        <#assign bankOpenAccount = datas.data.bankOpenAccount >
+    </#if>
                "account": "${(bankOpenAccount.account)!''}"
             },
        "userEvaluationResultFlag": "${(datas.data.userEvaluationResultFlag)!''}",
         "auth": "${(datas.data.auth)!''}",
         "webViewUser": {
-                <#if datas.data.webViewUser??>
-                    <#assign webViewUser = datas.data.webViewUser >
-                </#if>
+    <#if datas.data.webViewUser??>
+        <#assign webViewUser = datas.data.webViewUser >
+    </#if>
                 "email": "${(webViewUser.email)!''}",
-                "bankOpenAccount": ${(webViewUser.bankOpenAccount)!'0'},
-                "chinapnrUsrid":"${(webViewUser.chinapnrUsrid)!''}"
+                <#if webViewUser.chinapnrUsrcustid??>
+                    "chinapnrUsrid":"${(webViewUser.chinapnrUsrcustid)?c!''}",
+                </#if>
+                "bankOpenAccount": ${(webViewUser.bankOpenAccount)?string('1', '0')}
+
         },
         "user": {
-                <#if datas.data.user??>
-                    <#assign user = datas.data.user >
-                </#if>
+    <#if datas.data.user??>
+        <#assign user = datas.data.user >
+    </#if>
                   "iconUrl": "${user.iconUrl!''}",
                   "isSetPassword": "${user.isSetPassword!'0'}"
         },
          "account": {
-                    <#if datas.data.account??>
-                        <#assign account = datas.data.account >
+    <#if datas.data.account??>
+        <#assign account = datas.data.account >
                     "balance": ${(account.balance)?c!'0'},
                   "planAccountWait": ${(account.planAccountWait!0)?c!'0'},
                   "planCapitalWait": ${(account.planCapitalWait!0)?c},
@@ -44,7 +47,7 @@
                   "bankAwait": ${(account.bankAwait!0)?c!'0'},
                   "bankAwaitCapital": ${(account.bankAwaitCapital!0)?c!'0'},
                   "bankAwaitInterest": ${(account.bankAwaitInterest!0)?c!'0'}
-                    <#else >
+    <#else >
                     "balance":0,
                   "planAccountWait":0,
                   "planCapitalWait":0,
@@ -56,15 +59,23 @@
                   "bankAwait":0,
                   "bankAwaitCapital":0,
                   "bankAwaitInterest":0
-                   </#if>
+    </#if>
 
         },
         "userName": "${datas.data.username!''}",
-        "accountChinapnr":"${datas.data.accountChinapnr!''}",
+<#-- "accountChinapnr":{
+     <#if datas.data.accountChinapnr??>
+         <#assign accountChinapnr = datas.data.accountChinapnr >
+         <#list accountChinapnr?accountChinapnr.keySet()  as key>
+               "${key}":"${accountChinapnr.get(key)}"
+             <#if key_has_next>,</#if>
+         </#list>
+     </#if>
+ },-->
         "recoverLatestList": [
-                <#if datas.data.recoverLatestList??>
-                    <#assign recoverLatestList = datas.data.recoverLatestList >
-                    <#list recoverLatestList as recoverLatest>
+    <#if datas.data.recoverLatestList??>
+        <#assign recoverLatestList = datas.data.recoverLatestList >
+        <#list recoverLatestList as recoverLatest>
                       {
                         "investDate":"${(recoverLatest.investDate)!''}",
                         "projectName":"${(recoverLatest.projectName)!''}",
@@ -73,9 +84,9 @@
                         "borrowApr":"${(recoverLatest.borrowApr)!''}",
                         "totalWait":"${(recoverLatest.totalWait)!''}"
                     }
-                        <#if recoverLatest_has_next>,</#if>
-                    </#list>
-                </#if>
+            <#if recoverLatest_has_next>,</#if>
+        </#list>
+    </#if>
 
         ]
   }
