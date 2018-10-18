@@ -40,7 +40,7 @@ import java.util.Map;
  * @author nxl
  * @version AppBindCardController, v0.1 2018/10/16 9:34
  */
-@Api(value = "api端-解绑银行卡卡页面", tags = "api端-解绑银行卡卡页面")
+@Api(value = "api端-解绑银行卡(页面调用)", tags = "api端-解绑银行卡(页面调用)")
 @RestController
 @RequestMapping("/hyjf-api/server/user/unbindCardPage")
 public class ApiUnBindCardPageController extends BaseUserController {
