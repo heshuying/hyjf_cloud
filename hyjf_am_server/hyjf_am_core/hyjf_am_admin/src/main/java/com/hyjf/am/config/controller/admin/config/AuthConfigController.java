@@ -105,7 +105,6 @@ public class AuthConfigController extends BaseConfigController {
      */
     @PostMapping("/updateAuthConfig")
     public Integer updateAuthConfig(@RequestBody HjhUserAuthConfigVO form){
-
       return authConfigService.updateAuthConfig(CommonUtils.convertBean(form,HjhUserAuthConfig.class));
     }
 

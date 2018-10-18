@@ -70,6 +70,16 @@ public class AdminUserAuthListVO  extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "签约到期日结束时间")
 	private String investEndTimeEnd;
 
+	@ApiModelProperty(value = "自动投资单笔最高金额")
+	private String invesMaxAmt;
+
+	public String getInvesMaxAmt() {
+		return invesMaxAmt;
+	}
+
+	public void setInvesMaxAmt(String invesMaxAmt) {
+		this.invesMaxAmt = invesMaxAmt;
+	}
 
 	/**
 	 * userId
