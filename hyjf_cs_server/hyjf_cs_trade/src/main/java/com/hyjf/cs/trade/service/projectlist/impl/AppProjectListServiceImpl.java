@@ -1117,7 +1117,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             appProjectType.setBorrowTheThirdDesc("项目期限");
             String status = listCustomize.getStatus();
             if ("11".equals(status)) {
-                appProjectType.setStatusName("立即投资");
+                appProjectType.setStatusName("立即承接");
                 //可投金额
                 String borrowAccountWait = String.valueOf(listCustomize.getCreditCapital().subtract(listCustomize.getCreditCapitalAssigned()));
                 borrowAccountWait = CommonUtils.formatAmount(borrowAccountWait);
