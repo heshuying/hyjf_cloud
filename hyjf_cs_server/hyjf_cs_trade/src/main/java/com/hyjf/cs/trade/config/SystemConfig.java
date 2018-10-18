@@ -20,11 +20,7 @@ public class SystemConfig {
     @Value("${hyjf.app.push.manager.url}")
     public String appPushManagerUrl;
 
-    /**
-     * 转账指南
-     */
-    @Value("${hyjf.app.recharge.guide.url}")
-    public String appRechangeGuideUrl;
+
 
     @Value("${hyjf.weChat.host}")
     public String wechatHost;
@@ -499,4 +495,6 @@ public class SystemConfig {
     public void setRoleIsopen(String roleIsopen) {
         this.roleIsopen = roleIsopen;
     }
+
+
 }
