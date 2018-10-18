@@ -36,7 +36,7 @@ public class UserAliasController extends BaseController {
 	 */
 	@RequestMapping("/findAliasByMobile/{mobile}")
 	public UserAliasResponse findAliasByMobile(@PathVariable String mobile) {
-		logger.info("根据手机号查询推送别名开始... mobile is :{}", mobile);
+		logger.debug("根据手机号查询推送别名开始... mobile is :{}", mobile);
 		UserAliasResponse response = new UserAliasResponse();
 		UserAliasVO userAliasVO = null;
 		UserAlias userAlias = userAliasService.findAliasByMobile(mobile);
@@ -59,7 +59,7 @@ public class UserAliasController extends BaseController {
 	@RequestMapping("/findAliasesByMobiles")
 	public UserAliasResponse findAliasesByMobiles(@RequestBody FindAliasesForMsgPushRequest request) {
 		List<String> mobiles = request.getMobiles();
-		logger.info("根据手机号查询推送别名 - 批量开始... mobiles is :{}", mobiles);
+		logger.debug("根据手机号查询推送别名 - 批量开始... mobiles is :{}", mobiles);
 		UserAliasResponse response = new UserAliasResponse();
 		List<UserAliasVO> userAliasVOList = userAliasService.findAliasByMobiles(mobiles);
 		if(!CollectionUtils.isEmpty(userAliasVOList)){
@@ -84,14 +84,12 @@ public class UserAliasController extends BaseController {
 
 	@PostMapping("/updateMobileCode")
 	public int updateAliases(@RequestBody UserAlias userAlias) {
-		int cnt = userAliasService.updateAliases(userAlias);
-		return cnt;
+		return userAliasService.updateAliases(userAlias);
 	}
 
 	@PostMapping("/insertMobileCode")
 	public int insertMobileCode(@RequestBody UserAlias userAlias) {
-		int cnt = userAliasService.insertMobileCode(userAlias);
-		return cnt;
+		return userAliasService.insertMobileCode(userAlias);
 	}
 
 	/**
@@ -102,7 +100,7 @@ public class UserAliasController extends BaseController {
 	 */
 	@RequestMapping("/countAliasByClient/{clientAndroid}")
 	public UserAliasResponse countAliasByClient(@PathVariable String clientAndroid) {
-		logger.info("根据设备类型统计用户人数开始... clientAndroid is :{}", clientAndroid);
+		logger.debug("根据设备类型统计用户人数开始... clientAndroid is :{}", clientAndroid);
 		UserAliasResponse response = new UserAliasResponse();
 		Integer count = userAliasService.countAliasByClient(clientAndroid);
 		response.setCount(count);
