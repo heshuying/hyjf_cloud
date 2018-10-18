@@ -29,7 +29,18 @@ public class AppRepayCalendarCustomize implements Serializable {
 
 	private String assignNid;
 
-    public String getOrderId() {
+	//订单状态
+	private Integer orderStatus;
+
+	public Integer getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(Integer orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public String getOrderId() {
         return orderId;
     }
 

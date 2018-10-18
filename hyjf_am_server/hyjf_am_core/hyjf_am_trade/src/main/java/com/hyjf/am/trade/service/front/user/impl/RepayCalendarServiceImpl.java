@@ -60,6 +60,16 @@ public class RepayCalendarServiceImpl extends BaseServiceImpl implements RepayCa
             AppReapyCalendarResultVO result = null;
             for (AppRepayCalendarCustomize repayCalendarCustomize : list) {
                 result = new AppReapyCalendarResultVO();
+                //add by jijun start 添加退出标记
+                Integer orderStatus = repayCalendarCustomize.getOrderStatus();
+                if (orderStatus != null && orderStatus == 5) {
+                    //订单状态为0或者不到锁定期时 不显示退出中标签
+                    result.setIsExiting(1);
+                }else {
+                    result.setIsExiting(0);
+
+                }
+                //add by jijun end 添加退出标记
                 Calendar repayTimeCalendar = parseCalendarFromString(repayCalendarCustomize.getRepayTime());
                 String tradeYear = String.valueOf(repayTimeCalendar.get(Calendar.YEAR));
                 // +1 是因为日历对象取出的月份从0开始
