@@ -38,8 +38,8 @@ public class AppConfigServiceImpl implements AppConfigService {
         AdsExample.Criteria criteria = example.createCriteria();
         criteria.andClientTypeEqualTo(1);//手机端广告
         // 条件查询
-        if (bean.getTypeid() != null) {
-            criteria.andTypeIdEqualTo(bean.getTypeid());
+        if (bean.getTypeId() != null) {
+            criteria.andTypeIdEqualTo(bean.getTypeId());
         }
         if (bean.getPlatformType() != null) {
             criteria.andPlatformTypeEqualTo(bean.getPlatformType());
@@ -82,8 +82,8 @@ public class AppConfigServiceImpl implements AppConfigService {
         AdsExample.Criteria criteria = example.createCriteria();
         criteria.andClientTypeEqualTo(1);//手机端广告
         // 条件查询
-        if (bean.getTypeid() != null) {
-            criteria.andTypeIdEqualTo(bean.getTypeid());
+        if (bean.getTypeId() != null) {
+            criteria.andTypeIdEqualTo(bean.getTypeId());
         }
         if (bean.getPlatformType() != null) {
             criteria.andPlatformTypeEqualTo(bean.getPlatformType());

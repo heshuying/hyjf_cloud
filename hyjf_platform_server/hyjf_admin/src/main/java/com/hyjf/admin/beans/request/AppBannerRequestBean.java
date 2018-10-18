@@ -20,7 +20,7 @@ public class AppBannerRequestBean  extends BaseRequest implements Serializable {
     @ApiModelProperty(value = "广告名称")
     private String name;
     @ApiModelProperty(value = "广告类型")
-    private Integer typeid;
+    private Integer typeId;
     @ApiModelProperty(value = "创建时间")
     private Integer createTime;
     @ApiModelProperty(value = "创建时间start")
@@ -46,12 +46,12 @@ public class AppBannerRequestBean  extends BaseRequest implements Serializable {
         this.name = name;
     }
 
-    public Integer getTypeid() {
-        return typeid;
+    public Integer getTypeId() {
+        return typeId;
     }
 
-    public void setTypeid(Integer typeid) {
-        this.typeid = typeid;
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
     }
 
     public Integer getCreateTime() {
