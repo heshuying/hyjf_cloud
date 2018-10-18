@@ -316,7 +316,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private void checkUser(UserVO user, UserInfoVO userInfo) {
         if (null != userInfo) {
             // 合规校验角色
-            String roleIsOpen = systemConfig.getRoleIsOpen();
+            String roleIsOpen = systemConfig.getRoleIsopen();
             if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
                 if (userInfo.getRoleId() != 1) {
                     // 仅限出借人进行投资
