@@ -2209,4 +2209,67 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
 	}
+	@Override
+	public JSONArray selectLeftMenuTree(String id) {
+        String url = "http://AM-ADMIN/am-config/menu/selectLeftMenuTree/" + id;
+        JSONArray response = restTemplate.getForEntity(url,JSONArray.class).getBody();
+        if (null != response) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminSystemResponse insertAction(AdminMenuRequest form) {
+        String url = "http://AM-ADMIN/am-config/menu/insertAction";
+        AdminSystemResponse response = restTemplate.postForEntity(url, form, AdminSystemResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminSystemResponse getuser(AdminMenuRequest form) {
+        String url = "http://AM-ADMIN/am-config/menu/getuser";
+        AdminSystemResponse response = restTemplate.postForEntity(url, form, AdminSystemResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminSystemResponse deleteRecordAction(AdminMenuRequest form) {
+        String url = "http://AM-ADMIN/am-config/menu/deleteRecordAction";
+        AdminSystemResponse response = restTemplate.postForEntity(url, form, AdminSystemResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminSystemResponse moveToAuthAction(AdminMenuRequest form) {
+        String url = "http://AM-ADMIN/am-config/menu/moveToAuthAction";
+        AdminSystemResponse response = restTemplate.postForEntity(url, form, AdminSystemResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminSystemResponse updateMenuPermissionsAction(AdminMenuRequest form) {
+        String url = "http://AM-ADMIN/am-config/menu/updateMenuPermissionsAction";
+        AdminSystemResponse response = restTemplate.postForEntity(url, form, AdminSystemResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public List<String> getPermissionId(String string) {
+        String url = "http://AM-ADMIN/am-config/role/getPermissionId/"+string;
+        List<String>  response = restTemplate.getForEntity(url, List.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
 }

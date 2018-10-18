@@ -35,7 +35,10 @@ public class BankReturnCodeConfigServiceImpl implements BankReturnCodeConfigServ
             criteria.andTxCodeEqualTo(request.getTxCode());
         }
         if (Validator.isNotNull(request.getRetCode())) {
-            criteria.andRetCodeEqualTo(request.getRetCode());
+            criteria.andRetCodeEqualTo(request.getRetCode() );
+        }
+        if (Validator.isNotNull(request.getErrorMsg())) {
+            criteria.andErrorMsgEqualTo( request.getErrorMsg() );
         }
         return bankReturnCodeConfigMapper.countByExample(example);
     }
@@ -54,13 +57,13 @@ public class BankReturnCodeConfigServiceImpl implements BankReturnCodeConfigServ
         BankReturnCodeConfigExample.Criteria criteria = example.createCriteria();
         // 条件查询
         if (Validator.isNotNull(request.getTxCode())) {
-            criteria.andTxCodeLike("%" + request.getTxCode() + "%");
+            criteria.andTxCodeEqualTo(request.getTxCode());
         }
         if (Validator.isNotNull(request.getRetCode())) {
-            criteria.andRetCodeLike("%" + request.getRetCode() + "%");
+            criteria.andRetCodeEqualTo(request.getRetCode() );
         }
         if (Validator.isNotNull(request.getErrorMsg())) {
-            criteria.andErrorMsgLike("%" + request.getErrorMsg() + "%");
+            criteria.andErrorMsgEqualTo( request.getErrorMsg() );
         }
         return bankReturnCodeConfigMapper.selectByExample(example);
     }
@@ -114,8 +117,8 @@ public class BankReturnCodeConfigServiceImpl implements BankReturnCodeConfigServ
         BankReturnCodeConfigExample example = new BankReturnCodeConfigExample();
         BankReturnCodeConfigExample.Criteria cra = example.createCriteria();
         if (Validator.isNotNull(req.getTxCode()) && Validator.isNotNull(req.getRetCode())) {
-            cra.andTxCodeLike("%" + req.getTxCode() + "%");
-            cra.andRetCodeLike("%" + req.getRetCode() + "%");
+            cra.andTxCodeEqualTo(req.getTxCode() );
+            cra.andRetCodeEqualTo( req.getRetCode() );
         }
         List<BankReturnCodeConfig> bankReturnCodeConfigList = bankReturnCodeConfigMapper.selectByExample(example);
         if (bankReturnCodeConfigList != null && bankReturnCodeConfigList.size() > 0) {

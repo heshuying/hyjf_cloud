@@ -383,7 +383,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		userInfo.setEmailIsapprove(0);
 		userInfo.setUpdateTime(new Date());
 		userInfo.setBirthday("");
-		userInfo.setSex(1);
+		userInfo.setSex(0);
 		userInfo.setIdcard("");
 		userInfo.setAddress("");
 		userInfo.setTruenameIsapprove(0);

@@ -74,13 +74,13 @@ public class AssetExceptionServiceImpl extends BaseServiceImpl implements AssetE
         borrowDelete.setCreateUserId(assetExceptionRequest.getCreateUserId());
         borrowDelete.setCreateTime(assetExceptionRequest.getCreateTime());
 
-        // 插入异常标的
-        boolean re = borrowDeleteMapper.insertSelective(borrowDelete) > 0 ? true : false;
-        if (re) {
-            // 获取该机构保证金配置
-            HjhBailConfig hjhBailConfig = selectHjhBailConfigByInstCode(instCode);
-
-            if (null != hjhBailConfig) {
+        boolean re;
+        // 获取该机构保证金配置
+        HjhBailConfig hjhBailConfig = selectHjhBailConfigByInstCode(instCode);
+        if (null != hjhBailConfig) {
+            // 插入异常标的
+            re = borrowDeleteMapper.insertSelective(borrowDelete) > 0 ? true : false;
+            if (re) {
                 // 发标已发额度
                 hjhBailConfig.setLoanMarkLine(hjhBailConfig.getLoanMarkLine().subtract(account));
                 // loan_balance在贷余额
@@ -97,9 +97,9 @@ public class AssetExceptionServiceImpl extends BaseServiceImpl implements AssetE
                 hjhBailConfig.setCycLoanTotal(sendedAccountByCycBD);
 
                 re = this.hjhBailConfigMapper.updateByPrimaryKey(hjhBailConfig) > 0 ? true : false;
-            } else {
-                re = false;
             }
+        } else {
+            re = false;
         }
         return re;
     }
@@ -146,19 +146,19 @@ public class AssetExceptionServiceImpl extends BaseServiceImpl implements AssetE
         // 判断异常标的中是否存在
         BorrowDelete borrowDelete = this.borrowDeleteMapper.selectByPrimaryKey(id);
         if (null != borrowDelete) {
-            re = this.borrowDeleteMapper.deleteByPrimaryKey(id) > 0 ? true : false;
-            if (re) {
-                // 获取标的编号
-                String borrowNid = borrowDelete.getBorrowNid();
-                // 获取借款详情
-                Borrow borrow = getBorrow(borrowNid);
-                BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
-                // 获取标的资产来源和借款金额
-                String instCode = borrowInfo.getInstCode();
-                BigDecimal account = borrow.getAccount();
-                // 获取该机构保证金配置
-                HjhBailConfig hjhBailConfig = this.selectHjhBailConfigByInstCode(instCode);
-                if (null != hjhBailConfig) {
+            // 获取标的编号
+            String borrowNid = borrowDelete.getBorrowNid();
+            // 获取借款详情
+            Borrow borrow = getBorrow(borrowNid);
+            BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
+            // 获取标的资产来源和借款金额
+            String instCode = borrowInfo.getInstCode();
+            BigDecimal account = borrow.getAccount();
+            // 获取该机构保证金配置
+            HjhBailConfig hjhBailConfig = this.selectHjhBailConfigByInstCode(instCode);
+            if (null != hjhBailConfig) {
+                re = this.borrowDeleteMapper.deleteByPrimaryKey(id) > 0 ? true : false;
+                if (re) {
                     // 发标已发额度
                     hjhBailConfig.setLoanMarkLine(hjhBailConfig.getLoanMarkLine().add(account));
                     // 周期内发标已发额度
@@ -173,9 +173,9 @@ public class AssetExceptionServiceImpl extends BaseServiceImpl implements AssetE
                     // 发标额度余额remain_mark_line
                     hjhBailConfig.setRemainMarkLine(hjhBailConfig.getRemainMarkLine().subtract(account));
                     re = this.hjhBailConfigMapper.updateByPrimaryKey(hjhBailConfig) > 0 ? true : false;
-                } else {
-                    re = false;
                 }
+            } else {
+                re = false;
             }
         }
         return re;
