@@ -76,9 +76,12 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
         HjhPlanAsset resultAsset = null;
         HjhPlanAssetExample example = new HjhPlanAssetExample();
         HjhPlanAssetExample.Criteria crt = example.createCriteria();
-        crt.andAssetIdEqualTo(assetId);
-        crt.andInstCodeEqualTo(instCode);
-
+        if(StringUtils.isNotBlank(assetId)){
+            crt.andAssetIdEqualTo(assetId);
+        }
+        if(StringUtils.isNotBlank(instCode)){
+            crt.andInstCodeEqualTo(instCode);
+        }
         List<HjhPlanAsset> list = hjhPlanAssetMapper.selectByExample(example);
 
         if(list != null && list.size() > 0){

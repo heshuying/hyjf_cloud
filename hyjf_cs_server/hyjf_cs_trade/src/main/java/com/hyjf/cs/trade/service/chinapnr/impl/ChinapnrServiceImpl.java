@@ -173,7 +173,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
         reqExt.add(reqExtObj);
         // 调用汇付接口(提现)
         // 支付工程路径
-        String retUrl = "http://CS-TRADE/hyjf-web/user/withdraw/return";
+        String retUrl = systemConfig.getFrontHost()+"/user/withdrawHfDeal";
         String bgRetUrl = "http://CS-TRADE/hyjf-web/user/withdraw/callback";
         ChinapnrBean bean = new ChinapnrBean();
         // 接口版本号
