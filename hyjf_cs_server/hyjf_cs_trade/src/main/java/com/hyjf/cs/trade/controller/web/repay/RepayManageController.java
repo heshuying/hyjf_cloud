@@ -385,7 +385,7 @@ public class RepayManageController extends BaseTradeController {
             return webResult;
         }
         resultMap.put("borrowNid", borrowInfoVO.getBorrowNid());
-        resultMap.put("borrowName", borrowInfoVO.getName());
+        resultMap.put("borrowName", StringUtils.isBlank(borrowInfoVO.getName()) ? borrowInfoVO.getProjectName() : borrowInfoVO.getName());
         webResult.setData(resultMap);
 
         /** redis 锁 */
