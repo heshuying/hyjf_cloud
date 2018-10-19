@@ -91,6 +91,10 @@ public class DataSet2ExcelSXSSFHelper<T> {
                         } else {
                             textValue = String.valueOf(value);
                         }
+                    }else{
+                        if (mapValueAdapter.get(property) != null) {
+                            textValue = mapValueAdapter.get(property).format(null);
+                        }
                     }
                     cell.setCellValue(textValue);
                 } catch (Exception e) {
