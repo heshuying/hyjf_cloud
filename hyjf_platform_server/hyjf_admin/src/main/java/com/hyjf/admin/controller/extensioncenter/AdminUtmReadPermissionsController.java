@@ -54,17 +54,19 @@ public class AdminUtmReadPermissionsController extends BaseController {
 		for(AdminUtmReadPermissionsVO adminUtmReadPermissionsVO:list){
 			String umtIds = adminUtmReadPermissionsVO.getUtmIds();
 			if(StringUtils.isNotBlank(umtIds)) {
-				String umtNames = ",";
+				String umtNames = "";
 				String[] array = umtIds.split(",");
 				for (int j = 0; j < array.length; j++) {
 					String id = array[j];
 					for (int k = 0; k < umtList.size(); k++) {
 						if (Integer.valueOf(id).equals(umtList.get(k).getSourceId())) {
-							umtNames +=umtList.get(k).getSourceName();
+							umtNames +=","+umtList.get(k).getSourceName();
 						}
 					}
 				}
-				adminUtmReadPermissionsVO.setNames(umtNames.substring(1));
+				if(StringUtils.isNotBlank(umtNames)){
+					adminUtmReadPermissionsVO.setNames(umtNames.substring(1));
+				}
 			}
 		}
 		response.setResultList(list);
