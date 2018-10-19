@@ -2677,8 +2677,8 @@
 		FROM
 		ht_borrow_tender_cpn hbtc
 		INNER JOIN ht_hjh_plan hhp ON hbtc.borrow_nid = hhp.plan_nid
-		left join hyjf_coupon_real_tender hcrt on hbtc.nid = hcrt.coupon_tender_id
-		left join hyjf_hjh_accede hha ON hcrt.real_tender_id = hha.accede_order_id
+		left join ht_coupon_real_tender hcrt on hbtc.nid = hcrt.coupon_tender_id
+		left join ht_hjh_accede hha ON hcrt.real_tender_id = hha.accede_order_id
 		LEFT JOIN ht_coupon_recover hcr ON hbtc.nid=hcr.tender_id
 		INNER JOIN ht_coupon_tender hct ON hct.order_id = hbtc.nid
 		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
