@@ -58,9 +58,6 @@ public class PlatformTransferController extends BaseController {
 
     @Autowired
     private PlatformTransferService platformTransferService;
-
-    @Autowired
-    private SystemConfig systemConfig;
     /**
      * 平台转账-查询转账列表
      * @auth sunpeikai
