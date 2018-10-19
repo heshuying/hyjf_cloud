@@ -71,7 +71,9 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
         List<UserVO> userVOList = amUserClient.findUserListByUserIds(userIds);
         for(AccountRechargeVO accountRechargeVO:accountRechargeVOList){
             //txTime时间格式化
-            accountRechargeVO.setTxTimeStr(timeFormat(accountRechargeVO.getTxTime()));
+            if(null != accountRechargeVO.getTxTime()){
+                accountRechargeVO.setTxTimeStr(timeFormat(accountRechargeVO.getTxTime()));
+            }
             for(UserVO userVO:userVOList){
                 if(null != userVO && null != userVO.getUserId() && accountRechargeVO.getUserId().equals(userVO.getUserId())){
                     accountRechargeVO.setMobile(userVO.getMobile());
