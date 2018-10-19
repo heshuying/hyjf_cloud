@@ -720,7 +720,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer deleteFreezeLogById(Integer id) {
-        String url = "http://AM-ADMIN/am-trade/repayfreezelog/deleteby_id/" + id;
+        String url = "http://AM-ADMIN/am-admin/repayfreezelog/deleteby_id/" + id;
         return restTemplate.getForEntity(url, Integer.class).getBody();
     }
 
@@ -732,7 +732,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BankRepayFreezeLogVO getBankFreezeLogByOrderId(String orderId) {
-        String url = "http://AM-ADMIN/am-trade/repayfreezelog/get_logvalid_byorderid/" + orderId;
+        String url = "http://AM-ADMIN/am-admin/repayfreezelog/get_logvalid_byorderid/" + orderId;
         BankRepayFreezeLogResponse response = restTemplate.getForEntity(url, BankRepayFreezeLogResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -748,10 +748,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BankRepayFreezeLogVO> getFreezeLogValidAll(Integer limitStart, Integer limitEnd) {
-        Map<String, Integer> params = new HashMap<>();
-        params.put("limitStart", limitStart);
-        params.put("limitEnd", limitEnd);
-        String url = "http://AM-ADMIN/am-trade/repayfreezelog/get_logvalid_all";
+        Map<String, String> params = new HashMap<>();
+        params.put("limitStart", "1");
+        params.put("limitEnd", "10");
+        String url = "http://AM-ADMIN/am-admin/repayfreezelog/get_logvalid_all";
         BankRepayFreezeLogResponse response = restTemplate.postForEntity(url, params, BankRepayFreezeLogResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -767,7 +767,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer getFreezeLogValidAllCount() {
-        String url = "http://AM-ADMIN/am-trade/repayfreezelog/get_logvalid_all_count";
+        String url = "http://AM-ADMIN/am-admin/repayfreezelog/get_logvalid_all_count";
         return restTemplate.getForEntity(url, Integer.class).getBody();
     }
 
@@ -1314,7 +1314,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<ManualReverseCustomizeVO> getManualReverseList(ManualReverseCustomizeRequest requestBean) {
         String url = "http://AM-ADMIN/am-trade/manualreverse/getlist";
         ManualReverseCustomizeResponse response = restTemplate.postForEntity(url, requestBean, ManualReverseCustomizeResponse.class).getBody();
-        if (Validator.isNotNull(response)) {
+        if (Response.isSuccess(response)) {
             response.getResultList();
         }
         return null;
@@ -3416,7 +3416,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         BorrowCommonResponse response = restTemplate
                 .postForEntity("http://AM-ADMIN/am-trade/borrowcommon/insertAction", borrowCommonRequest, BorrowCommonResponse.class)
                 .getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+        if (response != null ) {
             return response;
         }
         return null;
@@ -6063,6 +6063,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url,request,HjhInfoAccountBalanceResponse.class).getBody();
         if(response != null){
             return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public HjhAccountBalanceVO getHjhAccountBalanceSum(HjhAccountBalanceRequest request){
+        String url = "http://AM-ADMIN/am-trade/manager/statis/getHjhAccountBalanceSum";
+        HjhInfoAccountBalanceResponse response = restTemplate.postForEntity(url,request,HjhInfoAccountBalanceResponse.class).getBody();
+        if(response != null){
+            return response.getSum();
         }
         return null;
     }

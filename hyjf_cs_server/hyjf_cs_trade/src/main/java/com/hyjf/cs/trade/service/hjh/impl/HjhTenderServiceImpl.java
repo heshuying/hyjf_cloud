@@ -314,6 +314,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             logger.info("HJH couponId is:{}, borrowNid is :{}", couponId, planNid);
             JSONObject userCoupon = appCouponService.getPlanCoupon( tender.getUserId(),planNid, money,
                     platform);
+            logger.info("userCoupon： ",JSONObject.toJSONString(userCoupon));
             if (couponId == null || "".equals(couponId) || couponId.length() == 0) {
                 // 不用获取最优优惠券了
                 //couponConfig = planService.getUserOptimalCoupon(couponId, borrowNid, userId, money, platform);
@@ -358,9 +359,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             resultVo.setCouponType("");
             JSONObject counts =  userCoupon;
             String couponAvailableCount = "0";
-            if(counts.containsKey("availableCouponListCount")){
+            if(counts!=null&&counts.containsKey("availableCouponListCount")){
                 couponAvailableCount = counts.getString("availableCouponListCount");
+            }else{
+                couponAvailableCount = "0";
             }
+
             if (couponConfig != null) {
                 if (couponConfig != null && couponConfig.getId() > 0 && couponConfig.getCouponType() == 1) {
                     resultVo.setCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");

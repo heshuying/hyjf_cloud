@@ -20,7 +20,7 @@ public class MessagePushTemplateStatics implements Serializable {
 
     private String msgId;
 
-    private Integer tagId;
+    private String tagId;
 
     private String msgTitle;
 
@@ -60,11 +60,11 @@ public class MessagePushTemplateStatics implements Serializable {
         this.msgId = msgId;
     }
 
-    public Integer getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
-    public void setTagId(Integer tagId) {
+    public void setTagId(String tagId) {
         this.tagId = tagId;
     }
 

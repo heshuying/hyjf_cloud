@@ -2933,6 +2933,8 @@ public interface AmTradeClient {
 
     List<HjhAccountBalanceVO> getHjhAccountBalanceMonthList(HjhAccountBalanceRequest request);
 
+    HjhAccountBalanceVO getHjhAccountBalanceSum(HjhAccountBalanceRequest request);
+
     int getHjhAccountBalancecountByDay (HjhAccountBalanceRequest request);
 
     List<HjhAccountBalanceVO> getHjhAccountBalanceListByDay(HjhAccountBalanceRequest request);

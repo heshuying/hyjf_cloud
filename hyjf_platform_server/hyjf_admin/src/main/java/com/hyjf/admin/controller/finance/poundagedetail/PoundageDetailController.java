@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.controller.finance.poundagedetail;
 
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -10,7 +12,10 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.PoundageDetailService;
 import com.hyjf.admin.service.PoundageService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.AdminPoundageDetailRequest;
+import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.admin.PoundageDetailVO;
 import com.hyjf.am.vo.admin.PoundageLedgerVO;
@@ -24,6 +29,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,10 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: sunpeikai
@@ -59,19 +62,21 @@ public class PoundageDetailController extends BaseController {
     @PostMapping(value = "/poundagedetaillist")
     public AdminResult poundageDetailList(HttpServletRequest request, @RequestBody AdminPoundageDetailRequest poundageDetailRequest){
         Map<String,Object> result = new HashMap<>();
-        Integer loginUserId = Integer.valueOf(getUser(request).getId());
+        Integer loginUserId = 3;//Integer.valueOf(getUser(request).getId());
         PoundageCustomizeVO poundageCustomizeVO = poundageService.getPoundageById(loginUserId,poundageDetailRequest.getPoundageId());
         result.put("poundage",poundageCustomizeVO);
         // 查询明细对应的手续费配置项
         PoundageLedgerVO poundageLedgerVO = new PoundageLedgerVO();
-        if(poundageCustomizeVO.getLedgerId()!=null) {
-            poundageLedgerVO = poundageDetailService.getPoundageLedgerById(poundageCustomizeVO.getLedgerId());
-        }
-        result.put("poundageLedger", poundageLedgerVO);
-        // 设置明细查询条件
-        poundageDetailRequest.setLedgerIdSer(poundageCustomizeVO.getLedgerId());
-        if(poundageDetailRequest.getLedgerTimeSer()==null) {
-            poundageDetailRequest.setLedgerTimeSer(Integer.parseInt(poundageCustomizeVO.getPoundageTime()));
+        if(poundageCustomizeVO != null){
+            if(poundageCustomizeVO.getLedgerId()!=null) {
+                poundageLedgerVO = poundageDetailService.getPoundageLedgerById(poundageCustomizeVO.getLedgerId());
+            }
+            result.put("poundageLedger", poundageLedgerVO);
+            // 设置明细查询条件
+            poundageDetailRequest.setLedgerIdSer(poundageCustomizeVO.getLedgerId());
+            if(poundageDetailRequest.getLedgerTimeSer()==null) {
+                poundageDetailRequest.setLedgerTimeSer(Integer.parseInt(poundageCustomizeVO.getPoundageTime()));
+            }
         }
         Integer count = poundageDetailService.getPoundageDetailCount(poundageDetailRequest);
         count = (count == null)?0:count;
@@ -101,124 +106,147 @@ public class PoundageDetailController extends BaseController {
      */
     @ApiOperation(value = "导出手续费明细列表",notes = "导出手续费明细列表")
     @PostMapping(value = "/exportpoundagedetaillist")
-    public void exportPoundageDetailList(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminPoundageDetailRequest poundageDetailRequest) throws UnsupportedEncodingException {
-        Integer loginUserId = Integer.valueOf(getUser(request).getId());
-        PoundageCustomizeVO poundageCustomizeVO = poundageService.getPoundageById(loginUserId,poundageDetailRequest.getPoundageId());
+    public void exportPoundageDetailList(HttpServletRequest request, HttpServletResponse response,@RequestBody AdminPoundageDetailRequest poundageDetailRequest) throws Exception {
+        Integer loginUserId = 3;//Integer.valueOf(getUser(request).getId());
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "手续费分账明细";
-        // 查询明细对应的手续费配置项
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+        //手续费分账信息
+        PoundageCustomizeVO poundageCustomizeVO = poundageService.getPoundageById(loginUserId,poundageDetailRequest.getPoundageId());
+
+        // 查询明细对应的手续费配置项，format使用
         PoundageLedgerVO poundageLedgerCustomize = this.poundageDetailService.getPoundageLedgerById(poundageCustomizeVO.getLedgerId());
         // 根据手续费配置id和分账时间段查询对应的手续费明细
         poundageDetailRequest.setLedgerIdSer(poundageCustomizeVO.getLedgerId());
         poundageDetailRequest.setLedgerTimeSer(Integer.parseInt(poundageCustomizeVO.getPoundageTime()));
-        List<PoundageDetailVO> recordList = this.poundageDetailService.searchPoundageDetailList(poundageDetailRequest);
-        // excel详细信息
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[]{"序号", "项目编号", "项目类型", "放款/还款时间", "投资人", "投资人分公司",
-                "分账类型", "分账来源", "服务费分账比例", "债转服务费分账比例", "管理费分账比例", "分账金额",
-                "收款方用户名", "收款方姓名", "收款方电子帐号", "分账状态", "实际分账时间"};
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-        if (recordList != null && recordList.size() > 0) {
-            int sheetCount = 1;
-            int rowNum = 0;
-            for (int i = 0; i < recordList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    PoundageDetailVO bean = recordList.get(i);
+        poundageDetailRequest.setCurrPage(-1);
+        Integer totalCount = poundageDetailService.getPoundageDetailCount(poundageDetailRequest);
 
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    //序号
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    }
-                    //项目编号
-                    if (celLength == 1) {
-                        cell.setCellValue(bean.getBorrowNid());
-                    }
-                    //项目类型
-                    if (celLength == 2) {
-                        cell.setCellValue(bean.getBorrowType());
-                    }
-                    //放款/还款时间
-                    if (celLength == 3) {
-                        Date addTime = bean.getCreateTime();
-                        cell.setCellValue(addTime == null ? "" : GetDate.dateToString(addTime));
-                    }
-                    //投资人
-                    if (celLength == 4) {
-                        cell.setCellValue(bean.getUsernname());
-                    }
-                    //分账金额
-                    if (celLength == 11) {
-                        BigDecimal amount = bean.getAmount();
-                        cell.setCellValue(amount != null ? amount.toString() : "");
-                    }
-                    /*根据详情的ledger_id关联相应的手续费配置项 start*/
-                    //分账类型
-                    if (celLength == 6) {
-                        cell.setCellValue(getTypeStr(poundageLedgerCustomize.getType()));
-                    }
-                    //投资人分公司
-                    if (celLength == 5) {
-                        cell.setCellValue(poundageLedgerCustomize.getInvestorCompany());
-                    }
-                    //分账来源
-                    if (celLength == 7) {
-                        cell.setCellValue(getSourceStr(poundageLedgerCustomize.getSource()));
-                    }
-                    //服务费分账比例
-                    if (celLength == 8) {
-                        cell.setCellValue(getRatio(poundageLedgerCustomize.getServiceRatio()));
-                    }
-                    //债转服务费分账比例
-                    if (celLength == 9) {
-                        cell.setCellValue(getRatio(poundageLedgerCustomize.getCreditRatio()));
-                    }
-                    //管理费分账比例
-                    if (celLength == 10) {
-                        cell.setCellValue(getRatio(poundageLedgerCustomize.getManageRatio()));
-                    }
-                    //收款人用户名
-                    if (celLength == 12) {
-                        cell.setCellValue(poundageLedgerCustomize.getUsername());
-                    }
-                    //收款人姓名
-                    if (celLength == 13) {
-                        cell.setCellValue(poundageLedgerCustomize.getTruename());
-                    }
-                    //收款人电子帐号
-                    if (celLength == 14) {
-                        cell.setCellValue(poundageLedgerCustomize.getAccount());
-                    }
-                    /*根据详情的ledger_id关联相应的手续费配置项 end*/
-                    /*手续费分账项 start*/
-                    //分账状态
-                    if (celLength == 15) {
-                        cell.setCellValue(PoundageCustomizeVO.getStatusStr(poundageCustomizeVO.getStatus()));
-                    }
-                    //实际分账时间
-                    if (celLength == 16) {
-                        Integer ledgerTime = poundageCustomizeVO.getAddTime();
-                        cell.setCellValue(ledgerTime == null ? "" : GetDate.timestamptoStrYYYYMMDDHHMMSS(ledgerTime));
-                    }
-                    /*手续费分账项 end*/
-                }
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter(poundageLedgerCustomize,poundageCustomizeVO);
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i <= sheetCount; i++) {
+            poundageDetailRequest.setPageSize(defaultRowMaxCount);
+            poundageDetailRequest.setCurrPage(i);
+            List<PoundageDetailVO> recordList = this.poundageDetailService.searchPoundageDetailList(poundageDetailRequest);
+            logger.info(JSON.toJSONString(recordList));
+            if (recordList != null && recordList.size()> 0) {
+                String sheetNameTmp = sheetName + "_第" + i + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("borrowNid", "项目编号");
+        map.put("borrowType", "项目类型");
+        map.put("createTime", "放款/还款时间");
+        map.put("username", "投资人");
+        map.put("investorCompany", "投资人分公司");
+        map.put("type", "分账类型");
+        map.put("source", "分账来源");
+        map.put("serviceRatio", "服务费分账比例");
+        map.put("creditRatio", "债转服务费分账比例");
+        map.put("manageRatio", "管理费分账比例");
+        map.put("amount", "分账金额");
+        map.put("userName", "收款方用户名");
+        map.put("trueName", "收款方姓名");
+        map.put("account", "收款方电子帐号");
+        map.put("status", "分账状态");
+        map.put("addTime", "实际分账时间");
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter(PoundageLedgerVO poundageLedgerCustomize,PoundageCustomizeVO poundageCustomizeVO) {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter createTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Date createTime = (Date) object;
+                return createTime == null ? "" : GetDate.dateToString(createTime);
+            }
+        };
+        IValueFormatter investorCompanyAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return poundageLedgerCustomize.getInvestorCompany();
+            }
+        };
+        IValueFormatter typeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return getTypeStr(poundageLedgerCustomize.getType());
+            }
+        };
+        IValueFormatter sourceAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return getSourceStr(poundageLedgerCustomize.getSource());
+            }
+        };
+        IValueFormatter serviceRatioAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return getRatio(poundageLedgerCustomize.getServiceRatio());
+            }
+        };
+        IValueFormatter creditRatioAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return getRatio(poundageLedgerCustomize.getCreditRatio());
+            }
+        };
+        IValueFormatter manageRatioAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return getRatio(poundageLedgerCustomize.getManageRatio());
+            }
+        };
+        IValueFormatter amountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal amount = (BigDecimal) object;
+                return amount != null ? amount.toString() : "";
+            }
+        };
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return PoundageCustomizeVO.getStatusStr(poundageCustomizeVO.getStatus());
+            }
+        };
+        IValueFormatter addTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer addTime = poundageCustomizeVO.getAddTime();
+                return addTime == null ? "" : GetDate.timestamptoStrYYYYMMDDHHMMSS(addTime);
+            }
+        };
+        mapAdapter.put("createTime", createTimeAdapter);
+        mapAdapter.put("investorCompany", investorCompanyAdapter);
+        mapAdapter.put("type", typeAdapter);
+        mapAdapter.put("source", sourceAdapter);
+        mapAdapter.put("serviceRatio", serviceRatioAdapter);
+        mapAdapter.put("creditRatio", creditRatioAdapter);
+        mapAdapter.put("manageRatio", manageRatioAdapter);
+        mapAdapter.put("amount", amountAdapter);
+        mapAdapter.put("status", statusAdapter);
+        mapAdapter.put("addTime", addTimeAdapter);
+        return mapAdapter;
     }
 
     /**

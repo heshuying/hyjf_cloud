@@ -212,6 +212,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         borrowTenderCpn.setUserId(userId);
         borrowTenderCpn.setRemark("");
         borrowTenderCpn.setWebStatus(0);
+        borrowTenderCpn.setTenderUserName(bean.getUserName());
         borrowTenderCpn.setClient(bean.getPlatform());
         // 投资类别：1：直投类，2：汇添金 3：汇计划
         borrowTenderCpn.setTenderType(bean.getTenderType());
@@ -346,10 +347,10 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
                 return result;
             }
         } else if (configVO.getCouponType() == 3) {
-            if (config.indexOf("3") == -1) {
+            /*if (config.indexOf("3") == -1) {
                 result.put("statusDesc", "您选择的优惠券不满足使用条件，请核对后重新选择！");
                 return result;
-            }
+            }*/
         }
         // 取得优惠券配置
         if (couponUser.getUsedFlag() != 0) {
@@ -499,6 +500,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             couponTender.setPlatform(bean.getLogClient());
             couponTender.setTenderType(CustomConstants.COUPON_TENDER_TYPE_HZT);
             couponTender.setUserId(userId);
+            couponTender.setUserName(bean.getLogUserName());
             // 开始使用优惠券投资
             this.updateCouponTender(couponTender);
         }

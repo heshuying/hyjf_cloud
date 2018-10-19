@@ -114,42 +114,65 @@ public class AppUserWithdrawController extends BaseUserController {
 
                         JxBankConfigVO jxBankConfigVO = userWithdrawService.getJxBankConfigByBankId(bankId);
 
-                        if (jxBankConfigVO != null && StringUtils.isNotEmpty(jxBankConfigVO.getBankIcon())) {
-                            bankCardBean.setLogo(systemConfig.getServerHost() + jxBankConfigVO.getBankLogo());
-                        } else {
-                            bankCardBean.setLogo(systemConfig.getServerHost() + "/data/upfiles/filetemp/image/bank_log.png");// 应前台要求，logo路径给绝对路径
-                        }
-
-                        // 是否快捷卡
-                        if (jxBankConfigVO != null && jxBankConfigVO.getQuickPayment() == 1) {
-                            bankCardBean.setIsDefault("2");
-                        } else {
-                            bankCardBean.setIsDefault("0");
-                        }
+                        //通用赋值
                         bankCardBean.setBankCode(bank.getBank());
-
-                        if (jxBankConfigVO != null && StringUtils.isNotEmpty(jxBankConfigVO.getBankName())) {
-                            bankCardBean.setBank(jxBankConfigVO.getBankName());
-                        }
-
                         bankCardBean.setCardNo(bank.getCardNo());
                         bankCardBean.setCardNo_info(BankCardUtil.getCardNo(bank.getCardNo()));
-                        // add by xiashuqing 20171205 app2.1改版新增 begin
-                        // 每次限额 单位：万元
-                        BigDecimal timesLimitAmount = jxBankConfigVO.getSingleQuota().divide(new BigDecimal(AMOUNT_UNIT));
-                        // 每日限额 单位：万元
-                        BigDecimal dayLimitAmount = jxBankConfigVO.getSingleCardQuota().divide(new BigDecimal(AMOUNT_UNIT));
-                        // 每月限额 单位: 万元
-                        BigDecimal monthLimitAmount = jxBankConfigVO.getMonthCardQuota().divide(new BigDecimal(AMOUNT_UNIT));
-                        if (monthLimitAmount == null) {
-                            monthLimitAmount = BigDecimal.ZERO;
-                        }
-                        // 是否支持快捷支付1:支持 2:不支持
-                        //Integer quickPayment = jxBankConfigVO.getQuickPayment();
-                        bankCardBean.setDesc(MessageFormat.format(CARD_DESC, (BigDecimal.ZERO.compareTo(timesLimitAmount) == 0) ? "不限" : timesLimitAmount.toString() + "万元",
-                                (BigDecimal.ZERO.compareTo(dayLimitAmount) == 0) ? "不限" : dayLimitAmount.toString() + "万元", (BigDecimal.ZERO.compareTo(monthLimitAmount) == 0) ? "不限" : monthLimitAmount.toString() + "万元"));
                         bankCardBean.setNotice(WARM_AND_SWEET_REMINDERS_URL);
-                        // add by xiashuqing 20171205 app2.1改版新增 end
+                        bankCardBean.setBank(bank.getBank());
+                        // 每次限额 单位：万元
+                        BigDecimal timesLimitAmount = BigDecimal.ZERO;
+                        // 每日限额 单位：万元
+                        BigDecimal dayLimitAmount = BigDecimal.ZERO;
+                        // 每月限额 单位: 万元
+                        BigDecimal monthLimitAmount = BigDecimal.ZERO;
+
+                        if(jxBankConfigVO != null){
+                            if (StringUtils.isNotEmpty(jxBankConfigVO.getBankIcon())) {
+                                bankCardBean.setLogo(systemConfig.getServerHost() + jxBankConfigVO.getBankLogo());
+                            } else {
+                                bankCardBean.setLogo(systemConfig.getServerHost() + "/data/upfiles/filetemp/image/bank_log.png");// 应前台要求，logo路径给绝对路径
+                            }
+
+                            // 是否快捷卡
+                            if (jxBankConfigVO.getQuickPayment() == 1) {
+                                bankCardBean.setIsDefault("2");
+                            } else {
+                                bankCardBean.setIsDefault("0");
+                            }
+
+                            if (StringUtils.isNotEmpty(jxBankConfigVO.getBankName())) {
+                                bankCardBean.setBank(jxBankConfigVO.getBankName());
+                            }
+
+                            // 每次限额 单位：万元
+                            timesLimitAmount = jxBankConfigVO.getSingleQuota().divide(new BigDecimal(AMOUNT_UNIT));
+                            // 每日限额 单位：万元
+                            dayLimitAmount = jxBankConfigVO.getSingleCardQuota().divide(new BigDecimal(AMOUNT_UNIT));
+                            // 每月限额 单位: 万元
+                            monthLimitAmount = jxBankConfigVO.getMonthCardQuota().divide(new BigDecimal(AMOUNT_UNIT));
+                        }else{
+                            bankCardBean.setLogo(systemConfig.getServerHost() + "/data/upfiles/filetemp/image/bank_log.png");// 应前台要求，logo路径给绝对路径
+                            bankCardBean.setIsDefault("0");
+
+                        }
+
+                        timesLimitAmount = (timesLimitAmount == null)?BigDecimal.ZERO:timesLimitAmount;
+                        dayLimitAmount = (dayLimitAmount == null)?BigDecimal.ZERO:dayLimitAmount;
+                        monthLimitAmount = (monthLimitAmount == null)?BigDecimal.ZERO:monthLimitAmount;
+
+                        String symbol = ",";
+                        String symBol2 = ",";
+                        if(BigDecimal.ZERO.compareTo(dayLimitAmount)==0 && BigDecimal.ZERO.compareTo(monthLimitAmount)==0){
+                            symbol = "";
+                            symBol2 = "";
+                        }
+                        if(BigDecimal.ZERO.compareTo(monthLimitAmount)==0){
+                            symBol2 = "";
+                        }
+
+                        bankCardBean.setDesc(MessageFormat.format(CARD_DESC, (BigDecimal.ZERO.compareTo(timesLimitAmount) == 0) ? "" : "单笔" + timesLimitAmount.toString() + "万元" + symbol,
+                                (BigDecimal.ZERO.compareTo(dayLimitAmount) == 0) ? "" : "单日" + dayLimitAmount.toString() + "万元" + symBol2, (BigDecimal.ZERO.compareTo(monthLimitAmount) == 0) ? "" : "单月" + monthLimitAmount.toString() + "万元"));
 
                         bankcards.add(bankCardBean);
                     }

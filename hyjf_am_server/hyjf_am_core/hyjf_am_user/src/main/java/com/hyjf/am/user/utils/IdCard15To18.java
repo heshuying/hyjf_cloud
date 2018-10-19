@@ -228,23 +228,23 @@ public class IdCard15To18 {
 
     //字符串转换unicode
     public static String stringToUnicode(String string) {
-        StringBuffer unicode = new StringBuffer();
+        StringBuilder unicode = new StringBuilder();
         for (int i = 0; i < string.length(); i++) {
             char c = string.charAt(i);  // 取出每一个字符
-            unicode.append("\\u" +Integer.toHexString(c));// 转换为unicode
+            unicode.append("\\u").append(Integer.toHexString(c));// 转换为unicode
         }
         return unicode.toString();
     }
 
     //unicode 转字符串
-    public static String unicodeToString(String unicode) {
-        StringBuffer string = new StringBuffer();
+    private static String unicodeToString(String unicode) {
+        StringBuilder stringBuilder = new StringBuilder();
         String[] hex = unicode.split("\\\\u");
         for (int i = 1; i < hex.length; i++) {
             int data = Integer.parseInt(hex[i], 16);// 转换出每一个代码点
-            string.append((char) data);// 追加成string
+            stringBuilder.append((char) data);// 追加成string
         }
-        return string.toString();
+        return stringBuilder.toString();
     }
     private static void cityInit(){
         String area = "";
@@ -255,7 +255,7 @@ public class IdCard15To18 {
                 properties.load(inputStream);
                 String json = properties.toString();
                 area = json.substring(1, json.length() -1);
-                if(area != null && !"".equals(area)){
+                if(!"".equals(area)){
                     String[] text = area.split(";");
                     for(String str:text){
                         String[] keyValue = str.split("=");

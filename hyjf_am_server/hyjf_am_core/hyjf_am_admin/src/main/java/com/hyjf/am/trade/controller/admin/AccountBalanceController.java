@@ -55,6 +55,19 @@ public class AccountBalanceController  extends BaseController {
         return response;
     }
 
+    @RequestMapping("/getHjhAccountBalanceSum")
+    public HjhInfoAccountBalanceResponse getHjhAccountBalanceSum(@RequestBody HjhAccountBalanceRequest request){
+        HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
+        HjhAccountBalanceVO vo = accountBalanceService.getHjhAccountBalanceMonthSum(request);
+        String returnCode = Response.FAIL;
+        if (null != vo) {
+            response.setSum(vo);
+            returnCode = Response.SUCCESS;
+        }
+        response.setRtn(returnCode);
+        return response;
+    }
+
     @RequestMapping("/getHjhAccountBalancecountByDay")
     public HjhInfoAccountBalanceResponse getHjhAccountBalancecountByDay(@RequestBody HjhAccountBalanceRequest request){
         HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();

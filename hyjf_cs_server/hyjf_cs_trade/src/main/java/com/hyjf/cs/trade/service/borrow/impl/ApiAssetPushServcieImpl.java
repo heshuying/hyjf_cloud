@@ -206,10 +206,25 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 }
 
                 // 信批需求(资产只有个人,若第三方不传则为默认值插入资产表中) start
-                // 年收入
-                if (StringUtils.isBlank(pushBean.getAnnualIncome())) {
-                    pushBean.setAnnualIncome("10万以内");
+//                // 年收入
+//                if (StringUtils.isBlank(pushBean.getAnnualIncome())) {
+//                    pushBean.setAnnualIncome("10万以内");
+//                }
+//
+                //update by wj 2018-05-24 年收入，月收入非空校验 start
+                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getAnnualIncome())){
+                    pushBean.setRetCode("ZT000013");
+                    pushBean.setRetMsg("年收入为空");
+                    continue;
                 }
+
+                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getMonthlyIncome())){
+                    pushBean.setRetCode("ZT000014");
+                    pushBean.setRetMsg("月收入为空");
+                    continue;
+                }
+                //update by wj 2018-05-24 年收入，月收入非空校验 end
+
                 // 征信报告逾期情况
                 if (StringUtils.isBlank(pushBean.getOverdueReport())) {
                     pushBean.setOverdueReport("暂无数据");

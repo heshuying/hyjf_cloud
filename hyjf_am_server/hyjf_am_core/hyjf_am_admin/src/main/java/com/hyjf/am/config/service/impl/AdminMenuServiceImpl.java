@@ -1,16 +1,19 @@
 package com.hyjf.am.config.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.config.dao.mapper.auto.AdminMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminMenuMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminMenuPermssionsMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminPermissionsMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminCustomizeMapper;
+import com.hyjf.am.config.dao.mapper.customize.AdminSystemMapper;
 import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.dao.model.customize.AdminCustomize;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminMenuService;
 import com.hyjf.am.resquest.config.AdminMenuRequest;
+import com.hyjf.am.vo.admin.MenuVO;
 import com.hyjf.common.validator.Validator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,8 @@ public class AdminMenuServiceImpl  implements AdminMenuService {
     AdminMenuPermssionsMapper adminMenuPermssionsMapper;
     @Autowired
     AdminPermissionsMapper adminPermissionsMapper;
+    @Autowired
+    AdminSystemMapper adminSystemMapper;
     /**
      * 获取菜单列表
      *
@@ -148,7 +153,8 @@ public class AdminMenuServiceImpl  implements AdminMenuService {
 		acv.setCreateUserId(record.getAdminId());
 		acv.setUpdateTime(new Date());
 		acv.setUpdateUserId(record.getAdminId());
-        adminMenuMapper.insertSelective(acv);
+		acv.setDelFlag(0);
+        adminMenuMapper.insert(acv);
     }
 
     /**
@@ -173,7 +179,7 @@ public class AdminMenuServiceImpl  implements AdminMenuService {
         AdminMenu record = new AdminMenu();
         record.setUpdateTime(new Date());
         record.setUpdateUserId(adminId);
-
+        record.setDelFlag(1);
         AdminMenuExample example = new AdminMenuExample();
         AdminMenuExample.Criteria criteria = example.createCriteria();
         criteria.andMenuUuidIn(ids);
@@ -205,6 +211,9 @@ public class AdminMenuServiceImpl  implements AdminMenuService {
             for (AdminPermissions permissions : listPermission) {
                 AdminSystem bean = new AdminSystem();
                 bean.setMenuUuid(menuUuid);
+                bean.setId(permissions.getPermission());
+                bean.setValue(permissions.getPermissionUuid());
+                bean.setTitle(permissions.getPermissionName());
                 bean.setPermissionUuid(permissions.getPermissionUuid());
                 bean.setPermission(permissions.getPermission());
                 bean.setPermissionName(permissions.getPermissionName());
@@ -238,5 +247,14 @@ public class AdminMenuServiceImpl  implements AdminMenuService {
             }
         }
 
+    }
+    @Override
+    public JSONArray selectLeftMenuTree2(AdminSystem admin) {
+        JSONArray array = new JSONArray();
+        List<MenuVO> leftMenuList = adminSystemMapper.selectLeftMenuTree1(admin);
+        for (MenuVO adminSystem : leftMenuList) {
+            array.add(adminSystem);
+        }
+        return array;
     }
 }

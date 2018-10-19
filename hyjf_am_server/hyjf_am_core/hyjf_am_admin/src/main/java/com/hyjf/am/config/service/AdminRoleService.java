@@ -87,4 +87,6 @@ public interface AdminRoleService {
     public int countRoleByname(Integer id, String roleName);
 
 	void setRolePermission(UserRoleRequest userRoleRequest) throws Exception;
+
+	List<String> getPermissionId(String menuId);
 }

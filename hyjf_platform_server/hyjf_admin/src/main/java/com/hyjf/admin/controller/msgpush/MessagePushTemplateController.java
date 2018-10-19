@@ -72,9 +72,41 @@ public class MessagePushTemplateController extends BaseController {
                 response = messagePushTemplateService.getRecord(form.getId());
                 if (response.getResult() != null) {
                     MessagePushTemplateVO record = response.getResult();
-                    if (StringUtils.isNotEmpty(record.getTemplateCode()) && record.getTemplateCode().contains("_")) {
-                        record.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
+                    BeanUtils.copyProperties(record, form);
+                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
+                        form.setTemplateActionUrl1("");
+                        form.setTemplateActionUrl2("");
                     }
+                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1) {
+                        form.setTemplateActionUrl1(record.getTemplateActionUrl());
+                        form.setTemplateActionUrl2("");
+                    }
+                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
+                        form.setTemplateActionUrl3(record.getTemplateActionUrl());
+                        form.setTemplateActionUrl2("");
+                    }
+                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+                        form.setTemplateActionUrl("");
+                        if ("hyjf://jumpZXH".equals(record.getTemplateActionUrl())) {
+                            form.setTemplateActionUrl2("1");
+                        }
+                        if ("hyjf://jumpMine".equals(record.getTemplateActionUrl())) {
+                            form.setTemplateActionUrl2("2");
+                        }
+                        if ("hyjf://jumpCouponsList".equals(record.getTemplateActionUrl())) {
+                            form.setTemplateActionUrl2("3");
+                        }
+                        if ("hyjf://jumpTransactionDetail".equals(record.getTemplateActionUrl())) {
+                            form.setTemplateActionUrl2("4");
+                        }
+                        if ("hyjf://jumpInvest".equals(record.getTemplateActionUrl())) {
+                            form.setTemplateActionUrl2("5");
+                        }
+                    }
+                    if (StringUtils.isNotEmpty(record.getTemplateCode()) && record.getTemplateCode().contains("_")) {
+                        form.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
+                    }
+                    BeanUtils.copyProperties(form, record);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -115,6 +147,19 @@ public class MessagePushTemplateController extends BaseController {
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl1());
         }
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+            if(templateRequest.getTemplateActionUrl2().equals("1")){
+                templateRequest.setTemplateActionUrl2("hyjf://jumpZXH" );
+            }else if (templateRequest.getTemplateActionUrl2().equals("5")) {
+                templateRequest.setTemplateActionUrl2("hyjf://jumpInvest");
+            }else if (templateRequest.getTemplateActionUrl2().equals("新手汇")) {
+                templateRequest.setTemplateActionUrl2("hyjf://jumpXSH");
+            }else if (templateRequest.getTemplateActionUrl2().equals("2")) {
+                templateRequest.setTemplateActionUrl2("hyjf://jumpMine");
+            }else if (templateRequest.getTemplateActionUrl2().equals("3")) {
+                templateRequest.setTemplateActionUrl2("hyjf://jumpCouponsList");
+            }else if (templateRequest.getTemplateActionUrl2().equals("4")) {
+                templateRequest.setTemplateActionUrl2("hyjf://jumpTransactionDetail");
+            }
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
         }
         templateVO.setTagCode(templateRequest.getTemplateCode().substring(0, 4));
@@ -155,7 +200,19 @@ public class MessagePushTemplateController extends BaseController {
             templateRequest.setTemplateActionUrl(templateRequest.getTemplateActionUrl3());
         }
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
-            templateRequest.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
+            if(templateRequest.getTemplateActionUrl2().equals("1")){
+                templateRequest.setTemplateActionUrl("hyjf://jumpZXH" );
+            }else if (templateRequest.getTemplateActionUrl2().equals("5")) {
+                templateRequest.setTemplateActionUrl("hyjf://jumpInvest");
+            }else if (templateRequest.getTemplateActionUrl2().equals("新手汇")) {
+                templateRequest.setTemplateActionUrl("hyjf://jumpXSH");
+            }else if (templateRequest.getTemplateActionUrl2().equals("2")) {
+                templateRequest.setTemplateActionUrl("hyjf://jumpMine");
+            }else if (templateRequest.getTemplateActionUrl2().equals("3")) {
+                templateRequest.setTemplateActionUrl("hyjf://jumpCouponsList");
+            }else if (templateRequest.getTemplateActionUrl2().equals("4")) {
+                templateRequest.setTemplateActionUrl("hyjf://jumpTransactionDetail");
+            }
         }
         templateRequest.setTagCode(templateRequest.getTemplateCode().substring(0, 3));
         templateRequest.setTemplateCode(templateRequest.getTemplateCode());

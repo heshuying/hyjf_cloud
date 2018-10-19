@@ -28,6 +28,7 @@ import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -457,7 +458,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 throw new RuntimeException("满标更新borrow表失败");
             }
             // 清除标总额的缓存
-            RedisUtils.del(borrowNid);
+            RedisUtils.del(RedisConstants.BORROW_NID+borrowNid);
             // 纯发短信接口
             Map<String, String> replaceMap = new HashMap<String, String>();
             replaceMap.put("val_title", borrowNid);

@@ -2233,6 +2233,27 @@ public interface AmTradeClient {
     List<BorrowProjectTypeVO> getProjectTypeList();
 
     /**
+     * 根据时间查询
+     * @param nowDay
+     * @return
+     */
+    List<CouponRepayMonitorVO> selectCouponRepayMonitor(String nowDay);
+
+    /**
+     * 插入数据
+     * @param monitor
+     * @return
+     */
+    int insertCouponRepayMonitor(CouponRepayMonitorVO monitor);
+
+    /**
+     * 更新数据
+     * @param monitor
+     * @return
+     */
+    int updateCouponRepayMonitor(CouponRepayMonitorVO monitor);
+
+    /**
      * 查询标的列表(协议)
      * @date 2018/10/18 14:48
      */

@@ -2,6 +2,7 @@ package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 
@@ -20,6 +21,8 @@ public class AssetManageResponse extends Response<BaseVO> {
     private List<RepayMentListCustomizeVO> repayMentList;
     //转让记录列表
     private List<TenderCreditDetailCustomizeVO> creditRecordList;
+
+    private List<TenderAgreementVO> TenderAggementList;
 
     //当前持有债权数量
     private Integer currentHoldObligatoryRightCount=0;
@@ -46,6 +49,14 @@ public class AssetManageResponse extends Response<BaseVO> {
     private List<AppMyPlanCustomizeVO> appMyPlanCustomizeList;
     //app端计划列表数量
     private Integer appMyPlanCount=0;
+
+    public List<TenderAgreementVO> getTenderAggementList() {
+        return TenderAggementList;
+    }
+
+    public void setTenderAggementList(List<TenderAgreementVO> tenderAggementList) {
+        TenderAggementList = tenderAggementList;
+    }
 
     public List<CurrentHoldObligatoryRightListCustomizeVO> getCurrentHoldObligatoryRightList() {
         return currentHoldObligatoryRightList;

@@ -25,7 +25,7 @@ public class ManualReverseCustomizeVO {
      * 交易时间
      */
     @ApiModelProperty(value = "交易时间")
-    private Date txTime;
+    private String txTimeView;
 
     /**
      * 用户名
@@ -114,21 +114,12 @@ public class ManualReverseCustomizeVO {
         this.bankSeqNo = bankSeqNo;
     }
 
-    /**
-     * txTime
-     * @return the txTime
-     */
-
-    public Date getTxTime() {
-        return txTime;
+    public String getTxTimeView() {
+        return txTimeView;
     }
 
-    /**
-     * @param txTime the txTime to set
-     */
-
-    public void setTxTime(Date txTime) {
-        this.txTime = txTime;
+    public void setTxTimeView(String txTimeView) {
+        this.txTimeView = txTimeView;
     }
 
     /**

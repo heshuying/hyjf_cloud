@@ -49,7 +49,7 @@ public class RedisConstants {
     /**
      * 风险保证金前缀
      */
-	public static final String CAPITAL_TOPLIMIT_ = "capital_toplimit:";
+//	public static final String CAPITAL_TOPLIMIT_ = "capital_toplimit:";
 
     /**
      * 汇计划发标redis key
