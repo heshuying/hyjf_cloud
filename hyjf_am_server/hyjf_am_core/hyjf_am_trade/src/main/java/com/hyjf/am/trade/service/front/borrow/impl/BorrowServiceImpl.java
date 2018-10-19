@@ -17,10 +17,13 @@ import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
+import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
+import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.DebtBorrowCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
@@ -4604,4 +4607,39 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     }
 
+
+    @Override
+    public List<BorrowListVO> getBorrowList(Map<String, Object> param) {
+       return  borrowCustomizeMapper.getBorrowList(param);
+    }
+
+    @Override
+    public List<DebtBorrowCustomizeVO> getDebtBorrowList(Map<String, Object> param) {
+        return borrowCustomizeMapper.getDebtBorrowList(param);
+    }
+
+    @Override
+    public List<WebProjectRepayListCustomizeVO> selectProjectLoanDetailList(Map<String, Object> param) {
+        return borrowCustomizeMapper.selectProjectLoanDetailList(param);
+    }
+
+    @Override
+    public List<WebUserInvestListCustomizeVO> selectUserDebtInvestList(Map<String, Object> param) {
+        return borrowCustomizeMapper.selectUserDebtInvestList(param);
+    }
+
+    @Override
+    public int planInfoCountProjectRepayPlanRecordTotal(Map<String, Object> param) {
+        return borrowCustomizeMapper.planInfoCountProjectRepayPlanRecordTotal(param);
+    }
+
+    @Override
+    public int myTenderCountProjectRepayPlanRecordTotal(Map<String, Object> param) {
+        return borrowCustomizeMapper.myTenderCountProjectRepayPlanRecordTotal(param);
+    }
+
+    @Override
+    public List<WebUserInvestListCustomizeVO> selectUserInvestList(Map<String, Object> param) {
+        return borrowCustomizeMapper.selectUserInvestList(param);
+    }
 }
