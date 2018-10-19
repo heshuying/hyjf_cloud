@@ -9,6 +9,64 @@
 		<result column="menu_icon" property="menuIcon" jdbcType="VARCHAR" />
 		<result column="menu_sort" property="menuSort" jdbcType="VARCHAR" />
 	</resultMap>
+	<resultMap id="selectLeftMenuTreeMap2" type="com.hyjf.am.vo.admin.MenuVO">
+		<result column="menu_puuid" property="id" jdbcType="VARCHAR" />
+		<result column="menu_uuid" property="menuUuid" jdbcType="VARCHAR" />
+		<result column="menu_name" property="name" jdbcType="VARCHAR" />
+		<result column="menu_url" property="path" jdbcType="VARCHAR" />
+		<result column="menu_icon" property="icon" jdbcType="VARCHAR" />
+		<result column="menu_sort" property="sort" jdbcType="VARCHAR" />
+		<result column="menu_ctrl" property="menuCtrl" jdbcType="VARCHAR" />
+		<association property="children" select="selectLeftMenuTree2" column="menu_uuid">
+			<!-- 这里要注意的是column对应的是student中的外键，而且需是表字段名 -->
+		</association>
+	</resultMap>
+		<select id="selectLeftMenuTree1" resultMap="selectLeftMenuTreeMap2" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
+		SELECT
+		   DISTINCT
+			m.menu_puuid AS menu_puuid,
+			m.menu_uuid AS menu_uuid,
+			m.menu_name AS menu_name,
+			m.menu_url AS menu_url,
+			m.menu_icon AS menu_icon,
+			m.menu_sort AS menu_sort,
+			m.menu_ctrl AS menu_ctrl,
+			a.status
+			FROM
+			ht_admin a
+			INNER JOIN ht_admin_and_role anr ON a.id = anr.user_id
+			INNER JOIN ht_admin_role anrr ON anr.role_id = anrr.id
+			INNER JOIN ht_admin_role_menu_permissions mp ON anrr.id = mp.role_id
+			AND mp.del_flag = '0'
+			INNER JOIN ht_admin_menu m ON mp.menu_uuid = m.menu_uuid
+			AND m.del_flag = '0'
+			INNER JOIN ht_admin_permissions p ON p.permission_uuid = mp.permission_uuid
+			AND p.del_flag = '0'
+			AND m.menu_hide = '0'
+			WHERE
+			 m.menu_puuid = '0'
+			AND m.menu_hide = '0'
+			<if test="permission != null" >
+				AND p.permission = #{permission, jdbcType=VARCHAR}
+			</if>
+			<if test="id != null" >
+				AND a.id = #{id, jdbcType=VARCHAR}
+			</if>
+			ORDER BY
+			m.menu_sort ASC
+		</select>
+			<select id="selectLeftMenuTree2" resultMap="selectLeftMenuTreeMap2" parameterType="com.hyjf.am.vo.admin.MenuVO">
+		select
+		    m.menu_uuid AS menu_uuid,
+		    m.menu_name AS menu_name,
+			m.menu_url AS menu_url,
+			m.menu_icon AS menu_icon,
+			m.menu_sort AS menu_sort,
+			m.menu_ctrl AS menu_ctrl
+		 from ht_admin_menu m
+		WHERE
+		m.menu_puuid =#{menu_uuid} and  m.del_flag = '0'
+	</select>
 	<select id="selectLeftMenuTree" resultMap="selectLeftMenuTreeMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
 		SELECT DISTINCT
 			m.menu_puuid AS menu_puuid,

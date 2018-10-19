@@ -48,6 +48,24 @@ public class AdminSystemVO extends BasePage implements Serializable {
     private Integer roleId;
 
     private String state;
+    private String value;
+    private String title;
+    
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	public String getPermission() {
 		return permission;

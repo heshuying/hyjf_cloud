@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AdminUserRecommendRequestBean;
 import com.hyjf.admin.beans.request.CompanyInfoInstRequesetBean;
 import com.hyjf.admin.beans.request.UserManagerRequestBean;
@@ -20,6 +21,8 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.SmsCountService;
 import com.hyjf.admin.service.UserCenterService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
@@ -35,6 +38,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -381,8 +385,8 @@ public class UserCenterController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "导出会员管理列表", notes = "导出会员管理列表")
-    @PostMapping(value = "/exportusers")
+//    @ApiOperation(value = "导出会员管理列表", notes = "导出会员管理列表")
+//    @PostMapping(value = "/exportusers")
     public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody UserManagerRequestBean userManagerRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "会员列表";
@@ -479,7 +483,133 @@ public class UserCenterController extends BaseController {
          // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
+    
+    /**
+     * 导出excel
+     *
+     * @param form
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "导出会员管理列表", notes = "导出会员管理列表")
+    @PostMapping(value = "/exportusers")
+    public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody UserManagerRequestBean userManagerRequestBean) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "会员列表";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
+        UserManagerRequest managerRequest = new UserManagerRequest();
+        BeanUtils.copyProperties(userManagerRequestBean,managerRequest);
+        managerRequest.setLimitFlg(true);
+        //请求第一页5000条
+        managerRequest.setPageSize(defaultRowMaxCount);
+        managerRequest.setCurrPage(1);
+        UserManagerResponse userManagerResponse = userCenterService.selectUserMemberList(managerRequest);
+        
+        Integer totalCount = userManagerResponse.getCount();
+
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        int minId = 0;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+        	
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, userManagerResponse.getResultList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+
+            managerRequest.setPageSize(defaultRowMaxCount);
+            managerRequest.setCurrPage(i+1);
+            UserManagerResponse userManagerResponse2 = userCenterService.selectUserMemberList(managerRequest);
+            if (userManagerResponse2 != null && userManagerResponse2.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  userManagerResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("regionName", "分公司");
+        map.put("branchName", "分部");
+        map.put("departmentName", "团队");
+        map.put("instName", "用户来源");
+        map.put("userName", "用户名");
+        map.put("realName", "姓名");
+        map.put("sex", "性别");
+        map.put("birthday", "年龄");
+        map.put("birthday", "生日");
+        map.put("idcard", "身份证号");
+        map.put("idcard", "户籍所在地");
+        map.put("mobile", "手机号码");
+        map.put("userRole", "用户角色");
+        map.put("userProperty", "用户属性");
+        map.put("recommendName", "推荐人");
+        map.put("userStatus", "用户状态");
+        map.put("bankOpenAccount", "银行开户状态");
+        map.put("bankOpenTime", "银行开户时间");
+        map.put("openAccount", "汇付开户状态");
+        map.put("registPlat", "注册平台");
+        map.put("regTime", "注册时间");
+        map.put("registArea", "注册所在地");
+
+
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter sexAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String sex = (String) object;
+                if("1".equals(sex)) {
+                	return "男";
+                }else {
+                	return "女";
+                }
+             
+            }
+        };
+        IValueFormatter idcardAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String idcard = (String) object;
+                return AsteriskProcessUtil.getAsteriskedValue(idcard,7);
+            }
+        };
+        IValueFormatter bankOpenAccounAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+            	String bankOpenAccount = (String) object;
+                return "1".equals(bankOpenAccount)?"已开户":"未开户";
+            }
+        };
+        IValueFormatter openAccounAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+            	String openAccount = (String) object;
+                return "1".equals(openAccount)?"已开户":"未开户";
+            }
+        };
+        mapAdapter.put("sex", sexAdapter);
+        mapAdapter.put("idcard", idcardAdapter);
+        mapAdapter.put("bankOpenAccount", bankOpenAccounAdapter);
+        mapAdapter.put("openAccount", openAccounAdapter);
+        return mapAdapter;
+    }
     public String getAge(String birthday) {
         if (StringUtils.isBlank(birthday)||birthday.contains("--")) {
             return "";

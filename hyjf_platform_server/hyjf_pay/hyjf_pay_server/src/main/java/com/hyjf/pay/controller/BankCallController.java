@@ -436,10 +436,16 @@ public class BankCallController extends BaseController {
                     }
                     bean.setRetUrl(retUrl);
                     bean.setNotifyUrl(notifyUrl);
+                    if("batchRepay".equals(bean.getTxCode())){
+                        logger.info("【wgx检验】还款异步返回请求地址retUrl:{},notifyUrl:{}",retUrl, notifyUrl);
+                    }
                     // 如果检证数据状态为未发送
                     // 更新状态记录
                     int nowTime = GetDate.getNowTime10();
                     this.payLogService.updateChinapnrExclusiveLog(logOrderId, bean, nowTime);
+                    if("batchRepay".equals(bean.getTxCode())){
+                        logger.info("【wgx检验】还款异步返回请求地址notifyUrl:{},retNotifyUrl:{}",bean.getNotifyURL(), bean.getRetNotifyURL());
+                    }
                     // 验签成功时
                     if (result.isLogVerifyFlag()) {
                         try {

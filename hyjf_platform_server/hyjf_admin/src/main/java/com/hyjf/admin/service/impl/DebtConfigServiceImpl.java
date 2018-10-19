@@ -4,6 +4,7 @@ import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.DebtConfigService;
 import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.admin.DebtConfigRequest;
+import com.hyjf.am.vo.config.DebtConfigLogVO;
 import com.hyjf.am.vo.config.DebtConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,4 +41,16 @@ public class DebtConfigServiceImpl implements DebtConfigService {
     public DebtConfigResponse updateDebtConfig(DebtConfigRequest record){
         return amConfigClient.updateDebtConfig(record);
     }
+    @Override
+    public int countDebtConfigLogTotal(){
+        return amConfigClient.countDebtConfigLogTotal();
+
+    }
+    @Override
+    public List<DebtConfigLogVO> getDebtConfigLogList(DebtConfigRequest req){
+        return amConfigClient.getDebtConfigLogList(req);
+
+    }
+
+
 }

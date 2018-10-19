@@ -477,5 +477,8 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
             adminRoleMenuPermissionsCustomizeMapper.insertMenuPerssion(adminList);
         }
     }
-
+    @Override
+    public List<String > getPermissionId(String menuId) {
+        return adminRoleCustomizeMapper.getPermissionId(menuId);
+    }
 }

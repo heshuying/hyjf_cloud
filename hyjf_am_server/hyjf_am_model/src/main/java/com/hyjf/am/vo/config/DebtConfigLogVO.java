@@ -1,20 +1,14 @@
-package com.hyjf.am.resquest.admin;
+package com.hyjf.am.vo.config;
 
-import com.hyjf.common.paginator.Paginator;
-import io.swagger.annotations.ApiModelProperty;
+import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- *
- * @author tanyy
- * @date 2018/08/09 17:00
- * @version V1.0  
- */
-public class DebtConfigRequest implements Serializable {
-
+public class DebtConfigLogVO extends BaseVO implements Serializable {
     private Integer id;
 
     private Integer hyjfDebtConfigId;
@@ -30,56 +24,13 @@ public class DebtConfigRequest implements Serializable {
     private String closeDes;
 
     private Integer updateUser;
-
-    private String updateUsername;
-
+    private String updateUserName;
     private Date updateTime;
+    private String updateTimeStr;
 
     private String ipAddress;
 
     private String macAddress;
-
-    @ApiModelProperty("列表画面自定义标签上的用翻页对象")
-    private Paginator paginator;
-    /**
-     * 当前页码
-     */
-    @ApiModelProperty(value = "当前页")
-    private int currPage;
-    /**
-     * 翻页机能用的隐藏变量
-     */
-    @ApiModelProperty("翻页机能用的隐藏变量")
-    private int paginatorPage = 1;
-
-    @ApiModelProperty("开始页")
-    private int limitStart;
-
-    @ApiModelProperty("结束页")
-    private int limitEnd;
-    /**
-     * 当前页条数
-     */
-    @ApiModelProperty(value = "当前页条数")
-    private int pageSize = 10;
-    public int getPaginatorPage() {
-        if (paginatorPage == 0) {
-            paginatorPage = 1;
-        }
-        return paginatorPage;
-    }
-
-    public void setPaginatorPage(int paginatorPage) {
-        this.paginatorPage = paginatorPage;
-    }
-
-    public Paginator getPaginator() {
-        return paginator;
-    }
-
-    public void setPaginator(Paginator paginator) {
-        this.paginator = paginator;
-    }
 
     private static final long serialVersionUID = 1L;
 
@@ -147,14 +98,6 @@ public class DebtConfigRequest implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public String getUpdateUsername() {
-        return updateUsername;
-    }
-
-    public void setUpdateUsername(String updateUsername) {
-        this.updateUsername = updateUsername == null ? null : updateUsername.trim();
-    }
-
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -179,35 +122,19 @@ public class DebtConfigRequest implements Serializable {
         this.macAddress = macAddress == null ? null : macAddress.trim();
     }
 
-    public int getCurrPage() {
-        return currPage;
+    public String getUpdateUserName() {
+        return updateUserName;
     }
 
-    public void setCurrPage(int currPage) {
-        this.currPage = currPage;
+    public void setUpdateUserName(String updateUserName) {
+        this.updateUserName = updateUserName;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public String getUpdateTimeStr() {
+        return GetDate.date2Str(getUpdateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getLimitStart() {
-        return limitStart;
-    }
-
-    public void setLimitStart(int limitStart) {
-        this.limitStart = limitStart;
-    }
-
-    public int getLimitEnd() {
-        return limitEnd;
-    }
-
-    public void setLimitEnd(int limitEnd) {
-        this.limitEnd = limitEnd;
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
     }
 }

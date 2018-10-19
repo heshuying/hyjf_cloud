@@ -326,7 +326,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	}
 	@Override
 	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
-		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
+		return  restTemplate.postForEntity("http://AM-ADMIN/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
 	}
 
 
