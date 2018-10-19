@@ -2,12 +2,16 @@ package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.customize.BorrowCustomize;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
+import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
+import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
+import com.hyjf.am.vo.trade.BorrowListVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.DebtBorrowCustomizeVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -139,4 +143,18 @@ public interface BorrowCustomizeMapper {
 	List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO BorrowCommonCustomizeVO);
 
     List<BorrowCustomizeVO>  selectBorrowByNidList(BorrowCustomizeVO borrowCustomizeVO);
+
+    List<BorrowListVO> getBorrowList(Map<String,Object> param);
+
+    List<DebtBorrowCustomizeVO> getDebtBorrowList(Map<String,Object> param);
+
+    List<WebProjectRepayListCustomizeVO> selectProjectLoanDetailList(Map<String,Object> param);
+
+    List<WebUserInvestListCustomizeVO> selectUserDebtInvestList(Map<String,Object> param);
+
+    int planInfoCountProjectRepayPlanRecordTotal(Map<String,Object> param);
+
+    int myTenderCountProjectRepayPlanRecordTotal(Map<String,Object> param);
+
+    List<WebUserInvestListCustomizeVO> selectUserInvestList(Map<String,Object> param);
 }

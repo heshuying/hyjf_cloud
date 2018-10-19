@@ -11,12 +11,12 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
+import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
+import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
-import com.hyjf.am.vo.trade.ProjectBeanVO;
-import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.DebtBorrowCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
@@ -226,5 +226,28 @@ public interface BorrowService extends BaseService {
      * @return
      */
 	public ProjectBeanVO searchRepayProjectDetail(ProjectBeanVO form) throws Exception;
+
+	/**
+	 *
+	 * @date 2018/10/18 15:07
+	 */
+	public List<BorrowListVO> getBorrowList(Map<String,Object> param);
+
+	/**
+	 *
+	 * @date 2018/10/18 15:07
+	 */
+	public List<DebtBorrowCustomizeVO> getDebtBorrowList(Map<String,Object> param);
+
+
+	public List<WebProjectRepayListCustomizeVO> selectProjectLoanDetailList(Map<String,Object> param);
+
+	public List<WebUserInvestListCustomizeVO> selectUserDebtInvestList(Map<String,Object> param);
+
+	public int planInfoCountProjectRepayPlanRecordTotal(Map<String,Object> param);
+
+	public int myTenderCountProjectRepayPlanRecordTotal(Map<String,Object> param);
+
+	public List<WebUserInvestListCustomizeVO> selectUserInvestList(Map<String,Object> param);
 
 }
