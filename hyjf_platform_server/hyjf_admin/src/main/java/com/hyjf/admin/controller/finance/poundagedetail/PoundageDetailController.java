@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.finance.poundagedetail;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -61,19 +62,21 @@ public class PoundageDetailController extends BaseController {
     @PostMapping(value = "/poundagedetaillist")
     public AdminResult poundageDetailList(HttpServletRequest request, @RequestBody AdminPoundageDetailRequest poundageDetailRequest){
         Map<String,Object> result = new HashMap<>();
-        Integer loginUserId = Integer.valueOf(getUser(request).getId());
+        Integer loginUserId = 3;//Integer.valueOf(getUser(request).getId());
         PoundageCustomizeVO poundageCustomizeVO = poundageService.getPoundageById(loginUserId,poundageDetailRequest.getPoundageId());
         result.put("poundage",poundageCustomizeVO);
         // 查询明细对应的手续费配置项
         PoundageLedgerVO poundageLedgerVO = new PoundageLedgerVO();
-        if(poundageCustomizeVO.getLedgerId()!=null) {
-            poundageLedgerVO = poundageDetailService.getPoundageLedgerById(poundageCustomizeVO.getLedgerId());
-        }
-        result.put("poundageLedger", poundageLedgerVO);
-        // 设置明细查询条件
-        poundageDetailRequest.setLedgerIdSer(poundageCustomizeVO.getLedgerId());
-        if(poundageDetailRequest.getLedgerTimeSer()==null) {
-            poundageDetailRequest.setLedgerTimeSer(Integer.parseInt(poundageCustomizeVO.getPoundageTime()));
+        if(poundageCustomizeVO != null){
+            if(poundageCustomizeVO.getLedgerId()!=null) {
+                poundageLedgerVO = poundageDetailService.getPoundageLedgerById(poundageCustomizeVO.getLedgerId());
+            }
+            result.put("poundageLedger", poundageLedgerVO);
+            // 设置明细查询条件
+            poundageDetailRequest.setLedgerIdSer(poundageCustomizeVO.getLedgerId());
+            if(poundageDetailRequest.getLedgerTimeSer()==null) {
+                poundageDetailRequest.setLedgerTimeSer(Integer.parseInt(poundageCustomizeVO.getPoundageTime()));
+            }
         }
         Integer count = poundageDetailService.getPoundageDetailCount(poundageDetailRequest);
         count = (count == null)?0:count;
@@ -104,7 +107,7 @@ public class PoundageDetailController extends BaseController {
     @ApiOperation(value = "导出手续费明细列表",notes = "导出手续费明细列表")
     @PostMapping(value = "/exportpoundagedetaillist")
     public void exportPoundageDetailList(HttpServletRequest request, HttpServletResponse response,@RequestBody AdminPoundageDetailRequest poundageDetailRequest) throws Exception {
-        Integer loginUserId = Integer.valueOf(getUser(request).getId());
+        Integer loginUserId = 3;//Integer.valueOf(getUser(request).getId());
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -137,6 +140,7 @@ public class PoundageDetailController extends BaseController {
             poundageDetailRequest.setPageSize(defaultRowMaxCount);
             poundageDetailRequest.setCurrPage(i);
             List<PoundageDetailVO> recordList = this.poundageDetailService.searchPoundageDetailList(poundageDetailRequest);
+            logger.info(JSON.toJSONString(recordList));
             if (recordList != null && recordList.size()> 0) {
                 String sheetNameTmp = sheetName + "_第" + i + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);

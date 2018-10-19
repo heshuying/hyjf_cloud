@@ -91,15 +91,14 @@ public class DataSet2ExcelSXSSFHelper<T> {
                         } else {
                             textValue = String.valueOf(value);
                         }
-                    }else{
-                        if (mapValueAdapter.get(property) != null) {
-                            textValue = mapValueAdapter.get(property).format(null);
-                        }
                     }
                     cell.setCellValue(textValue);
                 } catch (Exception e) {
+                    if (mapValueAdapter.get(property) != null) {
+                        cell.setCellValue(mapValueAdapter.get(property).format(null));
+                    }
                     logger.error("导出到Excel失败！" + e.getMessage());
-                    throw new IllegalArgumentException(e);
+                    //throw new IllegalArgumentException(e);
                 }
             }
             index++;
