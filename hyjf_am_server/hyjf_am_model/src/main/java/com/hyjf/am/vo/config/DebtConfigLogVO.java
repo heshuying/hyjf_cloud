@@ -1,9 +1,11 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DebtConfigLogVO extends BaseVO implements Serializable {
@@ -24,6 +26,7 @@ public class DebtConfigLogVO extends BaseVO implements Serializable {
     private Integer updateUser;
     private String updateUserName;
     private Date updateTime;
+    private String updateTimeStr;
 
     private String ipAddress;
 
@@ -125,5 +128,13 @@ public class DebtConfigLogVO extends BaseVO implements Serializable {
 
     public void setUpdateUserName(String updateUserName) {
         this.updateUserName = updateUserName;
+    }
+
+    public String getUpdateTimeStr() {
+        return GetDate.date2Str(getUpdateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
     }
 }
