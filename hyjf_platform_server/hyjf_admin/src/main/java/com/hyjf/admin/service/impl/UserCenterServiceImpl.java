@@ -612,7 +612,7 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     @Override
     public BankCardVO getBankCardByUserId(String userId) {
         if(StringUtils.isNotBlank(userId)){
-            userCenterClient.getBankCardByUserId(Integer.parseInt(userId));
+            return userCenterClient.getBankCardByUserId(Integer.parseInt(userId));
         }
         return null;
     }
