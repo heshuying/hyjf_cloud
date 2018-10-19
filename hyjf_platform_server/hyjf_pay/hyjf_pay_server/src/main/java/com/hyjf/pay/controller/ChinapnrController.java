@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.UnsupportedEncodingException;
@@ -56,6 +57,10 @@ public class ChinapnrController extends BaseController {
 
     @Autowired
     ChinaPnrApiImpl chinaPnrApi;
+
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * 调用接口(页面)
@@ -369,7 +374,7 @@ public class ChinapnrController extends BaseController {
                             }
                             // 提现异步回调
                             else if (ChinaPnrConstant.CMDID_CASH.equals(bean.getCmdId()) || ChinaPnrConstant.CMDID_CASH.equals(bean.getRespType())) {
-                                HttpDeal.post(callBackUrl, bean.getAllParams());
+                                restTemplate.postForEntity(callBackUrl, bean.getAllParams(), String.class).getBody();
                             }
                             // 开户异步回调
                             else if (ChinaPnrConstant.CMDID_USER_REGISTER.equals(bean.getCmdId())) {
