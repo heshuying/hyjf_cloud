@@ -483,5 +483,8 @@ public class AutoMapper {
 
     @Resource
     protected HjhBailConfigLogMapper hjhBailConfigLogMapper;
+
+    @Resource
+    protected BankRepayOrgFreezeLogMapper bankRepayOrgFreezeLogMapper;
 }
 
