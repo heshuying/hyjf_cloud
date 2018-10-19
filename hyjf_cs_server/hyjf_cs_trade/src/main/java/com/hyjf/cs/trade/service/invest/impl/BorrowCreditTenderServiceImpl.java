@@ -357,7 +357,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 result.setAssignCapital(DF_FOR_VIEW.format(new BigDecimal(creditAssign.getAssignCapital())) + "元");
                 // 垫付利息
                 result.setAssignInterestAdvance(creditAssign.getAssignInterestAdvance() + "元");
-                // 垫付利息
+                // 垫付利息u
                 result.setPaymentOfInterest(creditAssign.getAssignInterestAdvance() + "元");
                 // 实际支付计算式
                 result.setAssignPayText(creditAssign.getAssignPayText());

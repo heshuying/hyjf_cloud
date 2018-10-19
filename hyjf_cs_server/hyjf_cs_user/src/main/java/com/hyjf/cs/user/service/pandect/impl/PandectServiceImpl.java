@@ -62,7 +62,7 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         result.put("user", user);
         UserLoginLogVO userLogin = amUserClient.getUserLoginById(user.getUserId());
         //上次登录时间
-        if (userLogin.getLastTime() != null) {
+        if (null!=userLogin&&userLogin.getLastTime() != null) {
             result.put("lastlogintime", GetDate.formatTime(userLogin.getLastTime()));
         }
         result.put("auth", "");
@@ -130,7 +130,12 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         if (chinapnr != null) {
             webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
         }
-        result.put("webViewUser", user);
+        if(user.getBankOpenAccount()==1){
+            webViewUserVO.setBankOpenAccount(true);
+        }else {
+            webViewUserVO.setBankOpenAccount(false);
+        }
+        result.put("webViewUser", webViewUserVO);
         // 获取用户的银行电子账户信息
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
         result.put("bankOpenAccount", bankAccount);

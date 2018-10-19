@@ -665,23 +665,36 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 myCreditListService.checkTenderToCreditParam(request,userId);
                 // 债转保存
                 myCreditListService.insertTenderToCredit(userId, request);
-                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}","success").replace("{status}",CustomConstants.APP_STATUS_SUCCESS).replace("{statusDesc}",CustomConstants.APP_STATUS_DESC_SUCCESS).replace(accountStr,request.getCreditCapital()).replace(priceStr,request.getCreditPrice()).replace(endTimeStr, GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getCreditEndTime()));
+                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid())
+                        .replace("{state}","success")
+                        .replace("{status}",CustomConstants.APP_STATUS_SUCCESS)
+                        .replace("{statusDesc}",URLEncoder.encode(CustomConstants.APP_STATUS_DESC_SUCCESS,"utf-8"))
+                        .replace(accountStr,URLEncoder.encode(request.getCreditCapital(),"utf-8"))
+                        .replace(priceStr,URLEncoder.encode(request.getCreditPrice(),"utf-8"))
+                        .replace(endTimeStr, URLEncoder.encode(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getCreditEndTime()),"utf-8"));
                 // 业务手动抛出的异常
             }catch (CheckException e){
                 result.put(CustomConstants.APP_STATUS, e.getCode());
                 result.put(CustomConstants.APP_STATUS_DESC,e.getMessage());
-                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}", "failed").replace("{status}",e.getCode()).replace("{statusDesc}",e.getMessage()).replace(accountStr,"").replace(priceStr,"").replace(endTimeStr,"");
+                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid())
+                        .replace("{state}", "failed")
+                        .replace("{status}",e.getCode())
+                        .replace("{statusDesc}",URLEncoder.encode(e.getMessage(),"utf-8"))
+                        .replace(accountStr,"")
+                        .replace(priceStr,"")
+                        .replace(endTimeStr,"");
             }
             //  未处理的异常
         }catch (Exception e){
             result.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_FAIL);
             result.put(CustomConstants.APP_STATUS_DESC,MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg());
-            resultUrl =  resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}", "failed").replace("{status}",CustomConstants.APP_STATUS_FAIL).replace("{statusDesc}",MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg()).replace(accountStr,"").replace(priceStr,"").replace(endTimeStr,"");
-        }
-        try{
-            resultUrl = URLEncoder.encode(resultUrl,"utf-8");
-        }catch (Exception e){
-
+            resultUrl =  resultUrl.replace("{borrowNid}",request.getBorrowNid())
+                    .replace("{state}", "failed")
+                    .replace("{status}",CustomConstants.APP_STATUS_FAIL)
+                    .replace("{statusDesc}",MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg())
+                    .replace(accountStr,"")
+                    .replace(priceStr,"")
+                    .replace(endTimeStr,"");
         }
         result.put("resultUrl",resultUrl);
         return result;

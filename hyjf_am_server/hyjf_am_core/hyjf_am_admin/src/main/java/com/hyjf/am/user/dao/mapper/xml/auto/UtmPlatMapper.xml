@@ -84,7 +84,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from ht_utm_plat
+    from hyjf_user.ht_utm_plat
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -98,15 +98,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from ht_utm_plat
+    from hyjf_user.ht_utm_plat
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from ht_utm_plat
+    delete from hyjf_user.ht_utm_plat
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.UtmPlatExample" >
-    delete from ht_utm_plat
+    delete from hyjf_user.ht_utm_plat
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -115,7 +115,7 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_utm_plat (source_id, source_name, source_type, 
+    insert into hyjf_user.ht_utm_plat (source_id, source_name, source_type,
       del_flag, attorn_flag, remark, 
       create_group_cd, update_group_cd, create_user_id, 
       update_user_id, create_time, update_time
@@ -130,7 +130,7 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_utm_plat
+    insert into hyjf_user.ht_utm_plat
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="sourceId != null" >
         source_id,
@@ -209,13 +209,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.UtmPlatExample" resultType="java.lang.Integer" >
-    select count(*) from ht_utm_plat
+    select count(*) from hyjf_user.ht_utm_plat
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update ht_utm_plat
+    update hyjf_user.ht_utm_plat
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -262,7 +262,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update ht_utm_plat
+    update hyjf_user.ht_utm_plat
     set id = #{record.id,jdbcType=INTEGER},
       source_id = #{record.sourceId,jdbcType=INTEGER},
       source_name = #{record.sourceName,jdbcType=VARCHAR},
@@ -281,7 +281,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.UtmPlat" >
-    update ht_utm_plat
+    update hyjf_user.ht_utm_plat
     <set >
       <if test="sourceId != null" >
         source_id = #{sourceId,jdbcType=INTEGER},
@@ -323,7 +323,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.UtmPlat" >
-    update ht_utm_plat
+    update hyjf_user.ht_utm_plat
     set source_id = #{sourceId,jdbcType=INTEGER},
       source_name = #{sourceName,jdbcType=VARCHAR},
       source_type = #{sourceType,jdbcType=TINYINT},

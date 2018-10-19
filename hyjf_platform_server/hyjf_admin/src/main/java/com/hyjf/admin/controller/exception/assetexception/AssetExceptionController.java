@@ -63,6 +63,10 @@ public class AssetExceptionController extends BaseController {
 
         AssetExceptionResponseBean bean = new AssetExceptionResponseBean();
 
+        // 资产来源
+        List<DropDownVO> hjhInstConfigList = assetExceptionService.selectHjhInstConfigList();
+        bean.setInstNameList(hjhInstConfigList);
+
         Integer count = assetExceptionService.selectAssetExceptionCount(request);
         count = (count == null) ? 0 : count;
         bean.setTotal(count);

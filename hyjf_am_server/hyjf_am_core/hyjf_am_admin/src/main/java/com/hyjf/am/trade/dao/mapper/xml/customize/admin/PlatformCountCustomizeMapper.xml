@@ -122,7 +122,7 @@
 		LEFT JOIN
 		(
 		SELECT temp.client AS client, SUM(temp.money) AS recharge_price FROM ht_account_recharge temp
-		WHERE temp.`status` = 1
+		WHERE temp.`status` = 2
 		<include refid="And_Addtime" />
 		GROUP BY temp.client
 		) recharge_price ON pn.client = recharge_price.client

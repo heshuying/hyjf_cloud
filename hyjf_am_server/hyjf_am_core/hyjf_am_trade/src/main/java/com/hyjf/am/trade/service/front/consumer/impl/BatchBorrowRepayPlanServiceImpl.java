@@ -3796,9 +3796,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
      */
     private void updateInstitutionDataMonth(String instCode, BigDecimal repayCapitalWait, String borrowNid) {
         //回滚扣减掉的风险准备金
-        String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
-        boolean flag = redisAddstrack(key, repayCapitalWait.toString());
-        if (flag) {
+//        String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
+//        boolean flag = redisAddstrack(key, repayCapitalWait.toString());
+//        if (flag) {
 			// 更新发标额度余额(增加)和在贷额度（减少） 在数据库更新，防止数据并发 add by cwyang 20180801
 			HashMap map = new HashMap();
 			map.put("amount",repayCapitalWait);
@@ -3816,7 +3816,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				logger.info("=================标的分期还款后机构风险准备金增加成功,标的号:" + borrowNid + ",机构编号:" + instCode
 						+ ",发标额度余额:" + remainMarkLine + ",在贷余额：" + loanBalance + ",已还本金：" + repayedCapital);
 			}
-        }
+//        }
     }
 
 	/**
@@ -3832,9 +3832,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			String instCode = borrowInfo.getInstCode();
 			BigDecimal account = borrow.getAccount();
 			//回滚扣减掉的风险准备金
-			String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
-			boolean flag = redisAddstrack(key, account.toString());
-			if (flag) {				// 更新发标额度余额和在贷额度 在数据库更新，防止数据并发
+//			String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
+//			boolean flag = redisAddstrack(key, account.toString());
+//			if (flag) {				// 更新发标额度余额和在贷额度 在数据库更新，防止数据并发
 				HashMap map = new HashMap();
 				map.put("amount",account);
 				map.put("instCode",instCode);
@@ -3851,7 +3851,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 					logger.info("=================标的还款后机构风险准备金增加成功,标的号:" + borrow.getBorrowNid() + ",机构编号:" + instCode
 							+ ",发标额度余额:" + remainMarkLine + ",在贷余额：" + loanBalance + ",已还本金：" + repayedCapital);
 				}
-			}
+//			}
 		}
 		
 		
