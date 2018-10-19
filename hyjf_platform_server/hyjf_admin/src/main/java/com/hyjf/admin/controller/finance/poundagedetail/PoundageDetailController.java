@@ -150,13 +150,12 @@ public class PoundageDetailController extends BaseController {
         }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
-
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid", "项目编号");
         map.put("borrowType", "项目类型");
         map.put("createTime", "放款/还款时间");
-        map.put("username", "投资人");
+        map.put("usernname", "投资人");
         map.put("investorCompany", "投资人分公司");
         map.put("type", "分账类型");
         map.put("source", "分账来源");
@@ -223,6 +222,24 @@ public class PoundageDetailController extends BaseController {
                 return amount != null ? amount.toString() : "";
             }
         };
+        IValueFormatter userNameAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return poundageLedgerCustomize.getUsername();
+            }
+        };
+        IValueFormatter trueNameAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return poundageLedgerCustomize.getTruename();
+            }
+        };
+        IValueFormatter accountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return poundageLedgerCustomize.getAccount();
+            }
+        };
         IValueFormatter statusAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -244,6 +261,9 @@ public class PoundageDetailController extends BaseController {
         mapAdapter.put("creditRatio", creditRatioAdapter);
         mapAdapter.put("manageRatio", manageRatioAdapter);
         mapAdapter.put("amount", amountAdapter);
+        mapAdapter.put("userName", userNameAdapter);
+        mapAdapter.put("trueName", trueNameAdapter);
+        mapAdapter.put("account", accountAdapter);
         mapAdapter.put("status", statusAdapter);
         mapAdapter.put("addTime", addTimeAdapter);
         return mapAdapter;
