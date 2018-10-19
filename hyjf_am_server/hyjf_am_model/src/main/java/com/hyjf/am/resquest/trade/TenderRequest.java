@@ -70,6 +70,9 @@ public class TenderRequest extends BaseVO {
     @ApiModelProperty(value = "请求类型")
     private String borrowType;
 
+    @ApiModelProperty(value = "是否最后确认")
+    private String isConfirm;
+
     // 内部操作用
     private BankOpenAccountVO bankOpenAccount;
 
@@ -96,11 +99,71 @@ public class TenderRequest extends BaseVO {
 
     // 债转用到的---------------
     private String assignCapital;
+    /**
+     * order
+     */
+    private String order;
+
+    /**
+     * 版本号
+     */
+    private String version;
+    /**
+     * 网络状态
+     */
+    private String netStatus;
+
+    /**
+     * 随机字符串
+     */
+    private String randomString;
 
     /**
      * 投资人用户名
      */
     private String userName;
+
+
+
+    public String getIsConfirm() {
+        return isConfirm;
+    }
+
+    public void setIsConfirm(String isConfirm) {
+        this.isConfirm = isConfirm;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getNetStatus() {
+        return netStatus;
+    }
+
+    public void setNetStatus(String netStatus) {
+        this.netStatus = netStatus;
+    }
+
+    public String getRandomString() {
+        return randomString;
+    }
+
+    public void setRandomString(String randomString) {
+        this.randomString = randomString;
+    }
 
     public String getCreditNid() {
         return creditNid;

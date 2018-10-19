@@ -34,6 +34,11 @@ public class ManualReverseCustomize implements Serializable {
     private Date txTime;
 
     /**
+     * 交易时间格式化
+     */
+    private String txTimeView;
+
+    /**
      * 用户名
      */
     private String userName;
@@ -76,7 +81,7 @@ public class ManualReverseCustomize implements Serializable {
     /**
      * 创建时间create_time
      */
-    private int createTime;
+    private Date createTime;
 
     /**
      * seqNo
@@ -265,21 +270,19 @@ public class ManualReverseCustomize implements Serializable {
         this.createUserId = createUserId;
     }
 
-    /**
-     * createTime
-     * @return the createTime
-     */
-
-    public int getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    /**
-     * @param createTime the createTime to set
-     */
-
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
+    public String getTxTimeView() {
+        return txTimeView;
+    }
+
+    public void setTxTimeView(String txTimeView) {
+        this.txTimeView = txTimeView;
+    }
 }

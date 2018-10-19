@@ -4,7 +4,7 @@
 	<resultMap id="manualReverseListMap" type="com.hyjf.am.trade.dao.model.customize.ManualReverseCustomize">
 		<result column="seq_no" property="seqNo" /> <!-- 原交易流水号 -->
 		<result column="bank_seq_no" property="bankSeqNo"/><!-- 交易流水号 -->
-		<result column="tx_time" property="txTime"/><!-- 交易时间 -->
+		<result column="tx_time" property="txTimeView"/><!-- 交易时间 -->
 		<result column="username" property="userName"/><!-- 用户名 -->
 		<result column="account_id" property="accountId"/><!-- 电子账号 -->
 		<result column="is_bank" property="isBank"/><!-- 资金托管平台 -->
@@ -55,7 +55,7 @@
 		SELECT
 			hmr.seq_no,
 			hmr.bank_seq_no,
-			hmr.tx_time,
+			date_format(hmr.tx_time, '%Y-%m-%d %H:%i:%s') as tx_time,
 			hmr.username,
 			hmr.account_id,
 			hmr.is_bank,
@@ -94,7 +94,7 @@
 	    values (
 	      #{seqNo,jdbcType=INTEGER},
 	      #{bankSeqNo,jdbcType=INTEGER},
-	      #{txTime,jdbcType=VARCHAR},
+		  #{txTime,jdbcType=TIMESTAMP},
 	      #{userName,jdbcType=VARCHAR},
 	      #{accountId,jdbcType=VARCHAR},
 	      #{isBank,jdbcType=VARCHAR},
@@ -103,7 +103,7 @@
 	      #{amount,jdbcType=VARCHAR},
 	      #{status,jdbcType=VARCHAR},
 	      #{createUserId,jdbcType=INTEGER},
-	      #{createTime,jdbcType=INTEGER}
+		  #{createTime,jdbcType=TIMESTAMP}
 	      )
 	</insert>
 	
