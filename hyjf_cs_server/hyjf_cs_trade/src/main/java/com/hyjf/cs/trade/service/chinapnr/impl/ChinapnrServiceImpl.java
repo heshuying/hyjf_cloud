@@ -83,7 +83,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
             hasBindCard = true;
             for (AccountBankVO bank : banks) {
                 BankCardBean bankCardBean = new BankCardBean();
-                bankCardBean.setId(bank.getUserId());
+                bankCardBean.setId(bank.getId());
                 bankCardBean.setBank(bank.getBank());
                 BankConfigVO bankConfig = amConfigClient.selectBankConfigByCode(bank.getBank());
                 // 应前台要求，logo路径给绝对路径
