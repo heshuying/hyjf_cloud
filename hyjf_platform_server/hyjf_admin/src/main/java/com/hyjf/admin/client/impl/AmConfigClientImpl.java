@@ -82,6 +82,18 @@ public class AmConfigClientImpl implements AmConfigClient {
         DebtConfigResponse response = restTemplate.postForEntity(url,request,DebtConfigResponse.class).getBody();
         return response;
     }
+    @Override
+    public int countDebtConfigLogTotal(){
+        String url = "http://AM-ADMIN/am-admin/debtconfig/countdebtconfiglogtotal" ;
+        IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+        return response.getResultInt();
+    }
+    @Override
+    public List<DebtConfigLogVO> getDebtConfigLogList(DebtConfigRequest req){
+        String url = "http://AM-ADMIN/am-admin/debtconfig/getdebtconfigloglist" ;
+        DebtConfigLogResponse response = restTemplate.postForEntity(url,req,DebtConfigLogResponse.class).getBody();
+        return response.getResultList();
+    }
 
     @Override
     public List<ParamNameVO> getParamNameList(String nameClass) {
