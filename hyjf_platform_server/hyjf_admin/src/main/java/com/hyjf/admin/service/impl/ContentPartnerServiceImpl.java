@@ -28,6 +28,7 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 
 	@Override
 	public int insertAction(ContentPartnerRequestBean requestBean) {
+		requestBean.setType(2);// 合作伙伴
 		return amConfigClient.insertAction(requestBean);
 	}
 

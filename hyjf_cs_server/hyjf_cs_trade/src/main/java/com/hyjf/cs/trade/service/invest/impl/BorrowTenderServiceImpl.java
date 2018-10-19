@@ -1518,7 +1518,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private void userBorrowTender(BorrowAndInfoVO borrow, BankCallBean bean, String couponGrantId) {
         Integer userId = Integer.parseInt(bean.getLogUserId());
         // 借款金额
-        String txAmount = bean.getTxAmount();
+        String txAmount = bean.getTxAmount().replaceAll(",","");
         // 项目编号
         String borrowNid = borrow.getBorrowNid();
         boolean checkTender = RedisUtils.tranactionSet(RedisConstants.TENDER_ORDERID + bean.getLogOrderId(), 20);
@@ -1526,27 +1526,31 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (!checkTender) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_HANDING);
         }
-        // redis扣减
-        redisTender(userId, borrowNid, txAmount);
-        // 操作数据库表
-        try{
-            this.borrowTender(borrow, bean);
-        }catch (Exception e){
-            // 回滚redis
-            logger.error("标的投资异常  开始回滚redis  userId:{}   borrowNid:{}",userId, borrowNid);
-            redisRecover(borrowNid,userId,txAmount);
-            logger.info("标的投资异常  结束回滚redis ");
-            // 投资失败,投资撤销
-            try {
-                boolean flag = bidCancel(userId, borrow.getBorrowNid(), bean.getOrderId(), txAmount);
-                if (!flag) {
+        BigDecimal amount = new BigDecimal(txAmount);
+        // 投资金额大于0时候才执行
+        if(amount.compareTo(BigDecimal.ZERO)==1){
+            // redis扣减
+            redisTender(userId, borrowNid, txAmount);
+            // 操作数据库表
+            try{
+                this.borrowTender(borrow, bean);
+            }catch (Exception e){
+                // 回滚redis
+                logger.error("标的投资异常  开始回滚redis  userId:{}   borrowNid:{}",userId, borrowNid);
+                redisRecover(borrowNid,userId,txAmount);
+                logger.info("标的投资异常  结束回滚redis ");
+                // 投资失败,投资撤销
+                try {
+                    boolean flag = bidCancel(userId, borrow.getBorrowNid(), bean.getOrderId(), txAmount);
+                    if (!flag) {
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
+                    }
+                } catch (Exception ee) {
+                    logger.error("投标失败,请联系客服人员!userid:{} borrownid:{}  ordid:{}",userId, borrow.getBorrowNid(), bean.getOrderId());
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                 }
-            } catch (Exception ee) {
-                logger.error("投标失败,请联系客服人员!userid:{} borrownid:{}  ordid:{}",userId, borrow.getBorrowNid(), bean.getOrderId());
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
+                throw e;
             }
-            throw e;
         }
         logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
         // 如果用了优惠券

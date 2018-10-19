@@ -1470,4 +1470,18 @@ public interface AmConfigClient {
 	AdminRoleResponse checkAction(AdminRoleRequest bean);
 
 	AdminRoleResponse modifyPermissionAction(UserRoleRequest bean);
+
+	JSONArray selectLeftMenuTree(String id);
+
+	AdminSystemResponse insertAction(AdminMenuRequest form);
+
+	AdminSystemResponse getuser(AdminMenuRequest form);
+
+	AdminSystemResponse deleteRecordAction(AdminMenuRequest form);
+
+	AdminSystemResponse moveToAuthAction(AdminMenuRequest form);
+
+	AdminSystemResponse updateMenuPermissionsAction(AdminMenuRequest form);
+
+	List<String> getPermissionId(String string);
 }

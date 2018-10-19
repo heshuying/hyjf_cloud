@@ -1,6 +1,7 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
+import com.hyjf.am.vo.admin.MenuVO;
 
 import java.util.List;
 
@@ -47,6 +48,8 @@ public interface AdminSystemMapper {
 	 * @return
 	 */
 	Integer updatePassword(AdminSystem adminSystem);
+	
+	List<MenuVO> selectLeftMenuTree1(AdminSystem adminSystem);
 	
 
 }

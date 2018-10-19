@@ -112,9 +112,19 @@ public class SystemConfig {
 
     @Value("${hyjf.seal.operate}")
     private String sealOperate;
+    @Value("${hyjf.defaultRowMaxCount}")
+    private String defaultRowMaxCount;
 
+    
+    public String getDefaultRowMaxCount() {
+		return defaultRowMaxCount;
+	}
 
-    public String getAdminFrontHost() {
+	public void setDefaultRowMaxCount(String defaultRowMaxCount) {
+		this.defaultRowMaxCount = defaultRowMaxCount;
+	}
+
+	public String getAdminFrontHost() {
         return adminFrontHost;
     }
 

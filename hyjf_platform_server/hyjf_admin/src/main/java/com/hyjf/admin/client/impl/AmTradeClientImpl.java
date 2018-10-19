@@ -1315,7 +1315,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-ADMIN/am-trade/manualreverse/getlist";
         ManualReverseCustomizeResponse response = restTemplate.postForEntity(url, requestBean, ManualReverseCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return response.getResultList();
+            response.getResultList();
         }
         return null;
     }
@@ -3416,7 +3416,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         BorrowCommonResponse response = restTemplate
                 .postForEntity("http://AM-ADMIN/am-trade/borrowcommon/insertAction", borrowCommonRequest, BorrowCommonResponse.class)
                 .getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+        if (response != null ) {
             return response;
         }
         return null;

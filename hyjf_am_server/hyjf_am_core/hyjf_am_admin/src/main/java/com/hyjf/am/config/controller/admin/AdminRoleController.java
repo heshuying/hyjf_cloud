@@ -294,7 +294,13 @@ public class AdminRoleController {
 
         return null;
     }
+    @GetMapping("/getPermissionId/{menuId}")
+    public List<String> getPermissionId(@PathVariable String menuId) {
+//        LogUtil.startLog(THIS_CLASS, AdminRoleDefine.MENU_INFO_ACTION);
 
+    	
+        return this.adminRoleService.getPermissionId(menuId);
+    }
     /**
      * 插入或更新[角色菜单权限表]数据
      * 
