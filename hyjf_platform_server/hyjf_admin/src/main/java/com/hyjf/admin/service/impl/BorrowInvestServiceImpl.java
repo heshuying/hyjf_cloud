@@ -505,14 +505,13 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                     // 用户投资列表
                     List<WebUserInvestListCustomizeVO> tzList =
                             amTradeClient.selectUserInvestList(borrowInvestRequest);
-                    // 原代码是 > 0
-                    if (tzList != null && tzList.size() == 1) {
+                    if (tzList != null && tzList.size() > 0) {
                         WebUserInvestListCustomizeVO userInvest = tzList.get(0);
                         userInvest.setIdCard(borrowerUserinfo.getIdcard());
                         contents.put("userInvest", userInvest);
                     } else {
-                        logger.error("标的投资信息异常（0条或者大于1条信息）,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
-                        return "标的投资信息异常（0条或者大于1条信息）,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。";
+                        logger.error("标的投资信息异常,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
+                        return "标的投资信息异常,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。";
                     }
                     // 如果是分期还款，查询分期信息
                     String borrowStyle = recordList.get(0).getBorrowStyle();

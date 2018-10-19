@@ -5374,4 +5374,34 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public List<CouponRepayMonitorVO> selectCouponRepayMonitor(String nowDay) {
+        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/selectCouponRepayMonitor/"+nowDay;
+        CouponRepayMonitorResponse response = restTemplate.getForEntity(url,CouponRepayMonitorResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public int insertCouponRepayMonitor(CouponRepayMonitorVO monitor) {
+        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/insertCouponRepayMonitor";
+        CouponRepayMonitorResponse response = restTemplate.postForEntity(url,monitor, CouponRepayMonitorResponse.class).getBody();
+        if (response != null) {
+            return response.getInsertFlag();
+        }
+        return 0;
+    }
+
+    @Override
+    public int updateCouponRepayMonitor(CouponRepayMonitorVO monitor) {
+        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/updateCouponRepayMonitor";
+        CouponRepayMonitorResponse response = restTemplate.postForEntity(url,monitor,CouponRepayMonitorResponse.class).getBody();
+        if (response != null) {
+            return response.getUpdateFlag();
+        }
+        return 0;
+    }
 }
