@@ -31,6 +31,15 @@ public class MenuVO extends BaseVO implements Serializable{
     private String menuUuid;
 
     private Integer sort;
+    private String menuCtrl;
+    
+	public String getMenuCtrl() {
+		return menuCtrl;
+	}
+
+	public void setMenuCtrl(String menuCtrl) {
+		this.menuCtrl = menuCtrl;
+	}
 
 	public String getId() {
 		return id;

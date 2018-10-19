@@ -16,6 +16,7 @@
 		<result column="menu_url" property="path" jdbcType="VARCHAR" />
 		<result column="menu_icon" property="icon" jdbcType="VARCHAR" />
 		<result column="menu_sort" property="sort" jdbcType="VARCHAR" />
+		<result column="menu_ctrl" property="menuCtrl" jdbcType="VARCHAR" />
 		<association property="children" select="selectLeftMenuTree2" column="menu_uuid">
 			<!-- 这里要注意的是column对应的是student中的外键，而且需是表字段名 -->
 		</association>
