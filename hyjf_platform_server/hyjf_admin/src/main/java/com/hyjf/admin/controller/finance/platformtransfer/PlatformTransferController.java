@@ -134,115 +134,7 @@ public class PlatformTransferController extends BaseController {
 
     @ApiOperation(value = "平台转账-导出excel",notes = "平台转账-导出excel")
     @PostMapping(value = "/platformtransferlist")
-    public void exportPlatformTransferList(HttpServletResponse response, @RequestBody PlatformTransferListRequest platformTransferListRequest) throws UnsupportedEncodingException {
-        // currPage<0 为全部,currPage>0 为具体某一页
-        platformTransferListRequest.setCurrPage(-1);
-        // 表格sheet名称
-        String sheetName = "平台转账详情数据";
-        // 设置默认查询时间
-        if (StringUtils.isEmpty(platformTransferListRequest.getStartDate())) {
-            platformTransferListRequest.setStartDate(GetDate.getDate("yyyy-MM-dd"));
-        }
-        if (StringUtils.isEmpty(platformTransferListRequest.getEndDate())) {
-            platformTransferListRequest.setEndDate(GetDate.getDate("yyyy-MM-dd"));
-        }
-        List<AccountRechargeVO> accountRechargeVOList = platformTransferService.searchPlatformTransferList(platformTransferListRequest);
-        //RechargeCustomize rechargeCustomize = new RechargeCustomize();
-        //BeanUtils.copyProperties(platformTransferListRequest, rechargeCustomize);
-        //rechargeCustomize.setTypeSearch("ADMIN");
-        //List<RechargeCustomize> rechargeCustomizes = this.rechargeService.queryRechargeList(rechargeCustomize);
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-
-        // String[] titles = new String[] { "用户名", "订单号", "充值渠道", "充值银行",
-        // "银行卡号", "充值金额", "手续费", "垫付手续费" , "到账金额", "充值状态", "充值平台", "充值时间" };
-        String[] titles = new String[] { "序号", "订单号", "用户名", "手机号", "转账金额", "可用余额", "转账状态", "转账时间", "备注" ,"发送日期" ,"发送时间" ,"系统跟踪号" };
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
-        if (accountRechargeVOList != null && accountRechargeVOList.size() > 0) {
-
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < accountRechargeVOList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    AccountRechargeVO record = accountRechargeVOList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) {
-                        cell.setCellValue(record.getNid());
-                    } else if (celLength == 2) {
-                        cell.setCellValue(record.getUsername());
-                    }
-                    // 手机号
-                    else if (celLength == 3) {
-                        cell.setCellValue(record.getMobile());
-                    } // 转账金额
-                    else if (celLength == 4) {
-                        cell.setCellValue(record.getMoney() + "");
-                    }
-                    // 可用余额
-                    else if (celLength == 5) {
-                        cell.setCellValue(record.getBalance() + "");
-                    }
-                    // 转账状态
-                    else if (celLength == 6) {
-                        String status = "";
-                        if(record.getStatus() == 1){
-                            status = "转账中";
-                        }else if(record.getStatus() == 2){
-                            status = "成功";
-                        }else{
-                            status = "失败";
-                        }
-                        cell.setCellValue(status);
-                    }
-                    // 转账时间
-                    else if (celLength == 7) {
-                        cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(record.getCreateTime()));
-                    }
-                    // 备注
-                    else if (celLength == 8) {
-                        cell.setCellValue(record.getRemark());
-                    }
-                    else if (celLength == 9) {
-                        String dateStr = String.valueOf(record.getTxDate());
-                        String year = dateStr.substring(0,4);
-                        String month = dateStr.substring(4,6);
-                        String day = dateStr.substring(6,8);
-                        cell.setCellValue(year + "-" + month + "-" + day);
-                    }
-                    else if (celLength == 10) {
-                        cell.setCellValue(record.getTxTimeStr());
-                    }
-                    else if (celLength == 11) {
-                        cell.setCellValue(record.getBankSeqNo());
-                    }
-                    // 以下都是空
-                }
-            }
-        }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
-    @ApiOperation(value = "导出会员管理列表", notes = "导出会员管理列表")
-    @PostMapping(value = "/exportusers")
-    public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody PlatformTransferListRequest platformTransferListRequest) throws Exception {
+    public void exportPlatformTransferList(HttpServletRequest request, HttpServletResponse response,@RequestBody PlatformTransferListRequest platformTransferListRequest) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -257,16 +149,13 @@ public class PlatformTransferController extends BaseController {
         Integer totalCount = platformTransferService.getPlatformTransferCount(platformTransferListRequest);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         if (totalCount == 0) {
             String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }
-        logger.info("总条数:[{}],sheet页数:[{}]",totalCount,sheetCount);
         for (int i = 1; i <= sheetCount; i++) {
-            logger.info("进循环,i:[{}]",i);
             platformTransferListRequest.setPageSize(defaultRowMaxCount);
             platformTransferListRequest.setCurrPage(i);
             List<AccountRechargeVO> accountRechargeVOList2 = platformTransferService.searchPlatformTransferList(platformTransferListRequest);
