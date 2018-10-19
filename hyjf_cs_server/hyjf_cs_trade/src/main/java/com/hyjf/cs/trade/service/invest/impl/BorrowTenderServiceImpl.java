@@ -130,8 +130,28 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         logger.info("散标投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
         borrowTenderCheck(request,borrow,borrowInfoVO,cuc,account);
         logger.info("所有参数都已检查通过!");
+        // 如果没有本金投资且有优惠券投资
+        BigDecimal decimalAccount = StringUtils.isNotEmpty(request.getAccount()) ? new BigDecimal(request.getAccount()) : BigDecimal.ZERO;
+        WebResult<Map<String, Object>> result = new WebResult();
+        if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
+            logger.info("没有本金投资且有优惠券投资:{}",decimalAccount);
+            // 如果用了优惠券
+            couponTender(request.getIp(),request.getAccount(),request.getPlatform()+"","",request.getUserName(),
+                    request.getCouponGrantId()+"", userId, request.getBorrowNid());
+            result.setStatus(MsgEnum.ERR_AMT_TENDER_SUCCESS.getCode());
+            Map<String, Object> map = new HashedMap();
+            map.put("sign",request.getSign());
+            map.put("logOrdId","");
+            map.put("couponGrantId",request.getCouponGrantId());
+            map.put("borrowNid",request.getBorrowNid());
+            result.setData(map);
+            return result;
+        }else{
+            logger.info("开始本金+优惠券投资");
+            result = tender(request, borrow, account, cuc);
+        }
         // 开始真正的投资逻辑
-        return tender(request, borrow, account, cuc);
+        return result;
     }
 
     /**
@@ -567,16 +587,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         logger.info("获取投资成功结果参数 userId {}  logOrdId {} borrowNid {}",userId,logOrdId,borrowNid);
         BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
         logger.info("获取投资成功结果为:"+JSONObject.toJSONString(borrowTender));
-
+        BigDecimal earnings = new BigDecimal("0");
+        // 计算历史回报
+        String interest = null;
+        String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
+        Integer borrowPeriod = borrow.getBorrowPeriod();// 周期
+        BigDecimal borrowApr = borrow.getBorrowApr();// 項目预期年化收益率
         if(borrowTender!=null){
-            BigDecimal earnings = new BigDecimal("0");
-            // 本金收益  历史回报
-            //BigDecimal earnings = BorrowEarningsUtil.getBorrowEarnings(borrowTender.getAccount(),borrow.getBorrowPeriod(),borrow.getBorrowStyle(),borrow.getBorrowApr());
-            // 计算历史回报
-            String interest = null;
-            String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
-            Integer borrowPeriod = borrow.getBorrowPeriod();// 周期
-            BigDecimal borrowApr = borrow.getBorrowApr();// 項目预期年化收益率
             String account = String.valueOf(borrowTender.getAccount());
             switch (borrowStyle) {
                 case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
@@ -613,30 +630,31 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 本金
             data.put("account",df.format(borrowTender.getAccount()));
 
-            // 查询优惠券信息
-            CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
-            if (couponUser != null) {
-                // 查询优惠券的投资
-                //BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
-                // 优惠券收益
-                data.put("couponQuota", couponUser.getCouponQuota());
-                data.put("couponType", couponUser.getCouponType());
-                BigDecimal couponInterest = BigDecimal.ZERO;
-                if (couponUser.getCouponType() == 1) {
-                    couponInterest = couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
-                } else {
-                    couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), borrowTender.getAccount().toString(), borrow.getBorrowPeriod());
-                }
-                //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
-                data.put("income", earnings.add(couponInterest));
-                data.put("couponInterest", df.format(couponInterest));
 
+        }
+        // 查询优惠券信息
+        CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
+        if (couponUser != null) {
+            // 查询优惠券的投资
+            //BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
+            // 优惠券收益
+            data.put("couponQuota", couponUser.getCouponQuota());
+            data.put("couponType", couponUser.getCouponType());
+            BigDecimal couponInterest = BigDecimal.ZERO;
+            if (couponUser.getCouponType() == 1) {
+                couponInterest = couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
             } else {
-                data.put("couponQuota", "");
-                data.put("couponType", "");
-                data.put("couponAll", "");
-                data.put("couponInterest", "");
+                couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), borrowTender.getAccount().toString(), borrow.getBorrowPeriod());
             }
+            //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
+            data.put("income", earnings.add(couponInterest));
+            data.put("couponInterest", df.format(couponInterest));
+
+        } else {
+            data.put("couponQuota", "");
+            data.put("couponType", "");
+            data.put("couponAll", "");
+            data.put("couponInterest", "");
         }
         logger.info("返回给前端结果为：{} ",JSONObject.toJSONString(data));
         WebResult<Map<String, Object>> result = new WebResult();
@@ -1554,30 +1572,45 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
         // 如果用了优惠券
+        couponTender(bean.getLogIp(),bean.getTxAmount(),bean.getLogClient()+"",bean.getLogOrderId(),bean.getLogUserName(),
+                couponGrantId, userId, borrowNid);
+    }
+
+    /**
+     * 优惠券投资
+     * @param ip
+     * @param money
+     * @param client
+     * @param ordid
+     * @param userName
+     * @param couponGrantId
+     * @param userId
+     * @param borrowNid
+     */
+    private void couponTender(String ip,String money,String client,String ordid,String userName, String couponGrantId, Integer userId, String borrowNid) {
         if (StringUtils.isNotEmpty(couponGrantId) && !"0".equals(couponGrantId) && !"-1".equals(couponGrantId)) {
             // 开始使用优惠券
             Map<String, String> params = new HashMap<String, String>();
             params.put("mqMsgId", GetCode.getRandomCode(10));
             // 真实投资金额
-            params.put("money", bean.getTxAmount());
+            params.put("money", money);
             // 借款项目编号
             params.put("borrowNid", borrowNid);
             // 平台
-            params.put("platform", bean.getLogClient()+"");
+            params.put("platform", client);
             // 优惠券id
             params.put("couponGrantId", couponGrantId);
             // ip
-            params.put("ip", bean.getLogIp());
+            params.put("ip", ip);
             // 真实投资订单号
-            params.put("ordId", bean.getLogOrderId());
+            params.put("ordId", ordid);
             // 用户编号
             params.put("userId", userId+"");
-            params.put("userName", bean.getLogUserName());
-
+            params.put("userName", userName);
             try {
                 couponTenderProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
             } catch (MQException e) {
-                logger.error("使用优惠券异常,userId:{},ordId:{},couponGrantId:{},borrowNid:{}",userId,bean.getLogOrderId(),couponGrantId,borrowNid);
+                logger.error("使用优惠券异常,userId:{},ordId:{},couponGrantId:{},borrowNid:{}",userId,ordid,couponGrantId,borrowNid);
                 e.printStackTrace();
             }
         }
