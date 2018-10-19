@@ -533,14 +533,14 @@ public class BankCallController extends BaseController {
             // 发送前插入状态记录
             this.payLogService.insertChinapnrExclusiveLog(bean);
             if (Validator.isNotNull(bean.getNotifyURL())) {
-                String notifyURL = systemConfig.getCallbackUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String notifyURL = systemConfig.getApiReturnUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId() + StringPool.AMPERSAND + BankCallConstant.PARAM_LOGNOTIFYURLTYPE + StringPool.EQUAL
                         + BankCallConstant.PARAM_LOGNOTIFYURL;
                 bean.setNotifyURL(notifyURL);
                 bean.set(BankCallConstant.PARAM_NOTIFY_URL, notifyURL);
             }
             if (Validator.isNotNull(bean.getRetNotifyURL())) {
-                String retNotifyURL = systemConfig.getCallbackUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String retNotifyURL = systemConfig.getApiReturnUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId() + StringPool.AMPERSAND + BankCallConstant.PARAM_LOGNOTIFYURLTYPE + StringPool.EQUAL
                         + BankCallConstant.PARAM_LOGRETNOTIFYURL;
                 bean.setRetNotifyURL(retNotifyURL);
