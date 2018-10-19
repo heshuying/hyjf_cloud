@@ -164,21 +164,21 @@ public class MessagePushMessageController extends BaseController {
             templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl3());
         }
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
-            if(templateRequest.getMsgActionUrl2().equals("1")){
-                templateRequest.setMsgActionUrl2("hyjf://jumpZXH" );
-            }else if (templateRequest.getMsgActionUrl2().equals("5")) {
+            if (templateRequest.getMsgActionUrl2().equals("1")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpZXH");
+            } else if (templateRequest.getMsgActionUrl2().equals("5")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpInvest");
-            }else if (templateRequest.getMsgActionUrl2().equals("新手汇")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("新手汇")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpXSH");
-            }else if (templateRequest.getMsgActionUrl2().equals("2")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("2")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpMine");
-            }else if (templateRequest.getMsgActionUrl2().equals("3")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("3")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpCouponsList");
-            }else if (templateRequest.getMsgActionUrl2().equals("4")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("4")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpTransactionDetail");
-            }else if (templateRequest.getMsgActionUrl2().equals("债券转让-已承接")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("债券转让-已承接")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpTransfer");
-            }else if (templateRequest.getMsgActionUrl2().equals("债权转让-转让记录")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("债权转让-转让记录")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpTransferRecord");
             }
             templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl2());
@@ -297,6 +297,22 @@ public class MessagePushMessageController extends BaseController {
         return new AdminResult<>(response);
     }
 
+    @ApiOperation(value = "检查是否是电话号码", notes = "检查是否是电话号码")
+    @RequestMapping(value = "/checkMobile", method = RequestMethod.POST)
+    public AdminResult checkMobile(@RequestParam String msgDestination) {
+        MessagePushMsgResponse response = new MessagePushMsgResponse();
+        // 检查是否是电话号码
+        String[] mobileStrs = msgDestination.split(",");
+        for (int i = 0; i < mobileStrs.length; i++) {
+            String message = validatorFieldCheckMobile(mobileStrs[i]);
+            if (message != null) {
+                return new AdminResult(FAIL,mobileStrs[i] + "不是正确的电话号码");
+            }
+        }
+        return new AdminResult(response);
+    }
+
+
     @Autowired
     private FileUpLoadUtil fileUpLoadUtil;
 
@@ -412,6 +428,25 @@ public class MessagePushMessageController extends BaseController {
                         message = "手机号错误";
                     }
                 }
+            }
+        }
+        return message;
+    }
+
+    /**
+     * 校验手机号码
+     *
+     * @param mobile
+     * @return
+     */
+    private String validatorFieldCheckMobile(String mobile) {
+        String message = null;
+        if (mobile.length() != 11) {
+            message = "手机号码校验错误";
+        } else {
+            String reg = "^[1][0-9]{10}$";
+            if (!mobile.matches(reg)) {
+                message = "手机号错误";
             }
         }
         return message;
