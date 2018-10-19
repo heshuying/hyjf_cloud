@@ -35,8 +35,8 @@ public class WebProtocolController extends BaseController {
      */
     @ApiOperation(value = "获取首页散标推荐列表", notes = "首页散标推荐列表")
     @GetMapping(value = "/creditPaymentPlan")
-    public File homeBorrowProjectList(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response,@RequestHeader(value = "userId") Integer userId){
-        //userId = 5491;
+    public File homeBorrowProjectList(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response,@RequestHeader(value = "userId",required = false) Integer userId){
+        userId = 5491;
         File  file = webProtocolService.creditPaymentPlan(form,userId,request,response);
         return file;
     }
