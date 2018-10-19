@@ -102,7 +102,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
                     break;
                 } else if (bank.getCardType().equals("1")) {
                     hasBindDefault = true;
-                    defaultCardId = String.valueOf(bank.getUserId());
+                    defaultCardId = String.valueOf(bank.getId());
                 }
                 bankcards.add(bankCardBean);
             }

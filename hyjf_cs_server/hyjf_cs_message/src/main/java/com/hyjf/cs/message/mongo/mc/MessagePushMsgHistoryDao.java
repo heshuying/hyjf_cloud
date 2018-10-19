@@ -260,11 +260,11 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
 			criteria.and("msgCode").is(request.getMsgCodeSrch());
 		}
-		if(StringUtils.isNotEmpty(request.getStartDateSrch())){
-			criteria.and("startDate").gte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
-		}
-		if(StringUtils.isNotEmpty(request.getEndDateSrch())){
-			criteria.and("endDate").lte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
+		// 发送时间
+		if (request.getStartDateSrch() != null || request.getEndDateSrch() != null) {
+			int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartDateSrch() + " 00:00:00");
+			int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndDateSrch() + " 23:59:59");
+			criteria.and("sendTime").gte(startTime).lte(endTime);
 		}
 		criteria.and("msgSendStatus").is(2);//发送失败
 		if (limitStart != -1) {
