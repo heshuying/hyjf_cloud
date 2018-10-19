@@ -1044,70 +1044,7 @@ WHERE
 	</select>
 
 
-	<resultMap id="selectBorrowListMap" type="com.hyjf.am.vo.trade.BorrowListVO">
-		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
-		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
-		<!-- 项目标题 -->
-		<result column="project_name" property="projectName" jdbcType="VARCHAR" />
-		<result column="username" property="username" jdbcType="VARCHAR" />
-		<result column="userId" property="userId" />
-		<result column="applicant" property="applicant" jdbcType="VARCHAR" />
-		<result column="account" property="account" jdbcType="VARCHAR" />
-		<result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
-		<result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
-		<result column="project_type" property="projectType" jdbcType="VARCHAR" />
-		<result column="project_type_name" property="projectTypeName" jdbcType="VARCHAR" />
-		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
-		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
-		<result column="status" property="status" jdbcType="VARCHAR" />
-		<result column="repay_full_status" property="repayFullStatus" jdbcType="VARCHAR" />
-		<result column="addtime" property="addtime" jdbcType="VARCHAR" />
-		<result column="borrow_full_time" property="borrowFullTime" jdbcType="VARCHAR" />
-		<result column="reverify_time" property="reverifyTime" jdbcType="VARCHAR" />
-		<!-- 放款完成时间 -->
-		<result column="recover_last_time" property="recoverLastTime" jdbcType="VARCHAR" />
-		<!-- 放款完成时间 -->
-		<result column="recover_last_day" property="recoverLastDay" jdbcType="VARCHAR" />
-		<!-- 已借到金额 -->
-		<result column="borrow_account_yes" property="borrowAccountYes" jdbcType="VARCHAR" />
-		<!-- 剩余金额 -->
-		<result column="borrow_account_wait" property="borrowAccountWait" jdbcType="VARCHAR" />
-		<!-- 借款进度 -->
-		<result column="borrow_account_scale" property="borrowAccountScale" jdbcType="VARCHAR" />
-		<!-- 借款进度 -->
-		<result column="borrow_publisher" property="borrowPublisher" jdbcType="VARCHAR" />
-		<!-- 加息率 -->
-		<result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="VARCHAR" />
-		<!-- 融通宝编号 -->
-		<result column="borrow_asset_number" property="borrowAssetNumber" jdbcType="VARCHAR" />
-		<!-- 协议期限 -->
-		<result column="contract_period" property="contractPeriod" jdbcType="VARCHAR" />
-		<!-- 期限类型 -->
-		<result column="borrow_period_type" property="borrowPeriodType" jdbcType="VARCHAR" />
-		<!-- 项目最小投资金额 万-->
-		<result column="tender_account_min_wan" property="tenderAccountMinWan" jdbcType="VARCHAR" />
-		<!-- 倍增金额  increaseMoney-->
-		<result column="increase_money" property="increaseMoney" jdbcType="VARCHAR" />
-		<!-- 复审用户名-->
-		<result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-		<!--  垫付机构用户名-->
-		<result column="repay_org_name" property="repayOrgUserName" jdbcType="VARCHAR" />
-		<!--  计划编号 -->
-		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
-		<!--  资产来源 -->
-		<result column="inst_name" property="instName" jdbcType="VARCHAR" />
-		<!-- 标签名称 -->
-		<result column="labelName" property="labelName" jdbcType="VARCHAR" />
-		<!-- ADD BY LIUSHOUYI 合规检查 START -->
-		<!-- 借款方姓名 -->
-		<result column="truename" property="truename" jdbcType="VARCHAR" />
-		<result column="businame" property="businame" jdbcType="VARCHAR" />
-		<result column="usertype" property="userType" jdbcType="VARCHAR" />
-		<!-- ADD BY LIUSHOUYI 合规检查 END -->
-		<!-- ADD BY zhangyk 增加初审时间 start -->
-		<result column="verify_time" property="verifyTime" jdbcType="VARCHAR" />
-		<!-- ADD BY zhangyk 增加初审时间 end -->
-	</resultMap>
+
 
 	<select id="getBorrowList" resultMap="selectBorrowListMap">
 		SELECT
@@ -1138,8 +1075,8 @@ WHERE
 			CASE
 			WHEN ( ( b.`status` = 0 AND ( NOT EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) OR ( b.`status` = 0 AND b.verify_status = 0 AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '初审中'
 			WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '待发布'
-			WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
-			WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
+			WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
+			WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
 			WHEN ( b.`status` = 3 AND b.repay_full_status = 0 ) THEN '还款中'
 			WHEN ( b.`status` = 3 AND b.repay_full_status = 1 ) THEN '已还款'
 			WHEN b.`status` = 2 THEN '已流标'
@@ -1241,8 +1178,8 @@ WHERE
 		<if test="col != null and col != '' and sort != null and sort != ''">
 			${col} ${sort},
 		</if>
-		b.addtime DESC, b.id DESC
-		<if test="limitStart >= 0" >
+		b.create_time DESC, b.id DESC
+		<if test="limitStart != null" >
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
 	</select>

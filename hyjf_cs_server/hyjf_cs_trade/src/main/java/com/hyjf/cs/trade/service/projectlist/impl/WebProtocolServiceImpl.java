@@ -27,8 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Resource
+@Service
 public class WebProtocolServiceImpl implements WebProtocolService {
 
     private static Logger logger = LoggerFactory.getLogger(WebProtocolServiceImpl.class);
@@ -189,11 +189,12 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                     List<WebUserInvestListCustomizeVO> tzList = myTenderSelectUserInvestList(form, 0, 100);
                     if (tzList != null && tzList.size() > 0) {
                         WebUserInvestListCustomizeVO userInvest = tzList.get(0);
+                        UserInfoVO creditUserInfo = amUserClient.findUsersInfoById(Integer.valueOf(form.getCreditUserId()));
                         if(userInfo!=null&&!((userInfo.getUserId()+"").equals(userInvest.getUserId()))){
 
-                            userInvest.setRealName(userInvest.getRealName().substring(0,1)+"**");
+                            userInvest.setRealName(creditUserInfo.getTruename().substring(0,1)+"**");
                             userInvest.setUsername(userInvest.getUsername().substring(0,1)+"*****");
-                            userInvest.setIdCard(userInvest.getIdCard().substring(0,4)+"**************");
+                            userInvest.setIdCard(creditUserInfo.getIdcard().substring(0,4)+"**************");
                         }
                         contents.put("userInvest", userInvest);
                     }else {
@@ -204,10 +205,11 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                     List<WebUserInvestListCustomizeVO> tzList = myTenderSelectUserInvestList(form, 0, 100);
                     if (tzList != null && tzList.size() > 0) {
                         WebUserInvestListCustomizeVO userInvest = tzList.get(0);
+                        UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
                         if(userInfo!=null&&!((userInfo.getUserId()+"").equals(userInvest.getUserId()))){
-                            userInvest.setRealName(userInvest.getRealName().substring(0,1)+"**");
+                            userInvest.setRealName(userInfo.getTruename().substring(0,1)+"**");
                             userInvest.setUsername(userInvest.getUsername().substring(0,1)+"*****");
-                            userInvest.setIdCard(userInvest.getIdCard().substring(0,4)+"**************");
+                            userInvest.setIdCard(userInfo.getIdcard().substring(0,4)+"**************");
                         }
                         contents.put("userInvest", userInvest);
                     }else {

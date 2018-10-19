@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 
-public interface WebProtocolService {
+public interface WebProtocolService{
 
     /**
      * 下载脱敏后居间服务借款协议（原始标的）_计划投资人
