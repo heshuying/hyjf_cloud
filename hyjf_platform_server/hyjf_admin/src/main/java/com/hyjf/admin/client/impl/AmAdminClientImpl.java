@@ -19,6 +19,7 @@ import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
+import com.hyjf.am.response.user.BankRepayFreezeOrgResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
@@ -45,6 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -1249,5 +1251,35 @@ public class AmAdminClientImpl implements AmAdminClient {
     public void updateBindCard(BindCardExceptionRequest request) {
         String url = "http://AM-ADMIN/am-user/bindcardexception/updateBindCard";
         restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
+    }
+
+    /**
+     * 异常中心-还款冻结异常列表数据
+     * @param request
+     * @return
+     */
+    @Override
+    public List<BankRepayFreezeOrgCustomizeVO> getBankReapyFreezeOrgList(RepayFreezeOrgRequest request) {
+        String url = "http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/list_data";
+        BankRepayFreezeOrgResponse response = restTemplate.postForEntity(url,request,BankRepayFreezeOrgResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 异常中心-还款冻结异常列表记录数
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer getBankReapyFreezeOrgCount(RepayFreezeOrgRequest request) {
+        String url = "http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/list_count";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 }
