@@ -676,7 +676,7 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
      */
     @Override
     public int updateUserBankInfo(UserInfosUpdCustomizeRequest request){
-        return userCenterClient.updateUserBaseInfo(request);
+        return userCenterClient.updateUserBankInfo(request);
     }
 
     /**
