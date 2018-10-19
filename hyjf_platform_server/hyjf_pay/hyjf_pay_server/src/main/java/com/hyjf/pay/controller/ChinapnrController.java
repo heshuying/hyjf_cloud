@@ -89,9 +89,9 @@ public class ChinapnrController extends BaseController {
                 // 设置返回URL
                 if (Validator.isNotNull(bean.getRetUrl())) {
                     if (ChinaPnrConstant.CMDID_DIRECT_TRF_AUTH.equals(bean.get(ChinaPnrConstant.PARAM_CMDID))) {
-                        bean.setRetUrl(systemConfig.getChinapnrBindreturnUrl());
+                        //bean.setRetUrl(systemConfig.getChinapnrBindreturnUrl());
                     } else {
-                        bean.setRetUrl(systemConfig.getChinapnrReturnUrl());
+                       // bean.setRetUrl(systemConfig.getChinapnrReturnUrl());
                     }
                     bean.set(ChinaPnrConstant.PARAM_RETURL, bean.getRetUrl());
                 }

@@ -56,6 +56,18 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	DebtConfigResponse updateDebtConfig(DebtConfigRequest request);
+
+	/**
+	 * 债权配置日志表查询总条数
+	 *
+	 */
+	int countDebtConfigLogTotal();
+
+	/**
+	 * 债权配置日志表查询
+	 *
+	 */
+	 List<DebtConfigLogVO> getDebtConfigLogList(DebtConfigRequest req);
     /**
      * 获取数据字典表的下拉列表
      * @param nameClass

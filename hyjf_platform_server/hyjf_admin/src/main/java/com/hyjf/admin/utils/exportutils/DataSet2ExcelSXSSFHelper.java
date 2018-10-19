@@ -67,10 +67,17 @@ public class DataSet2ExcelSXSSFHelper<T> {
             Row columnValueRow = sheet.createRow(index);
             T t = (T) it.next();
             // 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
-            for (int i = 0; i < properties.size(); i++) {
+            //properties.size() + 1 是因为添加了"序号"一栏
+            for (int i = 0; i < properties.size() + 1; i++) {
                 // 创建相应的单元格
-                Cell  cell = columnValueRow.createCell(i);
-                String property = properties.get(i);
+                Cell cell = columnValueRow.createCell(i);
+                //为"序号"一栏赋值
+                if(i == 0){
+                    cell.setCellValue(index);
+                    continue;
+                }
+                //为"序号"栏空出一栏，导致【i】从1开始才是自定义栏位,而数组下标是从0开始，所以这里 i-1
+                String property = properties.get(i-1);
                 String getMethodName = "get" + property.substring(0, 1).toUpperCase() + property.substring(1);
                 try {
                     Class tCls = t.getClass();
@@ -87,8 +94,11 @@ public class DataSet2ExcelSXSSFHelper<T> {
                     }
                     cell.setCellValue(textValue);
                 } catch (Exception e) {
+                    if (mapValueAdapter.get(property) != null) {
+                        cell.setCellValue(mapValueAdapter.get(property).format(null));
+                    }
                     logger.error("导出到Excel失败！" + e.getMessage());
-                    throw new IllegalArgumentException(e);
+                    //throw new IllegalArgumentException(e);
                 }
             }
             index++;
@@ -99,10 +109,18 @@ public class DataSet2ExcelSXSSFHelper<T> {
         // 生成一个表格
         SXSSFSheet sheet = workbook.createSheet(sheetName);
         Row row = sheet.createRow(0);
-        for (int celLength = 0; celLength < titles.length; celLength++) {
+        //titles.length + 1  是因为添加了"序号"一栏
+        for (int celLength = 0; celLength < titles.length + 1; celLength++) {
             // 创建相应的单元格
-            Cell cell = row.createCell(celLength);
-            cell.setCellValue(titles[celLength]);
+            if(celLength != 0){
+                Cell cell = row.createCell(celLength);
+                //为"序号"栏空出一栏，导致celLength从1开始才是自定义栏位,而数组下标是从0开始，所以这里 celLength-1
+                cell.setCellValue(titles[celLength-1]);
+                continue;
+            }
+            //添加"序号"一栏
+            Cell cell = row.createCell(0);
+            cell.setCellValue("序号");
         }
 
         return sheet;

@@ -9,8 +9,8 @@
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
 				AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
-			<if test="borrowPeriodSrch != null and borrowPeriodSrch != ''">
-				AND b.borrow_period=#{borrowPeriodSrch}
+			<if test="borrowNameSrch != null and borrowNameSrch != ''">
+				AND bi.name LIKE CONCAT( #{borrowNameSrch}, '%')
 			</if>
 			<if test="usernameSrch != null and usernameSrch != ''">
 				AND b.borrow_user_name LIKE CONCAT( #{usernameSrch}, '%')

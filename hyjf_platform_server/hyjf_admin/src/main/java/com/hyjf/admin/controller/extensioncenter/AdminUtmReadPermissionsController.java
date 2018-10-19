@@ -64,7 +64,9 @@ public class AdminUtmReadPermissionsController extends BaseController {
 						}
 					}
 				}
-				adminUtmReadPermissionsVO.setNames(umtNames.substring(1));
+				if(StringUtils.isNotBlank(umtNames)){
+					adminUtmReadPermissionsVO.setNames(umtNames.substring(1));
+				}
 			}
 		}
 		response.setResultList(list);

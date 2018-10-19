@@ -262,8 +262,8 @@
 
 			<!-- 还款状态0还款中,1已还款 -->
 			<!-- 还款状态 -->
-			<if test="status != null and status != ''">
-				AND rp.repay_status = #{status}
+			<if test="statusSrch != null and statusSrch != ''">
+				AND rp.repay_status = #{statusSrch}
 			</if>
 			<!-- 最后还款日 -->
 			<if test="repayLastTimeStartSrch != null and repayLastTimeStartSrch != ''">

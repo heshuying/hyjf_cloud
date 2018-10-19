@@ -62,7 +62,7 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         result.put("user", user);
         UserLoginLogVO userLogin = amUserClient.getUserLoginById(user.getUserId());
         //上次登录时间
-        if (userLogin.getLastTime() != null) {
+        if (null!=userLogin&&userLogin.getLastTime() != null) {
             result.put("lastlogintime", GetDate.formatTime(userLogin.getLastTime()));
         }
         result.put("auth", "");
