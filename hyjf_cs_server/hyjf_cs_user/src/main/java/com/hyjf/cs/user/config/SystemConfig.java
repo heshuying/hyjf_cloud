@@ -10,6 +10,14 @@ public class SystemConfig {
     @Value("${hyjf.server.host}")
     public String serverHost;
 
+    @Value("${hyjf.web.host}")
+    public String webHost;
+
+    /**
+     * 转账指南
+     */
+    @Value("${hyjf.app.recharge.guide.url}")
+    public String appRechangeGuideUrl;
 
     /** 从系统配置中获取最新版本号 */
     @Value("${hyjf.app.version.new}")
@@ -150,6 +158,14 @@ public class SystemConfig {
 
     public void setPublickeyhjs(String publickeyhjs) {
         this.publickeyhjs = publickeyhjs;
+    }
+
+    public String getWebHost() {
+        return webHost;
+    }
+
+    public void setWebHost(String webHost) {
+        this.webHost = webHost;
     }
 
     public String getPrivatekeyhjs() {
@@ -342,5 +358,13 @@ public class SystemConfig {
 
     public void setRoleIsopen(String roleIsopen) {
         this.roleIsopen = roleIsopen;
+    }
+
+    public String getAppRechangeGuideUrl() {
+        return appRechangeGuideUrl;
+    }
+
+    public void setAppRechangeGuideUrl(String appRechangeGuideUrl) {
+        this.appRechangeGuideUrl = appRechangeGuideUrl;
     }
 }

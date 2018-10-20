@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndRequest;
 import com.hyjf.am.resquest.trade.InsertBankCreditEndForCreditEndRequest;
 import com.hyjf.am.resquest.trade.UpdateBankCreditEndForStatusRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.service.admin.exception.BankCreditEndService;
@@ -34,7 +35,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/bankCreditEndController")
-public class BankCreditEndController {
+public class BankCreditEndController extends BaseController {
 
     @Autowired
     private BankCreditEndService bankCreditEndService;

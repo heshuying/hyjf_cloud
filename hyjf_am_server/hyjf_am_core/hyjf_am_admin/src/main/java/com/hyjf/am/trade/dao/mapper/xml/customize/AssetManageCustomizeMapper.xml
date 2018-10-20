@@ -2094,7 +2094,14 @@
         hcr.recover_account repay_account_wait,
         hcr.recover_account received_interest,
 
-        IFNULL(FROM_UNIXTIME( IF(hcr.recover_time='',NULL,hcr.recover_time), '%Y-%m-%d' ),'--') AS last_payment_time,
+        <choose>
+            <when test="type == 2">
+                IFNULL(FROM_UNIXTIME( IF(hcr.recover_yestime='',NULL,hcr.recover_yestime), '%Y-%m-%d' ),'--') AS last_payment_time,
+            </when>
+            <otherwise>
+                IFNULL(FROM_UNIXTIME( IF(hcr.recover_time='',NULL,hcr.recover_time), '%Y-%m-%d' ),'--') AS last_payment_time,
+            </otherwise>
+        </choose>
 
         FROM_UNIXTIME(hbtc.create_time,'%Y-%m-%d') as create_time,
         hbtc.create_time as order_by_addtime,
@@ -2129,7 +2136,7 @@
                 ORDER BY t.order_by_addtime desc, t.order_id asc
             </when>
             <when test="type == 2">
-                ORDER BY t.orderby_quit_time desc, t.order_id asc
+                ORDER BY t.last_payment_time desc, t.order_id asc
             </when>
         </choose>
         LIMIT #{limitStart} , #{limitEnd}
@@ -2505,8 +2512,8 @@
         FROM
         ht_borrow_tender_cpn hbtc
         INNER JOIN ht_hjh_plan hhp ON hbtc.borrow_nid = hhp.plan_nid
-        left join hyjf_coupon_real_tender hcrt on hbtc.nid = hcrt.coupon_tender_id
-        left join hyjf_hjh_accede hha ON hcrt.real_tender_id = hha.accede_order_id
+        left join ht_coupon_real_tender hcrt on hbtc.nid = hcrt.coupon_tender_id
+        left join ht_hjh_accede hha ON hcrt.real_tender_id = hha.accede_order_id
         LEFT JOIN ht_coupon_recover hcr ON hbtc.nid=hcr.tender_id
         INNER JOIN ht_coupon_tender hct ON hct.order_id = hbtc.nid
         INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id

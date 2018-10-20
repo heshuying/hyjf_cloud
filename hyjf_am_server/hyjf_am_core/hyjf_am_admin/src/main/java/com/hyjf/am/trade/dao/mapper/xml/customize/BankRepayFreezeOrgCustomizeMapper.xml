@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BankRepayFreezeOrgCustomizeMapper">
+	<resultMap id="resultMap" type="com.hyjf.am.trade.dao.model.customize.BankRepayFreezeOrgCustomize" >
+	</resultMap>
+
+	<sql id="Where_Clause">
+		<where>
+			fl.del_flag = 0
+			<!-- 用户名 -->
+			<if test="borrowNid != null and borrowNid != ''">
+				AND fl.borrow_nid = #{borrowNid}
+			</if>
+			<if test="instCode != null and instCode != ''">
+				AND fl.inst_code = #{instCode}
+			</if>
+			<if test="planNid != null and planNid != ''">
+				AND fl.plan_nid = #{planNid}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND fl.order_id = #{orderId}
+			</if>
+			<if test="borrowUserName != null and borrowUserName != ''">
+				AND fl.borrow_user_name LIKE CONCAT('%', #{borrowUserName}, '%')
+			</if>
+			<if test="repayUserName != null and repayUserName != ''">
+				AND fl.repay_user_name LIKE CONCAT('%', #{repayUserName}, '%')
+			</if>
+			<if test="submitTimeStartSrch != null and submitTimeStartSrch != '' ">
+				AND FROM_UNIXTIME( fl.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{submitTimeStartSrch}
+			</if>
+			<if test="submitTimeEndSrch != null and submitTimeEndSrch != ''">
+				AND FROM_UNIXTIME( fl.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{submitTimeEndSrch}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 获取用户银行卡列表件数 -->
+	<select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+		count(fl.id) AS totalRecord
+		FROM
+		ht_bank_repay_org_freeze_log fl
+		LEFT JOIN ht_hjh_inst_config ic ON fl.inst_code = ic.inst_code
+		<include refid="Where_Clause" />
+	</select>
+
+	<!-- 获取用户银行卡列表 -->
+	<select id="selectList" parameterType="java.util.Map"  resultMap="resultMap">
+		SELECT
+		fl.borrow_nid AS borrowNid,
+		fl.borrow_period AS borrowPeriod,
+		fl.total_period AS totalPeriod,
+		fl.repay_user_name AS repayUserName,
+		fl.borrow_user_name AS borrowUserName,
+		fl.inst_code AS instCode,
+		ic.inst_name AS instName,
+		fl.plan_nid AS planNid,
+		fl.order_id AS orderId,
+		fl.amount AS amount,
+		fl.amount_freeze AS amountFreeze,
+		fl.repay_account AS repayAccount,
+		fl.repay_fee AS repayFee,
+		fl.lower_interest AS lowerInterest,
+		fl.penalty_amount AS penaltyAmount,
+		fl.default_interest AS defaultInterest,
+		fl.create_time AS createTimeView
+		FROM
+		ht_bank_repay_org_freeze_log fl
+		LEFT JOIN ht_hjh_inst_config ic ON fl.inst_code = ic.inst_code
+		<include refid="Where_Clause" />
+		ORDER BY fl.id desc
+		<if test="limitStart != null and limitEnd !=null and limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+		
+	</select>
+</mapper>

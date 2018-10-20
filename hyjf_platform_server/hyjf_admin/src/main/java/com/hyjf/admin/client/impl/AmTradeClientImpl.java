@@ -5,6 +5,7 @@ package com.hyjf.admin.client.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.repaybean.RepayBean;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.result.AdminResult;
@@ -1314,8 +1315,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<ManualReverseCustomizeVO> getManualReverseList(ManualReverseCustomizeRequest requestBean) {
         String url = "http://AM-ADMIN/am-trade/manualreverse/getlist";
         ManualReverseCustomizeResponse response = restTemplate.postForEntity(url, requestBean, ManualReverseCustomizeResponse.class).getBody();
-        if (Validator.isNotNull(response)) {
-            response.getResultList();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
         }
         return null;
     }
@@ -6503,4 +6504,49 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
 	}
+
+    /**
+     * 如果有正在出让的债权,先去把出让状态停止
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public Boolean updateBorrowCreditStautus(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/repay/update_borrowcredit_status/" + borrowNid;
+        Response<Boolean> response =
+                restTemplate.getForEntity(url,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 还款申请更新
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean){
+        BooleanResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/update", requestBean, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 获取计算完的还款Bean
+     * @param paraMap
+     * @return
+     */
+    @Override
+    public RepayBean getRepayBean(Map<String, String> paraMap) {
+        StringResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_repaybean",paraMap,StringResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return JSON.parseObject(response.getResultStr(),RepayBean.class);
+        }
+        return null;
+    }
 }

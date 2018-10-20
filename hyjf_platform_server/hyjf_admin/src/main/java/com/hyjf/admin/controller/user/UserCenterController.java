@@ -764,7 +764,7 @@ public class UserCenterController extends BaseController {
     /**
      * 同步用户角色 add by jijun 20181014
      */
-    @PostMapping(value = "/syncRoleAction/{userId}")
+    @GetMapping(value = "/syncRoleAction/{userId}")
     @ApiOperation(value = "同步用户角色", notes = "同步用户角色")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult syncRoleAction(HttpServletRequest request,@PathVariable String userId){

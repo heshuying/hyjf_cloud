@@ -277,8 +277,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         String planNid = tender.getBorrowNid();
         AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
         if (StringUtils.isNotBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) > 0) {
+            resultVo.setRealAmount("¥" + CommonUtils.formatAmount(null, money));
             resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
         }else if(StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0){
+            resultVo.setRealAmount("0");
             resultVo.setButtonWord("确认");
         }
 
@@ -378,7 +380,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     resultVo.setCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setConfirmCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setCouponType("代金券");
-                    resultVo.setRealAmount("实际投资 " + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())) + "元");
+                    resultVo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
 
                 }
                 resultVo.setCouponName(couponConfig.getCouponName());

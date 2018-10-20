@@ -31,10 +31,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.catalina.manager.util.SessionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +51,7 @@ public class AuthConfigController extends BaseController {
     private AuthConfigService authConfigService;
 
     @ApiOperation(value = "授权配置列表", notes = "授权配置列表")
-    @PostMapping(value = "/authConfigList")
+    @GetMapping(value = "/authConfigList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<HjhUserAuthConfigCustomizeAPIVO>> getAuthConfigList() {
         AdminAuthConfigCustomizeResponse authConfigResponse = authConfigService.getAuthConfigList();
@@ -129,7 +126,7 @@ public class AuthConfigController extends BaseController {
     public AdminResult updateAuthConfig(HttpServletRequest request,@RequestBody HjhUserAuthConfigCustomizeAPIVO form) {
 
         AdminSystemVO loginUser=getUser(request);
-        form.setUpdateUser(Integer.parseInt(loginUser.getId()));
+        form.setUpdateUserId(Integer.parseInt(loginUser.getId()));
         form.setUpdateTime(GetDate.getNowTime10());
         form.setIp(GetCilentIP.getIpAddr(request));
 

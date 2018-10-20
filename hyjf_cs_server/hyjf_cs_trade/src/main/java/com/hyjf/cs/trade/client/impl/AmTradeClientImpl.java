@@ -5478,4 +5478,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 获取有效公告
+     * @author cwyang 2018-10-18
+     * @return
+     */
+    @Override
+    public List<AppPushManageVO> getAnnouncements() {
+
+        String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/getAnnouncements";
+        AppPushManageReponse response = restTemplate.getForEntity(url, AppPushManageReponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }
