@@ -65,6 +65,6 @@
 			perm.permission_uuid
 	</select>
 	    <select id="getPermissionId" resultType="java.lang.String" >
-        select permission_id from  ht_admin_menu_permssions where  menu_id=#{menuId,jdbcType=VARCHAR}
+        select CONCAT(menu_uuid,'_',permission_uuid) from  ht_admin_role_menu_permissions where role_id= #{menuId,jdbcType=VARCHAR}
     </select>
 </mapper>
