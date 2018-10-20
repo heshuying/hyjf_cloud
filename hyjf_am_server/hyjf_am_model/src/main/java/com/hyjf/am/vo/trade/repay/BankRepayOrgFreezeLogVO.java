@@ -32,6 +32,8 @@ public class BankRepayOrgFreezeLogVO extends BaseVO {
     private String instCode;
     @ApiModelProperty(value = "借款金额")
     private BigDecimal amount;
+    @ApiModelProperty(value = "冻结金额")
+    private BigDecimal amountFreeze;
     @ApiModelProperty(value = "应还本息")
     private BigDecimal repayAccount;
     @ApiModelProperty(value = "还款服务费")
@@ -153,6 +155,14 @@ public class BankRepayOrgFreezeLogVO extends BaseVO {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public BigDecimal getAmountFreeze() {
+        return amountFreeze;
+    }
+
+    public void setAmountFreeze(BigDecimal amountFreeze) {
+        this.amountFreeze = amountFreeze;
     }
 
     public BigDecimal getRepayAccount() {

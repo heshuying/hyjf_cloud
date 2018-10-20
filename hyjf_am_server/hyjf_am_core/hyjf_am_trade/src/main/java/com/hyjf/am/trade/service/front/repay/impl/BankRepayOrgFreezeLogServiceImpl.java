@@ -35,6 +35,7 @@ public class BankRepayOrgFreezeLogServiceImpl extends BaseServiceImpl implements
         log.setPlanNid(requestBean.getPlanNid());// 计划编号
         log.setInstCode(requestBean.getInstCode());// 资产来源
         log.setAmount(requestBean.getAmount());// 借款金额
+        log.setAmountFreeze(requestBean.getAmountFreeze());// 借款金额
         log.setRepayAccount(requestBean.getRepayAccount());// 应还本息
         log.setRepayFee(requestBean.getRepayFee());// 还款服务费
         log.setLowerInterest(requestBean.getLowerInterest());// 减息金额
