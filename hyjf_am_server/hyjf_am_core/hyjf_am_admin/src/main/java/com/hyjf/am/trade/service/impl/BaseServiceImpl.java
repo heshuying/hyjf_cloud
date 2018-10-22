@@ -530,7 +530,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         borrowAndInfoVO.setCanTransactionIos(info.getCanTransactionIos());
         borrowAndInfoVO.setCanTransactionWei(info.getCanTransactionWei());
         borrowAndInfoVO.setOperationLabel(info.getOperationLabel());
-        borrowAndInfoVO.setCompanyOrPersonal(info.getCompanyOrPersonal());
+        borrowAndInfoVO.setCompanyOrPersonal(String.valueOf(info.getCompanyOrPersonal()));
         borrowAndInfoVO.setBorrowManagerScaleEnd(info.getBorrowManagerScaleEnd());
         borrowAndInfoVO.setConsumeId(info.getConsumeId());
         borrowAndInfoVO.setDisposalPriceEstimate(info.getDisposalPriceEstimate());
