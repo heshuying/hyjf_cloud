@@ -227,7 +227,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                     } else if ("1".equals(state)) {
                                         // 2备案成功直接更改备案状态:银行确认state为1的情况,银行标的备案成功
                                         //new added by 受托支付备案
-                                        if(borrowVO.getEntrustedFlg()==1){
+                                        if(1==borrowVO.getEntrustedFlg()){
                                             boolean debtEntrustedRegistedFlag = this.updateBorrowRegist(borrowVO, 7, 2,2);
                                             if (debtEntrustedRegistedFlag) {
                                                 result.put("success", "0");
