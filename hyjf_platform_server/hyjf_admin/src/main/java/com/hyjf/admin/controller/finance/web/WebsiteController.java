@@ -7,7 +7,6 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.WebBean;
 import com.hyjf.admin.beans.response.WebsiteResponse;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
@@ -24,11 +23,6 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,111 +136,7 @@ public class WebsiteController extends BaseController {
     @ApiOperation(value = "导出网站收支列表")
     @PostMapping(value = "/exportWeblistExcel")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportWeblistExcel(HttpServletResponse response, @RequestBody WebBean form) throws Exception {
-        AccountWebListVO accountWebList = new AccountWebListVO();
-        BeanUtils.copyProperties(form, accountWebList);
-        // 表格sheet名称
-        String sheetName = "网站收支";
-        // 取得数据
-        accountWebList.setPageSize(-1);
-        //设置默认查询时间
-        if(StringUtils.isEmpty(form.getStartDate())){
-            accountWebList.setStartDate(GetDate.getDate("yyyy-MM-dd"));
-        }
-        if(StringUtils.isEmpty(form.getEndDate())){
-            accountWebList.setEndDate(GetDate.getDate("yyyy-MM-dd"));
-        }
-        AccountWebListResponse accountWebListResponse = websiteService.queryAccountWebList(accountWebList);
-        List<AccountWebListVO> recordList = accountWebListResponse.getResultList();
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[] { "序号", "订单号", "分公司", "分部", "团队", "用户名", "姓名", "收支类型", "交易金额", "交易类型", "说明", "发生时间" };
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-        if (recordList != null && recordList.size() > 0) {
-            int sheetCount = 1;
-            int rowNum = 0;
-            for (int i = 0; i < recordList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    AccountWebListVO bean = recordList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    // 序号
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    }
-                    // 订单号
-                    else if (celLength == 1) {
-                        cell.setCellValue(bean.getOrdid());
-                    }
-                    // 大区
-                    else if (celLength == 2) {
-                        cell.setCellValue(bean.getRegionName());
-                    }
-                    // 分公司
-                    else if (celLength == 3) {
-                        cell.setCellValue(bean.getBranchName());
-                    }
-                    // 部门
-                    else if (celLength == 4) {
-                        cell.setCellValue(bean.getDepartmentName());
-                    }
-                    // 用户名
-                    else if (celLength == 5) {
-                        cell.setCellValue(bean.getUsername());
-                    }
-                    // 姓名
-                    else if (celLength == 6) {
-                        cell.setCellValue(bean.getTruename());
-                    }
-                    // 收支类型
-                    else if (celLength == 7) {
-                        cell.setCellValue("1".equals(bean.getTrade()) ?"收入":"支出");
-                    }
-                    // 交易金额
-                    else if (celLength == 8) {
-                        cell.setCellValue(bean.getAmount() == null ? "0.00" : bean.getAmount().toString());
-                    }
-                    // 交易类型
-                    else if (celLength == 9) {
-                        cell.setCellValue(bean.getTradeType());
-                    }
-                    // 说明
-                    else if (celLength == 10) {
-                        cell.setCellValue(bean.getRemark());
-                    }
-                    // 发生时间
-                    else if (celLength == 11) {
-                        logger.debug("CreateTime...:"+bean.getCreateTime());
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        if(bean.getCreateTime()!=null){
-                            Date data = new Date(bean.getCreateTime()*1000L);
-                            cell.setCellValue(sdf.format(data));
-                        }else {
-                            cell.setCellValue("");
-                        }
-
-                    }
-                }
-            }
-        }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
-
-    @ApiOperation(value = "平台转账-导出excel",notes = "平台转账-导出excel")
-    @PostMapping(value = "/platformtransferlist")
-    public void exportPlatformTransferList(HttpServletRequest request, HttpServletResponse response, @RequestBody WebBean form) throws Exception {
+    public void exportWeblistExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody WebBean form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
