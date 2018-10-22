@@ -1510,9 +1510,9 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<UtmPlatVO> getUtmPlat(String sourceId) {
+	public List<UtmPlatVO> getUtmPlat() {
 		UtmResponse response = restTemplate
-				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmplat/"+sourceId, UtmResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getmyutmplat", UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResultList();
 		}

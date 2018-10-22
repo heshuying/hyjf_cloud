@@ -758,7 +758,7 @@ public interface AmUserClient {
      * @Date 15:14 2018/7/14
      * @Param
      */
-    List<UtmPlatVO> getUtmPlat(String sourceId);
+    List<UtmPlatVO> getUtmPlat();
 
     /**
      * @return

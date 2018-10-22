@@ -52,6 +52,14 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     }
 
     @Override
+    public List<UtmPlatVO> getMyUtmPlat() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("delFlag",CustomConstants.FLAG_NORMAL);
+        map.put("sourceType",0);
+        return utmRegCustomizeMapper.getUtmPlat(map);
+    }
+
+    @Override
     public UtmChannelVO getUtmByUtmId(String utmId) {
         return utmRegCustomizeMapper.getUtmByUtmId(utmId);
     }

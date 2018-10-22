@@ -39,7 +39,7 @@ public interface ChannelService {
      * @Param 
      * @return 
      */
-    List<UtmPlatVO> getUtmPlat(String sourceId);
+    List<UtmPlatVO> getUtmPlat();
 
     /**
      * @Author walter.limeng
