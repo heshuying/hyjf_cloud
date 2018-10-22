@@ -100,6 +100,12 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             logger.info("-----------订单号" + accedeOrderId + ",未查询到匹配加入订单!");
             return;
         }
+        //重新获取是否清算完成标识 汇计划三期
+        Integer completeFlag = hjhAccede.getCreditCompleteFlag();
+        if(1 != completeFlag){
+            logger.info("-----------订单号" + accedeOrderId + ",未清算完成，暂不退出计划!");
+            return;
+        }
         boolean isQuit = checkIsRepayQuit(hjhAccede);
         if (!isQuit) {
             logger.info("-----------订单号" + accedeOrderId + ",不符合退出条件,暂不退出计划!");
@@ -299,22 +305,17 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         BigDecimal repayCapital = hjhRepay.getPlanRepayCapital();
         BigDecimal repayInterest = hjhRepay.getPlanRepayInterest();
         String planNid = hjhAccede.getPlanNid();
-        HjhPlanExample example = new HjhPlanExample();
-        example.createCriteria().andPlanNidEqualTo(planNid);
-        List<HjhPlan> planList = this.hjhPlanMapper.selectByExample(example);
-        if (planList != null && planList.size() > 0) {
-            HjhPlan hjhPlan = planList.get(0);
-            hjhPlan.setRepayWaitAll(hjhPlan.getRepayWaitAll().subtract(waitTotal));
-            hjhPlan.setPlanWaitCaptical(hjhPlan.getPlanWaitCaptical().subtract(waitCaptical));
-            hjhPlan.setPlanWaitInterest(hjhPlan.getPlanWaitInterest().subtract(waitInterest));
-            hjhPlan.setRepayTotal(hjhPlan.getRepayTotal().add(repayTotal));
-            hjhPlan.setPlanRepayCapital(hjhPlan.getPlanRepayCapital().add(repayCapital));
-            hjhPlan.setPlanRepayInterest(hjhPlan.getPlanRepayInterest().add(repayInterest));
-            int count = this.adminAccountCustomizeMapper.updateHjhPlanForQuit(hjhPlan);
-//            int count = this.hjhPlanMapper.updateByPrimaryKey(hjhPlan);
-            if (count > 0) {
-                logger.info("===============计划加入订单:" + hjhAccede.getAccedeOrderId() + "  对应的计划:" + planNid + "  相关待还应收金额维护成功!待还减少:" + waitTotal + ",应收增加:" + repayTotal);
-            }
+        HjhPlan hjhPlan = new HjhPlan();
+        hjhPlan.setPlanNid(planNid);
+        hjhPlan.setRepayWaitAll(waitTotal);
+        hjhPlan.setPlanWaitCaptical(waitCaptical);
+        hjhPlan.setPlanWaitInterest(waitInterest);
+        hjhPlan.setRepayTotal(repayTotal);
+        hjhPlan.setPlanRepayCapital(repayCapital);
+        hjhPlan.setPlanRepayInterest(repayInterest);
+        int count = this.adminAccountCustomizeMapper.updateHjhPlanForQuit(hjhPlan);
+        if (count > 0) {
+            logger.info("===============计划加入订单:" + hjhAccede.getAccedeOrderId() + "对应的计划:" + planNid + "相关待还应收金额维护成功!待还减少:" + waitTotal + ",应收增加:" + repayTotal);
         }
     }
 
