@@ -132,7 +132,9 @@ public class CouponConfigController extends BaseController {
         try {
             CouponConfig couponConfig = new CouponConfig();
             BeanUtils.copyProperties(couponConfigRequest, couponConfig);
-            couponConfig.setExpirationDate(GetDate.strYYYYMMDD2Timestamp2(couponConfigRequest.getExpirationDate()));
+            if (couponConfigRequest.getExpirationDate() != null) {
+                couponConfig.setExpirationDate(GetDate.strYYYYMMDD2Timestamp2(couponConfigRequest.getExpirationDate()));
+            }
             couponConfig.setCouponCode(GetCode.getCouponCode(couponConfigRequest
                     .getCouponType()));
             couponConfig.setStatus(1);
