@@ -61,6 +61,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
      */
     @Override
     public File creditPaymentPlan(ProtocolRequest form, Integer userId, HttpServletRequest request, HttpServletResponse response) {
+        logger.info(">>>>>>>>>>>>协议下载开始<<<<<<<<<<<");
         CheckUtil.check(StringUtils.isNotBlank(form.getBorrowNid()),MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         Map<String,Object> param = new HashMap<>();
         String borrowNid = form.getBorrowNid();
@@ -94,7 +95,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
 
                 List<DebtBorrowCustomizeVO> recordList = amTradeClient.searchDebtBorrowList4Protocol(param);
                 if (recordList.size() != 1) {
-                    logger.error("标的信息异常（0条或者大于1条信息）,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
+                    logger.error("标的信息异常[recordList.size = {}]（0条或者大于1条信息）,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。",recordList.size());
                     return null;
                 }
                 contents.put("borrowNid", borrowNid);

@@ -766,6 +766,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		// 产品加息 add by liuyang 20180730 start
 		// 根据项目编号查询项目类型配置
 		BorrowProjectType borrowProjectType = this.getBrrowProjectTpyeByProjectType(String.valueOf(borrowBean.getProjectType()));
+		BeanUtils.copyProperties(borrow, borrowinfo);
 		if (borrowProjectType.getIncreaseInterestFlag() == 1 && !StringUtils.isEmpty(borrowBean.getBorrowExtraYield()) && new BigDecimal(borrowBean.getBorrowExtraYield()).compareTo(BigDecimal.ZERO) > 0) {
 			// 是否加息
 			borrow.setIncreaseInterestFlag(1);
@@ -784,7 +785,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		// 产品加息 add by liuyang 20180730 end
 		this.borrowMapper.insertSelective(borrow);
-		BeanUtils.copyProperties(borrow, borrowinfo);
 		borrowinfo.setEntrustedFlg(Integer.valueOf(borrowBean.getEntrustedFlg()));
 		if("1".equals(borrowBean.getEntrustedFlg())){
 			borrowinfo.setEntrustedUserName(borrowBean.getEntrustedUsername().trim());
