@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.admin.exception;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowRegistCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
@@ -128,6 +129,7 @@ public class BorrowRegistExceptionController extends BaseController {
         BorrowAndInfoVO borrowVO = borrowRegistExceptionService.searchBorrowByBorrowNid(borrowNid);
         if(borrowVO != null){
             borrowResponse.setResult(borrowVO);
+            borrowResponse.setRtn(Response.SUCCESS);
         }
         return borrowResponse;
     }
