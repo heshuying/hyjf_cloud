@@ -1362,6 +1362,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (borrow == null || borrowInfoVO == null) {
             throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
         }
+        // 看标的是否关联计划 ，防止别有用心的guy从散标列表投资汇计划标的
+        if(borrow.getIsShow() != null && borrow.getIsShow().intValue() ==1){
+            if(StringUtils.isNotBlank(borrow.getPlanNid())){
+                // 该标的绑定了计划
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_BIND_PLAN_ERROR);
+            }
+        }
         borrow.setTenderAccountMin(borrowInfoVO.getTenderAccountMin());
         borrow.setTenderAccountMax(borrowInfoVO.getTenderAccountMax());
         borrow.setCanTransactionAndroid(borrowInfoVO.getCanTransactionAndroid());
@@ -1543,6 +1550,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         //同步/异步 优先执行完毕
         if (!checkTender) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_HANDING);
+        }
+        BorrowProjectTypeVO borrowProjectType = this.getProjectType(String.valueOf(borrow.getProjectType()));
+        if (borrowProjectType.getInvestUserType().equals(1)) {
+            boolean isNew = this.checkIsNewUserCanInvest(userId);
+            // 该项目只能新手投资
+            if (!isNew) {
+                logger.error("该项目只能新手投资  {} ",JSONObject.toJSONString(bean));
+                throw new CheckException(MsgEnum.ERR_TRADE_NEW_USER);
+            }
         }
         BigDecimal amount = new BigDecimal(txAmount);
         // 投资金额大于0时候才执行
