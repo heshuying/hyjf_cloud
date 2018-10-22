@@ -632,8 +632,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             data.put("income",df.format(earnings));
             // 本金
             data.put("account",df.format(borrowTender.getAccount()));
-
-
         }
         // 查询优惠券信息
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
@@ -647,7 +645,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (couponUser.getCouponType() == 1) {
                 couponInterest = couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
             } else {
-                couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), borrowTender.getAccount().toString(), borrow.getBorrowPeriod());
+                BigDecimal account = BigDecimal.ZERO;
+                if(borrowTender!=null && borrowTender.getAccount()!=null && !"".equals(borrowTender.getAccount())){
+                    account = borrowTender.getAccount();
+                }
+                couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(),account.toString(), borrow.getBorrowPeriod());
             }
             //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
             data.put("income", earnings.add(couponInterest));
