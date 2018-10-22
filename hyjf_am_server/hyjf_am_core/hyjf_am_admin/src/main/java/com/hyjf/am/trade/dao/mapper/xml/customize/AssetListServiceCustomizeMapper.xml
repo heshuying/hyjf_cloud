@@ -61,16 +61,8 @@
 			FROM ht_hjh_plan_asset hpa 
 			LEFT JOIN ht_hjh_inst_config hic on hpa.inst_code = hic.inst_code
 			LEFT JOIN ht_hjh_asset_type hat on hpa.inst_code = hat.inst_code AND hpa.asset_type = hat.asset_type
-			LEFT JOIN ht_borrow_style bs on hpa.borrow_style = bs.nid 
-			
-			<!-- LEFT JOIN ht_user u on hpa.user_id = u.user_id -->
+			LEFT JOIN ht_borrow_style bs on hpa.borrow_style = bs.nid
 			LEFT JOIN ht_r_user u on hpa.user_id = u.user_id
-			
-<!-- 			LEFT JOIN ht_param_name ast on cast(hpa.`status` AS CHAR) = ast.name_cd AND ast.name_class = 'ASSET_STATUS'
-			LEFT JOIN ht_param_name vast on cast(hpa.verify_status AS CHAR) = vast.name_cd AND vast.name_class = 'ASSET_APPLY_STATUS'
-			LEFT JOIN ht_param_name pnusertype ON cast(u.user_type AS CHAR) = pnusertype.name_cd AND pnusertype.name_class = 'USER_TYPE'
-			LEFT JOIN ht_param_name boa on cast(u.bank_open_account AS CHAR) = boa.name_cd AND boa.name_class = 'ACCOUNT_STATUS' -->
-			
 	   		<include refid="Where_Clause" />
 			ORDER BY
 			hpa.verify_status, hpa.recieve_time DESC
