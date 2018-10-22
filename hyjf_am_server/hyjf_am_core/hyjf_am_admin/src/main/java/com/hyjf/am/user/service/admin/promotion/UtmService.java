@@ -42,6 +42,8 @@ public interface UtmService extends BaseService {
      */
     List<UtmPlatVO> getUtmPlat(String sourceId);
 
+    List<UtmPlatVO> getMyUtmPlat();
+
     /**
      * @Author walter.limeng
      * @Description  获取Utm对象

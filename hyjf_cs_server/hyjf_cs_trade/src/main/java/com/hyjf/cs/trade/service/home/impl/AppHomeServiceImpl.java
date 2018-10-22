@@ -626,7 +626,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             adsRequest.setPlatformType("1");
         } else if ("3".equals(platform)) {
             code = ios;
-            adsRequest.setPlatformType("1");
+            adsRequest.setPlatformType("2");
         }
         adsRequest.setCode(code);
         List<AppAdsCustomizeVO> picList = amTradeClient.getHomeBannerList(adsRequest);
