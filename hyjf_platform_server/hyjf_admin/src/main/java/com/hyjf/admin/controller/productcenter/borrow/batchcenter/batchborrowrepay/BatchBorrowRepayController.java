@@ -109,7 +109,7 @@ public class BatchBorrowRepayController extends BaseController{
     })
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     @ResponseBody
-    public void exportBatchBorrowRepayList(HttpServletRequest request, @RequestBody BatchBorrowRecoverRequest from,HttpServletResponse response) throws UnsupportedEncodingException {
+    public void exportBatchBorrowRepayList(HttpServletRequest request, @RequestBody BatchBorrowRecoverRequest form,HttpServletResponse response) throws UnsupportedEncodingException {
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -121,10 +121,10 @@ public class BatchBorrowRepayController extends BaseController{
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
         //请求第一页5000条
-        from.setPageSize(defaultRowMaxCount);
-        from.setCurrPage(1);
-        from.setLimitStart(-1);
-        JSONObject jsonObject = this.querybatchBorrowRepayList(from);
+        form.setPageSize(defaultRowMaxCount);
+        form.setCurrPage(1);
+        form.setLimitStart(-1);
+        JSONObject jsonObject = this.querybatchBorrowRepayList(form);
         if(FAIL.equals(jsonObject.get(STATUS))){
             this.fail("暂时没有符合条件的数据！");
         }
@@ -143,14 +143,14 @@ public class BatchBorrowRepayController extends BaseController{
         }
         for (int i = 1; i < sheetCount; i++) {
 
-            from.setCurrPage(i+1);
-            from.setPageSize(defaultRowMaxCount);
-            from.setLimitStart(-1);
-            JSONObject jsonObject2 = this.querybatchBorrowRepayList(from);
+            form.setCurrPage(i+1);
+            form.setPageSize(defaultRowMaxCount);
+            form.setLimitStart(-1);
+            JSONObject jsonObject2 = this.querybatchBorrowRepayList(form);
             if(FAIL.equals(jsonObject.get(STATUS))){
                 this.fail("暂时没有符合条件的数据！");
             }
-            List<BatchBorrowRecoverVo> recordList2 = (List<BatchBorrowRecoverVo>) jsonObject.get(LIST);
+            List<BatchBorrowRecoverVo> recordList2 = (List<BatchBorrowRecoverVo>) jsonObject2.get(LIST);
             if (recordList2 != null && recordList2.size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2);
