@@ -315,7 +315,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             JSONObject userCoupon = appCouponService.getPlanCoupon( tender.getUserId(),planNid, money,
                     platform);
             logger.info("userCoupon： ",JSONObject.toJSONString(userCoupon));
-            if (couponId == null || "".equals(couponId) || couponId.length() == 0) {
+            if (couponId == null || "".equals(couponId) || couponId.length() == 0 || "-1".equals(couponId) ) {
                 // 不用获取最优优惠券了
                 //couponConfig = planService.getUserOptimalCoupon(couponId, borrowNid, userId, money, platform);
             } else {
