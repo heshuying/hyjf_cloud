@@ -3,13 +3,11 @@
  */
 package com.hyjf.admin.controller.finance.pushMoney;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -26,10 +24,6 @@ import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -221,152 +215,11 @@ public class PushMoneyManageController extends BaseController {
      */
     @ApiOperation(value = "直投提成列表导出",notes = "直投提成列表导出")
     @PostMapping(value = "/exportPushMoneyDetailExcelAction")
-    public void exportPushMoneyDetailExcelAction(@RequestBody @Valid PushMoneyRequest pushMoneyRequest,HttpServletResponse response) throws UnsupportedEncodingException {
-        // currPage<0 为全部,currPage>0 为具体某一页
-        pushMoneyRequest.setCurrPage(-1);
-
-        // 设置默认查询时间
-/*        if (StringUtils.isEmpty(pushMoneyRequest.getStartDate())) {
-            pushMoneyRequest.setStartDate(GetDate.getDate("yyyy-MM-dd"));
-        }
-        if (StringUtils.isEmpty(pushMoneyRequest.getEndDate())) {
-            pushMoneyRequest.setEndDate(GetDate.getDate("yyyy-MM-dd"));
-        }*/
-        // 表格sheet名称
-        String sheetName = "推广提成发放列表";
-
-        List<PushMoneyVO> recordList = pushMoneyManageService.searchPushMoneyList(pushMoneyRequest);
-        logger.debug(JSON.toJSONString(recordList));
-/*
-        PushMoneyCustomize pushMoneyCustomize = new PushMoneyCustomize();
-        BeanUtils.copyProperties(form, pushMoneyCustomize);
-        pushMoneyCustomize.setTenderType(1);
-        List<PushMoneyCustomize> recordList = this.pushMoneyService.queryPushMoneyDetail(pushMoneyCustomize);
-*/
-
-        String fileName =
-                URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-
-        String[] titles =
-                new String[] { "序号", "项目编号", "融资期限", "分公司", "分部", "团队", "提成人", "电子账号", "用户属性", "投资人", "投资金额", "提成金额",
-                        "状态", "投资时间", "发放时间" };
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
-        if (recordList != null && recordList.size() > 0) {
-
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < recordList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    PushMoneyVO bean = recordList.get(i);
-
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-
-                    // 序号
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    }
-                    // 项目编号
-                    else if (celLength == 1) {
-                        cell.setCellValue(bean.getBorrowNid());
-                    }
-                    // 融资期限
-                    else if (celLength == 2) {
-                        cell.setCellValue(bean.getRzqx());
-                    }
-                    // 分公司
-                    else if (celLength == 3) {
-                        cell.setCellValue(bean.getRegionName());
-                    }
-                    // 分部
-                    else if (celLength == 4) {
-                        cell.setCellValue(bean.getBranchName());
-                    }
-                    // 团队
-                    else if (celLength == 5) {
-                        cell.setCellValue(HtmlUtil.unescape(bean.getDepartmentName()));
-                    }
-                    // 提成人
-                    else if (celLength == 6) {
-                        cell.setCellValue(bean.getUsername());
-                    }
-                    else if (celLength == 7) {
-                        cell.setCellValue(bean.getAccountId());
-                    }
-                    // 提成人用户属性
-                    else if (celLength == 8) {
-                        // cell.setCellValue(bean.getAttributeName());
-                        String attribute = "";
-                        if ("0".equals(bean.getAttribute())) {
-                            attribute = "无主单";
-                        } else if ("1".equals(bean.getAttribute())) {
-                            attribute = "有主单";
-                        } else if ("2".equals(bean.getAttribute())) {
-                            attribute = "线下员工";
-                        } else if ("3".equals(bean.getAttribute())) {
-                            attribute = "线上员工";
-                        }
-                        cell.setCellValue(attribute);
-                    }
-                    // 51老用户
-/*                    else if (celLength == 9) {
-                        cell.setCellValue(bean.getIs51Name());
-                    }*/
-                    // 投资人
-                    else if (celLength == 9) {
-                        cell.setCellValue(bean.getUsernameTender());
-                    }
-                    // 投资金额
-                    else if (celLength == 10) {
-                        cell.setCellValue(bean.getAccountTender().toString());
-                    }
-                    // 提成金额
-                    else if (celLength == 11) {
-                        cell.setCellValue(bean.getCommission().toString());
-                    }
-                    // 状态
-                    else if (celLength == 12) {
-                        cell.setCellValue(bean.getStatusName());
-                    }
-                    // 投资时间
-                    else if (celLength == 13) {
-                        cell.setCellValue(bean.getTenderTimeView());
-                    }
-                    // 发放时间
-                    else if (celLength == 14) {
-                        cell.setCellValue(bean.getSendTimeView());
-                    }
-                }
-            }
-        }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
-
-
-    @ApiOperation(value = "直投提成管理记录导出", notes = "直投提成管理记录导出")
-    @PostMapping(value = "/exportpushmoney")
-    public void exportPushMoney1(HttpServletRequest request, HttpServletResponse response,@RequestBody PushMoneyRequest requestBean) throws Exception {
+    public void exportPushMoneyDetailExcelAction(HttpServletRequest request, HttpServletResponse response,@RequestBody PushMoneyRequest requestBean) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "直投提成管理";
+        String sheetName = "推广提成发放列表";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
         // 声明一个工作薄
@@ -375,7 +228,7 @@ public class PushMoneyManageController extends BaseController {
 
         requestBean.setCurrPage(1);
         requestBean.setPageSize(defaultRowMaxCount);
-        Integer totalCount = pushMoneyManageService.findPushMoneyList(requestBean).getCount();
+        Integer totalCount = pushMoneyManageService.getPushMoneyListCount(requestBean);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildDetailsMap();
@@ -387,7 +240,7 @@ public class PushMoneyManageController extends BaseController {
         for (int i = 1; i <= sheetCount; i++) {
             requestBean.setPageSize(defaultRowMaxCount);
             requestBean.setCurrPage(i);
-            List<PushMoneyVO> pushMoneyVOList = pushMoneyManageService.findPushMoneyList(requestBean).getResultList();
+            List<PushMoneyVO> pushMoneyVOList = pushMoneyManageService.searchPushMoneyList(requestBean);
             if (pushMoneyVOList != null && pushMoneyVOList.size()> 0) {
                 String sheetNameTmp = sheetName + "_第" + i + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  pushMoneyVOList);
@@ -399,18 +252,59 @@ public class PushMoneyManageController extends BaseController {
     }
 
     private Map<String, String> buildDetailsMap() {
-
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid", "项目编号");
-        map.put("borrowName", "项目标题");
-        map.put("borrowPeriodByStyle", "融资期限");
-        map.put("account", "融资金额");
-        map.put("commission", "提成总额");
-        map.put("recoverLastTime", "放款时间");
+        map.put("rzqx", "融资期限");
+        map.put("regionName", "分公司");
+        map.put("branchName", "分部");
+        map.put("departmentName", "团队");
+        map.put("username", "提成人");
+        map.put("accountId", "电子账号");
+        map.put("attribute", "用户属性");
+        map.put("usernameTender", "投资人");
+        map.put("accountTender", "投资金额");
+        map.put("commission", "提成金额");
+        map.put("statusName", "状态");
+        map.put("tenderTimeView", "投资时间");
+        map.put("sendTimeView", "发放时间");
         return map;
     }
     private Map<String, IValueFormatter> buildDetailsValueAdapter() {
-        return Maps.newHashMap();
+        Map<String, IValueFormatter> map = Maps.newHashMap();
+        IValueFormatter departmentNameAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String departmentName = (String) object;
+                return HtmlUtil.unescape(departmentName);
+            }
+        };
+        IValueFormatter attributeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String attribute = (String) object;
+                if ("0".equals(attribute)) {
+                    attribute = "无主单";
+                } else if ("1".equals(attribute)) {
+                    attribute = "有主单";
+                } else if ("2".equals(attribute)) {
+                    attribute = "线下员工";
+                } else if ("3".equals(attribute)) {
+                    attribute = "线上员工";
+                }
+                return attribute;
+            }
+        };
+        IValueFormatter accountTenderAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal accountTender = (BigDecimal) object;
+                return accountTender.toString();
+            }
+        };
+        map.put("departmentName",departmentNameAdapter);
+        map.put("attribute",attributeAdapter);
+        map.put("accountTender",accountTenderAdapter);
+        return map;
     }
 
 
