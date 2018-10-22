@@ -137,7 +137,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 */
 	public Integer countRecordList(MessagePushHistoryRequest form){
 		Criteria criteria = new Criteria();
-		if (StringUtils.isNotEmpty(form.getHistoryTagIdSrch())) {
+		if (form.getHistoryTagIdSrch()!=null) {
 			criteria.and("tagId").is(form.getHistoryTagIdSrch());
 
 		}
@@ -175,7 +175,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 */
 	public List<MessagePushMsgHistory> getRecordList(MessagePushHistoryRequest form,Integer offset,Integer limit){
 		Criteria criteria = new Criteria();
-		if (StringUtils.isNotEmpty(form.getHistoryTagIdSrch())) {
+		if (form.getHistoryTagIdSrch()!=null) {
 			criteria.and("tagId").is(form.getHistoryTagIdSrch());
 
 		}
