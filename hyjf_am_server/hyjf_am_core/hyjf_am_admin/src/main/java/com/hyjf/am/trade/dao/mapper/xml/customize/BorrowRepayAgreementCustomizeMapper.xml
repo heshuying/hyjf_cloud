@@ -24,7 +24,7 @@
         </where>
     </sql>
 
-    <select id="countBorrowRepayPlan" resultType="java.lang.Long"
+    <select id="countBorrowRepayPlan" resultType="java.lang.Integer"
             parameterType="com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest">
         SELECT
         COUNT(1)
@@ -32,15 +32,13 @@
         ht_borrow_repay_plan AS rp
         INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
         LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
-        LEFT JOIN ht_users u ON b.user_id = u.user_id
-        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
         <include refid="Where_Clause" />
         AND rp.repay_money_source=2
         AND hba.api_type = 1
         AND cast(hba.`status` AS CHAR) = '6'
     </select>
 
-    <select id="countBorrowRepay" resultType="java.lang.Long"
+    <select id="countBorrowRepay" resultType="java.lang.Integer"
             parameterType="com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest">
         SELECT
         COUNT(1)
@@ -48,8 +46,6 @@
         ht_borrow_repay AS rp
         INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
         LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
-        LEFT JOIN ht_users u ON b.user_id = u.user_id
-        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
         <include refid="Where_Clause" />
         AND rp.repay_money_source=2
         AND hba.api_type = 1
@@ -77,21 +73,18 @@
         rp.repay_user_id AS repayUserId,
         rp.repay_username AS repayUsername,
         rp.borrow_nid AS borrowNid,
-        hic.inst_name AS borrowProjectSource,
         b.plan_nid AS nid,
         1 AS isMonth,
         rp.repay_period AS repayPeriod,
         rp.repay_account_all AS repayCapital,
-        u.user_id AS userId,
-        u.username AS userName,
+        b.user_id AS userId,
+        b.borrow_user_name AS userName,
         if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
         '',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayYseTime
         FROM
         ht_borrow_repay_plan AS rp
         INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
         LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
-        LEFT JOIN ht_users u ON b.user_id = u.user_id
-        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
         <include refid="Where_Clause" />
         AND rp.repay_money_source=2
         AND hba.api_type = 1
@@ -107,21 +100,18 @@
         rp.repay_user_id AS repayUserId,
         rp.repay_username AS repayUsername,
         rp.borrow_nid AS borrowNid,
-        hic.inst_name AS borrowProjectSource,
         b.plan_nid AS nid,
         1 AS isMonth,
         rp.repay_period AS repayPeriod,
         rp.repay_account_all AS repayCapital,
-        u.user_id AS userId,
-        u.username AS userName,
+        b.user_id AS userId,
+        b.borrow_user_name AS userName,
         if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
         '',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayYseTime
         FROM
         ht_borrow_repay AS rp
         INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
         LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
-        LEFT JOIN ht_users u ON b.user_id = u.user_id
-        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
         <include refid="Where_Clause" />
         AND rp.repay_money_source=2
         AND hba.api_type = 1

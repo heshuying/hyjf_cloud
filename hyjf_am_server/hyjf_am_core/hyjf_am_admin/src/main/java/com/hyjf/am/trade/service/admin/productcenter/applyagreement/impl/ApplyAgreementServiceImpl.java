@@ -104,7 +104,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
      * @return
      */
     @Override
-    public List<ApplyAgreementVO> selectApplyAgreement(ApplyAgreementRequest request) {
+    public List<ApplyAgreementVO> selectApplyAgreement(ApplyAgreementRequest request, int limitStart, int limitEnd) {
         ApplyAgreementExample applyAgreementExample = new ApplyAgreementExample();
         ApplyAgreementExample.Criteria criteriaA = applyAgreementExample.createCriteria();
         if(StringUtils.isNotEmpty(request.getBorrowNid())){

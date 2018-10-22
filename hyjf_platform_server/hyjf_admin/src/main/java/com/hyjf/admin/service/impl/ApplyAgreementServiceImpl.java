@@ -92,7 +92,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         req.setLimitStart(page.getOffset());
         req.setLimitEnd(page.getLimit());
         ApplyAgreementResponse response = baseClient.postExe(AGREEMENT_COUNT_URL, request, ApplyAgreementResponse.class);
-        Integer count = response.getRecordTotal();
+        Integer count = response.getCount();
         if (count > 0) {
             response = baseClient.postExe(AGREEMENT_LIST_URL, request, ApplyAgreementResponse.class);
             List<ApplyAgreementVO> list = response.getResultList();
@@ -137,7 +137,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 ListUrl =ADD_AGREEMENT_LIST_URL;
             }
             BorrowRepayAgreementResponse response = baseClient.postExe(countUrl, req, BorrowRepayAgreementResponse.class);
-            Integer count = response.getRecordTotal();
+            Integer count = response.getCount();
             if (count > 0) {
                 response = baseClient.postExe(ListUrl, req, BorrowRepayAgreementResponse.class);
                 List<BorrowRepayAgreementCustomizeVO> list = response.getResultList();

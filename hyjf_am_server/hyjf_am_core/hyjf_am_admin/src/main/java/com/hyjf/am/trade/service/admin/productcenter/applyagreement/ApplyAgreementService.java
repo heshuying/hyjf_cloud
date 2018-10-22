@@ -28,7 +28,7 @@ public interface ApplyAgreementService extends BaseService{
      *
      * @return
      */
-    List<ApplyAgreementVO> selectApplyAgreement(ApplyAgreementRequest request);
+    List<ApplyAgreementVO> selectApplyAgreement(ApplyAgreementRequest request, int limitStart, int limitEnd);
     /**
      * 垫付协议申请明细列表页--分期列表总数量
      *
