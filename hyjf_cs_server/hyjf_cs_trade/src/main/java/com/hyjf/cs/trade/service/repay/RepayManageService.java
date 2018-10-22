@@ -100,7 +100,7 @@ public interface RepayManageService extends BaseTradeService {
      * @auther: hesy
      * @date: 2018/7/10
      */
-    Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean);
+    Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay);
     /**
      * 如果有正在出让的债权,先去把出让状态停止
      * @param borrowNid

@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.admin.exception;
 
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
+import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
@@ -71,7 +72,7 @@ public interface BorrowRegistExceptionService {
      * @param type 1更新标的备案 2更新受托支付标的备案
      * @return
      */
-    Boolean updateBorrowRegistByType(BorrowAndInfoVO borrowVO,Integer type);
+    Boolean updateBorrowRegistByType(BorrowRegistUpdateRequest registUpdateRequest);
 
     /**
      * 更新标的资产信息如果关联计划的话
