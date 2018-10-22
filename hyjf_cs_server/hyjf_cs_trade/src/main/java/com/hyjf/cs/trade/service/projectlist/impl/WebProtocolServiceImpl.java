@@ -61,6 +61,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
      */
     @Override
     public File creditPaymentPlan(ProtocolRequest form, Integer userId, HttpServletRequest request, HttpServletResponse response) {
+        logger.info(">>>>>>>>>>>>协议下载开始<<<<<<<<<<<");
         CheckUtil.check(StringUtils.isNotBlank(form.getBorrowNid()),MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         Map<String,Object> param = new HashMap<>();
         String borrowNid = form.getBorrowNid();
