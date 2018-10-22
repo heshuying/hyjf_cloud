@@ -32,49 +32,20 @@
 			</if>
 		</where>
 	</sql>
-	<sql id="Where_Clause_spk">
-		<where>
-			<!-- 备案中,备案失败 -->
-			b.`status` = 0 AND b.`regist_status` IN (1,4)
-			<if test="borrowNidSrch != null and borrowNidSrch != ''">
-				AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
-			</if>
-			<if test="borrowNameSrch != null and borrowNameSrch != ''">
-				AND bi.name LIKE CONCAT( #{borrowNameSrch}, '%')
-			</if>
-			<if test="usernameSrch != null and usernameSrch != ''">
-				AND b.borrow_user_name LIKE CONCAT( #{usernameSrch}, '%')
-			</if>
-			<if test="projectTypeSrch != null and projectTypeSrch != ''">
-				AND b.project_type = #{projectTypeSrch}
-			</if>
-			<if test="borrowStyleSrch != null and borrowStyleSrch != ''">
-				AND b.borrow_style = #{borrowStyleSrch}
-			</if>
-			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND b.create_time <![CDATA[>=]]> STR_TO_DATE(#{timeStartSrch}, '%Y-%m-%d %H:%i:%s')
-			</if>
-			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
-			</if>
-			<if test="registStatusSrch != null and registStatusSrch != ''">
-				AND b.regist_status = #{registStatusSrch}
-			</if>
-		</where>
-	</sql>
+
 	<select id="getRegistCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.BorrowRegistListRequest">
 		SELECT
-			COUNT(1)
+		COUNT(1)
 		FROM
-			ht_borrow b
+		ht_borrow b
 		LEFT JOIN ht_borrow_info bi ON
-			bi.borrow_nid = b.borrow_nid
+		bi.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			b.project_type = habt.borrow_cd
-			AND bi.inst_code = habt.inst_code
-			AND bi.asset_type = habt.asset_type
-			AND habt.is_open = 1
-		<include refid="Where_Clause_spk" />
+		b.project_type = habt.borrow_cd
+		AND bi.inst_code = habt.inst_code
+		AND bi.asset_type = habt.asset_type
+		AND habt.is_open = 1
+		<include refid="Where_Clause" />
 	</select>
 
 	<resultMap id="selectBorrowFirstListMap" type="com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize">
@@ -94,52 +65,52 @@
 	</resultMap>
 	<select id="selectBorrowRegistList" resultMap="selectBorrowFirstListMap" parameterType="com.hyjf.am.resquest.admin.BorrowRegistListRequest">
 		SELECT
-			b.borrow_nid,
-			bi.`name` AS borrow_name,
-			b.borrow_user_name AS username,
-			FORMAT(b.account, 2) AS account,
-			CONCAT(b.borrow_apr, '%') borrow_apr,
-			CASE
-			WHEN borrow_style = 'endday' THEN
-			CONCAT(b.borrow_period, '天')
-			ELSE
-			CONCAT(b.borrow_period, '个月')
-			END borrow_period,
-			b.borrow_style,
-			bs.`name` AS borrow_style_name,
-			bpt.borrow_name AS project_type_name,
-			DATE_FORMAT(b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
-			b.regist_status,
-			b.project_type
+		b.borrow_nid,
+		bi.`name` AS borrow_name,
+		b.borrow_user_name AS username,
+		FORMAT(b.account, 2) AS account,
+		CONCAT(b.borrow_apr, '%') borrow_apr,
+		CASE
+		WHEN borrow_style = 'endday' THEN
+		CONCAT(b.borrow_period, '天')
+		ELSE
+		CONCAT(b.borrow_period, '个月')
+		END borrow_period,
+		b.borrow_style,
+		bs.`name` AS borrow_style_name,
+		bpt.borrow_name AS project_type_name,
+		DATE_FORMAT(b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+		b.regist_status,
+		b.project_type
 		FROM
-			ht_borrow b
-			LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
-			LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
-			LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			b.project_type = habt.borrow_cd
-			AND bi.inst_code = habt.inst_code
-			AND bi.asset_type = habt.asset_type
-			AND habt.is_open = 1
-	   <include refid="Where_Clause_spk" />
+		ht_borrow b
+		LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_hjh_asset_borrowtype habt ON
+		b.project_type = habt.borrow_cd
+		AND bi.inst_code = habt.inst_code
+		AND bi.asset_type = habt.asset_type
+		AND habt.is_open = 1
+		<include refid="Where_Clause" />
 		ORDER BY
-		  b.create_time DESC, b.id DESC
-	    <if test="limitStart >= 0" >
-	      LIMIT #{limitStart} , #{limitEnd}
-	    </if>
+		b.create_time DESC, b.id DESC
+		<if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
 	</select>
 	<select id="sumBorrowRegistAccount" resultType="java.lang.String" parameterType="com.hyjf.am.resquest.admin.BorrowRegistListRequest">
 		SELECT
-			FORMAT(SUM(b.account), 2) AS accountSum
+		FORMAT(SUM(b.account), 2) AS accountSum
 		FROM
-			ht_borrow b
+		ht_borrow b
 		LEFT JOIN ht_borrow_info bi ON
-			bi.borrow_nid = b.borrow_nid
+		bi.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			b.project_type = habt.borrow_cd
-			AND bi.inst_code = habt.inst_code
-			AND bi.asset_type = habt.asset_type
-			AND habt.is_open = 1
+		b.project_type = habt.borrow_cd
+		AND bi.inst_code = habt.inst_code
+		AND bi.asset_type = habt.asset_type
+		AND habt.is_open = 1
 		<include refid="Where_Clause" />
 	</select>
 </mapper>
