@@ -132,11 +132,11 @@ public class UtmController extends BaseController {
         UtmResultResponse ret = new UtmResultResponse();
         int record = utmService.sourceIdIsExists(form.getSourceId());
         if (record == 1) {
-            ret.setStatus(AdminResult.SUCCESS);
-            ret.setStatusDesc(AdminResult.SUCCESS_DESC);
-        }else{
             ret.setStatus(AdminResult.FAIL);
             ret.setStatusDesc(AdminResult.FAIL_DESC);
+        }else{
+            ret.setStatus(AdminResult.SUCCESS);
+            ret.setStatusDesc(AdminResult.SUCCESS_DESC);
         }
         return ret;
     }
