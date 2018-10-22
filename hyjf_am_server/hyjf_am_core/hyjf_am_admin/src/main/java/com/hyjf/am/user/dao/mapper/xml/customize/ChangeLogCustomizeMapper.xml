@@ -54,6 +54,10 @@
 			AND l.update_time &lt;= STR_TO_DATE(CONCAT(#{endTime},'23:59:59'
 			),'%Y-%m-%d %H:%i:%s')
 		</if>
+		<!--合规四期,添加邮箱查询 add by nxl-->
+		<if test="email != null and email != ''">
+			AND l.email =#{email}
+		</if>
 	</sql>
 	<select id="queryChangeLogCount" resultType="java.lang.Integer"
 		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
@@ -66,10 +70,35 @@
 
 	<select id="queryChangeLogList" resultMap="BaseResultMap"
 		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
-		SELECT id, user_id, username, real_name, mobile, idcard, `role`, `attribute`, recommend_user, is51, 
-               `status`, update_user_id as change_userid,update_user as change_user,DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%s') as change_time, remark
-		,borrower_type from ht_user_change_log l
-		
+		SELECT
+		id,
+		user_id,
+		username,
+		real_name,
+		<!--mod by nxl 合规四期修改,手机号加密显示-->
+		REPLACE (
+		mobile,
+		SUBSTR(mobile, 4, 4),
+		'****'
+		) AS mobile,
+		idcard,
+		`role`,
+		`attribute`,
+		recommend_user,
+		is51,
+		`status`,
+		update_user_id AS change_userid,
+		update_user AS change_user,
+		DATE_FORMAT(
+		update_time,
+		'%Y-%m-%d %H:%i:%s'
+		) AS change_time,
+		remark,
+		borrower_type,
+		<!--add by nxl 合规四期修改,邮箱显示-->
+		email
+		FROM
+		ht_user_change_log l
 		WHERE 1=1 
 		<include refid="where-all-page-condition"/>
 		ORDER BY l.update_time DESC
