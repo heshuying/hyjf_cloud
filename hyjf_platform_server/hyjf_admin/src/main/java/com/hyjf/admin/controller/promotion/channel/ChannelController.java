@@ -297,7 +297,9 @@ public class ChannelController extends BaseController {
 
             } catch (Exception e) {
                 logger.error("推广管理导入数据失败！", e);
-                return null;
+                adminResult.setStatus(FAIL);
+                adminResult.setStatusDesc("推广管理导入数据失败！");
+                return adminResult;
             }
         }
 
