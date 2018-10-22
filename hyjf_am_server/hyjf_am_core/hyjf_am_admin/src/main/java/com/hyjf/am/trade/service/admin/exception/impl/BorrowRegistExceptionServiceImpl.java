@@ -45,9 +45,6 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     private BorrowStyleMapper borrowStyleMapper;
 
     @Autowired
-    private AdminBorrowRegistExceptionMapper adminBorrowRegistExceptionMapper;
-
-    @Autowired
     private StzhWhiteListMapper stzhWhiteListMapper;
 
     @Autowired
