@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.finance.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.WithdrawBeanAPIRequest;
 import com.hyjf.admin.beans.vo.AdminWithdrawAPIVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -10,6 +11,8 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.finance.withdraw.WithdrawService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
@@ -26,6 +29,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -367,5 +373,154 @@ public class WithdrawController extends BaseController {
 
 	}
 	// ***********************************************提现画面End****************************************************
+
+	@ApiOperation(value = "导出网站收支列表")
+	@PostMapping(value = "/exportWeblistExcel")
+	public void exportWeblistExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody WithdrawBeanAPIRequest form) throws Exception {
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "提现列表";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+		WithdrawBeanRequest withdrawBeanRequest = new WithdrawBeanRequest();
+		BeanUtils.copyProperties(form, withdrawBeanRequest);
+
+		withdrawBeanRequest.setCurrPage(1);
+		withdrawBeanRequest.setPageSize(defaultRowMaxCount);
+		WithdrawCustomizeResponse recordListResponse = withdrawService.getWithdrawRecordList(withdrawBeanRequest);
+		Integer totalCount = recordListResponse.getCount();
+
+		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		if (totalCount == 0) {
+			String sheetNameTmp = sheetName + "_第1页";
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}
+		for (int i = 1; i <= sheetCount; i++) {
+			withdrawBeanRequest.setPageSize(defaultRowMaxCount);
+			withdrawBeanRequest.setCurrPage(i);
+			WithdrawCustomizeResponse withdrawCustomizeResponse = withdrawService.getWithdrawRecordList(withdrawBeanRequest);
+			List<WithdrawCustomizeVO> record = withdrawCustomizeResponse.getResultList();
+			if (record != null && record.size()> 0) {
+				String sheetNameTmp = sheetName + "_第" + i + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  record);
+			} else {
+				break;
+			}
+		}
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+	}
+
+	private Map<String, String> buildMap() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("username", "用户名");
+		map.put("accountId", "电子帐号");
+		map.put("bankFlag", "资金托管平台");
+		map.put("bankSeqNo", "流水号");
+		map.put("mobile", "手机号");
+		map.put("roleid", "用户角色");
+		map.put("userAttribute", "用户属性（当前）");
+		map.put("userRegionName", "用户所属一级分部（当前）");
+		map.put("userBranchName", "用户所属二级分部（当前）");
+		map.put("userDepartmentName", "用户所属团队（当前）");
+		map.put("referrerName", "推荐人用户名（当前）");
+		map.put("referrerTrueName", "推荐人姓名（当前）");
+		map.put("referrerRegionName", "推荐人所属一级分部（当前）");
+		map.put("referrerBranchName", "推荐人所属二级分部（当前）");
+		map.put("referrerDepartmentName", "推荐人所属团队（当前）");
+		map.put("ordid", "订单号");
+		map.put("total", "提现金额");
+		map.put("fee", "手续费");
+		map.put("credited", "到账金额");
+		map.put("actualTotal", "实际出账金额");
+		map.put("bank", "提现银行");
+		map.put("withdrawType", "提现方式");
+		map.put("account", "提现银行卡号");
+		map.put("addtimeStr", "提交时间");
+		map.put("clientStr", "提现平台");
+		map.put("statusStr", "处理状态");
+		map.put("txDateS", "发送日期");
+		map.put("txTimeS", "发送时间");
+		map.put("seqNo", "系统跟踪号");
+		return map;
+	}
+	private Map<String, IValueFormatter> buildValueAdapter() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		IValueFormatter bankFlagAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Integer bankFlag = (Integer) object;
+				if (bankFlag != null) {
+					if (bankFlag == 1) {
+						return "江西银行";
+					} else {
+						return "汇付天下";
+					}
+				} else {
+					return "汇付天下";
+				}
+			}
+		};
+		IValueFormatter strAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String str = (String) object;
+				return str==null ? "" : String.valueOf(str);
+			}
+		};
+		IValueFormatter userAttributeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String userAttribute = (String) object;
+				if ("0".equals(userAttribute)) {
+					return "无主单";
+				} else if ("1".equals(userAttribute)) {
+					return "有主单";
+				} else if ("2".equals(userAttribute)) {
+					return "线下员工";
+				} else if ("3".equals(userAttribute)) {
+					return "线上员工";
+				}
+				return "";
+			}
+		};
+		IValueFormatter bigDecimalToStrAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				BigDecimal bigDecimal = (BigDecimal) object;
+				return bigDecimal.toString();
+			}
+		};
+
+		IValueFormatter withdrawAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Integer withdrawType = (Integer) object;
+				if ("0".equals(withdrawType+"")) {
+					return "主动提现";
+				} else if ("1".equals(withdrawType+"")) {
+					return "代提现";
+				}
+				return "";
+			}
+		};
+		mapAdapter.put("bankFlag", bankFlagAdapter);
+		mapAdapter.put("bankSeqNo", strAdapter);
+		mapAdapter.put("userAttribute", userAttributeAdapter);
+		mapAdapter.put("total", bigDecimalToStrAdapter);
+		mapAdapter.put("credited", bigDecimalToStrAdapter);
+		mapAdapter.put("actualTotal", bigDecimalToStrAdapter);
+		mapAdapter.put("withdrawType", withdrawAdapter);
+		mapAdapter.put("seqNo", strAdapter);
+		return mapAdapter;
+	}
+
+
 
 }
