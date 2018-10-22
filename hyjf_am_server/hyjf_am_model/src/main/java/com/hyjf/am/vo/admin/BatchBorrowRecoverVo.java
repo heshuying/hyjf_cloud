@@ -282,6 +282,10 @@ public class BatchBorrowRecoverVo extends BaseVO implements Serializable {
         return sucAmount;
     }
 
+    public BigDecimal getRepaid(){
+        return sucAmount;
+    }
+
     public void setSucAmount(BigDecimal sucAmount) {
         this.sucAmount = sucAmount;
     }

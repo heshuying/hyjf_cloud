@@ -80,4 +80,9 @@ public class UtmServiceImpl implements UtmService {
     public boolean deleteUtmPlatAction(UtmPlatVO utmPlatVO) {
         return amUserClient.utmClientdeleteUtmPlatAction(utmPlatVO);
     }
+
+    @Override
+    public int sourceIdIsExists(Integer sourceId) {
+        return amUserClient.sourceIdIsExists(sourceId);
+    }
 }

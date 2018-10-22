@@ -231,6 +231,24 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     }
 
     /**
+     *渠道管理检查编号唯一性
+     * @author cwyang
+     * @param sourceId
+     * @return
+     */
+    @Override
+    public Integer sourceIdIsExists(Integer sourceId) {
+        UtmPlatExample example = new UtmPlatExample();
+        UtmPlatExample.Criteria cra = example.createCriteria();
+        cra.andSourceIdEqualTo(sourceId);
+        List<UtmPlat> utmPlatList = this.utmPlatMapper.selectByExample(example);
+        if (utmPlatList != null && utmPlatList.size() > 0) {
+            return 1;
+        }
+        return 0;
+    }
+
+    /**
      * @Author walter.limeng
      * @Description  转换utmplat对象
      * @Date 11:36 2018/7/16

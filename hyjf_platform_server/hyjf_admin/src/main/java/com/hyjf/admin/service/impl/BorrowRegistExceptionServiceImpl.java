@@ -134,12 +134,16 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                 // 借款人银行账户
                 String accountId = bankOpenAccountVO.getAccount();
                 // 查询相应的标的备案状态
+                logger.info("标的备案异常，borrowNid:[{}],accountId:[{}],loginUserId:[{}]",borrowNid,accountId,loginUserId);
                 BankCallBean searchResult = this.borrowRegistSearch(borrowNid, accountId, loginUserId);
+                logger.info("银行返回报文:【{}】",searchResult);
                 if (Validator.isNotNull(searchResult)) {
                     String searchRetCode = StringUtils.isNotBlank(searchResult.getRetCode()) ? searchResult.getRetCode() : "";
+                    logger.info("银行返回报文searchRetCode:[{}]",searchRetCode);
                     // 如果返回成功
                     if (BankCallConstant.RESPCODE_SUCCESS.equals(searchRetCode)) {
                         String subPacks = searchResult.getSubPacks();
+                        logger.info("subPacks:[{}]",subPacks);
                         if (StringUtils.isNotBlank(subPacks)) {
                             JSONArray debtDetails = JSONObject.parseArray(subPacks);
                             if (debtDetails != null) {
