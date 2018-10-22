@@ -1,22 +1,6 @@
 package com.hyjf.admin.utils.exportutils;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URLEncoder;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import com.google.common.collect.Lists;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
@@ -24,8 +8,17 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
-import com.hyjf.common.util.ExportExcel;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URLEncoder;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 导出到excel工具类
@@ -104,7 +97,83 @@ public class DataSet2ExcelSXSSFHelper<T> {
             index++;
         }
     }
+    /**
+     * 查询结果导出到Excel
+     *
+     * @param workbook
+     * @param sheetName
+     * @param beanPropertyColumnMap：Bean属性和Excel表头对应Map
+     * @param mapValueAdapter:
+     * @param dataset:查询结果
+     */
+    public void export(SXSSFWorkbook workbook, String sheetName, Map<String, String> beanPropertyColumnMap, Map<String, IValueFormatter> mapValueAdapter, Collection<T> dataset,String[] lastRow) {
 
+        //属性
+        List<String> properties = Lists.newArrayList();
+        //表头
+        List<String> columnTitles = Lists.newArrayList();
+
+        properties.addAll(beanPropertyColumnMap.keySet());
+        columnTitles.addAll(beanPropertyColumnMap.values());
+
+        String[] arrayColumn = new String[columnTitles.size()];
+        columnTitles.toArray(arrayColumn);
+
+        SXSSFSheet sheet = createWorkbookTitle(workbook, arrayColumn, sheetName);
+
+        Iterator<T> it = dataset.iterator();
+        int index = 1;
+        while (it.hasNext()) {
+            // 创建一行
+            Row columnValueRow = sheet.createRow(index);
+            T t = (T) it.next();
+            // 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
+            //properties.size() + 1 是因为添加了"序号"一栏
+            for (int i = 0; i < properties.size() + 1; i++) {
+                // 创建相应的单元格
+                Cell cell = columnValueRow.createCell(i);
+                //为"序号"一栏赋值
+                if(i == 0){
+                    cell.setCellValue(index);
+                    continue;
+                }
+                //为"序号"栏空出一栏，导致【i】从1开始才是自定义栏位,而数组下标是从0开始，所以这里 i-1
+                String property = properties.get(i-1);
+                String getMethodName = "get" + property.substring(0, 1).toUpperCase() + property.substring(1);
+                try {
+                    Class tCls = t.getClass();
+                    Method getMethod = tCls.getMethod(getMethodName, new Class[]{});
+                    Object value = getMethod.invoke(t, new Object[]{});
+                    // 判断值的类型后进行强制类型转换
+                    String textValue = "";
+                    if (value != null) {
+                        if (mapValueAdapter.get(property) != null) {
+                            textValue = mapValueAdapter.get(property).format(value);
+                        } else {
+                            textValue = String.valueOf(value);
+                        }
+                    }
+                    cell.setCellValue(textValue);
+                } catch (Exception e) {
+                    if (mapValueAdapter.get(property) != null) {
+                        cell.setCellValue(mapValueAdapter.get(property).format(null));
+                    }
+                    logger.error("导出到Excel失败！" + e.getMessage());
+                    //throw new IllegalArgumentException(e);
+                }
+            }
+            index++;
+        }
+        if(lastRow.length>0){
+            //总条数
+            Row rowTow = sheet.createRow(index);
+            for (int celLength = 0; celLength < lastRow.length; celLength++) {
+                // 创建相应的单元格
+                Cell cell = rowTow.createCell(celLength);
+                cell.setCellValue(lastRow[celLength]);
+            }
+        }
+    }
     private SXSSFSheet createWorkbookTitle(SXSSFWorkbook workbook, String[] titles, String sheetName) {
         // 生成一个表格
         SXSSFSheet sheet = workbook.createSheet(sheetName);
