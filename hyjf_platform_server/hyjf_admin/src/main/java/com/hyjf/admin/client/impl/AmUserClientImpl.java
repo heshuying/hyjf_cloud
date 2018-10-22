@@ -2371,7 +2371,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public void insertUtmList(List<ChannelCustomizeVO> voList) {
 		ChannelRequest request = new ChannelRequest();
 		request.setList(voList);
-		restTemplate.postForObject("http:/AM-USER/am-user/promotion/utm/insert_utm_list", request, UtmResponse.class);
+		restTemplate.postForObject("http:/AM-ADMIN/am-user/promotion/utm/insert_utm_list", request, UtmResponse.class);
 	}
 	/**
 	 * 根据证件号码和姓名查找用户CA认证记录表

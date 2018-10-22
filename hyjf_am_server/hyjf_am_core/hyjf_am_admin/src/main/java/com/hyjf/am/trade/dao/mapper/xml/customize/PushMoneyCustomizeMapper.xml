@@ -26,7 +26,7 @@
         SELECT
         api.id,
         b.borrow_nid,
-        b.`name` AS borrow_name,
+        info.`name` AS borrow_name,
         b.borrow_period,
         b.borrow_style,
         b.account,
@@ -52,6 +52,7 @@
         FROM
         (SELECT * FROM ht_borrow_apicron a WHERE a.api_type = 0 ORDER BY a.id DESC) api
         JOIN ht_borrow b ON api.borrow_nid = b.borrow_nid AND (b.`status` = 4 OR b.`status` = 5) AND b.plan_nid IS NULL
+        JOIN ht_borrow_info info ON b.borrow_nid = info.borrow_nid
         <include refid="Where_Clause" />
         ORDER BY
         api.web_status,b.recover_last_time DESC
@@ -61,7 +62,7 @@
     </select>
     <sql id="Where_Clause">
         <where>
-            hyduab.`status` = 0
+            1=1
             <if test="borrowNid != null and borrowNid !='' ">
                 AND b.borrow_nid = #{borrowNid}
             </if>
