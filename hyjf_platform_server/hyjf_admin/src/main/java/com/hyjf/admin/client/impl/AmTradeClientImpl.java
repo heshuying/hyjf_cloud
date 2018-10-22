@@ -421,15 +421,14 @@ public class AmTradeClientImpl implements AmTradeClient {
     /**
      * 更新标
      *
-     * @param borrowVO 标信息
-     * @param type     1更新标的备案 2更新受托支付标的备案
+     * @param registUpdateRequest 标信息 1更新标的备案 2更新受托支付标的备案
      * @return
      * @auth sunpeikai
      */
     @Override
-    public boolean updateBorrowRegist(BorrowAndInfoVO borrowVO, Integer type) {
-        String url = "http://AM-ADMIN/am-trade/borrow_regist_exception/update_borrowregist_by_type/" + type;
-        Boolean response = restTemplate.postForEntity(url, borrowVO, Boolean.class).getBody();
+    public boolean updateBorrowRegistException(BorrowRegistUpdateRequest registUpdateRequest) {
+        String url = "http://AM-ADMIN/am-trade/borrow_regist_exception/update_borrowregist_by_type";
+        Boolean response = restTemplate.postForEntity(url, registUpdateRequest, Boolean.class).getBody();
         return response;
     }
 

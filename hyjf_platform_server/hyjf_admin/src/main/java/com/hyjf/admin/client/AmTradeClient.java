@@ -223,11 +223,10 @@ public interface AmTradeClient {
     /**
      * 更新标
      * @auth sunpeikai
-     * @param borrowVO 标信息
-     * @param type 1更新标的备案 2更新受托支付标的备案
+     * @param registUpdateRequest 标信息 1更新标的备案 2更新受托支付标的备案
      * @return
      */
-    boolean updateBorrowRegist(BorrowAndInfoVO borrowVO, Integer type);
+    boolean updateBorrowRegistException(BorrowRegistUpdateRequest registUpdateRequest);
 
     /**
      * 备案成功看标的是否关联计划，如果关联则更新对应资产表
