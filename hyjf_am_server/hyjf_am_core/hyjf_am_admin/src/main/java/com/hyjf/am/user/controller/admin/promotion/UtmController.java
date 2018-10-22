@@ -91,6 +91,19 @@ public class UtmController extends BaseController {
     }
 
     /**
+     *  取pc渠道
+     * @param
+     * @return
+     */
+    @RequestMapping("/getmyutmplat")
+    public UtmResponse getMyUtmPlat() {
+        UtmResponse response = new UtmResponse();
+        List<UtmPlatVO> utmPlatList = utmService.getMyUtmPlat();
+        response.setResultList(utmPlatList);
+        return response;
+    }
+
+    /**
      * 获取Utm对象
      * @param utmId
      * @return
