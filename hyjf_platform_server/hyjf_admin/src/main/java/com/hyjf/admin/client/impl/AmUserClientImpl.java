@@ -2390,4 +2390,21 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 渠道管理检查编号唯一性
+	 * @Author cwyang 2018-10-22
+	 * @param sourceId
+	 * @return
+	 */
+	@Override
+	public int sourceIdIsExists(Integer sourceId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/sourceIdIsExists/"+sourceId, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getRecordTotal();
+		}else{
+			return 0;
+		}
+	}
+
 }

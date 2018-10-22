@@ -29,7 +29,7 @@
 			</if>
 		</where>
 	</sql>
-	<select id="countBorrow" resultType="java.lang.Long" parameterType="com.hyjf.am.resquest.admin.BorrowRegistListRequest">
+	<select id="countBorrow" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.BorrowRegistListRequest">
 		SELECT
 		  	COUNT(1)
 		FROM

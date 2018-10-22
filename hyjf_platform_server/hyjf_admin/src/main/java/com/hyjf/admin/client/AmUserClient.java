@@ -1188,4 +1188,12 @@ public interface AmUserClient {
     void insertUtmList(List<ChannelCustomizeVO> voList);
 
 	CertificateAuthorityResponse selectCertificateAuthorityByCAName(String tureName);
+
+    /**
+     * 渠道管理检查编号唯一性
+     * @Author cwyang 2018-10-22
+     * @param sourceId
+     * @return
+     */
+    int sourceIdIsExists(Integer sourceId);
 }

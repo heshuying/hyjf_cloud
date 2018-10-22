@@ -339,4 +339,18 @@ public class UtmController extends BaseController {
         utmService.insertUtmList(request);
         return new UtmResponse();
     }
+
+    /**
+     *渠道管理检查编号唯一性
+     * @author cwyang
+     * @param sourceId
+     * @return
+     */
+    @RequestMapping("/sourceIdIsExists/{sourceId}")
+    public UtmResponse sourceIdIsExists(@PathVariable Integer sourceId) {
+        UtmResponse response = new UtmResponse();
+        Integer total = utmService.sourceIdIsExists(sourceId);
+        response.setRecordTotal(total);
+        return response;
+    }
 }
