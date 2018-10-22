@@ -1,11 +1,12 @@
 package com.hyjf.am.resquest.admin;
 
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
-public class BorrowRepayAgreementAmRequest implements Serializable {
+public class BorrowRepayAgreementAmRequest extends BasePage implements Serializable {
 
     @ApiModelProperty(value = "借款编号")
     private String borrowNidSrch;

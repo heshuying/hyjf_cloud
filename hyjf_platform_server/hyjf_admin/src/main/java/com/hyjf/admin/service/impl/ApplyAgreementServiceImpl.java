@@ -16,6 +16,7 @@ import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.response.trade.ApplyAgreementResponse;
 import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
@@ -54,21 +55,21 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     @Autowired
     private AmUserClient amUserClient;
 
-    public static final String BASE_URL = "http://AM-TRADE/am-trade/applyAgreement";
+    public static final String BASE_URL = "http://AM-ADMIN/am-admin/applyAgreement";
 
     /**垫付协议申请列表*/
     public static final String AGREEMENT_LIST_URL = BASE_URL + "/getApplyAgreementList";
 
-    /**垫付协议申请明细列表页count*/
+    /**垫付协议申请列表页count*/
     public static final String AGREEMENT_COUNT_URL = BASE_URL + "/getApplyAgreementCount";
 
-    /**垫付协议申请列表-分期*/
+    /**垫付协议申请明细列表-分期*/
     public static final String ADD_AGREEMENT_LIST_URL_PLAN = BASE_URL + "/getAddApplyAgreementPlanList";
 
-    /**垫付协议申请明细列表页-不分期count*/
+    /**垫付协议申请明细列表页-分期count*/
     public static final String ADD_AGREEMENT_COUNT_URL_PLAN = BASE_URL + "/getAddApplyAgreementPlanCount";
 
-    /**垫付协议申请列表*/
+    /**垫付协议申请明细列表*/
     public static final String ADD_AGREEMENT_LIST_URL= BASE_URL + "/getAddApplyAgreementList";
 
     /**垫付协议申请明细列表页count*/
@@ -91,7 +92,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         req.setLimitStart(page.getOffset());
         req.setLimitEnd(page.getLimit());
         ApplyAgreementResponse response = baseClient.postExe(AGREEMENT_COUNT_URL, request, ApplyAgreementResponse.class);
-        Integer count = response.getCount();
+        Integer count = response.getRecordTotal();
         if (count > 0) {
             response = baseClient.postExe(AGREEMENT_LIST_URL, request, ApplyAgreementResponse.class);
             List<ApplyAgreementVO> list = response.getResultList();
@@ -136,10 +137,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 ListUrl =ADD_AGREEMENT_LIST_URL;
             }
             BorrowRepayAgreementResponse response = baseClient.postExe(countUrl, req, BorrowRepayAgreementResponse.class);
-            Integer count = response.getCount();
+            Integer count = response.getRecordTotal();
             if (count > 0) {
                 response = baseClient.postExe(ListUrl, req, BorrowRepayAgreementResponse.class);
-                List<BorrowRepayAgreementVO> list = response.getResultList();
+                List<BorrowRepayAgreementCustomizeVO> list = response.getResultList();
                 bean.setRecordList(list);
             }
             bean.setTotal(count);

@@ -25,7 +25,7 @@
     </sql>
 
     <select id="countBorrowRepayPlan" resultType="java.lang.Long"
-            parameterType="java.util.Map">
+            parameterType="com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest">
         SELECT
         COUNT(1)
         FROM
@@ -41,7 +41,7 @@
     </select>
 
     <select id="countBorrowRepay" resultType="java.lang.Long"
-            parameterType="java.util.Map">
+            parameterType="com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest">
         SELECT
         COUNT(1)
         FROM
@@ -72,7 +72,7 @@
                 jdbcType="VARCHAR" />
     </resultMap>
     <select id="selectBorrowRepayPlan" resultMap="searchBorrowRepayAgreementListResultMap"
-            parameterType="java.util.Map">
+            parameterType="com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest">
         SELECT
         rp.repay_user_id AS repayUserId,
         rp.repay_username AS repayUsername,
@@ -102,7 +102,7 @@
     </select>
 
     <select id="selectBorrowRepay" resultMap="searchBorrowRepayAgreementListResultMap"
-            parameterType="java.util.Map">
+            parameterType="com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest">
         SELECT
         rp.repay_user_id AS repayUserId,
         rp.repay_username AS repayUsername,
