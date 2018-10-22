@@ -11,6 +11,7 @@ import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.BorrowRegistExceptionService;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
+import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -31,7 +32,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -204,8 +204,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                         result.put("success", "1");
                                         result.put("msg", "更新相应的标的信息失败,请稍后再试！");
                                     }
-                                }
-                                else if (debtDetails.size() == 1) {
+                                }else if (debtDetails.size() == 1) {
                                     JSONObject debtDetail = debtDetails.getJSONObject(0);
                                     String state = debtDetail.getString(BankCallConstant.PARAM_STATE);
                                     if ("9".equals(state)) {
@@ -441,10 +440,11 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Transactional(rollbackFor = Exception.class)
     public boolean updateBorrowRegist(BorrowAndInfoVO borrow, int status, int registStatus,Integer type){
-        Date nowDate = new Date();
-        borrow.setRegistStatus(registStatus);
-        borrow.setStatus(status);
-        borrow.setRegistTime(nowDate);
-        return amTradeClient.updateBorrowRegist(borrow,type);
+        BorrowRegistUpdateRequest registUpdateRequest = new BorrowRegistUpdateRequest();
+        registUpdateRequest.setBorrowVO(borrow);
+        registUpdateRequest.setStatus(status);
+        registUpdateRequest.setRegistStatus(registStatus);
+        registUpdateRequest.setType(type);
+        return amTradeClient.updateBorrowRegistException(registUpdateRequest);
     }
 }
