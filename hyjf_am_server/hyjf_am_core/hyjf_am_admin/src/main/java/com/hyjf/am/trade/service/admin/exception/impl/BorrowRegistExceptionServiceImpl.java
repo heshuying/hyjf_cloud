@@ -124,8 +124,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     @Override
     public BorrowAndInfoVO searchBorrowByBorrowNid(String borrowNid) {
         // 获取相应的标的详情
-        Borrow borrow = this.getBorrow(borrowNid);
-        return CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
+        return this.getBorrowAndInfoByNid(borrowNid);
     }
 
     /**

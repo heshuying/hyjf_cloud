@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl.exception;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
@@ -163,6 +164,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements com.hyj
             bean.setLogClient(0);
             // 调用放款接口
             BankCallBean result = BankCallUtils.callApiBg(bean);
+            logger.info("调用银行接口返回：" + JSON.toJSONString(result));
             if (Validator.isNotNull(result)) {
                 String retCode = StringUtils.isNotBlank(result.getRetCode()) ? result.getRetCode() : "";
                 if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
@@ -194,7 +196,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements com.hyj
                     JSONObject obj = array.getJSONObject(j);
                     BankCreditEndVO bean = new BankCreditEndVO();
                     bean.setOrderId(obj.getString("orderId"));//订单号
-                    bean.setState(Integer.parseInt(obj.getString("txState")));//交易状态
+                    bean.setState(obj.getString("txState"));//交易状态
                     bean.setFailmsg(obj.getString("failMsg"));//失败描述
                     //更新对应记录
                     result = amTradeClient.updateBankCreditEnd(bean)>0 ? true : false;

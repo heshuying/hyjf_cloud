@@ -334,7 +334,7 @@ public class UtmController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/insert_utm_list")
+    @RequestMapping("/insertutmlist")
     public UtmResponse insertUtmList(@RequestBody ChannelRequest request) {
         utmService.insertUtmList(request);
         return new UtmResponse();
