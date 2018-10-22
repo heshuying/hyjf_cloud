@@ -36,4 +36,10 @@ public interface AccountWithdrawService {
 
     List<WithdrawCustomize> getWithdrawRecordList(WithdrawBeanRequest request);
 
+    /**
+     * 根据用户ID查询用户提现记录
+     * @param userId
+     * @return
+     */
+    List<AccountWithdraw> selectAccountWithdrawByUserId(Integer userId);
 }

@@ -5,10 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.UserDepartmentInfoCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.customize.UserDepartmentInfoCustomize;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
@@ -1627,5 +1630,22 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}else{
 			return null;
 		}
+	}
+
+	/**
+	 * 根据用户ID查询用户部门信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserDepartmentInfoCustomizeVO queryUserDepartmentInfoByUserId(Integer userId) {
+		UserDepartmentInfoCustomizeVO userDepartmentInfoCustomizeVO = new UserDepartmentInfoCustomizeVO();
+		UserDepartmentInfoCustomize userDepartmentInfoCustomize = this.userDepartmentInfoCustomizeMapper.selectUserDepartmentInfo(userId);
+		if (userDepartmentInfoCustomize != null) {
+			BeanUtils.copyProperties(userDepartmentInfoCustomize, userDepartmentInfoCustomizeVO);
+			return userDepartmentInfoCustomizeVO;
+		}
+		return null;
 	}
 }

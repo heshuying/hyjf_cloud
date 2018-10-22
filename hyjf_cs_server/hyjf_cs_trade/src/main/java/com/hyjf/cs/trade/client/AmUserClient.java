@@ -6,6 +6,8 @@ import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -381,4 +383,44 @@ public interface AmUserClient {
 	 * @return
 	 */
 	int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
+
+	/**
+	 * 根据UtmId查询推广渠道
+	 *
+	 * @param utmId
+	 * @return
+	 */
+	UtmVO selectUtmByUtmId(Integer utmId);
+
+	/**
+	 * 根据sourceId查询UtmPlat
+	 *
+	 * @param sourceId
+	 * @return
+	 */
+	UtmPlatVO selectUtmPlatBySourceId(Integer sourceId);
+
+	/**
+	 * 根据用户ID查询是否App渠道过来的用户
+	 *
+	 * @param userId
+	 * @return
+	 */
+	AppChannelStatisticsDetailVO selectAppChannelStatisticsDetailByUserId(Integer userId);
+
+	/**
+	 * 根据用户Id查询用户部门信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserDepartmentInfoCustomizeVO queryUserDepartmentInfoByUserId(Integer userId);
+
+	/**
+	 * 根据用户ID查询用户登录信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserLoginLogVO getUserLoginById(Integer userId);
 }

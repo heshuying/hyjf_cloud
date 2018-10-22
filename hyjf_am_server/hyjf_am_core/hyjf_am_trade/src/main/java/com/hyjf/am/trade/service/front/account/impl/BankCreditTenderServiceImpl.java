@@ -1617,7 +1617,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							// 认购日期
 							creditRepay.setAssignCreateDate(creditTender.getAssignCreateDate());
 							// ip
-							creditRepay.setAddIp(creditTender.getAddip());
+							creditRepay.setAddIp(creditTender.getAddIp());
 							// 客户端
 							creditRepay.setClient(creditTender.getClient());
 							// 管理费

@@ -5373,4 +5373,86 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 根据用户ID查询用户提现记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<AccountWithdrawVO> selectAccountWithdrawByUserId(Integer userId) {
+        String url = tradeService + "/accountWithdraw/selectAccountWithdrawByUserId/" + userId;
+        AccountWithdrawResponse response = restTemplate.getForEntity(url, AccountWithdrawResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID 查询用户充值记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<AccountRechargeVO> selectRechargeListByUserId(Integer userId) {
+        String url = tradeService + "/accountrecharge/selectRechargeListByUserId/" + userId;
+        AccountRechargeResponse response = restTemplate.getForEntity(url, AccountRechargeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID查询用户投资记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<BorrowTenderVO> selectBorrowTenderByUserId(Integer userId) {
+        String url = tradeService + "/borrowTender/selectBorrowTenderByUserId/" + userId;
+        BorrowTenderResponse response = restTemplate.getForEntity(url, BorrowTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID 查询用户承接记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<CreditTenderVO> selectCreditTenderByUserId(Integer userId) {
+        String url = tradeService + "/borrowTender/selectBorrowTenderByUserId/" + userId;
+        CreditTenderResponse response = restTemplate.getForEntity(url, CreditTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID查询用户加入记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<HjhAccedeVO> selectHjhAccedeListByUserId(Integer userId) {
+        String url = tradeService + "/hjhAccede/selectHjhAccedeListByUserId/" + userId;
+        HjhAccedeResponse response =  restTemplate.getForEntity(url, HjhAccedeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
 }

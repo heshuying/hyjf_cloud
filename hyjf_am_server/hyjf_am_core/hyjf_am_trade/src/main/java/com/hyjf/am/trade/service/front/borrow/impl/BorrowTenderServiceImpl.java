@@ -243,4 +243,21 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         return borrowInvestCustomizeMapper.selectTenderCount(userId);
     }
 
+    /**
+     * 根据用户ID查询用户投资记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<BorrowTender> selectBorrowTenderByUserId(Integer userId) {
+        BorrowTenderExample example = new BorrowTenderExample();
+        BorrowTenderExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        cra.andAccedeOrderIdIsNull();
+        example.setOrderByClause("id ASC");
+        List<BorrowTender> list = this.borrowTenderMapper.selectByExample(example);
+        return list;
+    }
+
 }

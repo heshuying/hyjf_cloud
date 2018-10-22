@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.mapper.auto.CreditRepayMapper;
 import com.hyjf.am.trade.dao.mapper.auto.CreditTenderMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowCreditTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.CreditRepayExample;
+import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowCreditTenderCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowCreditTenderService;
@@ -147,5 +148,21 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     public String getCreditTenderServiceFee(String creditNid) {
        String serviceFee = borrowCreditTenderCustomizeMapper.getServiceFee(creditNid);
         return serviceFee;
+    }
+
+    /**
+     * 根据用户ID查询用户承接记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<CreditTender> selectCreditTenderByUserId(Integer userId) {
+        CreditTenderExample example = new CreditTenderExample();
+        CreditTenderExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        example.setOrderByClause("assign_id ASC");
+        List<CreditTender> list = this.creditTenderMapper.selectByExample(example);
+        return list;
     }
 }

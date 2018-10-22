@@ -2231,4 +2231,44 @@ public interface AmTradeClient {
      * @date 2018/10/9 15:52
      */
     List<BorrowProjectTypeVO> getProjectTypeList();
+
+    /**
+     * 根据用户ID查询用户提现记录
+     *
+     * @param userId
+     * @return
+     */
+    List<AccountWithdrawVO> selectAccountWithdrawByUserId(Integer userId);
+
+    /**
+     * 根据用户ID查询用户充值记录
+     *
+     * @param userId
+     * @return
+     */
+    List<AccountRechargeVO> selectRechargeListByUserId(Integer userId);
+
+    /**
+     * 根据用户ID查询用户投资记录
+     *
+     * @param userId
+     * @return
+     */
+    List<BorrowTenderVO> selectBorrowTenderByUserId(Integer userId);
+
+    /**
+     * 根据用户ID查询用户承接记录
+     *
+     * @param userId
+     * @return
+     */
+    List<CreditTenderVO> selectCreditTenderByUserId(Integer userId);
+
+    /**
+     * 根据用户ID查询用户加入记录
+     *
+     * @param userId
+     * @return
+     */
+    List<HjhAccedeVO> selectHjhAccedeListByUserId(Integer userId);
 }

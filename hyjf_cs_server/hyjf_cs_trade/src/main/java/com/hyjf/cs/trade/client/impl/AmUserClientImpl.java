@@ -2,16 +2,18 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.BankCardResponse;
-import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
-import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.user.UtmRequest;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -924,6 +926,98 @@ public class AmUserClientImpl implements AmUserClient {
 		} else {
 			throw new RuntimeException("发送验证码失败...");
 		}
+	}
+
+	/**
+	 * 根据UtmId查询推广渠道
+	 *
+	 * @param utmId
+	 * @return
+	 */
+	@Override
+	public UtmVO selectUtmByUtmId(Integer utmId) {
+		UtmRequest request = new UtmRequest();
+		request.setUtmId(utmId);
+		UtmVOResponse response = restTemplate
+				.postForEntity(userService + "/utm/selectUtmByUtmId", request, UtmVOResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据sourceId查询UtmPlat
+	 *
+	 * @param sourceId
+	 * @return
+	 */
+	@Override
+	public UtmPlatVO selectUtmPlatBySourceId(Integer sourceId) {
+		UtmPlatRequest request = new UtmPlatRequest();
+		request.setSourceId(sourceId);
+		UtmPlatResponse response = restTemplate
+				.postForEntity(userService + "/utm/selectUtmPlatBySourceId", request, UtmPlatResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户ID查询是否App渠道过来的用户
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public AppChannelStatisticsDetailVO selectAppChannelStatisticsDetailByUserId(Integer userId) {
+		AppChannelStatisticsDetailRequest request = new AppChannelStatisticsDetailRequest();
+		request.setUserId(userId);
+		AppChannelStatisticsDetailResponse response = restTemplate
+				.postForEntity(userService + "/utm/selectAppChannelStatisticsDetailByUserId", request, AppChannelStatisticsDetailResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户ID查询用户部门信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserDepartmentInfoCustomizeVO queryUserDepartmentInfoByUserId(Integer userId) {
+		UserDepartmentInfoCustomizeRequest request = new UserDepartmentInfoCustomizeRequest();
+		request.setUserId(userId);
+		UserDepartmentInfoCustomizeResponse response = restTemplate
+				.postForEntity(userService + "/user/selectAppChannelStatisticsDetailByUserId", request, UserDepartmentInfoCustomizeResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户ID查询用户登录信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserLoginLogVO getUserLoginById(Integer userId) {
+		UserLoginLogResponse response = restTemplate
+				.getForEntity(userService + "/user/getUserLoginById/" + userId, UserLoginLogResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 
 }

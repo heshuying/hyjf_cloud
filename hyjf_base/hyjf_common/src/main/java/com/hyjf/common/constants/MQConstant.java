@@ -441,4 +441,19 @@ public interface MQConstant {
 	 */
 	String NIFA_REPAY_INFO_GROUP = "NIFA_REPAY_INFO_GROUP";
 	String NIFA_REPAY_INFO_TOPIC = "NIFA_REPAY_INFO_TOPIC";
+
+	/** ------------------------------ 神策数据统计 start ------------------------------ */
+	/**
+	 * 用户注册事件
+	 */
+	String SENSORSDATA_REGISTER_GROUP = "SENSORSDATA_REGISTER_GROUP";
+	String SENSORSDATA_REGISTER_TOPIC = "SENSORSDATA_REGISTER_TOPIC";
+
+	/**
+	 * 用户登陆事件
+	 */
+	String SENSORSDATA_LOGIN_GROUP = "SENSORSDATA_LOGIN_GROUP";
+	String SENSORSDATA_LOGIN_TOPIC = "SENSORSDATA_LOGIN_TOPIC";
+
+	/** ------------------------------ 神策数据统计 end ------------------------------ */
 }

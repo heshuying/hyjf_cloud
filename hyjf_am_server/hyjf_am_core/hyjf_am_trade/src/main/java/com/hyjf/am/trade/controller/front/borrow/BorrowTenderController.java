@@ -370,4 +370,21 @@ public class BorrowTenderController extends BaseController {
         logger.info("countNewUserTotal...count is :{}", count);
         return count;
     }
+
+
+    /**
+     * 根据用户ID查询用户投资记录
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/selectBorrowTenderByUserId/{userId}")
+    public BorrowTenderResponse selectBorrowTenderByUserId(@PathVariable Integer userId){
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        List<BorrowTender> tenderList = borrowTenderService.selectBorrowTenderByUserId(userId);
+        if (CollectionUtils.isNotEmpty(tenderList)){
+            response.setResultList(CommonUtils.convertBeanList(tenderList,BorrowTenderVO.class));
+        }
+        return response;
+    }
 }

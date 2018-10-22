@@ -179,6 +179,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 银联行号
         String payAllianceCode = bean.getLogAcqResBean() == null ? "" : bean.getLogAcqResBean().getPayAllianceCode();
         int nowTime = GetDate.getNowTime10(); // 当前时间
+        // TODO
+        Date nowDate = new Date();
         List<AccountWithdrawVO> listAccountWithdraw = this.amTradeClient.selectAccountWithdrawByOrdId(ordId);
 
         if (listAccountWithdraw != null && listAccountWithdraw.size() > 0) {
@@ -275,7 +277,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     AccountWithdrawVO accountwithdraw = list.get(0);
                     //mod by nxl 将状态更改为提现中
                     accountwithdraw.setStatus(WITHDRAW_STATUS_WAIT);
-                    accountwithdraw.setUpdateTime(nowTime);
+                    accountwithdraw.setUpdateTime(nowDate);
                     // 失败原因
                     String reason = this.getBankRetMsg(bean.getRetCode());
                     accountwithdraw.setReason(reason);
@@ -602,6 +604,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     private BankWithdrawBeanRequest createBankWithdrawBeanRequest(AccountWithdrawVO accountWithdraw, BigDecimal transAmt, String fee, BigDecimal feeAmt, BigDecimal total, int userId, String ordId, int nowTime, String accountId, String ip) {
         BankWithdrawBeanRequest bankWithdrawBeanRequest = new BankWithdrawBeanRequest();
+        // TODO
+        Date nowDate = new Date();
         bankWithdrawBeanRequest.setUserId(userId);
         bankWithdrawBeanRequest.setTransAmt(transAmt);
         bankWithdrawBeanRequest.setFee(fee);
@@ -617,7 +621,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         accountWithdraw.setCredited(transAmt); // 更新到账金额
         accountWithdraw.setTotal(total); // 更新到总额
         accountWithdraw.setStatus(WITHDRAW_STATUS_SUCCESS);// 4:成功
-        accountWithdraw.setUpdateTime(nowTime);
+        accountWithdraw.setUpdateTime(nowDate);
         accountWithdraw.setAccount(accountId);
         accountWithdraw.setReason("");
         accountWithdraw.setNid(ordId);
@@ -761,15 +765,15 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         if(bankCard.getId() != null){
         	record.setBankId(bankCard.getId());
         }
-        record.setBranch(null);
-        record.setProvince(0);
-        record.setCity(0);
+//        record.setBranch(null);
+//        record.setProvince(0);
+//        record.setCity(0);
         record.setTotal(total);
         record.setCredited(money);
         record.setBankFlag(1);
         record.setFee(CustomUtil.formatAmount(fee.toString()));
-        record.setAddtime(String.valueOf(nowTime));
-        record.setAddip(params.get("ip"));
+        //record.setAddtime(String.valueOf(nowTime));
+        record.setAddIp(params.get("ip"));
         record.setAccountId(bean.getAccountId());
 
         record.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
@@ -938,15 +942,14 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         if(bankCard.getId() != null){
         	record.setBankId(bankCard.getId());
         }
-        record.setBranch(null);
-        record.setProvince(0);
-        record.setCity(0);
+//        record.setBranch(null);
+//        record.setProvince(0);
+//        record.setCity(0);
         record.setTotal(total);
         record.setCredited(money);
         record.setBankFlag(1);
         record.setFee(CustomUtil.formatAmount(fee.toString()));
-        record.setAddtime(String.valueOf(nowTime));
-        record.setAddip(params.get("ip"));
+        record.setAddIp(params.get("ip"));
         record.setAccountId(bean.getAccountId());
         record.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
         record.setTxDate(Integer.parseInt(bean.getTxDate()));
@@ -1859,8 +1862,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.setBank(accountWithdrawVO.getBank());
             result.setStatus(map.get(String.valueOf(accountWithdrawVO.getStatus())));
             //TODO:这里有问题，数据库表的字段已经更换。同时由于nxl代码中有关于老字段的应用，所以这里需要确认
-            result.setWithdrawTime(accountWithdrawVO.getAddtime());
-            //result.setWithdrawTime(GetDate.dateToString(accountWithdrawVO.getCreateTime()));
+            // result.setWithdrawTime(accountWithdrawVO.getAddtime());
+            result.setWithdrawTime(GetDate.dateToString(accountWithdrawVO.getCreateTime()));
             resultList.add(result);
         }
         return resultList;

@@ -255,4 +255,20 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
         return list;
     }
 
+    /**
+     * 根据用户ID查询用户提现记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<AccountWithdraw> selectAccountWithdrawByUserId(Integer userId) {
+        AccountWithdrawExample example = new AccountWithdrawExample();
+        AccountWithdrawExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        // 提现成功
+        cra.andStatusEqualTo(WITHDRAW_STATUS_SUCCESS);
+        return this.accountWithdrawMapper.selectByExample(example);
+    }
+
 }
