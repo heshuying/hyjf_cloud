@@ -50,13 +50,13 @@
 			<if test="attornFlag != null" >
 				and attorn_flag =  #{attornFlag,jdbcType=INTEGER}
 			</if>
-			<if test="timeStartSrch != null and timeStartSrch != ''" >
+			<if test="timeStartSrch != null " >
 				AND create_time <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
 			</if>
-			<if test="timeEndSrch != null and timeEndSrch != ''" >
+			<if test="timeEndSrch != null " >
 				AND create_time <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})
 			</if>
-			<if test="delFlag != null and delFlag != ''" >
+			<if test="delFlag != null " >
 				and del_flag =  #{delFlag}
 			</if>
 		</where>
