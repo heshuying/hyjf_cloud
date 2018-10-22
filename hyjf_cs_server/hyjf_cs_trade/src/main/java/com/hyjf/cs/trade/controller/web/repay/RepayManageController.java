@@ -466,7 +466,7 @@ public class RepayManageController extends BaseTradeController {
                 return webResult;
             }
             //还款后变更数据
-            boolean updateResult = this.repayManageService.updateForRepayRequest(repayBean, callBackBean);
+            boolean updateResult = this.repayManageService.updateForRepayRequest(repayBean, callBackBean, isAllRepay);
             if(updateResult){
                 updateResult = this.repayManageService.updateBorrowCreditStautus(requestBean.getBorrowNid());
                 if(!updateResult){
