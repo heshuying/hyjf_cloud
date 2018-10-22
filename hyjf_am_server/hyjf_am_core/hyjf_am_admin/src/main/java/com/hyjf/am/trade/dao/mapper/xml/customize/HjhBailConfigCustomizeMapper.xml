@@ -209,9 +209,9 @@
         AND hhpa.inst_code = #{instCode}
         WHERE
             hhpa.`status` IN (11, 12, 3, 4, 5, 7, 9)
-        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timestart},'00:00:00'
+        AND hb.create_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timestart},'00:00:00'
         ),'%Y-%m-%d %H:%i:%s')
-        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeend},'23:59:59'
+        AND hb.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeend},'23:59:59'
         ),'%Y-%m-%d %H:%i:%s')
         AND hb.borrow_nid NOT IN (
             SELECT
@@ -241,9 +241,9 @@
         AND hhpa.inst_code = #{instCode}
         WHERE
             hhpa.`status` IN (11, 12, 3, 4, 5, 7, 9)
-        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timeStart},'00:00:00'
+        AND hb.create_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timeStart},'00:00:00'
         ),'%Y-%m-%d %H:%i:%s')
-        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEnd},'23:59:59'
+        AND hb.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEnd},'23:59:59'
         ),'%Y-%m-%d %H:%i:%s')
     </select>
 </mapper>
