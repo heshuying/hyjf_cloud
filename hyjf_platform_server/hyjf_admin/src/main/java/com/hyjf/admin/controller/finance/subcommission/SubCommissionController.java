@@ -5,13 +5,15 @@ package com.hyjf.admin.controller.finance.subcommission;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.SubCommissionService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.SubCommissionRequest;
 import com.hyjf.am.vo.admin.SubCommissionVO;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -21,10 +23,7 @@ import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,10 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -90,85 +91,129 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "平台账户分佣导出",notes = "平台账户分佣导出")
     @PostMapping(value = "/subcommissionlistexport")
-    public void exportSubCommissionList(HttpServletResponse response, @RequestBody SubCommissionRequest request) throws UnsupportedEncodingException {
-        // currPage<0 为全部,currPage>0 为具体某一页
-        request.setCurrPage(-1);
+    public void exportSubCommissionList(HttpServletRequest request, HttpServletResponse response,@RequestBody SubCommissionRequest subCommissionRequest) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "账户分佣明细";
-        List<SubCommissionVO> subCommissionVOList = subCommissionService.searchSubCommissionList(request);
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[] { "序号", "转账订单号", "转出电子账户号", "转账金额", "转入用户名","转入姓名", "转入电子账户号", "转账状态", "转账时间", "操作人", "备注" ,"发送日期" ,"发送时间" ,"系统跟踪号" };
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
         // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-        if (subCommissionVOList != null && subCommissionVOList.size() > 0) {
-            int sheetCount = 1;
-            int rowNum = 0;
-            for (int i = 0; i < subCommissionVOList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    SubCommissionVO record = subCommissionVOList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) {
-                        cell.setCellValue(StringUtils.isEmpty(record.getOrderId()) ? StringUtils.EMPTY : record.getOrderId());
-                    } else if (celLength == 2) {
-                        cell.setCellValue(StringUtils.isEmpty(record.getAccountId()) ? StringUtils.EMPTY : record.getAccountId());
-                    } else if (celLength == 3) {
-                        cell.setCellValue(record.getAccount() == null ? "0" : record.getAccount().toString());
-                    } else if (celLength == 4) {
-                        cell.setCellValue(StringUtils.isEmpty(record.getReceiveUserName()) ? StringUtils.EMPTY : record.getReceiveUserName());
-                    } else if (celLength == 5) {
-                        cell.setCellValue(StringUtils.isEmpty(record.getTruename()) ? StringUtils.EMPTY : record.getTruename());
-                    } else if (celLength == 6) {
-                        cell.setCellValue(StringUtils.isEmpty(record.getReceiveAccountId()) ? StringUtils.EMPTY : record.getReceiveAccountId());
-                    } else if (celLength == 7) {
-                        // 转账状态
-                        List<ParamNameVO> transferStatus = this.subCommissionService.searchParamNameList("FS_TRANSFER_STATUS");
-                        for(ParamNameVO paramNameVO:transferStatus){
-                            logger.info(paramNameVO.getNameCd());
-                        }
-                        for (int j = 0; j < transferStatus.size(); j++) {
-                            if (transferStatus.get(j).getNameCd().equals(String.valueOf(record.getTradeStatus()))) {
-                                cell.setCellValue(transferStatus.get(j).getName());
-                            }
-                        }
-                    } else if (celLength == 8) {
-                        if (record.getCreateTime() == null) {
-                            cell.setCellValue("");
-                        } else {
-                            cell.setCellValue(GetDate.dateToString2(record.getCreateTime()));
-                        }
-                    } else if (celLength == 9) {
-                        cell.setCellValue(StringUtils.isEmpty(record.getCreateUserName()) ? StringUtils.EMPTY : record.getCreateUserName());
-                    } else if (celLength == 10) {
-                        cell.setCellValue(StringUtils.isEmpty(record.getRemark()) ? StringUtils.EMPTY : record.getRemark());
-                    } else if (celLength == 11) {
-                        String tmpTxDate = record.getTxDate().toString();
-                        cell.setCellValue(StringUtils.isEmpty(record.getTxDate().toString()) ? StringUtils.EMPTY : tmpTxDate.substring(0, 4) + "-" + tmpTxDate.substring(4, 6) + "-" + tmpTxDate.substring(6, 8));
-                    } else if (celLength == 12) {
-                        String tmpTxTime = String.format("%06d", record.getTxTime());
-                        cell.setCellValue(StringUtils.isEmpty(record.getTxTime().toString()) ? StringUtils.EMPTY : tmpTxTime.substring(0, 2) + ":" + tmpTxTime.substring(2, 4) + ":" + tmpTxTime.substring(4, 6));
-                    } else if (celLength == 13) {
-                        cell.setCellValue(StringUtils.isEmpty(record.getSeqNo()) ? StringUtils.EMPTY : record.getSeqNo());
-                    }
-                }
+        subCommissionRequest.setCurrPage(-1);
+        Integer totalCount = subCommissionService.getSubCommissionCount(subCommissionRequest);
+        List<ParamNameVO> transferStatus = this.subCommissionService.searchParamNameList("FS_TRANSFER_STATUS");
+
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter(transferStatus);
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i <= sheetCount; i++) {
+            subCommissionRequest.setPageSize(defaultRowMaxCount);
+            subCommissionRequest.setCurrPage(i);
+            List<SubCommissionVO> subCommissionVOList = subCommissionService.searchSubCommissionList(subCommissionRequest);
+            if (subCommissionVOList != null && subCommissionVOList.size()> 0) {
+                String sheetNameTmp = sheetName + "_第" + i + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  subCommissionVOList);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("orderId", "转账订单号");
+        map.put("accountId", "转出电子账户号");
+        map.put("account", "转账金额");
+        map.put("receiveUserName", "转入用户名");
+        map.put("truename", "转入姓名");
+        map.put("receiveAccountId", "转入电子账户号");
+        map.put("tradeStatus", "转账状态");
+        map.put("createTime", "转账时间");
+        map.put("createUserName", "操作人");
+        map.put("remark", "备注");
+        map.put("txDate", "发送日期");
+        map.put("txTime", "发送时间");
+        map.put("seqNo", "系统跟踪号");
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter(List<ParamNameVO> transferStatus) {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+
+        IValueFormatter accountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal accountTmp = (BigDecimal) object;
+                String account = String.valueOf(accountTmp);
+                return StringUtils.isEmpty(account) ? StringUtils.EMPTY : account;
+            }
+        };
+
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer tradeStatus = (Integer) object;
+                // 转账状态
+                for (int j = 0; j < transferStatus.size(); j++) {
+                    if (transferStatus.get(j).getNameCd().equals(String.valueOf(tradeStatus))) {
+                        return transferStatus.get(j).getName();
+                    }
+                }
+                return "";
+            }
+        };
+        IValueFormatter createTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Date createTime = (Date) object;
+                return createTime == null?"":GetDate.dateToString2(createTime);
+            }
+        };
+
+        IValueFormatter txDateAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer txDate = (Integer) object;
+                String tmpTxDate = txDate.toString();
+                return StringUtils.isEmpty(tmpTxDate) ? StringUtils.EMPTY : tmpTxDate.substring(0, 4) + "-" + tmpTxDate.substring(4, 6) + "-" + tmpTxDate.substring(6, 8);
+            }
+        };
+        IValueFormatter txTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer txTime = (Integer) object;
+                String tmpTxTime = String.format("%06d", txTime);
+                return StringUtils.isEmpty(tmpTxTime) ? StringUtils.EMPTY : tmpTxTime.substring(0, 2) + ":" + tmpTxTime.substring(2, 4) + ":" + tmpTxTime.substring(4, 6);
+            }
+        };
+        IValueFormatter strAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String str = (String) object;
+                return StringUtils.isEmpty(str) ? StringUtils.EMPTY : str;
+            }
+        };
+        mapAdapter.put("orderId", strAdapter);
+        mapAdapter.put("accountId", strAdapter);
+        mapAdapter.put("account", accountAdapter);
+        mapAdapter.put("receiveUserName", strAdapter);
+        mapAdapter.put("truename", strAdapter);
+        mapAdapter.put("receiveAccountId", strAdapter);
+        mapAdapter.put("tradeStatus", statusAdapter);
+        mapAdapter.put("createTime", createTimeAdapter);
+        mapAdapter.put("createUserName", strAdapter);
+        mapAdapter.put("remark", strAdapter);
+        mapAdapter.put("txDate", txDateAdapter);
+        mapAdapter.put("txTime", txTimeAdapter);
+        mapAdapter.put("seqNo", strAdapter);
+        return mapAdapter;
     }
 
     /**

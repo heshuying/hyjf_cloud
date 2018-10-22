@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class SystemConfig {
 
+	@Value("${hyjf.bank.api.return.url}")
+	private String apiReturnUrl;
+
     @Value("${hyjf.bank.page.return.url}")
     private String returnUrl;
 
@@ -114,6 +117,13 @@ public class SystemConfig {
 //	@Value("${hyjf.chinapnr.mer.pubkey.path}")
 	public static String chinapnrPubkey;
 
+	public String getApiReturnUrl() {
+		return apiReturnUrl;
+	}
+
+	public void setApiReturnUrl(String apiReturnUrl) {
+		this.apiReturnUrl = apiReturnUrl;
+	}
 
 	public String getChinapnrCallBack() {
 		return chinapnrCallBack;

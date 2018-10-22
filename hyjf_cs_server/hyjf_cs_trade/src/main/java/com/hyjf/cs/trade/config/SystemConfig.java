@@ -140,6 +140,226 @@ public class SystemConfig {
     @Value("${release.coupon.accesskey}")
     private String couponAccesskey;
 
+
+    @Value("${hyjf.contract.ftlpath}")
+    private String contractFtlPath;
+
+    @Value("${tender.contract.ftl.name}")
+    private String tenderContractFtlName;
+
+    @Value("${rtb.contract.ftl.name}")
+    private String rtbContractFtlName;
+
+    @Value("${rtbzsc.contract.ftl.name}")
+    private String rtbzscContractFtlName;
+
+    @Value("${new.hjh.invest.contract.ftl.name}")
+    private String newHjhInvestContractFtlName;
+
+    @Value("${credit.contract.ftl.name}")
+    private String creditContractFtlName;
+
+    @Value("${htj.tender.contract.ftl.name}")
+    private String htjTenderContractFtlName;
+
+    @Value("${tender.newcontract.ftl.name}")
+    private String tenderNewContractFtlName;
+
+    @Value("${borrower.contract.ftl.name}")
+    private String borrowContractFtlName;
+
+    @Value("${borrower.hxf.contract.ftl.name}")
+    private String borrowHXFContractFtlName;
+
+    @Value("${credit.hjh.contract.ftl.name}")
+    private String creditHjhContractFtlName;
+
+    @Value("${hyjf.contract.font}")
+    private String hyjfContractFont;
+
+    @Value("${hyjf.makepdf.temppath}")
+    private String hyjfMakePdfPath;
+
+    @Value("${hyjf.web.pdf.host}")
+    private String hyjfWebPdfHost;
+
+    @Value("${hyjf.temppdf.path}")
+    private String hyjfTemppdfPath;
+
+    @Value("${hyjf.seal.sysId}")
+    private String sealSysId;
+
+    @Value("${hyjf.seal.userid}")
+    private String sealUserId;
+
+    @Value("${hyjf.seal.password}")
+    private String sealPassword;
+
+    @Value("${hyjf.seal.url}")
+    private String sealUrl;
+
+    @Value("${hyjf.seal.address}")
+    private String sealAddress;
+
+    @Value("${hyjf.seal.port}")
+    private String sealPort;
+
+    @Value("${hyjf.seal.operate}")
+    private String sealOperate;
+
+    @Value("${plan.credit.contract.ftl.name}")
+    private String planCreditContractFtlName;
+
+    @Value("${htj.invest.contract.ftl.name}")
+    private String htjInvestContractFtlName;
+
+    @Value("${new.hjh.diary.ftl.name}")
+    private String neweHhjDiaryFtlName;
+
+    public String getNeweHhjDiaryFtlName() {
+        return neweHhjDiaryFtlName;
+    }
+
+    public void setNeweHhjDiaryFtlName(String neweHhjDiaryFtlName) {
+        this.neweHhjDiaryFtlName = neweHhjDiaryFtlName;
+    }
+
+    public String getHtjInvestContractFtlName() {
+        return htjInvestContractFtlName;
+    }
+
+    public void setHtjInvestContractFtlName(String htjInvestContractFtlName) {
+        this.htjInvestContractFtlName = htjInvestContractFtlName;
+    }
+
+    public String getPlanCreditContractFtlName() {
+        return planCreditContractFtlName;
+    }
+
+    public void setPlanCreditContractFtlName(String planCreditContractFtlName) {
+        this.planCreditContractFtlName = planCreditContractFtlName;
+    }
+
+    public String getSealUrl() {
+        return sealUrl;
+    }
+
+    public void setSealUrl(String sealUrl) {
+        this.sealUrl = sealUrl;
+    }
+
+    public String getSealAddress() {
+        return sealAddress;
+    }
+
+    public void setSealAddress(String sealAddress) {
+        this.sealAddress = sealAddress;
+    }
+
+    public String getSealPort() {
+        return sealPort;
+    }
+
+    public void setSealPort(String sealPort) {
+        this.sealPort = sealPort;
+    }
+
+    public String getSealOperate() {
+        return sealOperate;
+    }
+
+    public void setSealOperate(String sealOperate) {
+        this.sealOperate = sealOperate;
+    }
+
+    public String getSealSysId() {
+        return sealSysId;
+    }
+
+    public void setSealSysId(String sealSysId) {
+        this.sealSysId = sealSysId;
+    }
+
+    public String getSealUserId() {
+        return sealUserId;
+    }
+
+    public void setSealUserId(String sealUserId) {
+        this.sealUserId = sealUserId;
+    }
+
+    public String getSealPassword() {
+        return sealPassword;
+    }
+
+    public void setSealPassword(String sealPassword) {
+        this.sealPassword = sealPassword;
+    }
+
+    public String getHyjfTemppdfPath() {
+        return hyjfTemppdfPath;
+    }
+
+    public void setHyjfTemppdfPath(String hyjfTemppdfPath) {
+        this.hyjfTemppdfPath = hyjfTemppdfPath;
+    }
+
+    public String getHyjfWebPdfHost() {
+        return hyjfWebPdfHost;
+    }
+
+    public void setHyjfWebPdfHost(String hyjfWebPdfHost) {
+        this.hyjfWebPdfHost = hyjfWebPdfHost;
+    }
+
+    public String getHyjfMakePdfPath() {
+        return hyjfMakePdfPath;
+    }
+
+    public void setHyjfMakePdfPath(String hyjfMakePdfPath) {
+        this.hyjfMakePdfPath = hyjfMakePdfPath;
+    }
+
+    public String getHyjfContractFont() {
+        return hyjfContractFont;
+    }
+
+    public void setHyjfContractFont(String hyjfContractFont) {
+        this.hyjfContractFont = hyjfContractFont;
+    }
+
+    public String getCreditHjhContractFtlName() {
+        return creditHjhContractFtlName;
+    }
+
+    public void setCreditHjhContractFtlName(String creditHjhContractFtlName) {
+        this.creditHjhContractFtlName = creditHjhContractFtlName;
+    }
+
+    public String getBorrowHXFContractFtlName() {
+        return borrowHXFContractFtlName;
+    }
+
+    public void setBorrowHXFContractFtlName(String borrowHXFContractFtlName) {
+        this.borrowHXFContractFtlName = borrowHXFContractFtlName;
+    }
+
+    public String getBorrowContractFtlName() {
+        return borrowContractFtlName;
+    }
+
+    public void setBorrowContractFtlName(String borrowContractFtlName) {
+        this.borrowContractFtlName = borrowContractFtlName;
+    }
+
+    public String getTenderNewContractFtlName() {
+        return tenderNewContractFtlName;
+    }
+
+    public void setTenderNewContractFtlName(String tenderNewContractFtlName) {
+        this.tenderNewContractFtlName = tenderNewContractFtlName;
+    }
+
     public String getWechatHost() {
         return wechatHost;
     }
@@ -456,5 +676,61 @@ public class SystemConfig {
 
     public void setIosNoticeVersion(String iosNoticeVersion) {
         this.iosNoticeVersion = iosNoticeVersion;
+    }
+
+    public String getContractFtlPath() {
+        return contractFtlPath;
+    }
+
+    public void setContractFtlPath(String contractFtlPath) {
+        this.contractFtlPath = contractFtlPath;
+    }
+
+    public String getTenderContractFtlName() {
+        return tenderContractFtlName;
+    }
+
+    public void setTenderContractFtlName(String tenderContractFtlName) {
+        this.tenderContractFtlName = tenderContractFtlName;
+    }
+
+    public String getRtbContractFtlName() {
+        return rtbContractFtlName;
+    }
+
+    public void setRtbContractFtlName(String rtbContractFtlName) {
+        this.rtbContractFtlName = rtbContractFtlName;
+    }
+
+    public String getRtbzscContractFtlName() {
+        return rtbzscContractFtlName;
+    }
+
+    public void setRtbzscContractFtlName(String rtbzscContractFtlName) {
+        this.rtbzscContractFtlName = rtbzscContractFtlName;
+    }
+
+    public String getNewHjhInvestContractFtlName() {
+        return newHjhInvestContractFtlName;
+    }
+
+    public void setNewHjhInvestContractFtlName(String newHjhInvestContractFtlName) {
+        this.newHjhInvestContractFtlName = newHjhInvestContractFtlName;
+    }
+
+    public String getCreditContractFtlName() {
+        return creditContractFtlName;
+    }
+
+    public void setCreditContractFtlName(String creditContractFtlName) {
+        this.creditContractFtlName = creditContractFtlName;
+    }
+
+    public String getHtjTenderContractFtlName() {
+        return htjTenderContractFtlName;
+    }
+
+    public void setHtjTenderContractFtlName(String htjTenderContractFtlName) {
+        this.htjTenderContractFtlName = htjTenderContractFtlName;
     }
 }

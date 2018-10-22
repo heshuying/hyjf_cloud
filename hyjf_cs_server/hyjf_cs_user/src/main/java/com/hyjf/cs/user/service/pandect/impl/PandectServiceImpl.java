@@ -62,7 +62,7 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         result.put("user", user);
         UserLoginLogVO userLogin = amUserClient.getUserLoginById(user.getUserId());
         //上次登录时间
-        if (userLogin.getLastTime() != null) {
+        if (null!=userLogin&&userLogin.getLastTime() != null) {
             result.put("lastlogintime", GetDate.formatTime(userLogin.getLastTime()));
         }
         result.put("auth", "");
@@ -79,7 +79,7 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         UserInfoVO usersinfo = getUserInfo(userId);
         result.put("usersinfo", usersinfo);
         String userName = "";
-        if(StringUtils.isNotEmpty(usersinfo.getTruename())){
+        if(usersinfo!=null&&StringUtils.isNotEmpty(usersinfo.getTruename())){
             userName = usersinfo.getTruename().substring(0, 1);
             if(usersinfo.getSex() == 2){
                 userName = userName + "女士";
@@ -130,7 +130,12 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         if (chinapnr != null) {
             webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
         }
-        result.put("webViewUser", user);
+        if(user.getBankOpenAccount()==1){
+            webViewUserVO.setBankOpenAccount(true);
+        }else {
+            webViewUserVO.setBankOpenAccount(false);
+        }
+        result.put("webViewUser", webViewUserVO);
         // 获取用户的银行电子账户信息
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
         result.put("bankOpenAccount", bankAccount);
@@ -145,12 +150,11 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         List<RecentPaymentListCustomizeVO> recoverLatestList = amTradeClient.selectRecentPaymentList(userId);
         result.put("recoverLatestList", recoverLatestList);
         // 登录用户
-        UserInfoVO userInfo = this.getUserInfo(userId);
-        result.put("currentUsersInfo", userInfo);
-        boolean isVip = userInfo.getVipId() != null ? true : false;
+        result.put("currentUsersInfo", usersinfo);
+        boolean isVip = usersinfo!=null&&usersinfo.getVipId() != null ? true : false;
         result.put("isVip", isVip);
         if (isVip) {
-            VipInfoVO vipInfo = amUserClient.findVipInfoById(userInfo.getVipId());
+            VipInfoVO vipInfo = amUserClient.findVipInfoById(usersinfo.getVipId());
             result.put("vipName", vipInfo.getVipName());
         }
 

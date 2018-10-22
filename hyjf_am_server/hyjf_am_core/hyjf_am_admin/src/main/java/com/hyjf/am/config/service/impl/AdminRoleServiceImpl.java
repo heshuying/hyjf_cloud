@@ -421,10 +421,10 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
             HashSet<String> firstClass = new HashSet<>();
             String[] permList = userRoleRequest.getPermList();
             for (String perm : permList) {
-                boolean contains = perm.contains("-");
+                boolean contains = perm.contains("_");
                 //参数是三级菜单
                 if (contains) {
-                    String[] split = perm.split("-");
+                    String[] split = perm.split("_");
                     String menuUuid = split[0];
                     String permissionUuid = split[1];
                     String s = adminRoleMenuPermissionsCustomizeMapper.checkLevel(menuUuid);
@@ -477,5 +477,8 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
             adminRoleMenuPermissionsCustomizeMapper.insertMenuPerssion(adminList);
         }
     }
-
+    @Override
+    public List<String > getPermissionId(String menuId) {
+        return adminRoleCustomizeMapper.getPermissionId(menuId);
+    }
 }

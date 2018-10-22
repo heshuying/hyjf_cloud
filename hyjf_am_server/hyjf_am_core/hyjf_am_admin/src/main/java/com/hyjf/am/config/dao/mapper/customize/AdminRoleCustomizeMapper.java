@@ -23,4 +23,6 @@ public interface AdminRoleCustomizeMapper {
      */
     List<AdminRoleCustomize> selectRoleMenuPermissions(AdminRoleCustomize adminSystem);
 
+	List<String> getPermissionId(String menuId);
+
 }

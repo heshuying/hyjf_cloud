@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -128,10 +130,14 @@ public class AdminRoleController extends BaseController  {
 		@ApiOperation(value = "系统中心-菜单管理画面初始化", notes = "用户管理-菜单管理画面初始化")
 		@PostMapping(value = "/getAdminRoleMenu")
 		@ResponseBody
-	    public AdminResult<JSONArray> getAdminRoleMenu(@RequestBody Map<String,String> roleId) {
+	    public AdminResult< Map<String,Object>> getAdminRoleMenu(@RequestBody Map<String,String> roleId) {
 
 	        JSONArray ja = this.adminRoleService.getAdminRoleMenu(roleId.get("roleId"));
-	        return new AdminResult<JSONArray>(ja);
+	        List<String> list = this.adminRoleService.getPermissionId(roleId.get("roleId"));
+	        Map<String,Object> result=new HashMap<>();
+	        result.put("adminRoleMenu", ja);
+	        result.put("permission", list);
+	        return new AdminResult< Map<String,Object>>(result);
 
 	    }
 

@@ -71,7 +71,7 @@ public class PlatformCountController extends BaseController {
 
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-        String[] titles = new String[] { "序号", "平台", "访问数", "注册数", "开户数", "投资人数", "累计充值", "累计投资", "汇直投投资金额", "汇消费投资金额", "汇天利投资金额", "汇添金投资金额", "汇计划投资金额", "汇转让投资金额" };
+        String[] titles = new String[] { "序号", "平台", "注册数", "开户数", "投资人数", "累计充值", "累计投资", "汇直投投资金额", "汇消费投资金额", "汇天利投资金额", "汇添金投资金额", "汇计划投资金额", "汇转让投资金额" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -109,52 +109,52 @@ public class PlatformCountController extends BaseController {
                         cell.setCellValue(record.getSourceName());
                     }
                     // 访问数
-                    else if (celLength == 2) {
+                    /*else if (celLength == 2) {
                         cell.setCellValue(record.getAccessNumber());
-                    }
+                    }*/
                     // 注册数
-                    else if (celLength == 3) {
+                    else if (celLength == 2) {
                         cell.setCellValue(record.getRegistNumber());
                     }
                     // 开户数
-                    else if (celLength == 4) {
+                    else if (celLength == 3) {
                         cell.setCellValue(record.getAccountNumber());
                     }
                     // 投资人数
 
-                    else if (celLength == 5) {
+                    else if (celLength == 4) {
                         cell.setCellValue(record.getTenderNumber());
                     }
                     // 累计充值
-                    else if (celLength == 6) {
+                    else if (celLength == 5) {
                         cell.setCellValue(record.getRechargePrice());
                     }
                     // 累计投资
-                    else if (celLength == 7) {
+                    else if (celLength == 6) {
                         cell.setCellValue(record.getTenderPrice());
                     }
                     // 汇直投投资金额
-                    else if (celLength == 8) {
+                    else if (celLength == 7) {
                         cell.setCellValue(record.getHztTenderPrice());
                     }
                     // 汇消费投资金额
-                    else if (celLength == 9) {
+                    else if (celLength == 8) {
                         cell.setCellValue(record.getHxfTenderPrice());
                     }
                     // 汇天利投资金额
-                    else if (celLength == 10) {
+                    else if (celLength == 9) {
                         cell.setCellValue(record.getHtlTenderPrice());
                     }
                     // 汇添金投资金额
-                    else if (celLength == 11) {
+                    else if (celLength == 10) {
                         cell.setCellValue(record.getHtjTenderPrice());
                     }
                     // 汇计划投资金额
-                    else if (celLength == 12) {
+                    else if (celLength == 11) {
                         cell.setCellValue(record.getHjhTenderPrice());
                     }
                     // 汇转让投资金额
-                    else if (celLength == 13) {
+                    else if (celLength == 12) {
                         cell.setCellValue(record.getHzrTenderPrice());
                     }
                 }

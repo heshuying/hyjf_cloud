@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.UnsupportedEncodingException;
@@ -56,6 +57,10 @@ public class ChinapnrController extends BaseController {
 
     @Autowired
     ChinaPnrApiImpl chinaPnrApi;
+
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * 调用接口(页面)
@@ -89,9 +94,9 @@ public class ChinapnrController extends BaseController {
                 // 设置返回URL
                 if (Validator.isNotNull(bean.getRetUrl())) {
                     if (ChinaPnrConstant.CMDID_DIRECT_TRF_AUTH.equals(bean.get(ChinaPnrConstant.PARAM_CMDID))) {
-                        bean.setRetUrl(systemConfig.getChinapnrBindreturnUrl());
+                        //bean.setRetUrl(systemConfig.getChinapnrBindreturnUrl());
                     } else {
-                        bean.setRetUrl(systemConfig.getChinapnrReturnUrl());
+                       // bean.setRetUrl(systemConfig.getChinapnrReturnUrl());
                     }
                     bean.set(ChinaPnrConstant.PARAM_RETURL, bean.getRetUrl());
                 }
@@ -125,7 +130,7 @@ public class ChinapnrController extends BaseController {
             logger.error(THIS_CLASS, methodName, e);
             throw e;
         } finally {
-            logger.info(THIS_CLASS, methodName, "[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+            logger.info(THIS_CLASS, methodName, "[调用汇付接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         }
         return result;
     }
@@ -140,7 +145,7 @@ public class ChinapnrController extends BaseController {
         // 验签成功时, 跳转到各功能模块的回调URL
         ModelAndView modelAndView = new ModelAndView(CommonConstant.JSP_CHINAPNR_SEND);
         String methodName = "result";
-        logger.info(THIS_CLASS, methodName, "[交易完成后,回调开始]");
+        logger.info("[汇付交易完成后,回调开始]");
         // 参数转换成Map
         if(null==bean){
             logger.info(THIS_CLASS, methodName, "bean不能为空");
@@ -259,9 +264,10 @@ public class ChinapnrController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/callback")
-    public String callBack(@RequestBody ChinapnrBean bean) {
+    public String callBack(ChinapnrBean bean) {
+        logger.info("汇付异步回调开始");
         String methodName = "callBack";
-        logger.info(THIS_CLASS, methodName, "[接收异步返回的消息开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        logger.info(THIS_CLASS, methodName, "[汇付接收异步返回的消息开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         if(null==bean){
             logger.info(THIS_CLASS, methodName, "bean不能为空");
             return null;
@@ -357,6 +363,7 @@ public class ChinapnrController extends BaseController {
                                 HttpDeal.post(callBackUrl, bean.getAllParams());
                             }
                         } else {
+                            logger.info("callBackUrl："+callBackUrl);
                             // 用户绑卡回调
                             if (ChinaPnrConstant.CMDID_USER_BIND_CARD.equals(bean.getCmdId())) {
                                 HttpDeal.post(callBackUrl, bean.getAllParams());
@@ -367,7 +374,7 @@ public class ChinapnrController extends BaseController {
                             }
                             // 提现异步回调
                             else if (ChinaPnrConstant.CMDID_CASH.equals(bean.getCmdId()) || ChinaPnrConstant.CMDID_CASH.equals(bean.getRespType())) {
-                                HttpDeal.post(callBackUrl, bean.getAllParams());
+                                restTemplate.postForEntity(callBackUrl, bean.getAllParams(), String.class).getBody();
                             }
                             // 开户异步回调
                             else if (ChinaPnrConstant.CMDID_USER_REGISTER.equals(bean.getCmdId())) {

@@ -17,14 +17,18 @@ import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
+import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
+import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.DebtBorrowCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -454,7 +458,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 throw new RuntimeException("满标更新borrow表失败");
             }
             // 清除标总额的缓存
-            RedisUtils.del(borrowNid);
+            RedisUtils.del(RedisConstants.BORROW_NID+borrowNid);
             // 纯发短信接口
             Map<String, String> replaceMap = new HashMap<String, String>();
             replaceMap.put("val_title", borrowNid);
@@ -4603,4 +4607,41 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     }
 
+
+    @Override
+    public List<BorrowListVO> getBorrowList(Map<String, Object> param) {
+        Map<String,String> map = new HashMap<>();
+        map.put("borrowNidSrch",String.valueOf(param.get("borrowNidSrch")));
+       return  borrowCustomizeMapper.getBorrowList(param);
+    }
+
+    @Override
+    public List<DebtBorrowCustomizeVO> getDebtBorrowList(Map<String, Object> param) {
+        return borrowCustomizeMapper.getDebtBorrowList(param);
+    }
+
+    @Override
+    public List<WebProjectRepayListCustomizeVO> selectProjectLoanDetailList(Map<String, Object> param) {
+        return borrowCustomizeMapper.selectProjectLoanDetailList(param);
+    }
+
+    @Override
+    public List<WebUserInvestListCustomizeVO> selectUserDebtInvestList(Map<String, Object> param) {
+        return borrowCustomizeMapper.selectUserDebtInvestList(param);
+    }
+
+    @Override
+    public int planInfoCountProjectRepayPlanRecordTotal(Map<String, Object> param) {
+        return borrowCustomizeMapper.planInfoCountProjectRepayPlanRecordTotal(param);
+    }
+
+    @Override
+    public int myTenderCountProjectRepayPlanRecordTotal(Map<String, Object> param) {
+        return borrowCustomizeMapper.myTenderCountProjectRepayPlanRecordTotal(param);
+    }
+
+    @Override
+    public List<WebUserInvestListCustomizeVO> selectUserInvestList(Map<String, Object> param) {
+        return borrowCustomizeMapper.selectUserInvestList(param);
+    }
 }

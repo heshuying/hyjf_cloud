@@ -49,6 +49,7 @@ public class PushMoneyManageController extends BaseController {
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
+        logger.info(request.getLimitStart() + "    " + request.getLimitEnd());
         if (pushMoneyTotal > 0) {
             List<PushMoneyCustomize> pushMoneyCustomizeList = pushMoneyManagerService.selectPushMoneyList(request);
             if (!CollectionUtils.isEmpty(pushMoneyCustomizeList)) {

@@ -2336,9 +2336,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<TenderAgreementVO> selectTenderAgreementByNid(String nid) {
         String url = urlBase +"tenderagreement/selectTenderAgreementByNid/"+nid;
-        TenderAgreementResponse response = restTemplate.getForEntity(url,TenderAgreementResponse.class).getBody();
+        AssetManageResponse response = restTemplate.getForEntity(url,AssetManageResponse.class).getBody();
         if (response != null) {
-            return response.getResultList();
+            return response.getTenderAggementList();
         }
         return null;
     }
@@ -5369,6 +5369,113 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<BorrowProjectTypeVO> getProjectTypeList() {
         String url = "http://AM-TRADE/am-trade/config/projecttype/getProjectType";
         BorrowProjectTypeResponse response = restTemplate.getForEntity(url,BorrowProjectTypeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CouponRepayMonitorVO> selectCouponRepayMonitor(String nowDay) {
+        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/selectCouponRepayMonitor/"+nowDay;
+        CouponRepayMonitorResponse response = restTemplate.getForEntity(url,CouponRepayMonitorResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public int insertCouponRepayMonitor(CouponRepayMonitorVO monitor) {
+        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/insertCouponRepayMonitor";
+        CouponRepayMonitorResponse response = restTemplate.postForEntity(url,monitor, CouponRepayMonitorResponse.class).getBody();
+        if (response != null) {
+            return response.getInsertFlag();
+        }
+        return 0;
+    }
+
+    @Override
+    public int updateCouponRepayMonitor(CouponRepayMonitorVO monitor) {
+        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/updateCouponRepayMonitor";
+        CouponRepayMonitorResponse response = restTemplate.postForEntity(url,monitor,CouponRepayMonitorResponse.class).getBody();
+        if (response != null) {
+            return response.getUpdateFlag();
+        }
+        return 0;
+    }
+
+
+    /**
+     * 查询标的列表(协议)
+     * @author zhangyk
+     * @date 2018/10/18 14:49
+     */
+    @Override
+    public List<BorrowListVO> searchBorrowList4Protocol(Map<String, Object> map) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrowList";
+        BorrowListResponse response = restTemplate.postForEntity(url,map,BorrowListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return  response.getResultList();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<DebtBorrowCustomizeVO> searchDebtBorrowList4Protocol(Map<String, Object> map) {
+        String url = "http://AM-TRADE/am-trade/borrow/getDebtBorrowList";
+        DebtBorrowListResponse response = restTemplate.postForEntity(url,map,DebtBorrowListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<WebProjectRepayListCustomizeVO> selectProjectLoanDetailList(Map<String, Object> map) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectProjectLoanDetailList";
+        WebProjectRepayListCustomizeResponse response = restTemplate.postForEntity(url,map,WebProjectRepayListCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<WebUserInvestListCustomizeVO> selectUserDebtInvestList(Map<String, Object> map) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectUserDebtInvestList";
+        WebUserInvestListCustomizeResponse response = restTemplate.postForEntity(url,map,WebUserInvestListCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public int planInfoCountProjectRepayPlanRecordTotal(Map<String, Object> map) {
+        String url = "http://AM-TRADE/am-trade/borrow/planInfoCountProjectRepayPlanRecordTotal";
+        IntegerResponse response = restTemplate.postForEntity(url,map,IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    @Override
+    public int myTenderCountProjectRepayPlanRecordTotal(Map<String, Object> map) {
+        String url = "http://AM-TRADE/am-trade/borrow/myTenderCountProjectRepayPlanRecordTotal";
+        IntegerResponse response = restTemplate.postForEntity(url,map,IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<WebUserInvestListCustomizeVO> selectUserInvestList(Map<String, Object> map) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectUserInvestLsit";
+        WebUserInvestListCustomizeResponse response = restTemplate.postForEntity(url,map,WebUserInvestListCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
         }

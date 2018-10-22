@@ -140,6 +140,14 @@ public class PushMoneyVO extends BaseVO {
         this.borrowStyle = borrowStyle;
     }
 
+    public String getBorrowPeriodByStyle(){
+        if ("endday".equals(this.borrowStyle)) {
+            return this.borrowPeriod + "天";
+        } else {
+            return this.borrowPeriod + "个月";
+        }
+    }
+
     public String getBorrowPeriod() {
         return borrowPeriod;
     }

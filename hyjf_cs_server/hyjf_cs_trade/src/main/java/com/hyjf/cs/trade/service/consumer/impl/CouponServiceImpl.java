@@ -347,10 +347,10 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
                 return result;
             }
         } else if (configVO.getCouponType() == 3) {
-            if (config.indexOf("3") == -1) {
+            /*if (config.indexOf("3") == -1) {
                 result.put("statusDesc", "您选择的优惠券不满足使用条件，请核对后重新选择！");
                 return result;
-            }
+            }*/
         }
         // 取得优惠券配置
         if (couponUser.getUsedFlag() != 0) {

@@ -1049,8 +1049,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<BankCreditEndVO> getCreditEndList(BankCreditEndListRequest requestBean) {
         String url = "http://AM-ADMIN/am-trade/bankCreditEndController/getlist";
         BankCreditEndResponse response = restTemplate.postForEntity(url, requestBean, BankCreditEndResponse.class).getBody();
-        if (Validator.isNotNull(response)) {
-            response.getResultList();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
         }
         return null;
     }
@@ -1077,8 +1077,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     public BankCreditEndVO getCreditEndByOrderId(String orderId) {
         String url = "http://AM-ADMIN/am-trade/bankCreditEndController/getby_orderid" + orderId;
         BankCreditEndResponse response = restTemplate.getForEntity(url, BankCreditEndResponse.class).getBody();
-        if (Validator.isNotNull(response)) {
-            response.getResult();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
         }
         return null;
     }
@@ -1314,7 +1314,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<ManualReverseCustomizeVO> getManualReverseList(ManualReverseCustomizeRequest requestBean) {
         String url = "http://AM-ADMIN/am-trade/manualreverse/getlist";
         ManualReverseCustomizeResponse response = restTemplate.postForEntity(url, requestBean, ManualReverseCustomizeResponse.class).getBody();
-        if (Validator.isNotNull(response)) {
+        if (Response.isSuccess(response)) {
             response.getResultList();
         }
         return null;
@@ -3416,7 +3416,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         BorrowCommonResponse response = restTemplate
                 .postForEntity("http://AM-ADMIN/am-trade/borrowcommon/insertAction", borrowCommonRequest, BorrowCommonResponse.class)
                 .getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+        if (response != null ) {
             return response;
         }
         return null;
