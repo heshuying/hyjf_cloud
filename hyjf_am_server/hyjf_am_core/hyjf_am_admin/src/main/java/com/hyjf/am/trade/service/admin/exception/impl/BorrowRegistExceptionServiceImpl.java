@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
 import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
+import com.hyjf.am.trade.dao.mapper.customize.AdminBorrowRegistExceptionMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowRegistCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
@@ -44,7 +45,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     private BorrowStyleMapper borrowStyleMapper;
 
     @Autowired
-    private BorrowRegistCustomizeMapper borrowRegistCustomizeMapper;
+    private AdminBorrowRegistExceptionMapper adminBorrowRegistExceptionMapper;
 
     @Autowired
     private StzhWhiteListMapper stzhWhiteListMapper;
@@ -91,7 +92,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Override
     public Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest){
-        return borrowRegistCustomizeMapper.getRegistCount(borrowRegistListRequest);
+        return adminBorrowRegistExceptionMapper.countBorrow(borrowRegistListRequest);
     }
 
     /**
@@ -102,7 +103,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Override
     public List<BorrowRegistCustomize> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest){
-        List<BorrowRegistCustomize> list = borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
+        List<BorrowRegistCustomize> list = adminBorrowRegistExceptionMapper.selectBorrowList(borrowRegistListRequest);
         if(!CollectionUtils.isEmpty(list)){
             //处理标的备案状态
             Map<String, String> map = CacheUtil.getParamNameMap("REGIST_STATUS");
@@ -112,7 +113,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                 }
             }
         }
-        return borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
+        return list;
     }
 
     /**
