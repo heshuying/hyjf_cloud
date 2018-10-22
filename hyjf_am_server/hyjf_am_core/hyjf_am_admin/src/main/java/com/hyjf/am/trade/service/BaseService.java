@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,6 +28,8 @@ public interface BaseService {
      * @return
      */
     BorrowInfo getBorrowInfoByNid(String borrowNid);
+
+    BorrowAndInfoVO getBorrowAndInfoByNid(String borrowNid);
 
     /**
      * 获取用户的账户信息

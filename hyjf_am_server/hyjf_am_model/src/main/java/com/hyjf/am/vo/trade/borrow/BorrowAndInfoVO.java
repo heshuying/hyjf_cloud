@@ -344,7 +344,7 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private String operationLabel;
 
-    private String companyOrPersonal;
+    private Integer companyOrPersonal;
 
     private String borrowManager;
 
@@ -1790,12 +1790,12 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
         this.operationLabel = operationLabel == null ? null : operationLabel.trim();
     }
 
-    public String getCompanyOrPersonal() {
+    public Integer getCompanyOrPersonal() {
         return companyOrPersonal;
     }
 
-    public void setCompanyOrPersonal(String companyOrPersonal) {
-        this.companyOrPersonal = companyOrPersonal == null ? null : companyOrPersonal.trim();
+    public void setCompanyOrPersonal(Integer companyOrPersonal) {
+        this.companyOrPersonal = companyOrPersonal;
     }
 
     public String getBorrowManager() {
