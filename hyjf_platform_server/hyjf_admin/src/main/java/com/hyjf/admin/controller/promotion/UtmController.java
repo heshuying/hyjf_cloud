@@ -127,7 +127,7 @@ public class UtmController extends BaseController {
      * @return
      */
     @ApiOperation(value = "检查编号唯一性", notes = "检查编号唯一性")
-    @PostMapping("/insertorupdateaction")
+    @PostMapping("/checkAction")
     public UtmResultResponse checkAction(HttpServletRequest request, HttpServletResponse response, @RequestBody UtmPlatVO form){
         UtmResultResponse ret = new UtmResultResponse();
         int record = utmService.sourceIdIsExists(form.getSourceId());
