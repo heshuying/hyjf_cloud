@@ -8,7 +8,7 @@ import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.admin.extensioncenter.ChannelStatisticsDetailService;
+import com.hyjf.am.user.service.admin.extensioncenter.ChannelStatisticsDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

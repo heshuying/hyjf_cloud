@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowrepayment;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.BorrowRepaymentBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
 import com.hyjf.admin.beans.RepayInfoBean;
@@ -7,13 +8,14 @@ import com.hyjf.admin.beans.request.BorrowRepaymentPlanRequestBean;
 import com.hyjf.admin.beans.request.BorrowRepaymentRequestBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowRepaymentService;
 import com.hyjf.admin.utils.ConvertUtils;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
@@ -26,11 +28,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -152,8 +151,6 @@ public class BorrowRepaymentController extends BaseController {
         return result;
     }
 
-
-
     /**
      * @Description 数据导出--还款计划
      * @Author pangchengchao
@@ -164,9 +161,6 @@ public class BorrowRepaymentController extends BaseController {
     @PostMapping(value = "/exportRepayClkAct")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportRepayClkAct(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowRepaymentPlanRequestBean form) throws Exception {
-
-
-
         BorrowRepaymentPlanRequest copyForm=new BorrowRepaymentPlanRequest();
 
         BeanUtils.copyProperties(form, copyForm);
@@ -174,180 +168,137 @@ public class BorrowRepaymentController extends BaseController {
             String date;
             date = form.getVerifyTimeStartSrch();
             copyForm.setVerifyTimeStartSrch(date);
-
         }
         if(form.getVerifyTimeEndSrch() != null&&!"".equals(form.getVerifyTimeEndSrch())) {
             String date;
             date = form.getVerifyTimeEndSrch();
             copyForm.setVerifyTimeEndSrch(date);
         }
+
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "还款计划导出数据";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        //请求第一页5000条
+        copyForm.setPageSize(defaultRowMaxCount);
+        copyForm.setCurrPage(1);
         // 查询
         List<BorrowRepaymentPlanCustomizeVO> resultList = this.borrowRepaymentService.exportRepayClkActBorrowRepaymentInfoList(copyForm);
-        // 列头
-        String[] titles = new String[] { "借款编号","资产来源" , "借款人ID", "借款人用户名", "借款标题",
-                "项目类型", "借款期限", "年化收益", "借款金额", "借到金额",
-                "还款方式", "还款期次", "应还本金", "应还利息", "应还本息",
-                "还款服务费", "提前天数", "少还利息", "延期天数", "延期利息",
-                "逾期天数", "逾期利息", "应还总额", "实还总额", "还款状态",
-                "实际还款日期", "应还日期","还款来源","发布时间"};
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
 
-        if (resultList != null && resultList.size() > 0) {
+        Integer totalCount = resultList.size();
 
-            int sheetCount = 1;
-            int rowNum = 0;
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
 
-            for (int i = 0; i < resultList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BorrowRepaymentPlanCustomizeVO record = resultList.get(i);
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+        }
+        for (int i = 1; i < sheetCount; i++) {
 
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-
-                    // 借款编号
-                    if (celLength == 0) {
-                        cell.setCellValue(record.getBorrowNid());
-                    }
-                    // 资产来源
-                    else if(celLength == 1) {
-                        cell.setCellValue(record.getInstName());
-                    }
-                    // 借款人ID
-                    else if (celLength == 2) {
-                        cell.setCellValue(record.getUserId());
-                    }
-                    // 借款人用户名
-                    else if (celLength == 3) {
-                        cell.setCellValue(record.getBorrowUserName());
-                    }
-                    // 借款标题
-                    else if (celLength == 4) {
-                        cell.setCellValue(record.getBorrowName());
-                    }
-                    // 项目类型
-                    else if (celLength == 5) {
-                        cell.setCellValue(record.getProjectTypeName());
-                    }
-                    // 借款期限
-                    else if (celLength == 6) {
-                        cell.setCellValue(record.getBorrowPeriod());
-                    }
-                    // 年化收益
-                    else if (celLength == 7) {
-                        cell.setCellValue(record.getBorrowApr() + "%");
-                    }
-                    // 借款金额
-                    else if (celLength == 8) {
-                        cell.setCellValue("".equals(record.getBorrowAccount()) ? 0 : Double.valueOf(record.getBorrowAccount()));
-                    }
-                    // 借到金额
-                    else if (celLength == 9) {
-                        cell.setCellValue("".equals(record.getBorrowAccountYes()) ? 0 : Double.valueOf(record.getBorrowAccountYes()));
-                    }
-                    // 还款方式
-                    else if (celLength == 10) {
-                        cell.setCellValue(record.getRepayType());
-                    }
-                    // 还款期次
-                    else if (celLength == 11) {
-                        cell.setCellValue("第" + record.getRepayPeriod() + "期");
-                    }
-                    // 应还本金
-                    else if (celLength == 12) {
-                        cell.setCellValue("".equals(record.getRepayCapital()) ? 0 : Double.valueOf(record.getRepayCapital()));
-                    }
-                    // 应还利息
-                    else if (celLength == 13) {
-                        cell.setCellValue("".equals(record.getRepayInterest()) ? 0 : Double.valueOf(record.getRepayInterest()));
-                    }
-                    // 应还本息
-                    else if (celLength == 14) {
-                        cell.setCellValue("".equals(record.getRepayAccount()) ? 0 : Double.valueOf(record.getRepayAccount()));
-                    }
-                    // 应收管理费
-                    else if (celLength == 15) {
-                        cell.setCellValue("".equals(record.getRepayFee()) ? 0 : Double.valueOf(record.getRepayFee()));
-                    }
-                    // 提前天数
-                    else if (celLength == 16) {
-                        cell.setCellValue(record.getTiqiantianshu());
-                    }
-                    // 少还利息
-                    else if (celLength == 17) {
-                        cell.setCellValue("".equals(record.getShaohuanlixi()) ? 0 : Double.valueOf(record.getShaohuanlixi()));
-                    }
-                    // 延期天数
-                    else if (celLength == 18) {
-                        cell.setCellValue(record.getYanqitianshu());
-                    }
-                    // 延期利息
-                    else if (celLength == 19) {
-                        cell.setCellValue("".equals(record.getYanqilixi()) ? 0 : Double.valueOf(record.getYanqilixi()));
-                    }
-                    // 逾期天数
-                    else if (celLength == 20) {
-                        cell.setCellValue(record.getYuqitianshu());
-                    }
-                    // 逾期利息
-                    else if (celLength == 21) {
-                        cell.setCellValue("".equals(record.getYuqilixi()) ? 0 : Double.valueOf(record.getYuqilixi()));
-                    }
-                    // 应还总额
-                    else if (celLength == 22) {
-                        cell.setCellValue("".equals(record.getYinghuanzonge()) ? 0 : Double.valueOf(record.getYinghuanzonge()));
-                    }
-                    // 实还总额
-                    else if (celLength == 23) {
-                        cell.setCellValue("".equals(record.getShihuanzonge()) ? 0 : Double.valueOf(record.getShihuanzonge()));
-                    }
-                    // 还款状态
-                    else if (celLength == 24) {
-                        if (StringUtils.isNotEmpty(record.getStatus())) {
-                            cell.setCellValue("0".equals(record.getStatus()) ? "还款中" : "已还款");
-                        }
-                    }
-                    // 实际还款日
-                    else if (celLength == 25) {
-                        cell.setCellValue(record.getRepayActionTime());
-                    }
-                    // 应还日期
-                    else if (celLength == 26) {
-                        cell.setCellValue(record.getRepayLastTime());
-                    }
-                    // 还款来源
-                    else if(celLength == 27) {
-                        cell.setCellValue(record.getRepayMoneySource());
-                    }
-                    // 应还日期
-                    else if (celLength == 28) {
-                        cell.setCellValue(record.getVerifyTime());
-                    }
-                }
+            copyForm.setPageSize(defaultRowMaxCount);
+            copyForm.setCurrPage(i+1);
+            // 查询
+            List<BorrowRepaymentPlanCustomizeVO> resultList2 = this.borrowRepaymentService.exportRepayClkActBorrowRepaymentInfoList(copyForm);
+            if (resultList2 != null && resultList2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList2);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("borrowNid","借款编号");
+        map.put("instName","资产来源");
+        map.put("userId","借款人ID");
+        map.put("borrowUserName","借款人用户名");
+        map.put("borrowName","借款标题");
+        map.put("projectTypeName","项目类型");
+        map.put("borrowPeriod","借款期限");
+        map.put("borrowApr","年化收益");
+        map.put("borrowAccount","借款金额");
+        map.put("borrowAccountYes","借到金额");
+        map.put("repayType","还款方式");
+        map.put("repayPeriod","还款期次");
+        map.put("repayCapital","应还本金");
+        map.put("repayInterest","应还利息");
+        map.put("repayAccount","应还本息");
+        map.put("repayFee","还款服务费");
+        map.put("tiqiantianshu","提前天数");
+        map.put("shaohuanlixi","少还利息");
+        map.put("yanqitianshu","延期天数");
+        map.put("yanqilixi","延期利息");
+        map.put("yuqitianshu","逾期天数");
+        map.put("yuqilixi","逾期利息");
+        map.put("yinghuanzonge","应还总额");
+        map.put("shihuanzonge","实还总额");
+        map.put("status","还款状态");
+        map.put("repayActionTime","实际还款日期");
+        map.put("repayLastTime","应还日期");
+        map.put("repayMoneySource","还款来源");
+        map.put("verifyTime","发布时间");
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter borrowAprAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return object + "%";
+            }
+        };
+        IValueFormatter valueFormatAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return object==null||"".equals(object) ? "0" : object.toString();
+            }
+        };
+        IValueFormatter repayPeriodAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return "第" + object + "期";
+            }
+        };
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (null!=object) {
+                    return"0".equals(object) ? "还款中" : "已还款";
+                }
+                return null;
+            }
+        };
+        mapAdapter.put("borrowApr", borrowAprAdapter);
+        mapAdapter.put("borrowAccount", valueFormatAdapter);
+        mapAdapter.put("borrowAccountYes", valueFormatAdapter);
+        mapAdapter.put("repayPeriod", repayPeriodAdapter);
+        mapAdapter.put("repayCapital", valueFormatAdapter);
+        mapAdapter.put("repayInterest", valueFormatAdapter);
+        mapAdapter.put("repayAccount", valueFormatAdapter);
+        mapAdapter.put("repayFee", valueFormatAdapter);
+        mapAdapter.put("shaohuanlixi", valueFormatAdapter);
+        mapAdapter.put("yanqilixi", valueFormatAdapter);
+        mapAdapter.put("yuqilixi", valueFormatAdapter);
+        mapAdapter.put("yinghuanzonge", valueFormatAdapter);
+        mapAdapter.put("shihuanzonge", valueFormatAdapter);
+        mapAdapter.put("status", statusAdapter);
+        return mapAdapter;
+    }
 
     /**
-     * @Description 数据导出--还款计划
+     * @Description 数据导出--还款信息
      * @Author pangchengchao
      * @Version v0.1
      * @Date
@@ -358,185 +309,122 @@ public class BorrowRepaymentController extends BaseController {
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowRepaymentRequestBean form) throws Exception {
         BorrowRepaymentRequest copyForm=new BorrowRepaymentRequest();
         BeanUtils.copyProperties(form, copyForm);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "还款信息导出数据";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        //请求第一页5000条
+        copyForm.setPageSize(defaultRowMaxCount);
+        copyForm.setCurrPage(1);
         // 查询
         List<BorrowRepaymentCustomizeVO> resultList = this.borrowRepaymentService.selectBorrowRepaymentList(copyForm);
-        // 列头
-        String[] titles = new String[] { "借款编号", "资产来源", "计划编号", "借款人ID", "借款人用户名", "借款标题", "项目类型",
-                "合作机构", "借款期限", "年化收益", "借款金额", "借到金额", "还款方式", "应还本金", "应还利息", "应还本息",
-                "还款服务费", "已还本金", "已还利息", "已还本息", "未还本金", "未还利息","未还本息", "还款状态", "最后还款日",
-                "下期还款日", "还款来源", "实际还款时间" ,"垫付机构用户名","添加标的人员","备案人员"};
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
 
-        if (resultList != null && resultList.size() > 0) {
+        Integer totalCount = resultList.size();
 
-            int sheetCount = 1;
-            int rowNum = 0;
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = exportBuildMap();
+        Map<String, IValueFormatter> mapValueAdapter = exportBuildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
 
-            for (int i = 0; i < resultList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BorrowRepaymentCustomizeVO record = resultList.get(i);
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+        }
+        for (int i = 1; i < sheetCount; i++) {
 
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    // 借款编号
-                    if (celLength == 0) {
-                        cell.setCellValue(record.getBorrowNid());
-                    }
-                    /*-----add by LSY START-------------------------*/
-                    // 资产来源
-                    else if (celLength == 1) {
-                        cell.setCellValue(record.getInstName());
-                    }
-                    /*-----add by LSY END-------------------------*/
-                    // 计划编号
-                    else if (celLength == 2) {
-                        cell.setCellValue(record.getPlanNid());
-                    }
-                    // 借款人ID
-                    else if (celLength == 3) {
-                        cell.setCellValue(record.getUserId());
-                    }
-                    // 借款人用户名
-                    else if (celLength == 4) {
-                        cell.setCellValue(record.getBorrowUserName());
-                    }
-                    // 借款标题
-                    else if (celLength == 5) {
-                        cell.setCellValue(record.getBorrowName());
-                    }
-                    // 项目类型
-                    else if (celLength == 6) {
-                        cell.setCellValue(record.getProjectTypeName());
-                    }
-                    // 合作机构
-                    else if(celLength == 7){
-                        cell.setCellValue(record.getPartner());
-                    }
-                    // 借款期限
-                    else if (celLength == 8) {
-                        cell.setCellValue(record.getBorrowPeriod());
-                    }
-                    // 年化收益
-                    else if (celLength == 9) {
-                        cell.setCellValue(record.getBorrowApr() + "%");
-                    }
-                    // 借款金额
-                    else if (celLength == 10) {
-                        cell.setCellValue(
-                                "".equals(record.getBorrowAccount()) ? 0 : Double.valueOf(record.getBorrowAccount()));
-                    }
-                    // 借到金额
-                    else if (celLength == 11) {
-                        cell.setCellValue("".equals(record.getBorrowAccountYes()) ? 0
-                                : Double.valueOf(record.getBorrowAccountYes()));
-                    }
-                    // 还款方式
-                    else if (celLength == 12) {
-                        cell.setCellValue(record.getRepayType());
-                    }
-                    // 应还本金
-                    else if (celLength == 13) {
-                        cell.setCellValue("".equals(record.getRepayAccountCapital()) ? 0
-                                : Double.valueOf(record.getRepayAccountCapital()));
-                    }
-                    // 应还利息
-                    else if (celLength == 14) {
-                        cell.setCellValue("".equals(record.getRepayAccountInterest()) ? 0
-                                : Double.valueOf(record.getRepayAccountInterest()));
-                    }
-                    // 应还本息
-                    else if (celLength == 15) {
-                        cell.setCellValue("".equals(record.getRepayAccountAll()) ? 0
-                                : Double.valueOf(record.getRepayAccountAll()));
-                    }
-                    // 管理费
-                    else if (celLength == 16) {
-                        cell.setCellValue("".equals(record.getRepayFee()) ? 0 : Double.valueOf(record.getRepayFee()));
-                    }
-                    // 已还本金
-                    else if (celLength == 17) {
-                        cell.setCellValue("".equals(record.getRepayAccountCapitalYes()) ? 0
-                                : Double.valueOf(record.getRepayAccountCapitalYes()));
-                    }
-                    // 已还利息
-                    else if (celLength == 18) {
-                        cell.setCellValue("".equals(record.getRepayAccountInterestYes()) ? 0
-                                : Double.valueOf(record.getRepayAccountInterestYes()));
-                    }
-                    // 已还本息
-                    else if (celLength == 19) {
-                        cell.setCellValue("".equals(record.getRepayAccountYes()) ? 0
-                                : Double.valueOf(record.getRepayAccountYes()));
-                    }
-                    // 未还本金
-                    else if (celLength == 20) {
-                        cell.setCellValue("".equals(record.getRepayAccountCapitalWait()) ? 0
-                                : Double.valueOf(record.getRepayAccountCapitalWait()));
-                    }
-                    // 未还利息
-                    else if (celLength == 21) {
-                        cell.setCellValue("".equals(record.getRepayAccountInterestWait()) ? 0
-                                : Double.valueOf(record.getRepayAccountInterestWait()));
-                    }
-                    // 未还本息
-                    else if (celLength == 22) {
-                        cell.setCellValue("".equals(record.getRepayAccountWait()) ? 0
-                                : Double.valueOf(record.getRepayAccountWait()));
-                    }
-                    // 还款状态
-                    else if (celLength == 23) {
-                        if (StringUtils.isNotEmpty(record.getStatus())) {
-                            cell.setCellValue("0".equals(record.getStatus()) ? "还款中" : "已还款");
-                        }
-                    }
-                    // 最后还款日
-                    else if (celLength == 24) {
-                        cell.setCellValue(record.getRepayLastTime());
-                    }
-                    // 下期还款日
-                    else if (celLength == 25) {
-                        cell.setCellValue(record.getRepayNextTime());
-                    }
-                    // 还款来源
-                    else if (celLength == 26) {
-                        cell.setCellValue(record.getRepayMoneySource());
-                    }
-                    // 实际还款时间
-                    else if (celLength == 27) {
-                        cell.setCellValue(record.getRepayActionTime());
-                    }
-                    // 垫付机构用户名
-                    else if (celLength == 28) {
-                        cell.setCellValue(record.getRepayOrgUserName());
-                    }
-                    // 账户操作人
-                    else if (celLength == 29) {
-                        cell.setCellValue(record.getCreateUserName());
-                    }
-                    // 备案人员 
-                    else if (celLength == 30) {
-                        cell.setCellValue(record.getRegistUserName());
-                    }
-                }
+            copyForm.setPageSize(defaultRowMaxCount);
+            copyForm.setCurrPage(i+1);
+            // 查询
+            List<BorrowRepaymentCustomizeVO> resultList2 = this.borrowRepaymentService.selectBorrowRepaymentList(copyForm);
+            if (resultList2 != null && resultList2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList2);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+
+    private Map<String, String> exportBuildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("borrowNid","借款编号");
+        map.put("instName","资产来源");
+        map.put("planNid","计划编号");
+        map.put("userId","借款人ID");
+        map.put("borrowUserName","借款人用户名");
+        map.put("borrowName","借款标题");
+        map.put("projectTypeName","项目类型");
+        map.put("partner","合作机构");
+        map.put("borrowPeriod","借款期限");
+        map.put("borrowApr","年化收益");
+        map.put("borrowAccount","借款金额");
+        map.put("borrowAccountYes","借到金额");
+        map.put("repayType","还款方式");
+        map.put("repayAccountCapital","应还本金");
+        map.put("repayAccountInterest","应还利息");
+        map.put("repayAccountAll","应还本息");
+        map.put("repayFee","还款服务费");
+        map.put("repayAccountCapitalYes","已还本金");
+        map.put("repayAccountInterestYes","已还利息");
+        map.put("repayAccountYes","已还本息");
+        map.put("repayAccountCapitalWait","未还本金");
+        map.put("repayAccountInterestWait","未还利息");
+        map.put("repayAccountWait","未还本息");
+        map.put("status","还款状态");
+        map.put("repayLastTime","最后还款日");
+        map.put("repayNextTime","下期还款日");
+        map.put("repayMoneySource","还款来源");
+        map.put("repayActionTime","实际还款时间");
+        map.put("repayOrgUserName" ,"垫付机构用户名");
+        map.put("createUserName","添加标的人员");
+        map.put("registUserName","备案人员");
+        return map;
+    }
+    private Map<String, IValueFormatter> exportBuildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter borrowAprAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return object + "%";
+            }
+        };
+        IValueFormatter valueFormatAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return object == null || "".equals(object) ? "0" : object.toString();
+            }
+        };
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (null != object) {
+                    return "0".equals(object) ? "还款中" : "已还款";
+                }
+                return null;
+            }
+        };
+        mapAdapter.put("borrowApr", borrowAprAdapter);
+        mapAdapter.put("borrowAccount", valueFormatAdapter);
+        mapAdapter.put("borrowAccountYes", valueFormatAdapter);
+        mapAdapter.put("repayAccountCapital", valueFormatAdapter);
+        mapAdapter.put("repayAccountInterest", valueFormatAdapter);
+        mapAdapter.put("repayAccountAll", valueFormatAdapter);
+        mapAdapter.put("repayFee", valueFormatAdapter);
+        mapAdapter.put("repayAccountCapitalYes", valueFormatAdapter);
+        mapAdapter.put("repayAccountInterestYes", valueFormatAdapter);
+        mapAdapter.put("repayAccountYes", valueFormatAdapter);
+        mapAdapter.put("repayAccountCapitalWait", valueFormatAdapter);
+        mapAdapter.put("repayAccountInterestWait", valueFormatAdapter);
+        mapAdapter.put("repayAccountWait", valueFormatAdapter);
+        mapAdapter.put("status", statusAdapter);
+        return mapAdapter;
     }
 }
