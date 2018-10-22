@@ -1,18 +1,18 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.admin.extensioncenter.impl;
+package com.hyjf.am.user.service.admin.extensioncenter.impl;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.trade.dao.mapper.customize.ChannelStatisticsDetailCustomizeMapper;
-import com.hyjf.am.trade.service.admin.extensioncenter.ChannelStatisticsDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.user.dao.mapper.auto.UtmPlatMapper;
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
 import com.hyjf.am.user.dao.model.auto.UtmPlatExample;
+import com.hyjf.am.user.service.admin.extensioncenter.ChannelStatisticsDetailService;
 import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.springframework.beans.BeanUtils;
