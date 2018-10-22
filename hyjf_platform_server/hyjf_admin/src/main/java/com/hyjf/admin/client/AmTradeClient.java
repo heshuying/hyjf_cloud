@@ -3034,6 +3034,13 @@ public interface AmTradeClient {
 
     RepayBean getRepayBean(Map<String, String> paraMap);
 
+    /**
+     * 保证金不足列表
+     * @param request
+     * @return
+     */
+    AssetListCustomizeResponse findBZJBZList(AssetListRequest request);
+
     /** 加息接口开始*/
     /** 枚举类型 */
     enum IncreaseProperty {VO,STR,STR1}

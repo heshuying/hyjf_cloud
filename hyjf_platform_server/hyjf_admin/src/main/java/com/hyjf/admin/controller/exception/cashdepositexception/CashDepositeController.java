@@ -55,7 +55,7 @@ public class CashDepositeController extends BaseController {
         AssetListRequest request = new AssetListRequest();
         BeanUtils.copyProperties(viewRequest,request);
         // 保证金不足的资产列表list
-    	AssetListCustomizeResponse response = assetListService.findAssetList(request);
+    	AssetListCustomizeResponse response = assetListService.findBZJBZList(request);
         //返回给前端
         InitCashDepositListResponse initCashDepositResponse = new InitCashDepositListResponse();
 

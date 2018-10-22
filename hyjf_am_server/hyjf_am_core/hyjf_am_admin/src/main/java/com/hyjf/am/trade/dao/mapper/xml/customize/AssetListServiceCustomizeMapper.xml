@@ -70,6 +70,55 @@
 				LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 			</if>
 	</select>
+
+    <!-- 保证金不足列表 -->
+    <select id="findBZJBZList" resultMap="resultMap" parameterType="Map">
+        SELECT
+        hpa.asset_id,
+        hpa.inst_code,
+        hpa.asset_type,
+        hic.inst_name,
+        hat.asset_type_name,
+        hpa.borrow_nid,
+        hpa.plan_nid,
+        hpa.user_name,
+        hpa.mobile,
+        hpa.account_id,
+        <!-- pnusertype.name AS user_type, -->
+        u.user_type,
+        CONCAT(substr(hpa.truename, 1, 1),'**') truename,
+        CONCAT(substr(hpa.idcard, 1, 4),'************') idcard,
+        FORMAT(hpa.account, 2) account,
+        CASE WHEN hpa.borrow_style = 'endday' THEN CONCAT(hpa.borrow_period, '天') ELSE CONCAT(hpa.borrow_period, '个月') END borrow_period,
+        bs.name borrow_style_name,
+        hpa.verify_status AS verify_status,
+        hpa.status AS status,
+        FROM_UNIXTIME( hpa.recieve_time, '%Y-%m-%d %H:%i:%s' ) AS recieve_time,
+        hpa.label_name,
+        hpa.user_id,
+        <!-- 如果ht_r_user里面有truename说明是开户成功，是否银行开户,0未开户,1已开户 -->
+        CASE
+        WHEN
+        u.truename IS NULL
+        THEN '0'
+        ELSE
+        '1'
+        END AS bank_open_account
+
+        FROM ht_hjh_plan_asset hpa
+        LEFT JOIN ht_hjh_inst_config hic on hpa.inst_code = hic.inst_code
+        LEFT JOIN ht_hjh_asset_type hat on hpa.inst_code = hat.inst_code AND hpa.asset_type = hat.asset_type
+        LEFT JOIN ht_borrow_style bs on hpa.borrow_style = bs.nid
+        LEFT JOIN ht_r_user u on hpa.user_id = u.user_id
+        <include refid="Where_Clause_bzjbz" />
+        ORDER BY
+        hpa.verify_status, hpa.recieve_time DESC
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+
+
 	<sql id="Where_Clause">
 		<where>
 			<!-- 资产编号 -->
@@ -126,6 +175,68 @@
 			</if>
 		</where>
 	</sql>
+    <!-- 保证金不足 -->
+    <sql id="Where_Clause_bzjbz">
+        <where>
+            <!-- 资产编号 -->
+            <if test="assetIdSrch != null and assetIdSrch != ''">
+                AND hpa.asset_id =#{assetIdSrch}
+            </if>
+            <!-- 资产来源 -->
+            <if test="instCodeSrch != null and instCodeSrch != ''">
+                AND hpa.inst_code=#{instCodeSrch}
+            </if>
+            <!-- 产品类型	-->
+            <if test="assetTypeSrch != null and assetTypeSrch != ''">
+                AND hpa.asset_type=#{assetTypeSrch}
+            </if>
+            <!-- 项目编号 -->
+            <if test="borrowNidSrch != null and borrowNidSrch != ''">
+                AND hpa.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
+            </if>
+            <!-- 计划编号 -->
+            <if test="planNidSrch != null and planNidSrch != ''">
+                AND hpa.plan_nid LIKE CONCAT( #{planNidSrch}, '%')
+            </if>
+            <!-- 用户名 -->
+            <if test="userNameSrch != null and userNameSrch != ''">
+                AND hpa.user_name LIKE CONCAT( #{userNameSrch}, '%')
+            </if>
+            <!-- 标的名称 -->
+            <if test="labelNameSrch != null and labelNameSrch != ''">
+                AND hpa.label_name LIKE CONCAT( #{labelNameSrch}, '%')
+            </if>
+            <!-- 开户状态 -->
+            <if test="bankOpenAccountSrch != null and bankOpenAccountSrch != ''">
+                AND u.bank_open_account=#{bankOpenAccountSrch}
+            </if>
+            <!-- 审核状态 -->
+            <if test="verifyStatusSrch != null and verifyStatusSrch != ''">
+                AND hpa.verify_status=#{verifyStatusSrch}
+            </if>
+            <!-- 项目状态 -->
+            <if test="statusSrch != null and statusSrch != ''">
+                AND hpa.`status` in
+                <foreach collection="statusSrch" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <!-- 推送时间 -->
+            <if test="recieveTimeStartSrch != null and recieveTimeStartSrch != ''">
+                AND hpa.recieve_time<![CDATA[>=]]>unix_timestamp(#{recieveTimeStartSrch})
+            </if>
+            <!-- 推送时间 -->
+            <if test="recieveTimeEndSrch != null and recieveTimeEndSrch != ''">
+                AND hpa.recieve_time<![CDATA[<=]]>unix_timestamp(#{recieveTimeEndSrch})+86399
+            </if>
+            <!-- 借款类型 -->
+            <if test="userTypeSrch != null and userTypeSrch != ''">
+                AND u.user_type=#{userTypeSrch}
+            </if>
+        </where>
+    </sql>
+
+
 	<resultMap id="selectAssetDetailMap" type="com.hyjf.am.vo.admin.AssetDetailCustomizeVO">
 		<result column="asset_id" property="assetId" jdbcType="VARCHAR"/>
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />

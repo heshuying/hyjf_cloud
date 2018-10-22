@@ -45,4 +45,11 @@ public interface AssetListServiceCustomizeMapper {
 	 * @return
 	 */
 	BigDecimal getSumAccount(AssetListRequest request);
+
+	/**
+	 * 获取保证金不足列表
+	 * @param mapParam
+	 * @return
+	 */
+	List<AssetListCustomizeVO> findBZJBZList(Map<String,Object> mapParam);
 }
