@@ -4,8 +4,38 @@
 
 	<sql id="Where_Clause">
 		<where>
-		    b.`status` = 0
+			b.`status` = 0
 			AND (habt.auto_record != 1 OR b.regist_status = 3 OR b.regist_status = 4 OR habt.auto_record IS NULL)
+			<if test="borrowNidSrch != null and borrowNidSrch != ''">
+				AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
+			</if>
+			<if test="borrowPeriodSrch != null and borrowPeriodSrch != ''">
+				AND b.borrow_period=#{borrowPeriodSrch}
+			</if>
+			<if test="usernameSrch != null and usernameSrch != ''">
+				AND b.borrow_user_name LIKE CONCAT( #{usernameSrch}, '%')
+			</if>
+			<if test="projectTypeSrch != null and projectTypeSrch != ''">
+				AND b.project_type = #{projectTypeSrch}
+			</if>
+			<if test="borrowStyleSrch != null and borrowStyleSrch != ''">
+				AND b.borrow_style = #{borrowStyleSrch}
+			</if>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND b.create_time <![CDATA[>=]]> STR_TO_DATE(#{timeStartSrch}, '%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="registStatusSrch != null and registStatusSrch != ''">
+				AND b.regist_status = #{registStatusSrch}
+			</if>
+		</where>
+	</sql>
+	<sql id="Where_Clause_spk">
+		<where>
+			<!-- 备案中,备案失败 -->
+			b.`status` = 0 AND b.`regist_status` IN (1,4)
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
 				AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
@@ -32,7 +62,6 @@
 			</if>
 		</where>
 	</sql>
-
 	<select id="getRegistCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.BorrowRegistListRequest">
 		SELECT
 			COUNT(1)
@@ -45,7 +74,7 @@
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1
-		<include refid="Where_Clause" />
+		<include refid="Where_Clause_spk" />
 	</select>
 
 	<resultMap id="selectBorrowFirstListMap" type="com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize">
@@ -92,7 +121,7 @@
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1
-	   <include refid="Where_Clause" />
+	   <include refid="Where_Clause_spk" />
 		ORDER BY
 		  b.create_time DESC, b.id DESC
 	    <if test="limitStart >= 0" >
