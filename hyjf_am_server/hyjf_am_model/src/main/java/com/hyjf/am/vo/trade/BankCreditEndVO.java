@@ -64,7 +64,7 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "失败笔数")
     private Integer failCounts;
     @ApiModelProperty(value = "银行交易状态（S-成功;F-失败;A-待处理;D-正在处理;C-撤销;）")
-    private Integer state;
+    private String state;
     @ApiModelProperty(value = "0初始 1待请求 2请求成功 3请求失败 4校验成功 5业务全部成功  10校验失败 11业务部分成功 12业务失败 ")
     private Integer status;
     @ApiModelProperty(value = "失败原因")
@@ -266,11 +266,11 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
         this.failCounts = failCounts;
     }
 
-    public Integer getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(Integer state) {
+    public void setState(String state) {
         this.state = state;
     }
 

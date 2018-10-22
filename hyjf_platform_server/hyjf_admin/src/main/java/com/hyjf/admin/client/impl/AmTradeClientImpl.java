@@ -1075,7 +1075,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BankCreditEndVO getCreditEndByOrderId(String orderId) {
-        String url = "http://AM-ADMIN/am-trade/bankCreditEndController/getby_orderid" + orderId;
+        String url = "http://AM-ADMIN/am-trade/bankCreditEndController/getby_orderid/" + orderId;
         BankCreditEndResponse response = restTemplate.getForEntity(url, BankCreditEndResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResult();
