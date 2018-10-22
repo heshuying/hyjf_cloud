@@ -19,8 +19,6 @@ import java.util.List;
 public class BankRepayOrgFreezeLogServiceImpl extends BaseServiceImpl implements BankRepayOrgFreezeLogService {
     /**
      * 插入垫付机构冻结表日志
-     * @author wgx
-     * @date 2018/10/13
      */
     @Override
     public Integer insertRepayOrgFreezeLog(BankRepayOrgFreezeLogRequest requestBean) {
@@ -35,7 +33,7 @@ public class BankRepayOrgFreezeLogServiceImpl extends BaseServiceImpl implements
         log.setPlanNid(requestBean.getPlanNid());// 计划编号
         log.setInstCode(requestBean.getInstCode());// 资产来源
         log.setAmount(requestBean.getAmount());// 借款金额
-        log.setAmountFreeze(requestBean.getAmountFreeze());// 借款金额
+        log.setAmountFreeze(requestBean.getAmountFreeze());// 冻结金额
         log.setRepayAccount(requestBean.getRepayAccount());// 应还本息
         log.setRepayFee(requestBean.getRepayFee());// 还款服务费
         log.setLowerInterest(requestBean.getLowerInterest());// 减息金额
@@ -56,11 +54,6 @@ public class BankRepayOrgFreezeLogServiceImpl extends BaseServiceImpl implements
 
     /**
      * 查询垫付机构冻结列表
-     * @param orderId
-     * @param borrowNid
-     * @return
-     * @author wgx
-     * @date 2018/10/13
      */
     @Override
     public List<BankRepayOrgFreezeLog> getBankRepayOrgFreezeLogList(String orderId, String borrowNid){
@@ -78,9 +71,6 @@ public class BankRepayOrgFreezeLogServiceImpl extends BaseServiceImpl implements
 
     /**
      * 删除垫付机构临时日志,外部调用
-     * @param orderId
-     * @author wgx
-     * @date 2018/10/13
      */
     @Override
     public Integer deleteOrgFreezeTempLogs(String orderId, String borrowNid) {
