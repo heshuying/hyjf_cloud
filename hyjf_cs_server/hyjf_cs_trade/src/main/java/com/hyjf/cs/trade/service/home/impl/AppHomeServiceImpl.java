@@ -353,12 +353,17 @@ public class AppHomeServiceImpl implements AppHomeService {
         List<HjhPlanCustomizeVO> planList = this.searchIndexHjhExtensionPlanList(params);
         boolean hasInvestment = false;
         //判断是否有可投资计划
+        //mod by nxl 智投服务 修改立即加入->授权服务
         for (HjhPlanCustomizeVO hjhPlanCustomize:planList){
-            if("立即加入".equals(hjhPlanCustomize.getStatusName())){
+            /*if("立即加入".equals(hjhPlanCustomize.getStatusName())){
+                hasInvestment = true;
+                break;
+            }*/
+            if("授权服务".equals(hjhPlanCustomize.getStatusName())){
                 hasInvestment = true;
                 break;
             }
-
+            //mod by nxl 智投服务 修改立即加入->授权服务
         }
         //无可投计划
         if(!hasInvestment){
@@ -601,11 +606,11 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setBorrowType(listCustomize.getBorrowType());
             homePageCustomize.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
             // mod by nxl 智投服务 计划的历史回报率->参考年回报率
-//            homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
+//			homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
             homePageCustomize.setBorrowTheFirstDesc("参考年回报率");
             homePageCustomize.setBorrowTheSecond(listCustomize.getBorrowPeriod());
-            // mod by nxl 智投服务 锁定期限->服务回报期限
-//            homePageCustomize.setBorrowTheSecondDesc("锁定期限");
+            // mod by nxl 智投服务 修改显示 start
+//			homePageCustomize.setBorrowTheSecondDesc("锁定期限");
             homePageCustomize.setBorrowTheSecondDesc("服务回报期限");
             PlanDetailCustomizeVO planDetailCustomizeVO = amTradeClient.getPlanDetailByPlanNid(listCustomize.getBorrowNid());
             String statusNameDesc = planDetailCustomizeVO != null ? planDetailCustomizeVO.getAvailableInvestAccount() : "0.00";

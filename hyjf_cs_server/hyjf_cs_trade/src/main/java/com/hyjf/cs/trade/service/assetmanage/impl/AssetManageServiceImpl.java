@@ -309,11 +309,15 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         params.put("userId", userId);
         UserHjhInvistDetailCustomizeVO hjhInvistDetailVO = amTradeClient.selectUserHjhInvistDetail(params);
         if (null != hjhInvistDetailVO){
-            // add by nxl 智投服务：格式化参考回报Start
+            // add by nxl 智投服务：格式化参考回报和授权时间格式化Start
             if(hjhInvistDetailVO.getWaitInterest().equals("0.00")){
                 hjhInvistDetailVO.setWaitInterest("--");
             }
-            // add by nxl 智投服务：格式化参考回报End
+
+            if(StringUtils.isNotBlank(hjhInvistDetailVO.getAddTime())){
+                hjhInvistDetailVO.setAddTimeFormat(hjhInvistDetailVO.getAddTime().substring(0,10));
+            }
+            // add by nxl 智投服务：格式化参考回报和授权时间格式化End
             //计算实际收益
             if(type != null && "2".equals(type)){
                 if(hjhInvistDetailVO.getAccedeAccount()!=null&&hjhInvistDetailVO.getReceivedTotal()!=null){

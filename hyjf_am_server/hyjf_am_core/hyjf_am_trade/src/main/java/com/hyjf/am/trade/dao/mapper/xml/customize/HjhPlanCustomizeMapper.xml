@@ -77,7 +77,9 @@
 		END AS lock_period,
 		hha.user_id user_id,
 		hha.accede_account accede_account,
-	    DATE_FORMAT(hha.create_time, '%Y-%m-%d %H:%i:%s' ) AS add_time,
+		<!-- mod by nxl 智投服务，修改添加时间格式-->
+	    <!--DATE_FORMAT(hha.create_time, '%Y-%m-%d %H:%i:%s' ) AS add_time,-->
+		FROM_UNIXTIME(hha.create_time, '%Y-%m-%d' ) AS add_time,
 
 		IFNULL(FROM_UNIXTIME( IF(hha.quit_time=0,NULL,hha.quit_time), '%Y-%m-%d' ),'待确认') AS quit_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.last_payment_time=0,NULL,hha.last_payment_time), '%Y-%m-%d' ),'待确认') AS last_payment_time,
@@ -270,8 +272,10 @@
             AND FORMAT(hp.available_invest_account, 2) = 0.00
             THEN '稍后开启'
             WHEN hp.plan_invest_status = 1
-            THEN '立即加入'
-            WHEN hp.plan_invest_status = 2
+            <!--THEN '立即加入'-->
+			<!-- mod by nxl 智投服务 修改立即加入->授权服务 -->
+			THEN '授权服务'
+			WHEN hp.plan_invest_status = 2
             THEN '稍后开启'
             ELSE ''
           END AS plan_invest_status_name,

@@ -1129,6 +1129,8 @@
 		<result column="type" property="type" />
 		<result column="DATA" property="data" />
 		<result column="coupon_type" property="couponType" />
+		<!-- add by nxl 智投服务 加入参考回报-->
+		<result column="reference_return" property="referenceReturn" />
 	</resultMap>
 	<select id="selectCurrentHoldPlanList" resultMap="currentHoldPlanMap" parameterType="java.util.Map">
 		SELECT t.* FROM (
@@ -1139,6 +1141,10 @@
 		CONCAT(hdp.debt_lock_period,'个月') debt_lock_period,
 		hdpa.user_id user_id,
 		hdpa.accede_account accede_account,
+		<!-- add by nxl 智投服务 加入参考回报 -->
+		CASE hdpa.repay_interest_wait
+		WHEN 0.00 THEN '--'
+		ELSE hdpa.repay_interest_wait end AS reference_return,
 		hdpa.repay_account_wait repay_account_wait,
 		IFNULL(DATE_FORMAT( hdpa.create_time, '%Y-%m-%d' ),'--') AS create_time,
 		hdpa.create_time orderby_create_time,
@@ -1147,7 +1153,9 @@
 		0 type,
 		CASE
 		WHEN hdp.debt_plan_status = 4
-		THEN '投资中'
+		<!-- mod by nxl 智投服务修改 投资中->智能投标中-->
+		<!--THEN '投资中'-->
+		THEN '智能投标中'
 		ELSE '现金投资'
 		END AS DATA,
 		0 coupon_type
@@ -1169,6 +1177,10 @@
 		END AS debt_lock_period,
 		hha.user_id user_id,
 		hha.accede_account accede_account,
+		<!-- add by nxl 智投服务 加入参考回报 -->
+		CASE hha.wait_interest
+		WHEN 0.00 THEN '--'
+		ELSE hha.wait_interest end AS reference_return,
 		IF(hha.wait_total=0,'--',hha.wait_total) wait_total,
 		IFNULL(DATE_FORMAT( hha.create_time, '%Y-%m-%d' ),'--') AS add_time,
 		hha.create_time orderby_add_time,
@@ -1177,7 +1189,9 @@
 		1 type,
 		CASE
 		WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 )
-		THEN '投资中'
+		<!-- mod by nxl 智投服务修改 投资中->智能投标中-->
+		<!--THEN '投资中'-->
+		THEN '智能投标中'
 		ELSE '现金投资'
 		END AS DATA,
 		0 coupon_type
@@ -1202,6 +1216,9 @@
 		ELSE
 		hcc.coupon_quota
 		END AS accede_account,
+		<!-- add by nxl 智投服务 加入参考回报  -->
+		case IFNULL(SUM(hcr.recover_account)-SUM(hcr.recover_account_yes),0)  WHEN 0.00 THEN '--'
+		ELSE IFNULL(SUM(hcr.recover_account)-SUM(hcr.recover_account_yes),0) END AS reference_return,
 		IFNULL(SUM(hcr.recover_account)-SUM(hcr.recover_account_yes),0) AS wait_total,
 		DATE_FORMAT( hbtc.create_time, '%Y-%m-%d' ) AS addtime,
 		hbtc.create_time orderby_add_time,

@@ -1278,7 +1278,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                             wechatHomeProjectListCustomize.setOnTime(wechatHomeProjectListCustomize.getOnTime());
                             break;
                         case "11":
-                            wechatHomeProjectListCustomize.setOnTime("立即投资");
+                            // mod by nxl 智投服务,修改立即投资->授权服务
+//                            wechatHomeProjectListCustomize.setOnTime("立即投资");
+                            wechatHomeProjectListCustomize.setOnTime("授权服务");
                             break;
                         case "12":
                             wechatHomeProjectListCustomize.setOnTime("复审中");
