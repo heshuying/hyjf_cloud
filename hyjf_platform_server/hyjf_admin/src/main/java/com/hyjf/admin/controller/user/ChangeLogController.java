@@ -64,6 +64,8 @@ public class ChangeLogController extends BaseController {
 		clr.setCurrPage(Integer.valueOf(map.get("currPage")));
 		clr.setPageSize(Integer.valueOf(map.get("pageSize")));
 		clr.setAttribute(map.get("attribute"));
+		//add by nxl 添加邮箱查询
+        clr.setEmail(map.get("email"));
 		ChangeLogResponse prs=changeLogService.getChangeLogList(clr);
 		if (prs == null) {
 			return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(new ArrayList<ChangeLogVO>(), 0));
@@ -109,7 +111,7 @@ public class ChangeLogController extends BaseController {
 
         String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
 
-        String[] titles = new String[] { "序号", "用户名", "姓名", "手机号", "用户角色", "用户属性", "推荐人", "用户状态", "修改人", "修改时间", "说明"};
+        String[] titles = new String[] { "序号", "用户名", "姓名", "手机号", "用户角色", "用户属性", "推荐人", "用户状态", "修改人", "修改时间", "说明","邮箱"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -187,6 +189,10 @@ public class ChangeLogController extends BaseController {
                     // 修改说明
                     else if (celLength == 10) { 
                         cell.setCellValue(changeLog.getRemark());
+                    }
+                    //add by nxl 新加邮箱导出
+                    else if(celLength ==11){
+                        cell.setCellValue(changeLog.getEmail());
                     }
                 }
             }

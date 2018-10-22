@@ -43,6 +43,8 @@ public class UserChangeLogCustomizeVO implements Serializable {
 
     @ApiModelProperty(value = "更新时间")
     private String updateTime;
+    @ApiModelProperty(value = "邮箱")
+    private String email;
 
     private static final long serialVersionUID = 1L;
 
@@ -180,5 +182,13 @@ public class UserChangeLogCustomizeVO implements Serializable {
 
     public void setBorrowerType(Integer borrowerType) {
         this.borrowerType = borrowerType;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

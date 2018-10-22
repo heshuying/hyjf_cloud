@@ -39,6 +39,8 @@ public class ChangeLogVO extends BaseVO implements Serializable {
     private String borrowerType;
     
     private String idCard;
+    //合规四期(添加邮箱) add by nxl
+    private String email;
 
     private static final long serialVersionUID = 1L;
 
@@ -189,6 +191,13 @@ public class ChangeLogVO extends BaseVO implements Serializable {
 			
 	}
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
 
 

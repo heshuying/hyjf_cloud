@@ -976,6 +976,66 @@ public class BankRepayOrgFreezeLogExample {
             return (Criteria) this;
         }
 
+        public Criteria andAmountFreezeIsNull() {
+            addCriterion("amount_freeze is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountFreezeIsNotNull() {
+            addCriterion("amount_freeze is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountFreezeEqualTo(BigDecimal value) {
+            addCriterion("amount_freeze =", value, "amountFreeze");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountFreezeNotEqualTo(BigDecimal value) {
+            addCriterion("amount_freeze <>", value, "amountFreeze");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountFreezeGreaterThan(BigDecimal value) {
+            addCriterion("amount_freeze >", value, "amountFreeze");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountFreezeGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("amount_freeze >=", value, "amountFreeze");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountFreezeLessThan(BigDecimal value) {
+            addCriterion("amount_freeze <", value, "amountFreeze");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountFreezeLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("amount_freeze <=", value, "amountFreeze");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountFreezeIn(List<BigDecimal> values) {
+            addCriterion("amount_freeze in", values, "amountFreeze");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountFreezeNotIn(List<BigDecimal> values) {
+            addCriterion("amount_freeze not in", values, "amountFreeze");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountFreezeBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("amount_freeze between", value1, value2, "amountFreeze");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountFreezeNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("amount_freeze not between", value1, value2, "amountFreeze");
+            return (Criteria) this;
+        }
+
         public Criteria andLowerInterestIsNull() {
             addCriterion("lower_interest is null");
             return (Criteria) this;

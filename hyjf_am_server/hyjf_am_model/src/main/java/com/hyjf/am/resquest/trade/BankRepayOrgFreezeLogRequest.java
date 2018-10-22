@@ -27,6 +27,8 @@ public class BankRepayOrgFreezeLogRequest {
 
     private BigDecimal amount;
 
+    private BigDecimal amountFreeze;
+
     private BigDecimal repayAccount;
 
     private BigDecimal repayFee;
@@ -125,6 +127,14 @@ public class BankRepayOrgFreezeLogRequest {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public BigDecimal getAmountFreeze() {
+        return amountFreeze;
+    }
+
+    public void setAmountFreeze(BigDecimal amountFreeze) {
+        this.amountFreeze = amountFreeze;
     }
 
     public BigDecimal getRepayAccount() {

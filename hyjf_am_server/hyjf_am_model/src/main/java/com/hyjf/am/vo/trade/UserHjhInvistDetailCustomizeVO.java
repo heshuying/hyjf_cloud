@@ -38,6 +38,10 @@ public class UserHjhInvistDetailCustomizeVO extends BaseVO implements Serializab
     private String waitCaptical;
     // 还款方式 代号
     private String repayStyle;
+    // add by nxl 智投服务添加计息结束日
+    private String endInterestTime;
+    // add by nxl 智投服务授权时间格式化
+    private String addTimeFormat;
 
     public String getPlanNid() {
         return planNid;
@@ -239,4 +243,19 @@ public class UserHjhInvistDetailCustomizeVO extends BaseVO implements Serializab
         this.repayStyle = repayStyle;
     }
 
+    public String getEndInterestTime() {
+        return endInterestTime;
+    }
+
+    public void setEndInterestTime(String endInterestTime) {
+        this.endInterestTime = endInterestTime;
+    }
+
+    public String getAddTimeFormat() {
+        return addTimeFormat;
+    }
+
+    public void setAddTimeFormat(String addTimeFormat) {
+        this.addTimeFormat = addTimeFormat;
+    }
 }

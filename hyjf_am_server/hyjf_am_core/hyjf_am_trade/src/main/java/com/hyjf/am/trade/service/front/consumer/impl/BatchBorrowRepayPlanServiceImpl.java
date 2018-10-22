@@ -258,7 +258,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		int repayUserId = apicron.getUserId();// 还款用户userId
 		String borrowNid = apicron.getBorrowNid();// 项目编号
 		Integer periodNow = apicron.getPeriodNow();// 当前期数
-		//int isApicronRepayOrgFlag = Validator.isNull(apicron.getIsRepayOrgFlag()) ? 0 : apicron.getIsRepayOrgFlag();// 是否是担保机构还款
+		int isApicronRepayOrgFlag = Validator.isNull(apicron.getIsRepayOrgFlag()) ? 0 : apicron.getIsRepayOrgFlag();// 是否是担保机构还款
 		// 取得借款人账户信息
 		Account repayAccount = this.getAccountByUserId(repayUserId);
 		if (repayAccount == null) {
@@ -277,7 +277,11 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		}
 		String borrowStyle = borrow.getBorrowStyle();
 		// 标的是否可用担保机构还款
-		//int isRepayOrgFlag = Validator.isNull(borrow.getIsRepayOrgFlag()) ? 0 : borrow.getIsRepayOrgFlag();
+		int isRepayOrgFlag = 0;
+		if (isApicronRepayOrgFlag == 1) {
+			BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
+			isRepayOrgFlag = Validator.isNull(borrowInfo.getIsRepayOrgFlag()) ? 0 : borrowInfo.getIsRepayOrgFlag();
+		}
 		// 是否月标(true:月标, false:天标)
 		boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
 				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
@@ -409,30 +413,29 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			}
 			BankCallBean repayResult = null;
 			boolean delFlag = false;
+			Map resultMap = null;
 			// 调用相应的批次还款接口
 			if (isMonth) {
 				// 如果是垫付机构还款
-				/*if (isRepayOrgFlag == 1 && isApicronRepayOrgFlag == 1) {
+				if (isRepayOrgFlag == 1 && isApicronRepayOrgFlag == 1) {
 					// 调用相应的担保机构还款接口
-					repayResult = this.requestOrgRepay(borrow, repayAccountId, apicron, null, recoverPlanList, creditRepayList);
-				} else {*/
-					// 调用相应的担保机构还款接口
-				 Map resultMap = this.requestRepay(borrow, repayAccountId, apicron, null, recoverPlanList, creditRepayList);
-				 repayResult = (BankCallBean) resultMap.get("result");
-				 delFlag = (boolean) resultMap.get("delFlag");
-				/*}*/
+					resultMap = this.requestOrgRepay(borrow, repayAccountId, apicron, null, recoverPlanList, creditRepayList);
+				} else {
+					// 调用相应的非担保机构还款接口
+					resultMap = this.requestRepay(borrow, repayAccountId, apicron, null, recoverPlanList, creditRepayList);
+				}
 			} else {
 				// 如果是垫付机构还款
-				/*if (isRepayOrgFlag == 1 && isApicronRepayOrgFlag == 1) {
+				if (isRepayOrgFlag == 1 && isApicronRepayOrgFlag == 1) {
 					// 调用相应的担保机构还款接口
-					repayResult = this.requestOrgRepay(borrow, repayAccountId, apicron, recoverList, null, creditRepayList);
-				} else {*/
-					// 调用相应的担保机构还款接口
-					Map resultMap = this.requestRepay(borrow, repayAccountId, apicron, recoverList, null, creditRepayList);
-					repayResult = (BankCallBean) resultMap.get("result");
-					delFlag = (boolean) resultMap.get("delFlag");
-				/*}*/
+					resultMap = this.requestOrgRepay(borrow, repayAccountId, apicron, recoverList, null, creditRepayList);
+				} else {
+					// 调用相应的非担保机构还款接口
+					resultMap = this.requestRepay(borrow, repayAccountId, apicron, recoverList, null, creditRepayList);
+				}
 			}
+			repayResult = (BankCallBean) resultMap.get("result");
+			delFlag = (boolean) resultMap.get("delFlag");
 			Map map = new HashMap<>();
 			map.put("delFlag", delFlag);
 			if(Validator.isNull(repayResult) || StringUtils.isBlank(repayResult.getReceived()) 
@@ -950,6 +953,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				repayBean.setLogOrderDate(orderDate);
 				repayBean.setLogRemark("批次还款请求");
 				repayBean.setLogClient(0);
+				logger.info("计划批次还款请求开始！");
 				BankCallBean repayResult = BankCallUtils.callApiBg(repayBean);
 				if (Validator.isNotNull(repayResult)) {
 					String received = StringUtils.isNotBlank(repayResult.getReceived()) ? repayResult.getReceived() : "";
@@ -4838,5 +4842,255 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		}
 		return null;
 	}
-	
+
+	/**
+	 * 批次代偿（合规要求）
+	 * @author wgx
+	 * @date 2018/10/18
+	 */
+	private Map requestOrgRepay(BorrowApicron apicron, JSONArray subPacksJson) {
+		Map map = new HashMap<>();
+		boolean delFalg = false;
+		int userId = apicron.getUserId();// 还款用户userId
+		String borrowNid = apicron.getBorrowNid();// 项目编号
+		// 还款子参数
+		String subPacks = subPacksJson.toJSONString();
+		// 获取共同参数
+		String notifyUrl = systemConfig.getRepayVerifyUrl();
+		String retNotifyURL = systemConfig.getRepayResultUrl();
+		String channel = BankCallConstant.CHANNEL_PC;
+		for (int i = 0; i < 3; i++) {
+			try {
+				String logOrderId = GetOrderIdUtils.getOrderId2(apicron.getUserId());
+				String orderDate = GetOrderIdUtils.getOrderDate();
+				String batchNo = GetOrderIdUtils.getBatchNo();// 获取还款批次号
+				String txDate = GetOrderIdUtils.getTxDate();
+				String txTime = GetOrderIdUtils.getTxTime();
+				String seqNo = GetOrderIdUtils.getSeqNo(6);
+				apicron.setBatchNo(batchNo);
+				apicron.setTxDate(Integer.parseInt(txDate));
+				apicron.setTxTime(Integer.parseInt(txTime));
+				apicron.setSeqNo(Integer.parseInt(seqNo));
+				apicron.setBankSeqNo(txDate + txTime + seqNo);
+				// 更新任务API状态为进行中
+				boolean apicronFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDING);
+				if (!apicronFlag) {
+					throw new Exception("【计划批次代偿】更新还款任务为进行中失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
+				}
+				// 调用还款接口
+				BankCallBean repayBean = new BankCallBean();
+				repayBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+				repayBean.setTxCode(BankCallConstant.TXCODE_BATCH_SUBST_REPAY);// 消息类型(批次代偿)
+				repayBean.setTxDate(txDate);
+				repayBean.setTxTime(txTime);
+				repayBean.setSeqNo(seqNo);
+				repayBean.setChannel(channel);
+				repayBean.setBatchNo(apicron.getBatchNo());// 批次号
+				repayBean.setTxAmount(String.valueOf(apicron.getTxAmount()));// 交易金额
+				repayBean.setTxCounts(String.valueOf(apicron.getTxCounts()));// 交易笔数
+				repayBean.setNotifyURL(notifyUrl);// 后台通知连接
+				repayBean.setRetNotifyURL(retNotifyURL);// 业务结果通知
+				repayBean.setSubPacks(subPacks);// 请求数组
+				repayBean.setLogUserId(String.valueOf(userId));
+				repayBean.setLogOrderId(logOrderId);
+				repayBean.setLogOrderDate(orderDate);
+				repayBean.setLogRemark("批次还款请求");
+				repayBean.setLogClient(0);
+				BankCallBean repayResult = BankCallUtils.callApiBg(repayBean);
+				if (Validator.isNotNull(repayResult)) {
+					String received = StringUtils.isNotBlank(repayResult.getReceived()) ? repayResult.getReceived() : "";
+					if (BankCallConstant.RECEIVED_SUCCESS.equals(received)) {
+						try {
+							// 更新任务API状态
+							boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDED);
+							if (apicronResultFlag) {
+								map.put("result", repayResult);
+								map.put("delFlag", delFalg);
+								return map;
+							}
+						} catch (Exception e) {
+							logger.info("【计划批次代偿】-----------------------------------[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "],还款请求成功后,变更任务状态异常!");
+						}
+						map.put("result", repayResult);
+						map.put("delFlag", true);
+						return map;
+					} else {
+						continue;
+					}
+				} else {
+					continue;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		map.put("result", null);
+		map.put("delFlag", delFalg);
+		return map;
+	}
+
+	/**
+	 * 调用机构垫付还款
+	 * @author wgx
+	 * @date 2018/10/18
+	 */
+	private Map requestOrgRepay(Borrow borrow, String orgAccountId, BorrowApicron apicron, List<BorrowRecover> borrowRecoverList, List<BorrowRecoverPlan> borrowRecoverPlanList,
+								List<HjhDebtCreditRepay> creditRepayList) throws Exception {
+		String borrowNid = borrow.getBorrowNid();
+		boolean delFlag = false;
+		Map map = new HashMap<>();
+		int txCounts = 0;// 交易笔数
+		BigDecimal txAmountSum = BigDecimal.ZERO;// 交易总金额
+		BigDecimal repayAmountSum = BigDecimal.ZERO;// 交易总金额
+		BigDecimal serviceFeeSum = BigDecimal.ZERO;// 交易总服务费
+		JSONArray subPacksJson = new JSONArray();// 拼接结果
+		// 债转还款结果
+		if (creditRepayList != null && creditRepayList.size() > 0) {
+			// 遍历债权还款记录
+			for (int i = 0; i < creditRepayList.size(); i++) {
+				// 还款信息
+				HjhDebtCreditRepay creditRepay = creditRepayList.get(i);
+				JSONObject subJson = new JSONObject();// 结果集对象
+				int assignUserId = creditRepay.getUserId();// 承接用户userId
+				String creditRepayOrderId = creditRepay.getCreditRepayOrderId();// 债转还款订单号
+				BigDecimal txAmount = creditRepay.getRepayCapital();// 交易金额
+				BigDecimal intAmount = creditRepay.getRepayInterest().add(creditRepay.getRepayAdvanceInterest()).add(creditRepay.getRepayDelayInterest()).add(creditRepay.getRepayLateInterest());// 交易利息
+				BigDecimal serviceFee = creditRepay.getManageFee();// 还款管理费
+				logger.info("【计划批次代偿】------------------还款开始，标的：" + borrowNid + ",任务表变更金额,增加金额：" + txAmount + "+" + intAmount+"+"+serviceFee + "，原始金额：" + repayAmountSum + ",债转订单号：" + creditRepay.getCreditNid());
+				repayAmountSum = repayAmountSum.add(txAmount).add(intAmount).add(serviceFee);
+				txAmountSum = txAmountSum.add(txAmount);// 交易总金额
+				serviceFeeSum = serviceFeeSum.add(serviceFee);// 总服务费
+				String authCode = creditRepay.getAuthCode();// 投资授权码
+				// 承接用户的开户信息
+				Account bankOpenAccount = this.getAccount(assignUserId);
+				// 判断承接用户开户信息
+				if (Validator.isNotNull(bankOpenAccount) && StringUtils.isNotBlank(bankOpenAccount.getAccountId())) {
+					subJson = getSubJson(subJson, orgAccountId, borrowNid, creditRepayOrderId, txAmount, intAmount, serviceFee, authCode, bankOpenAccount);
+					subPacksJson.add(subJson);
+				} else {
+					throw new Exception("【计划批次代偿】还款时未查询到用户的银行开户信息。[用户userId：" + assignUserId + "]");
+				}
+			}
+			txCounts = txCounts + creditRepayList.size();
+		}
+		// 判断标的的放款信息
+		if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
+			// 遍历标的放款信息
+			for (int i = 0; i < borrowRecoverList.size(); i++) {
+				// 获取不分期的放款信息
+				BorrowRecover borrowRecover = borrowRecoverList.get(i);
+				JSONObject subJson = new JSONObject();// 结果集对象
+				int tenderUserId = borrowRecover.getUserId();// 投资用户userId
+				String recoverRepayOrderId = borrowRecover.getRepayOrdid();// 还款订单号
+				BigDecimal txAmount = borrowRecover.getRecoverCapitalWait();// 交易金额
+				BigDecimal intAmount = borrowRecover.getRecoverInterestWait().add(borrowRecover.getChargeInterest()).add(borrowRecover.getDelayInterest()).add(borrowRecover.getLateInterest());// 交易利息
+				BigDecimal serviceFee = borrowRecover.getRecoverFee();// 还款管理费
+				logger.info("【计划批次代偿】------------------还款开始，标的：" + borrowNid + ",任务表变更金额,增加金额：" + txAmount + "+" + intAmount+"+"+serviceFee + "，原始金额：" + repayAmountSum + ",投资订单号：" + borrowRecover.getNid());
+				txAmountSum = txAmountSum.add(txAmount);// 交易总金额
+				repayAmountSum = repayAmountSum.add(txAmount).add(intAmount).add(serviceFee);
+				serviceFeeSum = serviceFeeSum.add(serviceFee);// 总服务费
+				String authCode = borrowRecover.getAuthCode();// 投资授权码
+				// 投资用户的开户信息
+				Account bankOpenAccount = this.getAccount(tenderUserId);
+				// 判断投资用户开户信息
+				if (Validator.isNotNull(bankOpenAccount) && StringUtils.isNotBlank(bankOpenAccount.getAccountId())) {
+					subJson = getSubJson(subJson, orgAccountId, borrowNid, recoverRepayOrderId, txAmount, intAmount, serviceFee, authCode, bankOpenAccount);
+					subPacksJson.add(subJson);
+				} else {
+					throw new Exception("【计划批次代偿】还款时未查询到用户的银行开户信息。[用户userId：" + tenderUserId + "]");
+				}
+			}
+			txCounts = txCounts + borrowRecoverList.size();
+		} else {
+			if (borrowRecoverPlanList != null && borrowRecoverPlanList.size() > 0) {
+				for (int i = 0; i < borrowRecoverPlanList.size(); i++) {
+					// 获取分期的放款信息
+					BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlanList.get(i);
+					JSONObject subJson = new JSONObject();// 结果集对象
+					int tenderUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+					String recoverPlanRepayOrderId = borrowRecoverPlan.getRepayOrderId();
+					BigDecimal txAmount = borrowRecoverPlan.getRecoverCapitalWait();// 交易金额
+					BigDecimal intAmount = borrowRecoverPlan.getRecoverInterestWait().add(borrowRecoverPlan.getChargeInterest()).add(borrowRecoverPlan.getDelayInterest())
+							.add(borrowRecoverPlan.getLateInterest());// 交易利息
+					BigDecimal serviceFee = borrowRecoverPlan.getRecoverFee();// 还款管理费
+					logger.info("【计划批次代偿】------------------还款开始，标的：" + borrowNid + ",任务表变更金额,增加金额：" + txAmount + "+" + intAmount+"+"+serviceFee + "，原始金额：" + repayAmountSum + ",投资订单号：" + borrowRecoverPlan.getNid());
+					repayAmountSum = repayAmountSum.add(txAmount).add(intAmount).add(serviceFee);
+					txAmountSum = txAmountSum.add(txAmount);// 交易总金额
+					serviceFeeSum = serviceFeeSum.add(serviceFee);// 总服务费
+					String authCode = borrowRecoverPlan.getAuthCode();// 投资授权码
+					// 投资用户的开户信息
+					Account bankOpenAccount = this.getAccount(tenderUserId);
+					// 判断投资用户开户信息
+					if (Validator.isNotNull(bankOpenAccount) && StringUtils.isNotBlank(bankOpenAccount.getAccountId())) {
+						subJson = getSubJson(subJson, orgAccountId, borrowNid, recoverPlanRepayOrderId, txAmount, intAmount, serviceFee, authCode, bankOpenAccount);
+						subPacksJson.add(subJson);
+					} else {
+						throw new Exception("【计划批次代偿】还款时未查询到用户的银行开户信息。[用户userId：" + tenderUserId + "]");
+					}
+				}
+				txCounts = txCounts + borrowRecoverPlanList.size();
+			}
+		}
+		// 拼接相应的还款参数
+		if (apicron.getFailTimes() == 0) {
+			apicron.setBatchAmount(repayAmountSum);
+			apicron.setBatchCounts(txCounts);
+			apicron.setBatchServiceFee(serviceFeeSum);
+			apicron.setSucAmount(BigDecimal.ZERO);
+			apicron.setSucCounts(0);
+			apicron.setFailAmount(repayAmountSum);
+			apicron.setFailCounts(txCounts);
+		}
+		apicron.setServiceFee(serviceFeeSum);
+		apicron.setTxAmount(txAmountSum);
+		apicron.setTxCounts(txCounts);
+		apicron.setData(" ");
+		Map resultMap = this.requestOrgRepay(apicron, subPacksJson);
+		BankCallBean repayResult = (BankCallBean) resultMap.get("result");
+		delFlag = (boolean) resultMap.get("delFlag");
+		try {
+			if (Validator.isNotNull(repayResult)) {
+				String received = repayResult.getReceived();
+				if (StringUtils.isNotBlank(received)) {
+					if (BankCallConstant.RECEIVED_SUCCESS.equals(received)) {
+						map.put("result", repayResult);
+						map.put("delFlag", delFlag);
+						return map;
+					} else {
+						throw new Exception("【计划批次代偿】更新放款任务为放款请求失败失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
+					}
+				} else {
+					throw new Exception("【计划批次代偿】放款请求失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
+				}
+			} else {
+				throw new Exception("【计划批次代偿】放款请求失败。[用户ID：" + apicron.getUserId()  + "]," + "[借款编号：" + borrowNid + "]");
+			}
+		} catch (Exception e) {
+			logger.info("【计划批次代偿】-----------------------------------放款请求失败,错误信息:" + e.getMessage());
+		}
+		map.put("result", repayResult);
+		map.put("delFlag", delFlag);
+		return map;
+	}
+	/**
+	 * 批次代偿请求数组
+	 * @author wgx
+	 * @date 2018/10/18
+	 */
+	private JSONObject getSubJson(JSONObject subJson, String accountId, String borrowNid, String orderId, BigDecimal txAmount, BigDecimal intAmount, BigDecimal serviceFee, String authCode, Account bankOpenAccount) {
+		String forAccountId = bankOpenAccount.getAccountId();// 银行账户
+		subJson.put(BankCallConstant.PARAM_ACCOUNTID, accountId);           // 存管子账户             accountId    担保户
+		subJson.put(BankCallConstant.PARAM_ORDERID, orderId);               // 订单号                 orderId      由P2P生成，必须保证唯一
+		subJson.put(BankCallConstant.PARAM_TXAMOUNT, txAmount.toString());  // 交易金额               txAmount     代偿本金
+		subJson.put(BankCallConstant.PARAM_RISKAMOUNT, "");                 // 风险准备金             riskAmount   暂不做使用，请送空
+		subJson.put(BankCallConstant.PARAM_INTAMOUNT, intAmount.toString());// 交易利息               intAmount
+		subJson.put(BankCallConstant.PARAM_TXFEEIN, "0.00");                // 收款手续费             txFeeIn      向投资人收取的手续费
+		subJson.put(BankCallConstant.PARAM_FINEAMOUNT, "");                 // 罚息金额               fineAmount   暂不做使用，请送空
+		subJson.put(BankCallConstant.PARAM_FORACCOUNTID, forAccountId);     // 对手存管子账户         forAccountId 投资人账号
+		subJson.put(BankCallConstant.PARAM_PRODUCTID, borrowNid);           // 标的号                 productId    投资人投标成功的标的号
+		subJson.put(BankCallConstant.PARAM_AUTHCODE, authCode);             // 授权码                 authCode     投资人投标成功的授权号
+		subJson.put(BankCallConstant.PARAM_SEQFLAG, "");                    // 流水是否经过借款人标志 seqFlag      担保人资金是否过借款人标志。1：经过;空：不经过；
+		subJson.put(BankCallConstant.PARAM_TXFEEOUT, serviceFee.toString());// 转出方手续费金额       txFeeOut     扣收担保人手续费
+		return subJson;
+	}
 }

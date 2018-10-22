@@ -20,6 +20,7 @@ import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
+import com.hyjf.am.response.user.BankRepayFreezeOrgResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
@@ -35,6 +36,7 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
@@ -686,4 +688,12 @@ public interface AmAdminClient {
      * @return
      */
     void updateBindCard(BindCardExceptionRequest request);
+
+    List<BankRepayFreezeOrgCustomizeVO> getBankReapyFreezeOrgList(RepayFreezeOrgRequest request);
+
+    Integer getBankReapyFreezeOrgCount(RepayFreezeOrgRequest request);
+
+    Integer deleteOrgFreezeLog(String orderId);
+
+    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId);
 }

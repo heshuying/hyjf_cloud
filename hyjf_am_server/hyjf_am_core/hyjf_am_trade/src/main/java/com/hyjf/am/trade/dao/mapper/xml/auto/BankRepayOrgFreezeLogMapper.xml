@@ -15,6 +15,7 @@
     <result column="amount" property="amount" jdbcType="DECIMAL" />
     <result column="repay_account" property="repayAccount" jdbcType="DECIMAL" />
     <result column="repay_fee" property="repayFee" jdbcType="DECIMAL" />
+    <result column="amount_freeze" property="amountFreeze" jdbcType="DECIMAL" />
     <result column="lower_interest" property="lowerInterest" jdbcType="DECIMAL" />
     <result column="penalty_amount" property="penaltyAmount" jdbcType="DECIMAL" />
     <result column="default_interest" property="defaultInterest" jdbcType="DECIMAL" />
@@ -90,10 +91,10 @@
   </sql>
   <sql id="Base_Column_List" >
     id, repay_user_id, repay_user_name, borrow_user_id, borrow_user_name, account, order_id, 
-    borrow_nid, plan_nid, inst_code, amount, repay_account, repay_fee, lower_interest, 
-    penalty_amount, default_interest, borrow_period, total_period, current_period, all_repay_flag, 
-    del_flag, create_time, create_user_id, create_user_name, update_time, update_user_id, 
-    update_user_name
+    borrow_nid, plan_nid, inst_code, amount, repay_account, repay_fee, amount_freeze, 
+    lower_interest, penalty_amount, default_interest, borrow_period, total_period, current_period, 
+    all_repay_flag, del_flag, create_time, create_user_id, create_user_name, update_time, 
+    update_user_id, update_user_name
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BankRepayOrgFreezeLogExample" >
     select
@@ -136,20 +137,22 @@
       borrow_user_name, account, order_id, 
       borrow_nid, plan_nid, inst_code, 
       amount, repay_account, repay_fee, 
-      lower_interest, penalty_amount, default_interest, 
-      borrow_period, total_period, current_period, 
-      all_repay_flag, del_flag, create_time, 
-      create_user_id, create_user_name, update_time, 
-      update_user_id, update_user_name)
+      amount_freeze, lower_interest, penalty_amount, 
+      default_interest, borrow_period, total_period, 
+      current_period, all_repay_flag, del_flag, 
+      create_time, create_user_id, create_user_name, 
+      update_time, update_user_id, update_user_name
+      )
     values (#{repayUserId,jdbcType=INTEGER}, #{repayUserName,jdbcType=VARCHAR}, #{borrowUserId,jdbcType=INTEGER}, 
       #{borrowUserName,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
       #{borrowNid,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, 
       #{amount,jdbcType=DECIMAL}, #{repayAccount,jdbcType=DECIMAL}, #{repayFee,jdbcType=DECIMAL}, 
-      #{lowerInterest,jdbcType=DECIMAL}, #{penaltyAmount,jdbcType=DECIMAL}, #{defaultInterest,jdbcType=DECIMAL}, 
-      #{borrowPeriod,jdbcType=VARCHAR}, #{totalPeriod,jdbcType=INTEGER}, #{currentPeriod,jdbcType=INTEGER}, 
-      #{allRepayFlag,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR})
+      #{amountFreeze,jdbcType=DECIMAL}, #{lowerInterest,jdbcType=DECIMAL}, #{penaltyAmount,jdbcType=DECIMAL}, 
+      #{defaultInterest,jdbcType=DECIMAL}, #{borrowPeriod,jdbcType=VARCHAR}, #{totalPeriod,jdbcType=INTEGER}, 
+      #{currentPeriod,jdbcType=INTEGER}, #{allRepayFlag,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BankRepayOrgFreezeLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -192,6 +195,9 @@
       </if>
       <if test="repayFee != null" >
         repay_fee,
+      </if>
+      <if test="amountFreeze != null" >
+        amount_freeze,
       </if>
       <if test="lowerInterest != null" >
         lower_interest,
@@ -272,6 +278,9 @@
       </if>
       <if test="repayFee != null" >
         #{repayFee,jdbcType=DECIMAL},
+      </if>
+      <if test="amountFreeze != null" >
+        #{amountFreeze,jdbcType=DECIMAL},
       </if>
       <if test="lowerInterest != null" >
         #{lowerInterest,jdbcType=DECIMAL},
@@ -365,6 +374,9 @@
       <if test="record.repayFee != null" >
         repay_fee = #{record.repayFee,jdbcType=DECIMAL},
       </if>
+      <if test="record.amountFreeze != null" >
+        amount_freeze = #{record.amountFreeze,jdbcType=DECIMAL},
+      </if>
       <if test="record.lowerInterest != null" >
         lower_interest = #{record.lowerInterest,jdbcType=DECIMAL},
       </if>
@@ -427,6 +439,7 @@
       amount = #{record.amount,jdbcType=DECIMAL},
       repay_account = #{record.repayAccount,jdbcType=DECIMAL},
       repay_fee = #{record.repayFee,jdbcType=DECIMAL},
+      amount_freeze = #{record.amountFreeze,jdbcType=DECIMAL},
       lower_interest = #{record.lowerInterest,jdbcType=DECIMAL},
       penalty_amount = #{record.penaltyAmount,jdbcType=DECIMAL},
       default_interest = #{record.defaultInterest,jdbcType=DECIMAL},
@@ -483,6 +496,9 @@
       </if>
       <if test="repayFee != null" >
         repay_fee = #{repayFee,jdbcType=DECIMAL},
+      </if>
+      <if test="amountFreeze != null" >
+        amount_freeze = #{amountFreeze,jdbcType=DECIMAL},
       </if>
       <if test="lowerInterest != null" >
         lower_interest = #{lowerInterest,jdbcType=DECIMAL},
@@ -543,6 +559,7 @@
       amount = #{amount,jdbcType=DECIMAL},
       repay_account = #{repayAccount,jdbcType=DECIMAL},
       repay_fee = #{repayFee,jdbcType=DECIMAL},
+      amount_freeze = #{amountFreeze,jdbcType=DECIMAL},
       lower_interest = #{lowerInterest,jdbcType=DECIMAL},
       penalty_amount = #{penaltyAmount,jdbcType=DECIMAL},
       default_interest = #{defaultInterest,jdbcType=DECIMAL},

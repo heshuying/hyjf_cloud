@@ -31,6 +31,8 @@ public class BankRepayOrgFreezeLog implements Serializable {
 
     private BigDecimal repayFee;
 
+    private BigDecimal amountFreeze;
+
     private BigDecimal lowerInterest;
 
     private BigDecimal penaltyAmount;
@@ -163,6 +165,14 @@ public class BankRepayOrgFreezeLog implements Serializable {
 
     public void setRepayFee(BigDecimal repayFee) {
         this.repayFee = repayFee;
+    }
+
+    public BigDecimal getAmountFreeze() {
+        return amountFreeze;
+    }
+
+    public void setAmountFreeze(BigDecimal amountFreeze) {
+        this.amountFreeze = amountFreeze;
     }
 
     public BigDecimal getLowerInterest() {

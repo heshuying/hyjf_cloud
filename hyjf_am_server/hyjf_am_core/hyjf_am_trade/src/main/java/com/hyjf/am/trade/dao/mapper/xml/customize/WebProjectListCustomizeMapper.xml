@@ -697,7 +697,9 @@
         WHEN hp.plan_invest_status = 1 AND FORMAT(hp.available_invest_account , 2) <![CDATA[<=]]> 0.00
         THEN '稍后开启'
         WHEN hp.plan_invest_status = 1
-        THEN '立即加入'
+        <!--THEN '立即加入'-->
+        <!--mod by nxl 智投服务 计划 立即加入 -> 授权服务-->
+        THEN '授权服务'
         WHEN hp.plan_invest_status = 2
         THEN '稍后开启'
         ELSE ''
@@ -1182,7 +1184,9 @@
         AND FORMAT(hp.available_invest_account, 2)  <![CDATA[ <= ]]>    0.00
         THEN '稍后开启'
         WHEN hp.plan_invest_status = 1
-        THEN '立即加入'
+        <!--THEN '立即加入'-->
+        <!--mod by nxl 智投服务 计划 立即加入 -> 授权服务-->
+        THEN '授权服务'
         WHEN hp.plan_invest_status = 2
         THEN '稍后开启'
         ELSE ''
@@ -1317,7 +1321,9 @@
         AND FORMAT(hp.available_invest_account, 2) <![CDATA[<=]]> 0.00
         THEN '稍后开启'
         WHEN hp.plan_invest_status = 1
-        THEN '立即加入'
+        <!--THEN '立即加入'-->
+        <!--mod by nxl 智投服务 计划 立即加入 -> 授权服务-->
+        THEN '授权服务'
         WHEN hp.plan_invest_status = 2
         THEN '稍后开启'
         ELSE ''
@@ -1501,7 +1507,9 @@
 							AND FORMAT(hp.available_invest_account, 2) <![CDATA[<=]]> 0.00
 							THEN '稍后开启'
 							WHEN hp.plan_invest_status = 1
-                            THEN '立即加入'
+                            <!--THEN '立即加入'-->
+                            <!--mod by nxl 智投服务 计划 立即加入 -> 授权服务-->
+                            THEN '授权服务'
 							WHEN hp.plan_invest_status = 2
 							THEN '稍后开启'
 							ELSE ''

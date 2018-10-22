@@ -930,9 +930,14 @@ public class MyCouponListServiceImpl implements MyCouponListService {
     		/*if (projectType.indexOf("5")!=-1) {
             projectString = projectString + "汇添金,";
         }*/
-        if (projectType.indexOf("6") != -1) {
+        // mod by nxl 智投服务：修改汇计划->智投 start
+       /* if (projectType.indexOf("6") != -1) {
             projectString = projectString + "汇计划,";
+        }*/
+        if (projectType.indexOf("6")!=-1) {
+            projectString = projectString + "智投,";
         }
+        // mod by nxl 智投服务：修改汇计划->智投 end
 
         return projectString.substring(1, projectString.length() - 1);
     }
