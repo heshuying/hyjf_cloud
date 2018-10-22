@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.WebProjectRepayListCustomizeResponse;
@@ -486,6 +487,7 @@ public class BorrowController extends BaseController {
 
 	@PostMapping("/getBorrowList")
 	public BorrowListResponse getBorrowList(@RequestBody Map<String,Object> param){
+		logger.info("getBorrowList param = {}",JSON.toJSON(param));
 		BorrowListResponse response = new BorrowListResponse();
 		List<BorrowListVO> list = borrowService.getBorrowList(param);
 		if (CollectionUtils.isNotEmpty(list)){

@@ -4610,6 +4610,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     @Override
     public List<BorrowListVO> getBorrowList(Map<String, Object> param) {
+        Map<String,String> map = new HashMap<>();
+        map.put("borrowNidSrch",String.valueOf(param.get("borrowNidSrch")));
        return  borrowCustomizeMapper.getBorrowList(param);
     }
 
