@@ -155,10 +155,14 @@ public class AppMyPlanController extends BaseTradeController {
             BeanUtils.copyProperties(entity, project);
             //初始化加入金额
             project.setBorrowTheFirst(DF_FOR_VIEW.format(new BigDecimal(entity.getAccedeAmount())));
-            project.setBorrowTheFirstDesc("加入金额");
+            // mod by nxl 智投服务 修改加入金额->授权金额,锁定期限->回报期限 Start
+//			project.setBorrowTheFirstDesc("加入金额");
+            project.setBorrowTheFirstDesc("授权金额");
             //计划锁定期
             project.setBorrowTheSecond(entity.getLockPeriod());
-            project.setBorrowTheSecondDesc("锁定期限");
+//			project.setBorrowTheSecondDesc("锁定期限");
+            project.setBorrowTheSecondDesc("回报期限");
+            // mod by nxl 智投服务 修改加入金额->授权金额,锁定期限->回报期限 End
             //如果是标签类型有就转换为优惠券类别
             String label = entity.getLabel();
             switch (label) {
@@ -176,7 +180,9 @@ public class AppMyPlanController extends BaseTradeController {
             }
             //根据type判断计划是否已退出
             if ("1".equals(project.getType())) {
-                project.setBorrowTheThirdDesc("加入时间");
+                // mod by nxl 智投服务 修改加入时间-> 授权时间
+//                project.setBorrowTheThirdDesc("加入时间");
+                project.setBorrowTheThirdDesc("授权时间");
                 project.setBorrowTheThird(entity.getCreateTime());
             } else {
                 // mod 汇计划二期前端优化 已退出的计划将回款时间改为退出时间  nxl 20180426 start

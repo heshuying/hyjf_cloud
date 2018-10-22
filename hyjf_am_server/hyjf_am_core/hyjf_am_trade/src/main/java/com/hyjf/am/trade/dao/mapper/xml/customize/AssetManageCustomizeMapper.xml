@@ -11,6 +11,9 @@
 		<result column="type" property="type" />
 		<result column="coupon_type" property="couponType" />
 		<result column="projectNid" property="projectNid" />
+        <!--add by nxl 智投服务 添加退出中和是否是计划标识-->
+		<result column="exit_flg" property="exitType" />
+		<result column="hjh_flg"  property="hjhType" />
 	</resultMap>
 	<select id="selectRecentPaymentList" resultMap="recentPaymentMap" parameterType="java.util.Map">
 
@@ -26,6 +29,8 @@
 		WHEN hbc.credit_capital_assigned IS NOT NULL THEN 1
 		ELSE 0 END type,
 		0 coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		0 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		IFNULL(rec.recover_capital_wait,ten.account)+
 		IFNULL( rec.recover_interest_wait, 0 )-
 		(SELECT IFNULL(SUM(ct.assign_interest - ct.assign_repay_interest),0)
@@ -63,6 +68,8 @@
 		borrow.repay_last_time,
 		2 AS type,
 		0 coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		0 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		(ten.assign_capital+ten.assign_interest) total_wait
 		FROM
 		ht_credit_tender ten
@@ -87,6 +94,8 @@
 		MAX(hcr.recover_time),
 		3 type,
 		hcc.coupon_type coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		0 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		IFNULL(SUM(hcr.recover_account),0) total_wait
 		FROM
 		ht_borrow_tender_cpn hbtc
@@ -111,6 +120,8 @@
 		borrow.repay_last_time,
 		4 AS type,
 		0 coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		0 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		hiii.repay_interest_wait AS total_wait
 		FROM
 		ht_increase_interest_invest hiii
@@ -133,16 +144,38 @@
 		hha.last_payment_time,
 		5 AS type,
 		0 coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		1 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		hha.wait_total wait_total
 		FROM ht_hjh_accede hha
 		LEFT JOIN ht_hjh_plan hhp
 		ON hha.plan_nid=hhp.plan_nid
 		WHERE hha.order_status=3
 		AND hha.user_id=#{userId}
+		<!-- add by nxl 智投服务 添加推出中的计划 start-->
+		UNION ALL SELECT
+		hhp.plan_name,
+		hhp.plan_name AS projectNid,
+		CONCAT(hhp.expect_apr, '%') borrow_apr,
+		IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
+		hha.last_payment_time,
+		5 AS type,
+		0 coupon_type,
+		1 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识 1 :退出中-->
+		1 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
+		hha.wait_total wait_total
+		FROM ht_hjh_accede hha
+		LEFT JOIN ht_hjh_plan hhp
+		ON hha.plan_nid=hhp.plan_nid
+		WHERE hha.order_status= 5
+		AND hha.user_id=#{userId}
+		<!-- add by nxl 智投服务 添加推出中的计划 end-->
 		UNION ALL
 		SELECT
 		hhp.plan_name AS project_name,
-		hbtc.borrow_nid AS projectNid,
+		<!--hbtc.borrow_nid AS projectNid,-->
+		<!--mod by nxl 智投服务:修改计划显示计划编号->计划名称-->
+		hhp.plan_name AS projectNid,
 		CASE
 		WHEN hcc.coupon_type = 2 THEN
 		CONCAT(hcc.coupon_quota, '%')
@@ -154,6 +187,8 @@
 		hcr.recover_time,
 		3 type,
 		hcc.coupon_type coupon_type,
+		0 as exit_flg,<!-- add by nxl 智投服务,添加退出中标识-->
+		1 as hjh_flg,<!-- add by nxl 智投服务,添加计划标识-->
 		IFNULL(hcr.recover_account,0) total_wait
 		FROM
 		ht_borrow_tender_cpn hbtc
