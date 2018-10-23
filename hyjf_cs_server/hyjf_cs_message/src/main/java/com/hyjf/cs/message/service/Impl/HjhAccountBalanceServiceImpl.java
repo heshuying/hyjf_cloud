@@ -45,19 +45,19 @@ public class HjhAccountBalanceServiceImpl extends BaseMessageServiceImpl impleme
      * @return
      */
     @Override
-    public Boolean updateAccountBalance(HjhAccountBalanceVO hjhAccountBalance) {
+    public Boolean updateAccountBalance(HjhAccountBalanceVO hjhAccountBalanceVO) {
         Boolean result = false;
         // 判断数据是否已存在
-        List<HjhAccountBalanceVO> list = this.hjhAccountBalanceDao.selectHjhAccountBalanceList(hjhAccountBalance);
+        List<HjhAccountBalanceVO> list = this.hjhAccountBalanceDao.selectHjhAccountBalanceList(hjhAccountBalanceVO);
         if (list == null ) {
             throw new RuntimeException("取得汇计划按日对账统计表的数据失败。");
         }
         if (list.size()>0){
             // 存在，更新记录（汇计划按日对账统计表）
-            result = this.hjhAccountBalanceDao.updateHjhAccountBalance(hjhAccountBalance);
+            result = this.hjhAccountBalanceDao.updateHjhAccountBalance(hjhAccountBalanceVO);
         }else{
             // 不存在，插入记录（汇计划按日对账统计表）
-            result = this.hjhAccountBalanceDao.insertHjhAccountBalance(hjhAccountBalance);
+            result = this.hjhAccountBalanceDao.insertHjhAccountBalance(hjhAccountBalanceVO);
         }
         return result;
     }
