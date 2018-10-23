@@ -61,7 +61,7 @@ public interface UnBindCardService extends BaseUserService {
      * @param channel
      * @return
      */
-    Map<String,Object> callUnBindCardPage(WebViewUserVO user, BankOpenAccountVO accountChinapnrTender, BankCardVO bankCardVO, UserInfoVO userInfoVO, String channel,String sign);
+    Map<String,Object> callUnBindCardPage(WebViewUserVO user, BankOpenAccountVO accountChinapnrTender, BankCardVO bankCardVO, UserInfoVO userInfoVO, String channel,String sign,String bgRetUrl);
     /**
      * 解绑银行卡后(异步回调删除)
      * 合规四期(解卡页面调用)

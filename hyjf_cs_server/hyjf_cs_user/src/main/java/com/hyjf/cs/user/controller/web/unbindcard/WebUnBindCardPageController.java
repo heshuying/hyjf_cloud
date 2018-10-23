@@ -58,8 +58,10 @@ public class WebUnBindCardPageController extends BaseUserController{
         unBindCardService.checkParamUnBindCardPage(user,accountChinapnrTender,accountVO,bankCardVO);
         //获取用户info信息
         UserInfoVO userInfoVO = unBindCardService.getUserInfo(user.getUserId());
+        // 异步调用路
+        String bgRetUrl = "http://CS-USER/hyjf-web/user/deleteCardPage/bgReturn?userId=" + user.getUserId();
         //调用解绑银行卡接口
-        unBindCardService.callUnBindCardPage(user, accountChinapnrTender, bankCardVO, userInfoVO, BankCallConstant.CHANNEL_PC,null);
+        unBindCardService.callUnBindCardPage(user, accountChinapnrTender, bankCardVO, userInfoVO, BankCallConstant.CHANNEL_PC,null,bgRetUrl);
         return result;
     }
 

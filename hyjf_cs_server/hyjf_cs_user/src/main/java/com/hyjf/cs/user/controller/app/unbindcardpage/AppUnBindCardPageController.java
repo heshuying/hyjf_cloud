@@ -15,6 +15,8 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.web.bindcard.WebBindCardPageController;
 import com.hyjf.cs.user.service.unbindcard.UnBindCardService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -37,7 +39,7 @@ import java.util.Map;
 @Api(value = "app端-用户解绑卡接口(页面调用)",tags = "app端-用户解绑卡接口(页面调用)")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/hyjf-app/user/deleteCardPage")
+@RequestMapping("/hyjf-app/bank/app/deleteCardPage")
 public class AppUnBindCardPageController extends BaseUserController{
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebBindCardPageController.class);
 
@@ -152,8 +154,40 @@ public class AppUnBindCardPageController extends BaseUserController{
         unBindCardService.checkParamUnBindCardPage(user,accountChinapnrTender,accountVO,bankCardVO);
         //获取用户info信息
         UserInfoVO userInfoVO = unBindCardService.getUserInfo(user.getUserId());
+        // 异步调用路
+        String bgRetUrl = "http://CS-USER/hyjf-app/bank/app/deleteCardPage/bgReturn?userId=" + user.getUserId();
         //调用解绑银行卡接口
-        unBindCardService.callUnBindCardPage(user, accountChinapnrTender, bankCardVO, userInfoVO, BankCallConstant.CHANNEL_APP,sign);
+        unBindCardService.callUnBindCardPage(user, accountChinapnrTender, bankCardVO, userInfoVO, BankCallConstant.CHANNEL_APP,sign,bgRetUrl);
+        return result;
+    }
+
+    /**
+     * 绑卡异步回调
+     * @param bean
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
+    @PostMapping(value = "/bgReturn")
+    @ResponseBody
+    public BankCallResult bindCardBgReturn(BankCallBean bean, HttpServletRequest request) {
+
+        BankCallResult result = new BankCallResult();
+        logger.info("app端页面解卡异步回调start");
+        bean.convert();
+        int userId = Integer.parseInt(bean.getLogUserId());
+        // 绑卡后处理
+        try {
+            if(BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())){
+                logger.info("app端删除银行卡成功");
+                // 删除银行卡信息
+                unBindCardService.updateAfterUnBindCard(bean, userId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        logger.info("app端页面解卡成功,用户ID:[" + userId + ",用户电子账户号:[" + bean.getAccountId() + "]");
+        result.setStatus(true);
         return result;
     }
 
