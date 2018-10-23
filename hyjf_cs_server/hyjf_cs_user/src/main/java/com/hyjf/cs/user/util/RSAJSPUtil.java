@@ -271,8 +271,9 @@ public class RSAJSPUtil {
 		String encoding = "UTF-8";
 		File file = new File(filePath);
 		Long filelength = file.length();
+		logger.info("filelength:"+filelength);
 		byte[] filecontent = new byte[filelength.intValue()];
-
+		logger.info("filecontent[]:"+filecontent);
 
 		try (FileInputStream in = new FileInputStream(file)) {
 			in.read(filecontent);
