@@ -487,5 +487,8 @@ public class AutoMapper {
 
     @Autowired
     protected ApplyAgreementMapper applyAgreementMapper;
+
+    @Autowired
+    protected ApplyAgreementInfoMapper applyAgreementInfoMapper;
 }
 

@@ -1,6 +1,7 @@
 package com.hyjf.cs.message.mongo.mc;
 
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
+
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -28,37 +29,30 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      */
     public Integer countRecordList(MessagePushNoticesRequest form){
         Criteria criteria = new Criteria();
-        if (form.getTagId() != null) {
-            criteria.and("tagId").is(form.getTagId());
+        if (form.getNoticesTagIdSrch() != null) {
+            criteria.and("tagId").is(form.getNoticesTagIdSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesTitleSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesTitleSrch())) {
             criteria.and("msgTitle").regex(form.getNoticesTitleSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesCodeSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesCodeSrch())) {
             criteria.and("msgCode").regex(form.getNoticesCodeSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesCreateUserNameSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesCreateUserNameSrch())) {
             criteria.and("createUserName").regex(form.getNoticesCreateUserNameSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesTerminalSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesTerminalSrch())) {
             criteria.and("msgTerminal").regex(form.getNoticesTerminalSrch());
         }
         if (form.getNoticesSendStatusSrch() != null) {
             criteria.and("msgSendStatus").is(form.getNoticesSendStatusSrch());
         }
+
         criteria.and("msgDestinationType").is(0);
-       if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
-            Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch());
-            criteria.and("sendTime").gte(time);
-            if (form.getEndSendTimeSrch() != null) {
-                Integer time2 = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
-                criteria.lte(time2);
-            }
-        }else{
-            if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
-                Integer time2 = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
-                criteria.and("sendTime").lte(time2);
-            }
+        if (form.getStartSendTimeSrch() != null || form.getEndSendTimeSrch() != null) {
+            int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch() + " 00:00:00");
+            int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch() + " 23:59:59");
+            criteria.and("sendTime").gte(startTime).lte(endTime);
         }
         Query query = new Query(criteria);
         return (int)mongoTemplate.count(query,MessagePushMsg.class);
@@ -89,18 +83,10 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         if (form.getNoticesSendStatusSrch() != null) {
             criteria.and("msgSendStatus").is(form.getNoticesSendStatusSrch());
         }
-        if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
-            Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch());
-            criteria.and("sendTime").gte(time);
-            if (form.getEndSendTimeSrch() != null) {
-                Integer time2 = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
-                criteria.lte(time2);
-            }
-        }else{
-            if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
-                Integer time2 = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
-                criteria.and("sendTime").lte(time2);
-            }
+        if (form.getStartSendTimeSrch() != null || form.getEndSendTimeSrch() != null) {
+            int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch() + " 00:00:00");
+            int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch() + " 23:59:59");
+            criteria.and("sendTime").gte(startTime).lte(endTime);
         }
         criteria.and("msgDestinationType").is(0);
         Query query = new Query(criteria);
