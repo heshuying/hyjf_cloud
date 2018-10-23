@@ -188,12 +188,27 @@ public interface UserManagerService extends BaseService {
     int updateUserInfoByUserInfo(UserInfo userInfo);
 
     /**
+     * -开户掉单更新用户
+     *
+     * @param userInfo
+     * @return
+     */
+    int updateUserInfoByUserInfoSelective(UserInfo userInfo);
+
+    /**
      * 更新用户表
      *
      * @param user
      * @return
      */
     int updateUser(User user);
+
+    /**
+     *  更新用户表-开户掉单更新用户
+     * @param user
+     * @return
+     */
+    int updateUserSelective(User user);
 
     /**
      * 获取某一用户的信息修改列表
