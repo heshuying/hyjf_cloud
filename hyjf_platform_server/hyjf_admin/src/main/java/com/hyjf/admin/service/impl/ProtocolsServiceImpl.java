@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.ProtocolsService;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -44,23 +45,20 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Value("${hyjf.ftp.ip}")
-	private String ftpIp;
+	@Autowired
+	private SystemConfig systemConfig;
 
-	@Value("${hyjf.ftp.port}")
-	private String ftpPort;
+	private String ftpIp = systemConfig.getFtpIp();
 
-	@Value("${hyjf.ftp.basepath.pdf}")
-	private String ftpBasePath;
+	private String ftpPort = systemConfig.getFtpPort();
 
-	@Value("${hyjf.ftp.password}")
-	private String ftpPassword;
+	private String ftpBasePath = systemConfig.getFtpBasePath();
 
-	@Value("${hyjf.ftp.username}")
-	private String ftpUsername;
+	private String ftpPassword = systemConfig.getFtpPassword();
 
-	@Value("${hyjf.ftp.url}")
-	private String ftpDomain;
+	private String ftpUsername = systemConfig.getFtpUsername();
+
+	private String ftpDomain = systemConfig.getFtpDomain();
 
 	@Autowired
 	private AmTradeClient amTradeClient;
@@ -158,7 +156,6 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 		String password = ftpPassword;
 		String username = ftpUsername;
 		String domain = ftpDomain;
-		String ftpPath = "ftp://" + ftpIP + ":" + port + basePath + "/" + fddTemplet;
 		String httpPath = domain + basePath + "/" + fddTemplet;
 		String httpUrl = null;
 		try {
