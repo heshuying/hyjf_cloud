@@ -78,8 +78,8 @@ public class PcChannelReconciliationController extends BaseController {
      * @param response
      * @param form
      */
-    @ApiOperation(value = "导出散标列表", notes = "导出散标列表")
-    @PostMapping("/export")
+   // @ApiOperation(value = "导出散标列表", notes = "导出散标列表")
+    //@PostMapping("/export")
     public void exportAction(@RequestBody ChannelReconciliationRequest request, HttpServletResponse response) throws Exception {
         // 表格sheet名称
         String sheetName = "PC渠道对账-散标";
@@ -170,6 +170,91 @@ public class PcChannelReconciliationController extends BaseController {
             ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         }
 
+    }
+
+
+    @ApiOperation(value = "导出散标列表", notes = "导出散标列表")
+    @PostMapping("/export")
+    public void exportAction(@RequestBody ChannelReconciliationRequest request, HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "PC渠道对账-散标";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+        int sheetCount = 0;
+        String sheetNameTmp = sheetName + "_第1页";
+        Map<String, String> beanPropertyColumnMap = buildExportMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildExportValueAdapter();
+        request.setCurrPage(1);
+        request.setPageSize(defaultRowMaxCount);
+
+        ChannelReconciliationResponse channelReconciliationResponse = channelService.searchAction(request);
+
+        if (channelReconciliationResponse == null || channelReconciliationResponse.getCount() <= 0){
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            int totalCount = channelReconciliationResponse.getCount();
+            sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, channelReconciliationResponse.getResultList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            request.setCurrPage(i+1);
+            ChannelReconciliationResponse channelReconciliationResponse2 = channelService.searchAction(request);
+            if (channelReconciliationResponse2 != null && channelReconciliationResponse2.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  channelReconciliationResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+
+
+        DataSet2ExcelSXSSFHelper.write2Response(httpRequest, response, fileName, workbook);
+
+
+
+    }
+
+
+    private Map<String, String> buildExportMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("userName", "用户名");
+        map.put("utmName", "渠道");
+        map.put("registTime", "注册时间");
+        map.put("orderCode", "投资订单");
+        map.put("borrowNid", "借款编号");
+        map.put("borrowPeriod", "标的期限");
+        map.put("investAmount", "投资金额");
+        map.put("firstFlag", "是否首投");
+        map.put("investTime", "投资时间");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildExportValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter firstFlagAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer firstFlag = (Integer) object;
+                return firstFlag.equals(1) ? "是" : "否";
+            }
+        };
+        IValueFormatter investTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String investTime = (String) object;
+                return StringUtils.isNotBlank(investTime) ? investTime : "";
+            }
+        };
+        mapAdapter.put("firstFlag", firstFlagAdapter);
+        mapAdapter.put("investTime",investTimeAdapter);
+        return mapAdapter;
     }
 
 
