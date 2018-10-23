@@ -11,8 +11,6 @@ import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
 import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
-import com.hyjf.am.trade.dao.mapper.customize.AdminBorrowRegistExceptionMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BorrowRegistCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;

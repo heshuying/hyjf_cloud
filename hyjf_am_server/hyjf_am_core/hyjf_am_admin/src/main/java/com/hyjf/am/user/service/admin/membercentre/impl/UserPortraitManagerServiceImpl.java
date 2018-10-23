@@ -5,7 +5,10 @@ package com.hyjf.am.user.service.admin.membercentre.impl;
 
 import com.hyjf.am.resquest.admin.UserPortraitScoreRequest;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
-import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.auto.SpreadsUser;
+import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
+import com.hyjf.am.user.dao.model.auto.UserPortrait;
+import com.hyjf.am.user.dao.model.auto.UserPortraitExample;
 import com.hyjf.am.user.dao.model.customize.UserPortraitScoreCustomize;
 import com.hyjf.am.user.service.admin.membercentre.UserPortraitManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;

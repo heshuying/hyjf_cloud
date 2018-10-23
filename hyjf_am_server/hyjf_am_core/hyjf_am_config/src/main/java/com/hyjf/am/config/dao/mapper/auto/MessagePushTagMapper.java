@@ -2,8 +2,9 @@ package com.hyjf.am.config.dao.mapper.auto;
 
 import com.hyjf.am.config.dao.model.auto.MessagePushTag;
 import com.hyjf.am.config.dao.model.auto.MessagePushTagExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface MessagePushTagMapper {
     int countByExample(MessagePushTagExample example);

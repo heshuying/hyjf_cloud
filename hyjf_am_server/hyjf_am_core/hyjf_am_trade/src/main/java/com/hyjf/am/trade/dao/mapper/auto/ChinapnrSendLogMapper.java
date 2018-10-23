@@ -3,8 +3,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 import com.hyjf.am.trade.dao.model.auto.ChinapnrSendLog;
 import com.hyjf.am.trade.dao.model.auto.ChinapnrSendLogExample;
 import com.hyjf.am.trade.dao.model.auto.ChinapnrSendLogWithBLOBs;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ChinapnrSendLogMapper {
     int countByExample(ChinapnrSendLogExample example);

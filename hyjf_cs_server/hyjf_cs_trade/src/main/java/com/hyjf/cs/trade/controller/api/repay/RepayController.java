@@ -18,7 +18,6 @@ import com.hyjf.cs.trade.service.repay.BatchHjhBorrowRepayApiService;
 import com.hyjf.cs.trade.service.repay.RepayService;
 import com.hyjf.cs.trade.service.synbalance.SynBalanceService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
-import com.hyjf.cs.trade.util.SignUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.promotion;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.promotion.UtmService;

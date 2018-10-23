@@ -3,20 +3,18 @@
  */
 package com.hyjf.admin.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AdminRoleService;
 import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.admin.UserRoleRequest;
 import com.hyjf.am.resquest.config.AdminMenuRequest;
 import com.hyjf.am.resquest.config.AdminRoleRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author DongZeShan
