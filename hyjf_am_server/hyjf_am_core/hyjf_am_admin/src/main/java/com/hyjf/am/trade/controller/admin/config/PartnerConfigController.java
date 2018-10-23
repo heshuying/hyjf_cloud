@@ -2,13 +2,13 @@ package com.hyjf.am.trade.controller.admin.config;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminPartnerConfigDetailResponse;
 import com.hyjf.am.resquest.admin.AdminPartnerConfigListRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.service.admin.config.PartnerConfigService;
 import com.hyjf.am.vo.admin.HjhInstConfigWrapVo;
-import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetCode;
@@ -163,6 +163,15 @@ public class PartnerConfigController {
         this.partnerConfigService.deleteInstConfig(req);
         resp.setRtn(Response.SUCCESS);
         return resp;
+    }
+
+    /**
+     * 合作机构配置资产编号校验
+     * @param req
+     */
+    @RequestMapping("/isExists")
+    public IntegerResponse isExists(@RequestBody AdminPartnerConfigListRequest req) {
+        return this.partnerConfigService.isExists(req);
     }
 
     /**

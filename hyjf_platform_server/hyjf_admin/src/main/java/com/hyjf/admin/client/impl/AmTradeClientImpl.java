@@ -5867,6 +5867,17 @@ public class AmTradeClientImpl implements AmTradeClient {
                 .getBody();
     }
     /**
+     * 合作机构配置资产编号校验
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    @Override
+    public IntegerResponse isExistsCheckAction(AdminPartnerConfigListRequest req){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/config/partnerconfig/isExists", req, IntegerResponse.class)
+                .getBody();
+    }
+    /**
      * 查询固定时间间隔的用户投资列表
      * @param repairStartDate
      * @param repairEndDate
