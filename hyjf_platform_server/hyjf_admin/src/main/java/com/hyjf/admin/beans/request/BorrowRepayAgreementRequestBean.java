@@ -1,7 +1,6 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
-import com.hyjf.am.vo.trade.BorrowRepayAgreementVO;
 
 import java.io.Serializable;
 import java.util.List;

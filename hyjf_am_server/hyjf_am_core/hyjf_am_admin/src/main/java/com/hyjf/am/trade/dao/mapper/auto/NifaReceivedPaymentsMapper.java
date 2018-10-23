@@ -2,8 +2,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.NifaReceivedPayments;
 import com.hyjf.am.trade.dao.model.auto.NifaReceivedPaymentsExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface NifaReceivedPaymentsMapper {
     int countByExample(NifaReceivedPaymentsExample example);

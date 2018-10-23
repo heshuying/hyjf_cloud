@@ -2,8 +2,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.Poundage;
 import com.hyjf.am.trade.dao.model.auto.PoundageExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface PoundageMapper {
     int countByExample(PoundageExample example);

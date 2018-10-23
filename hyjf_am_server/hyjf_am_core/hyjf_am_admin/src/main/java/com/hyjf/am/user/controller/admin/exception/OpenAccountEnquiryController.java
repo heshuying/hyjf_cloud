@@ -1,6 +1,5 @@
 package com.hyjf.am.user.controller.admin.exception;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankOpenAccountLogResponse;
 import com.hyjf.am.response.user.OpenAccountEnquiryResponse;

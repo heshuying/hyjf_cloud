@@ -2,8 +2,9 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.ROaUsers;
 import com.hyjf.am.user.dao.model.auto.ROaUsersExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ROaUsersMapper {
     int countByExample(ROaUsersExample example);

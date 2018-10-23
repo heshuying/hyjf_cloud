@@ -3,24 +3,18 @@
  */
 package com.hyjf.admin.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.service.AdminRoleService;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminMenuRequest;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author DongZeShan

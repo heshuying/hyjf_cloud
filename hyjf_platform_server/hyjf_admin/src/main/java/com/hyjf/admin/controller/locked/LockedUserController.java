@@ -5,7 +5,6 @@ package com.hyjf.admin.controller.locked;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.locked.LockedUserService;
 import com.hyjf.am.response.Response;

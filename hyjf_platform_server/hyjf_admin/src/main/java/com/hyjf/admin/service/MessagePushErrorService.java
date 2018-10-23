@@ -5,7 +5,6 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
-import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.util.List;

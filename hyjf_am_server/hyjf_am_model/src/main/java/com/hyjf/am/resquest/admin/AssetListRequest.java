@@ -1,8 +1,8 @@
 package com.hyjf.am.resquest.admin;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BasePage;
+
+import java.io.Serializable;
 
 /**
  * @author libin

@@ -11,11 +11,6 @@
 
 package com.hyjf.am.trade.dao.model.customize;
 
-import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Date;
-
 /**
  * wechat用户转让记录列表实体
  */

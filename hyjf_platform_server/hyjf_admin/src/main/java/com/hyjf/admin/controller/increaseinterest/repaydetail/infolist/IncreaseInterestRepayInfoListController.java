@@ -73,7 +73,7 @@ public class IncreaseInterestRepayInfoListController extends BaseController {
 	 */
 	@ApiOperation(value = "产品中心-加息还款明细详情", notes = "产品中心-加息还款明细详情 导出还款明细详情")
 	@GetMapping("/export")
-	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody IncreaseInterestRepayInfoListRequest form) throws Exception {
+	public void exportAction(HttpServletRequest request, HttpServletResponse response, IncreaseInterestRepayInfoListRequest form) throws Exception {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
@@ -140,7 +140,7 @@ public class IncreaseInterestRepayInfoListController extends BaseController {
 		IValueFormatter percentAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
-				BigDecimal percent = (BigDecimal) object;
+				String percent = (String) object;
 				return percent + "%";
 			}
 		};
