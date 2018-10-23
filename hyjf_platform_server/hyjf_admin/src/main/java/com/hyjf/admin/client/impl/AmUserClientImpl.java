@@ -1978,7 +1978,7 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request) {
+	public SmsCountCustomizeResponse querySmsCountList(SmsCountRequest request) {
 		return restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/query_sms_count_list", request, SmsCountCustomizeResponse.class);
 	}
 
