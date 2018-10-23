@@ -225,7 +225,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgTitle").is(request.getMsgTitleSrch());
 		}
 		if(StringUtils.isNoneBlank(request.getTagIdSrch())){
-			criteria.and("tagId").is(request.getTagIdSrch());
+			criteria.and("tagId").is(Integer.valueOf(request.getTagIdSrch()));
 		}
 		if(StringUtils.isNoneBlank(request.getMsgCodeSrch())){
 			criteria.and("msgCode").is(request.getMsgCodeSrch());
@@ -255,7 +255,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgTitle").is(request.getMsgTitleSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
-			criteria.and("tagId").is(request.getTagIdSrch());
+			criteria.and("tagId").is(Integer.valueOf(request.getTagIdSrch()));
 		}
 		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
 			criteria.and("msgCode").is(request.getMsgCodeSrch());
