@@ -4,12 +4,17 @@ import com.hyjf.admin.beans.BaseRequest;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @author nxl
  * @version UserPortraitResponse, v0.1 2018/6/28 14:27
  */
 public class UserPortraitRequestBean extends BaseRequest implements Serializable {
+    @ApiModelProperty(value = "手机号")
+    private String mobile;
+    @ApiModelProperty(value = "性别")
+    private String sex;
 
     @ApiModelProperty(value = "用户id")
     private Integer userId;
@@ -41,7 +46,62 @@ public class UserPortraitRequestBean extends BaseRequest implements Serializable
     private Integer inviteCustomer;
     @ApiModelProperty(value = "备注")
     private String remark;
-
+    /**
+     * 年龄开始
+     */
+    @ApiModelProperty(value = "年龄开始")
+    private Integer ageStart;
+    /**
+     * 年龄开始
+     */
+    @ApiModelProperty(value = "年龄结束")
+    private Integer ageEnd;
+    /**
+     * 账户总资产开始
+     */
+    @ApiModelProperty(value = "账户总资产开始")
+    private BigDecimal bankTotalStart;
+    /**
+     * 账户总资产结束
+     */
+    @ApiModelProperty(value = "账户总资产结束")
+    private BigDecimal bankTotalEnd;
+    /**
+     * 累计收益开始
+     */
+    @ApiModelProperty(value = "累计收益开始")
+    private BigDecimal interestSumStart;
+    /**
+     * 累计收益结束
+     */
+    @ApiModelProperty(value = "累计收益结束")
+    private BigDecimal interestSumEnd;
+    /**
+     * 交易笔数开始
+     */
+    @ApiModelProperty(value = "易笔数开始")
+    private Integer tradeNumberStart;
+    /**
+     * 交易笔数结束
+     */
+    @ApiModelProperty(value = "交易笔数结束")
+    private Integer tradeNumberEnd;
+    /**
+     * 是否有主单
+     */
+    @ApiModelProperty(value = "是否有主单")
+    private Integer attribute;
+    /**
+     * 注册时间开始
+     */
+    @ApiModelProperty(value = "注册时间开始")
+    private String regTimeStart;
+    /**
+     * 注册时间结束
+     */
+    @ApiModelProperty(value = "注册时间结束")
+    private String regTimeEnd;
+//    private List<UserPortraitCustomize> recordlist;
 
     public String getUserName() {
         return userName;
@@ -161,5 +221,109 @@ public class UserPortraitRequestBean extends BaseRequest implements Serializable
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getAgeStart() {
+        return ageStart;
+    }
+
+    public void setAgeStart(Integer ageStart) {
+        this.ageStart = ageStart;
+    }
+
+    public Integer getAgeEnd() {
+        return ageEnd;
+    }
+
+    public void setAgeEnd(Integer ageEnd) {
+        this.ageEnd = ageEnd;
+    }
+
+    public BigDecimal getBankTotalStart() {
+        return bankTotalStart;
+    }
+
+    public void setBankTotalStart(BigDecimal bankTotalStart) {
+        this.bankTotalStart = bankTotalStart;
+    }
+
+    public BigDecimal getBankTotalEnd() {
+        return bankTotalEnd;
+    }
+
+    public void setBankTotalEnd(BigDecimal bankTotalEnd) {
+        this.bankTotalEnd = bankTotalEnd;
+    }
+
+    public BigDecimal getInterestSumStart() {
+        return interestSumStart;
+    }
+
+    public void setInterestSumStart(BigDecimal interestSumStart) {
+        this.interestSumStart = interestSumStart;
+    }
+
+    public BigDecimal getInterestSumEnd() {
+        return interestSumEnd;
+    }
+
+    public void setInterestSumEnd(BigDecimal interestSumEnd) {
+        this.interestSumEnd = interestSumEnd;
+    }
+
+    public Integer getTradeNumberStart() {
+        return tradeNumberStart;
+    }
+
+    public void setTradeNumberStart(Integer tradeNumberStart) {
+        this.tradeNumberStart = tradeNumberStart;
+    }
+
+    public Integer getTradeNumberEnd() {
+        return tradeNumberEnd;
+    }
+
+    public void setTradeNumberEnd(Integer tradeNumberEnd) {
+        this.tradeNumberEnd = tradeNumberEnd;
+    }
+
+    public Integer getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Integer attribute) {
+        this.attribute = attribute;
+    }
+
+    public String getRegTimeStart() {
+        return regTimeStart;
+    }
+
+    public void setRegTimeStart(String regTimeStart) {
+        this.regTimeStart = regTimeStart;
+    }
+
+    public String getRegTimeEnd() {
+        return regTimeEnd;
+    }
+
+    public void setRegTimeEnd(String regTimeEnd) {
+        this.regTimeEnd = regTimeEnd;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 }
