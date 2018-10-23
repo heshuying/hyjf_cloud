@@ -183,7 +183,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 	 * @return
 	 */
 	@Override
-	public Map<String,Object> callUnBindCardPage(WebViewUserVO user, BankOpenAccountVO accountChinapnrTender,BankCardVO bankCardVO, UserInfoVO userInfoVO,String channel,String sign){
+	public Map<String,Object> callUnBindCardPage(WebViewUserVO user, BankOpenAccountVO accountChinapnrTender,BankCardVO bankCardVO, UserInfoVO userInfoVO,String channel,String sign,String bgRetUrl){
 		// 失败页面
 		String errorPath = "/user/unBindCardError";
 		// 成功页面
@@ -201,8 +201,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 			retUrl += "&token=1&sign=" +sign;
 			successUrl += "&token=1&sign=" +sign;
 		}
-		// 异步调用路
-		String bgRetUrl = "http://CS-USER/hyjf-web/user/deleteCardPage/bgReturn?userId=" + user.getUserId();
+
 		// 忘记密码跳转链接
 		String forgetPassworedUrl =  systemConfig.getForgetpassword();
 		DeleteCardPageBean bean = new DeleteCardPageBean();

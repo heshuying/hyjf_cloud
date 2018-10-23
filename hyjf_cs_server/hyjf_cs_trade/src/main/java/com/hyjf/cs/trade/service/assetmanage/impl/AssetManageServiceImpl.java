@@ -397,9 +397,9 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             // add by nxl 智投服务：计划状态为退出中显示开始退出时间 end
 
             // 实际退出时间
-            if(StringUtils.isEmpty(hjhInvistDetailVO.getRepayActualTime())) {
+            /*if(StringUtils.isEmpty(hjhInvistDetailVO.getRepayActualTime())) {
                 hjhInvistDetailVO.setRepayActualTime("— —");
-            }
+            }*/
             // add 汇计划二期前端优化 持有中计划详情修改锁定期和实际退出时间 nxl 20180419 end
             info.put("userHjhInvistDetail", hjhInvistDetailVO);
             info.put("type", type);
