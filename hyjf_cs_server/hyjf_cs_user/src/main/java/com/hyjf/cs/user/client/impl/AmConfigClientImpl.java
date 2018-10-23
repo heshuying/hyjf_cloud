@@ -199,7 +199,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public Integer getBankInterfaceFlagByType(String type) {
         BankInterfaceResponse response = restTemplate
-                .getForEntity("http://AM-ADMIN/am-admin/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
+                .getForEntity(configService+"/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
         if (response != null) {
             return response.getFlag();
         }

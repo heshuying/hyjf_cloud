@@ -312,10 +312,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             resultVo.setInitMoney(initMoney);
             // -设置优惠券
             logger.info("HJH couponId is:{}, borrowNid is :{}", couponId, planNid);
-            JSONObject userCoupon = appCouponService.getPlanCoupon( tender.getUserId(),planNid, money,
+            JSONObject userCoupon = appCouponService.getPlanCoupon(tender.getUserId(),planNid, money,
                     platform);
             logger.info("userCoupon： ",JSONObject.toJSONString(userCoupon));
-            if (couponId == null || "".equals(couponId) || couponId.length() == 0) {
+            if (couponId == null || "".equals(couponId) || couponId.length() == 0 || "-1".equals(couponId) ) {
                 // 不用获取最优优惠券了
                 //couponConfig = planService.getUserOptimalCoupon(couponId, borrowNid, userId, money, platform);
             } else {
@@ -432,10 +432,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 resultVo.setEndTime("");
                 resultVo.setCouponId("-1");
 
-                if(!"0".equals(userCoupon.getString("availableCouponListCount"))){
+                if(userCoupon!=null&& !"0".equals(userCoupon.getString("availableCouponListCount"))){
                     resultVo.setIsThereCoupon("1");
                     resultVo.setCouponDescribe("请选择");
-                }else if ("0".equals(userCoupon.getString("availableCouponListCount")) && !"0".equals(userCoupon.getString("notAvailableCouponListCount"))) {
+                }else if (userCoupon!=null&& "0".equals(userCoupon.getString("availableCouponListCount")) && !"0".equals(userCoupon.getString("notAvailableCouponListCount"))) {
                     resultVo.setIsThereCoupon("1");
                     resultVo.setCouponDescribe("暂无可用");
                 }else {

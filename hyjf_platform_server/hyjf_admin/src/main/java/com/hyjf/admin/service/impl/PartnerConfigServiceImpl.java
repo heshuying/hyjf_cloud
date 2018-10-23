@@ -2,6 +2,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.PartnerConfigService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminPartnerConfigDetailResponse;
 import com.hyjf.am.resquest.admin.AdminPartnerConfigListRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +61,14 @@ public class PartnerConfigServiceImpl implements PartnerConfigService {
     public AdminPartnerConfigDetailResponse deletePartnerConfig(AdminPartnerConfigListRequest req){
         return amTradeClient.deletePartnerConfig(req);
     }
-
+    /**
+     * 合作机构配置资产编号校验
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    @Override
+    public IntegerResponse isExistsCheckAction(AdminPartnerConfigListRequest req){
+        return amTradeClient.isExistsCheckAction(req);
+    }
 }

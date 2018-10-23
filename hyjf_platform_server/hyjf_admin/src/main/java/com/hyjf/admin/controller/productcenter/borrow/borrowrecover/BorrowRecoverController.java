@@ -1,14 +1,16 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowrecover;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.BorrowRecoverBean;
 import com.hyjf.admin.beans.request.BorrowRecoverRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRecoverService;
 import com.hyjf.admin.utils.ConvertUtils;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -18,10 +20,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,8 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -73,7 +74,6 @@ public class BorrowRecoverController extends BaseController {
         return result;
     }
 
-
     /**
      * 带条件导出
      * 1.无法指定相应的列的顺序，
@@ -90,184 +90,96 @@ public class BorrowRecoverController extends BaseController {
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowRecoverRequestBean form) throws Exception {
         BorrowRecoverRequest copyForm=new BorrowRecoverRequest();
         BeanUtils.copyProperties(form, copyForm);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "放款明细";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        //请求第一页5000条
+        copyForm.setPageSize(defaultRowMaxCount);
+        copyForm.setCurrPage(1);
         // 查询
         List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
-        // 列头
-        String[] titles = new String[] { "序号", "借款编号", "资产来源", "计划编号", "借款人ID", "借款人用户名", "是否受托支付", "受托支付用户名", "借款标题", "项目类型", "借款期限", "年化收益", "还款方式", "投资订单号", "放款订单号","合作机构编号",
-                "投资人用户名", "投资人ID", "投资时间", "投资金额", "应放款金额", "放款服务费", "实际放款金额", "实收服务费", "放款状态", "放款时间" ,
-                "投资人用户属性（投资时）", "推荐人用户属性（投资时）", "推荐人（投资时）", "推荐人ID（投资时）", "一级分部（投资时）", "二级分部（投资时）", "团队（投资时）"};
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+        Integer totalCount = resultList.size();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
 
-        if (resultList != null && resultList.size() > 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+        }
+        for (int i = 1; i < sheetCount; i++) {
 
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < resultList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BorrowRecoverCustomizeVO record = resultList.get(i);
-
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-
-                    // 序号
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    }
-                    // 借款编号
-                    else if (celLength == 1) {
-                        cell.setCellValue(record.getBorrowNid());
-                    }
-                    /*--------------add by LSY START-------------------*/
-                    else if (celLength == 2) {
-                        cell.setCellValue(record.getInstName());
-                    }
-                    /*--------------add by LSY END-------------------*/
-                    // 计划编号
-                    else if (celLength == 3) {
-                        cell.setCellValue(record.getPlanNid());
-                    }
-                    // 借款人ID
-                    else if (celLength == 4) {
-                        cell.setCellValue(record.getUserId());
-                    }
-                    // 借款人用户名
-                    else if (celLength == 5) {
-                        cell.setCellValue(record.getUsername());
-                    }
-                    // 是否受托支付 2017.11.7新增
-                    else if (celLength == 6) {
-                        Integer isStzf = record.getEntrustedFlg();
-                        String isStzf_str="否";
-                        if (isStzf != null && isStzf - 1 == 0) {
-                            isStzf_str = "是";
-                        }
-                        cell.setCellValue(isStzf_str);
-                    }
-                    // 受托支付用户名 2017.11.7新增
-                    else if (celLength == 7) {
-                        cell.setCellValue(record.getEntrustedUserName());
-                    }
-                    // 借款标题
-                    else if (celLength == 8) {
-                        cell.setCellValue(record.getBorrowName());
-                    }
-                    // 项目类型
-                    else if (celLength == 9) {
-                        cell.setCellValue(record.getBorrowProjectTypeName());
-                    }
-                    // 借款期限
-                    else if (celLength == 10) {
-                        cell.setCellValue(record.getBorrowPeriod());
-                    }
-                    // 年化收益
-                    else if (celLength == 11) {
-                        cell.setCellValue(record.getBorrowApr());
-                    }
-                    // 还款方式
-                    else if (celLength == 12) {
-                        cell.setCellValue(record.getBorrowStyleName());
-                    }
-                    // 投资订单号
-                    else if (celLength == 13) {
-                        cell.setCellValue(record.getOrderNum());
-                    }
-                    // 投资订单号
-                    else if (celLength == 14) {
-                        cell.setCellValue(record.getLoanOrdid());
-                    }
-                    // 合作机构编号
-                    else if (celLength == 15) {
-                        cell.setCellValue(record.getInstCode());
-                    }
-                    // 投资人用户名
-                    else if (celLength == 16) {
-                        cell.setCellValue(record.getTenderUsername());
-                    }
-                    // 投资人ID
-                    else if (celLength == 17) {
-                        cell.setCellValue(record.getTenderUserId());
-                    }
-                    // 投资时间
-                    else if (celLength == 18) {
-                        cell.setCellValue(record.getCreateTime());
-                    }
-                    // 投资金额
-                    else if (celLength == 19) {
-                        cell.setCellValue(record.getAccount());
-                    }
-                    // 应放款金额
-                    else if (celLength == 20) {
-                        cell.setCellValue(record.getAccountYes());
-                    }
-                    // 应收服务费
-                    else if (celLength == 21) {
-                        cell.setCellValue(record.getLoanFee());
-                    }
-                    // 实际放款金额
-                    else if (celLength == 22) {
-                        cell.setCellValue(record.getRecoverPrice());
-                    }
-                    // 实收服务费
-                    else if (celLength == 23) {
-                        cell.setCellValue(record.getServicePrice());
-                    }
-                    // 放款状态
-                    else if (celLength == 24) {
-                        cell.setCellValue(record.getIsRecover());
-                    }
-                    // 放款时间
-                    else if (celLength == 25) {
-                        cell.setCellValue(record.getTimeRecover());
-                    }
-                    // 投资人用户属性（投资时）
-                    else if (celLength == 26) {
-                        cell.setCellValue(record.getTenderUserAttribute());
-                    }
-                    // 推荐人用户属性（投资时）
-                    else if (celLength == 27) {
-                        cell.setCellValue(record.getInviteUserAttribute());
-                    }
-                    // 推荐人（投资时）
-                    else if (celLength == 28) {
-                        cell.setCellValue(record.getTenderReferrerUsername());
-                    }
-                    // 推荐人ID（投资时）
-                    else if (celLength == 29) {
-                        cell.setCellValue(record.getTenderReferrerUserId());
-                    }
-                    // 一级分部（投资时）
-                    else if (celLength == 30) {
-                        cell.setCellValue(record.getDepartmentLevel1Name());
-                    }
-                    // 二级分部（投资时）
-                    else if (celLength == 31) {
-                        cell.setCellValue(record.getDepartmentLevel2Name());
-                    }
-                    // 团队（投资时）
-                    else if (celLength == 32) {
-                        cell.setCellValue(record.getTeamName());
-                    }
-                }
+            copyForm.setPageSize(defaultRowMaxCount);
+            copyForm.setCurrPage(i+1);
+            // 查询
+            List<BorrowRecoverCustomizeVO> resultList2 = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
+            if (resultList2 != null && resultList2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList2);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("borrowNid","借款编号");
+        map.put("instName","资产来源");
+        map.put("planNid","计划编号");
+        map.put("userId","借款人ID");
+        map.put("username","借款人用户名");
+        map.put("entrustedFlg","是否受托支付");
+        map.put("entrustedUserName","受托支付用户名");
+        map.put("borrowName","借款标题");
+        map.put("borrowProjectTypeName","项目类型");
+        map.put("borrowPeriod","借款期限");
+        map.put("borrowApr","年化收益");
+        map.put("borrowStyleName","还款方式");
+        map.put("orderNum","投资订单号");
+        map.put("loanOrdid","放款订单号");
+        map.put("instCode","合作机构编号");
+        map.put("tenderUsername","投资人用户名");
+        map.put("tenderUserId","投资人ID");
+        map.put("createTime","投资时间");
+        map.put("account","投资金额");
+        map.put("accountYes","应放款金额");
+        map.put("loanFee","放款服务费");
+        map.put("recoverPrice","实际放款金额");
+        map.put("servicePrice","实收服务费");
+        map.put("isRecover","放款状态");
+        map.put("timeRecover","放款时间");
+        map.put("tenderUserAttribute","投资人用户属性（投资时）");
+        map.put("inviteUserAttribute","推荐人用户属性（投资时）");
+        map.put("tenderReferrerUsername","推荐人（投资时）");
+        map.put("tenderReferrerUserId","推荐人ID（投资时）");
+        map.put("departmentLevel1Name","一级分部（投资时）");
+        map.put("departmentLevel2Name","二级分部（投资时）");
+        map.put("teamName","团队（投资时）");
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter entrustedFlgAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String isStzf_str="否";
+                if (object != null && Integer.parseInt(object.toString()) - 1 == 0) {
+                    isStzf_str = "是";
+                }
+                return isStzf_str;
+            }
+        };
+        mapAdapter.put("entrustedFlg", entrustedFlgAdapter);
+        return mapAdapter;
     }
 }

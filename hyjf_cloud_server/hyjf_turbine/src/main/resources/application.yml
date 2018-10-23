@@ -1,0 +1,12 @@
+
+# turbine 配置
+turbine:
+  app-config: zuul,cs-message,am-config,eureka,config
+  aggregator:
+    # turbine聚集数据的粒度
+    clusterConfig: default
+  clusterNameExpression: new String("default")
+  combine-host: true
+  instanceUrlSuffix:
+    # turbine连接hystrix-dashboard的url
+    default: actuator/hystrix.stream

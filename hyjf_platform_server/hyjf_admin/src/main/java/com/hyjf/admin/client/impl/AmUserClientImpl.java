@@ -1510,9 +1510,9 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<UtmPlatVO> getUtmPlat(String sourceId) {
+	public List<UtmPlatVO> getUtmPlat() {
 		UtmResponse response = restTemplate
-				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getutmplat/"+sourceId, UtmResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getmyutmplat", UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResultList();
 		}
@@ -2371,7 +2371,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public void insertUtmList(List<ChannelCustomizeVO> voList) {
 		ChannelRequest request = new ChannelRequest();
 		request.setList(voList);
-		restTemplate.postForObject("http:/AM-ADMIN/am-user/promotion/utm/insert_utm_list", request, UtmResponse.class);
+		UtmResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-user/promotion/utm/insertutmlist",request, UtmResponse.class).getBody();
 	}
 	/**
 	 * 根据证件号码和姓名查找用户CA认证记录表
@@ -2388,6 +2388,23 @@ public class AmUserClientImpl implements AmUserClient {
 			return response;
 		}
 		return null;
+	}
+
+	/**
+	 * 渠道管理检查编号唯一性
+	 * @Author cwyang 2018-10-22
+	 * @param sourceId
+	 * @return
+	 */
+	@Override
+	public int sourceIdIsExists(Integer sourceId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/sourceIdIsExists/"+sourceId, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getRecordTotal();
+		}else{
+			return 0;
+		}
 	}
 
 }

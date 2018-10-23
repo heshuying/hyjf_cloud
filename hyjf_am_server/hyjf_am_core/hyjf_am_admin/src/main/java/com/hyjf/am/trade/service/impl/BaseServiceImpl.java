@@ -8,8 +8,10 @@ import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.trade.dao.customize.CustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BaseService;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -65,6 +67,18 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         List<BorrowInfo> list=this.borrowInfoMapper.selectByExample(example);
         if (CollectionUtils.isNotEmpty(list)){
             return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public BorrowAndInfoVO getBorrowAndInfoByNid(String borrowNid) {
+        if(StringUtils.isNotBlank(borrowNid)){
+            Borrow borrow = this.getBorrow(borrowNid);
+            BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
+            if(borrow != null && borrowInfo != null) {
+                return copyToBorrowAndInfo(borrow,borrowInfo);
+            }
         }
         return null;
     }
@@ -480,4 +494,91 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         return false;
     }
 
+    /**
+     * 将borrow 和 borrowInfo 赋值给 borrowAndInfoVO
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    private BorrowAndInfoVO copyToBorrowAndInfo(Borrow borrow,BorrowInfo info){
+        BorrowAndInfoVO borrowAndInfoVO = CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
+        borrowAndInfoVO.setBorrowPreNid(info.getBorrowPreNid());
+        borrowAndInfoVO.setBorrowPreNidNew(info.getBorrowPreNidNew());
+        borrowAndInfoVO.setName(info.getName());
+        borrowAndInfoVO.setUserId(info.getUserId());
+        borrowAndInfoVO.setBorrowUserName(info.getBorrowUserName());
+        borrowAndInfoVO.setApplicant(info.getApplicant());
+        borrowAndInfoVO.setRepayOrgName(info.getRepayOrgName());
+        borrowAndInfoVO.setIsRepayOrgFlag(info.getIsRepayOrgFlag());
+        borrowAndInfoVO.setRepayOrgUserId(info.getRepayOrgUserId());
+        borrowAndInfoVO.setType(info.getType());
+        borrowAndInfoVO.setBorrowUse(info.getBorrowUse());
+        borrowAndInfoVO.setBorrowValidTime(info.getBorrowValidTime());
+        borrowAndInfoVO.setInstCode(info.getInstCode());
+        borrowAndInfoVO.setAssetType(info.getAssetType());
+        borrowAndInfoVO.setAssetTypeName(info.getAssetTypeName());
+        borrowAndInfoVO.setEntrustedFlg(info.getEntrustedFlg());
+        borrowAndInfoVO.setEntrustedUserName(info.getEntrustedUserName());
+        borrowAndInfoVO.setEntrustedUserId(info.getEntrustedUserId());
+        borrowAndInfoVO.setTrusteePayTime(info.getTrusteePayTime());
+        borrowAndInfoVO.setTenderAccountMin(info.getTenderAccountMin());
+        borrowAndInfoVO.setTenderAccountMax(info.getTenderAccountMax());
+        borrowAndInfoVO.setUpfilesId(info.getUpfilesId());
+        borrowAndInfoVO.setProjectType(info.getProjectType());
+        borrowAndInfoVO.setCanTransactionPc(info.getCanTransactionPc());
+        borrowAndInfoVO.setCanTransactionAndroid(info.getCanTransactionAndroid());
+        borrowAndInfoVO.setCanTransactionIos(info.getCanTransactionIos());
+        borrowAndInfoVO.setCanTransactionWei(info.getCanTransactionWei());
+        borrowAndInfoVO.setOperationLabel(info.getOperationLabel());
+        borrowAndInfoVO.setCompanyOrPersonal(String.valueOf(info.getCompanyOrPersonal()));
+        borrowAndInfoVO.setBorrowManagerScaleEnd(info.getBorrowManagerScaleEnd());
+        borrowAndInfoVO.setConsumeId(info.getConsumeId());
+        borrowAndInfoVO.setDisposalPriceEstimate(info.getDisposalPriceEstimate());
+        borrowAndInfoVO.setDisposalPeriod(info.getDisposalPeriod());
+        borrowAndInfoVO.setDisposalChannel(info.getDisposalChannel());
+        borrowAndInfoVO.setDisposalResult(info.getDisposalResult());
+        borrowAndInfoVO.setDisposalNote(info.getDisposalNote());
+        borrowAndInfoVO.setDisposalProjectName(info.getDisposalProjectName());
+        borrowAndInfoVO.setDisposalProjectType(info.getDisposalProjectType());
+        borrowAndInfoVO.setDisposalArea(info.getDisposalArea());
+        borrowAndInfoVO.setDisposalPredictiveValue(info.getDisposalPredictiveValue());
+        borrowAndInfoVO.setDisposalOwnershipCategory(info.getDisposalOwnershipCategory());
+        borrowAndInfoVO.setDisposalAssetOrigin(info.getDisposalAssetOrigin());
+        borrowAndInfoVO.setDisposalAttachmentInfo(info.getDisposalAttachmentInfo());
+        borrowAndInfoVO.setBorrowIncreaseMoney(info.getBorrowIncreaseMoney());
+        borrowAndInfoVO.setBorrowInterestCoupon(info.getBorrowInterestCoupon());
+        borrowAndInfoVO.setBorrowTasteMoney(info.getBorrowTasteMoney());
+        borrowAndInfoVO.setBorrowAssetNumber(info.getBorrowAssetNumber());
+        borrowAndInfoVO.setBorrowProjectSource(info.getBorrowProjectSource());
+        borrowAndInfoVO.setBorrowInterestTime(info.getBorrowInterestTime());
+        borrowAndInfoVO.setBorrowDueTime(info.getBorrowDueTime());
+        borrowAndInfoVO.setBorrowSafeguardWay(info.getBorrowSafeguardWay());
+        borrowAndInfoVO.setBorrowIncomeDescription(info.getBorrowIncomeDescription());
+        borrowAndInfoVO.setBorrowPublisher(info.getBorrowPublisher());
+        borrowAndInfoVO.setBorrowExtraYield(info.getBorrowExtraYield());
+        borrowAndInfoVO.setIncreaseInterestFlag(info.getIncreaseInterestFlag());
+        borrowAndInfoVO.setContractPeriod(info.getContractPeriod());
+        borrowAndInfoVO.setBorrowLevel(info.getBorrowLevel());
+        borrowAndInfoVO.setAssetAttributes(info.getAssetAttributes());
+        borrowAndInfoVO.setBankRaiseStartDate(info.getBankRaiseStartDate());
+        borrowAndInfoVO.setBankRaiseEndDate(info.getBankRaiseEndDate());
+        borrowAndInfoVO.setBankRegistDays(info.getBankRegistDays());
+        borrowAndInfoVO.setBankBorrowDays(info.getBankBorrowDays());
+        borrowAndInfoVO.setProjectName(info.getProjectName());
+        borrowAndInfoVO.setFinancePurpose(info.getFinancePurpose());
+        borrowAndInfoVO.setMonthlyIncome(info.getMonthlyIncome());
+        borrowAndInfoVO.setPayment(info.getPayment());
+        borrowAndInfoVO.setFirstPayment(info.getFirstPayment());
+        borrowAndInfoVO.setSecondPayment(info.getSecondPayment());
+        borrowAndInfoVO.setCostIntrodution(info.getCostIntrodution());
+        borrowAndInfoVO.setFianceCondition(info.getFianceCondition());
+        borrowAndInfoVO.setIsNew(info.getIsNew());
+        borrowAndInfoVO.setPublishInstCode(info.getPublishInstCode());
+        borrowAndInfoVO.setRemark(info.getRemark());
+        borrowAndInfoVO.setCreateUserName(info.getCreateUserName());
+        borrowAndInfoVO.setAddip(info.getAddIp());
+        borrowAndInfoVO.setCreateTime(info.getCreateTime());
+        borrowAndInfoVO.setUpdatetime(info.getUpdateTime());
+        return borrowAndInfoVO;
+    }
 }

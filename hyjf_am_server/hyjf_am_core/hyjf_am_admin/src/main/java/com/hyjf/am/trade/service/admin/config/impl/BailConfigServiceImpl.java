@@ -241,8 +241,8 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
         // 保证金修改日志
         HjhBailConfigLog hjhBailConfigLog = new HjhBailConfigLog();
         // 更新时间
-        hjhBailConfigLog.setCreateTime(bailConfigAddRequest.getCreateTime());
-        hjhBailConfigLog.setCreateUserId(bailConfigAddRequest.getCreateUserId());
+        hjhBailConfigLog.setCreateTime(new Date());
+        hjhBailConfigLog.setCreateUserId(bailConfigAddRequest.getUpdateUserId());
         // 更新的资产来源
         hjhBailConfigLog.setInstCode(bailConfigAddRequest.getInstCode());
         // 更新日志表
