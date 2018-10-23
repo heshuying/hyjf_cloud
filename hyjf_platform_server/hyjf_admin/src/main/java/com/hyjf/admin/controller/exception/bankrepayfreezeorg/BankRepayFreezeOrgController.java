@@ -122,7 +122,7 @@ public class BankRepayFreezeOrgController extends BaseController {
      * 冻结异常情况处理
      */
     @ResponseBody
-    @PostMapping("process")
+    @PostMapping("/process")
     public AdminResult bankAccountCheckAction(HttpServletRequest request, @RequestBody BankRepayFreezeOrgProcessRequestBean form) {
         AdminResult result = new AdminResult();
         JSONObject ret = new JSONObject();

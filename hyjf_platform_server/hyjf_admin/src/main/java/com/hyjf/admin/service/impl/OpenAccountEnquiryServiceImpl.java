@@ -297,7 +297,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             throw new RuntimeException("插入用户银行卡失败！");
         }
 
-       /* BankCardVO card = amUserClient.getBankCardByUserId(userId);
+       BankCardVO card = amUserClient.getBankCardByUserId(userId);
         if(card==null){
             logger.info("开始保存银行卡信息。。。");
             BankCallBean bean = new BankCallBean();
@@ -305,7 +305,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             bean.setLogUserId(requestBean.getUserid());
             bean.setMobile(requestBean.getMobile());
             updateCardNoToBank(bean,user);
-        }*/
+        }
 
         // 开户更新开户渠道统计开户时间
         AppChannelStatisticsDetailVO appChannelStatisticsDetailVO = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
