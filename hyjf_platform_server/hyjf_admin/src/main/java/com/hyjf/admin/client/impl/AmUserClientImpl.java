@@ -768,8 +768,27 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 更新用户信息表--开户掉单
+	 *
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int updateUserInfoByUserInfoSelective(UserInfoVO userInfoVO) {
+		UserInfoRequest request = new UserInfoRequest();
+		BeanUtils.copyProperties(userInfoVO, request);
+		IntegerResponse result = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserInfoByUserInfoSelective", request, IntegerResponse.class)
+				.getBody();
+		if (result == null || !Response.isSuccess(result)) {
+			return 0;
+		}
+		return result.getResultInt().intValue();
+	}
+
+	/**
 	 * 更新用户表
-	 * 
+	 *
 	 * @return
 	 * @auther: nxl
 	 */
@@ -778,6 +797,24 @@ public class AmUserClientImpl implements AmUserClient {
 		UserRequest request = null;
 		BeanUtils.copyProperties(userVO, request);
 		IntegerResponse result = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/updateUser", request, IntegerResponse.class)
+				.getBody();
+		if (result == null || !Response.isSuccess(result)) {
+			return 0;
+		}
+		return result.getResultInt().intValue();
+	}
+
+	/**
+	 * 更新用户表-开户掉单
+	 *
+	 * @return
+	 * @auther: nxl
+	 */
+	@Override
+	public int updateUserSelective(UserVO userVO) {
+		UserRequest request = null;
+		BeanUtils.copyProperties(userVO, request);
+		IntegerResponse result = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserSelective", request, IntegerResponse.class)
 				.getBody();
 		if (result == null || !Response.isSuccess(result)) {
 			return 0;

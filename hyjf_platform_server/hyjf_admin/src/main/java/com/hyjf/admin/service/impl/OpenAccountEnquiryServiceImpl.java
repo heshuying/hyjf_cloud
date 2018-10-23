@@ -14,26 +14,21 @@ import com.hyjf.admin.mq.SmsProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.OpenAccountEnquiryService;
 import com.hyjf.admin.utils.BankUtil;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.resquest.user.BankOpenAccountLogRequest;
 import com.hyjf.am.resquest.user.BankOpenAccountRequest;
-import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
-import com.hyjf.am.vo.admin.BankOpenAccountLogVO;
-import com.hyjf.am.vo.admin.OpenAccountEnquiryCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -41,17 +36,18 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @version OpenAccountEnquiryServiceImpl, v0.1 2018/8/20 16:36
@@ -246,9 +242,10 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         user.setUserType(0);
         user.setIsSetPassword(getIsSetPassword(requestBean.getAccountId(),userId));
         user.setMobile(requestBean.getMobile());
-        UserManagerUpdateRequest request = new UserManagerUpdateRequest();
         // 更新相应的用户表
-        boolean usersFlag = amUserClient.updataUserInfo(request)> 0 ? true : false;
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(userVO, user);
+        boolean usersFlag = amUserClient.updateUserSelective(userVO)> 0 ? true : false;
         if (!usersFlag) {
             logger.error("更新用户表失败！");
             return false;
@@ -265,7 +262,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         userInfo.setTruenameIsapprove(1);
         userInfo.setMobileIsapprove(1);
         // 更新用户详细信息表
-        boolean userInfoFlag = amUserClient.updateUserInfoByUserInfo(userInfo) > 0 ? true : false;
+        boolean userInfoFlag = amUserClient.updateUserInfoByUserInfoSelective(userInfo) > 0 ? true : false;
         if (!userInfoFlag) {
             logger.error("更新用户详情表失败！");
             return false;
@@ -282,8 +279,25 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             logger.error("插入用户开户表失败！");
             return false;
         }
+        String bank = BankUtil.getNameOfBank(idCard);
         // 保存银行卡
-        BankCardVO card = amUserClient.getBankCardByUserId(userId);
+        // 插入相应的银行卡
+        BankCardVO bankCard = new BankCardVO();
+        bankCard.setUserId(userId);
+        bankCard.setUserName(userName);
+        bankCard.setCardNo(idCard);
+        bankCard.setBank(bank);
+        bankCard.setStatus(1);
+        bankCard.setCreateTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
+        bankCard.setCreateUserId(userId);
+        BankCardRequest bankCardRequest =  new BankCardRequest();
+        BeanUtils.copyProperties(bankCard, bankCardRequest);
+        boolean bankFlag = this.amUserClient.insertUserCard(bankCardRequest) > 0 ? true : false;
+        if (!bankFlag) {
+            throw new RuntimeException("插入用户银行卡失败！");
+        }
+
+       /* BankCardVO card = amUserClient.getBankCardByUserId(userId);
         if(card==null){
             logger.info("开始保存银行卡信息。。。");
             BankCallBean bean = new BankCallBean();
@@ -291,7 +305,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             bean.setLogUserId(requestBean.getUserid());
             bean.setMobile(requestBean.getMobile());
             updateCardNoToBank(bean,user);
-        }
+        }*/
 
         // 开户更新开户渠道统计开户时间
         AppChannelStatisticsDetailVO appChannelStatisticsDetailVO = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
