@@ -68,16 +68,16 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         if (form.getNoticesTagIdSrch() != null) {
             criteria.and("tagId").is(form.getNoticesTagIdSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesTitleSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesTitleSrch())) {
             criteria.and("msgTitle").regex(form.getNoticesTitleSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesCodeSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesCodeSrch())) {
             criteria.and("msgCode").regex(form.getNoticesCodeSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesCreateUserNameSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesCreateUserNameSrch())) {
             criteria.and("createUserName").regex(form.getNoticesCreateUserNameSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesTerminalSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesTerminalSrch())) {
             criteria.and("msgTerminal").regex(form.getNoticesTerminalSrch());
         }
         if (form.getNoticesSendStatusSrch() != null) {
@@ -219,8 +219,5 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         record.setMsgDestinationType(CustomConstants.MSG_PUSH_DESTINATION_TYPE_0);
     }
 
-    public static void main(String[] args) {
-        Integer[] ints = new Integer[10];
-        System.out.println(ints [5]);
-    }
+
 }
