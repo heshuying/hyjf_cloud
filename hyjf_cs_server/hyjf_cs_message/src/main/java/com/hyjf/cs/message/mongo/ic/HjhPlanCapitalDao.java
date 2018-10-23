@@ -144,7 +144,7 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
         Criteria criteria = new Criteria();
         criteria.and("date").is(hjhPlanCapital.getDate());
         criteria.and("planNid").is(hjhPlanCapital.getPlanNid());
-
+        query.addCriteria(criteria);
         Update update = new Update();
         update.set("reinvestAccount", hjhPlanCapital.getReinvestAccount())
             .set("creditAccount", hjhPlanCapital.getCreditAccount())

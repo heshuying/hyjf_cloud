@@ -21,8 +21,8 @@
 	</resultMap>
 	<select id="selectHjhAccountBalanceForActList" resultMap="selectHjhAccountBalanceMap"
 		parameterType="java.util.Date">
-				SELECT
-			DATE_FORMAT('2018-05-25', '%Y-%m-%d') `date`,
+		SELECT
+			DATE_FORMAT(#{date}, '%Y-%m-%d') `date`,
 			SUM(i_account) invest_account,
 			SUM(c_account) credit_account,
 			SUM(r_account) reinvest_account,
