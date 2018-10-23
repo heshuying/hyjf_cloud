@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.admin.finance.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
 import com.hyjf.am.resquest.admin.SubCommissionRequest;

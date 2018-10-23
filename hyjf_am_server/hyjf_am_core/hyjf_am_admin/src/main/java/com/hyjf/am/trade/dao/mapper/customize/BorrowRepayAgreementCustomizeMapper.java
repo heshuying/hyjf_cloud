@@ -1,12 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest;
-import com.hyjf.am.trade.dao.model.customize.BorrowRepayAgreementCustomize;
 import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @version BorrowRepayAgreementCustomizeMapper, v0.1 2018/8/14 17:16

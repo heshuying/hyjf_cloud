@@ -15,20 +15,14 @@ import com.hyjf.admin.service.PoundageService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.AdminPoundageDetailRequest;
-import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.admin.PoundageDetailVO;
 import com.hyjf.am.vo.admin.PoundageLedgerVO;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.ExportExcel;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
@@ -62,7 +55,7 @@ public class PoundageDetailController extends BaseController {
     @PostMapping(value = "/poundagedetaillist")
     public AdminResult poundageDetailList(HttpServletRequest request, @RequestBody AdminPoundageDetailRequest poundageDetailRequest){
         Map<String,Object> result = new HashMap<>();
-        Integer loginUserId = 3;//Integer.valueOf(getUser(request).getId());
+        Integer loginUserId = Integer.valueOf(getUser(request).getId());
         PoundageCustomizeVO poundageCustomizeVO = poundageService.getPoundageById(loginUserId,poundageDetailRequest.getPoundageId());
         result.put("poundage",poundageCustomizeVO);
         // 查询明细对应的手续费配置项
@@ -107,7 +100,7 @@ public class PoundageDetailController extends BaseController {
     @ApiOperation(value = "导出手续费明细列表",notes = "导出手续费明细列表")
     @PostMapping(value = "/exportpoundagedetaillist")
     public void exportPoundageDetailList(HttpServletRequest request, HttpServletResponse response,@RequestBody AdminPoundageDetailRequest poundageDetailRequest) throws Exception {
-        Integer loginUserId = 3;//Integer.valueOf(getUser(request).getId());
+        Integer loginUserId = Integer.valueOf(getUser(request).getId());
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称

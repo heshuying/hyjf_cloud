@@ -348,13 +348,16 @@ public class HjhLabelController extends BaseController{
 			}
 		}
 		
-		// 6.标签名称重复检验
-		if (StringUtils.isNotEmpty(viewRequest.getLabelName())) {
-			hjhLabelRequest.setLabelNameSrch(viewRequest.getLabelName());
-			List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
-			// 通过传入的 labelName 查询如果不为空说明此 labelName 已经存在
-			if(CollectionUtils.isNotEmpty(list)){
-				jsonObject.put("errorMsg", "标签名称已存在!");
+		// 6.标签名称重复检验  0：标签名称未改 1标签名称修改
+		// 只有当传入的标签名称改动时，才校验新改的名称是否重复
+		if(viewRequest.getFlag() == 1){
+			if (StringUtils.isNotEmpty(viewRequest.getLabelName())) {
+				hjhLabelRequest.setLabelNameSrch(viewRequest.getLabelName());
+				List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
+				// 通过传入的 labelName 查询如果不为空说明此 labelName 已经存在
+				if(CollectionUtils.isNotEmpty(list)){
+					jsonObject.put("errorMsg", "标签名称已存在!");
+				}
 			}
 		}
 	}

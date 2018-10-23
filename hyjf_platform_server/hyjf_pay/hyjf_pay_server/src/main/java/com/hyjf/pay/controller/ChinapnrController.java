@@ -264,7 +264,7 @@ public class ChinapnrController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/callback")
-    public String callBack(ChinapnrBean bean) {
+    public String callBack(@RequestBody ChinapnrBean bean) {
         logger.info("汇付异步回调开始");
         String methodName = "callBack";
         logger.info(THIS_CLASS, methodName, "[汇付接收异步返回的消息开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");

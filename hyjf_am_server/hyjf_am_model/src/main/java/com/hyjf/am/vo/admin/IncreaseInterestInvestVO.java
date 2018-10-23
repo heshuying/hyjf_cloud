@@ -4,6 +4,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class IncreaseInterestInvestVO extends BaseVO implements Serializable {
     private Integer id;
@@ -60,13 +61,13 @@ public class IncreaseInterestInvestVO extends BaseVO implements Serializable {
 
     private Integer investType;
 
-    private Integer createTime;
+    private Date createTime;
 
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer updateTime;
+    private Date updateTime;
 
     private Integer updateUserId;
 
@@ -320,11 +321,11 @@ public class IncreaseInterestInvestVO extends BaseVO implements Serializable {
         this.investType = investType;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -344,11 +345,11 @@ public class IncreaseInterestInvestVO extends BaseVO implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 

@@ -72,7 +72,7 @@ public class IncreaseInterestRepayPlanController extends BaseController {
 	 */
 	@ApiOperation(value = "产品中心-加息还款计划", notes = "产品中心-加息还款计划 导出还款计划详情")
 	@GetMapping("/export")
-	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody IncreaseInterestRepayPlanRequest form) throws Exception {
+	public void exportAction(HttpServletRequest request, HttpServletResponse response, IncreaseInterestRepayPlanRequest form) throws Exception {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
@@ -151,17 +151,17 @@ public class IncreaseInterestRepayPlanController extends BaseController {
 		IValueFormatter repayTimeAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
-				String repayTime = (String) object;
-				return StringUtils.isEmpty(repayTime) ? "" : GetDate.getDateMyTimeInMillis(Integer.parseInt(repayTime));
+				Integer repayTime = (Integer) object;
+				return StringUtils.isEmpty(repayTime) ? "" : GetDate.getDateMyTimeInMillis(repayTime);
 			}
 		};
 		IValueFormatter repayStatusAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
-				Integer repayTime = (Integer) object;
-				if (repayTime == 0) {
+				Integer repayStatus = (Integer) object;
+				if (repayStatus == 0) {
 					return "未回款";
-				} else if (repayTime == 1) {
+				} else if (repayStatus == 1) {
 					return "已回款";
 				}
 				return "";
@@ -170,7 +170,7 @@ public class IncreaseInterestRepayPlanController extends BaseController {
 		IValueFormatter repayPeriodAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
-				String repayPeriod = (String) object;
+				Integer repayPeriod = (Integer) object;
 				return "第" + repayPeriod + "期";
 			}
 		};

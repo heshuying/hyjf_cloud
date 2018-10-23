@@ -3,51 +3,9 @@
  */
 package com.hyjf.am.trade.service.front.consumer.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.aop.framework.AopContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountBorrow;
-import com.hyjf.am.trade.dao.model.auto.AccountBorrowExample;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectTypeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
-import com.hyjf.am.trade.dao.model.auto.FreezeList;
-import com.hyjf.am.trade.dao.model.auto.FreezeListExample;
-import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtDetail;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.FddProducer;
@@ -70,6 +28,13 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.aop.framework.AopContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author dxj
@@ -471,7 +436,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		BorrowApicronExample example = new BorrowApicronExample();
 		example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 		apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_DOING);
-//		apicron.setUpdateTime(nowTime);
+		apicron.setUpdateTime(new Date());
 		boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 		if (!apicronFlag) {
 			throw new Exception("更新放款任务失败。[项目编号：" + borrowNid + "]");
@@ -794,7 +759,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			BorrowApicronExample example = new BorrowApicronExample();
 			example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 			apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-//			apicron.setUpdateTime(nowTime);
+			apicron.setUpdateTime(new Date());
 			boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 			if (!apicronFlag) {
 				throw new RuntimeException("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -826,7 +791,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			BorrowApicronExample example = new BorrowApicronExample();
 			example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 			apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_FAIL);
-//			apicron.setUpdateTime(nowTime);
+			apicron.setUpdateTime(new Date());
 			boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 			if (!apicronFlag) {
 				throw new RuntimeException("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -844,7 +809,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			BorrowApicronExample example = new BorrowApicronExample();
 			example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 			apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
-//			apicron.setUpdateTime(nowTime);
+			apicron.setUpdateTime(new Date());
 			boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 			if (!apicronFlag) {
 				throw new RuntimeException("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -1591,7 +1556,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		BorrowApicronExample example = new BorrowApicronExample();
 		example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 		apicron.setStatus(status);
-//		apicron.setUpdateTime(nowTime);
+		apicron.setUpdateTime(new Date());
 		boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 		if (!apicronFlag) {
 			throw new Exception("更新放款任务失败。[项目编号：" + borrowNid + "]");

@@ -713,6 +713,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
                 Integer status = borrow.getStatus();
                 if (4 > status) {
                     isLastBorrow = false;
+                    logger.info("================= 订单号:" + hjhAccede.getAccedeOrderId() + "投资标的未放款，标的号："+ borrowNid );
                 }
             }
         }
@@ -1016,7 +1017,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         if (Validator.isNull(accountTender)) {
             throw new RuntimeException("投资人账户信息不存在。[投资人ID：" + hjhAccede.getUserId() + "]，" + "[投资订单号：" + hjhAccede.getAccedeOrderId() + "]");
         }
-        Account tenderOpenAccount = this.getAccountByUserId(hjhAccede.getUserId());
+        //牵扯到跨库问题 用account表中的account_id代替原先bank_open_account的account
+//        Account tenderOpenAccount = this.getAccountByUserId(hjhAccede.getUserId());
         String txDate = GetOrderIdUtils.getTxDate();
         String txTime = GetOrderIdUtils.getTxTime();
         int nowTime = GetDate.getNowTime10();
@@ -1033,7 +1035,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         accountList.setBankWaitCapital(accountTender.getBankWaitCapital());
         accountList.setBankWaitInterest(accountTender.getBankWaitInterest());
         accountList.setBankWaitRepay(accountTender.getBankWaitRepay());
-        accountList.setAccountId(tenderOpenAccount.getAccountId());
+        //牵扯到跨库问题 用account表中的account_id代替原先bank_open_account的account
+        accountList.setAccountId(accountTender.getAccountId());
         accountList.setCheckStatus(0);
         accountList.setTradeStatus(1);
         accountList.setIsBank(1);

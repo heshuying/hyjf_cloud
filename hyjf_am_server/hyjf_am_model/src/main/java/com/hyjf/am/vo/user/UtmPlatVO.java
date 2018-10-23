@@ -2,7 +2,6 @@ package com.hyjf.am.vo.user;
 
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.common.util.GetDateUtils;
-import com.hyjf.common.util.calculate.DateUtils;
 
 import java.io.Serializable;
 import java.util.Date;
