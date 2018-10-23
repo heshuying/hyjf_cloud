@@ -5,6 +5,7 @@ package com.hyjf.cs.message.service.Impl;
 
 import com.hyjf.am.response.admin.HjhAccountBalanceResponse;
 import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.message.mongo.ic.HjhAccountBalanceDao;
 import com.hyjf.cs.message.service.BaseMessageServiceImpl;
@@ -34,7 +35,7 @@ public class HjhAccountBalanceServiceImpl extends BaseMessageServiceImpl impleme
      */
     @Override
     public List<HjhAccountBalanceVO> getHjhAccountBalanceForActList(Date date) {
-        HjhAccountBalanceResponse response = this.baseClient.getExe("http://AM-TRADE/am-trade/hjhAccountBalanceController/getHjhAccountBalanceForActList/" + date
+        HjhAccountBalanceResponse response = this.baseClient.getExe("http://AM-TRADE/am-trade/hjhAccountBalanceController/getHjhAccountBalanceForActList/" + GetDate.dateToString2(date)
                 , HjhAccountBalanceResponse.class);
         return response.getResultList();
     }
