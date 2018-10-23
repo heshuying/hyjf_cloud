@@ -14,6 +14,7 @@ import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
+import com.hyjf.cs.user.constants.ErrorViewConstant;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -61,13 +63,16 @@ public class ApiPassWordController extends BaseController {
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
     @PostMapping(value = "/setPassword.do")
-    public ModelAndView setPassword(@RequestBody ThirdPartyTransPasswordRequestBean transPasswordRequestBean) {
+    public ModelAndView setPassword(@RequestBody ThirdPartyTransPasswordRequestBean transPasswordRequestBean,RedirectAttributes redirectAttributes) {
         logger.info("api端设置交易密码 start");
         ModelAndView modelAndView = new ModelAndView();
         logger.info("第三方请求参数："+JSONObject.toJSONString(transPasswordRequestBean));
         Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean,BankCallConstant.TXCODE_PASSWORD_SET, BaseDefine.METHOD_SERVER_SET_PASSWORD);
         if (null==map.get("flag")){
-            return (ModelAndView) map.get("modelAndView");
+            //return (ModelAndView) map.get("modelAndView");
+            redirectAttributes.addFlashAttribute(ErrorViewConstant.ERROR_FORM_BEAN,map);
+            modelAndView.setViewName(ErrorViewConstant.ERROR_VIEW_REDIRECT_URL);
+            return modelAndView;
         }
         UserVO user = (UserVO) map.get("user");
         BankOpenAccountVO bankOpenAccount = (BankOpenAccountVO) map.get("bankOpenAccount");
