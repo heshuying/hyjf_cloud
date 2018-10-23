@@ -1,13 +1,13 @@
 package com.hyjf.am.trade.service.admin.config.impl;
 
 
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.AdminPartnerConfigListRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
 import com.hyjf.am.trade.service.admin.config.PartnerConfigService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -113,6 +113,26 @@ public class PartnerConfigServiceImpl extends BaseServiceImpl implements Partner
         example.setLimitStart(-1);
         example.setLimitEnd(-1);
         return hjhInstConfigMapper.selectByExample(example);
+    }
+
+    /**
+     * 合作机构配置资产编号校验
+     * @param req
+     */
+    @Override
+    public IntegerResponse isExists(AdminPartnerConfigListRequest req){
+        IntegerResponse response = new IntegerResponse();
+        HjhInstConfigExample example = new HjhInstConfigExample();
+        example.createCriteria().andInstCodeEqualTo(req.getInstCode());
+        int count = this.hjhInstConfigMapper.countByExample(example);
+        if(count >=0){
+            response.setResultInt(count);
+            return response;
+        }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
+
     }
 
 }

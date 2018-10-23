@@ -118,4 +118,26 @@ public class UtmController extends BaseController {
         }
 
     }
+
+    /**
+     * 检查编号唯一性
+     * @param request
+     * @param response
+     * @param form
+     * @return
+     */
+    @ApiOperation(value = "检查编号唯一性", notes = "检查编号唯一性")
+    @PostMapping("/checkAction")
+    public UtmResultResponse checkAction(HttpServletRequest request, HttpServletResponse response, @RequestBody UtmPlatVO form){
+        UtmResultResponse ret = new UtmResultResponse();
+        int record = utmService.sourceIdIsExists(form.getSourceId());
+        if (record == 1) {
+            ret.setStatus(AdminResult.FAIL);
+            ret.setStatusDesc(AdminResult.FAIL_DESC);
+        }else{
+            ret.setStatus(AdminResult.SUCCESS);
+            ret.setStatusDesc(AdminResult.SUCCESS_DESC);
+        }
+        return ret;
+    }
 }

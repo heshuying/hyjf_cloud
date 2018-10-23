@@ -47,8 +47,8 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public List<UtmPlatVO> getUtmPlat(String sourceId) {
-        return amUserClient.getUtmPlat(sourceId);
+    public List<UtmPlatVO> getUtmPlat() {
+        return amUserClient.getUtmPlat();
     }
 
     @Override

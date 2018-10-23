@@ -32,7 +32,16 @@ public class MenuVO extends BaseVO implements Serializable{
 
     private Integer sort;
     private String menuCtrl;
+    private String menuHide;
     
+	public String getMenuHide() {
+		return menuHide;
+	}
+
+	public void setMenuHide(String menuHide) {
+		this.menuHide = menuHide;
+	}
+
 	public String getMenuCtrl() {
 		return menuCtrl;
 	}

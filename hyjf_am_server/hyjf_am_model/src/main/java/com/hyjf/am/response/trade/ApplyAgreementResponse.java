@@ -1,6 +1,9 @@
 package com.hyjf.am.response.trade;
 
+import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
+import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
 
 /**
@@ -9,13 +12,13 @@ import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
  */
 public class ApplyAgreementResponse extends Response<ApplyAgreementVO> {
 
-    private Integer count;
+    private int count;
 
-    public Integer getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(int count) {
         this.count = count;
     }
 

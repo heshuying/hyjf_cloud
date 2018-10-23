@@ -645,10 +645,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (couponUser.getCouponType() == 1) {
                 couponInterest = couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
             } else {
-                if(borrowTender.getAccount()==null||"".equals(borrowTender.getAccount())){
-                    borrowTender.setAccount(BigDecimal.ZERO);
+                BigDecimal account = BigDecimal.ZERO;
+                if(borrowTender!=null && borrowTender.getAccount()!=null && !"".equals(borrowTender.getAccount())){
+                    account = borrowTender.getAccount();
                 }
-                couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), borrowTender.getAccount()==null?"0":borrowTender.getAccount().toString(), borrow.getBorrowPeriod());
+                couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(),account.toString(), borrow.getBorrowPeriod());
             }
             //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
             data.put("income", earnings.add(couponInterest));
@@ -659,6 +660,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             data.put("couponType", "");
             data.put("couponAll", "");
             data.put("couponInterest", "");
+        }
+        if(!data.containsKey("account")){
+            data.put("account","0");
+        }
+        if(!data.containsKey("income")){
+            data.put("income","0");
         }
         logger.info("返回给前端结果为：{} ",JSONObject.toJSONString(data));
         WebResult<Map<String, Object>> result = new WebResult();
