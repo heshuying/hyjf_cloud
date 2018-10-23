@@ -51,10 +51,10 @@
 				and attorn_flag =  #{attornFlag,jdbcType=INTEGER}
 			</if>
 			<if test="timeStartSrch != null " >
-				AND create_time <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
+				AND date_format(create_time,'%Y-%m-%d') <![CDATA[>=]]> #{timeStartSrch}
 			</if>
 			<if test="timeEndSrch != null " >
-				AND create_time <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})
+				AND date_format(create_time,'%Y-%m-%d') <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 			<if test="delFlag != null " >
 				and del_flag =  #{delFlag}
