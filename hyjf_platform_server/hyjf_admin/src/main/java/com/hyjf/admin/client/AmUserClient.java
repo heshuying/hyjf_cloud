@@ -438,8 +438,7 @@ public interface AmUserClient {
     UserVO selectUserByRecommendName(String recommendName);
 
     SpreadsUserVO selectSpreadsUsersByUserId(String userId);
-
-    /**
+      /**
      * 修改推荐人信息
      *
      * @param request
