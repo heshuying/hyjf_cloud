@@ -241,7 +241,17 @@ public class MessagePushMessageController extends BaseController {
             templateRequest.setMsgActionUrl(templateRequest.getMsgActionUrl3());
         }
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
-            templateRequest.setMsgActionUrl(templateRequest.getMsgActionUrl2());
+            if (templateRequest.getMsgActionUrl2().equals("1")) {
+                templateRequest.setMsgActionUrl("hyjf://jumpZXH");
+            } else if (templateRequest.getMsgActionUrl2().equals("5")) {
+                templateRequest.setMsgActionUrl("hyjf://jumpInvest");
+            } else if (templateRequest.getMsgActionUrl2().equals("2")) {
+                templateRequest.setMsgActionUrl("hyjf://jumpMine");
+            } else if (templateRequest.getMsgActionUrl2().equals("3")) {
+                templateRequest.setMsgActionUrl("hyjf://jumpCouponsList");
+            } else if (templateRequest.getMsgActionUrl2().equals("4")) {
+                templateRequest.setMsgActionUrl("hyjf://jumpTransactionDetail");
+            }
         }
         if (templateRequest.getMsgSendType().intValue() == CustomConstants.MSG_PUSH_SEND_TYPE_1) {
             templateRequest.setSendTime(GetDate.getMyTimeInMillis());
