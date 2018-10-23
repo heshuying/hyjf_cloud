@@ -467,19 +467,7 @@ public class UserManagerController extends BaseController {
         return ingFlg;
     }
 
-    /**
-     * 更新用户表-开户掉单更新用户
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping("/updateUserInfoByUserInfoSelective")
-    public int updateUserInfoByUserInfoSelective(@RequestBody @Valid UserInfoRequest request) {
-        UserInfo user = new UserInfo();
-        BeanUtils.copyProperties(request, user);
-        int ingFlg = userManagerService.updateUserInfoByUserInfoSelective(user);
-        return ingFlg;
-    }
+
 
     /**
      * 更新用户表
@@ -495,19 +483,7 @@ public class UserManagerController extends BaseController {
         return ingFlg;
     }
 
-    /**
-     * 更新用户表-开户掉单更新用户
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping("/updateUserSelective")
-    public int updateUserSelective(@RequestBody @Valid UserRequest request) {
-        User user = new User();
-        BeanUtils.copyProperties(request, user);
-        int ingFlg = userManagerService.updateUserSelective(user);
-        return ingFlg;
-    }
+
 
     /**
      * 查询条件设置

@@ -547,22 +547,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return userFlag;
     }
 
-    /**
-     * 更新用户信息表-开户掉单更新
-     *
-     * @param userInfo
-     * @return
-     */
-    @Override
-    public int updateUserInfoByUserInfoSelective(UserInfo userInfo) {
-        int userFlag = this.userInfoMapper.updateByPrimaryKeySelective(userInfo);
-        if (userFlag > 0) {
-            System.out.println("=============用户详细信息保存成功!=============");
-        } else {
-            throw new RuntimeException("用户详细信息保存异常!");
-        }
-        return userFlag;
-    }
+
 
     /**
      * 更新用户表
@@ -581,22 +566,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return userFlag;
     }
 
-    /**
-     * 更新用户表-开户掉单更新
-     *
-     * @param user
-     * @return
-     */
-    @Override
-    public int updateUserSelective(User user) {
-        int userFlag = this.userMapper.updateByPrimaryKeySelective(user);
-        if (userFlag > 0) {
-            System.out.println("=============用户表信息保存成功!=============");
-        } else {
-            throw new RuntimeException("用户表信息保存异常!");
-        }
-        return userFlag;
-    }
+
 
     /**
      * 获取某一用户的信息修改列表

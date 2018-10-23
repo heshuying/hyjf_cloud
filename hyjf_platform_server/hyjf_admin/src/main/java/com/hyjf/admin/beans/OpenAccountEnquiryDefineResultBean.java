@@ -33,7 +33,7 @@ public class OpenAccountEnquiryDefineResultBean implements Serializable {
     private String channel;
     @ApiModelProperty(value = "电子账号")
     private String accountId;
-    @ApiModelProperty(value = "开户平台")
+    @ApiModelProperty(value = "开户平台，数字类型")
     private String platform;
     @ApiModelProperty(value = "姓名")
     private String name;

@@ -52,6 +52,10 @@ public class UserManagerController extends BaseController {
     @Autowired
     private BankConfigService bankConfigService;
 
+
+
+
+
     /**
      * 根据筛选条件查找(用户管理列表显示)
      *
@@ -515,6 +519,33 @@ public class UserManagerController extends BaseController {
         return whereFlag;
     }
 
+    /**
+     * 更新用户表-开户掉单更新用户
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateUserSelective")
+    public int updateUserSelective(@RequestBody @Valid UserRequest request) {
+        User user = new User();
+        BeanUtils.copyProperties(request, user);
+        int ingFlg = userManagerService.updateUserSelective(user);
+        return ingFlg;
+    }
+
+    /**
+     * 更新用户表-开户掉单更新用户
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateUserInfoByUserInfoSelective")
+    public int updateUserInfoByUserInfoSelective(@RequestBody @Valid UserInfoRequest request) {
+        UserInfo user = new UserInfo();
+        BeanUtils.copyProperties(request, user);
+        int ingFlg = userManagerService.updateUserInfoByUserInfoSelective(user);
+        return ingFlg;
+    }
     /**
      * 获取某一用户的信息修改列表
      * @param request

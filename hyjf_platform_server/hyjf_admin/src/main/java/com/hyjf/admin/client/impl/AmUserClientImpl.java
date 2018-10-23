@@ -812,7 +812,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int updateUserSelective(UserVO userVO) {
-		UserRequest request = null;
+		UserRequest request = new UserRequest();
 		BeanUtils.copyProperties(userVO, request);
 		IntegerResponse result = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserSelective", request, IntegerResponse.class)
 				.getBody();

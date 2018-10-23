@@ -191,40 +191,60 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         String userid = requestBean.getUserid().trim();
         String channel =requestBean.getChannel().trim();
         String accountId = requestBean.getAccountId().trim();
+        String tResult = "开户掉单同步成功";//返回结果
         if(userid!=null||channel!=null||accountId!=null){
-            updateUserAccount(requestBean);
+            return updateUserAccount(requestBean);
         }
-        resultBean.setStatus("success");
-        resultBean.setResult("开户掉单同步成功");
+        resultBean.setStatus("y");
+        resultBean.setResult(tResult);
         return resultBean;
     }
     /**
      * 保存开户的数据
      */
-    public boolean updateUserAccount(OpenAccountEnquiryDefineResultBean requestBean) {
+    public OpenAccountEnquiryDefineResultBean updateUserAccount(OpenAccountEnquiryDefineResultBean requestBean) {
+        OpenAccountEnquiryDefineResultBean resultBean= new OpenAccountEnquiryDefineResultBean();
+        String idCard = requestBean.getIdcard();
+        String platform = requestBean.getPlatform();//开户平台
+        if(StringUtils.isEmpty(idCard)){
+            resultBean.setStatus("n");
+            resultBean.setResult("身份不能为空");
+            return resultBean;
+        }
+        if(StringUtils.isEmpty(platform)){
+            resultBean.setStatus("n");
+            resultBean.setResult("开户平台platform不能为空");
+            return resultBean;
+        }
         Integer userId = Integer.parseInt(requestBean.getUserid());
-        boolean deleteLogFlag = this.amUserClient.deleteBankOpenAccountLogByUserId(userId);
+       boolean deleteLogFlag = this.amUserClient.deleteBankOpenAccountLogByUserId(userId);
         if (!deleteLogFlag) {
             logger.error("删除用户开户日志表失败，用户userId:" + userId);
-            return false;
+            resultBean.setStatus("n");
+            resultBean.setResult("删除用户开户日志表失败");
+            return resultBean;
         }
         // 查询返回的电子账号是否已开户
         boolean result = amUserClient.checkAccountByAccountId(requestBean.getAccountId());
         if (result) {
             // 校验未通过
             logger.error("==========该电子账号已被用户关联,无法完成掉单修复!============关联电子账号: " + requestBean.getAccountId());
-            return false;
+            resultBean.setStatus("n");
+            resultBean.setResult("该电子账号已被用户关联,无法完成掉单修复!");
+            return resultBean;
         }
         // 获取用户信息
         UserVO user = amUserClient.getUserByUserId(userId);
         String userName = user.getUsername();
-        String idCard = requestBean.getIdcard();
         String trueName = requestBean.getName();
-        if (idCard != null && idCard.length() < 18) {
+        if (idCard.length() < 18) {
             try {
                 idCard = IdCard15To18.getEighteenIDCard(idCard);
             } catch (Exception e) {
                 logger.error("===========身份证转换异常!=============");
+                resultBean.setStatus("n");
+                resultBean.setResult("身份证转换异常");
+                return resultBean;
             }
         }
         int sexInt = Integer.parseInt(idCard.substring(16, 17));// 性别
@@ -244,16 +264,21 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         user.setMobile(requestBean.getMobile());
         // 更新相应的用户表
         UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(userVO, user);
+        BeanUtils.copyProperties(user,userVO );
         boolean usersFlag = amUserClient.updateUserSelective(userVO)> 0 ? true : false;
         if (!usersFlag) {
             logger.error("更新用户表失败！");
-            return false;
+            resultBean.setStatus("n");
+            resultBean.setResult("更新用户表失败!");
+            return resultBean;
+
         }
         UserInfoVO userInfo = amUserClient.selectUsersInfoByUserId(userId);
         if (userInfo == null) {
             logger.error("用户详情表数据错误，用户id：" + user.getUserId());
-            return false;
+            resultBean.setStatus("n");
+            resultBean.setResult("用户详情表数据错误!");
+            return resultBean;
         }
         userInfo.setTruename(trueName);
         userInfo.setIdcard(idCard);
@@ -265,7 +290,9 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         boolean userInfoFlag = amUserClient.updateUserInfoByUserInfoSelective(userInfo) > 0 ? true : false;
         if (!userInfoFlag) {
             logger.error("更新用户详情表失败！");
-            return false;
+            resultBean.setStatus("n");
+            resultBean.setResult("更新用户详情表失败!");
+            return resultBean;
         }
         // 插入江西银行关联表
         BankOpenAccountRequest openAccount = new BankOpenAccountRequest();
@@ -277,7 +304,9 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         boolean openAccountFlag = amUserClient.insertBankOpenAccount(openAccount)> 0 ? true : false;
         if (!openAccountFlag) {
             logger.error("插入用户开户表失败！");
-            return false;
+            resultBean.setStatus("n");
+            resultBean.setResult("插入用户开户表失败!");
+            return resultBean;
         }
         String bank = BankUtil.getNameOfBank(idCard);
         // 保存银行卡
@@ -291,7 +320,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         bankCard.setCreateTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
         bankCard.setCreateUserId(userId);
         BankCardRequest bankCardRequest =  new BankCardRequest();
-        BeanUtils.copyProperties(bankCard, bankCardRequest);
+        BeanUtils.copyProperties(bankCardRequest,bankCard );
         boolean bankFlag = this.amUserClient.insertUserCard(bankCardRequest) > 0 ? true : false;
         if (!bankFlag) {
             throw new RuntimeException("插入用户银行卡失败！");
@@ -326,7 +355,10 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         }
         //rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_CERTIFICATE_AUTHORITY, JSONObject.toJSONString(params));
         // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  end
-        return true;
+        resultBean.setStatus("y");
+        resultBean.setResult("开户掉单同步成功!");
+        return resultBean;
+
     }
 
     /**

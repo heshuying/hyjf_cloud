@@ -24,6 +24,20 @@ import java.util.Map;
 public interface UserManagerService extends BaseService {
 
     /**
+     * -开户掉单更新用户
+     *
+     * @param userInfo
+     * @return
+     */
+    int updateUserInfoByUserInfoSelective(UserInfo userInfo);
+
+    /**
+     *  更新用户表-开户掉单更新用户
+     * @param user
+     * @return
+     */
+    int updateUserSelective(User user);
+    /**
      * 根据筛选条件查找会员列表
      * @param mapParam
      * @param limitStart
