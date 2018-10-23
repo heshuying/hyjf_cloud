@@ -1,7 +1,9 @@
 package com.hyjf.am.trade.service.admin.productcenter.applyagreement;
 
+import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRepayAgreementCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
@@ -60,4 +62,55 @@ public interface ApplyAgreementService extends BaseService{
      * @return
      */
     List<BorrowRepayAgreementCustomizeVO> selectBorrowRepay(BorrowRepayAgreementAmRequest request, int limitStart, int limitEnd);
+
+    /**
+     * 获取用户投资协议
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowRecover> selectBorrowRecoverList(String borrowNid);
+
+    /**
+     * 获取用户债转还款列表
+     * @author Zha Daojian
+     * @date 2018/8/17 16:28
+     * @param      * @param nid
+     * @return java.util.List<com.hyjf.am.trade.dao.model.auto.CreditRepay>
+     **/
+    List<CreditRepay> selectCreditRepayList(String nid, int period);
+
+    /**
+     * 获取用户汇计划债转还款表
+     * @author Zha Daojian
+     * @date 2018/8/17 16:28
+     * @param nid
+     * @return java.util.List<com.hyjf.am.trade.dao.model.auto.CreditRepay>
+     **/
+    List<HjhDebtCreditRepay> selectHjhDebtCreditRepayList(String nid, int period);
+
+    /**
+     * 获取用户投资协议
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowRecoverPlan> selectBorrowRecoverPlanList(String borrowNid, int period);
+    /**
+     * 根据contract_id查询垫付协议生成详情
+     * @author Zha Daojian
+     * @date 2018/8/23 16:37
+     * @param contractId
+     * @return java.util.List<com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan>
+     **/
+    List<ApplyAgreementInfo> selectApplyAgreementInfoByContractId(String contractId);
+
+    /**
+     * 保存垫付协议申请-协议生成详情
+     * @author Zha Daojian
+     * @date 2018/8/23 16:37
+     * @param request
+     * @return java.util.List<com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan>
+     **/
+    int saveApplyAgreementInfo(ApplyAgreementInfoRequest request);
 }

@@ -611,7 +611,6 @@ public interface AmUserClient {
     /**
      * 根据证件号码和姓名查找用户CA认证记录表
      *
-     * @param strIdNo
      * @param tureName
      * @return
      */
@@ -994,7 +993,7 @@ public interface AmUserClient {
      * @param request
      * @return
      */
-    SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request);
+    SmsCountCustomizeResponse querySmsCountList(SmsCountRequest request);
 
     /**
      * 查询短信总条数+总费用
