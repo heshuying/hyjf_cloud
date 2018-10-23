@@ -177,7 +177,13 @@ public class IncreaseInterestInvestVO extends BaseVO implements Serializable {
     public void setBorrowStyle(String borrowStyle) {
         this.borrowStyle = borrowStyle == null ? null : borrowStyle.trim();
     }
-
+    public String getBorrowPeriodByStyle(){
+        if ("endday".equals(this.borrowStyle)) {
+            return this.borrowPeriod + "天";
+        } else {
+            return this.borrowPeriod + "个月";
+        }
+    }
     public String getBorrowStyleName() {
         return borrowStyleName;
     }
