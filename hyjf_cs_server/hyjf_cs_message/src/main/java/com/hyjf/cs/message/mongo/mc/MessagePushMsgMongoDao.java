@@ -65,19 +65,19 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
     public List<MessagePushMsg> getRecordList(MessagePushNoticesRequest form, Integer offset, Integer limit){
         Criteria criteria = new Criteria();
 
-        if (form.getTagId() != null) {
-            criteria.and("tagId").is(form.getTagId());
+        if (form.getNoticesTagIdSrch() != null) {
+            criteria.and("tagId").is(form.getNoticesTagIdSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesTitleSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesTitleSrch())) {
             criteria.and("msgTitle").regex(form.getNoticesTitleSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesCodeSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesCodeSrch())) {
             criteria.and("msgCode").regex(form.getNoticesCodeSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesCreateUserNameSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesCreateUserNameSrch())) {
             criteria.and("createUserName").regex(form.getNoticesCreateUserNameSrch());
         }
-        if (StringUtils.isNotEmpty(form.getNoticesTerminalSrch())) {
+        if (StringUtils.isNotBlank(form.getNoticesTerminalSrch())) {
             criteria.and("msgTerminal").regex(form.getNoticesTerminalSrch());
         }
         if (form.getNoticesSendStatusSrch() != null) {
@@ -145,11 +145,17 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         Update update = new Update();
         update.set("lastupdateTime", GetDate.getNowTime10());
         update.set("lastupdateUserName", record.getLastupdateUserName());
+        if(record.getTagId()!=null){
+            update.set("tagId", record.getTagId());
+        }
         if(StringUtils.isNotBlank(record.getMsgTitle())){
             update.set("msgTitle", record.getMsgTitle());
         }
-        if(StringUtils.isNotBlank(record.getMsgActionUrl())){
-            update.set("msgImageUrl", record.getMsgActionUrl());
+        if(StringUtils.isNotBlank(record.getMsgImageUrl())){
+            update.set("msgImageUrl", record.getMsgImageUrl());
+        }
+        if (StringUtils.isNotBlank(record.getMsgActionUrl())) {
+            update.set("msgActionUrl", record.getMsgActionUrl());
         }
         if(StringUtils.isNotBlank(record.getMsgContent())){
             update.set("msgContent", record.getMsgContent());
@@ -212,4 +218,6 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         record.setMsgSendStatus(CustomConstants.MSG_PUSH_MSG_STATUS_0);// 设置默认状态
         record.setMsgDestinationType(CustomConstants.MSG_PUSH_DESTINATION_TYPE_0);
     }
+
+
 }
