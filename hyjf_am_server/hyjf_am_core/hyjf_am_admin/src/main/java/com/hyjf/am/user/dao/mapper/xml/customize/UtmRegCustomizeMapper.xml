@@ -760,11 +760,11 @@
 		INNER JOIN hyjf_trade.ht_hjh_accede ten ON t.user_id = ten.user_id
 		INNER JOIN hyjf_trade.ht_hjh_plan hhp ON ten.plan_nid = hhp.plan_nid
 		where 1=1
-		<if test="registStartTime != null and registStartTime != ''">
-			AND reg_time <![CDATA[>=]]> unix_timestamp(#{registStartTime})
+		<if test="registStartTime != null">
+			AND reg_time <![CDATA[>=]]> DATE_FORMAT(#{registStartTime},'%Y-%m-%d %H:%i:%s')
 		</if>
-		<if test="registEndTime != null and registEndTime !=''">
-			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
+		<if test="registEndTime != null">
+			AND reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
 		</if>
 		) AS a
 		LEFT JOIN ht_user u ON a.utm_id = u.user_id
