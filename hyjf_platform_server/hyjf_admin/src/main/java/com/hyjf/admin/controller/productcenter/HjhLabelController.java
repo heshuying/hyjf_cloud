@@ -505,6 +505,7 @@ public class HjhLabelController extends BaseController{
 			List<BorrowStyleVO> borrowStyleList = this.labelService.getBorrowStyleList();
 			jsonObject.put("还款方式下拉列表", "borrowStyleList");
 			jsonObject.put("borrowStyleList", borrowStyleList);
+			return jsonObject;
 		}
 		// 准备插表--拼装info画面参数
 		infoRequest = setInfoParam(jsonObject,viewRequest);
