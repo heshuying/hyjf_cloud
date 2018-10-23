@@ -349,8 +349,8 @@ public class HjhLabelController extends BaseController{
 		}
 		
 		// 6.标签名称重复检验
-		if (StringUtils.isNotEmpty(viewRequest.getLabelNameSrch())) {
-			hjhLabelRequest.setLabelNameSrch(viewRequest.getLabelNameSrch());
+		if (StringUtils.isNotEmpty(viewRequest.getLabelName())) {
+			hjhLabelRequest.setLabelNameSrch(viewRequest.getLabelName());
 			List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
 			// 通过传入的 labelName 查询如果不为空说明此 labelName 已经存在
 			if(CollectionUtils.isNotEmpty(list)){

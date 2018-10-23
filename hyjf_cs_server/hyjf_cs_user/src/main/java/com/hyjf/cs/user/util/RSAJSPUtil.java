@@ -271,6 +271,7 @@ public class RSAJSPUtil {
 		String encoding = "UTF-8";
 		File file = new File(filePath);
 		Long filelength = file.length();
+		logger.info("filelength:"+filelength);
 		byte[] filecontent = new byte[filelength.intValue()];
 
 
@@ -280,6 +281,7 @@ public class RSAJSPUtil {
 			e.printStackTrace();
 		}
 		try {
+            logger.info("filecontent:"+new String(filecontent, encoding));
 			return new String(filecontent, encoding);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
