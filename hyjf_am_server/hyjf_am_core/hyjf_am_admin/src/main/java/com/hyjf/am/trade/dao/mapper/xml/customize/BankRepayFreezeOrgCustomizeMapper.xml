@@ -41,7 +41,7 @@
 		count(fl.id) AS totalRecord
 		FROM
 		ht_bank_repay_org_freeze_log fl
-		LEFT JOIN ht_hjh_inst_config ic ON fl.inst_code = ic.inst_code
+		LEFT JOIN ht_hjh_inst_config ic ON fl.inst_code = ic.inst_code and ic.del_flag = 0
 		<include refid="Where_Clause" />
 	</select>
 
