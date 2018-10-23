@@ -65,8 +65,8 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
     public List<MessagePushMsg> getRecordList(MessagePushNoticesRequest form, Integer offset, Integer limit){
         Criteria criteria = new Criteria();
 
-        if (form.getTagId() != null) {
-            criteria.and("tagId").is(form.getTagId());
+        if (form.getNoticesTagIdSrch() != null) {
+            criteria.and("tagId").is(form.getNoticesTagIdSrch());
         }
         if (StringUtils.isNotEmpty(form.getNoticesTitleSrch())) {
             criteria.and("msgTitle").regex(form.getNoticesTitleSrch());
