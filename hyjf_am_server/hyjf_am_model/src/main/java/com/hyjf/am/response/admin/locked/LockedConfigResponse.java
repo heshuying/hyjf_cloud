@@ -5,7 +5,6 @@ package com.hyjf.am.response.admin.locked;
 
 import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.bean.result.BaseResult;
-import com.hyjf.am.response.Response;
 
 /**
  * @author cui

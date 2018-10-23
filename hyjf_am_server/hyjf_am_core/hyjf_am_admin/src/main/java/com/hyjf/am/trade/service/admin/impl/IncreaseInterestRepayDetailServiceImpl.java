@@ -1,21 +1,17 @@
 package com.hyjf.am.trade.service.admin.impl;
 
 import com.hyjf.am.resquest.admin.IncreaseInterestRepayDetailRequest;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminIncreaseInterestRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.IncreaseInterestRepayMapper;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepay;
+import com.hyjf.am.trade.dao.mapper.customize.admin.AdminIncreaseInterestRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayExample;
 import com.hyjf.am.trade.service.admin.IncreaseInterestRepayDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.AdminIncreaseInterestRepayCustomizeVO;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

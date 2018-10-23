@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.controller.app.user.myproject;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.controller.BaseTradeController;

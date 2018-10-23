@@ -2,7 +2,6 @@ package com.hyjf.am.trade.service.front.coupon.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.customize.CustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.CouponCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CouponCustomize;
