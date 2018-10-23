@@ -46,10 +46,13 @@ public class WechatBorrowTenderController extends BaseTradeController {
         tender.setIp(ip);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
         tender.setUserId(userId);
+        tender.setSign(request.getParameter("sign"));
+        logger.info("sign:{}",request.getParameter("sign"));
         WebResult<Map<String,Object>> result = null;
         WeChatResult weChatResult = new WeChatResult();
         try{
             result =  borrowTenderService.borrowTender(tender);
+            weChatResult.setStatus(result.getStatus());
             weChatResult.setData(result.getData());
         }catch (CheckException e){
             throw e;

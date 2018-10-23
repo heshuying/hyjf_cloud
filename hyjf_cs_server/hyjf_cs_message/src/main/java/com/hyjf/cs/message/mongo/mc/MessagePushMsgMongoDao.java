@@ -145,11 +145,17 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         Update update = new Update();
         update.set("lastupdateTime", GetDate.getNowTime10());
         update.set("lastupdateUserName", record.getLastupdateUserName());
+        if(record.getTagId()!=null){
+            update.set("tagId", record.getTagId());
+        }
         if(StringUtils.isNotBlank(record.getMsgTitle())){
             update.set("msgTitle", record.getMsgTitle());
         }
-        if(StringUtils.isNotBlank(record.getMsgActionUrl())){
-            update.set("msgImageUrl", record.getMsgActionUrl());
+        if(StringUtils.isNotBlank(record.getMsgImageUrl())){
+            update.set("msgImageUrl", record.getMsgImageUrl());
+        }
+        if (StringUtils.isNotBlank(record.getMsgActionUrl())) {
+            update.set("msgActionUrl", record.getMsgActionUrl());
         }
         if(StringUtils.isNotBlank(record.getMsgContent())){
             update.set("msgContent", record.getMsgContent());
@@ -211,5 +217,10 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         record.setMsgCode(msgCode);// 设置ID
         record.setMsgSendStatus(CustomConstants.MSG_PUSH_MSG_STATUS_0);// 设置默认状态
         record.setMsgDestinationType(CustomConstants.MSG_PUSH_DESTINATION_TYPE_0);
+    }
+
+    public static void main(String[] args) {
+        Integer[] ints = new Integer[10];
+        System.out.println(ints [5]);
     }
 }
