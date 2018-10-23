@@ -4,11 +4,15 @@
 package com.hyjf.cs.market.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.market.client.AmUserClient;
+import com.hyjf.cs.market.client.CsMessageClient;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.mq.producer.AppChannelStatisticsProducer;
 import com.hyjf.cs.market.service.AppChannelStatisticsService;
@@ -29,20 +33,31 @@ import java.util.List;
 public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl implements AppChannelStatisticsService {
 	@Autowired
 	private AmUserClient amUserClient;
+
+	@Autowired
+	private CsMessageClient csMessageClient;
+
 	@Autowired
 	private AppChannelStatisticsProducer producer;
 
 	@Override
 	public void insertStatistics() {
 		logger.info("----------------APP渠道统计定时任务Start-------------");
+
+		AppChannelStatisticsRequest request = new AppChannelStatisticsRequest();
+		String nowDate = "2018-08-21";
+//		String nowDate = GetDate.date2Str(GetDate.date_sdf);
+		request.setTimeStartSrch(GetDate.getDayStart(nowDate));
+		request.setTimeEndSrch(GetDate.getDayEnd(nowDate));
+
 		// 查询所有app渠道
 		List<UtmVO> voList = amUserClient.selectUtmPlatList("app");
 		if (!CollectionUtils.isEmpty(voList)) {
 			for (UtmVO vo : voList) {
 				Integer sourceId = vo.getSourceId();
+				request.setSourceId(String.valueOf(sourceId));
 				// 访问数
-				Integer accessNumber = amUserClient.getAccessNumber(sourceId, "pc") == null ? 0
-						: amUserClient.getAccessNumber(sourceId, "pc");
+				Integer accessNumber = getAccessNumber(request);
 				// 注册数
 				Integer registNumber = amUserClient.getRegistNumber(sourceId, "pc") == null ? 0
 						: amUserClient.getRegistNumber(sourceId, "pc");
@@ -127,5 +142,15 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 				}
 			}
 		}
+	}
+
+	/**
+	 * 访问数
+	 * @param request
+	 * @return
+	 */
+	public Integer getAccessNumber(AppChannelStatisticsRequest request){
+		List<AppAccesStatisticsVO> list = csMessageClient.getAppAccesStatisticsVO(request);
+		return 0;
 	}
 }

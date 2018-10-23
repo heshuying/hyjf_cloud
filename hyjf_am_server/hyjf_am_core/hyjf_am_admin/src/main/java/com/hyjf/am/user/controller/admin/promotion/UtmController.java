@@ -46,6 +46,7 @@ public class UtmController extends BaseController {
         List<UtmVO> pageList = utmService.getByPageList(map);
         if (pageList != null) {
             response.setResultList(pageList);
+            response.setResultListS(pageList);
         }
         return response;
     }
