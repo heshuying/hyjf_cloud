@@ -4,10 +4,12 @@
 
 	<sql id="And_Addtime">
 		<if test="timeStartSrch != null and timeStartSrch != ''">
-			AND  temp.create_time <![CDATA[>=]]> #{timeStartSrch}
+			<!-- 优化sql(字段类型转换) timestamp-->
+			AND temp.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
 		</if>
 		<if test="timeEndSrch != null and timeEndSrch != ''">
-			AND temp.create_time <![CDATA[<=]]> #{timeEndSrch}
+			<!-- 优化sql(字段类型转换) timestamp-->
+			AND temp.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 		</if>
 	</sql>
 
@@ -20,10 +22,12 @@
 		<where>
 			temp.invest_status = 0
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND  temp.invest_time <![CDATA[>=]]> #{timeStartSrch}
+				<!-- 优化sql(字段类型转换) int-->
+				AND temp.invest_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeStartSrch})
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND  temp.invest_time <![CDATA[<=]]> #{timeEndSrch}
+				<!-- 优化sql(字段类型转换) int-->
+				AND temp.invest_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{timeEndSrch},' 23:59:59'))
 			</if>
 		</where>
 	</sql>
@@ -31,10 +35,12 @@
 	<sql id="Where_Invest_htj_time">
 		<where>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND  temp.create_time <![CDATA[>=]]> #{timeStartSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND temp.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND  temp.create_time <![CDATA[<=]]> #{timeEndSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND temp.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>
@@ -42,10 +48,12 @@
 	<sql id="Where_add_time">
 		<where>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND temp.create_time <![CDATA[>=]]> #{timeStartSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND temp.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND  temp.create_time <![CDATA[<=]]> #{timeEndSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND temp.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>

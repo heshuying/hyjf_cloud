@@ -42,6 +42,8 @@ public interface UtmService extends BaseService {
      */
     List<UtmPlatVO> getUtmPlat(String sourceId);
 
+    List<UtmPlatVO> getMyUtmPlat();
+
     /**
      * @Author walter.limeng
      * @Description  获取Utm对象
@@ -197,4 +199,12 @@ public interface UtmService extends BaseService {
      * @param request
      */
     void insertUtmList(ChannelRequest request);
+
+    /**
+     * 渠道管理检查编号唯一性
+     * @author cwyang
+     * @param sourceId
+     * @return
+     */
+    Integer sourceIdIsExists(Integer sourceId);
 }

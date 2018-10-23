@@ -11,13 +11,16 @@
           ht_user hu
       LEFT JOIN ht_bank_open_account hb on hu.user_id = hb.user_id
       <where>
-			<if test="startTime != null and endTime != ''">
-				AND FROM_UNIXTIME( hu.reg_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{startTime}
-                AND FROM_UNIXTIME( hb.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{startTime}
+          <!-- hb.create_time 改为<= endTime if语句中的time统一 wgx-->
+			<if test="startTime != null and startTime != ''">
+                <!-- 优化sql(字段类型转换) timestamp-->
+                AND hu.reg_time >= STR_TO_DATE(#{startTime},'%Y-%m-%d %H:%i:%s')
+                AND hb.create_time >= STR_TO_DATE(#{startTime},'%Y-%m-%d %H:%i:%s')
 			</if>
-			<if test="startTime != null and endTime != ''">
-				AND FROM_UNIXTIME( hu.reg_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{endTime}
-                AND FROM_UNIXTIME( hb.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{endTime}
+			<if test="endTime != null and endTime != ''">
+                <!-- 优化sql(字段类型转换) timestamp-->
+                AND hu.reg_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endTime},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+                AND hb.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{endTime},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
       GROUP BY

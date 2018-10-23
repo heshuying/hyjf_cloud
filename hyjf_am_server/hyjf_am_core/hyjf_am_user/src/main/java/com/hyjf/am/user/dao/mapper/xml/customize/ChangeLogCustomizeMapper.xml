@@ -46,12 +46,13 @@
 		<if test="changeType != null and changeType != ''">
 			AND l.change_type = #{changeType}
 		</if>
+		<!-- ht_user_change_log都没有change_time字段 改成update_time wgx-->
 		<if test="startTime != null and startTime != ''">
-			AND FROM_UNIXTIME(l.change_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{startTime},'00:00:00'
+			AND l.update_time &gt;= STR_TO_DATE(CONCAT(#{startTime},'00:00:00'
 			),'%Y-%m-%d %H:%i:%s')
 		</if>
 		<if test="endTime != null and endTime != ''">
-			AND FROM_UNIXTIME(l.change_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{endTime},'23:59:59'
+			AND l.update_time &lt;= STR_TO_DATE(CONCAT(#{endTime},'23:59:59'
 			),'%Y-%m-%d %H:%i:%s')
 		</if>
 	</sql>

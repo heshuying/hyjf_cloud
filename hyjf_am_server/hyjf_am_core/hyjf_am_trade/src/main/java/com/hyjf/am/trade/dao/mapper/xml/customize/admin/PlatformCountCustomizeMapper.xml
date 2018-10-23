@@ -3,11 +3,14 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.admin.PlatformCountCustomizeMapper">
 
 	<sql id="And_Addtime">
+		<!-- ht_account_recharge ht_borrow_tender 都没有addtime字段 改成create_time wgx-->
 		<if test="timeStartSrch != null and timeStartSrch != ''">
-			AND FROM_UNIXTIME( temp.addtime, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+			<!-- 优化sql(字段类型转换) timestamp-->
+			AND temp.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
 		</if>
 		<if test="timeEndSrch != null and timeEndSrch != ''">
-			AND FROM_UNIXTIME( temp.addtime, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+			<!-- 优化sql(字段类型转换) timestamp-->
+			AND temp.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 		</if>
 	</sql>
 	
@@ -20,10 +23,12 @@
 		<where>
 			temp.invest_status = 0
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( temp.invest_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+				<!-- 优化sql(字段类型转换) int-->
+				AND temp.invest_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeStartSrch})
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( temp.invest_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+				<!-- 优化sql(字段类型转换) int-->
+				AND temp.invest_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{timeEndSrch},' 23:59:59'))
 			</if>
 		</where>
 	</sql>
@@ -31,10 +36,12 @@
 	<sql id="Where_Invest_htj_time">
 		<where>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( temp.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND temp.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( temp.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND temp.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>
@@ -121,10 +128,12 @@
 				SELECT accede.client, sum(hjhTen.assign_pay) sumAcount  FROM ht_hjh_accede accede
 				INNER  JOIN ht_hjh_debt_credit_tender hjhTen on accede.accede_order_id = hjhTen.assign_plan_order_id
 				<if test="timeStartSrch != null and timeStartSrch != ''">
-					AND FROM_UNIXTIME( hjhTen.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+					<!-- 优化sql(字段类型转换) timestamp-->
+					AND hjhTen.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
 				</if>
 				<if test="timeEndSrch != null and timeEndSrch != ''">
-					AND FROM_UNIXTIME( hjhTen.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+					<!-- 优化sql(字段类型转换) timestamp-->
+					AND hjhTen.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 				</if>
 				GROUP BY accede.client
 			) ss

@@ -143,7 +143,7 @@
             ems.del_flg as endmonthsDEL
         FROM
         ht_hjh_bail_config hhbc
-        INNER JOIN ht_hjh_inst_config hhic ON hhbc.inst_code = hhic.inst_code
+        LEFT JOIN ht_hjh_inst_config hhic ON hhbc.inst_code = hhic.inst_code and hhic.del_flag = 0
         LEFT JOIN ht_hjh_bail_config_info m ON hhbc.inst_code = m.inst_code and m.borrow_style = 'month'
         LEFT JOIN ht_hjh_bail_config_info e ON hhbc.inst_code = e.inst_code and e.borrow_style = 'end'
         LEFT JOIN ht_hjh_bail_config_info em ON hhbc.inst_code = em.inst_code and em.borrow_style = 'endmonth'
@@ -209,9 +209,9 @@
         AND hhpa.inst_code = #{instCode}
         WHERE
             hhpa.`status` IN (11, 12, 3, 4, 5, 7, 9)
-        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timestart},'00:00:00'
+        AND hb.create_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timestart},'00:00:00'
         ),'%Y-%m-%d %H:%i:%s')
-        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeend},'23:59:59'
+        AND hb.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeend},'23:59:59'
         ),'%Y-%m-%d %H:%i:%s')
         AND hb.borrow_nid NOT IN (
             SELECT
@@ -241,9 +241,9 @@
         AND hhpa.inst_code = #{instCode}
         WHERE
             hhpa.`status` IN (11, 12, 3, 4, 5, 7, 9)
-        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timeStart},'00:00:00'
+        AND hb.create_time <![CDATA[>=]]> STR_TO_DATE(CONCAT(#{timeStart},'00:00:00'
         ),'%Y-%m-%d %H:%i:%s')
-        AND FROM_UNIXTIME(hb.create_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEnd},'23:59:59'
+        AND hb.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEnd},'23:59:59'
         ),'%Y-%m-%d %H:%i:%s')
     </select>
 </mapper>

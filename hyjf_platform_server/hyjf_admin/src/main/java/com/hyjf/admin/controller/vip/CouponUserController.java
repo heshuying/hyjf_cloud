@@ -255,6 +255,16 @@ public class CouponUserController extends BaseController {
         }
         CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponCode);
         CouponConfigVO configVO = configResponse.getResult();
+        //截止日
+        if(configVO.getExpirationType() == 1){
+            configVO.setContent(GetDate.formatDate(Long.parseLong((configVO.getExpirationDate() + "000"))));
+        }else if(configVO.getExpirationType() == 2){
+            Date date = GetDate.countDate(GetDate.getDate(), 2, configVO.getExpirationLength());
+            configVO.setContent(GetDate.formatDate(date));
+        }else if(configVO.getExpirationType() == 3){
+            Date date = GetDate.countDate(GetDate.getDate(), 5, configVO.getExpirationLengthDay());
+            configVO.setContent(GetDate.formatDate(date));
+        }
         //操作平台
         Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
         String clientString = "";

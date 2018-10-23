@@ -56,4 +56,12 @@ public interface UtmService {
      * @return 
      */
     boolean deleteUtmPlatAction(UtmPlatVO utmPlatVO);
+
+    /**
+     * @Author cwyang
+     * 检查编号唯一性
+     * @param sourceId
+     * @return
+     */
+    int sourceIdIsExists(Integer sourceId);
 }
