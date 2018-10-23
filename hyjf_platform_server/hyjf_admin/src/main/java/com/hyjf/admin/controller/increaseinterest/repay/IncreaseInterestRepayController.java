@@ -72,7 +72,7 @@ public class IncreaseInterestRepayController extends BaseController {
 	 */
 	@ApiOperation(value = "产品中心-加息还款信息", notes = "产品中心-加息还款信息 导出还款明细")
 	@GetMapping("/export")
-	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody IncreaseInterestRepayRequest form) throws Exception {
+	public void exportAction(HttpServletRequest request, HttpServletResponse response, IncreaseInterestRepayRequest form) throws Exception {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
@@ -160,8 +160,8 @@ public class IncreaseInterestRepayController extends BaseController {
 		IValueFormatter repayTimeAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
-				String repayTime = (String) object;
-				return StringUtils.isEmpty(repayTime) ? "" : GetDate.getDateMyTimeInMillis(Integer.parseInt(repayTime));
+				Integer repayTime = (Integer) object;
+				return StringUtils.isEmpty(repayTime) ? "" : GetDate.getDateMyTimeInMillis(repayTime);
 			}
 		};
 		IValueFormatter repayStatusAdapter = new IValueFormatter() {
@@ -179,8 +179,8 @@ public class IncreaseInterestRepayController extends BaseController {
 		IValueFormatter repayActionTimeAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
-				String repayActionTime = (String) object;
-				return StringUtils.isEmpty(repayActionTime) ? "" : GetDate.getDateTimeMyTimeInMillis(Integer.parseInt(repayActionTime));
+				Integer repayActionTime = (Integer) object;
+				return StringUtils.isEmpty(repayActionTime) ? "" : GetDate.getDateTimeMyTimeInMillis(repayActionTime);
 			}
 		};
 		mapAdapter.put("borrowNid", strAdapter);

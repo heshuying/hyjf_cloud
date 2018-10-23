@@ -44,9 +44,9 @@ public class IncreaseInterestRepayVO extends BaseVO implements Serializable {
 
     private Integer repayPeriod;
 
-    private String repayTime;
+    private Integer repayTime;
 
-    private String repayActionTime;
+    private Integer repayActionTime;
 
     private BigDecimal repayInterest;
 
@@ -232,20 +232,20 @@ public class IncreaseInterestRepayVO extends BaseVO implements Serializable {
         this.repayPeriod = repayPeriod;
     }
 
-    public String getRepayTime() {
+    public Integer getRepayTime() {
         return repayTime;
     }
 
-    public void setRepayTime(String repayTime) {
-        this.repayTime = repayTime == null ? null : repayTime.trim();
+    public void setRepayTime(Integer repayTime) {
+        this.repayTime = repayTime;
     }
 
-    public String getRepayActionTime() {
+    public Integer getRepayActionTime() {
         return repayActionTime;
     }
 
-    public void setRepayActionTime(String repayActionTime) {
-        this.repayActionTime = repayActionTime == null ? null : repayActionTime.trim();
+    public void setRepayActionTime(Integer repayActionTime) {
+        this.repayActionTime = repayActionTime;
     }
 
     public BigDecimal getRepayInterest() {

@@ -156,6 +156,26 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public List<ChannelReconciliationVO> selectPcChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        if (request.getInvestStartTime() != null) {
+            Date investStartTime = request.getInvestStartTime();
+            investStartTime = GetDate.getSomeDayStart(investStartTime);
+            request.setInvestStartTime(investStartTime);
+        }
+        if (request.getInvestEndTime() != null) {
+            Date investEndTime = request.getInvestEndTime();
+            investEndTime = GetDate.getSomeDayEnd(investEndTime);
+            request.setInvestEndTime(investEndTime);
+        }
+        if (request.getRegistStartTime() != null) {
+            Date registStartTime = request.getRegistStartTime();
+            registStartTime = GetDate.getSomeDayStart(registStartTime);
+            request.setRegistStartTime(registStartTime);
+        }
+        if (request.getRegistEndTime() != null) {
+            Date registEndTime = request.getRegistEndTime();
+            registEndTime = GetDate.getSomeDayEnd(registEndTime);
+            request.setRegistEndTime(registEndTime);
+        }
         return utmRegCustomizeMapper.selectPcChannelReconciliationRecordHjh(request);
     }
 
@@ -206,6 +226,26 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public List<ChannelReconciliationVO> selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        if (request.getInvestStartTime() != null) {
+            Date investStartTime = request.getInvestStartTime();
+            investStartTime = GetDate.getSomeDayStart(investStartTime);
+            request.setInvestStartTime(investStartTime);
+        }
+        if (request.getInvestEndTime() != null) {
+            Date investEndTime = request.getInvestEndTime();
+            investEndTime = GetDate.getSomeDayEnd(investEndTime);
+            request.setInvestEndTime(investEndTime);
+        }
+        if (request.getRegistStartTime() != null) {
+            Date registStartTime = request.getRegistStartTime();
+            registStartTime = GetDate.getSomeDayStart(registStartTime);
+            request.setRegistStartTime(registStartTime);
+        }
+        if (request.getRegistEndTime() != null) {
+            Date registEndTime = request.getRegistEndTime();
+            registEndTime = GetDate.getSomeDayEnd(registEndTime);
+            request.setRegistEndTime(registEndTime);
+        }
         return utmRegCustomizeMapper.selectAppChannelReconciliationRecordHjh(request);
     }
 

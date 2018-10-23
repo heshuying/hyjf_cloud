@@ -68,32 +68,27 @@ public class IncreaseInterestRepayDetailServiceImpl extends BaseServiceImpl impl
      */
     @Override
     public List<AdminIncreaseInterestRepayCustomizeVO> getIncreaseInterestRepayDetailList(IncreaseInterestRepayDetailRequest form) {
-        IncreaseInterestRepayExample example = new IncreaseInterestRepayExample();
-        IncreaseInterestRepayExample.Criteria cra = example.createCriteria();
-        List<AdminIncreaseInterestRepayCustomizeVO> reslutList = new ArrayList<AdminIncreaseInterestRepayCustomizeVO>();
+
+        Map<String, Object> param = new HashMap<String, Object>();
         // 项目编号
         if (StringUtils.isNotEmpty(form.getBorrowNidSrch())) {
-            cra.andBorrowNidEqualTo(form.getBorrowNidSrch());
+            param.put("borrowNidSrch", form.getBorrowNidSrch());
         }
         // 项目状态
         if (StringUtils.isNotEmpty(form.getRepayStatusSrch())) {
-            cra.andRepayStatusEqualTo(Integer.parseInt(form.getRepayStatusSrch()));
+            param.put("repayStatusSrch", form.getRepayStatusSrch());
         }
         // 应还时间
         if (StringUtils.isNotEmpty(form.getTimeStartSrch())) {
-            cra.andRepayTimeGreaterThanOrEqualTo(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(form.getTimeStartSrch())));
-            cra.andRepayTimeLessThanOrEqualTo( GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(form.getTimeEndSrch())));
+            param.put("timeStartSrch", form.getTimeStartSrch());
+            param.put("timeEndSrch", form.getTimeEndSrch());
         }
+        //limit限制
         if (form.getLimitStart() != -1) {
-            example.setLimitStart(form.getLimitStart());
-            example.setLimitEnd(form.getLimitEnd());
+            param.put("limitStart", form.getLimitStart());
+            param.put("limitEnd", form.getLimitEnd());
         }
-        example.setOrderByClause(" repay_time ASC");
-        List<IncreaseInterestRepay> list = increaseInterestRepayMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(list)) {
-            reslutList = CommonUtils.convertBeanList(list,AdminIncreaseInterestRepayCustomizeVO.class);
-        }
-        return reslutList;
+        return adminIncreaseInterestRepayCustomizeMapper.selectBorrowRepaymentInfoListList(param);
     }
 
     /**
