@@ -65,8 +65,13 @@ public class AmConfigClientImpl implements AmConfigClient {
 
 	@Override
 	public List<ContentArticleVO> aboutUsClient(BasePage request) {
+		ContentArticleRequest articleRequest = new ContentArticleRequest();
+		// 网站公告
+		articleRequest.setNoticeType("20");
+		articleRequest.setCurrPage(request.getCurrPage());
+		articleRequest.setPageSize(request.getPageSize());
 		ContentArticleResponse response = restTemplate.postForObject(
-				"http://AM-CONFIG/am-config/article/contentArticleList", request, ContentArticleResponse.class);
+				"http://AM-CONFIG/am-config/article/contentArticleList", articleRequest, ContentArticleResponse.class);
 		if (response != null) {
 			return response.getResultList();
 		}
