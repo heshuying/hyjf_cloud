@@ -70,7 +70,9 @@
                         "type":"${(recoverLatest.type)!''}",
                         "couponType":"${(recoverLatest.couponType)!''}",
                         "borrowApr":"${(recoverLatest.borrowApr)!''}",
-                        "totalWait":"${(recoverLatest.totalWait)!''}"
+                        "totalWait":"${(recoverLatest.totalWait)!''}",
+                        "exitType":"${(recoverLatest.exitType)!''}",
+                        "hjhType":"${(recoverLatest.hjhType)!''}"
                     }
                         <#if recoverLatest_has_next>,</#if>
                     </#list>
