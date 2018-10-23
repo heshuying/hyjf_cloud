@@ -35,8 +35,7 @@ public class CurrentHoldPlanListCustomize implements Serializable {
 	private String data;
 	/**优惠券类型*/
 	private String couponType;
-    // add by nxl 智投服务,添加参考回报
-    private String referenceReturn;
+
 
     public String getDebtPlanNid() {
         return debtPlanNid;
@@ -111,11 +110,4 @@ public class CurrentHoldPlanListCustomize implements Serializable {
         this.couponType = couponType;
     }
 
-    public String getReferenceReturn() {
-        return referenceReturn;
-    }
-
-    public void setReferenceReturn(String referenceReturn) {
-        this.referenceReturn = referenceReturn;
-    }
 }

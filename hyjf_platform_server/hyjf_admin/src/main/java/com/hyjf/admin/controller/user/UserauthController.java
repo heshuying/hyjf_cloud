@@ -156,8 +156,8 @@ public class UserauthController extends BaseController {
 	 * @param userId
 	 */
 	@ResponseBody
-	@PostMapping("userauthquery")
-	public AdminResult queryUserAuth(@RequestParam Integer userId) {
+	@GetMapping("/userauthquery/{userId}")
+	public AdminResult queryUserAuth(@PathVariable Integer userId) {
 		// 返回结果
 		logger.info("授权查询开始，查询用户：{}", userId);
 		BankCallBean retBean = authService.getTermsAuthQuery(userId, BankCallConstant.CHANNEL_PC);
@@ -167,6 +167,7 @@ public class UserauthController extends BaseController {
 			}
 
 			if (retBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
+				authService.updateUserAuth(userId, retBean,AuthBean.AUTH_TYPE_AUTO_BID);
 				return new AdminResult();
 			} else {
 				return new AdminResult<>(FAIL, "请求银行接口失败");
