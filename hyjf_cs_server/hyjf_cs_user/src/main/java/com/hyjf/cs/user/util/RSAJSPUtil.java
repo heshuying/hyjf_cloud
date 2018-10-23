@@ -273,7 +273,7 @@ public class RSAJSPUtil {
 		Long filelength = file.length();
 		logger.info("filelength:"+filelength);
 		byte[] filecontent = new byte[filelength.intValue()];
-		logger.info("filecontent[]:"+filecontent);
+
 
 		try (FileInputStream in = new FileInputStream(file)) {
 			in.read(filecontent);
@@ -281,6 +281,7 @@ public class RSAJSPUtil {
 			e.printStackTrace();
 		}
 		try {
+            logger.info("filecontent:"+new String(filecontent, encoding));
 			return new String(filecontent, encoding);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
