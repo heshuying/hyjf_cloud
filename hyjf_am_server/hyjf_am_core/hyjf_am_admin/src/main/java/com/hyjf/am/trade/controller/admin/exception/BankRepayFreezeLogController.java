@@ -56,7 +56,7 @@ public class BankRepayFreezeLogController extends BaseController {
      * @date: 2018/7/11
      */
     @RequestMapping("/deleteby_id/{id}")
-    public Integer deleteFreezeLogById(Integer id) {
+    public Integer deleteFreezeLogById(@PathVariable Integer id) {
         return bankRepayFreezeLogService.deleteFreezeLogById(id);
     }
 

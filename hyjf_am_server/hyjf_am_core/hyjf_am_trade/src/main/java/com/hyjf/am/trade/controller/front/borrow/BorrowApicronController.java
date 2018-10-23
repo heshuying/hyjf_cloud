@@ -27,7 +27,7 @@ public class BorrowApicronController extends BaseController {
 	private BorrowApicronService borrowApicronService;
 
 	@GetMapping("/getBorrowApicronList/{extraYieldRepayStatus}/{apiType}")
-	public BorrowApicronResponse getBorrowApicronList(Integer extraYieldRepayStatus, Integer apiType) {
+	public BorrowApicronResponse getBorrowApicronList(@PathVariable Integer extraYieldRepayStatus, @PathVariable Integer apiType) {
 		BorrowApicronResponse response = new BorrowApicronResponse();
 		List<BorrowApicron> borrowApicronList = borrowApicronService.getBorrowApicronList(extraYieldRepayStatus,
 				apiType);
@@ -50,7 +50,7 @@ public class BorrowApicronController extends BaseController {
 	}
 
 	@GetMapping("/getBorrowApicronListWithRepayStatus/{status}/{apiType}")
-	public BorrowApicronResponse getBorrowApicronListWithRepayStatus(Integer status, Integer apiType) {
+	public BorrowApicronResponse getBorrowApicronListWithRepayStatus(@PathVariable Integer status, @PathVariable Integer apiType) {
 		BorrowApicronResponse response = new BorrowApicronResponse();
 		List<BorrowApicron> borrowApicronList = borrowApicronService.getBorrowApicronListWithRepayStatus(status,
 				apiType);
@@ -69,7 +69,7 @@ public class BorrowApicronController extends BaseController {
 	}
 
 	@GetMapping("/selectBorrowApicronListByBorrowNid/{borrowNid}")
-	public BorrowApicronResponse selectBorrowApicronListByBorrowNid(String borrowNid) {
+	public BorrowApicronResponse selectBorrowApicronListByBorrowNid(@PathVariable String borrowNid) {
 		BorrowApicronResponse response = new BorrowApicronResponse();
 		List<BorrowApicron> borrowApicronList = borrowApicronService.selectBorrowApicronListByBorrowNid(borrowNid);
 		if (!CollectionUtils.isEmpty(borrowApicronList)) {
@@ -86,7 +86,7 @@ public class BorrowApicronController extends BaseController {
 	 * @date: 2018/7/17
 	 */
 	@GetMapping("/getby_bankseqno/{bankSeqNO}")
-	public BorrowApicronResponse selectBorrowApicron(String bankSeqNO) {
+	public BorrowApicronResponse selectBorrowApicron(@PathVariable String bankSeqNO) {
 		BorrowApicronResponse response = new BorrowApicronResponse();
 		BorrowApicron borrowApicron = borrowApicronService.selectBorrowApicron(bankSeqNO);
 		if (borrowApicron != null) {
