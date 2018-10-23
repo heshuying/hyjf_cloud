@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.group.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.OrganizationStructureVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;

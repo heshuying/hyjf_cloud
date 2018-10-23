@@ -12,7 +12,6 @@ import com.hyjf.pay.lib.fadada.call.DzqzCallApi;
 import com.hyjf.pay.lib.fadada.call.impl.DzqzCallApiImpl;
 import com.hyjf.pay.mq.FddProducer;
 import com.hyjf.pay.mq.MessageContent;
-import com.hyjf.pay.mq.Producer;
 import com.hyjf.pay.service.DzqzPayLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

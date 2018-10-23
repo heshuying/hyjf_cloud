@@ -1,6 +1,5 @@
 package com.hyjf.pay.mq;
 
-import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
-import java.io.Serializable;
 
 /**
  * @author xiasq

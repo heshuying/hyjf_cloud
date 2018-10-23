@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.promotion;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.vo.user.UtmPlatVO;
 

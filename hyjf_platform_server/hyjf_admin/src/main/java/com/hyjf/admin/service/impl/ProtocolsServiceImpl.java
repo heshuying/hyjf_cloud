@@ -21,7 +21,6 @@ import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,18 +46,6 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 
 	@Autowired
 	private SystemConfig systemConfig;
-
-	private String ftpIp = systemConfig.getFtpIp();
-
-	private String ftpPort = systemConfig.getFtpPort();
-
-	private String ftpBasePath = systemConfig.getFtpBasePath();
-
-	private String ftpPassword = systemConfig.getFtpPassword();
-
-	private String ftpUsername = systemConfig.getFtpUsername();
-
-	private String ftpDomain = systemConfig.getFtpDomain();
 
 	@Autowired
 	private AmTradeClient amTradeClient;
@@ -150,12 +137,12 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 
 	@Override
 	public String uploadTempletToFtp(MultipartFile multipartFile, String fddTemplet, int type) {
-		String ftpIP = ftpIp;
-		String port = ftpPort;
-		String basePath = ftpBasePath;
-		String password = ftpPassword;
-		String username = ftpUsername;
-		String domain = ftpDomain;
+		String ftpIP = systemConfig.getFtpIp();
+		String port = systemConfig.getFtpPort();
+		String basePath = systemConfig.getFtpBasePath();
+		String password = systemConfig.getFtpPassword();
+		String username = systemConfig.getFtpUsername();
+		String domain = systemConfig.getFtpDomain();
 		String httpPath = domain + basePath + "/" + fddTemplet;
 		String httpUrl = null;
 		try {
