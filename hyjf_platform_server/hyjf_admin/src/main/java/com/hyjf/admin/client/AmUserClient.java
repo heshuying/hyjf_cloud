@@ -395,6 +395,13 @@ public interface AmUserClient {
     int updateUserInfoByUserInfo(UserInfoVO userInfoVO);
 
     /**
+     * 开户掉单更新用户信息
+     * @param userInfoVO
+     * @return
+     */
+    int updateUserInfoByUserInfoSelective(UserInfoVO userInfoVO);
+
+    /**
      * 更新用户表
      *
      * @param userVO
@@ -402,6 +409,15 @@ public interface AmUserClient {
      * @auth nxl
      */
     int updateUser(UserVO userVO);
+
+    /**
+     * 更新用户表--开户掉单
+     *
+     * @param userVO
+     * @return
+     * @auth nxl
+     */
+    int updateUserSelective(UserVO userVO);
 
     /**
      * 获取某一用户的信息修改列表
