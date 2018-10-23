@@ -17,6 +17,7 @@
 		<result column="menu_icon" property="icon" jdbcType="VARCHAR" />
 		<result column="menu_sort" property="sort" jdbcType="VARCHAR" />
 		<result column="menu_ctrl" property="menuCtrl" jdbcType="VARCHAR" />
+		<result column="menu_hide" property="menuHide" jdbcType="VARCHAR" />
 		<association property="children" select="selectLeftMenuTree2" column="menu_uuid">
 			<!-- 这里要注意的是column对应的是student中的外键，而且需是表字段名 -->
 		</association>
@@ -31,6 +32,7 @@
 			m.menu_icon AS menu_icon,
 			m.menu_sort AS menu_sort,
 			m.menu_ctrl AS menu_ctrl,
+			m.menu_hide AS menu_hide,
 			a.status
 			FROM
 			ht_admin a
@@ -60,7 +62,8 @@
 			m.menu_url AS menu_url,
 			m.menu_icon AS menu_icon,
 			m.menu_sort AS menu_sort,
-			m.menu_ctrl AS menu_ctrl
+			m.menu_ctrl AS menu_ctrl,
+			m.menu_hide AS menu_hide
 		 from ht_admin_menu m
 		WHERE
 		m.menu_puuid =#{menu_uuid} and  m.del_flag = '0'

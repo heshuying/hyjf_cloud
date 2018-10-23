@@ -6,6 +6,7 @@ package com.hyjf.admin.client;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
@@ -2748,6 +2749,13 @@ public interface AmTradeClient {
      * @return
      */
     public AdminPartnerConfigDetailResponse deletePartnerConfig(AdminPartnerConfigListRequest req);
+    /**
+     * 合作机构配置资产编号校验
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    public IntegerResponse isExistsCheckAction(AdminPartnerConfigListRequest req);
     /**
      * 查询固定时间间隔的用户投资列表
      * @param repairStartDate
