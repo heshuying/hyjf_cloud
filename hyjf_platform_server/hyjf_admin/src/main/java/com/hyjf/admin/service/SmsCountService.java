@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.admin.SmsCountCustomizeResponse;
+import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
 
 /**
@@ -17,11 +18,11 @@ public interface SmsCountService {
      * @param request
      * @return
      */
-    SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request);
+    SmsCountCustomizeResponse querySmsCountList(SmsCountRequest request);
 
     /**
      * 查询短信总条数+总费用
-     * @param smsCountCustomize
+     * @param
      * @return
      */
     Integer querySmsCountNumberTotal(SmsCountCustomizeVO request);
