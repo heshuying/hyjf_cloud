@@ -88,6 +88,7 @@ public class MessagePushHistoryRequest extends MessagePushMsgHistoryVO implement
     @ApiModelProperty(value = "更新或是转发,0为更新1为转发")
     private String updateOrReSend;
 
+
     /**
      * 当前页码
      */

@@ -54,7 +54,6 @@ public class MessagePushNoticesController extends BaseController {
     @ResponseBody
     public JSONObject init(@RequestBody MessagePushNoticesRequest messagePushNoticesRequest) {
         JSONObject jsonObject = new JSONObject();
-        try {
             MessagePushNoticesResponse prs = messagePushNoticesService.getRecordList(messagePushNoticesRequest);
             List<MessagePushTagVO> allPushTagList = messagePushHistoryService.getAllPushTagList();
             if (prs == null) {
@@ -66,18 +65,12 @@ public class MessagePushNoticesController extends BaseController {
                 return jsonObject;
             }
             prepareDatas(jsonObject);
-            //MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
-            //List<MessagePushTagVO> resultList = tagList.getResultList();
-            //jsonObject.put("noticesPushTags", resultList);
             jsonObject.put("totalCount", prs.getRecordTotal());
             jsonObject.put("list", prs.getResultList());
             jsonObject.put("allPushTagList", allPushTagList);
             jsonObject.put("fileDomainUrl", url);
             return jsonObject;
-        } catch (Exception e) {
-            jsonObject.put(FAIL, FAIL_DESC);
-            return jsonObject;
-        }
+
 
     }
 
