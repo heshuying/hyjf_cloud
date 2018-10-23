@@ -137,7 +137,7 @@ public class PushMoneyManageController extends BaseController {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "直投提成管理";
+        String sheetName = "推广提成列表";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
         // 声明一个工作薄
@@ -262,7 +262,7 @@ public class PushMoneyManageController extends BaseController {
         map.put("accountId", "电子账号");
         map.put("attribute", "用户属性");
         map.put("usernameTender", "投资人");
-        map.put("accountTender", "投资金额");
+        map.put("accountTender", "授权服务金额");
         map.put("commission", "提成金额");
         map.put("statusName", "状态");
         map.put("tenderTimeView", "投资时间");

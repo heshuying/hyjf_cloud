@@ -1,5 +1,6 @@
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowRepayAgreementVO;
 
 import java.io.Serializable;
@@ -11,15 +12,15 @@ import java.util.List;
  */
 public class BorrowRepayAgreementRequestBean implements Serializable {
 
-    private List<BorrowRepayAgreementVO> recordList;
+    private List<BorrowRepayAgreementCustomizeVO> recordList;
 
     private Integer total;
 
-    public List<BorrowRepayAgreementVO> getRecordList() {
+    public List<BorrowRepayAgreementCustomizeVO> getRecordList() {
         return recordList;
     }
 
-    public void setRecordList(List<BorrowRepayAgreementVO> recordList) {
+    public void setRecordList(List<BorrowRepayAgreementCustomizeVO> recordList) {
         this.recordList = recordList;
     }
 

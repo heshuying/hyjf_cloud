@@ -162,6 +162,9 @@ public class WebsiteController extends BaseController {
             String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }
+        //交易总金额
+        String sumAccount = this.websiteService.selectBorrowInvestAccount(accountWebList);
+        String[] lastRow = {"总计","","","","","","","",sumAccount};
         for (int i = 1; i <= sheetCount; i++) {
             accountWebList.setPageSize(defaultRowMaxCount);
             accountWebList.setCurrPage(i);
@@ -169,7 +172,7 @@ public class WebsiteController extends BaseController {
             List<AccountWebListVO> record = webListResponse.getResultList();
             if (record != null && record.size()> 0) {
                 String sheetNameTmp = sheetName + "_第" + i + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  record);
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,record,lastRow);
             } else {
                 break;
             }
@@ -179,7 +182,7 @@ public class WebsiteController extends BaseController {
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("orderid", "订单号");
+        map.put("ordid", "订单号");
         map.put("regionName", "分公司");
         map.put("branchName", "分部");
         map.put("departmentName", "团队");

@@ -34,33 +34,33 @@ public class ApplyAgreementRequest extends BasePage {
     @ApiModelProperty(value = "申请时间结束")
     private String timeEnd;
 
-    public int limit;
+    public Integer limit;
 
-    public int limitStart;
+    public Integer limitStart;
 
-    public int limitEnd;
+    public Integer limitEnd;
 
-    public int getLimit() {
+    public Integer getLimit() {
         return limit;
     }
 
-    public void setLimit(int limit) {
+    public void setLimit(Integer limit) {
         this.limit = limit;
     }
 
-    public int getLimitStart() {
+    public Integer getLimitStart() {
         return limitStart;
     }
 
-    public void setLimitStart(int limitStart) {
+    public void setLimitStart(Integer limitStart) {
         this.limitStart = limitStart;
     }
 
-    public int getLimitEnd() {
+    public Integer getLimitEnd() {
         return limitEnd;
     }
 
-    public void setLimitEnd(int limitEnd) {
+    public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
     }
 

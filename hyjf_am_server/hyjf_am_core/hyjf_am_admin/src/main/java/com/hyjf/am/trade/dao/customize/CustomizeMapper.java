@@ -203,6 +203,9 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AssetExceptionCustomizeMapper assetExceptionCustomizeMapper;
+
+	@Autowired
+	protected BorrowRepayAgreementCustomizeMapper borrowRepayAgreementCustomizeMapper;
 	@Autowired
 	protected AdminBorrowRegistExceptionMapper adminBorrowRegistExceptionMapper;
 

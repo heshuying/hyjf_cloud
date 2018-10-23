@@ -38,6 +38,7 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 			MessagePushTemplateExample example = new MessagePushTemplateExample();
 			MessagePushTemplateExample.Criteria criteria = example.createCriteria();
 			criteria.andTemplateCodeEqualTo(tplCode);
+			criteria.andStatusEqualTo(1);
 			List<MessagePushTemplate> messagePushTemplateList = templateMapper.selectByExample(example);
 			if (!CollectionUtils.isEmpty(messagePushTemplateList)) {
 				messagePushTemplate = messagePushTemplateList.get(0);

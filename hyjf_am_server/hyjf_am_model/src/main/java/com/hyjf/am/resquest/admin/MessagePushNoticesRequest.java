@@ -21,7 +21,7 @@ public class MessagePushNoticesRequest extends MessagePushMsgVO implements Seria
      * 标签类型查询
      */
     @ApiModelProperty(value = "标签类型查询")
-    private String noticesTagIdSrch;
+    private Integer noticesTagIdSrch;
     /**
      * 标题查询
      */
@@ -75,7 +75,6 @@ public class MessagePushNoticesRequest extends MessagePushMsgVO implements Seria
      */
     @ApiModelProperty(value = "发送时间")
     private String noticesPreSendTimeStr;
-
     private String ids;
 
     private List<MessagePushMsgVO> recordList;
@@ -98,6 +97,7 @@ public class MessagePushNoticesRequest extends MessagePushMsgVO implements Seria
     @ApiModelProperty(value = "当前页条数")
     private int pageSize;
 
+
     private String userName;
     public int getCurrPage() {
         return currPage;
@@ -115,11 +115,11 @@ public class MessagePushNoticesRequest extends MessagePushMsgVO implements Seria
         this.pageSize = pageSize;
     }
 
-    public String getNoticesTagIdSrch() {
+    public Integer getNoticesTagIdSrch() {
         return noticesTagIdSrch;
     }
 
-    public void setNoticesTagIdSrch(String noticesTagIdSrch) {
+    public void setNoticesTagIdSrch(Integer noticesTagIdSrch) {
         this.noticesTagIdSrch = noticesTagIdSrch;
     }
 
@@ -242,4 +242,6 @@ public class MessagePushNoticesRequest extends MessagePushMsgVO implements Seria
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+
 }

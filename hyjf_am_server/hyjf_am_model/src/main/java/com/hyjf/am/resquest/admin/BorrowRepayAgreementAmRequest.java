@@ -1,14 +1,18 @@
 package com.hyjf.am.resquest.admin;
 
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
-public class BorrowRepayAgreementAmRequest implements Serializable {
+public class BorrowRepayAgreementAmRequest extends BasePage implements Serializable {
 
     @ApiModelProperty(value = "借款编号")
     private String borrowNidSrch;
+
+    @ApiModelProperty(value = "还款状态")
+    private String repayStatus;
 
     @ApiModelProperty(value = "垫付时间开始")
     private String timeStartSrch;
@@ -29,6 +33,14 @@ public class BorrowRepayAgreementAmRequest implements Serializable {
 
     public void setBorrowNidSrch(String borrowNidSrch) {
         this.borrowNidSrch = borrowNidSrch;
+    }
+
+    public String getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(String repayStatus) {
+        this.repayStatus = repayStatus;
     }
 
     public String getTimeStartSrch() {

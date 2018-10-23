@@ -4,6 +4,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializable {
     private Integer id;
@@ -38,9 +39,9 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
 
     private Integer repayPeriod;
 
-    private String repayTime;
+    private Integer repayTime;
 
-    private String repayActionTime;
+    private Integer repayActionTime;
 
     private BigDecimal repayInterest;
 
@@ -48,21 +49,21 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
 
     private BigDecimal repayInterestWait;
 
-    private String addip;
+    private String addIp;
 
     private Integer web;
-
-    private Integer createTime;
 
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer updateTime;
-
     private Integer updateUserId;
 
     private String updateUserName;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -87,7 +88,7 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
     }
 
     public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
+        this.userName = userName;
     }
 
     public Integer getInvestId() {
@@ -103,7 +104,7 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
     }
 
     public void setInvestOrderId(String investOrderId) {
-        this.investOrderId = investOrderId == null ? null : investOrderId.trim();
+        this.investOrderId = investOrderId;
     }
 
     public BigDecimal getInvestAccount() {
@@ -119,7 +120,7 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
     }
 
     public void setBorrowNid(String borrowNid) {
-        this.borrowNid = borrowNid == null ? null : borrowNid.trim();
+        this.borrowNid = borrowNid;
     }
 
     public BigDecimal getBorrowApr() {
@@ -151,7 +152,7 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
     }
 
     public void setBorrowStyle(String borrowStyle) {
-        this.borrowStyle = borrowStyle == null ? null : borrowStyle.trim();
+        this.borrowStyle = borrowStyle;
     }
 
     public String getBorrowStyleName() {
@@ -159,15 +160,21 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
     }
 
     public void setBorrowStyleName(String borrowStyleName) {
-        this.borrowStyleName = borrowStyleName == null ? null : borrowStyleName.trim();
+        this.borrowStyleName = borrowStyleName;
     }
-
+    public String getBorrowPeriodByStyle(){
+        if ("endday".equals(this.borrowStyle)) {
+            return this.borrowPeriod + "天";
+        } else {
+            return this.borrowPeriod + "个月";
+        }
+    }
     public String getOrderId() {
         return orderId;
     }
 
     public void setOrderId(String orderId) {
-        this.orderId = orderId == null ? null : orderId.trim();
+        this.orderId = orderId;
     }
 
     public String getOrderDate() {
@@ -175,7 +182,7 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
     }
 
     public void setOrderDate(String orderDate) {
-        this.orderDate = orderDate == null ? null : orderDate.trim();
+        this.orderDate = orderDate;
     }
 
     public Integer getRepayStatus() {
@@ -194,20 +201,20 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
         this.repayPeriod = repayPeriod;
     }
 
-    public String getRepayTime() {
+    public Integer getRepayTime() {
         return repayTime;
     }
 
-    public void setRepayTime(String repayTime) {
-        this.repayTime = repayTime == null ? null : repayTime.trim();
+    public void setRepayTime(Integer repayTime) {
+        this.repayTime = repayTime;
     }
 
-    public String getRepayActionTime() {
+    public Integer getRepayActionTime() {
         return repayActionTime;
     }
 
-    public void setRepayActionTime(String repayActionTime) {
-        this.repayActionTime = repayActionTime == null ? null : repayActionTime.trim();
+    public void setRepayActionTime(Integer repayActionTime) {
+        this.repayActionTime = repayActionTime;
     }
 
     public BigDecimal getRepayInterest() {
@@ -234,12 +241,12 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
         this.repayInterestWait = repayInterestWait;
     }
 
-    public String getAddip() {
-        return addip;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp;
     }
 
     public Integer getWeb() {
@@ -248,14 +255,6 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
 
     public void setWeb(Integer web) {
         this.web = web;
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
     }
 
     public Integer getCreateUserId() {
@@ -271,15 +270,7 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
     }
 
     public void setCreateUserName(String createUserName) {
-        this.createUserName = createUserName == null ? null : createUserName.trim();
-    }
-
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
+        this.createUserName = createUserName;
     }
 
     public Integer getUpdateUserId() {
@@ -295,6 +286,22 @@ public class IncreaseInterestRepayDetailVO extends BaseVO implements Serializabl
     }
 
     public void setUpdateUserName(String updateUserName) {
-        this.updateUserName = updateUserName == null ? null : updateUserName.trim();
+        this.updateUserName = updateUserName;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

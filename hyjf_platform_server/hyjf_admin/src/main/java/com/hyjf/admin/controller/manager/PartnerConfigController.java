@@ -6,6 +6,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PartnerConfigService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminPartnerConfigDetailResponse;
 import com.hyjf.am.resquest.admin.AdminPartnerConfigListRequest;
@@ -114,6 +115,36 @@ public class PartnerConfigController extends BaseController {
 
         }
         return new AdminResult<>();
+    }
+    /**
+     * 合作机构配置资产编号校验
+     *
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "合作机构配置资产编号校验", notes = "合作机构配置资产编号校验")
+    @PostMapping("/isExists")
+    public AdminResult isExistsCheckAction(HttpServletRequest request,@RequestBody AdminPartnerConfigListRequest req) {
+        AdminResult result = new AdminResult<>();
+        String ret = new String();
+        //新增配置instCode
+        if (StringUtils.isBlank(req.getInstCode())) {
+            return new AdminResult<String>("资产编号不可为空，请重试.");
+        }
+        IntegerResponse res = partnerConfigService.isExistsCheckAction(req);
+        if(Response.isSuccess(res)){
+            if(res.getResultInt()>=1){
+                //校验通过正常返回
+                ret="该资产编号已经存在。";
+            }else{
+                //校验通过正常返回
+                ret="y";
+            }
+        }else {
+            //校验通过正常返回
+            return new AdminResult<>(FAIL, res.getMessage());
+        }
+        return new AdminResult<String>(ret);
     }
 
 
