@@ -2262,7 +2262,7 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/deleteBankOpenAccountLogByUserId/"+userId;
 		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
 		if (Response.isSuccess(response)) {
-			return response.isDeleteFlag();
+			return response.isBankOpenFlag();
 		}
 		return false;
 	}
@@ -2280,7 +2280,7 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/checkAccountByAccountId/"+accountId;
 		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
 		if (Response.isSuccess(response)) {
-			return response.isDeleteFlag();
+			return response.isBankOpenFlag();
 		}
 		return false;
 	}

@@ -272,6 +272,11 @@ public class BankCallMethodConstant implements Serializable {
 	 * 按手机号查询电子账号信息
 	 */
 	public static final String TXCODE_ACCOUNT_QUERY_BY_MOBILE = "accountQueryByMobile";
+
+	/**
+	 * 按手机号查询电子账号信息增强
+	 */
+	public static final String TXCODE_ACCOUNT_QUERY_BY_MOBILE_PLUS = "accountQueryByMobilePlus";
 	/**
 	 * 查询交易状态
 	 */

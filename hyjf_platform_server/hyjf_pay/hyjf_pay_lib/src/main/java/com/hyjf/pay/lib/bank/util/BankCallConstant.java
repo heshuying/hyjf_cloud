@@ -106,6 +106,7 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	public static final String BANK_URL_BIND_CARD_PAGE = "/p2p/page/bindCardPage";
 	public static final String BANK_URL_TERMS_AUTH_PAGE = "/p2p/page/termsAuthPage";
 	public static final String BANK_URL_REFINANCE_FREEZE_PAGE = "/p2p/page/refinanceFreezePage";
+	public static final String BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE = "/p2p/page/accountOpenEncryptPage";
 	// 解卡页面(合规)
 	public static final String BANK_URL_UNBIND_CARD_PAGE = "/p2p/page/unbindCardPage";
 	/** 签约状态查询 1 自动投标签约*/
