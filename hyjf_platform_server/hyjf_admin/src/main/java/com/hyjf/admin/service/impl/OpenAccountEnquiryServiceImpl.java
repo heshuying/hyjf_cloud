@@ -133,16 +133,17 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                 // 调用查询电子账户
                 BankCallBean selectbean = new BankCallBean();
                 selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-                selectbean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE);
+                selectbean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE_PLUS);
                 selectbean.setInstCode(systemConfig.getBANK_INSTCODE());// 机构代码
                 selectbean.setBankCode(systemConfig.getBANK_BANKCODE());
                 selectbean.setTxDate(GetOrderIdUtils.getTxDate());
                 selectbean.setTxTime(GetOrderIdUtils.getTxTime());
                 selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
                 selectbean.setChannel("000002");
+                selectbean.setMobile(requestBean.getLastname());
                 // 操作者ID
-                selectbean.setLogUserId(String.valueOf(currUser.getId()));
-                selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.parseInt(currUser.getId())));
+                selectbean.setLogUserId(String.valueOf(user.getUserId()));
+                selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
                 selectbean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
                 selectbean.setLogClient(0);
                 // 返回参数
@@ -164,6 +165,8 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                             result.setName(userInfoVO.getTruename());
                             result.setRoleId((String) jso.get("identity"));
                             result.setPlatform(1+"");
+                            result.setUserid(user.getUserId()+"");
+                            result.setChannel(BankCallConstant.CHANNEL_PC);
                             return result;
                         } else {
                             CheckUtil.check(Validator.isNotNull(user) , MsgEnum.STATUS_CE000007);
@@ -189,11 +192,10 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     @Override
     public OpenAccountEnquiryDefineResultBean openAccountEnquiryUpdate(OpenAccountEnquiryDefineResultBean requestBean) {
         OpenAccountEnquiryDefineResultBean resultBean= new OpenAccountEnquiryDefineResultBean();
-        String ordeidString =requestBean.getOrdeidString().trim();
         String userid = requestBean.getUserid().trim();
         String channel =requestBean.getChannel().trim();
         String accountId = requestBean.getAccountId().trim();
-        if(ordeidString!=null||userid!=null||channel!=null||accountId!=null){
+        if(userid!=null||channel!=null||accountId!=null){
             updateUserAccount(requestBean);
         }
         resultBean.setStatus("success");

@@ -156,7 +156,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         String gender = "F";
         String idType = BankCallConstant.ID_TYPE_IDCARD;
         // 调用开户接口
-        BankCallBean openAccoutBean =  new BankCallBean(openBean.getUserId(),BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE,Integer.parseInt(openBean.getPlatform()),BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
+        BankCallBean openAccoutBean =  new BankCallBean(openBean.getUserId(),BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE,Integer.parseInt(openBean.getPlatform()),BankCallConstant.BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE);
         openAccoutBean.setIdentity(openBean.getIdentity());
         /**1：出借角色2：借款角色3：代偿角色*/
         openAccoutBean.setChannel(openBean.getChannel());
