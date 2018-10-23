@@ -135,9 +135,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
     public int updateBankCreditEnd(BankCreditEnd bankCreditEnd) {
         BankCreditEndExample example = new BankCreditEndExample();
         example.createCriteria().andOrderIdEqualTo(bankCreditEnd.getOrderId());
-        bankCreditEnd.setOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(bankCreditEnd.getTenderUserId())));
         bankCreditEnd.setUpdateTime(GetDate.getNowTime());
-        bankCreditEnd.setStatus(0);
         return this.bankCreditEndMapper.updateByExampleSelective(bankCreditEnd, example);
     }
 

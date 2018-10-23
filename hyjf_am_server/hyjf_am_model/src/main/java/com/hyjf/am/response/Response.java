@@ -21,6 +21,7 @@ public class Response<T> {
 
 	private List<T> resultList = new ArrayList();
 
+
 	public Response() {
 		this.rtn = SUCCESS;
 		this.message = SUCCESS_MSG;

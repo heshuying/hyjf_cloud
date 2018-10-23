@@ -15,14 +15,9 @@ import com.hyjf.admin.utils.Page;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.response.trade.ApplyAgreementResponse;
 import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
-import com.hyjf.am.resquest.admin.ApplyAgreementAmRequest;
-import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
-import com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest;
-import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
-import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
-import com.hyjf.am.vo.trade.BorrowRepayAgreementVO;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.CreditRepayVO;
+import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.am.vo.user.ApplyAgreementInfoVO;
@@ -36,6 +31,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -58,21 +55,21 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     @Autowired
     private AmUserClient amUserClient;
 
-    public static final String BASE_URL = "http://AM-TRADE/am-trade/applyAgreement";
+    public static final String BASE_URL = "http://AM-ADMIN/am-trade/applyAgreement";
 
     /**垫付协议申请列表*/
     public static final String AGREEMENT_LIST_URL = BASE_URL + "/getApplyAgreementList";
 
-    /**垫付协议申请明细列表页count*/
+    /**垫付协议申请列表页count*/
     public static final String AGREEMENT_COUNT_URL = BASE_URL + "/getApplyAgreementCount";
 
-    /**垫付协议申请列表-分期*/
+    /**垫付协议申请明细列表-分期*/
     public static final String ADD_AGREEMENT_LIST_URL_PLAN = BASE_URL + "/getAddApplyAgreementPlanList";
 
-    /**垫付协议申请明细列表页-不分期count*/
+    /**垫付协议申请明细列表页-分期count*/
     public static final String ADD_AGREEMENT_COUNT_URL_PLAN = BASE_URL + "/getAddApplyAgreementPlanCount";
 
-    /**垫付协议申请列表*/
+    /**垫付协议申请明细列表*/
     public static final String ADD_AGREEMENT_LIST_URL= BASE_URL + "/getAddApplyAgreementList";
 
     /**垫付协议申请明细列表页count*/
@@ -143,7 +140,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             Integer count = response.getCount();
             if (count > 0) {
                 response = baseClient.postExe(ListUrl, req, BorrowRepayAgreementResponse.class);
-                List<BorrowRepayAgreementVO> list = response.getResultList();
+                List<BorrowRepayAgreementCustomizeVO> list = response.getResultList();
                 bean.setRecordList(list);
             }
             bean.setTotal(count);
@@ -1069,6 +1066,83 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             }
         }
         return "";
+    }
+
+    /**
+     * 下载文件签署
+     * @param request
+     * @return
+     */
+    public void downloadAction(DownloadAgreementRequest request,HttpServletResponse response) {
+        String status = request.getStatus();//1:脱敏，0：原始
+       /* String tenderNid = request.getTenderNid();
+        String borrowNid = request.getBorrowNid();
+        List<TenderAgreementVO> tenderAgreementsAss= fddGenerateContractService.selectLikeByExample(tenderNid+"%",borrowNid);//债转协议
+        //输出文件集合
+        List<File> files = new ArrayList<File>();
+        for (TenderAgreementVO tenderAgreement : tenderAgreementsAss) {
+            if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
+                if("1".equals(status)){
+                    files = createFaddPDFImgFile(files,tenderAgreement);
+                }else {
+                    if(org.apache.commons.lang.StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
+                        File filePdf = null;
+                        try {
+                            filePdf = FileUtil.getFile(null,null,tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
+                        } catch (IOException e) {
+                            filePdf = null;
+                        }//债转协议
+                        if(filePdf!=null){
+                            files.add(filePdf);
+                        }
+                    }
+                }
+            }
+        }
+        if(files!=null && files.size()>0){
+            ZIPGenerator.generateZip(response, files, assignNid);
+        }else{
+            LogUtil.infoLog(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
+            return ;
+
+        }*/
+
+        return;
+    }
+    /**
+     * 下载法大大协议 __垫付
+     *
+     * @param files
+     * @param tenderAgreement
+     * 返回 0:下载成功；1:下载失败；2:没有生成法大大合同记录
+     */
+    public List<File> createFaddPDFImgFile(List<File> files,TenderAgreementVO tenderAgreement) {
+       /* SFTPParameter para = new SFTPParameter() ;
+        String ftpIP = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_IP);
+        String port = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_PORT);
+        String basePathPdf = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_BASEPATH_PDF);
+        String password = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_PASSWORD);
+        String username = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_USERNAME);
+        para.hostName = ftpIP;//ftp服务器地址
+        para.userName = username;//ftp服务器用户名
+        para.passWord = password;//ftp服务器密码
+        para.port = Integer.valueOf(port);//ftp服务器端口
+        para.fileName=tenderAgreement.getTenderNid();
+        para.savePath = "/pdf_tem/pdf/" + tenderAgreement.getTenderNid();
+        String imgUrl = tenderAgreement.getImgUrl();
+        String pdfUrl = tenderAgreement.getPdfUrl();
+        //获取文件目录
+        int index = pdfUrl.lastIndexOf("/");
+        String pdfPath = pdfUrl.substring(0,index);
+        //文件名称
+        String pdfName = pdfUrl.substring(index+1);
+        para.downloadPath = basePathPdf + "/" + pdfPath;
+        para.sftpKeyFile = pdfName;
+
+        File file =  FavFTPUtil.downloadDirectory(para);
+        files.add(file);
+        return files;*/
+        return null;
     }
 
 }

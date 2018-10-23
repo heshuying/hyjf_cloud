@@ -4433,6 +4433,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         List<RepayDetailBean> repayPLanList = repay.getRepayPlanList();
         // 分期还款
         if (repayPLanList != null && repayPLanList.size() > 0) {
+            logger.info("isAllRepay: " + isAllRepay);
+            logger.info("repayPlanList size: " + repayPLanList.size() + " json:" + JSON.toJSONString(repayPLanList));
             for (int i = 0; i < repayPLanList.size(); i++) {
                 RepayDetailBean repayDetail = repayPLanList.get(i);
                 if (repayDetail.getRepayPeriod() == period && !isAllRepay) {

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,6 +135,37 @@ public class UserPortraitManagerController extends BaseController {
         if (null != request) {
             mapParam.put("yesterdayEnd", request.getYesterdayEndTime());
         }
+        String mobile= StringUtils.isNoneBlank(request.getMobile())?request.getMobile():null;
+        String sex=StringUtils.isNoneBlank(request.getSex())?request.getSex():null;
+        Integer ageStart=request.getAgeStart()!= null ?request.getAgeStart():null;
+        Integer ageEnd=request.getAgeEnd()!= null ?request.getAgeEnd():null;
+        BigDecimal bankTotalStart=request.getBankTotalStart()!= null?request.getBankTotalStart():null;
+        BigDecimal bankTotalEnd = request.getBankTotalEnd() != null?request.getBankTotalEnd():null;
+        BigDecimal interestSumStart=request.getInterestSumStart() != null? request.getInterestSumStart():null;
+        BigDecimal interestSumEnd =request.getInterestSumEnd() != null?request.getInterestSumEnd():null;
+        Integer tradeNumberStart=request.getTradeNumberStart() != null?request.getTradeNumberStart():null;
+        Integer tradeNumberEnd=request.getTradeNumberEnd() != null?request.getTradeNumberEnd():null;
+        String currentOwner = StringUtils.isNotBlank(request.getCurrentOwner())?request.getCurrentOwner():null;
+        Integer attribute=request.getAttribute() != null?request.getAttribute():null;
+        String investProcess=StringUtils.isNoneBlank(request.getInvestProcess())?request.getInvestProcess():null;
+        String regTimeStart=StringUtils.isNoneBlank(request.getRegTimeStart())?request.getRegTimeStart()+" 00:00:00":null;
+        String regTimeEnd=StringUtils.isNoneBlank(request.getRegTimeEnd())?request.getRegTimeEnd()+" 23:59:59":null;
+
+        mapParam.put("mobile", mobile);
+        mapParam.put("sex", sex);
+        mapParam.put("ageStart", ageStart);
+        mapParam.put("ageEnd", ageEnd);
+        mapParam.put("bankTotalStart", bankTotalStart);
+        mapParam.put("bankTotalEnd", bankTotalEnd);
+        mapParam.put("interestSumStart", interestSumStart);
+        mapParam.put("interestSumEnd", interestSumEnd);
+        mapParam.put("tradeNumberStart", tradeNumberStart);
+        mapParam.put("tradeNumberEnd", tradeNumberEnd);
+        mapParam.put("currentOwner", currentOwner);
+        mapParam.put("attribute", attribute);
+        mapParam.put("investProcess", investProcess);
+        mapParam.put("regTimeStart", regTimeStart);
+        mapParam.put("regTimeEnd", regTimeEnd);
         return mapParam;
     }
 
@@ -168,4 +200,26 @@ public class UserPortraitManagerController extends BaseController {
         return response;
     }
 
+    /**
+     * 导出根据筛选条件查找(用户管理列表显示)
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/exportRecordList")
+    public UserPortraitResponse exportRecordList(@RequestBody @Valid UserPortraitRequest request) {
+        logger.info("---用户画像导出 param---  " + request);
+        Map<String, Object> mapParam = paramToMap(request);
+        UserPortraitResponse response = new UserPortraitResponse();
+        Integer registCount = userPortraitManagerService.countLoanSubjectCertificateAuthority(mapParam);
+        if (registCount > 0) {
+            response.setCount(registCount);
+            List<UserPortraitVO> listUserPortrait = userPortraitManagerService.selectRecordList(mapParam,-1,-1);
+            if (!CollectionUtils.isEmpty(listUserPortrait)) {
+                response.setResultList(listUserPortrait);
+                response.setRtn(Response.SUCCESS);
+            }
+        }
+        return response;
+    }
 }

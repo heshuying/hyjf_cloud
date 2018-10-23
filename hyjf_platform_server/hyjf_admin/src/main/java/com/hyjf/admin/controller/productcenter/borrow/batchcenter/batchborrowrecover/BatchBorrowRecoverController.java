@@ -1,11 +1,13 @@
 package com.hyjf.admin.controller.productcenter.borrow.batchcenter.batchborrowrecover;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BatchBorrowRecoverService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
@@ -13,10 +15,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.*;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +23,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -99,114 +100,95 @@ public class BatchBorrowRecoverController extends BaseController{
         return jsonObject;
     }
 
-
     @ApiOperation(value = "批次中心-批次放款页面导出功能", notes = "导出功能")
     @PostMapping(value = "/exportBatchBorrowRecoverList")
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public JSONObject exportBatchBorrowRecoverList(@RequestBody BatchBorrowRecoverRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
-        String sheetName = "批次放款列表";
+    public void exportBatchBorrowRecoverList(HttpServletRequest request,@RequestBody BatchBorrowRecoverRequest form,HttpServletResponse response) throws UnsupportedEncodingException {
 
-        request.setLimitStart(-1);
-        JSONObject jsonObject = this.querybatchBorrowRecoverList(request);
+
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "批次放款列表";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        //请求第一页5000条
+        form.setPageSize(defaultRowMaxCount);
+        form.setCurrPage(1);
+        form.setLimitStart(-1);
+        JSONObject jsonObject = this.querybatchBorrowRecoverList(form);
         if(FAIL.equals(jsonObject.get(STATUS))){
             this.fail("暂时没有符合条件的数据！");
         }
         List<BatchBorrowRecoverVo> recordList = (List<BatchBorrowRecoverVo>) jsonObject.get(LIST);
+        Integer totalCount = recordList.size();
 
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[] { "序号","借款编号","资产来源","批次号", "借款金额","放款服务费","应放款","已放款","总笔数","成功笔数","失败笔数","更新时间","批次状态"};
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
 
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
+        }
+        for (int i = 1; i < sheetCount; i++) {
 
-        if (recordList != null && recordList.size() > 0) {
-
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < recordList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BatchBorrowRecoverVo  customize= recordList.get(i);
-
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-
-                    // 序号
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    }
-                    // 借款编号
-                    else if (celLength == 1) {
-                        cell.setCellValue(customize.getBorrowNid());
-                    }
-                    /*----------add by LSY START---------------------*/
-                    // 借款编号
-                    else if (celLength == 2) {
-                        cell.setCellValue(customize.getInstName());
-                    }
-                    /*----------add by LSY END---------------------*/
-                    // 批次号
-                    else if (celLength == 3) {
-                        cell.setCellValue(customize.getBatchNo());
-                    }
-                    // 借款金额
-                    else if (celLength == 4) {
-                        cell.setCellValue(customize.getBorrowAccount().toString());
-                    }
-                    // 应收服务费
-                    else if (celLength == 5) {
-                        cell.setCellValue(customize.getBatchServiceFee().toString());
-                    }
-                    // 应放款
-                    else if (celLength == 6) {
-                        cell.setCellValue(customize.getBatchAmount().toString());
-                    }
-                    // 已放款
-                    else if (celLength == 7) {
-                        cell.setCellValue(customize.getSucAmount().toString());
-                    }
-                    // 总笔数）
-                    else if (celLength == 8) {
-                        cell.setCellValue(customize.getBatchCounts());
-                    }
-                    // 成功笔数
-                    else if (celLength == 9) {
-                        cell.setCellValue(customize.getSucCounts());
-                    }
-                    // 失败笔数
-                    else if (celLength == 10) {
-                        cell.setCellValue(customize.getFailCounts());
-                    }
-                    // 更新时间
-                    else if (celLength == 11) {
-                        cell.setCellValue(customize.getUpdateTime());
-                    }
-                    // 批次状态
-                    else if (celLength == 12) {
-                        cell.setCellValue(customize.getStatusStr());
-                    }
-                }
+            form.setCurrPage(i+1);
+            form.setPageSize(defaultRowMaxCount);
+            form.setLimitStart(-1);
+            JSONObject jsonObject2 = this.querybatchBorrowRecoverList(form);
+            if(FAIL.equals(jsonObject.get(STATUS))){
+                this.fail("暂时没有符合条件的数据！");
+            }
+            List<BatchBorrowRecoverVo> recordList2 = (List<BatchBorrowRecoverVo>) jsonObject2.get(LIST);
+            if (recordList2 != null && recordList2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-        return this.success();
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("borrowNid","借款编号");
+        map.put("instName","资产来源");
+        map.put("batchNo","批次号");
+        map.put("borrowAccount", "借款金额");
+        map.put("batchServiceFee","放款服务费");
+        map.put("batchAmount","应放款");
+        map.put("sucAmount","已放款");
+        map.put("batchCounts","总笔数");
+        map.put("sucCounts","成功笔数");
+        map.put("failCounts","失败笔数");
+        map.put("updateTime","更新时间");
+        map.put("statusStr","批次状态");
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter valueToString = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return object.toString();
+            }
+        };
+        mapAdapter.put("borrowAccount", valueToString);
+        mapAdapter.put("batchServiceFee", valueToString);
+        mapAdapter.put("batchAmount", valueToString);
+        mapAdapter.put("sucAmount", valueToString);
+        return mapAdapter;
+    }
 
 }

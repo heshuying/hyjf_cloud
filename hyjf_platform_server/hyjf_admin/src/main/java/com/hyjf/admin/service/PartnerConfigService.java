@@ -1,5 +1,6 @@
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminPartnerConfigDetailResponse;
 import com.hyjf.am.resquest.admin.AdminPartnerConfigListRequest;
 
@@ -47,4 +48,12 @@ public interface PartnerConfigService {
      * @return
      */
     public AdminPartnerConfigDetailResponse deletePartnerConfig(AdminPartnerConfigListRequest req);
+
+    /**
+     * 合作机构配置资产编号校验
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    public IntegerResponse isExistsCheckAction(AdminPartnerConfigListRequest req);
 }

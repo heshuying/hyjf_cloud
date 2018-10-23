@@ -348,13 +348,16 @@ public class HjhLabelController extends BaseController{
 			}
 		}
 		
-		// 6.标签名称重复检验
-		if (StringUtils.isNotEmpty(viewRequest.getLabelNameSrch())) {
-			hjhLabelRequest.setLabelNameSrch(viewRequest.getLabelNameSrch());
-			List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
-			// 通过传入的 labelName 查询如果不为空说明此 labelName 已经存在
-			if(CollectionUtils.isNotEmpty(list)){
-				jsonObject.put("errorMsg", "标签名称已存在!");
+		// 6.标签名称重复检验  0：标签名称未改 1标签名称修改
+		// 只有当传入的标签名称改动时，才校验新改的名称是否重复
+		if(viewRequest.getFlag() == 1){
+			if (StringUtils.isNotEmpty(viewRequest.getLabelName())) {
+				hjhLabelRequest.setLabelNameSrch(viewRequest.getLabelName());
+				List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
+				// 通过传入的 labelName 查询如果不为空说明此 labelName 已经存在
+				if(CollectionUtils.isNotEmpty(list)){
+					jsonObject.put("errorMsg", "标签名称已存在!");
+				}
 			}
 		}
 	}
@@ -505,6 +508,7 @@ public class HjhLabelController extends BaseController{
 			List<BorrowStyleVO> borrowStyleList = this.labelService.getBorrowStyleList();
 			jsonObject.put("还款方式下拉列表", "borrowStyleList");
 			jsonObject.put("borrowStyleList", borrowStyleList);
+			return jsonObject;
 		}
 		// 准备插表--拼装info画面参数
 		infoRequest = setInfoParam(jsonObject,viewRequest);
@@ -528,17 +532,25 @@ public class HjhLabelController extends BaseController{
 				} 
 				// 用info的修改后信息去修改标签表
 				infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
+				// 更新label表
 				int flg = this.labelService.updateHjhLabelRecord(infoRequest);
 				if(flg > 0){
 					// 通过传入的标签id和标签名称查出一条引擎表的记录
 					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
 					// 传入标签id 和 标签名称 进  infoRequest
 					int allocation = this.labelService.updateAllocationRecord(infoRequest);
-					if(allocation > 0){
+					if(allocation == 0){
 						jsonObject.put("status", SUCCESS);
+						jsonObject.put("info", "此标签还未添加到引擎中，只更新标签列表成功！");
+					} else if(allocation > 0){
+						jsonObject.put("status", SUCCESS);
+						jsonObject.put("info", "此标签已经添加到引擎中并且引擎表更新成功！");
 					} else {
 						jsonObject.put("status", FAIL);
 					}
+				} else {
+					jsonObject.put("status", FAIL);
+					jsonObject.put("error", "更新标签表失败！");
 				}
 			}
 		}

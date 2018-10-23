@@ -108,7 +108,7 @@ public class AccountDetailController extends BaseController {
                     AdminAccountDetailDataRepairResponse accountdetailDataRepair = accountDetailService.getdetailDataRepair(userId);
                     if(null!=accountdetailDataRepair&& null!=accountdetailDataRepair.getResult()){
                         Integer accountListId = Integer.parseInt(accountdetailDataRepair.getResult().getId());
-                        this.repayDataRepair(userId, accountListId);
+                        accountDetailService.repayDataRepair(userId, accountListId);
                     }
                 }
             }
@@ -116,58 +116,6 @@ public class AccountDetailController extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>();
-    }
-
-    private String repayDataRepair(Integer userId, Integer accountListId) {
-        // 根据Id查询此条交易明细
-        AccountListResponse accountListResponse = accountDetailService.selectAccountById(accountListId);
-        if (null != accountListResponse && null != accountListResponse.getResult()) {
-            AccountListVO accountListVO = accountListResponse.getResult();
-            // 获取账户可用余额
-            BigDecimal balance = accountListVO.getBalance();
-            // 查询此用户的下一条交易明细
-            AccountListResponse accountListResponseNext = accountDetailService.selectNextAccountList(accountListId, userId);
-            // 如果下一条交易明细不为空
-            if (null != accountListResponseNext && null != accountListResponseNext.getResult()) {
-                AccountListVO accountListVOnext = accountListResponseNext.getResult();
-                // 根据查询用交易类型查询用户操作金额
-                AccountTradeResponse accountTradeResponse = accountDetailService.selectAccountTradeByValue(accountListVOnext.getTrade());
-                if (null != accountTradeResponse && null != accountTradeResponse.getResult()) {
-                    AccountTradeVO accountTradeVO = accountTradeResponse.getResult();
-                    // 更新交易明细的账户余额
-                    if ("ADD".equals(accountTradeVO.getOperation())) {
-                        accountListVOnext.setBalance(balance.add(accountListVOnext.getAmount()));
-                    } else if ("SUB".equals(accountTradeVO.getOperation()) && !"cash_success".equals(accountListVOnext.getTrade())) {
-                        accountListVOnext.setBalance(balance.subtract(accountListVOnext.getAmount()));
-                    } /*else if ("SUB".equals(accountTradeVO.getOperation())&&"cash_success".equals(accountListVOnext.getTrade())){
-                        // 提现不处理
-                        //return ;
-                    }*/ else if ("UNCHANGED".equals(accountTradeVO.getOperation())) {
-                        accountListVOnext.setBalance(balance);
-                    }
-                    // 更新用户的交易明细
-                    AccountListRequest accountListRequest = new AccountListRequest();
-                    //
-                    BeanUtils.copyProperties(accountListVOnext, accountListRequest);
-                    boolean isAccountListUpdateFlag = accountDetailService.updateAccountList(accountListRequest) > 0 ? true : false;
-                    if (isAccountListUpdateFlag) {
-                        // 递归更新下一条交易明细
-                        this.repayDataRepair(userId, accountListVOnext.getId());
-
-                    } else {
-                        return "交易明细更新失败,交易明细ID:" + accountListVOnext.getId();
-                    }
-                } else {
-                    return "查询ht_account_trade交易类型失败,交易明细Value:" + accountListVOnext.getTrade();
-                }
-
-            } else {
-                return "未查询到下一条交易明细,上一条交易明细ID:" + accountListId;
-            }
-        } else {
-            return "获取交易明细失败" + accountListId;
-        }
-        return null;
     }
 
     /**

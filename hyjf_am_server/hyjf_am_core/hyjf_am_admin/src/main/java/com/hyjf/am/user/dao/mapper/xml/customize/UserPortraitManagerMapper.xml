@@ -48,6 +48,52 @@
 			<if test="userName != null and userName !='' ">
 				AND hup.user_name LIKE CONCAT( #{userName}, '%')
 			</if>
+			<if test="mobile != null and mobile !='' ">
+				AND hup.mobile = #{mobile}
+			</if>
+			<if test="sex != null and sex !=null ">
+				AND hup.sex = #{sex}
+			</if>
+
+			<if test="ageStart != null  ">
+				AND hup.age <![CDATA[>=]]> #{ageStart}
+			</if>
+			<if test="ageEnd != null  ">
+				AND hup.age <![CDATA[<=]]>  #{ageEnd}
+			</if>
+			<if test="bankTotalStart != null ">
+				AND hup.bank_total <![CDATA[>=]]> #{bankTotalStart}
+			</if>
+			<if test="bankTotalEnd != null  ">
+				AND hup.bank_total <![CDATA[<=]]> #{bankTotalEnd}
+			</if>
+			<if test="interestSumStart != null ">
+				AND hup.interest_sum <![CDATA[>=]]> #{interestSumStart}
+			</if>
+			<if test="interestSumEnd != null  ">
+				AND hup.interest_sum <![CDATA[<=]]> #{interestSumEnd}
+			</if>
+			<if test="tradeNumberStart != null  ">
+				AND hup.trade_number <![CDATA[>=]]> #{tradeNumberStart}
+			</if>
+			<if test="tradeNumberEnd != null  ">
+				AND hup.trade_number <![CDATA[<=]]>  #{tradeNumberEnd}
+			</if>
+			<if test="currentOwner != null and currentOwner !='' ">
+				AND hup.current_owner = #{currentOwner}
+			</if>
+			<if test="attribute != null ">
+				AND hup.attribute = #{attribute}
+			</if>
+			<if test="investProcess != null and investProcess !='' ">
+				AND hup.invest_process = #{investProcess}
+			</if>
+			<if test="regTimeStart != null and regTimeStart !='' ">
+				AND hydur.reg_time <![CDATA[>=]]> unix_timestamp(#{regTimeStart})
+			</if>
+			<if test="regTimeEnd != null and regTimeEnd !='' ">
+				AND hydur.reg_time <![CDATA[<=]]> unix_timestamp(#{regTimeEnd})
+			</if>
 		</where>
 	</sql>
 	<!-- 查询用户画像记录数 -->
@@ -74,7 +120,7 @@
 			ht_user_portrait hup
 		LEFT JOIN hyjf_user.ht_user hydur ON hydur.user_id = hup.user_id
 		<include refid="Where_Clause_UserPortrait"/>
-		ORDER BY hup.user_id DESC
+		ORDER BY regTime DESC
 		<if test="limitStart != null and limitEnd !=null ">
 			limit #{limitStart},#{limitEnd}
 		</if>

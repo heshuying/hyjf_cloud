@@ -285,6 +285,7 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
     @ApiIgnore
     @RequestMapping("/callback")
     public WebResult cashCallBack(HttpServletRequest request, @RequestBody ChinapnrBean bean) {
+        logger.info("http://CS-TRADE/hyjf-web/chinapnr/withdraw/callback");
         WebResult result = new WebResult();
         Map<String,Object> map = new HashMap<>();
         logger.info("[交易完成后,回调开始]");
