@@ -55,7 +55,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     @Autowired
     private AmUserClient amUserClient;
 
-    public static final String BASE_URL = "http://AM-ADMIN/am-admin/applyAgreement";
+    public static final String BASE_URL = "http://AM-ADMIN/am-trade/applyAgreement";
 
     /**垫付协议申请列表*/
     public static final String AGREEMENT_LIST_URL = BASE_URL + "/getApplyAgreementList";
