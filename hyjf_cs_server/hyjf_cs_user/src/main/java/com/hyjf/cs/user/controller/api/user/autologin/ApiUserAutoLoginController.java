@@ -12,10 +12,7 @@ import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.security.util.SignUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.bean.ApiResultPageBean;
-import com.hyjf.cs.user.bean.ApiSkipFormBean;
-import com.hyjf.cs.user.bean.ApiUserPostBean;
-import com.hyjf.cs.user.bean.NmcfLoginRequestBean;
+import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
@@ -105,7 +102,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
     @ApiOperation(value = "纳觅财富自动登录",notes = "纳觅财富自动登录")
     @ResponseBody
     @PostMapping(value = "/nmcfThirdLogin.do")
-    public JSONObject nmcfThirdLogin(HttpServletResponse response, HttpServletRequest httpServletRequest, @ModelAttribute NmcfLoginRequestBean request){
+    public ResultApiBean<JSONObject> nmcfThirdLogin(HttpServletRequest httpServletRequest, @ModelAttribute NmcfLoginRequestBean request){
         JSONObject result = new JSONObject();
         String retUrl = "";
         // 验证
@@ -132,29 +129,28 @@ public class ApiUserAutoLoginController extends BaseUserController {
         //WebUtils.sessionLogin(request, response, webUser);
         String token = webViewUserVO.getToken();
         logger.info("用户登录生成的token::[{}]",token);
-        response.setHeader("token",token);
         // 先跳转纳觅传过来的url
         if (request.getRetUrl() != null) {
             logger.info("retUrl:[{}]",request.getRetUrl());
-            retUrl = "第三方的url";
+            retUrl = request.getRetUrl();
             //return new ModelAndView("redirect:" + request.getRetUrl());
         } else {
             // 如果纳觅没传url,有borrowNid,跳标的详情,无borowNid,跳个人中心
             if (request.getBorrowNid() == null || "".equals(request.getBorrowNid())) {
                 logger.info("pandect");
-                retUrl = "个人中心";
+                retUrl = "https://frontweb1.hyjf.com/user/pandect?token=" + token;
                 //return new ModelAndView("redirect:https://frontweb1.hyjf.com/user/pandect?token=" + token);
             } else {
                 // 跳转到前端的标的详情
                 logger.info("borrowDetail");
-                retUrl = "标的详情";
+                retUrl = "https://frontweb1.hyjf.com/borrow/borrowDetail?borrowNid=" + request.getBorrowNid() + "&token=" + token;
                 //return new ModelAndView("redirect:https://frontweb1.hyjf.com/borrow/borrowDetail?borrowNid=" + request.getBorrowNid() + "&token=" + token);
             }
         }
 
         result.put("retUrl",retUrl);
         result.put("data",webViewUserVO);
-        return result;
+        return new ResultApiBean<>(result);
     }
 
     /**
