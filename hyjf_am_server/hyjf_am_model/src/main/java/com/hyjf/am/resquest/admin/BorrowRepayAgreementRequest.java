@@ -1,7 +1,10 @@
 package com.hyjf.am.resquest.admin;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.List;
 
 /**
  * @version BorrowRepayAgreementRequest, v0.1 2018/8/10 15:05
@@ -10,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class BorrowRepayAgreementRequest extends BasePage {
 
     @ApiModelProperty(value = "借款编号(批量生成垫付债转协议时使用,'借款编号_期数'组合JSONArray，垫付债转协议PDF文件签署单独传一个)")
-    private String ids;
+    private List<String> ids;
     @ApiModelProperty(value = "借款编号")
     private String borrowNidSrch;
 
@@ -20,11 +23,11 @@ public class BorrowRepayAgreementRequest extends BasePage {
     @ApiModelProperty(value = "垫付时间结束")
     private String timeEndSrch;
 
-    public String getIds() {
+    public List<String> getIds() {
         return ids;
     }
 
-    public void setIds(String ids) {
+    public void setIds(List<String> ids) {
         this.ids = ids;
     }
 
