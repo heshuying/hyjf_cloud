@@ -73,7 +73,7 @@ public class AccountBalanceController extends BaseController {
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出日交易量")
     @GetMapping("/exportActionByDay")
-    public void exportActionByDay(HttpServletRequest request,HttpServletResponse response,@RequestBody HjhAccountBalanceRequest form) throws Exception {
+    public void exportActionByDay(HttpServletRequest request,HttpServletResponse response, HjhAccountBalanceRequest form) throws Exception {
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -155,7 +155,7 @@ public class AccountBalanceController extends BaseController {
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出月交易量")
     @PostMapping("/exportActionMonth")
-    public void exportActionMonth(HttpServletRequest request,HttpServletResponse response, @RequestBody HjhAccountBalanceRequest form) throws Exception {
+    public void exportActionMonth(HttpServletRequest request,HttpServletResponse response, HjhAccountBalanceRequest form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         //请求第一页5000条
