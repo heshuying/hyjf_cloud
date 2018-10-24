@@ -1183,9 +1183,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param request
      * @return
      */
-    public void downloadAction(DownloadAgreementRequest request,HttpServletResponse response) {
+    public AdminResult downloadAction(DownloadAgreementRequest request,HttpServletResponse response) {
         String status = request.getStatus();//1:脱敏，0：原始
-
         String repayPeriod = "DF-"+request.getRepayPeriod()+"-";
         request.setRepayPeriod(repayPeriod);
         List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectLikeByExample(request);//债转协议
@@ -1208,17 +1207,18 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                         }
                     }
                 }
+            } else{
+                return new AdminResult(BaseResult.FAIL, "下载失败，未找到相关协议");
             }
         }
         if(files!=null && files.size()>0){
             ZIPGenerator.generateZip(response, files, repayPeriod);
+            return new AdminResult(BaseResult.SUCCESS, "下载成功");
         }else{
             logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
-            return ;
+            return new AdminResult(BaseResult.FAIL, "下载失败，请稍后重试。。。。");
 
         }
-
-        return;
     }
     /**
      * 下载法大大协议 __垫付

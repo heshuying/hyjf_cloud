@@ -1917,7 +1917,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<TenderAgreementVO> selectLikeByExample(DownloadAgreementRequest request) {
-        String url = "http://AM-ADMIN/am-trade/selectLikeByExample";
+        String url = "http://AM-ADMIN//am-trade/applyAgreement/selectLikeByExample";
         TenderAgreementResponse response = restTemplate.postForEntity(url, request,TenderAgreementResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
