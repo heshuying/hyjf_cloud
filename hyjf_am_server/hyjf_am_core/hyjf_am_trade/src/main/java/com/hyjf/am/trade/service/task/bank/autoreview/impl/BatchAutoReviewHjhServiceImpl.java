@@ -10,7 +10,6 @@ import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.bank.autoreview.BatchAutoReviewHjhService;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
-import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -72,17 +71,24 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
         }
     }
 
+    /**
+     * 获取复审中的进计划的标的
+     *
+     * @return
+     */
     @Override
-    public List<BorrowWithBLOBs> selectAutoReview() {
+    public List<Borrow> selectAutoReview() {
         /*------------upd by liushouyi HJH3 Start-------------------*/
-        //使用引擎：计划
-        List<BorrowWithBLOBs> borrowList = borrowCustomizeMapper.selectAutoReviewHJHBorrowNidList();
+        //使用引擎：计划(仅使用borrowNid进行后续处理)
+        BorrowExample  example = new BorrowExample();
+        example.createCriteria().andStatusEqualTo(3).andBorrowFullStatusEqualTo(1).andPlanNidIsNotNull();
+        List<Borrow> borrowList = borrowMapper.selectByExample(example);
         /*------------upd by liushouyi HJH3 End-------------------*/
         return borrowList;
     }
 
     @Override
-    public void updateBorrow(BorrowWithBLOBs borrows) throws Exception {
+    public void updateBorrow(Borrow borrows) throws Exception {
         /*--------------upd by liushouyi HJH3 Start----------------*/
         //遍历自动发标的数据原抽出表中所有字段、表关联后仅查借款编号
         Borrow borrow = this.getBorrowByNid(borrows.getBorrowNid());

@@ -86,7 +86,7 @@
 				AND a.utm_id = #{utmIds}
 			</if>-->
 			<if test="utmPlat != null and utmPlat != ''">
-				AND mm.utm_name in
+				AND mm.utm_id in
 				<foreach collection="utmPlat" open="(" close=")" separator="," item="utmName">
 					#{utmName}
 				</foreach>
