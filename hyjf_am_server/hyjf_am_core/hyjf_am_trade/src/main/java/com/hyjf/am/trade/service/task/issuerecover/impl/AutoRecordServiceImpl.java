@@ -277,7 +277,7 @@ public class AutoRecordServiceImpl implements AutoRecordService {
                             AccountExample.Criteria cras = examples.createCriteria();
                             cras.andUserIdEqualTo(borrowInfo.getRepayOrgUserId());
                             List<Account> accountLists = accountMapper.selectByExample(examples);
-                            if (!CollectionUtils.isEmpty(accountList)){
+                            if (!CollectionUtils.isEmpty(accountLists)){
                                 Account accounts = accountLists.get(0);
                                 if (Validator.isNotNull(accounts.getAccountId())) {
                                     debtRegistBean.setBailAccountId(accounts.getAccountId());

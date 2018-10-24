@@ -5,7 +5,6 @@ package com.hyjf.am.config.controller.admin.maintenance;
 
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.service.SynParamService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

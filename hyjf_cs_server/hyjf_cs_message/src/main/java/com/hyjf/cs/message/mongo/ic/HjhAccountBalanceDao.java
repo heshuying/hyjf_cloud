@@ -4,7 +4,9 @@
 package com.hyjf.cs.message.mongo.ic;
 
 import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.message.bean.ic.HjhAccountBalance;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -17,32 +19,36 @@ import java.util.List;
  * @version HjhAccountBalanceDao, v0.1 2018/8/2 11:14
  */
 @Repository
-public class HjhAccountBalanceDao extends BaseMongoDao<HjhAccountBalanceVO>{
+public class HjhAccountBalanceDao extends BaseMongoDao<HjhAccountBalance> {
 
     @Override
-    protected Class<HjhAccountBalanceVO> getEntityClass() {
-            return HjhAccountBalanceVO.class;
+    protected Class<HjhAccountBalance> getEntityClass() {
+        return HjhAccountBalance.class;
     }
 
-    public List<HjhAccountBalanceVO> selectHjhAccountBalanceList(HjhAccountBalanceVO hjhAccountBalance) {
+    public List<HjhAccountBalanceVO> selectHjhAccountBalanceList(HjhAccountBalanceVO hjhAccountBalanceVO) {
         Query query = new Query();
-        Criteria criteria = Criteria.where("date").is(hjhAccountBalance.getDate());
+        Criteria criteria = Criteria.where("date").is(hjhAccountBalanceVO.getDate());
         query.addCriteria(criteria);
-        return this.find(query);
+        return CommonUtils.convertBeanList(this.find(query), HjhAccountBalanceVO.class);
     }
 
-    public boolean updateHjhAccountBalance(HjhAccountBalanceVO hjhAccountBalance) {
+    public boolean updateHjhAccountBalance(HjhAccountBalanceVO hjhAccountBalanceVO) {
         Query query = new Query();
-        Criteria criteria = Criteria.where("date").is(hjhAccountBalance.getDate());
-
+        Criteria criteria = Criteria.where("date").is(hjhAccountBalanceVO.getDate());
+        query.addCriteria(criteria);
         Update update = new Update();
-        update.inc("updateTime", GetDate.getNowTime10()).set("delFlg", 0);
-
+        update.set("investAccount", hjhAccountBalanceVO.getReinvestAccount())
+                .set("creditAccount", hjhAccountBalanceVO.getCreditAccount())
+                .set("reinvestAccount", hjhAccountBalanceVO.getCreditAccount())
+                .set("addAccount", hjhAccountBalanceVO.getCreditAccount())
+                .set("updateTime", GetDate.getDate()).set("delFlg", 0);
         this.update(query, update);
         return true;
     }
 
-    public boolean insertHjhAccountBalance(HjhAccountBalanceVO hjhAccountBalance) {
+    public boolean insertHjhAccountBalance(HjhAccountBalanceVO hjhAccountBalanceVO) {
+        HjhAccountBalance hjhAccountBalance = CommonUtils.convertBean(hjhAccountBalanceVO, getEntityClass());
         hjhAccountBalance.setCreateTime(GetDate.getNowTime10());
         hjhAccountBalance.setDelFlg(0);
         this.insert(hjhAccountBalance);

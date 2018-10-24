@@ -1,11 +1,12 @@
 package com.hyjf.admin.controller.increaseinterest.investdetail;
 
-import com.hyjf.admin.client.AmTradeClient;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.List2Result;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.IncreaseInterestInvestDetailService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.IncreaseInterestInvestDetailResponse;
 import com.hyjf.am.resquest.admin.IncreaseInterestInvestDetailRequest;
@@ -15,19 +16,19 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wenxin
@@ -70,122 +71,132 @@ public class IncreaseInterestInvestDetailController extends BaseController {
 	 */
 	@ApiOperation(value = "产品中心-加息投资明细", notes = "产品中心-加息投资明细 导出投资明细")
 	@GetMapping("/export")
-	public void exportAction(HttpServletResponse response, IncreaseInterestInvestDetailRequest form) throws Exception {
+	public void exportAction(HttpServletRequest request, HttpServletResponse response, IncreaseInterestInvestDetailRequest form) throws Exception {
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
 		String sheetName = "加息投资明细";
-
-		//获取返回参数
-		EnumMap<AmTradeClient.IncreaseProperty,Object> voList = increaseInterestInvestDetailService.selectRecordList(form);
-		voList.entrySet().iterator();
-		List<IncreaseInterestInvestVO> resultList = (List<IncreaseInterestInvestVO>) voList.get(AmTradeClient.IncreaseProperty.VO);
-
-		String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-		//20180730增加导出字段：推荐人/项目期限/还款方式/投资订单号/加息收益/回款时间
-		String[] titles = new String[] { "序号", "投资人","推荐人", "借款编号", "年化收益率", "加息收益率", "项目期限","还款方式","投资订单号","投资金额","加息收益", "操作平台", "投资时间" ,"回款时间" };
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
 		// 声明一个工作薄
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-		// 生成一个表格
-		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+		form.setCurrPage(1);
+		form.setPageSize(defaultRowMaxCount);
+		IncreaseInterestInvestDetailResponse detailResponse = increaseInterestInvestDetailService.searchPage(form);
+		Integer totalCount = detailResponse.getTotal() == null ? 0 : detailResponse.getTotal();
 
-		if (resultList != null && resultList.size() > 0) {
-
-			int sheetCount = 1;
-			int rowNum = 0;
-
-			for (int i = 0; i < resultList.size(); i++) {
-				rowNum++;
-				if (i != 0 && i % 60000 == 0) {
-					sheetCount++;
-					sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-					rowNum = 1;
-				}
-
-				// 新建一行
-				Row row = sheet.createRow(rowNum);
-				// 循环数据
-				for (int celLength = 0; celLength < titles.length; celLength++) {
-					IncreaseInterestInvestVO investDetail = resultList.get(i);
-
-					// 创建相应的单元格
-					Cell cell = row.createCell(celLength);
-
-					// 序号
-					if (celLength == 0) {
-						cell.setCellValue(i + 1);
-					}
-					// 用户名
-					else if (celLength == 1) {
-						cell.setCellValue(StringUtils.isEmpty(investDetail.getInvestUserName()) ? "" : investDetail.getInvestUserName());
-					}
-					//推荐人(投资)++++++++++
-					else if (celLength == 2) {
-						cell.setCellValue(StringUtils.isEmpty(investDetail.getInviteUserName()) ? "" : investDetail.getInviteUserName());
-					}
-					// 借款编号
-					else if (celLength == 3) {
-						cell.setCellValue(StringUtils.isEmpty(investDetail.getBorrowNid()) ? "" : investDetail.getBorrowNid());
-					}
-					// 年化收益率
-					else if (celLength == 4) {
-						cell.setCellValue(investDetail.getBorrowApr() + "%");
-					}
-					// 产品加息收益率
-					else if (celLength == 5) {
-						cell.setCellValue(investDetail.getBorrowExtraYield() + "%");
-					}
-					//项目期限+++++++++
-					else if (celLength == 6) {
-						//cell.setCellValue(StringUtils.isEmpty(investDetail.getBorrowPeriod().toString()) ? "" : investDetail.getBorrowPeriod().toString());
-						if ("endday".equals(investDetail.getBorrowStyle())) {
-							cell.setCellValue(investDetail.getBorrowPeriod() + "天");
-						} else {
-							cell.setCellValue(investDetail.getBorrowPeriod() + "个月");
-						}
-					}
-					// 还款方式++++++++
-					else if (celLength == 7) {
-						cell.setCellValue(StringUtils.isEmpty(investDetail.getBorrowStyleName()) ? "" : investDetail.getBorrowStyleName());
-					}
-					// 投资订单号++++++++
-					else if (celLength == 8) {
-						cell.setCellValue(StringUtils.isEmpty(investDetail.getOrderId()) ? "" : investDetail.getOrderId());
-					}
-					// 投资金额
-					else if (celLength == 9) {
-						cell.setCellValue(investDetail.getAccount().toString());
-					}
-					// 加息收益++++++++
-					else if (celLength == 10) {
-						cell.setCellValue(investDetail.getRepayInterest()==null ? "" : investDetail.getRepayInterest().toString());
-					}
-					// 操作平台
-					else if (celLength == 11) {
-						// 客户端,0PC,1微官网,2Android,3iOS,4其他
-						if (investDetail.getClient() == 0) {
-							cell.setCellValue("PC");
-						} else if (investDetail.getClient() == 1) {
-							cell.setCellValue("微官网");
-						} else if (investDetail.getClient() == 2) {
-							cell.setCellValue("Android");
-						} else if (investDetail.getClient() == 3) {
-							cell.setCellValue("iOS");
-						} else {
-							cell.setCellValue("其他");
-						}
-					}
-					// 投资时间
-					else if (celLength == 12) {
-						cell.setCellValue(investDetail.getCreateTime()==null ? "" :GetDate.getDateTimeMyTime(investDetail.getCreateTime()));
-					}
-					// 回款时间++++++++++
-					else if (celLength == 13) {
-						cell.setCellValue((investDetail.getRepayTime()==null ? 0 : investDetail.getRepayTime()) == 0 ? "" :  GetDate.getDateTimeMyTime(investDetail.getRepayTime()));
-					}
-				}
+		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		if (totalCount == 0) {
+			String sheetNameTmp = sheetName + "_第1页";
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}
+		for (int i = 1; i <= sheetCount; i++) {
+			form.setPageSize(defaultRowMaxCount);
+			form.setCurrPage(i);
+			IncreaseInterestInvestDetailResponse interestInvestDetailResponse = increaseInterestInvestDetailService.searchPage(form);
+			List<IncreaseInterestInvestVO> record = interestInvestDetailResponse.getResultList();
+			if (record != null && record.size()> 0) {
+				String sheetNameTmp = sheetName + "_第" + i + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  record);
+			} else {
+				break;
 			}
 		}
-		// 导出
-		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}
+
+	private Map<String, String> buildMap() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("investUserName", "投资人");
+		map.put("inviteUserName", "推荐人");
+		map.put("borrowNid", "借款编号");
+		map.put("borrowApr", "年化收益率");
+		map.put("borrowExtraYield", "加息收益率");
+		map.put("borrowPeriodByStyle", "项目期限");
+		map.put("borrowStyleName", "还款方式");
+		map.put("orderId", "投资订单号");
+		map.put("account", "授权服务金额");
+		map.put("repayInterest", "加息收益");
+		map.put("client", "操作平台");
+		map.put("createTime", "投资时间");
+		map.put("repayTime", "回款时间");
+		return map;
+	}
+	private Map<String, IValueFormatter> buildValueAdapter() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		IValueFormatter strAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String str = (String) object;
+				return StringUtils.isEmpty(str) ? "" : String.valueOf(str);
+			}
+		};
+		IValueFormatter percentAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				BigDecimal percent = (BigDecimal) object;
+				return percent + "%";
+			}
+		};
+
+		IValueFormatter clientAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Integer client = (Integer) object;
+				// 客户端,0PC,1微官网,2Android,3iOS,4其他
+				if (client == 0) {
+					return "PC";
+				} else if (client == 1) {
+					return "微官网";
+				} else if (client == 2) {
+					return "Android";
+				} else if (client == 3) {
+					return "iOS";
+				} else {
+					return "其他";
+				}
+			}
+		};
+		IValueFormatter bigDecimalToStrAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				BigDecimal bigDecimal = (BigDecimal) object;
+				return bigDecimal.toString();
+			}
+		};
+
+		IValueFormatter createTimeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Date createTime = (Date) object;
+				return createTime==null ? "" :GetDate.datetimeFormat.format(createTime);
+			}
+		};
+		IValueFormatter repayTimeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Integer repayTime = (Integer) object;
+				return (repayTime==null ? 0 : repayTime) == 0 ? "" :  GetDate.getDateTimeMyTime(repayTime);
+			}
+		};
+
+		mapAdapter.put("investUserName", strAdapter);
+		mapAdapter.put("inviteUserName", strAdapter);
+		mapAdapter.put("borrowNid", strAdapter);
+		mapAdapter.put("borrowApr", percentAdapter);
+		mapAdapter.put("borrowExtraYield", percentAdapter);
+		mapAdapter.put("borrowStyleName", strAdapter);
+		mapAdapter.put("orderId", strAdapter);
+		mapAdapter.put("account", bigDecimalToStrAdapter);
+		mapAdapter.put("repayInterest", bigDecimalToStrAdapter);
+		mapAdapter.put("client", clientAdapter);
+		mapAdapter.put("createTime", createTimeAdapter);
+		mapAdapter.put("repayTime", repayTimeAdapter);
+		return mapAdapter;
+	}
+
 }

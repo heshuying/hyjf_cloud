@@ -1,8 +1,8 @@
 package com.hyjf.am.trade.service.admin.impl;
 
 import com.hyjf.am.resquest.admin.IncreaseInterestInvestDetailRequest;
-import com.hyjf.am.trade.dao.mapper.customize.admin.IncreaseInterestInvestCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.IncreaseInterestInvestMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.IncreaseInterestInvestCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvestExample;
 import com.hyjf.am.trade.service.admin.IncreaseInterestInvestDetailService;

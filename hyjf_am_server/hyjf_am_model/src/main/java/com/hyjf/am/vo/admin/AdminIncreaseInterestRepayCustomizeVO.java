@@ -167,7 +167,13 @@ public class AdminIncreaseInterestRepayCustomizeVO extends BaseVO implements Ser
 	public void setBorrowStyle(String borrowStyle) {
 		this.borrowStyle = borrowStyle;
 	}
-
+	public String getBorrowPeriodByStyle(){
+		if ("endday".equals(this.borrowStyle)) {
+			return this.borrowPeriod + "天";
+		} else {
+			return this.borrowPeriod + "个月";
+		}
+	}
 	public String getRepayPeriod() {
 		return repayPeriod;
 	}

@@ -14,7 +14,6 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -127,7 +126,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		
 		String borrowNid = apicron.getBorrowNid();
 		apicron.setStatus(status);
-//		apicron.setUpdateTime(nowTime);
+		apicron.setUpdateTime(new Date());
 		boolean apicronFlag = this.borrowApicronMapper.updateByPrimaryKeySelective(apicron) > 0 ? true : false;
 		if (!apicronFlag) {
 			throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
@@ -3397,7 +3396,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample apicronExample = new BorrowApicronExample();
 				apicronExample.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, apicronExample) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
@@ -3512,7 +3511,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -3530,7 +3529,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -3669,7 +3668,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample apicronExample = new BorrowApicronExample();
 				apicronExample.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, apicronExample) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
@@ -3723,7 +3722,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -3741,7 +3740,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");

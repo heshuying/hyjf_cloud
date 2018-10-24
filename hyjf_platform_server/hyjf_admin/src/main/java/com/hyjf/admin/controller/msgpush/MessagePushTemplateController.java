@@ -18,6 +18,8 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -107,6 +109,7 @@ public class MessagePushTemplateController extends BaseController {
                         form.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
                     }
                     BeanUtils.copyProperties(form, record);
+                    record.setTemplateActionUrl(form.getTemplateActionUrl2());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -214,10 +217,11 @@ public class MessagePushTemplateController extends BaseController {
                 templateRequest.setTemplateActionUrl("hyjf://jumpTransactionDetail");
             }
         }
-        templateRequest.setTagCode(templateRequest.getTemplateCode().substring(0, 3));
+        templateRequest.setTagCode(templateRequest.getTagCode());
         templateRequest.setTemplateCode(templateRequest.getTemplateCode());
         templateRequest.setCreateUserName(username);
         response = this.messagePushTemplateService.updateRecord(templateRequest);
+        RedisUtils.del(RedisConstants.MESSAGE_PUSH_TEMPLATE);
         return new AdminResult<>(response);
     }
 
@@ -230,6 +234,7 @@ public class MessagePushTemplateController extends BaseController {
         List<Integer> recordList = JSONArray.parseArray(ids, Integer.class);
         MessagePushTemplateResponse response = messagePushTemplateService.deleteAction(recordList);
         if (response.getCount() > 0) {
+            RedisUtils.del(RedisConstants.MESSAGE_PUSH_TEMPLATE);
             return new AdminResult<>(response);
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
@@ -260,6 +265,7 @@ public class MessagePushTemplateController extends BaseController {
             if (!Response.isSuccess(tagResponse)) {
                 return new AdminResult<>(FAIL, tagResponse.getMessage());
             }
+            RedisUtils.del(RedisConstants.MESSAGE_PUSH_TEMPLATE);
             return new AdminResult<>(tagResponse);
         }
         return new AdminResult<>(FAIL, FAIL_DESC);

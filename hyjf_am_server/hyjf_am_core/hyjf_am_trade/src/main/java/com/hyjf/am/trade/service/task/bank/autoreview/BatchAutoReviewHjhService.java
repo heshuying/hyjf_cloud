@@ -1,6 +1,6 @@
 package com.hyjf.am.trade.service.task.bank.autoreview;
 
-import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public interface BatchAutoReviewHjhService {
      * @Param
      * @return 
      */
-    List<BorrowWithBLOBs> selectAutoReview();
+    List<Borrow> selectAutoReview();
 
     /**
      * @Author walter.limeng
@@ -33,5 +33,5 @@ public interface BatchAutoReviewHjhService {
      * @Param 
      * @return 
      */
-    void updateBorrow(BorrowWithBLOBs borrow) throws Exception;
+    void updateBorrow(Borrow borrow) throws Exception;
 }

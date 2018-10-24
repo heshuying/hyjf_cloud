@@ -195,7 +195,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
             MyPlanDetailResultBean.RepayPlan repayPlan = new MyPlanDetailResultBean.RepayPlan();
             repayPlan.setTime(customize.getLastPaymentTime());
 
-            repayPlan.setAccount(DF_FOR_VIEW.format(new BigDecimal(customize.getWaitTotal()).add(new BigDecimal(customize.getReceivedTotal()))));
+            repayPlan.setAccount(DF_FOR_VIEW.format(new BigDecimal(customize.getWaitTotal().replace(",","")).add(new BigDecimal(customize.getReceivedTotal().replace(",","")))));
             // 目前只有一期
             repayPlan.setNumber("1");
             // 0 -未还款 1- 部分还款 2- 已还款

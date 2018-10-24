@@ -1,8 +1,6 @@
 package com.hyjf.am.trade.service.task.issuerecover.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.mapper.customize.BorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.MailProducer;
@@ -19,8 +17,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -525,6 +521,9 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         }else{
             borrowManinfo.setIsPunished("暂无");
         }
+        if(StringUtils.isNotBlank(hjhPlanAsset.getAddress())){
+            borrowManinfo.setAddress(hjhPlanAsset.getAddress());
+        }
         this.borrowManinfoMapper.insertSelective(borrowManinfo);
 
         return 0;
@@ -940,6 +939,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrow.setBorrowEndTime("");
         borrow.setRepayLastTime(0);
 
+
         // 项目申请人
 //		String applicant = hjhAssetBorrowType.getApplicant();
 
@@ -969,7 +969,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 //		} else {
 //			borrow.setAccountContents(hjhPlanAsset.getAccountContents());
 //		}
-
+        borrow.setBorrowValidTime(Integer.parseInt(getBorrowConfig("BORROW_VALID_TIME")));
         // 是否可以进行借款
         borrow.setBorrowStatus(0);
         // 满表审核状态

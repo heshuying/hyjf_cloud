@@ -2,8 +2,9 @@ package com.hyjf.am.config.dao.mapper.auto;
 
 import com.hyjf.am.config.dao.model.auto.Payment;
 import com.hyjf.am.config.dao.model.auto.PaymentExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface PaymentMapper {
     int countByExample(PaymentExample example);

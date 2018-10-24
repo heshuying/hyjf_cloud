@@ -225,7 +225,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgTitle").is(request.getMsgTitleSrch());
 		}
 		if(StringUtils.isNoneBlank(request.getTagIdSrch())){
-			criteria.and("tagId").is(request.getTagIdSrch());
+			criteria.and("tagId").is(Integer.valueOf(request.getTagIdSrch()));
 		}
 		if(StringUtils.isNoneBlank(request.getMsgCodeSrch())){
 			criteria.and("msgCode").is(request.getMsgCodeSrch());
@@ -255,7 +255,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgTitle").is(request.getMsgTitleSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
-			criteria.and("tagId").is(request.getTagIdSrch());
+			criteria.and("tagId").is(Integer.valueOf(request.getTagIdSrch()));
 		}
 		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
 			criteria.and("msgCode").is(request.getMsgCodeSrch());
@@ -282,12 +282,13 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 */
 	public MessagePushMsgHistory getRecord(String id) {
 		Criteria criteria = new Criteria();
-		Query query = new Query();
 		// 条件查询
-		if(id != null){
+		if(StringUtils.isNotBlank(id)){
+			//criteria.and("_id").is(new ObjectId(id));
 			criteria.and("id").is(id);
 		}
-        MessagePushMsgHistory one = mongoTemplate.findOne(query, MessagePushMsgHistory.class);
+		Query query = new Query(criteria);
+		MessagePushMsgHistory one = mongoTemplate.findOne(query, MessagePushMsgHistory.class);
 		return one;
 	}
 

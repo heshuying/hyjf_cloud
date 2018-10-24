@@ -1,14 +1,14 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.service.wirhdraw.impl;
+package com.hyjf.cs.trade.service.withdraw.impl;
 
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.service.wirhdraw.RdfWithdrawService;
+import com.hyjf.cs.trade.service.withdraw.RdfWithdrawService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,6 @@
 package com.hyjf.am.response.admin.locked;
 
 import com.google.common.collect.Lists;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 
 import java.util.List;

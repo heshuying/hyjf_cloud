@@ -77,6 +77,10 @@ public class SmsCountCustomizeVO extends BaseVO {
         return smsNumber;
     }
 
+    public Integer getSmsFee() {
+        return smsNumber;
+    }
+
     public void setSmsNumber(Integer smsNumber) {
         this.smsNumber = smsNumber;
     }

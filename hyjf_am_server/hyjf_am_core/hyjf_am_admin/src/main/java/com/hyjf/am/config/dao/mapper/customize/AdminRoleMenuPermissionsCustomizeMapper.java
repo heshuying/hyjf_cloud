@@ -1,9 +1,9 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions;
+
+import java.util.List;
 
 /**
  * @author dongzeshan

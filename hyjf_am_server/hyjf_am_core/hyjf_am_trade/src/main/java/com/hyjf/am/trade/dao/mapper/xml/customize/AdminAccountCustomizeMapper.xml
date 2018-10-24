@@ -604,7 +604,7 @@
 		update ht_account
 		set
 		total = IFNULL(total,0) - #{total,jdbcType=DECIMAL},
-		balance = IFNULL(balance,0) - #{balance,jdbcType=DECIMAL},
+		balance = IFNULL(balance,0) - #{balance,jdbcType=DECIMAL}
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>

@@ -5,14 +5,12 @@ package com.hyjf.am.trade.service.admin.exception.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AutoPreAuditProducer;
+import com.hyjf.am.admin.mq.producer.AutoPreAuditMessageProducer;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
 import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
-import com.hyjf.am.trade.dao.mapper.customize.AdminBorrowRegistExceptionMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BorrowRegistCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;
@@ -49,7 +47,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     private StzhWhiteListMapper stzhWhiteListMapper;
 
     @Autowired
-    private AutoPreAuditProducer autoPreAuditProducer;
+    private AutoPreAuditMessageProducer autoPreAuditMessageProducer;
 
     /**
      * 获取项目类型,筛选条件展示
@@ -204,7 +202,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                 params.put("assetId", hjhPlanAsset.getAssetId());
                 params.put("instCode", hjhPlanAsset.getInstCode());
                 try {
-                    autoPreAuditProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                    autoPreAuditMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                     logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列 ");
                 } catch (MQException e) {
                     logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列失败");

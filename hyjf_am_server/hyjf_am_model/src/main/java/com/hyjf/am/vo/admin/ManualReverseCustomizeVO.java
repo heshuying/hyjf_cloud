@@ -2,8 +2,6 @@ package com.hyjf.am.vo.admin;
 
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Date;
-
 /**
  * @author hesy
  * @version ManualReverseCustomizeVO, v0.1 2018/7/14 12:08
