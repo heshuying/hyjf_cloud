@@ -16,6 +16,7 @@ import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
+import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -28,6 +29,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -35,11 +37,9 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author fuqiang
@@ -53,6 +53,13 @@ public class ProtocolsController extends BaseController {
 	private ProtocolsService protocolsService;
 	@Autowired
 	private ProtocolService protocolService;
+
+	@Value("${file.domain.url}")
+	private String FILEDOMAINURL;
+	@Value("${file.physical.path}")
+	private String FILEPHYSICALPATH;
+	@Value("${file.upload.temp.path}")
+	private String FILEUPLOADTEMPPATH;
 
 	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
 	@PostMapping("/init")
@@ -162,62 +169,97 @@ public class ProtocolsController extends BaseController {
 			adminResult.setStatusDesc("协议类型必须选择。");
 			return adminResult;
 		}
-		//从request中取得MultipartFile列表
-		List<MultipartFile> multipartFileList = multipartRequest.getFiles("file");
-		if (multipartFileList == null || multipartFileList.size() <= 0){
-			adminResult.setStatus(FAIL);
-			adminResult.setStatusDesc("获取上传文件失败！");
-			logger.info("---------------法大大协议上传模板,获取上传文件失败！");
-			return adminResult;
-		}
-		if (multipartFileList.size() > 1){
-			adminResult.setStatus(FAIL);
-			adminResult.setStatusDesc("不可同时上传多个文件");
-			logger.info("---------------法大大协议上传模板,不可同时上传多个文件！");
-			return adminResult;
-		}
-		//从MultipartFile列表中取得唯一的Multipart
-		MultipartFile file = multipartFileList.get(0);
-		if (file == null){
-			adminResult.setStatus(FAIL);
-			logger.info("---------------法大大协议上传模板,获取上传模板失败！");
-			adminResult.setStatusDesc("获取上传模板失败！");
-			return adminResult;
-		}
-		String fileName = file.getOriginalFilename();
-		if (!(fileName.substring(fileName.length()-4)).toUpperCase().equals(".PDF")){
-			adminResult.setStatus(FAIL);
-			adminResult.setStatusDesc("上传的模板必须是PDF格式。");
-			logger.info("---------------法大大协议上传模板,上传的模板必须是PDF格式！");
-			return adminResult;
-		}
-		// ======调模板上传FTP服务器=======
-		String httpUrl = this.protocolsService.uploadTempletToFtp(file, "FddTemplet", 0);
-		if (StringUtils.isBlank(httpUrl)){
-			adminResult.setStatus(FAIL);
-			adminResult.setStatusDesc("上传FTP服务器失败。");
-			logger.info("---------------法大大协议上传模板,上传FTP服务器失败！");
-			return adminResult;
-		}
 
-		String userId = null;
-		AdminSystemVO user = getUser(request);
-		if (user != null) {
-			userId = user.getId();
-		}
-		//调用发大大模板上传接口
+//		String fileDomainUrl = FILEDOMAINURL;
+//		String filePhysicalPath = FILEPHYSICALPATH;
+//		String fileUploadTempPath = FILEUPLOADTEMPPATH;
+//		String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
+//		File logoSaveFile = new File(logoRealPathDir);
+//		if (!logoSaveFile.exists()) {
+//			logoSaveFile.mkdirs();
+//		}
+//		BorrowCommonImage fileMeta = null;
+//		LinkedList<BorrowCommonImage> files = new LinkedList<BorrowCommonImage>();
+//
+		Iterator<String> itr = multipartRequest.getFileNames();
+//		MultipartFile multipartFile = null;
+
+		while (itr.hasNext()) {
+			// 文件错误信息
+//			String errorMessage = null;
+//			multipartFile = multipartRequest.getFile(itr.next());
+//			String fileRealName = String.valueOf(System.currentTimeMillis());
+//			String originalFilename = multipartFile.getOriginalFilename();
+//			String suf = UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
+//			fileRealName = fileRealName + suf;
+//			if (org.apache.commons.lang.StringUtils.isEmpty(suf)) {
+//				errorMessage = "上传的文件不能是空";
+//			}
+			try {
+				//从request中取得MultipartFile列表
+				List<MultipartFile> multipartFileList = this.protocolsService.getMultipartFileList(multipartRequest);
+				if (multipartFileList == null || multipartFileList.size() <= 0) {
+					adminResult.setStatus(FAIL);
+					adminResult.setStatusDesc("获取上传文件失败！");
+					logger.info("---------------法大大协议上传模板,获取上传文件失败！");
+					return adminResult;
+				}
+				if (multipartFileList.size() > 1) {
+					adminResult.setStatus(FAIL);
+					adminResult.setStatusDesc("不可同时上传多个文件");
+					logger.info("---------------法大大协议上传模板,不可同时上传多个文件！");
+					return adminResult;
+				}
+				//从MultipartFile列表中取得唯一的Multipart
+				MultipartFile file = multipartFileList.get(0);
+				if (file == null) {
+					adminResult.setStatus(FAIL);
+					logger.info("---------------法大大协议上传模板,获取上传模板失败！");
+					adminResult.setStatusDesc("获取上传模板失败！");
+					return adminResult;
+				}
+				String fileName = file.getOriginalFilename();
+				if (!(fileName.substring(fileName.length() - 4)).toUpperCase().equals(".PDF")) {
+					adminResult.setStatus(FAIL);
+					adminResult.setStatusDesc("上传的模板必须是PDF格式。");
+					logger.info("---------------法大大协议上传模板,上传的模板必须是PDF格式！");
+					return adminResult;
+				}
+				// ======调模板上传FTP服务器=======
+				String httpUrl = this.protocolsService.uploadTempletToFtp(file, "FddTemplet", 0);
+				if (StringUtils.isBlank(httpUrl)) {
+					adminResult.setStatus(FAIL);
+					adminResult.setStatusDesc("上传FTP服务器失败。");
+					logger.info("---------------法大大协议上传模板,上传FTP服务器失败！");
+					return adminResult;
+				}
+
+				String userId = null;
+				AdminSystemVO user = getUser(request);
+				if (user != null) {
+					userId = user.getId();
+				}
+				//调用发大大模板上传接口
 //        DzqzCallBean dzqzCallBean = this.protocolsService.uploadtemplateDZApi(file, templetId);
-		DzqzCallBean dzqzCallBean = this.protocolsService.uploadtemplateDZApi(httpUrl, templetId, userId);
-		if (dzqzCallBean == null) {
-			adminResult.setStatus(FAIL);
-			adminResult.setStatusDesc("返回结果为空，上传模板失败。");
-			logger.info("---------------法大大协议上传模板,返回结果为空，上传模板失败！");
-			return adminResult;
+				DzqzCallBean dzqzCallBean = this.protocolsService.uploadtemplateDZApi(httpUrl, templetId, userId);
+				if (dzqzCallBean == null) {
+					adminResult.setStatus(FAIL);
+					adminResult.setStatusDesc("返回结果为空，上传模板失败。");
+					logger.info("---------------法大大协议上传模板,返回结果为空，上传模板失败！");
+					return adminResult;
+				}
+
+				adminResult.setStatus(SUCCESS);
+				adminResult.setStatusDesc(SUCCESS_DESC);
+				return adminResult;
+
+			}catch (Exception e){
+				e.printStackTrace();
+				logger.info("--------------法大大协议模板上传异常------------");
+			}
 		}
 
-		adminResult.setStatus(SUCCESS);
-		adminResult.setStatusDesc(SUCCESS_DESC);
-		return adminResult;
+		return null;
 
 	}
 
