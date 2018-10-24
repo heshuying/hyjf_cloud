@@ -164,7 +164,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         if (StringUtils.isEmpty(ids)) {
             return result;
         }
-        //借款编号和期数组合
+        //借款编号和期数组合，数组
         List<String> recordList = null;
         try {
             recordList = JSONArray.parseArray(ids, String.class);
