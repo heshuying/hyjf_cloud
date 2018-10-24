@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.admin.finance;
 
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
 
 import java.util.List;
@@ -49,4 +50,12 @@ public interface PushMoneyManageService {
      * @return
      */
     int updateTenderCommissionRecord(PushMoneyRequest request);
+
+    /**取得借款API表
+    * @author Zha Daojian
+    * @date 2018/10/24 19:33
+    * @param borrowNid
+    * @return java.util.List<com.hyjf.am.trade.dao.model.auto.BorrowApicron>
+    **/
+    List<BorrowApicron> selectBorrowApicronListByBorrowNid(String borrowNid);
 }

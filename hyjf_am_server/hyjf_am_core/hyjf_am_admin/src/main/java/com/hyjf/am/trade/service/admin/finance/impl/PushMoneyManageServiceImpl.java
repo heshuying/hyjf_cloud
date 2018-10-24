@@ -118,6 +118,20 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
         return pushMoneyCustomizeMapper.queryCrmCuttype(userId);
     }
 
+
+    /**取得借款API表
+     * @author Zha Daojian
+     * @date 2018/10/24 19:33
+     * @param borrowNid
+     * @return java.util.List<com.hyjf.am.trade.dao.model.auto.BorrowApicron>
+     **/
+    @Override
+    public List<BorrowApicron> selectBorrowApicronListByBorrowNid(String borrowNid) {
+        BorrowApicronExample example = new BorrowApicronExample();
+        example.createCriteria().andBorrowNidEqualTo(borrowNid).andApiTypeEqualTo(1).andStatusNotEqualTo(6);
+        return this.borrowApicronMapper.selectByExample(example);
+    }
+
     /**
      * 发提成
      *
