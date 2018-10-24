@@ -398,7 +398,7 @@ public class HjhLabelController extends BaseController{
         	if (StringUtils.isNotEmpty(viewRequest.getLabelAprEnd())) {
         		request.setLabelAprEnd(new BigDecimal(viewRequest.getLabelAprEnd()));
         	} else {
-        		request.setLabelAprStart(BigDecimal.ZERO);
+        		request.setLabelAprEnd(BigDecimal.ZERO);
         	}
         	// 还款方式
         	if (StringUtils.isNotEmpty(viewRequest.getBorrowStyle())) {

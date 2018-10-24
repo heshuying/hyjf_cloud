@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.controller.front.hjh.autoreview;
 
+import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.service.task.bank.autoreview.BatchAutoReviewHjhService;
-import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +37,11 @@ public class BatchAutoReviewHjhController {
             } catch (Exception e) {
                 logger.info("=======给到期未满标项目发短信错误!" + e.getMessage());
             }
-            List<BorrowWithBLOBs> borrowList = this.batchAutoReviewHjhService.selectAutoReview();
+            List<Borrow> borrowList = this.batchAutoReviewHjhService.selectAutoReview();
 
             if (borrowList != null && borrowList.size() > 0) {
                 logger.info("--------------复审标的数量:" + borrowList.size());
-                for (BorrowWithBLOBs borrow : borrowList) {
+                for (Borrow borrow : borrowList) {
                     logger.info("--------------复审标的号:" + borrow.getBorrowNid());
                     try {
                         batchAutoReviewHjhService.updateBorrow(borrow);

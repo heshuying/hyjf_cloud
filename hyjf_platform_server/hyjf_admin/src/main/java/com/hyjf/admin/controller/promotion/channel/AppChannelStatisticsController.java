@@ -87,7 +87,15 @@ public class AppChannelStatisticsController extends BaseController {
 
     @ApiOperation(value = "导出", notes = "导出")
     @RequestMapping(value = "/export", method = RequestMethod.POST)
-    public void export(HttpServletResponse response, @RequestBody AppChannelStatisticsRequest statisticsRequest) throws UnsupportedEncodingException {
+    public void export(HttpServletResponse response, HttpServletRequest request, @RequestBody AppChannelStatisticsRequest statisticsRequest) throws UnsupportedEncodingException {
+        //获取后天用户登录id
+        AdminSystemVO adminSystemVO = getUser(request);
+        String userId = adminSystemVO.getId();
+        // 根据用户Id查询渠道账号管理
+        AdminUtmReadPermissionsVO permissionsVO = adminUtmReadPermissionsService.selectAdminUtmReadPermissions(userId);
+        if (permissionsVO != null) {
+            statisticsRequest.setUtmIds(permissionsVO.getUtmIds());
+        }
         // 表格sheet名称
         String sheetName = "app渠道统计";
         // 文件名称

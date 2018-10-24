@@ -11,7 +11,6 @@ import com.hyjf.am.trade.service.task.bank.autoreview.BatchAutoReviewService;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
-import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -106,17 +105,24 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
         return sendType.getAfterTime();
     }
 
+    /**
+     * 查询待复审的所有直投标的
+     *
+     * @return
+     */
     @Override
-    public List<BorrowWithBLOBs> selectAutoReview() {
+    public List<Borrow> selectAutoReview() {
         /*------------upd by liushouyi HJH3 Start-------------------*/
-        //不使用引擎：散标
-        List<BorrowWithBLOBs> borrowList = borrowCustomizeMapper.selectAutoReviewBorrowNidList();
+        //不使用引擎：散标(仅使用borrowNid、使用前先通过borrownid查询借款详情)
+        BorrowExample  example = new BorrowExample();
+        example.createCriteria().andStatusEqualTo(3).andBorrowFullStatusEqualTo(1).andPlanNidIsNotNull();
+        List<Borrow> borrowList = borrowMapper.selectByExample(example);
         /*------------upd by liushouyi HJH3 End-------------------*/
         return borrowList;
     }
 
     @Override
-    public void updateBorrow(BorrowWithBLOBs borrows, Integer afterTime) throws Exception{
+    public void updateBorrow(Borrow borrows, Integer afterTime) throws Exception{
         /*--------------upd by liushouyi HJH3 Start----------------*/
         //遍历自动发标的数据原抽出表中所有字段、表关联后仅查借款编号
         Borrow borrow = this.getBorrowByNid(borrows.getBorrowNid());
@@ -217,7 +223,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                                 borrowApicron.setCreateTime(new Date());// 创建时间
                                 borrowApicron.setUpdateTime(new Date());// 更新时间
                                 boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
-                                if (!apicronFlag) {
+                                if (apicronFlag) {
                                     //2018-10-15 复审之后之后发送MQ进行放款
                                     try {
                                         borrowLoanRepayProducer.messageSend(
