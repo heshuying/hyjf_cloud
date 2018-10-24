@@ -166,6 +166,7 @@ public class RepayManageController extends BaseController {
      */
     @PostMapping(value = "/repay_detail")
     public StringResponse repayDetail(@RequestBody @Valid RepayRequestDetailRequest requestBean){
+        logger.info("开始获取还款详情页面数据，requestBean：" + JSON.toJSONString(requestBean));
         StringResponse responseBean = new StringResponse();
         ProjectBean projectBean = new ProjectBean();
         projectBean.setUserId(String.valueOf(requestBean.getUserId()));
@@ -176,6 +177,7 @@ public class RepayManageController extends BaseController {
 
         try {
             projectBean = repayManageService.searchRepayProjectDetail(projectBean, requestBean.getAllRepay());
+            logger.info("加载的还款详情数据：" + JSON.toJSONString(projectBean));
             responseBean.setResultStr(JSON.toJSONString(projectBean));
             return responseBean;
         } catch (Exception e) {
