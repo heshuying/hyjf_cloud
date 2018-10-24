@@ -176,10 +176,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
             registEndTime = GetDate.getSomeDayEnd(registEndTime);
             request.setRegistEndTime(registEndTime);
         }
-        if (request.getCurrPage() < 1) {
-            // 不查询分页
-            request.setLimitStart(-1);
-        }
+
         return utmRegCustomizeMapper.selectPcChannelReconciliationRecordHjh(request);
     }
 
@@ -250,10 +247,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
             registEndTime = GetDate.getSomeDayEnd(registEndTime);
             request.setRegistEndTime(registEndTime);
         }
-        if (request.getCurrPage() < 1) {
-            // 不查询分页
-            request.setLimitStart(-1);
-        }
+
         return utmRegCustomizeMapper.selectAppChannelReconciliationRecordHjh(request);
     }
 

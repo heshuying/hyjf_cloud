@@ -22,7 +22,7 @@ import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.bean.BankCardBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
+import com.hyjf.cs.trade.service.withdraw.BankWithdrawService;
 import com.hyjf.cs.trade.vo.BaseResultBean;
 import com.hyjf.cs.trade.vo.SimpleResultBean;
 import com.hyjf.cs.trade.vo.WxQueryWIthdrawInfoVO;
