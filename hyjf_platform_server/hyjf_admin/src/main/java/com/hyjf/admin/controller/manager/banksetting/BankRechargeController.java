@@ -1,12 +1,14 @@
 package com.hyjf.admin.controller.manager.banksetting;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankRechargeService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankRechargeConfigResponse;
@@ -20,18 +22,19 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author by xiehuili on 2018/7/19.
@@ -184,100 +187,130 @@ public class BankRechargeController extends BaseController {
     @ApiOperation(value = "快捷充值限额导出", notes = "快捷充值限额导出")
     @GetMapping("/exportAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportAction(HttpServletResponse response ) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, AdminBankRechargeConfigRequest adminRequest) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "快捷充值限额配置";
-        BankRechargeLimitConfigVO bankRecharge = new BankRechargeLimitConfigVO();
-        //列表
-        List<BankRechargeLimitConfigVO> resultList  = this.bankRechargeService.exportRecordList(bankRecharge);
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+        adminRequest.setCurrPage(-1);
+        adminRequest.setPageSize(defaultRowMaxCount);
+        AdminBankRechargeConfigResponse configResponse = bankRechargeService.bankRechargeInit(adminRequest);
+        Integer totalCount = configResponse.getRecordTotal();
+
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         //获取银行列表(快捷支付卡)
         List<BankConfigVO> bankList = bankRechargeService.getBankRecordList();
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[] {"序号", "银行", "接入方式","银行卡类型","单笔充值限额（元）","单卡单日累计限额（元）","状态" };
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
 
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
-        if (resultList != null && resultList.size() > 0) {
-
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < resultList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BankRechargeLimitConfigVO pInfo = resultList.get(i);
-
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-
-                    // 序号
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    }
-                    else if (celLength == 1) {
-                        bank: for(int j = 0;j < bankList.size();j++){
-                            if(pInfo.getBankId().equals(bankList.get(j).getId())){
-                                cell.setCellValue(bankList.get(j).getName());
-                                break bank;
-                            }
-                        }
-                    }
-                    else if (celLength == 2) {
-                        if(pInfo.getAccessCode() == null){
-                            cell.setCellValue("");
-                        }else if(pInfo.getAccessCode() == 0){
-                            cell.setCellValue("全国");
-                        }
-                    }
-                    else if (celLength == 3) {
-                        if(pInfo.getBankType() == null){
-                            cell.setCellValue("");
-                        }else if(pInfo.getBankType() == 0){
-                            cell.setCellValue("借记卡");
-                        }
-                    }
-                    else if (celLength == 4) {
-                        if(pInfo.getSingleQuota() == null){
-                            cell.setCellValue("无限额");
-                        }else{
-                            cell.setCellValue(String.valueOf(pInfo.getSingleQuota()));
-                        }
-                    }
-                    else if (celLength == 5) {
-                        if(pInfo.getSingleCardQuota() == null){
-                            cell.setCellValue("无限额");
-                        }else{
-                            cell.setCellValue(String.valueOf(pInfo.getSingleCardQuota()));
-                        }
-                    }
-                    else if (celLength == 6) {
-                        if(pInfo.getStatus() == null){
-                            cell.setCellValue("");
-                        }else if(pInfo.getStatus() == 0){
-                            cell.setCellValue("启用");
-                        }else{
-                            cell.setCellValue("禁用");
-                        }
-                    }
-                }
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter(bankList);
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i <= sheetCount; i++) {
+            adminRequest.setPageSize(defaultRowMaxCount);
+            adminRequest.setCurrPage(i);
+            AdminBankRechargeConfigResponse rechargeConfigResponse = bankRechargeService.bankRechargeInit(adminRequest);
+            List<BankRechargeLimitConfigVO> rechargeLimitConfigVOList = rechargeConfigResponse.getResultList();
+            if (rechargeLimitConfigVOList != null && rechargeLimitConfigVOList.size()> 0) {
+                String sheetNameTmp = sheetName + "_第" + i + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  rechargeLimitConfigVOList);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("bankId", "银行");
+        map.put("accessCode", "接入方式");
+        map.put("bankType", "银行卡类型");
+        map.put("singleQuota", "单笔充值限额（元）");
+        map.put("singleCardQuota", "单卡单日累计限额（元）");
+        map.put("status", "状态");
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter(List<BankConfigVO> bankList) {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter bankIdAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer bankId = (Integer) object;
+                for (BankConfigVO bankConfigVO : bankList) {
+                    logger.info("bankId:[{}]",bankId);
+                    if (bankId.equals(bankConfigVO.getId())) {
+                        logger.info("id:[{}],name:[{}]",bankConfigVO.getId(),bankConfigVO.getName());
+                        return bankConfigVO.getName();
+                    }
+                }
+                return "";
+            }
+        };
+        IValueFormatter accessCodeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer accessCode = (Integer) object;
+                if(accessCode == null){
+                    return "";
+                }else if(accessCode == 0){
+                    return "全国";
+                }
+                return "";
+            }
+        };
+        IValueFormatter bankTypeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer bankType = (Integer) object;
+                if(bankType == null){
+                    return "";
+                }else if(bankType == 0){
+                    return "借记卡";
+                }
+                return "";
+            }
+        };
+        IValueFormatter singleQuotaAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal singleQuota = (BigDecimal) object;
+                if(singleQuota == null){
+                    return "无限额";
+                }else{
+                    return String.valueOf(singleQuota);
+                }
+            }
+        };
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer status = (Integer) object;
+                if(status == null){
+                    return "";
+                }else if(status == 0){
+                    return "启用";
+                }else{
+                    return "禁用";
+                }
+            }
+        };
+
+        mapAdapter.put("bankId", bankIdAdapter);
+        mapAdapter.put("accessCode", accessCodeAdapter);
+        mapAdapter.put("bankType", bankTypeAdapter);
+        mapAdapter.put("singleQuota", singleQuotaAdapter);
+        mapAdapter.put("singleCardQuota", singleQuotaAdapter);
+        mapAdapter.put("status", statusAdapter);
+        return mapAdapter;
+    }
+
 
     /**
      * 调用校验表单方法

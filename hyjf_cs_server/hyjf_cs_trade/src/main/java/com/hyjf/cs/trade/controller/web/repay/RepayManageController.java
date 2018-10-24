@@ -579,6 +579,7 @@ public class RepayManageController extends BaseTradeController {
             msg = "998";
             logger.info("==============垫付机构:" + userVO.getUserId() + "批量还款失败,用户未开户!");
             webResult.setData(msg);
+            webResult.setStatusDesc("用户未开户");
             return webResult;
         }
         boolean isBalance = comperToOrgUserBalance(userVO.getUserId(), userVO.getBankAccount(), new BigDecimal(requestBean.getRepayTotal()));
@@ -586,6 +587,7 @@ public class RepayManageController extends BaseTradeController {
             msg = "997";
             logger.info("==============垫付机构:" + userVO.getUserId() + "批量还款失败,用户银行可用余额不足!");
             webResult.setData(msg);
+            webResult.setStatusDesc("余额不足");
             return webResult;
         }
         boolean reslut = RedisUtils.exists(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userVO.getUserId());
@@ -593,6 +595,7 @@ public class RepayManageController extends BaseTradeController {
             msg = "999";
             logger.info("==============垫付机构:" + userVO.getUserId() + "校验处->批量还款失败,项目正在还款中!");
             webResult.setData(msg);
+            webResult.setStatusDesc("项目正在还款中");
             return webResult;
         }
         boolean isTime = companyRepayTime(requestBean.getStartDate(),requestBean.getEndDate(),userVO.getUserId());
@@ -600,6 +603,7 @@ public class RepayManageController extends BaseTradeController {
             msg = "996";
             logger.info("==============垫付机构:" + userVO.getUserId() + "校验处->批量还款失败,还款区间大于28天!");
             webResult.setData(msg);
+            webResult.setStatusDesc("还款区间大于28天!");
             return webResult;
         }
         webResult.setData(msg);
