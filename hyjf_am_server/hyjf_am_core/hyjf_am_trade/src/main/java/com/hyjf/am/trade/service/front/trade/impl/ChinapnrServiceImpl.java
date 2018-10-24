@@ -24,6 +24,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
@@ -520,7 +521,7 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
     }
 
     public BigDecimal stringToBigDecimal(String value) {
-        if (Validator.isNotNull(value) && StringUtils.isNumeric(value)) {
+        if (Validator.isNotNull(value) && NumberUtils.isNumber(value)) {
             return new BigDecimal(value);
         }else {
             return BigDecimal.ZERO;
