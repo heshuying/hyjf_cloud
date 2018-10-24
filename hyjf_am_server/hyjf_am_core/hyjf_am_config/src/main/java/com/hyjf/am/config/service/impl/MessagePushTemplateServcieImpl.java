@@ -45,8 +45,10 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 				RedisUtils.setObjEx(RedisConstants.MESSAGE_PUSH_TEMPLATE, messagePushTemplate, 24 * 60 * 60);
 				return messagePushTemplate;
 			}
+		}else if(messagePushTemplate.getStatus()==1){
+			return messagePushTemplate;
 		}
-		return messagePushTemplate;
+		return null;
 	}
 
 	@Override
