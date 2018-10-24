@@ -6,7 +6,6 @@ import com.hyjf.admin.beans.response.OperationLogResponseBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -25,10 +24,6 @@ import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,115 +111,6 @@ public class OperationLogController  extends BaseController {
 
         }
         return new AdminResult<ListResult<FeerateModifyLogVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
-    }
-
-    /**
-     * 数据导出
-     *
-     * @param request
-     * @param operationLogRequestBean
-     * @return
-     */
-    @ApiOperation(value = "导出配置中心操作日志配置", notes = "导出配置中心操作日志配置")
-    @PostMapping("/exportAction1")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportAction1(HttpServletRequest request, HttpServletResponse response, @RequestBody OperationLogRequestBean operationLogRequestBean) throws Exception {
-        AdminOperationLogRequest form= new AdminOperationLogRequest();
-        //可以直接使用
-        BeanUtils.copyProperties(operationLogRequestBean, form);
-        // 表格sheet名称
-        String sheetName = "费率操作日志";
-
-        // 封装查询条件
-        Map<String, Object> conditionMap = setCondition(form);
-        AdminOperationLogResponse operationLogResponseResponse = this.operationLogService.selectOperationLogList(conditionMap,-1,-1);
-
-        List<FeerateModifyLogVO> resultList =  operationLogResponseResponse.getResultList();
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-
-        String[] titles = new String[] { "序号", "资产来源", "产品类型", "期限", "自动发标利率", "服务费", "管理费", "收益差率", "逾期利率", "逾期免息天数", "状态", "修改类型", "操作人", "操作时间" };
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
-        if (resultList != null && resultList.size() > 0) {
-
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < resultList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    FeerateModifyLogVO record = resultList.get(i);
-
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-
-                    // 序号
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    }
-                    // 资产来源
-                    else if (celLength == 1) {
-                        cell.setCellValue(record.getInstName());
-                    }
-                    // 产品类型
-                    else if (celLength == 2) {
-                        cell.setCellValue(record.getAssetTypeName());
-                    }
-                    // 期限
-                    else if (celLength == 3) {
-                        cell.setCellValue(record.getBorrowPeriod());
-                    }
-                    // 自动发标利率
-                    else if (celLength == 4) {
-                        cell.setCellValue(record.getBorrowApr().toString());
-                    }
-                    // 服务费
-                    else if (celLength == 5) {
-                        cell.setCellValue(record.getServiceFee());
-                    }
-                    // 管理费
-                    else if (celLength == 6) {
-                        cell.setCellValue(record.getManageFee());
-                    }
-                    // 收益差率
-                    else if (celLength == 7) {
-                        cell.setCellValue(record.getRevenueDiffRate());
-                    }
-                    // 逾期利率
-                    else if (celLength == 8) {
-                        cell.setCellValue(record.getLateInterestRate());
-                    }
-
-                    // 逾期免息天数
-                    else if (celLength == 9) {
-                        cell.setCellValue(record.getLateFreeDays());
-                    }
-                    // 状态
-                    else if (celLength == 10) {
-                        cell.setCellValue(nameStates(record.getStatus()));
-                    }
-                    // 修改类型
-                    else if (celLength == 11) {
-                        cell.setCellValue(accountEsbStates(record.getModifyType()));
-                    }
-                }
-            }
-        }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
 
     /**
