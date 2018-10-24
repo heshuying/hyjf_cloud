@@ -50,7 +50,10 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
     public Integer updateBorrowCredit(BorrowCreditVO borrowCreditVO) {
         BorrowCredit borrowCredit = new BorrowCredit();
         BeanUtils.copyProperties(borrowCreditVO,borrowCredit);
-        boolean result =  this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit) >0 ? true:false;
+        BorrowCreditExample borrowCreditExample = new BorrowCreditExample();
+        BorrowCreditExample.Criteria borrowCreditCriteria = borrowCreditExample.createCriteria();
+        borrowCreditCriteria.andCreditNidEqualTo(borrowCredit.getCreditNid());
+        boolean result =  this.borrowCreditMapper.updateByExampleSelective(borrowCredit,borrowCreditExample) >0 ? true:false;
         return result?1:0;
     }
 

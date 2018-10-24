@@ -340,7 +340,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             request.setBorrowNid(borrowNid);
             request.setUserId(String.valueOf(userId));
             request.setPlatform(CustomConstants.CLIENT_PC);
-            couponConfig = amUserClient.selectBestCoupon(request);
+            couponConfig = amTradeClient.selectBestCoupon(request);
             if (couponConfig != null) {
                 other.put("isThereCoupon", 1);
                 if (couponConfig.getCouponType() == 1) {
@@ -361,7 +361,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             other.put("couponConfig", couponConfig);
             /** 可用优惠券张数开始 pccvip */
             request.setMoney("0");
-            Integer couponAvailableCount = amUserClient.countAvaliableCoupon(request);
+            Integer couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
             other.put("couponAvailableCount", couponAvailableCount == null ? "0" : String.valueOf(couponAvailableCount));
             BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(borrow.getBorrowNid());
             other.put("borrowMeasuresMea", StringUtils.isNotBlank(borrow.getBorrowMeasuresMea()) ? borrow.getBorrowMeasuresMea() : "");

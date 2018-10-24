@@ -13,6 +13,7 @@
 	   <result column="coupon_system" property="couponSystem" />
 	   <result column="project_type" property="projectType" />
 	   <result column="tender_quota" property="tenderQuota" />
+	   <result column="tender_quota_type" property="tenderQuotaType" />
 	   <result column="project_expiration_type" property="projectExpirationType" />
 	   <result column="used_flag" property="usedFlag" />
 	   <result column="tender_quota_min" property="tenderQuotaMin" />
@@ -123,6 +124,7 @@
 		ELSE
 			'不限'
 		END tender_quota,
+		cc.tender_quota_type tender_quota_type,
 		 CASE
 		WHEN cc.project_expiration_type = 0 THEN
 			'不限'

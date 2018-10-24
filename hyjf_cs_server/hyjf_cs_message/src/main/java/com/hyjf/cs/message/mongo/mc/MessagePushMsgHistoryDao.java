@@ -282,12 +282,13 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 */
 	public MessagePushMsgHistory getRecord(String id) {
 		Criteria criteria = new Criteria();
-		Query query = new Query();
 		// 条件查询
-		if(id != null){
+		if(StringUtils.isNotBlank(id)){
+			//criteria.and("_id").is(new ObjectId(id));
 			criteria.and("id").is(id);
 		}
-        MessagePushMsgHistory one = mongoTemplate.findOne(query, MessagePushMsgHistory.class);
+		Query query = new Query(criteria);
+		MessagePushMsgHistory one = mongoTemplate.findOne(query, MessagePushMsgHistory.class);
 		return one;
 	}
 
