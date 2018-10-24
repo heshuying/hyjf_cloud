@@ -455,25 +455,6 @@ public class AmUserClientImpl implements AmUserClient {
 
 
     @Override
-    public BestCouponListVO selectBestCoupon(MyCouponListRequest request) {
-        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/myBestCouponList", request,MyBestCouponListResponse.class).getBody();
-        if (Response.isSuccess(response)) {
-            return response.getResult();
-        }
-        return null;
-    }
-
-    @Override
-    public Integer countAvaliableCoupon(MyCouponListRequest request) {
-        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/countAvaliableCoupon",request, MyBestCouponListResponse.class).getBody();
-        if (Response.isSuccess(response)) {
-            return response.getCouponCount();
-        }
-        return null;
-    }
-
-
-    @Override
     public List<SpreadsUserVO> selectByUserId(Integer userId) {
         SpreadsUserResponse response = restTemplate
                 .getForEntity("http://AM-USER//am-user/user/selectspreadsuserbyuserid/" + userId,SpreadsUserResponse.class)

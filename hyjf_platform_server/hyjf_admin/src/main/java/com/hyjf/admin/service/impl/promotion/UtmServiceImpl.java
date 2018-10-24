@@ -42,7 +42,7 @@ public class UtmServiceImpl implements UtmService {
         }
         //查询当前页数据
         map.put("limitStart",(currPage -1) * pageSize);
-        map.put("limitEnd",currPage * pageSize);
+        map.put("limitEnd", pageSize);
         UtmResponse utmResponse = amUserClient.getByPageList(map);
         List<UtmVO> list = new ArrayList<UtmVO>();
         if(null != utmResponse){

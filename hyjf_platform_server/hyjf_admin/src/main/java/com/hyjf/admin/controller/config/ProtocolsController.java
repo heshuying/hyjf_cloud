@@ -157,13 +157,13 @@ public class ProtocolsController extends BaseController {
 		String templetId = multipartRequest.getParameter("templetId");
 		logger.info("---------------法大大协议开始上传模板----------，协议类型ID：" + templetId);
 		// ======上传校验=======
-		if (templetId.isEmpty()){
+		if (templetId == null || templetId.isEmpty() || "undefined".equals(templetId)){
 			adminResult.setStatus(FAIL);
 			adminResult.setStatusDesc("协议类型必须选择。");
 			return adminResult;
 		}
 		//从request中取得MultipartFile列表
-		List<MultipartFile> multipartFileList = this.protocolsService.getMultipartFileList(multipartRequest);
+		List<MultipartFile> multipartFileList = multipartRequest.getFiles("file");
 		if (multipartFileList == null || multipartFileList.size() <= 0){
 			adminResult.setStatus(FAIL);
 			adminResult.setStatusDesc("获取上传文件失败！");
