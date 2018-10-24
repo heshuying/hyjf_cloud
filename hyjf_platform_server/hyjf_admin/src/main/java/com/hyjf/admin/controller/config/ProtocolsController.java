@@ -51,15 +51,16 @@ import java.util.*;
 public class ProtocolsController extends BaseController {
 	@Autowired
 	private ProtocolsService protocolsService;
-	@Autowired
-	private ProtocolService protocolService;
 
-	@Value("${file.domain.url}")
-	private String FILEDOMAINURL;
-	@Value("${file.physical.path}")
-	private String FILEPHYSICALPATH;
-	@Value("${file.upload.temp.path}")
-	private String FILEUPLOADTEMPPATH;
+//	@Autowired
+//	private ProtocolService protocolService;
+
+//	@Value("${file.domain.url}")
+//	private String FILEDOMAINURL;
+//	@Value("${file.physical.path}")
+//	private String FILEPHYSICALPATH;
+//	@Value("${file.upload.temp.path}")
+//	private String FILEUPLOADTEMPPATH;
 
 	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
 	@PostMapping("/init")
