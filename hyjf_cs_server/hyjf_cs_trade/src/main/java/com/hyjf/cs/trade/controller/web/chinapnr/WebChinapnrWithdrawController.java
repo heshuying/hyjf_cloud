@@ -288,10 +288,9 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
         WebResult result = new WebResult();
         Map<String,Object> map = new HashMap<>();
         logger.info("[交易完成后,回调开始]");
-        logger.info("参数bean："+(bean==null));
         logger.debug("参数1: " + bean == null ? "无" : bean.getAllParams() + "]");
         bean.convert();
-        logger.debug("参数2: " + bean == null ? "无" : bean.getAllParams() + "]");
+        logger.info("参数bean："+bean);
         // 取得更新用UUID
         boolean updateFlag = false;
         String uuid = request.getParameter("uuid");
