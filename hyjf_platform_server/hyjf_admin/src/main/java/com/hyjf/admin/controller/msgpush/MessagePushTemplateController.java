@@ -175,8 +175,8 @@ public class MessagePushTemplateController extends BaseController {
     @RequestMapping(value = "/updateAction", method = RequestMethod.POST)
     public AdminResult updateAction(HttpServletRequest request, @RequestBody MsgPushTemplateRequest templateRequest) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
-//        AdminSystemVO user = getUser(request);
-//        String username = user.getUsername();
+        AdminSystemVO user = getUser(request);
+        String username = user.getUsername();
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
         if (message != null) {
@@ -217,7 +217,7 @@ public class MessagePushTemplateController extends BaseController {
         }
         templateRequest.setTagCode(templateRequest.getTagCode());
         templateRequest.setTemplateCode(templateRequest.getTemplateCode());
-        templateRequest.setCreateUserName("admin");
+        templateRequest.setCreateUserName(username);
         response = this.messagePushTemplateService.updateRecord(templateRequest);
         return new AdminResult<>(response);
     }
