@@ -21,8 +21,10 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.http.URLCodec;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
@@ -118,6 +120,7 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
             int withdrawStatus = accountWithdraw.getStatus();
             // 返回值=000成功
             if (ChinaPnrConstant.RESPCODE_SUCCESS.equals(bean.getRespCode())) {
+                logger.info("返回值=000成功");
                 // 如果信息未被处理
                 if (withdrawStatus == CustomConstants.WITHDRAW_STATUS_DEFAULT) {
                     // 开启事务
@@ -125,9 +128,9 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                     try {
                         txStatus = this.transactionManager.getTransaction(transactionDefinition);
                         // 支出金额
-                        BigDecimal transAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_TRANSAMT);
+                        BigDecimal transAmt = stringToBigDecimal(bean.getTransAmt());
                         // 提现金额
-                        BigDecimal realTansAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_REALTRANSAMT);
+                        BigDecimal realTansAmt = stringToBigDecimal(bean.getRealTransAmt());
                         // 提现手续费
                         BigDecimal feeAmt = transAmt.subtract(realTansAmt);
                         // 更新手续费
@@ -239,7 +242,7 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                     try {
                         txStatus = this.transactionManager.getTransaction(transactionDefinition);
                         // 支出金额
-                        BigDecimal transAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_TRANSAMT);
+                        BigDecimal transAmt = stringToBigDecimal(bean.getTransAmt());
                         // 更新状态为成功
                         accountWithdraw.setStatus(CustomConstants.WITHDRAW_STATUS_SUCCESS);
                         accountWithdraw.setUpdateTime(nowTime);
@@ -310,9 +313,9 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                     try {
                         txStatus = this.transactionManager.getTransaction(transactionDefinition);
                         // 支出金额
-                        BigDecimal transAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_TRANSAMT);
+                        BigDecimal transAmt = stringToBigDecimal(bean.getTransAmt());
                         // 提现金额
-                        BigDecimal realTansAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_REALTRANSAMT);
+                        BigDecimal realTansAmt = stringToBigDecimal(bean.getRealTransAmt());
                         // 提现手续费
                         BigDecimal feeAmt = transAmt.subtract(realTansAmt);
                         // 更新订单信息
@@ -389,9 +392,9 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                 try {
                     txStatus = this.transactionManager.getTransaction(transactionDefinition);
                     // 支出金额
-                    BigDecimal transAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_TRANSAMT);
+                    BigDecimal transAmt = stringToBigDecimal(bean.getTransAmt());
                     // 提现金额
-                    BigDecimal realTansAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_REALTRANSAMT);
+                    BigDecimal realTansAmt = stringToBigDecimal(bean.getRealTransAmt());
                     // 提现手续费
                     BigDecimal feeAmt = transAmt.subtract(realTansAmt);
                     // 如果信息已被处理(400)
@@ -515,5 +518,13 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
             }
         }
         return false;
+    }
+
+    public BigDecimal stringToBigDecimal(String value) {
+        if (Validator.isNotNull(value) && NumberUtils.isNumber(value)) {
+            return new BigDecimal(value);
+        }else {
+            return BigDecimal.ZERO;
+        }
     }
 }

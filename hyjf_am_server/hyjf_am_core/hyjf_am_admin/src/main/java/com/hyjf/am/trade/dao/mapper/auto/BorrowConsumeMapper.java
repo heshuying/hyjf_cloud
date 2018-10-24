@@ -3,8 +3,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 import com.hyjf.am.trade.dao.model.auto.BorrowConsume;
 import com.hyjf.am.trade.dao.model.auto.BorrowConsumeExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowConsumeWithBLOBs;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface BorrowConsumeMapper {
     int countByExample(BorrowConsumeExample example);

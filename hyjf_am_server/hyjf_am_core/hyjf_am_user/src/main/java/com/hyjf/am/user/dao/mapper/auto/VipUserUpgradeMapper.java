@@ -2,8 +2,9 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.VipUserUpgrade;
 import com.hyjf.am.user.dao.model.auto.VipUserUpgradeExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface VipUserUpgradeMapper {
     int countByExample(VipUserUpgradeExample example);

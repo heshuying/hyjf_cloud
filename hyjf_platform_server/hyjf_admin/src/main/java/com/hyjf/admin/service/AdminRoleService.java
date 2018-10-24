@@ -3,15 +3,14 @@
  */
 package com.hyjf.admin.service;
 
-import java.util.List;
-
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.admin.UserRoleRequest;
 import com.hyjf.am.resquest.config.AdminMenuRequest;
 import com.hyjf.am.resquest.config.AdminRoleRequest;
-import com.hyjf.common.constants.MsgCode;
+
+import java.util.List;
 
 /**
  * @author DongZeShan

@@ -4,8 +4,6 @@
 package com.hyjf.cs.user.controller.api.group;
 
 import com.hyjf.am.vo.user.OrganizationStructureVO;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.OrganizationStructureRequestBean;
 import com.hyjf.cs.user.bean.ResultApiBean;
 import com.hyjf.cs.user.controller.BaseUserController;

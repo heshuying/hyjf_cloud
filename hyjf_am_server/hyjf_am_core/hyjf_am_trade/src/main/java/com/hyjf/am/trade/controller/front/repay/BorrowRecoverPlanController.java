@@ -4,12 +4,10 @@
 package com.hyjf.am.trade.controller.front.repay;
 
 import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
-import com.hyjf.am.response.trade.BorrowRepayPlanResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
 import com.hyjf.am.trade.service.front.repay.BorrowRecoverPlanService;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;

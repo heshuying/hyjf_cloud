@@ -348,13 +348,16 @@ public class HjhLabelController extends BaseController{
 			}
 		}
 		
-		// 6.标签名称重复检验
-		if (StringUtils.isNotEmpty(viewRequest.getLabelNameSrch())) {
-			hjhLabelRequest.setLabelNameSrch(viewRequest.getLabelNameSrch());
-			List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
-			// 通过传入的 labelName 查询如果不为空说明此 labelName 已经存在
-			if(CollectionUtils.isNotEmpty(list)){
-				jsonObject.put("errorMsg", "标签名称已存在!");
+		// 6.标签名称重复检验  0：标签名称未改 1标签名称修改
+		// 只有当传入的标签名称改动时，才校验新改的名称是否重复
+		if(viewRequest.getFlag() == 1){
+			if (StringUtils.isNotEmpty(viewRequest.getLabelName())) {
+				hjhLabelRequest.setLabelNameSrch(viewRequest.getLabelName());
+				List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
+				// 通过传入的 labelName 查询如果不为空说明此 labelName 已经存在
+				if(CollectionUtils.isNotEmpty(list)){
+					jsonObject.put("errorMsg", "标签名称已存在!");
+				}
 			}
 		}
 	}
@@ -372,7 +375,7 @@ public class HjhLabelController extends BaseController{
 			// 标签名称
         	if (StringUtils.isNotEmpty(viewRequest.getLabelName())){
         		request.setLabelName(viewRequest.getLabelName());
-        	}
+        	} 
         	//标的期限最小
         	if (StringUtils.isNotEmpty(viewRequest.getLabelTermStart())) {
         		request.setLabelTermStart(Integer.valueOf(viewRequest.getLabelTermStart()));
@@ -388,10 +391,14 @@ public class HjhLabelController extends BaseController{
         	// 标的实际利率最小
         	if (StringUtils.isNotEmpty(viewRequest.getLabelAprStart())) {
         		request.setLabelAprStart(new BigDecimal(viewRequest.getLabelAprStart()));
+        	} else {
+        		request.setLabelAprStart(BigDecimal.ZERO);
         	}
         	// 标的实际利率最大
         	if (StringUtils.isNotEmpty(viewRequest.getLabelAprEnd())) {
         		request.setLabelAprEnd(new BigDecimal(viewRequest.getLabelAprEnd()));
+        	} else {
+        		request.setLabelAprStart(BigDecimal.ZERO);
         	}
         	// 还款方式
         	if (StringUtils.isNotEmpty(viewRequest.getBorrowStyle())) {
@@ -404,10 +411,14 @@ public class HjhLabelController extends BaseController{
         	// 标的实际支付金额最小
         	if (StringUtils.isNotEmpty(viewRequest.getLabelPaymentAccountStart())) {
         		request.setLabelPaymentAccountStart(new BigDecimal(viewRequest.getLabelPaymentAccountStart()));
+        	} else {
+        		request.setLabelPaymentAccountStart(BigDecimal.ZERO);
         	}
         	// 标的实际支付金额最大
         	if (StringUtils.isNotEmpty(viewRequest.getLabelPaymentAccountEnd())) {
         		request.setLabelPaymentAccountEnd(new BigDecimal(viewRequest.getLabelPaymentAccountEnd()));
+        	} else {
+        		request.setLabelPaymentAccountEnd(BigDecimal.ZERO);
         	}
         	// 资产来源Code
         	if (StringUtils.isNotEmpty(viewRequest.getInstCode())) {
@@ -505,6 +516,7 @@ public class HjhLabelController extends BaseController{
 			List<BorrowStyleVO> borrowStyleList = this.labelService.getBorrowStyleList();
 			jsonObject.put("还款方式下拉列表", "borrowStyleList");
 			jsonObject.put("borrowStyleList", borrowStyleList);
+			return jsonObject;
 		}
 		// 准备插表--拼装info画面参数
 		infoRequest = setInfoParam(jsonObject,viewRequest);

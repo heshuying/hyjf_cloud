@@ -24,6 +24,7 @@
 		<module>hyjf_zuul</module>
         <module>hyjf_monitor</module>
         <module>hyjf_zipkin</module>
+        <module>hyjf_turbine</module>
 	</modules>
 
 </project>

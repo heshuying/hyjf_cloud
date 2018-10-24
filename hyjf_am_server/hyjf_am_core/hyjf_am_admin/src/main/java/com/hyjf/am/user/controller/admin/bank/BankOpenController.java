@@ -1,7 +1,6 @@
 package com.hyjf.am.user.controller.admin.bank;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.user.service.admin.bank.BankOpenService;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.BankCardResponse;
@@ -11,6 +10,7 @@ import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.service.admin.bank.BankOpenService;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;

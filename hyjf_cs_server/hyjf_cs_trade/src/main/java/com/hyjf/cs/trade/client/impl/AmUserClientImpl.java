@@ -455,25 +455,6 @@ public class AmUserClientImpl implements AmUserClient {
 
 
     @Override
-    public BestCouponListVO selectBestCoupon(MyCouponListRequest request) {
-        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/myBestCouponList", request,MyBestCouponListResponse.class).getBody();
-        if (Response.isSuccess(response)) {
-            return response.getResult();
-        }
-        return null;
-    }
-
-    @Override
-    public Integer countAvaliableCoupon(MyCouponListRequest request) {
-        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/countAvaliableCoupon",request, MyBestCouponListResponse.class).getBody();
-        if (Response.isSuccess(response)) {
-            return response.getCouponCount();
-        }
-        return null;
-    }
-
-
-    @Override
     public List<SpreadsUserVO> selectByUserId(Integer userId) {
         SpreadsUserResponse response = restTemplate
                 .getForEntity("http://AM-USER//am-user/user/selectspreadsuserbyuserid/" + userId,SpreadsUserResponse.class)
@@ -664,7 +645,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer selectUserIdByUsrcustid(Long chinapnrUsrcustid) {
-		IntegerResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/chinapnr/selectUserIdByUsrcustid/"+chinapnrUsrcustid, IntegerResponse.class).getBody();
+		IntegerResponse response = restTemplate.getForEntity("http://AM-USER/am-user/chinapnr/selectUserIdByUsrcustid/"+chinapnrUsrcustid, IntegerResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResultInt();
 		}

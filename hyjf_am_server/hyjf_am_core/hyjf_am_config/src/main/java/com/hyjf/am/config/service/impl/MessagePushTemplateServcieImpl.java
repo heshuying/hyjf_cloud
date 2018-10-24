@@ -38,14 +38,17 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 			MessagePushTemplateExample example = new MessagePushTemplateExample();
 			MessagePushTemplateExample.Criteria criteria = example.createCriteria();
 			criteria.andTemplateCodeEqualTo(tplCode);
+			criteria.andStatusEqualTo(1);
 			List<MessagePushTemplate> messagePushTemplateList = templateMapper.selectByExample(example);
 			if (!CollectionUtils.isEmpty(messagePushTemplateList)) {
 				messagePushTemplate = messagePushTemplateList.get(0);
 				RedisUtils.setObjEx(RedisConstants.MESSAGE_PUSH_TEMPLATE, messagePushTemplate, 24 * 60 * 60);
 				return messagePushTemplate;
 			}
+		}else if(messagePushTemplate.getStatus()==1&&StringUtils.equals(messagePushTemplate.getTemplateCode(),tplCode)){
+			return messagePushTemplate;
 		}
-		return messagePushTemplate;
+		return null;
 	}
 
 	@Override

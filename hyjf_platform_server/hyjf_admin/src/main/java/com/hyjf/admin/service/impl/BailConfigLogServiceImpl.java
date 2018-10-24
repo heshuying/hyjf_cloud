@@ -5,7 +5,6 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.BailConfigLogService;
 import com.hyjf.admin.utils.ConvertUtils;
