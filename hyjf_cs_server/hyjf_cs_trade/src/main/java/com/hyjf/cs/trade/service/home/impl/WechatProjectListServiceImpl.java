@@ -877,7 +877,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         AdsRequest request = new AdsRequest();
         request.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
         request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
-        request.setHost(systemConfig.getWebHost());
+        request.setHost(systemConfig.getWeiFrontHost());
 
         String code = "";
         // 未注册
@@ -936,7 +936,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         AdsRequest request = new AdsRequest();
         request.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
         request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
-        request.setHost(systemConfig.getWebHost());
+        request.setHost(systemConfig.getWeiFrontHost());
         request.setCode(module);
         request.setPlatformType("3");
         List<AppAdsCustomizeVO> picList = amTradeClient.getHomeBannerList(request);

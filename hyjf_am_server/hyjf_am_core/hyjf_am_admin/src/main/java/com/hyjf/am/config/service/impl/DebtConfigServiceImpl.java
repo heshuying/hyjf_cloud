@@ -5,8 +5,12 @@ import com.hyjf.am.config.dao.mapper.auto.DebtConfigMapper;
 import com.hyjf.am.config.dao.model.auto.DebtConfig;
 import com.hyjf.am.config.dao.model.auto.DebtConfigExample;
 import com.hyjf.am.config.dao.model.auto.DebtConfigLog;
+import com.hyjf.am.config.dao.model.auto.DebtConfigLogExample;
 import com.hyjf.am.config.service.DebtConfigService;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.config.DebtConfigLogResponse;
 import com.hyjf.am.resquest.admin.DebtConfigRequest;
+import com.hyjf.am.vo.config.DebtConfigLogVO;
 import com.hyjf.am.vo.config.DebtConfigVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,5 +71,32 @@ public class DebtConfigServiceImpl implements DebtConfigService {
         BeanUtils.copyProperties(record,debtConfig);
         debtConfigLogMapper.insertSelective(debtConfigLog);
         debtConfigMapper.updateByPrimaryKeySelective(debtConfig);
+    }
+
+    @Override
+    public IntegerResponse countDebtConfigLogTotal(){
+        IntegerResponse response = new IntegerResponse();
+        DebtConfigLogExample example = new DebtConfigLogExample();
+        int count = debtConfigLogMapper.countByExample(example);
+        response.setResultInt(count);
+        return response;
+    }
+
+    @Override
+    public DebtConfigLogResponse getDebtConfigLogList(DebtConfigRequest form){
+        DebtConfigLogResponse response = new DebtConfigLogResponse();
+        DebtConfigLogExample example = new DebtConfigLogExample();
+        example.setLimitStart(form.getLimitStart());
+        example.setLimitEnd(form.getLimitEnd());
+        example.setOrderByClause("`update_time` desc");
+        List<DebtConfigLog> list =  debtConfigLogMapper.selectByExample(example);
+        List<DebtConfigLogVO> voList = new ArrayList<>();
+        for (DebtConfigLog log:list){
+            DebtConfigLogVO vo = new DebtConfigLogVO();
+            BeanUtils.copyProperties(log,vo);
+            voList.add(vo);
+        }
+        response.setResultList(voList);
+        return  response;
     }
 }

@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.admin.config;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.resquest.admin.AdminPartnerConfigListRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 
@@ -45,5 +46,11 @@ public interface PartnerConfigService {
      * @return
      */
     List<HjhInstConfig> getInstConfigByType(int instType);
+
+    /**
+     * 合作机构配置资产编号校验
+     * @param req
+     */
+    public IntegerResponse isExists(AdminPartnerConfigListRequest req);
 
 }

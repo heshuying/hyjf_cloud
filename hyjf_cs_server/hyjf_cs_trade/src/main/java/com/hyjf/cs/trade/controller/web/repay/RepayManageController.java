@@ -466,7 +466,7 @@ public class RepayManageController extends BaseTradeController {
                 return webResult;
             }
             //还款后变更数据
-            boolean updateResult = this.repayManageService.updateForRepayRequest(repayBean, callBackBean);
+            boolean updateResult = this.repayManageService.updateForRepayRequest(repayBean, callBackBean, isAllRepay);
             if(updateResult){
                 updateResult = this.repayManageService.updateBorrowCreditStautus(requestBean.getBorrowNid());
                 if(!updateResult){
@@ -711,7 +711,7 @@ public class RepayManageController extends BaseTradeController {
                             logger.info("调用还款申请冻结资金接口失败:" + callBackBean.getRetMsg() + "订单号:" + callBackBean.getOrderId());
                         } else {
                             //还款后变更数据
-                            boolean updateResult = this.repayManageService.updateForRepayRequest(repayBean, callBackBean);
+                            boolean updateResult = this.repayManageService.updateForRepayRequest(repayBean, callBackBean, false);
                             if (updateResult) {
                                 String planNid = borrow.getPlanNid();
                                 if (StringUtils.isNotBlank(planNid)) {

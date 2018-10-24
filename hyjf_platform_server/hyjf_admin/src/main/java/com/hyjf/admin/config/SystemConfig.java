@@ -6,6 +6,25 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SystemConfig {
+
+    @Value("${hyjf.ftp.ip}")
+    public String ftpIp;
+
+    @Value("${hyjf.ftp.port}")
+    public String ftpPort;
+
+    @Value("${hyjf.ftp.basepath.pdf}")
+    public String ftpBasePath;
+
+    @Value("${hyjf.ftp.password}")
+    public String ftpPassword;
+
+    @Value("${hyjf.ftp.username}")
+    public String ftpUsername;
+
+    @Value("${hyjf.ftp.url}")
+    public String ftpDomain;
+
     @Value("${hyjf.web.host}")
     public String webHost;
 
@@ -112,9 +131,66 @@ public class SystemConfig {
 
     @Value("${hyjf.seal.operate}")
     private String sealOperate;
+    @Value("${hyjf.defaultRowMaxCount}")
+    private String defaultRowMaxCount;
 
+    public String getFtpIp() {
+        return ftpIp;
+    }
 
-    public String getAdminFrontHost() {
+    public void setFtpIp(String ftpIp) {
+        this.ftpIp = ftpIp;
+    }
+
+    public String getFtpPort() {
+        return ftpPort;
+    }
+
+    public void setFtpPort(String ftpPort) {
+        this.ftpPort = ftpPort;
+    }
+
+    public String getFtpBasePath() {
+        return ftpBasePath;
+    }
+
+    public void setFtpBasePath(String ftpBasePath) {
+        this.ftpBasePath = ftpBasePath;
+    }
+
+    public String getFtpPassword() {
+        return ftpPassword;
+    }
+
+    public void setFtpPassword(String ftpPassword) {
+        this.ftpPassword = ftpPassword;
+    }
+
+    public String getFtpUsername() {
+        return ftpUsername;
+    }
+
+    public void setFtpUsername(String ftpUsername) {
+        this.ftpUsername = ftpUsername;
+    }
+
+    public String getFtpDomain() {
+        return ftpDomain;
+    }
+
+    public void setFtpDomain(String ftpDomain) {
+        this.ftpDomain = ftpDomain;
+    }
+
+    public String getDefaultRowMaxCount() {
+		return defaultRowMaxCount;
+	}
+
+	public void setDefaultRowMaxCount(String defaultRowMaxCount) {
+		this.defaultRowMaxCount = defaultRowMaxCount;
+	}
+
+	public String getAdminFrontHost() {
         return adminFrontHost;
     }
 

@@ -2,13 +2,13 @@ package com.hyjf.am.trade.controller.admin.config;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminPartnerConfigDetailResponse;
 import com.hyjf.am.resquest.admin.AdminPartnerConfigListRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.service.admin.config.PartnerConfigService;
 import com.hyjf.am.vo.admin.HjhInstConfigWrapVo;
-import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetCode;
@@ -61,13 +61,13 @@ public class PartnerConfigController {
                 HjhInstConfigWrapVo recordWrap = new HjhInstConfigWrapVo();
                 BeanUtils.copyProperties(instConfigVO, recordWrap);
                 //获取发标额度余额
-                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
-                if(StringUtils.isNotEmpty(capitalAvailable)){
-                    recordWrap.setCapitalAvailable(capitalAvailable);
-                }else{
-                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
-                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
-                }
+//                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
+//                if(StringUtils.isNotEmpty(capitalAvailable)){
+//                    recordWrap.setCapitalAvailable(capitalAvailable);
+//                }else{
+//                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
+//                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
+//                }
                 resList.add(recordWrap);
             }
             response.setResultList(resList);
@@ -89,13 +89,13 @@ public class PartnerConfigController {
             if(null != record){
                 BeanUtils.copyProperties(record, recordWrap);
                 //获取发标额度余额
-                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
-                if(StringUtils.isNotEmpty(capitalAvailable)){
-                    recordWrap.setCapitalAvailable(capitalAvailable);
-                }else{
-                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
-                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
-                }
+//                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
+//                if(StringUtils.isNotEmpty(capitalAvailable)){
+//                    recordWrap.setCapitalAvailable(capitalAvailable);
+//                }else{
+//                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
+//                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
+//                }
                 response.setResult(recordWrap);
                 response.setRtn(Response.SUCCESS);
             }
@@ -112,8 +112,8 @@ public class PartnerConfigController {
         AdminPartnerConfigDetailResponse resp = new AdminPartnerConfigDetailResponse();
         String instCode = GetCode.generateInstCode(8);
         int result =this.partnerConfigService.insertInstConfig(req,instCode);
-        if(result > 0 && req.getCapitalToplimit() != null && !RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instCode)){
-            RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_ + instCode, req.getCapitalToplimit().toString());
+        if(result > 0 /*&& req.getCapitalToplimit() != null && !RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instCode)*/){
+            //RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_ + instCode, req.getCapitalToplimit().toString());
             resp.setRtn(Response.SUCCESS);
             return resp;
         }
@@ -135,17 +135,17 @@ public class PartnerConfigController {
         }
         int result = partnerConfigService.updateInstConfigRecordById(req);
         // 更新redis中的可用余额
-        if(result > 0 && !req.getCapitalToplimit(). equals(instConfig.getCapitalToplimit())){
-            if(!RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instConfig.getInstCode())){
-                RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(), req.getCapitalToplimit().toString());
-            }else {
-                if(req.getCapitalToplimit().compareTo(instConfig.getCapitalToplimit()) > 0){
-                    redisAdd(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(),req.getCapitalToplimit().subtract(instConfig.getCapitalToplimit()).toString());//增加redis相应计划可投金额
-                }else{
-                    redisSubstrack(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(),instConfig.getCapitalToplimit().subtract(req.getCapitalToplimit()).toString());//减少风险保证金可投金额
-
-                }
-            }
+        if(result > 0 /*&& !req.getCapitalToplimit(). equals(instConfig.getCapitalToplimit())*/){
+//            if(!RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instConfig.getInstCode())){
+//                RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(), req.getCapitalToplimit().toString());
+//            }else {
+//                if(req.getCapitalToplimit().compareTo(instConfig.getCapitalToplimit()) > 0){
+//                    redisAdd(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(),req.getCapitalToplimit().subtract(instConfig.getCapitalToplimit()).toString());//增加redis相应计划可投金额
+//                }else{
+//                    redisSubstrack(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(),instConfig.getCapitalToplimit().subtract(req.getCapitalToplimit()).toString());//减少风险保证金可投金额
+//
+//                }
+//            }
             resp.setRtn(Response.SUCCESS);
             return resp;
         }
@@ -163,6 +163,15 @@ public class PartnerConfigController {
         this.partnerConfigService.deleteInstConfig(req);
         resp.setRtn(Response.SUCCESS);
         return resp;
+    }
+
+    /**
+     * 合作机构配置资产编号校验
+     * @param req
+     */
+    @RequestMapping("/isExists")
+    public IntegerResponse isExists(@RequestBody AdminPartnerConfigListRequest req) {
+        return this.partnerConfigService.isExists(req);
     }
 
     /**

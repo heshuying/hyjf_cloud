@@ -2,26 +2,19 @@ package com.hyjf.am.config.controller.admin;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.config.dao.model.auto.AdminRole;
-import com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions;
 import com.hyjf.am.config.dao.model.customize.AdminRoleCustomize;
 import com.hyjf.am.config.service.AdminRoleService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.resquest.admin.UserRoleRequest;
 import com.hyjf.am.resquest.config.AdminRoleRequest;
-import com.hyjf.am.vo.admin.AdminRoleMenuPermissionsVO;
 import com.hyjf.am.vo.admin.AdminRoleVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -294,7 +287,13 @@ public class AdminRoleController {
 
         return null;
     }
+    @GetMapping("/getPermissionId/{menuId}")
+    public List<String> getPermissionId(@PathVariable String menuId) {
+//        LogUtil.startLog(THIS_CLASS, AdminRoleDefine.MENU_INFO_ACTION);
 
+    	
+        return this.adminRoleService.getPermissionId(menuId);
+    }
     /**
      * 插入或更新[角色菜单权限表]数据
      * 

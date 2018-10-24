@@ -81,7 +81,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
+		logger.info("用户名:"+loginUserName);
 		UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
+		logger.info("用户是否存在:"+(userVO==null));
 		CheckUtil.check(userVO!=null, MsgEnum.ERR_USER_NOT_EXISTS);
 		// 获取密码错误次数
 		String errCount = RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT + userVO.getUserId());
@@ -141,7 +143,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
 		String codeSalt = userVO.getSalt();
-		logger.info("salt:"+codeSalt);
 		String passwordDb = userVO.getPassword();
 		// 页面传来的密码
 		String password = "";

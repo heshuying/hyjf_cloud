@@ -2231,4 +2231,44 @@ public interface AmTradeClient {
      * @date 2018/10/9 15:52
      */
     List<BorrowProjectTypeVO> getProjectTypeList();
+
+    /**
+     * 根据时间查询
+     * @param nowDay
+     * @return
+     */
+    List<CouponRepayMonitorVO> selectCouponRepayMonitor(String nowDay);
+
+    /**
+     * 插入数据
+     * @param monitor
+     * @return
+     */
+    int insertCouponRepayMonitor(CouponRepayMonitorVO monitor);
+
+    /**
+     * 更新数据
+     * @param monitor
+     * @return
+     */
+    int updateCouponRepayMonitor(CouponRepayMonitorVO monitor);
+
+    /**
+     * 查询标的列表(协议)
+     * @date 2018/10/18 14:48
+     */
+    List<BorrowListVO> searchBorrowList4Protocol(Map<String,Object> map);
+
+    List<DebtBorrowCustomizeVO> searchDebtBorrowList4Protocol(Map<String,Object> map);
+
+    List<WebProjectRepayListCustomizeVO> selectProjectLoanDetailList(Map<String,Object> map);
+
+    List<WebUserInvestListCustomizeVO> selectUserDebtInvestList(Map<String,Object> map);
+
+    List<WebUserInvestListCustomizeVO> selectUserInvestList(Map<String,Object> map);
+
+    int planInfoCountProjectRepayPlanRecordTotal(Map<String,Object> map);
+
+    int myTenderCountProjectRepayPlanRecordTotal(Map<String,Object> map);
+
 }

@@ -1,19 +1,13 @@
 package com.hyjf.am.trade.service.task.issuerecover.impl;
 
-import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.issuerecover.AutoPreAuditMessageService;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -76,9 +70,12 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
         HjhPlanAsset resultAsset = null;
         HjhPlanAssetExample example = new HjhPlanAssetExample();
         HjhPlanAssetExample.Criteria crt = example.createCriteria();
-        crt.andAssetIdEqualTo(assetId);
-        crt.andInstCodeEqualTo(instCode);
-
+        if(StringUtils.isNotBlank(assetId)){
+            crt.andAssetIdEqualTo(assetId);
+        }
+        if(StringUtils.isNotBlank(instCode)){
+            crt.andInstCodeEqualTo(instCode);
+        }
         List<HjhPlanAsset> list = hjhPlanAssetMapper.selectByExample(example);
 
         if(list != null && list.size() > 0){
@@ -263,25 +260,25 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
      * @param hjhPlanAsset
      * @return
      */
-    private boolean checkAssetCanSend(HjhPlanAsset hjhPlanAsset) {
-        String instCode = hjhPlanAsset.getInstCode();
-
-        String capitalToplimit = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+instCode);
-        BigDecimal lcapitalToplimit = new BigDecimal(capitalToplimit);
-        BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
-
-        if (BigDecimal.ZERO.compareTo(lcapitalToplimit) >= 0) {
-            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 风险保证金小于等于零 "+capitalToplimit);
-            // 风险保证金小于等于0不能发标
-            return false;
-        }
-
-        if(assetAcount.compareTo(lcapitalToplimit) > 0){
-            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 金额： "+assetAcount+" 风险保证金小于等于零 "+capitalToplimit);
-            // 风险保证金不够不能发标
-            return false;
-        }
-
-        return true;
-    }
+//    private boolean checkAssetCanSend(HjhPlanAsset hjhPlanAsset) {
+//        String instCode = hjhPlanAsset.getInstCode();
+//
+//        String capitalToplimit = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+instCode);
+//        BigDecimal lcapitalToplimit = new BigDecimal(capitalToplimit);
+//        BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
+//
+//        if (BigDecimal.ZERO.compareTo(lcapitalToplimit) >= 0) {
+//            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 风险保证金小于等于零 "+capitalToplimit);
+//            // 风险保证金小于等于0不能发标
+//            return false;
+//        }
+//
+//        if(assetAcount.compareTo(lcapitalToplimit) > 0){
+//            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 金额： "+assetAcount+" 风险保证金小于等于零 "+capitalToplimit);
+//            // 风险保证金不够不能发标
+//            return false;
+//        }
+//
+//        return true;
+//    }
 }

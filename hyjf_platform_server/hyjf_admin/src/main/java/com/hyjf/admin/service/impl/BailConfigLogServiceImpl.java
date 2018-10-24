@@ -5,7 +5,6 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.BailConfigLogService;
 import com.hyjf.admin.utils.ConvertUtils;
@@ -27,9 +26,6 @@ public class BailConfigLogServiceImpl extends BaseServiceImpl implements BailCon
     @Autowired
     AmAdminClient amAdminClient;
 
-    @Autowired
-    AmTradeClient amTradeClient;
-
     /**
      * 资产来源下拉列表
      *
@@ -37,7 +33,7 @@ public class BailConfigLogServiceImpl extends BaseServiceImpl implements BailCon
      */
     @Override
     public List<DropDownVO> selectHjhInstConfigList() {
-        List<HjhInstConfigVO> hjhInstConfigVOList = amTradeClient.selectCommonHjhInstConfigList();
+        List<HjhInstConfigVO> hjhInstConfigVOList = amAdminClient.selectHjhInstConfigList();
         return ConvertUtils.convertListToDropDown(hjhInstConfigVOList,"instCode","instName");
     }
 

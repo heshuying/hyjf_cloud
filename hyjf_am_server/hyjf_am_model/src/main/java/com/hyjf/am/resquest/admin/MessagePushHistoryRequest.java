@@ -21,7 +21,7 @@ public class MessagePushHistoryRequest extends MessagePushMsgHistoryVO implement
      * 标签类型查询
      */
     @ApiModelProperty(value = "标签类型查询")
-    private String historyTagIdSrch;
+    private Integer historyTagIdSrch;
     /**
      * 标题查询
      */
@@ -88,6 +88,7 @@ public class MessagePushHistoryRequest extends MessagePushMsgHistoryVO implement
     @ApiModelProperty(value = "更新或是转发,0为更新1为转发")
     private String updateOrReSend;
 
+
     /**
      * 当前页码
      */
@@ -116,11 +117,11 @@ public class MessagePushHistoryRequest extends MessagePushMsgHistoryVO implement
         this.pageSize = pageSize;
     }
 
-    public String getHistoryTagIdSrch() {
+    public Integer getHistoryTagIdSrch() {
         return historyTagIdSrch;
     }
 
-    public void setHistoryTagIdSrch(String historyTagIdSrch) {
+    public void setHistoryTagIdSrch(Integer historyTagIdSrch) {
         this.historyTagIdSrch = historyTagIdSrch;
     }
 

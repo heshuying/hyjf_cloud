@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hyjf.common.http.HttpDeal;
-import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -436,10 +434,16 @@ public class BankCallController extends BaseController {
                     }
                     bean.setRetUrl(retUrl);
                     bean.setNotifyUrl(notifyUrl);
+                    if("batchRepay".equals(bean.getTxCode())){
+                        logger.info("【wgx检验】还款异步返回请求地址retUrl:{},notifyUrl:{}",retUrl, notifyUrl);
+                    }
                     // 如果检证数据状态为未发送
                     // 更新状态记录
                     int nowTime = GetDate.getNowTime10();
                     this.payLogService.updateChinapnrExclusiveLog(logOrderId, bean, nowTime);
+                    if("batchRepay".equals(bean.getTxCode())){
+                        logger.info("【wgx检验】还款异步返回请求地址notifyUrl:{},retNotifyUrl:{}",bean.getNotifyURL(), bean.getRetNotifyURL());
+                    }
                     // 验签成功时
                     if (result.isLogVerifyFlag()) {
                         try {
@@ -527,14 +531,14 @@ public class BankCallController extends BaseController {
             // 发送前插入状态记录
             this.payLogService.insertChinapnrExclusiveLog(bean);
             if (Validator.isNotNull(bean.getNotifyURL())) {
-                String notifyURL = systemConfig.getCallbackUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String notifyURL = systemConfig.getApiReturnUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId() + StringPool.AMPERSAND + BankCallConstant.PARAM_LOGNOTIFYURLTYPE + StringPool.EQUAL
                         + BankCallConstant.PARAM_LOGNOTIFYURL;
                 bean.setNotifyURL(notifyURL);
                 bean.set(BankCallConstant.PARAM_NOTIFY_URL, notifyURL);
             }
             if (Validator.isNotNull(bean.getRetNotifyURL())) {
-                String retNotifyURL = systemConfig.getCallbackUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                String retNotifyURL = systemConfig.getApiReturnUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId() + StringPool.AMPERSAND + BankCallConstant.PARAM_LOGNOTIFYURLTYPE + StringPool.EQUAL
                         + BankCallConstant.PARAM_LOGRETNOTIFYURL;
                 bean.setRetNotifyURL(retNotifyURL);

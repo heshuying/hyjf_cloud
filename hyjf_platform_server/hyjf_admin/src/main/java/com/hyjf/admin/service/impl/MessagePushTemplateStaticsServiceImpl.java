@@ -6,7 +6,6 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.MessagePushTemplateStaticsService;
-import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.response.admin.MessagePushTemplateStaticsResponse;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import org.springframework.beans.factory.annotation.Autowired;

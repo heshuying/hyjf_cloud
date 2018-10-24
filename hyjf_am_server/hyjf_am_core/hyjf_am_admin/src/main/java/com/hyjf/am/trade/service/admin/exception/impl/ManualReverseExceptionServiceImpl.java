@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.admin.ManualReverseAddRequest;
 import com.hyjf.am.resquest.admin.ManualReverseCustomizeRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.auto.ManualReverse;
 import com.hyjf.am.trade.dao.model.auto.RUser;
 import com.hyjf.am.trade.dao.model.customize.ManualReverseCustomize;
 import com.hyjf.am.trade.service.admin.exception.ManualReverseExceptionService;
@@ -192,9 +193,10 @@ public class ManualReverseExceptionServiceImpl extends BaseServiceImpl implement
     }
 
     private void insertManualReverse(ManualReverseAddRequest requestBean, String status){
-        ManualReverseCustomize manualReverseCustomize = new ManualReverseCustomize();
+        ManualReverse manualReverseCustomize = new ManualReverse();
+//        ManualReverseCustomize manualReverseCustomize = new ManualReverseCustomize();
         //原交易系统跟踪号
-        manualReverseCustomize.setSeqNo(requestBean.getSeqNo());
+        manualReverseCustomize.setSeqNo(Integer.parseInt(requestBean.getSeqNo()));
         //原交易订单号
         manualReverseCustomize.setBankSeqNo(requestBean.getBankSeqNo());
         //设置日期格式
@@ -202,7 +204,7 @@ public class ManualReverseExceptionServiceImpl extends BaseServiceImpl implement
         //交易时间
         manualReverseCustomize.setTxTime(GetDate.getNowTime());
         //用户名
-        manualReverseCustomize.setUserName(requestBean.getUserName());
+        manualReverseCustomize.setUsername(requestBean.getUserName());
 //		// 重新获取用户银行卡号
 //		if (StringUtils.isEmpty(requestBean.getAccountId())) {
 //			requestBean.setAccountId(getAccountId(requestBean.getUserName()));
@@ -210,21 +212,22 @@ public class ManualReverseExceptionServiceImpl extends BaseServiceImpl implement
         //电子账号
         manualReverseCustomize.setAccountId(requestBean.getAccountId());
         //资金托管平台：1江西银行
-        manualReverseCustomize.setIsBank("1");
+        manualReverseCustomize.setIsBank(1);
         //收支类型:0收入 1支出
-        manualReverseCustomize.setType(requestBean.getType());
+        manualReverseCustomize.setType(Integer.parseInt(requestBean.getType()));
         //交易类型
         manualReverseCustomize.setTransType("充值");
         //操作金额
-        manualReverseCustomize.setAmount(requestBean.getAmount());
+        manualReverseCustomize.setAmount(new BigDecimal(requestBean.getAmount()));
         //操作结果 操作状态 0 成功 1失败
-        manualReverseCustomize.setStatus(status);
+        manualReverseCustomize.setStatus(Integer.parseInt(status));
         //用户id
         manualReverseCustomize.setCreateUserId(Integer.valueOf(requestBean.getLoginUserId()));
         //插入时间
-        manualReverseCustomize.setCreateTime(GetDate.getNowTime10());
+        manualReverseCustomize.setCreateTime(GetDate.getNowTime());
 
-        this.manualReverseCustomizeMapper.insertManualReverse(manualReverseCustomize);
+        manualReverseMapper.insertSelective(manualReverseCustomize);
+//        this.manualReverseCustomizeMapper.insertManualReverse(manualReverseCustomize);
     }
 
 }

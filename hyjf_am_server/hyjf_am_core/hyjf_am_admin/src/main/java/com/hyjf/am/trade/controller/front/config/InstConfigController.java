@@ -8,10 +8,8 @@ import com.hyjf.am.resquest.admin.AdminInstConfigListRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.service.front.config.InstConfigService;
 import com.hyjf.am.vo.admin.HjhInstConfigWrapVo;
-import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.GetCode;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,13 +59,13 @@ public class InstConfigController {
                 HjhInstConfigWrapVo recordWrap = new HjhInstConfigWrapVo();
                 BeanUtils.copyProperties(instConfigVO, recordWrap);
                 //获取发标额度余额
-                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
-                if(StringUtils.isNotEmpty(capitalAvailable)){
-                    recordWrap.setCapitalAvailable(capitalAvailable);
-                }else{
-                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
-                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
-                }
+//                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
+//                if(StringUtils.isNotEmpty(capitalAvailable)){
+//                    recordWrap.setCapitalAvailable(capitalAvailable);
+//                }else{
+//                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
+//                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
+//                }
                 resList.add(recordWrap);
             }
             response.setResultList(resList);
@@ -88,13 +86,13 @@ public class InstConfigController {
             if(null != record){
                 BeanUtils.copyProperties(record, recordWrap);
                 //获取发标额度余额
-                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
-                if(StringUtils.isNotEmpty(capitalAvailable)){
-                    recordWrap.setCapitalAvailable(capitalAvailable);
-                }else{
-                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
-                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
-                }
+//                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
+//                if(StringUtils.isNotEmpty(capitalAvailable)){
+//                    recordWrap.setCapitalAvailable(capitalAvailable);
+//                }else{
+//                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
+//                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
+//                }
                 response.setResult(recordWrap);
                 response.setRtn(Response.SUCCESS);
             }

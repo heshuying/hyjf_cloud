@@ -3,8 +3,11 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.response.admin.WebProjectRepayListCustomizeResponse;
+import com.hyjf.am.response.admin.WebUserInvestListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.BorrowAccountResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
@@ -19,10 +22,9 @@ import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.borrow.BorrowStyleService;
 import com.hyjf.am.trade.service.front.hjh.HjhInstConfigService;
-import com.hyjf.am.vo.trade.ProjectBeanVO;
-import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
+import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
+import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
@@ -482,5 +484,74 @@ public class BorrowController extends BaseController {
 		}
 		return response;
 	}
+
+	@PostMapping("/getBorrowList")
+	public BorrowListResponse getBorrowList(@RequestBody Map<String,Object> param){
+		logger.info("getBorrowList param = {}",JSON.toJSON(param));
+		BorrowListResponse response = new BorrowListResponse();
+		List<BorrowListVO> list = borrowService.getBorrowList(param);
+		if (CollectionUtils.isNotEmpty(list)){
+			response.setResultList(list);
+		}
+		return response;
+	}
+
+	@PostMapping("/getDebtBorrowList")
+	public DebtBorrowListResponse getDebtBorrowList(@RequestBody Map<String,Object> param){
+		DebtBorrowListResponse response = new DebtBorrowListResponse();
+		List<DebtBorrowCustomizeVO> list = borrowService.getDebtBorrowList(param);
+		if (CollectionUtils.isNotEmpty(list)){
+			response.setResultList(list);
+		}
+		return response;
+	}
+
+	@PostMapping("/selectProjectLoanDetailList")
+	public WebProjectRepayListCustomizeResponse selectProjectLoanDetailList(@RequestBody Map<String,Object> param){
+		WebProjectRepayListCustomizeResponse response = new WebProjectRepayListCustomizeResponse();
+		List<WebProjectRepayListCustomizeVO> list  = borrowService.selectProjectLoanDetailList(param);
+		if (CollectionUtils.isNotEmpty(list)){
+			response.setResultList(list);
+		}
+		return response;
+	}
+
+
+	@PostMapping("/selectUserDebtInvestList")
+	public WebUserInvestListCustomizeResponse selectUserDebtInvestList(@RequestBody Map<String,Object> param){
+		WebUserInvestListCustomizeResponse response = new WebUserInvestListCustomizeResponse();
+		List<WebUserInvestListCustomizeVO> list = borrowService.selectUserDebtInvestList(param);
+		if (CollectionUtils.isNotEmpty(list)){
+			response.setResultList(list);
+		}
+		return response;
+	}
+
+	@PostMapping("/planInfoCountProjectRepayPlanRecordTotal")
+	public IntegerResponse planInfoCountProjectRepayPlanRecordTotal(@RequestBody Map<String,Object> param){
+		IntegerResponse response = new IntegerResponse();
+		int count = borrowService.planInfoCountProjectRepayPlanRecordTotal(param);
+		response.setResultInt(count);
+		return response;
+	}
+
+	@PostMapping("/selectUserInvestLsit")
+	public WebUserInvestListCustomizeResponse selectUserInvestLsit(@RequestBody Map<String,Object> param){
+		WebUserInvestListCustomizeResponse response = new WebUserInvestListCustomizeResponse();
+		List<WebUserInvestListCustomizeVO> list = borrowService.selectUserInvestList(param);
+		if (CollectionUtils.isNotEmpty(list)){
+			response.setResultList(list);
+		}
+		return response;
+	}
+
+	@PostMapping("/myTenderCountProjectRepayPlanRecordTotal")
+	public IntegerResponse myTenderCountProjectRepayPlanRecordTotal(@RequestBody Map<String,Object> param){
+		IntegerResponse response = new IntegerResponse();
+		int count = borrowService.myTenderCountProjectRepayPlanRecordTotal(param);
+		response.setResultInt(count);
+		return response;
+	}
+
 
 }

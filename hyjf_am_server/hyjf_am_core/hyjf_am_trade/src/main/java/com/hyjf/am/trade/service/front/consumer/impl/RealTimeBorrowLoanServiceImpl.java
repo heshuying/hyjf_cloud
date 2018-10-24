@@ -796,7 +796,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		BorrowApicronExample example = new BorrowApicronExample();
 		example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 		apicron.setStatus(status);
-//		apicron.setUpdateTime(nowTime); //TODO:不存，待测试确认
+		apicron.setUpdateTime(new Date()); 
 		boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 		if (!apicronFlag) {
 			throw new Exception("更新放款任务失败。[项目编号：" + borrowNid + "]");
@@ -1394,7 +1394,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 			BorrowApicronExample example = new BorrowApicronExample();
 			example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 			apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-//			apicron.setUpdateTime(nowTime);
+			apicron.setUpdateTime(new Date());
 			boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 			if (!apicronFlag) {
 				throw new RuntimeException("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -1435,7 +1435,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 			BorrowApicronExample example = new BorrowApicronExample();
 			example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 			apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_FAIL);
-//			apicron.setUpdateTime(new Date());
+			apicron.setUpdateTime(new Date());
 			boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 			if (!apicronFlag) {
 				throw new RuntimeException("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -1453,7 +1453,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 			BorrowApicronExample example = new BorrowApicronExample();
 			example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 			apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
-//			apicron.setUpdateTime(nowTime);
+			apicron.setUpdateTime(new Date());
 			boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 			if (!apicronFlag) {
 				throw new RuntimeException("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");

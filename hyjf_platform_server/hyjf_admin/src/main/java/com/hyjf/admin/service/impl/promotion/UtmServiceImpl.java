@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.impl.promotion;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.am.response.admin.UtmResponse;
@@ -79,5 +78,10 @@ public class UtmServiceImpl implements UtmService {
     @Override
     public boolean deleteUtmPlatAction(UtmPlatVO utmPlatVO) {
         return amUserClient.utmClientdeleteUtmPlatAction(utmPlatVO);
+    }
+
+    @Override
+    public int sourceIdIsExists(Integer sourceId) {
+        return amUserClient.sourceIdIsExists(sourceId);
     }
 }

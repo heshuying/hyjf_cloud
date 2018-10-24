@@ -9,13 +9,13 @@ import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
  */
 public class ApplyAgreementResponse extends Response<ApplyAgreementVO> {
 
-    private Integer count;
+    private int count;
 
-    public Integer getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(int count) {
         this.count = count;
     }
 

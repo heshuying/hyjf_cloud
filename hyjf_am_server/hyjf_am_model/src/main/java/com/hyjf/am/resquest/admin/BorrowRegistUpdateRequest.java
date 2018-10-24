@@ -43,6 +43,21 @@ public class BorrowRegistUpdateRequest implements Serializable {
      */
     private String bailAccountId;
 
+    /**
+     * 状态-admin银行标的备案异常处理异常时用到
+     */
+    private int status;
+
+    /**
+     * 备案状态-admin银行标的备案异常处理异常时用到
+     */
+    private int registStatus;
+
+    /**
+     * 更新类型（1更新标的备案 2更新受托支付标的备案）-admin银行标的备案异常处理异常时用到
+     */
+    private int type;
+
     public BorrowAndInfoVO getBorrowVO() {
         return borrowVO;
     }
@@ -89,5 +104,29 @@ public class BorrowRegistUpdateRequest implements Serializable {
 
     public void setBailAccountId(String bailAccountId) {
         this.bailAccountId = bailAccountId;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getRegistStatus() {
+        return registStatus;
+    }
+
+    public void setRegistStatus(int registStatus) {
+        this.registStatus = registStatus;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

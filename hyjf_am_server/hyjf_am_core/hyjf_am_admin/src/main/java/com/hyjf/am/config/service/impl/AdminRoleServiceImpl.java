@@ -412,7 +412,7 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
      */
     @Override
     public void setRolePermission(UserRoleRequest userRoleRequest) throws Exception {
-        Integer roleId = userRoleRequest.getId();
+        Integer roleId = userRoleRequest.getRoleId();
         if (roleId != null) {
             List<AdminRoleMenuPermissions> adminList = new ArrayList<>();
             //先删除已有的权限
@@ -421,10 +421,10 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
             HashSet<String> firstClass = new HashSet<>();
             String[] permList = userRoleRequest.getPermList();
             for (String perm : permList) {
-                boolean contains = perm.contains("-");
+                boolean contains = perm.contains("_");
                 //参数是三级菜单
                 if (contains) {
-                    String[] split = perm.split("-");
+                    String[] split = perm.split("_");
                     String menuUuid = split[0];
                     String permissionUuid = split[1];
                     String s = adminRoleMenuPermissionsCustomizeMapper.checkLevel(menuUuid);
@@ -448,6 +448,17 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
                                 permissions.setMenuUuid(s1);
                                 permissions.setPermissionUuid(pId);
                                 adminList.add(permissions);
+                            }
+                            List<String> list2 = adminRoleMenuPermissionsCustomizeMapper.selectChildMenu(s1);
+                            for (String s2 : list2) {
+                                List<String> permissionId2 = adminRoleMenuPermissionsCustomizeMapper.selectMenuPerssion(s2);
+                                for (String pId : permissionId2) {
+                                    AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
+                                    permissions.setRoleId(roleId);
+                                    permissions.setMenuUuid(s2);
+                                    permissions.setPermissionUuid(pId);
+                                    adminList.add(permissions);
+                                }
                             }
                         }
                         //参数是二级菜单
@@ -477,5 +488,8 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
             adminRoleMenuPermissionsCustomizeMapper.insertMenuPerssion(adminList);
         }
     }
-
+    @Override
+    public List<String > getPermissionId(String menuId) {
+        return adminRoleCustomizeMapper.getPermissionId(menuId);
+    }
 }

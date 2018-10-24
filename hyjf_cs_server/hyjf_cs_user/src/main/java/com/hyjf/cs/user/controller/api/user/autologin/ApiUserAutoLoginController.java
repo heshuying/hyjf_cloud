@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.controller.api.user.autologin;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.enums.MsgEnum;
@@ -11,11 +12,7 @@ import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.security.util.SignUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.util.ApiSignUtil;
-import com.hyjf.cs.user.bean.ApiResultPageBean;
-import com.hyjf.cs.user.bean.ApiSkipFormBean;
-import com.hyjf.cs.user.bean.ApiUserPostBean;
-import com.hyjf.cs.user.bean.NmcfLoginRequestBean;
+import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
@@ -29,9 +26,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -103,9 +100,11 @@ public class ApiUserAutoLoginController extends BaseUserController {
     }
 
     @ApiOperation(value = "纳觅财富自动登录",notes = "纳觅财富自动登录")
+    @ResponseBody
     @PostMapping(value = "/nmcfThirdLogin.do")
-    public ModelAndView nmcfThirdLogin(HttpServletResponse response,HttpServletRequest httpServletRequest,@ModelAttribute NmcfLoginRequestBean request){
-
+    public ResultApiBean<JSONObject> nmcfThirdLogin(HttpServletRequest httpServletRequest, @ModelAttribute NmcfLoginRequestBean request){
+        JSONObject result = new JSONObject();
+        String retUrl = "";
         // 验证
         //this.checkNmcfPostBean(request);
         // 验签
@@ -118,7 +117,8 @@ public class ApiUserAutoLoginController extends BaseUserController {
         Integer userId = Integer.valueOf(request.getUserId());
         // userid不存在,跳转登录页面
         if(userId == null) {
-            return new ModelAndView("redirect:" + systemConfig.getServerHost() + "/hyjf-web/user/login/init.do");
+            retUrl = "登录页面";
+            //return new ModelAndView("redirect:" + systemConfig.getServerHost() + "/hyjf-web/user/login/init.do");
         }
         //TODO:登录以后，前端页面还是未登录状态
         // 登陆
@@ -129,25 +129,28 @@ public class ApiUserAutoLoginController extends BaseUserController {
         //WebUtils.sessionLogin(request, response, webUser);
         String token = webViewUserVO.getToken();
         logger.info("用户登录生成的token::[{}]",token);
-        response.setHeader("token",token);
         // 先跳转纳觅传过来的url
         if (request.getRetUrl() != null) {
-            logger.info("retUrl");
-            return new ModelAndView("redirect:" + request.getRetUrl());
+            logger.info("retUrl:[{}]",request.getRetUrl());
+            retUrl = request.getRetUrl();
+            //return new ModelAndView("redirect:" + request.getRetUrl());
         } else {
             // 如果纳觅没传url,有borrowNid,跳标的详情,无borowNid,跳个人中心
             if (request.getBorrowNid() == null || "".equals(request.getBorrowNid())) {
                 logger.info("pandect");
-                return new ModelAndView("redirect:https://frontweb1.hyjf.com/user/pandect?token=" + token);
+                retUrl = "https://frontweb1.hyjf.com/user/pandect?token=" + token;
+                //return new ModelAndView("redirect:https://frontweb1.hyjf.com/user/pandect?token=" + token);
             } else {
                 // 跳转到前端的标的详情
                 logger.info("borrowDetail");
-                //return new ModelAndView("redirect:" + systemConfig.webHost + "/hyjf-web/projectlist/getBorrowDetail?borrowNid=" + request.getBorrowNid());
-                return new ModelAndView("redirect:https://frontweb1.hyjf.com/borrow/borrowDetail?borrowNid=" + request.getBorrowNid() + "&token=" + token);
-
+                retUrl = "https://frontweb1.hyjf.com/borrow/borrowDetail?borrowNid=" + request.getBorrowNid() + "&token=" + token;
+                //return new ModelAndView("redirect:https://frontweb1.hyjf.com/borrow/borrowDetail?borrowNid=" + request.getBorrowNid() + "&token=" + token);
             }
         }
 
+        result.put("retUrl",retUrl);
+        result.put("data",webViewUserVO);
+        return new ResultApiBean<>(result);
     }
 
     /**
@@ -155,7 +158,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
      * @return
      * @author liubin
      */
-    protected void initCheckUtil(ApiUserPostBean apiUserPostBean) {
+    private void initCheckUtil(ApiUserPostBean apiUserPostBean) {
         // 结果页FormBean赋值
         ApiResultPageBean apiResultPageBean = new ApiResultPageBean();
         apiResultPageBean.setRetUrl(apiUserPostBean.getRetUrl());

@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.SmsCountService;
 import com.hyjf.am.response.admin.SmsCountCustomizeResponse;
+import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
 import com.hyjf.common.http.HtmlUtil;
@@ -29,7 +30,7 @@ public class SmsCountServiceImpl implements SmsCountService {
     private AmUserClient amUserClient;
 
     @Override
-    public SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request) {
+    public SmsCountCustomizeResponse querySmsCountList(SmsCountRequest request) {
         return amUserClient.querySmsCountList(request);
     }
 

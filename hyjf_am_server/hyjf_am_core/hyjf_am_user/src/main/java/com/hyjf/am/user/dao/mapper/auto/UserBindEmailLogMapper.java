@@ -2,8 +2,9 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.UserBindEmailLog;
 import com.hyjf.am.user.dao.model.auto.UserBindEmailLogExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface UserBindEmailLogMapper {
     int countByExample(UserBindEmailLogExample example);

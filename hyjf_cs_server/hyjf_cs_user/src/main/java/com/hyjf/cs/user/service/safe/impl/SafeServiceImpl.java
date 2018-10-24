@@ -105,11 +105,14 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         UserInfoVO userInfo = this.amUserClient.findUserInfoById(user.getUserId());
 
         resultMap.put("webViewUser", user);
-        if (userInfo.getTruename() != null && userInfo.getTruename().length() >= 1) {
-            resultMap.put("truename", userInfo.getTruename().substring(0, 1) + "**");
-        }
-        if (userInfo.getIdcard() != null && userInfo.getIdcard().length() >= 15) {
-            resultMap.put("idcard", userInfo.getIdcard().substring(0, 3) + "***********" + userInfo.getIdcard().substring(userInfo.getIdcard().length() - 4));
+        if(userInfo!=null){
+            if (userInfo.getTruename() != null && userInfo.getTruename().length() >= 1) {
+                resultMap.put("truename", userInfo.getTruename().substring(0, 1) + "**");
+            }
+            if (userInfo.getIdcard() != null && userInfo.getIdcard().length() >= 15) {
+                resultMap.put("idcard", userInfo.getIdcard().substring(0, 3) + "***********" + userInfo.getIdcard().substring(userInfo.getIdcard().length() - 4));
+            }
+            resultMap.put("roleId", userInfo.getRoleId());
         }
         if (user.getMobile() != null && user.getMobile().length() == 11) {
             resultMap.put("mobile", user.getMobile().substring(0, 3) + "****" + user.getMobile().substring(user.getMobile().length() - 4));
@@ -120,9 +123,6 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }
 
         UserLoginLogVO userLogin = amUserClient.getUserLoginById(user.getUserId());
-
-
-        resultMap.put("roleId", userInfo.getRoleId());
         // 是否设置交易密码
         resultMap.put("isSetPassword", user.getIsSetPassword());
         resultMap.put("lastTime", userLogin.getLastTime());

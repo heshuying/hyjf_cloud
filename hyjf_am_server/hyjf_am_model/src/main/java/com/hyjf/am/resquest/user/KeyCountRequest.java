@@ -5,6 +5,7 @@ import com.hyjf.am.vo.BasePage;
 import java.io.Serializable;
 import java.util.Date;
 
+
 /**
  * @author tanyy
  * @version KeyCountRequest, v0.1 2018/7/18 10:52
@@ -271,4 +272,3 @@ public class KeyCountRequest extends BasePage implements Serializable {
         this.nowDate = nowDate;
     }
 }
-

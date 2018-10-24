@@ -3,18 +3,6 @@
  */
 package com.hyjf.admin.controller;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -24,9 +12,15 @@ import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.resquest.admin.UserRoleRequest;
 import com.hyjf.am.resquest.config.AdminRoleRequest;
 import com.hyjf.am.vo.admin.AdminRoleVO;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author DongZeShan
@@ -128,10 +122,14 @@ public class AdminRoleController extends BaseController  {
 		@ApiOperation(value = "系统中心-菜单管理画面初始化", notes = "用户管理-菜单管理画面初始化")
 		@PostMapping(value = "/getAdminRoleMenu")
 		@ResponseBody
-	    public AdminResult<JSONArray> getAdminRoleMenu(@RequestBody Map<String,String> roleId) {
+	    public AdminResult< Map<String,Object>> getAdminRoleMenu(@RequestBody Map<String,String> roleId) {
 
 	        JSONArray ja = this.adminRoleService.getAdminRoleMenu(roleId.get("roleId"));
-	        return new AdminResult<JSONArray>(ja);
+	        List<String> list = this.adminRoleService.getPermissionId(roleId.get("roleId"));
+	        Map<String,Object> result=new HashMap<>();
+	        result.put("adminRoleMenu", ja);
+	        result.put("permission", list);
+	        return new AdminResult< Map<String,Object>>(result);
 
 	    }
 

@@ -1,8 +1,10 @@
 package com.hyjf.am.config.controller.admin;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminMenuService;
+import com.hyjf.am.config.service.AdminRoleService;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.TreeResponse;
 import com.hyjf.am.resquest.config.AdminMenuRequest;
@@ -11,6 +13,7 @@ import com.hyjf.am.vo.config.TreeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +32,8 @@ public class AdminMenuController {
 
 	@Autowired
 	private AdminMenuService adminMenuService;
+	@Autowired
+	private AdminRoleService adminRoleService;
 
 	/**
 	 * 菜单管理画面初始化
@@ -237,4 +242,17 @@ public class AdminMenuController {
 		// LogUtil.endLog(THIS_CLASS, AdminMenuDefine.UPDATE_SETTING_ACTION);
 		// return modelAndView;
 	}
+    /**
+     * 拉取用户可显示的菜单
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/selectLeftMenuTree/{adminId}")
+    public JSONArray selectLeftMenuTree2(@PathVariable String adminId) {
+        AdminSystem adminSystem = new AdminSystem();
+        adminSystem.setId(adminId);
+        adminSystem.setPermission("VIEW");
+        JSONArray tree = adminMenuService.selectLeftMenuTree2(adminSystem);
+        return tree;
+    }
 }

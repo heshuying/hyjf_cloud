@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.myproject.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
@@ -11,7 +10,6 @@ import com.hyjf.am.response.trade.coupon.CouponRepayResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.vo.config.DebtConfigVO;
-import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
@@ -21,32 +19,27 @@ import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
-import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.AppResult;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.BorrowProjectDetailBean;
-import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import com.hyjf.cs.trade.service.smscode.SmsCodeService;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,7 +51,10 @@ import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -665,23 +661,36 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 myCreditListService.checkTenderToCreditParam(request,userId);
                 // 债转保存
                 myCreditListService.insertTenderToCredit(userId, request);
-                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}","success").replace("{status}",CustomConstants.APP_STATUS_SUCCESS).replace("{statusDesc}",CustomConstants.APP_STATUS_DESC_SUCCESS).replace(accountStr,request.getCreditCapital()).replace(priceStr,request.getCreditPrice()).replace(endTimeStr, GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getCreditEndTime()));
+                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid())
+                        .replace("{state}","success")
+                        .replace("{status}",CustomConstants.APP_STATUS_SUCCESS)
+                        .replace("{statusDesc}",URLEncoder.encode(CustomConstants.APP_STATUS_DESC_SUCCESS,"utf-8"))
+                        .replace(accountStr,URLEncoder.encode(request.getCreditCapital(),"utf-8"))
+                        .replace(priceStr,URLEncoder.encode(request.getCreditPrice(),"utf-8"))
+                        .replace(endTimeStr, URLEncoder.encode(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getCreditEndTime()),"utf-8"));
                 // 业务手动抛出的异常
             }catch (CheckException e){
                 result.put(CustomConstants.APP_STATUS, e.getCode());
                 result.put(CustomConstants.APP_STATUS_DESC,e.getMessage());
-                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}", "failed").replace("{status}",e.getCode()).replace("{statusDesc}",e.getMessage()).replace(accountStr,"").replace(priceStr,"").replace(endTimeStr,"");
+                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid())
+                        .replace("{state}", "failed")
+                        .replace("{status}",e.getCode())
+                        .replace("{statusDesc}",URLEncoder.encode(e.getMessage(),"utf-8"))
+                        .replace(accountStr,"")
+                        .replace(priceStr,"")
+                        .replace(endTimeStr,"");
             }
             //  未处理的异常
         }catch (Exception e){
             result.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_FAIL);
             result.put(CustomConstants.APP_STATUS_DESC,MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg());
-            resultUrl =  resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}", "failed").replace("{status}",CustomConstants.APP_STATUS_FAIL).replace("{statusDesc}",MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg()).replace(accountStr,"").replace(priceStr,"").replace(endTimeStr,"");
-        }
-        try{
-            resultUrl = URLEncoder.encode(resultUrl,"utf-8");
-        }catch (Exception e){
-
+            resultUrl =  resultUrl.replace("{borrowNid}",request.getBorrowNid())
+                    .replace("{state}", "failed")
+                    .replace("{status}",CustomConstants.APP_STATUS_FAIL)
+                    .replace("{statusDesc}",MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg())
+                    .replace(accountStr,"")
+                    .replace(priceStr,"")
+                    .replace(endTimeStr,"");
         }
         result.put("resultUrl",resultUrl);
         return result;

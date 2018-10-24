@@ -14,7 +14,6 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -127,7 +126,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		
 		String borrowNid = apicron.getBorrowNid();
 		apicron.setStatus(status);
-//		apicron.setUpdateTime(nowTime);
+		apicron.setUpdateTime(new Date());
 		boolean apicronFlag = this.borrowApicronMapper.updateByPrimaryKeySelective(apicron) > 0 ? true : false;
 		if (!apicronFlag) {
 			throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
@@ -3397,7 +3396,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample apicronExample = new BorrowApicronExample();
 				apicronExample.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, apicronExample) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
@@ -3512,7 +3511,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -3530,7 +3529,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -3669,7 +3668,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample apicronExample = new BorrowApicronExample();
 				apicronExample.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, apicronExample) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
@@ -3723,7 +3722,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -3741,7 +3740,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -3796,9 +3795,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
      */
     private void updateInstitutionDataMonth(String instCode, BigDecimal repayCapitalWait, String borrowNid) {
         //回滚扣减掉的风险准备金
-        String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
-        boolean flag = redisAddstrack(key, repayCapitalWait.toString());
-        if (flag) {
+//        String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
+//        boolean flag = redisAddstrack(key, repayCapitalWait.toString());
+//        if (flag) {
 			// 更新发标额度余额(增加)和在贷额度（减少） 在数据库更新，防止数据并发 add by cwyang 20180801
 			HashMap map = new HashMap();
 			map.put("amount",repayCapitalWait);
@@ -3816,7 +3815,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				logger.info("=================标的分期还款后机构风险准备金增加成功,标的号:" + borrowNid + ",机构编号:" + instCode
 						+ ",发标额度余额:" + remainMarkLine + ",在贷余额：" + loanBalance + ",已还本金：" + repayedCapital);
 			}
-        }
+//        }
     }
 
 	/**
@@ -3832,9 +3831,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			String instCode = borrowInfo.getInstCode();
 			BigDecimal account = borrow.getAccount();
 			//回滚扣减掉的风险准备金
-			String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
-			boolean flag = redisAddstrack(key, account.toString());
-			if (flag) {				// 更新发标额度余额和在贷额度 在数据库更新，防止数据并发
+//			String key = RedisConstants.CAPITAL_TOPLIMIT_+instCode;
+//			boolean flag = redisAddstrack(key, account.toString());
+//			if (flag) {				// 更新发标额度余额和在贷额度 在数据库更新，防止数据并发
 				HashMap map = new HashMap();
 				map.put("amount",account);
 				map.put("instCode",instCode);
@@ -3851,7 +3850,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 					logger.info("=================标的还款后机构风险准备金增加成功,标的号:" + borrow.getBorrowNid() + ",机构编号:" + instCode
 							+ ",发标额度余额:" + remainMarkLine + ",在贷余额：" + loanBalance + ",已还本金：" + repayedCapital);
 				}
-			}
+//			}
 		}
 		
 		

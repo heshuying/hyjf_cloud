@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.manager;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.OperationLogRequestBean;
 import com.hyjf.admin.beans.response.OperationLogResponseBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
@@ -10,6 +11,8 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.OperationLogService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminOperationLogResponse;
 import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
@@ -26,6 +29,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -122,9 +126,9 @@ public class OperationLogController  extends BaseController {
      * @return
      */
     @ApiOperation(value = "导出配置中心操作日志配置", notes = "导出配置中心操作日志配置")
-    @PostMapping("/exportAction")
+    @PostMapping("/exportAction1")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody OperationLogRequestBean operationLogRequestBean) throws Exception {
+    public void exportAction1(HttpServletRequest request, HttpServletResponse response, @RequestBody OperationLogRequestBean operationLogRequestBean) throws Exception {
         AdminOperationLogRequest form= new AdminOperationLogRequest();
         //可以直接使用
         BeanUtils.copyProperties(operationLogRequestBean, form);
@@ -223,7 +227,124 @@ public class OperationLogController  extends BaseController {
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
 
+    /**
+     * 数据导出
+     *
+     * @param request
+     * @param operationLogRequestBean
+     * @return
+     */
+    @ApiOperation(value = "导出配置中心操作日志配置", notes = "导出配置中心操作日志配置")
+    @PostMapping("/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody OperationLogRequestBean operationLogRequestBean) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 
+        AdminOperationLogRequest form= new AdminOperationLogRequest();
+        //可以直接使用
+        BeanUtils.copyProperties(operationLogRequestBean, form);
+        //请求第一页5000条
+        form.setPageSize(defaultRowMaxCount);
+        form.setCurrPage(1);
+        // 封装查询条件
+        Map<String, Object> conditionMap = setCondition(form);
+        AdminOperationLogResponse operationLogResponseResponse = this.operationLogService.selectOperationLogList(conditionMap,-1,-1);
+
+        List<FeerateModifyLogVO> resultList =  operationLogResponseResponse.getResultList();
+        // 表格sheet名称
+        String sheetName = "费率操作日志";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        Integer totalCount = resultList.size();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,resultList);
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            //请求第一页5000条
+            form.setPageSize(defaultRowMaxCount);
+            form.setCurrPage(i+1);
+            // 封装查询条件
+            Map<String, Object> conditionMap2 = setCondition(form);
+            AdminOperationLogResponse operationLogResponseResponse2 = this.operationLogService.selectOperationLogList(conditionMap2,-1,-1);
+            List<FeerateModifyLogVO> resultList2 =  operationLogResponseResponse2.getResultList();
+            if (resultList2 != null && resultList2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList2);
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("instName","资产来源");
+        map.put("assetTypeName","产品类型");
+        map.put("borrowPeriod","期限");
+        map.put("borrowApr","自动发标利率");
+        map.put("serviceFee","服务费");
+        map.put("manageFee","管理费");
+        map.put("revenueDiffRate","收益差率");
+        map.put("lateInterestRate","逾期利率");
+        map.put("lateFreeDays","逾期免息天数");
+        map.put("status","状态");
+        map.put("modifyType","修改类型");
+        map.put("user","操作人");
+        map.put("time","操作时间");
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter valueToStringAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+               return object.toString();
+            }
+        };
+        IValueFormatter nameStatusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (object.equals(0)) {
+                    return "启用";
+                }
+                if (object.equals(1)) {
+                    return "禁用";
+                }
+                return null;
+            }
+        };
+        IValueFormatter accountEsbStatesAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                    if (object.equals(1)) {
+                        return "增加";
+                    }
+                    if (object.equals(2)) {
+                        return "修改";
+                    }
+                    if (object.equals(3)) {
+                        return "删除";
+                    }
+                    return null;
+            }
+        };
+
+        mapAdapter.put("borrowApr", valueToStringAdapter);
+        mapAdapter.put("status", nameStatusAdapter);
+        mapAdapter.put("modifyType", accountEsbStatesAdapter);
+        return mapAdapter;
+    }
 
     /**
      * 封装查询条件

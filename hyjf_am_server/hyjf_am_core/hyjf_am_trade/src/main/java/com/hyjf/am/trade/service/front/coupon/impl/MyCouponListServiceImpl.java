@@ -409,7 +409,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             }
             //是否与本金公用
             boolean addFlg = false;
-            if (bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
+            if (bestCoupon.getAddFlag() !=null && bestCoupon.getAddFlag().equals(1) && !"0".equals(money)) {
                 addFlg = true;
             }
             if (addFlg) {
@@ -607,7 +607,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             }
             //是否与本金公用
             boolean addFlg = false;
-            if(userCouponConfigCustomize.getAddFlag()==1&&!"0".equals(money)){
+            if(userCouponConfigCustomize.getAddFlag()!=null&&userCouponConfigCustomize.getAddFlag()==1&&!"0".equals(money)){
                 addFlg = true;
             }
             if(addFlg){

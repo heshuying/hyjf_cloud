@@ -450,6 +450,14 @@ public interface AmUserClient {
     UserPortraitResponse selectRecordList(UserPortraitRequest request);
 
     /**
+     * 导出根据参数查询用户画像信息
+     *
+     * @param mapParam
+     * @return
+     */
+    UserPortraitResponse exportRecordList(UserPortraitRequest userPortraitRequest);
+
+    /**
      * 根据用户id查找用户画像
      *
      * @param userId
@@ -611,7 +619,6 @@ public interface AmUserClient {
     /**
      * 根据证件号码和姓名查找用户CA认证记录表
      *
-     * @param strIdNo
      * @param tureName
      * @return
      */
@@ -758,7 +765,7 @@ public interface AmUserClient {
      * @Date 15:14 2018/7/14
      * @Param
      */
-    List<UtmPlatVO> getUtmPlat(String sourceId);
+    List<UtmPlatVO> getUtmPlat();
 
     /**
      * @return
@@ -994,7 +1001,7 @@ public interface AmUserClient {
      * @param request
      * @return
      */
-    SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request);
+    SmsCountCustomizeResponse querySmsCountList(SmsCountRequest request);
 
     /**
      * 查询短信总条数+总费用
@@ -1188,4 +1195,12 @@ public interface AmUserClient {
     void insertUtmList(List<ChannelCustomizeVO> voList);
 
 	CertificateAuthorityResponse selectCertificateAuthorityByCAName(String tureName);
+
+    /**
+     * 渠道管理检查编号唯一性
+     * @Author cwyang 2018-10-22
+     * @param sourceId
+     * @return
+     */
+    int sourceIdIsExists(Integer sourceId);
 }

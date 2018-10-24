@@ -5,19 +5,19 @@ package com.hyjf.admin.controller.exception.bidapplyquery;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BidApplyQueryBean;
+import com.hyjf.admin.beans.request.BidApplyQueryViewRequest;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.exception.BidApplyQueryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * @author libin
@@ -39,7 +39,11 @@ public class BidApplyQueryController extends BaseController{
     @PostMapping(value = "/search")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public JSONObject search(HttpServletRequest request, BidApplyQueryBean form) {
+    public JSONObject search(HttpServletRequest request, @RequestBody @Valid BidApplyQueryViewRequest viewRequest) {
+    	// 初始化原子层请求实体
+    	BidApplyQueryBean form = new BidApplyQueryBean();
+    	// 将画面请求request赋值给原子层 request
+    	BeanUtils.copyProperties(viewRequest, form);
     	JSONObject json = new JSONObject();
     	// 初始化前端直接做成
 		//单笔资金类业务交易查询

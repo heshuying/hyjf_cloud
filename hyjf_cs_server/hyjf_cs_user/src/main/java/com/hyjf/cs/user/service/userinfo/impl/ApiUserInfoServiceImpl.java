@@ -6,8 +6,6 @@ package com.hyjf.cs.user.service.userinfo.impl;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.SyncUserInfoRequestBean;

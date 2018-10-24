@@ -5,8 +5,6 @@ import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
 import com.hyjf.am.trade.service.front.config.InstConfigService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -87,9 +85,9 @@ public class InstConfigServiceImpl extends BaseServiceImpl implements InstConfig
             record = this.getInstConfigRecordById(req.getIds());
             record.setDelFlag(1);
             int result = hjhInstConfigMapper.updateByPrimaryKeySelective(record);
-            if(result > 0 && RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode())){
-                RedisUtils.del(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode());
-            }
+//            if(result > 0 && RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode())){
+//                RedisUtils.del(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode());
+//            }
         }
     }
     /**

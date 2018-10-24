@@ -14,7 +14,9 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -71,7 +73,9 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
         List<UserVO> userVOList = amUserClient.findUserListByUserIds(userIds);
         for(AccountRechargeVO accountRechargeVO:accountRechargeVOList){
             //txTime时间格式化
-            accountRechargeVO.setTxTimeStr(timeFormat(accountRechargeVO.getTxTime()));
+            if(null != accountRechargeVO.getTxTime()){
+                accountRechargeVO.setTxTimeStr(timeFormat(accountRechargeVO.getTxTime()));
+            }
             for(UserVO userVO:userVOList){
                 if(null != userVO && null != userVO.getUserId() && accountRechargeVO.getUserId().equals(userVO.getUserId())){
                     accountRechargeVO.setMobile(userVO.getMobile());

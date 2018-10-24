@@ -3,11 +3,14 @@
  */
 package com.hyjf.am.trade.controller.admin.exception;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowRegistCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
+import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
@@ -128,6 +131,7 @@ public class BorrowRegistExceptionController extends BaseController {
         BorrowAndInfoVO borrowVO = borrowRegistExceptionService.searchBorrowByBorrowNid(borrowNid);
         if(borrowVO != null){
             borrowResponse.setResult(borrowVO);
+            borrowResponse.setRtn(Response.SUCCESS);
         }
         return borrowResponse;
     }
@@ -147,13 +151,14 @@ public class BorrowRegistExceptionController extends BaseController {
     /**
      * 更新标
      * @auth sunpeikai
-     * @param type 1更新标的备案 2更新受托支付标的备案
+     * @param registUpdateRequest 1更新标的备案 2更新受托支付标的备案
      * @return
      */
     @ApiOperation(value = "更新标", notes = "更新标")
-    @PostMapping(value = "/update_borrowregist_by_type/{type}")
-    public Boolean updateBorrowRegistByType(@RequestBody BorrowAndInfoVO borrowVO,@PathVariable Integer type){
-        return  borrowRegistExceptionService.updateBorrowRegistByType(borrowVO,type);
+    @PostMapping(value = "/update_borrowregist_by_type")
+    public Boolean updateBorrowRegistByType(@RequestBody BorrowRegistUpdateRequest registUpdateRequest){
+        logger.debug(JSON.toJSONString(registUpdateRequest));
+        return borrowRegistExceptionService.updateBorrowRegistByType(registUpdateRequest);
     }
 
     /**

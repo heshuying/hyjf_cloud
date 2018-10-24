@@ -1,8 +1,6 @@
 package com.hyjf.am.trade.service.task.issuerecover.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.mapper.customize.BorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.MailProducer;
@@ -19,8 +17,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -1155,13 +1151,13 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
     private Integer checkAssetCanSend(HjhPlanAsset hjhPlanAsset) {
         String instCode = hjhPlanAsset.getInstCode();
         HjhBailConfig bailConfig = this.getBailConfig(instCode);
-        BigDecimal availableBalance = bailConfig.getRemainMarkLine();
-        BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
-
         if(bailConfig == null){
             logger.error("没有添加保证金配置");
             return -1;
         }
+
+        BigDecimal availableBalance = bailConfig.getRemainMarkLine();
+        BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
 
         // 可用发标额度余额校验
         if (BigDecimal.ZERO.compareTo(availableBalance) >= 0) {
