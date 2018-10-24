@@ -127,7 +127,7 @@ public class AuthConfigController extends BaseController {
 
         AdminSystemVO loginUser=getUser(request);
         form.setUpdateUserId(Integer.parseInt(loginUser.getId()));
-        form.setUpdateTime(GetDate.getNowTime10());
+        form.setUpdateTime(GetDate.getDate());
         form.setIp(GetCilentIP.getIpAddr(request));
 
         int result = this.authConfigService.updateAuthConfig(CommonUtils.convertBean(form,HjhUserAuthConfigVO.class));

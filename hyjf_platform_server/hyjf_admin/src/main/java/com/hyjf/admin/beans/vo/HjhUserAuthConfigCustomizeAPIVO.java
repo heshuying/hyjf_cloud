@@ -3,6 +3,7 @@ package com.hyjf.admin.beans.vo;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class HjhUserAuthConfigCustomizeAPIVO implements Serializable {
     @ApiModelProperty(value = "主键id")
@@ -24,15 +25,13 @@ public class HjhUserAuthConfigCustomizeAPIVO implements Serializable {
 
     private Integer createUserId;
 
-    private Integer createTime;
+    private Date createTime;
 
     private Integer updateUserId;
 
     private String updateUserStr;
 
-    private Integer updateTime;
-
-    private String updateTimeStr;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -50,14 +49,6 @@ public class HjhUserAuthConfigCustomizeAPIVO implements Serializable {
 
     public void setUpdateUserStr(String updateUserStr) {
         this.updateUserStr = updateUserStr;
-    }
-
-    public String getUpdateTimeStr() {
-        return updateTimeStr;
-    }
-
-    public void setUpdateTimeStr(String updateTimeStr) {
-        this.updateTimeStr = updateTimeStr;
     }
 
     public Integer getId() {
@@ -116,19 +107,19 @@ public class HjhUserAuthConfigCustomizeAPIVO implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 

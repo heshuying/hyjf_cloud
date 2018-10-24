@@ -15,11 +15,11 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
     private Integer enabledStatus;
     private String remark;
 
-    private Integer createUser;
+    private Integer createUserId;
 
     private Date createTime;
 
-    private Integer updateUser;
+    private Integer updateUserId;
 
     private String updateUserStr;
 
@@ -93,22 +93,6 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
-    }
-
-    public Integer getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -131,5 +115,21 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 }

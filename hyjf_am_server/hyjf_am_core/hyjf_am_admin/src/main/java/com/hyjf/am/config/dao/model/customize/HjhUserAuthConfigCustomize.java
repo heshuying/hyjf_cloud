@@ -18,11 +18,11 @@ public class HjhUserAuthConfigCustomize implements Serializable {
 
     private String remark;
 
-    private Integer createUser;
+    private Integer createUserId;
 
-    private Integer createTime;
+    private Date createTime;
 
-    private Integer updateUser;
+    private Integer updateUserId;
 
     private String updateUserStr;
 
@@ -94,28 +94,25 @@ public class HjhUserAuthConfigCustomize implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateUser() {
-        return createUser;
+
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public Integer getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getUpdateTime() {
@@ -124,5 +121,9 @@ public class HjhUserAuthConfigCustomize implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }
