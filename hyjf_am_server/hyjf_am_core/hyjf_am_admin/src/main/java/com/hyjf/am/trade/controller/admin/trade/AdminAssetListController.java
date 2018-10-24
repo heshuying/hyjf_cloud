@@ -11,9 +11,9 @@ import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.apache.commons.collections.CollectionUtils;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;

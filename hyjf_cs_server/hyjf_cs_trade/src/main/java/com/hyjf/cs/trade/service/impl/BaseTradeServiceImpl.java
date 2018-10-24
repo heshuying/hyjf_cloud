@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeService {
     protected Logger logger = LoggerFactory.getLogger(getClass());

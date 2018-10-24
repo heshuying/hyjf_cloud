@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.service.wirhdraw;
+package com.hyjf.cs.trade.service.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.JxBankConfigVO;

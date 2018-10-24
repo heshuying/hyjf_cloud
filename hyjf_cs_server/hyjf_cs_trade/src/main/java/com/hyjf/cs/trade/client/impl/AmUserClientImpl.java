@@ -664,7 +664,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer selectUserIdByUsrcustid(Long chinapnrUsrcustid) {
-		IntegerResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/chinapnr/selectUserIdByUsrcustid/"+chinapnrUsrcustid, IntegerResponse.class).getBody();
+		IntegerResponse response = restTemplate.getForEntity("http://AM-USER/am-user/chinapnr/selectUserIdByUsrcustid/"+chinapnrUsrcustid, IntegerResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResultInt();
 		}

@@ -120,11 +120,11 @@ public class BorrowAuthServiceImpl extends BaseServiceImpl implements BorrowAuth
         borrowMapper.updateByExampleSelective(borrow, example);
 
         // 更新受托支付申请完成时间
-        BorrowInfo borrowInfo = new BorrowInfo();
+        BorrowInfoWithBLOBs borrowInfo = new BorrowInfoWithBLOBs();
         borrowInfo.setTrusteePayTime(GetDate.getNowTime10());// 受托支付完成时间
         BorrowInfoExample exampleInfo = new BorrowInfoExample();
         exampleInfo.createCriteria().andBorrowNidEqualTo(nid);
-        borrowInfoMapper.updateByExample(borrowInfo,exampleInfo);
+        borrowInfoMapper.updateByExampleSelective(borrowInfo,exampleInfo);
 
         // 修改hyjf_hjh_plan_asset
         HjhPlanAsset hp = new HjhPlanAsset();

@@ -2,8 +2,9 @@ package com.hyjf.am.config.dao.mapper.auto;
 
 import com.hyjf.am.config.dao.model.auto.SiteSetting;
 import com.hyjf.am.config.dao.model.auto.SiteSettingExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface SiteSettingMapper {
     int countByExample(SiteSettingExample example);

@@ -3,8 +3,6 @@
  */
 package com.hyjf.cs.user.bean;
 
-import com.hyjf.am.bean.result.BaseResult;
-
 import java.util.List;
 
 /**

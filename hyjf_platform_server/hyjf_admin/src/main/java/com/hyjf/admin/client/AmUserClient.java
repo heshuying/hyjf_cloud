@@ -450,6 +450,14 @@ public interface AmUserClient {
     UserPortraitResponse selectRecordList(UserPortraitRequest request);
 
     /**
+     * 导出根据参数查询用户画像信息
+     *
+     * @param mapParam
+     * @return
+     */
+    UserPortraitResponse exportRecordList(UserPortraitRequest userPortraitRequest);
+
+    /**
      * 根据用户id查找用户画像
      *
      * @param userId

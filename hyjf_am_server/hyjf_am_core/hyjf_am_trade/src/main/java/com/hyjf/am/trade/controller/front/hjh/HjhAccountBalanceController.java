@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller.front.hjh;
 import com.hyjf.am.response.admin.HjhAccountBalanceResponse;
 import com.hyjf.am.trade.service.front.hjh.HjhAccountBalanceService;
 import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
+import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,13 +34,12 @@ public class HjhAccountBalanceController {
      * @return
      */
     @GetMapping("/getHjhAccountBalanceForActList/{date}")
-    public HjhAccountBalanceResponse getHjhAccountBalanceForActList(@PathVariable(value = "date") Date date){
+    public HjhAccountBalanceResponse getHjhAccountBalanceForActList(@PathVariable(value = "date") String date){
         HjhAccountBalanceResponse response = new HjhAccountBalanceResponse();
-        List<HjhAccountBalanceVO> list = this.hjhAccountBalanceService.getHjhAccountBalanceForActList(date);
+        List<HjhAccountBalanceVO> list = this.hjhAccountBalanceService.getHjhAccountBalanceForActList(GetDate.stringToDate2(date));
         if (!CollectionUtils.isEmpty(list)) {
             response.setResultList(list);
         }
         return response;
     }
-
 }

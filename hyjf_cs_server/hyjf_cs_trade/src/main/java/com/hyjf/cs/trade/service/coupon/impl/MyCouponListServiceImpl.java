@@ -2,7 +2,6 @@ package com.hyjf.cs.trade.service.coupon.impl;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
-import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.cs.trade.client.AmTradeClient;

@@ -889,7 +889,23 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	/**
+	 * 导出根据参数查询用户画像信息
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public UserPortraitResponse exportRecordList(UserPortraitRequest request) {
+		UserPortraitResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userPortraitManage/exportRecordList", request,
+						UserPortraitResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 	/**
 	 * 根据用户id查找用户画像
 	 * 
