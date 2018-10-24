@@ -137,6 +137,9 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     @Override
     public AdminResult getAddApplyAgreementListDetail(BorrowRepayAgreementRequest request){
         AdminResult result = new AdminResult();
+        if(StringUtils.isEmpty(request.getBorrowNidSrch())){
+            return new AdminResult(BaseResult.FAIL, "项目编号不能为空");
+        }
         BorrowRepayAgreementRequestBean bean = new BorrowRepayAgreementRequestBean();
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         BorrowRepayAgreementAmRequest req = CommonUtils.convertBean(request, BorrowRepayAgreementAmRequest.class);
@@ -145,7 +148,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         // 根据标的编号查询标的详情
         BorrowAndInfoVO borrowVO = amTradeClient.searchBorrowByBorrowNid(request.getBorrowNidSrch());
         if (borrowVO == null) {
-            throw new RuntimeException("根据标的编号查询标的详情失败,标的编号:[" + request.getBorrowNidSrch() + "].");
+            return new AdminResult(BaseResult.FAIL, "未找到对应的编号的标");
         }else{
             // 还款方式
             String borrowStyle = borrowVO.getBorrowStyle();
