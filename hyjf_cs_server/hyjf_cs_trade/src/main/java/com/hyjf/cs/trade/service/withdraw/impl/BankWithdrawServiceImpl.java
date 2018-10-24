@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.service.wirhdraw.impl;
+package com.hyjf.cs.trade.service.withdraw.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -40,7 +40,7 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
+import com.hyjf.cs.trade.service.withdraw.BankWithdrawService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
 import com.hyjf.cs.trade.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;

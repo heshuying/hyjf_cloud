@@ -37,9 +37,11 @@ public class MapResponse extends Response{
         }
         Map<String, Object> bigDecimalMap = new HashMap<String, Object>();
         for (Map.Entry<String, Object> entry : this.resultMap.entrySet()) {
+            System.out.println(entry.toString());
             if (entry.getValue() == null){
                 bigDecimalMap.put(entry.getKey(), null);
             }else if (entry.getValue().getClass().getName().equals("java.lang.String")){
+                System.out.println(entry.getValue().toString());
                 bigDecimalMap.put(entry.getKey(), new BigDecimal(entry.getValue().toString()));
             }else{
                 throw new RuntimeException("resultMap的元素类型必须是String且是数字，不然会失精度。");
