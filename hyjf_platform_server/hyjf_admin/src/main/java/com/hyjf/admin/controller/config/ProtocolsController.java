@@ -163,7 +163,7 @@ public class ProtocolsController extends BaseController {
 			return adminResult;
 		}
 		//从request中取得MultipartFile列表
-		List<MultipartFile> multipartFileList = this.protocolsService.getMultipartFileList(multipartRequest);
+		List<MultipartFile> multipartFileList = multipartRequest.getFiles("file");
 		if (multipartFileList == null || multipartFileList.size() <= 0){
 			adminResult.setStatus(FAIL);
 			adminResult.setStatusDesc("获取上传文件失败！");
