@@ -68,7 +68,7 @@ public class AuthConfigController extends BaseController {
     @ApiOperation(value = "授权配置记录", notes = "授权配置记录")
     @PostMapping(value = "/authConfigLogList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<HjhUserAuthConfigLogCustomizeAPIVO>> getAuthConfigLogList(HjhUserAuthConfigLogCustomizeAPIVO request) {
+    public AdminResult<ListResult<HjhUserAuthConfigLogCustomizeAPIVO>> getAuthConfigLogList(@RequestBody HjhUserAuthConfigLogCustomizeAPIVO request) {
         AdminAuthConfigLogResponse response = authConfigService.getAuthConfigLogList(CommonUtils.convertBean(request,HjhUserAuthConfigLogCustomizeVO.class));
         if (response == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -127,7 +127,7 @@ public class AuthConfigController extends BaseController {
 
         AdminSystemVO loginUser=getUser(request);
         form.setUpdateUserId(Integer.parseInt(loginUser.getId()));
-        form.setUpdateTime(GetDate.getNowTime10());
+        form.setUpdateTime(GetDate.getDate());
         form.setIp(GetCilentIP.getIpAddr(request));
 
         int result = this.authConfigService.updateAuthConfig(CommonUtils.convertBean(form,HjhUserAuthConfigVO.class));

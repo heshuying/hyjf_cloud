@@ -3,6 +3,7 @@ package com.hyjf.am.vo.admin;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class HjhUserAuthConfigCustomizeVO implements Serializable {
 
@@ -14,17 +15,15 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
     private Integer enabledStatus;
     private String remark;
 
-    private Integer createUser;
+    private Integer createUserId;
 
-    private Integer createTime;
+    private Date createTime;
 
-    private Integer updateUser;
+    private Integer updateUserId;
 
     private String updateUserStr;
 
-    private Integer updateTime;
-
-    private String updateTimeStr;
+    private Date updateTime;
 
     private String ip;
 
@@ -36,14 +35,6 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
 
     public void setUpdateUserStr(String updateUserStr) {
         this.updateUserStr = updateUserStr;
-    }
-
-    public String getUpdateTimeStr() {
-        return updateTimeStr;
-    }
-
-    public void setUpdateTimeStr(String updateTimeStr) {
-        this.updateTimeStr = updateTimeStr;
     }
 
     public Integer getId() {
@@ -102,35 +93,19 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
-    }
-
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
-    }
-
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -140,5 +115,21 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 }

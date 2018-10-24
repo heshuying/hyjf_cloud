@@ -3,6 +3,7 @@ package com.hyjf.admin.beans.vo;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class HjhUserAuthConfigLogCustomizeAPIVO implements Serializable {
     @ApiModelProperty(value = "主键id")
@@ -30,9 +31,7 @@ public class HjhUserAuthConfigLogCustomizeAPIVO implements Serializable {
 
     private String createUserStr;
 
-    private Integer createTime;
-
-    private String  createTimeStr;
+    private Date createTime;
 
     public String getCreateUserStr() {
         return createUserStr;
@@ -40,14 +39,6 @@ public class HjhUserAuthConfigLogCustomizeAPIVO implements Serializable {
 
     public void setCreateUserStr(String createUserStr) {
         this.createUserStr = createUserStr;
-    }
-
-    public String getCreateTimeStr() {
-        return createTimeStr;
-    }
-
-    public void setCreateTimeStr(String createTimeStr) {
-        this.createTimeStr = createTimeStr;
     }
 
     private static final long serialVersionUID = 1L;
@@ -140,11 +131,12 @@ public class HjhUserAuthConfigLogCustomizeAPIVO implements Serializable {
         this.createUser = createUser;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
 }

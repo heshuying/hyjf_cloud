@@ -4,6 +4,7 @@ import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class HjhUserAuthConfigLogCustomizeVO extends BasePage implements Serializable {
 
@@ -32,7 +33,7 @@ public class HjhUserAuthConfigLogCustomizeVO extends BasePage implements Seriali
 
     private String createUserStr;
 
-    private Integer createTime;
+    private Date createTime;
 
     private String  createTimeStr;
 
@@ -167,11 +168,12 @@ public class HjhUserAuthConfigLogCustomizeVO extends BasePage implements Seriali
         this.createUser = createUser;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
 }
