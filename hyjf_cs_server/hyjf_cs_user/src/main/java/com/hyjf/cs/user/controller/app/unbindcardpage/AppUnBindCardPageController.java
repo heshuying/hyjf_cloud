@@ -6,6 +6,7 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.validator.Validator;
@@ -111,13 +112,9 @@ public class AppUnBindCardPageController extends BaseUserController{
         try {
             ret.put("status", "0");
             ret.put("statusDesc", "成功");
-            StringBuffer sbUrl = new StringBuffer();
-            sbUrl.append(super.getFrontHost(systemConfig,platform));
-//            String RECHARGE_URL = super.getFrontHost(systemConfig,platform) + "/public/formsubmit?requestType="+ CommonConstant.APP_BANK_REQUEST_TYPE_RECHARGE;
-//            sbUrl.append(request.getContextPath());
-            sbUrl.append("/hyjf-app/bank/app/deleteCardPage");
-            sbUrl.append("/deleteCardPage");
-            sbUrl.append("?").append("version").append("=").append(version);
+            String RECHARGE_URL = super.getFrontHost(systemConfig,platform) + "/public/formsubmit?requestType="+ CommonConstant.APP_BANK_REQUEST_TYPE_UNBINDCARD;
+            StringBuffer sbUrl = new StringBuffer(RECHARGE_URL);
+            sbUrl.append("&").append("version").append("=").append(version);
             sbUrl.append("&").append("netStatus").append("=").append(netStatus);
             sbUrl.append("&").append("platform").append("=").append(platform);
             sbUrl.append("&").append("randomString").append("=").append(randomString);

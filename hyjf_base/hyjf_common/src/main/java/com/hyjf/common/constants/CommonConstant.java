@@ -205,6 +205,11 @@ public class CommonConstant {
      * 授权还款授权
      */
     public static final String APP_BANK_REQUEST_TYPE_AUTHREPAY = "13";
+    /**
+     * 解绑银行卡
+     */
+    public static final String APP_BANK_REQUEST_TYPE_UNBINDCARD = "14";
+
 
 
     /**
