@@ -217,12 +217,6 @@ public interface AmUserClient {
 	BankCardVO getBankCardByCardNo(Integer userId, String cardNo);
 
 
-    BestCouponListVO selectBestCoupon(MyCouponListRequest request);
-
-
-    Integer countAvaliableCoupon(MyCouponListRequest request);
-
-
     /**
      * @Author walter.limeng
      * @Description  根据用户ID获取推荐人

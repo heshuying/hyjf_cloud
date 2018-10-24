@@ -226,6 +226,13 @@ public class CouponIssuanceController extends BaseController {
     public AdminResult insertAction(@RequestBody CouponConfigRequest couponConfigRequest, HttpServletRequest request) {
         AdminSystemVO user = getUser(request);
         String userId = user.getId();
+        Integer tenderQuotaType = couponConfigRequest.getTenderQuotaType();
+        if (tenderQuotaType != null) {
+            if (tenderQuotaType == 0 || tenderQuotaType == 2) {
+                couponConfigRequest.setTenderQuotaMin(100);
+                couponConfigRequest.setTenderQuotaMin(1000000);
+            }
+        }
         couponConfigRequest.setCreateUserId(Integer.parseInt(userId));
         couponConfigRequest.setUpdateUserId(Integer.parseInt(userId));
         CouponConfigResponse ccr = couponConfigService.insertAction(couponConfigRequest);
