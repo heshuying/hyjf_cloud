@@ -144,41 +144,18 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 		String username = systemConfig.getFtpUsername();
 		String domain = systemConfig.getFtpDomain();
 		String httpPath = domain + basePath + "/" + fddTemplet;
-		String httpUrl = null;
+		String httpUrl;
 		try {
 			logger.info("----------待上传目录：" + multipartFile.getOriginalFilename());
-			File paraentDir = multipartToFile(multipartFile);
-			String upParaFile = paraentDir.getParent();
-			if(paraentDir.isDirectory()){
+			String fileName = multipartFile.getOriginalFilename();
+			logger.info("--------开始上传文件：" + fileName + "  上传到：" + httpPath );
+			boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
+					basePath, fddTemplet, fileName, multipartFile.getInputStream());
+			if (!flag){
+				throw new RuntimeException("上传失败!fileName:" + fileName);
+			}
+			httpUrl = httpPath + "/" + fileName;
 
-				logger.info("----------待删除目录：" + upParaFile);
-				File[] files = paraentDir.listFiles();
-				for (File file : files) {
-					String fileName = file.getName();
-					logger.info("--------循环目录，开始上传文件：" + fileName);
-					FileInputStream in = new FileInputStream(file);
-					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
-							basePath, fddTemplet, fileName, in);
-					if (!flag){
-						throw new RuntimeException("上传失败!fileName:" + fileName);
-					}
-				}
-			}else{
-				String fileName = multipartFile.getOriginalFilename();
-				logger.info("--------开始上传文件：" + fileName + "  上传到：" + httpPath );
-				FileInputStream in = new FileInputStream(paraentDir);
-				boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
-						basePath, fddTemplet, fileName, in);
-				if (!flag){
-					throw new RuntimeException("上传失败!fileName:" + fileName);
-				}
-				httpUrl = httpPath + "/" + fileName;
-			}
-			if(type == 1){
-				//删除原目录
-				FileUtil.deltree(upParaFile);
-				logger.info("--------删除原目录：" + upParaFile );
-			}
 		}catch (Exception e){
 			e.printStackTrace();
 			logger.info(e.getMessage());

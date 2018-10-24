@@ -583,14 +583,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         logger.info("creditCapital:"+borrowCredit.getCreditCapital());
         request.setCreditPrice(DF_COM_VIEW.format(borrowCredit.getCreditPrice().setScale(2, BigDecimal.ROUND_DOWN)));
         request.setCreditCapital(DF_COM_VIEW.format(borrowCredit.getCreditCapital().setScale(2, BigDecimal.ROUND_DOWN)));
-        if (borrow != null) {
-            if ("endmonth".equals(borrow.getBorrowStyle())) {
-                // 从第几期开始
-                borrowCredit.setRecoverPeriod(borrow.getBorrowPeriod() - recover.getRecoverPeriod());
-            } else {
-                // 从第几期开始
-                borrowCredit.setRecoverPeriod(0);
-            }
+        if ("endmonth".equals(borrow.getBorrowStyle())) {
+            // 从第几期开始
+            borrowCredit.setRecoverPeriod(borrow.getBorrowPeriod() - recover.getRecoverPeriod());
         } else {
             // 从第几期开始
             borrowCredit.setRecoverPeriod(0);

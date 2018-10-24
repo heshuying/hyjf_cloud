@@ -73,7 +73,7 @@ public class AccountBalanceController extends BaseController {
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出日交易量")
     @GetMapping("/exportActionByDay")
-    public void exportActionByDay(HttpServletRequest request,HttpServletResponse response,@RequestBody HjhAccountBalanceRequest form) throws Exception {
+    public void exportActionByDay(HttpServletRequest request,HttpServletResponse response, HjhAccountBalanceRequest form) throws Exception {
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -155,7 +155,7 @@ public class AccountBalanceController extends BaseController {
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出月交易量")
     @PostMapping("/exportActionMonth")
-    public void exportActionMonth(HttpServletRequest request,HttpServletResponse response, @RequestBody HjhAccountBalanceRequest form) throws Exception {
+    public void exportActionMonth(HttpServletRequest request,HttpServletResponse response, HjhAccountBalanceRequest form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         //请求第一页5000条
@@ -171,7 +171,7 @@ public class AccountBalanceController extends BaseController {
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
         Integer totalCount = resultResponse.getResultList().size();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, String> beanPropertyColumnMap = monthBuildMap();
         Map<String, IValueFormatter> mapValueAdapter = monthBuildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
@@ -216,5 +216,15 @@ public class AccountBalanceController extends BaseController {
         mapAdapter.put("reinvestAccount", valueFormatAdapter);
         mapAdapter.put("addAccount", valueFormatAdapter);
         return mapAdapter;
+    }
+
+    private Map<String, String> monthBuildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("dataFormt","日期");
+        map.put("investAccount","原始资产交易额(元)");
+        map.put("creditAccount","债转资产交易额(元)");
+        map.put("reinvestAccount","复投资金额(元)");
+        map.put("addAccount","新加入资金额(元)");
+        return map;
     }
 }

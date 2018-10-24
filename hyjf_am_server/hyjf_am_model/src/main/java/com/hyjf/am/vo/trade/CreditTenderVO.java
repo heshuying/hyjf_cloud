@@ -91,6 +91,8 @@ public class CreditTenderVO extends BaseVO implements Serializable {
 
     private String addip;
 
+    private String addIp;
+
     private Integer client;
 
     private Integer recoverPeriod;
@@ -447,5 +449,13 @@ public class CreditTenderVO extends BaseVO implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getAddIp() {
+        return addIp;
+    }
+
+    public void setAddIp(String addIp) {
+        this.addIp = addIp;
     }
 }

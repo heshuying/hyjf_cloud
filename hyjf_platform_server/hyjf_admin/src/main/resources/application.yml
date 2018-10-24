@@ -24,6 +24,9 @@ spring:  # Redis
     # 连接超时时间（毫秒）
     timeout: 5000ms
 
+multipart:
+  enabled: true
+
 am:
   config:
     service:

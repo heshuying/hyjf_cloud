@@ -3,10 +3,12 @@ package com.hyjf.am.trade.service.admin.productcenter.applyagreement.impl;
 import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest;
+import com.hyjf.am.resquest.admin.DownloadAgreementRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.productcenter.applyagreement.ApplyAgreementService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
@@ -99,6 +101,33 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         return count;
     }
 
+    /**
+     * 垫付协议申请
+     *
+     * @return
+     */
+    @Override
+    public List<TenderAgreementVO> selectLikeByExample(DownloadAgreementRequest request) {
+        String tenderNid = request.getRepayPeriod()+"%";
+        String borrowNid = request.getBorrowNid();
+        TenderAgreementExample example = new TenderAgreementExample();
+        TenderAgreementExample.Criteria cra = example.createCriteria();
+        cra.andTenderNidLike(tenderNid);
+        cra.andBorrowNidEqualTo(borrowNid);
+        List<TenderAgreement> tenderAgreements= this.tenderAgreementMapper.selectByExample(example);
+        List<TenderAgreementVO> tenderAgreementvos = new ArrayList<>();
+        if(tenderAgreements != null && tenderAgreements.size()>0){
+
+            TenderAgreementVO tenderAgreementVO =  new TenderAgreementVO();
+            for (TenderAgreement tenderAgreement : tenderAgreements) {
+                BeanUtils.copyProperties(tenderAgreement,tenderAgreementVO);
+                tenderAgreementvos.add(tenderAgreementVO);
+            }
+            return tenderAgreementvos;
+        }
+        return null;
+
+    }
     /**
      * 垫付协议申请  数目
      *
@@ -268,7 +297,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     @Override
     public int saveApplyAgreementInfo(ApplyAgreementInfoRequest request) {
         ApplyAgreementInfo applyAgreementInfo = new ApplyAgreementInfo();
-        CommonUtils.convertBean(request, ApplyAgreementInfo.class);
+        BeanUtils.copyProperties(request,applyAgreementInfo);
         ApplyAgreementInfoExample example = new ApplyAgreementInfoExample();
         example.createCriteria().andContractIdEqualTo(applyAgreementInfo.getContractId());
         List<ApplyAgreementInfo> openAccountRecords = this.applyAgreementInfoMapper.selectByExample(example);
@@ -282,5 +311,36 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
             applyAgreementInfo.setCreateTime(new Date());
             return this.applyAgreementInfoMapper.insert(applyAgreementInfo);
         }
+    }
+
+    /**
+     * 保存垫付协议申请
+     *
+     * @param vo
+     * @return java.util.List<com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan>
+     * @author Zha Daojian
+     * @date 2018/8/23 16:37
+     **/
+    @Override
+    public int saveApplyAgreement(ApplyAgreementVO vo) {
+        ApplyAgreement applyAgreement = new ApplyAgreement();
+        BeanUtils.copyProperties(vo,applyAgreement);
+        applyAgreement.setStatus(1);
+        applyAgreement.setDelFlag(0);
+        ApplyAgreementExample example = new ApplyAgreementExample();//垫付协议申请记录
+        ApplyAgreementExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(applyAgreement.getBorrowNid());
+        criteria.andRepayPeriodEqualTo(applyAgreement.getRepayPeriod());
+        List<ApplyAgreement> applyAgreements = this.applyAgreementMapper.selectByExample(example);
+        if(applyAgreements != null && applyAgreements.size() > 0){
+            applyAgreement.setId(applyAgreements.get(0).getId());
+            applyAgreement.setUpdateTime(new Date());
+            this.applyAgreementMapper.updateByPrimaryKey(applyAgreement);
+
+        }else {
+            applyAgreement.setCreateTime(new Date());
+            return this.applyAgreementMapper.insert(applyAgreement);
+        }
+        return 0;
     }
 }
