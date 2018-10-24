@@ -4890,7 +4890,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             List<BorrowCredit> borrowCreditList = this.borrowCreditMapper.selectByExample(example);
             if (borrowCreditList != null && borrowCreditList.size() > 0) {
                 for (BorrowCredit borrowCredit : borrowCreditList) {
-                    borrowCredit.setCreditStatus(3);
+                    // 老系统也是3，可能不对， 经过刘阳和杨昌卫确认，此处改成1(承接停止)，  2018年10月24日10:21:39
+                    borrowCredit.setCreditStatus(1);
                     this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit);
                 }
             }
