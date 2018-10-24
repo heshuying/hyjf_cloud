@@ -965,7 +965,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 //		} else {
 //			borrow.setAccountContents(hjhPlanAsset.getAccountContents());
 //		}
-
+        borrow.setBorrowValidTime(Integer.parseInt(getBorrowConfig("BORROW_VALID_TIME")));
         // 是否可以进行借款
         borrow.setBorrowStatus(0);
         // 满表审核状态
