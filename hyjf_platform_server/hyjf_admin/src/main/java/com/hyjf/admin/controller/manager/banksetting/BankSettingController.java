@@ -3,16 +3,18 @@
  */
 package com.hyjf.admin.controller.manager.banksetting;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.BankSettingRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankSettingService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankSettingResponse;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
@@ -24,10 +26,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -38,10 +37,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author dangzw
@@ -241,81 +239,85 @@ public class BankSettingController extends BaseController {
 
     @ApiOperation(value = "列表导出", httpMethod = "POST", notes = "列表导出")
     @PostMapping(value = "/exportregist")
-    public void exportAction(HttpServletResponse response) throws Exception {
-        logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/exportregist");
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminBankSettingRequest adminRequest) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "银行配置";
-        //列表
-        List<JxBankConfigVO> resultList  =this.bankSettingService.getRecordList(new JxBankConfigVO(), -1, -1);
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[] {"序号", "银行名称", "银行联行号","银行ICON","LOGO","支持快捷支付","快捷支付单笔限额","快捷充值单日限额","提现手续费"};
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
         // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+        adminRequest.setCurrPage(-1);
+        adminRequest.setPageSize(defaultRowMaxCount);
+        AdminBankSettingResponse settingResponse = this.bankSettingService.selectBankSettingList(adminRequest);
+        Integer totalCount = settingResponse.getRecordTotal();
 
-        if (resultList != null && resultList.size() > 0) {
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < resultList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    JxBankConfigVO pInfo = resultList.get(i);
-
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-
-                    // 序号
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    }
-                    else if (celLength == 1) {
-                        cell.setCellValue(pInfo.getBankName());
-                    }
-                    else if (celLength == 2) {
-                        cell.setCellValue(pInfo.getPayAllianceCode());
-                    }
-                    else if (celLength == 3) {
-                        cell.setCellValue(pInfo.getBankIcon());
-                    }
-                    else if (celLength == 4) {
-                        cell.setCellValue(pInfo.getBankLogo());
-                    }
-                    else if (celLength == 5) {
-                        if(pInfo.getQuickPayment()==1){
-                            cell.setCellValue("是");
-                        }else{
-                            cell.setCellValue("否");
-                        }
-                    }
-                    else if (celLength == 6) {
-                        cell.setCellValue(pInfo.getSingleQuota().doubleValue());
-                    }
-                    else if (celLength == 7) {
-                        cell.setCellValue(pInfo.getSingleCardQuota().doubleValue());
-                    }
-                    else if (celLength == 8) {
-                        cell.setCellValue(pInfo.getFeeWithdraw().doubleValue());
-                    }
-                }
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i <= sheetCount; i++) {
+            adminRequest.setPageSize(defaultRowMaxCount);
+            adminRequest.setCurrPage(i);
+            AdminBankSettingResponse bankSettingResponse = this.bankSettingService.selectBankSettingList(adminRequest);
+            List<JxBankConfigVO> bankConfigVOList = bankSettingResponse.getResultList();
+            if (bankConfigVOList != null && bankConfigVOList.size()> 0) {
+                String sheetNameTmp = sheetName + "_第" + i + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankConfigVOList);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-        logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/exportregist");
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("bankName", "银行名称");
+        map.put("payAllianceCode", "银行联行号");
+        map.put("bankIcon", "银行ICON");
+        map.put("bankLogo", "LOGO");
+        map.put("quickPayment", "支持快捷支付");
+        map.put("singleQuota", "快捷支付单笔限额");
+        map.put("singleCardQuota", "快捷充值单日限额");
+        map.put("feeWithdraw", "提现手续费");
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter quickPaymentAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer quickPayment = (Integer) object;
+                if(quickPayment==1){
+                    return "是";
+                }else{
+                    return "否";
+                }
+            }
+        };
+        IValueFormatter bigDecimalAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal number = (BigDecimal) object;
+                return String.valueOf(number);
+            }
+        };
+
+        mapAdapter.put("quickPayment", quickPaymentAdapter);
+        mapAdapter.put("singleQuota", bigDecimalAdapter);
+        mapAdapter.put("singleCardQuota", bigDecimalAdapter);
+        mapAdapter.put("feeWithdraw", bigDecimalAdapter);
+        return mapAdapter;
+    }
+
+
 
     /**
      * 调用校验表单方法

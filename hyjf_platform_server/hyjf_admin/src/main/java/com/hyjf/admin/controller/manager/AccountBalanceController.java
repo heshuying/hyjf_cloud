@@ -1,30 +1,31 @@
 package com.hyjf.admin.controller.manager;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AccountBalanceService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhInfoAccountBalanceResponse;
 import com.hyjf.am.resquest.admin.HjhAccountBalanceRequest;
-import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author：yinhui
@@ -72,73 +73,79 @@ public class AccountBalanceController extends BaseController {
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出日交易量")
     @GetMapping("/exportActionByDay")
-    public void exportActionByDay(HttpServletResponse response,HjhAccountBalanceRequest form) throws Exception {
+    public void exportActionByDay(HttpServletRequest request,HttpServletResponse response,@RequestBody HjhAccountBalanceRequest form) throws Exception {
+
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+
+        //请求第一页5000条
+        form.setPageSize(defaultRowMaxCount);
+        form.setPaginatorPage(1);
+        HjhInfoAccountBalanceResponse resultResponse = accountBalanceService.getSearchListByDay(form);
         // 表格sheet名称
         String sheetName = "每日交易量";
-        List<HjhAccountBalanceVO> resultList = accountBalanceService.getHjhAccountBalanceList(form);
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[]{"序号", "日期", "原始资产交易额(元)", "债转资产交易额(元)", "复投资金额(元)", "新加入资金额(元)"};
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
         // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
-        if (resultList != null && resultList.size() > 0) {
-            int sheetCount = 1;
-            int rowNum = 0;
-            for (int i = 0; i < resultList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    HjhAccountBalanceVO AccountBalanceCustomize = resultList.get(i);
-
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    Double investAccount = AccountBalanceCustomize.getInvestAccount().doubleValue();
-                    Double creditAccount = AccountBalanceCustomize.getCreditAccount().doubleValue();
-                    Double reinvestAccount = AccountBalanceCustomize.getReinvestAccount().doubleValue();
-                    Double addAccount = AccountBalanceCustomize.getAddAccount().doubleValue();
-                    Date date = AccountBalanceCustomize.getRptDate();
-                    String format = new SimpleDateFormat("yyyy-MM-dd ").format(date);
-                    // 序号
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    }
-
-                    // 日期
-                    else if (celLength == 1) {
-                        cell.setCellValue(StringUtils.isEmpty(format) ? StringUtils.EMPTY : format);
-                    }
-                    // 原始资产交易额(元)
-                    else if (celLength == 2) {
-                        cell.setCellValue((investAccount != null ? investAccount : 0));
-                    }
-//					债转资产交易额(元)
-                    else if (celLength == 3) {
-                        cell.setCellValue((creditAccount != null ? creditAccount : 0));
-                    }
-//					复投资金额(元)
-                    else if (celLength == 4) {
-                        cell.setCellValue((reinvestAccount != null ? reinvestAccount : 0));
-                    }
-//					新加入资金额(元)
-                    else if (celLength == 5) {
-                        cell.setCellValue((addAccount != null ? addAccount : 0));
-                    }
-
-                }
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        Integer totalCount = resultResponse.getResultList().size();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,resultResponse.getResultList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            //请求第一页5000条
+            form.setPageSize(defaultRowMaxCount);
+            form.setPaginatorPage(i+1);
+            HjhInfoAccountBalanceResponse resultResponse2 = accountBalanceService.getSearchListByDay(form);
+            if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
 
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("rptDate","日期");
+        map.put("investAccount","原始资产交易额(元)");
+        map.put("creditAccount","债转资产交易额(元)");
+        map.put("reinvestAccount","复投资金额(元)");
+        map.put("addAccount","新加入资金额(元)");
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter dateAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String format = new SimpleDateFormat("yyyy-MM-dd ").format((Date)object);
+                return StringUtils.isEmpty(format) ? StringUtils.EMPTY : format;
+            }
+        };
+
+        IValueFormatter valueFormatAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return object != null ? object.toString() : "0";
+            }
+        };
+
+        mapAdapter.put("rptDate", dateAdapter);
+        mapAdapter.put("investAccount", valueFormatAdapter);
+        mapAdapter.put("creditAccount", valueFormatAdapter);
+        mapAdapter.put("reinvestAccount", valueFormatAdapter);
+        mapAdapter.put("addAccount", valueFormatAdapter);
+        return mapAdapter;
     }
 
     /**
@@ -148,73 +155,66 @@ public class AccountBalanceController extends BaseController {
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出月交易量")
     @PostMapping("/exportActionMonth")
-    public void exportActionMonth( HttpServletResponse response, HjhAccountBalanceRequest form) throws Exception {
+    public void exportActionMonth(HttpServletRequest request,HttpServletResponse response, @RequestBody HjhAccountBalanceRequest form) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        //请求第一页5000条
+        form.setPageSize(defaultRowMaxCount);
+        form.setPaginatorPage(1);
+        HjhInfoAccountBalanceResponse resultResponse = accountBalanceService.getSearchListByMonth(form);
         // 表格sheet名称
         String sheetName = "每月交易量";
-        List<HjhAccountBalanceVO> resultList = accountBalanceService.getHjhAccountBalanceMonthList(form);
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[]{"序号", "日期", "原始资产交易额(元)", "债转资产交易额(元)", "复投资金额(元)", "新加入资金额(元)"};
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
         // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
-        if (resultList != null && resultList.size() > 0) {
-            int sheetCount = 1;
-            int rowNum = 0;
-            for (int i = 0; i < resultList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    HjhAccountBalanceVO AccountBalanceCustomize = resultList.get(i);
-
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-
-
-                    Double investAccount = AccountBalanceCustomize.getInvestAccount().doubleValue();
-                    Double creditAccount = AccountBalanceCustomize.getCreditAccount().doubleValue();
-                    Double reinvestAccount = AccountBalanceCustomize.getReinvestAccount().doubleValue();
-                    Double addAccount = AccountBalanceCustomize.getAddAccount().doubleValue();
-                    String dataFormt = AccountBalanceCustomize.getDataFormt();
-                    // 序号
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    }
-
-                    // 日期
-                    else if (celLength == 1) {
-                        cell.setCellValue(StringUtils.isEmpty(dataFormt) ? StringUtils.EMPTY : dataFormt);
-                    }
-                    // 原始资产交易额(元)
-                    else if (celLength == 2) {
-                        cell.setCellValue((investAccount != null ? investAccount : 0));
-                    }
-//					债转资产交易额(元)
-                    else if (celLength == 3) {
-                        cell.setCellValue((creditAccount != null ? creditAccount : 0));
-                    }
-//					复投资金额(元)
-                    else if (celLength == 4) {
-                        cell.setCellValue((reinvestAccount != null ? reinvestAccount : 0));
-                    }
-//					新加入资金额(元)
-                    else if (celLength == 5) {
-                        cell.setCellValue((addAccount != null ? addAccount : 0));
-                    }
-
-                }
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        Integer totalCount = resultResponse.getResultList().size();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = monthBuildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,resultResponse.getResultList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            //请求第一页5000条
+            form.setPageSize(defaultRowMaxCount);
+            form.setPaginatorPage(i+1);
+            HjhInfoAccountBalanceResponse resultResponse2 = accountBalanceService.getSearchListByMonth(form);
+            if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
 
+    private Map<String, IValueFormatter> monthBuildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter dateAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return null==object||"".equals(object) ? StringUtils.EMPTY : object.toString();
+            }
+        };
+
+        IValueFormatter valueFormatAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return object != null ? object.toString() : "0";
+            }
+        };
+
+        mapAdapter.put("dataFormt", dateAdapter);
+        mapAdapter.put("investAccount", valueFormatAdapter);
+        mapAdapter.put("creditAccount", valueFormatAdapter);
+        mapAdapter.put("reinvestAccount", valueFormatAdapter);
+        mapAdapter.put("addAccount", valueFormatAdapter);
+        return mapAdapter;
     }
 }

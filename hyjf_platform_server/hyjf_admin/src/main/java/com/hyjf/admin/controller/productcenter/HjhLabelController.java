@@ -375,7 +375,7 @@ public class HjhLabelController extends BaseController{
 			// 标签名称
         	if (StringUtils.isNotEmpty(viewRequest.getLabelName())){
         		request.setLabelName(viewRequest.getLabelName());
-        	}
+        	} 
         	//标的期限最小
         	if (StringUtils.isNotEmpty(viewRequest.getLabelTermStart())) {
         		request.setLabelTermStart(Integer.valueOf(viewRequest.getLabelTermStart()));
@@ -391,10 +391,14 @@ public class HjhLabelController extends BaseController{
         	// 标的实际利率最小
         	if (StringUtils.isNotEmpty(viewRequest.getLabelAprStart())) {
         		request.setLabelAprStart(new BigDecimal(viewRequest.getLabelAprStart()));
+        	} else {
+        		request.setLabelAprStart(BigDecimal.ZERO);
         	}
         	// 标的实际利率最大
         	if (StringUtils.isNotEmpty(viewRequest.getLabelAprEnd())) {
         		request.setLabelAprEnd(new BigDecimal(viewRequest.getLabelAprEnd()));
+        	} else {
+        		request.setLabelAprEnd(BigDecimal.ZERO);
         	}
         	// 还款方式
         	if (StringUtils.isNotEmpty(viewRequest.getBorrowStyle())) {
@@ -407,10 +411,14 @@ public class HjhLabelController extends BaseController{
         	// 标的实际支付金额最小
         	if (StringUtils.isNotEmpty(viewRequest.getLabelPaymentAccountStart())) {
         		request.setLabelPaymentAccountStart(new BigDecimal(viewRequest.getLabelPaymentAccountStart()));
+        	} else {
+        		request.setLabelPaymentAccountStart(BigDecimal.ZERO);
         	}
         	// 标的实际支付金额最大
         	if (StringUtils.isNotEmpty(viewRequest.getLabelPaymentAccountEnd())) {
         		request.setLabelPaymentAccountEnd(new BigDecimal(viewRequest.getLabelPaymentAccountEnd()));
+        	} else {
+        		request.setLabelPaymentAccountEnd(BigDecimal.ZERO);
         	}
         	// 资产来源Code
         	if (StringUtils.isNotEmpty(viewRequest.getInstCode())) {
