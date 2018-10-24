@@ -27,7 +27,7 @@ public class ApplyAgreementVO  extends BaseVO implements Serializable {
     private String applyUserName;
 
     @ApiModelProperty(value = "协议份数")
-    private Byte agreementNumber;
+    private Integer agreementNumber;
 
     @ApiModelProperty(value = "申请状态 0 全部；1申请中：2申请成功")
     private Integer status;
@@ -89,11 +89,11 @@ public class ApplyAgreementVO  extends BaseVO implements Serializable {
         this.applyUserName = applyUserName == null ? null : applyUserName.trim();
     }
 
-    public Byte getAgreementNumber() {
+    public Integer getAgreementNumber() {
         return agreementNumber;
     }
 
-    public void setAgreementNumber(Byte agreementNumber) {
+    public void setAgreementNumber(Integer agreementNumber) {
         this.agreementNumber = agreementNumber;
     }
 
