@@ -25,6 +25,12 @@ public class SystemConfig {
     @Value("${hyjf.ftp.url}")
     public String ftpDomain;
 
+    @Value("${hyjf.ftp.basepath.img}")
+    private String hyjfFtpBasepathImg;
+
+    @Value("${hyjf.ftp.basepath.pdf}")
+    private String hyjfFtpBasepathPdf;
+
     @Value("${hyjf.web.host}")
     public String webHost;
 
@@ -470,5 +476,21 @@ public class SystemConfig {
 
     public void setHYJF_HANDRECHARGE_PASSWORD(String HYJF_HANDRECHARGE_PASSWORD) {
         this.HYJF_HANDRECHARGE_PASSWORD = HYJF_HANDRECHARGE_PASSWORD;
+    }
+
+    public String getHyjfFtpBasepathImg() {
+        return hyjfFtpBasepathImg;
+    }
+
+    public void setHyjfFtpBasepathImg(String hyjfFtpBasepathImg) {
+        this.hyjfFtpBasepathImg = hyjfFtpBasepathImg;
+    }
+
+    public String getHyjfFtpBasepathPdf() {
+        return hyjfFtpBasepathPdf;
+    }
+
+    public void setHyjfFtpBasepathPdf(String hyjfFtpBasepathPdf) {
+        this.hyjfFtpBasepathPdf = hyjfFtpBasepathPdf;
     }
 }
