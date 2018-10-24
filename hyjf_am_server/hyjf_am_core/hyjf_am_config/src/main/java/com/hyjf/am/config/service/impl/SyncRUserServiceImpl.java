@@ -33,7 +33,7 @@ public class SyncRUserServiceImpl implements SyncRUserService {
         String attribute = jsonObj.getString("attribute");
         String userId = jsonObj.getString("userId");
         String roleId = jsonObj.getString("roleId");
-        String trueName = jsonObj.getString("trueName");
+        String trueName = jsonObj.getString("truename");
 
         if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(roleId)) {
             RUser record = new RUser();

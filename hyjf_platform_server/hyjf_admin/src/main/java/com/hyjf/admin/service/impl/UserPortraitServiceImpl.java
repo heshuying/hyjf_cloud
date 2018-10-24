@@ -30,6 +30,16 @@ public class UserPortraitServiceImpl implements UserPortraitService {
     }
 
     /**
+     * 导出 根据参数查询用户画像信息
+     * @return
+     */
+    @Override
+    public UserPortraitResponse exportRecordList(UserPortraitRequest userPortraitRequest){
+        UserPortraitResponse response =  userPortraitClient.exportRecordList(userPortraitRequest);
+        return response;
+    }
+
+    /**
      * 根据用户id查找用户画像
      * @param userId
      * @return

@@ -33,4 +33,12 @@ public interface UserPortraitService {
      */
     int updateUserPortrait(UserPortraitRequest userPortraitRequest);
 
+    /**
+     * 导出根据参数查询用户画像信息
+     *
+     * @param mapParam
+     * @return
+     */
+    UserPortraitResponse exportRecordList(UserPortraitRequest userPortraitRequest);
+
 }

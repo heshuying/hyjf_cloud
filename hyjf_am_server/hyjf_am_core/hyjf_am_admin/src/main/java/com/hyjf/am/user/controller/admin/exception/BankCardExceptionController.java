@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.user.controller.admin.exception;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankCardExceptionResponse;
 import com.hyjf.am.resquest.admin.BankCardExceptionRequest;

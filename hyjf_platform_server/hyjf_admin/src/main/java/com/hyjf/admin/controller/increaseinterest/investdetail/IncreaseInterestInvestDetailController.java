@@ -71,7 +71,7 @@ public class IncreaseInterestInvestDetailController extends BaseController {
 	 */
 	@ApiOperation(value = "产品中心-加息投资明细", notes = "产品中心-加息投资明细 导出投资明细")
 	@GetMapping("/export")
-	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody IncreaseInterestInvestDetailRequest form) throws Exception {
+	public void exportAction(HttpServletRequest request, HttpServletResponse response, IncreaseInterestInvestDetailRequest form) throws Exception {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
@@ -119,7 +119,7 @@ public class IncreaseInterestInvestDetailController extends BaseController {
 		map.put("borrowPeriodByStyle", "项目期限");
 		map.put("borrowStyleName", "还款方式");
 		map.put("orderId", "投资订单号");
-		map.put("account", "投资金额");
+		map.put("account", "授权服务金额");
 		map.put("repayInterest", "加息收益");
 		map.put("client", "操作平台");
 		map.put("createTime", "投资时间");
@@ -172,8 +172,8 @@ public class IncreaseInterestInvestDetailController extends BaseController {
 		IValueFormatter createTimeAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
-				Integer createTime = (Integer) object;
-				return createTime==null ? "" :GetDate.getDateTimeMyTime(createTime);
+				Date createTime = (Date) object;
+				return createTime==null ? "" :GetDate.datetimeFormat.format(createTime);
 			}
 		};
 		IValueFormatter repayTimeAdapter = new IValueFormatter() {

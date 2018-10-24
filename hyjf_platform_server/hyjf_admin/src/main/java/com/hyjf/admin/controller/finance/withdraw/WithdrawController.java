@@ -23,6 +23,7 @@ import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -261,7 +262,7 @@ public class WithdrawController extends BaseController {
 			@Override
 			public String format(Object object) {
 				String str = (String) object;
-				return str==null ? "" : String.valueOf(str);
+				return StringUtils.isNotBlank(str) ? "" : String.valueOf(str);
 			}
 		};
 		IValueFormatter userAttributeAdapter = new IValueFormatter() {
@@ -307,7 +308,6 @@ public class WithdrawController extends BaseController {
 		mapAdapter.put("credited", bigDecimalToStrAdapter);
 		mapAdapter.put("actualTotal", bigDecimalToStrAdapter);
 		mapAdapter.put("withdrawType", withdrawAdapter);
-		mapAdapter.put("seqNo", strAdapter);
 		return mapAdapter;
 	}
 

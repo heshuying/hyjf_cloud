@@ -147,16 +147,17 @@ public class ProtocolsController extends BaseController {
 	@ApiOperation(value = "pdf文件上传", notes = "pdf文件上传")
 	@PostMapping(value = "uploadFile")
 	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
 		AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
 		// 错误信息对象
-		DzqzCallBean errDzqzCallBean = new DzqzCallBean();
 		// request转换为MultipartHttpServletRequest
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
 		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
 
 		String templetId = multipartRequest.getParameter("templetId");
+		logger.info("---------------法大大协议开始上传模板----------，协议类型ID：" + templetId);
 		// ======上传校验=======
-		if (templetId.isEmpty()){
+		if (templetId == null || templetId.isEmpty() || "undefined".equals(templetId)){
 			adminResult.setStatus(FAIL);
 			adminResult.setStatusDesc("协议类型必须选择。");
 			return adminResult;
@@ -166,17 +167,20 @@ public class ProtocolsController extends BaseController {
 		if (multipartFileList == null || multipartFileList.size() <= 0){
 			adminResult.setStatus(FAIL);
 			adminResult.setStatusDesc("获取上传文件失败！");
+			logger.info("---------------法大大协议上传模板,获取上传文件失败！");
 			return adminResult;
 		}
 		if (multipartFileList.size() > 1){
 			adminResult.setStatus(FAIL);
 			adminResult.setStatusDesc("不可同时上传多个文件");
+			logger.info("---------------法大大协议上传模板,不可同时上传多个文件！");
 			return adminResult;
 		}
 		//从MultipartFile列表中取得唯一的Multipart
 		MultipartFile file = multipartFileList.get(0);
 		if (file == null){
 			adminResult.setStatus(FAIL);
+			logger.info("---------------法大大协议上传模板,获取上传模板失败！");
 			adminResult.setStatusDesc("获取上传模板失败！");
 			return adminResult;
 		}
@@ -184,6 +188,7 @@ public class ProtocolsController extends BaseController {
 		if (!(fileName.substring(fileName.length()-4)).toUpperCase().equals(".PDF")){
 			adminResult.setStatus(FAIL);
 			adminResult.setStatusDesc("上传的模板必须是PDF格式。");
+			logger.info("---------------法大大协议上传模板,上传的模板必须是PDF格式！");
 			return adminResult;
 		}
 		// ======调模板上传FTP服务器=======
@@ -191,6 +196,7 @@ public class ProtocolsController extends BaseController {
 		if (StringUtils.isBlank(httpUrl)){
 			adminResult.setStatus(FAIL);
 			adminResult.setStatusDesc("上传FTP服务器失败。");
+			logger.info("---------------法大大协议上传模板,上传FTP服务器失败！");
 			return adminResult;
 		}
 
@@ -205,6 +211,7 @@ public class ProtocolsController extends BaseController {
 		if (dzqzCallBean == null) {
 			adminResult.setStatus(FAIL);
 			adminResult.setStatusDesc("返回结果为空，上传模板失败。");
+			logger.info("---------------法大大协议上传模板,返回结果为空，上传模板失败！");
 			return adminResult;
 		}
 

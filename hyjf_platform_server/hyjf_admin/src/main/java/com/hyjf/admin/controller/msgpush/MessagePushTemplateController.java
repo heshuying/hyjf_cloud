@@ -107,6 +107,7 @@ public class MessagePushTemplateController extends BaseController {
                         form.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
                     }
                     BeanUtils.copyProperties(form, record);
+                    record.setTemplateActionUrl(form.getTemplateActionUrl2());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -214,7 +215,7 @@ public class MessagePushTemplateController extends BaseController {
                 templateRequest.setTemplateActionUrl("hyjf://jumpTransactionDetail");
             }
         }
-        templateRequest.setTagCode(templateRequest.getTemplateCode().substring(0, 3));
+        templateRequest.setTagCode(templateRequest.getTagCode());
         templateRequest.setTemplateCode(templateRequest.getTemplateCode());
         templateRequest.setCreateUserName(username);
         response = this.messagePushTemplateService.updateRecord(templateRequest);

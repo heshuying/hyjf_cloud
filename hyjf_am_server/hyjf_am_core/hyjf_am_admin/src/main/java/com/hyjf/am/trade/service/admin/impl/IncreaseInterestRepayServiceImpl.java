@@ -1,8 +1,8 @@
 package com.hyjf.am.trade.service.admin.impl;
 
 import com.hyjf.am.resquest.admin.IncreaseInterestRepayRequest;
-import com.hyjf.am.trade.dao.mapper.customize.admin.IncreaseInterestRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.IncreaseInterestRepayMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.IncreaseInterestRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepay;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayExample;
 import com.hyjf.am.trade.service.admin.IncreaseInterestRepayService;

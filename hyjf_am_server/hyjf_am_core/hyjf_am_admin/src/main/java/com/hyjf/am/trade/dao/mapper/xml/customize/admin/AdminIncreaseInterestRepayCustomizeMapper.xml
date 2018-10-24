@@ -136,6 +136,7 @@
 		<result column="repayPeriod" property="repayPeriod" jdbcType="VARCHAR" />
 		<result column="borrowStyle" property="borrowStyle" jdbcType="VARCHAR" />
 		<result column="investUserId" property="investUserId" jdbcType="VARCHAR" />
+		<result column="investId" property="investId" jdbcType="VARCHAR" />
 		<result column="borrowApr" property="borrowApr" jdbcType="VARCHAR" />
 		<result column="borrowExtraYield" property="borrowExtraYield" jdbcType="VARCHAR" />
 		<result column="repayCapital" property="repayCapital" jdbcType="VARCHAR" />
@@ -152,6 +153,7 @@
 		bs.name AS repayStyleName,
 		hiild.user_name AS investUserName,
 		hiild.user_id AS investUserId,
+		hiild.invest_id AS investId,
 		b.borrow_apr AS borrowApr,
 		b.borrow_style AS borrowStyle,
 		info.borrow_extra_yield AS borrowExtraYield,
@@ -173,6 +175,10 @@
 		<!-- 借款编号 -->
 		<if test="borrowNidSrch != null and borrowNidSrch != ''">
 			AND hiild.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
+		</if>
+		<!-- 项目状态 -->
+		<if test="repayStatusSrch != null and repayStatusSrch != ''">
+			AND hiild.repay_status = #{repayStatusSrch}
 		</if>
 		<!-- 投资人 -->
 		<if test="userNameSrch != null and userNameSrch != ''">

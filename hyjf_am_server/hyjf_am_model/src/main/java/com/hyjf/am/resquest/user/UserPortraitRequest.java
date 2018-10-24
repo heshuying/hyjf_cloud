@@ -84,6 +84,49 @@ public class UserPortraitRequest extends BasePage {
 
     private BigDecimal bankFrost;
 
+    //    检索条件
+    /**
+     * 年龄开始
+     */
+    private Integer ageStart;
+    /**
+     * 年龄开始
+     */
+    private Integer ageEnd;
+    /**
+     * 账户总资产开始
+     */
+    private BigDecimal bankTotalStart;
+    /**
+     * 账户总资产结束
+     */
+    private BigDecimal bankTotalEnd;
+    /**
+     * 累计收益开始
+     */
+    private BigDecimal interestSumStart;
+    /**
+     * 累计收益结束
+     */
+    private BigDecimal interestSumEnd;
+    /**
+     * 交易笔数开始
+     */
+    private Integer tradeNumberStart;
+    /**
+     * 交易笔数结束
+     */
+    private Integer tradeNumberEnd;
+    /**
+     * 注册时间开始
+     */
+    private String regTimeStart;
+    /**
+     * 注册时间结束
+     */
+    private String regTimeEnd;
+//    private List<UserPortraitCustomize> recordlist;
+
     private static final long serialVersionUID = 1L;
     //默认为true ,获取全部数据，为false时，获取部分数据
     public boolean limitFlg = true;
@@ -418,5 +461,85 @@ public class UserPortraitRequest extends BasePage {
 
     public void setBankFrost(BigDecimal bankFrost) {
         this.bankFrost = bankFrost;
+    }
+
+    public Integer getAgeStart() {
+        return ageStart;
+    }
+
+    public void setAgeStart(Integer ageStart) {
+        this.ageStart = ageStart;
+    }
+
+    public Integer getAgeEnd() {
+        return ageEnd;
+    }
+
+    public void setAgeEnd(Integer ageEnd) {
+        this.ageEnd = ageEnd;
+    }
+
+    public BigDecimal getBankTotalStart() {
+        return bankTotalStart;
+    }
+
+    public void setBankTotalStart(BigDecimal bankTotalStart) {
+        this.bankTotalStart = bankTotalStart;
+    }
+
+    public BigDecimal getBankTotalEnd() {
+        return bankTotalEnd;
+    }
+
+    public void setBankTotalEnd(BigDecimal bankTotalEnd) {
+        this.bankTotalEnd = bankTotalEnd;
+    }
+
+    public BigDecimal getInterestSumStart() {
+        return interestSumStart;
+    }
+
+    public void setInterestSumStart(BigDecimal interestSumStart) {
+        this.interestSumStart = interestSumStart;
+    }
+
+    public BigDecimal getInterestSumEnd() {
+        return interestSumEnd;
+    }
+
+    public void setInterestSumEnd(BigDecimal interestSumEnd) {
+        this.interestSumEnd = interestSumEnd;
+    }
+
+    public Integer getTradeNumberStart() {
+        return tradeNumberStart;
+    }
+
+    public void setTradeNumberStart(Integer tradeNumberStart) {
+        this.tradeNumberStart = tradeNumberStart;
+    }
+
+    public Integer getTradeNumberEnd() {
+        return tradeNumberEnd;
+    }
+
+    public void setTradeNumberEnd(Integer tradeNumberEnd) {
+        this.tradeNumberEnd = tradeNumberEnd;
+    }
+
+    public String getRegTimeStart() {
+        return regTimeStart;
+    }
+
+    public void setRegTimeStart(String regTimeStart) {
+        this.regTimeStart = regTimeStart;
+    }
+
+    public String getRegTimeEnd() {
+        return regTimeEnd;
+    }
+
+    public void setRegTimeEnd(String regTimeEnd) {
+        this.regTimeEnd = regTimeEnd;
     }
 }
