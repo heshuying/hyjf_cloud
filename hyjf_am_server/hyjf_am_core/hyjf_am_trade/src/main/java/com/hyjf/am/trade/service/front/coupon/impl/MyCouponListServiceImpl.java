@@ -516,13 +516,13 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             if (tenderQuotaType == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
-                            bestCoupon.getProjectExpirationType());
+                            bestCoupon.getTenderQuota());
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
             } else if (tenderQuotaType == 2) {
                 if (bestCoupon.getTenderQuotaAmount() != null && (new Double(bestCoupon.getTenderQuotaAmount()) > new Double(money))) {
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getProjectExpirationType());
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getTenderQuota());
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
@@ -622,14 +622,14 @@ public class MyCouponListServiceImpl implements MyCouponListService {
                     if (userCouponConfigCustomize.getTenderQuotaMin() > new Double(money)
                             || userCouponConfigCustomize.getTenderQuotaMax() < new Double(money)) {
 
-                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getProjectExpirationType());
+                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota());
                         notAvailableCouponList.add(couponBeanVo);
                         continue;
                     }
                 } else if (2 == tenderQuotaType) {
                     if (!"不限".equals(userCouponConfigCustomize.getTenderQuota()) && null != userCouponConfigCustomize.getTenderQuotaAmount()) {
                         if(new Double(userCouponConfigCustomize.getTenderQuotaAmount()) > new Double(money)){
-                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getProjectExpirationType());
+                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota());
                             notAvailableCouponList.add(couponBeanVo);
                             continue;
                         }
