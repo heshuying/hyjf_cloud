@@ -185,16 +185,16 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 	@Override
 	public Map<String,Object> callUnBindCardPage(WebViewUserVO user, BankOpenAccountVO accountChinapnrTender,BankCardVO bankCardVO, UserInfoVO userInfoVO,String channel,String sign,String bgRetUrl){
 		// 失败页面
-		String errorPath = "/user/unBindCardError";
+		String errorPath = "/bank/user/bankcardNew/closebindcard-error";
 		// 成功页面
-		String successPath = "/user/unBindCardSuccess";
+		String successPath = "/bank/user/bankcardNew/closebindcard-success";
 		// 回调路径
 		String retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath +"?userId="+user.getUserId();
 		String successUrl = super.getFrontHost(systemConfig,channel) + successPath;
 		if(!channel.contains(BankCallConstant.CHANNEL_PC)){
 			//todo 返回路径
-			errorPath = "/user/open/result/failed";
-			successPath = "/user/open/result/success";
+			errorPath = "/user/bankCard/unbind/result/failed";
+			successPath = "/user/bankCard/unbind/result/success";
 			// 同步地址  是否跳转到前端页面
 			retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath +"?status=99&userId="+user.getUserId();
 			successUrl = super.getFrontHost(systemConfig,channel+"") + successPath+"?status=000&statusDesc=";
