@@ -1431,6 +1431,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	 */
 	@Override
 	public void insertCreditBgData(CreditTenderBgVO request) {
+		CreditTenderLogVO creditTenderLog = request.getCreditTenderLog();
 		// 删除tmp表
 		logger.info("债转异步处理  删除tmp表{}",JSONObject.toJSONString(request));
 		deleteByOrderIdAndUserId(request.getCreditTenderLog().getLogOrderId(),request.getCreditTenderLog().getUserId());
@@ -1444,7 +1445,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		this.adminAccountCustomizeMapper.updateCreditAssignSuccess(assignAccountNew) ;
 		AccountList assignAccountList = CommonUtils.convertBean(request.getAssignAccountList(),AccountList.class);
 		logger.info("处理承接人account_list表{} ",JSONObject.toJSONString(assignAccountList));
-		this.accountListMapper.insertSelective(assignAccountList);
+		insertAssignAccountList(creditTender,assignAccountNew,creditTenderLog);
 
 		// 处理出让人的 account表和account_list表
 		Account sellerAccountNew = CommonUtils.convertBean(request.getSellerAccountNew(),Account.class);
@@ -1452,7 +1453,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		this.adminAccountCustomizeMapper.updateCreditSellerSuccess(sellerAccountNew) ;
 		AccountList sellerAccountList = CommonUtils.convertBean(request.getSellerAccountList(),AccountList.class);
 		logger.info("处理出让人的 account_list表{} ",JSONObject.toJSONString(sellerAccountList));
-		this.accountListMapper.insertSelective(sellerAccountList);
+		insertSellerAccountList(creditTender,sellerAccountNew,creditTenderLog);
 
 		// 插入 creditRepay
 		if(request.getCreditRepayVO()!=null){
@@ -1487,6 +1488,110 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 			logger.info("调用银行结束债转接口");
 			this.requestDebtEnd(borrowRecover, request.getSellerBankAccount().getAccount());
 		}
+	}
+
+	// 处理出让人的account_list
+	private void insertSellerAccountList(CreditTender creditTender, Account sellerAccountNew, CreditTenderLogVO creditTenderLog) {
+		sellerAccountNew = getAccount(creditTender.getUserId());
+		AccountList sellerAccountList = new AccountList();
+		sellerAccountList.setNid(creditTender.getAssignNid());
+		sellerAccountList.setUserId(creditTender.getCreditUserId());
+		//操作金额
+		sellerAccountList.setAmount(creditTender.getAssignPay().subtract(creditTender.getCreditFee()));
+		// 收支类型1收入2支出3冻结
+		sellerAccountList.setType(1);
+		// 交易类型
+		sellerAccountList.setTrade("creditsell");
+		// 操作识别码 balance余额操作 frost冻结操作 await待收操作
+		sellerAccountList.setTradeCode("balance");
+		// 资金总额
+		sellerAccountList.setTotal(sellerAccountNew.getTotal());
+		// 可用金额
+		sellerAccountList.setBalance(sellerAccountNew.getBalance());
+		// 银行存管可用余额
+		sellerAccountList.setBankBalance(sellerAccountNew.getBankBalance());
+		// 银行待收总额
+		sellerAccountList.setBankAwait(sellerAccountNew.getBankAwait());
+		// 银行待还本金
+		sellerAccountList.setBankAwaitCapital(sellerAccountNew.getBankAwaitCapital());
+		// 银行待还利息
+		sellerAccountList.setBankAwaitInterest(sellerAccountNew.getBankAwaitInterest());
+		// 银行累计收益
+		sellerAccountList.setBankInterestSum(sellerAccountNew.getBankInterestSum());
+		// 银行累计投资
+		sellerAccountList.setBankInvestSum(sellerAccountNew.getBankInvestSum());
+		// 银行存管冻结金额
+		sellerAccountList.setBankFrost(sellerAccountNew.getBankFrost());
+		// 银行总资产
+		sellerAccountList.setBankTotal(sellerAccountNew.getBankTotal());
+		//汇计划账户可用余额
+		sellerAccountList.setPlanBalance(sellerAccountNew.getPlanBalance());
+		// 汇添金账户冻结金额
+		sellerAccountList.setPlanFrost(sellerAccountNew.getPlanFrost());
+		sellerAccountList.setSeqNo(String.valueOf(creditTenderLog.getSeqNo()));
+		sellerAccountList.setTxDate(creditTenderLog.getTxDate());
+		sellerAccountList.setTxTime(creditTenderLog.getTxTime());
+		sellerAccountList.setBankSeqNo(String.valueOf(creditTenderLog.getTxDate()) + String.valueOf(creditTenderLog.getTxTime()) + String.valueOf(creditTenderLog.getSeqNo()));
+		// 出让人电子账户号
+		sellerAccountList.setAccountId(sellerAccountNew.getAccountId());
+		sellerAccountList.setFrost(sellerAccountNew.getFrost());
+		sellerAccountList.setAwait(sellerAccountNew.getAwait());
+		sellerAccountList.setRepay(sellerAccountNew.getRepay());
+		sellerAccountList.setRemark("出让债权");
+		sellerAccountList.setCreateTime(new Date());
+		sellerAccountList.setOperator(String.valueOf(creditTenderLog.getCreditUserId()));
+		sellerAccountList.setIp(creditTenderLog.getAddIp());
+		sellerAccountList.setWeb(0);
+		sellerAccountList.setIsBank(1);
+		sellerAccountList.setCheckStatus(0);
+
+		this.accountListMapper.insertSelective(sellerAccountList);
+	}
+
+	// 处理承接人account_list
+	private void insertAssignAccountList(CreditTender creditTender,Account assignAccount,CreditTenderLogVO creditTenderLog ) {
+		// 重新获取承接人用户账户信息
+		assignAccount = getAccount(assignAccount.getUserId());
+		AccountList assignAccountList = new AccountList();
+		assignAccountList.setNid(creditTender.getAssignNid());
+		assignAccountList.setUserId(assignAccount.getUserId());
+		assignAccountList.setAmount(creditTender.getAssignPay());
+		assignAccountList.setType(2);
+		assignAccountList.setTrade("creditassign");
+		assignAccountList.setTradeCode("balance");
+		assignAccountList.setTotal(assignAccount.getTotal());
+		assignAccountList.setBalance(assignAccount.getBalance());
+		assignAccountList.setBankBalance(assignAccount.getBankBalance());
+		assignAccountList.setBankAwait(assignAccount.getBankAwait());
+		assignAccountList.setBankAwaitCapital(assignAccount.getBankAwaitCapital());
+		assignAccountList.setBankAwaitInterest(assignAccount.getBankAwaitInterest());
+		assignAccountList.setBankInvestSum(assignAccount.getBankInvestSum());
+		assignAccountList.setBankInterestSum(assignAccount.getBankInterestSum());
+		assignAccountList.setBankFrost(assignAccount.getBankFrost());
+		assignAccountList.setBankInterestSum(assignAccount.getBankInterestSum());
+		// 银行总资产
+		logger.info("assignAccountList.setBankTotal:   "+assignAccount.getBankTotal());
+		assignAccountList.setBankTotal(assignAccount.getBankTotal());
+		//汇计划账户可用余额
+		assignAccountList.setPlanBalance(assignAccount.getPlanBalance());
+		assignAccountList.setPlanFrost(assignAccount.getPlanFrost());
+		assignAccountList.setSeqNo(String.valueOf(creditTenderLog.getSeqNo()));
+		assignAccountList.setTxDate(creditTenderLog.getTxDate());
+		assignAccountList.setTxTime(creditTenderLog.getTxTime());
+		assignAccountList.setBankSeqNo(String.valueOf(creditTenderLog.getTxDate()) + String.valueOf(creditTenderLog.getTxTime()) + String.valueOf(creditTenderLog.getSeqNo()));
+		// 承接人电子账户号
+		assignAccountList.setAccountId(assignAccount.getAccountId());
+		assignAccountList.setFrost(assignAccount.getFrost());
+		assignAccountList.setAwait(assignAccount.getAwait());
+		assignAccountList.setRepay(assignAccount.getRepay());
+		assignAccountList.setRemark("购买债权");
+		assignAccountList.setCreateTime(new Date());
+		assignAccountList.setOperator(String.valueOf(assignAccount.getUserId()));
+		assignAccountList.setIp(creditTender.getAddIp());
+		assignAccountList.setWeb(0);
+		assignAccountList.setIsBank(1);
+		assignAccountList.setCheckStatus(0);
+		this.accountListMapper.insertSelective(assignAccountList);
 	}
 
 	// 分期的标的

@@ -2029,6 +2029,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer saveCreditBgData(CreditTenderBgVO creditTenderBg) {
         String url  = "http://AM-TRADE/am-trade/creditTender/saveCreditBgData";
+        logger.info("保存债转的数据：{}",JSONObject.toJSONString(creditTenderBg));
         IntegerResponse response = restTemplate.postForEntity(url,creditTenderBg,IntegerResponse.class).getBody();
         if(IntegerResponse.isSuccess(response)){
             return 1;
