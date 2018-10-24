@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.finance.accountdetail;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AccountDetailRequestBean;
 import com.hyjf.admin.beans.vo.AccountDetailCustomizeVO;
 import com.hyjf.admin.beans.vo.DropDownVO;
@@ -13,6 +14,8 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AccountDetailService;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.admin.utils.ConvertUtils;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
@@ -31,15 +34,19 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -121,142 +128,164 @@ public class AccountDetailController extends BaseController {
      */
     @ApiOperation(value = "导出资金明细列表", notes = "导出资金明细列表")
     @PostMapping(value = "/exportqueryaccountdetail")
-    public void exportAccountsExcel(HttpServletResponse response,@RequestBody AccountDetailRequestBean accountDetailRequestBean) throws Exception {
+    public void exportAccountsExcel(HttpServletRequest httpRequest, HttpServletResponse response, @RequestBody AccountDetailRequestBean accountDetailRequestBean) throws Exception {
+
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "资金明细";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+        int sheetCount = 0;
+        String sheetNameTmp = sheetName + "_第1页";
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        accountDetailRequestBean.setCurrPage(1);
+        accountDetailRequestBean.setPageSize(defaultRowMaxCount);
 
         AccountDetailRequest requestAccountDetail = new AccountDetailRequest();
         BeanUtils.copyProperties(accountDetailRequestBean,requestAccountDetail);
         //查找全部数据
-        requestAccountDetail.setLimitFlg(true);
+        //requestAccountDetail.setLimitFlg(true);
         AccountDetailResponse accountDetailResponse = accountDetailService.findAccountDetailList(requestAccountDetail);
+        if (accountDetailResponse == null || accountDetailResponse.getRecordTotal() <= 0){
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            int totalCount = accountDetailResponse.getRecordTotal();
+            sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, accountDetailResponse.getResultList());
+        }
 
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
-
-        String[] titles = new String[]{"序号", "明细ID", "用户名", "电子账号", "推荐人", "推荐组", "资金托管平台", "流水号", "订单号", "操作类型", "交易类型", "操作金额", "银行总资产", "银行可用余额", "银行冻结金额", "汇付可用金额", "汇付冻结金额", "汇添金可用余额",
-                "汇添金冻结金额", "交易状态", "对账状态", "备注说明", "时间"};
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-        if (null != accountDetailResponse && null != accountDetailResponse.getResultList()) {
-            List<AccountDetailVO> accountDetailVOList = accountDetailResponse.getResultList();
-            if (accountDetailVOList != null && accountDetailVOList.size() > 0) {
-                int sheetCount = 1;
-                int rowNum = 0;
-                for (int i = 0; i < accountDetailVOList.size(); i++) {
-                    rowNum++;
-                    if (i != 0 && i % 60000 == 0) {
-                        sheetCount++;
-                        sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                        rowNum = 1;
-                    }
-                    // 新建一行
-                    Row row = sheet.createRow(rowNum);
-                    // 循环数据
-                    for (int celLength = 0; celLength < titles.length; celLength++) {
-                        AccountDetailVO accountDetailCustomize = accountDetailVOList.get(i);
-                        // 创建相应的单元格
-                        Cell cell = row.createCell(celLength);
-                        // 序号
-                        if (celLength == 0) {
-                            cell.setCellValue(i + 1);
-                        }
-                        // 明细ID
-                        else if (celLength == 1) {
-                            cell.setCellValue(accountDetailCustomize.getId());
-                        }
-                        // 用户名
-                        else if (celLength == 2) {
-                            cell.setCellValue(accountDetailCustomize.getUsername());
-                        }
-                        // 电子账号
-                        else if (celLength == 3) {
-                            cell.setCellValue(accountDetailCustomize.getAccountId());
-                        }
-                        // 推荐人
-                        else if (celLength == 4) {
-                            cell.setCellValue(accountDetailCustomize.getReferrerName());
-                        }
-                        // 推荐组
-                        else if (celLength == 5) {
-                            cell.setCellValue(accountDetailCustomize.getReferrerGroup());
-                        }
-                        // 资金托管平台
-                        else if (celLength == 6) {
-                            cell.setCellValue(StringUtils.isEmpty(accountDetailCustomize.getIsBank()) ? "" : "1".equals(accountDetailCustomize.getIsBank()) ? "江西银行" : "汇付天下");
-                        }
-                        // 流水号
-                        else if (celLength == 7) {
-                            cell.setCellValue(accountDetailCustomize.getSeqNo());
-                        }
-                        // 订单号
-                        else if (celLength == 8) {
-                            cell.setCellValue(accountDetailCustomize.getNid());
-                        }
-                        // 操作类型
-                        else if (celLength == 9) {
-                            cell.setCellValue(accountDetailCustomize.getType());
-                        }
-                        // 交易类型
-                        else if (celLength == 10) {
-                            cell.setCellValue(accountDetailCustomize.getTradeType());
-                        }
-                        // 操作金额
-                        else if (celLength == 11) {
-                            cell.setCellValue(accountDetailCustomize.getAmount() + "");
-                        }
-                        // 银行总资产
-                        else if (celLength == 12) {
-                            cell.setCellValue(accountDetailCustomize.getBankTotal() + "");
-                        }
-                        // 银行可用余额
-                        else if (celLength == 13) {
-                            cell.setCellValue(accountDetailCustomize.getBankBalance() + "");
-                        }
-                        // 银行冻结金额
-                        else if (celLength == 14) {
-                            cell.setCellValue(accountDetailCustomize.getBankFrost() + "");
-                        }
-                        // 汇付可用金额
-                        else if (celLength == 15) {
-                            cell.setCellValue(accountDetailCustomize.getBalance() + "");
-                        }
-                        // 汇付冻结金额
-                        else if (celLength == 16) {
-                            cell.setCellValue(accountDetailCustomize.getFrost() + "");
-                        }
-                        // 汇添金可用金额
-                        else if (celLength == 17) {
-                            cell.setCellValue(accountDetailCustomize.getPlanBalance() + "");
-                        }
-                        // 汇添金冻结金额
-                        else if (celLength == 18) {
-                            cell.setCellValue(accountDetailCustomize.getPlanFrost() + "");
-                        }
-                        // 交易状态
-                        else if (celLength == 19) {
-                            cell.setCellValue(StringUtils.isEmpty(accountDetailCustomize.getTradeStatus()) ? "" : "0".equals(accountDetailCustomize.getTradeStatus()) ? "失败" : "成功" + "");
-                        }
-                        // 对账状态
-                        else if (celLength == 20) {
-                            cell.setCellValue(StringUtils.isEmpty(accountDetailCustomize.getCheckStatus()) ? "" : "0".equals(accountDetailCustomize.getCheckStatus()) ? "未对账" : "已对账" + "");
-                        }
-                        // 备注说明
-                        else if (celLength == 21) {
-                            cell.setCellValue(accountDetailCustomize.getRemark());
-                        }
-                        // 时间
-                        else if (celLength == 22) {
-                            cell.setCellValue(accountDetailCustomize.getCreateTime());
-                        }
-                    }
-                }
+        for (int i = 1; i < sheetCount; i++) {
+            requestAccountDetail.setCurrPage(i+1);
+            AccountDetailResponse AccountDetailResponse2 = accountDetailService.findAccountDetailList(requestAccountDetail);
+            if (AccountDetailResponse2 != null && AccountDetailResponse2.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  AccountDetailResponse2.getResultList());
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(httpRequest, response, fileName, workbook);
+    }
 
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("id", "明细ID");
+        map.put("username", "用户名");
+        map.put("accountId", "电子账号");
+        map.put("referrerName", "推荐人");
+        map.put("referrerGroup", "推荐组");
+        map.put("isBank", "资金托管平台");
+        map.put("seqNo", "流水号");
+        map.put("nid", "订单号");
+        map.put("type", "操作类型");
+        map.put("tradeType", "交易类型");
+        map.put("amount", "操作金额");
+        map.put("bankTotal", "银行总资产");
+        map.put("bankBalance", "银行可用余额");
+        map.put("bankFrost", "银行冻结金额");
+        map.put("balance", "汇付可用余额");
+        map.put("frost", "汇付冻结金额");
+        map.put("planBalance","汇添金可用余额");
+        map.put("planFrost","汇添金冻结金额");
+        map.put("tradeStatus", "交易状态");
+        map.put("checkStatus", "对账状态");
+        map.put("remark", "备注说明");
+        map.put("createTime", "时间");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter isBankAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String isBank = (String) object;
+               return StringUtils.isEmpty(isBank) ? "" : "1".equals(isBank) ? "江西银行" : "汇付天下";
+            }
+        };
+        IValueFormatter amountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal amount = (BigDecimal) object;
+                return amount + "";
+            }
+        };
+        IValueFormatter bankBalanceAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal bankBalance = (BigDecimal) object;
+                return bankBalance + "";
+            }
+        };
+        IValueFormatter bankFrostAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal bankFrost = (BigDecimal) object;
+                return bankFrost + "";
+            }
+        };
+        IValueFormatter balanceAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal balance = (BigDecimal) object;
+                return balance + "";
+            }
+        };
+        IValueFormatter frostAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal frost = (BigDecimal) object;
+                return frost + "";
+            }
+        };
+        IValueFormatter planBalanceAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal planBalance = (BigDecimal) object;
+                return planBalance + "";
+            }
+        };
+
+        IValueFormatter planFrostAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal planFrost = (BigDecimal) object;
+                return planFrost + "";
+            }
+        };
+
+        IValueFormatter tradeStatusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String tradeStatus = (String) object;
+                return StringUtils.isEmpty(tradeStatus) ? "" : "0".equals(tradeStatus) ? "失败" : "成功" + "";
+            }
+        };
+
+        IValueFormatter checkStatusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String checkStatus = (String) object;
+                return StringUtils.isEmpty(checkStatus) ? "" : "0".equals(checkStatus) ? "未对账" : "已对账" + "";
+            }
+        };
+        mapAdapter.put("isBank",isBankAdapter);
+        mapAdapter.put("amount",amountAdapter);
+        mapAdapter.put("bankBalance",bankBalanceAdapter);
+        mapAdapter.put("bankFrost",bankFrostAdapter);
+        mapAdapter.put("balance",balanceAdapter);
+        mapAdapter.put("frost",frostAdapter);
+        mapAdapter.put("planBalance",planBalanceAdapter);
+        mapAdapter.put("planFrost",planFrostAdapter);
+        mapAdapter.put("tradeStatus",tradeStatusAdapter);
+        mapAdapter.put("checkStatus",checkStatusAdapter);
+        return mapAdapter;
     }
 
 
