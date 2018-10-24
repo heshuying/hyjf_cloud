@@ -1823,6 +1823,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             userLoginInfo.setSetPassword(userVO.getIsSetPassword() == 1 ? Boolean.TRUE : Boolean.FALSE);
             // 检查用户角色是否能投资  合规接口改造之后需要判断
             UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
+            // 返回前端角色
+            userLoginInfo.setRoleId(userInfo.getRoleId());
             if (null != userInfo) {
                 userLoginInfo.setIsAllowedTender(Boolean.TRUE);
                 // 担保机构用户
@@ -1838,8 +1840,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 userLoginInfo.setIsAllowedTender(Boolean.FALSE);
             }
 
-            // 缴费授权状态
-            userLoginInfo.setPaymentAuthStatus(userVO.getPaymentAuthStatus());
 
             try {
 
@@ -1864,7 +1864,15 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 logger.error("查询用户是否完成风险测评标识出错....", e);
                 userLoginInfo.setRiskTested("0");
             }
+            // 缴费授权状态
+            userLoginInfo.setPaymentAuthStatus(userVO.getPaymentAuthStatus());
+            // 服务费授权开关
+            userLoginInfo.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+            userLoginInfo.setInvesAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            userLoginInfo.setCreditAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
 
+            // 是否校验用户角色
+            userLoginInfo.setIsCheckUserRole(Boolean.parseBoolean(systemConfig.getRoleIsopen()));
             try {
                 // 6. 用户是否完成自动授权标识: 0: 未授权 1:已授权
                 HjhUserAuthVO userAuthVO = amTradeClient.getUserAuthByUserId(userId);

@@ -825,13 +825,13 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}
 			String sign=request.getParameter("sign");
 			// 自动投标授权URL
-			result.setAutoInvesUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD);// 0:未授权
+			result.setAutoInvesUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHMERGE);// 0:未授权
 			// 自动投标授权URL
-			result.setMergeAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD);// 0:未授权
+			result.setMergeAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHMERGE);// 0:未授权
 			// 服务费授权Url
-			result.setPaymentAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD);
+			result.setPaymentAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHPAYMENT);
 			// 还款授权URL
-			result.setRepayAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD);
+			result.setRepayAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHREPAY);
 		}
 		result.setInvitationCode(userId);
 		return result;
