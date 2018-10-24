@@ -18,6 +18,8 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -219,6 +221,7 @@ public class MessagePushTemplateController extends BaseController {
         templateRequest.setTemplateCode(templateRequest.getTemplateCode());
         templateRequest.setCreateUserName(username);
         response = this.messagePushTemplateService.updateRecord(templateRequest);
+        RedisUtils.del(RedisConstants.MESSAGE_PUSH_TEMPLATE);
         return new AdminResult<>(response);
     }
 
@@ -259,6 +262,7 @@ public class MessagePushTemplateController extends BaseController {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
             if (!Response.isSuccess(tagResponse)) {
+                RedisUtils.del(RedisConstants.MESSAGE_PUSH_TEMPLATE);
                 return new AdminResult<>(FAIL, tagResponse.getMessage());
             }
             return new AdminResult<>(tagResponse);
