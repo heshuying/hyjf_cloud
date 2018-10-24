@@ -12,11 +12,11 @@
     a.auth_period authPeriod,
     a.enabled_status enabledStatus,
     b.truename createUserStr,
-    FROM_UNIXTIME(a.create_time,'%Y-%m-%d %H:%i:%S') createTimeStr,
+    a.create_time createTime,
     a.ip,
     a.mac,
     a.remark
-    from ht_hjh_user_auth_config_log a left join ht_admin b on a.create_user = b.id
+    from ht_hjh_user_auth_config_log a left join ht_admin b on a.create_user_id = b.id
     order by a.create_time desc
     <if test="limitStart >= 0" >
       limit #{limitStart} , #{limitEnd}

@@ -1,6 +1,7 @@
 package com.hyjf.am.config.dao.model.customize;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class HjhUserAuthConfigCustomize implements Serializable {
     private Integer id;
@@ -25,9 +26,7 @@ public class HjhUserAuthConfigCustomize implements Serializable {
 
     private String updateUserStr;
 
-    private Integer updateTime;
-
-    private String updateTimeStr;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -37,14 +36,6 @@ public class HjhUserAuthConfigCustomize implements Serializable {
 
     public void setUpdateUserStr(String updateUserStr) {
         this.updateUserStr = updateUserStr;
-    }
-
-    public String getUpdateTimeStr() {
-        return updateTimeStr;
-    }
-
-    public void setUpdateTimeStr(String updateTimeStr) {
-        this.updateTimeStr = updateTimeStr;
     }
 
     public Integer getId() {
@@ -127,11 +118,11 @@ public class HjhUserAuthConfigCustomize implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 }

@@ -3,6 +3,7 @@ package com.hyjf.am.vo.admin;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class HjhUserAuthConfigCustomizeVO implements Serializable {
 
@@ -16,15 +17,13 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
 
     private Integer createUser;
 
-    private Integer createTime;
+    private Date createTime;
 
     private Integer updateUser;
 
     private String updateUserStr;
 
-    private Integer updateTime;
-
-    private String updateTimeStr;
+    private Date updateTime;
 
     private String ip;
 
@@ -36,14 +35,6 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
 
     public void setUpdateUserStr(String updateUserStr) {
         this.updateUserStr = updateUserStr;
-    }
-
-    public String getUpdateTimeStr() {
-        return updateTimeStr;
-    }
-
-    public void setUpdateTimeStr(String updateTimeStr) {
-        this.updateTimeStr = updateTimeStr;
     }
 
     public Integer getId() {
@@ -110,14 +101,6 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
         this.createUser = createUser;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
     public Integer getUpdateUser() {
         return updateUser;
     }
@@ -126,11 +109,19 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Integer getUpdateTime() {
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
