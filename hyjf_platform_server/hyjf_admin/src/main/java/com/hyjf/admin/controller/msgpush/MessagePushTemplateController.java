@@ -107,6 +107,7 @@ public class MessagePushTemplateController extends BaseController {
                         form.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
                     }
                     BeanUtils.copyProperties(form, record);
+                    record.setTemplateActionUrl(form.getTemplateActionUrl2());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
