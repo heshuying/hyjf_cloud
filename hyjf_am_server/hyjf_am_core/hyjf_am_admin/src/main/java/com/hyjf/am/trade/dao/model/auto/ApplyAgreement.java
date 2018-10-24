@@ -14,7 +14,7 @@ public class ApplyAgreement implements Serializable {
 
     private String applyUserName;
 
-    private Byte agreementNumber;
+    private Integer agreementNumber;
 
     private Integer status;
 
@@ -70,11 +70,11 @@ public class ApplyAgreement implements Serializable {
         this.applyUserName = applyUserName == null ? null : applyUserName.trim();
     }
 
-    public Byte getAgreementNumber() {
+    public Integer getAgreementNumber() {
         return agreementNumber;
     }
 
-    public void setAgreementNumber(Byte agreementNumber) {
+    public void setAgreementNumber(Integer agreementNumber) {
         this.agreementNumber = agreementNumber;
     }
 

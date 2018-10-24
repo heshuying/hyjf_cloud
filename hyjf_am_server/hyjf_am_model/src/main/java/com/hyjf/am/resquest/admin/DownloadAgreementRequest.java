@@ -9,20 +9,20 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class DownloadAgreementRequest extends BasePage {
 
-    @ApiModelProperty(value = "合同编号")
-    private String tenderNid;
+    @ApiModelProperty(value = "期数")
+    private String repayPeriod;
     @ApiModelProperty(value = "借款编号")
     private String borrowNid;
 
     @ApiModelProperty(value = "协议类型，1:脱敏，0：原始")
     private String status;
 
-    public String getTenderNid() {
-        return tenderNid;
+    public String getRepayPeriod() {
+        return repayPeriod;
     }
 
-    public void setTenderNid(String tenderNid) {
-        this.tenderNid = tenderNid;
+    public void setRepayPeriod(String repayPeriod) {
+        this.repayPeriod = repayPeriod;
     }
 
     public String getBorrowNid() {
