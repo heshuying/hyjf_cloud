@@ -2,8 +2,9 @@ package com.hyjf.am.config.dao.mapper.auto;
 
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfig;
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfigExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface BankRechargeConfigMapper {
     int countByExample(BankRechargeConfigExample example);

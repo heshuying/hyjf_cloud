@@ -88,7 +88,7 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
             Integer end = GetDate.dateString2Timestamp(timeEndSrch + " 23:59:59");
             criteria.and("updateTime").gte(begin).lte(end);
         }
-        if (utmIdsSrch.length > 0) {
+        if (utmIdsSrch != null && utmIdsSrch.length > 0) {
             List<String> sourceIds = Arrays.asList(utmIdsSrch);
             criteria.in(sourceIds);
         }
