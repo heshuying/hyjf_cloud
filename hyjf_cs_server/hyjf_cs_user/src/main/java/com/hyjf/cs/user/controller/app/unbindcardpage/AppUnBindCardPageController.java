@@ -112,9 +112,10 @@ public class AppUnBindCardPageController extends BaseUserController{
             ret.put("status", "0");
             ret.put("statusDesc", "成功");
             StringBuffer sbUrl = new StringBuffer();
-            sbUrl.append(systemConfig.getServerHost());
-            sbUrl.append(request.getContextPath());
-            sbUrl.append("/bank/app/deleteCardPage");
+            sbUrl.append(super.getFrontHost(systemConfig,platform));
+//            String RECHARGE_URL = super.getFrontHost(systemConfig,platform) + "/public/formsubmit?requestType="+ CommonConstant.APP_BANK_REQUEST_TYPE_RECHARGE;
+//            sbUrl.append(request.getContextPath());
+            sbUrl.append("/hyjf-app/bank/app/deleteCardPage");
             sbUrl.append("/deleteCardPage");
             sbUrl.append("?").append("version").append("=").append(version);
             sbUrl.append("&").append("netStatus").append("=").append(netStatus);
