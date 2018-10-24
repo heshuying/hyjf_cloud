@@ -181,7 +181,7 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
                             borrowApicron.setUpdateTime(new Date());// 更新时间
                             borrowApicron.setPlanNid(borrow.getPlanNid());//计划编号
                             boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
-                            if (!apicronFlag) {
+                            if (apicronFlag) {
                                 //2018-10-15 复审之后之后发送MQ进行放款
                                 try {
                                     borrowLoanRepayProducer.messageSend(

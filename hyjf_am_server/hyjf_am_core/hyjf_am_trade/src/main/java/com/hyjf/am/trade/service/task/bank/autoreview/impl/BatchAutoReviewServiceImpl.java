@@ -223,7 +223,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                                 borrowApicron.setCreateTime(new Date());// 创建时间
                                 borrowApicron.setUpdateTime(new Date());// 更新时间
                                 boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
-                                if (!apicronFlag) {
+                                if (apicronFlag) {
                                     //2018-10-15 复审之后之后发送MQ进行放款
                                     try {
                                         borrowLoanRepayProducer.messageSend(
