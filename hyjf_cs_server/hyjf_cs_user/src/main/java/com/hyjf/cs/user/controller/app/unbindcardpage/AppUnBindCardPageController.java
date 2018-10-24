@@ -11,6 +11,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.bean.DeleteCardPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.web.bindcard.WebBindCardPageController;
@@ -21,14 +22,15 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -112,7 +114,7 @@ public class AppUnBindCardPageController extends BaseUserController{
             StringBuffer sbUrl = new StringBuffer();
             sbUrl.append(systemConfig.getServerHost());
             sbUrl.append(request.getContextPath());
-            sbUrl.append("/user/deleteCardPage");
+            sbUrl.append("/bank/app/deleteCardPage");
             sbUrl.append("/deleteCardPage");
             sbUrl.append("?").append("version").append("=").append(version);
             sbUrl.append("&").append("netStatus").append("=").append(netStatus);
@@ -136,6 +138,8 @@ public class AppUnBindCardPageController extends BaseUserController{
     @PostMapping("/deleteCardPage")
     @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
     public AppResult<Object> bindCardPage(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign,@RequestHeader(value = "bankNumber") String bankNumber,HttpServletRequest request) {
+        // 平台
+        String platform = request.getParameter("platform");
         AppResult<Object> result = new AppResult<Object>();
         if (userId == null) {
             throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
@@ -156,8 +160,16 @@ public class AppUnBindCardPageController extends BaseUserController{
         UserInfoVO userInfoVO = unBindCardService.getUserInfo(user.getUserId());
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/app/deleteCardPage/bgReturn?userId=" + user.getUserId();
+        DeleteCardPageBean deleteCardPageBean = new DeleteCardPageBean();
+        deleteCardPageBean.setUserId(user.getUserId());
+        deleteCardPageBean.setAccountId(accountChinapnrTender.getAccount());
+        deleteCardPageBean.setName(userInfoVO.getTruename());
+        deleteCardPageBean.setIdNo(userInfoVO.getIdcard());
+        deleteCardPageBean.setCardNo(bankCardVO.getCardNo());// 银行卡号
+        deleteCardPageBean.setNotifyUrl(bgRetUrl);
         //调用解绑银行卡接口
-        unBindCardService.callUnBindCardPage(user, accountChinapnrTender, bankCardVO, userInfoVO, BankCallConstant.CHANNEL_APP,sign,bgRetUrl);
+
+        unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_APP,sign,platform,request);
         return result;
     }
 
@@ -203,7 +215,7 @@ public class AppUnBindCardPageController extends BaseUserController{
         logger.info("调用银行失败原因start,logOrdId:{}", param);
         WebResult<Object> result = new WebResult<Object>();
         String retMsg = unBindCardService.getFailedMess(param.get("logOrdId"));
-        Map<String,String> map = new HashedMap();
+        Map<String,String> map = new HashMap<>();
         map.put("error",retMsg);
         result.setData(map);
         return result;
