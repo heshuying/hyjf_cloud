@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AccountRecordRequestBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.beans.vo.BankOpenAccountRecordCustomizeVO;
@@ -13,6 +14,8 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankOpenRecordService;
 import com.hyjf.admin.service.UserCenterService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankAccountRecordResponse;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
@@ -25,6 +28,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -111,8 +116,8 @@ public class BankOpenRecordController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "汇付银行开户记录导出", notes = "汇付银行开户记录导出")
-    @PostMapping(value = "/exportaccount")
+    //@ApiOperation(value = "汇付银行开户记录导出", notes = "汇付银行开户记录导出")
+    //@PostMapping(value = "/exportaccount")
     public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountRecordRequestBean accountRecordRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "开户记录";
@@ -190,6 +195,121 @@ public class BankOpenRecordController extends BaseController {
     }
 
     /**
+     * 导出excel
+     *
+     * @param accountRecordRequestBean
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "汇付银行开户记录导出", notes = "汇付银行开户记录导出")
+    @PostMapping(value = "/exportaccount")
+    public void exportExcelAccount(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountRecordRequestBean accountRecordRequestBean) throws Exception {
+        // 封装查询条件
+        AccountRecordRequest accountRecordRequest = new AccountRecordRequest();
+        BeanUtils.copyProperties(accountRecordRequestBean,accountRecordRequest);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "开户记录";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        accountRecordRequest.setLimitFlg(true);
+        //请求第一页5000条
+        accountRecordRequest.setPageSize(defaultRowMaxCount);
+        accountRecordRequest.setCurrPage(1);
+        // 需要输出的结果列表
+        BankAccountRecordResponse bankAccountRecordResponse =bankOpenRecordService.findAccountRecordList(accountRecordRequest);
+        Integer totalCount = bankAccountRecordResponse.getCount();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMapAcc();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterAcc();
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            accountRecordRequest.setPageSize(defaultRowMaxCount);
+            accountRecordRequest.setCurrPage(i+1);
+            BankAccountRecordResponse bankAccountRecordResponse2 =bankOpenRecordService.findAccountRecordList(accountRecordRequest);
+            if (bankAccountRecordResponse2 != null && bankAccountRecordResponse2.getResultList().size()> 0) {
+                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankAccountRecordResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMapAcc() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("userName", "用户名");
+        map.put("realName", "姓名");
+        map.put("sex", "性别");
+        map.put("age", "年龄");
+        map.put("birthday", "生日");
+        map.put("area", "户籍所在地");
+        map.put("idCard", "身份证号码");
+        map.put("accountStatusName", "开户状态");
+        map.put("account", "汇付账号");
+        map.put("openAccountPlat", "开户平台");
+        map.put("openTime", "开户时间");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapterAcc() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter ageAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String age = (String) object;
+                return getAge(age);
+            }
+        };
+
+        IValueFormatter sexAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String sex = (String) object;
+                if ("1".equals(sex)) {
+                    sex = ("男");
+                } else if ("2".equals(sex)) {
+                    sex = ("女");
+                } else {
+                    sex = ("未知");
+                }
+                return sex;
+            }
+        };
+
+        IValueFormatter areaAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String area = (String) object;
+                return userCenterService.getAreaByIdCard(area);
+            }
+        };
+
+        IValueFormatter idCardAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String idCard = (String) object;
+                return AsteriskProcessUtil.getAsteriskedValue(idCard, 3,7);
+            }
+        };
+
+        mapAdapter.put("sex", sexAdapter);
+        mapAdapter.put("age", ageAdapter);
+        mapAdapter.put("area", areaAdapter);
+        mapAdapter.put("idCard", idCardAdapter);
+        return mapAdapter;
+    }
+
+    /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
      * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
      * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
@@ -198,8 +318,8 @@ public class BankOpenRecordController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "江西银行开户记录导出", notes = "江西银行开户记录导出")
-    @PostMapping(value = "/exportbankaccount")
+    //@ApiOperation(value = "江西银行开户记录导出", notes = "江西银行开户记录导出")
+    //@PostMapping(value = "/exportbankaccount")
     public void exportBankExcel( HttpServletResponse response, @RequestBody AccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
         BankAccountRecordRequest registerRcordeRequest = new BankAccountRecordRequest();
         BeanUtils.copyProperties(bankAccountRecordRequestBeans,registerRcordeRequest);
@@ -266,7 +386,74 @@ public class BankOpenRecordController extends BaseController {
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
 
+    /**
+     * 导出excel
+     *
+     * @param bankAccountRecordRequestBeans
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "江西银行开户记录导出", notes = "江西银行开户记录导出")
+    @PostMapping(value = "/exportbankaccount")
+    public void exportBankAccountExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody AccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
+        // 封装查询条件
+        BankAccountRecordRequest registerRcordeRequest = new BankAccountRecordRequest();
+        BeanUtils.copyProperties(bankAccountRecordRequestBeans,registerRcordeRequest);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "江西银行开户记录";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        registerRcordeRequest.setLimitFlg(true);
+        //请求第一页5000条
+        registerRcordeRequest.setPageSize(defaultRowMaxCount);
+        registerRcordeRequest.setCurrPage(1);
+        // 需要输出的结果列表
+        BankAccountRecordResponse bankAccountRecordResponse=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);
+        Integer totalCount = bankAccountRecordResponse.getCount();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMapBkAcc();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterBkAcc();
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            registerRcordeRequest.setPageSize(defaultRowMaxCount);
+            registerRcordeRequest.setCurrPage(i+1);
+            BankAccountRecordResponse bankAccountRecordResponse2=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);
+            if (bankAccountRecordResponse2 != null && bankAccountRecordResponse2.getResultList().size()> 0) {
+                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankAccountRecordResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
 
+    private Map<String, String> buildMapBkAcc() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("userName", "用户名");
+        map.put("mobile", "当前手机号");
+        map.put("realName", "姓名");
+        map.put("idCard", "身份证号码");
+        map.put("account", "银行卡号");
+        map.put("customerAccount", "银行电子账户");
+        map.put("openAccountPlat", "开户平台");
+        map.put("openTime", "开户时间");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapterBkAcc() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        return mapAdapter;
+    }
 
     /**
      *

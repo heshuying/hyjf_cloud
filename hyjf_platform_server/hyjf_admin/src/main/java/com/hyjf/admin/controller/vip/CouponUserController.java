@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.vip;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -10,6 +11,8 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.coupon.CouponUserService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.UtmResponse;
@@ -37,6 +40,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
@@ -46,10 +51,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author yaoyong
@@ -570,8 +573,8 @@ public class CouponUserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "导出", notes = "导出")
-    @RequestMapping(value = "/exportAction", method = RequestMethod.POST)
+    //@ApiOperation(value = "导出", notes = "导出")
+    //@RequestMapping(value = "/exportAction", method = RequestMethod.POST)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponUserBeanRequest beanRequest) throws Exception {
         logger.info("优惠券列表导出开始！");
         // 表格sheet名称
@@ -700,6 +703,156 @@ public class CouponUserController extends BaseController {
         logger.info("优惠券列表导出结束！");
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param beanRequest
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "导出", notes = "导出")
+    @RequestMapping(value = "/exportAction", method = RequestMethod.POST)
+    public void exportActionCu(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponUserBeanRequest beanRequest) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "借款盖章用户查询";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        beanRequest.setLimitFlg(true);
+        //请求第一页5000条
+        beanRequest.setPageSize(defaultRowMaxCount);
+        beanRequest.setCurrPage(1);
+        // 需要输出的结果列表
+        CouponUserCustomizeResponse customizeResponse = couponUserService.searchList(beanRequest);
+        Integer totalCount = customizeResponse.getCount();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            beanRequest.setPageSize(defaultRowMaxCount);
+            beanRequest.setCurrPage(i+1);
+            CouponUserCustomizeResponse customizeResponse2 = couponUserService.searchList(beanRequest);
+            //操作平台
+            Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+            //插入参数
+            if (customizeResponse2 != null && customizeResponse2.getResultList().size()> 0) {
+                for(CouponUserCustomizeVO couponUserCustomizeVO:customizeResponse2.getResultList()){
+                    //循环计数（每循环一次是一行）根据行数下标位置获取数组，无法确定当前行下标
+                    int s = 1;
+                    String clientString = "";
+                    String clientSed[] = StringUtils.split(couponUserCustomizeVO.getCouponSystem(), ",");
+                    for (int k = 0; k < clientSed.length; k++) {
+                        if ("-1".equals(clientSed[k])) {
+                            clientString = clientString + "不限";
+                            break;
+                        } else {
+                            for (String key : client.keySet()) {
+                                if (clientSed[s].equals(key)) {
+                                    if (s != 0 && clientString.length() != 0) {
+                                        clientString = clientString + "/";
+                                    }
+                                    clientString = clientString + client.get(key);
+                                }
+                            }
+                        }
+                        couponUserCustomizeVO.setCouponSystem(clientString);
+                    }
+                    s++;
+                }
+                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  customizeResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("couponCode", "优惠券类别编号");
+        map.put("couponUserCode", "优惠券用户编号");
+        map.put("username", "用户名");
+        map.put("attribute", "发券时属性");
+        map.put("channel", "注册渠道");
+        map.put("couponType", "优惠券类型");
+        map.put("couponQuota", "面值");
+        map.put("tenderQuota", "投资限额");
+        map.put("endTime", "有效期");
+        map.put("couponSource", "来源");
+        map.put("couponSystem", "操作平台");
+        map.put("projectType", "项目类型");
+        map.put("projectExpirationType", "项目期限");
+        map.put("usedFlagView", "使用状态");
+        map.put("addTime", "获得时间");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter attributeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String attribute = (String) object;
+                return attribute == null ? "" : "0".equals(attribute) ? "无主单" : "1".equals(attribute) ? "有主单" : "2".equals(attribute) ? "线下员工" : "线上员工";
+            }
+        };
+
+        IValueFormatter projectTypeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String projectType = (String) object;
+                //被选中项目类型    新逻辑 pcc20160715
+                String projectString = "";
+                //被选中项目类型
+                String projectSed[] = StringUtils.split(projectType, ",");
+                if (projectType.indexOf("-1") != -1) {
+                    projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
+                } else {
+                    projectString = projectString + "所有";
+                    for (String project : projectSed) {
+                        if ("1".equals(project)) {
+                            projectString = projectString + "汇直投/";
+                        }
+                        if ("2".equals(project)) {
+                            projectString = projectString + "汇消费/";
+                        }
+                        if ("3".equals(project)) {
+                            projectString = projectString + "新手汇/";
+                        }
+                        if ("4".equals(project)) {
+                            projectString = projectString + "尊享汇/";
+                        }
+                        if ("5".equals(project)) {
+                            projectString = projectString + "汇添金/";
+                        }
+                        if ("6".equals(project)) {
+                            projectString = projectString + "汇计划/";
+                        }
+
+                    }
+                    projectString = StringUtils.removeEnd(
+                            projectString, "/");
+                    projectString = projectString + "项目";
+                }
+                return projectString;
+            }
+        };
+
+        mapAdapter.put("attribute", attributeAdapter);
+        mapAdapter.put("projectType", projectTypeAdapter);
+        return mapAdapter;
     }
 
     /**

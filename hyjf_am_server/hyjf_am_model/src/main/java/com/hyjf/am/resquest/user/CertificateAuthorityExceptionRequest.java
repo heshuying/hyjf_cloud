@@ -77,6 +77,8 @@ public class CertificateAuthorityExceptionRequest  extends BasePage implements S
      */
     private int limitEnd = -1;
 
+    //默认为true ,获取全部数据，为false时，获取部分数据
+    private boolean limitFlg = false;
 
     public int getPaginatorPage() {
         if (paginatorPage == 0) {
@@ -89,7 +91,13 @@ public class CertificateAuthorityExceptionRequest  extends BasePage implements S
         this.paginatorPage = paginatorPage;
     }
 
+    public boolean isLimitFlg() {
+        return limitFlg;
+    }
 
+    public void setLimitFlg(boolean limitFlg) {
+        this.limitFlg = limitFlg;
+    }
 
     public String getUserNameSrch() {
         return userNameSrch;

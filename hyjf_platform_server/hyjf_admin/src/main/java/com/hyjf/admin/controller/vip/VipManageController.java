@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.vip;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -12,6 +13,8 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankAccountManageService;
 import com.hyjf.admin.service.VipManageService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.VipDetailListResponse;
 import com.hyjf.am.response.admin.VipManageResponse;
@@ -34,12 +37,15 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -158,8 +164,8 @@ public class VipManageController extends BaseController {
      *
      * @throws Exception
      */
-    @ApiOperation(value = "导出",notes = "导出")
-    @RequestMapping(value = "/exportVips",method = RequestMethod.POST)
+    //@ApiOperation(value = "导出",notes = "导出")
+    //@RequestMapping(value = "/exportVips",method = RequestMethod.POST)
     public void exportExcel( VipManageRequest vipManageRequest, HttpServletRequest request,
                             HttpServletResponse response) throws Exception {
         // 表格sheet名称
@@ -251,6 +257,84 @@ public class VipManageController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
+
+    /**
+     * 导出excel
+     *
+     * @param vipManageRequest
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "导出",notes = "导出")
+    @RequestMapping(value = "/exportVips",method = RequestMethod.POST)
+    public void exportExcelVips( VipManageRequest vipManageRequest, HttpServletRequest request,
+                             HttpServletResponse response) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "VIP列表";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        vipManageRequest.setLimitFlg(true);
+        //请求第一页5000条
+        vipManageRequest.setPageSize(defaultRowMaxCount);
+        vipManageRequest.setCurrPage(1);
+        // 需要输出的结果列表
+        VipManageResponse vipManageResponse = vipManageService.searchList(vipManageRequest);
+        Integer totalCount = vipManageResponse.getCount();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            vipManageRequest.setPageSize(defaultRowMaxCount);
+            vipManageRequest.setCurrPage(i+1);
+            VipManageResponse vipManageResponse2 = vipManageService.searchList(vipManageRequest);
+            if (vipManageResponse2 != null && vipManageResponse2.getResultList().size()> 0) {
+                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  vipManageResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("regionName", "分公司");
+        map.put("branchName", "分部");
+        map.put("departmentName", "团队");
+        map.put("userName", "用户名");
+        map.put("realName", "姓名");
+        map.put("mobile", "手机号码");
+        map.put("vipName", "VIP等级");
+        map.put("vipValue", "V值");
+        map.put("vipAddTime", "VIP购买时间");
+        map.put("userRole", "用户角色");
+        map.put("userProperty", "用户属性");
+        map.put("recommendName", "推荐人");
+        map.put("userStatus", "用户状态");
+        map.put("accountStatus", "开户状态");
+        map.put("vipPlatform", "会员开通渠道");
+        map.put("registPlat", "注册平台");
+        map.put("regTime", "注册时间");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        return mapAdapter;
+    }
+
+
     private VipManageRequest setParamRequest(Map<String, Object> map) {
         VipManageRequest request = new VipManageRequest();
         if (null != map && map.size() > 0) {

@@ -58,9 +58,18 @@ public class ChangeLogRequest extends BasePage {
 	    private String borrowerType;
 	    
 	    private String idCard;
+		// 分页区分
+		private boolean limitFlg =false;
 
+		public boolean isLimitFlg() {
+			return limitFlg;
+		}
 
-	    public Integer getId() {
+		public void setLimitFlg(boolean limitFlg) {
+			this.limitFlg = limitFlg;
+		}
+
+		public Integer getId() {
 	        return id;
 	    }
 

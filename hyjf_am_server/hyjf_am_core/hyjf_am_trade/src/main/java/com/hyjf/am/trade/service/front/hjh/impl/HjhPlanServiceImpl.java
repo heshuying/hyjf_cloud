@@ -78,7 +78,6 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
     public HjhPlan getHjhPlanByNid(String planNid) {
         HjhPlanExample example = new HjhPlanExample();
         HjhPlanExample.Criteria cra = example.createCriteria();
-        ;
         cra.andPlanNidEqualTo(planNid);
         List<HjhPlan> list = this.hjhPlanMapper.selectByExample(example);
         if (!CollectionUtils.isEmpty(list)) {

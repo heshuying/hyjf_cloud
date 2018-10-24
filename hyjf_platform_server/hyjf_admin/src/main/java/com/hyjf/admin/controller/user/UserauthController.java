@@ -1,10 +1,13 @@
 package com.hyjf.admin.controller.user;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.UserauthService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
@@ -12,6 +15,7 @@ import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
 import com.hyjf.am.vo.user.AdminUserAuthListVO;
 import com.hyjf.am.vo.user.AdminUserAuthLogListVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
@@ -20,14 +24,17 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -151,9 +158,9 @@ public class UserauthController extends BaseController {
      * @param response
      * @throws Exception
      */
-	@ApiOperation(value = "授权状态", notes = "授权导出")
-	@ResponseBody
-	@PostMapping("/exportExcel")
+	//@ApiOperation(value = "授权状态", notes = "授权导出")
+	//@ResponseBody
+	//@PostMapping("/exportExcel")
     public void exportExcel(@RequestBody AdminUserAuthListRequest from, HttpServletRequest request,
                             HttpServletResponse response) throws Exception {
         // 表格sheet名称
@@ -219,6 +226,92 @@ public class UserauthController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
+
+	/**
+	 * 导出excel
+	 *
+	 * @param from
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "授权状态", notes = "授权导出")
+	@ResponseBody
+	@PostMapping("/exportExcel")
+	public void exportExcelSq(@RequestBody AdminUserAuthListRequest from, HttpServletRequest request,
+							HttpServletResponse response) throws Exception {
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "授权状态";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+		from.setLimitFlg(true);
+		//请求第一页5000条
+		from.setPageSize(defaultRowMaxCount);
+		from.setCurrPage(1);
+		// 需要输出的结果列表
+		AdminUserAuthListResponse recordList = userauthService.userauthlist(from);
+		Integer totalCount = recordList.getRecordTotal();
+		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+		Map<String, String> beanPropertyColumnMap = buildMapSq();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterSq();
+		if (totalCount == 0) {
+			String sheetNameTmp = sheetName + "_第1页";
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}
+		for (int i = 1; i < sheetCount; i++) {
+			from.setPageSize(defaultRowMaxCount);
+			from.setCurrPage(i+1);
+			AdminUserAuthListResponse recordList2 = userauthService.userauthlist(from);
+			if (recordList2 != null && recordList2.getResultList().size()> 0) {
+				String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2.getResultList());
+			} else {
+				break;
+			}
+		}
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+	}
+
+	private Map<String, String> buildMapSq() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("userName", "用户名");
+		map.put("mobile", "手机号");
+		map.put("auto1", "自动投标交易金额");
+		map.put("auto2", "自动投标总金额");
+		map.put("autoInvesEndTime", "自动投标到期日");
+		map.put("autoInvesStatus", "自动投标授权状态");
+		map.put("autoCreditStatus", "自动债转授权状态");
+		map.put("autoCreateTime", "授权时间");
+		return map;
+	}
+
+	private Map<String, IValueFormatter> buildValueAdapterSq() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		IValueFormatter auto1Adapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				return "2000000";
+			}
+		};
+
+		IValueFormatter auto2Adapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+
+				return "1000000000";
+			}
+		};
+
+		mapAdapter.put("auto1", auto1Adapter);
+		mapAdapter.put("auto2", auto2Adapter);
+		return mapAdapter;
+	}
+
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
      * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
@@ -228,9 +321,9 @@ public class UserauthController extends BaseController {
      * @param response
      * @throws Exception
      */
-	@ApiOperation(value = "授权状态", notes = "授权导出")
-	@ResponseBody
-	@PostMapping("/exportLogExcel")
+	//@ApiOperation(value = "授权状态", notes = "授权导出")
+	//@ResponseBody
+	//@PostMapping("/exportLogExcel")
     public void exportExcel(@RequestBody AdminUserAuthLogListRequest form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 
@@ -291,4 +384,89 @@ public class UserauthController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
+
+	/**
+	 * 导出excel
+	 *
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "授权状态", notes = "授权导出")
+	@ResponseBody
+	@PostMapping("/exportLogExcel")
+	public void exportExcelLog(@RequestBody AdminUserAuthLogListRequest form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "授权记录";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+		form.setLimitFlg(true);
+		//请求第一页5000条
+		form.setPageSize(defaultRowMaxCount);
+		form.setCurrPage(1);
+		// 需要输出的结果列表
+		AdminUserAuthLogListResponse adminUserAuthLogListResponse = userauthService.userauthLoglist(form);
+		Integer totalCount = adminUserAuthLogListResponse.getRecordTotal();
+		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+		Map<String, String> beanPropertyColumnMap = buildMapLog();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterLog();
+		if (totalCount == 0) {
+			String sheetNameTmp = sheetName + "_第1页";
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}
+		for (int i = 1; i < sheetCount; i++) {
+			form.setPageSize(defaultRowMaxCount);
+			form.setCurrPage(i+1);
+			AdminUserAuthLogListResponse adminUserAuthLogListResponse2 = userauthService.userauthLoglist(form);
+			if (adminUserAuthLogListResponse2 != null && adminUserAuthLogListResponse2.getResultList().size()> 0) {
+				String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  adminUserAuthLogListResponse2.getResultList());
+			} else {
+				break;
+			}
+		}
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+	}
+
+	private Map<String, String> buildMapLog() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("orderId", "订单号");
+		map.put("authType", "类型");
+		map.put("userName", "用户名");
+		map.put("operateEsb", "操作平台");
+		map.put("orderStatus", "订单状态");
+		map.put("creditTime", "授权时间");
+		return map;
+	}
+
+	private Map<String, IValueFormatter> buildValueAdapterLog() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		IValueFormatter authTypeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String authType = (String) object;
+				Map<String, String> invert = CacheUtil.getParamNameMap("AUTO_INVER_TYPE");
+				return invert.get(authType);
+			}
+		};
+
+		IValueFormatter operateEsbAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String operateEsb = (String) object;
+				Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+				return client.get(operateEsb);
+			}
+		};
+
+		mapAdapter.put("authType", authTypeAdapter);
+		mapAdapter.put("operateEsb", operateEsbAdapter);
+		return mapAdapter;
+	}
 }

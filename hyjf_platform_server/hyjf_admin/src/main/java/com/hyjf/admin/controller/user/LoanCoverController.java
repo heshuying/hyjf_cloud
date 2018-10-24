@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
 import com.hyjf.admin.beans.vo.LoanCoverUserCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -9,16 +10,15 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.LoanCoverService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.LoanCoverUserResponse;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
@@ -28,6 +28,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -165,8 +167,8 @@ public class LoanCoverController extends BaseController {
        * @param request
        * @param modelAndView
        * @param form*/
-    @ApiOperation(value = "导出借款盖章用户", notes = "导出借款盖章用户")
-    @PostMapping(value = "/exportLoancover")
+    //@ApiOperation(value = "导出借款盖章用户", notes = "导出借款盖章用户")
+    //@PostMapping(value = "/exportLoancover")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) throws Exception {
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
@@ -252,6 +254,130 @@ public class LoanCoverController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         logger.info("=============导出借款盖章用户完成=============");
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param loanCoverUserRequestBean
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "导出借款盖章用户", notes = "导出借款盖章用户")
+    @PostMapping(value = "/exportLoancover")
+    public void exportExcelAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) throws Exception {
+        // 封装查询条件
+        LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
+        BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "借款盖章用户查询";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        loanCoverUserRequest.setLimitFlg(true);
+        //请求第一页5000条
+        loanCoverUserRequest.setPageSize(defaultRowMaxCount);
+        loanCoverUserRequest.setCurrPage(1);
+        // 需要输出的结果列表
+        LoanCoverUserResponse loanCoverUserResponse = loanCoverService.selectUserMemberList(loanCoverUserRequest);
+        Integer totalCount = loanCoverUserResponse.getCount();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            loanCoverUserRequest.setPageSize(defaultRowMaxCount);
+            loanCoverUserRequest.setCurrPage(i+1);
+            LoanCoverUserResponse loanCoverUserResponse2 = loanCoverService.selectUserMemberList(loanCoverUserRequest);
+            if (loanCoverUserResponse2 != null && loanCoverUserResponse2.getResultList().size()> 0) {
+                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  loanCoverUserResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("mobile", "手机号");
+        map.put("name", "名称");
+        map.put("idNo", "证件号");
+        map.put("idType", "用户类型");
+        map.put("email", "邮箱");
+        map.put("customerId", "客户编号");
+        map.put("status", "状态");
+        map.put("code", "状态码");
+        map.put("createTime", "添加时间");
+        map.put("updateTime", "申请时间");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter idTypeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer idType = (Integer) object;
+                if (idType == 0) {
+                    return ("个人");
+                } else {
+                    return ("企业");
+                }
+            }
+        };
+
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String status = (String) object;
+                if(status ==null){
+                    status = ("未认证");
+                } else if ("success".equals(status)) {
+                    status = ("认证成功");
+                } else if ("error".equals(status)) {
+                    status = ("认证失败");
+                } else {
+                    status = (status);
+                }
+                return status;
+            }
+        };
+
+        IValueFormatter createTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date createTime = (Date) object;
+                String strCreateTime = format.format(createTime);
+                return strCreateTime;
+            }
+        };
+
+        IValueFormatter updateTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String updateTime = (String) object;
+                String strUpdateTime = format.format(updateTime);
+                return strUpdateTime;
+            }
+        };
+
+        mapAdapter.put("idType", idTypeAdapter);
+        mapAdapter.put("status", statusAdapter);
+        mapAdapter.put("createTime", createTimeAdapter);
+        mapAdapter.put("updateTime", updateTimeAdapter);
+        return mapAdapter;
     }
 
     //认证
