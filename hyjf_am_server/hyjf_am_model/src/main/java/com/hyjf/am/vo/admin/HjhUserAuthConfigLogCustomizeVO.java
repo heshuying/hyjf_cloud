@@ -7,17 +7,25 @@ import java.io.Serializable;
 
 public class HjhUserAuthConfigLogCustomizeVO extends BasePage implements Serializable {
 
+    @ApiModelProperty(value = "主键ID")
     private Integer id;
+    @ApiModelProperty(value = "授权配置ID")
     private Integer authConfigId;
+    @ApiModelProperty(value = "授权配置类型 1服务费授权 2还款授权 3自动投标 4智投债转")
     private Integer authType;
+    @ApiModelProperty(value = "个人最高金额（元）")
     private Integer personalMaxAmount;
+    @ApiModelProperty(value = "企业最高金额（元）")
     private Integer enterpriseMaxAmount;
+    @ApiModelProperty(value = "授权期限（年）")
     private Integer authPeriod;
+    @ApiModelProperty(value = "启用状态 0未启用 1启用")
     private Integer enabledStatus;
+    @ApiModelProperty(value = "备注")
     private String remark;
-
+    @ApiModelProperty(value = "ip地址")
     private String ip;
-
+    @ApiModelProperty(value = "mac地址")
     private String mac;
 
     private Integer createUser;
