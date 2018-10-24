@@ -76,8 +76,8 @@ public class MessagePushErrorController extends BaseController {
         return new AdminResult(response);
     }
 
-    @PostMapping("/update")
-    @ApiOperation(value = "重发 APP消息推送 异常处理", httpMethod = "POST", notes = "重发 APP消息推送 异常处理")
+    @PutMapping("/update")
+    @ApiOperation(value = "重发 APP消息推送 异常处理", httpMethod = "PUT", notes = "重发 APP消息推送 异常处理")
     public AdminResult update(@RequestParam("id") String id) {
         MessagePushErrorResponse response = new MessagePushErrorResponse();
         try {
