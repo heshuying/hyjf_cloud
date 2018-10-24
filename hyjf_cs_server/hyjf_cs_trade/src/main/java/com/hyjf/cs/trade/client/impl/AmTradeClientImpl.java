@@ -897,8 +897,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BorrowApicronVO selectBorrowApicron(String bankSeqNO) {
         String url = "http://AM-TRADE/am-trade/borrowApicron/getby_bankseqno/" + bankSeqNO;
-        Response<BorrowApicronVO> response =
-                restTemplate.getForEntity(url,Response.class).getBody();
+        BorrowApicronResponse response =
+                restTemplate.getForEntity(url,BorrowApicronResponse.class).getBody();
         if (response!=null && Response.isSuccess(response)){
             return response.getResult();
         }
