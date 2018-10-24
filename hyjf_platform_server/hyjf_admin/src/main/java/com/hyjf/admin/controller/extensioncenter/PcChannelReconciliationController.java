@@ -13,10 +13,7 @@ import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.ExportExcel;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -53,6 +50,16 @@ public class PcChannelReconciliationController extends BaseController {
     @ApiOperation(value = "散标列表查询", notes = "散标列表查询")
     @PostMapping("/search")
     public AdminResult searchAction(@RequestBody ChannelReconciliationRequest request) {
+        List<UtmVO> list = channelService.searchUtmList(0);
+        if (request.getUtmPlat() == null) {
+            List<String> utmList = new ArrayList<>();
+            for (UtmVO vo : list) {
+                utmList.add(vo.getSourceId().toString());
+            }
+            String[] integers = new String[utmList.size()];
+            String[] array = utmList.toArray(integers);
+            request.setUtmPlat(array);
+        }
         ChannelReconciliationResponse response = channelService.searchAction(request);
         return new AdminResult(response);
     }
@@ -60,6 +67,16 @@ public class PcChannelReconciliationController extends BaseController {
     @ApiOperation(value = "计划列表查询", notes = "计划列表查询")
     @PostMapping("/search_hjh")
     public AdminResult searchHJHAction(@RequestBody ChannelReconciliationRequest request) {
+        List<UtmVO> list = channelService.searchUtmList(0);
+        if (request.getUtmPlat() == null) {
+            List<String> utmList = new ArrayList<>();
+            for (UtmVO vo : list) {
+                utmList.add(vo.getSourceId().toString());
+            }
+            String[] integers = new String[utmList.size()];
+            String[] array = utmList.toArray(integers);
+            request.setUtmPlat(array);
+        }
         ChannelReconciliationResponse response = channelService.searchHJHAction(request);
         return new AdminResult(response);
     }

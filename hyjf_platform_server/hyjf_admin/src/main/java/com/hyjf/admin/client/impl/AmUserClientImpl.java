@@ -27,6 +27,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -1483,10 +1487,13 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
     public UtmResponse getByPageList(Map<String, Object> map) {
-		UtmResponse response = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/getbypagelist", map, UtmResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response;
+
+		ResponseEntity<UtmResponse<UtmVO>> response = restTemplate.exchange(
+				"http://AM-ADMIN/am-user/promotion/utm/getbypagelist", HttpMethod.POST, new HttpEntity<>(map),
+				new ParameterizedTypeReference<UtmResponse<UtmVO>>() {
+				});
+		if (null != response) {
+			return response.getBody();
 		}
 		return null;
 	}
