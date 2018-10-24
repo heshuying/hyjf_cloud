@@ -45,7 +45,7 @@ public class AppChannelStatisticsDao extends BaseMongoDao<AppChannelStatistics> 
             Integer end = GetDate.dateString2Timestamp(timeEndSrch + " 23:59:59");
             criteria.and("updateTime").gte(begin).lte(end);
         }
-        if (utmIdsSrch.length > 0) {
+        if (utmIdsSrch != null && utmIdsSrch.length > 0) {
             List<Integer> listInt = new ArrayList<>();
             List<String> sourceIds = Arrays.asList(utmIdsSrch);
             CollectionUtils.collect(sourceIds, new Transformer() {
@@ -62,8 +62,6 @@ public class AppChannelStatisticsDao extends BaseMongoDao<AppChannelStatistics> 
         );
         AggregationResults<AppChannelStatistics> ar = mongoTemplate.aggregate(aggregation, getEntityClass(), AppChannelStatistics.class);
         List<AppChannelStatistics> result = ar.getMappedResults();
-
-
         return result;
     }
 
