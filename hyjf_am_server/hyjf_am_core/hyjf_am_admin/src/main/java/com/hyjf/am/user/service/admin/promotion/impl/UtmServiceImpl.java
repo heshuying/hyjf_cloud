@@ -176,6 +176,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
             registEndTime = GetDate.getSomeDayEnd(registEndTime);
             request.setRegistEndTime(registEndTime);
         }
+
         return utmRegCustomizeMapper.selectPcChannelReconciliationRecordHjh(request);
     }
 
@@ -246,6 +247,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
             registEndTime = GetDate.getSomeDayEnd(registEndTime);
             request.setRegistEndTime(registEndTime);
         }
+
         return utmRegCustomizeMapper.selectAppChannelReconciliationRecordHjh(request);
     }
 
