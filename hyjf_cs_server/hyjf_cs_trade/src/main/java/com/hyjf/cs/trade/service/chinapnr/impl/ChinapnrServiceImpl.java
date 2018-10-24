@@ -131,7 +131,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
     @Override
     public void checkParam(Integer userId, String transAmtStr, String bankId) {
         // 检查参数(交易金额是否数字)
-        CheckUtil.check(Validator.isNotNull(transAmtStr)&& StringUtils.isNumeric(transAmtStr),MsgEnum.ERR_AMT_WITHDRAW_AMOUNT);
+        CheckUtil.check(Validator.isNotNull(transAmtStr)&& NumberUtils.isNumber(transAmtStr),MsgEnum.ERR_AMT_WITHDRAW_AMOUNT);
         // 检查参数(交易金额是否大于0)
         BigDecimal transAmt = new BigDecimal(transAmtStr);
         CheckUtil.check(transAmt.compareTo(BigDecimal.ONE) > 0,MsgEnum.ERR_AMT_WITHDRAW_AMOUNT_GREATER_THAN_ONE);

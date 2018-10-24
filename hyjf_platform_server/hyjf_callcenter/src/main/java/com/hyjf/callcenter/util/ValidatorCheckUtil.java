@@ -2,6 +2,7 @@ package com.hyjf.callcenter.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.springframework.web.servlet.support.RequestContext;
@@ -746,7 +747,7 @@ public class ValidatorCheckUtil {
 			}
 		}
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !StringUtils.isNumeric(value)) {
+			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
 				CustomErrors.add(info, itemname, key, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -775,7 +776,7 @@ public class ValidatorCheckUtil {
 		}
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !StringUtils.isNumeric(value)) {
+			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
 				CustomErrors.add(info, itemname, key, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -821,7 +822,7 @@ public class ValidatorCheckUtil {
 		boolean retValue = validateMaxLength(info, itemname, key, value, maxLength, required);
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !StringUtils.isNumeric(value)) {
+			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
 				CustomErrors.add(info, itemname, NUM, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -845,7 +846,7 @@ public class ValidatorCheckUtil {
 		boolean retValue = validateMaxLength(info, itemname, key, value, 0, required);
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isInt(value) || !StringUtils.isNumeric(value) || Integer.valueOf(value) < 0) {
+			if (!GenericValidator.isInt(value) || !NumberUtils.isNumber(value) || Integer.valueOf(value) < 0) {
 				CustomErrors.add(info, itemname, key, getErrorMessage(SIGNLESSNUM, maxLength));
 				retValue = false;
 			}
