@@ -4,7 +4,7 @@ import com.hyjf.cs.trade.service.batch.BankCreditTenderService;
 import com.hyjf.cs.trade.service.batch.BankTenderCancelExceptionService;
 import com.hyjf.cs.trade.service.batch.BatchBankInvestAllService;
 import com.hyjf.cs.trade.service.batch.BatchBankInvestService;
-import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
+import com.hyjf.cs.trade.service.withdraw.BankWithdrawService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

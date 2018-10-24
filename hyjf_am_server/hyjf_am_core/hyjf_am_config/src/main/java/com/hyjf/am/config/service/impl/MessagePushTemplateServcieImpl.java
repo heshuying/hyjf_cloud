@@ -34,7 +34,7 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 	public MessagePushTemplate findMessagePushTemplateByCode(String tplCode) {
 		MessagePushTemplate messagePushTemplate = RedisUtils.getObj(RedisConstants.MESSAGE_PUSH_TEMPLATE,
 				MessagePushTemplate.class);
-		if (messagePushTemplate == null) {
+		if (messagePushTemplate == null||!StringUtils.equals(messagePushTemplate.getTemplateCode(),tplCode)) {
 			MessagePushTemplateExample example = new MessagePushTemplateExample();
 			MessagePushTemplateExample.Criteria criteria = example.createCriteria();
 			criteria.andTemplateCodeEqualTo(tplCode);

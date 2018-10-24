@@ -7,12 +7,14 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest;
+import com.hyjf.am.resquest.admin.DownloadAgreementRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.productcenter.applyagreement.ApplyAgreementService;
 import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
@@ -69,6 +71,16 @@ public class ApplyAgreementController extends BaseController {
         }
         List<ApplyAgreementVO> list =  applyAgreementService.selectApplyAgreement(request,limitStart,limitEnd);
         reponse.setCount(total);
+        reponse.setResultList(list);
+        reponse.setRtn(Response.SUCCESS);
+        return reponse;
+    }
+    @ApiOperation(value = "垫付协议申请列表页")
+    @PostMapping("/selectLikeByExample")
+    public TenderAgreementResponse selectLikeByExample(@RequestBody DownloadAgreementRequest request){
+        logger.info("ApplyAgreementRequest:::::::[{}]", JSON.toJSONString(request));
+        TenderAgreementResponse reponse = new TenderAgreementResponse();
+        List<TenderAgreementVO> list =  applyAgreementService.selectLikeByExample(request);
         reponse.setResultList(list);
         reponse.setRtn(Response.SUCCESS);
         return reponse;
@@ -144,11 +156,11 @@ public class ApplyAgreementController extends BaseController {
     /**
      * 获取用户投资协议列表，垫付协议用
      *
-     * @param nid
+     * @param borrowNid
      * @return
      */
-    @RequestMapping("/select_borrow_recover_list/{userId}/{borrowNid}/{nid}")
-    public BorrowRecoverResponse selectBorrowRecoverList(@PathVariable(value = "userId") Integer userId, @PathVariable(value = "borrowNid") String borrowNid, @PathVariable(value = "nid") String nid){
+    @RequestMapping("/select_borrow_recover_list/{borrowNid}")
+    public BorrowRecoverResponse selectBorrowRecoverList( @PathVariable(value = "borrowNid") String borrowNid){
         BorrowRecoverResponse response = new BorrowRecoverResponse();
         List<BorrowRecover> list = applyAgreementService.selectBorrowRecoverList(borrowNid);
         List<BorrowRecoverVO> voList = null;
@@ -229,6 +241,21 @@ public class ApplyAgreementController extends BaseController {
     }
     /**
      * 保存垫付协议申请
+     * @auther: Zha Daojian
+     * @date: 2018/8/14 14:19
+     */
+    @RequestMapping("/saveApplyAgreement")
+    public ApplyAgreementResponse saveApplyAgreement(@RequestBody ApplyAgreementVO request) {
+        ApplyAgreementResponse response = new ApplyAgreementResponse();
+        logger.info("saveApplyAgreement::::::::::");
+        int re = applyAgreementService.saveApplyAgreement(request);
+        response.setCount(re);
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+    /**
+     * 保存垫付协议申请-详情
      * @auther: Zha Daojian
      * @date: 2018/8/14 14:19
      */

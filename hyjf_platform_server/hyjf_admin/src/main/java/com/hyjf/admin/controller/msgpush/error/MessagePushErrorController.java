@@ -76,15 +76,15 @@ public class MessagePushErrorController extends BaseController {
         return new AdminResult(response);
     }
 
-    @PostMapping("/update")
-    @ApiOperation(value = "数据修改 APP消息推送 异常处理", httpMethod = "POST", notes = "数据修改 APP消息推送 异常处理")
+    @PutMapping("/update")
+    @ApiOperation(value = "重发 APP消息推送 异常处理", httpMethod = "PUT", notes = "重发 APP消息推送 异常处理")
     public AdminResult update(@RequestParam("id") String id) {
         MessagePushErrorResponse response = new MessagePushErrorResponse();
         try {
             // 重发此消息
             MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(id);
             //推送极光消息（暂不开启）
-            //this.messagePushErrorService.sendMessage(msg);
+            this.messagePushErrorService.sendMessage(msg);
         }catch (Exception e){
             return new AdminResult(FAIL, FAIL_DESC);
         }

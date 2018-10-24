@@ -285,13 +285,12 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
     @ApiIgnore
     @RequestMapping("/callback")
     public WebResult cashCallBack(HttpServletRequest request, @RequestBody ChinapnrBean bean) {
-        logger.info("http://CS-TRADE/hyjf-web/chinapnr/withdraw/callback");
         WebResult result = new WebResult();
         Map<String,Object> map = new HashMap<>();
         logger.info("[交易完成后,回调开始]");
         logger.debug("参数1: " + bean == null ? "无" : bean.getAllParams() + "]");
         bean.convert();
-        logger.debug("参数2: " + bean == null ? "无" : bean.getAllParams() + "]");
+        logger.info("参数bean："+bean.getAllParams());
         // 取得更新用UUID
         boolean updateFlag = false;
         String uuid = request.getParameter("uuid");

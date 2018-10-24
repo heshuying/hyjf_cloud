@@ -18,6 +18,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.TradeConstant;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCilentIP;
@@ -579,6 +580,7 @@ public class RepayManageController extends BaseTradeController {
             msg = "998";
             logger.info("==============垫付机构:" + userVO.getUserId() + "批量还款失败,用户未开户!");
             webResult.setData(msg);
+            webResult.setStatusDesc("用户未开户");
             return webResult;
         }
         boolean isBalance = comperToOrgUserBalance(userVO.getUserId(), userVO.getBankAccount(), new BigDecimal(requestBean.getRepayTotal()));
@@ -586,6 +588,7 @@ public class RepayManageController extends BaseTradeController {
             msg = "997";
             logger.info("==============垫付机构:" + userVO.getUserId() + "批量还款失败,用户银行可用余额不足!");
             webResult.setData(msg);
+            webResult.setStatusDesc("余额不足");
             return webResult;
         }
         boolean reslut = RedisUtils.exists(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userVO.getUserId());
@@ -593,6 +596,7 @@ public class RepayManageController extends BaseTradeController {
             msg = "999";
             logger.info("==============垫付机构:" + userVO.getUserId() + "校验处->批量还款失败,项目正在还款中!");
             webResult.setData(msg);
+            webResult.setStatusDesc("项目正在还款中");
             return webResult;
         }
         boolean isTime = companyRepayTime(requestBean.getStartDate(),requestBean.getEndDate(),userVO.getUserId());
@@ -600,6 +604,7 @@ public class RepayManageController extends BaseTradeController {
             msg = "996";
             logger.info("==============垫付机构:" + userVO.getUserId() + "校验处->批量还款失败,还款区间大于28天!");
             webResult.setData(msg);
+            webResult.setStatusDesc("还款区间大于28天!");
             return webResult;
         }
         webResult.setData(msg);
@@ -700,6 +705,7 @@ public class RepayManageController extends BaseTradeController {
                         if(callBackBean == null){
                             webResult.setStatus(WebResult.ERROR);
                             webResult.setStatusDesc("批量还款调用银行接口失败，返回值为null");
+                            logger.info("批量还款调用银行接口失败，返回值为null");
                             return webResult;
                         }
                         String respCode = callBackBean.getRetCode();
@@ -743,7 +749,10 @@ public class RepayManageController extends BaseTradeController {
                         return webResult;
                     }
 
-                } catch (Exception e) {
+                }catch (CheckException e){
+                    logger.error("==============垫付机构:" + userId + "批量还款校验失败,标的号:" + borrowNid, e);
+                    throw e;
+                }catch (Exception e) {
                     logger.error("==============垫付机构:" + userId + "批量还款存在失败标的,标的号:" + borrowNid, e);
                     webResult.setStatus(WebResult.ERROR);
                     webResult.setStatusDesc("批量还款存在失败标的");

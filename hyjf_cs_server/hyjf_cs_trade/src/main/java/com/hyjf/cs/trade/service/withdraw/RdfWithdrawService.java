@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.service.wirhdraw;
+package com.hyjf.cs.trade.service.withdraw;
 
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.cs.trade.service.BaseTradeService;

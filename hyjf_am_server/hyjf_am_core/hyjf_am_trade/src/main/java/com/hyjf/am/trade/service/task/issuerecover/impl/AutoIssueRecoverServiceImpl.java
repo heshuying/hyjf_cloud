@@ -521,6 +521,9 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         }else{
             borrowManinfo.setIsPunished("暂无");
         }
+        if(StringUtils.isNotBlank(hjhPlanAsset.getAddress())){
+            borrowManinfo.setAddress(hjhPlanAsset.getAddress());
+        }
         this.borrowManinfoMapper.insertSelective(borrowManinfo);
 
         return 0;
@@ -764,7 +767,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         BorrowInfoWithBLOBs borrowInfo = new BorrowInfoWithBLOBs();
         borrowInfo.setInstCode(hjhPlanAsset.getInstCode());
         borrowInfo.setAssetType(hjhAssetBorrowType.getAssetType());
-
+        borrowInfo.setUserId(hjhPlanAsset.getUserId());
         borrowInfo.setAccountContents("");
 
         // 受托支付
@@ -936,6 +939,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrow.setBorrowEndTime("");
         borrow.setRepayLastTime(0);
 
+
         // 项目申请人
 //		String applicant = hjhAssetBorrowType.getApplicant();
 
@@ -965,7 +969,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 //		} else {
 //			borrow.setAccountContents(hjhPlanAsset.getAccountContents());
 //		}
-
+        borrow.setBorrowValidTime(Integer.parseInt(getBorrowConfig("BORROW_VALID_TIME")));
         // 是否可以进行借款
         borrow.setBorrowStatus(0);
         // 满表审核状态
