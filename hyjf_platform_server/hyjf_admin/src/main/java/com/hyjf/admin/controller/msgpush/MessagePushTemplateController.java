@@ -234,6 +234,7 @@ public class MessagePushTemplateController extends BaseController {
         List<Integer> recordList = JSONArray.parseArray(ids, Integer.class);
         MessagePushTemplateResponse response = messagePushTemplateService.deleteAction(recordList);
         if (response.getCount() > 0) {
+            RedisUtils.del(RedisConstants.MESSAGE_PUSH_TEMPLATE);
             return new AdminResult<>(response);
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
@@ -262,9 +263,9 @@ public class MessagePushTemplateController extends BaseController {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
             if (!Response.isSuccess(tagResponse)) {
-                RedisUtils.del(RedisConstants.MESSAGE_PUSH_TEMPLATE);
                 return new AdminResult<>(FAIL, tagResponse.getMessage());
             }
+            RedisUtils.del(RedisConstants.MESSAGE_PUSH_TEMPLATE);
             return new AdminResult<>(tagResponse);
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
