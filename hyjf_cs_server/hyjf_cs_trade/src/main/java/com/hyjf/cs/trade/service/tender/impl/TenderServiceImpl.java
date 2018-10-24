@@ -316,8 +316,10 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			// 新需求判断顺序变化
 			// 将投资金额转化为BigDecimal
 			BigDecimal accountBigDecimal = new BigDecimal(account);
-			// String balance = RedisUtils.get(borrowNid);
-			String balance = "10000";
+			
+			String balance = RedisUtils.get(RedisConstants.BORROW_NID +borrowNid);
+			/*String balance = "10000";*/
+
 			if (StringUtils.isEmpty(balance)) {
 				return jsonMessage("您来晚了，下次再来抢吧", "1");
 			}
@@ -819,6 +821,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
         // 更新渠道统计用户累计投资
         // 投资人信息
         UserVO users = amUserClient.findUserById(userId);
+        /*projectType = 8 是汇消费　不需要判断了*/
         if (users != null) {
             // 更新渠道统计用户累计投资 从mongo里面查询
             AppChannelStatisticsDetailVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(users.getUserId());
@@ -863,7 +866,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
                     // 投资时间
                     params.put("investTime", nowTime);
                     // 项目类型
-                    params.put("projectType", "汇计划");
+                    params.put("projectType", "汇直投");
                     String investProjectPeriod = "";
                     // 首次投标项目期限// 还款方式
                     String borrowStyle = borrow.getBorrowStyle();
