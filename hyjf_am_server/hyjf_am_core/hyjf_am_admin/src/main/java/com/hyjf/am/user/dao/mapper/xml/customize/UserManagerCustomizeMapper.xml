@@ -326,6 +326,10 @@
         <result column="open_account_time" property="openAccountTime" jdbcType="VARCHAR" />
         <result column="user_type" property="userType" jdbcType="VARCHAR" />
         <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <!--合规四期,用户详情添加以下三个字段显示 add by nxl-->
+        <result column="bankNo" property="bankNo" jdbcType="VARCHAR" />
+        <result column="payAllianceCode" property="payAllianceCode" jdbcType="VARCHAR" />
+        <result column="bankName" property="bankName" jdbcType="VARCHAR" />
     </resultMap>
     <select id="selectBankOpenAccountByUserId" resultMap="BankOpenAccountPOMap" parameterType="java.lang.Integer">
         SELECT
@@ -333,7 +337,11 @@
         hydu.bank_account_esb AS  open_account_plat,
         date_format(hboa.create_time,'%Y-%c-%d %H:%i:%s') AS open_account_time,
         hydu.user_type AS user_type,
-        hbc.mobile AS mobile
+        hbc.mobile AS mobile,
+        <!--合规四期,用户详情添加以下三个字段显示 add by nxl-->
+        hbc.card_no AS bankNo,
+        hbc.pay_alliance_code as payAllianceCode,
+        hbc.bank AS bankName
         FROM
         ht_user hydu
         LEFT JOIN ht_bank_open_account hboa ON hboa.user_id = hydu.user_id
@@ -349,7 +357,6 @@
         <result column="email" property="email" jdbcType="VARCHAR" />
         <result column="mobile" property="mobile" jdbcType="VARCHAR" />
         <result column="user_role" property="userRole" jdbcType="INTEGER" />
-        <result column="user_property" property="userProperty" jdbcType="VARCHAR" />
         <result column="status" property="status" jdbcType="INTEGER" />
         <result column="borrower_type" property="borrowerType"  jdbcType="INTEGER" />
     </resultMap>
