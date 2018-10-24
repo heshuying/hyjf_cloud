@@ -187,7 +187,7 @@ public class BankRechargeController extends BaseController {
     @ApiOperation(value = "快捷充值限额导出", notes = "快捷充值限额导出")
     @GetMapping("/exportAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminBankRechargeConfigRequest adminRequest) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, AdminBankRechargeConfigRequest adminRequest) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
