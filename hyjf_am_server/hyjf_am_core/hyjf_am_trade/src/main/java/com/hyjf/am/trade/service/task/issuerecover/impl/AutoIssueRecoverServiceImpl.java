@@ -521,6 +521,9 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         }else{
             borrowManinfo.setIsPunished("暂无");
         }
+        if(StringUtils.isNotBlank(hjhPlanAsset.getAddress())){
+            borrowManinfo.setAddress(hjhPlanAsset.getAddress());
+        }
         this.borrowManinfoMapper.insertSelective(borrowManinfo);
 
         return 0;
@@ -935,6 +938,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
         borrow.setBorrowEndTime("");
         borrow.setRepayLastTime(0);
+
 
         // 项目申请人
 //		String applicant = hjhAssetBorrowType.getApplicant();
