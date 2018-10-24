@@ -515,11 +515,13 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             String tenderQuota = bestCoupon.getCouponType();
             if("1".equals(tenderQuota)){
                 if (!"不限".equals(bestCoupon.getTenderQuota())){
-                    if(bestCoupon.getTenderQuotaMin()> new Double(money)||bestCoupon.getTenderQuotaMax()<new Double(money)){
-                        CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
-                                bestCoupon.getProjectExpirationType());
-                        notAvailableCouponList.add(couponBean);
-                        continue;
+                    if(null != bestCoupon.getTenderQuotaMin() && null != bestCoupon.getTenderQuotaMax()){
+                        if(bestCoupon.getTenderQuotaMin()> new Double(money)||bestCoupon.getTenderQuotaMax()<new Double(money)){
+                            CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
+                                    bestCoupon.getProjectExpirationType());
+                            notAvailableCouponList.add(couponBean);
+                            continue;
+                        }
                     }
                 }
             }else if("2".equals(tenderQuota)){
