@@ -128,4 +128,11 @@ public class HjhUserAuthConfigLogCustomize implements Serializable {
         this.createUser = createUser;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }
