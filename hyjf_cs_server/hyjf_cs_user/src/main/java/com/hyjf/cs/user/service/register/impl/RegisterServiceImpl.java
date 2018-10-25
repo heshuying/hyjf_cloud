@@ -551,7 +551,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     @Override
     public void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO) {
-        logger.info("version:========"+version);
         Integer sourceId = null;
         if (StringUtils.isNotBlank(version)) {
             String[] shuzu = version.split("\\.");
@@ -571,7 +570,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                     params.put("investAmount",0.00);
                     params.put("registerTime",new Date());
                     params.put("cumulativeInvest",BigDecimal.ZERO);
-                    logger.info("压入消息队列============="+sourceId);
                     try {
                         appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                 MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
@@ -647,8 +645,8 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             params.put("mqMsgId", GetCode.getRandomCode(10));
             params.put("userId", String.valueOf(userId));
             params.put("sendFlg", "11");
-            couponProducer.messageSend(new MessageContent(MQConstant.REGISTER_COUPON_TOPIC,
-                    MQConstant.REGISTER_COUPON_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            couponProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
+                    UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
         } catch (Exception e) {
             logger.error("注册发放888红包失败...", e);
         }
