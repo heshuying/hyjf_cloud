@@ -3,9 +3,9 @@
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserAliasCustomizeMapper">
 
 <select id="findAliasByMobiles" parameterType="java.util.List" resultType="com.hyjf.am.vo.user.UserAliasVO">
-    select id, user_id, sign, alias, client, package_code
-    from ht_user_alias
-    where package_code in
+    select a.id, a.user_id, a.sign, a.alias, a.client, a.package_code
+    from ht_user_alias a inner JOIN ht_user u on u.user_id=a.user_id
+    where u.mobile in
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
         #{item}
     </foreach>
