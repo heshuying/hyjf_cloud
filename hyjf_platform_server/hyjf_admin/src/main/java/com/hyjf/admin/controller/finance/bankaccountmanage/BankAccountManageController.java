@@ -5,12 +5,14 @@ package com.hyjf.admin.controller.finance.bankaccountmanage;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.response.BankAccountManageResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankAccountManageService;
 import com.hyjf.admin.utils.Page;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -23,20 +25,16 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author PC-LIUSHOUYI
@@ -377,166 +375,160 @@ public class BankAccountManageController extends BaseController {
      */
     @ApiOperation(value = "导出资金明细列表", notes = "银行账户管理")
     @PostMapping("/export_account_detail_excel")
-	public void exportAccountsExcel(@RequestBody BankAccountManageRequest request, HttpServletResponse response) throws Exception {
-		// 表格sheet名称
-		String sheetName = "账户数据";
+    public void exportAccountsExcel(@RequestBody BankAccountManageRequest request, HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
 
-		
-//		// 部门
-//		if (Validator.isNotNull(request.getCombotreeSrch())) {
-//			if (form.getCombotreeSrch().contains(StringPool.COMMA)) {
-//				String[] list = form.getCombotreeSrch().split(StringPool.COMMA);
-//				form.setCombotreeListSrch(list);
-//			} else {
-//				form.setCombotreeListSrch(new String[] { form.getCombotreeSrch() });
-//			}
-//		}
-	      List<BankAccountManageCustomizeVO> recordList = this.bankAccountManageService.queryAccountDetails(request);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "账户数据";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        int sheetCount = 0;
+        String sheetNameTmp = sheetName + "_第1页";
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        request.setCurrPage(1);
+        request.setPageSize(defaultRowMaxCount);
 
-		String[] titles = new String[] { "用户ID", "用户名", "分公司", "分部", "团队", "资产总额", "电子账号", "会员等级", "可用金额", "冻结金额", "银行待收", "银行待还", "银行账户", "用户手机号", "用户属性（当前）", "用户角色", "一级分部（当前）", "二级分部（当前）",
-				"三级分部（当前）", "推荐人用户名（当前）", "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属三级分部（当前）" };
+        Integer count = bankAccountManageService.selectAccountInfoCount(request);
 
-		// 声明一个工作薄
-		HSSFWorkbook workbook = new HSSFWorkbook();
+        List<BankAccountManageCustomizeVO> recordList = this.bankAccountManageService.queryAccountInfos(request);
 
-		// 生成一个表格
-		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+        if (count == null || count.equals(0)  ){
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            int totalCount = count;
+            sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
+        }
 
-		if (recordList != null && recordList.size() > 0) {
-			int sheetCount = 1;
-			int rowNum = 0;
-			for (int i = 0; i < recordList.size(); i++) {
-				rowNum++;
-				if (i != 0 && i % 60000 == 0) {
-					sheetCount++;
-					sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-					rowNum = 1;
-				}
+        for (int i = 1; i < sheetCount; i++) {
+            request.setCurrPage(i+1);
+            List<BankAccountManageCustomizeVO> recordList2 = this.bankAccountManageService.queryAccountInfos(request);
+            if (!CollectionUtils.isEmpty(recordList2)) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2);
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(httpRequest, response, fileName, workbook);
+    }
 
-				// 新建一行
-				Row row = sheet.createRow(rowNum);
-				// 循环数据
-				for (int celLength = 0; celLength < titles.length; celLength++) {
-					BankAccountManageCustomizeVO bean = recordList.get(i);
 
-					// 创建相应的单元格
-					Cell cell = row.createCell(celLength);
-					// 用户ID
-					if (celLength == 0) {
-						cell.setCellValue(bean.getUserId());
-					}
-					// 用户名
-					else if (celLength == 1) {
-						cell.setCellValue(bean.getUsername());
-					}
-					// 分公司
-					else if (celLength == 2) {
-						cell.setCellValue(bean.getRegionName());
-					}
-					// 分部
-					else if (celLength == 3) {
-						cell.setCellValue(bean.getBranchName());
-					}
-					// 团队
-					else if (celLength == 4) {
-						cell.setCellValue(bean.getDepartmentName());
-					}
-					// 资产总额
-					else if (celLength == 5) {
-						if (bean.getBankTotal() != null) {
-							cell.setCellValue(String.valueOf(bean.getBankTotal()));
-						} else {
-							cell.setCellValue("0.00");
-						}
-					}
-					// 电子账号
-					else if (celLength == 6) {
-						cell.setCellValue(bean.getAccount() == null ? "" : bean.getAccount());
-					}
-					// 会员等级
-					else if (celLength == 7) {
-						cell.setCellValue(bean.getVipName() == null ? "" : bean.getVipName());
-					}
-					// 可用金额
-					else if (celLength == 8) {
-						cell.setCellValue(bean.getBankBalance() == null ? "0.00" : bean.getBankBalance().toString());
-					}
-					// 冻结金额
-					else if (celLength == 9) {
-						cell.setCellValue(bean.getBankFrost() == null ? "0.00" : bean.getBankFrost().toString());
-					}
-					// 待收金额
-					else if (celLength == 10) {
-						cell.setCellValue(bean.getBankAwait() == null ? "0.00" : bean.getBankAwait().toString());
-					}
-					// 待还金额
-					else if (celLength == 11) {
-						cell.setCellValue(bean.getBankWaitRepay() == null ? "0.00" : bean.getBankWaitRepay().toString());
-					}
-					// 银行账户
-					else if (celLength == 12) {
-						cell.setCellValue((bean.getBankBalanceCash() == null ? "0.00" : bean.getBankBalanceCash().toString()) + "/"
-								+ (bean.getBankFrostCash() == null ? "0.00" : bean.getBankFrostCash().toString()));
-					}
-					// 手机号
-					else if (celLength == 13) {
-						cell.setCellValue(bean.getMobile());
-					}
-					// 用户属性（当前）
-					else if (celLength == 14) {
-						if ("0".equals(bean.getUserAttribute())) {
-							cell.setCellValue("无主单");
-						} else if ("1".equals(bean.getUserAttribute())) {
-							cell.setCellValue("有主单");
-						} else if ("2".equals(bean.getUserAttribute())) {
-							cell.setCellValue("线下员工");
-						} else if ("3".equals(bean.getUserAttribute())) {
-							cell.setCellValue("线上员工");
-						}
-					}
-					// 角色
-					else if (celLength == 15) {
-						cell.setCellValue(bean.getRoleid());
-					}
-					// 用户所属一级分部（当前）
-					else if (celLength == 16) {
-						cell.setCellValue(bean.getUserRegionName());
-					}
-					// 用户所属二级分部（当前）
-					else if (celLength == 17) {
-						cell.setCellValue(bean.getUserBranchName());
-					}
-					// 用户所属三级分部（当前）
-					else if (celLength == 18) {
-						cell.setCellValue(bean.getUserDepartmentName());
-					}
-					// 推荐人用户名（当前）
-					else if (celLength == 19) {
-						cell.setCellValue(bean.getReferrerName());
-					}
-					// 推荐人姓名（当前）
-					else if (celLength == 20) {
-						cell.setCellValue(bean.getReferrerTrueName());
-					}
-					// 推荐人所属一级分部（当前）
-					else if (celLength == 21) {
-						cell.setCellValue(bean.getReferrerRegionName());
-					}
-					// 推荐人所属二级分部（当前）
-					else if (celLength == 22) {
-						cell.setCellValue(bean.getReferrerBranchName());
-					}
-					// 推荐人所属三级分部（当前）
-					else if (celLength == 23) {
-						cell.setCellValue(bean.getReferrerDepartmentName());
-					}
-				}
-			}
-		}
-		// 导出
-		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-	}
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("userId", "用户ID");
+        map.put("username", "用户名");
+        map.put("regionName", "分公司");
+        map.put("branchName", "分部");
+        map.put("departmentName", "团队");
+        map.put("bankTotal", "资产总额");
+        map.put("account", "电子账号");
+        map.put("vipName", "会员等级");
+        map.put("bankBalance","可用金额");
+        map.put("bankFrost","冻结金额");
+        map.put("bankAwait","银行待收");
+        map.put("bankWaitRepay","银行待还");
+        map.put("bankBalanceCashTotal","银行账户");
+        map.put("mobile","用户手机号");
+        map.put("userAttribute","用户属性(当前)");
+        map.put("roleid","用户角色");
+        map.put("userRegionName","一级分部(当前)");
+        map.put("userBranchName","二级分部(当前)");
+        map.put("userDepartmentName","三级分部(当前)");
+        map.put("referrerName","推荐人用户名(当前)");
+        map.put("referrerTrueName","推荐人姓名(当前)");
+        map.put("referrerRegionName","推荐人所属一级分部(当前)");
+        map.put("referrerBranchName","推荐人所属二级分部(当前)");
+        map.put("referrerDepartmentName","推荐人所属三级分部(当前)");
+
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter bankTotalAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal bankTotal = (BigDecimal) object;
+                return bankTotal != null ? String.valueOf(bankTotal) : "0.00";
+            }
+        };
+        IValueFormatter accountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String account = (String) object;
+                return StringUtils.isNotBlank(account) ? account : "";
+            }
+        };
+        IValueFormatter vipNameAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String vipName = (String) object;
+                return StringUtils.isNotBlank(vipName) ? vipName : "";
+            }
+        };
+        IValueFormatter bankBalanceAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal bankBalance = (BigDecimal) object;
+                return bankBalance != null ? String.valueOf(bankBalance) : "0.00";
+            }
+        };
+        IValueFormatter bankFrostAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal bankFrost = (BigDecimal) object;
+                return bankFrost != null ? String.valueOf(bankFrost) : "0.00";
+            }
+        };
+        IValueFormatter bankWaitAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal bankWait = (BigDecimal) object;
+                return bankWait != null ? String.valueOf(bankWait) : "0.00";
+            }
+        };
+        IValueFormatter bankWaitRepayAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal bankWaitRepay = (BigDecimal) object;
+                return bankWaitRepay != null ? String.valueOf(bankWaitRepay) : "0.00";
+            }
+        };
+        IValueFormatter userAttributeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String userAttribute = (String) object;
+                String str = "";
+                if ("0".equals(userAttribute)) {
+                    str = "无主单";
+                } else if ("1".equals(userAttribute)) {
+                    str = "有主单";
+                } else if ("2".equals(userAttribute)) {
+                   str = "线下员工";
+                } else if ("3".equals(userAttribute)) {
+                    str = "线上员工";
+                }
+                return str;
+            }
+        };
+
+        mapAdapter.put("bankTotal",bankTotalAdapter);
+        mapAdapter.put("account",accountAdapter);
+        mapAdapter.put("vipName",vipNameAdapter);
+        mapAdapter.put("bankBalance",bankBalanceAdapter);
+        mapAdapter.put("bankFrost",bankFrostAdapter);
+        mapAdapter.put("bankWait",bankWaitAdapter);
+        mapAdapter.put("bankWaitRepay",bankWaitRepayAdapter);
+        mapAdapter.put("userAttribute",userAttributeAdapter);
+        return mapAdapter;
+    }
 
 }

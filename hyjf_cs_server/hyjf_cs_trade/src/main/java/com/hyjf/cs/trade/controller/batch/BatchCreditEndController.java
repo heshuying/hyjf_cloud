@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -12,6 +13,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -60,9 +62,10 @@ public class BatchCreditEndController extends BaseTradeController {
      * @throws Exception
      */
     @RequestMapping("/batch_credit_end_verify")
-    public String batchCreditEndVerify(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) throws Exception {
+    public String batchCreditEndVerify(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCallBean bean) throws Exception {
 
         BankCallResult result = new BankCallResult();
+        logger.info("批次结束债权,合法性检查异步回调开始，bean：" + JSON.toJSONString(bean));
         logger.info("批次结束债权,合法性检查异步回调开始 "+bean.getRetCode() + "  "+ bean.getBatchNo());
 
         if (StringUtils.isBlank(bean.getRetCode()) || StringUtils.isBlank(bean.getBatchNo())) {
@@ -89,9 +92,10 @@ public class BatchCreditEndController extends BaseTradeController {
      * @throws Exception
      */
     @RequestMapping("/batch_credit_end_finish")
-    public String batchCreditEndFinish(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) throws Exception {
+    public String batchCreditEndFinish(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCallBean bean) throws Exception {
 
         BankCallResult result = new BankCallResult();
+        logger.info("批次结束债权,业务结果异步回调开始, bean: " + JSON.toJSONString(bean));
         logger.info("批次结束债权,业务结果异步回调开始 "+bean.getRetCode() + "  "+ bean.getBatchNo());
 
         if (StringUtils.isBlank(bean.getRetCode()) || StringUtils.isBlank(bean.getBatchNo())) {

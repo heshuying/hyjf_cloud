@@ -123,6 +123,9 @@ public class AppRegistController extends BaseUserController {
                 register.getVerificationCode(), register.getPassword(),
                 register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), platform, GetCilentIP.getIpAddr(request));
 
+        //发送mq同步推广表
+        logger.info("发送mq同步推广表=============");
+        registService.sendMqToSaveAppChannel(version,webViewUserVO);
         String statusDesc = "注册成功";
         boolean active = false;
         try {

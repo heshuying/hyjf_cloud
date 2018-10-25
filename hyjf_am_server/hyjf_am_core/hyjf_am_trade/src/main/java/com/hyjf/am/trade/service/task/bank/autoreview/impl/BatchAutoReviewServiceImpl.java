@@ -115,7 +115,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
         /*------------upd by liushouyi HJH3 Start-------------------*/
         //不使用引擎：散标(仅使用borrowNid、使用前先通过borrownid查询借款详情)
         BorrowExample  example = new BorrowExample();
-        example.createCriteria().andStatusEqualTo(3).andBorrowFullStatusEqualTo(1).andPlanNidIsNotNull();
+        example.createCriteria().andStatusEqualTo(3).andBorrowFullStatusEqualTo(1).andPlanNidIsNull();
         List<Borrow> borrowList = borrowMapper.selectByExample(example);
         /*------------upd by liushouyi HJH3 End-------------------*/
         return borrowList;
@@ -225,10 +225,11 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                                 boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                                 if (apicronFlag) {
                                     //2018-10-15 复审之后之后发送MQ进行放款
+                                    //由于是在事务内提交 会发生MQ消费时事务还没提交的情况 所以改成延时队列
                                     logger.debug("自动复审更新数据完成，开始发送放款MQ，标的编号：{}", borrowNid);
                                     try {
-                                        borrowLoanRepayProducer.messageSend(
-                                                new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
+                                        borrowLoanRepayProducer.messageSendDelay(
+                                                new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)), 2);
                                     } catch (MQException e) {
                                         logger.error("[编号：" + borrowNid + "]发送直投放款MQ失败！", e);
                                     }

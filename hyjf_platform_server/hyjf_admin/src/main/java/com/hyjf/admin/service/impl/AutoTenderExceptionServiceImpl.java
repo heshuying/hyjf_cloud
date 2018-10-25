@@ -18,6 +18,7 @@ import com.hyjf.am.resquest.admin.TenderExceptionSolveRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.hjh.*;
+import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.bean.RedisBorrow;
 import com.hyjf.common.cache.RedisConstants;
@@ -37,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
@@ -205,7 +205,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      * @author nxl
      */
     @Override
-    public Map<String, Object> saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
+    public HjhCreditCalcResultVO saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
         return amTradeClient.saveCreditTenderLogNoSave(credit,hjhAccede,orderId,orderDate,yujiAmoust,isLast);
     }
     /**
@@ -215,8 +215,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      * @author nxl
      */
     @Override
-    public boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap){
-        return amTradeClient.updateCreditForAutoTender(credit.getCreditNid(), hjhAccede.getAccedeOrderId(), hjhPlan.getPlanNid(),bean,tenderUsrcustid,sellerUsrcustid,resultMap);
+    public boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, HjhCreditCalcResultVO resultVO){
+        return amTradeClient.updateCreditForAutoTender(credit.getCreditNid(), hjhAccede.getAccedeOrderId(), hjhPlan.getPlanNid(),bean,tenderUsrcustid,sellerUsrcustid,resultVO);
     }
 
     /**
@@ -381,32 +381,29 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                         isLast = true;
                     }
                     // 计算实际金额 保存creditTenderLog表
-                    Map<String, Object> resultMap = saveCreditTenderLogNoSave(credit, hjhAccede,
+                    HjhCreditCalcResultVO resultVO = saveCreditTenderLogNoSave(credit, hjhAccede,
                             hjhPlanBorrowTmp.getOrderId(), orderDate, hjhPlanBorrowTmp.getAccount(),isLast);
-                    if (Validator.isNull(resultMap)) {
+                    if (Validator.isNull(resultVO)) {
                         logger.info("保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                         return  "保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId();
                     }
                     //汇计划自动投资(收债转服务费)
                     logger.info("[" + hjhAccede.getAccedeOrderId() + "]" + "承接用计算完成"
-                            + "\n,分期数据结果:" + resultMap.get("assignResult")
-                            + "\n,承接总额:" + resultMap.get("assignAccount")
-                            + "\n,承接本金:" + resultMap.get("assignCapital")
-                            + "\n,承接利息:" + resultMap.get("assignInterest")
-                            + "\n,承接支付金额:" + resultMap.get("assignPay")
-                            + "\n,承接垫付利息:" + resultMap.get("assignAdvanceMentInterest")
-                            + "\n,承接延期利息:" + resultMap.get("assignRepayDelayInterest")
-                            + "\n,承接逾期利息:" + resultMap.get("assignRepayLateInterest")
-                            + "\n,分期本金:" + resultMap.get("assignPeriodCapital")
-                            + "\n,分期利息:" + resultMap.get("assignPeriodInterest")
-                            + "\n,分期垫付利息:" + resultMap.get("assignPeriodAdvanceMentInterest")
-                            + "\n,分期承接延期利息:" + resultMap.get("assignPeriodRepayDelayInterest")
-                            + "\n,分期承接延期利息:" + resultMap.get("assignPeriodRepayLateInterest")
-                            + "\n,承接服务率:" + resultMap.get("serviceApr")
-                            + "\n,承接服务费:" + resultMap.get("serviceFee"));
+                            + "\n,分期数据结果:" + resultVO.getAssignResult()
+                            + "\n,承接总额:" + resultVO.getAssignAccount()
+                            + "\n,承接本金:" + resultVO.getAssignCapital()
+                            + "\n,承接利息:" + resultVO.getAssignInterest()
+                            + "\n,承接支付金额:" + resultVO.getAssignPay()
+                            + "\n,承接垫付利息:" + resultVO.getAssignAdvanceMentInterest()
+                            + "\n,承接延期利息:" + resultVO.getAssignRepayDelayInterest()
+                            + "\n,承接逾期利息:" + resultVO.getAssignRepayLateInterest()
+                            // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+                            + "\n,承接服务率:" + resultVO.getServiceApr()
+                            // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+                            + "\n,承接服务费:" + resultVO.getServiceFee());
                     // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
                     bean.setOrderId(hjhPlanBorrowTmp.getOrderId());
-                    boolean isOK = updateCreditForAutoTender(credit, hjhAccede, hjhPlan, bean, borrowUserAccountId, sellerUsrcustid, resultMap);
+                    boolean isOK = updateCreditForAutoTender(credit, hjhAccede, hjhPlan, bean, borrowUserAccountId, sellerUsrcustid, resultVO);
                     if(isOK){
                         // 更改加入明细状态和投资临时表状态
                         updateTenderByParam(orderStatus,hjhAccede.getId());
