@@ -26,7 +26,11 @@ public class HjhUserAuthConfigVO extends BaseVO implements Serializable {
 
     private Date createTime;
 
+    private String createTimeStr;
+
     private Date updateTime;
+
+    private String updateTimeStr;
 
     private String ip;
 
@@ -126,5 +130,21 @@ public class HjhUserAuthConfigVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
+    }
+
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
     }
 }
