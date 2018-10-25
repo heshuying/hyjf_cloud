@@ -85,7 +85,7 @@ public class AppUnBindCardPageController extends BaseUserController{
             ret.put("statusDesc", "用户未登录！");
             return ret;
         }
-        // 取得用户在汇付天下的客户号
+        // 取得用户的客户号
         BankOpenAccountVO accountChinapnrTender = unBindCardService.getBankOpenAccount(userId);
         if (accountChinapnrTender == null || org.apache.commons.lang3.StringUtils.isEmpty(accountChinapnrTender.getAccount())) {
             ret.put("status", "1");
