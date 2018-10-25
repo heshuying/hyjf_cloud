@@ -387,4 +387,23 @@ public class BorrowTenderController extends BaseController {
         }
         return response;
     }
+
+
+    /**
+     * 根据投资订单号查询投资记录
+     *
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/selectBorrowTenderByOrderId/{orderId}")
+    public BorrowTenderResponse selectBorrowTenderByOrderId(@PathVariable String orderId){
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        BorrowTenderRequest request = new BorrowTenderRequest();
+        request.setTenderNid(orderId);
+        BorrowTender borrowTender = this.borrowTenderService.selectBorrowTender(request);
+        if (Validator.isNotNull(borrowTender)){
+            response.setResult(CommonUtils.convertBean(borrowTender,BorrowTenderVO.class));
+        }
+        return response;
+    }
 }

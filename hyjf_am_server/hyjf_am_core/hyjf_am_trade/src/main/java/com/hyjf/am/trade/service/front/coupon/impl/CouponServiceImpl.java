@@ -199,4 +199,76 @@ public class CouponServiceImpl extends CustomizeMapper implements CouponService{
 	public List<AppCouponCustomizeVO> getAppMyPlanCouponInfo(Map<String, Object> params) {
 		return couponCustomizeMapper.getMyCouponPlanList(params);
 	}
+
+	/**
+	 * 根据投资订单号查询此笔投资是否使用优惠券
+	 *
+	 * @param orderId
+	 * @return
+	 */
+	@Override
+	public CouponRealTender selectCouponRealTenderByOrderId(String orderId) {
+		CouponRealTenderExample example = new CouponRealTenderExample();
+		CouponRealTenderExample.Criteria cra = example.createCriteria();
+		cra.andRealTenderIdEqualTo(orderId);
+		List<CouponRealTender> list = this.couponRealTenderMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * 根据优惠券投资ID查询优惠券投资
+	 *
+	 * @param couponTenderId
+	 * @return
+	 */
+	@Override
+	public CouponTender selectCouponTenderByCouponTenderId(String couponTenderId) {
+		CouponTenderExample example = new CouponTenderExample();
+		CouponTenderExample.Criteria cra = example.createCriteria();
+		cra.andOrderIdEqualTo(couponTenderId);
+		List<CouponTender> list = this.couponTenderMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * 根据优惠券ID查询优惠券使用信息
+	 *
+	 * @param couponGrantId
+	 * @return
+	 */
+	@Override
+	public CouponUser selectCouponUserById(Integer couponGrantId) {
+		CouponUserExample example = new CouponUserExample();
+		CouponUserExample.Criteria cra = example.createCriteria();
+		cra.andIdEqualTo(couponGrantId);
+		List<CouponUser> list = this.couponUserMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * 根据优惠券投资ID获取优惠券投资信息
+	 *
+	 * @param couponTenderId
+	 * @return
+	 */
+	@Override
+	public BorrowTenderCpn selectBorrowTenderCpnByCouponTenderId(String couponTenderId) {
+		BorrowTenderCpnExample example = new BorrowTenderCpnExample();
+		BorrowTenderCpnExample.Criteria cra = example.createCriteria();
+		cra.andNidEqualTo(couponTenderId);
+		List<BorrowTenderCpn> list = this.borrowTenderCpnMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
 }

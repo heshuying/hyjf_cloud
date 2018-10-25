@@ -3,8 +3,7 @@
  */
 package com.hyjf.am.trade.service.front.coupon;
 
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
-import com.hyjf.am.trade.dao.model.auto.CouponRecover;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CouponCustomize;
 import com.hyjf.am.vo.trade.coupon.AppCouponCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
@@ -117,4 +116,36 @@ public interface CouponService {
      * @date 2018/8/1 14:30
      */
     List<AppCouponCustomizeVO> getAppMyPlanCouponInfo(Map<String,Object> params);
+
+    /**
+     * 根据订单号查询此笔投资是否使用优惠券
+     *
+     * @param orderId
+     * @return
+     */
+    CouponRealTender selectCouponRealTenderByOrderId(String orderId);
+
+    /**
+     * 根据优惠券投资ID查询优惠券投资
+     *
+     * @param couponTenderId
+     * @return
+     */
+    CouponTender selectCouponTenderByCouponTenderId(String couponTenderId);
+
+    /**
+     * 根据优惠券ID查询优惠券使用信息
+     *
+     * @param couponGrantId
+     * @return
+     */
+    CouponUser selectCouponUserById(Integer couponGrantId);
+
+    /**
+     * 根据优惠券投资ID获取优惠券投资信息
+     *
+     * @param couponTenderId
+     * @return
+     */
+    BorrowTenderCpn selectBorrowTenderCpnByCouponTenderId(String couponTenderId);
 }

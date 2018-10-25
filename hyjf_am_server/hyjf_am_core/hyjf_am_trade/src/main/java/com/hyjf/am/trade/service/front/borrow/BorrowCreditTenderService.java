@@ -98,4 +98,12 @@ public interface BorrowCreditTenderService {
      * @return
      */
     List<CreditTender> selectCreditTenderByUserId(Integer userId);
+
+    /**
+     * 根据承接订单号查询用户承接记录
+     *
+     * @param assignOrderId
+     * @return
+     */
+    CreditTender selectCreditTenderByAssignOrderId(String assignOrderId);
 }

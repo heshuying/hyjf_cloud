@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.response.trade.BorrowCreditRepayResponse;
@@ -18,6 +19,7 @@ import com.hyjf.am.trade.service.front.borrow.BorrowCreditTenderService;
 import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
@@ -206,8 +208,23 @@ public class BorrowCreditTenderController extends BaseController {
         return response;
     }
 
-
-
+    /**
+     * 根据承接订单号查询承接记录
+     *
+     * @param assignOrderId
+     * @return
+     */
+    @RequestMapping("/selectCreditTenderByAssignOrderId/{assignOrderId}")
+    public CreditTenderResponse selectCreditTenderByAssignOrderId(@PathVariable String assignOrderId) {
+        CreditTenderResponse response = new CreditTenderResponse();
+        CreditTender creditTender = this.borrowCreditTenderService.selectCreditTenderByAssignOrderId(assignOrderId);
+        if (creditTender != null) {
+            CreditTenderVO creditTenderVO = CommonUtils.convertBean(creditTender, CreditTenderVO.class);
+            response.setResult(creditTenderVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 
 
 

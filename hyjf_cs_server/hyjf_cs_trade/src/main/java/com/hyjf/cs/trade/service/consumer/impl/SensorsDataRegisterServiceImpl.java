@@ -37,10 +37,13 @@ public class SensorsDataRegisterServiceImpl extends BaseServiceImpl implements S
     @Autowired
     private SystemConfig systemConfig;
 
+
     /**
      * 发送神策数据统计
      *
      * @param sensorsDataBean
+     * @throws IOException
+     * @throws InvalidArgumentException
      */
     @Override
     public void sendSensorsData(SensorsDataBean sensorsDataBean) throws IOException, InvalidArgumentException {

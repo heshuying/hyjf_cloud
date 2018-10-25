@@ -21,6 +21,8 @@ public interface SensorsDataRegisterService extends BaseService {
      * 发送神策数据统计
      *
      * @param sensorsDataBean
+     * @throws IOException
+     * @throws InvalidArgumentException
      */
     void sendSensorsData(SensorsDataBean sensorsDataBean) throws IOException, InvalidArgumentException;
 }

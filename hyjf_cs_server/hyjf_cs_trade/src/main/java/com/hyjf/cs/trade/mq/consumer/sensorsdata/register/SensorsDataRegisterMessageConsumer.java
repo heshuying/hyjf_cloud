@@ -96,7 +96,7 @@ public class SensorsDataRegisterMessageConsumer extends Consumer {
                 logger.info("神策数据统计:用户注册相关统计异常:" + e.getMessage());
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
-            return null;
+            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         }
     }
 

@@ -40,7 +40,6 @@ import java.util.Map;
 @Service
 public class SensorsDataLoginServiceImpl extends BaseServiceImpl implements SensorsDataLoginService {
 
-
     @Autowired
     private AmUserClient amUserClient;
 

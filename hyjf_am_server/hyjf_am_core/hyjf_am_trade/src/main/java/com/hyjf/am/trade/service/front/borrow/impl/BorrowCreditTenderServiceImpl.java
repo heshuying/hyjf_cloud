@@ -14,6 +14,7 @@ import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -165,4 +166,24 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         List<CreditTender> list = this.creditTenderMapper.selectByExample(example);
         return list;
     }
+
+    /**
+     * 根据承接订单号查询承接记录
+     *
+     * @param assignOrderId
+     * @return
+     */
+    @Override
+    public CreditTender selectCreditTenderByAssignOrderId(String assignOrderId) {
+        CreditTenderExample example = new CreditTenderExample();
+        CreditTenderExample.Criteria cra =example.createCriteria();
+        cra.andAssignNidEqualTo(assignOrderId);
+        List<CreditTender> list =  this.creditTenderMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
+
 }

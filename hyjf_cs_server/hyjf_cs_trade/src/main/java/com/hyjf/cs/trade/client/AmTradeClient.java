@@ -2271,4 +2271,51 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhAccedeVO> selectHjhAccedeListByUserId(Integer userId);
+
+    /**
+     * 根据承接订单号查询承接记录
+     *
+     * @param assignOrderId
+     * @return
+     */
+    CreditTenderVO selectCreditTenderByAssignOrderId(String assignOrderId);
+
+    /**
+     * 根据加入订单号查询优惠券投资记录
+     *
+     * @param orderId
+     * @return
+     */
+    CouponRealTenderVO selectCouponRealTenderByOrderId(String orderId);
+
+    /**
+     * 根据优惠券投资ID查询优惠券投资
+     *
+     * @param couponTenderId
+     * @return
+     */
+    CouponTenderVO selectCouponTenderByCouponTenderId(String couponTenderId);
+
+    /**
+     * 根据优惠券ID查询优惠券使用情况
+     *
+     * @param couponGrantId
+     * @return
+     */
+    CouponUserVO selectCouponUserById(Integer couponGrantId);
+
+    /**
+     * 根据优惠券投资ID获取优惠券投资信息
+     *
+     * @param couponTenderId
+     * @return
+     */
+    BorrowTenderCpnVO selectBorrowTenderCpnByCouponTenderId(String couponTenderId);
+
+    /**
+     * 根据投资订单号查询投资信息
+     * @param orderId
+     * @return
+     */
+    BorrowTenderVO selectBorrowTenderByOrderId(String orderId);
 }

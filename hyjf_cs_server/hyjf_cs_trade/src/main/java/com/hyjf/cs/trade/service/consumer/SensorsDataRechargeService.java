@@ -10,15 +10,15 @@ import com.sensorsdata.analytics.javasdk.exceptions.InvalidArgumentException;
 import java.io.IOException;
 
 /**
- * 神策数据统计:用户登陆事件Service
+ * 神策数据统计:用户充值相关Service
  *
  * @author liuyang
- * @version SensorsDataLoginService, v0.1 2018/10/19 14:43
+ * @version SensorsDataRechargeService, v0.1 2018/10/22 15:06
  */
-public interface SensorsDataLoginService extends BaseService {
+public interface SensorsDataRechargeService extends BaseService {
 
     /**
-     * 发送神策数据统计
+     * 发送神策埋点数据
      *
      * @param sensorsDataBean
      * @throws IOException
