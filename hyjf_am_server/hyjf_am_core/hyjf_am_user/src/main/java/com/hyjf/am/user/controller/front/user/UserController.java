@@ -247,7 +247,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/selectByExample/{orderId}")
-    public HjhUserAuthLogResponse selectByExample(@RequestBody String orderId) {
+    public HjhUserAuthLogResponse selectByExample(@PathVariable String orderId) {
         HjhUserAuthLogResponse response = new HjhUserAuthLogResponse();
         HjhUserAuthLog hjhUserAuthLog = userService.selectByExample(orderId);
         if (null != hjhUserAuthLog) {

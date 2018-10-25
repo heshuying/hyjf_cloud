@@ -66,6 +66,7 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
         String platform = request.getParameter("platform");
+        String sign=request.getParameter("sign");
         //检查用户信息
         checkUserMessage(user);
 
@@ -76,7 +77,7 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
         String successPath = "/bank/user/repayauth/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId;
+        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
         String successUrl = super.getFrontHost(systemConfig,platform) + successPath;
         String bgRetUrl = "http://CS-USER/hyjf-web/bank/user/auth/repayauthpageplus/repayauthBgreturn" ;
 
@@ -88,9 +89,9 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
         authBean.setIp(CustomUtil.getIpAddr(request));
         authBean.setAccountId(bankOpenAccountVO.getAccount());
         // 同步 异步
-        authBean.setRetUrl(retUrl);
-        authBean.setSuccessUrl(successUrl);
-        authBean.setNotifyUrl(bgRetUrl);
+        authBean.setRetUrl(splicingParam(retUrl,request));
+        authBean.setSuccessUrl(splicingParam(successUrl,request));
+        authBean.setNotifyUrl(splicingParam(bgRetUrl,request));
         // 0：PC 1：微官网 2：Android 3：iOS 4：其他
         authBean.setPlatform(platform);
         authBean.setAuthType(AuthBean.AUTH_TYPE_REPAY_AUTH);
@@ -123,7 +124,18 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
         // 判断是否授权过
         CheckUtil.check(!authService.checkIsAuth(user.getUserId(), AuthBean.AUTH_TYPE_REPAY_AUTH),MsgEnum.STATUS_CE000009);
     }
+    private String splicingParam(String bgRetUrl, HttpServletRequest request) {
+        String sign=request.getParameter("sign");
+        String token=request.getParameter("token");
+        StringBuffer sb = new StringBuffer(bgRetUrl);
 
+        if(bgRetUrl.indexOf("?")!=-1){
+            sb.append("&sign=").append(sign);
+        }else{
+            sb.append("?sign=").append(sign);
+        }
+        return sb.toString();
+    }
     /**
      * 用户还款授权异步回调
      * @param bean
@@ -176,7 +188,8 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
     @ApiOperation(value = "查询授权失败原因", notes = "查询授权失败原因")
     @PostMapping("/seachFiledMess")
     @ResponseBody
-    public WebResult<Object> seachUserAuthErrorMessgae(@RequestBody @Valid String logOrdId) {
+    public WebResult<Object> seachUserAuthErrorMessgae(HttpServletRequest request) {
+        String logOrdId=request.getParameter("logOrdId");
         logger.info("查询授权失败原因start,logOrdId:{}", logOrdId);
         WebResult<Object> result = authService.seachUserAuthErrorMessgae(logOrdId);
         return result;
