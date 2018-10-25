@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UserActionUtmRequest;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -346,16 +347,16 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         if (activityId == null) {
             return false;
         }
-
+        ActivityListVO activityListVO = amMarketClient.selectActivityList(activityId);
         AdsVO adsVO = amMarketClient.findAdsById(activityId);
 
-        if (adsVO == null) {
+        if (activityListVO == null) {
             return false;
         }
-        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeStart()) > GetDate.getNowTime10()) {
+        if (activityListVO.getTimeStart() > GetDate.getNowTime10()) {
             return false;
         }
-        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeEnd()) < GetDate.getNowTime10()) {
+        if( activityListVO.getTimeEnd() < GetDate.getNowTime10()) {
             return false;
         }
 
@@ -552,6 +553,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     @Override
     public void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO) {
+        logger.info("version:========"+version);
         Integer sourceId = null;
         if (StringUtils.isNotBlank(version)) {
             String[] shuzu = version.split("\\.");
@@ -571,7 +573,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                     params.put("investAmount",0.00);
                     params.put("registerTime",new Date());
                     params.put("cumulativeInvest",BigDecimal.ZERO);
-                    //压入消息队列
+                    logger.info("压入消息队列============="+sourceId);
                     try {
                         appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                 MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));

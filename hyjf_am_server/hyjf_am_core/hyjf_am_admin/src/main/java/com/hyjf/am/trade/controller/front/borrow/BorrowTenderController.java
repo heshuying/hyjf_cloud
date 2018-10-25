@@ -2,10 +2,12 @@ package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
 import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -17,6 +19,7 @@ import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
@@ -327,6 +330,118 @@ public class BorrowTenderController extends BaseController {
         BeanUtils.copyProperties(request,borrowTender);
         boolean bol = borrowTenderService.updateBorrowTender(borrowTender);
         return new BooleanResponse(bol);
+    }
+
+    /**
+     * 汇直投投资总额
+     * @Param
+     * @return
+     */
+    @PostMapping("/getBorrowTenderByAddtime")
+    public WrbTenderNotifyResponse getBorrowTenderByAddtime(@RequestBody AppChannelStatisticsRequest request){
+        WrbTenderNotifyResponse response = new WrbTenderNotifyResponse();
+        List<WrbTenderNotifyCustomizeVO> flag = borrowTenderService.getBorrowTenderByAddtime(request.getSourceIdSrch(),request.getTimeStartSrch(),request.getTimeEndSrch());
+        if(flag.size() != 0){
+            response.setResultList(flag);
+        }
+
+        return response;
+    }
+
+    /**
+     * 汇转让投资总额
+     * @Param
+     * @return
+     */
+    @PostMapping("/getCreditTenderByAddtime")
+    public WrbTenderNotifyResponse getCreditTenderByAddtime(@RequestBody AppChannelStatisticsRequest request){
+        WrbTenderNotifyResponse response = new WrbTenderNotifyResponse();
+        List<WrbTenderNotifyCustomizeVO> flag = borrowTenderService.getCreditTenderByAddtime(request.getTimeStartSrch(),request.getTimeEndSrch());
+        if(flag.size() != 0){
+            response.setResultList(flag);
+        }
+
+        return response;
+    }
+
+    /**
+     * app渠道用户充值金额
+     * @Param
+     * @return
+     */
+    @PostMapping("/getAccountRechargeByAddtime")
+    public WrbTenderNotifyResponse getAccountRechargeByAddtime(@RequestBody AppChannelStatisticsRequest request){
+        WrbTenderNotifyResponse response = new WrbTenderNotifyResponse();
+        List<WrbTenderNotifyCustomizeVO> flag = borrowTenderService.getAccountRechargeByAddtime(request.getTimeStartSrch(),request.getTimeEndSrch());
+        if(flag.size() != 0){
+            response.setResultList(flag);
+        }
+
+        return response;
+    }
+
+    /**
+     * 1
+     * @Param
+     * @return
+     */
+    @PostMapping("/getBorrowTenderByClient")
+    public WrbTenderNotifyResponse getBorrowTenderByClient(@RequestBody AppChannelStatisticsRequest request){
+        WrbTenderNotifyResponse response = new WrbTenderNotifyResponse();
+        List<WrbTenderNotifyCustomizeVO> flag = borrowTenderService.getBorrowTenderByClient(request.getSourceIdSrch(),request.getTimeStartSrch(),request.getTimeEndSrch());
+        if(flag.size() != 0){
+            response.setResultList(flag);
+        }
+
+        return response;
+    }
+
+    /**
+     * 2
+     * @Param
+     * @return
+     */
+    @PostMapping("/getProductListByClient")
+    public WrbTenderNotifyResponse getProductListByClient(@RequestBody AppChannelStatisticsRequest request){
+        WrbTenderNotifyResponse response = new WrbTenderNotifyResponse();
+        List<WrbTenderNotifyCustomizeVO> flag = borrowTenderService.getProductListByClient(request.getSourceIdSrch(),request.getTimeStartSrch(),request.getTimeEndSrch());
+        if(flag.size() != 0){
+            response.setResultList(flag);
+        }
+
+        return response;
+    }
+
+    /**
+     * 3
+     * @Param
+     * @return
+     */
+    @PostMapping("/getDebtPlanAccedeByClient")
+    public WrbTenderNotifyResponse getDebtPlanAccedeByClient(@RequestBody AppChannelStatisticsRequest request){
+        WrbTenderNotifyResponse response = new WrbTenderNotifyResponse();
+        List<WrbTenderNotifyCustomizeVO> flag = borrowTenderService.getDebtPlanAccedeByClient(request.getSourceIdSrch(),request.getTimeStartSrch(),request.getTimeEndSrch());
+        if(flag.size() != 0){
+            response.setResultList(flag);
+        }
+
+        return response;
+    }
+
+    /**
+     * 4
+     * @Param
+     * @return
+     */
+    @PostMapping("/getCreditTenderByClient")
+    public WrbTenderNotifyResponse getCreditTenderByClient(@RequestBody AppChannelStatisticsRequest request){
+        WrbTenderNotifyResponse response = new WrbTenderNotifyResponse();
+        List<WrbTenderNotifyCustomizeVO> flag = borrowTenderService.getCreditTenderByClient(request.getSourceIdSrch(),request.getTimeStartSrch(),request.getTimeEndSrch());
+        if(flag.size() != 0){
+            response.setResultList(flag);
+        }
+
+        return response;
     }
 
 }

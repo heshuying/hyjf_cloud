@@ -5972,9 +5972,9 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 	@Override
-	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
+	public BorrowCustomizeResponse exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
         return restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrow/exportBorrowList", borrowCommonCustomize, BorrowCustomizeResponse.class)
-                .getBody().getBorrowCommonCustomizeList();
+                .getBody();
 	}
 
 

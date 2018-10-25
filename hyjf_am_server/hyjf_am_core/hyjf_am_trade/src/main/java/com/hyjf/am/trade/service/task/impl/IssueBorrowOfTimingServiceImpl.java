@@ -18,6 +18,7 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -162,16 +163,41 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 	 * @throws MQException
 	 */
 	private boolean updateOntimeSendBorrow(BorrowCustomize borrowCustomize) throws MQException {
+
+		Borrow borrow = this.borrowMapper.selectByPrimaryKey(borrowCustomize.getId());
+
+		String borrowNid = borrow.getBorrowNid();
+		String SEPARATE = CustomConstants.COLON;
+		// 标的状态key
+		String onTimeStatusKey = CustomConstants.REDIS_KEY_ONTIME_STATUS + SEPARATE + borrowNid;
+		// 标的定时独占锁key
+		String onTimeLockKey = CustomConstants.REDIS_KEY_ONTIME_LOCK + SEPARATE + borrowNid;
+		String status = RedisUtils.get(onTimeStatusKey);
+		if (StringUtils.isNotBlank(status) && ("0".equals(status))){
+			logger.error(borrow.getBorrowNid() + " 定时发标异常：标的已经开始发标");
+			return false;
+		}
+
+		if (!RedisUtils.tranactionSet(onTimeLockKey, 10)){
+			logger.error(borrow.getBorrowNid() + " 定时发标异常：标的已经开始发标");
+			return false;
+		}
+
+
+
+		if(!RedisUtils.tranactionSet(onTimeStatusKey, "1", 300)){
+			return false;
+		}
+
 		// 当前时间
 		int nowTime = GetDate.getNowTime10();
-		Borrow borrow = this.borrowMapper.selectByPrimaryKey(borrowCustomize.getId());
+
 		//董泽杉要求加redis  add by yagnchangwei 2018-10-15
 		RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
 		// DB验证
 		// 有投资金额发生异常
 		BigDecimal zero = new BigDecimal("0");
 		BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
-		String borrowNid = borrow.getBorrowNid();
 		if (!(borrowAccountYes == null || borrowAccountYes.compareTo(zero) == 0)) {
 			logger.error(borrowNid + " 定时发标异常：标的已有投资人投资");
 			return false;
@@ -196,6 +222,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 			logger.info("发标成功短信发送....");
 			// 发送发标短信
 			this.AfterIssueBorrowSuccessSendSms(borrow.getBorrowNid(), "【汇盈金服】", CustomConstants.PARAM_TPL_DSFB);
+			RedisUtils.set(onTimeStatusKey, "0", 300);
 			return true;
 		} else {
 			return false;
@@ -214,12 +241,34 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		int nowTime = GetDate.getNowTime10();
 		Borrow borrow = this.borrowMapper.selectByPrimaryKey(borrowCustomize.getId());
 
+		String SEPARATE = CustomConstants.COLON;
+		// 标的状态key
+		String borrowNid = borrow.getBorrowNid();
+		String onTimeStatusKey = CustomConstants.REDIS_KEY_ONTIME_STATUS + SEPARATE + borrowNid;
+		// 标的定时独占锁key
+		String onTimeLockKey = CustomConstants.REDIS_KEY_ONTIME_LOCK + SEPARATE + borrowNid;
+		String status = RedisUtils.get(onTimeStatusKey);
+		if (StringUtils.isNotBlank(status) && ("0".equals(status))){
+			logger.error(borrow.getBorrowNid() + " 定时发标异常：标的已经开始发标");
+			return false;
+		}
+
+		if (!RedisUtils.tranactionSet(onTimeLockKey, 10)){
+			logger.error(borrow.getBorrowNid() + " 定时发标异常：标的已经开始发标");
+			return false;
+		}
+
+
+
+		if(!RedisUtils.tranactionSet(onTimeStatusKey, "1", 300)){
+			return false;
+		}
+
 		//董泽杉要求加redis  add by yagnchangwei 2018-10-15
 		RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
 		// 有投资金额发生异常
 		BigDecimal zero = new BigDecimal("0");
 		BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
-		String borrowNid = borrow.getBorrowNid();
 		if (!(borrowAccountYes == null || borrowAccountYes.compareTo(zero) == 0)) {
 			logger.error(borrowNid + " 定时发标异常：标的已有投资人投资");
 			return false;
@@ -238,7 +287,11 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setVerifyStatus(4);
 		// 剩余可投资金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
-		return this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
+		boolean result = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
+		if(result){
+			RedisUtils.set(onTimeStatusKey, "0", 300);
+		}
+		return result ;
 	}
 
 	/**
@@ -319,11 +372,33 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 	}
 
 	public boolean updateFireBorrow(Borrow borrow, int nowTime) throws MQException {
-		//董泽杉要求加redis  add by yagnchangwei 2018-10-15
-		RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
+
 		BorrowInfoExample example = new BorrowInfoExample();
 		example.createCriteria().andBorrowNidEqualTo(borrow.getBorrowNid());
 		BorrowInfo borrowInfo = this.borrowInfoMapper.selectByExample(example).get(0);
+		String SEPARATE = CustomConstants.COLON;
+		// 标的状态key
+		String borrowNid = borrow.getBorrowNid();
+		String onTimeStatusKey = CustomConstants.REDIS_KEY_ONTIME_STATUS + SEPARATE + borrowNid;
+		// 标的定时独占锁key
+		String onTimeLockKey = CustomConstants.REDIS_KEY_ONTIME_LOCK + SEPARATE + borrowNid;
+		String status = RedisUtils.get(onTimeStatusKey);
+		if (StringUtils.isNotBlank(status) && ("0".equals(status))){
+			logger.error(borrow.getBorrowNid() + " 定时发标异常：标的已经开始发标");
+			return false;
+		}
+
+		if (!RedisUtils.tranactionSet(onTimeLockKey, 10)){
+			logger.error(borrow.getBorrowNid() + " 定时发标异常：标的已经开始发标");
+			return false;
+		}
+
+
+
+		if(!RedisUtils.tranactionSet(onTimeStatusKey, "1", 300)){
+			return false;
+		}
+
 		// 借款到期时间
 		borrow.setBorrowEndTime(String.valueOf(nowTime + borrowInfo.getBorrowValidTime() * 86400));
 		// 状态
@@ -343,13 +418,10 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		boolean flag = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if (flag) {
 			if ("0".equals(borrow.getIsEngineUsed())) {
-				// borrowNid，借款的borrowNid,account借款总额
-				if (RedisUtils.get(borrow.getBorrowNid()) != null) {
-					logger.error(borrow.getBorrowNid() + " 拆分标自动发标异常：redis已经存在");
-					throw new RuntimeException("拆分标自动发标异常，redis已经存在 标号：" + borrow.getBorrowNid());
-				}
 
-				RedisUtils.set(String.valueOf(borrow.getBorrowNid()), String.valueOf(borrow.getAccount()));
+				//董泽杉要求加redis  add by yagnchangwei 2018-10-15
+				RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
+				RedisUtils.set(onTimeStatusKey, "0", 300);
 				// 发送发标短信
 				this.AfterIssueBorrowSuccessSendSms(borrow.getBorrowNid(), null, CustomConstants.PARAM_TPL_ZDFB);
 				logger.info("定时发标自动任务 " + String.valueOf(borrow.getBorrowNid()) + "标的已经自动发标！");
