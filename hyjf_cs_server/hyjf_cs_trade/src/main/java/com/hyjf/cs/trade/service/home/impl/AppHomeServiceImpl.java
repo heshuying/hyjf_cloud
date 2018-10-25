@@ -21,6 +21,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.app.AppHomePageCustomize;
 import com.hyjf.cs.trade.bean.app.AppHomePageRecommendProject;
@@ -484,6 +485,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         project.setBorrowPeriod(appHomePageCustomize.getBorrowTheSecondDesc() + appHomePageCustomize.getBorrowTheSecond());
         project.setBorrowDesc(appHomePageCustomize.getBorrowDesc());
         project.setButtonText(appHomePageCustomize.getStatusName());
+        // 产品加息
+        project.setBorrowExtraYield(appHomePageCustomize.getBorrowExtraYield());
         return project;
     }
 
@@ -626,6 +629,11 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setBorrowUrl(HOST + HomePageDefine.PLAN + listCustomize.getBorrowNid());
             homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
+            String borrowExtraYield = listCustomize.getBorrowExtraYield();
+            if(StringUtils.isNotBlank(borrowExtraYield)){
+                borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
+            }
+            homePageCustomize.setBorrowExtraYield(borrowExtraYield);
             String status = listCustomize.getStatus();
             if ("稍后开启".equals(listCustomize.getStatusName())){    //1.启用  2.关闭
                 // 20.立即加入  21.稍后开启
@@ -964,6 +972,9 @@ public class AppHomeServiceImpl implements AppHomeService {
                 info.put("sprogBorrowNid", project.getBorrowNid());
                 info.put("sprogBorrowUrl", project.getBorrowUrl());
                 info.put("sprogTime", project.getOnTime());
+                if(!Validator.isIncrease(project.getIncreaseInterestFlag(), project.getBorrowExtraYieldOld())){
+                    project.setBorrowExtraYield("");
+                }
                 info.put("borrowExtraYield", project.getBorrowExtraYield());
             }else {
                 info.put("sprogExist", "0");
