@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.admin.exception;
 
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.BankCreditEndResponse;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
@@ -100,7 +101,7 @@ public class BankCreditEndController extends BaseController {
      */
     @RequestMapping("/update_initial")
     public Integer updateCreditEndForInitial(@RequestBody BankCreditEndVO requestBean){
-        logger.info("结束债权更新为初始状态，requestBean: " + requestBean);
+        logger.info("结束债权更新为初始状态，requestBean: " + JSON.toJSONString(requestBean));
         BankCreditEnd creditEnd = new BankCreditEnd();
         BeanUtils.copyProperties(requestBean,creditEnd);
         return bankCreditEndService.updateCreditEndForInitial(creditEnd);
