@@ -33,6 +33,8 @@ public class HjhUserAuthConfigLogCustomizeAPIVO implements Serializable {
 
     private Date createTime;
 
+    private String createTimeStr;
+
     public String getCreateUserStr() {
         return createUserStr;
     }
@@ -139,4 +141,11 @@ public class HjhUserAuthConfigLogCustomizeAPIVO implements Serializable {
         this.createTime = createTime;
     }
 
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
+    }
 }

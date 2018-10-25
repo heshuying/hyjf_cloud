@@ -19,11 +19,15 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
 
     private Date createTime;
 
+    private String createTimeStr;
+
     private Integer updateUserId;
 
     private String updateUserStr;
 
     private Date updateTime;
+
+    private String updateTimeStr;
 
     private String ip;
 
@@ -131,5 +135,21 @@ public class HjhUserAuthConfigCustomizeVO implements Serializable {
 
     public void setUpdateUserId(Integer updateUserId) {
         this.updateUserId = updateUserId;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
+    }
+
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
     }
 }

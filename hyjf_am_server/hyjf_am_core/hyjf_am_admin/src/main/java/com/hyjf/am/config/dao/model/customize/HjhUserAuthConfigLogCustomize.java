@@ -30,6 +30,8 @@ public class HjhUserAuthConfigLogCustomize implements Serializable {
 
     private Date createTime;
 
+    private String createTimeStr;
+
     public String getCreateUserStr() {
         return createUserStr;
     }
@@ -128,4 +130,19 @@ public class HjhUserAuthConfigLogCustomize implements Serializable {
         this.createUser = createUser;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
+    }
 }

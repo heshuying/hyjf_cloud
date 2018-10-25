@@ -13,8 +13,10 @@
       a.remark,
       a.create_user_id createUserId,
       a.create_time createTime,
+      date_format(a.create_time,'%Y-%m-%d %H:%i:%s') createTimeStr,
       a.update_user_id updateUserId,
       a.update_time updateTime,
+      date_format(a.update_time,'%Y-%m-%d %H:%i:%s') updateTimeStr,
       b.truename updateUserStr
       from ht_hjh_user_auth_config a left join ht_admin b on a.update_user_id = b.id
   </select>
