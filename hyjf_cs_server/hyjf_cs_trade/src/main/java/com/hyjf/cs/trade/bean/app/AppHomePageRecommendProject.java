@@ -54,6 +54,11 @@ public class AppHomePageRecommendProject implements Serializable {
      */
     private String buttonText;
 
+    /**
+     * 产品加息
+     */
+    private String borrowExtraYield;
+
 
     public String getTitle() {
         return title;
@@ -141,5 +146,13 @@ public class AppHomePageRecommendProject implements Serializable {
 
     public void setButtonText(String buttonText) {
         this.buttonText = buttonText;
+    }
+
+    public String getBorrowExtraYield() {
+        return borrowExtraYield;
+    }
+
+    public void setBorrowExtraYield(String borrowExtraYield) {
+        this.borrowExtraYield = borrowExtraYield;
     }
 }

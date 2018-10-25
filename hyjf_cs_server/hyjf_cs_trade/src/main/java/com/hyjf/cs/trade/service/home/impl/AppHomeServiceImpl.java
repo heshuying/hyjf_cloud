@@ -21,6 +21,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.app.AppHomePageCustomize;
 import com.hyjf.cs.trade.bean.app.AppHomePageRecommendProject;
@@ -484,6 +485,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         project.setBorrowPeriod(appHomePageCustomize.getBorrowTheSecondDesc() + appHomePageCustomize.getBorrowTheSecond());
         project.setBorrowDesc(appHomePageCustomize.getBorrowDesc());
         project.setButtonText(appHomePageCustomize.getStatusName());
+        // 产品加息
+        project.setBorrowExtraYield(appHomePageCustomize.getBorrowExtraYield());
         return project;
     }
 
@@ -626,6 +629,11 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setBorrowUrl(HOST + HomePageDefine.PLAN + listCustomize.getBorrowNid());
             homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
+            String borrowExtraYield = listCustomize.getBorrowExtraYield();
+            if(StringUtils.isNotBlank(borrowExtraYield)){
+                borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
+            }
+            homePageCustomize.setBorrowExtraYield(borrowExtraYield);
             String status = listCustomize.getStatus();
             if ("稍后开启".equals(listCustomize.getStatusName())){    //1.启用  2.关闭
                 // 20.立即加入  21.稍后开启
@@ -964,6 +972,9 @@ public class AppHomeServiceImpl implements AppHomeService {
                 info.put("sprogBorrowNid", project.getBorrowNid());
                 info.put("sprogBorrowUrl", project.getBorrowUrl());
                 info.put("sprogTime", project.getOnTime());
+                if(!Validator.isIncrease(project.getIncreaseInterestFlag(), project.getBorrowExtraYieldOld())){
+                    project.setBorrowExtraYield("");
+                }
                 info.put("borrowExtraYield", project.getBorrowExtraYield());
             }else {
                 info.put("sprogExist", "0");
@@ -1018,6 +1029,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (listNewInvest != null && listNewInvest.size() > 0) {
             for (int i = 0; i < listNewInvest.size(); i++) {
                 AppProjectListCustomizeVO newInvest = listNewInvest.get(i);
+                if(!Validator.isIncrease(newInvest.getIncreaseInterestFlag(), newInvest.getBorrowExtraYieldOld())){
+                    newInvest.setBorrowExtraYield("");
+                }
                 projectList.add(newInvest);
             }
             return projectList;
@@ -1031,6 +1045,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (listNewOnTime != null && listNewOnTime.size() > 0) {
             for (int i = 0; i < listNewOnTime.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = listNewOnTime.get(i);
+                if(!Validator.isIncrease(newOnTime.getIncreaseInterestFlag(), newOnTime.getBorrowExtraYieldOld())){
+                    newOnTime.setBorrowExtraYield("");
+                }
                 projectList.add(newOnTime);
             }
             return projectList;
@@ -1043,6 +1060,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (reviewList != null && reviewList.size() > 0) {
             for (int i = 0; i < reviewList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = reviewList.get(i);
+                if(!Validator.isIncrease(newOnTime.getIncreaseInterestFlag(), newOnTime.getBorrowExtraYieldOld())){
+                    newOnTime.setBorrowExtraYield("");
+                }
                 projectList.add(newOnTime);
             }
             return projectList;
@@ -1054,6 +1074,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (repaymentList != null && repaymentList.size() > 0) {
             for (int i = 0; i < repaymentList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = repaymentList.get(i);
+                if(!Validator.isIncrease(newOnTime.getIncreaseInterestFlag(), newOnTime.getBorrowExtraYieldOld())){
+                    newOnTime.setBorrowExtraYield("");
+                }
                 projectList.add(newOnTime);
             }
             return projectList;
