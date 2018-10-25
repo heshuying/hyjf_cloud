@@ -216,8 +216,9 @@ public class ProtocolsController extends BaseController {
                     return adminResult;
                 }else{
                     adminResult.setStatus(FAIL);
-                    adminResult.setStatusDesc(dzqzCallBean.getResult_desc());
+                    adminResult.setStatusDesc(dzqzCallBean.getMsg());
                     return adminResult;
+
                 }
             }
 

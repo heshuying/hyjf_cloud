@@ -58,7 +58,7 @@
 				AND b.reverify_time <![CDATA[<=]]>  unix_timestamp(#{reAuthPassEndTime})
 			</if>
 			<if test="instCodeSrch != null and instCodeSrch != ''">
-				AND b.inst_code = #{instCodeSrch}
+				AND bi.inst_code = #{instCodeSrch}
 			</if>
 			<if test="productType != null and productType != ''">
 				AND  b.project_type = #{productType}

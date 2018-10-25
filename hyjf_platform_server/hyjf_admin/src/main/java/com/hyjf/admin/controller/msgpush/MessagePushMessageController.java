@@ -136,6 +136,8 @@ public class MessagePushMessageController extends BaseController {
         String username = user.getUsername();
 
         templateRequest.setCreateUserName(username);
+        templateRequest.setLastupdateUserName(username);
+        templateRequest.setLastupdateUserId(Integer.parseInt(user.getId()));
         templateRequest.setCreateUserId(Integer.parseInt(user.getId()));
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
