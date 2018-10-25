@@ -6,16 +6,13 @@ import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.BankCardResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
-import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -96,23 +93,6 @@ public class AmUserClientImpl implements AmUserClient {
 	public HjhUserAuthVO getHjhUserAuthVO(Integer userId) {
 		HjhUserAuthResponse response = restTemplate
 				.getForEntity(urlBase + "user/getHjhUserAuthByUserId/" + userId, HjhUserAuthResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
-
-	/**
-	 * @param userId
-	 * @Description 根据userId查询开户信息
-	 * @Author sunss
-	 * @Version v0.1
-	 * @Date 2018/6/19 15:32
-	 */
-	@Override
-	public BankOpenAccountVO selectBankAccountById(Integer userId) {
-		String url = urlBase + "bankopen/selectById/" + userId;
-		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -688,10 +668,17 @@ public class AmUserClientImpl implements AmUserClient {
         return null;
     }
 
+	/**
+	 * @param userId
+	 * @Description 根据userId查询开户信息
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/19 15:32
+	 */
 	@Override
-	public BankOpenAccountVO selectById(int userId) {
-		BankOpenAccountResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
+	public BankOpenAccountVO selectBankAccountById(Integer userId) {
+		String url = urlBase + "bankopen/selectById/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

@@ -331,8 +331,6 @@ public interface AmUserClient {
 
 	List<VipAuthVO> getVipAuthList(int vipId);
 
-	BankOpenAccountVO selectById(int userId);
-
 	BankOpenAccountVO selectByAccountId(String accountId);
 
 	UserVO getUser(String userName);

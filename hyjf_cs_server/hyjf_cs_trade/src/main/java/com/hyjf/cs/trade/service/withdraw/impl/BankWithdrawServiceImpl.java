@@ -804,7 +804,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         String orderId=GetOrderIdUtils.getOrderId2(user.getUserId());
         BankCardVO bankCard = this.amUserClient.queryUserCardValid(user.getUserId()+"", cardNo);
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
-        BankOpenAccountVO bankOpenAccountVO=amUserClient.selectById(user.getUserId());
+        BankOpenAccountVO bankOpenAccountVO=amUserClient.selectBankAccountById(user.getUserId());
         // 调用汇付接口(提现)
         retUrl = retUrl+"?logOrdId="+orderId;
         if(platform.equals(CommonConstant.CLIENT_PC)){
