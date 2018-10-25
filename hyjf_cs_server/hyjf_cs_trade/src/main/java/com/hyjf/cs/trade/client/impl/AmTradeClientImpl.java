@@ -397,7 +397,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean, String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap) {
-        String url = "autoTenderController/updateCreditForAutoTender";
+        String url = urlBase + "autoTenderController/updateCreditForAutoTender";
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
         UpdateCreditForAutoTenderRequest request = new UpdateCreditForAutoTenderRequest(creditNid, accedeOrderId, planNid, bankCallBeanVO, tenderUsrcustid, sellerUsrcustid, resultMap);
@@ -897,8 +897,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BorrowApicronVO selectBorrowApicron(String bankSeqNO) {
         String url = "http://AM-TRADE/am-trade/borrowApicron/getby_bankseqno/" + bankSeqNO;
-        Response<BorrowApicronVO> response =
-                restTemplate.getForEntity(url,Response.class).getBody();
+        BorrowApicronResponse response =
+                restTemplate.getForEntity(url,BorrowApicronResponse.class).getBody();
         if (response!=null && Response.isSuccess(response)){
             return response.getResult();
         }
@@ -1701,7 +1701,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean borrowTender(TenderBgVO tenderBg) {
-        logger.info("用户投资散标操作表");
+        logger.info("用户投资散标操作表,对象为：{}",JSONObject.toJSONString(tenderBg));
         IntegerResponse result =  restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/borrow/borrowTender", tenderBg, IntegerResponse.class).getBody();
         if (Response.isSuccess(result)) {
@@ -2029,6 +2029,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer saveCreditBgData(CreditTenderBgVO creditTenderBg) {
         String url  = "http://AM-TRADE/am-trade/creditTender/saveCreditBgData";
+        logger.info("保存债转的数据：{}",JSONObject.toJSONString(creditTenderBg));
         IntegerResponse response = restTemplate.postForEntity(url,creditTenderBg,IntegerResponse.class).getBody();
         if(IntegerResponse.isSuccess(response)){
             return 1;

@@ -1910,6 +1910,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 获取用户投资协议
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<TenderAgreementVO> selectLikeByExample(DownloadAgreementRequest request) {
+        String url = "http://AM-ADMIN/am-trade/selectLikeByExample";
+        TenderAgreementResponse response = restTemplate.postForEntity(url, request,TenderAgreementResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      * 标的放款记录
      *
      * @param userId
@@ -3277,7 +3293,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid) {
         BorrowApicronResponse response = restTemplate.getForEntity(
-                "http://AM-ADMIN/am-trade/borrowApicron/selectBorrowApicronListByBorrowNid/" + borrowNid,
+                "http://AM-ADMIN/am-trade/pushMoneyRecord/selectBorrowApicronListByBorrowNid/" + borrowNid,
                 BorrowApicronResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -3343,10 +3359,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer updateBorrowApicronByPrimaryKeySelective(String apicornId) {
-        String url = "http://AM-MARKET/am-market/activity/updateBorrowApicronByPrimaryKeySelective/";
-        BorrowApicronResponse response = restTemplate.postForEntity(url, apicornId, BorrowApicronResponse.class).getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getFlag();
+        String url = "http://AM-ADMIN/am-admin/adminBatchBorrowRecover/updateBorrowApicronByPrimaryKeySelective/";
+        boolean response = restTemplate.postForEntity(url, apicornId, boolean.class).getBody();
+        if(response){
+            return 1;
         }
         return 0;
     }
@@ -4994,7 +5010,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-ADMIN/am-trade/account/updateAccountAfterWithdrawFail/" + userId + "/" + nid;
         return restTemplate.getForEntity(url, Boolean.class).getBody();
     }
-    
+
 	/**
 	 * 获取部门列表
 	 * 此方法后期可以做成基类的方法
@@ -5918,8 +5934,25 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public ApplyAgreementInfoResponse saveApplyAgreementInfo(ApplyAgreementInfoVO applyAgreementInfoVO) {
         ApplyAgreementInfoRequest request = new ApplyAgreementInfoRequest();
+        String url = "http://AM-ADMIN/am-trade/applyAgreement/saveApplyAgreementInfo";
         BeanUtils.copyProperties(applyAgreementInfoVO, request);
-        return null;
+        return restTemplate.postForEntity(url, request, ApplyAgreementInfoResponse.class)
+                .getBody();
+    }
+
+    /**
+     * 保存垫付协议申请-协议生成详情
+     *
+     * @param applyAgreementVO
+     * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
+     * @author Zha Daojian
+     * @date 2018/8/23 15:38
+     **/
+    @Override
+    public ApplyAgreementResponse saveApplyAgreement(ApplyAgreementVO applyAgreementVO) {
+        String url = "http://AM-ADMIN/am-trade/applyAgreement/saveApplyAgreement";
+        return restTemplate.postForEntity(url, applyAgreementVO, ApplyAgreementResponse.class)
+                .getBody();
     }
 
     /**

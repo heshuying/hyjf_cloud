@@ -3,9 +3,11 @@ package com.hyjf.am.trade.service.admin.productcenter.applyagreement;
 import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest;
+import com.hyjf.am.resquest.admin.DownloadAgreementRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
 
 import java.util.List;
@@ -29,6 +31,13 @@ public interface ApplyAgreementService extends BaseService{
      * @return
      */
     List<ApplyAgreementVO> selectApplyAgreement(ApplyAgreementRequest request, int limitStart, int limitEnd);
+
+    /**
+     * 列表
+     *
+     * @return
+     */
+    List<TenderAgreementVO> selectLikeByExample(DownloadAgreementRequest request);
     /**
      * 垫付协议申请明细列表页--分期列表总数量
      *
@@ -111,4 +120,13 @@ public interface ApplyAgreementService extends BaseService{
      * @return java.util.List<com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan>
      **/
     int saveApplyAgreementInfo(ApplyAgreementInfoRequest request);
+
+    /**
+     * 保存垫付协议申请
+     * @author Zha Daojian
+     * @date 2018/8/23 16:37
+     * @param vo
+     * @return java.util.List<com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan>
+     **/
+    int saveApplyAgreement(ApplyAgreementVO vo);
 }
