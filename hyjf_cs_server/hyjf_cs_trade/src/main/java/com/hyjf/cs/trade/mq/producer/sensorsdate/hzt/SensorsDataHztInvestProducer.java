@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.mq.producer.sensorsdate.register;
+package com.hyjf.cs.trade.mq.producer.sensorsdate.hzt;
 
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -11,17 +11,18 @@ import com.hyjf.cs.trade.mq.base.ProducerFieldsWrapper;
 import org.springframework.stereotype.Component;
 
 /**
- * 神策数据统计:用户注册相关
+ * 神策数据统计:散标投资相关
  *
  * @author liuyang
- * @version SensorsDataRegisterProducer, v0.1 2018/10/22 14:58
+ * @version SensorsDataHztInvestProducer, v0.1 2018/10/25 10:07
  */
 @Component
-public class SensorsDataRegisterProducer extends Producer {
+public class SensorsDataHztInvestProducer extends Producer {
+
     @Override
     protected ProducerFieldsWrapper getFieldsWrapper() {
         ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-        wrapper.setGroup(MQConstant.SENSORSDATA_REGISTER_GROUP);
+        wrapper.setGroup(MQConstant.SENSORSDATA_HZT_INVEST_GROUP);
         wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
         return wrapper;
     }

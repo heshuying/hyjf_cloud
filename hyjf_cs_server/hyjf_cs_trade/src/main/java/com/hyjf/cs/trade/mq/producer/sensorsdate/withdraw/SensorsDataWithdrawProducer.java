@@ -21,7 +21,7 @@ public class SensorsDataWithdrawProducer extends Producer {
     @Override
     protected ProducerFieldsWrapper getFieldsWrapper() {
         ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-        wrapper.setGroup(MQConstant.SENSORSDATA_RECHARGE_GROUP);
+        wrapper.setGroup(MQConstant.SENSORSDATA_WITHDRAW_GROUP);
         wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
         return wrapper;
     }
