@@ -10,6 +10,7 @@ import com.hyjf.admin.service.MessagePushErrorService;
 import com.hyjf.admin.service.MessagePushHistoryService;
 import com.hyjf.am.response.admin.MessagePushErrorResponse;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
+import com.hyjf.am.vo.admin.AdminAccountDetailDataRepairVO;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -78,11 +79,11 @@ public class MessagePushErrorController extends BaseController {
 
     @PutMapping("/update")
     @ApiOperation(value = "重发 APP消息推送 异常处理", httpMethod = "PUT", notes = "重发 APP消息推送 异常处理")
-    public AdminResult update(@RequestParam("id") String id) {
+    public AdminResult update(@RequestBody AdminAccountDetailDataRepairVO requestParam) {
         MessagePushErrorResponse response = new MessagePushErrorResponse();
         try {
             // 重发此消息
-            MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(id);
+            MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(requestParam.getId());
             //推送极光消息（暂不开启）
             this.messagePushErrorService.sendMessage(msg);
         }catch (Exception e){
