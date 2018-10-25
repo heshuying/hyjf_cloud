@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.exception.bankdebtend;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
@@ -58,7 +59,7 @@ public class BankCreditEndExceptionController extends BaseController {
     @ApiOperation(value = "结束债权(新)同步", notes = "结束债权(新)同步")
     @PostMapping("/update_frombank")
     public AdminResult updateFromBank(@RequestBody BankCreditEndUpdateRequest requestBean){
-        logger.info("结束债权(新)同步, requestBean: " + requestBean);
+        logger.info("结束债权(新)同步, requestBean: " + JSON.toJSONString(requestBean));
         //请求参数校验
         boolean checkResult = bankCreditEndService.checkForUpdate(requestBean);
         if(!checkResult){
@@ -89,7 +90,7 @@ public class BankCreditEndExceptionController extends BaseController {
     @ApiOperation(value = "结束债权(新)更新为初始状态", notes = "结束债权(新)更新为初始状态")
     @PostMapping("/update_forinitial")
     public AdminResult updateForInitial(@RequestBody BankCreditEndUpdateRequest requestBean){
-        logger.info("结束债权(新)更新为初始状态，requestBean：" + requestBean);
+        logger.info("结束债权(新)更新为初始状态，requestBean：" + JSON.toJSONString(requestBean));
         //请求参数校验
         boolean checkResult = bankCreditEndService.checkForUpdateInitial(requestBean);
         if(!checkResult){

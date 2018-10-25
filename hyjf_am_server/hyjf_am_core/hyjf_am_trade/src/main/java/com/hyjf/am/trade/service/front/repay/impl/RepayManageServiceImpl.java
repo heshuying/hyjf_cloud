@@ -4825,13 +4825,14 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
     /**
      * 发送发起还款消息
+     * 由于是在事务内提交 会发生MQ消费时事务还没提交的情况 所以改成延时队列
      * @author wgx
      * @date 2018/10/17
      */
     public void sendRepayMessage(BorrowApicron apiCron) {
         try {
-            borrowLoanRepayProducer.messageSend(new MessageContent(MQConstant.BORROW_REPAY_REQUEST_TOPIC,
-                    apiCron.getBorrowNid(), JSON.toJSONBytes(apiCron)));
+            borrowLoanRepayProducer.messageSendDelay(new MessageContent(MQConstant.BORROW_REPAY_REQUEST_TOPIC,
+                    apiCron.getBorrowNid(), JSON.toJSONBytes(apiCron)),2);
             logger.info("【还款】发起还款消息:还款项目编号:[" + apiCron.getBorrowNid() + ",还款期数:[第" + apiCron.getPeriodNow() +
                     "],计划编号:[" + (org.apache.commons.lang3.StringUtils.isEmpty(apiCron.getPlanNid()) ? "" : apiCron.getPlanNid()));
         } catch (MQException e) {
