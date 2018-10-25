@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.controller.app.unbindcardpage;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -166,8 +167,9 @@ public class AppUnBindCardPageController extends BaseUserController{
         deleteCardPageBean.setCardNo(bankCardVO.getCardNo());// 银行卡号
         deleteCardPageBean.setNotifyUrl(bgRetUrl);
         //调用解绑银行卡接口
-
-        unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_APP,sign,platform,request);
+        Map<String,Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_APP,sign,platform,request);
+        result.setStatus(BaseResult.SUCCESS);
+        result.setData(data);
         return result;
     }
 
