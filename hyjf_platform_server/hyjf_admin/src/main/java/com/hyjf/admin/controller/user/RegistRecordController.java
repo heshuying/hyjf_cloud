@@ -99,7 +99,7 @@ public class RegistRecordController extends BaseController {
      */
     //@ApiOperation(value = "注册记录列表导出", notes = "注册记录列表导出")
     //@PostMapping(value = "/exportregist")
-    public void exportExcel(HttpServletResponse response, @RequestBody RegistRcordRequestBean registRcordRequestBean) throws Exception {
+    /*public void exportExcel(HttpServletResponse response, @RequestBody RegistRcordRequestBean registRcordRequestBean) throws Exception {
 
         // 表格sheet名称
         String sheetName = "注册记录";
@@ -163,7 +163,7 @@ public class RegistRecordController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
 
     /**
      * 导出excel

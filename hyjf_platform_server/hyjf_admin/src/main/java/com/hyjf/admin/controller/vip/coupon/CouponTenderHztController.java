@@ -89,7 +89,7 @@ public class CouponTenderHztController extends BaseController {
      */
     //@ApiOperation(value = "优惠券使用-汇直投列表", notes = "优惠券使用-汇直投列表")
     //@PostMapping("/exportAction")
-    public void exportActionByDay(HttpServletResponse response, @RequestBody CouponTenderRequest couponTenderRequest) throws Exception {
+    /*public void exportActionByDay(HttpServletResponse response, @RequestBody CouponTenderRequest couponTenderRequest) throws Exception {
 // 表格sheet名称
         String sheetName = "优惠券使用-汇直投列表";
         //设置默认查询时间
@@ -195,7 +195,7 @@ public class CouponTenderHztController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
 
     /**
      * 导出excel

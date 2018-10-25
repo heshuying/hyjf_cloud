@@ -198,7 +198,7 @@ public class BankCardManagerController extends BaseController {
      */
     //@ApiOperation(value = "汇付银行开户銀行卡記錄导出", notes = "銀行卡管理")
     //@PostMapping(value = "/exportbankcard")
-    public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
+    /*public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
         // 封装查询条件
         BankCardManagerRequest requestBank =new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
@@ -257,7 +257,7 @@ public class BankCardManagerController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         logger.info("==================汇付银行开户銀行卡記錄导出==================");
-    }
+    }*/
 
     /**
      * 导出excel
@@ -343,7 +343,7 @@ public class BankCardManagerController extends BaseController {
      */
     //@ApiOperation(value = "江西银行开户銀行卡記錄导出", notes = "江西银行开户銀行卡記錄导出")
     //@PostMapping(value = "/exportnewbankcard")
-    public void exportExcelNew(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
+    /*public void exportExcelNew(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
 
         // 表格sheet名称
         String sheetName = "银行卡管理";
@@ -404,7 +404,7 @@ public class BankCardManagerController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         logger.info("==================江西银行开户銀行卡記錄导出成功==================");
-    }
+    }*/
 
     /**
      * 导出excel
@@ -497,7 +497,7 @@ public class BankCardManagerController extends BaseController {
 
     //@ApiOperation(value = "用户银行卡操作记录导出", notes = "用户银行卡操作记录导出")
     //@PostMapping(value = "/exportbankcardlog")
-    public void exportBankCardLog(HttpServletRequest request,HttpServletResponse response, @RequestBody BankCardLogRequestBean bankCardLogRequestBean) throws Exception {
+    /*public void exportBankCardLog(HttpServletRequest request,HttpServletResponse response, @RequestBody BankCardLogRequestBean bankCardLogRequestBean) throws Exception {
 
         // 表格sheet名称
         String sheetName = "用户银行卡操作记录";
@@ -557,8 +557,8 @@ public class BankCardManagerController extends BaseController {
                             }
                         } else if (celLength == 5) {
                             // 银行卡属性
-                            /*String cellValue = bankcardProperty.getOrDefault(user.getBankCode(),null);
-                            cell.setCellValue(cellValue);*/
+                            *//*String cellValue = bankcardProperty.getOrDefault(user.getBankCode(),null);
+                            cell.setCellValue(cellValue);*//*
                         } else if (celLength == 6) {// 添加时间
                             cell.setCellValue(user.getCreateTime());
                         }
@@ -569,7 +569,7 @@ public class BankCardManagerController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         logger.info("==================用户银行卡操作记录导出成功==================");
-    }
+    }*/
 
     /**
      * 导出excel

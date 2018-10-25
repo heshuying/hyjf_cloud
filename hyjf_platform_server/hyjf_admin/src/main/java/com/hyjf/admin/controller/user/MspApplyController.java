@@ -235,7 +235,7 @@ public class MspApplyController extends BaseController {
 	 */
 	//@PostMapping("/exportAction")
 	//@ApiOperation(value = "导出", notes = "导出")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	/*@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	public void exportAction(HttpServletRequest request,
 			@RequestBody MspApplytRequestBean mspApplytRequestBean,HttpServletResponse response) throws Exception {
 	
@@ -304,7 +304,7 @@ public class MspApplyController extends BaseController {
 		}
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-	}
+	}*/
 
 	/**
 	 * 导出excel
@@ -602,6 +602,7 @@ public class MspApplyController extends BaseController {
 		}
 		return new AdminResult();
 	}
+
 	/**
 	 * 数据导出
 	 * 
@@ -609,7 +610,7 @@ public class MspApplyController extends BaseController {
 	 * @param
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
+	/*@SuppressWarnings("deprecation")
 	@PostMapping("/mspexportAction")
 	@ApiOperation(value = "安融反欺诈查询配置表", notes = "安融反欺诈查询配置表")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_EXPORT)
@@ -709,7 +710,7 @@ public class MspApplyController extends BaseController {
 		}
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-	}
+	}*/
 
 
 	/**

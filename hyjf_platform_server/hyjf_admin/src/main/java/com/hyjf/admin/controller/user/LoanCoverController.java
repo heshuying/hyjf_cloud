@@ -169,7 +169,7 @@ public class LoanCoverController extends BaseController {
        * @param form*/
     //@ApiOperation(value = "导出借款盖章用户", notes = "导出借款盖章用户")
     //@PostMapping(value = "/exportLoancover")
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) throws Exception {
+    /*public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) throws Exception {
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
         loanCoverUserRequest.setLimitFlg(true);
@@ -255,7 +255,7 @@ public class LoanCoverController extends BaseController {
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         logger.info("=============导出借款盖章用户完成=============");
     }
-
+*/
     /**
      * 导出excel
      *

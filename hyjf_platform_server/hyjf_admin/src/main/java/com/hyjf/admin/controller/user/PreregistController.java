@@ -150,7 +150,7 @@ public class PreregistController extends BaseController {
 	//@PostMapping(value = "/exportpreregist")
 	//@ResponseBody
 	//@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-	public void exportExcel(@RequestBody PreRegistRequestBean adminPreRegistListRequest, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	/*public void exportExcel(@RequestBody PreRegistRequestBean adminPreRegistListRequest, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		AdminPreRegistListRequest aprlr = new AdminPreRegistListRequest();
 		
@@ -218,7 +218,7 @@ public class PreregistController extends BaseController {
 		}
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-	}
+	}*/
 
 
 	/**

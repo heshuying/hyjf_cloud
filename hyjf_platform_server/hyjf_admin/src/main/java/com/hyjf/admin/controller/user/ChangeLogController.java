@@ -90,7 +90,7 @@ public class ChangeLogController extends BaseController {
 	//@ApiOperation(value = "下载操作日志", notes = "下载操作日志")
 	//@PostMapping(value = "/exportAccountsExcel")
 	//@ResponseBody
-    public void exportAccountsExcel(HttpServletRequest request,HttpServletResponse response,@RequestBody Map<String, String> map)
+    /*public void exportAccountsExcel(HttpServletRequest request,HttpServletResponse response,@RequestBody Map<String, String> map)
             throws Exception {
 		ChangeLogRequest clr = new ChangeLogRequest();
 		clr.setUsername(map.get("username"));
@@ -200,7 +200,7 @@ public class ChangeLogController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
 
-    }
+    }*/
 
     /**
      * 导出excel

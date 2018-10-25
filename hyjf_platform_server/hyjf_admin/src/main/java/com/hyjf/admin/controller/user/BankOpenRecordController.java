@@ -118,7 +118,7 @@ public class BankOpenRecordController extends BaseController {
      */
     //@ApiOperation(value = "汇付银行开户记录导出", notes = "汇付银行开户记录导出")
     //@PostMapping(value = "/exportaccount")
-    public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountRecordRequestBean accountRecordRequestBean) throws Exception {
+    /*public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountRecordRequestBean accountRecordRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "开户记录";
         // 文件名称
@@ -192,7 +192,7 @@ public class BankOpenRecordController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
 
     /**
      * 导出excel
@@ -320,7 +320,7 @@ public class BankOpenRecordController extends BaseController {
      */
     //@ApiOperation(value = "江西银行开户记录导出", notes = "江西银行开户记录导出")
     //@PostMapping(value = "/exportbankaccount")
-    public void exportBankExcel( HttpServletResponse response, @RequestBody AccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
+    /*public void exportBankExcel( HttpServletResponse response, @RequestBody AccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
         BankAccountRecordRequest registerRcordeRequest = new BankAccountRecordRequest();
         BeanUtils.copyProperties(bankAccountRecordRequestBeans,registerRcordeRequest);
         registerRcordeRequest.setLimitFlg(true);
@@ -384,7 +384,7 @@ public class BankOpenRecordController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
 
     /**
      * 导出excel

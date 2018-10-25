@@ -166,7 +166,7 @@ public class VipManageController extends BaseController {
      */
     //@ApiOperation(value = "导出",notes = "导出")
     //@RequestMapping(value = "/exportVips",method = RequestMethod.POST)
-    public void exportExcel( VipManageRequest vipManageRequest, HttpServletRequest request,
+    /*public void exportExcel( VipManageRequest vipManageRequest, HttpServletRequest request,
                             HttpServletResponse response) throws Exception {
         // 表格sheet名称
         String sheetName = "VIP列表";
@@ -256,7 +256,7 @@ public class VipManageController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
 
     /**
      * 导出excel

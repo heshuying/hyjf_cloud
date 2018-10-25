@@ -136,7 +136,7 @@ public class UserPortraitController extends BaseController {
      */
     //@ApiOperation(value = "导出用户画像户", notes = "导出用户画像")
     //@PostMapping(value = "/exportLoancover")
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPortraitRequestBean userPortraitRequestBean) throws Exception {
+    /*public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPortraitRequestBean userPortraitRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "用户画像";
         // 文件名称
@@ -264,7 +264,7 @@ public class UserPortraitController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         logger.info("=============导出用户画像完成=============");
-    }
+    }*/
 
     /**
      * 导出excel

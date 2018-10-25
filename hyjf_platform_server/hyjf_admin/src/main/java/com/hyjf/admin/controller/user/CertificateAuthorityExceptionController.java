@@ -139,7 +139,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
     //@PostMapping("/exportAction")
  	//@ApiOperation(value = "CA导出列表", notes = "CA导出列表")
  	//@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportExcel(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    /*public void exportExcel(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         // 表格sheet名称
         String sheetName = "CA认证记录";
@@ -204,7 +204,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
 
     /**
      * 导出excel

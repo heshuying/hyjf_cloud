@@ -161,7 +161,7 @@ public class UserauthController extends BaseController {
 	//@ApiOperation(value = "授权状态", notes = "授权导出")
 	//@ResponseBody
 	//@PostMapping("/exportExcel")
-    public void exportExcel(@RequestBody AdminUserAuthListRequest from, HttpServletRequest request,
+    /*public void exportExcel(@RequestBody AdminUserAuthListRequest from, HttpServletRequest request,
                             HttpServletResponse response) throws Exception {
         // 表格sheet名称
         String sheetName = "授权状态";
@@ -225,7 +225,7 @@ public class UserauthController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
 
 	/**
 	 * 导出excel
@@ -324,7 +324,7 @@ public class UserauthController extends BaseController {
 	//@ApiOperation(value = "授权状态", notes = "授权导出")
 	//@ResponseBody
 	//@PostMapping("/exportLogExcel")
-    public void exportExcel(@RequestBody AdminUserAuthLogListRequest form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    /*public void exportExcel(@RequestBody AdminUserAuthLogListRequest form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 
         // 表格sheet名称
@@ -383,7 +383,7 @@ public class UserauthController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
 
 	/**
 	 * 导出excel

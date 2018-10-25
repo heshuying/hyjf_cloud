@@ -417,7 +417,7 @@ public class CouponIssuanceController extends BaseController {
 
     //@ApiOperation(value = "导出", notes = "导出")
     //@RequestMapping(value = "/export", method = RequestMethod.POST)
-    public void exportAction(HttpServletResponse response, @RequestBody CouponConfigRequest request) throws Exception {
+    /*public void exportAction(HttpServletResponse response, @RequestBody CouponConfigRequest request) throws Exception {
         //表格sheet名称
         String sheetName = "优惠券发行列表";
         // 文件名称
@@ -552,7 +552,7 @@ public class CouponIssuanceController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
 
     /**
      * 导出excel
