@@ -217,6 +217,84 @@
         </if>
     </select>
 
+    <select id="selectCouponTenderListCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.CouponTenderRequest">
+        select count(1) from(
+        SELECT
+        hcu.id id,
+        hcu.coupon_user_code coupon_user_code,
+        hct.order_id order_id,
+        hct.attribute,
+        hu.username username,
+        hu.user_id user_id,
+        hcc.coupon_code coupon_code,
+        CASE
+        WHEN hcc.coupon_type = 1 THEN
+        '体验金'
+        WHEN hcc.coupon_type = 2 THEN
+        '加息券'
+        WHEN hcc.coupon_type = 3 THEN
+        '代金券'
+        ELSE
+        '加息券'
+        END coupon_typeStr,
+        hcc.coupon_type coupon_type,
+
+        CASE hcc.coupon_type
+        WHEN 1 THEN
+        CONCAT(
+        FORMAT(hcc.coupon_quota, 2),
+        '元'
+        )
+        WHEN 3 THEN
+        CONCAT(
+        FORMAT(hcc.coupon_quota, 2),
+        '元'
+        )
+        ELSE
+        CONCAT(hcc.coupon_quota, '%')
+        END AS coupon_quota,
+
+
+        hbt.borrow_nid borrow_nid,
+        hbt1.account account,
+        hbt.client AS operating_deck,
+        CONCAT(hb.borrow_apr, '%') borrow_apr,
+        CASE
+        WHEN borrow_style = 'endday' THEN
+        CONCAT(hb.borrow_period, '天')
+        ELSE
+        CONCAT(hb.borrow_period, '个月')
+        END borrow_period,
+        FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i' ) order_date,
+        hbt.recover_account_interest_wait recover_account_interest_wait,
+        hcr.received_flg received_flg,
+        (SELECT
+        cr.received_flg
+        FROM
+        ht_coupon_recover cr
+        WHERE
+        cr.tender_id = hbt.nid
+        ORDER BY
+        cr.recover_period DESC
+        LIMIT 1) AS received_flg_all
+        FROM
+        ht_coupon_tender hct
+        INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=1
+        INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
+        INNER JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
+        INNER JOIN ht_r_user hu ON hbt.user_id = hu.user_id
+        INNER JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
+        LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
+        LEFT JOIN ht_borrow_tender hbt1 ON hcrt.real_tender_id=hbt1.nid
+        INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
+        <include refid="selectCouponTenderList_Where_Clause"/>
+        GROUP BY hct.order_id
+        ORDER BY hct.id DESC
+        <if test="limitStart >= 0">
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+        ) t
+    </select>
 
     <select id="selectCouponTenderDetailCustomize" resultMap="selectCouponTenderDetailMap" parameterType="java.util.Map">
         SELECT

@@ -297,7 +297,7 @@ public class BorrowController extends BaseController {
 			logger.info("原子层  散标投资 操作数据库表成功");
 			return result;
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error("散标投资   原子层操作失败  ",e);
 			result.setResultInt(0);
 			logger.info("原子层  散标投资 操作数据库表失败");
 			return result;

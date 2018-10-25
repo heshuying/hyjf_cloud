@@ -664,7 +664,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setTenderAccount(tenderAccount);
         // 体验金投资
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
-            // TODO: 2018/10/6   需要改成用mq 的
             logger.info("体验{},优惠金投资开始:userId:{},平台{},券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
             // 体验金投资
             couponService.couponTender(request, plan,  cuc, userId);
@@ -734,6 +733,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             afterDealFlag = updateAfterPlanRedis(request, plan);
             logger.info("加入计划updateAfterPlanRedis 操作结果 ", afterDealFlag);
         }catch (Exception e){
+            logger.error("加入计划报错了 userId:"+userId+"  planNid:"+ plan.getPlanNid(),e);
             // 恢复redis
             recoverRedis(request);
             throw e;

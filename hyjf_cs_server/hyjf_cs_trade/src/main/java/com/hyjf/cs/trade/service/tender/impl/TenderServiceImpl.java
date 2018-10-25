@@ -82,7 +82,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 		 * couponGrantId)){ cuc = this.getCouponUser(couponGrantId); }
 		 */
 		/*原BankOpenAccount accountChinapnrTender = this.getBankOpenAccount(bizAcount);   使用 crt.andAccountEqualTo(bankAccount);*/
-		BankOpenAccountVO accountChinapnrTender = amUserClient.selectByAccountId(bizAccount);//原子也是 andAccountEqualTo
+		BankOpenAccountVO accountChinapnrTender = amUserClient.selectBankOpenAccountByAccountId(bizAccount);//原子也是 andAccountEqualTo
 		
 		// 用户未在平台开户
 		if (accountChinapnrTender == null) {
@@ -435,12 +435,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 	/**
 	 * 
 	 * 投资预插入
-	 * 
-	 * @param borrowNid
-	 * @param orderId
-	 * @param userId
-	 * @param account
-	 * @param ip
+	 *
 	 * @return
 	 * @author Administrator
 	 * @throws Exception
@@ -454,9 +449,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 	/**
 	 * 投资失败后,投标申请撤销
 	 * 
-	 * @param borrowUserId
 	 * @param investUserId
-	 * @param bean
 	 * @return
 	 * @throws Exception
 	 */

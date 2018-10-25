@@ -193,4 +193,11 @@ public interface CouponTenderCustomizeMapper {
     List<CouponBackMoneyCustomize> getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
 
     CouponTenderDetailVo selectCouponTenderDetailCustomize(Map<String, Object> paramMap);
+
+    /**
+     * 汇直投根据查询条件获取总数
+     * @param request 查询条件对象
+     * @return List<CouponTenderCustomize>
+     */
+    Integer selectCouponTenderListCount (CouponTenderRequest request);
 }

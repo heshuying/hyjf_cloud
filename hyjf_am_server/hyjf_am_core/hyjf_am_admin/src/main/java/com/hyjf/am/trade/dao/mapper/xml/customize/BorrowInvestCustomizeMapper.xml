@@ -58,7 +58,7 @@
 				AND b.reverify_time <![CDATA[<=]]>  unix_timestamp(#{reAuthPassEndTime})
 			</if>
 			<if test="instCodeSrch != null and instCodeSrch != ''">
-				AND b.inst_code = #{instCodeSrch}
+				AND bi.inst_code = #{instCodeSrch}
 			</if>
 			<if test="productType != null and productType != ''">
 				AND  b.project_type = #{productType}
@@ -72,6 +72,7 @@
 		FROM
 		    ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
+        INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
 		<include refid="Where_Clause" />
 	</select>
 	
@@ -81,6 +82,7 @@
 		FROM
 		    ht_borrow_tender bt
 		  INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
+          INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
 		<include refid="Where_Clause" />
 	</select>
 	

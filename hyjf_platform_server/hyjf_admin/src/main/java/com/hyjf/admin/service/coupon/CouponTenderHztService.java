@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.coupon;
 
+import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.resquest.admin.CouponTenderRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
@@ -56,4 +57,13 @@ public interface CouponTenderHztService {
      * @return
      */
     List<CouponTenderCustomize> exoportRecordList(CouponTenderRequest couponTenderRequest);
+
+    /**
+     * @Author walter.wenxin
+     * @Description  导出
+     * @Date 15:53 2018/9/20
+     * @Param couponTenderRequest
+     * @return
+     */
+    CouponTenderResponse getRecordExport(CouponTenderRequest couponTenderRequest);
 }
