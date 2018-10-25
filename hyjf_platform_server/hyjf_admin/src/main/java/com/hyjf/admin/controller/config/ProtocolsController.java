@@ -205,7 +205,7 @@ public class ProtocolsController extends BaseController {
 			}else{
                 String result = dzqzCallBean.getResult();
                 String code = dzqzCallBean.getCode();
-                if("success".equals(result) && FddGenerateContractConstant.FDD_RETURN_CODE_1000.equals(code)){
+                if("success".equals(result)){
 					LinkedList<BorrowCommonImage> files = new LinkedList<>();
 
 					BorrowCommonImage fileMeta = new BorrowCommonImage();
