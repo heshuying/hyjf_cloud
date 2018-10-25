@@ -137,6 +137,9 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     @Override
     public AdminResult getAddApplyAgreementListDetail(BorrowRepayAgreementRequest request){
         AdminResult result = new AdminResult();
+        if(StringUtils.isEmpty(request.getBorrowNidSrch())){
+            return new AdminResult(BaseResult.FAIL, "项目编号不能为空");
+        }
         BorrowRepayAgreementRequestBean bean = new BorrowRepayAgreementRequestBean();
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         BorrowRepayAgreementAmRequest req = CommonUtils.convertBean(request, BorrowRepayAgreementAmRequest.class);
@@ -145,7 +148,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         // 根据标的编号查询标的详情
         BorrowAndInfoVO borrowVO = amTradeClient.searchBorrowByBorrowNid(request.getBorrowNidSrch());
         if (borrowVO == null) {
-            throw new RuntimeException("根据标的编号查询标的详情失败,标的编号:[" + request.getBorrowNidSrch() + "].");
+            return new AdminResult(BaseResult.FAIL, "未找到对应的编号的标");
         }else{
             // 还款方式
             String borrowStyle = borrowVO.getBorrowStyle();
@@ -1183,9 +1186,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param request
      * @return
      */
-    public void downloadAction(DownloadAgreementRequest request,HttpServletResponse response) {
+    public AdminResult downloadAction(DownloadAgreementRequest request,HttpServletResponse response) {
         String status = request.getStatus();//1:脱敏，0：原始
-
         String repayPeriod = "DF-"+request.getRepayPeriod()+"-";
         request.setRepayPeriod(repayPeriod);
         List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectLikeByExample(request);//债转协议
@@ -1208,17 +1210,18 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                         }
                     }
                 }
+            } else{
+                return new AdminResult(BaseResult.FAIL, "下载失败，未找到相关协议");
             }
         }
         if(files!=null && files.size()>0){
             ZIPGenerator.generateZip(response, files, repayPeriod);
+            return new AdminResult(BaseResult.SUCCESS, "下载成功");
         }else{
             logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
-            return ;
+            return new AdminResult(BaseResult.FAIL, "下载失败，请稍后重试。。。。");
 
         }
-
-        return;
     }
     /**
      * 下载法大大协议 __垫付
