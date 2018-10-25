@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -64,7 +65,7 @@ public class BatchCreditEndController extends BaseTradeController {
     public String batchCreditEndVerify(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCallBean bean) throws Exception {
 
         BankCallResult result = new BankCallResult();
-        logger.info("批次结束债权,合法性检查异步回调开始，bean：" + bean);
+        logger.info("批次结束债权,合法性检查异步回调开始，bean：" + JSON.toJSONString(bean));
         logger.info("批次结束债权,合法性检查异步回调开始 "+bean.getRetCode() + "  "+ bean.getBatchNo());
 
         if (StringUtils.isBlank(bean.getRetCode()) || StringUtils.isBlank(bean.getBatchNo())) {
@@ -94,7 +95,7 @@ public class BatchCreditEndController extends BaseTradeController {
     public String batchCreditEndFinish(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCallBean bean) throws Exception {
 
         BankCallResult result = new BankCallResult();
-        logger.info("批次结束债权,业务结果异步回调开始, bean: " + bean);
+        logger.info("批次结束债权,业务结果异步回调开始, bean: " + JSON.toJSONString(bean));
         logger.info("批次结束债权,业务结果异步回调开始 "+bean.getRetCode() + "  "+ bean.getBatchNo());
 
         if (StringUtils.isBlank(bean.getRetCode()) || StringUtils.isBlank(bean.getBatchNo())) {
