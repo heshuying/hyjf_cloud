@@ -100,7 +100,7 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 	            	return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	            }
 	        } catch (Exception e1) {
-	            e1.printStackTrace();
+	            logger.error("计划放款系统异常", e1);
 	            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	        }
 	        String borrowNid = borrowApicron.getBorrowNid();// 借款编号
@@ -166,7 +166,7 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 				}
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+	            logger.error("计划放款系统异常", e);
 				StringBuffer sbError = new StringBuffer();// 错误信息
 				sbError.append(e.getMessage()).append("<br/>");
 				String online = "生产环境";// 取得是否线上

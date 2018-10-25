@@ -174,7 +174,7 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 				
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+	            logger.error("计划放款系统异常", e);
 				StringBuffer sbError = new StringBuffer();// 错误信息
 				sbError.append(e.getMessage()).append("<br/>");
 				String online = "生产环境";// 取得是否线上

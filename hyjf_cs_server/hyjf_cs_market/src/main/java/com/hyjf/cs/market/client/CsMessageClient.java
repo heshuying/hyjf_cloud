@@ -3,10 +3,13 @@
  */
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
 import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -49,5 +52,7 @@ public interface CsMessageClient {
      * @return
      */
     OperationReportEntityVO getOperationReport(int i);
+
+    List<AppAccesStatisticsVO> getAppAccesStatisticsVO(AppChannelStatisticsRequest request);
 
 }

@@ -68,9 +68,12 @@ public class CouponTenderController {
         logger.info("---hztgetrecordlist by param---  " + JSONObject.toJSON(request));
         CouponTenderResponse couponTenderResponse = new CouponTenderResponse();
         List<CouponTenderCustomize> list = couponTenderService.getRecordList(request);
+        Integer count = couponTenderService.getRecordListCount(request);
         couponTenderResponse.setResultList(list);
+        couponTenderResponse.setCount(count);
         return couponTenderResponse;
     }
+
     /**
      * 根据条件查询优惠券使用详情
      * @param  paramMap couponUserId 优惠券发放编号，userFlag ：1

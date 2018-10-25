@@ -1,5 +1,9 @@
 package com.hyjf.am.vo.config;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
+
 /**
  * @author lisheng
  * @version SubmissionsCustomizeVO, v0.1 2018/7/13 17:03
@@ -47,7 +51,8 @@ public class SubmissionsCustomizeVO  {
     /**
      * 添加时间
      */
-    private String addTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone="GMT+8")
+    private Date addTime;
 
     /**
      * 处理状态
@@ -133,11 +138,11 @@ public class SubmissionsCustomizeVO  {
         this.content = content;
     }
 
-    public String getAddTime() {
+    public Date getAddTime() {
         return addTime;
     }
 
-    public void setAddTime(String addTime) {
+    public void setAddTime(Date addTime) {
         this.addTime = addTime;
     }
 
