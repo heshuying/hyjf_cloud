@@ -4,8 +4,7 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.bank.BankCallBeanVO;
-
-import java.util.Map;
+import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 
 /**
  * @author liubin
@@ -18,19 +17,19 @@ public class UpdateCreditForAutoTenderRequest {
     private BankCallBeanVO bankCallBeanVO;
     private String tenderUsrcustid;
     private String sellerUsrcustid;
-    private Map<String, Object> resultMap;
+    private HjhCreditCalcResultVO resultVO;
 
     public UpdateCreditForAutoTenderRequest() {
     }
 
-    public UpdateCreditForAutoTenderRequest(String creditNid, String accedeOrderId, String planNid, BankCallBeanVO bankCallBeanVO, String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap) {
+    public UpdateCreditForAutoTenderRequest(String creditNid, String accedeOrderId, String planNid, BankCallBeanVO bankCallBeanVO, String tenderUsrcustid, String sellerUsrcustid, HjhCreditCalcResultVO resultVO) {
         this.creditNid = creditNid;
         this.accedeOrderId = accedeOrderId;
         this.planNid = planNid;
         this.bankCallBeanVO = bankCallBeanVO;
         this.tenderUsrcustid = tenderUsrcustid;
         this.sellerUsrcustid = sellerUsrcustid;
-        this.resultMap = resultMap;
+        this.resultVO = resultVO;
     }
 
     public String getCreditNid() {
@@ -81,11 +80,11 @@ public class UpdateCreditForAutoTenderRequest {
         this.sellerUsrcustid = sellerUsrcustid;
     }
 
-    public Map<String, Object> getResultMap() {
-        return resultMap;
+    public HjhCreditCalcResultVO getResultVO() {
+        return resultVO;
     }
 
-    public void setResultMap(Map<String, Object> resultMap) {
-        this.resultMap = resultMap;
+    public void setResultVO(HjhCreditCalcResultVO resultVO) {
+        this.resultVO = resultVO;
     }
 }

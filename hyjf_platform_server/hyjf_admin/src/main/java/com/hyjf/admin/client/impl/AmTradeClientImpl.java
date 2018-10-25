@@ -18,6 +18,7 @@ import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.*;
+import com.hyjf.am.response.trade.calculate.HjhCreditCalcResultResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
@@ -40,6 +41,7 @@ import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.*;
+import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.user.ApplyAgreementInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -1291,7 +1293,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean) {
-        String url = "http://AM-ADMIN/am-trade/autoTenderController/updateBorrowForAutoTender";
+        String url = "http://AM-TRADE/am-trade/autoTenderController/updateBorrowForAutoTender";
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
         UpdateBorrowForAutoTenderRequest request = new UpdateBorrowForAutoTenderRequest(borrowNid, accedeOrderId, bankCallBeanVO);
@@ -1350,15 +1352,14 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @author nxl
      */
     @Override
-    public Map<String, Object> saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
-        String url = "http://AM-ADMIN/am-trade/autoTenderController/saveCreditTenderLogNoSave";
+    public HjhCreditCalcResultVO saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
+        String url = "http://AM-TRADE/am-trade/autoTenderController/saveCreditTenderLogNoSave";
         SaveCreditTenderLogRequest request = new SaveCreditTenderLogRequest(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
-        MapResponse response = restTemplate.postForEntity(url, request, MapResponse.class).getBody();
+        HjhCreditCalcResultResponse response = restTemplate.postForEntity(url, request, HjhCreditCalcResultResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return null;
         }
-        // MapResponse的元素类型转换（String→BigDecimal）
-        return response.resultMapToBigDecimalAll();
+        return response.getResult();
     }
 
     /**
@@ -1369,11 +1370,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
-                                             String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap) {
-        String url = "http://AM-ADMIN/am-trade/autoTenderController/updateCreditForAutoTender";
+                                             String tenderUsrcustid, String sellerUsrcustid, HjhCreditCalcResultVO resultVO) {
+        String url = "http://AM-TRADE/am-trade/autoTenderController/updateCreditForAutoTender";
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
-        UpdateCreditForAutoTenderRequest request = new UpdateCreditForAutoTenderRequest(creditNid, accedeOrderId, planNid, bankCallBeanVO, tenderUsrcustid, sellerUsrcustid, resultMap);
+        UpdateCreditForAutoTenderRequest request = new UpdateCreditForAutoTenderRequest(creditNid, accedeOrderId, planNid, bankCallBeanVO, tenderUsrcustid, sellerUsrcustid, resultVO);
         Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
         if (!Response.isSuccess(response)) {
             logger.error("[" + accedeOrderId + "] 银行自动债转成功后，更新债转数据失败。");
