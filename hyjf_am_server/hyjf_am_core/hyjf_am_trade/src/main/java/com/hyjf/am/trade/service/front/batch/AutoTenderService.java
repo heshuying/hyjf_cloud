@@ -8,11 +8,11 @@ import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 自动投资
@@ -83,7 +83,7 @@ public interface AutoTenderService extends BaseService {
      * @param isLast
      * @return
      */
-    Map<String, Object> saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO debtPlanAccede, String creditOrderId, String creditOrderDate, BigDecimal account, Boolean isLast);
+    HjhCreditCalcResultVO saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO debtPlanAccede, String creditOrderId, String creditOrderDate, BigDecimal account, Boolean isLast);
 
 
 
@@ -96,7 +96,7 @@ public interface AutoTenderService extends BaseService {
      * @param account
      * @return
      */
-    Map<String, Object> saveCreditTenderLog(HjhDebtCreditVO credit, HjhAccedeVO debtPlanAccede, String creditOrderId, String creditOrderDate, BigDecimal account, Boolean isLast);
+    HjhCreditCalcResultVO saveCreditTenderLog(HjhDebtCreditVO credit, HjhAccedeVO debtPlanAccede, String creditOrderId, String creditOrderDate, BigDecimal account, Boolean isLast);
 
     /**
      * 银行自动债转成功后，更新债转数据
@@ -110,7 +110,7 @@ public interface AutoTenderService extends BaseService {
      * @return
      */
     boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
-                         String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
+                         String tenderUsrcustid, String sellerUsrcustid, HjhCreditCalcResultVO resultVO);
 
     /**
      * 根据是否原始债权获出让人投标成功的授权号

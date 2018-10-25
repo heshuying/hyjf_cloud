@@ -259,16 +259,18 @@ public class UserauthController extends BaseController {
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMapSq();
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterSq();
+        String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
-			String sheetNameTmp = sheetName + "_第1页";
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		}
+		}else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList());
+        }
 		for (int i = 1; i < sheetCount; i++) {
 			from.setPageSize(defaultRowMaxCount);
 			from.setCurrPage(i+1);
 			AdminUserAuthListResponse recordList2 = userauthService.userauthlist(from);
 			if (recordList2 != null && recordList2.getResultList().size()> 0) {
-				String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+				sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
 				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2.getResultList());
 			} else {
 				break;
@@ -281,8 +283,8 @@ public class UserauthController extends BaseController {
 		Map<String, String> map = Maps.newLinkedHashMap();
 		map.put("userName", "用户名");
 		map.put("mobile", "手机号");
-		map.put("auto1", "自动投标交易金额");
-		map.put("auto2", "自动投标总金额");
+		map.put("automaticTenderAmount", "自动投标交易金额");
+		map.put("totalAmountAutomatic", "自动投标总金额");
 		map.put("autoInvesEndTime", "自动投标到期日");
 		map.put("autoInvesStatus", "自动投标授权状态");
 		map.put("autoCreditStatus", "自动债转授权状态");
@@ -292,23 +294,20 @@ public class UserauthController extends BaseController {
 
 	private Map<String, IValueFormatter> buildValueAdapterSq() {
 		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-		IValueFormatter auto1Adapter = new IValueFormatter() {
+		IValueFormatter automaticTenderAmountAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
 				return "2000000";
 			}
 		};
-
-		IValueFormatter auto2Adapter = new IValueFormatter() {
+		IValueFormatter totalAmountAutomaticAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
-
 				return "1000000000";
 			}
 		};
-
-		mapAdapter.put("auto1", auto1Adapter);
-		mapAdapter.put("auto2", auto2Adapter);
+		mapAdapter.put("automaticTenderAmount", automaticTenderAmountAdapter);
+		mapAdapter.put("totalAmountAutomatic", totalAmountAutomaticAdapter);
 		return mapAdapter;
 	}
 
@@ -416,16 +415,18 @@ public class UserauthController extends BaseController {
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMapLog();
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterLog();
+        String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
-			String sheetNameTmp = sheetName + "_第1页";
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		}
+		}else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, adminUserAuthLogListResponse.getResultList());
+        }
 		for (int i = 1; i < sheetCount; i++) {
 			form.setPageSize(defaultRowMaxCount);
 			form.setCurrPage(i+1);
 			AdminUserAuthLogListResponse adminUserAuthLogListResponse2 = userauthService.userauthLoglist(form);
 			if (adminUserAuthLogListResponse2 != null && adminUserAuthLogListResponse2.getResultList().size()> 0) {
-				String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+				sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
 				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  adminUserAuthLogListResponse2.getResultList());
 			} else {
 				break;

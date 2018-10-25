@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.assetcenter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AssetListViewRequest;
 import com.hyjf.admin.beans.vo.AdminAssetListCustomizeVO;
 import com.hyjf.admin.beans.vo.DropDownVO;
@@ -13,6 +14,8 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.AssetListService;
 import com.hyjf.admin.service.UserCenterService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
@@ -31,6 +34,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -248,94 +252,183 @@ public class AssetListController extends BaseController {
 	 * @param request
 	 * @return 带条件导出
 	 */
+//	@ApiOperation(value = "资产列表", notes = "带条件导出EXCEL")
+//	@PostMapping(value = "/export")
+//	@ResponseBody
+//	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+//	public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody AssetListViewRequest viewRequest) throws Exception {
+//		// 表格sheet名称
+//		String sheetName = "资产列表";
+//		// 文件名称
+//		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+//		// 封装查询条件
+//		AssetListRequest form = new AssetListRequest();
+//		// 初始化查询列表
+//		List<AssetListCustomizeVO> assetList = null;
+//		// 将画面请求request赋值给原子层 request
+//		BeanUtils.copyProperties(viewRequest, form);
+//		// 获取查询的列表
+//		AssetListCustomizeResponse res = assetListService.findAssetListWithoutPage(form);
+//		if(res != null) {
+//			assetList = res.getResultList();
+//		}
+//		// 列头
+//		String[] titles = new String[] { "序号", "资产编号", "资产来源", "产品类型", "项目编号", "计划编号", "用户名", "手机号", "银行电子账号", "借款类型", "开户状态", "姓名", "身份证号", "借款金额（元）", "借款期限", "还款方式", "审核状态", "项目状态", "标的标签", "推送时间" };
+//		// 声明一个工作薄
+//		HSSFWorkbook workbook = new HSSFWorkbook();
+//		// 生成一个表格
+//		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+//		if (assetList != null && assetList.size() > 0) {
+//			int sheetCount = 1;
+//			int rowNum = 0;
+//			for (int i = 0; i < assetList.size(); i++) {
+//				rowNum++;
+//				if (i != 0 && i % 60000 == 0) {
+//					sheetCount++;
+//					sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+//					rowNum = 1;
+//				}
+//				// 新建一行
+//				Row row = sheet.createRow(rowNum);
+//				// 循环数据
+//				for (int celLength = 0; celLength < titles.length; celLength++) {
+//					AssetListCustomizeVO data = assetList.get(i);
+//					// 创建相应的单元格
+//					Cell cell = row.createCell(celLength);
+//					if (celLength == 0) {// 序号
+//						cell.setCellValue(i + 1);
+//					} else if (celLength == 1) {// 资产编号
+//						cell.setCellValue(data.getAssetId());
+//					} else if (celLength == 2) {// 资产来源
+//						cell.setCellValue(data.getInstName());
+//					} else if (celLength == 3) {// 产品类型
+//						cell.setCellValue(data.getAssetTypeName());
+//					} else if (celLength == 4) {// 项目编号
+//						cell.setCellValue(data.getBorrowNid());
+//					} else if (celLength == 5) {// 计划编号
+//						cell.setCellValue(data.getPlanNid());
+//					} else if (celLength == 6) {// 用户名
+//						cell.setCellValue(data.getUserName());
+//					} else if (celLength == 7) {// 手机号
+//						cell.setCellValue(data.getMobile());
+//					} else if (celLength == 8) {// 银行电子账号
+//						cell.setCellValue(data.getAccountId());
+//					} else if (celLength == 9) {// 借款类型
+//						cell.setCellValue(data.getUserType());
+//					} else if (celLength == 10) {// 开户状态
+//						cell.setCellValue(data.getBankOpenAccount());
+//					} else if (celLength == 11) {// 姓名
+//						cell.setCellValue(data.getTruename());
+//					} else if (celLength == 12) {// 身份证号
+//						cell.setCellValue(data.getIdcard());
+//					} else if (celLength == 13) {// 借款金额（元）
+//						cell.setCellValue(data.getAccount());
+//					} else if (celLength == 14) {// 借款期限
+//						cell.setCellValue(data.getBorrowPeriod());
+//					} else if (celLength == 15) {// 还款方式
+//						cell.setCellValue(data.getBorrowStyleName());
+//					} else if (celLength == 16) {// 审核状态
+//						cell.setCellValue(data.getVerifyStatus());
+//					} else if (celLength == 17) {// 项目状态
+//						cell.setCellValue(data.getStatus());
+//					} else if (celLength == 18) {// 标的标签
+//						cell.setCellValue(data.getLabelName());
+//					} else if (celLength == 19) {// 推送时间
+//						cell.setCellValue(data.getRecieveTime());
+//					}
+//				}
+//			}
+//		}
+//		// 导出
+//		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+//	}
+	/**
+	 * 带条件导出
+	 * 1.无法指定相应的列的顺序，
+	 * 2.无法配置，excel文件名，excel sheet名称
+	 * 3.目前只能导出一个sheet
+	 * 4.列的宽度的自适应，中文存在一定问题
+	 * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
+	 * @param request
+	 * @return 带条件导出
+	 */
 	@ApiOperation(value = "资产列表", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/export")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-	public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody AssetListViewRequest viewRequest) throws Exception {
-		// 表格sheet名称
-		String sheetName = "资产列表";
-		// 文件名称
-		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-		// 封装查询条件
-		AssetListRequest form = new AssetListRequest();
-		// 初始化查询列表
-		List<AssetListCustomizeVO> assetList = null;
-		// 将画面请求request赋值给原子层 request
-		BeanUtils.copyProperties(viewRequest, form);
-		// 获取查询的列表
-		AssetListCustomizeResponse res = assetListService.findAssetListWithoutPage(form);
-		if(res != null) {
-			assetList = res.getResultList();
-		}
-		// 列头
-		String[] titles = new String[] { "序号", "资产编号", "资产来源", "产品类型", "项目编号", "计划编号", "用户名", "手机号", "银行电子账号", "借款类型", "开户状态", "姓名", "身份证号", "借款金额（元）", "借款期限", "还款方式", "审核状态", "项目状态", "标的标签", "推送时间" };
-		// 声明一个工作薄
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		// 生成一个表格
-		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-		if (assetList != null && assetList.size() > 0) {
-			int sheetCount = 1;
-			int rowNum = 0;
-			for (int i = 0; i < assetList.size(); i++) {
-				rowNum++;
-				if (i != 0 && i % 60000 == 0) {
-					sheetCount++;
-					sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-					rowNum = 1;
-				}
-				// 新建一行
-				Row row = sheet.createRow(rowNum);
-				// 循环数据
-				for (int celLength = 0; celLength < titles.length; celLength++) {
-					AssetListCustomizeVO data = assetList.get(i);
-					// 创建相应的单元格
-					Cell cell = row.createCell(celLength);
-					if (celLength == 0) {// 序号
-						cell.setCellValue(i + 1);
-					} else if (celLength == 1) {// 资产编号
-						cell.setCellValue(data.getAssetId());
-					} else if (celLength == 2) {// 资产来源
-						cell.setCellValue(data.getInstName());
-					} else if (celLength == 3) {// 产品类型
-						cell.setCellValue(data.getAssetTypeName());
-					} else if (celLength == 4) {// 项目编号
-						cell.setCellValue(data.getBorrowNid());
-					} else if (celLength == 5) {// 计划编号
-						cell.setCellValue(data.getPlanNid());
-					} else if (celLength == 6) {// 用户名
-						cell.setCellValue(data.getUserName());
-					} else if (celLength == 7) {// 手机号
-						cell.setCellValue(data.getMobile());
-					} else if (celLength == 8) {// 银行电子账号
-						cell.setCellValue(data.getAccountId());
-					} else if (celLength == 9) {// 借款类型
-						cell.setCellValue(data.getUserType());
-					} else if (celLength == 10) {// 开户状态
-						cell.setCellValue(data.getBankOpenAccount());
-					} else if (celLength == 11) {// 姓名
-						cell.setCellValue(data.getTruename());
-					} else if (celLength == 12) {// 身份证号
-						cell.setCellValue(data.getIdcard());
-					} else if (celLength == 13) {// 借款金额（元）
-						cell.setCellValue(data.getAccount());
-					} else if (celLength == 14) {// 借款期限
-						cell.setCellValue(data.getBorrowPeriod());
-					} else if (celLength == 15) {// 还款方式
-						cell.setCellValue(data.getBorrowStyleName());
-					} else if (celLength == 16) {// 审核状态
-						cell.setCellValue(data.getVerifyStatus());
-					} else if (celLength == 17) {// 项目状态
-						cell.setCellValue(data.getStatus());
-					} else if (celLength == 18) {// 标的标签
-						cell.setCellValue(data.getLabelName());
-					} else if (celLength == 19) {// 推送时间
-						cell.setCellValue(data.getRecieveTime());
-					}
-				}
-			}
-		}
-		// 导出
-		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-	}
+	    public void exportToExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody AssetListViewRequest viewRequest) throws Exception {
+	        //sheet默认最大行数
+	        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+	        // 表格sheet名称
+	        String sheetName = "资产列表";
+	        // 文件名称
+	        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+	        // 声明一个工作薄
+	        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+	        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+			// 封装查询条件
+			AssetListRequest form = new AssetListRequest();
+			// 初始化查询列表
+			List<AssetListCustomizeVO> assetList = null;
+			// 将画面请求request赋值给原子层 request
+			BeanUtils.copyProperties(viewRequest, form);
+	        //请求第一页5000条
+			form.setPageSize(defaultRowMaxCount);
+			form.setCurrPage(1);
+			// 获取查询的列表
+			AssetListCustomizeResponse res = assetListService.findAssetListWithoutPage(form);
+	        Integer totalCount = res.getCount();
+
+	        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+	        Map<String, String> beanPropertyColumnMap = buildMap();
+	        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+	        String sheetNameTmp = sheetName + "_第1页";
+	        if (totalCount == 0) {
+	        	
+	            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+	        }else {
+	        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, res.getResultList());
+	        }
+	        for (int i = 1; i < sheetCount; i++) {
+
+	        	form.setPageSize(defaultRowMaxCount);
+	        	form.setCurrPage(i+1);
+				AssetListCustomizeResponse res2 = assetListService.findAssetListWithoutPage(form);
+	            if (res2 != null && res2.getResultList().size()> 0) {
+	                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+	                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  res2.getResultList());
+	            } else {
+	                break;
+	            }
+	        }
+	        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+	    }
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("assetId", "资产编号");
+        map.put("instName", "资产来源");
+        map.put("assetTypeName", "产品类型");
+        map.put("borrowNid", "项目编号");
+        map.put("planNid", "计划编号");
+        map.put("userName", "用户名");
+        map.put("mobile", "手机号");
+        map.put("accountId", "银行电子账号");
+        map.put("userType", "借款类型");
+        map.put("bankOpenAccount", "开户状态");
+        map.put("truename", "姓名");
+        map.put("idcard", "身份证号");
+        map.put("account", "借款金额（元）");
+        map.put("borrowPeriod", "借款期限");
+        map.put("borrowStyleName", "还款方式");
+        map.put("status", "审核状态");
+        map.put("labelName", "标的标签");
+        map.put("recieveTime", "推送时间");
+        return map;
+    }
+	   private Map<String, IValueFormatter> buildValueAdapter() {
+	        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+	        return mapAdapter;
+	    }
+		
 }

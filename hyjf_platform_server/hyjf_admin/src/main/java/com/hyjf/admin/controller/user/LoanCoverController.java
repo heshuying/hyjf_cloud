@@ -289,16 +289,18 @@ public class LoanCoverController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-            String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, loanCoverUserResponse.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
             loanCoverUserRequest.setPageSize(defaultRowMaxCount);
             loanCoverUserRequest.setCurrPage(i+1);
             LoanCoverUserResponse loanCoverUserResponse2 = loanCoverService.selectUserMemberList(loanCoverUserRequest);
             if (loanCoverUserResponse2 != null && loanCoverUserResponse2.getResultList().size()> 0) {
-                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  loanCoverUserResponse2.getResultList());
             } else {
                 break;
@@ -367,7 +369,7 @@ public class LoanCoverController extends BaseController {
             @Override
             public String format(Object object) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String updateTime = (String) object;
+                Date updateTime = (Date) object;
                 String strUpdateTime = format.format(updateTime);
                 return strUpdateTime;
             }

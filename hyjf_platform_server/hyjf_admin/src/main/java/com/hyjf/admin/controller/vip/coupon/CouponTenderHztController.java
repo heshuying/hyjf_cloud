@@ -238,10 +238,12 @@ public class CouponTenderHztController extends BaseController {
 
         String investTotal=this.couponTenderHztService.queryInvestTotalHzt(couponTenderRequest);
         //总条数
-        String[] sumSmsCount = new String[]{"合计", "","","", "", "", "","","", "￥"+investTotal, "", "","",""};
+        String[] sumSmsCount = new String[]{"合计", "","","", "", "", "","","", "", "￥"+ (investTotal == null ? "" : investTotal), "","",""};
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList(),sumSmsCount);
+        }else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList(),sumSmsCount);
         }
         for (int i = 1; i < sheetCount; i++) {
             couponTenderRequest.setPageSize(defaultRowMaxCount);
