@@ -384,14 +384,12 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         cardBean.setLogUserId(String.valueOf(userId));
         // 调用银行接口 4.4.11 银行卡查询接口
         BankCallBean call = BankCallUtils.callApiBg(bean);
-        System.out.println(JSONObject.toJSONString(call, true));
         String respCode = call == null ? "" : call.getRetCode();
         // 如果接口调用成功
         if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             String usrCardInfolist = call.getSubPacks();
             JSONArray array = JSONObject.parseArray(usrCardInfolist);
             JSONObject obj = null;
-            System.out.println(array.size() + "           array:" + array.toString());
             if (array != null && array.size() != 0) {
                 obj = array.getJSONObject(0);
             }
