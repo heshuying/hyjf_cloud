@@ -586,7 +586,19 @@ public class BankAccountManageCustomizeVO extends BaseVO implements Serializable
     */
    private BigDecimal planFrost;
 
-   /**
+   private String bankBalanceCashTotal;
+
+
+    public String getBankBalanceCashTotal() {
+        return (getBankBalanceCash() == null ? "0.00" : getBankBalanceCash().toString()) + "/"
+                + (getBankFrostCash() == null ? "0.00" : getBankFrostCash().toString());
+    }
+
+    public void setBankBalanceCashTotal(String bankBalanceCashTotal) {
+        bankBalanceCashTotal = bankBalanceCashTotal;
+    }
+
+    /**
     * 计划代收金额
     */
    private BigDecimal planAccountWait;
