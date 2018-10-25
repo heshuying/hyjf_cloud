@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -112,7 +113,7 @@ public class ServerController extends BaseUserController {
 			}
 		} catch (Exception e) {
 			resultBean.setStatus("1");
-			resultBean.setStatus("获取最优服务器发生错误");
+			resultBean.setStatusDesc("获取最优服务器发生错误");
 		}
 		return resultBean;
 	}
@@ -167,7 +168,7 @@ public class ServerController extends BaseUserController {
 
 		} catch (Exception e) {
 			resultBean.setStatus("1");
-			resultBean.setStatus("获取算法密钥发生错误");
+			resultBean.setStatusDesc("获取算法密钥发生错误");
 		}
 		return resultBean;
 	}

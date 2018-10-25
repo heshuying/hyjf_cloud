@@ -81,15 +81,15 @@ public class WebBindCardPageController extends BaseUserController{
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
     @PostMapping(value = "/bgReturn")
     @ResponseBody
-    public BankCallResult bindCardBgReturn(BankCallBean bean, HttpServletRequest request) {
+    public BankCallResult bindCardBgReturn(@RequestBody BankCallBean bean, HttpServletRequest request) {
 
         BankCallResult result = new BankCallResult();
         String phone = request.getParameter("phone");
         logger.info("页面绑卡异步回调start");
         bean.setMobile(phone);
         bean.convert();
-//        bean.setAccountId("6212461890000753401");
-//        bean.setLogUserId("5490");
+//        bean.setAccountId("6212461890000003344");
+//        bean.setLogUserId("5683");
         int userId = Integer.parseInt(bean.getLogUserId());
 
         // 绑卡后处理

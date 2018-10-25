@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.front.account.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.account.BankCreditEndService;
@@ -222,6 +223,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      */
     @Override
     public int updateBatchCreditEndCheck(BankCallBeanVO bean) {
+        logger.info("updateBatchCreditEndCheck, bean: " + JSON.toJSONString(bean));
 
         BankCreditEndExample example = new BankCreditEndExample();
         BankCreditEndExample.Criteria cra = example.createCriteria();

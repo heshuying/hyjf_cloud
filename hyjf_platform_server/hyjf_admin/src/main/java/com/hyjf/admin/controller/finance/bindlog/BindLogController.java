@@ -3,11 +3,13 @@
  */
 package com.hyjf.admin.controller.finance.bindlog;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BindLogService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.common.util.CustomConstants;
@@ -15,22 +17,23 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -67,78 +70,117 @@ public class BindLogController extends BaseController {
      */
     @ApiOperation(value = "导出绑定日志列表",notes = "根据筛选条件导出绑定日志list")
     @PostMapping(value = "/bindloglistexport")
-    public void exportBindLogList(HttpServletResponse response, @RequestBody BindLogListRequest request) throws UnsupportedEncodingException {
-        // currPage<0 为全部,currPage>0 为具体某一页
-        request.setCurrPage(-1);
+    public void exportBindLogList(HttpServletRequest httpRequest, HttpServletResponse response, @RequestBody BindLogListRequest request) throws UnsupportedEncodingException {
 
+
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "绑定日志列表";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+        int sheetCount = 0;
+        String sheetNameTmp = sheetName + "_第1页";
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        request.setCurrPage(1);
+        request.setPageSize(defaultRowMaxCount);
+
+        Integer count = bindLogService.getBindLogCount(request);
 
         // 检索列表
         List<BindLogVO> bindLogVOList = bindLogService.searchBindLogList(request);
-        String[] titles =
-                new String[] { "序号", "转出账户", "转出账户手机", "转出账户客户号", "转入账户", "转入账户手机", "转入账户客户号", "关联状态", "关联时间", "说明" };
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
-        if (bindLogVOList != null && bindLogVOList.size() > 0) {
-            int sheetCount = 1;
-            int rowNum = 0;
-            for (int i = 0; i < bindLogVOList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet =
-                            ExportExcel
-                                    .createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BindLogVO bindLogVO = bindLogVOList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {// 序号
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) { // 转出账户
-                        cell.setCellValue(bindLogVO.getTurnOutUsername());
-                    } else if (celLength == 2) { // 转出账户手机
-                        cell.setCellValue(bindLogVO.getTurnOutMobile());
-                    } else if (celLength == 3) { // 转出账户客户号
-                        cell.setCellValue(String.valueOf(bindLogVO.getTurnOutChinapnrUsrcustid()));
-                    } else if (celLength == 4) {// 转入账户
-                        cell.setCellValue(bindLogVO.getShiftToUsername());
-                    } else if (celLength == 5) {// 转入账户手机
-                        cell.setCellValue(bindLogVO.getShiftToMobile());
-                    } else if (celLength == 6) {// 转入账户客户号
-                        cell.setCellValue(String.valueOf(bindLogVO.getShiftToChinapnrUsrcustid()));
-                    } else if (celLength == 7) {// 关联状态
-                        if (bindLogVO.getAssociatedState() == 0) {
-                            cell.setCellValue("未授权");
-                        } else if (bindLogVO.getAssociatedState() == 1) {
-                            cell.setCellValue("成功");
-                        } else if (bindLogVO.getAssociatedState() == 2) {
-                            cell.setCellValue("失败");
-                        }
-                    } else if (celLength == 8) {// 关联时间
-                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        cell.setCellValue(df.format(bindLogVO.getAssociatedTime()));
-                    } else if (celLength == 9) {// 说明
-                        cell.setCellValue(bindLogVO.getRemark());
-                    }
-                }
-            }
+        if (count == null || count.equals(0)  ){
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            int totalCount = count;
+            sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bindLogVOList);
         }
 
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-
+        for (int i = 1; i < sheetCount; i++) {
+            request.setCurrPage(i+1);
+            List<BindLogVO> bindLogVOList2 = bindLogService.searchBindLogList(request);
+            if (!CollectionUtils.isEmpty(bindLogVOList2)) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bindLogVOList2);
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(httpRequest, response, fileName, workbook);
     }
+
+
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("turnOutUsername", "转出账户");
+        map.put("turnOutMobile", "转出账户手机");
+        map.put("turnOutChinapnrUsrcustid", "转出账户客户号");
+        map.put("shiftToUsername", "转入账户");
+        map.put("shiftToMobile", "转入账户手机");
+        map.put("shiftToChinapnrUsrcustid", "转入账户客户号");
+        map.put("associatedState", "关联状态");
+        map.put("associatedTime", "关联时间");
+        map.put("remark","说明");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter turnOutChinapnrUsrcustidAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Long turnOutChinapnrUsrcustid = (Long) object;
+                return turnOutChinapnrUsrcustid != null ? String.valueOf(turnOutChinapnrUsrcustid) : "";
+            }
+        };
+        IValueFormatter shiftToChinapnrUsrcustidAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Long shiftToChinapnrUsrcustid = (Long) object;
+                return shiftToChinapnrUsrcustid != null ? String.valueOf(shiftToChinapnrUsrcustid) : "";
+            }
+        };
+        IValueFormatter associatedStateAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer associatedState = (Integer) object;
+                String associatedStateStr = "";
+                switch (associatedState){
+                    case 0:
+                        associatedStateStr = "未授权";
+                        break;
+                    case 1:
+                        associatedStateStr = "成功";
+                        break;
+                    case 2:
+                        associatedStateStr = "失败";
+                        break;
+                    default:
+                }
+
+                return associatedStateStr;
+            }
+        };
+        IValueFormatter associatedTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Date associatedTime = (Date) object;
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                return df.format(associatedTime);
+            }
+        };
+        mapAdapter.put("turnOutChinapnrUsrcustid",turnOutChinapnrUsrcustidAdapter);
+        mapAdapter.put("shiftToChinapnrUsrcustid",shiftToChinapnrUsrcustidAdapter);
+        mapAdapter.put("associatedState",associatedStateAdapter);
+        mapAdapter.put("associatedTime",associatedTimeAdapter);
+        return mapAdapter;
+    }
+
 }

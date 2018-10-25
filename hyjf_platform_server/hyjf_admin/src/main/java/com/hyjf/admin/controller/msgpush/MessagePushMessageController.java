@@ -77,45 +77,27 @@ public class MessagePushMessageController extends BaseController {
             response = messagePushMsgService.getRecord(form.getId());
             if (response.getResult() != null) {
                 MessagePushMsgVO record = response.getResult();
-                BeanUtils.copyProperties(record, form);
-                if (record.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
-                    form.setMsgActionUrl1("");
-                    form.setMsgActionUrl2("");
-                }
-                if (record.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1) {
-                    form.setMsgActionUrl1(record.getMsgActionUrl());
-                    form.setMsgActionUrl2("");
-                }
-                if (record.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
-                    form.setMsgActionUrl3(record.getMsgActionUrl());
-                    form.setMsgActionUrl2("");
-                }
                 if (record.getMsgAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
                     form.setMsgActionUrl1("");
                     if ("hyjf://jumpZXH".equals(record.getMsgActionUrl())) {
-                        form.setMsgActionUrl2("1");
+                        record.setMsgActionUrl("1");
                     }
                     if ("hyjf://jumpMine".equals(record.getMsgActionUrl())) {
-                        form.setMsgActionUrl2("2");
+                        record.setMsgActionUrl("2");
                     }
                     if ("hyjf://jumpCouponsList".equals(record.getMsgActionUrl())) {
-                        form.setMsgActionUrl2("3");
+                        record.setMsgActionUrl("3");
                     }
                     if ("hyjf://jumpTransactionDetail".equals(record.getMsgActionUrl())) {
-                        form.setMsgActionUrl2("4");
+                        record.setMsgActionUrl("4");
                     }
                     if ("hyjf://jumpInvest".equals(record.getMsgActionUrl())) {
-                        form.setMsgActionUrl2("5");
+                        record.setMsgActionUrl("5");
                     }
                 }
                 // 如果是转发,则form的id应置为空
                 if (StringUtils.isNotEmpty(form.getUpdateOrReSend()) && form.getUpdateOrReSend().equals("2")) {
-                    form.setId(null);
-                }
-                if (form.getMsgSendType().intValue() == CustomConstants.MSG_PUSH_SEND_TYPE_1) {
-                    if (form.getPreSendTime() != null) {
-                        form.setMessagesPreSendTimeStr(GetDate.timestamptoStrYYYYMMDDHHMMSS(form.getPreSendTime()));
-                    }
+                    record.setId(null);
                 }
             }
         } catch (Exception e) {

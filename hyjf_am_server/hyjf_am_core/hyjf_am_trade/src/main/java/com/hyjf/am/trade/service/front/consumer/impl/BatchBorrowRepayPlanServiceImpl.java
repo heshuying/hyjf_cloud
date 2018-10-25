@@ -444,7 +444,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			}
 			return map;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("计划还款中发生系统", e);
 			throw new RuntimeException();
 			
 		}
@@ -495,11 +495,11 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 						return true;
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("计划还款中发生系统", e);
 				}
 			}
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error("还款中发生系统", e1);
 		}
 		return false;
 
@@ -977,7 +977,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 					continue;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("计划还款中发生系统", e);
 			}
 		}
 		map.put("result", null);
@@ -1099,7 +1099,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 										}
 									}
 								} catch (Exception e) {
-									e.printStackTrace();
+									logger.error("计划还款中发生系统", e);
 									continue;
 								}
 							}
@@ -1139,7 +1139,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 												throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 											}
 										} catch (Exception e) {
-											e.printStackTrace();
+											logger.error("计划还款中发生系统", e);
 											continue;
 										}
 									} else {
@@ -1150,7 +1150,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 												throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 											}
 										} catch (Exception e) {
-											e.printStackTrace();
+											logger.error("计划还款中发生系统", e);
 											continue;
 										}
 									}
@@ -1162,7 +1162,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 											throw new Exception("更新相应的还款信息失败!" + "[投资订单号：" + tenderOrderId + "]");
 										}
 									} catch (Exception e) {
-										e.printStackTrace();
+										logger.error("计划还款中发生系统", e);
 										continue;
 									}
 								}
@@ -1197,7 +1197,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 									throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 								}
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("计划还款中发生系统", e);
 								continue;
 							}
 						} else {
@@ -1208,7 +1208,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 									throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 								}
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("计划还款中发生系统", e);
 								continue;
 							}
 						}
@@ -1371,7 +1371,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 							this.bankCreditEndMapper.insertSelective(record);
 							return true;
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error("计划还款中发生系统", e);
 						}
 					}
 				}
@@ -1426,7 +1426,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 					continue;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("计划还款中发生系统", e);
 			}
 		}
 		return null;
@@ -2174,7 +2174,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error("计划还款中发生系统", e);
             }
 			
 		}
@@ -2251,7 +2251,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			logger.info("发送优惠券还款队列---" + hjhAccede.getAccedeOrderId());
 			couponRepayHjhMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error("计划还款中发生系统", e);
         }
 		//核对请求参数
 //        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONREPAY_HJH, JSONObject.toJSONString(params));
@@ -3099,7 +3099,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				logger.info("发送credit收支明细---" + repayUserId + "---------" + manageFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error("计划还款中发生系统", e);
             }
 			
 		}
@@ -3465,7 +3465,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
         			logger.info("发送优惠券还款队列---" + borrowNid);
         			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error("计划还款中发生系统", e);
                 }
         		
                 // 优惠券还款请求
@@ -3496,7 +3496,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				try { 
 					this.sendSmsForManager(borrowNid);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("计划还款中发生系统", e);
 				}
 			} else if (failCount == repayCount) {
 				// 更新Borrow 
@@ -3687,7 +3687,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
         			logger.info("发送优惠券还款队列---" + borrowNid);
         			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error("计划还款中发生系统", e);
                 }
 //                rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_COUPONREPAY, JSONObject.toJSONString(params));
                 // add by hsy 优惠券还款请求加入到消息队列 end
@@ -3707,7 +3707,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				try {
 					this.sendSmsForManager(borrowNid);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("计划还款中发生系统", e);
 				}
 			} else if (failCount == repayCount) {
 				// 更新Borrow
@@ -4179,7 +4179,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			try {
 				couponRepay(hjhAccede);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("计划还款中发生系统", e);
 				logger.info("============优惠券还款请求失败");
 			}
 		}
@@ -4362,7 +4362,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				//开始计算提成 add by cwyang 2018-5-24 汇计划3期由batch工程挪至此处处理
 				commisionCompute(hjhAccede);
 			}catch (Exception e){
-				e.printStackTrace();
+				logger.error("计划还款中发生系统", e);
 				logger.info("=================提成发放失败,计划加入订单号:" + hjhAccede.getAccedeOrderId());
 			}
 			try {
@@ -4433,7 +4433,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
 			
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error("计划还款中发生系统", e);
 			logger.info("-------------userid:" + userId + ",生成计划加入协议失败！----------");
 
 		}
@@ -4567,7 +4567,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			logger.info("发送计划优惠券放款---" + hjhAccede.getAccedeOrderId());
 			couponLoansHjhMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error("计划还款中发生系统", e);
         }
 //        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS_HJH, JSONObject.toJSONString(params));
         // add by cwyang 优惠券放款请求加入到消息队列 end

@@ -257,16 +257,18 @@ public class PreregistController extends BaseController {
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMap();
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
-			String sheetNameTmp = sheetName + "_第1页";
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}else{
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, prs.getResultList());
 		}
 		for (int i = 1; i < sheetCount; i++) {
 			aprlr.setPageSize(defaultRowMaxCount);
 			aprlr.setCurrPage(i+1);
 			AdminPreRegistListResponse prs2 = preregistService.getRecordList(aprlr);
 			if (prs2 != null && prs2.getResultList().size()> 0) {
-				String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+				sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
 				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  prs2.getResultList());
 			} else {
 				break;
