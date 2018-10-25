@@ -307,24 +307,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             resultBean.setStatus("n");
             resultBean.setResult("插入用户开户表失败!");
             return resultBean;
-        }
-        String bank = BankUtil.getNameOfBank(idCard);
-        // 保存银行卡
-        // 插入相应的银行卡
-        BankCardVO bankCard = new BankCardVO();
-        bankCard.setUserId(userId);
-        bankCard.setUserName(userName);
-        bankCard.setCardNo(idCard);
-        bankCard.setBank(bank);
-        bankCard.setStatus(1);
-        bankCard.setCreateTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
-        bankCard.setCreateUserId(userId);
-        BankCardRequest bankCardRequest =  new BankCardRequest();
-        BeanUtils.copyProperties(bankCardRequest,bankCard );
-        boolean bankFlag = this.amUserClient.insertUserCard(bankCardRequest) > 0 ? true : false;
-        if (!bankFlag) {
-            throw new RuntimeException("插入用户银行卡失败！");
-        }
+       }
 
        BankCardVO card = amUserClient.getBankCardByUserId(userId);
         if(card==null){
