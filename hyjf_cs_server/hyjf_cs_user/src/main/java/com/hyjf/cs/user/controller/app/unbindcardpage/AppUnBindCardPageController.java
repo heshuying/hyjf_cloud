@@ -165,6 +165,7 @@ public class AppUnBindCardPageController extends BaseUserController{
         deleteCardPageBean.setName(userInfoVO.getTruename());
         deleteCardPageBean.setIdNo(userInfoVO.getIdcard());
         deleteCardPageBean.setCardNo(bankCardVO.getCardNo());// 银行卡号
+        deleteCardPageBean.setMobile(user.getMobile());
         deleteCardPageBean.setNotifyUrl(bgRetUrl);
         //调用解绑银行卡接口
         Map<String,Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_APP,sign,platform,request);
