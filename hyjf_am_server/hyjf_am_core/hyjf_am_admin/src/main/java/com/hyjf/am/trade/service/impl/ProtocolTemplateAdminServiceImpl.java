@@ -318,7 +318,7 @@ public class ProtocolTemplateAdminServiceImpl implements ProtocolTemplateAdminSe
                 //根据protocolId查询正在启用的版本号
                 ProtocolVersionExample protocolVersionExample=  new ProtocolVersionExample();
                 ProtocolVersionExample.Criteria create=protocolVersionExample.createCriteria();
-                create.andProtocolIdEqualTo(protocolId).andDisplayFlagEqualTo(2);
+                create.andProtocolIdEqualTo(protocolId).andDisplayFlagNotEqualTo(2);
                 List<ProtocolVersion> protocolVersions =protocolVersionMapper.selectByExample(protocolVersionExample);
                 if( !CollectionUtils.isEmpty(protocolVersions)){
 

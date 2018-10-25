@@ -99,7 +99,7 @@ public class AppBindCardPageController extends BaseUserController {
     @PostMapping("/notifyReturn")
     @ApiOperation(value = "绑卡异步回调", notes = "绑卡异步回调")
     public BankCallResult bgreturn(HttpServletRequest request,
-                                   @ModelAttribute BankCallBean bean) {
+                                   @RequestBody BankCallBean bean) {
         // 上送的异步地址里面有
         BankCallResult result = new BankCallResult();
         String phone = request.getParameter("phone");

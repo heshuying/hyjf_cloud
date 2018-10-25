@@ -584,9 +584,11 @@ public class CouponIssuanceController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-            String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, exportCustomizeResponse.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
             couponConfigRequest.setPageSize(defaultRowMaxCount);
@@ -601,7 +603,7 @@ public class CouponIssuanceController extends BaseController {
                         couponConfigExportCustomizeVO.setCouponQuota(couponConfigExportCustomizeVO.getCouponQuota() + "元");
                     }
                 }
-                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  exportCustomizeResponse2.getResultList());
             } else {
                 break;
