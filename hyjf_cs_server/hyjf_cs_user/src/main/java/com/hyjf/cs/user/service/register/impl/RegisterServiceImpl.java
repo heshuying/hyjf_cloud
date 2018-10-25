@@ -9,7 +9,6 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UserActionUtmRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -332,6 +331,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         // 活动有效期校验
         try {
             Integer activityId = systemConfig.getActivity888Id();
+            logger.info("注册送188元新手红包:"+activityId);
             if (!checkActivityIfAvailable(activityId)) {
                 sendCoupon(userVO);
             }
@@ -348,8 +348,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             return false;
         }
         ActivityListVO activityListVO = amMarketClient.selectActivityList(activityId);
-        AdsVO adsVO = amMarketClient.findAdsById(activityId);
-
         if (activityListVO == null) {
             return false;
         }
@@ -553,7 +551,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     @Override
     public void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO) {
-        logger.info("version:========"+version);
         Integer sourceId = null;
         if (StringUtils.isNotBlank(version)) {
             String[] shuzu = version.split("\\.");
@@ -573,7 +570,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                     params.put("investAmount",0.00);
                     params.put("registerTime",new Date());
                     params.put("cumulativeInvest",BigDecimal.ZERO);
-                    logger.info("压入消息队列============="+sourceId);
                     try {
                         appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                 MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
@@ -649,8 +645,8 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             params.put("mqMsgId", GetCode.getRandomCode(10));
             params.put("userId", String.valueOf(userId));
             params.put("sendFlg", "11");
-            couponProducer.messageSend(new MessageContent(MQConstant.REGISTER_COUPON_TOPIC,
-                    MQConstant.REGISTER_COUPON_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            couponProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
+                    UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
         } catch (Exception e) {
             logger.error("注册发放888红包失败...", e);
         }
