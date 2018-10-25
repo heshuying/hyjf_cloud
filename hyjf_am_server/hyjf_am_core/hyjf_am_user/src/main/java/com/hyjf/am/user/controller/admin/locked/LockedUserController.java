@@ -26,7 +26,7 @@ public class LockedUserController {
     private LockedUserService lockedUserService;
 
     /**
-     * 保证金配置，根据用户名称查询用户信息
+     * 出入输错密码次数超限的用户信息
      *
      * @param lockedUserInfoVO
      * @return

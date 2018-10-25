@@ -417,7 +417,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 return vo;
             }
 
-            if (password.length() < 6 || password.length() > 16) {
+            if (password.length() < 8 || password.length() > 16) {
                 vo.setEnum(ResultEnum.ERROR_013);
                 vo.setSuccessUrl("");
                 return vo;
