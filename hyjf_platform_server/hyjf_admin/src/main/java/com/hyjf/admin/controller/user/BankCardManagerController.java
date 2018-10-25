@@ -292,16 +292,18 @@ public class BankCardManagerController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-            String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bankCardManager.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
             requestBank.setPageSize(defaultRowMaxCount);
             requestBank.setCurrPage(i+1);
             BankCardManagerResponse bankCardManager2  = bankCardManagerService.selectBankCardList(requestBank);
             if (bankCardManager2 != null && bankCardManager2.getResultList().size()> 0) {
-                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankCardManager2.getResultList());
             } else {
                 break;
@@ -439,16 +441,18 @@ public class BankCardManagerController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMapTwo();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterTwo();
+        String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-            String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bankCardManagerResponse.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
             requestBank.setPageSize(defaultRowMaxCount);
             requestBank.setCurrPage(i+1);
             BankCardManagerResponse bankCardManagerResponse2 = bankCardManagerService.selectNewBankCardList(requestBank);
             if (bankCardManagerResponse2 != null && bankCardManagerResponse2.getResultList().size()> 0) {
-                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankCardManagerResponse2.getResultList());
             } else {
                 break;
@@ -604,16 +608,18 @@ public class BankCardManagerController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMapLog();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterLog();
+        String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-            String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bankCardLogResponse.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
             bankCardLogRequest.setPageSize(defaultRowMaxCount);
             bankCardLogRequest.setCurrPage(i+1);
             BankCardLogResponse bankCardLogResponse2 =  bankCardManagerService.selectBankCardLogByExample(bankCardLogRequest);
             if (bankCardLogResponse2 != null && bankCardLogResponse2.getResultList().size()> 0) {
-                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankCardLogResponse2.getResultList());
             } else {
                 break;

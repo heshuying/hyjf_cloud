@@ -261,7 +261,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			}
 			return map;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("还款中发生系统", e);
 			throw new RuntimeException();
 			
 		}
@@ -573,7 +573,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					continue;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("还款中发生系统", e);
 			}
 		}
 		map.put("result", null);
@@ -726,11 +726,11 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 						return true;
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("还款中发生系统", e);
 				}
 			}
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error("还款中发生系统", e1);
 		}
 		return false;
 
@@ -894,7 +894,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 										}
 									}
 								} catch (Exception e) {
-									e.printStackTrace();
+									logger.error("还款中发生系统", e);
 									continue;
 								}
 							}
@@ -930,7 +930,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 												throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 											}
 										} catch (Exception e) {
-											e.printStackTrace();
+											logger.error("还款中发生系统", e);
 											continue;
 										}
 									} else {
@@ -941,7 +941,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 												throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 											}
 										} catch (Exception e) {
-											e.printStackTrace();
+											logger.error("还款中发生系统", e);
 											continue;
 										}
 									}
@@ -952,7 +952,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 											throw new Exception("更新相应的还款信息失败!" + "[投资订单号：" + tenderOrderId + "]");
 										}
 									} catch (Exception e) {
-										e.printStackTrace();
+										logger.error("还款中发生系统", e);
 										continue;
 									}
 								}
@@ -988,7 +988,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 									throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 								}
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("还款中发生系统", e);
 								continue;
 							}
 						} else {
@@ -999,7 +999,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 									throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 								}
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("还款中发生系统", e);
 								continue;
 							}
 						}
@@ -1462,7 +1462,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error("还款中发生系统", e);
             }
 			
 		}
@@ -1658,7 +1658,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 							this.bankCreditEndMapper.insertSelective(record);
 							return true;
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error("还款中发生系统", e);
 						}
 					
 					}
@@ -1714,7 +1714,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					continue;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("还款中发生系统", e);
 			}
 		}
 		return null;
@@ -2063,7 +2063,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         			logger.info("发送优惠券还款队列---" + borrowNid);
         			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error("还款中发生系统", e);
                 }
                 // add by hsy 优惠券还款请求加入到消息队列 end
 
@@ -2073,7 +2073,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				try {
 					this.sendSmsForManager(borrowNid);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("还款中发生系统", e);
 				}
 			} else if (failCount == repayCount) {
 				// 更新Borrow
@@ -2311,7 +2311,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         			logger.info("发送优惠券还款队列---" + borrowNid);
         			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error("还款中发生系统", e);
                 }
                 
 //                rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONREPAY, JSONObject.toJSONString(params));
@@ -2323,7 +2323,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				try {
 					this.sendSmsForManager(borrowNid);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("还款中发生系统", e);
 				}
 			} else if (failCount == repayCount) {
 				// 更新Borrow
@@ -2861,7 +2861,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error("还款中发生系统", e);
             }
 		}
 		apicron.setSucAmount(apicron.getSucAmount().add(repayAccount.add(manageFee)));
@@ -2878,7 +2878,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			// 推送消息
 			this.sendMessage(tenderUserId, borrowNid, repayAccount, repayInterest);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("还款中发生系统", e);
 		}
 
 		// 直投类还款成功之后， 判断是风车理财的投资，发送到队列，准备回调通知

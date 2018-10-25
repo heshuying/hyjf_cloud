@@ -259,16 +259,18 @@ public class UserauthController extends BaseController {
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMapSq();
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterSq();
+        String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
-			String sheetNameTmp = sheetName + "_第1页";
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		}
+		}else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList());
+        }
 		for (int i = 1; i < sheetCount; i++) {
 			from.setPageSize(defaultRowMaxCount);
 			from.setCurrPage(i+1);
 			AdminUserAuthListResponse recordList2 = userauthService.userauthlist(from);
 			if (recordList2 != null && recordList2.getResultList().size()> 0) {
-				String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+				sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
 				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2.getResultList());
 			} else {
 				break;
@@ -416,16 +418,18 @@ public class UserauthController extends BaseController {
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMapLog();
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterLog();
+        String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
-			String sheetNameTmp = sheetName + "_第1页";
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		}
+		}else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, adminUserAuthLogListResponse.getResultList());
+        }
 		for (int i = 1; i < sheetCount; i++) {
 			form.setPageSize(defaultRowMaxCount);
 			form.setCurrPage(i+1);
 			AdminUserAuthLogListResponse adminUserAuthLogListResponse2 = userauthService.userauthLoglist(form);
 			if (adminUserAuthLogListResponse2 != null && adminUserAuthLogListResponse2.getResultList().size()> 0) {
-				String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+				sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
 				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  adminUserAuthLogListResponse2.getResultList());
 			} else {
 				break;
