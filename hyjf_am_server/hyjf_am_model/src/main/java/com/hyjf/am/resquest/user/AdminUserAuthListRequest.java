@@ -68,6 +68,17 @@ public class AdminUserAuthListRequest extends BasePage {
 	@ApiModelProperty(value = "同步类型(1自动投资授权,2债转授权)")
 	private Integer type;
 
+	//默认为true ,获取全部数据，为false时，获取部分数据
+	private boolean limitFlg = false;
+
+	public boolean isLimitFlg() {
+		return limitFlg;
+	}
+
+	public void setLimitFlg(boolean limitFlg) {
+		this.limitFlg = limitFlg;
+	}
+
 	/**
 	 * userId
 	 *

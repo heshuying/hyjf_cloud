@@ -18,6 +18,15 @@ public class CouponTenderResponse extends AdminResponse<CouponTenderCustomize> {
     private List<CouponRecoverVO> couponRecoverList;
     private String attrbute;
     private List<CouponBackMoneyCustomize> backMoneyCustomizeList;
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 
     public String getAmountTotal() {
         return amountTotal;

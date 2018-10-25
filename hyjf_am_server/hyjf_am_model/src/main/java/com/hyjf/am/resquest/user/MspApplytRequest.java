@@ -21,6 +21,16 @@ public class MspApplytRequest extends BasePage {
 	 */
 	private int paginatorPage = 1;
 	private String adminId;
+	//默认为true ,获取全部数据，为false时，获取部分数据
+	private boolean limitFlg = false;
+
+	public boolean isLimitFlg() {
+		return limitFlg;
+	}
+
+	public void setLimitFlg(boolean limitFlg) {
+		this.limitFlg = limitFlg;
+	}
 
 	public String getAdminId() {
 		return adminId;

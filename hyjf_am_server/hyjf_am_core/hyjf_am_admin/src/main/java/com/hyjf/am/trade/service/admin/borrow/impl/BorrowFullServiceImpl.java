@@ -275,9 +275,10 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
      * @param borrowRealtimeloanPlanRequestTopic
      */
     private void sendRealTimeLoanMQ(String borrowNid, BorrowApicron borrowApicron, String borrowRealtimeloanPlanRequestTopic) {
+        //由于是在事务内提交 会发生MQ消费时事务还没提交的情况 所以改成延时队列
         try {
-            borrowLoanRepayProducer.messageSend(
-                    new MessageContent(borrowRealtimeloanPlanRequestTopic, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
+            borrowLoanRepayProducer.messageSendDelay(
+                    new MessageContent(borrowRealtimeloanPlanRequestTopic, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)),2);
         } catch (MQException e) {
             logger.error("[编号：" + borrowNid + "]发送放款MQ失败！", e);
         }

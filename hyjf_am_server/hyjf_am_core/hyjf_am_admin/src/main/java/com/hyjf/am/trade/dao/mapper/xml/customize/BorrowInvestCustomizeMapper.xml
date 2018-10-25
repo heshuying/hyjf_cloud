@@ -72,6 +72,7 @@
 		FROM
 		    ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
+        INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
 		<include refid="Where_Clause" />
 	</select>
 	
@@ -81,6 +82,7 @@
 		FROM
 		    ht_borrow_tender bt
 		  INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
+          INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
 		<include refid="Where_Clause" />
 	</select>
 	
