@@ -89,8 +89,15 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
             criteria.and("updateTime").gte(begin).lte(end);
         }
         if (utmIdsSrch != null && utmIdsSrch.length > 0) {
+            List<Integer> listInt = new ArrayList<>();
             List<String> sourceIds = Arrays.asList(utmIdsSrch);
-            criteria.in(sourceIds);
+            org.apache.commons.collections.CollectionUtils.collect(sourceIds, new Transformer() {
+                @Override
+                public Object transform(Object o) {
+                    return Integer.valueOf(String.valueOf(o));
+                }
+            },listInt);
+            criteria.and("sourceId").in(listInt);
         }
         Aggregation aggregation = Aggregation.newAggregation(
                 match(criteria),
@@ -108,7 +115,7 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
         Date startTime = request.getStartTime();
         Date endTime = request.getEndTime();
         if (startTime != null && endTime != null) {
-            criteria.and("addTime").gte(startTime).lte(endTime);
+            criteria.and("addTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
         }
         query.addCriteria(criteria);
         if (request.getCurrPage() > 0) {

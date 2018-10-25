@@ -192,4 +192,11 @@ public interface CouponTenderService {
      * @return List<CouponBackMoneyCustomize>
      */
     List<CouponBackMoneyCustomize> getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    /**
+     * count
+     * @param request 查询对象
+     * @return List<CouponBackMoneyCustomize>
+     */
+    Integer getRecordListCount(CouponTenderRequest request);
 }
