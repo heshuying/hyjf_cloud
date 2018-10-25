@@ -94,6 +94,7 @@ public class BatchCreditEndController extends BaseTradeController {
     public String batchCreditEndFinish(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCallBean bean) throws Exception {
 
         BankCallResult result = new BankCallResult();
+        logger.info("批次结束债权,业务结果异步回调开始, bean: " + bean);
         logger.info("批次结束债权,业务结果异步回调开始 "+bean.getRetCode() + "  "+ bean.getBatchNo());
 
         if (StringUtils.isBlank(bean.getRetCode()) || StringUtils.isBlank(bean.getBatchNo())) {
