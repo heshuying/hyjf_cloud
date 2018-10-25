@@ -123,7 +123,16 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
     private String description;
 
     private Integer amount;
+    //默认为true ,获取全部数据，为false时，获取部分数据
+    private boolean limitFlg = false;
 
+    public boolean isLimitFlg() {
+        return limitFlg;
+    }
+
+    public void setLimitFlg(boolean limitFlg) {
+        this.limitFlg = limitFlg;
+    }
     public Integer getId() {
         return id;
     }

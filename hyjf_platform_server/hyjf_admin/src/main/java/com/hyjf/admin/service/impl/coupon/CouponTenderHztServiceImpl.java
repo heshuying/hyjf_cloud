@@ -57,6 +57,17 @@ public class CouponTenderHztServiceImpl implements CouponTenderHztService {
     }
 
     @Override
+    public CouponTenderResponse getRecordExport(CouponTenderRequest couponTenderRequest) {
+        couponTenderRequest.setLimitStart(couponTenderRequest.getLimitStart());
+        couponTenderRequest.setLimitEnd(couponTenderRequest.getLimitEnd());
+        CouponTenderResponse couponTenderResponse = amTradeClient.getRecordListHzt(couponTenderRequest);
+        if(null != couponTenderResponse){
+            return couponTenderResponse;
+        }
+        return null;
+    }
+
+    @Override
     public CouponTenderDetailVo getCouponTenderDetailCustomize(Map<String, Object> paramMap) {
         CouponTenderResponse couponTenderResponse = amTradeClient.getCouponTenderDetailCustomize(paramMap);
         if(null != couponTenderResponse){

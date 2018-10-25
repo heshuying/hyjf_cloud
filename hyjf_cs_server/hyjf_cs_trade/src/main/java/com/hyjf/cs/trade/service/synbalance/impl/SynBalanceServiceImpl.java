@@ -43,7 +43,7 @@ public class SynBalanceServiceImpl extends BaseTradeServiceImpl implements SynBa
      */
     @Override
     public BankOpenAccountVO getBankOpenAccount(String accountId) {
-        return amUserClient.selectByAccountId(accountId);
+        return amUserClient.selectBankOpenAccountByAccountId(accountId);
     }
     /**
      * @Description 获取用户信息

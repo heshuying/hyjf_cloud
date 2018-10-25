@@ -1281,7 +1281,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
             // 加入到消息队列
             JSONObject params = new JSONObject();
             params.put("creditNid", creditNid);
-            autoIssueMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+            autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
             logger.info("清算完成后,发送MQ成功,债转编号:[" + creditNid + "].");
         } catch (MQException e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.user;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.MspApplytRequestBean;
 import com.hyjf.admin.beans.response.MspApplytResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -9,6 +10,8 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MspApplyService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.response.user.MspResponse;
@@ -25,6 +28,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,10 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 
@@ -232,9 +233,9 @@ public class MspApplyController extends BaseController {
 	 * @param
 	 * @param
 	 */
-	@PostMapping("/exportAction")
-	@ApiOperation(value = "导出", notes = "导出")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	//@PostMapping("/exportAction")
+	//@ApiOperation(value = "导出", notes = "导出")
+	/*@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	public void exportAction(HttpServletRequest request,
 			@RequestBody MspApplytRequestBean mspApplytRequestBean,HttpServletResponse response) throws Exception {
 	
@@ -303,7 +304,86 @@ public class MspApplyController extends BaseController {
 		}
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+	}*/
+
+	/**
+	 * 导出excel
+	 *
+	 * @param mspApplytRequestBean
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@PostMapping("/exportAction")
+	@ApiOperation(value = "导出", notes = "导出")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportExcelAccount(HttpServletRequest request,
+								   @RequestBody MspApplytRequestBean mspApplytRequestBean,HttpServletResponse response) throws Exception {
+		// 封装查询条件
+		MspApplytRequest aprlr = new MspApplytRequest();
+		BeanUtils.copyProperties(mspApplytRequestBean, aprlr);
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "安融反欺诈查询";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+		aprlr.setLimitFlg(true);
+		//请求第一页5000条
+		aprlr.setPageSize(defaultRowMaxCount);
+		aprlr.setCurrPage(1);
+		// 需要输出的结果列表
+		MspApplytResponse recordList = this.mspApplyService.getRecordList(aprlr);
+		Integer totalCount = recordList.getRecordTotal();
+		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		if (totalCount == 0) {
+			String sheetNameTmp = sheetName + "_第1页";
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}
+		for (int i = 1; i < sheetCount; i++) {
+			aprlr.setPageSize(defaultRowMaxCount);
+			aprlr.setCurrPage(i+1);
+			MspApplytResponse recordList2 = this.mspApplyService.getRecordList(aprlr);
+			if (recordList2 != null && recordList2.getResultList().size()> 0) {
+				String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2.getResultList());
+			} else {
+				break;
+			}
+		}
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}
+
+	private Map<String, String> buildMap() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("name", "姓名");
+		map.put("identityCard", "身份证号");
+		map.put("createUser", "操作人");
+		map.put("createTime", "查询时间");
+		return map;
+	}
+
+	private Map<String, IValueFormatter> buildValueAdapter() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		IValueFormatter createTimeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String createTime = (String) object;
+				Long time1 = new Long(createTime);
+				return format.format(time1 * 1000);
+			}
+		};
+
+		mapAdapter.put("createTime", createTimeAdapter);
+		return mapAdapter;
+	}
+
 
 	/**
 	 * 画面迁移(含有id更新，不含有id添加)
@@ -522,6 +602,7 @@ public class MspApplyController extends BaseController {
 		}
 		return new AdminResult();
 	}
+
 	/**
 	 * 数据导出
 	 * 
@@ -529,7 +610,7 @@ public class MspApplyController extends BaseController {
 	 * @param
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
+	/*@SuppressWarnings("deprecation")
 	@PostMapping("/mspexportAction")
 	@ApiOperation(value = "安融反欺诈查询配置表", notes = "安融反欺诈查询配置表")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_EXPORT)
@@ -629,6 +710,78 @@ public class MspApplyController extends BaseController {
 		}
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+	}*/
+
+
+	/**
+	 * 导出excel
+	 *
+	 * @param aprlr
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@SuppressWarnings("deprecation")
+	@PostMapping("/mspexportAction")
+	@ApiOperation(value = "安融反欺诈查询配置表", notes = "安融反欺诈查询配置表")
+	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportActionDep(HttpServletRequest request, @RequestBody MspRequest aprlr,HttpServletResponse response) throws Exception {
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "安融反欺诈查询配置表";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+		aprlr.setLimitFlg(true);
+		//请求第一页5000条
+		aprlr.setPageSize(defaultRowMaxCount);
+		aprlr.setCurrPage(1);
+		// 需要输出的结果列表
+		MspResponse prs = mspApplyService.searchAction(aprlr);
+		Integer totalCount = prs.getRecordTotal();
+		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		if (totalCount == 0) {
+			String sheetNameTmp = sheetName + "_第1页";
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}
+		for (int i = 1; i < sheetCount; i++) {
+			aprlr.setPageSize(defaultRowMaxCount);
+			aprlr.setCurrPage(i+1);
+			MspResponse prs2 = mspApplyService.searchAction(aprlr);
+			if (prs2 != null && prs2.getResultList().size()> 0) {
+				String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  prs2.getResultList());
+			} else {
+				break;
+			}
+		}
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}
+
+	private Map<String, String> buildMapDep() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("configureName", "标的名称");
+		map.put("serviceTypeName", "业务类型");
+		map.put("loanTypeName", "借款类型(借款用途)");
+		map.put("approvalResultName", "审批结果");
+		map.put("loanMoney", "借款金额（合同金额）（元）");
+		map.put("loanTimeLimit", "借款/还款期数（月）");
+		map.put("creditAddress", "借款城市(借款地点)");
+		map.put("guaranteeTypeName", "担保类型");
+		map.put("unredeemedMoney", "未偿还本金");
+		map.put("repaymentStatusName", "当前还款状态");
+		return map;
+	}
+
+	private Map<String, IValueFormatter> buildValueAdapterDep() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		return mapAdapter;
+	}
+
 
 }

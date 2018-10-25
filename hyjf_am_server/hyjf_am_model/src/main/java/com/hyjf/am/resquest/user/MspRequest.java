@@ -245,7 +245,17 @@ public class MspRequest extends BasePage implements Serializable {
 	@ApiModelProperty(value = "修改时间")
 	private Date updateTime;
 	private Integer delFlag;
+	//默认为true ,获取全部数据，为false时，获取部分数据
+	private boolean limitFlg = false;
 	private static final long serialVersionUID = 1L;
+
+	public boolean isLimitFlg() {
+		return limitFlg;
+	}
+
+	public void setLimitFlg(boolean limitFlg) {
+		this.limitFlg = limitFlg;
+	}
 
 	public Integer getId() {
 		return id;

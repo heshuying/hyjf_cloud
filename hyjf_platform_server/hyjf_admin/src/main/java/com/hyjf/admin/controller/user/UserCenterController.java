@@ -387,7 +387,7 @@ public class UserCenterController extends BaseController {
      */
 //    @ApiOperation(value = "导出会员管理列表", notes = "导出会员管理列表")
 //    @PostMapping(value = "/exportusers")
-    public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody UserManagerRequestBean userManagerRequestBean) throws Exception {
+    /*public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody UserManagerRequestBean userManagerRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "会员列表";
         // 文件名称
@@ -482,12 +482,12 @@ public class UserCenterController extends BaseController {
         }
          // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
     
     /**
      * 导出excel
      *
-     * @param form
+     * @param userManagerRequestBean
      * @param request
      * @param response
      * @throws Exception
