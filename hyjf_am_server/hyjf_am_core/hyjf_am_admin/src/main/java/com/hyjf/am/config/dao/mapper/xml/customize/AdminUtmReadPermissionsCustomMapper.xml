@@ -53,7 +53,7 @@
 		<include refid="Where_Clause" />
 		ORDER BY
 		a.create_time DESC
-		<if test=" limitStart > 0 " >
+		<if test=" limitStart >= 0 " >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>

@@ -227,16 +227,18 @@ public class BankOpenRecordController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMapAcc();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterAcc();
+        String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-            String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bankAccountRecordResponse.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
             accountRecordRequest.setPageSize(defaultRowMaxCount);
             accountRecordRequest.setCurrPage(i+1);
             BankAccountRecordResponse bankAccountRecordResponse2 =bankOpenRecordService.findAccountRecordList(accountRecordRequest);
             if (bankAccountRecordResponse2 != null && bankAccountRecordResponse2.getResultList().size()> 0) {
-                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankAccountRecordResponse2.getResultList());
             } else {
                 break;
@@ -419,16 +421,18 @@ public class BankOpenRecordController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMapBkAcc();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterBkAcc();
+        String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-            String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bankAccountRecordResponse.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
             registerRcordeRequest.setPageSize(defaultRowMaxCount);
             registerRcordeRequest.setCurrPage(i+1);
             BankAccountRecordResponse bankAccountRecordResponse2=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);
             if (bankAccountRecordResponse2 != null && bankAccountRecordResponse2.getResultList().size()> 0) {
-                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankAccountRecordResponse2.getResultList());
             } else {
                 break;

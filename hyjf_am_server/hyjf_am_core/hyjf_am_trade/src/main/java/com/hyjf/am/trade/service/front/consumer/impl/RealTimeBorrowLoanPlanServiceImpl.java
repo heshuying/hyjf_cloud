@@ -776,7 +776,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 //				this.sendSmsForBorrower(borrowUserId, borrowNid);
 				this.sendSmsForManager(borrowNid);
 			} catch (Exception e) {
-				e.printStackTrace();
+	            logger.error("计划放款系统异常", e);
 			}
 		} else if (failCount == tenderCount) {
 			// 更新Borrow
@@ -1516,7 +1516,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				logger.info("发送收支明细---" + borrowTender.getUserId() + "---------" + serviceFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
             } catch (MQException e) {
-                e.printStackTrace();
+	            logger.error("计划放款系统异常", e);
             }
 			
 		}

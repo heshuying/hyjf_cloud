@@ -183,10 +183,11 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
                             boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                             if (apicronFlag) {
                                 //2018-10-15 复审之后之后发送MQ进行放款
+                                //由于是在事务内提交 会发生MQ消费时事务还没提交的情况 所以改成延时队列
                                 logger.debug("自动复审更新数据完成，开始发送放款MQ，标的编号：{}", borrowNid);
                                 try {
-                                    borrowLoanRepayProducer.messageSend(
-                                            new MessageContent(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
+                                    borrowLoanRepayProducer.messageSendDelay(
+                                            new MessageContent(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)),2);
                                 } catch (MQException e) {
                                     logger.error("[编号：" + borrowNid + "]发送计划放款MQ失败！", e);
                                 }
