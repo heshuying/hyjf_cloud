@@ -376,7 +376,7 @@ public class MspApplyController extends BaseController {
 			@Override
 			public String format(Object object) {
 				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				String createTime = (String) object;
+				Integer createTime = (Integer) object;
 				if(createTime != null){
 					Long time1 = new Long(createTime);
 					return format.format(time1 * 1000);
