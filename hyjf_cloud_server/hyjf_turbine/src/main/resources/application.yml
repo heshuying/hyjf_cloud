@@ -1,7 +1,7 @@
 
 # turbine 配置
 turbine:
-  app-config: zuul,cs-message,cs-user,cs-market,cs-trade,am-config,am-user,am-trade,am-market,eureka,config
+  app-config: zuul,cs-message,cs-user,cs-market,cs-trade
   aggregator:
     # turbine聚集数据的粒度
     clusterConfig: default
