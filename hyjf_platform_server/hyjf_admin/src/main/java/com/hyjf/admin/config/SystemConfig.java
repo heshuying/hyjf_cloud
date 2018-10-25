@@ -7,6 +7,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class SystemConfig {
 
+    @Value("${file.domain.url}")
+    public String fileDomainUrl;
+
+    @Value("${file.upload.temp.path}")
+    public String fileUplodeTempPath;
+
     @Value("${hyjf.ftp.ip}")
     public String ftpIp;
 
@@ -139,6 +145,22 @@ public class SystemConfig {
     private String sealOperate;
     @Value("${hyjf.defaultRowMaxCount}")
     private String defaultRowMaxCount;
+
+    public String getFileDomainUrl() {
+        return fileDomainUrl;
+    }
+
+    public void setFileDomainUrl(String fileDomainUrl) {
+        this.fileDomainUrl = fileDomainUrl;
+    }
+
+    public String getFileUplodeTempPath() {
+        return fileUplodeTempPath;
+    }
+
+    public void setFileUplodeTempPath(String fileUplodeTempPath) {
+        this.fileUplodeTempPath = fileUplodeTempPath;
+    }
 
     public String getFtpIp() {
         return ftpIp;

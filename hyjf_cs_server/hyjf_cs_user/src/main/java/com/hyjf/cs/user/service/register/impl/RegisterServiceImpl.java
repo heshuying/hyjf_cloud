@@ -552,6 +552,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     @Override
     public void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO) {
+        logger.info("version:========"+version);
         Integer sourceId = null;
         if (StringUtils.isNotBlank(version)) {
             String[] shuzu = version.split("\\.");
@@ -571,7 +572,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                     params.put("investAmount",0.00);
                     params.put("registerTime",new Date());
                     params.put("cumulativeInvest",BigDecimal.ZERO);
-                    //压入消息队列
+                    logger.info("压入消息队列============="+sourceId);
                     try {
                         appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                 MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));

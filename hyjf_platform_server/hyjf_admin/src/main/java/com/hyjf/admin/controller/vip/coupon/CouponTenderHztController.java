@@ -238,7 +238,7 @@ public class CouponTenderHztController extends BaseController {
 
         String investTotal=this.couponTenderHztService.queryInvestTotalHzt(couponTenderRequest);
         //总条数
-        String[] sumSmsCount = new String[]{"合计", "","","", "", "", "","","", "￥"+investTotal, "", "","",""};
+        String[] sumSmsCount = new String[]{"合计", "","","", "", "", "","","", "", "￥"+ (investTotal == null ? "" : investTotal), "","",""};
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList(),sumSmsCount);
