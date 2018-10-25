@@ -767,7 +767,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         BorrowInfoWithBLOBs borrowInfo = new BorrowInfoWithBLOBs();
         borrowInfo.setInstCode(hjhPlanAsset.getInstCode());
         borrowInfo.setAssetType(hjhAssetBorrowType.getAssetType());
-
+        borrowInfo.setUserId(hjhPlanAsset.getUserId());
         borrowInfo.setAccountContents("");
 
         // 受托支付

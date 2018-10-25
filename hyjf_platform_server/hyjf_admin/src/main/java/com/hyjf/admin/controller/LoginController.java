@@ -61,11 +61,11 @@ public class LoginController extends BaseController {
 		logger.info("登陆开始用户:"+username);
 		String password=map.get("password");
         String captcha =map.get("code");
-        Long loginCaptcha = (Long) request.getSession().getAttribute("LoginCaptcha");
+       /* Long loginCaptcha = (Long) request.getSession().getAttribute("LoginCaptcha");
         if (captcha == null || captcha.isEmpty() || loginCaptcha == null
                 || !loginCaptcha.toString().equals(captcha)) {
         	return new AdminResult<>(FAIL, "验证码错误");
-        }
+        }*/
 		AdminSystemRequest adminSystemRequest=new AdminSystemRequest();
 		adminSystemRequest.setUsername(username);
 		adminSystemRequest.setPassword(password);

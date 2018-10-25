@@ -460,6 +460,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             couponUserForAppCustomizeVO.setCouponTypeOrigin(myCouponListCustomizeVO.getCouponType());
             couponUserForAppCustomizeVO.setCouponQuotaOrigin(myCouponListCustomizeVO.getCouponQuota());
             couponUserForAppCustomizeVO.setEndTime(myCouponListCustomizeVO.getAddTime() + "-" + myCouponListCustomizeVO.getEndTime());
+            couponUserForAppCustomizeVO.setTime(myCouponListCustomizeVO.getAddTime() + "-" + myCouponListCustomizeVO.getEndTime());
             couponUserForAppCustomizeVO.setInvestQuota(myCouponListCustomizeVO.getTenderQuota());
             couponUserForAppCustomizeVO.setInvestTime(myCouponListCustomizeVO.getProjectExpirationType());
             couponUserForAppCustomizeVO.setCouponName(myCouponListCustomizeVO.getCouponName());

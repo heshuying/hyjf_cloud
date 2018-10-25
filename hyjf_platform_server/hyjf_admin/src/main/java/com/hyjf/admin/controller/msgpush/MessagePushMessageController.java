@@ -212,11 +212,6 @@ public class MessagePushMessageController extends BaseController {
     @RequestMapping(value = "/updateAction", method = RequestMethod.POST)
     public AdminResult updateAction(HttpServletRequest request, @RequestBody MessagePushMsgRequest templateRequest) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
-        AdminSystemVO user = getUser(request);
-        String username = user.getUsername();
-
-        templateRequest.setLastupdateUserName(username);
-        templateRequest.setLastupdateUserId(Integer.parseInt(user.getId()));
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
         if (message != null) {
