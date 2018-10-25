@@ -242,7 +242,10 @@ public class CouponConfigController extends BaseController {
         }
         List<CouponConfigExportCustomize> configExportCustomizes = couponConfigService.exoportRecordList(configCustomize);
         if (!CollectionUtils.isEmpty(configExportCustomizes)) {
+            Map<String, Object> mapParam = paramSet(request);
+            int recordTotal = couponConfigService.countRecord(mapParam);
             List<CouponConfigExportCustomizeVO> configExportCustomizeVOS = CommonUtils.convertBeanList(configExportCustomizes,CouponConfigExportCustomizeVO.class);
+            response.setCount(recordTotal);
             response.setResultList(configExportCustomizeVOS);
         }
         return response;
