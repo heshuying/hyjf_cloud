@@ -83,7 +83,7 @@ public class AdsServiceImpl implements AdsService {
 		AdsExample example = new AdsExample();
 		example.setOrderByClause("`order` Asc");
 		AdsExample.Criteria crt = example.createCriteria();
-		crt.andTypeIdEqualTo(request.getIsIndex());
+		crt.andTypeIdEqualTo(request.getTypeId());
 		crt.andStatusEqualTo(1);
 		crt.andIsIndexEqualTo(request.getIsIndex());
 		crt.andStartTimeLessThanOrEqualTo(GetDate.getDataString(GetDate.datetimeFormat));//活动开始时间要小于当前时间
