@@ -9,7 +9,6 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UserActionUtmRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -332,6 +331,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         // 活动有效期校验
         try {
             Integer activityId = systemConfig.getActivity888Id();
+            logger.info("注册送188元新手红包:"+activityId);
             if (!checkActivityIfAvailable(activityId)) {
                 sendCoupon(userVO);
             }
@@ -348,8 +348,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             return false;
         }
         ActivityListVO activityListVO = amMarketClient.selectActivityList(activityId);
-        AdsVO adsVO = amMarketClient.findAdsById(activityId);
-
         if (activityListVO == null) {
             return false;
         }
