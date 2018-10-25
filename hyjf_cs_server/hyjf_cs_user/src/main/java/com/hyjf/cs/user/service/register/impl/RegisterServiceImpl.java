@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UserActionUtmRequest;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -346,16 +347,16 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         if (activityId == null) {
             return false;
         }
-
+        ActivityListVO activityListVO = amMarketClient.selectActivityList(activityId);
         AdsVO adsVO = amMarketClient.findAdsById(activityId);
 
-        if (adsVO == null) {
+        if (activityListVO == null) {
             return false;
         }
-        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeStart()) > GetDate.getNowTime10()) {
+        if (activityListVO.getTimeStart() > GetDate.getNowTime10()) {
             return false;
         }
-        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeEnd()) < GetDate.getNowTime10()) {
+        if( activityListVO.getTimeEnd() < GetDate.getNowTime10()) {
             return false;
         }
 
