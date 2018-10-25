@@ -1,30 +1,24 @@
 package com.hyjf.cs.user.service.unbindcard.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
-import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.resquest.user.BankCardUpdateRequest;
-import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.*;
-import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.bean.BindCardPageBean;
-import com.hyjf.cs.user.bean.BindCardPageRequestBean;
 import com.hyjf.cs.user.bean.DeleteCardPageBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.unbindcard.UnBindCardService;
-import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
@@ -35,12 +29,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 解绑银行卡服务类
@@ -175,51 +169,41 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 
 	/**
 	 * 解绑银行卡接口请求
-	 * @param user
-	 * @param accountChinapnrTender
-	 * @param bankCardVO
-	 * @param userInfoVO
 	 * @param channel
+	 * @param sign
+	 * @param request
 	 * @return
 	 */
 	@Override
-	public Map<String,Object> callUnBindCardPage(WebViewUserVO user, BankOpenAccountVO accountChinapnrTender,BankCardVO bankCardVO, UserInfoVO userInfoVO,String channel,String sign,String bgRetUrl){
+	public Map<String,Object> callUnBindCardPage(DeleteCardPageBean bean,String channel,String sign,String platform,HttpServletRequest request){
 		// 失败页面
-		String errorPath = "/user/unBindCardError";
+		String errorPath = "/bank/user/bankcardNew/closebindcard-error";
 		// 成功页面
-		String successPath = "/user/unBindCardSuccess";
+		String successPath = "/bank/user/bankcardNew/closebindcard-success";
 		// 回调路径
-		String retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath +"?userId="+user.getUserId();
+		String retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath;
 		String successUrl = super.getFrontHost(systemConfig,channel) + successPath;
 		if(!channel.contains(BankCallConstant.CHANNEL_PC)){
-			//todo 返回路径
-			errorPath = "/user/open/result/failed";
-			successPath = "/user/open/result/success";
+			//返回路径
+			errorPath = "/user/bankCard/unbind/result/failed";
+			successPath = "/user/bankCard/unbind/result/success";
 			// 同步地址  是否跳转到前端页面
-			retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath +"?status=99&userId="+user.getUserId();
+			retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath +"?status=99";
 			successUrl = super.getFrontHost(systemConfig,channel+"") + successPath+"?status=000&statusDesc=";
 			retUrl += "&token=1&sign=" +sign;
 			successUrl += "&token=1&sign=" +sign;
 		}
 
 		// 忘记密码跳转链接
-		String forgetPassworedUrl =  systemConfig.getForgetpassword();
-		DeleteCardPageBean bean = new DeleteCardPageBean();
+		String forgetPassworedUrl = getForgotPwdUrl(channel,request,systemConfig);
 		//
-		bean.setUserId(user.getUserId());
 		bean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_UNBINDCARD_PAGE);
-		bean.setAccountId(accountChinapnrTender.getAccount());
-		bean.setName(userInfoVO.getTruename());
 		bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
-		bean.setIdNo(userInfoVO.getIdcard());
-		bean.setCardNo(bankCardVO.getCardNo());// 银行卡号
-		bean.setMobile(user.getMobile());
 		bean.setForgotPwdUrl(forgetPassworedUrl);
 		bean.setRetUrl(retUrl);
 		bean.setSuccessfulUrl(successUrl);
-		bean.setNotifyUrl(bgRetUrl);
 		bean.setChannel(channel);// 交易渠道
-		bean.setPlatform("0");
+		bean.setPlatform(platform);
 		try {
 			// 拼装参数 调用江西银行
 			Map<String,Object> map = getCallbankMV(bean);
@@ -328,6 +312,23 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 			ret = true;
 		}
 		return ret;
+	}
+	public String getForgotPwdUrl(String platform, HttpServletRequest request, SystemConfig sysConfig) {
+
+		Integer client = Integer.parseInt(platform);
+		if (ClientConstants.WEB_CLIENT == client) {
+			String token=request.getHeader("token");
+			return sysConfig.getFrontHost()+"/user/setTradePassword";
+		}
+		if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+			String sign=request.getParameter("sign");
+			return sysConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD;
+		}
+		if (ClientConstants.WECHAT_CLIENT == client) {
+			String sign=request.getParameter("sign");
+			return sysConfig.getWeiFrontHost()+"/submitForm?queryType=6";
+		}
+		return "";
 	}
 }
 

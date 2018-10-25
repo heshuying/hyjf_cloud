@@ -6,6 +6,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.bean.DeleteCardPageBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.web.bindcard.WebBindCardPageController;
 import com.hyjf.cs.user.service.unbindcard.UnBindCardService;
@@ -15,11 +16,11 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -41,7 +42,6 @@ public class WebUnBindCardPageController extends BaseUserController{
      * 绑卡接口
      */
     @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
-//    @ApiImplicitParam(name = "paraMap",value = "{urlstatus:string}", dataType = "Map")
     @PostMapping(value = "/deleteCardPage", produces = "application/json; charset=utf-8")
     public WebResult<Object> bindCardPage(@RequestParam(value = "userId") int userId, @RequestParam(value = "cardId") String cardId, HttpServletRequest request) {
         // 银行卡id
@@ -60,8 +60,17 @@ public class WebUnBindCardPageController extends BaseUserController{
         UserInfoVO userInfoVO = unBindCardService.getUserInfo(user.getUserId());
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-web/user/deleteCardPage/bgReturn?userId=" + user.getUserId();
+
+        DeleteCardPageBean deleteCardPageBean = new DeleteCardPageBean();
+        deleteCardPageBean.setUserId(user.getUserId());
+        deleteCardPageBean.setAccountId(accountChinapnrTender.getAccount());
+        deleteCardPageBean.setName(userInfoVO.getTruename());
+        deleteCardPageBean.setIdNo(userInfoVO.getIdcard());
+        deleteCardPageBean.setCardNo(bankCardVO.getCardNo());// 银行卡号
+        deleteCardPageBean.setNotifyUrl(bgRetUrl);
+
         //调用解绑银行卡接口
-        unBindCardService.callUnBindCardPage(user, accountChinapnrTender, bankCardVO, userInfoVO, BankCallConstant.CHANNEL_PC,null,bgRetUrl);
+        unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_PC,null,"0",request);
         return result;
     }
 
@@ -104,7 +113,7 @@ public class WebUnBindCardPageController extends BaseUserController{
         logger.info("调用银行失败原因start,logOrdId:{}", param);
         WebResult<Object> result = new WebResult<Object>();
         String retMsg = unBindCardService.getFailedMess(param.get("logOrdId"));
-        Map<String,String> map = new HashedMap();
+        Map<String,String> map = new HashMap<>();
         map.put("error",retMsg);
         result.setData(map);
         return result;

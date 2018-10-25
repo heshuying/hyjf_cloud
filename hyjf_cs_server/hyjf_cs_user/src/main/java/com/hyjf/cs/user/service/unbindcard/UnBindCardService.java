@@ -1,21 +1,15 @@
 package com.hyjf.cs.user.service.unbindcard;
 
-import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.cs.user.bean.BindCardPageBean;
-import com.hyjf.cs.user.bean.BindCardPageRequestBean;
-import com.hyjf.cs.user.constants.ResultEnum;
+import com.hyjf.cs.user.bean.DeleteCardPageBean;
 import com.hyjf.cs.user.service.BaseUserService;
-import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.Map;
 
 public interface UnBindCardService extends BaseUserService {
@@ -53,15 +47,13 @@ public interface UnBindCardService extends BaseUserService {
      */
     BankCardVO getBankCardByUserAndId(Integer userId, String cardId);
     /**
-     * 解绑银行卡接口晴晴
-     * @param user
-     * @param accountChinapnrTender
-     * @param bankCardVO
-     * @param userInfoVO
+     * 解绑银行卡接口请求
      * @param channel
+     * @param sign
+     * @param request
      * @return
      */
-    Map<String,Object> callUnBindCardPage(WebViewUserVO user, BankOpenAccountVO accountChinapnrTender, BankCardVO bankCardVO, UserInfoVO userInfoVO, String channel,String sign,String bgRetUrl);
+    Map<String,Object> callUnBindCardPage(DeleteCardPageBean deleteCardPageBean,String channel, String sign, String platform, HttpServletRequest request);
     /**
      * 解绑银行卡后(异步回调删除)
      * 合规四期(解卡页面调用)

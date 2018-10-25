@@ -1,6 +1,7 @@
 package com.hyjf.am.config.dao.model.customize;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class HjhUserAuthConfigLogCustomize implements Serializable {
     private Integer id;
@@ -27,9 +28,7 @@ public class HjhUserAuthConfigLogCustomize implements Serializable {
 
     private String createUserStr;
 
-    private Integer createTime;
-
-    private String  createTimeStr;
+    private Date createTime;
 
     public String getCreateUserStr() {
         return createUserStr;
@@ -37,14 +36,6 @@ public class HjhUserAuthConfigLogCustomize implements Serializable {
 
     public void setCreateUserStr(String createUserStr) {
         this.createUserStr = createUserStr;
-    }
-
-    public String getCreateTimeStr() {
-        return createTimeStr;
-    }
-
-    public void setCreateTimeStr(String createTimeStr) {
-        this.createTimeStr = createTimeStr;
     }
 
     private static final long serialVersionUID = 1L;
@@ -137,11 +128,4 @@ public class HjhUserAuthConfigLogCustomize implements Serializable {
         this.createUser = createUser;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
 }

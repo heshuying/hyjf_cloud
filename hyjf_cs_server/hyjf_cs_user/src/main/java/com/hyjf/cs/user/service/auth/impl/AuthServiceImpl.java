@@ -596,20 +596,22 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		}
 
 		if(!AuthBean.AUTH_TYPE_MERGE_AUTH.equals(txcode)){
-			Integer endTimeInt=Integer.parseInt(endTime);
-			Integer nowTimeInt=Integer.parseInt(nowTime);
 			// 0是未授权
 			if (status - 0 == 0) {
 				return 0;
+			}else{
+				Integer endTimeInt=Integer.parseInt(endTime);
+				Integer nowTimeInt=Integer.parseInt(nowTime);
+				//20180731-20180630=101  20180228-20180131=97
+				if(endTimeInt - nowTimeInt > 101){
+					return 1;
+				}else if(endTimeInt - nowTimeInt <= 101&&endTimeInt - nowTimeInt > 0){
+					return 2;
+				}else {
+					return 3;
+				}
 			}
-			//20180731-20180630=101  20180228-20180131=97
-			if(endTimeInt - nowTimeInt > 101){
-				return 1;
-			}else if(endTimeInt - nowTimeInt <= 101&&endTimeInt - nowTimeInt > 0){
-				return 2;
-			}else {
-				return 3;
-			}
+
 		}else{
 			Integer paymentflag=0;
 			Integer invesflag=0;
@@ -619,43 +621,50 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			// 0是未授权
 			if (status - 0 != 0 ) {
 				creditflag=1;
+			}else{
+				creditflag=0;
 			}
 			endTime = hjhUserAuth.getAutoBidEndTime();
 			status = hjhUserAuth.getAutoInvesStatus();
-			Integer endTimeInt=Integer.parseInt(endTime);
-			Integer nowTimeInt=Integer.parseInt(nowTime);
+
 			// 0是未授权
 			if (status - 0 == 0) {
 				invesflag= 0;
+			}else{
+				Integer endTimeInt=Integer.parseInt(endTime);
+				Integer nowTimeInt=Integer.parseInt(nowTime);
+				//20180731-20180630=101  20180228-20180131=97
+				if(endTimeInt - nowTimeInt > 101){
+					invesflag=1;
+				}else if(endTimeInt - nowTimeInt <= 101&&endTimeInt - nowTimeInt > 0){
+					invesflag= 2;
+				}else {
+					invesflag= 3;
+				}
 			}
-			//20180731-20180630=101  20180228-20180131=97
-			if(endTimeInt - nowTimeInt > 101){
-				invesflag=1;
-			}else if(endTimeInt - nowTimeInt <= 101&&endTimeInt - nowTimeInt > 0){
-				invesflag= 2;
-			}else {
-				invesflag= 3;
-			}
+
 
 			endTime = hjhUserAuth.getAutoPaymentEndTime();
 			status = hjhUserAuth.getAutoPaymentStatus();
-			endTimeInt=Integer.parseInt(endTime);
-			nowTimeInt=Integer.parseInt(nowTime);
 			// 0是未授权
 			if (status - 0 == 0) {
 				paymentflag= 0;
+			}else{
+				Integer endTimeInt=Integer.parseInt(endTime);
+				Integer nowTimeInt=Integer.parseInt(nowTime);
+				//20180731-20180630=101  20180228-20180131=97
+				if(endTimeInt - nowTimeInt > 101){
+					paymentflag=1;
+				}else if(endTimeInt - nowTimeInt <= 101&&endTimeInt - nowTimeInt > 0){
+					paymentflag= 2;
+				}else {
+					paymentflag= 3;
+				}
+				if(invesflag==0||creditflag==0||paymentflag==0){
+					return 0;
+				}
 			}
-			//20180731-20180630=101  20180228-20180131=97
-			if(endTimeInt - nowTimeInt > 101){
-				paymentflag=1;
-			}else if(endTimeInt - nowTimeInt <= 101&&endTimeInt - nowTimeInt > 0){
-				paymentflag= 2;
-			}else {
-				paymentflag= 3;
-			}
-			if(invesflag==0||creditflag==0||paymentflag==0){
-				return 0;
-			}
+
 			return invesflag>paymentflag?invesflag:paymentflag;
 		}
 	}
