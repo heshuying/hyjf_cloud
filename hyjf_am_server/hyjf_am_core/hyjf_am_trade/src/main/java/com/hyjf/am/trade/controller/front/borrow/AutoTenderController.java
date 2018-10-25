@@ -4,10 +4,10 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.BigDecimalResponse;
-import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
+import com.hyjf.am.response.trade.calculate.HjhCreditCalcResultResponse;
 import com.hyjf.am.resquest.trade.SaveCreditTenderLogRequest;
 import com.hyjf.am.resquest.trade.UpdateBorrowForAutoTenderRequest;
 import com.hyjf.am.resquest.trade.UpdateCreditForAutoTenderRequest;
@@ -19,8 +19,8 @@ import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
 import com.hyjf.am.trade.service.front.batch.AutoTenderService;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 自动投资（原子层）
@@ -66,18 +65,36 @@ public class AutoTenderController extends BaseController {
      * @return
      */
     @RequestMapping("/saveCreditTenderLog")
-    public MapResponse saveCreditTenderLog(@RequestBody SaveCreditTenderLogRequest request) {
-        MapResponse response = new MapResponse();
-        Map<String, Object> resultMap = this.autoTenderService.saveCreditTenderLog(
+    public HjhCreditCalcResultResponse saveCreditTenderLog(@RequestBody SaveCreditTenderLogRequest request) {
+        HjhCreditCalcResultResponse response = new HjhCreditCalcResultResponse();
+        HjhCreditCalcResultVO resultVO = this.autoTenderService.saveCreditTenderLog(
                 request.getCredit(),
                 request.getHjhAccede(),
                 request.getOrderId(),
                 request.getOrderDate(),
                 request.getYujiAmoust(),
                 request.isLast());
-        //防止失精度，把Map<String, (BigDecimal)Object>转成Map<String, (String)Object>
-        resultMap = ConvertUtils.convertToMapValString(resultMap);
-        response.setResultMap(resultMap);
+        response.setResult(resultVO);
+        return response;
+    }
+
+    /**
+     * 保存用户的债转承接log数据
+     * @param request
+     * @return
+     * @author nxl
+     */
+    @RequestMapping("/saveCreditTenderLogNoSave")
+    public HjhCreditCalcResultResponse saveCreditTenderLogNoSave(@RequestBody SaveCreditTenderLogRequest request) {
+        HjhCreditCalcResultResponse response = new HjhCreditCalcResultResponse();
+        HjhCreditCalcResultVO resultVO = this.autoTenderService.saveCreditTenderLogNoSave(
+                request.getCredit(),
+                request.getHjhAccede(),
+                request.getOrderId(),
+                request.getOrderDate(),
+                request.getYujiAmoust(),
+                request.isLast());
+        response.setResult(resultVO);
         return response;
     }
 
@@ -129,12 +146,12 @@ public class AutoTenderController extends BaseController {
         String planNid = request.getPlanNid();
         String tenderUsrcustid = request.getTenderUsrcustid();
         String sellerUsrcustid = request.getSellerUsrcustid();
-        Map<String, Object> resultMap = request.getResultMap();
+        HjhCreditCalcResultVO resultVO = request.getResultVO();
         BeanUtils.copyProperties(request.getBankCallBeanVO(), bean);
         //银行自动投资成功后，更新投资数据
         boolean result = this.autoTenderService.updateCreditForAutoTender(
                 creditNid, accedeOrderId, planNid, bean,
-                tenderUsrcustid, sellerUsrcustid, resultMap
+                tenderUsrcustid, sellerUsrcustid, resultVO
         );
         if (!result) {
             return new Response(Response.FAIL, Response.FAIL_MSG);
@@ -153,27 +170,5 @@ public class AutoTenderController extends BaseController {
     public StringResponse getSellerAuthCode(@PathVariable String tenderOrderId, @PathVariable Integer sourceType) {
         String authCode = this.autoTenderService.getSellerAuthCode(tenderOrderId, sourceType);
         return new StringResponse(authCode);
-    }
-
-    /**
-     * 保存用户的债转承接log数据
-     * @param request
-     * @return
-     * @author nxl
-     */
-    @RequestMapping("/saveCreditTenderLogNoSave")
-    public MapResponse saveCreditTenderLogNoSave(@RequestBody SaveCreditTenderLogRequest request) {
-        MapResponse response = new MapResponse();
-        Map<String, Object> resultMap = this.autoTenderService.saveCreditTenderLogNoSave(
-                request.getCredit(),
-                request.getHjhAccede(),
-                request.getOrderId(),
-                request.getOrderDate(),
-                request.getYujiAmoust(),
-                request.isLast());
-        //防止失精度，把Map<String, (BigDecimal)Object>转成Map<String, (String)Object>
-        resultMap = ConvertUtils.convertToMapValString(resultMap);
-        response.setResultMap(resultMap);
-        return response;
     }
 }

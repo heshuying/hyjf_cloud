@@ -283,8 +283,8 @@ public class UserauthController extends BaseController {
 		Map<String, String> map = Maps.newLinkedHashMap();
 		map.put("userName", "用户名");
 		map.put("mobile", "手机号");
-		map.put("auto1", "自动投标交易金额");
-		map.put("auto2", "自动投标总金额");
+		map.put("automaticTenderAmount", "自动投标交易金额");
+		map.put("totalAmountAutomatic", "自动投标总金额");
 		map.put("autoInvesEndTime", "自动投标到期日");
 		map.put("autoInvesStatus", "自动投标授权状态");
 		map.put("autoCreditStatus", "自动债转授权状态");
@@ -294,23 +294,20 @@ public class UserauthController extends BaseController {
 
 	private Map<String, IValueFormatter> buildValueAdapterSq() {
 		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-		IValueFormatter auto1Adapter = new IValueFormatter() {
+		IValueFormatter automaticTenderAmountAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
 				return "2000000";
 			}
 		};
-
-		IValueFormatter auto2Adapter = new IValueFormatter() {
+		IValueFormatter totalAmountAutomaticAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
-
 				return "1000000000";
 			}
 		};
-
-		mapAdapter.put("auto1", auto1Adapter);
-		mapAdapter.put("auto2", auto2Adapter);
+		mapAdapter.put("automaticTenderAmount", automaticTenderAmountAdapter);
+		mapAdapter.put("totalAmountAutomatic", totalAmountAutomaticAdapter);
 		return mapAdapter;
 	}
 

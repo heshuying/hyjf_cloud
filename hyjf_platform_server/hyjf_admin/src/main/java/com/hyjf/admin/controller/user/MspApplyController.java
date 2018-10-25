@@ -376,9 +376,13 @@ public class MspApplyController extends BaseController {
 			@Override
 			public String format(Object object) {
 				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				String createTime = (String) object;
-				Long time1 = new Long(createTime);
-				return format.format(time1 * 1000);
+				Integer createTime = (Integer) object;
+				if(createTime != null){
+					Long time1 = new Long(createTime);
+					return format.format(time1 * 1000);
+				}else{
+					return "";
+				}
 			}
 		};
 
@@ -745,8 +749,8 @@ public class MspApplyController extends BaseController {
 		MspResponse prs = mspApplyService.searchAction(aprlr);
 		Integer totalCount = prs.getRecordTotal();
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-		Map<String, String> beanPropertyColumnMap = buildMap();
-		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		Map<String, String> beanPropertyColumnMap = buildMapDep();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterDep();
 		String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
