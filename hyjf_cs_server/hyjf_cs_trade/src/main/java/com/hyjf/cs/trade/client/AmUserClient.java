@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
@@ -9,7 +8,6 @@ import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -310,28 +308,15 @@ public interface AmUserClient {
 	AccountBankVO getBankInfo(Integer userId, int bankId);
 
 	/**
-	 * 通过account 获取用户开户信息
-	 * @param account
-	 * @return
-	 * @Author : huanghui
-	 */
-	BankOpenAccountVO getBankOpenAccountByAccountId(String account);
-
-
-	/**
 	 * 根据汇付账户查询user_id
 	 * @param chinapnrUsrcustid
 	 * @return
 	 */
 	Integer selectUserIdByUsrcustid(Long chinapnrUsrcustid);
 
-	BankOpenAccountVO getBankOpenAccount(String accountId);
-
 	AccountVO getAccount(Integer userId);
 
 	List<VipAuthVO> getVipAuthList(int vipId);
-
-	BankOpenAccountVO selectByAccountId(String accountId);
 
 	UserVO getUser(String userName);
 

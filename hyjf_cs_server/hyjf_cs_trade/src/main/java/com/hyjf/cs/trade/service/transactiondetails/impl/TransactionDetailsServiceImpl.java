@@ -54,7 +54,7 @@ public class TransactionDetailsServiceImpl extends BaseTradeServiceImpl implemen
             return false;
         }
         int userId = userVO.getUserId();
-        BankOpenAccountVO bankOpenAccountVO = this.amUserClient.getBankOpenAccountByAccountId(accountId);
+        BankOpenAccountVO bankOpenAccountVO = this.amUserClient.selectBankOpenAccountByAccountId(accountId);
         if (bankOpenAccountVO == null || "".equals(bankOpenAccountVO)){
             return false;
         }
