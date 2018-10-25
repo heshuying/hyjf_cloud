@@ -122,7 +122,7 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 	}
 
 	@Override
-	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
+	public BorrowCustomizeResponse exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
 		
 		return amTradeClient.exportBorrowList(borrowCommonCustomize);
 	}

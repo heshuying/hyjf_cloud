@@ -2781,7 +2781,7 @@ public interface AmTradeClient {
      */
     Boolean updateBorrowTender(BorrowTenderUpdRequest request);
 
-    List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize);
+    BorrowCustomizeResponse exportBorrowList(BorrowBeanRequest borrowCommonCustomize);
 
     /**
      * 获取债转状态为0的数据
