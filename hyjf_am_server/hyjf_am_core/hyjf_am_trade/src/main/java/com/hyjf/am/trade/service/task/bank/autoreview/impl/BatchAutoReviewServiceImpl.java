@@ -225,13 +225,15 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                                 boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                                 if (apicronFlag) {
                                     //2018-10-15 复审之后之后发送MQ进行放款
+                                    logger.debug("自动复审更新数据完成，开始发送放款MQ，标的编号：{}", borrowNid);
                                     try {
                                         borrowLoanRepayProducer.messageSend(
                                                 new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
                                     } catch (MQException e) {
                                         logger.error("[编号：" + borrowNid + "]发送直投放款MQ失败！", e);
                                     }
-                                    throw new Exception("更新borrow表失败,项目编号：" + borrow.getBorrowNid());
+                                } else {
+                                    throw new Exception("插入borrowApi表失败,项目编号：" + borrow.getBorrowNid());
                                 }
                             }
                         }
