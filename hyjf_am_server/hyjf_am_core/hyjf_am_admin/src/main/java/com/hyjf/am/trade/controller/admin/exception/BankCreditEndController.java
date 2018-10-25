@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndRequest;
 import com.hyjf.am.resquest.trade.InsertBankCreditEndForCreditEndRequest;
 import com.hyjf.am.resquest.trade.UpdateBankCreditEndForStatusRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.service.admin.exception.BankCreditEndService;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/bankCreditEndController")
-public class BankCreditEndController {
+public class BankCreditEndController extends BaseController {
 
     @Autowired
     private BankCreditEndService bankCreditEndService;
@@ -99,11 +100,10 @@ public class BankCreditEndController {
      */
     @RequestMapping("/update_initial")
     public Integer updateCreditEndForInitial(@RequestBody BankCreditEndVO requestBean){
+        logger.info("结束债权更新为初始状态，requestBean: " + requestBean);
         BankCreditEnd creditEnd = new BankCreditEnd();
         BeanUtils.copyProperties(requestBean,creditEnd);
-        creditEnd.setOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(requestBean.getTenderUserId())));
-        creditEnd.setStatus(0);
-        return bankCreditEndService.updateBankCreditEnd(creditEnd);
+        return bankCreditEndService.updateCreditEndForInitial(creditEnd);
     }
 
     @RequestMapping("/insertBankCreditEndForCreditEnd")
