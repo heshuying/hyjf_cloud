@@ -1029,6 +1029,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (listNewInvest != null && listNewInvest.size() > 0) {
             for (int i = 0; i < listNewInvest.size(); i++) {
                 AppProjectListCustomizeVO newInvest = listNewInvest.get(i);
+                if(!Validator.isIncrease(newInvest.getIncreaseInterestFlag(), newInvest.getBorrowExtraYieldOld())){
+                    newInvest.setBorrowExtraYield("");
+                }
                 projectList.add(newInvest);
             }
             return projectList;
@@ -1042,6 +1045,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (listNewOnTime != null && listNewOnTime.size() > 0) {
             for (int i = 0; i < listNewOnTime.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = listNewOnTime.get(i);
+                if(!Validator.isIncrease(newOnTime.getIncreaseInterestFlag(), newOnTime.getBorrowExtraYieldOld())){
+                    newOnTime.setBorrowExtraYield("");
+                }
                 projectList.add(newOnTime);
             }
             return projectList;
@@ -1054,6 +1060,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (reviewList != null && reviewList.size() > 0) {
             for (int i = 0; i < reviewList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = reviewList.get(i);
+                if(!Validator.isIncrease(newOnTime.getIncreaseInterestFlag(), newOnTime.getBorrowExtraYieldOld())){
+                    newOnTime.setBorrowExtraYield("");
+                }
                 projectList.add(newOnTime);
             }
             return projectList;
@@ -1065,6 +1074,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (repaymentList != null && repaymentList.size() > 0) {
             for (int i = 0; i < repaymentList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = repaymentList.get(i);
+                if(!Validator.isIncrease(newOnTime.getIncreaseInterestFlag(), newOnTime.getBorrowExtraYieldOld())){
+                    newOnTime.setBorrowExtraYield("");
+                }
                 projectList.add(newOnTime);
             }
             return projectList;
