@@ -166,7 +166,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         adsRequest.setLimitStart(0);
         adsRequest.setLimitEnd(4);
         adsRequest.setTypeId(6);
-        adsRequest.setIsIndex(1);
+        adsRequest.setIsIndex(0);
 
         AppAdsCustomizeResponse res = baseClient.postExe(BANNER_LIST_URL,adsRequest,AppAdsCustomizeResponse.class);
         List<AppAdsCustomizeVO> bannerList = res.getResultList();

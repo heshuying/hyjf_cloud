@@ -3,11 +3,13 @@
  */
 package com.hyjf.admin.controller.config;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.admin.service.ProtocolsService;
@@ -53,15 +55,8 @@ public class ProtocolsController extends BaseController {
 	@Autowired
 	private ProtocolsService protocolsService;
 
-//	@Autowired
-//	private ProtocolService protocolService;
-
-//	@Value("${file.domain.url}")
-//	private String FILEDOMAINURL;
-//	@Value("${file.physical.path}")
-//	private String FILEPHYSICALPATH;
-//	@Value("${file.upload.temp.path}")
-//	private String FILEUPLOADTEMPPATH;
+	@Autowired
+	private SystemConfig systemConfig;
 
 	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
 	@PostMapping("/init")
@@ -211,7 +206,32 @@ public class ProtocolsController extends BaseController {
                 String result = dzqzCallBean.getResult();
                 String code = dzqzCallBean.getCode();
                 if("success".equals(result) && FddGenerateContractConstant.FDD_RETURN_CODE_1000.equals(code)){
-                    adminResult.setStatus(SUCCESS);
+					LinkedList<BorrowCommonImage> files = new LinkedList<>();
+
+					BorrowCommonImage fileMeta = new BorrowCommonImage();
+					String originalFilename = file.getOriginalFilename();
+					String fileRealName = String.valueOf(new Date().getTime());
+					String  suf = UploadFileUtils.getSuffix(file.getOriginalFilename());
+					fileRealName = fileRealName + suf;
+					int index = originalFilename.lastIndexOf(".");
+					if (index != -1) {
+						fileMeta.setImageName(originalFilename.substring(0, index));
+					} else {
+						fileMeta.setImageName(originalFilename);
+					}
+
+					fileMeta.setImageRealName(fileRealName);
+					fileMeta.setImageSize(file.getSize() / 1024 + "");// KB
+					fileMeta.setImageType(file.getContentType());
+					// 获取文件路径
+					String fileUploadTempPath = systemConfig.getFileUplodeTempPath();
+					String fileDomainUrl = systemConfig.getFileDomainUrl();
+
+					fileMeta.setImagePath(fileUploadTempPath + fileRealName);
+					fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
+					files.add(fileMeta);
+					adminResult.setData(files);
+					adminResult.setStatus(SUCCESS);
                     adminResult.setStatusDesc(SUCCESS_DESC);
                     return adminResult;
                 }else{
