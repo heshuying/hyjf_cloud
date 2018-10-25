@@ -18,6 +18,8 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -86,12 +88,28 @@ public class MessagePushTemplateController extends BaseController {
                         form.setTemplateActionUrl2("");
                     }
                     if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
-                        form.setTemplateActionUrl1("");
-                        form.setTemplateActionUrl2(record.getTemplateActionUrl());
+                        form.setTemplateActionUrl("");
+                        if ("hyjf://jumpZXH".equals(record.getTemplateActionUrl())) {
+                            form.setTemplateActionUrl2("1");
+                        }
+                        if ("hyjf://jumpMine".equals(record.getTemplateActionUrl())) {
+                            form.setTemplateActionUrl2("2");
+                        }
+                        if ("hyjf://jumpCouponsList".equals(record.getTemplateActionUrl())) {
+                            form.setTemplateActionUrl2("3");
+                        }
+                        if ("hyjf://jumpTransactionDetail".equals(record.getTemplateActionUrl())) {
+                            form.setTemplateActionUrl2("4");
+                        }
+                        if ("hyjf://jumpInvest".equals(record.getTemplateActionUrl())) {
+                            form.setTemplateActionUrl2("5");
+                        }
                     }
                     if (StringUtils.isNotEmpty(record.getTemplateCode()) && record.getTemplateCode().contains("_")) {
                         form.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
                     }
+                    BeanUtils.copyProperties(form, record);
+                    record.setTemplateActionUrl(form.getTemplateActionUrl2());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -132,9 +150,22 @@ public class MessagePushTemplateController extends BaseController {
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl1());
         }
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+            if(templateRequest.getTemplateActionUrl2().equals("1")){
+                templateRequest.setTemplateActionUrl2("hyjf://jumpZXH" );
+            }else if (templateRequest.getTemplateActionUrl2().equals("5")) {
+                templateRequest.setTemplateActionUrl2("hyjf://jumpInvest");
+            }else if (templateRequest.getTemplateActionUrl2().equals("新手汇")) {
+                templateRequest.setTemplateActionUrl2("hyjf://jumpXSH");
+            }else if (templateRequest.getTemplateActionUrl2().equals("2")) {
+                templateRequest.setTemplateActionUrl2("hyjf://jumpMine");
+            }else if (templateRequest.getTemplateActionUrl2().equals("3")) {
+                templateRequest.setTemplateActionUrl2("hyjf://jumpCouponsList");
+            }else if (templateRequest.getTemplateActionUrl2().equals("4")) {
+                templateRequest.setTemplateActionUrl2("hyjf://jumpTransactionDetail");
+            }
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
         }
-        templateVO.setTagCode(templateRequest.getTemplateCode().substring(0,3));
+        templateVO.setTagCode(templateRequest.getTemplateCode().substring(0, 4));
         templateVO.setTemplateCode(templateRequest.getTemplateCode());
         templateVO.setCreateUserId(Integer.parseInt(userId));
         templateVO.setLastupdateUserId(Integer.parseInt(userId));
@@ -172,12 +203,25 @@ public class MessagePushTemplateController extends BaseController {
             templateRequest.setTemplateActionUrl(templateRequest.getTemplateActionUrl3());
         }
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
-            templateRequest.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
+            if(templateRequest.getTemplateActionUrl2().equals("1")){
+                templateRequest.setTemplateActionUrl("hyjf://jumpZXH" );
+            }else if (templateRequest.getTemplateActionUrl2().equals("5")) {
+                templateRequest.setTemplateActionUrl("hyjf://jumpInvest");
+            }else if (templateRequest.getTemplateActionUrl2().equals("新手汇")) {
+                templateRequest.setTemplateActionUrl("hyjf://jumpXSH");
+            }else if (templateRequest.getTemplateActionUrl2().equals("2")) {
+                templateRequest.setTemplateActionUrl("hyjf://jumpMine");
+            }else if (templateRequest.getTemplateActionUrl2().equals("3")) {
+                templateRequest.setTemplateActionUrl("hyjf://jumpCouponsList");
+            }else if (templateRequest.getTemplateActionUrl2().equals("4")) {
+                templateRequest.setTemplateActionUrl("hyjf://jumpTransactionDetail");
+            }
         }
-        templateRequest.setTagCode(templateRequest.getTemplateCode().substring(0,3));
+        templateRequest.setTagCode(templateRequest.getTagCode());
         templateRequest.setTemplateCode(templateRequest.getTemplateCode());
         templateRequest.setCreateUserName(username);
         response = this.messagePushTemplateService.updateRecord(templateRequest);
+        RedisUtils.del(RedisConstants.MESSAGE_PUSH_TEMPLATE);
         return new AdminResult<>(response);
     }
 
@@ -190,6 +234,7 @@ public class MessagePushTemplateController extends BaseController {
         List<Integer> recordList = JSONArray.parseArray(ids, Integer.class);
         MessagePushTemplateResponse response = messagePushTemplateService.deleteAction(recordList);
         if (response.getCount() > 0) {
+            RedisUtils.del(RedisConstants.MESSAGE_PUSH_TEMPLATE);
             return new AdminResult<>(response);
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
@@ -220,6 +265,7 @@ public class MessagePushTemplateController extends BaseController {
             if (!Response.isSuccess(tagResponse)) {
                 return new AdminResult<>(FAIL, tagResponse.getMessage());
             }
+            RedisUtils.del(RedisConstants.MESSAGE_PUSH_TEMPLATE);
             return new AdminResult<>(tagResponse);
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
@@ -240,7 +286,7 @@ public class MessagePushTemplateController extends BaseController {
         if (response.getCount() > 0) {
             String message = "标签重复";
             response.setMessage(message);
-            return new AdminResult(FAIL,response.getMessage());
+            return new AdminResult(FAIL, response.getMessage());
         }
         return new AdminResult<>(response);
     }
@@ -258,6 +304,7 @@ public class MessagePushTemplateController extends BaseController {
         }
         return new AdminResult<>(response);
     }
+
     @Autowired
     private FileUpLoadUtil fileUpLoadUtil;
 
@@ -279,6 +326,7 @@ public class MessagePushTemplateController extends BaseController {
 
     /**
      * 画面校验
+     *
      * @param request
      * @return
      */
@@ -324,7 +372,7 @@ public class MessagePushTemplateController extends BaseController {
             }
         }
 
-       return message;
+        return message;
     }
 
 

@@ -10,6 +10,7 @@ import com.hyjf.admin.service.MessagePushErrorService;
 import com.hyjf.admin.service.MessagePushHistoryService;
 import com.hyjf.am.response.admin.MessagePushErrorResponse;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
+import com.hyjf.am.vo.admin.AdminAccountDetailDataRepairVO;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -70,20 +71,21 @@ public class MessagePushErrorController extends BaseController {
             //返回状态
             response.setCount(count);
         }catch (Exception e){
+            e.printStackTrace();
             return new AdminResult(FAIL, FAIL_DESC);
         }
         return new AdminResult(response);
     }
 
-    @PostMapping("/update")
-    @ApiOperation(value = "数据修改 APP消息推送 异常处理", httpMethod = "POST", notes = "数据修改 APP消息推送 异常处理")
-    public AdminResult update(@RequestParam("id") String id) {
+    @PutMapping("/update")
+    @ApiOperation(value = "重发 APP消息推送 异常处理", httpMethod = "PUT", notes = "重发 APP消息推送 异常处理")
+    public AdminResult update(@RequestBody AdminAccountDetailDataRepairVO requestParam) {
         MessagePushErrorResponse response = new MessagePushErrorResponse();
         try {
             // 重发此消息
-            MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(id);
+            MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(requestParam.getId());
             //推送极光消息（暂不开启）
-            //this.messagePushErrorService.sendMessage(msg);
+            this.messagePushErrorService.sendMessage(msg);
         }catch (Exception e){
             return new AdminResult(FAIL, FAIL_DESC);
         }

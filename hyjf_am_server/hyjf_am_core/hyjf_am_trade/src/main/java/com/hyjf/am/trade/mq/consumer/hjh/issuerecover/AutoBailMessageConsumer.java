@@ -93,12 +93,12 @@ public class AutoBailMessageConsumer extends Consumer {
                 BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
                 try {
 
-                    // 自动审核保证金
-                    logger.info(borrow.getBorrowNid()+" 开始自动审核保证金 "+ borrowInfo.getInstCode());
                     if(borrow == null){
                         logger.info(borrow.getBorrowNid()+" 该资产在表里不存在！！");
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
+                    // 自动审核保证金
+                    logger.info(borrow.getBorrowNid()+" 开始自动审核保证金 "+ borrowInfo.getInstCode());
 
                     // redis 放重复检查
                     String redisKey = "borrowbail:" + borrowInfo.getInstCode()+borrow.getBorrowNid();
@@ -144,9 +144,11 @@ public class AutoBailMessageConsumer extends Consumer {
             } catch (Exception e) {
                 logger.error("自动审核保证金异常！",e);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } finally {
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
+            // finally中最好不要用return
+            /*finally {
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            }*/
         }
     }
 }

@@ -6,16 +6,13 @@ import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.BankCardResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
-import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -96,23 +93,6 @@ public class AmUserClientImpl implements AmUserClient {
 	public HjhUserAuthVO getHjhUserAuthVO(Integer userId) {
 		HjhUserAuthResponse response = restTemplate
 				.getForEntity(urlBase + "user/getHjhUserAuthByUserId/" + userId, HjhUserAuthResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
-
-	/**
-	 * @param userId
-	 * @Description 根据userId查询开户信息
-	 * @Author sunss
-	 * @Version v0.1
-	 * @Date 2018/6/19 15:32
-	 */
-	@Override
-	public BankOpenAccountVO selectBankAccountById(Integer userId) {
-		String url = urlBase + "bankopen/selectById/" + userId;
-		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -455,25 +435,6 @@ public class AmUserClientImpl implements AmUserClient {
 
 
     @Override
-    public BestCouponListVO selectBestCoupon(MyCouponListRequest request) {
-        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/myBestCouponList", request,MyBestCouponListResponse.class).getBody();
-        if (Response.isSuccess(response)) {
-            return response.getResult();
-        }
-        return null;
-    }
-
-    @Override
-    public Integer countAvaliableCoupon(MyCouponListRequest request) {
-        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/countAvaliableCoupon",request, MyBestCouponListResponse.class).getBody();
-        if (Response.isSuccess(response)) {
-            return response.getCouponCount();
-        }
-        return null;
-    }
-
-
-    @Override
     public List<SpreadsUserVO> selectByUserId(Integer userId) {
         SpreadsUserResponse response = restTemplate
                 .getForEntity("http://AM-USER//am-user/user/selectspreadsuserbyuserid/" + userId,SpreadsUserResponse.class)
@@ -646,41 +607,14 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	/**
-	 * 通过account 获取用户开户信息
-	 * @param account
-	 * @return
-	 * @Author : huanghui
-	 */
-	@Override
-	public BankOpenAccountVO getBankOpenAccountByAccountId(String account) {
-		String url = urlBase + "bankopen/getBankOpenAccountByAccountId/" + account;
-		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
-
 	@Override
 	public Integer selectUserIdByUsrcustid(Long chinapnrUsrcustid) {
-		IntegerResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/chinapnr/selectUserIdByUsrcustid/"+chinapnrUsrcustid, IntegerResponse.class).getBody();
+		IntegerResponse response = restTemplate.getForEntity("http://AM-USER/am-user/chinapnr/selectUserIdByUsrcustid/"+chinapnrUsrcustid, IntegerResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResultInt();
 		}
 		return 0;
 	}
-
-    @Override
-    public BankOpenAccountVO getBankOpenAccount(String accountId) {
-        BankOpenAccountResponse response = restTemplate.getForEntity(
-                "http://AM-USER/am-user/bankopen/getBankOpenAccountByAccountId/" + accountId,
-				BankOpenAccountResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
-        }
-        return null;
-    }
 
 	/**
 	 * 获取用户account信息
@@ -707,25 +641,37 @@ public class AmUserClientImpl implements AmUserClient {
         return null;
     }
 
+	/**
+	 * @param userId
+	 * @Description 根据userId查询开户信息
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/19 15:32
+	 */
 	@Override
-	public BankOpenAccountVO selectById(int userId) {
-		BankOpenAccountResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
+	public BankOpenAccountVO selectBankAccountById(Integer userId) {
+		String url = urlBase + "bankopen/selectById/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
 		return null;
 	}
 
-	@Override
-	public BankOpenAccountVO selectByAccountId(String accountId) {
-		BankOpenAccountResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/bankopen/selectByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
+    /**
+     * 根据accounId获取开户信息
+     * @param accountId
+     * @return
+     */
+    @Override
+    public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
+        BankOpenAccountResponse response = restTemplate
+                .getForEntity(userService+"/userManager/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
 
     @Override
     public UserVO getUser(String userName) {
@@ -774,21 +720,6 @@ public class AmUserClientImpl implements AmUserClient {
 				.getForEntity(userService+"/user/getHjhUserAuthByUserId/"+userId, HjhUserAuthResponse.class)
 				.getBody();
 		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
-
-	/**
-	 * 根据accounId获取开户信息
-	 * @param accountId
-	 * @return
-	 */
-	@Override
-	public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
-		BankOpenAccountResponse response = restTemplate
-				.getForEntity(userService+"/userManager/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;

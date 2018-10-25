@@ -40,8 +40,7 @@ public class SubmissionsController {
         int count = submissionsService.queryTotal(form);
         if(count>0){
             Paginator paginator = new Paginator(form.getCurrPage(), count,form.getPageSize());
-            List<SubmissionsCustomizeVO> recordList = submissionsService.queryRecordList(form,paginator.getOffset(), paginator.getLimit());
-            List<SubmissionsCustomizeVO> list = CommonUtils.convertBeanList(recordList, SubmissionsCustomizeVO.class);
+            List<SubmissionsCustomizeVO> list = submissionsService.queryRecordList(form,paginator.getOffset(), paginator.getLimit());
             response.setResultList(list);
             response.setRecordTotal(count);
         }

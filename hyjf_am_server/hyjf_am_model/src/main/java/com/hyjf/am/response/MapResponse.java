@@ -3,6 +3,9 @@
  */
 package com.hyjf.am.response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +16,8 @@ import java.util.Map;
  * @version MapResponse, v0.1 2018/7/10 18:22
  */
 public class MapResponse extends Response{
+    private static Logger logger = LoggerFactory.getLogger(MapResponse.class);
+
     Map<String, Object> resultMap;
 
     public MapResponse() {
@@ -37,9 +42,11 @@ public class MapResponse extends Response{
         }
         Map<String, Object> bigDecimalMap = new HashMap<String, Object>();
         for (Map.Entry<String, Object> entry : this.resultMap.entrySet()) {
+            logger.info("sssss"+entry.toString());
             if (entry.getValue() == null){
                 bigDecimalMap.put(entry.getKey(), null);
             }else if (entry.getValue().getClass().getName().equals("java.lang.String")){
+                logger.info("sssss"+entry.getValue().toString());
                 bigDecimalMap.put(entry.getKey(), new BigDecimal(entry.getValue().toString()));
             }else{
                 throw new RuntimeException("resultMap的元素类型必须是String且是数字，不然会失精度。");

@@ -32,6 +32,7 @@ public class BidApplyQueryServiceImpl extends BaseAdminServiceImpl implements Bi
 		JSONObject result = new JSONObject();
 		if(StringUtils.isEmpty(form.getAccountId()) && StringUtils.isEmpty(form.getOrgOrderId())){
 			result.put("error", "请输入电子账号和原订单号！");
+			result.put("status", "99");
 			return result;
 		}
 		//根据电子账户查询用户ID
@@ -47,6 +48,7 @@ public class BidApplyQueryServiceImpl extends BaseAdminServiceImpl implements Bi
 		//接口返回对象为空
 		if(Validator.isNull(resultBean)){
 			result.put("msg", "投资人投标申请查询"+"接口调用失败。");
+			result.put("status", "99");
 			return result;
 		}
 		//Json显示用去null
@@ -99,7 +101,7 @@ public class BidApplyQueryServiceImpl extends BaseAdminServiceImpl implements Bi
 		resultBean.setBonusAmount(srchBonusAmount);
 		//接口返回对象完全返回页面
 		result = (JSONObject)JSON.toJSON(resultBean);
-		result.put("success", "0");
+		result.put("status", "000");
 		result.put("msg", "投资人投标申请查询"+"接口调用成功。");
 		return result;
 	}

@@ -4,14 +4,14 @@
 
 	<sql id="Where_Clause">
 		<where>
-			<if test="adminUserName != null and adminUserName !=''">
-				AND a.admin_user_name LIKE #{adminUserName,jdbcType=VARCHAR}
+			<if test="adminUserNameSrch != null and adminUserNameSrch !=''">
+				AND a.admin_user_name LIKE #{adminUserNameSrch,jdbcType=VARCHAR}
 			</if>
-			<if test="adminTrueName != null and adminTrueName != ''">
-				AND b.truename LIKE  #{adminTrueName,jdbcType=VARCHAR}
+			<if test="adminTrueNameSrch != null and adminTrueNameSrch != ''">
+				AND b.truename LIKE  #{adminTrueNameSrch,jdbcType=VARCHAR}
 			</if>
-			<if test="keyCode != null and keyCode !=''">
-				AND a.key_code = #{keyCode,jdbcType=VARCHAR}
+			<if test="keyCodeSrch != null and keyCodeSrch !=''">
+				AND a.key_code = #{keyCodeSrch,jdbcType=VARCHAR}
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
 				AND a.create_time <![CDATA[>=]]> #{timeStartSrch}
@@ -53,7 +53,7 @@
 		<include refid="Where_Clause" />
 		ORDER BY
 		a.create_time DESC
-		<if test=" limitStart > 0 " >
+		<if test=" limitStart >= 0 " >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>

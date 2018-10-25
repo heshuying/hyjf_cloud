@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.admin.finance.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
 import com.hyjf.am.resquest.admin.SubCommissionRequest;
@@ -110,9 +109,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
     @Override
     public List<SubCommission> searchSubCommissionList(SubCommissionRequest request) {
         SubCommissionExample example = convertExample(request);
-        List<SubCommission> subCommissionList = subCommissionMapper.selectByExample(example);
-        logger.info(JSON.toJSONString(subCommissionList));
-        return subCommissionList;
+        return subCommissionMapper.selectByExample(example);
     }
 
     @Override

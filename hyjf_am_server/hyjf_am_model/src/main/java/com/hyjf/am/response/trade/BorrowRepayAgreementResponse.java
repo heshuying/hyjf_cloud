@@ -1,22 +1,21 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.BorrowRepayAgreementVO;
+import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
 
 /**
  * @version ApplyAgreementResponse, v0.1 2018/8/10 14:22
  * @Author: Zha Daojian
  */
-public class BorrowRepayAgreementResponse extends Response<BorrowRepayAgreementVO> {
+public class BorrowRepayAgreementResponse extends Response<BorrowRepayAgreementCustomizeVO> {
 
-    private Integer count;
+    private int count;
 
-    public Integer getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(int count) {
         this.count = count;
     }
-
 }

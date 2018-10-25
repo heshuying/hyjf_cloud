@@ -8,7 +8,6 @@ import com.hyjf.am.trade.service.task.issuerecover.AutoIssueMessageService;
 import com.hyjf.common.bean.RedisBorrow;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -263,9 +262,9 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
 
 
         redisAdd(RedisConstants.HJH_PLAN+planNid,borrow.getAccount().toString());//增加redis相应计划可投金额
-        if (!CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
-            redisSubstrack(RedisConstants.CAPITAL_TOPLIMIT_+borrowInfo.getInstCode(),borrow.getAccount().toString());//减少风险保证金可投金额
-        }
+//        if (!CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
+//            redisSubstrack(RedisConstants.CAPITAL_TOPLIMIT_+borrowInfo.getInstCode(),borrow.getAccount().toString());//减少风险保证金可投金额
+//        }
         RedisBorrow redisBorrow = new RedisBorrow();
         redisBorrow.setBorrowNid(borrow.getBorrowNid());
         redisBorrow.setBorrowAccountWait(borrow.getAccount());

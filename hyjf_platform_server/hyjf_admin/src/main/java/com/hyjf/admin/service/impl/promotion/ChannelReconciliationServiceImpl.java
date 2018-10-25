@@ -34,7 +34,7 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
         map.put("sourceType", sourceType);
         UtmResponse response = amUserClient.getByPageList(map);
         if (response != null) {
-            return response.getResultList();
+            return response.getResultListS();
         }
         return null;
     }

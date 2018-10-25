@@ -52,6 +52,14 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     }
 
     @Override
+    public List<UtmPlatVO> getMyUtmPlat() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("delFlag",CustomConstants.FLAG_NORMAL);
+        map.put("sourceType",0);
+        return utmRegCustomizeMapper.getUtmPlat(map);
+    }
+
+    @Override
     public UtmChannelVO getUtmByUtmId(String utmId) {
         return utmRegCustomizeMapper.getUtmByUtmId(utmId);
     }
@@ -143,11 +151,53 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public List<ChannelReconciliationVO> selectPcChannelReconciliationRecord(ChannelReconciliationRequest request) {
+        if (request.getInvestStartTime() != null) {
+            Date investStartTime = request.getInvestStartTime();
+            investStartTime = GetDate.getSomeDayStart(investStartTime);
+            request.setInvestStartTime(investStartTime);
+        }
+        if (request.getInvestEndTime() != null) {
+            Date investEndTime = request.getInvestEndTime();
+            investEndTime = GetDate.getSomeDayEnd(investEndTime);
+            request.setInvestEndTime(investEndTime);
+        }
+        if (request.getRegistStartTime() != null) {
+            Date registStartTime = request.getRegistStartTime();
+            registStartTime = GetDate.getSomeDayStart(registStartTime);
+            request.setRegistStartTime(registStartTime);
+        }
+        if (request.getRegistEndTime() != null) {
+            Date registEndTime = request.getRegistEndTime();
+            registEndTime = GetDate.getSomeDayEnd(registEndTime);
+            request.setRegistEndTime(registEndTime);
+        }
+
         return utmRegCustomizeMapper.selectPcChannelReconciliationRecord(request);
     }
 
     @Override
     public List<ChannelReconciliationVO> selectPcChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        if (request.getInvestStartTime() != null) {
+            Date investStartTime = request.getInvestStartTime();
+            investStartTime = GetDate.getSomeDayStart(investStartTime);
+            request.setInvestStartTime(investStartTime);
+        }
+        if (request.getInvestEndTime() != null) {
+            Date investEndTime = request.getInvestEndTime();
+            investEndTime = GetDate.getSomeDayEnd(investEndTime);
+            request.setInvestEndTime(investEndTime);
+        }
+        if (request.getRegistStartTime() != null) {
+            Date registStartTime = request.getRegistStartTime();
+            registStartTime = GetDate.getSomeDayStart(registStartTime);
+            request.setRegistStartTime(registStartTime);
+        }
+        if (request.getRegistEndTime() != null) {
+            Date registEndTime = request.getRegistEndTime();
+            registEndTime = GetDate.getSomeDayEnd(registEndTime);
+            request.setRegistEndTime(registEndTime);
+        }
+
         return utmRegCustomizeMapper.selectPcChannelReconciliationRecordHjh(request);
     }
 
@@ -193,11 +243,52 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public List<ChannelReconciliationVO> selectAppChannelReconciliationRecord(ChannelReconciliationRequest request) {
+        if (request.getInvestStartTime() != null) {
+            Date investStartTime = request.getInvestStartTime();
+            investStartTime = GetDate.getSomeDayStart(investStartTime);
+            request.setInvestStartTime(investStartTime);
+        }
+        if (request.getInvestEndTime() != null) {
+            Date investEndTime = request.getInvestEndTime();
+            investEndTime = GetDate.getSomeDayEnd(investEndTime);
+            request.setInvestEndTime(investEndTime);
+        }
+        if (request.getRegistStartTime() != null) {
+            Date registStartTime = request.getRegistStartTime();
+            registStartTime = GetDate.getSomeDayStart(registStartTime);
+            request.setRegistStartTime(registStartTime);
+        }
+        if (request.getRegistEndTime() != null) {
+            Date registEndTime = request.getRegistEndTime();
+            registEndTime = GetDate.getSomeDayEnd(registEndTime);
+            request.setRegistEndTime(registEndTime);
+        }
         return utmRegCustomizeMapper.selectAppChannelReconciliationRecord(request);
     }
 
     @Override
     public List<ChannelReconciliationVO> selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        if (request.getInvestStartTime() != null) {
+            Date investStartTime = request.getInvestStartTime();
+            investStartTime = GetDate.getSomeDayStart(investStartTime);
+            request.setInvestStartTime(investStartTime);
+        }
+        if (request.getInvestEndTime() != null) {
+            Date investEndTime = request.getInvestEndTime();
+            investEndTime = GetDate.getSomeDayEnd(investEndTime);
+            request.setInvestEndTime(investEndTime);
+        }
+        if (request.getRegistStartTime() != null) {
+            Date registStartTime = request.getRegistStartTime();
+            registStartTime = GetDate.getSomeDayStart(registStartTime);
+            request.setRegistStartTime(registStartTime);
+        }
+        if (request.getRegistEndTime() != null) {
+            Date registEndTime = request.getRegistEndTime();
+            registEndTime = GetDate.getSomeDayEnd(registEndTime);
+            request.setRegistEndTime(registEndTime);
+        }
+
         return utmRegCustomizeMapper.selectAppChannelReconciliationRecordHjh(request);
     }
 
@@ -220,6 +311,24 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
             utmMapper.insertSelective(utm);
         }
 
+    }
+
+    /**
+     *渠道管理检查编号唯一性
+     * @author cwyang
+     * @param sourceId
+     * @return
+     */
+    @Override
+    public Integer sourceIdIsExists(Integer sourceId) {
+        UtmPlatExample example = new UtmPlatExample();
+        UtmPlatExample.Criteria cra = example.createCriteria();
+        cra.andSourceIdEqualTo(sourceId);
+        List<UtmPlat> utmPlatList = this.utmPlatMapper.selectByExample(example);
+        if (utmPlatList != null && utmPlatList.size() > 0) {
+            return 1;
+        }
+        return 0;
     }
 
     /**

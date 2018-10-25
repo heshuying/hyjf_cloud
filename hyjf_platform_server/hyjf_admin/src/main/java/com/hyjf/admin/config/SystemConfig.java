@@ -6,6 +6,37 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SystemConfig {
+
+    @Value("${file.domain.url}")
+    public String fileDomainUrl;
+
+    @Value("${file.upload.temp.path}")
+    public String fileUplodeTempPath;
+
+    @Value("${hyjf.ftp.ip}")
+    public String ftpIp;
+
+    @Value("${hyjf.ftp.port}")
+    public String ftpPort;
+
+    @Value("${hyjf.ftp.basepath.pdf}")
+    public String ftpBasePath;
+
+    @Value("${hyjf.ftp.password}")
+    public String ftpPassword;
+
+    @Value("${hyjf.ftp.username}")
+    public String ftpUsername;
+
+    @Value("${hyjf.ftp.url}")
+    public String ftpDomain;
+
+    @Value("${hyjf.ftp.basepath.img}")
+    private String hyjfFtpBasepathImg;
+
+    @Value("${hyjf.ftp.basepath.pdf}")
+    private String hyjfFtpBasepathPdf;
+
     @Value("${hyjf.web.host}")
     public String webHost;
 
@@ -112,9 +143,82 @@ public class SystemConfig {
 
     @Value("${hyjf.seal.operate}")
     private String sealOperate;
+    @Value("${hyjf.defaultRowMaxCount}")
+    private String defaultRowMaxCount;
 
+    public String getFileDomainUrl() {
+        return fileDomainUrl;
+    }
 
-    public String getAdminFrontHost() {
+    public void setFileDomainUrl(String fileDomainUrl) {
+        this.fileDomainUrl = fileDomainUrl;
+    }
+
+    public String getFileUplodeTempPath() {
+        return fileUplodeTempPath;
+    }
+
+    public void setFileUplodeTempPath(String fileUplodeTempPath) {
+        this.fileUplodeTempPath = fileUplodeTempPath;
+    }
+
+    public String getFtpIp() {
+        return ftpIp;
+    }
+
+    public void setFtpIp(String ftpIp) {
+        this.ftpIp = ftpIp;
+    }
+
+    public String getFtpPort() {
+        return ftpPort;
+    }
+
+    public void setFtpPort(String ftpPort) {
+        this.ftpPort = ftpPort;
+    }
+
+    public String getFtpBasePath() {
+        return ftpBasePath;
+    }
+
+    public void setFtpBasePath(String ftpBasePath) {
+        this.ftpBasePath = ftpBasePath;
+    }
+
+    public String getFtpPassword() {
+        return ftpPassword;
+    }
+
+    public void setFtpPassword(String ftpPassword) {
+        this.ftpPassword = ftpPassword;
+    }
+
+    public String getFtpUsername() {
+        return ftpUsername;
+    }
+
+    public void setFtpUsername(String ftpUsername) {
+        this.ftpUsername = ftpUsername;
+    }
+
+    public String getFtpDomain() {
+        return ftpDomain;
+    }
+
+    public void setFtpDomain(String ftpDomain) {
+        this.ftpDomain = ftpDomain;
+    }
+
+    public String getDefaultRowMaxCount() {
+		return defaultRowMaxCount;
+	}
+
+	public void setDefaultRowMaxCount(String defaultRowMaxCount) {
+		this.defaultRowMaxCount = defaultRowMaxCount;
+	}
+
+	public String getAdminFrontHost() {
         return adminFrontHost;
     }
 
@@ -394,5 +498,21 @@ public class SystemConfig {
 
     public void setHYJF_HANDRECHARGE_PASSWORD(String HYJF_HANDRECHARGE_PASSWORD) {
         this.HYJF_HANDRECHARGE_PASSWORD = HYJF_HANDRECHARGE_PASSWORD;
+    }
+
+    public String getHyjfFtpBasepathImg() {
+        return hyjfFtpBasepathImg;
+    }
+
+    public void setHyjfFtpBasepathImg(String hyjfFtpBasepathImg) {
+        this.hyjfFtpBasepathImg = hyjfFtpBasepathImg;
+    }
+
+    public String getHyjfFtpBasepathPdf() {
+        return hyjfFtpBasepathPdf;
+    }
+
+    public void setHyjfFtpBasepathPdf(String hyjfFtpBasepathPdf) {
+        this.hyjfFtpBasepathPdf = hyjfFtpBasepathPdf;
     }
 }

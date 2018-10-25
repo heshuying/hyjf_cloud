@@ -2,8 +2,9 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.WhereaboutsPageConfig;
 import com.hyjf.am.user.dao.model.auto.WhereaboutsPageConfigExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface WhereaboutsPageConfigMapper {
     int countByExample(WhereaboutsPageConfigExample example);

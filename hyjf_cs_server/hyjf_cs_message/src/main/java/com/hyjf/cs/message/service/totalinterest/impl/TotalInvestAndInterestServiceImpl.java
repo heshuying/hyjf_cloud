@@ -8,7 +8,8 @@ import com.hyjf.cs.message.bean.ic.TotalInvestAndInterestEntity;
 import com.hyjf.cs.message.client.AmTradeClient;
 import com.hyjf.cs.message.mongo.ic.TotalInvestAndInterestMongoDao;
 import com.hyjf.cs.message.service.totalinterest.TotalInvestAndInterestService;
-import org.springframework.beans.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
  */
 @Service
 public class TotalInvestAndInterestServiceImpl implements TotalInvestAndInterestService {
+    Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private TotalInvestAndInterestMongoDao mongoDao;
     @Autowired
@@ -29,11 +31,19 @@ public class TotalInvestAndInterestServiceImpl implements TotalInvestAndInterest
     @Override
     public void updateData() {
         TotalInvestAndInterestVO vo = amTradeClient.getTotalInvestAndInterest();
-        if (vo != null) {
-            TotalInvestAndInterestEntity entity = new TotalInvestAndInterestEntity();
-            BeanUtils.copyProperties(vo, entity);
-            mongoDao.save(entity);
+        TotalInvestAndInterestEntity entity = mongoDao.findOne(new Query());
+        // 第一次插入
+        if (entity == null) {
+            entity = new TotalInvestAndInterestEntity();
         }
+        entity.setTotalInvestAmount(vo.getTotalInvestAmount());
+        entity.setTotalInvestNum(vo.getTotalInvestNum());
+        entity.setTotalInterestAmount(vo.getTotalInterestAmount());
+        entity.setHjhTotalInvestAmount(vo.getHjhTotalInvestAmount());
+        entity.setHjhTotalInvestNum(vo.getHjhTotalInvestNum());
+        entity.setHjhTotalInterestAmount(vo.getHjhTotalInterestAmount());
+        logger.info("待更新数据: {}", entity);
+        mongoDao.save(entity);
     }
 
 

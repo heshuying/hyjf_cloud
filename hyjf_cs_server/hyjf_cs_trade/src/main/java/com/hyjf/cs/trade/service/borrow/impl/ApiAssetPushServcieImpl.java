@@ -70,7 +70,8 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         params.put("assetId", hjhPlanAsset.getAssetId());
         params.put("instCode", hjhPlanAsset.getInstCode());
         try {
-            autoSendProducer.messageSend(new MessageContent(MQConstant.HJH_AUTO_ISSUERECOVER_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+            //modify by liushouyi 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+            autoSendProducer.messageSendDelay(new MessageContent(MQConstant.HJH_AUTO_ISSUERECOVER_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
         } catch (MQException e) {
             logger.error("自动录标发送消息失败...", e);
         }
@@ -206,10 +207,25 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 }
 
                 // 信批需求(资产只有个人,若第三方不传则为默认值插入资产表中) start
-                // 年收入
-                if (StringUtils.isBlank(pushBean.getAnnualIncome())) {
-                    pushBean.setAnnualIncome("10万以内");
+//                // 年收入
+//                if (StringUtils.isBlank(pushBean.getAnnualIncome())) {
+//                    pushBean.setAnnualIncome("10万以内");
+//                }
+//
+                //update by wj 2018-05-24 年收入，月收入非空校验 start
+                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getAnnualIncome())){
+                    pushBean.setRetCode("ZT000013");
+                    pushBean.setRetMsg("年收入为空");
+                    continue;
                 }
+
+                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getMonthlyIncome())){
+                    pushBean.setRetCode("ZT000014");
+                    pushBean.setRetMsg("月收入为空");
+                    continue;
+                }
+                //update by wj 2018-05-24 年收入，月收入非空校验 end
+
                 // 征信报告逾期情况
                 if (StringUtils.isBlank(pushBean.getOverdueReport())) {
                     pushBean.setOverdueReport("暂无数据");

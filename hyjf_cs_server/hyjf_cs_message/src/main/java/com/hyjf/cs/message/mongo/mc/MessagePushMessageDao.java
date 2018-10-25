@@ -7,12 +7,11 @@ import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,7 +63,7 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
         int limitEnd = limitStart + pageSize;
         query.addCriteria(criteria);
         query.skip(limitStart).limit(limitEnd);
-        query.with(new Sort(Sort.Direction.DESC, "createTime"));
+        query.with(new Sort(Sort.Direction.DESC, "lastUpdateTime"));
         return mongoTemplate.find(query, getEntityClass());
     }
 

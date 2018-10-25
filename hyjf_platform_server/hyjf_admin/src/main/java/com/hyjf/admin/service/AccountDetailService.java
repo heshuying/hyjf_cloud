@@ -55,4 +55,12 @@ public interface AccountDetailService {
      * @Date
      */
     List<AccountTradeVO> selectTradeTypes();
+
+    /**
+     * 交易明细修复
+     * @param userId
+     * @param accountListId
+     * @return
+     */
+    String repayDataRepair(Integer userId, Integer accountListId);
 }

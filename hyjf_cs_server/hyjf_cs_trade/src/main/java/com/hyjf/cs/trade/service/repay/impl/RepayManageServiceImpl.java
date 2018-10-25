@@ -218,6 +218,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         if(borrow == null){
             throw  new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
+        repayBean.setRepayUserId(user.getUserId());
 
         boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(),300);
         if (!tranactionSetFlag) {//设置失败
@@ -350,10 +351,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      * @date: 2018/7/10
      */
     @Override
-    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean){
+    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay){
         RepayRequestUpdateRequest requestBean = new RepayRequestUpdateRequest();
         requestBean.setRepayBeanData(JSON.toJSONString(repayBean));
         requestBean.setBankCallBeanData(JSON.toJSONString(bankCallBean));
+        requestBean.setAllRepay(isAllRepay);
 
         return amTradeClient.repayRequestUpdate(requestBean);
     }

@@ -46,6 +46,7 @@ public class UtmController extends BaseController {
         List<UtmVO> pageList = utmService.getByPageList(map);
         if (pageList != null) {
             response.setResultList(pageList);
+            response.setResultListS(pageList);
         }
         return response;
     }
@@ -86,6 +87,19 @@ public class UtmController extends BaseController {
     public UtmResponse getUtmPlat(@PathVariable String sourceId) {
         UtmResponse response = new UtmResponse();
         List<UtmPlatVO> utmPlatList = utmService.getUtmPlat(sourceId);
+        response.setResultList(utmPlatList);
+        return response;
+    }
+
+    /**
+     *  取pc渠道
+     * @param
+     * @return
+     */
+    @RequestMapping("/getmyutmplat")
+    public UtmResponse getMyUtmPlat() {
+        UtmResponse response = new UtmResponse();
+        List<UtmPlatVO> utmPlatList = utmService.getMyUtmPlat();
         response.setResultList(utmPlatList);
         return response;
     }
@@ -334,9 +348,23 @@ public class UtmController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/insert_utm_list")
+    @RequestMapping("/insertutmlist")
     public UtmResponse insertUtmList(@RequestBody ChannelRequest request) {
         utmService.insertUtmList(request);
         return new UtmResponse();
+    }
+
+    /**
+     *渠道管理检查编号唯一性
+     * @author cwyang
+     * @param sourceId
+     * @return
+     */
+    @RequestMapping("/sourceIdIsExists/{sourceId}")
+    public UtmResponse sourceIdIsExists(@PathVariable Integer sourceId) {
+        UtmResponse response = new UtmResponse();
+        Integer total = utmService.sourceIdIsExists(sourceId);
+        response.setRecordTotal(total);
+        return response;
     }
 }

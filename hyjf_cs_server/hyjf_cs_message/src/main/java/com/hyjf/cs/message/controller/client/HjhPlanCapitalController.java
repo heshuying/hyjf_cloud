@@ -82,6 +82,7 @@ public class HjhPlanCapitalController extends BaseController {
                         }
                     }
                 }
+                logger.info("汇计划资本预估统计(每日)任务 更新前一天的汇计划资本统计 OK ");
 
                 // 更新当日到后9日的汇计划资本预估
                 List<HjhPlanCapitalVO> proformaList = this.hjhPlanCapitalService.getPlanCapitalForProformaList(nowDate, date9);
@@ -101,6 +102,7 @@ public class HjhPlanCapitalController extends BaseController {
                         }
                     }
                 }
+                logger.info("汇计划资本预估统计(每日)任务 更新当日到后9日的汇计划资本预估 OK ");
 
                 // 更新前一天的汇计划日交易量
                 List<HjhAccountBalanceVO> hjhAccountBalanceList = this.hjhAccountBalanceService.getHjhAccountBalanceForActList(yDate);
@@ -118,6 +120,8 @@ public class HjhPlanCapitalController extends BaseController {
                         }
                     }
                 }
+                logger.info("汇计划资本预估统计(每日)任务 更新前一天的汇计划日交易量 OK ");
+
             } catch (Exception e) {
                 logger.error("汇计划资本预估统计(每日)任务 失败... ");
                 e.printStackTrace();

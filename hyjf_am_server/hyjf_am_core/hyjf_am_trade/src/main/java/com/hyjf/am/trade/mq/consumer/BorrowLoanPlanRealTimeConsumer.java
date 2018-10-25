@@ -100,7 +100,7 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 	            	return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	            }
 	        } catch (Exception e1) {
-	            e1.printStackTrace();
+	            logger.error("计划放款系统异常", e1);
 	            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	        }
 	        String borrowNid = borrowApicron.getBorrowNid();// 借款编号
@@ -147,17 +147,26 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 						}
 
 						// 发送mq到生成互金合同要素信息
-						try {
-							JSONObject param = new JSONObject();
-							param.put("borrowNid", borrowApicron.getBorrowNid());
-							nifaContractEssenceMessageProducer.messageSend(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)));
-						} catch (Exception e) {
-							logger.error("发送mq到生成互金合同要素信息失败,放款标的:" + borrowApicron.getBorrowNid());
-						}
+						sendMQ(borrowApicron);
 					}
+				}else if(loanStatus == CustomConstants.BANK_BATCH_STATUS_SENDED) {
+					//放款成功
+					// 进行后续操作
+					BankCallBean requestLoanBean = new BankCallBean();
+					boolean batchDetailFlag = realTimeBorrowLoanPlanService.planLoanBatchUpdateDetails(borrowApicron,requestLoanBean);
+					if (!batchDetailFlag) {
+						throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
+					}
+
+					// 发送mq到生成互金合同要素信息
+					sendMQ(borrowApicron);
+					
+				}else {
+					logger.error("计划标的编号：" + borrowNid + "，不是放款状态 "+ borrowApicron.getStatus());
 				}
+				
 			} catch (Exception e) {
-				e.printStackTrace();
+	            logger.error("计划放款系统异常", e);
 				StringBuffer sbError = new StringBuffer();// 错误信息
 				sbError.append(e.getMessage()).append("<br/>");
 				String online = "生产环境";// 取得是否线上
@@ -187,11 +196,25 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 	            logger.error("放款请求系统异常....");
 	            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 			}
-			logger.info("--------------------放款任务结束，项目编号：" + borrowNid + "=============");
+			logger.info("----------------计划放款任务结束，项目编号：" + borrowNid + "=============");
 			RedisUtils.del(redisKey);
-			logger.info("----------------------------计划放款结束--------------------------------");
+			logger.info("---------------------计划放款结束--------------------------------");
 
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+		}
+
+		/**
+		 * 推送放款成功消息
+		 * @param borrowApicron
+		 */
+		private void sendMQ(BorrowApicron borrowApicron) {
+			try {
+				JSONObject param = new JSONObject();
+				param.put("borrowNid", borrowApicron.getBorrowNid());
+				nifaContractEssenceMessageProducer.messageSend(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)));
+			} catch (Exception e) {
+				logger.error("发送mq到生成互金合同要素信息失败,放款标的:" + borrowApicron.getBorrowNid());
+			}
 		}
 	}
 

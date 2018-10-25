@@ -8,12 +8,14 @@ import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.ManualReverseAddRequest;
 import com.hyjf.am.resquest.admin.ManualReverseCustomizeRequest;
 import com.hyjf.am.vo.admin.ManualReverseCustomizeVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -54,8 +56,9 @@ public class ManualReverseExceptionController extends BaseController {
      */
     @ApiOperation(value = "手动冲正更新", notes = "手动冲正更新")
     @PostMapping("/update_manualreverse")
-    public AdminResult manualReverse(@RequestBody ManualReverseAddRequest requestBean){
-
+    public AdminResult manualReverse(HttpServletRequest request, @RequestBody ManualReverseAddRequest requestBean){
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        requestBean.setLoginUserId(adminSystemVO.getId());
         // 请求参数校验
         boolean checkResult = manualReverseExceptionService.checkForManualReverse(requestBean);
         if(!checkResult){

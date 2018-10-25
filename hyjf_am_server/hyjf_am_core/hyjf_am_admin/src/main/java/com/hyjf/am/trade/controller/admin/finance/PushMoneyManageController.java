@@ -5,12 +5,15 @@ package com.hyjf.am.trade.controller.admin.finance;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
 import com.hyjf.am.trade.service.admin.finance.PushMoneyManageService;
 import com.hyjf.am.vo.trade.PushMoneyVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,7 @@ public class PushMoneyManageController extends BaseController {
     @Autowired
     private PushMoneyManageService pushMoneyManagerService;
 
+
     /**
      * 根据筛选条件查找(查找提成管理)
      *
@@ -49,6 +53,7 @@ public class PushMoneyManageController extends BaseController {
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
+        logger.info(request.getLimitStart() + "    " + request.getLimitEnd());
         if (pushMoneyTotal > 0) {
             List<PushMoneyCustomize> pushMoneyCustomizeList = pushMoneyManagerService.selectPushMoneyList(request);
             if (!CollectionUtils.isEmpty(pushMoneyCustomizeList)) {
@@ -140,6 +145,23 @@ public class PushMoneyManageController extends BaseController {
         int cnt = pushMoneyManagerService.updateTenderCommissionRecord(request);
         response.setCnt(cnt);
         response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+    /**
+     * 取得借款API表
+     * @param borrowNid
+     * @return
+     */
+    @GetMapping("/selectBorrowApicronListByBorrowNid/{borrowNid}")
+    public BorrowApicronResponse selectBorrowApicronListByBorrowNid(@PathVariable String borrowNid) {
+        BorrowApicronResponse response = new BorrowApicronResponse();
+        List<BorrowApicron> borrowApicronList = pushMoneyManagerService.selectBorrowApicronListByBorrowNid(borrowNid);
+        if (!CollectionUtils.isEmpty(borrowApicronList)) {
+            List<BorrowApicronVO> borrowApicronVoList = CommonUtils.convertBeanList(borrowApicronList,
+                    BorrowApicronVO.class);
+            response.setResultList(borrowApicronVoList);
+        }
         return response;
     }
 }

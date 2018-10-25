@@ -3,6 +3,9 @@ package com.hyjf.admin.service;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
+import com.hyjf.am.resquest.admin.DownloadAgreementRequest;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @version ApplyAgreementService, v0.1 2018/8/9 16:51
@@ -30,6 +33,13 @@ public interface ApplyAgreementService {
      * @date 2018/7/12 10:52
      */
     AdminResult generateContract(BorrowRepayAgreementRequest request);
+
+    /**
+     * 下载文件签署
+     * @author Zha Daojian
+     * @date 2018/7/12 10:52
+     */
+    AdminResult downloadAction(DownloadAgreementRequest request,HttpServletResponse response);
 
 
 }

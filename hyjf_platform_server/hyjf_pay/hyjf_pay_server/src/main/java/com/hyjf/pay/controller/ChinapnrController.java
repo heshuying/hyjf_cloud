@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
@@ -58,6 +58,10 @@ public class ChinapnrController extends BaseController {
     @Autowired
     ChinaPnrApiImpl chinaPnrApi;
 
+
+    @Autowired
+    private RestTemplate restTemplate;
+
     /**
      * 调用接口(页面)
      *
@@ -70,8 +74,11 @@ public class ChinapnrController extends BaseController {
     public Map<String,Object> callApi(@RequestBody ChinapnrBean bean) throws Exception {
         String methodName = "callApi";
         logger.info(THIS_CLASS, methodName, "[调用接口开始]");
-        //ModelAndView modelAndView = new ModelAndView("/chinapnr/chinapnr_send");
         Map<String,Object> result = new HashMap<>();
+        if(null==bean){
+            logger.info(THIS_CLASS, methodName, "bean值为空");
+            return null;
+        }
         try {
             // 参数转换成Map
             bean.convert();
@@ -87,11 +94,9 @@ public class ChinapnrController extends BaseController {
                 // 设置返回URL
                 if (Validator.isNotNull(bean.getRetUrl())) {
                     if (ChinaPnrConstant.CMDID_DIRECT_TRF_AUTH.equals(bean.get(ChinaPnrConstant.PARAM_CMDID))) {
-                       // bean.setRetUrl(ChinapnrUtil.getBindRetUrl());
-                        bean.setRetUrl(systemConfig.getChinapnrBindreturnUrl());
+                        //bean.setRetUrl(systemConfig.getChinapnrBindreturnUrl());
                     } else {
-                        //bean.setRetUrl(ChinapnrUtil.getRetUrl());
-                        bean.setRetUrl(systemConfig.getChinapnrReturnUrl());
+                       // bean.setRetUrl(systemConfig.getChinapnrReturnUrl());
                     }
                     bean.set(ChinaPnrConstant.PARAM_RETURL, bean.getRetUrl());
                 }
@@ -100,7 +105,6 @@ public class ChinapnrController extends BaseController {
                     ChinaPnrSignUtils.setUUID(bean, id);
                 }
                 // 得到接口API对象
-             //   PnrApi api = new ChinaPnrApiImpl();
                 Class<ChinaPnrApiImpl> c = ChinaPnrApiImpl.class;
                 Object obj = api;
                 // 取得该消息类型对应的bean
@@ -126,7 +130,7 @@ public class ChinapnrController extends BaseController {
             logger.error(THIS_CLASS, methodName, e);
             throw e;
         } finally {
-            logger.info(THIS_CLASS, methodName, "[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+            logger.info(THIS_CLASS, methodName, "[调用汇付接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         }
         return result;
     }
@@ -138,13 +142,19 @@ public class ChinapnrController extends BaseController {
      */
     @PostMapping(value = "/return")
     public ModelAndView result(@RequestBody ChinapnrBean bean) {
-
-        String methodName = "result";
-        logger.info(THIS_CLASS, methodName, "[交易完成后,回调开始]");
-        // 参数转换成Map
-        bean.convert();
         // 验签成功时, 跳转到各功能模块的回调URL
         ModelAndView modelAndView = new ModelAndView(CommonConstant.JSP_CHINAPNR_SEND);
+        String methodName = "result";
+        logger.info("[汇付交易完成后,回调开始]");
+        // 参数转换成Map
+        if(null==bean){
+            logger.info(THIS_CLASS, methodName, "bean不能为空");
+            modelAndView.setViewName(CommonConstant.JSP_CHINAPNR_RESULT);
+            modelAndView.addObject("content", "bean值为空<br>");
+            return modelAndView;
+        }
+        bean.convert();
+
         try {
             this.chinapnrService.insertChinapnrLog(bean, 0);
         } catch (Exception e) {
@@ -166,7 +176,6 @@ public class ChinapnrController extends BaseController {
             e.printStackTrace();
         }
         // 验签
-        //PnrApi api = new ChinaPnrApiImpl();
         ChinapnrBean result = api.verifyChinaPnr(bean);
         try {
             if (bean.getMerPriv() != null) {
@@ -255,9 +264,14 @@ public class ChinapnrController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/callback")
-    public String callBack(HttpServletRequest request, @RequestBody ChinapnrBean bean) {
+    public String callBack(@ModelAttribute ChinapnrBean bean) {
+        logger.info("汇付异步回调开始");
         String methodName = "callBack";
-        logger.info(THIS_CLASS, methodName, "[接收异步返回的消息开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        logger.info(THIS_CLASS, methodName, "[汇付接收异步返回的消息开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        if(null==bean){
+            logger.info("bean不能为空");
+            return null;
+        }
         bean.convert();
         // 写入汇付天下接口接收记录
         try {
@@ -281,7 +295,6 @@ public class ChinapnrController extends BaseController {
             }
         }
         // 验签
-        //PnrApi api = new ChinaPnrApiImpl();
         ChinapnrBean result = api.verifyChinaPnr(bean);
         try {
             if (bean.getMerPriv() != null) {
@@ -347,10 +360,10 @@ public class ChinapnrController extends BaseController {
                             // TODO: 2018/7/12 暂时没有，不处理
                             // 用户绑卡回调
                             if (ChinaPnrConstant.CMDID_USER_BIND_CARD.equals(bean.getCmdId())) {
-                               // callBackUrl = ChinaPnrPropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + "/bindCard/return";
                                 HttpDeal.post(callBackUrl, bean.getAllParams());
                             }
                         } else {
+                            logger.info("callBackUrl："+callBackUrl);
                             // 用户绑卡回调
                             if (ChinaPnrConstant.CMDID_USER_BIND_CARD.equals(bean.getCmdId())) {
                                 HttpDeal.post(callBackUrl, bean.getAllParams());
@@ -361,7 +374,7 @@ public class ChinapnrController extends BaseController {
                             }
                             // 提现异步回调
                             else if (ChinaPnrConstant.CMDID_CASH.equals(bean.getCmdId()) || ChinaPnrConstant.CMDID_CASH.equals(bean.getRespType())) {
-                                HttpDeal.post(callBackUrl, bean.getAllParams());
+                                restTemplate.postForEntity(callBackUrl, bean.getAllParams(), String.class).getBody();
                             }
                             // 开户异步回调
                             else if (ChinaPnrConstant.CMDID_USER_REGISTER.equals(bean.getCmdId())) {
@@ -406,12 +419,17 @@ public class ChinapnrController extends BaseController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/bindReturn")
     public ModelAndView bindResult(@RequestBody ChinapnrBean bean) {
+        ModelAndView modelAndView = new ModelAndView();
         // TODO: 2018/7/12 暂时没有，不处理
         String methodName = "result";
         logger.info(THIS_CLASS, methodName, "[交易完成后,回调开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         // 参数转换成Map
+        if(null==bean){
+            logger.info(THIS_CLASS, methodName, "bean为空");
+            modelAndView.addObject("content", "保存回调日志失败");
+            return modelAndView;
+        }
         bean.convert();
-        ModelAndView modelAndView = new ModelAndView();
         // 写入汇付天下接口接收记录
         try {
             this.chinapnrService.insertChinapnrLog(bean, 1);
@@ -422,7 +440,6 @@ public class ChinapnrController extends BaseController {
         // 发送状态(1:处理中)
         String status = ChinaPnrConstant.STATUS_SENDING;
         // 验签
-        //PnrApi api = new ChinaPnrApiImpl();
         ChinapnrBean result = api.verifyChinaPnr(bean);
         bean.convert();
         // 检证失败
@@ -437,7 +454,6 @@ public class ChinapnrController extends BaseController {
         }
         // 回调URL
         String callBackUrl = "";
-      //  String callBackUrl = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_WEB_HOST) + "/direct/bindUserReturn.do";
         // 验签成功时, 跳转到各功能模块的回调URL
         modelAndView = new ModelAndView(CommonConstant.JSP_CHINAPNR_SEND);
         if (result.isVerifyFlag() && Validator.isNotNull(callBackUrl)) {
@@ -466,6 +482,10 @@ public class ChinapnrController extends BaseController {
         logger.info(THIS_CLASS, methodName, "[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         String ret = "";
         String nowTime = GetDate.getServerDateTime(9, new Date());
+        if(null==bean){
+            logger.info(THIS_CLASS, methodName, "bean值为空");
+            return ret;
+        }
         try {
             // 参数转换成Map
             bean.convert();
@@ -483,7 +503,6 @@ public class ChinapnrController extends BaseController {
             String id = this.chinapnrService.insertChinapnrExclusiveLog(bean, methodName);
             if (id != null) {
                 bean.setUuid(id);
-              //  ChinapnrUtil.setUUID(bean, id);
                 MerPriv merPrivPo = bean.getMerPrivPo();
                 if (null == merPrivPo) {
                     merPrivPo = new MerPriv();
@@ -498,7 +517,6 @@ public class ChinapnrController extends BaseController {
                 }
                  merPriv = bean.getMerPriv();
                 // 得到接口API对象
-                //PnrApi api = new ChinaPnrApiImpl();
                 Class<ChinaPnrApiImpl> c = ChinaPnrApiImpl.class;
                 Object obj = api;
                 // 取得该消息类型对应的bean
@@ -589,6 +607,10 @@ public class ChinapnrController extends BaseController {
         String methodName = "callApiAjax";
         logger.info(THIS_CLASS, methodName, "[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         String ret = "";
+        if(bean == null){
+            logger.info(THIS_CLASS, methodName, "bean不能为空");
+            return ret;
+        }
         try {
             // 参数转换成Map
             bean.convert();

@@ -271,7 +271,7 @@ public class OperationReportController extends BaseController {
                     // 状态
                     else if (celLength == 7) {
                         if (1 == bean.getIsRelease().intValue()) {
-                            cell.setCellValue("发布");
+                            cell.setCellValue("已发布");
                         } else {
                             cell.setCellValue("未发布");
                         }

@@ -137,7 +137,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 */
 	public Integer countRecordList(MessagePushHistoryRequest form){
 		Criteria criteria = new Criteria();
-		if (StringUtils.isNotEmpty(form.getHistoryTagIdSrch())) {
+		if (form.getHistoryTagIdSrch()!=null) {
 			criteria.and("tagId").is(form.getHistoryTagIdSrch());
 
 		}
@@ -157,26 +157,13 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		if (form.getHistorySendStatusSrch() != null) {
 			criteria.and("msgSendStatus").is(form.getHistorySendStatusSrch());
 		}
-		if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
-			try {
-				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getHistoryCreateUserNameSrch());
-				criteria.and("sendTime").gte(time);
-			} catch (Exception e) {
-
-			}
-		}
-			if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
-			try {
-				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
-				criteria.and("sendTime").lte(time);
-			} catch (Exception e) {
-			}
+		if (form.getStartSendTimeSrch() != null || form.getEndSendTimeSrch() != null) {
+			int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch() + " 00:00:00");
+			int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch() + " 23:59:59");
+			criteria.and("sendTime").gte(startTime).lte(endTime);
 		}
 		if (form.getHistoryFirstReadTerminalSrch() != null) {
-			try {
-				criteria.and("msgFirstreadPlat").is(Integer.parseInt(form.getHistoryFirstReadTerminalSrch()));
-			} catch (NumberFormatException e) {
-			}
+				criteria.and("msgFirstreadPlat").is(Integer.valueOf(form.getHistoryFirstReadTerminalSrch()));
 		}
 		criteria.and("msgDestinationType").ne(CustomConstants.MSG_PUSH_SEND_STATUS_0);
 		Query query = new Query(criteria);
@@ -188,7 +175,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 */
 	public List<MessagePushMsgHistory> getRecordList(MessagePushHistoryRequest form,Integer offset,Integer limit){
 		Criteria criteria = new Criteria();
-		if (StringUtils.isNotEmpty(form.getHistoryTagIdSrch())) {
+		if (form.getHistoryTagIdSrch()!=null) {
 			criteria.and("tagId").is(form.getHistoryTagIdSrch());
 
 		}
@@ -208,19 +195,10 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		if (form.getHistorySendStatusSrch() != null) {
 			criteria.and("msgSendStatus").is(form.getHistorySendStatusSrch());
 		}
-		if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
-			try {
-				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getHistoryCreateUserNameSrch());
-				criteria.and("sendTime").gte(time);
-			} catch (Exception e) {
-			}
-		}
-		if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
-			try {
-				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
-				criteria.and("sendTime").lte(time);
-			} catch (Exception e) {
-			}
+		if (form.getStartSendTimeSrch() != null || form.getEndSendTimeSrch() != null) {
+			int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch() + " 00:00:00");
+			int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch() + " 23:59:59");
+			criteria.and("sendTime").gte(startTime).lte(endTime);
 		}
 		if (form.getHistoryFirstReadTerminalSrch() != null) {
 			try {
@@ -242,26 +220,25 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 */
 	public Integer getRecordCount(MessagePushErrorRequest request) {
 		Criteria criteria = new Criteria();
-		Query query = new Query();
 		// 条件查询
-		if (StringUtils.isNotEmpty(request.getMsgTitleSrch())) {
+		if (StringUtils.isNoneBlank(request.getMsgTitleSrch())) {
 			criteria.and("msgTitle").is(request.getMsgTitleSrch());
 		}
-		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
-			criteria.and("tagId").is(request.getTagIdSrch());
+		if(StringUtils.isNoneBlank(request.getTagIdSrch())){
+			criteria.and("tagId").is(Integer.valueOf(request.getTagIdSrch()));
 		}
-		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
+		if(StringUtils.isNoneBlank(request.getMsgCodeSrch())){
 			criteria.and("msgCode").is(request.getMsgCodeSrch());
 		}
-		if(StringUtils.isNotEmpty(request.getStartDateSrch())){
-			criteria.and("createTime").gte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
-		}
-		if(StringUtils.isNotEmpty(request.getEndDateSrch())){
-			criteria.and("createTime").lte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
+
+		// 发送时间
+		if (request.getStartDateSrch() != null || request.getEndDateSrch() != null) {
+			int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartDateSrch() + " 00:00:00");
+			int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndDateSrch() + " 23:59:59");
+			criteria.and("sendTime").gte(startTime).lte(endTime);
 		}
 		criteria.and("msgSendStatus").is(2);//发送失败
-
-		query.addCriteria(criteria);
+		Query query = new Query(criteria);
 		return (int) mongoTemplate.count(query, MessagePushMsgHistory.class);
 	}
 
@@ -278,16 +255,16 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgTitle").is(request.getMsgTitleSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
-			criteria.and("tagId").is(request.getTagIdSrch());
+			criteria.and("tagId").is(Integer.valueOf(request.getTagIdSrch()));
 		}
 		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
 			criteria.and("msgCode").is(request.getMsgCodeSrch());
 		}
-		if(StringUtils.isNotEmpty(request.getStartDateSrch())){
-			criteria.and("startDate").gte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
-		}
-		if(StringUtils.isNotEmpty(request.getEndDateSrch())){
-			criteria.and("endDate").lte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
+		// 发送时间
+		if (request.getStartDateSrch() != null || request.getEndDateSrch() != null) {
+			int startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartDateSrch() + " 00:00:00");
+			int endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndDateSrch() + " 23:59:59");
+			criteria.and("sendTime").gte(startTime).lte(endTime);
 		}
 		criteria.and("msgSendStatus").is(2);//发送失败
 		if (limitStart != -1) {
@@ -305,12 +282,13 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 */
 	public MessagePushMsgHistory getRecord(String id) {
 		Criteria criteria = new Criteria();
-		Query query = new Query();
 		// 条件查询
-		if(id != null){
+		if(StringUtils.isNotBlank(id)){
+			//criteria.and("_id").is(new ObjectId(id));
 			criteria.and("id").is(id);
 		}
-        MessagePushMsgHistory one = mongoTemplate.findOne(query, MessagePushMsgHistory.class);
+		Query query = new Query(criteria);
+		MessagePushMsgHistory one = mongoTemplate.findOne(query, MessagePushMsgHistory.class);
 		return one;
 	}
 

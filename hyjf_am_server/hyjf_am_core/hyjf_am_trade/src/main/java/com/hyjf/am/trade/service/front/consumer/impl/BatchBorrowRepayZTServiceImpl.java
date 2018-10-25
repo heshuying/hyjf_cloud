@@ -27,6 +27,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -260,7 +261,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			}
 			return map;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("还款中发生系统", e);
 			throw new RuntimeException();
 			
 		}
@@ -572,7 +573,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					continue;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("还款中发生系统", e);
 			}
 		}
 		map.put("result", null);
@@ -689,7 +690,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 
 		String borrowNid = apicron.getBorrowNid();
 		apicron.setStatus(status);
-//		apicron.setUpdateTime(nowTime);
+		apicron.setUpdateTime(new Date());
 		boolean apicronFlag = this.borrowApicronMapper.updateByPrimaryKeySelective(apicron) > 0 ? true : false;
 		if (!apicronFlag) {
 			throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
@@ -720,16 +721,16 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			if (repayFlag) {
 				try {
 					// 更新标的借款人余额，交易明细，标的表批次表的状态
-					boolean borrowFlag = this.updateBorrowStatus(apicron, borrow, borrowInfo);
+					boolean borrowFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateBorrowStatus(apicron, borrow, borrowInfo);
 					if (borrowFlag) {
 						return true;
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("还款中发生系统", e);
 				}
 			}
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error("还款中发生系统", e1);
 		}
 		return false;
 
@@ -864,7 +865,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 									// 如果处理状态为成功
 									if (txState.equals(BankCallConstant.BATCH_TXSTATE_TYPE_SUCCESS)) {
 										// 调用债转还款
-										boolean creditRepayFlag = this.updateCreditRepay(apicron, borrow, borrowInfo, borrowRecover, creditRepay, assignRepayDetail);
+										boolean creditRepayFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateCreditRepay(apicron, borrow, borrowInfo, borrowRecover, creditRepay, assignRepayDetail);
 										if (creditRepayFlag) {
 											if (!isMonth || (isMonth && periodNext == 0)) {
 												// 结束债权
@@ -893,7 +894,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 										}
 									}
 								} catch (Exception e) {
-									e.printStackTrace();
+									logger.error("还款中发生系统", e);
 									continue;
 								}
 							}
@@ -908,7 +909,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 									// 如果处理状态为成功
 									if (txState.equals(BankCallConstant.BATCH_TXSTATE_TYPE_SUCCESS)) {
 										try {
-											boolean tenderRepayFlag = this.updateTenderRepay(apicron, borrow, borrowInfo, borrowRecover, repayDetail);
+											boolean tenderRepayFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateTenderRepay(apicron, borrow, borrowInfo, borrowRecover, repayDetail);
 											if (tenderRepayFlag) {
 												if (!isMonth || (isMonth && periodNext == 0)) {
 													// 结束债权
@@ -929,29 +930,29 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 												throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 											}
 										} catch (Exception e) {
-											e.printStackTrace();
+											logger.error("还款中发生系统", e);
 											continue;
 										}
 									} else {
 										try {
 											// 更新投资详情表
-											boolean recoverFlag = this.updateRecover(apicron, borrow, borrowRecover);
+											boolean recoverFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateRecover(apicron, borrow, borrowRecover);
 											if (!recoverFlag) {
 												throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 											}
 										} catch (Exception e) {
-											e.printStackTrace();
+											logger.error("还款中发生系统", e);
 											continue;
 										}
 									}
 								} else {
 									try {
-										boolean tenderRepayFlag = this.updateTenderRepayStatus(apicron, borrow, borrowRecover);
+										boolean tenderRepayFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateTenderRepayStatus(apicron, borrow, borrowRecover);
 										if (!tenderRepayFlag) {
 											throw new Exception("更新相应的还款信息失败!" + "[投资订单号：" + tenderOrderId + "]");
 										}
 									} catch (Exception e) {
-										e.printStackTrace();
+										logger.error("还款中发生系统", e);
 										continue;
 									}
 								}
@@ -969,7 +970,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 						// 如果处理状态为成功
 						if (txState.equals(BankCallConstant.BATCH_TXSTATE_TYPE_SUCCESS)) {
 							try {
-								boolean tenderRepayFlag = this.updateTenderRepay(apicron, borrow, borrowInfo, borrowRecover, repayDetail);
+								boolean tenderRepayFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateTenderRepay(apicron, borrow, borrowInfo, borrowRecover, repayDetail);
 								if (tenderRepayFlag) {
 									if (!isMonth || (isMonth && periodNext == 0)) {
 										boolean debtOverFlag = this.requestDebtEnd(borrowRecover.getUserId(), repayDetail,borrowRecover.getNid(), borrow, borrowInfo);
@@ -987,18 +988,18 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 									throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 								}
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("还款中发生系统", e);
 								continue;
 							}
 						} else {
 							try {
 								// 更新投资详情表
-								boolean recoverFlag = this.updateRecover(apicron, borrow, borrowRecover);
+								boolean recoverFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateRecover(apicron, borrow, borrowRecover);
 								if (!recoverFlag) {
 									throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
 								}
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("还款中发生系统", e);
 								continue;
 							}
 						}
@@ -1030,7 +1031,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		return repayOrderId;
 	}
 
-	private boolean updateCreditRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover, CreditRepay creditRepay, JSONObject assignRepayDetail) throws Exception {
+	@Override
+	public boolean updateCreditRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover, CreditRepay creditRepay, JSONObject assignRepayDetail) throws Exception {
 
 		logger.info("------债转还款承接部分开始---承接订单号：" + creditRepay.getCreditNid() + "---------");
 
@@ -1460,7 +1462,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error("还款中发生系统", e);
             }
 			
 		}
@@ -1656,7 +1658,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 							this.bankCreditEndMapper.insertSelective(record);
 							return true;
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error("还款中发生系统", e);
 						}
 					
 					}
@@ -1712,7 +1714,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					continue;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("还款中发生系统", e);
 			}
 		}
 		return null;
@@ -1774,7 +1776,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 *
 	 * @throws Exception
 	 */
-	private boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception {
+	@Override
+	public boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception {
 
 		int nowTime = GetDate.getNowTime10();
 		String borrowNid = borrow.getBorrowNid();
@@ -1992,7 +1995,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				BorrowApicronExample apicronExample = new BorrowApicronExample();
 				apicronExample.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, apicronExample) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
@@ -2060,7 +2063,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         			logger.info("发送优惠券还款队列---" + borrowNid);
         			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error("还款中发生系统", e);
                 }
                 // add by hsy 优惠券还款请求加入到消息队列 end
 
@@ -2070,7 +2073,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				try {
 					this.sendSmsForManager(borrowNid);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("还款中发生系统", e);
 				}
 			} else if (failCount == repayCount) {
 				// 更新Borrow
@@ -2085,7 +2088,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -2103,7 +2106,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -2290,7 +2293,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				BorrowApicronExample apicronExample = new BorrowApicronExample();
 				apicronExample.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, apicronExample) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
@@ -2308,7 +2311,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         			logger.info("发送优惠券还款队列---" + borrowNid);
         			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error("还款中发生系统", e);
                 }
                 
 //                rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONREPAY, JSONObject.toJSONString(params));
@@ -2320,7 +2323,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				try {
 					this.sendSmsForManager(borrowNid);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("还款中发生系统", e);
 				}
 			} else if (failCount == repayCount) {
 				// 更新Borrow
@@ -2335,7 +2338,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -2353,7 +2356,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				BorrowApicronExample example = new BorrowApicronExample();
 				example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
-//				apicron.setUpdateTime(nowTime);
+				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
 					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
@@ -2391,7 +2394,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * @return
 	 * @throws Exception
 	 */
-	private boolean updateTenderRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover, JSONObject repayDetail) throws Exception {
+	@Override
+	public boolean updateTenderRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover, JSONObject repayDetail) throws Exception {
 
 		logger.info("-----------还款开始---" + apicron.getBorrowNid() + "---------");
 
@@ -2857,7 +2861,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error("还款中发生系统", e);
             }
 		}
 		apicron.setSucAmount(apicron.getSucAmount().add(repayAccount.add(manageFee)));
@@ -2874,7 +2878,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			// 推送消息
 			this.sendMessage(tenderUserId, borrowNid, repayAccount, repayInterest);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("还款中发生系统", e);
 		}
 
 		// 直投类还款成功之后， 判断是风车理财的投资，发送到队列，准备回调通知
@@ -2903,7 +2907,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		return true;
 	}
 
-	private boolean updateRecover(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception {
+	@Override
+	public boolean updateRecover(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception {
 		int periodNow = apicron.getPeriodNow();
 		// 还款方式
 		String borrowStyle = borrow.getBorrowStyle();
@@ -2936,7 +2941,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		return true;
 	}
 
-	private boolean updateTenderRepayStatus(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception {
+	@Override
+	public boolean updateTenderRepayStatus(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception {
 
 		logger.info("-----------还款开始---" + apicron.getBorrowNid() + "---------");
 		/** 还款信息 */

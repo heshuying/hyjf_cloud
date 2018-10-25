@@ -151,4 +151,9 @@ public class CouponTenderServiceImpl implements CouponTenderService {
     public List<CouponBackMoneyCustomize> getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         return couponTenderCustomizeMapper.getRecordListHjhJX(couponBackMoneyCustomize);
     }
+
+    @Override
+    public Integer getRecordListCount(CouponTenderRequest request) {
+        return couponTenderCustomizeMapper.selectCouponTenderListCount(request);
+    }
 }

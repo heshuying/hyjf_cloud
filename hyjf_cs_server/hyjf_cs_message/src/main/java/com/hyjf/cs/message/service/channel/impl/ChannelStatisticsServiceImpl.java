@@ -56,7 +56,7 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
             Integer end = GetDate.dateString2Timestamp(timeEndSrch + " 23:59:59");
             criteria.and("updateTime").gte(begin).lte(end);
         }
-        if (utmIdsSrch.length > 0) {
+        if (utmIdsSrch != null && utmIdsSrch.length > 0) {
             List<Integer> listInt = new ArrayList<>();
             List<String> sourceIds = Arrays.asList(utmIdsSrch);
             org.apache.commons.collections.CollectionUtils.collect(sourceIds, new Transformer() {
@@ -88,9 +88,16 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
             Integer end = GetDate.dateString2Timestamp(timeEndSrch + " 23:59:59");
             criteria.and("updateTime").gte(begin).lte(end);
         }
-        if (utmIdsSrch.length > 0) {
+        if (utmIdsSrch != null && utmIdsSrch.length > 0) {
+            List<Integer> listInt = new ArrayList<>();
             List<String> sourceIds = Arrays.asList(utmIdsSrch);
-            criteria.in(sourceIds);
+            org.apache.commons.collections.CollectionUtils.collect(sourceIds, new Transformer() {
+                @Override
+                public Object transform(Object o) {
+                    return Integer.valueOf(String.valueOf(o));
+                }
+            },listInt);
+            criteria.and("sourceId").in(listInt);
         }
         Aggregation aggregation = Aggregation.newAggregation(
                 match(criteria),
@@ -108,15 +115,14 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
         Date startTime = request.getStartTime();
         Date endTime = request.getEndTime();
         if (startTime != null && endTime != null) {
-            criteria.and("addTime").gte(startTime).lte(endTime);
+            criteria.and("addTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
         }
         query.addCriteria(criteria);
         if (request.getCurrPage() > 0) {
             int currPage = request.getCurrPage();
             int pageSize = request.getPageSize();
             int limitStart = (currPage - 1) * pageSize;
-            int limitEnd = limitStart + pageSize;
-            query.skip(limitStart).limit(limitEnd);
+            query.skip(limitStart).limit(pageSize);
         }
         query.with(new Sort(Sort.Direction.DESC, "addTime"));
         return pcChannelStatisticsDao.find(query);

@@ -249,7 +249,7 @@ public class BorrowCommonController extends BaseController {
 
 		/*--------upd by liushouyi HJH3 Start---------------*/
 		// 新建标的使用引擎的时候验证是否有匹配的到的标签
-		if (isExistsRecord == false && StringUtils.isNotBlank(form.getIsEngineUsed()) && "1".equals(form.getIsEngineUsed())) {
+		if (isExistsRecord == false) {
 			Borrow borrow = new Borrow();
 			BorrowInfo borrowInfo = new BorrowInfo();
 
@@ -270,12 +270,19 @@ public class BorrowCommonController extends BaseController {
 			// 获取标签id
 			HjhLabel label = adminHjhLabelService.getBestLabel(borrow,borrowInfo, null);
 			if(label == null || label.getId() == null){
-				// 返回错误信息
-				bcr.setRtn(Response.FAIL);
-				bcr.setMessage("该标的信息未能匹配到相应的标签，无法使用引擎进计划！");
-				return bcr;
-			}
-			form.setLabelId(label.getId());
+				// 勾选使用引擎未匹配到标签的无法建标
+				if(StringUtils.isNotBlank(form.getIsEngineUsed()) && "1".equals(form.getIsEngineUsed())) {
+					// 返回错误信息
+					bcr.setRtn(Response.FAIL);
+					bcr.setMessage("该标的信息未能匹配到相应的标签，无法使用引擎进计划！");
+					return bcr;
+				} else {
+					// 未勾选使用引擎的散标匹配不到标签赋值为0
+                    form.setLabelId(0);
+				}
+			} else {
+                form.setLabelId(label.getId());
+            }
 		}else if (isExistsRecord){
 			// 备案状态的标的修改时重新匹配标签
 			Borrow borrow = borrowService.getBorrow(form.getBorrowNid());
@@ -321,11 +328,14 @@ public class BorrowCommonController extends BaseController {
 
 			// 标的进计划 产品额外加息不能>0 add by liuyang 20180729
 			BorrowInfo borrowInfo = this.borrowCommonService.getBorrowInfoByNid(form.getBorrowNid());
-			if (borrowInfo.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
-				bcr.setRtn(Response.FAIL);
-				bcr.setMessage("汇计划底层资产的标的不能设置产品额外加息。");
-				return bcr;
+			if(borrowInfo.getBorrowExtraYield()!=null) {
+				if (borrowInfo.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
+					bcr.setRtn(Response.FAIL);
+					bcr.setMessage("汇计划底层资产的标的不能设置产品额外加息。");
+					return bcr;
+				}
 			}
+
 			// 标的进计划 产品额外加息不能>0 add by liuyang 20180729
 		}
 		if ("BORROW_LIST".equals(form.getMoveFlag())) {

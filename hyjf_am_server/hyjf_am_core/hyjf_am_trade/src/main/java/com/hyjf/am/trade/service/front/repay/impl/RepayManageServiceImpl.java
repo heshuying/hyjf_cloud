@@ -1,14 +1,19 @@
 package com.hyjf.am.trade.service.front.repay.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
@@ -18,6 +23,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -36,6 +42,9 @@ import java.util.*;
 public class RepayManageServiceImpl extends BaseServiceImpl implements RepayManageService {
 
     public static JedisPool pool = RedisUtils.getPool();
+
+    @Autowired
+    private BorrowLoanRepayProducer borrowLoanRepayProducer;
 
     /**
      * 普通借款人管理费总待还
@@ -4113,7 +4122,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public List<BorrowRepayPlan> searchRepayPlan(int userId, String borrowNid) {
         BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
-// todo 暂时注释掉       borrowRepayPlanCrt.andUserIdEqualTo(userId);
+        borrowRepayPlanCrt.andUserIdEqualTo(userId);
         borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
         List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
         return borrowRepayPlans;
@@ -4122,7 +4131,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public List<BorrowRepayPlan> searchRepayPlanAll(int userId, String borrowNid) {
         BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
-//todo 暂时删除       borrowRepayPlanCrt.andUserIdEqualTo(userId);
+        borrowRepayPlanCrt.andUserIdEqualTo(userId);
         borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
         borrowRepayPlanExample.setOrderByClause("repay_period");
         List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
@@ -4161,7 +4170,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         int period = Integer.parseInt(periodTotal) - remainRepayPeriod + 1;
         int userId = repay.getUserId();// 借款人id
         Integer repayUserId = repay.getRepayUserId();
+        logger.info("borrowNid:" + borrowNid + " repayUserId:" + repayUserId);
         RUser repayUser = this.getRUser(repayUserId);
+        logger.info("repayUser:" + repayUser);
         String userName = repayUser.getUsername();
         Integer roleId = repayUser.getRoleId();
         BigDecimal repayTotal = repay.getRepayAccountAll();// 用户还款总额
@@ -4169,6 +4180,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         Boolean repayFlag = false;
         int errorCount = 0;
         Borrow borrow = this.getBorrow(borrowNid);
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
         /** 标的基本数据 */
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
         String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
@@ -4389,9 +4401,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         borrowApicron.setCreditRepayStatus(0);
                         borrowApicron.setCreateTime(GetDate.getNowTime());
                         borrowApicron.setUpdateTime(GetDate.getNowTime());
-                        if (projectType == 13) {
+                        boolean increase = Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield());
+                        if (increase) {
                             borrowApicron.setExtraYieldStatus(0);// 融通宝加息相关的放款状态
                             borrowApicron.setExtraYieldRepayStatus(0);// 融通宝相关的加息还款状态
+
                         } else {
                             borrowApicron.setExtraYieldStatus(1);// 融通宝加息相关的放款状态
                             borrowApicron.setExtraYieldRepayStatus(1);// 融通宝相关的加息还款状态
@@ -4400,6 +4414,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         boolean apiCronFlag = borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                         if (apiCronFlag) {
                             repayFlag = true;
+                            sendRepayMessage(borrowApicron);// 用户还款后直接发起还款消息
                         } else {
                             throw new Exception("还款失败，项目编号：" + borrowNid);
                         }
@@ -4418,6 +4433,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         List<RepayDetailBean> repayPLanList = repay.getRepayPlanList();
         // 分期还款
         if (repayPLanList != null && repayPLanList.size() > 0) {
+            logger.info("isAllRepay: " + isAllRepay);
+            logger.info("repayPlanList size: " + repayPLanList.size() + " json:" + JSON.toJSONString(repayPLanList));
             for (int i = 0; i < repayPLanList.size(); i++) {
                 RepayDetailBean repayDetail = repayPLanList.get(i);
                 if (repayDetail.getRepayPeriod() == period && !isAllRepay) {
@@ -4576,6 +4593,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 boolean isAllRepay) throws Exception {
 
         Map map = new HashMap();
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrow.getBorrowNid());
         BorrowRepayPlan borrowRepayPlan = this.searchRepayPlan(userId, borrowNid, period);
         BorrowApicronExample example = new BorrowApicronExample();
         BorrowApicronExample.Criteria crt = example.createCriteria();
@@ -4773,7 +4791,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     if(isAllRepay){
                         borrowApicron.setIsAllrepay(1);
                     }
-                    if (projectType == 13) {
+                    boolean increase = Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield());
+                    if (increase) {
                         borrowApicron.setExtraYieldStatus(0);// 融通宝加息相关的放款状态
                         borrowApicron.setExtraYieldRepayStatus(0);// 融通宝相关的加息还款状态
                     } else {
@@ -4784,6 +4803,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     boolean apiCronFlag = borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                     if (apiCronFlag) {
                         repayFlag = true;
+                        sendRepayMessage(borrowApicron);// 用户还款后直接发起还款消息
                     } else {
                         throw new RuntimeException("重复还款");
                     }
@@ -4801,6 +4821,24 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         }
         map.put("repayFlag",repayFlag);
         return map;
+    }
+
+    /**
+     * 发送发起还款消息
+     * 由于是在事务内提交 会发生MQ消费时事务还没提交的情况 所以改成延时队列
+     * @author wgx
+     * @date 2018/10/17
+     */
+    public void sendRepayMessage(BorrowApicron apiCron) {
+        try {
+            borrowLoanRepayProducer.messageSendDelay(new MessageContent(MQConstant.BORROW_REPAY_REQUEST_TOPIC,
+                    apiCron.getBorrowNid(), JSON.toJSONBytes(apiCron)),2);
+            logger.info("【还款】发起还款消息:还款项目编号:[" + apiCron.getBorrowNid() + ",还款期数:[第" + apiCron.getPeriodNow() +
+                    "],计划编号:[" + (org.apache.commons.lang3.StringUtils.isEmpty(apiCron.getPlanNid()) ? "" : apiCron.getPlanNid()));
+        } catch (MQException e) {
+            e.printStackTrace();
+            logger.info("【还款】发起还款消息发生异常 ", e);
+        }
     }
 
     /**
@@ -4853,7 +4891,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             List<BorrowCredit> borrowCreditList = this.borrowCreditMapper.selectByExample(example);
             if (borrowCreditList != null && borrowCreditList.size() > 0) {
                 for (BorrowCredit borrowCredit : borrowCreditList) {
-                    borrowCredit.setCreditStatus(3);
+                    // 老系统也是3，可能不对， 经过刘阳和杨昌卫确认，此处改成1(承接停止)，  2018年10月24日10:21:39
+                    borrowCredit.setCreditStatus(1);
                     this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit);
                 }
             }

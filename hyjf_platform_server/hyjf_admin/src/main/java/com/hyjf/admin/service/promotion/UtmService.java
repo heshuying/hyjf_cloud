@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.promotion;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
@@ -56,4 +55,12 @@ public interface UtmService {
      * @return 
      */
     boolean deleteUtmPlatAction(UtmPlatVO utmPlatVO);
+
+    /**
+     * @Author cwyang
+     * 检查编号唯一性
+     * @param sourceId
+     * @return
+     */
+    int sourceIdIsExists(Integer sourceId);
 }

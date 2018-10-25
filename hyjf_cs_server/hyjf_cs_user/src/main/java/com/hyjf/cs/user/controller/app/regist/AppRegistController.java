@@ -9,7 +9,6 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.util.GetCilentIP;
@@ -95,7 +94,7 @@ public class AppRegistController extends BaseUserController {
             return ret;
         }
         logger.info("当前注册手机号: {}", mobile);
-
+        version = request.getParameter("version");
         // 取得加密用的Key
         if(StringUtils.isBlank(key)){
             ret.put(CustomConstants.APP_STATUS, 1);
@@ -124,6 +123,8 @@ public class AppRegistController extends BaseUserController {
                 register.getVerificationCode(), register.getPassword(),
                 register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), platform, GetCilentIP.getIpAddr(request));
 
+        //发送mq同步推广表
+        registService.sendMqToSaveAppChannel(version,webViewUserVO);
         String statusDesc = "注册成功";
         boolean active = false;
         try {

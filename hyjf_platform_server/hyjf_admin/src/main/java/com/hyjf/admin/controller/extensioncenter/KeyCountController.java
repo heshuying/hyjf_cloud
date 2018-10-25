@@ -65,7 +65,7 @@ public class KeyCountController extends BaseController {
 	@GetMapping("/channels")
 	public AdminResult getChannels() {
 		AdminResult adminResult = new AdminResult();
-		List<UtmPlatVO>  list = channelService.getUtmPlat(null);
+		List<UtmPlatVO>  list = channelService.getUtmPlat();
 		adminResult.setData(list);
 		return adminResult;
 

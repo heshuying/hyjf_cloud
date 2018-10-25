@@ -10,9 +10,13 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 还款冻结表操作
@@ -55,7 +59,7 @@ public class BankRepayFreezeLogController extends BaseController {
      * @date: 2018/7/11
      */
     @RequestMapping("/deleteby_id/{id}")
-    public Integer deleteFreezeLogById(Integer id) {
+    public Integer deleteFreezeLogById(@PathVariable Integer id) {
         return bankRepayFreezeLogService.deleteFreezeLogById(id);
     }
 
@@ -80,7 +84,7 @@ public class BankRepayFreezeLogController extends BaseController {
      * @date: 2018/7/11
      */
     @RequestMapping("/get_logvalid_byorderid/{orderId}")
-    public BankRepayFreezeLogResponse getBankFreezeLogByOrderId(String orderId) {
+    public BankRepayFreezeLogResponse getBankFreezeLogByOrderId(@PathVariable String orderId) {
         BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
         BankRepayFreezeLog log = bankRepayFreezeLogService.getBankFreezeLogByOrderId(orderId);
         if (Validator.isNotNull(log)){
@@ -91,13 +95,12 @@ public class BankRepayFreezeLogController extends BaseController {
 
     /**
      * 分页获取所有有效的冻结记录
-     * @param limitStart
-     * @param limitEnd
-     * @return
      */
     @RequestMapping("/get_logvalid_all")
-    public BankRepayFreezeLogResponse getFreezeLogValidAll(@RequestParam Integer limitStart, @RequestParam Integer limitEnd){
+    public BankRepayFreezeLogResponse getFreezeLogValidAll(@RequestBody Map<String,String> param){
         BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
+        Integer limitStart = Integer.parseInt(param.get("limitStart"));
+        Integer limitEnd = Integer.parseInt(param.get("limitEnd"));
         List<BankRepayFreezeLog> logList = bankRepayFreezeLogService.getFreezeLogValidAll(limitStart,limitEnd);
         if (Validator.isNotNull(logList)){
             response.setResultList(CommonUtils.convertBeanList(logList,BankRepayFreezeLogVO.class));

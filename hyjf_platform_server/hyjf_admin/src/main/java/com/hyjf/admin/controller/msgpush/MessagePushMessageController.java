@@ -77,45 +77,27 @@ public class MessagePushMessageController extends BaseController {
             response = messagePushMsgService.getRecord(form.getId());
             if (response.getResult() != null) {
                 MessagePushMsgVO record = response.getResult();
-                BeanUtils.copyProperties(record, form);
-                if (record.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
-                    form.setMsgActionUrl1("");
-                    form.setMsgActionUrl2("");
-                }
-                if (record.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1) {
-                    form.setMsgActionUrl1(record.getMsgActionUrl());
-                    form.setMsgActionUrl2("");
-                }
-                if (record.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
-                    form.setMsgActionUrl3(record.getMsgActionUrl());
-                    form.setMsgActionUrl2("");
-                }
                 if (record.getMsgAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
                     form.setMsgActionUrl1("");
                     if ("hyjf://jumpZXH".equals(record.getMsgActionUrl())) {
-                        form.setMsgActionUrl2("1");
+                        record.setMsgActionUrl("1");
                     }
                     if ("hyjf://jumpMine".equals(record.getMsgActionUrl())) {
-                        form.setMsgActionUrl2("2");
+                        record.setMsgActionUrl("2");
                     }
                     if ("hyjf://jumpCouponsList".equals(record.getMsgActionUrl())) {
-                        form.setMsgActionUrl2("3");
+                        record.setMsgActionUrl("3");
                     }
                     if ("hyjf://jumpTransactionDetail".equals(record.getMsgActionUrl())) {
-                        form.setMsgActionUrl2("4");
+                        record.setMsgActionUrl("4");
                     }
                     if ("hyjf://jumpInvest".equals(record.getMsgActionUrl())) {
-                        form.setMsgActionUrl2("5");
+                        record.setMsgActionUrl("5");
                     }
                 }
                 // 如果是转发,则form的id应置为空
                 if (StringUtils.isNotEmpty(form.getUpdateOrReSend()) && form.getUpdateOrReSend().equals("2")) {
-                    form.setId(null);
-                }
-                if (form.getMsgSendType().intValue() == CustomConstants.MSG_PUSH_SEND_TYPE_1) {
-                    if (form.getPreSendTime() != null) {
-                        form.setMessagesPreSendTimeStr(GetDate.timestamptoStrYYYYMMDDHHMMSS(form.getPreSendTime()));
-                    }
+                    record.setId(null);
                 }
             }
         } catch (Exception e) {
@@ -136,6 +118,8 @@ public class MessagePushMessageController extends BaseController {
         String username = user.getUsername();
 
         templateRequest.setCreateUserName(username);
+        templateRequest.setLastupdateUserName(username);
+        templateRequest.setLastupdateUserId(Integer.parseInt(user.getId()));
         templateRequest.setCreateUserId(Integer.parseInt(user.getId()));
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
@@ -164,21 +148,21 @@ public class MessagePushMessageController extends BaseController {
             templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl3());
         }
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
-            if(templateRequest.getMsgActionUrl2().equals("1")){
-                templateRequest.setMsgActionUrl2("hyjf://jumpZXH" );
-            }else if (templateRequest.getMsgActionUrl2().equals("5")) {
+            if (templateRequest.getMsgActionUrl2().equals("1")) {
+                templateRequest.setMsgActionUrl2("hyjf://jumpZXH");
+            } else if (templateRequest.getMsgActionUrl2().equals("5")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpInvest");
-            }else if (templateRequest.getMsgActionUrl2().equals("新手汇")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("新手汇")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpXSH");
-            }else if (templateRequest.getMsgActionUrl2().equals("2")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("2")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpMine");
-            }else if (templateRequest.getMsgActionUrl2().equals("3")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("3")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpCouponsList");
-            }else if (templateRequest.getMsgActionUrl2().equals("4")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("4")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpTransactionDetail");
-            }else if (templateRequest.getMsgActionUrl2().equals("债券转让-已承接")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("债券转让-已承接")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpTransfer");
-            }else if (templateRequest.getMsgActionUrl2().equals("债权转让-转让记录")) {
+            } else if (templateRequest.getMsgActionUrl2().equals("债权转让-转让记录")) {
                 templateRequest.setMsgActionUrl2("hyjf://jumpTransferRecord");
             }
             templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl2());
@@ -212,11 +196,6 @@ public class MessagePushMessageController extends BaseController {
     @RequestMapping(value = "/updateAction", method = RequestMethod.POST)
     public AdminResult updateAction(HttpServletRequest request, @RequestBody MessagePushMsgRequest templateRequest) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
-        AdminSystemVO user = getUser(request);
-        String username = user.getUsername();
-
-        templateRequest.setLastupdateUserName(username);
-        templateRequest.setLastupdateUserId(Integer.parseInt(user.getId()));
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
         if (message != null) {
@@ -241,7 +220,17 @@ public class MessagePushMessageController extends BaseController {
             templateRequest.setMsgActionUrl(templateRequest.getMsgActionUrl3());
         }
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
-            templateRequest.setMsgActionUrl(templateRequest.getMsgActionUrl2());
+            if (templateRequest.getMsgActionUrl2().equals("1")) {
+                templateRequest.setMsgActionUrl("hyjf://jumpZXH");
+            } else if (templateRequest.getMsgActionUrl2().equals("5")) {
+                templateRequest.setMsgActionUrl("hyjf://jumpInvest");
+            } else if (templateRequest.getMsgActionUrl2().equals("2")) {
+                templateRequest.setMsgActionUrl("hyjf://jumpMine");
+            } else if (templateRequest.getMsgActionUrl2().equals("3")) {
+                templateRequest.setMsgActionUrl("hyjf://jumpCouponsList");
+            } else if (templateRequest.getMsgActionUrl2().equals("4")) {
+                templateRequest.setMsgActionUrl("hyjf://jumpTransactionDetail");
+            }
         }
         if (templateRequest.getMsgSendType().intValue() == CustomConstants.MSG_PUSH_SEND_TYPE_1) {
             templateRequest.setSendTime(GetDate.getMyTimeInMillis());
@@ -250,7 +239,7 @@ public class MessagePushMessageController extends BaseController {
                     Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
                     if (time != 0) {
                         templateRequest.setPreSendTime(time);
-                        templateRequest.setSendTime(GetDate.strYYYYMMDD2Timestamp2(GetDate.getDateMyTimeInMillis(time)));
+                        templateRequest.setSendTime(time);
                     }
                 } catch (Exception e) {
                 }
@@ -301,6 +290,22 @@ public class MessagePushMessageController extends BaseController {
         // 没有错误时,返回y
         return new AdminResult<>(response);
     }
+
+    @ApiOperation(value = "检查是否是电话号码", notes = "检查是否是电话号码")
+    @RequestMapping(value = "/checkMobile", method = RequestMethod.POST)
+    public AdminResult checkMobile(@RequestParam String msgDestination) {
+        MessagePushMsgResponse response = new MessagePushMsgResponse();
+        // 检查是否是电话号码
+        String[] mobileStrs = msgDestination.split(",");
+        for (int i = 0; i < mobileStrs.length; i++) {
+            String message = validatorFieldCheckMobile(mobileStrs[i]);
+            if (message != null) {
+                return new AdminResult(FAIL,mobileStrs[i] + "不是正确的电话号码");
+            }
+        }
+        return new AdminResult(response);
+    }
+
 
     @Autowired
     private FileUpLoadUtil fileUpLoadUtil;
@@ -417,6 +422,25 @@ public class MessagePushMessageController extends BaseController {
                         message = "手机号错误";
                     }
                 }
+            }
+        }
+        return message;
+    }
+
+    /**
+     * 校验手机号码
+     *
+     * @param mobile
+     * @return
+     */
+    private String validatorFieldCheckMobile(String mobile) {
+        String message = null;
+        if (mobile.length() != 11) {
+            message = "手机号码校验错误";
+        } else {
+            String reg = "^[1][0-9]{10}$";
+            if (!mobile.matches(reg)) {
+                message = "手机号错误";
             }
         }
         return message;

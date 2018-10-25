@@ -4,12 +4,14 @@
 package com.hyjf.admin.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,10 @@ import java.util.Map;
 @Api(value = "admin基类",tags ="admin基类")
 @RestController
 public class BaseController{
+
+	@Autowired
+	public SystemConfig systemConfig;
+
 	public static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 	//redis存有用户信息的key
 	public static final String USER="user";

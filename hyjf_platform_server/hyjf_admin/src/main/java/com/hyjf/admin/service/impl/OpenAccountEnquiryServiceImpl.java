@@ -1,7 +1,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
 import com.hyjf.admin.beans.OpenAccountEnquiryErrorResultBean;
 import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
@@ -32,13 +32,13 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -275,8 +275,9 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         OpenAccountEnquiryErrorResultBean resultBean = new OpenAccountEnquiryErrorResultBean();
         String userId = currUser.getId();
         //选择1为手机号查询，2为身份证号查询
-        String num = requestBean.getNum();
-        String phone =requestBean.getLastname().trim();
+        String type = requestBean.getNum();
+        String nums =requestBean.getLastname().trim();
+        // 按照手机号查询 2按照身份证查询
         // 调用查询电子账户
         BankCallBean selectbean = new BankCallBean();
         selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
@@ -293,68 +294,84 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         selectbean.setLogClient(0);
         // 返回参数
         BankCallBean retBean = null;
-        if (Integer.parseInt(num)==1) {//手机号查询
-
-            // 画面验证
-            // 身份证号码格式以及长度的校验
-            CheckUtil.check(Validator.isNotNull(phone) && Validator.isIdcard(phone), MsgEnum.ERR_FMT_IDCARDNO);
-            boolean booleans=ValidatorFieldCheckUtil.isIDCard(phone);
-            if (!booleans) {
-                resultBean.setStatus("n");
-                resultBean.setInfo("输入验证失败！");
-                return resultBean;
-            }else{
+        // 设置本地的开户状态
+        String isOpen = setDbOpenParam(type, nums);
+        // 已经开户的就不查询了
+        if ("0".equals(isOpen)) {
+            if ("1".equals(type)) {
+                // 根据手机号查询
+                CheckUtil.check(Validator.isNotNull(nums) && Validator.isMobile(nums), MsgEnum.ERR_FMT_MOBILE);
+                // 手机号码验证成功
+                selectbean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE);
                 //获取掉单用户信息
                 BankOpenAccountLogRequest bankOpenAccountLog=new BankOpenAccountLogRequest();
-                bankOpenAccountLog.setIdcard(phone);
+                bankOpenAccountLog.setMobile(nums);
                 selectbean.setTxCode(BankCallConstant.TXCODE_ACCOUNTID_QUERY);
                 OpenAccountEnquiryCustomizeVO accountMap=this.amUserClient.searchAccountEnquiry(bankOpenAccountLog);
-                if (accountMap==null) {
+                if (accountMap == null) {
                     resultBean.setStatus("n");
-                    resultBean.setInfo("该用户不存在,输入身份证号码不存在！");
+                    resultBean.setInfo("该用户不存在,输入手机号码不存在！");
                     return resultBean;
                 }
-                selectbean.setIdType("01");
-                selectbean.setIdNo(phone);
+                selectbean.setMobile(nums);
+                // 首次查询上送空；翻页查询上送1； 翻页标志
+                selectbean.setRtnInd("");
+                // nxProduct翻页产品号 翻页控制使用；首次查询上送空；翻页查询时上送上页返回的最后一条记录的产品。
                 // 调用接口
                 retBean = BankCallUtils.callApiBg(selectbean);
-
-                if (retBean!=null) {
-                    resultBean.setStatus("y");
-                    resultBean.setInfo("验证通过！");
-                    return resultBean;
-
-                }else{
+                if (retBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
+                    JSONArray jsa = JSONArray.parseArray(retBean.getSubPacks());
+                    if (jsa != null && jsa.size() > 0) {
+                        // 如果返回的结果大于0条
+                        resultBean.setStatus("y");
+                        resultBean.setInfo("验证通过！");
+                        return resultBean;
+                    } else {
+                        resultBean.setStatus("n");
+                        resultBean.setInfo("该用户无银行开户信息！");
+                        return resultBean;
+                    }
+                } else {
                     resultBean.setStatus("n");
                     resultBean.setInfo("该用户无银行开户信息！");
                     return resultBean;
                 }
-            }
-
-        }else{//手机号码验证成功
-            selectbean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE);
-            //获取掉单用户信息
-            BankOpenAccountLogRequest bankOpenAccountLog=new BankOpenAccountLogRequest();
-            bankOpenAccountLog.setMobile(phone);
-            OpenAccountEnquiryCustomizeVO accountMap=this.amUserClient.searchAccountEnquiry(bankOpenAccountLog);
-            if (accountMap==null) {
-                resultBean.setStatus("n");
-                resultBean.setInfo("该用户不存在！");
-                return resultBean;
-            }
-            selectbean.setMobile(phone);
-            // 调用接口
-            retBean = BankCallUtils.callApiBg(selectbean);
-            if (retBean!=null) {
-                resultBean.setStatus("y");
-                resultBean.setInfo("验证通过！");
-                return resultBean;
-            }else{
-                resultBean.setStatus("n");
-                resultBean.setInfo("该用户无银行开户信息！");
-                return resultBean;
+            } else if ("2".equals(type)) {
+                // 根据身份证查询
+                CheckUtil.check(Validator.isNotNull(nums) && Validator.isIdcard(nums), MsgEnum.ERR_FMT_IDCARDNO);
+                // 根据身份证查询时候必须验证用户名不能为空
+                if (nums==null||"".equals(nums)) {
+                    resultBean.setStatus("n");
+                    resultBean.setInfo("该用户无银行开户信息！");
+                    return resultBean;
+                }
+                //获取掉单用户信息
+                BankOpenAccountLogRequest bankOpenAccountLog=new BankOpenAccountLogRequest();
+                bankOpenAccountLog.setIdcard(nums);
+                OpenAccountEnquiryCustomizeVO accountMap=this.amUserClient.searchAccountEnquiry(bankOpenAccountLog);
+                if (accountMap==null) {
+                    resultBean.setStatus("n");
+                    resultBean.setInfo("该用户不存在！");
+                    return resultBean;
+                }
+                // 根据身份证查询
+                selectbean.setTxCode(BankCallConstant.TXCODE_ACCOUNTID_QUERY);
+                selectbean.setIdType("01");
+                selectbean.setIdNo(nums);
+                // 调用接口
+                retBean = BankCallUtils.callApiBg(selectbean);
+                if (retBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
+                    resultBean.setStatus("y");
+                    resultBean.setInfo("验证成功！");
+                    return resultBean;
+                } else {
+                    resultBean.setStatus("n");
+                    resultBean.setInfo("该用户不存在！");
+                    return resultBean;
+                }
             }
         }
+        return resultBean;
     }
 
     /**
@@ -537,5 +554,27 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         }
         return null;
 
+    }
+
+    // 查询本地开户状态
+    private String setDbOpenParam(String requestType, String phone) {
+        BankOpenAccountLogRequest bankOpenAccountLog=new BankOpenAccountLogRequest();
+        bankOpenAccountLog.setMobile(phone);
+
+        if ("1".equals(requestType)) {
+            // 手机号
+            bankOpenAccountLog.setMobile(phone);
+        } else if ("2".equals(requestType)) {
+            // 身份证
+            bankOpenAccountLog.setIdcard(phone);
+        }
+        OpenAccountEnquiryCustomizeVO accountMap=this.amUserClient.searchAccountEnquiry(bankOpenAccountLog);
+        if (accountMap != null) {
+            // 已经开户了
+            return accountMap.getAccountStatus();
+        } else {
+            // 没开户
+            return "0";
+        }
     }
 }

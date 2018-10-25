@@ -347,6 +347,10 @@ public class WithdrawCustomizeVO extends BaseVO implements Serializable {
         return total;
     }
 
+    public BigDecimal getActualTotal() {
+        return total;
+    }
+
     public void setTotal(BigDecimal total) {
         this.total = total;
     }

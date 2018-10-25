@@ -153,28 +153,28 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 						}
 						// 放款成功,更新mongo运营数据
 						logger.info("放款成功更新运营数据...");
-						JSONObject params = new JSONObject();
-						// 散标
-						params.put("type", 1);
-						params.put("money", borrowApicron.getBorrowAccount());
-				        //运营数据队列
-				        try {
-				            calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-				        }catch (MQException e){
-				            logger.error("发送运营数据更新MQ失败,放款标的:" + borrowApicron.getBorrowNid());
-				        }
-				        // 发送mq到生成互金合同要素信息
-						try {
-							JSONObject param = new JSONObject();
-							param.put("borrowNid", borrowApicron.getBorrowNid());
-				        	nifaContractEssenceMessageProducer.messageSend(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)));
-						} catch (Exception e) {
-							logger.error("发送mq到生成互金合同要素信息失败,放款标的:" + borrowApicron.getBorrowNid());
-						}
+						sendMQ(borrowApicron);
 					}
+					
+					// 
+				}else if (borrowApicron.getStatus().equals(CustomConstants.BANK_BATCH_STATUS_SENDED)) {
+					// 发送放款
+					BankCallBean requestLoanBean = new BankCallBean();
+					boolean batchDetailFlag = realTimeBorrowLoanService.loanBatchUpdateDetails(borrowApicron,requestLoanBean);
+					if (!batchDetailFlag) {
+						throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
+					}
+					// 放款成功,更新mongo运营数据
+					logger.info("再次更新放款 运营数据...");
+					sendMQ(borrowApicron);
+					
+				}else {
+					logger.error("标的编号：" + borrowNid + "，不是放款状态 "+ borrowApicron.getStatus());
 				}
+				
+				
 			} catch (Exception e) {
-				e.printStackTrace();
+	            logger.error("计划放款系统异常", e);
 				StringBuffer sbError = new StringBuffer();// 错误信息
 				sbError.append(e.getMessage()).append("<br/>");
 				String online = "生产环境";// 取得是否线上
@@ -209,6 +209,31 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 			logger.info("----------------------------直投放款结束--------------------------------");
 
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+		}
+
+		/**
+		 * 推送放款成功消息
+		 * @param borrowApicron
+		 */
+		private void sendMQ(BorrowApicron borrowApicron) {
+			JSONObject params = new JSONObject();
+			// 散标
+			params.put("type", 1);
+			params.put("money", borrowApicron.getBorrowAccount());
+			//运营数据队列
+			try {
+			    calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+			}catch (MQException e){
+			    logger.error("发送运营数据更新MQ失败,放款标的:" + borrowApicron.getBorrowNid());
+			}
+			// 发送mq到生成互金合同要素信息
+			try {
+				JSONObject param = new JSONObject();
+				param.put("borrowNid", borrowApicron.getBorrowNid());
+				nifaContractEssenceMessageProducer.messageSend(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)));
+			} catch (Exception e) {
+				logger.error("发送mq到生成互金合同要素信息失败,放款标的:" + borrowApicron.getBorrowNid());
+			}
 		}
 	}
 

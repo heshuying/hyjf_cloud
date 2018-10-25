@@ -5,12 +5,12 @@ package com.hyjf.am.trade.service.admin.exception.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AutoPreAuditProducer;
+import com.hyjf.am.admin.mq.producer.AutoPreAuditMessageProducer;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
+import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
 import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BorrowRegistCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;
@@ -44,13 +44,10 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     private BorrowStyleMapper borrowStyleMapper;
 
     @Autowired
-    private BorrowRegistCustomizeMapper borrowRegistCustomizeMapper;
-
-    @Autowired
     private StzhWhiteListMapper stzhWhiteListMapper;
 
     @Autowired
-    private AutoPreAuditProducer autoPreAuditProducer;
+    private AutoPreAuditMessageProducer autoPreAuditMessageProducer;
 
     /**
      * 获取项目类型,筛选条件展示
@@ -91,7 +88,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Override
     public Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest){
-        return borrowRegistCustomizeMapper.getRegistCount(borrowRegistListRequest);
+        return adminBorrowRegistExceptionMapper.countBorrow(borrowRegistListRequest);
     }
 
     /**
@@ -102,7 +99,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Override
     public List<BorrowRegistCustomize> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest){
-        List<BorrowRegistCustomize> list = borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
+        List<BorrowRegistCustomize> list = adminBorrowRegistExceptionMapper.selectBorrowList(borrowRegistListRequest);
         if(!CollectionUtils.isEmpty(list)){
             //处理标的备案状态
             Map<String, String> map = CacheUtil.getParamNameMap("REGIST_STATUS");
@@ -112,7 +109,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                 }
             }
         }
-        return borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
+        return list;
     }
 
     /**
@@ -124,8 +121,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     @Override
     public BorrowAndInfoVO searchBorrowByBorrowNid(String borrowNid) {
         // 获取相应的标的详情
-        Borrow borrow = this.getBorrow(borrowNid);
-        return CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
+        return this.getBorrowAndInfoByNid(borrowNid);
     }
 
     /**
@@ -150,13 +146,15 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     /**
      * 更新标
      * @auth sunpeikai
-     * @param type 1更新标的备案 2更新受托支付标的备案
+     * @param registUpdateRequest 1更新标的备案 2更新受托支付标的备案
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean updateBorrowRegistByType(BorrowAndInfoVO borrowVO,Integer type) {
-        Borrow borrow = CommonUtils.convertBean(borrowVO,Borrow.class);
+    public Boolean updateBorrowRegistByType(BorrowRegistUpdateRequest registUpdateRequest) {
+        Integer type = registUpdateRequest.getType();
+        BorrowAndInfoVO borrowAndInfoVO = registUpdateRequest.getBorrowVO();
+        Borrow borrow = CommonUtils.convertBean(borrowAndInfoVO,Borrow.class);
         BorrowExample example = new BorrowExample();
         if(type == 1){
             // 更新备案
@@ -165,6 +163,9 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
             // 更新受托支付备案
             example.createCriteria().andIdEqualTo(borrow.getId());
         }
+        borrow.setStatus(registUpdateRequest.getStatus());
+        borrow.setRegistStatus(registUpdateRequest.getRegistStatus());
+        borrow.setRegistTime(new Date());
         return borrowMapper.updateByExampleSelective(borrow, example) > 0;
     }
 
@@ -201,7 +202,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                 params.put("assetId", hjhPlanAsset.getAssetId());
                 params.put("instCode", hjhPlanAsset.getInstCode());
                 try {
-                    autoPreAuditProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                    autoPreAuditMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                     logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列 ");
                 } catch (MQException e) {
                     logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列失败");

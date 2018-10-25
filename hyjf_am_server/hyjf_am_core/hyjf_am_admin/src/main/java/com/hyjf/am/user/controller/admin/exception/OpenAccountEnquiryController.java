@@ -1,6 +1,5 @@
 package com.hyjf.am.user.controller.admin.exception;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankOpenAccountLogResponse;
 import com.hyjf.am.response.user.OpenAccountEnquiryResponse;
@@ -46,7 +45,6 @@ public class OpenAccountEnquiryController extends BaseController {
         String idcard = reqest.getIdcard();
         BankOpenAccountLogResponse response = new BankOpenAccountLogResponse();
         List<BankOpenAccountLog> bankOpenAccountLogList = bankOpenAccountLogSrvice.bankOpenAccountLogSelect(mobile,idcard);
-        JSON.toJSONString(bankOpenAccountLogList);
         if(!CollectionUtils.isEmpty(bankOpenAccountLogList)){
             List<BankOpenAccountLogVO> bankCardExceptionCustomizeVOList = CommonUtils.convertBeanList(bankOpenAccountLogList,BankOpenAccountLogVO.class);
             response.setResultList(bankCardExceptionCustomizeVOList);

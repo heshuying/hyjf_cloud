@@ -160,8 +160,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        		delRedisKey(borrowApicron);
 				}
 	        }catch(Exception e){
-	            logger.error("还款请求系统异常....");
-				e.printStackTrace();
+	            logger.error("还款请求系统异", e);
 				
 	        	StringBuffer sbError = new StringBuffer();// 错误信息
 	        	sbError.append(e.getMessage()).append("<br/>");
@@ -230,7 +229,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 					throw new Exception("-------------------标的号:" + borrowNid + "的还款异常处理失败,变更api任务状态(请求成功)失败!-----------");
 				}
 			} catch (Exception e) {
-				logger.error(e.getMessage());
+				logger.error(e.getMessage(), e);
 			}
 			return false;
 		}
@@ -275,8 +274,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 					delRedisKey(borrowApicron);
 				}
 			} catch (Exception e) {
-				logger.info("---------------标的号:" + borrowNid + "还款请求异常处理校验异常:" + e.getMessage());
-				e.printStackTrace();
+				logger.error("---------------标的号:" + borrowNid + "还款请求异常处理校验异常:" + e.getMessage(), e);
 			}
 			return false;
 		}

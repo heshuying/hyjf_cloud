@@ -83,7 +83,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
             hasBindCard = true;
             for (AccountBankVO bank : banks) {
                 BankCardBean bankCardBean = new BankCardBean();
-                bankCardBean.setId(bank.getUserId());
+                bankCardBean.setId(bank.getId());
                 bankCardBean.setBank(bank.getBank());
                 BankConfigVO bankConfig = amConfigClient.selectBankConfigByCode(bank.getBank());
                 // 应前台要求，logo路径给绝对路径
@@ -102,7 +102,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
                     break;
                 } else if (bank.getCardType().equals("1")) {
                     hasBindDefault = true;
-                    defaultCardId = String.valueOf(bank.getUserId());
+                    defaultCardId = String.valueOf(bank.getId());
                 }
                 bankcards.add(bankCardBean);
             }
@@ -131,7 +131,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
     @Override
     public void checkParam(Integer userId, String transAmtStr, String bankId) {
         // 检查参数(交易金额是否数字)
-        CheckUtil.check(Validator.isNotNull(transAmtStr)&& StringUtils.isNumeric(transAmtStr),MsgEnum.ERR_AMT_WITHDRAW_AMOUNT);
+        CheckUtil.check(Validator.isNotNull(transAmtStr)&& NumberUtils.isNumber(transAmtStr),MsgEnum.ERR_AMT_WITHDRAW_AMOUNT);
         // 检查参数(交易金额是否大于0)
         BigDecimal transAmt = new BigDecimal(transAmtStr);
         CheckUtil.check(transAmt.compareTo(BigDecimal.ONE) > 0,MsgEnum.ERR_AMT_WITHDRAW_AMOUNT_GREATER_THAN_ONE);
@@ -173,8 +173,8 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
         reqExt.add(reqExtObj);
         // 调用汇付接口(提现)
         // 支付工程路径
-        String retUrl = systemConfig.getWebHost() + "/user/withdraw/return";
-        String bgRetUrl = systemConfig.getWebHost() + "/user/withdraw/callback";
+        String retUrl = systemConfig.getFrontHost()+"/user/withdrawHfDeal";
+        String bgRetUrl = "http://CS-TRADE/hyjf-web/chinapnr/withdraw/callback";
         ChinapnrBean bean = new ChinapnrBean();
         // 接口版本号
         bean.setVersion(ChinaPnrConstant.VERSION_20);

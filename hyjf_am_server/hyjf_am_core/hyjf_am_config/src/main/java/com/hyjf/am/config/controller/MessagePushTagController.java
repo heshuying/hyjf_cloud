@@ -47,6 +47,24 @@ public class MessagePushTagController extends BaseConfigController{
 	}
 
 	/**
+	 * 根据名称获取消息模板标签
+	 *
+	 * @param tagName
+	 * @return
+	 */
+	@RequestMapping("/selectMsgTagByTagId/{tagId}")
+	public MessagePushTagResponse selectMsgTagByTagId(@PathVariable Integer tagId) {
+		MessagePushTagResponse response = new MessagePushTagResponse();
+		MessagePushTag messagePushTag = messagePushTagServcie.getRecord(tagId);
+		if (messagePushTag != null) {
+			MessagePushTagVO messagePushTagVO = new MessagePushTagVO();
+			BeanUtils.copyProperties(messagePushTag, messagePushTagVO);
+			response.setResult(messagePushTagVO);
+		}
+		return response;
+	}
+
+	/**
 	 * 获取消息推送标签管理列表
 	 * @param request
 	 * @return

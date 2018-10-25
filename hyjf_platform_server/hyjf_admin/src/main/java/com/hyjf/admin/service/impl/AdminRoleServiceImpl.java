@@ -3,16 +3,18 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.service.AdminRoleService;
+import com.hyjf.am.response.admin.AdminRoleResponse;
+import com.hyjf.am.response.config.AdminSystemResponse;
+import com.hyjf.am.resquest.admin.UserRoleRequest;
+import com.hyjf.am.resquest.config.AdminMenuRequest;
+import com.hyjf.am.resquest.config.AdminRoleRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.service.AdminRoleService;
-import com.hyjf.am.response.admin.AdminRoleResponse;
-import com.hyjf.am.resquest.admin.UserRoleRequest;
-import com.hyjf.am.resquest.config.AdminRoleRequest;
+import java.util.List;
 
 /**
  * @author DongZeShan
@@ -68,6 +70,46 @@ public class AdminRoleServiceImpl implements AdminRoleService {
 	public AdminRoleResponse modifyPermissionAction(UserRoleRequest bean) {
 		 
 		return amConfigClient.modifyPermissionAction(bean);
+	}
+
+	@Override
+	public JSONArray selectLeftMenuTree(String id) {
+		return amConfigClient.selectLeftMenuTree(id);
+	}
+
+	@Override
+	public AdminSystemResponse insertAction(AdminMenuRequest form) {
+ 
+		return amConfigClient.insertAction(form) ;
+	}
+
+	@Override
+	public AdminSystemResponse getuser(AdminMenuRequest form) {
+ 
+		return amConfigClient.getuser(form);
+	}
+
+	@Override
+	public AdminSystemResponse deleteRecordAction(AdminMenuRequest form) {
+ 
+		return amConfigClient.deleteRecordAction(form);
+	}
+
+	@Override
+	public AdminSystemResponse moveToAuthAction(AdminMenuRequest form) {
+ 
+		return amConfigClient.moveToAuthAction(form);
+	}
+
+	@Override
+	public AdminSystemResponse updateMenuPermissionsAction(AdminMenuRequest form) {
+ 
+		return amConfigClient.updateMenuPermissionsAction(form);
+	}
+
+	@Override
+	public List<String> getPermissionId(String string) {
+		return amConfigClient.getPermissionId(string);
 	}
 
 }

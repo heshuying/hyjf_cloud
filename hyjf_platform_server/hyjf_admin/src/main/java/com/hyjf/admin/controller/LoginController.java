@@ -5,8 +5,6 @@ package com.hyjf.admin.controller;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ShiroConstants;
-import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.LoginService;
 import com.hyjf.admin.utils.PictureInitUtil;
 import com.hyjf.am.bean.admin.LockedConfig;
@@ -37,12 +35,11 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import java.awt.Font;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author DongZeShan
@@ -74,11 +71,11 @@ public class LoginController extends BaseController {
 		logger.info("登陆开始用户:"+username);
 		String password=map.get("password");
         String captcha =map.get("code");
-        Long loginCaptcha = (Long) request.getSession().getAttribute("LoginCaptcha");
+       /* Long loginCaptcha = (Long) request.getSession().getAttribute("LoginCaptcha");
         if (captcha == null || captcha.isEmpty() || loginCaptcha == null
                 || !loginCaptcha.toString().equals(captcha)) {
         	return new AdminResult<>(FAIL, "验证码错误");
-        }
+        }*/
 		AdminSystemRequest adminSystemRequest=new AdminSystemRequest();
 		adminSystemRequest.setUsername(username);
 		adminSystemRequest.setPassword(password);

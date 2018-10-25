@@ -5,7 +5,6 @@ package com.hyjf.admin.controller.locked;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.locked.LockedUserService;
 import com.hyjf.am.response.Response;
@@ -63,11 +62,11 @@ public class LockedUserController extends BaseController {
     @ApiOperation(value = "前台解锁",notes = "前台解锁")
     @PostMapping(value = "/frontunlock")
     @ResponseBody
-    public BaseResult<Boolean> frontUnlock(@RequestBody String lockedUserId, HttpServletRequest request){
+    public BaseResult<Boolean> frontUnlock(@RequestBody LockedUserInfoVO lockedUserInfoVO, HttpServletRequest request){
 
-        LockedUserInfoVO vo=buildVO(lockedUserId, request);
+        buildVO(lockedUserInfoVO, request);
 
-        Response response = lockedUserService.unlock(vo,false);
+        Response response = lockedUserService.unlock(lockedUserInfoVO,false);
 
         Boolean isSuccess=response.getRtn().equals(Response.SUCCESS);
 
@@ -81,11 +80,11 @@ public class LockedUserController extends BaseController {
     @ApiOperation(value = "后台解锁",notes = "后台解锁")
     @PostMapping(value = "/adminunlock")
     @ResponseBody
-    public BaseResult<Boolean> adminUnlock(@RequestBody String lockedUserId,HttpServletRequest request){
+    public BaseResult<Boolean> adminUnlock(@RequestBody LockedUserInfoVO lockedUserInfoVO,HttpServletRequest request){
 
-        LockedUserInfoVO vo=buildVO(lockedUserId, request);
+        buildVO(lockedUserInfoVO, request);
 
-        Response response= lockedUserService.unlock(vo,false);
+        Response response= lockedUserService.unlock(lockedUserInfoVO,false);
 
         Boolean isSuccess=response.getRtn().equals(Response.SUCCESS);
 
@@ -96,13 +95,10 @@ public class LockedUserController extends BaseController {
         }
     }
 
-    private LockedUserInfoVO buildVO(String lockedUserId, HttpServletRequest request) {
+    private void buildVO(LockedUserInfoVO lockedUserInfoVO, HttpServletRequest request) {
         AdminSystemVO user=getUser(request);
         String operatorId=user.getId();
-        LockedUserInfoVO vo=new LockedUserInfoVO();
-        vo.setId(Integer.valueOf(lockedUserId));
-        vo.setOperator(Integer.valueOf(operatorId));
-        return vo;
+        lockedUserInfoVO.setOperator(Integer.valueOf(operatorId));
     }
 }
 

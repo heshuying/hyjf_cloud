@@ -1073,7 +1073,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
      * @Param userId
      */
     public BankOpenAccountVO getBankOpenAccount(Integer userId) {
-        return amUserClient.selectById(userId);
+        return amUserClient.selectBankAccountById(userId);
     }
 
     /**

@@ -9,7 +9,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.client.CouponRepayMonitorClient;
 import com.hyjf.cs.trade.service.batch.CouponRepayStatisticService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +33,6 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
     private AmConfigClient amConfigClient;
     @Autowired
     private AmTradeClient amTradeClient;
-    @Autowired
-    private CouponRepayMonitorClient couponRepayMonitorClient;
 
     /**
      * 自动生成加息券每日收益统计数据
@@ -75,7 +72,7 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
                 interestReceived = BigDecimal.ZERO;
             }
 
-            List<CouponRepayMonitorVO> monitors = couponRepayMonitorClient.selectCouponRepayMonitor(nowDay);
+            List<CouponRepayMonitorVO> monitors = amTradeClient.selectCouponRepayMonitor(nowDay);
 
             if(monitors == null || monitors.isEmpty()){
                 //新增
@@ -89,7 +86,7 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
                 monitor.setUpdateTime(GetDate.getNowTime10());
                 monitor.setUpdateUser(CustomConstants.USERID_ADMIN);
                 monitor.setDelFlag(0);
-                result = couponRepayMonitorClient.insertCouponRepayMonitor(monitor);
+                result = amTradeClient.insertCouponRepayMonitor(monitor);
             }else {
                 //更新
                 CouponRepayMonitorVO monitor = monitors.get(0);
@@ -97,7 +94,7 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
                 monitor.setInterestYesTotal(interestReceived);
                 monitor.setUpdateTime(GetDate.getNowTime10());
                 monitor.setUpdateUser(CustomConstants.USERID_ADMIN);
-                result = couponRepayMonitorClient.updateCouponRepayMonitor(monitor);
+                result = amTradeClient.updateCouponRepayMonitor(monitor);
             }
         }
 

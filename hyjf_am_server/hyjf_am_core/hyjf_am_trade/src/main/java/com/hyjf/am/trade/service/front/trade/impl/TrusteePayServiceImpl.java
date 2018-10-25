@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AutoPreAuditProducer;
+import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoPreAuditMessageProducer;
 import com.hyjf.am.trade.service.front.trade.TrusteePayService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.constants.MQConstant;
@@ -28,7 +28,7 @@ import java.util.UUID;
 @Service
 public class TrusteePayServiceImpl extends BaseServiceImpl implements TrusteePayService {
     @Autowired
-    AutoPreAuditProducer autoPreAuditProducer;
+    AutoPreAuditMessageProducer autoPreAuditMessageProducer;
 
     /**
      * 借款人受托支付申请异步回调更新
@@ -75,7 +75,8 @@ public class TrusteePayServiceImpl extends BaseServiceImpl implements TrusteePay
                         params.put("mqMsgId", GetCode.getRandomCode(10));
                         params.put("assetId", hjhHp.getAssetId());
                         params.put("instCode", hjhHp.getInstCode());
-                        autoPreAuditProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                        //modify by liushouyi 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+                        autoPreAuditMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                     }
                 } catch (Exception e) {
                     logger.error("发送自动初审MQ失败(AM),标的编号:【" + borrowNid + "】错误原因：", e);

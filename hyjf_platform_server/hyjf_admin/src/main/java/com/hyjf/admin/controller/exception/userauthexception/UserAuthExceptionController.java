@@ -16,7 +16,10 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,20 +59,20 @@ public class UserAuthExceptionController extends BaseController {
     /**
      * 同步用户授权状态
      * @auth sunpeikai
-     * @param userId 用户id
-     * @param type 1自动投资授权  2债转授权
      * @return
      */
     @ApiOperation(value = "同步用户授权状态", notes = "同步用户授权状态")
     @PostMapping(value = "/syn_user_auth")
-    public AdminResult synUserAuth(@RequestParam Integer userId , @RequestParam Integer type){
+    public AdminResult synUserAuth(@RequestBody AdminUserAuthListRequest request){
+        Integer userId = Integer.valueOf(request.getUserId());
+        Integer type = request.getType();
         logger.info("同步用户[{}]的授权状态,同步类型[{}]",userId,type);
         AdminUserAuthListResponse response = userAuthExceptionService.synUserAuth(userId, type);
 
         if(AdminResponse.isSuccess(response)){
-            return new AdminResult(SUCCESS,SUCCESS_DESC);
+            return new AdminResult(SUCCESS,response.getMessage());
         }else{
-            return new AdminResult(FAIL,FAIL_DESC);
+            return new AdminResult(FAIL,response.getMessage());
         }
     }
 

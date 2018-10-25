@@ -41,6 +41,10 @@ public class BorrowRepaymentInfoListCustomizeVO {
     private String instName; //机构名称
     private String repayBatchNo;
 
+    public String getRecoverAccountCopy() {
+        return recoverAccount;
+    }
+
     public String getNid() {
         return nid;
     }

@@ -11,7 +11,7 @@ import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.call.DzqzCallApi;
 import com.hyjf.pay.lib.fadada.call.impl.DzqzCallApiImpl;
 import com.hyjf.pay.mq.FddProducer;
-import com.hyjf.pay.mq.Producer;
+import com.hyjf.pay.mq.MessageContent;
 import com.hyjf.pay.service.DzqzPayLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.TreeMap;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(DzqzCallDefine.FDD_REQUEST_MAPPING)
@@ -47,7 +48,7 @@ public class DzqzCallController extends BaseController {
     @PostMapping(value = DzqzCallDefine.FDD_CALL_APIBG)
     public String callApiBg(@RequestBody DzqzCallBean bean) {
         log.info("--------------开始调用pay工程-------------");
-        log.info("-------fdd-------ca参数-----[{}]",JSON.toJSONString(bean));
+        log.debug("-------fdd-------ca参数-----[{}]",JSON.toJSONString(bean));
         String ret = "";
         String orderId = "";
         try {
@@ -114,11 +115,13 @@ public class DzqzCallController extends BaseController {
             if (!"3000".equals(result_code)){//未签署成功
                 log.info("--------------合同签署异步返回签署失败-----------交易号：" + orderId + "--交易描述：" + bean.getResult_desc());
             }else{
-                fddProducer.messageSend(new Producer.MassageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_AUTO_SIGN_TAG,JSON.toJSONBytes(bean)));
+                fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_AUTO_SIGN_TAG, UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
             }
         } catch (Exception e) {
-            log.info("---------------合同签署异步返回异常，txcode:" + bean.getResult_code() + ",logordid:" + orderId);
             e.printStackTrace();
+            log.info("--------------合同签署异步返回异常" + e.getMessage());
+            log.info("---------------合同签署异步返回异常，txcode:" + bean.getResult_code() + ",logordid:" + orderId);
+
         }
         return "success";
     }

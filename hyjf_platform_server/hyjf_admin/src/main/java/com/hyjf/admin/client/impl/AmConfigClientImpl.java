@@ -82,6 +82,18 @@ public class AmConfigClientImpl implements AmConfigClient {
         DebtConfigResponse response = restTemplate.postForEntity(url,request,DebtConfigResponse.class).getBody();
         return response;
     }
+    @Override
+    public int countDebtConfigLogTotal(){
+        String url = "http://AM-ADMIN/am-admin/debtconfig/countdebtconfiglogtotal" ;
+        IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+        return response.getResultInt();
+    }
+    @Override
+    public List<DebtConfigLogVO> getDebtConfigLogList(DebtConfigRequest req){
+        String url = "http://AM-ADMIN/am-admin/debtconfig/getdebtconfigloglist" ;
+        DebtConfigLogResponse response = restTemplate.postForEntity(url,req,DebtConfigLogResponse.class).getBody();
+        return response.getResultList();
+    }
 
     @Override
     public List<ParamNameVO> getParamNameList(String nameClass) {
@@ -150,7 +162,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public String getBankRetMsg(String retCode) {
         BankReturnCodeConfigResponse response = restTemplate
-                .getForEntity("http://AM-ADMIN/config/getBankReturnCodeConfig/" + retCode,
+                .getForEntity("http://AM-ADMIN/am-config/config/getBankReturnCodeConfig/" + retCode,
                         BankReturnCodeConfigResponse.class)
                 .getBody();
         if (response != null) {
@@ -2209,4 +2221,67 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
 	}
+    @Override
+    public JSONArray selectLeftMenuTree(String id) {
+        String url = "http://AM-ADMIN/am-config/menu/selectLeftMenuTree/" + id;
+        JSONArray response = restTemplate.getForEntity(url,JSONArray.class).getBody();
+        if (null != response) {
+            return response;
+        }
+        return null;
+    }
+    @Override
+    public AdminSystemResponse insertAction(AdminMenuRequest form) {
+        String url = "http://AM-ADMIN/am-config/menu/insertAction";
+        AdminSystemResponse response = restTemplate.postForEntity(url, form, AdminSystemResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+    @Override
+    public AdminSystemResponse getuser(AdminMenuRequest form) {
+        String url = "http://AM-ADMIN/am-config/menu/getuser";
+        AdminSystemResponse response = restTemplate.postForEntity(url, form, AdminSystemResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+    @Override
+    public AdminSystemResponse deleteRecordAction(AdminMenuRequest form) {
+        String url = "http://AM-ADMIN/am-config/menu/deleteRecordAction";
+        AdminSystemResponse response = restTemplate.postForEntity(url, form, AdminSystemResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+    @Override
+    public AdminSystemResponse moveToAuthAction(AdminMenuRequest form) {
+        String url = "http://AM-ADMIN/am-config/menu/moveToAuthAction";
+        AdminSystemResponse response = restTemplate.postForEntity(url, form, AdminSystemResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+    @Override
+    public AdminSystemResponse updateMenuPermissionsAction(AdminMenuRequest form) {
+        String url = "http://AM-ADMIN/am-config/menu/updateMenuPermissionsAction";
+        AdminSystemResponse response = restTemplate.postForEntity(url, form, AdminSystemResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+    @Override
+    public List<String> getPermissionId(String string) {
+        String url = "http://AM-ADMIN/am-config/role/getPermissionId/"+string;
+        List<String>  response = restTemplate.getForEntity(url, List.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
 }

@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.controller.wechat.user.trade;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -51,13 +51,12 @@ public class WechatTradeDetailController extends BaseTradeController {
     /**
      * 用户收支明细
      *
-     * @param trade
      * @return
      */
     @ApiOperation(value = "用户收支明细", notes = "用户收支明细")
     @ResponseBody
     @PostMapping(value = "/queryTradeList.do",  produces = "application/json; charset=utf-8")
-    public Map<String, Object> searchTradeDetailList(@RequestHeader(value = "userId" , required = false )Integer userId, @RequestBody @Valid AppTradeDetailBeanRequest trade) {
+    public Map<String, Object> searchTradeDetailList(HttpServletRequest request,@RequestHeader(value = "userId" , required = false )Integer userId) {
 
         SimpleResultBean<Map<String, Object>> resultBean = new SimpleResultBean<>();
 
@@ -65,7 +64,8 @@ public class WechatTradeDetailController extends BaseTradeController {
         resultBean.setObject(mapVo);
 
         Preconditions.checkArgument(userId!=null);
-        trade.setUserId(userId);
+        AppTradeDetailBeanRequest trade=createBean(request,userId);
+
         AppTradeDetailBean appTradeDetailBean=tradeDetailService.createTradeDetailListPage(trade);
         int totalCount = appTradeDetailBean.getTradeTotal();
 
@@ -83,6 +83,24 @@ public class WechatTradeDetailController extends BaseTradeController {
         return mapVo;
     }
 
+    private AppTradeDetailBeanRequest createBean(HttpServletRequest request, Integer userId) {
+        AppTradeDetailBeanRequest trade=new AppTradeDetailBeanRequest();
+
+        String currentPageStr = request.getParameter("currentPage");
+        String pageSizeStr = request.getParameter("pageSize");
+        String tradeType = request.getParameter("tradeType");
+        String year = request.getParameter("year");
+        String month = request.getParameter("month");
+        int currentPage = Strings.isNullOrEmpty(currentPageStr) ? 1 : Integer.valueOf(currentPageStr);
+        int pageSize = Strings.isNullOrEmpty(currentPageStr) ? 10 : Integer.valueOf(pageSizeStr);
+        trade.setUserId(userId);
+        trade.setYear(year);
+        trade.setMonth(month);
+        trade.setTradeType(tradeType);
+        trade.setCurrPage(currentPage);
+        trade.setPageSize(pageSize);
+        return trade;
+    }
 
 
 }

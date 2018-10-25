@@ -3,6 +3,8 @@ package com.hyjf.am.config.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.service.DebtConfigService;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.config.DebtConfigLogResponse;
 import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.admin.DebtConfigRequest;
 import com.hyjf.am.vo.config.DebtConfigVO;
@@ -46,4 +48,14 @@ public class DebtConfigController extends BaseConfigController{
         return response;
     }
 
+    @GetMapping("/countdebtconfiglogtotal")
+    public IntegerResponse countDebtConfigLogTotal(){
+        IntegerResponse response= debtConfigService.countDebtConfigLogTotal();
+        return response;
+    }
+    @PostMapping("/getdebtconfigloglist")
+    public DebtConfigLogResponse getDebtConfigLogList(@RequestBody DebtConfigRequest request){
+        DebtConfigLogResponse response= debtConfigService.getDebtConfigLogList(request);
+        return response;
+    }
 }

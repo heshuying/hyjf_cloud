@@ -112,6 +112,7 @@ public class CreditController {
     @PostMapping(value = "/checkCode", produces = "application/json; charset=utf-8")
     public WebResult checkCode(@RequestBody TenderBorrowCreditCustomize request,
                               @RequestHeader(value = "userId",required = false) Integer userId){
+        request.setPlatform(Integer.parseInt(CommonConstant.CLIENT_PC));
         WebResult result = creditListService.checkCode(request,userId);
         return result;
     }

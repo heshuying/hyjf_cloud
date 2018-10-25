@@ -1,10 +1,12 @@
 package com.hyjf.admin.controller.mobileclient;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.mobileclient.SubmissionsService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
@@ -17,22 +19,18 @@ import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 意见反馈
@@ -122,14 +120,22 @@ public class SubmissionsController extends BaseController {
      */
     @ApiOperation(value = "意见反馈导出", notes = "意见反馈导出")
     @PostMapping("/exportListAction")
-    public void exportListAction(@RequestBody SubmissionsRequest form,
+    public void exportListAction(HttpServletRequest request,@RequestBody SubmissionsRequest form,
                                  HttpServletResponse response) throws Exception {
-        Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
+
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "意见反馈列表";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
-                + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        //请求第一页5000条
+        form.setPageSize(defaultRowMaxCount);
+        form.setCurrPage(1);
+        Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
         if(StringUtils.isNotBlank(form.getUserName())){
             UserResponse user = submissionsService.getUserIdByUserName(form.getUserName());
             if(user!=null&&user.getResult()!=null){
@@ -147,57 +153,52 @@ public class SubmissionsController extends BaseController {
             String userName = users.getResult() != null ? users.getResult().getUsername() : "";
             submissionsCustomizeVO.setUserName(userName);
         }
-      //  List<SubmissionsCustomizeVO> submissionsList = this.submissionsService.queryRecordList(searchCon, -1, -1);
+        Integer totalCount = submissionsList.size();
 
-        String[] titles = new String[] { "序号", "用户名", "操作系统", "版本号", "手机型号", "反馈内容", "时间" };
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = new HashMap<>();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
 
-        if (submissionsList != null && submissionsList.size() > 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, submissionsList);
+        }
+        for (int i = 1; i < sheetCount; i++) {
 
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < submissionsList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles,
-                            (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    SubmissionsCustomizeVO submissions = submissionsList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {// 序号
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) { // 用户名
-                        cell.setCellValue(submissions.getUserName());
-                    } else if (celLength == 2) { // 系统
-                        cell.setCellValue(submissions.getSysType());
-                    } else if (celLength == 3) { // 平台版本号
-                        cell.setCellValue(submissions.getPlatformVersion());
-                    } else if (celLength == 4) {// 手机型号
-                        cell.setCellValue(submissions.getPhoneType());
-                    } else if (celLength == 5) {// 反馈内容
-                        cell.setCellValue(submissions.getContent());
-                    } else if (celLength == 6) {// 时间
-                        cell.setCellValue(submissions.getAddTime());
-                    }
-                }
+            form.setCurrPage(i+1);
+            form.setPageSize(defaultRowMaxCount);
+            Map<String, String> userStatus2 = CacheUtil.getParamNameMap("CLIENT");
+            SubmissionsResponse submissionList2 = submissionsService.getExportSubmissionList(form);
+            List<SubmissionsCustomizeVO> submissionsList2 = submissionList2.getResultList();
+            for (SubmissionsCustomizeVO submissionsCustomizeVO : submissionsList2) {
+                String type = userStatus2.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
+                submissionsCustomizeVO.setSysType(type);
+                Integer userId = submissionsCustomizeVO.getUserId();
+                UserResponse users = submissionsService.getUserIdByUserId(userId);
+                String userName = users.getResult() != null ? users.getResult().getUsername() : "";
+                submissionsCustomizeVO.setUserName(userName);
+            }
+            if (submissionsList2 != null && submissionsList2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  submissionsList2);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("userName","用户名");
+        map.put("sysType","操作系统");
+        map.put("platformVersion","版本号");
+        map.put("phoneType","手机型号");
+        map.put("content","反馈内容");
+        map.put("addTime","时间");
+        return map;
+    }
 
 }

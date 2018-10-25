@@ -3,7 +3,8 @@
  */
 package com.hyjf.am.trade.service.front.consumer;
 
-import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -24,5 +25,17 @@ public interface BatchBorrowRepayZTService extends BaseService {
 	boolean reapyBatchDetailsUpdate(BorrowApicron apicron);
 
 	BorrowApicron selApiCronByPrimaryKey(int id);
+
+	boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
+
+	boolean updateTenderRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover,
+			JSONObject repayDetail) throws Exception;
+
+	boolean updateRecover(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception;
+
+	boolean updateTenderRepayStatus(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception;
+
+	boolean updateCreditRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover,
+			CreditRepay creditRepay, JSONObject assignRepayDetail) throws Exception;
 
 }

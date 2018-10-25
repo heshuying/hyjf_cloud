@@ -7,7 +7,6 @@ import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmpExample;
 import com.hyjf.am.trade.service.front.hjh.HjhPlanBorrowTmpService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.common.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

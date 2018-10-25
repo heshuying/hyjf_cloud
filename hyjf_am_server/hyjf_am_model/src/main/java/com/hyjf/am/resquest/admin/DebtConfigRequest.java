@@ -1,5 +1,8 @@
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -35,6 +38,48 @@ public class DebtConfigRequest implements Serializable {
     private String ipAddress;
 
     private String macAddress;
+
+    @ApiModelProperty("列表画面自定义标签上的用翻页对象")
+    private Paginator paginator;
+    /**
+     * 当前页码
+     */
+    @ApiModelProperty(value = "当前页")
+    private int currPage;
+    /**
+     * 翻页机能用的隐藏变量
+     */
+    @ApiModelProperty("翻页机能用的隐藏变量")
+    private int paginatorPage = 1;
+
+    @ApiModelProperty("开始页")
+    private int limitStart;
+
+    @ApiModelProperty("结束页")
+    private int limitEnd;
+    /**
+     * 当前页条数
+     */
+    @ApiModelProperty(value = "当前页条数")
+    private int pageSize = 10;
+    public int getPaginatorPage() {
+        if (paginatorPage == 0) {
+            paginatorPage = 1;
+        }
+        return paginatorPage;
+    }
+
+    public void setPaginatorPage(int paginatorPage) {
+        this.paginatorPage = paginatorPage;
+    }
+
+    public Paginator getPaginator() {
+        return paginator;
+    }
+
+    public void setPaginator(Paginator paginator) {
+        this.paginator = paginator;
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -132,5 +177,37 @@ public class DebtConfigRequest implements Serializable {
 
     public void setMacAddress(String macAddress) {
         this.macAddress = macAddress == null ? null : macAddress.trim();
+    }
+
+    public int getCurrPage() {
+        return currPage;
+    }
+
+    public void setCurrPage(int currPage) {
+        this.currPage = currPage;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

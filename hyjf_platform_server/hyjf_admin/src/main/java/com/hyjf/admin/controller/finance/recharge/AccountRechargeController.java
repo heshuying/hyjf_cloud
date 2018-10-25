@@ -2,13 +2,15 @@ package com.hyjf.admin.controller.finance.recharge;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AccountRechargeRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.finance.recharge.AccountRechargeService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
@@ -24,17 +26,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -325,175 +324,142 @@ public class AccountRechargeController extends BaseController {
 
     @ApiOperation(value = "充值管理数据导出",notes = "资金中心->充值管理数据导出")
     @PostMapping(value = "/exportAction")
-    public void exportAction(HttpServletResponse response, @RequestBody AccountRechargeRequestBean request) throws UnsupportedEncodingException {
-
-        AccountRechargeRequest accountRechargeRequest = new AccountRechargeRequest();
-        BeanUtils.copyProperties(request, accountRechargeRequest);
-
-        // currPage<0 为全部,currPage>0 为具体某一页
-        accountRechargeRequest.setCurrPage(-1);
-
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody AccountRechargeRequestBean accountRechargeRequestBean) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "充值管理详情数据";
-        // 设置默认查询时间
-        if (StringUtils.isEmpty(accountRechargeRequest.getStartDate())) {
-            accountRechargeRequest.setStartDate(GetDate.getDate("yyyy-MM-dd"));
-        }
-        if (StringUtils.isEmpty(accountRechargeRequest.getEndDate())) {
-            accountRechargeRequest.setEndDate(GetDate.getDate("yyyy-MM-dd"));
-        }
-
-        List<AccountRechargeCustomizeVO> returnList = null;
-        AccountRechargeCustomizeResponse rechargeResponse = this.rechargeService.queryRechargeList(accountRechargeRequest);
-
-        if (rechargeResponse.getCount() > 0) {
-            returnList = CommonUtils.convertBeanList(rechargeResponse.getResultList(), AccountRechargeCustomizeVO.class);
-        }
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-
-        // String[] titles = new String[] { "用户名", "订单号", "充值渠道", "充值银行",
-        // "银行卡号", "充值金额", "手续费", "垫付手续费" , "到账金额", "充值状态", "充值平台", "充值时间" };
-        String[] titles = new String[] { "序号", "订单号", "用户名", "电子账号", "手机号", "流水号", "资金托管平台", "用户角色", "用户属性（当前）", "用户所属一级分部（当前）", "用户所属二级分部（当前）", "用户所属团队（当前）", "推荐人用户名（当前）", "推荐人姓名（当前）",
-                "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）", "充值渠道", "充值类型", "充值银行", "银行卡号", "充值金额", "手续费", "垫付手续费", "到账金额", "充值状态", "充值平台", "充值时间" ,"发送日期" ,"发送时间" ,"系统跟踪号" };
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
         // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+        AccountRechargeRequest accountRechargeRequest = new AccountRechargeRequest();
+        BeanUtils.copyProperties(accountRechargeRequestBean, accountRechargeRequest);
 
-        if (returnList != null && returnList.size() > 0) {
+        //请求第一页5000条
+        accountRechargeRequest.setPageSize(defaultRowMaxCount);
+        accountRechargeRequest.setCurrPage(1);
+        AccountRechargeCustomizeResponse rechargeResponse = rechargeService.queryRechargeList(accountRechargeRequest);
 
-            int sheetCount = 1;
-            int rowNum = 0;
+        Integer totalCount = rechargeResponse.getCount();
 
-            for (int i = 0; i < returnList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, rechargeResponse.getResultList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
 
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-//                    AccountRechargeVO record = returnList.get(i);
-                    AccountRechargeCustomizeVO record = returnList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) {
-                        cell.setCellValue(record.getNid());
-                    } else if (celLength == 2) {
-                        cell.setCellValue(record.getUsername());
-                    } else if (celLength == 3) {
-                        cell.setCellValue(record.getAccountId());
-                    }
-                    // 手机号
-                    else if (celLength == 4) {
-                        cell.setCellValue(record.getMobile());
-                    }
-                    // 流水号
-                    else if (celLength == 5) {
-                        cell.setCellValue(record.getSeqNo());
-                    }
-                    // 资金托管平台
-                    else if (celLength == 6) {
-                        cell.setCellValue(record.getIsBank());
-                    }
-                    // 用户角色
-                    else if (celLength == 7) {
-                        cell.setCellValue(record.getRoleId());
-                    }
-                    // 用户属性（当前）
-                    else if (celLength == 8) {
-                        if ("0".equals(record.getUserAttribute())) {
-                            cell.setCellValue("无主单");
-                        } else if ("1".equals(record.getUserAttribute())) {
-                            cell.setCellValue("有主单");
-                        } else if ("2".equals(record.getUserAttribute())) {
-                            cell.setCellValue("线下员工");
-                        } else if ("3".equals(record.getUserAttribute())) {
-                            cell.setCellValue("线上员工");
-                        }
-                    }
-                    // 用户所属一级分部（当前）
-                    else if (celLength == 9) {
-                        cell.setCellValue(record.getUserRegionName());
-                    }
-                    // 用户所属二级分部（当前）
-                    else if (celLength == 10) {
-                        cell.setCellValue(record.getUserBranchName());
-                    }
-                    // 用户所属团队（当前）
-                    else if (celLength == 11) {
-                        cell.setCellValue(record.getUserDepartmentName());
-                    }
-                    // 推荐人用户名（当前）
-                    else if (celLength == 12) {
-                        cell.setCellValue(record.getReferrerName());
-                    }
-                    // 推荐人姓名（当前）
-                    else if (celLength == 13) {
-                        cell.setCellValue(record.getReferrerTrueName());
-                    }
-                    // 推荐人所属一级分部（当前）
-                    else if (celLength == 14) {
-                        cell.setCellValue(record.getReferrerRegionName());
-                    }
-                    // 推荐人所属二级分部（当前）
-                    else if (celLength == 15) {
-                        cell.setCellValue(record.getReferrerBranchName());
-                    }
-                    // 推荐人所属团队（当前）
-                    else if (celLength == 16) {
-                        cell.setCellValue(record.getReferrerDepartmentName());
-                    } else if (celLength == 17) {
-                        cell.setCellValue(record.getType());// 充值渠道
-                    } else if (celLength == 18) {
-                        if (record.getGateType() != null && "B2C".equals(record.getGateType())) {
-                            cell.setCellValue("个人网银充值"); // 充值类型
-                        } else if (record.getGateType() != null && "B2B".equals(record.getGateType())) {
-                            cell.setCellValue("企业网银充值"); // 充值类型
-                        } else if (record.getGateType() != null && "QP".equals(record.getGateType())) {
-                            cell.setCellValue("快捷充值"); // 充值类型
-                        } else {
-                            cell.setCellValue(record.getGateType()); // 充值类型
-                        }
-                    } else if (celLength == 19) {
-                        cell.setCellValue(record.getBankName());
-                    } else if (celLength == 20) {
-                        cell.setCellValue(record.getCardid());
-                    } else if (celLength == 21) {
-                        cell.setCellValue(record.getMoney() + "");
-                    } else if (celLength == 22) {
-                        cell.setCellValue(record.getFee() != null ? (record.getFee() + "") : (0 + ""));
-                    } else if (celLength == 23) {
-                        cell.setCellValue(record.getDianfuFee() != null ? (record.getDianfuFee() + "") : (0 + ""));
-                    } else if (celLength == 24) {
-                        cell.setCellValue(record.getBalance() + "");
-                    } else if (celLength == 25) {
-                        cell.setCellValue(record.getStatus());
-                    } else if (celLength == 26) {
-                        cell.setCellValue(record.getClient());
-                    } else if (celLength == 27) {
-                        cell.setCellValue(record.getCreateTime());
-                    } else if (celLength == 28) {
-                        cell.setCellValue(record.getTxDate());
-                    } else if (celLength == 29) {
-                        cell.setCellValue(record.getTxTime());
-                    } else if (celLength == 30) {
-                        cell.setCellValue(record.getBankSeqNo());
-                    }
-                    // 以下都是空
-                }
+            accountRechargeRequest.setPageSize(defaultRowMaxCount);
+            accountRechargeRequest.setCurrPage(i+1);
+            AccountRechargeCustomizeResponse rechargeCustomizeResponse = rechargeService.queryRechargeList(accountRechargeRequest);
+            if (rechargeCustomizeResponse != null && rechargeCustomizeResponse.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  rechargeCustomizeResponse.getResultList());
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("nid", "订单号");
+        map.put("username", "用户名");
+        map.put("accountId", "电子账号");
+        map.put("mobile", "手机号");
+        map.put("seqNo", "流水号");
+        map.put("isBank", "资金托管平台");
+        map.put("roleId", "用户角色");
+        map.put("userAttribute", "用户属性（当前）");
+        map.put("userRegionName", "用户所属一级分部（当前）");
+        map.put("userBranchName", "用户所属二级分部（当前）");
+        map.put("userDepartmentName", "用户所属团队（当前）");
+        map.put("referrerName", "推荐人用户名（当前）");
+        map.put("referrerTrueName", "推荐人姓名（当前）");
+        map.put("referrerRegionName", "推荐人所属一级分部（当前）");
+        map.put("referrerBranchName", "推荐人所属二级分部（当前）");
+        map.put("referrerDepartmentName", "推荐人所属团队（当前）");
+        map.put("type", "充值渠道");
+        map.put("gateType", "充值类型");
+        map.put("bankName", "充值银行");
+        map.put("cardid", "银行卡号");
+        map.put("money", "充值金额");
+        map.put("fee", "手续费");
+        map.put("dianfufee", "垫付手续费");
+        map.put("balance", "到账金额");
+        map.put("status", "充值状态");
+        map.put("client", "充值平台");
+        map.put("createTime", "充值时间");
+        map.put("txDate", "发送日期");
+        map.put("txTime", "发送时间");
+        map.put("bankSeqNo", "系统跟踪号");
+
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter userAttributeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String userAttribute = (String) object;
+                if ("0".equals(userAttribute)) {
+                    return "无主单";
+                } else if ("1".equals(userAttribute)) {
+                    return "有主单";
+                } else if ("2".equals(userAttribute)) {
+                    return "线下员工";
+                } else if ("3".equals(userAttribute)) {
+                    return "线上员工";
+                }
+                return "";
+            }
+        };
+        IValueFormatter gateTypeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                // 充值类型
+                String gateType = (String) object;
+                if ("B2C".equals(gateType)) {
+                    return "个人网银充值";
+                } else if ("B2B".equals(gateType)) {
+                    return "企业网银充值";
+                } else if ("QP".equals(gateType)) {
+                    return "快捷充值";
+                } else {
+                    return gateType;
+                }
+            }
+        };
+        IValueFormatter moneyAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal money = (BigDecimal) object;
+                return money.toString();
+            }
+        };
+        IValueFormatter feeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal fee = (BigDecimal) object;
+                return fee != null ? (fee + "") : (0 + "");
+            }
+        };
+        mapAdapter.put("userAttribute", userAttributeAdapter);
+        mapAdapter.put("gateType", gateTypeAdapter);
+        mapAdapter.put("money", moneyAdapter);
+        mapAdapter.put("fee", feeAdapter);
+        mapAdapter.put("fianfuFee", feeAdapter);
+        mapAdapter.put("balance", moneyAdapter);
+        return mapAdapter;
+    }
+
 
 }

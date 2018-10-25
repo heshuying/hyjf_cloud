@@ -10,7 +10,6 @@ import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -312,9 +311,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             resultVo.setInitMoney(initMoney);
             // -设置优惠券
             logger.info("HJH couponId is:{}, borrowNid is :{}", couponId, planNid);
-            JSONObject userCoupon = appCouponService.getPlanCoupon( tender.getUserId(),planNid, money,
+            JSONObject userCoupon = appCouponService.getPlanCoupon(tender.getUserId(),planNid, money,
                     platform);
-            if (couponId == null || "".equals(couponId) || couponId.length() == 0) {
+            logger.info("userCoupon： ",JSONObject.toJSONString(userCoupon));
+            if (couponId == null || "".equals(couponId) || couponId.length() == 0 || "-1".equals(couponId) ) {
                 // 不用获取最优优惠券了
                 //couponConfig = planService.getUserOptimalCoupon(couponId, borrowNid, userId, money, platform);
             } else {
@@ -358,9 +358,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             resultVo.setCouponType("");
             JSONObject counts =  userCoupon;
             String couponAvailableCount = "0";
-            if(counts.containsKey("availableCouponListCount")){
+            if(counts!=null&&counts.containsKey("availableCouponListCount")){
                 couponAvailableCount = counts.getString("availableCouponListCount");
+            }else{
+                couponAvailableCount = "0";
             }
+
             if (couponConfig != null) {
                 if (couponConfig != null && couponConfig.getId() > 0 && couponConfig.getCouponType() == 1) {
                     resultVo.setCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");
@@ -428,10 +431,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 resultVo.setEndTime("");
                 resultVo.setCouponId("-1");
 
-                if(!"0".equals(userCoupon.getString("availableCouponListCount"))){
+                if(userCoupon!=null&& !"0".equals(userCoupon.getString("availableCouponListCount"))){
                     resultVo.setIsThereCoupon("1");
                     resultVo.setCouponDescribe("请选择");
-                }else if ("0".equals(userCoupon.getString("availableCouponListCount")) && !"0".equals(userCoupon.getString("notAvailableCouponListCount"))) {
+                }else if (userCoupon!=null&& "0".equals(userCoupon.getString("availableCouponListCount")) && !"0".equals(userCoupon.getString("notAvailableCouponListCount"))) {
                     resultVo.setIsThereCoupon("1");
                     resultVo.setCouponDescribe("暂无可用");
                 }else {
@@ -661,7 +664,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setTenderAccount(tenderAccount);
         // 体验金投资
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
-            // TODO: 2018/10/6   需要改成用mq 的
             logger.info("体验{},优惠金投资开始:userId:{},平台{},券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
             // 体验金投资
             couponService.couponTender(request, plan,  cuc, userId);
@@ -731,6 +733,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             afterDealFlag = updateAfterPlanRedis(request, plan);
             logger.info("加入计划updateAfterPlanRedis 操作结果 ", afterDealFlag);
         }catch (Exception e){
+            logger.error("加入计划报错了 userId:"+userId+"  planNid:"+ plan.getPlanNid(),e);
             // 恢复redis
             recoverRedis(request);
             throw e;
