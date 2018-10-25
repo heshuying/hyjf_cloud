@@ -11,4 +11,14 @@ import com.hyjf.am.vo.trade.coupon.CouponConfigExportCustomizeVO;
  * @version CouponConfigExportCustomizeResponse, v0.1 2018/9/15 14:27
  */
 public class CouponConfigExportCustomizeResponse extends Response<CouponConfigExportCustomizeVO> {
+
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

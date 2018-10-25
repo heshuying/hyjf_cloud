@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.BankCardLogRequestBean;
 import com.hyjf.admin.beans.request.BankCardManagerRequestBean;
 import com.hyjf.admin.beans.vo.BankCardLogCustomizedVO;
@@ -13,9 +14,12 @@ import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankCardManagerService;
 import com.hyjf.admin.utils.ConvertUtils;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankCardLogResponse;
 import com.hyjf.am.response.user.BankCardManagerResponse;
@@ -28,10 +32,12 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +45,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -54,6 +61,8 @@ import java.util.Map;
 public class BankCardManagerController extends BaseController {
     @Autowired
     private BankCardManagerService bankCardManagerService;
+    @Autowired
+    private SystemConfig systemConfig;
 
     @ApiOperation(value = "銀行卡管理页面初始化", notes = "銀行卡管理页面初始化")
     @PostMapping(value = "/bankCardInit")
@@ -187,9 +196,9 @@ public class BankCardManagerController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "汇付银行开户銀行卡記錄导出", notes = "銀行卡管理")
-    @PostMapping(value = "/exportbankcard")
-    public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
+    //@ApiOperation(value = "汇付银行开户銀行卡記錄导出", notes = "銀行卡管理")
+    //@PostMapping(value = "/exportbankcard")
+    /*public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
         // 封装查询条件
         BankCardManagerRequest requestBank =new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
@@ -248,8 +257,82 @@ public class BankCardManagerController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         logger.info("==================汇付银行开户銀行卡記錄导出==================");
+    }*/
+
+    /**
+     * 导出excel
+     *
+     * @param bankCardManagerRequestBean
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "汇付银行开户銀行卡記錄导出", notes = "銀行卡管理")
+    @PostMapping(value = "/exportbankcard")
+    public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
+        // 封装查询条件
+        BankCardManagerRequest requestBank =new BankCardManagerRequest();
+        BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "银行卡管理";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        requestBank.setLimitFlg(true);
+        //请求第一页5000条
+        requestBank.setPageSize(defaultRowMaxCount);
+        requestBank.setCurrPage(1);
+        // 需要输出的结果列表
+        BankCardManagerResponse bankCardManager  = bankCardManagerService.selectBankCardList(requestBank);
+        Integer totalCount = bankCardManager.getCount();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            requestBank.setPageSize(defaultRowMaxCount);
+            requestBank.setCurrPage(i+1);
+            BankCardManagerResponse bankCardManager2  = bankCardManagerService.selectBankCardList(requestBank);
+            if (bankCardManager2 != null && bankCardManager2.getResultList().size()> 0) {
+                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankCardManager2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("userName", "用户名");
+        map.put("account", "银行账号");
+        map.put("bank", "所属银行");
+        map.put("cardType", "是否默认");
+        map.put("cardProperty", "银行卡属性");
+        map.put("addTime", "添加时间");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter accountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String account = (String) object;
+                return AsteriskProcessUtil.getAsteriskedValue(account,3,7);
+            }
+        };
+        mapAdapter.put("account", accountAdapter);
+        return mapAdapter;
+    }
 
     /**
      * 导出方法
@@ -258,9 +341,9 @@ public class BankCardManagerController extends BaseController {
      * @param bankCardManagerRequestBean
      * @throws Exception
      */
-    @ApiOperation(value = "江西银行开户銀行卡記錄导出", notes = "江西银行开户銀行卡記錄导出")
-    @PostMapping(value = "/exportnewbankcard")
-    public void exportExcelNew(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
+    //@ApiOperation(value = "江西银行开户銀行卡記錄导出", notes = "江西银行开户銀行卡記錄导出")
+    //@PostMapping(value = "/exportnewbankcard")
+    /*public void exportExcelNew(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
 
         // 表格sheet名称
         String sheetName = "银行卡管理";
@@ -321,6 +404,73 @@ public class BankCardManagerController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         logger.info("==================江西银行开户銀行卡記錄导出成功==================");
+    }*/
+
+    /**
+     * 导出excel
+     *
+     * @param bankCardManagerRequestBean
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "江西银行开户銀行卡記錄导出", notes = "江西银行开户銀行卡記錄导出")
+    @PostMapping(value = "/exportnewbankcard")
+    public void exportToExcelTwo(HttpServletRequest request, HttpServletResponse response,@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
+        // 封装查询条件
+        BankCardManagerRequest requestBank = new BankCardManagerRequest();
+        BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "银行卡管理";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        requestBank.setLimitFlg(true);
+        //请求第一页5000条
+        requestBank.setPageSize(defaultRowMaxCount);
+        requestBank.setCurrPage(1);
+        // 需要输出的结果列表
+        BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectNewBankCardList(requestBank);
+        Integer totalCount = bankCardManagerResponse.getCount();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMapTwo();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterTwo();
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            requestBank.setPageSize(defaultRowMaxCount);
+            requestBank.setCurrPage(i+1);
+            BankCardManagerResponse bankCardManagerResponse2 = bankCardManagerService.selectNewBankCardList(requestBank);
+            if (bankCardManagerResponse2 != null && bankCardManagerResponse2.getResultList().size()> 0) {
+                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankCardManagerResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMapTwo() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("userName", "用户名");
+        map.put("mobile", "当前手机号");
+        map.put("realName", "姓名");
+        map.put("idcard", "身份证号");
+        map.put("account", "银行卡号");
+        map.put("addTime", "绑卡时间");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapterTwo() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        return mapAdapter;
     }
 
     //汇付银行操作记录記錄查询
@@ -344,9 +494,10 @@ public class BankCardManagerController extends BaseController {
         }
         return new AdminResult<ListResult<BankCardLogCustomizedVO>>(ListResult.build(bankCardLogCustomizedVO, bankCardLogResponse.getCount()));
     }
-    @ApiOperation(value = "用户银行卡操作记录导出", notes = "用户银行卡操作记录导出")
-    @PostMapping(value = "/exportbankcardlog")
-    public void exportBankCardLog(HttpServletRequest request,HttpServletResponse response, @RequestBody BankCardLogRequestBean bankCardLogRequestBean) throws Exception {
+
+    //@ApiOperation(value = "用户银行卡操作记录导出", notes = "用户银行卡操作记录导出")
+    //@PostMapping(value = "/exportbankcardlog")
+    /*public void exportBankCardLog(HttpServletRequest request,HttpServletResponse response, @RequestBody BankCardLogRequestBean bankCardLogRequestBean) throws Exception {
 
         // 表格sheet名称
         String sheetName = "用户银行卡操作记录";
@@ -406,8 +557,8 @@ public class BankCardManagerController extends BaseController {
                             }
                         } else if (celLength == 5) {
                             // 银行卡属性
-                            /*String cellValue = bankcardProperty.getOrDefault(user.getBankCode(),null);
-                            cell.setCellValue(cellValue);*/
+                            *//*String cellValue = bankcardProperty.getOrDefault(user.getBankCode(),null);
+                            cell.setCellValue(cellValue);*//*
                         } else if (celLength == 6) {// 添加时间
                             cell.setCellValue(user.getCreateTime());
                         }
@@ -418,6 +569,85 @@ public class BankCardManagerController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         logger.info("==================用户银行卡操作记录导出成功==================");
+    }*/
+
+    /**
+     * 导出excel
+     *
+     * @param bankCardLogRequestBean
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "用户银行卡操作记录导出", notes = "用户银行卡操作记录导出")
+    @PostMapping(value = "/exportbankcardlog")
+    public void exportToExcelLog(HttpServletRequest request, HttpServletResponse response,@RequestBody BankCardLogRequestBean bankCardLogRequestBean) throws Exception {
+        // 封装查询条件
+        BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
+        BeanUtils.copyProperties(bankCardLogRequestBean, bankCardLogRequest);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "用户银行卡操作记录";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        bankCardLogRequest.setLimitFlg(true);
+        //请求第一页5000条
+        bankCardLogRequest.setPageSize(defaultRowMaxCount);
+        bankCardLogRequest.setCurrPage(1);
+        // 需要输出的结果列表
+        BankCardLogResponse bankCardLogResponse =  bankCardManagerService.selectBankCardLogByExample(bankCardLogRequest);
+        Integer totalCount = bankCardLogResponse.getCount();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMapLog();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterLog();
+        if (totalCount == 0) {
+            String sheetNameTmp = sheetName + "_第1页";
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            bankCardLogRequest.setPageSize(defaultRowMaxCount);
+            bankCardLogRequest.setCurrPage(i+1);
+            BankCardLogResponse bankCardLogResponse2 =  bankCardManagerService.selectBankCardLogByExample(bankCardLogRequest);
+            if (bankCardLogResponse2 != null && bankCardLogResponse2.getResultList().size()> 0) {
+                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankCardLogResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMapLog() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("userName", "用户名");
+        map.put("bankCode", "银行账号");
+        map.put("bankName", "所属银行");
+        map.put("operationType", "操作");
+        map.put("createTime", "添加时间");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapterLog() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter operationTypeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String operationType = (String) object;
+                if(operationType == "0"){
+                    operationType = ("绑定");
+                }else{
+                    operationType = ("删除");
+                }
+                return operationType;
+            }
+        };
+        mapAdapter.put("operationType", operationTypeAdapter);
+        return mapAdapter;
     }
 
 }

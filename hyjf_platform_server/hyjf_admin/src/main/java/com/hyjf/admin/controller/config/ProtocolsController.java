@@ -16,6 +16,7 @@ import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
+import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -206,11 +207,22 @@ public class ProtocolsController extends BaseController {
 				adminResult.setStatusDesc("返回结果为空，上传模板失败。");
 				logger.info("---------------法大大协议上传模板,返回结果为空，上传模板失败！");
 				return adminResult;
-			}
+			}else{
+                String result = dzqzCallBean.getResult();
+                String code = dzqzCallBean.getCode();
+                if("success".equals(result) && FddGenerateContractConstant.FDD_RETURN_CODE_1000.equals(code)){
+                    adminResult.setStatus(SUCCESS);
+                    adminResult.setStatusDesc(SUCCESS_DESC);
+                    return adminResult;
+                }else{
+                    adminResult.setStatus(FAIL);
+                    adminResult.setStatusDesc(dzqzCallBean.getMsg());
+                    return adminResult;
 
-			adminResult.setStatus(SUCCESS);
-			adminResult.setStatusDesc(SUCCESS_DESC);
-			return adminResult;
+                }
+            }
+
+
 
 		}catch (Exception e){
 			e.printStackTrace();
