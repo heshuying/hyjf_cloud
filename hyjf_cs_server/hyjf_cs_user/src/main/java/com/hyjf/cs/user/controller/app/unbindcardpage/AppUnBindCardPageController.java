@@ -135,7 +135,7 @@ public class AppUnBindCardPageController extends BaseUserController{
      */
     @PostMapping("/deleteCardPage")
     @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
-    public AppResult<Object> bindCardPage(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign,@RequestHeader(value = "bankNumber") String bankNumber,HttpServletRequest request) {
+    public AppResult<Object> bindCardPage(@RequestHeader(value = "userId") Integer userId, @RequestParam(value = "sign") String sign,@RequestParam(value = "bankNumber") String bankNumber,HttpServletRequest request) {
         // 平台
         String platform = request.getParameter("platform");
         AppResult<Object> result = new AppResult<Object>();
