@@ -369,7 +369,7 @@ public class LoanCoverController extends BaseController {
             @Override
             public String format(Object object) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String updateTime = (String) object;
+                Date updateTime = (Date) object;
                 String strUpdateTime = format.format(updateTime);
                 return strUpdateTime;
             }

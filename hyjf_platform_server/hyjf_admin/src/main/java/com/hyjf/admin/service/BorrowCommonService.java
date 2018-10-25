@@ -127,6 +127,6 @@ public interface BorrowCommonService {
 	 * @param borrowCustomize
 	 * @return
 	 */
-	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize);
+	public BorrowCustomizeResponse exportBorrowList(BorrowBeanRequest borrowCommonCustomize);
 	public UserVO getUserByUserName(String userName);
 }
