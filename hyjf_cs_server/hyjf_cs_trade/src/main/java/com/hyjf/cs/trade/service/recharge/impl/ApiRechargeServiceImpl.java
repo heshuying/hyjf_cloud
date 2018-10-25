@@ -74,7 +74,7 @@ public class ApiRechargeServiceImpl extends BaseTradeServiceImpl implements ApiR
             String channel = requestBean.getChannel();
 
             // 根据用户电子账户号查询用户信息
-            BankOpenAccountVO bankOpenAccount = amUserClient.selectByAccountId(accountId);
+            BankOpenAccountVO bankOpenAccount = amUserClient.selectBankOpenAccountByAccountId(accountId);
             if (bankOpenAccount == null) {
                 logger.info("查询用户开户信息失败,用户电子账户号:[" + accountId + "]");
                 resultBean.setStatus(BaseResult.FAIL);

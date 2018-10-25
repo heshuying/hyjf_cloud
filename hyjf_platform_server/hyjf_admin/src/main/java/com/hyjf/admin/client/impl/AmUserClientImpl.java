@@ -27,6 +27,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -889,7 +893,23 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	/**
+	 * 导出根据参数查询用户画像信息
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public UserPortraitResponse exportRecordList(UserPortraitRequest request) {
+		UserPortraitResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userPortraitManage/exportRecordList", request,
+						UserPortraitResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 	/**
 	 * 根据用户id查找用户画像
 	 * 
@@ -1467,10 +1487,13 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
     public UtmResponse getByPageList(Map<String, Object> map) {
-		UtmResponse response = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/promotion/utm/getbypagelist", map, UtmResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response;
+
+		ResponseEntity<UtmResponse<UtmVO>> response = restTemplate.exchange(
+				"http://AM-ADMIN/am-user/promotion/utm/getbypagelist", HttpMethod.POST, new HttpEntity<>(map),
+				new ParameterizedTypeReference<UtmResponse<UtmVO>>() {
+				});
+		if (null != response) {
+			return response.getBody();
 		}
 		return null;
 	}
@@ -1978,7 +2001,7 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request) {
+	public SmsCountCustomizeResponse querySmsCountList(SmsCountRequest request) {
 		return restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/query_sms_count_list", request, SmsCountCustomizeResponse.class);
 	}
 

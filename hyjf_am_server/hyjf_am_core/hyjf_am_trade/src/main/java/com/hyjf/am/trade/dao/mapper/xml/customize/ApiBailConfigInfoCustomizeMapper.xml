@@ -108,7 +108,7 @@
             ems.del_flg as endmonthsDEL
         FROM
         ht_hjh_bail_config hhbc
-        INNER JOIN ht_hjh_inst_config hhic ON hhbc.inst_code = hhic.inst_code
+        LEFT JOIN ht_hjh_inst_config hhic ON hhbc.inst_code = hhic.inst_code AND hhic.del_flag = 0
         LEFT JOIN ht_hjh_bail_config_info m ON hhbc.inst_code = m.inst_code and m.borrow_style = 'month'
         LEFT JOIN ht_hjh_bail_config_info e ON hhbc.inst_code = e.inst_code and e.borrow_style = 'end'
         LEFT JOIN ht_hjh_bail_config_info em ON hhbc.inst_code = em.inst_code and em.borrow_style = 'endmonth'

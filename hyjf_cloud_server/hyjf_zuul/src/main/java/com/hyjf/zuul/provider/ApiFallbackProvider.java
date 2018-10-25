@@ -1,9 +1,6 @@
 package com.hyjf.zuul.provider;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
+import com.netflix.hystrix.exception.HystrixTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
@@ -13,18 +10,31 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 
-import com.netflix.hystrix.exception.HystrixTimeoutException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
+/**
+ * 网关容错处理
+ * @author dxj
+ *
+ */
 @Component
 public class ApiFallbackProvider implements FallbackProvider {
 	
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(ApiFallbackProvider.class);
 
+	/**、
+	 * 针对服务级别设置容错，这里是针对全部服务
+	 */
 	@Override
 	public String getRoute() {
 		return "*";
 	}
 
+	/**
+	 * 容错的消息返回，这里区分是超时，还是服务挂掉了
+	 */
 	@Override
 	public ClientHttpResponse fallbackResponse(String route, Throwable cause) {
 		logger.warn(String.format("route:%s,exceptionType:%s,stackTrace:%s", route, cause.getClass().getName(), cause.getStackTrace()));
@@ -62,7 +72,7 @@ public class ApiFallbackProvider implements FallbackProvider {
 
             @Override
             public InputStream getBody() throws IOException {
-                String bodyText = String.format("{\"status\": 999,\"statusDesc	\": \"Service unavailable:%s\"}", message);
+                String bodyText = String.format("{\"status\": 999,\"statusDesc\": \"Service unavailable:%s\"}", message);
                 return new ByteArrayInputStream(bodyText.getBytes());
             }
 

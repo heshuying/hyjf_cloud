@@ -10,7 +10,6 @@ import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.bank.autoreview.BatchAutoReviewHjhService;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
-import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -72,17 +71,24 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
         }
     }
 
+    /**
+     * 获取复审中的进计划的标的
+     *
+     * @return
+     */
     @Override
-    public List<BorrowWithBLOBs> selectAutoReview() {
+    public List<Borrow> selectAutoReview() {
         /*------------upd by liushouyi HJH3 Start-------------------*/
-        //使用引擎：计划
-        List<BorrowWithBLOBs> borrowList = borrowCustomizeMapper.selectAutoReviewHJHBorrowNidList();
+        //使用引擎：计划(仅使用borrowNid进行后续处理)
+        BorrowExample  example = new BorrowExample();
+        example.createCriteria().andStatusEqualTo(3).andBorrowFullStatusEqualTo(1).andPlanNidIsNotNull();
+        List<Borrow> borrowList = borrowMapper.selectByExample(example);
         /*------------upd by liushouyi HJH3 End-------------------*/
         return borrowList;
     }
 
     @Override
-    public void updateBorrow(BorrowWithBLOBs borrows) throws Exception {
+    public void updateBorrow(Borrow borrows) throws Exception {
         /*--------------upd by liushouyi HJH3 Start----------------*/
         //遍历自动发标的数据原抽出表中所有字段、表关联后仅查借款编号
         Borrow borrow = this.getBorrowByNid(borrows.getBorrowNid());
@@ -175,17 +181,18 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
                             borrowApicron.setUpdateTime(new Date());// 更新时间
                             borrowApicron.setPlanNid(borrow.getPlanNid());//计划编号
                             boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
-                            if (!apicronFlag) {
+                            if (apicronFlag) {
                                 //2018-10-15 复审之后之后发送MQ进行放款
+                                logger.debug("自动复审更新数据完成，开始发送放款MQ，标的编号：{}", borrowNid);
                                 try {
                                     borrowLoanRepayProducer.messageSend(
                                             new MessageContent(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
                                 } catch (MQException e) {
                                     logger.error("[编号：" + borrowNid + "]发送计划放款MQ失败！", e);
                                 }
-                                throw new Exception("更新borrow表失败,项目编号：" + borrow.getBorrowNid());
+                            } else {
+                                throw new Exception("插入borrowApi表失败,项目编号：" + borrow.getBorrowNid());
                             }
-
                         } else {
                             throw new Exception("更新borrow表失败,项目编号：" + borrow.getBorrowNid());
                         }

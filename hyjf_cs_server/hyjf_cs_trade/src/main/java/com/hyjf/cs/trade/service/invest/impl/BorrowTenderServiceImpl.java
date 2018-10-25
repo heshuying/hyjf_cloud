@@ -505,7 +505,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         int userId = StringUtils.isBlank(bean.getLogUserId()) ? 0 : Integer.parseInt(bean.getLogUserId());
         // 投资结果返回码
         String respCode = bean.getRetCode();
-        Integer platForm = bean.getLogClient();
         BankCallResult result = new BankCallResult();
         // true 的话PAY工程就不调用了  false的话PAY还会调用
         result.setStatus(true);
@@ -537,7 +536,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String borrowId = bean.getProductId();
         BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowId);
         if (borrow == null) {
-            logger.info("用户:" + userId + "**回调时,borrowNid为空，错误码: " + respCode);
+            logger.error("用户:" + userId + "**回调时,borrowNid为空，错误码: " + respCode);
             result.setStatus(false);
             result.setMessage("回调时,borrowNid为空.");
             return result;

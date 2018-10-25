@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.repay;
 
-import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.vo.trade.borrow.BatchCenterCustomizeVO;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;

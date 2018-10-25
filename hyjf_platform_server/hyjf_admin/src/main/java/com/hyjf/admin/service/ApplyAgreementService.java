@@ -39,7 +39,7 @@ public interface ApplyAgreementService {
      * @author Zha Daojian
      * @date 2018/7/12 10:52
      */
-    void downloadAction(DownloadAgreementRequest request,HttpServletResponse response);
+    AdminResult downloadAction(DownloadAgreementRequest request,HttpServletResponse response);
 
 
 }

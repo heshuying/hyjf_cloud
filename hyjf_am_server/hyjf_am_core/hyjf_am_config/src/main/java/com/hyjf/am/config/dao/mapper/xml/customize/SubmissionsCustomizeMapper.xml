@@ -38,7 +38,7 @@
 		<result column="platform_version" property="platformVersion" jdbcType="VARCHAR" /> <!-- 平台版本号  -->
 		<result column="phone_type" property="phoneType" jdbcType="VARCHAR" /> <!-- 手机型号  -->
 		<result column="content" property="content" jdbcType="VARCHAR" /> <!-- 反馈内容  -->
-		<result column="addtime" property="addTime" jdbcType="VARCHAR" /> <!-- 添加时间 -->
+		<result column="addtime" property="addTime" jdbcType="TIMESTAMP" /> <!-- 添加时间 -->
 	</resultMap>
 
 	<!-- 根据条件 查询意见反馈信息  -->

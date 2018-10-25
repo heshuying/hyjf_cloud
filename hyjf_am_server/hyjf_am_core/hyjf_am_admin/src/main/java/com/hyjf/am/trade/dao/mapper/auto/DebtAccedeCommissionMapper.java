@@ -2,8 +2,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.DebtAccedeCommission;
 import com.hyjf.am.trade.dao.model.auto.DebtAccedeCommissionExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface DebtAccedeCommissionMapper {
     int countByExample(DebtAccedeCommissionExample example);

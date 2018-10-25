@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,7 +71,7 @@ public class IncreaseInterestRepayDetailController extends BaseController {
 	 */
 	@ApiOperation(value = "产品中心-加息还款明细", notes = "产品中心-加息还款明细 导出还款详情")
 	@GetMapping("/export")
-	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody IncreaseInterestRepayDetailRequest form) throws Exception {
+	public void exportAction(HttpServletRequest request, HttpServletResponse response, IncreaseInterestRepayDetailRequest form) throws Exception {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
@@ -130,13 +129,13 @@ public class IncreaseInterestRepayDetailController extends BaseController {
 			@Override
 			public String format(Object object) {
 				String str = (String) object;
-				return org.springframework.util.StringUtils.isEmpty(str) ? "" : String.valueOf(str);
+				return StringUtils.isEmpty(str) ? "" : String.valueOf(str);
 			}
 		};
 		IValueFormatter percentAdapter = new IValueFormatter() {
 			@Override
 			public String format(Object object) {
-				BigDecimal percent = (BigDecimal) object;
+				String percent = (String) object;
 				return percent + "%";
 			}
 		};

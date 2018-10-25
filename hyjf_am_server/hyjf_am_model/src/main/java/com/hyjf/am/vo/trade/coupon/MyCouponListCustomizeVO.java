@@ -40,6 +40,8 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     private Integer expirationType;
 
+    private Integer tenderQuotaType;
+
     private Integer projectExpirationLength;
 
     private Integer projectExpirationLengthMin;
@@ -227,5 +229,13 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     public void setAddFlag(Integer addFlag) {
         this.addFlag = addFlag;
+    }
+
+    public Integer getTenderQuotaType() {
+        return tenderQuotaType;
+    }
+
+    public void setTenderQuotaType(Integer tenderQuotaType) {
+        this.tenderQuotaType = tenderQuotaType;
     }
 }

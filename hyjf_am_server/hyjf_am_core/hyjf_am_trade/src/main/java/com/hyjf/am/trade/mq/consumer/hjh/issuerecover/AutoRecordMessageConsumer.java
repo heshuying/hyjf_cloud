@@ -93,7 +93,6 @@ public class AutoRecordMessageConsumer extends Consumer {
                 try {
 
                     if(mqHjhPlanAsset != null){
-                        logger.info(mqHjhPlanAsset.getAssetId()+" 该资产在表里不存在！！");
                         // 原有三方资产推送处理不变
                         if (StringUtils.isNotBlank(mqHjhPlanAsset.getAssetId())) {
                             // 资产自动备案

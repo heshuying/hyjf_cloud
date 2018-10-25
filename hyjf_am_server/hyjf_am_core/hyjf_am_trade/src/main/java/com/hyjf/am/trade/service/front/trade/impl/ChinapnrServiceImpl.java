@@ -21,11 +21,12 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.http.URLCodec;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -118,16 +119,15 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
             int withdrawStatus = accountWithdraw.getStatus();
             // 返回值=000成功
             if (ChinaPnrConstant.RESPCODE_SUCCESS.equals(bean.getRespCode())) {
+                logger.info("返回值=000成功");
                 // 如果信息未被处理
                 if (withdrawStatus == CustomConstants.WITHDRAW_STATUS_DEFAULT) {
-                    // 开启事务
-                    TransactionStatus txStatus = null;
                     try {
-                        txStatus = this.transactionManager.getTransaction(transactionDefinition);
+                       this.transactionManager.getTransaction(transactionDefinition);
                         // 支出金额
-                        BigDecimal transAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_TRANSAMT);
+                        BigDecimal transAmt = stringToBigDecimal(bean.getTransAmt());
                         // 提现金额
-                        BigDecimal realTansAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_REALTRANSAMT);
+                        BigDecimal realTansAmt = stringToBigDecimal(bean.getRealTransAmt());
                         // 提现手续费
                         BigDecimal feeAmt = transAmt.subtract(realTansAmt);
                         // 更新手续费
@@ -202,8 +202,6 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                         if (!accountListFlag) {
                             throw new RuntimeException("提现插入交易明细accountList失败,用户userId：" + userId + ",提现金额：" + transAmt);
                         }
-                        // 提交事务
-                        this.transactionManager.commit(txStatus);
                         UserVO users = chinaPnrWithdrawRequest.getUser();
                         // 可以发送提现短信时
                         Map<String, String> replaceMap = new HashMap<String, String>();
@@ -227,19 +225,16 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                         }
                         return true;
                     } catch (Exception e) {
-                        // 回滚事务
-                        transactionManager.rollback(txStatus);
-                        e.printStackTrace();
+
+                        logger.error("汇付提现异步处理出错："+e);
                     }
                 }
                 // 返回正常(000), 且当前表的状态为1:处理中
                 else if (withdrawStatus == CustomConstants.WITHDRAW_STATUS_WAIT) {
-                    // 开启事务
-                    TransactionStatus txStatus = null;
                     try {
-                        txStatus = this.transactionManager.getTransaction(transactionDefinition);
+                        this.transactionManager.getTransaction(transactionDefinition);
                         // 支出金额
-                        BigDecimal transAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_TRANSAMT);
+                        BigDecimal transAmt = stringToBigDecimal(bean.getTransAmt());
                         // 更新状态为成功
                         accountWithdraw.setStatus(CustomConstants.WITHDRAW_STATUS_SUCCESS);
                         accountWithdraw.setUpdateTime(nowTime);
@@ -291,13 +286,9 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                         if (!accountListFlag) {
                             throw new RuntimeException("提现插入交易明细accountList失败,用户userId：" + userId + ",提现金额：" + transAmt);
                         }
-                        // 提交事务
-                        this.transactionManager.commit(txStatus);
                         return true;
                     } catch (Exception e) {
-                        // 回滚事务
-                        transactionManager.rollback(txStatus);
-                        e.printStackTrace();
+                        logger.error("汇付提现异步出错："+e);
                     }
                 }
             }
@@ -305,14 +296,12 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
             else if (ChinaPnrConstant.RESPCODE_CHECK.equals(bean.getRespCode())) {
                 // 如果是首次返回
                 if (withdrawStatus == CustomConstants.WITHDRAW_STATUS_DEFAULT) {
-                    // 开启事务
-                    TransactionStatus txStatus = null;
                     try {
-                        txStatus = this.transactionManager.getTransaction(transactionDefinition);
+                        this.transactionManager.getTransaction(transactionDefinition);
                         // 支出金额
-                        BigDecimal transAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_TRANSAMT);
+                        BigDecimal transAmt = stringToBigDecimal(bean.getTransAmt());
                         // 提现金额
-                        BigDecimal realTansAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_REALTRANSAMT);
+                        BigDecimal realTansAmt = stringToBigDecimal(bean.getRealTransAmt());
                         // 提现手续费
                         BigDecimal feeAmt = transAmt.subtract(realTansAmt);
                         // 更新订单信息
@@ -346,8 +335,6 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                         if (!accountFlag) {
                             throw new RuntimeException("提现更新account失败,用户userId：" + userId + ",提现金额：" + transAmt);
                         }
-                        // 提交事务
-                        this.transactionManager.commit(txStatus);
                         UserVO users = chinaPnrWithdrawRequest.getUser();
                         // 可以发送提现短信时
                         Map<String, String> replaceMap = new HashMap<String, String>();
@@ -371,9 +358,7 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                         }
                         return true;
                     } catch (Exception e) {
-                        // 回滚事务
-                        transactionManager.rollback(txStatus);
-                        e.printStackTrace();
+                        logger.error("汇付提现异步出错："+e);
                     }
                 }
                 // 已经是处理中
@@ -383,15 +368,13 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
             }
             // 提现失败
             else {
-                System.out.println("提现失败异步回调，订单号：" + ordId);
-                // 开启事务
-                TransactionStatus txStatus = null;
+               logger.info("提现失败异步回调，订单号：" + ordId);
                 try {
-                    txStatus = this.transactionManager.getTransaction(transactionDefinition);
+                    this.transactionManager.getTransaction(transactionDefinition);
                     // 支出金额
-                    BigDecimal transAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_TRANSAMT);
+                    BigDecimal transAmt = stringToBigDecimal(bean.getTransAmt());
                     // 提现金额
-                    BigDecimal realTansAmt = bean.getBigDecimal(ChinaPnrConstant.PARAM_REALTRANSAMT);
+                    BigDecimal realTansAmt = stringToBigDecimal(bean.getRealTransAmt());
                     // 提现手续费
                     BigDecimal feeAmt = transAmt.subtract(realTansAmt);
                     // 如果信息已被处理(400)
@@ -457,8 +440,6 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                         if (!accountListFlag) {
                             throw new RuntimeException("提现插入交易明细accountList失败,用户userId：" + userId + ",提现金额：" + transAmt);
                         }
-                        // 提交事务
-                        this.transactionManager.commit(txStatus);
                     } else if (withdrawStatus == CustomConstants.WITHDRAW_STATUS_WAIT) {
                         // 更新为失败状态
                         accountWithdraw.setStatus(CustomConstants.WITHDRAW_STATUS_FAIL);
@@ -481,8 +462,6 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                         if (!accountFlag) {
                             throw new RuntimeException("提现更新account失败,用户userId：" + userId + ",提现金额：" + transAmt);
                         }
-                        // 提交事务
-                        this.transactionManager.commit(txStatus);
                     } else {
                         // 失敗原因
                         String reason = bean.getRespDesc();
@@ -504,16 +483,20 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                         if (!accountWithdrawFlag) {
                             throw new RuntimeException("提现更新accountwithdraw失败,用户userId：" + userId + ",提现金额：" + transAmt);
                         }
-                        // 提交事务
-                        this.transactionManager.commit(txStatus);
                     }
                 } catch (Exception e) {
-                    // 回滚事务
-                    transactionManager.rollback(txStatus);
-                    e.printStackTrace();
+                    logger.error("汇付提现异步出错："+e);
                 }
             }
         }
         return false;
+    }
+
+    public BigDecimal stringToBigDecimal(String value) {
+        if (Validator.isNotNull(value) && NumberUtils.isNumber(value)) {
+            return new BigDecimal(value);
+        }else {
+            return BigDecimal.ZERO;
+        }
     }
 }

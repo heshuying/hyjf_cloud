@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.service.wirhdraw.impl;
+package com.hyjf.cs.trade.service.withdraw.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -40,7 +40,7 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
+import com.hyjf.cs.trade.service.withdraw.BankWithdrawService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
 import com.hyjf.cs.trade.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -50,6 +50,7 @@ import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -560,7 +561,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 FeeConfigVO feeConfig = listFeeConfig.get(0);
                 BigDecimal takout = BigDecimal.ZERO;
                 BigDecimal percent = BigDecimal.ZERO;
-                if (Validator.isNotNull(feeConfig.getNormalTakeout()) && StringUtils.isNumeric(feeConfig.getNormalTakeout())) {
+                if (Validator.isNotNull(feeConfig.getNormalTakeout()) && NumberUtils.isNumber(feeConfig.getNormalTakeout())) {
                     takout = new BigDecimal(feeConfig.getNormalTakeout());
                 }
                 return takout.add(percent).toString();
@@ -803,7 +804,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         String orderId=GetOrderIdUtils.getOrderId2(user.getUserId());
         BankCardVO bankCard = this.amUserClient.queryUserCardValid(user.getUserId()+"", cardNo);
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
-        BankOpenAccountVO bankOpenAccountVO=amUserClient.selectById(user.getUserId());
+        BankOpenAccountVO bankOpenAccountVO=amUserClient.selectBankAccountById(user.getUserId());
         // 调用汇付接口(提现)
         retUrl = retUrl+"?logOrdId="+orderId;
         if(platform.equals(CommonConstant.CLIENT_PC)){

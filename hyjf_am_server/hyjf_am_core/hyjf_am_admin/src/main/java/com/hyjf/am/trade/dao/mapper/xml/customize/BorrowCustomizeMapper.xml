@@ -362,7 +362,7 @@ WHERE
 		parameterType="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
 		SELECT
 		b.borrow_nid,
-		FROM_UNIXTIME(verify_time + borrow_valid_time * 24 * 60 *60, '%Y-%m-%d %H:%i:%s' ) AS
+		FROM_UNIXTIME(verify_time + b.borrow_valid_time * 24 * 60 *60, '%Y-%m-%d %H:%i:%s' ) AS
 		timeStartSrch
 		FROM
 		ht_borrow b

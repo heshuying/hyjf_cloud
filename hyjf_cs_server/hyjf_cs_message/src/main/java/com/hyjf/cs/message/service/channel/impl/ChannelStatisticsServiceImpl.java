@@ -56,7 +56,7 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
             Integer end = GetDate.dateString2Timestamp(timeEndSrch + " 23:59:59");
             criteria.and("updateTime").gte(begin).lte(end);
         }
-        if (utmIdsSrch.length > 0) {
+        if (utmIdsSrch != null && utmIdsSrch.length > 0) {
             List<Integer> listInt = new ArrayList<>();
             List<String> sourceIds = Arrays.asList(utmIdsSrch);
             org.apache.commons.collections.CollectionUtils.collect(sourceIds, new Transformer() {
@@ -88,9 +88,16 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
             Integer end = GetDate.dateString2Timestamp(timeEndSrch + " 23:59:59");
             criteria.and("updateTime").gte(begin).lte(end);
         }
-        if (utmIdsSrch.length > 0) {
+        if (utmIdsSrch != null && utmIdsSrch.length > 0) {
+            List<Integer> listInt = new ArrayList<>();
             List<String> sourceIds = Arrays.asList(utmIdsSrch);
-            criteria.in(sourceIds);
+            org.apache.commons.collections.CollectionUtils.collect(sourceIds, new Transformer() {
+                @Override
+                public Object transform(Object o) {
+                    return Integer.valueOf(String.valueOf(o));
+                }
+            },listInt);
+            criteria.and("sourceId").in(listInt);
         }
         Aggregation aggregation = Aggregation.newAggregation(
                 match(criteria),

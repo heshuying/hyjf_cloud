@@ -460,6 +460,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             couponUserForAppCustomizeVO.setCouponTypeOrigin(myCouponListCustomizeVO.getCouponType());
             couponUserForAppCustomizeVO.setCouponQuotaOrigin(myCouponListCustomizeVO.getCouponQuota());
             couponUserForAppCustomizeVO.setEndTime(myCouponListCustomizeVO.getAddTime() + "-" + myCouponListCustomizeVO.getEndTime());
+            couponUserForAppCustomizeVO.setTime(myCouponListCustomizeVO.getAddTime() + "-" + myCouponListCustomizeVO.getEndTime());
             couponUserForAppCustomizeVO.setInvestQuota(myCouponListCustomizeVO.getTenderQuota());
             couponUserForAppCustomizeVO.setInvestTime(myCouponListCustomizeVO.getProjectExpirationType());
             couponUserForAppCustomizeVO.setCouponName(myCouponListCustomizeVO.getCouponName());
@@ -512,19 +513,17 @@ public class MyCouponListServiceImpl implements MyCouponListService {
                 continue;
             }
             // 验证项目金额
-            String tenderQuota = bestCoupon.getCouponType();
-            if("1".equals(tenderQuota)){
-                if (!"不限".equals(bestCoupon.getTenderQuota())){
-                    if(bestCoupon.getTenderQuotaMin()> new Double(money)||bestCoupon.getTenderQuotaMax()<new Double(money)){
-                        CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
-                                bestCoupon.getProjectExpirationType());
-                        notAvailableCouponList.add(couponBean);
-                        continue;
-                    }
+            Integer tenderQuotaType = bestCoupon.getTenderQuotaType();
+            if (tenderQuotaType == 1) {
+                if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
+                            bestCoupon.getTenderQuota());
+                    notAvailableCouponList.add(couponBean);
+                    continue;
                 }
-            }else if("2".equals(tenderQuota)){
-                if(!"不限".equals(bestCoupon.getTenderQuota()) && null != bestCoupon.getTenderQuotaAmount() && new Double(bestCoupon.getTenderQuotaAmount())> new Double(money)){
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getProjectExpirationType());
+            } else if (tenderQuotaType == 2) {
+                if (bestCoupon.getTenderQuotaAmount() != null && (new Double(bestCoupon.getTenderQuotaAmount()) > new Double(money))) {
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getTenderQuota());
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
@@ -607,7 +606,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             }
             //是否与本金公用
             boolean addFlg = false;
-            if(userCouponConfigCustomize.getAddFlag()==1&&!"0".equals(money)){
+            if(userCouponConfigCustomize.getAddFlag()!=null&&userCouponConfigCustomize.getAddFlag()==1&&!"0".equals(money)){
                 addFlg = true;
             }
             if(addFlg){
@@ -619,19 +618,19 @@ public class MyCouponListServiceImpl implements MyCouponListService {
 
             if (!ifcouponSystem) {
                 // 验证项目金额
-                String tenderQuota = userCouponConfigCustomize.getCouponType();
-                if ("1".equals(tenderQuota) && !"不限".equals(userCouponConfigCustomize.getTenderQuota())) {
+                Integer tenderQuotaType = userCouponConfigCustomize.getTenderQuotaType();
+                if (1 == tenderQuotaType) {
                     if (userCouponConfigCustomize.getTenderQuotaMin() > new Double(money)
                             || userCouponConfigCustomize.getTenderQuotaMax() < new Double(money)) {
 
-                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getProjectExpirationType());
+                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota());
                         notAvailableCouponList.add(couponBeanVo);
                         continue;
                     }
-                } else if ("2".equals(tenderQuota)) {
+                } else if (2 == tenderQuotaType) {
                     if (!"不限".equals(userCouponConfigCustomize.getTenderQuota()) && null != userCouponConfigCustomize.getTenderQuotaAmount()) {
                         if(new Double(userCouponConfigCustomize.getTenderQuotaAmount()) > new Double(money)){
-                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getProjectExpirationType());
+                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota());
                             notAvailableCouponList.add(couponBeanVo);
                             continue;
                         }

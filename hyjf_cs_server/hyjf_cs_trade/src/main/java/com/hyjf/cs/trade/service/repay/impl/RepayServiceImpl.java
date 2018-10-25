@@ -196,6 +196,6 @@ public class RepayServiceImpl implements RepayService {
      */
     @Override
     public BankOpenAccountVO getBankOpenAccount(String accountId) {
-        return amUserClient.getBankOpenAccount(accountId);
+        return amUserClient.selectBankOpenAccountByAccountId(accountId);
     }
 }

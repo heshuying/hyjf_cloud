@@ -138,6 +138,9 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
     @ApiModelProperty(value = "标签状态输入")
     private String labelState;
     
+    @ApiModelProperty(value = "标签修改时，0：标签名称未改；1标签名称修改")
+    private int flag;
+    
 	public String getIds() {
 		return ids;
 	}
@@ -433,5 +436,10 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 	public void setLabelState(String labelState) {
 		this.labelState = labelState;
 	}
-	
+	public int getFlag() {
+		return flag;
+	}
+	public void setFlag(int flag) {
+		this.flag = flag;
+	}
 }
