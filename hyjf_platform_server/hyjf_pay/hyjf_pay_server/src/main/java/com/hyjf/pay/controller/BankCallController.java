@@ -631,8 +631,7 @@ public class BankCallController extends BaseController {
         String content = "";
         if (StringUtils.isNotBlank(bgData)) {
             bean = JSONObject.parseObject(bgData, BankCallBean.class);
-            logger.info("[接收异步返回的消息开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
-            logger.info("-接收异步返回的消息开始, 消息类型:[" + (bean == null ? "" : bean.getTxCode()) + "],订单号:[" + logOrderId + "],用户ID:[" + logUserId + "].");
+            logger.info("-接收异步返回的消息开始, 消息类型:[" + (bean == null ? "" : bean.getTxCode()) + "],订单号:[" + logOrderId + "],用户ID:[" + logUserId + "]. logNotifyType: " + logNotifyType);
             // 判断返回参数是否为空
             if (Validator.isNull(bean)) {
                 throw new RuntimeException("接收的同步返回参数为空，调用银行接口失败");

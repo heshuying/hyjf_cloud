@@ -37,7 +37,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	public List<OperationReportJobVO> getTenderCityGroupBy(List<OperationReportJobVO> bms){
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setOperationReportJobVOList(bms);
-		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/tendercitygroupby",request, OperationReportJobResponse.class).getBody();
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/idcard/tendercitygroupby",request, OperationReportJobResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -107,52 +107,52 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setBeginDate(beginDate);
 		request.setEndDate(endDate);
-		BigDecimal count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/accountbymonth",request, BigDecimal.class).getBody();
-		return count;
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/accountbymonth",request, OperationReportJobResponse.class).getBody();
+		return response.getTotalAccount();
 	}
 	@Override
 	public  int getTradeCountByMonth(Date beginDate,Date endDate) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setBeginDate(beginDate);
 		request.setEndDate(endDate);
-		int count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tradecountbymonth",request, int.class).getBody();
-		return count;
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tradecountbymonth",request, OperationReportJobResponse.class).getBody();
+		return response.getCount();
 	}
 	@Override
 	public  int getLoanNum(Date date) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		int count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/loannum",request, int.class).getBody();
-		return count;
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/loannum",request, OperationReportJobResponse.class).getBody();
+		return response.getCount();
 	}
 	@Override
 	public  int getTenderCount(Date date) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		int count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tendercount",request, int.class).getBody();
-		return count;
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tendercount",request, OperationReportJobResponse.class).getBody();
+		return response.getCount();
 	}
 
 	@Override
 	public  double getInvestLastDate(Date date) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		double count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/investlastdate",request, double.class).getBody();
-		return count;
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/investlastdate",request, OperationReportJobResponse.class).getBody();
+		return response.getAccount();
 	}
 	@Override
 	public float getFullBillAverageTime(Date date){
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		float count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/fullbillaveragetime",request, float.class).getBody();
-		return count;
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/fullbillaveragetime",request, OperationReportJobResponse.class).getBody();
+		return response.getFullBillAverage();
 	}
 	@Override
 	public BigDecimal getRepayTotal(Date date) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		BigDecimal count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/repaytotal",request, BigDecimal.class).getBody();
-		return count;
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/repaytotal",request, OperationReportJobResponse.class).getBody();
+		return response.getTotalAccount();
 	}
 	@Override
 	public List<OperationReportJobVO> getPerformanceSum(){

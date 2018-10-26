@@ -70,6 +70,26 @@ public class AdminUserAuthListVO  extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "签约到期日结束时间")
 	private String investEndTimeEnd;
 
+	@ApiModelProperty(value = "自动投标交易金额")
+	private String automaticTenderAmount;
+			@ApiModelProperty(value = "自动投标总金额")
+	private	String totalAmountAutomatic;
+
+	public String getAutomaticTenderAmount() {
+		return automaticTenderAmount = "2000000";
+	}
+
+	public void setAutomaticTenderAmount(String automaticTenderAmount) {
+		this.automaticTenderAmount = automaticTenderAmount;
+	}
+
+	public String getTotalAmountAutomatic() {
+		return totalAmountAutomatic = "1000000000";
+	}
+
+	public void setTotalAmountAutomatic(String totalAmountAutomatic) {
+		this.totalAmountAutomatic = totalAmountAutomatic;
+	}
 
 	/**
 	 * userId

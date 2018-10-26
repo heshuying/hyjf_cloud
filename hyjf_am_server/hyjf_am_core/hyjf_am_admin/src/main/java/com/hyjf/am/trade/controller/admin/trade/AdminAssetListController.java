@@ -12,6 +12,7 @@ import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,8 +66,69 @@ public class AdminAssetListController extends BaseController {
 		}
 		return response;
 	}
-	
-	
+
+
+	/**
+	 * 根据条件查询保证金不足列表
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/findBZJBZList", method = RequestMethod.POST)
+	public AssetListCustomizeResponse findBZJBZList(@RequestBody @Valid AssetListRequest request){
+		AssetListCustomizeResponse response = new AssetListCustomizeResponse();
+		Integer registCount = assetListService.getRecordCount(request);
+		// 查询列表传入分页
+		Paginator paginator;
+		/*Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());*/
+		if(request.getLimit() == 0){
+			// 前台传分页
+			paginator = new Paginator(request.getCurrPage(), registCount);
+		} else {
+			// 前台未传分页那默认 10
+			paginator = new Paginator(request.getCurrPage(), registCount,request.getPageSize());
+		}
+		//代表成功
+		String returnCode = "0";
+		//设置保证金不足查询条件
+		Map<String, Object> mapParam = setBZJBZQueryCondition(request);
+		//获取保证金不足列表
+		List<AssetListCustomizeVO> assetList = assetListService.findBZJBZList(mapParam,paginator.getOffset(), paginator.getLimit());
+		if(registCount>0){
+			if(null!=assetList&&assetList.size()>0){
+				List<AssetListCustomizeVO> assetListCustomizeVO = CommonUtils.convertBeanList(assetList,AssetListCustomizeVO.class);
+				response.setResultList(assetListCustomizeVO);
+				response.setCount(registCount);
+				response.setRtn(returnCode);
+			}
+		}
+		return response;
+	}
+
+
+	/**
+	 * 封装保证金不足查询条件
+	 * @param form
+	 * @return
+	 */
+	private Map<String, Object> setBZJBZQueryCondition(AssetListRequest form) {
+		String assetIdSrch = StringUtils.isNotEmpty(form.getAssetIdSrch()) ? form.getAssetIdSrch() : null;//资产编号
+		String instCodeSrch = StringUtils.isNotEmpty(form.getInstCodeSrch()) ? form.getInstCodeSrch() : null;//资产来源
+		String borrowNidSrch = StringUtils.isNotEmpty(form.getBorrowNidSrch()) ? form.getBorrowNidSrch() : null;//项目编号
+		String planNidSrch = StringUtils.isNotEmpty(form.getPlanNidSrch()) ? form.getPlanNidSrch() : null;//计划编号
+		String userNameSrch = StringUtils.isNotEmpty(form.getUserNameSrch()) ? form.getUserNameSrch() : null;//用户名
+
+		Map<String, Object> conditionMap = new HashMap<String, Object>();
+		conditionMap.put("assetIdSrch", assetIdSrch);
+		conditionMap.put("instCodeSrch", instCodeSrch);
+		conditionMap.put("borrowNidSrch", borrowNidSrch);
+		conditionMap.put("planNidSrch", planNidSrch);
+		conditionMap.put("userNameSrch", userNameSrch);
+		// 1 保证金不足 21 新增授信额度不足 22 在贷余额额度不足
+		conditionMap.put("statusSrch", new int[]{1,21,22,23,24});
+		return conditionMap;
+	}
+
+
 	/**
 	 * @Author: libin
 	 * @Desc :根据条件查询资产列表不分页

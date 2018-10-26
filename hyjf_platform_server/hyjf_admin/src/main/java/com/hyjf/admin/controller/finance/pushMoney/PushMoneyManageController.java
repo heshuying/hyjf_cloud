@@ -93,30 +93,37 @@ public class PushMoneyManageController extends BaseController {
         String borrowNid = form.getBorrowNid();
         // 取得借款API表
         BorrowApicronVO apicron = this.pushMoneyManageService.getBorrowApicronBorrowNid(borrowNid);
-        String status= Response.SUCCESS;
+        String status= SUCCESS;
         if (apicron == null) {
             jsonObject.put("record","该项目不存在!");
-            status = Response.FAIL;
+            status = FAIL;
+            jsonObject.put("status",status);
+            return jsonObject;
         }
         if (GetterUtil.getInteger(apicron.getWebStatus()) == 1) {
             jsonObject.put("record","该标的提成已经计算完成!");
-            status = Response.SUCCESS;
+            status = SUCCESS;
+            jsonObject.put("status",status);
+            return jsonObject;
         }
         int cnt = -1;
         try {
             // 发提成处理
             cnt = this.pushMoneyManageService.insertTenderCommissionRecord(apicron.getId(), form);
         } catch (Exception e) {
-            jsonObject.put("record","提成计算失败,请重新操作!");
+            //e.printStackTrace();
+           jsonObject.put("record","提成计算失败,请重新操作!");
             status = Response.FAIL;
+            jsonObject.put("status",status);
+            return jsonObject;
         }
 
         if (cnt >= 0) {
             jsonObject.put("record","提成计算成功！");
-            status = Response.SUCCESS;
+            status = SUCCESS;
         } else {
             jsonObject.put("record","提成计算失败,请重新操作!");
-            status = Response.FAIL;
+            status = FAIL;
         }
         jsonObject.put("status",status);
         return jsonObject;

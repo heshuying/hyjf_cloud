@@ -429,11 +429,13 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
                     String permissionUuid = split[1];
                     String s = adminRoleMenuPermissionsCustomizeMapper.checkLevel(menuUuid);
                     firstClass.add(s);
-                    AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
-                    permissions.setRoleId(roleId);
-                    permissions.setMenuUuid(menuUuid);
-                    permissions.setPermissionUuid(permissionUuid);
-                    adminList.add(permissions);
+                    if(!s.equals("0")) {
+                        AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
+                        permissions.setRoleId(roleId);
+                        permissions.setMenuUuid(menuUuid);
+                        permissions.setPermissionUuid(permissionUuid);
+                        adminList.add(permissions);
+                    }
                 } else {
                     String s = adminRoleMenuPermissionsCustomizeMapper.checkLevel(perm);
                     //参数是一级菜单

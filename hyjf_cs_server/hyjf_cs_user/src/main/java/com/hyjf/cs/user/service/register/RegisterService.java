@@ -153,4 +153,11 @@ public interface RegisterService extends BaseUserService {
      * @return
      */
     String getAutoInvesStatus(Integer userId);
+
+    /**
+     * 发送mq同步app推广渠道表
+     * @param version
+     * @param webViewUserVO
+     */
+    void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO);
 }

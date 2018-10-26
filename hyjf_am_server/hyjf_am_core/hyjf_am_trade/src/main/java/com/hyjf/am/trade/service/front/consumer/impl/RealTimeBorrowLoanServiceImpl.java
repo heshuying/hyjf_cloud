@@ -1410,7 +1410,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
     			logger.info("发送优惠券放款---" + borrowNid);
     			couponLoansMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
             } catch (MQException e) {
-                e.printStackTrace();
+	            logger.error("放款系统异常", e);
             }
 //            rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS, JSONObject.toJSONString(params));
             
@@ -1420,7 +1420,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 				this.sendSmsForBorrower(borrowUserId, borrowNid);
 				this.sendSmsForManager(borrowNid);
 			} catch (Exception e) {
-				e.printStackTrace();
+	            logger.error("放款系统异常", e);
 			}
 		} else if (failCount == tenderCount) {
 			// 更新Borrow
@@ -1685,7 +1685,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 				logger.info("发送收支明细---" + borrowTender.getUserId() + "---------" + serviceFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
             } catch (MQException e) {
-                e.printStackTrace();
+	            logger.error("放款系统异常", e);
             }
 		}
 
@@ -1709,7 +1709,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 			this.sendMessage(borrowRecover);
 			this.sendSms(borrowRecover, borrow, borrowInfo);
 		} catch (Exception e) {
-			e.printStackTrace();
+            logger.error("放款系统异常", e);
 		}
 		logger.info("-----------放款结束，放款成功---" + borrowNid + "---------投资订单号" + tenderOrderId);
 		result.put("result", true);

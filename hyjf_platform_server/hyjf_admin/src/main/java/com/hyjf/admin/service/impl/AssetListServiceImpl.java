@@ -114,4 +114,15 @@ public class AssetListServiceImpl implements AssetListService {
 		AssetListCustomizeResponse response = amTradeClient.findAssetListWithoutPage(request);
 		return response;
 	}
+
+	/**
+	 * 保证金不足列表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public AssetListCustomizeResponse findBZJBZList(AssetListRequest request) {
+		AssetListCustomizeResponse response = amTradeClient.findBZJBZList(request);
+		return response;
+	}
 }

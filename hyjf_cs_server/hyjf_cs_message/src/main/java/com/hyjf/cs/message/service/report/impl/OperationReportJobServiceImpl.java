@@ -87,16 +87,18 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         oe.setWillPayMoney(operationReportJobClient.getRepayTotal(getLastDay(cal)));
 
         BorrowUserStatistic borrowUserStatistic = this.selectBorrowUserStatistic();
-        // 累计借款人
-        oe.setBorrowuserCountTotal(borrowUserStatistic.getBorrowuserCountTotal());
-        // 当前投资人
-        oe.setBorrowuserCountCurrent(borrowUserStatistic.getBorrowuserCountCurrent());
-        // 当前投资人
-        oe.setTenderuserCountCurrent(borrowUserStatistic.getTenderuserCountCurrent());
-        // 最大单一借款人待还金额占比
-        oe.setBorrowuserMoneyTopone(borrowUserStatistic.getBorrowuserMoneyTopone().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2,BigDecimal.ROUND_HALF_UP));
-        // 前十大借款人待还金额占比
-        oe.setBorrowuserMoneyTopten(borrowUserStatistic.getBorrowuserMoneyTopten().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2,BigDecimal.ROUND_HALF_UP));
+        if(borrowUserStatistic!=null) {
+            // 累计借款人
+            oe.setBorrowuserCountTotal(borrowUserStatistic.getBorrowuserCountTotal());
+            // 当前投资人
+            oe.setBorrowuserCountCurrent(borrowUserStatistic.getBorrowuserCountCurrent());
+            // 当前投资人
+            oe.setTenderuserCountCurrent(borrowUserStatistic.getTenderuserCountCurrent());
+            // 最大单一借款人待还金额占比
+            oe.setBorrowuserMoneyTopone(borrowUserStatistic.getBorrowuserMoneyTopone().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
+            // 前十大借款人待还金额占比
+            oe.setBorrowuserMoneyTopten(borrowUserStatistic.getBorrowuserMoneyTopten().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
+        }
         log.info("借款数据....  oe is :{}", oe);
         operationMongDao.save(oe);
         return cal;

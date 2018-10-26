@@ -55,7 +55,7 @@ public class AppMessageConsumer extends Consumer {
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 			MessageExt msg = msgs.get(0);
 			AppMsMessage appMsMessage = JSONObject.parseObject(msg.getBody(), AppMsMessage.class);
-			logger.info("AppMessageConsumer 收到请求，开始推送app消息....appMsMessage is：{}", appMsMessage);
+			logger.debug("AppMessageConsumer 收到请求，开始推送app消息....appMsMessage is：{}", appMsMessage);
 			if (null != appMsMessage) {
 				switch (appMsMessage.getServiceType()) {
 				case MessageConstant.APP_MS_SEND_FOR_MOBILE:

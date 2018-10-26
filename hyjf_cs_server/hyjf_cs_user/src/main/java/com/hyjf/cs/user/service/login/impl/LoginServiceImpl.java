@@ -34,6 +34,7 @@ import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -50,6 +51,8 @@ import java.util.*;
 public class LoginServiceImpl extends BaseUserServiceImpl implements LoginService {
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
+	@Value("${am.user.service.name}")
+	private String userService;
 	@Autowired
 	private AmUserClient amUserClient;
 
@@ -80,17 +83,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	public WebViewUserVO login(String loginUserName, String loginPassword, String ip, String channel) {
 		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
-		}
-		logger.info("用户名:"+loginUserName);
-		UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
-		logger.info("用户是否存在:"+(userVO==null));
-		CheckUtil.check(userVO!=null, MsgEnum.ERR_USER_NOT_EXISTS);
-		// 获取密码错误次数
-		String errCount = RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT + userVO.getUserId());
-		//2.获取用户允许输入的最大错误次数
-		Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();//获取Redis配置的额登录最大错误次数
-		if (StringUtils.isNotBlank(errCount) && Integer.parseInt(errCount) > maxLoginErrorNum) {
-			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MANEY);
 		}
 		return this.doLogin(loginUserName, loginPassword, ip, channel);
 	}
@@ -143,6 +135,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
 		String codeSalt = userVO.getSalt();
+		logger.info("salt:"+codeSalt);
 		String passwordDb = userVO.getPassword();
 		// 页面传来的密码
 		String password = "";
@@ -914,6 +907,74 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		UserInfoVO userInfoVO = amUserClient.getUserByIdNo(idCard);
 		return amUserClient.findUserById(userInfoVO.getUserId());
 	}
+
+	/**
+	 *
+	 * @param userName 用户名，手机号
+	 * @param loginPassword 登录密码
+	 * @param channel 渠道
+	 * @return
+	 */
+	@Override
+	public Map<String, String> insertErrorPassword(String userName,String loginPassword,String channel) {
+		UserVO userVO = this.getUser(userName);
+		Map<String, String> r=new HashMap<>();
+		//1.获取该用户密码错误次数
+		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
+		//2.获取用户允许输入的最大错误次数
+		Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();
+		//3.redis配置的超限有效时间
+		long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
+		//判断密码错误次数是否超限
+		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>maxLoginErrorNum) {
+//			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
+			r.put("info","您的登录失败次数超限，请"+retTime+"之后重试!");
+		}
+		String codeSalt = userVO.getSalt();
+		String passwordDb = userVO.getPassword();
+		// 页面传来的密码
+		String password = "";
+		if (channel.equals(BankCallConstant.CHANNEL_PC)) {
+			password = MD5Utils.MD5(loginPassword + codeSalt);
+		}else {
+			password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
+		}
+		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
+		if (!password.equals(passwordDb)) {
+			long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ALL+ userVO.getUserId());//以用户手机号为key
+			for (int i=1;i<4;i++){
+				if (maxLoginErrorNum-value == i){
+//					CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_MAX,i);
+					r.put("info","登录失败,您的登录机会还剩"+i+"次!");
+				}
+			}
+			if (maxLoginErrorNum - value == 0){
+				Integer	loginLockTime=LockedConfigManager.getInstance().getWebConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
+				// 同步输错密码超限锁定用户信息接口
+				String  requestUrl= "/lockeduser/insertLockedUser";
+				LockedUserInfoVO lockedUserInfoVO=new LockedUserInfoVO();
+				lockedUserInfoVO.setUserid(userVO.getUserId());
+				lockedUserInfoVO.setUsername(userVO.getUsername());
+				lockedUserInfoVO.setMobile(userVO.getMobile());
+				lockedUserInfoVO.setLockTime(new Date());
+				lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
+				lockedUserInfoVO.setFront(1);
+				String result = restTemplate.postForEntity(userService+requestUrl,lockedUserInfoVO,String.class).getBody();
+			}
+		}
+		return  r;
+	}
+	/**
+	 * redis增加
+	 * @param key
+	 */
+	private long insertPassWordCount(String key) {
+		long retValue  = RedisUtils.incr(key);
+//		RedisUtils.expire(key,RedisUtils.getRemainMiao());//给key设置过期时间
+		Integer	loginErrorConfigManager=LockedConfigManager.getInstance().getWebConfig().getLockLong();
+		RedisUtils.expire(key,loginErrorConfigManager*3600);//给key设置过期时间
+		return retValue;
+	}
 	 @Override
 	    public Map<String, String> updateLoginInAction(String userName, String password, String ipAddr) {
 		  Map<String, String> r=new HashMap<>();
@@ -972,25 +1033,15 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	        } else {
 	        	//增加密码错误次数
 	        	RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT + userId);;//以用户userId为key
-				Integer loginLockTime=LockedConfigManager.getInstance().getWebConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
 				//1.获取该用户密码错误次数，2.判断是否错误超过错误次数
 				if((Integer.valueOf(passwordErrorNum)+1) < maxLoginErrorNum){
 	            	r.put("stt", "-3");
 	                return r;
 				}else{
-					// 同步输错密码超限锁定用户信息接口
-					String  requestUrl= "/am-user/lockeduser/insertLockedUser.do";
-					LockedUserInfoVO lockedUserInfoVO=new LockedUserInfoVO();
-					lockedUserInfoVO.setUserid(userId);
-					lockedUserInfoVO.setUsername(userName);
-					lockedUserInfoVO.setMobile(mobileString);
-					lockedUserInfoVO.setLockTime(new Date());
-					lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
-					lockedUserInfoVO.setFront(1);
-					String result = restTemplate.postForEntity(requestUrl,lockedUserInfoVO,String.class).getBody();
 	            	r.put("stt", "-5");
 	                return r;//用户当天密码错误次数已达上限
 				}
 	        }
 	    }
+
 }

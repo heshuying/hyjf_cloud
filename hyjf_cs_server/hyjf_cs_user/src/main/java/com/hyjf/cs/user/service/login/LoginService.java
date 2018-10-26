@@ -106,4 +106,13 @@ public interface LoginService extends BaseUserService {
 	UserVO getUserByIdCard(String idCard);
 
 	Map<String, String> updateLoginInAction(String userName, String password, String ipAddr);
+
+    /**
+     *
+     * @param userName 用户名，手机号
+     * @param loginPassword 登录密码
+     * @param channel 渠道
+     * @return
+     */
+    public Map<String, String> insertErrorPassword(String userName,String loginPassword,String channel);
 }
