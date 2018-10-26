@@ -14,6 +14,7 @@ import com.hyjf.am.user.dao.model.auto.LockedUserInfo;
 import com.hyjf.am.user.dao.model.auto.LockedUserInfoExample;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserExample;
+import com.hyjf.am.user.service.admin.locked.impl.LockedUserServiceImpl;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -148,9 +149,9 @@ public class LockedConfigServiceImpl implements LockedConfigService {
      * @return
      */
     public Map<String, String> insertErrorPassword(String userName, String loginPassword){
-        Map<String, String> r=new HashMap<>();
-        UserExample userExample=new UserExample();
-            userExample.or().andUsernameEqualTo(userName);
+            Map<String, String> r=new HashMap<>();
+            UserExample userExample=new UserExample();
+            userExample.createCriteria().andUsernameEqualTo(userName);
             List<User> users = userMapper.selectByExample(userExample);
             if (users.size()<1){
                 return r;
@@ -183,14 +184,14 @@ public class LockedConfigServiceImpl implements LockedConfigService {
                     Integer	loginLockTime=LockedConfigManager.getInstance().getAdminConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
                     // 同步输错密码超限锁定用户信息接口
                     String  requestUrl= "http://am-user/lockeduser/insertLockedUser";
-                    LockedUserInfoVO lockedUserInfoVO=new LockedUserInfoVO();
+                    LockedUserInfo lockedUserInfoVO=new LockedUserInfo();
                     lockedUserInfoVO.setUserid(users.get(0).getUserId());
                     lockedUserInfoVO.setUsername(users.get(0).getUsername());
                     lockedUserInfoVO.setMobile(users.get(0).getMobile());
                     lockedUserInfoVO.setLockTime(new Date());
                     lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
                     lockedUserInfoVO.setFront(1);
-                    String result = restTemplate.postForEntity(requestUrl,lockedUserInfoVO,String.class).getBody();
+                    int insert=lockedUserInfoMapper.insert(lockedUserInfoVO);
                 }
             }
             return  r;

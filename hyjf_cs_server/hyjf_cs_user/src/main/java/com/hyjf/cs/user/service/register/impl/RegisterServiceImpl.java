@@ -260,6 +260,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         registerUserRequest.setLoginIp(ip);
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
+        logger.info("注册之后user值是否为空："+(userVO==null));
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         // 3.注册后处理
         return this.afterRegisterHandle(userVO);
@@ -561,9 +562,10 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 }
                 // 查询推广渠道
                     UtmPlatVO plat = amUserClient.selectUtmPlatByUtmId(sourceId.toString());
+
                     Map<String, Object> params = new HashMap<String, Object>();
                     params.put("sourceId",sourceId);
-                    params.put("sourceName",plat.getSourceName() != null ? plat.getSourceName() : "");
+                    params.put("sourceName",plat!=null&&plat.getSourceName() != null ? plat.getSourceName() : "");
                     params.put("userId",webViewUserVO.getUserId());
                     params.put("userName",webViewUserVO.getUsername());
                     params.put("firstInvestTime",0);
@@ -645,6 +647,8 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             params.put("mqMsgId", GetCode.getRandomCode(10));
             params.put("userId", String.valueOf(userId));
             params.put("sendFlg", "11");
+            String signValue = StringUtils.lowerCase(MD5.toMD5Code(systemConfig.couponAccesskey + String.valueOf(userId) + 11 + systemConfig.couponAccesskey));
+            params.put("sign", signValue);
             couponProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
                     UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
         } catch (Exception e) {

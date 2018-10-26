@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.admin.finance;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankAleveResponse;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
@@ -55,6 +56,17 @@ public class BankAleveController extends BaseController {
 			}
 		}
 		response.setRtn(returnCode);
+		return response;
+	}
+
+
+	@RequestMapping(value = "/selectBankAleveInfoCount")
+	public IntegerResponse selectBankAleveInfoCount(@RequestBody @Valid BankAleveRequest request){
+		logger.info("request:" +JSONObject.toJSON(request));
+		IntegerResponse response = new IntegerResponse();
+		Map<String, Object> mapParam = paramSet(request);
+		int count = aleveService.countRecord(mapParam);
+		response.setResultInt(count);
 		return response;
 	}
 

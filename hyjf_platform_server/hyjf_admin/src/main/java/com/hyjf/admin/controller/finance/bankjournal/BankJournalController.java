@@ -4,8 +4,12 @@
 package com.hyjf.admin.controller.finance.bankjournal;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.BankJournalService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankEveRequest;
 import com.hyjf.am.vo.admin.BankEveVO;
 import com.hyjf.common.util.CustomConstants;
@@ -17,14 +21,19 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zdj
@@ -36,6 +45,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/hyjf-admin/bankeve")
 public class BankJournalController {
+
+    @Autowired
+    public SystemConfig systemConfig;
     @Autowired
     private BankJournalService bankJournalService;
 
@@ -74,71 +86,90 @@ public class BankJournalController {
      */
     @ApiOperation(value = "银行交易明细", notes = "银行交易明细导出")
     @PostMapping(value = "/exportbankeeve")
-    public void exportBankeeveList( HttpServletResponse response, @RequestBody BankEveRequest bankEveRequest) throws UnsupportedEncodingException {
+    public void exportBankeeveList(HttpServletRequest request , HttpServletResponse response, @RequestBody BankEveRequest bankEveRequest) throws UnsupportedEncodingException {
+
+
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "银行账务明细";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        // 需要输出的结果列表
-        List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
-        String[] titles = new String[] { "序号", "发送方标识码", "系统跟踪号", "交易传输时间", "主账号", "交易金额", "交易金额符号","消息类型",
-                "交易类型码", "订单号", "内部交易流水号", "内部保留域", "冲正撤销标志", "主机交易类型"};
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
         // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-        if (bankEveList != null && bankEveList.size() > 0) {
-            int sheetCount = 1;
-            int rowNum = 0;
-            for (int i = 0; i < bankEveList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BankEveVO bankeve = bankEveList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {// 序号
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) {// 发送方标识码
-                        cell.setCellValue(bankeve.getForcode());
-                    } else if (celLength == 2) {// 系统跟踪号
-                        cell.setCellValue(bankeve.getSeqno());
-                    } else if (celLength == 3) {// 交易传输时间
-                        cell.setCellValue(bankeve.getCendt()+"");
-                    }else if (celLength == 4) {// 主账号
-                        cell.setCellValue(bankeve.getCardnbr());
-                    } else if (celLength == 5) {// 交易金额
-                        cell.setCellValue(bankeve.getAmount()+"");
-                    }else if (celLength == 6) {// 交易金额符号
-                        cell.setCellValue(bankeve.getCrflag());
-                    } else if (celLength == 7) {// 消息类型
-                        cell.setCellValue(bankeve.getMsgtype());
-                    }else if (celLength == 8) {// 交易类型码
-                        cell.setCellValue(bankeve.getProccode());
-                    }else if (celLength == 9) {// 订单号
-                        cell.setCellValue(bankeve.getOrderno());
-                    }else if (celLength == 10) {// 内部交易流水号
-                        cell.setCellValue(bankeve.getTranno());
-                    }else if (celLength == 11) {// 关联交易流水号
-                        cell.setCellValue(bankeve.getReserved());
-                    }else if (celLength == 12) {// 内部保留域
-                        cell.setCellValue(bankeve.getReserved());
-                    }else if (celLength == 13) {// 冲正撤销标志
-                        cell.setCellValue(bankeve.getRevind());
-                    }else if (celLength == 14) {// 主机交易类型
-                        cell.setCellValue(bankeve.getTranstype()+"");
-                    }
-                }
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+        int sheetCount = 0;
+        String sheetNameTmp = sheetName + "_第1页";
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        bankEveRequest.setPaginatorPage(1);
+        bankEveRequest.setLimit(defaultRowMaxCount);
+
+
+        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
+
+
+        if (count == null || count <= 0){
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
+            int totalCount = count;
+            sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bankEveList);
+        }
+
+        for (int i = 1; i < sheetCount; i++) {
+            bankEveRequest.setPaginatorPage(i +1);
+            // 需要输出的结果列表
+            List<BankEveVO> bankEveList2 =bankJournalService.queryBankEveList(bankEveRequest);
+            if (!CollectionUtils.isEmpty(bankEveList2)) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankEveList2);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("forcode", "发送方标识码");
+        map.put("seqno","系统跟踪号");
+        map.put("cendt", "交易传输时间");
+        map.put("cardnbr", "主账号");
+        map.put("amount", "交易金额");
+        map.put("crflag", "交易金额符号");
+        map.put("msgtype","消息类型");
+        map.put("proccode","交易类型码");
+        map.put("orderno", "订单号");
+        map.put("tranno","内部交易流水号");
+        map.put("reserved", "内部保留域");
+        map.put("revind","冲正撤销标志");
+        map.put("transtype", "主机交易类型");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter cendtAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer cendt = (Integer) object;
+                return cendt + "";
+            }
+        };
+        IValueFormatter transtypeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer transtype = (Integer) object;
+                return transtype + "";
+            }
+        };
+        mapAdapter.put("cendt",cendtAdapter);
+        mapAdapter.put("transtype",transtypeAdapter);
+        return mapAdapter;
     }
 }
