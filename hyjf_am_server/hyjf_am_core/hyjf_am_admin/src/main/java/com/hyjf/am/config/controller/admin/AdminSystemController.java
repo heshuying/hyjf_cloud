@@ -63,12 +63,12 @@ public class AdminSystemController extends BaseConfigController {
 		adminSystem.setPassword(MD5.toMD5Code(adminSystemR.getPassword()));
 		adminSystem.setState("NOT CHECK");
 		//判断用户输入的密码错误次数---开始
-		Map<String, String> errorInfo=lockedConfigService.insertErrorPassword(adminSystemR.getUsername(),adminSystemR.getPassword());
-		if (!errorInfo.isEmpty()){
-			asr.setMessage(errorInfo.get("info"));
-			asr.setRtn(Response.ERROR);
-			return asr;
-		}
+//		Map<String, String> errorInfo=lockedConfigService.insertErrorPassword(adminSystemR.getUsername(),adminSystemR.getPassword());
+//		if (!errorInfo.isEmpty()){
+//			asr.setMessage(errorInfo.get("info"));
+//			asr.setRtn(Response.ERROR);
+//			return asr;
+//		}
 		//判断用户输入的密码错误次数---结束
 		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
 		if (adminSystemr != null) {
