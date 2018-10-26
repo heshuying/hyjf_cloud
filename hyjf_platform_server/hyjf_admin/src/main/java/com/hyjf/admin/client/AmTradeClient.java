@@ -1664,6 +1664,8 @@ public interface AmTradeClient {
      */
     List<BankEveVO> queryBankEveList(BankEveRequest request);
 
+    Integer queryBankEveCount(BankEveRequest request);
+
 
     //董泽杉
     /**
