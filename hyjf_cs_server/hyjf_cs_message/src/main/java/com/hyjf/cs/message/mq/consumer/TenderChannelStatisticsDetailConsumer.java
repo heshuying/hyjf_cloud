@@ -89,14 +89,18 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                             Query query = new Query();
                             Criteria criteria = Criteria.where("userId").is(userId);
                             query.addCriteria(criteria);
+
                             Update update = new Update();
+
                             BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal");
                             String projectType = entity.getString("projectType");
                             Integer investTime = entity.getInteger("investTime");
                             String investProjectPeriod = entity.getString("investProjectPeriod");
+
                             update.inc("cumulativeInvest", accountDecimal).set("investAmount", accountDecimal)
                                     .set("investProjectType", projectType).set("firstInvestTime", investTime)
                                     .set("investProjectPeriod", investProjectPeriod);
+
                             dao.update(query, update);
                         }
                     }

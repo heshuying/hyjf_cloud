@@ -282,6 +282,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         user.setBankOpenAccount(true);
         RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
 
+        // 更新account表的电子帐户号
+        Integer saveResult = amTradeClient.updateAccountNumberByUserId(userId,bean.getAccountId());
+
         // 查询银行卡绑定信息
         Integer saveBankCardFlag = saveCardNoToBank(bean);
         if (saveBankCardFlag.intValue() != 1) {
@@ -291,8 +294,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             result.setMessage("开户失败,保存银行卡信息失败");
             return result;
         }
-        // 更新account表的电子帐户号
-        Integer saveResult = amTradeClient.updateAccountNumberByUserId(userId,bean.getAccountId());
+
         try {
             // 加入到消息队列
             Map<String, String> params = new HashMap<String, String>();
