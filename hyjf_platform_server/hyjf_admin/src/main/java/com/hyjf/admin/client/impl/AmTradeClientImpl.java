@@ -5972,9 +5972,9 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 	@Override
-	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
+	public BorrowCustomizeResponse exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
         return restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrow/exportBorrowList", borrowCommonCustomize, BorrowCustomizeResponse.class)
-                .getBody().getBorrowCommonCustomizeList();
+                .getBody();
 	}
 
 
@@ -6313,6 +6313,23 @@ public class AmTradeClientImpl implements AmTradeClient {
     public PushMoneyResponse getInfoAction(Integer id) {
         return restTemplate.getForObject("http://AM-ADMIN/am-trade/pushmoney/get_info_action/" + id,
                 PushMoneyResponse.class);
+    }
+
+    /**
+     * 保证金不足列表
+     * @param request
+     * @return
+     */
+    @Override
+    public AssetListCustomizeResponse findBZJBZList(AssetListRequest request) {
+        AssetListCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/findBZJBZList", request,
+                        AssetListCustomizeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
     }
 
     /**

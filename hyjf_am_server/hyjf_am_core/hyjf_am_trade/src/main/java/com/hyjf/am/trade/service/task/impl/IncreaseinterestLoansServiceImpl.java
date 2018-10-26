@@ -3,9 +3,44 @@
  */
 package com.hyjf.am.trade.service.task.impl;
 
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.aop.framework.AopContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.config.SystemConfig;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountBorrow;
+import com.hyjf.am.trade.dao.model.auto.AccountBorrowExample;
+import com.hyjf.am.trade.dao.model.auto.AccountExample;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
+import com.hyjf.am.trade.dao.model.auto.CouponRecover;
+import com.hyjf.am.trade.dao.model.auto.CouponRecoverExample;
+import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
+import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvestExample;
+import com.hyjf.am.trade.dao.model.auto.IncreaseInterestLoan;
+import com.hyjf.am.trade.dao.model.auto.IncreaseInterestLoanDetail;
+import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepay;
+import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayDetail;
+import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayDetailExample;
+import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayExample;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
@@ -33,19 +68,6 @@ import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.util.calculate.InterestInfo;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 产品加息放款
@@ -122,6 +144,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 	 * @throws Exception
 	 */
 //	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.NESTED, rollbackFor = Exception.class)
+	@Override
 	public List<Map<String, String>> updateBorrowLoans(BorrowApicron apicron, IncreaseInterestInvest borrowTender) throws Exception {
 
 		logger.info("-----------融通宝加息放款开始---" + apicron.getBorrowNid() + "---------" + borrowTender.getLoanOrderId());
@@ -950,7 +973,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 									// 更新放款信息
 									updateBorrowTender(borrowTender);
 								}
-								updateBorrowLoans(apicron, borrowTender);
+								((IncreaseinterestLoansService)AopContext.currentProxy()).updateBorrowLoans(apicron, borrowTender);
 							} catch (Exception e) {
 								sbError.append(e.getMessage()).append("<br/>");
 								logger.error(e.getMessage());
@@ -962,9 +985,10 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 						if (errorCnt > 0) {
 							throw new Exception("融通宝加息放款时发生错误。" + "[借款编号：" + borrowNid + "]," + "[错误件数：" + errorCnt + "]");
 						}
+
+						// 更新任务API状态为完成
+						updateBorrowApicron(apicron.getId(), STATUS_SUCCESS);
 					}
-					// 更新任务API状态为完成
-					updateBorrowApicron(apicron.getId(), STATUS_SUCCESS);
 				} catch (Exception e) {
 //					int runCnt = 1;
 //					if (runTimes.containsKey(apicron.getBorrowNid())) {

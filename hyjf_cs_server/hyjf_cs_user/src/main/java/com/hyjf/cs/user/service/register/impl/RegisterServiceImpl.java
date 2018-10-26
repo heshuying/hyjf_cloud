@@ -8,7 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UserActionUtmRequest;
-import com.hyjf.am.vo.market.AdsVO;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -260,6 +260,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         registerUserRequest.setLoginIp(ip);
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
+        logger.info("注册之后user值是否为空："+(userVO==null));
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         // 3.注册后处理
         return this.afterRegisterHandle(userVO);
@@ -331,6 +332,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         // 活动有效期校验
         try {
             Integer activityId = systemConfig.getActivity888Id();
+            logger.info("注册送188元新手红包:"+activityId);
             if (!checkActivityIfAvailable(activityId)) {
                 sendCoupon(userVO);
             }
@@ -346,16 +348,14 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         if (activityId == null) {
             return false;
         }
-
-        AdsVO adsVO = amMarketClient.findAdsById(activityId);
-
-        if (adsVO == null) {
+        ActivityListVO activityListVO = amMarketClient.selectActivityList(activityId);
+        if (activityListVO == null) {
             return false;
         }
-        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeStart()) > GetDate.getNowTime10()) {
+        if (activityListVO.getTimeStart() > GetDate.getNowTime10()) {
             return false;
         }
-        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeEnd()) < GetDate.getNowTime10()) {
+        if( activityListVO.getTimeEnd() < GetDate.getNowTime10()) {
             return false;
         }
 
@@ -420,7 +420,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 return vo;
             }
 
-            if (password.length() < 6 || password.length() > 16) {
+            if (password.length() < 8 || password.length() > 16) {
                 vo.setEnum(ResultEnum.ERROR_013);
                 vo.setSuccessUrl("");
                 return vo;
@@ -562,16 +562,16 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 }
                 // 查询推广渠道
                     UtmPlatVO plat = amUserClient.selectUtmPlatByUtmId(sourceId.toString());
+
                     Map<String, Object> params = new HashMap<String, Object>();
                     params.put("sourceId",sourceId);
-                    params.put("sourceName",plat.getSourceName() != null ? plat.getSourceName() : "");
+                    params.put("sourceName",plat!=null&&plat.getSourceName() != null ? plat.getSourceName() : "");
                     params.put("userId",webViewUserVO.getUserId());
                     params.put("userName",webViewUserVO.getUsername());
                     params.put("firstInvestTime",0);
                     params.put("investAmount",0.00);
                     params.put("registerTime",new Date());
                     params.put("cumulativeInvest",BigDecimal.ZERO);
-                    //压入消息队列
                     try {
                         appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                 MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
@@ -647,8 +647,10 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             params.put("mqMsgId", GetCode.getRandomCode(10));
             params.put("userId", String.valueOf(userId));
             params.put("sendFlg", "11");
-            couponProducer.messageSend(new MessageContent(MQConstant.REGISTER_COUPON_TOPIC,
-                    MQConstant.REGISTER_COUPON_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            String signValue = StringUtils.lowerCase(MD5.toMD5Code(systemConfig.couponAccesskey + String.valueOf(userId) + 11 + systemConfig.couponAccesskey));
+            params.put("sign", signValue);
+            couponProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
+                    UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
         } catch (Exception e) {
             logger.error("注册发放888红包失败...", e);
         }

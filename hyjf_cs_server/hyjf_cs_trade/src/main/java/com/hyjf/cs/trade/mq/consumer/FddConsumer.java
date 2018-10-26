@@ -60,7 +60,7 @@ public class FddConsumer extends Consumer {
 	public class MessageListener implements MessageListenerConcurrently {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-			logger.info("法大大 收到消息，开始处理....msgs is :{}", msgs);
+			logger.debug("法大大 收到消息，开始处理....msgs is :{}", msgs);
 
 			for (MessageExt msg : msgs) {
 				if (MQConstant.FDD_GENERATE_CONTRACT_TAG.equals(msg.getTags())) {
