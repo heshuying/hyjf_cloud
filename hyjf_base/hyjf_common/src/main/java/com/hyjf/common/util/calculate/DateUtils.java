@@ -414,6 +414,36 @@ public class DateUtils {
 		return null;
 	}
 	/**
+	 * 整数(秒数)转换为时分秒格式
+	 * @param value
+	 * @return
+	 */
+	public static String SToHMSStr(long value) {
+		String timeStr = null;
+		int hour = 0;
+		int minute = 0;
+		int second = 0;
+		if (value <= 0)
+			return "00时00分";
+		else {
+			int intValue=(int)value;
+			minute = intValue / 60;
+			if (intValue<60) {
+				return "一分钟之后";
+			}else if (minute < 60) {
+				timeStr =unitFormat(minute) + "分";
+			} else {
+				hour = minute / 60;
+				if (hour > 99)
+					return "99:59:59";
+				minute = minute % 60;
+//                second = intValue - hour * 3600 - minute * 60;
+				timeStr = unitFormat(hour) + "时" + unitFormat(minute) + "分";
+			}
+		}
+		return timeStr;
+	}
+	/**
 	 * 设置时间加当前系统时间（小时）
 	 * @param loginLockTime
 	 * @return
@@ -570,6 +600,14 @@ public class DateUtils {
 		}
 		long d = c/60/60/24;//天
 		return d;
+	}
+	public static String unitFormat(int i) {
+		String retStr = null;
+		if (i >= 0 && i < 10)
+			retStr = "0" + Integer.toString(i);
+		else
+			retStr = "" + i;
+		return retStr;
 	}
 
 }
