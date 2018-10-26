@@ -69,12 +69,13 @@ public class CouponTenderHztController extends BaseController {
         couponTenderHztVo.setCouponReciveStatusList(list);
         Integer count = this.couponTenderHztService.countRecord(couponTenderRequest);
         lrs.setCount(count);
+        List<CouponTenderCustomize>  recordList = null;
         if (count != null && count > 0) {
             String investTotal=this.couponTenderHztService.queryInvestTotalHzt(couponTenderRequest);
-            List<CouponTenderCustomize>  recordList = this.couponTenderHztService.getRecordList(couponTenderRequest);
+            recordList = this.couponTenderHztService.getRecordList(couponTenderRequest);
             couponTenderHztVo.setInvestTotal(investTotal);
-            couponTenderHztVo.setRecordList(recordList);
         }
+        couponTenderHztVo.setRecordList(recordList==null?new ArrayList():recordList);
         lrs.setData(couponTenderHztVo);
         Page page = Page.initPage(couponTenderRequest.getCurrPage(), couponTenderRequest.getPageSize());
         page.setTotal(count);

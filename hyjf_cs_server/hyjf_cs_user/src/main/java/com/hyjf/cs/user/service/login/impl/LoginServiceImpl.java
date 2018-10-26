@@ -918,6 +918,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	@Override
 	public Map<String, String> insertErrorPassword(String userName,String loginPassword,String channel) {
 		UserVO userVO = this.getUser(userName);
+		CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
 		Map<String, String> r=new HashMap<>();
 		//1.获取该用户密码错误次数
 		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
