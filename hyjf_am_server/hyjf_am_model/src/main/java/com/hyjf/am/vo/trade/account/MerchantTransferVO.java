@@ -47,6 +47,17 @@ public class MerchantTransferVO extends BasePage implements Serializable {
 
     private Date updateTime;
 
+    //导出增加字段（转账类型）
+    private Integer transferStyle;
+
+    public Integer getTransferStyle() {
+        return transferStyle = this.getTransferType();
+    }
+
+    public void setTransferStyle(Integer transferStyle) {
+        this.transferStyle = transferStyle;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
