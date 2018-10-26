@@ -59,6 +59,9 @@ public class AppHomePageRecommendProject implements Serializable {
      */
     private String borrowExtraYield;
 
+    private String borrowTheFirstDesc;
+
+
 
     public String getTitle() {
         return title;
@@ -154,5 +157,13 @@ public class AppHomePageRecommendProject implements Serializable {
 
     public void setBorrowExtraYield(String borrowExtraYield) {
         this.borrowExtraYield = borrowExtraYield;
+    }
+
+    public String getBorrowTheFirstDesc() {
+        return borrowTheFirstDesc;
+    }
+
+    public void setBorrowTheFirstDesc(String borrowTheFirstDesc) {
+        this.borrowTheFirstDesc = borrowTheFirstDesc;
     }
 }

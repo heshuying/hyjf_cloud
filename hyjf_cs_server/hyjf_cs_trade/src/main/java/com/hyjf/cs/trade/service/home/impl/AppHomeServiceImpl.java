@@ -487,6 +487,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         project.setButtonText(appHomePageCustomize.getStatusName());
         // 产品加息
         project.setBorrowExtraYield(appHomePageCustomize.getBorrowExtraYield());
+        project.setBorrowTheFirstDesc(appHomePageCustomize.getBorrowTheFirstDesc());
         return project;
     }
 
