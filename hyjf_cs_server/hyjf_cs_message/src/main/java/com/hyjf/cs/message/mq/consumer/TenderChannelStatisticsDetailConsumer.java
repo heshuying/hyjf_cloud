@@ -86,22 +86,26 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                         } else if (investFlag == 1) {
                             logger.info("开始更新首次投资信息....userId:"+userId);
                             // 首次投资
-                            Query query = new Query();
-                            Criteria criteria = Criteria.where("userId").is(userId);
-                            query.addCriteria(criteria);
+                            try{
+                                Query query = new Query();
+                                Criteria criteria = Criteria.where("userId").is(userId);
+                                query.addCriteria(criteria);
 
-                            Update update = new Update();
+                                Update update = new Update();
 
-                            BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal");
-                            String projectType = entity.getString("projectType");
-                            Integer investTime = entity.getInteger("investTime");
-                            String investProjectPeriod = entity.getString("investProjectPeriod");
+                                BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal");
+                                String projectType = entity.getString("projectType");
+                                Integer investTime = entity.getInteger("investTime");
+                                String investProjectPeriod = entity.getString("investProjectPeriod");
 
-                            update.inc("cumulativeInvest", accountDecimal).set("investAmount", accountDecimal)
-                                    .set("investProjectType", projectType).set("firstInvestTime", investTime)
-                                    .set("investProjectPeriod", investProjectPeriod);
+                                update.inc("cumulativeInvest", accountDecimal).set("investAmount", accountDecimal)
+                                        .set("investProjectType", projectType).set("firstInvestTime", investTime)
+                                        .set("investProjectPeriod", investProjectPeriod);
 
-                            dao.update(query, update);
+                                dao.update(query, update);
+                            }catch (Exception e){
+                                logger.error("报错了。。。",e);
+                            }
                         }
                     }
                 } else {
