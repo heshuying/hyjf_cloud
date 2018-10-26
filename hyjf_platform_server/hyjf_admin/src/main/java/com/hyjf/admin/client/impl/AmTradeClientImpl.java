@@ -6316,6 +6316,23 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 保证金不足列表
+     * @param request
+     * @return
+     */
+    @Override
+    public AssetListCustomizeResponse findBZJBZList(AssetListRequest request) {
+        AssetListCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/findBZJBZList", request,
+                        AssetListCustomizeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 产品中心-加息投资明细（总计）
      * @param request
      * @auth wenxin
