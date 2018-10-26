@@ -37,9 +37,9 @@ public class UserAuthController extends BaseController {
 	 * 更新授权log信息
 	 * @return
 	 */
-	@PostMapping("/updateUserAuthLog/{logOrderId}/{message}")
-	public void updateUserAuthLog(@PathVariable String logOrderId,@PathVariable String message) {
-		userauthService.updateUserAuthLog(logOrderId,message);
+	@RequestMapping("/updateUserAuthLog")
+	public void updateUserAuthLog(@RequestBody HjhUserAuthLog hjhUserAuthLog) {
+		userauthService.updateUserAuthLog(hjhUserAuthLog.getOrderId(),hjhUserAuthLog.getRemark());
 	}
 
 }

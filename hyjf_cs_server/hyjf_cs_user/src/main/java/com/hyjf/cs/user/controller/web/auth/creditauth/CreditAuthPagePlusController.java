@@ -19,6 +19,7 @@ import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.auth.AuthService;
+import com.hyjf.cs.user.vo.AuthVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -71,12 +72,12 @@ public class CreditAuthPagePlusController extends BaseUserController {
 
         // 拼装参数 调用江西银行
         // 失败页面
-        String errorPath = "/user/openError";
+        String errorPath = "/user/autoplus/autoTenderFail";
         // 成功页面
-        String successPath = "/user/openSuccess";
+        String successPath = "/user/autoplus/autoTenderSuccess";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + errorPath +"?logOrdId="+orderId;
+        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT;
         String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + successPath;
         String bgRetUrl = "http://CS-USER/hyjf-web/user/auth/creditauthpageplus/creditAuthBgreturn" ;
 
@@ -141,7 +142,7 @@ public class CreditAuthPagePlusController extends BaseUserController {
         UserVO user = this.authService.getUsersById(userId);
         if(authService.checkDefaultConfig(bean, AuthBean.AUTH_TYPE_AUTO_CREDIT)){
 
-            authService.updateUserAuthLog(bean.getLogOrderId(),"授权期限过短或额度过低，<br>请重新授权！");
+            authService.updateUserAuthLog(bean.getLogOrderId(),"QuotaError");
             logger.info("[用户自动债转授权完成后,回调结束]");
             result.setMessage("自动债转授权成功");
             result.setStatus(true);
@@ -177,9 +178,9 @@ public class CreditAuthPagePlusController extends BaseUserController {
     @ApiOperation(value = "查询授权失败原因", notes = "查询授权失败原因")
     @PostMapping("/seachFiledMess")
     @ResponseBody
-    public WebResult<Object> seachUserAuthErrorMessgae(@RequestBody @Valid String logOrdId) {
-        logger.info("查询授权失败原因start,logOrdId:{}", logOrdId);
-        WebResult<Object> result = authService.seachUserAuthErrorMessgae(logOrdId);
+    public WebResult<Object> seachUserAuthErrorMessgae(@RequestBody @Valid AuthVO vo) {
+        logger.info("查询授权失败原因start,logOrdId:{}", vo.getLogOrdId());
+        WebResult<Object> result = authService.seachUserAuthErrorMessgae(vo.getLogOrdId());
         return result;
     }
 

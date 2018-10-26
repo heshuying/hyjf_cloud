@@ -61,7 +61,7 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
     @ApiOperation(value = "用户自动投资授权", notes = "用户自动投资授权")
     @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId,@RequestBody AuthorizedVO authorizedVO, HttpServletRequest request) {
+    public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
@@ -80,7 +80,7 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_BID;
         String successUrl = super.getFrontHost(systemConfig,platform) + successPath;
-        String bgRetUrl = "http://CS-USER/hyjf-web/user/auth/invesauthpageplus/invesAuthBgreturn" ;
+        String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/invesauthpageplus/invesAuthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO=authService.getBankOpenAccount(userId);
@@ -154,7 +154,7 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
         UserVO user = this.authService.getUsersById(userId);
         if(authService.checkDefaultConfig(bean, AuthBean.AUTH_TYPE_AUTO_BID)){
 
-            authService.updateUserAuthLog(bean.getLogOrderId(),"授权期限过短或额度过低，<br>请重新授权！");
+            authService.updateUserAuthLog(bean.getLogOrderId(),"QuotaError");
             logger.info("[用户自动投资授权完成后,回调结束]");
             result.setMessage("自动投资授权成功");
             result.setStatus(true);

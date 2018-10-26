@@ -177,7 +177,7 @@ public class AppMergeAuthPagePlusController extends BaseUserController {
         UserVO user = this.authService.getUsersById(userId);
         if(authService.checkDefaultConfig(bean, AuthBean.AUTH_TYPE_MERGE_AUTH)){
 
-            authService.updateUserAuthLog(bean.getLogOrderId(),"授权期限过短或额度过低，<br>请重新授权！");
+            authService.updateUserAuthLog(bean.getLogOrderId(),"QuotaError");
             logger.info("[用户合并授权完成后,回调结束]");
             result.setMessage("合并授权成功");
             result.setStatus(true);
