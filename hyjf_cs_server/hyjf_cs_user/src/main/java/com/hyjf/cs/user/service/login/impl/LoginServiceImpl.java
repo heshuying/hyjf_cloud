@@ -950,6 +950,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				}
 			}
 			if (maxLoginErrorNum - value == 0){
+				logger.info("插入密码超限用户信息开始","-----userId:"+userVO.getUserId());
 				Integer	loginLockTime=LockedConfigManager.getInstance().getWebConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
 				// 同步输错密码超限锁定用户信息接口
 				String  requestUrl= "/lockeduser/insertLockedUser";
@@ -961,6 +962,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
 				lockedUserInfoVO.setFront(1);
 				String result = restTemplate.postForEntity(userService+requestUrl,lockedUserInfoVO,String.class).getBody();
+				logger.info("插入密码超限用户信息结束","-----userId:"+userVO.getUserId());
 			}
 		}
 		return  r;

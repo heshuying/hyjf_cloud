@@ -69,6 +69,7 @@ public class WebLoginController extends BaseUserController {
             logger.error("web端登录失败...");
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(errorInfo.get("info"));
+            return result;
         }
         //判断用户输入的密码错误次数---结束
         WebViewUserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC);
