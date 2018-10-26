@@ -312,6 +312,38 @@ public class UserPortraitController extends BaseController {
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else{
+            for(UserPortraitVO userPortraitVO : responseUserPortrait.getResultList()){
+                // 用户名
+                userPortraitVO.setUserName(StringUtils.isNoneBlank(userPortraitVO.getUserName()) ? userPortraitVO.getUserName() : "");
+                //手机号
+                userPortraitVO.setMobile(StringUtils.isNoneBlank(userPortraitVO.getMobile()) ? userPortraitVO.getMobile() :  "");
+                // 性别
+                userPortraitVO.setSex(StringUtils.isNoneBlank(userPortraitVO.getSex()) ? userPortraitVO.getSex() :  "");
+                // 学历
+                userPortraitVO.setEducation(StringUtils.isNoneBlank(userPortraitVO.getEducation()) ? userPortraitVO.getEducation() :  "");
+                // 职业
+                userPortraitVO.setOccupation(StringUtils.isNoneBlank(userPortraitVO.getOccupation()) ? userPortraitVO.getOccupation() :  "");
+                // 地域
+                userPortraitVO.setCity(StringUtils.isNoneBlank(userPortraitVO.getCity()) ? userPortraitVO.getCity() :  "");
+                // 爱好
+                userPortraitVO.setInterest(StringUtils.isNoneBlank(userPortraitVO.getInterest()) ?userPortraitVO.getInterest() :  "");
+                // 登录活跃
+                userPortraitVO.setLoginActive(StringUtils.isNoneBlank(userPortraitVO.getLoginActive()) ?userPortraitVO.getLoginActive() :  "");
+                // 客户来源
+                userPortraitVO.setCustomerSource(StringUtils.isNoneBlank(userPortraitVO.getCustomerSource()) ?userPortraitVO.getCustomerSource() :  "");
+                // 最后一笔回款时间
+                userPortraitVO.setLastRepayTimeS(StringUtils.isNoneBlank(userPortraitVO.getLastRepayTimeS()) ?userPortraitVO.getLastRepayTimeS() : "");
+                // 当前拥有人
+                userPortraitVO.setCurrentOwner(StringUtils.isNoneBlank(userPortraitVO.getCurrentOwner()) ?userPortraitVO.getCurrentOwner() : "");
+                // 是否加微信
+                userPortraitVO.setAddWechat(StringUtils.isNoneBlank(userPortraitVO.getAddWechat())?userPortraitVO.getAddWechat() : "");
+                // 投资进程
+                userPortraitVO.setInvestProcess(StringUtils.isNoneBlank(userPortraitVO.getInvestProcess())?userPortraitVO.getInvestProcess() : "");
+                // 客户投诉
+                userPortraitVO.setCustomerComplaint(StringUtils.isNoneBlank(userPortraitVO.getCustomerComplaint())?userPortraitVO.getCustomerComplaint() : "");
+                // 注册时间
+                userPortraitVO.setRegTime(StringUtils.isNoneBlank(userPortraitVO.getRegTime())?userPortraitVO.getRegTime() : "");
+            }
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, responseUserPortrait.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {

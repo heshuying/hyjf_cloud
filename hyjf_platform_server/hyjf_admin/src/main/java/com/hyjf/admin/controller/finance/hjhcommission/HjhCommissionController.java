@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.finance.hjhcommission;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.HjhCommissionViewRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -14,6 +15,8 @@ import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.*;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
@@ -38,6 +41,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -49,8 +53,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 /**
  * @author libin
  * @version HjhCommissionController.java, v0.1 2018年8月7日 下午2:38:45
@@ -233,11 +241,11 @@ public class HjhCommissionController extends BaseController{
 	 * @param request
 	 * @return 带条件导出         已测试
 	 */
-	@ApiOperation(value = "汇计划提成列表带条件导出EXCEL", notes = "带条件导出EXCEL")
-	@PostMapping(value = "/export")
-	@ResponseBody
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-	public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody HjhCommissionViewRequest viewRequest) throws Exception {
+	// @ApiOperation(value = "汇计划提成列表带条件导出EXCEL", notes = "带条件导出EXCEL")
+	// @PostMapping(value = "/export")
+	// @ResponseBody
+	// @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	/*public void exportExcelBack(HttpServletRequest request, HttpServletResponse response,@RequestBody HjhCommissionViewRequest viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "汇计划提成列表";
 		// 文件名称
@@ -336,7 +344,7 @@ public class HjhCommissionController extends BaseController{
                    //提成人
                     else if (celLength == 6) {
                     	//UsernameTender 是投资人用户名
-                        /*cell.setCellValue(bean.getUsernameTender());*/
+                        *//*cell.setCellValue(bean.getUsernameTender());*//*
                         // Username是 提成人用户名
                         cell.setCellValue(bean.getUsername()); 
                     }
@@ -406,8 +414,214 @@ public class HjhCommissionController extends BaseController{
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+	}*/
+
+	/**
+	 * 导出excel
+	 *
+	 * @param viewRequest
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "汇计划提成列表带条件导出EXCEL", notes = "带条件导出EXCEL")
+	@PostMapping(value = "/export")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody HjhCommissionViewRequest viewRequest) throws Exception {
+		// 封装查询条件
+		// 初始化原子层请求实体
+		HjhCommissionRequest form = new HjhCommissionRequest();
+		// 初始化返回LIST
+		List<HjhCommissionCustomizeVO> returnList = null;
+		// 将画面检索参数request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
+		// 默认为汇计划类的投资
+		form.setTenderType(2);
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "汇计划提成列表";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+		//form.setLimitFlg(true);
+		//请求第一页5000条
+		form.setPageSize(defaultRowMaxCount);
+		form.setCurrPage(1);
+		// 需要输出的结果列表
+		// 列表查询
+		HjhCommissionResponse res = hjhCommissionService.selectHjhCommissionList(form);
+		Integer totalCount = res.getCount();
+		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		String sheetNameTmp = sheetName + "_第1页";
+		if (totalCount == 0) {
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}else{
+			for(HjhCommissionCustomizeVO hjhCommissionCustomizeVO : res.getResultList()){
+				//锁定期
+				String str = "";
+				if (hjhCommissionCustomizeVO.getLockPeriod()==null) {
+					hjhCommissionCustomizeVO.setLockPeriod(str);
+				}else {
+					if ("1".equals(hjhCommissionCustomizeVO.getIsMonth())) {
+						str = "个月";
+					}else if("0".equals(hjhCommissionCustomizeVO.getIsMonth())) {
+						str = "天";
+					}
+					hjhCommissionCustomizeVO.setLockPeriod(hjhCommissionCustomizeVO.getLockPeriod() + str);
+				}
+			}
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, res.getResultList());
+		}
+		for (int i = 1; i < sheetCount; i++) {
+			form.setPageSize(defaultRowMaxCount);
+			form.setCurrPage(i+1);
+			HjhCommissionResponse res2 = hjhCommissionService.selectHjhCommissionList(form);
+			for(HjhCommissionCustomizeVO hjhCommissionCustomizeVO : res2.getResultList()){
+				//锁定期
+				String str = "";
+				if (hjhCommissionCustomizeVO.getLockPeriod()==null) {
+					hjhCommissionCustomizeVO.setLockPeriod(str);
+				}else {
+					if ("1".equals(hjhCommissionCustomizeVO.getIsMonth())) {
+						str = "个月";
+					}else if("0".equals(hjhCommissionCustomizeVO.getIsMonth())) {
+						str = "天";
+					}
+					hjhCommissionCustomizeVO.setLockPeriod(hjhCommissionCustomizeVO.getLockPeriod() + str);
+				}
+			}
+			if (res2 != null && res2.getResultList().size()> 0) {
+				sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  res2.getResultList());
+			} else {
+				break;
+			}
+		}
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}
-	
+
+	private Map<String, String> buildMap() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("ordid", "加入订单号");
+		map.put("borrowNid", "计划编号");
+		map.put("borrowStyleHjh", "还款方式");
+		map.put("lockPeriod", "锁定期");
+		map.put("expectApr", "预期年化收益率");
+		map.put("username", "提成人");
+		map.put("trueNameTender", "提成人真实姓名");
+		map.put("attribute", "提成人用户属性(投资时)");
+		map.put("usernameTender", "投资人用户名");
+		map.put("attributeTender", "投资人用户属性(投资时)");
+		map.put("accountTender", "加入金额");
+		map.put("commission", "提成金额");
+		map.put("statusName", "提成发放状态");
+		map.put("sendTimeView", "提成发放时间");
+		map.put("addTime", "计划订单加入时间");
+		map.put("countInterestTimeView", "计划订单锁定时间");
+		return map;
+	}
+
+	private Map<String, IValueFormatter> buildValueAdapter() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		IValueFormatter borrowStyleHjhAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String borrowStyleHjh = (String) object;
+				String borrowStyleHjhStr = "";
+				if ("month".equals(borrowStyleHjh)) {
+					borrowStyleHjhStr = "等额本息";
+				}else if("season".equals(borrowStyleHjh)) {
+					borrowStyleHjhStr = "按季还款";
+				}else if("end".equals(borrowStyleHjh)) {
+					borrowStyleHjhStr = "按月计息，到期还本还息";
+				}else if("endmonth".equals(borrowStyleHjh)) {
+					borrowStyleHjhStr = "先息后本";
+				}else if("endday".equals(borrowStyleHjh)) {
+					borrowStyleHjhStr = "按天计息，到期还本还息";
+				}else if("endmonths".equals(borrowStyleHjh)) {
+					borrowStyleHjhStr = "按月付息到期还本";
+				}else if("principal".equals(borrowStyleHjh)) {
+					borrowStyleHjhStr = "等额本金";
+				}
+				return borrowStyleHjhStr;
+			}
+		};
+
+		IValueFormatter expectAprAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				BigDecimal expectApr = (BigDecimal) object;
+				return (expectApr.toString()+" %");
+			}
+		};
+
+		IValueFormatter attributeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String attribute = (String) object;
+				String attributeStr = "";
+				if ("0".equals(attribute)) {
+					attributeStr = "无主单";
+				} else if ("1".equals(attribute)) {
+					attributeStr = "有主单";
+				} else if ("2".equals(attribute)) {
+					attributeStr = "线下员工";
+				} else if ("3".equals(attribute)) {
+					attributeStr = "线上员工";
+				}
+				return attribute;
+			}
+		};
+
+		IValueFormatter attributeTenderAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String attributeTender = (String) object;
+				String attribute = "";
+				if ("0".equals(attributeTender)) {
+					attribute = "无主单";
+				} else if ("1".equals(attributeTender)) {
+					attribute = "有主单";
+				} else if ("2".equals(attributeTender)) {
+					attribute = "线下员工";
+				} else if ("3".equals(attributeTender)) {
+					attribute = "线上员工";
+				}
+				return attribute;
+			}
+		};
+
+		IValueFormatter accountTenderAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				BigDecimal accountTender = (BigDecimal) object;
+				return (accountTender.toString() + "元");
+			}
+		};
+
+		IValueFormatter commissionAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				BigDecimal commission = (BigDecimal) object;
+				return (commission.toString() + "元");
+			}
+		};
+
+		mapAdapter.put("borrowStyleHjh", borrowStyleHjhAdapter);
+		mapAdapter.put("expectApr", expectAprAdapter);
+		mapAdapter.put("attribute", attributeAdapter);
+		mapAdapter.put("attributeTender", attributeTenderAdapter);
+		mapAdapter.put("accountTender", accountTenderAdapter);
+		mapAdapter.put("commission", commissionAdapter);
+		return mapAdapter;
+	}
+
     /**
      * 取得部门信息   已测试
      *
