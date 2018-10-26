@@ -42,8 +42,7 @@ import java.util.*;
 public class LockedConfigServiceImpl implements LockedConfigService {
 
     private Logger logger=LoggerFactory.getLogger(getClass());
-    @Value("${am.user.service.name}")
-    private String userService;
+
     @Autowired
     private LockedUserInfoMapper lockedUserInfoMapper;
 
@@ -183,7 +182,7 @@ public class LockedConfigServiceImpl implements LockedConfigService {
                 if (maxLoginErrorNum - value == 0){
                     Integer	loginLockTime=LockedConfigManager.getInstance().getAdminConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
                     // 同步输错密码超限锁定用户信息接口
-                    String  requestUrl= "/lockeduser/insertLockedUser";
+                    String  requestUrl= "http://am-user/lockeduser/insertLockedUser";
                     LockedUserInfoVO lockedUserInfoVO=new LockedUserInfoVO();
                     lockedUserInfoVO.setUserid(users.get(0).getUserId());
                     lockedUserInfoVO.setUsername(users.get(0).getUsername());
@@ -191,7 +190,7 @@ public class LockedConfigServiceImpl implements LockedConfigService {
                     lockedUserInfoVO.setLockTime(new Date());
                     lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
                     lockedUserInfoVO.setFront(1);
-                    String result = restTemplate.postForEntity(userService+requestUrl,lockedUserInfoVO,String.class).getBody();
+                    String result = restTemplate.postForEntity(requestUrl,lockedUserInfoVO,String.class).getBody();
                 }
             }
             return  r;
