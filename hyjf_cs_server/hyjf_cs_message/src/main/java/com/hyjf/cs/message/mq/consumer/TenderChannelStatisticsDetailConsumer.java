@@ -70,6 +70,7 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                 //查询mongo里面是否已经有数据了
                 Integer userId = entity.getInteger("userId");
                 AppChannelStatisticsDetail appChannelStatisticsDetails = dao.findByUserId(userId);
+                logger.info("AppChannelStatisticsDetail:{}",JSONObject.toJSONString(appChannelStatisticsDetails));
                 if (appChannelStatisticsDetails != null) {
                     if (Validator.isNotNull(entity)) {
                         Integer investFlag = amUserClient.countNewUserTotal(userId);
