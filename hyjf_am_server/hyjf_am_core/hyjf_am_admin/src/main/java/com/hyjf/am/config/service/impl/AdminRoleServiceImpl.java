@@ -414,7 +414,7 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
     public void setRolePermission(UserRoleRequest userRoleRequest) throws Exception {
         Integer roleId = userRoleRequest.getRoleId();
         if (roleId != null) {
-            List<AdminRoleMenuPermissions> adminList = new ArrayList<>();
+//            List<AdminRoleMenuPermissions> adminList = new ArrayList<>();
             //先删除已有的权限
             adminRoleMenuPermissionsCustomizeMapper.deleteMenubyRoleId(roleId);
             //放入一级菜单的信息
@@ -428,66 +428,74 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
                     String menuUuid = split[0];
                     String permissionUuid = split[1];
                     String s = adminRoleMenuPermissionsCustomizeMapper.checkLevel(menuUuid);
-                    firstClass.add(s);
-                    if(!s.equals("0")) {
-                        AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
-                        permissions.setRoleId(roleId);
-                        permissions.setMenuUuid(menuUuid);
-                        permissions.setPermissionUuid(permissionUuid);
-                        adminList.add(permissions);
-                    }
+                    firstClass.add(s+"_"+VIEW);
+                    firstClass.add(perm);
+//                    if(!s.equals("0")) {
+//                        AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
+//                        permissions.setRoleId(roleId);
+//                        permissions.setMenuUuid(menuUuid);
+//                        permissions.setPermissionUuid(permissionUuid);
+//                        adminList.add(permissions);
+//                    }
                 } else {
                     String s = adminRoleMenuPermissionsCustomizeMapper.checkLevel(perm);
                     //参数是一级菜单
                     if (StringUtils.equals(s, "0")) {
-                        firstClass.add(perm);
+                        firstClass.add(perm+"_"+VIEW);
                         List<String> list = adminRoleMenuPermissionsCustomizeMapper.selectChildMenu(perm);
                         for (String s1 : list) {
                             List<String> permissionId = adminRoleMenuPermissionsCustomizeMapper.selectMenuPerssion(s1);
                             for (String pId : permissionId) {
-                                AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
-                                permissions.setRoleId(roleId);
-                                permissions.setMenuUuid(s1);
-                                permissions.setPermissionUuid(pId);
-                                adminList.add(permissions);
+                            	firstClass.add(s1+"_"+pId);
+//                                AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
+//                                permissions.setRoleId(roleId);
+//                                permissions.setMenuUuid(s1);
+//                                permissions.setPermissionUuid(pId);
+//                                adminList.add(permissions);
                             }
                             List<String> list2 = adminRoleMenuPermissionsCustomizeMapper.selectChildMenu(s1);
                             for (String s2 : list2) {
                                 List<String> permissionId2 = adminRoleMenuPermissionsCustomizeMapper.selectMenuPerssion(s2);
                                 for (String pId : permissionId2) {
-                                    AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
-                                    permissions.setRoleId(roleId);
-                                    permissions.setMenuUuid(s2);
-                                    permissions.setPermissionUuid(pId);
-                                    adminList.add(permissions);
+                                	firstClass.add(s2+"_"+pId);
+//                                    AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
+//                                    permissions.setRoleId(roleId);
+//                                    permissions.setMenuUuid(s2);
+//                                    permissions.setPermissionUuid(pId);
+//                                    adminList.add(permissions);
                                 }
                             }
                         }
                         //参数是二级菜单
                     } else {
                         String s1 = adminRoleMenuPermissionsCustomizeMapper.checkLevel(perm);
-                        firstClass.add(s1);
+                        firstClass.add(s1+"_"+VIEW);
                         List<String> permissionId = adminRoleMenuPermissionsCustomizeMapper.selectMenuPerssion(perm);
                         for (String pId : permissionId) {
-                            AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
-                            permissions.setRoleId(roleId);
-                            permissions.setMenuUuid(perm);
-                            permissions.setPermissionUuid(pId);
-                            adminList.add(permissions);
+                        	firstClass.add(perm+"_"+pId);
+//                            AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
+//                            permissions.setRoleId(roleId);
+//                            permissions.setMenuUuid(perm);
+//                            permissions.setPermissionUuid(pId);
+//                            adminList.add(permissions);
                         }
                     }
                 }
             }
+            List<AdminRoleMenuPermissions> adminList2 = new ArrayList<>();
             //插入一级菜单
             for (String s : firstClass) {
                 AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
                 permissions.setRoleId(roleId);
-                permissions.setMenuUuid(s);
-                permissions.setPermissionUuid(VIEW);
-                adminList.add(permissions);
+                String[] split = s.split("_");
+              permissions.setMenuUuid(split[0]);
+              permissions.setPermissionUuid(split[1]);
+//                permissions.setMenuUuid(s);
+//                permissions.setPermissionUuid(VIEW);
+              adminList2.add(permissions);
             }
             //将所有条件拼接好一次插入
-            adminRoleMenuPermissionsCustomizeMapper.insertMenuPerssion(adminList);
+            adminRoleMenuPermissionsCustomizeMapper.insertMenuPerssion(adminList2);
         }
     }
     @Override
