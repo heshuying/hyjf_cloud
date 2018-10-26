@@ -56,7 +56,7 @@ public class BankRepayFreezeLogController extends BaseController {
      * @date: 2018/7/11
      */
     @RequestMapping("/deleteby_id/{id}")
-    public IntegerResponse deleteFreezeLogById(Integer id) {
+    public IntegerResponse deleteFreezeLogById(@PathVariable Integer id) {
         return new IntegerResponse(bankRepayFreezeLogService.deleteFreezeLogById(id));
     }
 
@@ -96,7 +96,7 @@ public class BankRepayFreezeLogController extends BaseController {
      * @date: 2018/7/11
      */
     @RequestMapping("/get_logvalid_byorderid/{orderId}")
-    public BankRepayFreezeLogResponse getBankFreezeLogByOrderId(String orderId) {
+    public BankRepayFreezeLogResponse getBankFreezeLogByOrderId(@PathVariable String orderId) {
         BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
         BankRepayFreezeLog log = bankRepayFreezeLogService.getBankFreezeLogByOrderId(orderId);
         if (Validator.isNotNull(log)){
