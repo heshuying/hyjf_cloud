@@ -3427,6 +3427,16 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
+    public Integer queryBankEveCount(BankEveRequest request) {
+        IntegerResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/bankeve/selectBankEveInfoCount/", request, IntegerResponse.class).getBody();
+        if (response != null) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    @Override
     public BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest) {
         BorrowCommonResponse response = restTemplate
                 .postForEntity("http://AM-ADMIN/am-trade/borrowcommon/infoAction", borrowCommonRequest, BorrowCommonResponse.class)
