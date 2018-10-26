@@ -55,7 +55,7 @@
         SELECT
         ui.user_id
         FROM
-        ht_users_info ui
+        ht_user_info ui
         <where>
             ui.attribute = 0
         </where>

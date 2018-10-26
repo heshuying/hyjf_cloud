@@ -575,6 +575,13 @@ public class RepayManageController extends BaseTradeController {
         WebResult webResult = new WebResult();
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
 
+        if(userVO == null){
+            webResult.setStatus(WebResult.ERROR);
+            webResult.setData("990");
+            webResult.setStatusDesc("未登录");
+            return webResult;
+        }
+
         String msg = "";
         if (!userVO.isBankOpenAccount()) {
             msg = "998";
