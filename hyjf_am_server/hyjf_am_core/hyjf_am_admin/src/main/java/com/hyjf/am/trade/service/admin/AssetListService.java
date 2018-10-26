@@ -24,6 +24,8 @@ public interface AssetListService {
 	BigDecimal getSumAccount(AssetListRequest request);
 
 	boolean updateCashDepositeStatus(String assetId, String menuHide);
+
+    List<AssetListCustomizeVO> findBZJBZList(Map<String,Object> mapParam, int offset, int limit);
 }
 
 

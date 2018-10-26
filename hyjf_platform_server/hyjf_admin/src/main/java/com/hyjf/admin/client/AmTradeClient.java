@@ -1649,12 +1649,22 @@ public interface AmTradeClient {
      */
     List<BankAleveVO> queryBankAleveList(BankAleveRequest request);
 
+
+    /**
+     * 根据筛选条件查询银行账务明细count
+     * @param
+     * @return
+     */
+    Integer queryBankAleveCount(BankAleveRequest request);
+
     /**
      * 根据筛选条件查询银行账务明细list
      * @param
      * @return
      */
     List<BankEveVO> queryBankEveList(BankEveRequest request);
+
+    Integer queryBankEveCount(BankEveRequest request);
 
 
     //董泽杉
@@ -2781,7 +2791,7 @@ public interface AmTradeClient {
      */
     Boolean updateBorrowTender(BorrowTenderUpdRequest request);
 
-    List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize);
+    BorrowCustomizeResponse exportBorrowList(BorrowBeanRequest borrowCommonCustomize);
 
     /**
      * 获取债转状态为0的数据
@@ -3052,6 +3062,13 @@ public interface AmTradeClient {
      * @return
      */
     PushMoneyResponse getInfoAction(Integer id);
+
+    /**
+     * 保证金不足列表
+     * @param request
+     * @return
+     */
+    AssetListCustomizeResponse findBZJBZList(AssetListRequest request);
 
     /** 加息接口开始*/
     /** 枚举类型 */

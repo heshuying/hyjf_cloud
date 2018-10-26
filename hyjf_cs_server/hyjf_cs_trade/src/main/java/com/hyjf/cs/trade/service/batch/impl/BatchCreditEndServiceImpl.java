@@ -105,6 +105,9 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
 
             // 调用放款接口
             bean.setBatchNo(bankCreditEnd.getBatchNo());
+            bean.setTxDate(bankCreditEnd.getTxDate());
+            bean.setTxTime(bankCreditEnd.getTxTime());
+            bean.setSeqNo(bankCreditEnd.getSeqNo());
             bean.setTxCounts(String.valueOf(bankCreditEnd.getTxCounts()));
             bean.setNotifyURL(systemConfig.getNotifyUrl());
             bean.setRetNotifyURL(systemConfig.getRetNotifyUrl());

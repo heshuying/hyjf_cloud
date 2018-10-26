@@ -151,5 +151,178 @@
 		WHERE t.user_id = #{userId}
 		AND t.nid = #{nid}
 	</select>
-	
+
+	<select id="getBorrowTenderByAddtime" resultMap="tenderNotifyMap" >
+		SELECT
+		tender.user_id,
+		tender.borrow_nid,
+		tender.account
+		FROM
+		ht_borrow_tender tender
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = tender.borrow_nid
+		<where>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'hztTenderPrice'">
+				borrow.project_type <![CDATA[<>]]> 8
+				AND borrow.project_type <![CDATA[<>]]> 13
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'hxfTenderPrice'">
+				borrow.project_type = 8
+			</if>
+		<if test="timeStartSrch != null and timeStartSrch != ''">
+			AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' )  <![CDATA[>=]]> #{timeStartSrch}
+		</if>
+		<if test="timeEndSrch != null and timeEndSrch != ''">
+			AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' )  <![CDATA[<=]]> #{timeEndSrch}
+		</if>
+		</where>
+	</select>
+
+	<select id="getCreditTenderByAddtime" resultMap="tenderNotifyMap" >
+		SELECT
+		hct.user_id,
+		hct.assign_capital as account
+		FROM
+		ht_credit_tender hct
+		<where>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+	</select>
+
+	<select id="getAccountRechargeByAddtime" resultMap="tenderNotifyMap" >
+		SELECT
+		recharge.user_id,
+		recharge.money as account
+		FROM
+		ht_account_recharge recharge
+		<where>
+			recharge.`status` = 1
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( recharge.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( recharge.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+	</select>
+
+	<select id="getBorrowTenderByClient" resultMap="tenderNotifyMap" >
+		SELECT
+		tender.user_id
+		FROM
+		ht_borrow_tender tender
+		<where>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'ios'">
+				tender.client = 3
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'android'">
+				tender.client = 2
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'pc'">
+				tender.client = 0
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'wechat'">
+				tender.client = 1
+			</if>
+
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+	</select>
+
+	<select id="getProductListByClient" resultMap="tenderNotifyMap" >
+
+		SELECT
+		list.user_id
+		FROM
+		ht_product_list list
+		<where>
+
+			<if test="sourceIdSrch != null and sourceIdSrch == 'ios'">
+				list.client = 3
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'android'">
+				list.client = 2
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'pc'">
+				list.client = 0
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'wechat'">
+				list.client = 1
+			</if>
+			AND list.invest_status = 0
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( list.invest_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( list.invest_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+
+	</select>
+
+	<select id="getDebtPlanAccedeByClient" resultMap="tenderNotifyMap" >
+		SELECT
+		hdpa.user_id
+		FROM
+		ht_debt_plan_accede hdpa
+		<where>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'ios'">
+				hdpa.client = 3
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'android'">
+				hdpa.client = 2
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'pc'">
+				hdpa.client = 0
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'wechat'">
+				hdpa.client = 1
+			</if>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( hdpa.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( hdpa.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+
+	</select>
+
+	<select id="getCreditTenderByClient" resultMap="tenderNotifyMap" >
+		SELECT
+		hct.user_id
+		FROM
+		ht_credit_tender hct
+		<where>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'ios'">
+				hct.client = 3
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'android'">
+				hct.client = 2
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'pc'">
+				hct.client = 0
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'wechat'">
+				hct.client = 1
+			</if>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+
+	</select>
+
 </mapper>

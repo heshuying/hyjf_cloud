@@ -5,6 +5,7 @@ package com.hyjf.cs.market.client;
 
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 
@@ -54,5 +55,7 @@ public interface CsMessageClient {
     OperationReportEntityVO getOperationReport(int i);
 
     List<AppAccesStatisticsVO> getAppAccesStatisticsVO(AppChannelStatisticsRequest request);
+
+    List<AppChannelStatisticsDetailVO> getAppChannelStatisticsDetailVO(AppChannelStatisticsRequest request);
 
 }

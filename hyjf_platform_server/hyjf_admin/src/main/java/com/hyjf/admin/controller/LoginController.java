@@ -7,16 +7,25 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.service.LoginService;
 import com.hyjf.admin.utils.PictureInitUtil;
+import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.calculate.DateUtils;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +52,7 @@ public class LoginController extends BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	@Autowired
 	private LoginService loginService;
+
 	private static final String key="key";
 	
     /**

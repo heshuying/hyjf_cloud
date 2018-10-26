@@ -31,6 +31,7 @@ import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -258,7 +259,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 				balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("加息还款中发生系统", e);
 		}
 		return balance;
 	}
@@ -603,7 +604,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 											logger.info("发送收支明细---" + investUserId + "---------" + repayInterest);
 							                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
 							            } catch (MQException e) {
-							                e.printStackTrace();
+							                logger.error("加息还款中发生系统", e);
 							            }
 										
 										msg.put(VAL_TITLE, borrowNid);
@@ -1027,7 +1028,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 							increaseInterestLoan = increaseInterestLoans.get(i);
 							try {
 								// 自动还款
-								List<Map<String, String>> msgList = updateBorrowRepay(apicron,borrow, increaseInterestLoan, borrowAccount.getAccountId());
+								List<Map<String, String>> msgList = ((IncreaseInterestRepayService)AopContext.currentProxy()).updateBorrowRepay(apicron,borrow, increaseInterestLoan, borrowAccount.getAccountId());
 								// 发送短信
 								sendSms(msgList);
 								// 推送消息
@@ -1063,7 +1064,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 					// 更新任务API状态为完成
 					this.updateBorrowApicron(apicron.getId(), STATUS_SUCCESS);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("加息还款中发生系统", e);
 //					int runCnt = 1;
 //					if (runTimes.containsKey(apicron.getBorrowNid())) {
 //						TimesBean bean = runTimes.get(apicron.getBorrowNid());

@@ -94,7 +94,7 @@ public class AppRegistController extends BaseUserController {
             return ret;
         }
         logger.info("当前注册手机号: {}", mobile);
-
+        version = request.getParameter("version");
         // 取得加密用的Key
         if(StringUtils.isBlank(key)){
             ret.put(CustomConstants.APP_STATUS, 1);

@@ -17,4 +17,6 @@ public interface BankJournalService {
      */
     List<BankEveVO> queryBankEveList(BankEveRequest request);
 
+    Integer queryBankEveCount(BankEveRequest request);
+
 }

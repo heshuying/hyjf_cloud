@@ -27,7 +27,7 @@
 	<sql id="Base_Column_List" >
 		forcode, seqno, cendt, cardnbr, amount, crflag, msgtype, proccode, orderno, tranno,
 		reserved, revind, create_day AS createDay, transtype, create_user_id AS createUserId, create_time AS createTime, update_user_id AS updateUserId,
-		update_time AS updateTime, del_flg AS delFlg
+		update_time AS updateTime, del_flag AS delFlg
 	</sql>
 
 	<select id="countRecord" resultType="java.lang.Integer"
