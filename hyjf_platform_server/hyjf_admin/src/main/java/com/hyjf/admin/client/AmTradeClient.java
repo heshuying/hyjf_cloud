@@ -1649,6 +1649,14 @@ public interface AmTradeClient {
      */
     List<BankAleveVO> queryBankAleveList(BankAleveRequest request);
 
+
+    /**
+     * 根据筛选条件查询银行账务明细count
+     * @param
+     * @return
+     */
+    Integer queryBankAleveCount(BankAleveRequest request);
+
     /**
      * 根据筛选条件查询银行账务明细list
      * @param
