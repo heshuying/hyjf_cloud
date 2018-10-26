@@ -260,6 +260,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         registerUserRequest.setLoginIp(ip);
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
+        logger.info("注册之后user值是否为空："+(userVO==null));
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         // 3.注册后处理
         return this.afterRegisterHandle(userVO);
