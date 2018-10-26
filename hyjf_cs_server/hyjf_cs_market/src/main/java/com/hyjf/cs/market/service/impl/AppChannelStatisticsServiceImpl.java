@@ -53,8 +53,8 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		logger.info("----------------APP渠道统计定时任务Start-------------");
 
 		AppChannelStatisticsRequest request = new AppChannelStatisticsRequest();
-		String nowDate = "2018-08-21";
-//		String nowDate = GetDate.date2Str(GetDate.date_sdf);
+//		String nowDate = "2018-08-21";
+		String nowDate = GetDate.date2Str(GetDate.date_sdf);
 		request.setTimeStartSrch(GetDate.getDayStart(nowDate));
 		request.setTimeEndSrch(GetDate.getDayEnd(nowDate));
 
