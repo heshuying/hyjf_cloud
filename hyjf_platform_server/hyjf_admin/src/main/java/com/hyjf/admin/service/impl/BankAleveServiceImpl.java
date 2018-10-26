@@ -28,4 +28,8 @@ public class BankAleveServiceImpl implements BankAleveService {
         return amTradeClient.queryBankAleveList(request);
     }
 
+    @Override
+    public Integer queryBankAleveCount(BankAleveRequest request) {
+        return amTradeClient.queryBankAleveCount(request);
+    }
 }

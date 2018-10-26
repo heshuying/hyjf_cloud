@@ -66,13 +66,15 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
             for (MessageExt msg : msgs) {
                 JSONObject entity = JSONObject.parseObject(msg.getBody(),
                         JSONObject.class);
+                logger.info("entity：{}",JSONObject.toJSONString(entity));
                 //查询mongo里面是否已经有数据了
                 Integer userId = entity.getInteger("userId");
                 AppChannelStatisticsDetail appChannelStatisticsDetails = dao.findByUserId(userId);
+                logger.info("AppChannelStatisticsDetail:{}",JSONObject.toJSONString(appChannelStatisticsDetails));
                 if (appChannelStatisticsDetails != null) {
                     if (Validator.isNotNull(entity)) {
                         Integer investFlag = amUserClient.countNewUserTotal(userId);
-                        if (investFlag >0) {
+                        if (investFlag >1) {
                             // 累计投资
                             Query query = new Query();
                             Criteria criteria = Criteria.where("userId").is(userId);
@@ -81,7 +83,8 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                             BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal");
                             update.inc("cumulativeInvest", accountDecimal);
                             dao.update(query, update);
-                        } else if (investFlag == 0) {
+                        } else if (investFlag == 1) {
+                            logger.info("开始更新首次投资信息....userId:"+userId);
                             // 首次投资
                             Query query = new Query();
                             Criteria criteria = Criteria.where("userId").is(userId);

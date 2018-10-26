@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -99,6 +100,14 @@ public class AppLoginController extends BaseUserController {
                 ret.put("statusDesc", "密码不能为空");
                 return ret;
             }
+            //判断用户输入的密码错误次数---开始
+            Map<String, String> errorInfo=loginService.insertErrorPassword(username,password,BankCallConstant.CHANNEL_APP);
+            if (!errorInfo.isEmpty()){
+                ret.put("status", "1");
+                ret.put("statusDesc", errorInfo.get("info"));
+                return ret;
+            }
+            //判断用户输入的密码错误次数---结束
             // 执行登录(登录时间，登录ip)
             WebViewUserVO webViewUserVO = loginService.login(username, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP);
             if (webViewUserVO != null) {

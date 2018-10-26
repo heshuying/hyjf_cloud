@@ -323,6 +323,7 @@ public class AdminRoleController {
             try {
                 adminRoleService.setRolePermission(userRoleRequest);
             } catch (Exception e) {
+            	e.printStackTrace();
             	arr.setRtn(Response.FAIL);
             	arr.setMessage("角色权限修改时发生错误,请重新操作!");
             }

@@ -79,4 +79,11 @@ public interface AssetListService {
 	 * @return List<HjhAssetTypeVO>
 	 */
 	AssetListCustomizeResponse findAssetListWithoutPage(AssetListRequest form);
+
+	/**
+	 * 保证金不足列表
+	 * @param request
+	 * @return
+	 */
+    AssetListCustomizeResponse findBZJBZList(AssetListRequest request);
 }

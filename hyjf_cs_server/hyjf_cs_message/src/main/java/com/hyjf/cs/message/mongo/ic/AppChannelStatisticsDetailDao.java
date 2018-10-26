@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 /**
  * @author xiasq
@@ -23,5 +25,9 @@ public class AppChannelStatisticsDetailDao extends BaseMongoDao<AppChannelStatis
 	@Override
 	protected Class<AppChannelStatisticsDetail> getEntityClass() {
 		return AppChannelStatisticsDetail.class;
+	}
+
+	public List<AppChannelStatisticsDetail> getAppChannelStatisticsDetail(Query query){
+		return mongoTemplate.find(query,getEntityClass());
 	}
 }
