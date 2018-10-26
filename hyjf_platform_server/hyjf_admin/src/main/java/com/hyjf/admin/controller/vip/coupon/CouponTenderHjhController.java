@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,12 +52,13 @@ public class CouponTenderHjhController extends BaseController {
         couponTenderHztVo.setCouponReciveStatusList(list);
         Integer count = this.couponTenderHjhService.countRecord(couponTenderRequest);
         lrs.setCount(count);
+        List<CouponTenderCustomize> recordList = null;
         if (count != null && count > 0) {
             String investTotal=this.couponTenderHjhService.queryInvestTotalHjh(couponTenderRequest);
-            List<CouponTenderCustomize> recordList = this.couponTenderHjhService.getRecordList(couponTenderRequest);
+            recordList = this.couponTenderHjhService.getRecordList(couponTenderRequest);
             couponTenderHztVo.setInvestTotal(investTotal);
-            couponTenderHztVo.setRecordList(recordList);
         }
+        couponTenderHztVo.setRecordList(recordList==null?new ArrayList():recordList);
         lrs.setData(couponTenderHztVo);
         Page page = Page.initPage(couponTenderRequest.getCurrPage(), couponTenderRequest.getPageSize());
         page.setTotal(count);

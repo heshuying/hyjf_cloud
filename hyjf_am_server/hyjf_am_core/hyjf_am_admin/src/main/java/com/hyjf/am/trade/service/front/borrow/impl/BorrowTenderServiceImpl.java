@@ -6,6 +6,7 @@ import com.hyjf.am.trade.service.front.borrow.BorrowTenderService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
@@ -208,5 +209,40 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         }else{
             throw new RuntimeException("============borrowTender表更新成功失败!========");
         }
+    }
+
+    @Override
+    public List<WrbTenderNotifyCustomizeVO> getBorrowTenderByAddtime(String sourceIdSrch,String dayStart, String dayEnd) {
+        return borrowTenderCustomizeMapper.getBorrowTenderByAddtime(sourceIdSrch,dayStart,dayEnd);
+    }
+
+    @Override
+    public List<WrbTenderNotifyCustomizeVO> getCreditTenderByAddtime(String dayStart, String dayEnd) {
+        return borrowTenderCustomizeMapper.getCreditTenderByAddtime(dayStart,dayEnd);
+    }
+
+    @Override
+    public List<WrbTenderNotifyCustomizeVO> getAccountRechargeByAddtime(String dayStart, String dayEnd) {
+        return borrowTenderCustomizeMapper.getAccountRechargeByAddtime(dayStart,dayEnd);
+    }
+
+    @Override
+    public List<WrbTenderNotifyCustomizeVO> getBorrowTenderByClient(String source,String dayStart, String dayEnd) {
+        return borrowTenderCustomizeMapper.getBorrowTenderByClient(source,dayStart,dayEnd);
+    }
+
+    @Override
+    public List<WrbTenderNotifyCustomizeVO> getProductListByClient(String source,String dayStart, String dayEnd) {
+        return borrowTenderCustomizeMapper.getProductListByClient(source,dayStart,dayEnd);
+    }
+
+    @Override
+    public List<WrbTenderNotifyCustomizeVO> getDebtPlanAccedeByClient(String source,String dayStart, String dayEnd) {
+        return borrowTenderCustomizeMapper.getDebtPlanAccedeByClient(source,dayStart,dayEnd);
+    }
+
+    @Override
+    public List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(String source,String dayStart, String dayEnd) {
+        return borrowTenderCustomizeMapper.getCreditTenderByClient(source,dayStart,dayEnd);
     }
 }

@@ -35,4 +35,51 @@
 			limit 1) t
 	</select>
 
+    <select id="selectUtmPlatBySourceIds" parameterType="int" resultMap="BaseResultMap">
+        SELECT
+        utm.source_id,
+        utm.source_name
+        FROM
+        ht_utm_plat utm
+        <where>
+            utm.source_type = 1
+            AND utm.source_id IS NOT NULL
+            AND utm.source_id <![CDATA[<>]]> ''
+            <if test="sourceIdSrch != null and sourceIdSrch != ''">
+                AND utm.source_id = #{sourceId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUsersInfo" resultType="int">
+        SELECT
+        ui.user_id
+        FROM
+        ht_users_info ui
+        <where>
+            ui.attribute = 0
+        </where>
+    </select>
+
+    <select id="selectUsers" resultType="int">
+        SELECT
+        u.user_id
+        FROM
+        ht_users u
+        <where>
+            <if test="sourceIdSrch != null and sourceIdSrch == 'ios'">
+                u.account_esb = 3
+            </if>
+            <if test="sourceIdSrch != null and sourceIdSrch == 'android'">
+                u.account_esb = 2
+            </if>
+            <if test="sourceIdSrch != null and sourceIdSrch == 'pc'">
+                u.account_esb = 0
+            </if>
+            <if test="sourceIdSrch != null and sourceIdSrch == 'wechat'">
+                u.account_esb = 1
+            </if>
+        </where>
+    </select>
+
 </mapper>

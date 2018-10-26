@@ -115,7 +115,7 @@ public class HjhDebtCreditController extends BaseController {
         return response;
     }
 
-    @GetMapping("/updateHjhDebtCreditByPK")
+    @PostMapping("/updateHjhDebtCreditByPK")
     public IntegerResponse updateHjhDebtCreditByPK(@RequestBody HjhDebtCreditVO hjhDebtCreditVO){
         HjhDebtCredit hjhDebtCredit =  new HjhDebtCredit();
         BeanUtils.copyProperties(hjhDebtCreditVO, hjhDebtCredit);

@@ -115,7 +115,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
         /*------------upd by liushouyi HJH3 Start-------------------*/
         //不使用引擎：散标(仅使用borrowNid、使用前先通过borrownid查询借款详情)
         BorrowExample  example = new BorrowExample();
-        example.createCriteria().andStatusEqualTo(3).andBorrowFullStatusEqualTo(1).andPlanNidIsNotNull();
+        example.createCriteria().andStatusEqualTo(3).andBorrowFullStatusEqualTo(1).andPlanNidIsNull();
         List<Borrow> borrowList = borrowMapper.selectByExample(example);
         /*------------upd by liushouyi HJH3 End-------------------*/
         return borrowList;

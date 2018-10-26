@@ -1443,16 +1443,12 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		Account assignAccountNew = CommonUtils.convertBean(request.getAssignAccountNew(),Account.class);
 		logger.info("处理承接人account表  {} ",JSONObject.toJSONString(assignAccountNew));
 		this.adminAccountCustomizeMapper.updateCreditAssignSuccess(assignAccountNew) ;
-		AccountList assignAccountList = CommonUtils.convertBean(request.getAssignAccountList(),AccountList.class);
-		logger.info("处理承接人account_list表{} ",JSONObject.toJSONString(assignAccountList));
 		insertAssignAccountList(creditTender,assignAccountNew,creditTenderLog);
 
 		// 处理出让人的 account表和account_list表
 		Account sellerAccountNew = CommonUtils.convertBean(request.getSellerAccountNew(),Account.class);
 		logger.info("处理出让人的 account表{} ",JSONObject.toJSONString(sellerAccountNew));
 		this.adminAccountCustomizeMapper.updateCreditSellerSuccess(sellerAccountNew) ;
-		AccountList sellerAccountList = CommonUtils.convertBean(request.getSellerAccountList(),AccountList.class);
-		logger.info("处理出让人的 account_list表{} ",JSONObject.toJSONString(sellerAccountList));
 		insertSellerAccountList(creditTender,sellerAccountNew,creditTenderLog);
 
 		// 插入 creditRepay
@@ -1492,7 +1488,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 
 	// 处理出让人的account_list
 	private void insertSellerAccountList(CreditTender creditTender, Account sellerAccountNew, CreditTenderLogVO creditTenderLog) {
-		sellerAccountNew = getAccount(creditTender.getUserId());
+		sellerAccountNew = getAccount(sellerAccountNew.getUserId());
 		AccountList sellerAccountList = new AccountList();
 		sellerAccountList.setNid(creditTender.getAssignNid());
 		sellerAccountList.setUserId(creditTender.getCreditUserId());
