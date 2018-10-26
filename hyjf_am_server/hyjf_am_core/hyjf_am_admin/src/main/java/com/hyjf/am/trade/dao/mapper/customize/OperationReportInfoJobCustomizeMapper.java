@@ -138,5 +138,5 @@ public interface OperationReportInfoJobCustomizeMapper {
      * 按照省份统计投资人的分布
      * @param date 上个月的最后一天
      */
-    List<OperationReportJobVO> getTenderCityGroupByList(Date date);
+    List<OperationReportJobVO> getTenderCityGroupBy(Date date);
 }

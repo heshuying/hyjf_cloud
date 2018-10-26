@@ -47,7 +47,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	public List<OperationReportJobVO> getTenderCityGroupByList(Date date){
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tendercitygroupbylist",request, OperationReportJobResponse.class).getBody();
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/tendercitygroupbylist",request, OperationReportJobResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
