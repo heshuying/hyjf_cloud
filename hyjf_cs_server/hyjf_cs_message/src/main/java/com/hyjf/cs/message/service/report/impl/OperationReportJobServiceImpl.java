@@ -123,8 +123,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         oegroup.setInvestorRegionMap(cityMap);
 
         // 投资人按照性别分布
-        List<OperationReportJobVO> userIds = operationReportJobClient.getTenderSexGroupByList(getLastDay(cal));
-        List<OperationReportJobVO> sexGroup = operationReportJobClient.getTenderSexGroupBy(getLastDay(cal),userIds);
+        List<OperationReportJobVO> sexGroup = operationReportJobClient.getTenderSexGroupByList(getLastDay(cal));
         Map<Integer, Integer> sexMap = sexGrouptoMap(sexGroup);
         oegroup.setInvestorSexMap(sexMap);
 
