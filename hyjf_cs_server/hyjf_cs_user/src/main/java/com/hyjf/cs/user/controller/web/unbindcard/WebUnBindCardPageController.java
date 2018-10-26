@@ -43,7 +43,7 @@ public class WebUnBindCardPageController extends BaseUserController{
      */
     @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
     @PostMapping(value = "/deleteCardPage", produces = "application/json; charset=utf-8")
-    public WebResult<Object> bindCardPage(@RequestParam(value = "userId") int userId, @RequestParam(value = "cardId") String cardId, HttpServletRequest request) {
+    public WebResult<Object> bindCardPage(@RequestHeader(value = "userId") int userId, @RequestParam(value = "cardId") String cardId, HttpServletRequest request) {
         // 银行卡id
 //        String cardId = param.get("cardId");
         WebResult<Object> result = new WebResult<>();
@@ -68,6 +68,7 @@ public class WebUnBindCardPageController extends BaseUserController{
         deleteCardPageBean.setIdNo(userInfoVO.getIdcard());
         deleteCardPageBean.setCardNo(bankCardVO.getCardNo());// 银行卡号
         deleteCardPageBean.setNotifyUrl(bgRetUrl);
+        deleteCardPageBean.setMobile(user.getMobile());
 
         //调用解绑银行卡接口
         unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_PC,null,"0",request);
@@ -80,7 +81,7 @@ public class WebUnBindCardPageController extends BaseUserController{
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
     @PostMapping(value = "/bgReturn")
     @ResponseBody
-    public BankCallResult bindCardBgReturn(BankCallBean bean, HttpServletRequest request) {
+    public BankCallResult bindCardBgReturn(@RequestBody BankCallBean bean, HttpServletRequest request) {
 
         BankCallResult result = new BankCallResult();
         logger.info("页面解卡异步回调start");
