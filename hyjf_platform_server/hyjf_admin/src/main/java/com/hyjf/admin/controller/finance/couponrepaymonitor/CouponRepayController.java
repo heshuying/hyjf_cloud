@@ -3,11 +3,14 @@
  */
 package com.hyjf.admin.controller.finance.couponrepaymonitor;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.CouponRepayService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.admin.AdminCouponRepayMonitorCustomizeResponse;
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
@@ -20,20 +23,20 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -129,64 +132,88 @@ public class CouponRepayController extends BaseController {
      */
     @ApiOperation(value = "数据导出",notes = "数据导出")
     @PostMapping("/exportAction")
-    public void exportAction(HttpServletResponse response,@RequestBody CouponRepayRequest form) throws UnsupportedEncodingException {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponRepayRequest form) throws UnsupportedEncodingException {
+
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "优惠券还款监测";
-        List<AdminCouponRepayMonitorCustomizeVO> resultList = this.couponRepayService.selectRecordList(form);
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[] { "序号", "日期", "星期", "加息券待还统计", "加息券实际还款", "差额（实际-预测）"};
+        String sheetName = "优惠券还款检测";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
         // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-        if (resultList != null && resultList.size() > 0) {
-            int sheetCount = 1;
-            int rowNum = 0;
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-            for (int i = 0; i < resultList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    AdminCouponRepayMonitorCustomizeVO record = resultList.get(i);
+        int sheetCount = 0;
+        String sheetNameTmp = sheetName + "_第1页";
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        form.setCurrPage(1);
+        form.setPageSize(defaultRowMaxCount);
 
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
+        AdminCouponRepayMonitorCustomizeResponse couponRepayResponse = couponRepayService.couponRepayMonitorCreatePage(form);
+        if (couponRepayResponse == null || couponRepayResponse.getRecordTotal() <= 0  ){
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            int totalCount = couponRepayResponse.getRecordTotal();
+            sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, couponRepayResponse.getResultList());
+        }
 
-                    // 序号
-                    if (celLength == 0) {
-                        cell.setCellValue(i + 1);
-                    }
-                    // 日期
-                    else if (celLength == 1) {
-                        cell.setCellValue(record.getDay());
-                    }
-                    // 星期
-                    else if (celLength == 2) {
-                        cell.setCellValue(record.getWeek());
-                    }
-                    // 加息券待还收益
-                    else if (celLength == 3) {
-                        cell.setCellValue(String.valueOf(record.getInterestWaitTotal()));
-                    }
-                    // 加息券已还收益
-                    else if (celLength == 4) {
-                        cell.setCellValue(String.valueOf(record.getInterestYesTotal()));
-                    }
-                    // 差额
-                    else if (celLength == 5) {
-                        cell.setCellValue(String.valueOf(record.getRepayGap()));
-                    }
-                }
+        for (int i = 1; i < sheetCount; i++) {
+            form.setCurrPage(i+1);
+            AdminCouponRepayMonitorCustomizeResponse couponRepayResponse2 = couponRepayService.couponRepayMonitorCreatePage(form);
+            List<AdminCouponRepayMonitorCustomizeVO> couponRepayList = new ArrayList<>();
+            if (couponRepayResponse2 != null){
+                couponRepayList = couponRepayResponse2.getResultList();
+            }
+            if (!CollectionUtils.isEmpty(couponRepayList)) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  couponRepayList);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("day", "日期");
+        map.put("week", "星期");
+        map.put("interestWaitTotal", "加息券代还统计");
+        map.put("interestYesTotal", "加息券实际还款");
+        map.put("repayGap", "差额(实际-预测)");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter interestWaitTotalAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal interestWaitTotal = (BigDecimal) object;
+                return String.valueOf(interestWaitTotal);
+            }
+        };
+        IValueFormatter interestYesTotalAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal interestYesTotal = (BigDecimal) object;
+                return String.valueOf(interestYesTotal);
+            }
+        };
+        IValueFormatter repayGapAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal repayGap = (BigDecimal) object;
+                return String.valueOf(repayGap);
+            }
+        };
+        mapAdapter.put("interestWaitTotal",interestWaitTotalAdapter);
+        mapAdapter.put("interestYesTotal",interestYesTotalAdapter);
+        mapAdapter.put("repayGap",repayGapAdapter);
+        return mapAdapter;
     }
 }

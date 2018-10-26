@@ -588,6 +588,14 @@ public class CouponIssuanceController extends BaseController {
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else{
+            //实现多个参数判断返回问题
+            for(CouponConfigExportCustomizeVO couponConfigExportCustomizeVO : exportCustomizeResponse.getResultList()){
+                if ("2".equals(couponConfigExportCustomizeVO.getCouponType())) {
+                    couponConfigExportCustomizeVO.setCouponQuota(couponConfigExportCustomizeVO.getCouponQuota() + "%");
+                } else if ("1".equals(couponConfigExportCustomizeVO.getCouponType()) || "3".equals(couponConfigExportCustomizeVO.getCouponType())) {
+                    couponConfigExportCustomizeVO.setCouponQuota(couponConfigExportCustomizeVO.getCouponQuota() + "元");
+                }
+            }
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, exportCustomizeResponse.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {

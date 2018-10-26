@@ -118,25 +118,12 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
         // 投资人按照地域分布
         //查询出所有符合条件用户
-        List<OperationReportJobVO> cityUserIds = operationReportJobClient.getTenderCityGroupByList(getLastDay(cal));
-        //查询出所有符合条件用户的身份证号地址
-        List<OperationReportJobVO> cityBms = operationReportJobClient.getTenderCityGroupByUserIds(cityUserIds);
-        //分组
-        List<OperationReportJobVO> cityGroup = operationReportJobClient.getTenderCityGroupBy(cityBms);
-        for (int i=0;i<cityGroup.size();i++){
-            OperationReportJobVO city = cityGroup.get(i);
-            for (int j=0;j<cityBms.size();j++){
-                if(cityBms.get(j).getTitle().equals(city.getCitycode())){
-                    city.setCount(cityBms.get(j).getCount());
-                }
-            }
-        }
+        List<OperationReportJobVO> cityGroup = operationReportJobClient.getTenderCityGroupByList(getLastDay(cal));
         Map<Integer, String> cityMap = cityGrouptoMap(cityGroup);
         oegroup.setInvestorRegionMap(cityMap);
 
         // 投资人按照性别分布
-        List<OperationReportJobVO> userIds = operationReportJobClient.getTenderSexGroupByList(getLastDay(cal));
-        List<OperationReportJobVO> sexGroup = operationReportJobClient.getTenderSexGroupBy(getLastDay(cal),userIds);
+        List<OperationReportJobVO> sexGroup = operationReportJobClient.getTenderSexGroupByList(getLastDay(cal));
         Map<Integer, Integer> sexMap = sexGrouptoMap(sexGroup);
         oegroup.setInvestorSexMap(sexMap);
 

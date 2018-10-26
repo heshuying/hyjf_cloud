@@ -93,7 +93,6 @@ public class BankAleveController {
     @ApiOperation(value = "银行账务明细", notes = "银行账务明细导出")
     @PostMapping(value = "/exportbankaleve")
     public void exportBankaleveList(HttpServletRequest request, HttpServletResponse response, @RequestBody BankAleveRequest bankAleveRequest) throws UnsupportedEncodingException {
-        // 表格sheet名称
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -147,7 +146,7 @@ public class BankAleveController {
         map.put("amount", "交易金额");
         map.put("curNum", "货币代码");
         map.put("crflag", "交易金额符号");
-        map.put("valdate", "日账日期");
+        map.put("valdate", "入账日期");
         map.put("inpdate", "交易日期");
         map.put("reldate", "自然日期");
         map.put("inptime","交易时间");
