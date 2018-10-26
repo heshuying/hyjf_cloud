@@ -562,9 +562,10 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 }
                 // 查询推广渠道
                     UtmPlatVO plat = amUserClient.selectUtmPlatByUtmId(sourceId.toString());
+
                     Map<String, Object> params = new HashMap<String, Object>();
                     params.put("sourceId",sourceId);
-                    params.put("sourceName",plat.getSourceName() != null ? plat.getSourceName() : "");
+                    params.put("sourceName",plat!=null&&plat.getSourceName() != null ? plat.getSourceName() : "");
                     params.put("userId",webViewUserVO.getUserId());
                     params.put("userName",webViewUserVO.getUsername());
                     params.put("firstInvestTime",0);
