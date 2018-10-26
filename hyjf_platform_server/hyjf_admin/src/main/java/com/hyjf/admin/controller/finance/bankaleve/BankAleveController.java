@@ -4,10 +4,13 @@
 package com.hyjf.admin.controller.finance.bankaleve;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankAleveService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
 import com.hyjf.am.vo.admin.BankAleveVO;
 import com.hyjf.common.util.CustomConstants;
@@ -15,18 +18,20 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zdj
@@ -38,6 +43,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/hyjf-admin/bankaleve")
 public class BankAleveController {
+
+    @Autowired
+    public SystemConfig systemConfig;
     @Autowired
     private BankAleveService bankAleveService;
     /** 权限 */
@@ -84,84 +92,97 @@ public class BankAleveController {
      */
     @ApiOperation(value = "银行账务明细", notes = "银行账务明细导出")
     @PostMapping(value = "/exportbankaleve")
-    public void exportBankaleveList( HttpServletResponse response, @RequestBody BankAleveRequest bankAleveRequest) throws UnsupportedEncodingException {
+    public void exportBankaleveList(HttpServletRequest request, HttpServletResponse response, @RequestBody BankAleveRequest bankAleveRequest) throws UnsupportedEncodingException {
         // 表格sheet名称
-        String sheetName = "银行账务明细";
+
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "银行账户明细";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        // 需要输出的结果列表
-        List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
-        String[] titles = new String[] { "序号", "银行号", "电子账号", "交易金额", "货币代码", "交易金额符号", "入帐日期","交易日期",
-                "自然日期", "交易时间", "交易流水号", "关联交易流水号", "交易类型", "交易描述", "交易后余额","对手交易账号",
-                "冲正撤销标志", "交易标识", "系统根踪号", "原交易流水号", "保留域"};
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
         // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-        if (bankAleveList != null && bankAleveList.size() > 0) {
-            int sheetCount = 1;
-            int rowNum = 0;
-            for (int i = 0; i < bankAleveList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BankAleveVO bankAleve = bankAleveList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {// 序号
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) {// 银行号
-                        cell.setCellValue(bankAleve.getBank());
-                    } else if (celLength == 2) {// 电子账号
-                        cell.setCellValue(bankAleve.getCardnbr());
-                    } else if (celLength == 3) {// 交易金额
-                        cell.setCellValue(bankAleve.getAmount()+"");
-                    }else if (celLength == 4) {// 货币代码
-                        cell.setCellValue(bankAleve.getCurNum());
-                    } else if (celLength == 5) {// 交易金额符号
-                        cell.setCellValue(bankAleve.getCrflag());
-                    }else if (celLength == 6) {// 入帐日期
-                        cell.setCellValue(bankAleve.getValdate());
-                    } else if (celLength == 7) {// 交易日期
-                        cell.setCellValue(bankAleve.getInpdate());
-                    }else if (celLength == 8) {// 自然日期
-                        cell.setCellValue(bankAleve.getReldate());
-                    }else if (celLength == 9) {// 交易时间
-                        cell.setCellValue(bankAleve.getInptime());
-                    }else if (celLength == 10) {// 交易流水号
-                        cell.setCellValue(bankAleve.getTranno());
-                    }else if (celLength == 11) {// 关联交易流水号
-                        cell.setCellValue(bankAleve.getOriTranno());
-                    }else if (celLength == 12) {// 交易类型
-                        cell.setCellValue(bankAleve.getTranstype());
-                    }else if (celLength == 13) {// 交易描述
-                        cell.setCellValue(bankAleve.getDesline());
-                    }else if (celLength == 14) {// 交易后余额
-                        cell.setCellValue(bankAleve.getCurrBal()+"");
-                    }else if (celLength == 15) {// 对手交易账号
-                        cell.setCellValue(bankAleve.getForcardnbr());
-                    }else if (celLength == 16) {// 冲正撤销标志
-                        cell.setCellValue(bankAleve.getRevind());
-                    }else if (celLength == 17) {// 交易标识
-                        cell.setCellValue(bankAleve.getAccchg());
-                    }else if (celLength == 18) {// 系统根踪号
-                        cell.setCellValue(bankAleve.getSeqno());
-                    }else if (celLength == 19) {// 原交易流水号
-                        cell.setCellValue(bankAleve.getOriNum());
-                    }else if (celLength == 20) {// 保留域
-                        cell.setCellValue(bankAleve.getResv());
-                    }
-                }
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+        int sheetCount = 0;
+        String sheetNameTmp = sheetName + "_第1页";
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        bankAleveRequest.setPaginatorPage(1);
+        bankAleveRequest.setLimit(defaultRowMaxCount);
+
+
+        // 需要输出的结果列表
+        Integer count = bankAleveService.queryBankAleveCount(bankAleveRequest);
+
+        if (count == null || count <= 0){
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
+            int totalCount = count;
+            sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bankAleveList);
+        }
+
+        for (int i = 1; i < sheetCount; i++) {
+            bankAleveRequest.setPaginatorPage(i +1);
+            List<BankAleveVO> bankAleveList2 = bankAleveService.queryBankAleveList(bankAleveRequest);
+            if (!CollectionUtils.isEmpty(bankAleveList2)) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankAleveList2);
+            } else {
+                break;
             }
         }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("bank", "银行号");
+        map.put("cardnbr", "电子账号");
+        map.put("amount", "交易金额");
+        map.put("curNum", "货币代码");
+        map.put("crflag", "交易金额符号");
+        map.put("valdate", "日账日期");
+        map.put("inpdate", "交易日期");
+        map.put("reldate", "自然日期");
+        map.put("inptime","交易时间");
+        map.put("tranno","交易流水号");
+        map.put("oriTranno","关联交易流水号");
+        map.put("transtype","交易类型");
+        map.put("desline","交易描述");
+        map.put("currBal","交易后余额");
+        map.put("forcardnbr","对手交易账号");
+        map.put("revind","冲正撤销标志");
+        map.put("accchg","交易标识");
+        map.put("seqno","系统跟踪号");
+        map.put("oriNum","原交易流水号");
+        map.put("resv","保留域");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter amountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal amount = (BigDecimal) object;
+                return amount + "";
+            }
+        };
+        IValueFormatter currBalAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal currBal = (BigDecimal) object;
+                return currBal + "";
+            }
+        };
+        mapAdapter.put("amount",amountAdapter);
+        mapAdapter.put("currBal",currBalAdapter);
+        return mapAdapter;
     }
 }

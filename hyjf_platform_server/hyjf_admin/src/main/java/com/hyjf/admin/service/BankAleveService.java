@@ -17,4 +17,6 @@ public interface BankAleveService {
      */
     List<BankAleveVO> queryBankAleveList(BankAleveRequest request);
 
+    Integer  queryBankAleveCount(BankAleveRequest request);
+
 }

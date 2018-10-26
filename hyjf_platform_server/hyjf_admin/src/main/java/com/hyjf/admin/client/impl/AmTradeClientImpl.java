@@ -3400,6 +3400,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    @Override
+    public Integer queryBankAleveCount(BankAleveRequest request) {
+        IntegerResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/bankaleve/selectBankAleveInfoCount", request, IntegerResponse.class).getBody();
+        if (response != null) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
     /**
      * 根据筛选条件查询银行账务明细list
      *
