@@ -183,11 +183,10 @@ public class AppUnBindCardPageController extends BaseUserController{
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
     @PostMapping(value = "/bgReturn")
     @ResponseBody
-    public BankCallResult bindCardBgReturn(BankCallBean bean, HttpServletRequest request) {
+    public BankCallResult bindCardBgReturn(@RequestBody BankCallBean bean, HttpServletRequest request) {
 
         BankCallResult result = new BankCallResult();
         logger.info("app端页面解卡异步回调start");
-        bean.convert();
         int userId = Integer.parseInt(bean.getLogUserId());
         // 绑卡后处理
         try {
