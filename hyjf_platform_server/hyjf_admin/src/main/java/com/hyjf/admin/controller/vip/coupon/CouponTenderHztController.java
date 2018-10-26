@@ -244,6 +244,18 @@ public class CouponTenderHztController extends BaseController {
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList(),sumSmsCount);
         }else{
+            //实现多个参数判断返回问题
+            for(CouponTenderCustomize couponTenderCustomize : recordList.getResultList()){
+                if("1".equals(couponTenderCustomize.getCouponType())){
+                    couponTenderCustomize.setCouponQuota("￥"+couponTenderCustomize.getCouponQuota());
+                }
+                if("2".equals(couponTenderCustomize.getCouponType())){
+                    couponTenderCustomize.setCouponQuota(couponTenderCustomize.getCouponQuota()+"%");
+                }
+                if("3".equals(couponTenderCustomize.getCouponType())){
+                    couponTenderCustomize.setCouponQuota("￥"+couponTenderCustomize.getCouponQuota());
+                }
+            }
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList(),sumSmsCount);
         }
         for (int i = 1; i < sheetCount; i++) {

@@ -20,4 +20,13 @@ public interface LockedUserService {
     Integer getLockedUserId(String username);
 
     boolean unlock(LockedUserInfoVO lockedUserId, boolean isFront);
+
+    /**
+     *@author koudeli
+     * @param userName 用户名，手机号
+     * @param loginPassword 登录密码
+     * @return
+     */
+    public Map<String, String> insertErrorPassword(String userName, String loginPassword);
+
 }
