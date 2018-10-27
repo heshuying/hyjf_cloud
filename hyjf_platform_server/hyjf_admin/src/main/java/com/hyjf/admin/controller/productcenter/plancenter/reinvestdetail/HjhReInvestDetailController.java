@@ -1,13 +1,15 @@
 package com.hyjf.admin.controller.productcenter.plancenter.reinvestdetail;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.HjhReInvestDetailRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.HjhReInvestDetailService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.admin.HjhReInvestDetailResponse;
 import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
@@ -20,10 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +41,7 @@ import java.util.Map;
  */
 @Api(value = "产品中心-汇计划-资金计划",tags ="产品中心-汇计划-资金计划-复投原始标的")
 @RestController
-@RequestMapping(value = "/hjhReInvestDetail")
+@RequestMapping(value = "/hyjf-admin/hjhReInvestDetail")
 public class HjhReInvestDetailController extends BaseController {
 
     @Autowired
@@ -161,7 +160,7 @@ public class HjhReInvestDetailController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "资金计划", notes = "复投详情列表导出")
+    /*@ApiOperation(value = "资金计划", notes = "复投详情列表导出")
     @PostMapping(value = "/exportAction")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, HjhReInvestDetailRequestBean requestBean) throws Exception {
 
@@ -283,6 +282,102 @@ public class HjhReInvestDetailController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
 
+    }*/
+
+    /**
+     * 导出资金明细列表
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "资金计划", notes = "复投详情列表导出")
+    @PostMapping(value = "/exportAction")
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, HjhReInvestDetailRequestBean requestBean) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "资金明细";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+        HjhReInvestDetailRequest hjhReInvestDetailCustomize = new HjhReInvestDetailRequest();
+
+        hjhReInvestDetailCustomize.setAccedeOrderIdSrch(requestBean.getAccedeOrderIdSrch());
+        hjhReInvestDetailCustomize.setBorrowNidSrch(requestBean.getBorrowNidSrch());
+        hjhReInvestDetailCustomize.setBorrowStyleSrch(requestBean.getBorrowStyleSrch());
+        hjhReInvestDetailCustomize.setInvestTypeSrch(requestBean.getInvestTypeSrch());
+        hjhReInvestDetailCustomize.setLockPeriodSrch(requestBean.getLockPeriodSrch());
+        hjhReInvestDetailCustomize.setUserNameSrch(requestBean.getUserNameSrch());
+        hjhReInvestDetailCustomize.setBorrowStyleSrch(requestBean.getBorrowStyleSrch());
+        hjhReInvestDetailCustomize.setInvestTypeSrch(requestBean.getInvestTypeSrch());
+        hjhReInvestDetailCustomize.setPlanNid(requestBean.getPlanNid());
+        hjhReInvestDetailCustomize.setDate(requestBean.getDate());
+        //请求第一页5000条
+        hjhReInvestDetailCustomize.setPageSize(defaultRowMaxCount);
+        hjhReInvestDetailCustomize.setCurrPage(1);
+        // 需要输出的结果列表
+        // 取得数据
+        List<HjhReInvestDetailVO> resultList = null;
+
+        HjhReInvestDetailResponse resultResponse = this.hjhReInvestDetailService.getHjhReInvestDetailList(hjhReInvestDetailCustomize);
+
+        if (resultResponse.getCount() > 0) {
+            resultList = CommonUtils.convertBeanList(resultResponse.getResultList(), HjhReInvestDetailVO.class);
+        }
+
+
+        Integer totalCount = resultResponse.getCount();
+
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+        }
+        for (int i = 1; i < sheetCount; i++) {
+
+            hjhReInvestDetailCustomize.setPageSize(defaultRowMaxCount);
+            hjhReInvestDetailCustomize.setCurrPage(i + 1);
+            HjhReInvestDetailResponse resultResponse2 = this.hjhReInvestDetailService.getHjhReInvestDetailList(hjhReInvestDetailCustomize);
+            if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("accedeOrderId", "计划订单号");
+        map.put("planNid", "计划编号");
+        map.put("userName", "用户名");
+        map.put("inviteUserName", "推荐人");
+        map.put("userAttribute", "用户属性");
+        map.put("borrowNid", "借款编号");
+        map.put("expectApr", "年化利率");
+        map.put("borrowPeriodView", "借款期限");
+        map.put("accedeAccount", "投资金额（元）");
+        map.put("borrowStyle", "还款方式");
+        map.put("investType", "投资方式");
+        map.put("countInterestTime", "计息时间");
+        map.put("addTime", "投资时间");
+
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        return mapAdapter;
     }
 
 }

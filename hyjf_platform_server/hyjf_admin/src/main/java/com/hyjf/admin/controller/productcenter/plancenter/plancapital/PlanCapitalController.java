@@ -4,17 +4,13 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.HjhPlanCapitalRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.PlanCapitalService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
-import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
-import com.hyjf.am.vo.admin.HjhDebtCreditVo;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -24,10 +20,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.ParseException;
@@ -201,8 +192,8 @@ public class PlanCapitalController extends BaseController {
     @ApiOperation(value = "资金计划列表", notes = "资金计划列表导出")
     @PostMapping(value = "/exportExcel")
     public void exportExcel(@ModelAttribute HjhPlanCapitalRequestBean requestBean, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        HjhPlanCapitalRequest planCapitalRequest = new HjhPlanCapitalRequest();
-        BeanUtils.copyProperties(requestBean, planCapitalRequest);
+        HjhPlanCapitalRequest requestVO = new HjhPlanCapitalRequest();
+        BeanUtils.copyProperties(requestBean, requestVO);
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -214,11 +205,11 @@ public class PlanCapitalController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
         //请求第一页5000条
-        planCapitalRequest.setPageSize(defaultRowMaxCount);
-        planCapitalRequest.setCurrPage(1);
+        requestVO.setPageSize(defaultRowMaxCount);
+        requestVO.setCurrPage(1);
         // 需要输出的结果列表
         List<HjhPlanCapitalVO> resultList = null;
-        HjhPlanCapitalResponse resultResponse = planCapitalService.getPlanCapitalList(planCapitalRequest);
+        HjhPlanCapitalResponse resultResponse = planCapitalService.getPlanCapitalList(requestVO);
         if (resultResponse.getCount() > 0){
             resultList = CommonUtils.convertBeanList(resultResponse.getResultList(), HjhPlanCapitalVO.class);
         }
@@ -239,9 +230,9 @@ public class PlanCapitalController extends BaseController {
         }
         for (int i = 1; i < sheetCount; i++) {
 
-            planCapitalRequest.setPageSize(defaultRowMaxCount);
-            planCapitalRequest.setCurrPage(i + 1);
-            HjhPlanCapitalResponse resultResponse2 = planCapitalService.getPlanCapitalList(planCapitalRequest);
+            requestVO.setPageSize(defaultRowMaxCount);
+            requestVO.setCurrPage(i + 1);
+            HjhPlanCapitalResponse resultResponse2 = planCapitalService.getPlanCapitalList(requestVO);
             if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());

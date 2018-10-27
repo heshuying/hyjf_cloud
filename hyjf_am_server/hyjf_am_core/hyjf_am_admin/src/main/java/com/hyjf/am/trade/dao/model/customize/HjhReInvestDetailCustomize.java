@@ -32,6 +32,8 @@ public class HjhReInvestDetailCustomize {
     private String expectApr;
     //借款期限(锁定期)
     private String borrowPeriod;
+    //借款期限（带单位）
+    private String borrowPeriodView;
     private String isMonth;
     //投资金额
     private String accedeAccount;
@@ -210,5 +212,13 @@ public class HjhReInvestDetailCustomize {
 
     public void setAddTime(String addTime) {
         this.addTime = addTime;
+    }
+
+    public String getBorrowPeriodView() {
+        return borrowPeriodView;
+    }
+
+    public void setBorrowPeriodView(String borrowPeriodView) {
+        this.borrowPeriodView = borrowPeriodView;
     }
 }
