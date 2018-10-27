@@ -300,6 +300,12 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 	 * 计算用已投资金额
 	 */
 	private BigDecimal jalreadyInvest;
+
+	/**
+	 * 自动投标进度
+	 * @return
+	 */
+	private String investScaleView;
 	
 	public String getPlanOrderId() {
 		return planOrderId;
@@ -851,5 +857,13 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 
 	public void setJalreadyInvest(BigDecimal jalreadyInvest) {
 		this.jalreadyInvest = jalreadyInvest;
+	}
+
+	public String getInvestScaleView() {
+		return investScaleView;
+	}
+
+	public void setInvestScaleView(String investScaleView) {
+		this.investScaleView = investScaleView;
 	}
 }
