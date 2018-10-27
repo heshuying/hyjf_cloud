@@ -32,6 +32,7 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
@@ -5488,7 +5489,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<AppPushManageVO> getAnnouncements() {
 
         String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/getAnnouncements";
-        AppPushManageReponse response = restTemplate.getForEntity(url, AppPushManageReponse.class).getBody();
+        AppPushManageResponse response = restTemplate.getForEntity(url, AppPushManageResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
         }
