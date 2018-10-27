@@ -1,9 +1,11 @@
 package com.hyjf.admin.client;
 
+import com.hyjf.admin.beans.request.AppPushManageRequestBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.am.bean.admin.LockedConfig;
+import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.EmailRecipientResponse;
 import com.hyjf.am.response.IntegerResponse;
@@ -696,4 +698,36 @@ public interface AmAdminClient {
     Integer deleteOrgFreezeLog(String orderId);
 
     List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId);
+
+    /**
+     * 移动客户端 - App 推送管理 列表
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    AppPushManageResponse getPushManageList(AppPushManageRequestBean requestBean);
+
+    /**
+     * 移动客户端 - App 推送管理 添加
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    AppPushManageResponse insterPushManage(AppPushManageRequestBean requestBean);
+
+    /**
+     * 移动客户端 - App 推送管理 更新
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    boolean updatePushManage(AppPushManageRequestBean requestBean);
+
+    /**
+     * 移动客户端 - App 推送管理 删除
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    boolean deletePushManage(Integer id);
 }
