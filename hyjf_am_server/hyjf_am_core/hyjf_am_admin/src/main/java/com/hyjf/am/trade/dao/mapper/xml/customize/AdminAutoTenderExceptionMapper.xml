@@ -182,7 +182,7 @@
 		ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
 		<where>
 			<if test="debtPlanNid != null and debtPlanNid != ''">
-				AND hdp.plan_nid LIKE CONCAT( #{debtPlanNidSrch}, '%')
+				AND hdp.plan_nid LIKE CONCAT( #{debtPlanNid}, '%')
 			</if>
 			<if test="accedeOrderId != null and accedeOrderId != ''">
 				AND hdpa.accede_order_id LIKE CONCAT( #{accedeOrderId}, '%')
