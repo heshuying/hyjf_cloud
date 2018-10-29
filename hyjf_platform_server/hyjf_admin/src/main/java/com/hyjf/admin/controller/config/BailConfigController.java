@@ -271,6 +271,13 @@ public class BailConfigController extends BaseController {
     public BailConfigInfoCustomizeVO instCodeChangeAction(String instCode) {
 
         BailConfigInfoCustomizeVO hjhBailConfigInfoCustomize = new BailConfigInfoCustomizeVO();
+        hjhBailConfigInfoCustomize.setEndDEL(1);
+        hjhBailConfigInfoCustomize.setEnddayDEL(1);
+        hjhBailConfigInfoCustomize.setMonthDEL(1);
+        hjhBailConfigInfoCustomize.setEndmonthDEL(1);
+        hjhBailConfigInfoCustomize.setPrincipalDEL(1);
+        hjhBailConfigInfoCustomize.setSeasonDEL(1);
+        hjhBailConfigInfoCustomize.setEndmonthsDEL(1);
 
         // 获取当前机构可用还款方式
         List<String> repayMethodList = this.bailConfigService.selectRepayMethod(instCode);
