@@ -426,7 +426,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
             strCnName.append(year).append("年").append("第三季度");
             strEnName.append("The third Quarter Operation Report of ").append(year).toString();
         }
-
+        logger.info("季度报告进入=====");
         //业绩总览
         Map<String, BigDecimal> mapPerformanceSum = getPerformanceSum();
         if (CollectionUtils.isEmpty(mapPerformanceSum)) {
