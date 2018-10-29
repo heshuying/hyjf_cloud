@@ -494,7 +494,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateBankOpenAccount(BankOpenAccount request) {
         int openFlag = this.bankOpenAccountMapper.updateByPrimaryKey(request);
         if (openFlag > 0) {
-            System.out.println("============银行开户修改信息保存成功!=============");
+            logger.info("============银行开户修改信息保存成功!=============");
         } else {
             throw new RuntimeException("============银行开户信息修改保存异常!==============");
         }
@@ -511,7 +511,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int insertBankOpenAccount(BankOpenAccount request) {
         int openFlag = this.bankOpenAccountMapper.insertSelective(request);
         if (openFlag > 0) {
-            System.out.println("============银行开户信息保存成功!=============");
+            logger.info("============银行开户信息保存成功!=============");
         } else {
             throw new RuntimeException("============银行开户信息保存异常!==============");
         }
@@ -528,7 +528,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateUserInfoByUserInfo(UserInfo userInfo) {
         int userFlag = this.userInfoMapper.updateByPrimaryKey(userInfo);
         if (userFlag > 0) {
-            System.out.println("=============用户详细信息保存成功!=============");
+            logger.info("=============用户详细信息保存成功!=============");
         } else {
             throw new RuntimeException("用户详细信息保存异常!");
         }
@@ -545,7 +545,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateUser(User user) {
         int userFlag = this.userMapper.updateByPrimaryKey(user);
         if (userFlag > 0) {
-            System.out.println("=============用户表信息保存成功!=============");
+            logger.info("=============用户表信息保存成功!=============");
         } else {
             throw new RuntimeException("用户表信息保存异常!");
         }
