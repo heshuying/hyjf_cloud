@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -166,7 +167,17 @@ public class BorrowCommonController extends BaseController {
 			return new AdminResult<>(FAIL, "该用户已被禁用");
 		} else if (usersFlag == 4) {
 			return new AdminResult<>(FAIL, "该用户不是借款人");
+		}else if (usersFlag == 5) {
+			// 服务费授权
+			return new AdminResult<>(FAIL, "未进行服务费授权");
+		} else if (usersFlag == 6) {
+			// 还款授权
+			return new AdminResult<>(FAIL, "未进行还款授权");
+		} else if (usersFlag == 7) {
+			// 还款授权和服务费授权
+			return new AdminResult<>(FAIL, "未进行服务费授权和还款授权");
 		}
+
 		return new AdminResult();
 	}
 
@@ -229,9 +240,10 @@ public class BorrowCommonController extends BaseController {
 				if(userinfo.getRoleId()!=3) {
 					return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
 				}
-//			}else {
-//				return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！");
-//			}
+		Integer authState = CommonUtils.checkPaymentAuthStatus(user.get(0).getPaymentAuthStatus());
+		if (authState == 0) {
+			return new AdminResult<>(FAIL, "未开通服务费授权！");
+		}
 		return new AdminResult();
 	}
 
@@ -1673,6 +1685,8 @@ public class BorrowCommonController extends BaseController {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_IN);
 		} else if (usersFlag == 6) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_IS_DISABLE);
+		} else if (usersFlag == 7) {
+			throw new ReturnMessageException(MsgEnum.ERR_PAYMENT_AUTH);
 		}
 		return new AdminResult<>() ;
 	}

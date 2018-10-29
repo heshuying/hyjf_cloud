@@ -401,6 +401,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USERNAME_NOT_IN("99","受托人用户名不在配置表中。"),
 	ERR_USERNAME_NOT_RELEVANT("99","受托人用户名与资产来源不一致。"),
 	ERR_USERNAME_IS_DISABLE("99","受托人在白名单中被禁用。"),
+	ERR_PAYMENT_AUTH("99","未进行服务费授权。"),
 
 
 	// 枚举终结
