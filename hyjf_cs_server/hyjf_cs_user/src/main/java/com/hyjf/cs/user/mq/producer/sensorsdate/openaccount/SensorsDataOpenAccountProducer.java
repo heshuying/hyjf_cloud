@@ -1,27 +1,26 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.mq.producer.sensorsdate.credit;
+package com.hyjf.cs.user.mq.producer.sensorsdate.openaccount;
 
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.base.Producer;
-import com.hyjf.cs.trade.mq.base.ProducerFieldsWrapper;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.base.Producer;
+import com.hyjf.cs.user.mq.base.ProducerFieldsWrapper;
 import org.springframework.stereotype.Component;
-
 /**
- * 神策数据统计:债转相关相关
+ * 神策数据统计:开户相关
  *
  * @author liuyang
- * @version SensorsDataCreditProducer, v0.1 2018/10/23 9:22
+ * @version SensorsDataOpenAccountProducer, v0.1 2018/10/25 10:04
  */
 @Component
-public class SensorsDataCreditProducer extends Producer {
+public class SensorsDataOpenAccountProducer extends Producer {
     @Override
     protected ProducerFieldsWrapper getFieldsWrapper() {
         ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-        wrapper.setGroup(MQConstant.SENSORSDATA_CREDIT_GROUP);
+        wrapper.setGroup(MQConstant.SENSORSDATA_OPEN_ACCOUNT_GROUP);
         wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
         return wrapper;
     }
@@ -35,4 +34,5 @@ public class SensorsDataCreditProducer extends Producer {
     public boolean messageSendDelay(MessageContent messageContent,int delayLevel) throws MQException {
         return super.messageSendDelay(messageContent,delayLevel);
     }
+
 }

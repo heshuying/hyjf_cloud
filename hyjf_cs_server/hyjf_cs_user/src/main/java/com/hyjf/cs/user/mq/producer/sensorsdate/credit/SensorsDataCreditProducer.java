@@ -1,13 +1,13 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.mq.producer.sensorsdate.credit;
+package com.hyjf.cs.user.mq.producer.sensorsdate.credit;
 
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.base.Producer;
-import com.hyjf.cs.trade.mq.base.ProducerFieldsWrapper;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.base.Producer;
+import com.hyjf.cs.user.mq.base.ProducerFieldsWrapper;
 import org.springframework.stereotype.Component;
 
 /**
