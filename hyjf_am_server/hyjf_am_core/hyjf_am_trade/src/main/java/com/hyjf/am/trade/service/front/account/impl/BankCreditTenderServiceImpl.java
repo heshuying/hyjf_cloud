@@ -1617,7 +1617,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							// 认购日期
 							creditRepay.setAssignCreateDate(creditTender.getAssignCreateDate());
 							// ip
-							creditRepay.setAddIp(creditTender.getAddip());
+							creditRepay.setAddIp(creditTender.getAddIp());
 							// 客户端
 							creditRepay.setClient(creditTender.getClient());
 							// 管理费
@@ -1642,6 +1642,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							// 原标还款期数
 							creditRepay.setRecoverPeriod(borrowRecoverPlan.getRecoverPeriod());
 							// 管理费
+							creditRepay.setUserName(creditTender.getUserName());
+							creditRepay.setCreditUserName(creditTender.getCreditUserName());
 							creditRepay.setManageFee(perManage);
 							creditRepayMapper.insertSelective(creditRepay);
 							// 更新borrowRecover

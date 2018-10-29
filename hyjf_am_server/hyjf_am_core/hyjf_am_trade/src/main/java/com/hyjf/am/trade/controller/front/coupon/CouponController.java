@@ -1,26 +1,22 @@
 package com.hyjf.am.trade.controller.front.coupon;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.CoupUserResponse;
-import com.hyjf.am.response.trade.coupon.AppCouponInfoResponse;
-import com.hyjf.am.response.trade.coupon.AppCouponResponse;
-import com.hyjf.am.response.trade.coupon.CouponRepayResponse;
-import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.response.trade.CouponUserResponse;
+import com.hyjf.am.response.trade.coupon.*;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
-import com.hyjf.am.trade.dao.model.auto.CouponRecover;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CouponCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.coupon.AppCouponCustomizeVO;
-import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
-import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -61,11 +57,14 @@ public class CouponController extends BaseController {
 
     @ApiOperation(value = " 优惠券投资")
     @PostMapping("/updateCouponTender")
-    public Integer updateCouponTender(CouponTenderVO couponTender) {
+    public Integer updateCouponTender(@RequestBody CouponTenderVO couponTender) {
         try{
+            logger.info("优惠券投资开始。。。。。。。");
             couponService.updateCouponTender(couponTender);
             return 1;
         }catch (Exception e ) {
+            e.printStackTrace();
+            logger.info("chucuole :::"+JSONObject.toJSONString(e));
             return 0;
         }
     }
@@ -178,5 +177,68 @@ public class CouponController extends BaseController {
         return response;
     }
 
+    /**
+     * 根据订单号查询此笔投资是否使用优惠券
+     *
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/selectCouponRealTenderByOrderId/{orderId}")
+    public CouponRealTenderResponse selectCouponRealTenderByOrderId(@PathVariable String orderId) {
+        CouponRealTenderResponse response = new CouponRealTenderResponse();
+        CouponRealTender couponRealTender = this.couponService.selectCouponRealTenderByOrderId(orderId);
+        if (Validator.isNotNull(couponRealTender)){
+            response.setResult(CommonUtils.convertBean(couponRealTender,CouponRealTenderVO.class));
+        }
+        return response;
+    }
 
+    /**
+     * 根据优惠券投资ID获取优惠券投资信息
+     *
+     * @param couponTenderId
+     * @return
+     */
+    @RequestMapping("/selectCouponTenderByCouponTenderId/{couponTenderId}")
+    public com.hyjf.am.response.trade.coupon.CouponTenderResponse selectCouponTenderByCouponTenderId(@PathVariable String couponTenderId) {
+        com.hyjf.am.response.trade.coupon.CouponTenderResponse response = new com.hyjf.am.response.trade.coupon.CouponTenderResponse();
+        CouponTender couponTender = this.couponService.selectCouponTenderByCouponTenderId(couponTenderId);
+        if (Validator.isNotNull(couponTender)) {
+            response.setResult(CommonUtils.convertBean(couponTender, CouponTenderVO.class));
+        }
+        return response;
+    }
+
+
+    /**
+     * 根据优惠券ID查询优惠券信息
+     *
+     * @param couponGrantId
+     * @return
+     */
+    @RequestMapping("/selectCouponUserById/{couponGrantId}")
+    public CouponUserResponse selectCouponUserById(@PathVariable Integer couponGrantId) {
+        CouponUserResponse response = new CouponUserResponse();
+        CouponUser couponUser = this.couponService.selectCouponUserById(couponGrantId);
+        if (Validator.isNotNull(couponUser)) {
+            response.setResult(CommonUtils.convertBean(couponUser, CouponUserVO.class));
+        }
+        return response;
+    }
+
+    /**
+     * 根据优惠券投资ID获取优惠券投资信息
+     *
+     * @param couponTenderId
+     * @return
+     */
+    @RequestMapping("/selectBorrowTenderCpnByCouponTenderId/{couponTenderId}")
+    public BorrowTenderCpnResponse selectBorrowTenderCpnByCouponTenderId(@PathVariable String couponTenderId) {
+        BorrowTenderCpnResponse response = new BorrowTenderCpnResponse();
+        BorrowTenderCpn borrowTenderCpn = this.couponService.selectBorrowTenderCpnByCouponTenderId(couponTenderId);
+        if (Validator.isNotNull(borrowTenderCpn)) {
+            response.setResult(CommonUtils.convertBean(borrowTenderCpn, BorrowTenderCpnVO.class));
+        }
+        return response;
+    }
 }

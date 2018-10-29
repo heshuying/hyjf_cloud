@@ -43,6 +43,7 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -646,6 +647,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             // 根据渠道号检索推广渠道
             utmPlat = this.amUserClient.selectUtmPlatByUtmId(utmId);
         } catch (Exception e) {
+            logger.error("查询渠道异常：", e);
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
             resultBean.setStatusDesc("第三方操作平台非法");
             return resultBean;
@@ -696,9 +698,10 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         if (user == null) {
             // 检查用户身份证号是否开户（身份证存在代表开户成功）
             boolean checkIdNo = checkIdNo(idNo);
-            if (checkIdNo) {
+            if (!checkIdNo) {
                 // 身份证不存在，在汇盈金服平台注册
                 RegisterUserRequest registerUserRequest = new RegisterUserRequest();
+                BeanUtils.copyProperties(openAccountRequestBean, registerUserRequest);
                 registerUserRequest.setUtmId(channel);
                 registerUserRequest.setReffer(referee);
                 registerUserRequest.setLoginIp(ipAddr);
@@ -748,7 +751,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             Integer userId = user.getUserId();
             // 手机号已注册，判断用户身份证号是否存在
             boolean idNo1 = this.checkIdNo(idNo);
-            if (idNo1) {
+            if (!idNo1) {
                 String userName = user.getUsername();
                 // 调用江西银行短信验证码接口
                 resultBean =  this.callBankSendSms(mobile, userId, userName, channel, platform);
@@ -758,30 +761,34 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             } else {
                 // 判断注册手机号与已存在的手机号是否相同
                 UserInfoVO userInfoVO = amUserClient.getUserByIdNo(idNo);
-                UserVO users = amUserClient.findUserById(userInfoVO.getUserId());
-                if (!mobile.equals(users.getMobile())) {
-                    resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZC000005);
-                    resultBean.setStatusDesc("手机号已被他人注册,请更换手机号");
-                    return resultBean;
-                } else {
-                    resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZC000023);
-                    resultBean.setStatusDesc("已开户，无需再次开户");
+                if(userInfoVO != null){
+                    UserVO users = amUserClient.findUserById(userInfoVO.getUserId());
+                    if (users != null && mobile.equals(users.getMobile())) {
+                        resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZC000005);
+                        resultBean.setStatusDesc("手机号已被他人注册,请更换手机号");
+                        return resultBean;
+                    } else {
+                        resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZC000023);
+                        resultBean.setStatusDesc("已开户，无需再次开户");
 
-                    // 已开户的用户，需要返回电子账号和银联行号
-                    BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(users.getUserId());
-                    resultBean.setAccountId(bankOpenAccountVO.getAccount());
-                    BankCardVO bankCardVO = amUserClient.getBankCardByUserId(users.getUserId());
-                    if(bankCardVO != null){
-                        resultBean.setPayAllianceCode(bankCardVO.getPayAllianceCode());
+                        // 已开户的用户，需要返回电子账号和银联行号
+                        BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(users.getUserId());
+                        resultBean.setAccountId(bankOpenAccountVO.getAccount());
+                        BankCardVO bankCardVO = amUserClient.getBankCardByUserId(users.getUserId());
+                        if(bankCardVO != null){
+                            resultBean.setPayAllianceCode(bankCardVO.getPayAllianceCode());
+                        }
+                        if (users.getIsSetPassword() != null) {
+                            resultBean.setIsSetPassword(String.valueOf(users.getIsSetPassword()));
+                        }
+                        HjhUserAuthVO hjhUserAuthVO = amUserClient.getHjhUserAuthByUserId(users.getUserId());
+                        resultBean.setAutoInvesStatus(String.valueOf(hjhUserAuthVO.getAutoInvesStatus()));
+                        resultBean.setTrueName(userInfoVO.getTruename());
+                        return resultBean;
                     }
-                    if (users.getIsSetPassword() != null) {
-                        resultBean.setIsSetPassword(String.valueOf(users.getIsSetPassword()));
-                    }
-                    HjhUserAuthVO hjhUserAuthVO = amUserClient.getHjhUserAuthByUserId(users.getUserId());
-                    resultBean.setAutoInvesStatus(String.valueOf(hjhUserAuthVO.getAutoInvesStatus()));
-                    resultBean.setTrueName(userInfoVO.getTruename());
-                    return resultBean;
                 }
+
+
             }
 
             if (bindUser == null) {

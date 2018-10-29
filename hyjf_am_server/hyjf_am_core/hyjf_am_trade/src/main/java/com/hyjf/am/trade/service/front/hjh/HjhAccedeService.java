@@ -66,4 +66,12 @@ public interface HjhAccedeService extends BaseService {
      * @return
      */
     boolean updateMatchDays();
+
+    /**
+     * 根据用户ID查询用户加入记录
+     *
+     * @param userId
+     * @return
+     */
+    List<HjhAccede> selectHjhAccedeListByUserId(Integer userId);
 }

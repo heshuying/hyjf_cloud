@@ -85,15 +85,13 @@ public class CreditTenderVO extends BaseVO implements Serializable {
 
     private String inviteUserCreditDepartmentname;
 
-    private Date addTime;
-
-    private Date createTime;
-
-    private String addip;
-
     private Integer client;
 
     private Integer recoverPeriod;
+
+    private String addIp;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -118,7 +116,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
+        this.userName = userName;
     }
 
     public Integer getCreditUserId() {
@@ -134,7 +132,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setCreditUserName(String creditUserName) {
-        this.creditUserName = creditUserName == null ? null : creditUserName.trim();
+        this.creditUserName = creditUserName;
     }
 
     public Integer getStatus() {
@@ -150,7 +148,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setBidNid(String bidNid) {
-        this.bidNid = bidNid == null ? null : bidNid.trim();
+        this.bidNid = bidNid;
     }
 
     public Integer getBorrowUserId() {
@@ -166,7 +164,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setBorrowUserName(String borrowUserName) {
-        this.borrowUserName = borrowUserName == null ? null : borrowUserName.trim();
+        this.borrowUserName = borrowUserName;
     }
 
     public String getCreditNid() {
@@ -174,7 +172,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setCreditNid(String creditNid) {
-        this.creditNid = creditNid == null ? null : creditNid.trim();
+        this.creditNid = creditNid;
     }
 
     public String getCreditTenderNid() {
@@ -182,7 +180,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setCreditTenderNid(String creditTenderNid) {
-        this.creditTenderNid = creditTenderNid == null ? null : creditTenderNid.trim();
+        this.creditTenderNid = creditTenderNid;
     }
 
     public String getAssignNid() {
@@ -190,7 +188,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setAssignNid(String assignNid) {
-        this.assignNid = assignNid == null ? null : assignNid.trim();
+        this.assignNid = assignNid;
     }
 
     public String getAuthCode() {
@@ -198,7 +196,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setAuthCode(String authCode) {
-        this.authCode = authCode == null ? null : authCode.trim();
+        this.authCode = authCode;
     }
 
     public BigDecimal getAssignCapital() {
@@ -334,7 +332,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setInviteUserName(String inviteUserName) {
-        this.inviteUserName = inviteUserName == null ? null : inviteUserName.trim();
+        this.inviteUserName = inviteUserName;
     }
 
     public Integer getInviteUserAttribute() {
@@ -350,7 +348,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setInviteUserRegionname(String inviteUserRegionname) {
-        this.inviteUserRegionname = inviteUserRegionname == null ? null : inviteUserRegionname.trim();
+        this.inviteUserRegionname = inviteUserRegionname;
     }
 
     public String getInviteUserBranchname() {
@@ -358,7 +356,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setInviteUserBranchname(String inviteUserBranchname) {
-        this.inviteUserBranchname = inviteUserBranchname == null ? null : inviteUserBranchname.trim();
+        this.inviteUserBranchname = inviteUserBranchname;
     }
 
     public String getInviteUserDepartmentname() {
@@ -366,7 +364,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setInviteUserDepartmentname(String inviteUserDepartmentname) {
-        this.inviteUserDepartmentname = inviteUserDepartmentname == null ? null : inviteUserDepartmentname.trim();
+        this.inviteUserDepartmentname = inviteUserDepartmentname;
     }
 
     public String getInviteUserCreditName() {
@@ -374,7 +372,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setInviteUserCreditName(String inviteUserCreditName) {
-        this.inviteUserCreditName = inviteUserCreditName == null ? null : inviteUserCreditName.trim();
+        this.inviteUserCreditName = inviteUserCreditName;
     }
 
     public Integer getInviteUserCreditAttribute() {
@@ -390,7 +388,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setInviteUserCreditRegionname(String inviteUserCreditRegionname) {
-        this.inviteUserCreditRegionname = inviteUserCreditRegionname == null ? null : inviteUserCreditRegionname.trim();
+        this.inviteUserCreditRegionname = inviteUserCreditRegionname;
     }
 
     public String getInviteUserCreditBranchname() {
@@ -398,7 +396,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setInviteUserCreditBranchname(String inviteUserCreditBranchname) {
-        this.inviteUserCreditBranchname = inviteUserCreditBranchname == null ? null : inviteUserCreditBranchname.trim();
+        this.inviteUserCreditBranchname = inviteUserCreditBranchname;
     }
 
     public String getInviteUserCreditDepartmentname() {
@@ -406,23 +404,7 @@ public class CreditTenderVO extends BaseVO implements Serializable {
     }
 
     public void setInviteUserCreditDepartmentname(String inviteUserCreditDepartmentname) {
-        this.inviteUserCreditDepartmentname = inviteUserCreditDepartmentname == null ? null : inviteUserCreditDepartmentname.trim();
-    }
-
-    public Date getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
-    }
-
-    public String getAddip() {
-        return addip;
-    }
-
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+        this.inviteUserCreditDepartmentname = inviteUserCreditDepartmentname;
     }
 
     public Integer getClient() {
@@ -439,6 +421,14 @@ public class CreditTenderVO extends BaseVO implements Serializable {
 
     public void setRecoverPeriod(Integer recoverPeriod) {
         this.recoverPeriod = recoverPeriod;
+    }
+
+    public String getAddIp() {
+        return addIp;
+    }
+
+    public void setAddIp(String addIp) {
+        this.addIp = addIp;
     }
 
     public Date getCreateTime() {

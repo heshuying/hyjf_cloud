@@ -1,5 +1,6 @@
 package com.hyjf.admin.client.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.am.response.BooleanResponse;
@@ -2138,6 +2139,78 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+	@Override
+	public AdminRoleResponse search(AdminRoleRequest form) {
+        String url = "http://AM-ADMIN/am-config/role/search";
+        AdminRoleResponse response = restTemplate.postForEntity(url, form, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse moveToInfoAction(AdminRoleRequest form) {
+        String url = "http://AM-ADMIN/am-config/role/moveToInfoAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, form, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse insertRecord(AdminRoleRequest form) {
+        String url = "http://AM-ADMIN/am-config/role/insertAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, form, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse updateRecord(AdminRoleRequest form) {
+        String url = "http://AM-ADMIN/am-config/role/updateAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, form, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse deleteRecord(AdminRoleRequest form) {
+        String url = "http://AM-ADMIN/am-config/role/deleteRecordAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, form, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public JSONArray getAdminRoleMenu(String roleId) {
+        String url = "http://AM-ADMIN/am-config/role/getAdminRoleMenu/" + roleId;
+        JSONArray response = restTemplate.getForEntity(url,JSONArray.class).getBody();
+        if (null != response) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse checkAction(AdminRoleRequest bean) {
+        String url = "http://AM-ADMIN/am-config/role/checkAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, bean, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
+	@Override
+	public AdminRoleResponse modifyPermissionAction(UserRoleRequest bean) {
+        String url = "http://AM-ADMIN/am-config/role/modifyPermissionAction";
+        AdminRoleResponse response = restTemplate.postForEntity(url, bean, AdminRoleResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
     /**
      * 根据银行名获取江西银行配置信息
      * @param bankName
@@ -2208,6 +2281,5 @@ public class AmConfigClientImpl implements AmConfigClient {
         String url = "http://AM-ADMIN/am-config/configCenter/authConfig/updateAuthConfig";
         return restTemplate.postForEntity(url,form,Integer.class).getBody();
     }
-
 
 }

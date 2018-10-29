@@ -103,4 +103,21 @@ public class HjhAccedeController extends BaseController {
         BeanUtils.copyProperties(hjhAccedeVO,hjhAccede);
         return new IntegerResponse(this.hjhAccedeService.updateHjhAccedeByPrimaryKey(hjhAccede));
     }
+
+    /**
+     * 根据用户ID查询用户加入记录
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/selectHjhAccedeListByUserId/{userId}")
+    public HjhAccedeResponse selectHjhAccedeListByUserId(@PathVariable Integer userId){
+        HjhAccedeResponse response = new HjhAccedeResponse();
+        List<HjhAccede> accedeList = this.hjhAccedeService.selectHjhAccedeListByUserId(userId);
+        if (CollectionUtils.isNotEmpty(accedeList)){
+            List<HjhAccedeVO> result = CommonUtils.convertBeanList(accedeList,HjhAccedeVO.class);
+            response.setResultList(result);
+        }
+        return response;
+    }
 }

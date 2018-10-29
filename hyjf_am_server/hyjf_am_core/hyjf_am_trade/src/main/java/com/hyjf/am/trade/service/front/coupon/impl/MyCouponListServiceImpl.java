@@ -240,7 +240,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             /**************逻辑修改 pcc start***************/
             //是否与本金公用
             boolean addFlg = false;
-            if (bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
+            if (bestCoupon.getAddFlag()!=null&&bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
                 addFlg = true;
             }
             if (addFlg) {
@@ -514,14 +514,16 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             // 验证项目金额
             String tenderQuota = bestCoupon.getCouponType();
             if("1".equals(tenderQuota)){
-                if(bestCoupon.getTenderQuotaMin()> new Double(money)||bestCoupon.getTenderQuotaMax()<new Double(money)){
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
-                            bestCoupon.getProjectExpirationType());
-                    notAvailableCouponList.add(couponBean);
-                    continue;
+                if (!"不限".equals(bestCoupon.getTenderQuota())){
+                    if(bestCoupon.getTenderQuotaMin()> new Double(money)||bestCoupon.getTenderQuotaMax()<new Double(money)){
+                        CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
+                                bestCoupon.getProjectExpirationType());
+                        notAvailableCouponList.add(couponBean);
+                        continue;
+                    }
                 }
             }else if("2".equals(tenderQuota)){
-                if("不限".equals(bestCoupon.getTenderQuota()) || new Double(bestCoupon.getTenderQuotaAmount())> new Double(money)){
+                if(!"不限".equals(bestCoupon.getTenderQuota()) && null != bestCoupon.getTenderQuotaAmount() && new Double(bestCoupon.getTenderQuotaAmount())> new Double(money)){
                     CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getProjectExpirationType());
                     notAvailableCouponList.add(couponBean);
                     continue;

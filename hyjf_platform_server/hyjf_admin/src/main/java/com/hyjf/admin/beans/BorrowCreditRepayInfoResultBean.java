@@ -17,7 +17,7 @@ public class BorrowCreditRepayInfoResultBean implements Serializable {
 
     private List<BorrowCreditRepayInfoVO> recordList;
 
-    private Map<String,Object> sumData;
+    private Map<String,String> sumData;
 
     public Integer getTotal() {
         return total;
@@ -35,11 +35,11 @@ public class BorrowCreditRepayInfoResultBean implements Serializable {
         this.recordList = recordList;
     }
 
-    public Map<String, Object> getSumData() {
+    public Map<String, String> getSumData() {
         return sumData;
     }
 
-    public void setSumData(Map<String, Object> sumData) {
+    public void setSumData(Map<String, String> sumData) {
         this.sumData = sumData;
     }
 }

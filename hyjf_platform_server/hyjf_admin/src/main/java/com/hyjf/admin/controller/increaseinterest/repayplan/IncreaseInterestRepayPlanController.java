@@ -59,7 +59,7 @@ public class IncreaseInterestRepayPlanController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<ListResult<IncreaseInterestRepayDetailVO>>(ListResult.build(response.getResultList(), response.getCount())) ;
+		return new AdminResult<ListResult<IncreaseInterestRepayDetailVO>>(ListResult.build(response.getResultList(), response.getTotal() == null ? 0 : response.getTotal())) ;
 	}
 
 	/**

@@ -12,6 +12,15 @@ import com.hyjf.am.vo.admin.IncreaseInterestInvestVO;
  */
 public class IncreaseInterestInvestDetailResponse extends Response<IncreaseInterestInvestVO>{
     private int count;
+    private Integer total;
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
 
     public int getCount() {
         return count;

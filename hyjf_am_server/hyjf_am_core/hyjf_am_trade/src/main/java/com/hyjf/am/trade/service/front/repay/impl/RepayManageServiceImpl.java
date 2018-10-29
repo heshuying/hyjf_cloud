@@ -4730,9 +4730,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         throw new Exception("重复还款");
                     }
                     int nowTime = GetDate.getNowTime10();
-                    nid = repay.getBorrowNid() + "_" + repay.getUserId() + "_" + period;
+                    String nid2 = repay.getBorrowNid() + "_" + repay.getUserId() + "_" + period;
                     BorrowApicron borrowApicron = new BorrowApicron();
-                    borrowApicron.setNid(nid);
+                    borrowApicron.setNid(nid2);
                     borrowApicron.setUserId(repayUserId);
                     borrowApicron.setUserName(userName);
                     borrowApicron.setBorrowNid(borrowNid);

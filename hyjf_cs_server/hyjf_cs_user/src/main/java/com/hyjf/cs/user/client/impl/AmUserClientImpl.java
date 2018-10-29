@@ -979,8 +979,12 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid) {
-		return restTemplate.getForEntity(userService+"/userManager/bindThirdUser/"+userId+"/"+bindUniqueId+"/"+pid, Boolean.class).getBody();
+	public Boolean bindThirdUser(Integer userId, Integer bindUniqueId, Integer pid) {
+		BooleanResponse response = restTemplate.getForEntity(userService+"/userManager/bindThirdUser/"+userId+"/"+bindUniqueId+"/"+pid, BooleanResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultBoolean();
+		}
+		return null;
 	}
 
 	/**

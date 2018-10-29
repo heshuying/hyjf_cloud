@@ -5,6 +5,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
@@ -280,4 +281,12 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
     User selectUserInfoByUsername(String userName);
+
+	/**
+	 * 根据用户ID查询用户部门信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserDepartmentInfoCustomizeVO queryUserDepartmentInfoByUserId(Integer userId);
 }

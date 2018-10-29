@@ -29,6 +29,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -370,6 +371,8 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
             return ret;
         }
         int nowTime = GetDate.getNowTime10(); // 当前时间
+        // 当前日期
+        Date nowDate = new Date();
         // 银行卡号
         String cardNo = bean.getCardNo();
         // 根据银行卡号检索银行卡信息
@@ -385,24 +388,24 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
         record.setUsername(bean.getLogUserName());// 用户 名
         record.setTxDate(Integer.parseInt(bean.getTxDate()));// 交易日期
         record.setTxTime(Integer.parseInt(bean.getTxTime()));// 交易时间
-        record.setSeqNo(bean.getSeqNo()); // 交易流水号
+        record.setSeqNo(Integer.parseInt(bean.getSeqNo())); // 交易流水号
         record.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo()); // 交易日期+交易时间+交易流水号
         record.setStatus(RECHARGE_STATUS_WAIT); // 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
         record.setAccountId(bean.getAccountId());// 电子账号
         record.setMoney(money); // 金额
         record.setCardid(cardNo);// 银行卡号
-        record.setFeeFrom(null);// 手续费扣除方式
+        // record.setFeeFrom(null);// 手续费扣除方式
         record.setFee(BigDecimal.ZERO); // 费用
-        record.setDianfuFee(BigDecimal.ZERO);// 垫付费用
+        // record.setDianfuFee(BigDecimal.ZERO);// 垫付费用
         record.setBalance(money); // 实际到账余额
         record.setPayment(bankCard == null ? "" : bankCard.getBank()); // 所属银行
         record.setGateType("QP"); // 网关类型：QP快捷支付
         record.setType(1); // 类型.1网上充值.0线下充值
         record.setRemark("快捷充值");// 备注
-        record.setCreateTime(nowTime);
+        record.setCreateTime(nowDate);
         record.setOperator(bean.getLogUserId());
-        record.setAddtime(String.valueOf(nowTime));
-        record.setAddip(bean.getUserIP());
+        // record.setAddtime(String.valueOf(nowTime));
+        record.setAddIp(bean.getUserIP());
         record.setClient(bean.getLogClient()); // 0pc
         record.setIsBank(1);// 资金托管平台 0:汇付,1:江西银行
         // 插入用户充值记录表

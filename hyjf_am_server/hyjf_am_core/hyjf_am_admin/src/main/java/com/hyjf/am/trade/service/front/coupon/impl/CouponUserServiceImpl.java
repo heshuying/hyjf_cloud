@@ -130,7 +130,7 @@ public class CouponUserServiceImpl implements CouponUserService {
     public Integer getUserCouponCount(Integer userId, String useFlag) {
         Map<String, Object> param = new HashMap<>();
         param.put("userId", userId);
-        param.put("useFlag", useFlag);
+        param.put("usedFlag", useFlag);
         Integer count = couponUserCustomizeMapper.countCouponUser(param);
         return count;
     }
@@ -238,6 +238,8 @@ public class CouponUserServiceImpl implements CouponUserService {
     @Override
     public int insertCouponUser(CouponUserRequest request) {
         CouponUser couponUser = new CouponUser();
+        couponUser.setCouponCode(request.getCouponCode());
+        couponUser.setContent(request.getContent());
         couponUser.setEndTime(request.getEndTime());
         couponUser.setUserId(request.getUserId());
         couponUser.setCouponUserCode(request.getCouponUserCode());

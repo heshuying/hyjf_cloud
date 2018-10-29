@@ -58,5 +58,22 @@ public class AccountRechargeController extends BaseController {
         return response;
     }
 
+    /**
+     * 根据用户ID查询用户充值成功记录
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/selectRechargeListByUserId/{userId}")
+    public AccountRechargeResponse selectRechargeListByUserId(@PathVariable Integer userId){
+        AccountRechargeResponse response = new AccountRechargeResponse();
+        List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> list = accountRecharge.selectRechargeListByUserId(userId);
+        if (CollectionUtils.isNotEmpty(list)) {
+            List<com.hyjf.am.vo.trade.account.AccountRechargeVO> voList = CommonUtils.convertBeanList(list,com.hyjf.am.vo.trade.account.AccountRechargeVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+
+    }
 
 }

@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.mq.base.Consumer;
@@ -67,17 +68,18 @@ public class CouponTenderConsumer extends Consumer {
             Map<String, Object> map = new HashMap<>();
             String msgBody = new String(paramBean.getBody());
             map = JSONObject.parseObject(msgBody, Map.class);
-            logger.info("散标优惠券投资请求参数：{}",msgBody);
-            JSONObject result = new JSONObject();
+            logger.info("散标优惠券投资请求参数：{}",JSONObject.toJSONString(map));
             try {
                 String couponGrantId = (String) map.get("couponGrantId");
                 String borrowNid = (String) map.get("borrowNid");
                 String money = (String) map.get("money");
                 String platform = (String) map.get("platform");
-                String ip = (String) map.get("ip");
+                String ip = "";
+                if(map.containsKey("ip")){
+                    ip = (String) map.get("ip");
+                }
                 String ordId = (String) map.get("ordId");
                 String userId = (String) map.get("userId");
-
                 BankCallBean bean = new BankCallBean();
                 bean.setLogOrderId(ordId);
                 bean.setLogIp(ip);
@@ -85,10 +87,12 @@ public class CouponTenderConsumer extends Consumer {
                 bean.setLogClient(Integer.parseInt(platform));
                 bean.setTxAmount(money);
                 BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
-                couponService.borrowTenderCouponUse(couponGrantId, borrow, bean);
+                BorrowInfoVO borrowInfoVO = borrowClient.getBorrowInfoByNid(borrowNid);
+                couponService.borrowTenderCouponUse(couponGrantId, borrow, bean,borrowInfoVO);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
-                logger.info("操作失败");
+                e.printStackTrace();
+                logger.info("操作失败了:"+JSONObject.toJSONString(e));
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
         }

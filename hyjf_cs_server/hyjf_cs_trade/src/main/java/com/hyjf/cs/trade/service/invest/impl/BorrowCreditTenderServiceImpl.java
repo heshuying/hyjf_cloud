@@ -539,7 +539,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 服务费
                 creditTender.setCreditFee(creditTenderLog.getCreditFee());
                 // 添加时间
-                creditTender.setAddTime(new Date());
+                creditTender.setCreateTime(new Date());
                 // 投资本金
                 creditTender.setAssignCapital(creditTenderLog.getAssignCapital());
                 // 用户名称
@@ -585,7 +585,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 creditTender.setAssignRepayYesTime(creditTenderLog.getAssignRepayYesTime());
                 creditTender.setAssignRepayPeriod(creditTenderLog.getAssignRepayPeriod());
                 // 还款期数
-                creditTender.setAddip(creditTenderLog.getAddIp());
+                creditTender.setAddIp(creditTenderLog.getAddIp());
                 // 客户端
                 creditTender.setClient(creditTenderLog.getClient());
                 // 银行存管新增授权码
@@ -685,7 +685,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignAccountList.setCreateTime(nowTime);
                 assignAccountList.setBaseUpdate(nowTime);
                 assignAccountList.setOperator(String.valueOf(userId));
-                assignAccountList.setIp(creditTender.getAddip());
+                assignAccountList.setIp(creditTender.getAddIp());
                 assignAccountList.setIsUpdate(0);
                 assignAccountList.setBaseUpdate(0);
                 assignAccountList.setInterest(null);
@@ -833,7 +833,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         // 认购日期
                         creditRepay.setAssignCreateDate(creditTender.getAssignCreateDate());
                         // ip
-                        creditRepay.setAddIp(creditTender.getAddip());
+                        creditRepay.setAddIp(creditTender.getAddIp());
                         // 客户端
                         creditRepay.setClient(creditTenderLog.getClient());
                         // 原标还款期数

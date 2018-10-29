@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.mapper.auto.CreditRepayMapper;
 import com.hyjf.am.trade.dao.mapper.auto.CreditTenderMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowCreditTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.CreditRepayExample;
+import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowCreditTenderCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowCreditTenderService;
@@ -13,6 +14,7 @@ import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -148,4 +150,40 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
        String serviceFee = borrowCreditTenderCustomizeMapper.getServiceFee(creditNid);
         return serviceFee;
     }
+
+    /**
+     * 根据用户ID查询用户承接记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<CreditTender> selectCreditTenderByUserId(Integer userId) {
+        CreditTenderExample example = new CreditTenderExample();
+        CreditTenderExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        example.setOrderByClause("assign_id ASC");
+        List<CreditTender> list = this.creditTenderMapper.selectByExample(example);
+        return list;
+    }
+
+    /**
+     * 根据承接订单号查询承接记录
+     *
+     * @param assignOrderId
+     * @return
+     */
+    @Override
+    public CreditTender selectCreditTenderByAssignOrderId(String assignOrderId) {
+        CreditTenderExample example = new CreditTenderExample();
+        CreditTenderExample.Criteria cra =example.createCriteria();
+        cra.andAssignNidEqualTo(assignOrderId);
+        List<CreditTender> list =  this.creditTenderMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.hyjf.admin.client;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
@@ -1445,6 +1446,21 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	JxBankConfigVO selectJxBankConfigByBankId(Integer bankId);
+	AdminRoleResponse search(AdminRoleRequest form);
+
+	AdminRoleResponse moveToInfoAction(AdminRoleRequest form);
+
+	AdminRoleResponse insertRecord(AdminRoleRequest form);
+
+	AdminRoleResponse updateRecord(AdminRoleRequest form);
+
+	AdminRoleResponse deleteRecord(AdminRoleRequest form);
+
+	JSONArray getAdminRoleMenu(String roleId);
+
+	AdminRoleResponse checkAction(AdminRoleRequest bean);
+
+	AdminRoleResponse modifyPermissionAction(UserRoleRequest bean);
 	/**
 	 * 根据银行名获取江西银行配置信息
 	 * @param bankName

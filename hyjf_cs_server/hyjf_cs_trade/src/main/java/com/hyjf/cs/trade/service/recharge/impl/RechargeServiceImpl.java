@@ -46,10 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 用户充值Service实现类
@@ -128,6 +125,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		String orderId = bean.getLogOrderId();
 		// 当前时间
 		int nowTime = GetDate.getNowTime10();
+		// 当前日期
+		Date nowDate = new Date();
 		// 错误信息
 		String errorMsg = this.getBankRetMsg(bean.getRetCode());
 		// ip
@@ -163,9 +162,9 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 					try {
 						// 将数据封装更新至充值记录
 						accountRecharge.setFee(BigDecimal.ZERO);
-						accountRecharge.setDianfuFee(BigDecimal.ZERO);
+						// accountRecharge.setDianfuFee(BigDecimal.ZERO);
 						accountRecharge.setBalance(txAmount);
-						accountRecharge.setUpdateTime(nowTime);
+						accountRecharge.setUpdateTime(nowDate);
 						accountRecharge.setStatus(RECHARGE_STATUS_SUCCESS);
 						accountRecharge.setAccountId(accountId);
 						accountRecharge.setBankSeqNo(txDate + txTime + seqNo);
@@ -174,7 +173,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 						accountRecharge.setTxAmount(bean.getTxAmount());
 						accountRecharge.setTxDate(Integer.parseInt(null==bean.getTxDate()?"0":bean.getTxDate()));
 						accountRecharge.setTxTime(Integer.parseInt(null==bean.getTxTime()?"0":bean.getTxTime()));
-						accountRecharge.setSeqNo(seqNo);
+						accountRecharge.setSeqNo(Integer.parseInt(seqNo));
 						BankAccountBeanRequest bankAccountBeanRequest = new BankAccountBeanRequest();
 						bankAccountBeanRequest.setAccountRecharge(accountRecharge);
 						bankAccountBeanRequest.setIp(ip);
@@ -238,7 +237,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			if (accountRecharge != null ) {
 				if (RECHARGE_STATUS_WAIT == accountRecharge.getStatus()) {
 					accountRecharge.setStatus(RECHARGE_STATUS_FAIL);
-					accountRecharge.setUpdateTime(nowTime);
+					accountRecharge.setUpdateTime(nowDate);
 					accountRecharge.setMessage(errorMsg);
 					accountRecharge.setAccountId(accountId);
 					accountRecharge.setBankSeqNo(txDate + txTime + seqNo);

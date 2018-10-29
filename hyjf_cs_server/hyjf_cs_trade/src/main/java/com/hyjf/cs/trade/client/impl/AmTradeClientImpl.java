@@ -15,6 +15,7 @@ import com.hyjf.am.response.trade.HjhPlanDetailResponse;
 import com.hyjf.am.response.trade.HjhPlanResponse;
 import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
+import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
@@ -5375,6 +5376,184 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 根据用户ID查询用户提现记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<AccountWithdrawVO> selectAccountWithdrawByUserId(Integer userId) {
+        String url = tradeService + "/accountWithdraw/selectAccountWithdrawByUserId/" + userId;
+        AccountWithdrawResponse response = restTemplate.getForEntity(url, AccountWithdrawResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID 查询用户充值记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<AccountRechargeVO> selectRechargeListByUserId(Integer userId) {
+        String url = tradeService + "/accountrecharge/selectRechargeListByUserId/" + userId;
+        AccountRechargeResponse response = restTemplate.getForEntity(url, AccountRechargeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID查询用户投资记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<BorrowTenderVO> selectBorrowTenderByUserId(Integer userId) {
+        String url = tradeService + "/borrowTender/selectBorrowTenderByUserId/" + userId;
+        BorrowTenderResponse response = restTemplate.getForEntity(url, BorrowTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID 查询用户承接记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<CreditTenderVO> selectCreditTenderByUserId(Integer userId) {
+        String url = tradeService + "/borrowTender/selectBorrowTenderByUserId/" + userId;
+        CreditTenderResponse response = restTemplate.getForEntity(url, CreditTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID查询用户加入记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<HjhAccedeVO> selectHjhAccedeListByUserId(Integer userId) {
+        String url = tradeService + "/hjhAccede/selectHjhAccedeListByUserId/" + userId;
+        HjhAccedeResponse response =  restTemplate.getForEntity(url, HjhAccedeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据承接订单号查询承接记录
+     *
+     * @param assignOrderId
+     * @return
+     */
+    @Override
+    public CreditTenderVO selectCreditTenderByAssignOrderId(String assignOrderId) {
+        String url = tradeService + "/creditTender/selectCreditTenderByAssignOrderId/" + assignOrderId;
+        CreditTenderResponse response =  restTemplate.getForEntity(url, CreditTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据加入订单号查询优惠券投资
+     *
+     * @param orderId
+     * @return
+     */
+    @Override
+    public CouponRealTenderVO selectCouponRealTenderByOrderId(String orderId) {
+        String url = tradeService + "/coupon/selectCouponRealTenderByOrderId/" + orderId;
+        CouponRealTenderResponse response =  restTemplate.getForEntity(url, CouponRealTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据优惠券投资ID查询优惠券投资
+     *
+     * @param couponTenderId
+     * @return
+     */
+    @Override
+    public CouponTenderVO selectCouponTenderByCouponTenderId(String couponTenderId) {
+        String url = tradeService + "/coupon/selectCouponTenderByCouponTenderId/" + couponTenderId;
+        com.hyjf.am.response.trade.coupon.CouponTenderResponse response = restTemplate.getForEntity(url, com.hyjf.am.response.trade.coupon.CouponTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据优惠券ID查询优惠券使用情况
+     *
+     * @param couponGrantId
+     * @return
+     */
+    @Override
+    public CouponUserVO selectCouponUserById(Integer couponGrantId) {
+        String url = tradeService + "/coupon/selectCouponUserById/" + couponGrantId;
+        CouponUserResponse response = restTemplate.getForEntity(url, CouponUserResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据优惠券投资ID获取优惠券投资信息
+     *
+     * @param couponTenderId
+     * @return
+     */
+    @Override
+    public BorrowTenderCpnVO selectBorrowTenderCpnByCouponTenderId(String couponTenderId) {
+        String url = tradeService + "/coupon/selectBorrowTenderCpnByCouponTenderId/" + couponTenderId;
+        BorrowTenderCpnResponse response = restTemplate.getForEntity(url, BorrowTenderCpnResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据投资订单号查询投资信息
+     *
+     * @param orderId
+     * @return
+     */
+    @Override
+    public BorrowTenderVO selectBorrowTenderByOrderId(String orderId) {
+        String url = tradeService + "/borrowTender/selectBorrowTenderByOrderId/" + orderId;
+        BorrowTenderResponse response = restTemplate.getForEntity(url, BorrowTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+
 
     /**
      * 首页汇计划推广计划列表 - 首页显示 ②	若没有可投计划，则显示锁定期限短的

@@ -281,20 +281,22 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         isLast = true;
                     }
 
+                    logger.info("1");
+
                     /** 4.2. 获取债转详情	 */
                     HjhDebtCreditVO credit = this.amTradeClient.selectHjhDebtCreditByCreditNid(redisBorrow.getBorrowNid());
                     if (credit == null) {
                         logger.error("[" + accedeOrderId + "]" + "债转号不存在 " + redisBorrow.getBorrowNid());
                         return false;
                     }
-
+                    logger.info("2");
                     if (credit.getCreditStatus().compareTo(3) == 0) {
                         //3承接终止
                         logger.warn("[" + accedeOrderId + "]" + "债转标的" + redisBorrow.getBorrowNid() + "发生还款（3），被停止债转，不再推回队列。");
                         result = true;
                         continue;
                     }
-
+                    logger.info("3");
                     // 债转加redis锁，禁止还款
                     boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrowNidForCredit, redisBorrow.getBorrowNid(), 300);
                     if (!tranactionSetFlag) {//设置失败
@@ -303,7 +305,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         result = true;
                         continue;
                     }
-
+                    logger.info("4");
                     /** 4.3. 校验是否可以债转	 */
                     // 债权的转让人，和计划订单的投资人不能相同
                     if (credit.getUserId().compareTo(hjhAccede.getUserId()) == 0) {
@@ -319,13 +321,14 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         result = true;
                         continue;
                     }
+                    logger.info("5");
                     // credit的CreditStatus = 3 时债转停止，不再推回队列，取下一个队列中的标的
                     if (credit.getCreditStatus().compareTo(3) == 0) {
                         logger.info("[" + accedeOrderId + "]" + "债转号 " + redisBorrow.getBorrowNid() + "的债权已经停止债转。");
                         result = true;
                         continue;
                     }
-
+                    logger.info("6");
                     /** 4.4. 调用银行自动购买债权接口	 */
                     // 调用银行接口准备参数
                     //获取出让用户的江西银行电子账号
@@ -334,6 +337,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         logger.info("[" + accedeOrderId + "]" + "转出用户没开户 " + credit.getUserId());
                         return false;
                     }
+                    logger.info("7");
                     String sellerUsrcustid = sellerBankOpenAccount.getAccount();//出让用户的江西银行电子账号
 
                     // 生成承接日志
@@ -559,6 +563,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                 }
             } catch (Exception e) {
                 this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
+                e.printStackTrace();
                 logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_ERR + "，请后台异常处理。");
                 e.printStackTrace();
                 return false;

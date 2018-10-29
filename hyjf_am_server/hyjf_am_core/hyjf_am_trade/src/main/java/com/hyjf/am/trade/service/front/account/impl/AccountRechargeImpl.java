@@ -37,4 +37,23 @@ public class AccountRechargeImpl implements AccountRecharge {
         return rechargeList;
     }
 
+    /**
+     * 根据用户ID查询用户充值成功记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> selectRechargeListByUserId(Integer userId) {
+        AccountRechargeExample example = new AccountRechargeExample();
+        AccountRechargeExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        // 充值状态:2:充值成功
+        cra.andStatusEqualTo(2);
+        example.setOrderByClause("id ASC");
+        List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> list = this.accountRechargeMapper.selectByExample(example);
+        return list;
+    }
+
+
 }

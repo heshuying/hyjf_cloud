@@ -174,6 +174,10 @@ public class SystemConfig {
         return wechatHost;
     }
 
+    /*需要在cs-trade的工程配置里面添加 sensorsDataLogPath */
+    @Value("${sensors.data.log.path}")
+    private String sensorsDataLogPath;
+
     public void setWechatHost(String wechatHost) {
         this.wechatHost = wechatHost;
     }
@@ -497,4 +501,12 @@ public class SystemConfig {
     }
 
 
+
+    public String getSensorsDataLogPath() {
+        return sensorsDataLogPath;
+    }
+
+    public void setSensorsDataLogPath(String sensorsDataLogPath) {
+        this.sensorsDataLogPath = sensorsDataLogPath;
+    }
 }

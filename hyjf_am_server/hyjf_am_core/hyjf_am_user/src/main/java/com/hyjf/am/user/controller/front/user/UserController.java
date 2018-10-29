@@ -5,12 +5,14 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
@@ -902,6 +904,27 @@ public class UserController extends BaseController {
             userService.updateFirstUtmReg(params);
         }catch (Exception e){
             logger.error("更新用户首次投资信息失败  参数为：{}",JSONObject.toJSONString(params));
+        }
+        return response;
+    }
+
+    /**
+     * 根据用户ID查询用户部门信息
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/queryUserDepartmentInfoByUserId")
+    public UserDepartmentInfoCustomizeResponse queryUserDepartmentInfoByUserId(@RequestBody @Valid UserDepartmentInfoCustomizeRequest request){
+        UserDepartmentInfoCustomizeResponse response = new UserDepartmentInfoCustomizeResponse();
+        try {
+            // 用户ID
+            Integer userId = request.getUserId();
+            UserDepartmentInfoCustomizeVO userDepartmentInfoCustomizeVO = userService.queryUserDepartmentInfoByUserId(userId);
+            response.setResult(userDepartmentInfoCustomizeVO);
+            response.setRtn(UserDepartmentInfoCustomizeResponse.SUCCESS);
+        } catch (Exception e) {
+            response.setRtn(UserDepartmentInfoCustomizeResponse.FAIL);
         }
         return response;
     }

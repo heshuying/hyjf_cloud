@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.bean;
 
 
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 
 public class TenderInfoResult extends BaseResultBean {
 
@@ -114,6 +115,9 @@ public class TenderInfoResult extends BaseResultBean {
     private String desc0;
 
     private String desc1;
+
+    /**优惠券信息*/
+    private CouponUserVO couponUser;
     
 	public String getEarnings() {
 		return earnings;
@@ -453,5 +457,13 @@ public class TenderInfoResult extends BaseResultBean {
 
     public void setBorrowExtraYield(String borrowExtraYield) {
         this.borrowExtraYield = borrowExtraYield;
+    }
+
+    public CouponUserVO getCouponUser() {
+        return couponUser;
+    }
+
+    public void setCouponUser(CouponUserVO couponUser) {
+        this.couponUser = couponUser;
     }
 }

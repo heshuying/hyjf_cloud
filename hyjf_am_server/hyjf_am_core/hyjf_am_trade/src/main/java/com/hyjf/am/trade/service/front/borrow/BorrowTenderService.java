@@ -128,4 +128,12 @@ public interface BorrowTenderService {
      * @return
      */
     Integer selectTenderCount(Integer userId);
+
+    /**
+     * 根据用户ID查询用户投资记录
+     *
+     * @param userId
+     * @return
+     */
+    List<BorrowTender> selectBorrowTenderByUserId(Integer userId);
 }

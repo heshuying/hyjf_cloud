@@ -66,8 +66,8 @@ public class AppInviteController {
             ret.put("statusDesc", "请求参数非法");
             return ret;
         }
-        page = Integer.valueOf(page);
-        pageSize = Integer.valueOf(pageSize);
+//        page = Integer.valueOf(page);
+//        pageSize = Integer.valueOf(pageSize);
         int limitStart = pageSize * (page - 1);
         ret.put("status", "000");
         ret.put("statusDesc", "成功");

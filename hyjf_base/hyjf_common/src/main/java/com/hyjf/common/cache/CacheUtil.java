@@ -23,11 +23,12 @@ public class CacheUtil {
 
 	/**
 	 * 获取param 制定key value
+	 *
 	 * @param key
 	 * @return
 	 */
 	public static String getParamName(String nameClass, String key) {
-		
-		return RedisUtils.hget(RedisConstants.CACHE_PARAM_NAME+nameClass, key);
+
+		return RedisUtils.hget(RedisConstants.CACHE_PARAM_NAME + nameClass, key);
 	}
 }
