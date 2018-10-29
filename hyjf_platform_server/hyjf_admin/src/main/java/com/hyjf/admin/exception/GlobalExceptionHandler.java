@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
 		logger.error("system error", e);
 		BaseResult response = new BaseResult();
 		response.setStatus(SYSTEM_ERROR);
-		response.setStatusDesc(e.getMessage() == null ? SYSTEM_ERROR_MSG : e.getMessage());
+		response.setStatusDesc( SYSTEM_ERROR_MSG);
 		return response;
 	}
 
