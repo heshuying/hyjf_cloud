@@ -181,7 +181,7 @@ public class FddHandle {
 				borrowIdCard = borrowManinfo.getCardNo();
 				// 获取CA认证客户编号
 				borrowerCustomerID = this.getPersonCACustomerID(borrowManinfo);
-				logger.info("-----------，合同编号：" + tenderNid + ",获得借款人认证编号：" + bean.getBorrowerCustomerID());
+				logger.info("-----------，合同编号：" + tenderNid + ",获得借款人认证编号：" +borrowerCustomerID);
 				if (StringUtils.isBlank(borrowerCustomerID)) {
 					throw new RuntimeException("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:["
 							+ borrowManinfo.getCardNo() + "].");
