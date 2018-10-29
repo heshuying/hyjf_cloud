@@ -43,7 +43,7 @@ public abstract class Producer {
 
 	protected boolean send(Message message)
 			throws MQClientException, RemotingException, MQBrokerException, InterruptedException {
-//		logger.info("mq address--->{}", namesrvAddr);
+		logger.info("mq address--->{}", namesrvAddr);
 		SendResult sendResult = defaultMQProducer.send(message);
 		if (sendResult != null && sendResult.getSendStatus() == SendStatus.SEND_OK) {
 			return true;
