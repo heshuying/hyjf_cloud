@@ -44,4 +44,5 @@ management:
       auto-time-requests: true
 logging:
   file: am-config.log
+  file.max-size: 100MB
 

@@ -33,3 +33,4 @@ management:
 
 logging:
   file: am-user.log
+  file.max-size: 100MB

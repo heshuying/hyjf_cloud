@@ -494,7 +494,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
                 strEnName.toString(),
                 2, mapPerformanceSum.get("allAmount"), mapPerformanceSum.get("allProfit"), mapPerformanceSum.get("registNum"), sumCompleteCount,
                 quarterDealMoney, operationProfit, year);
-
+        logger.info("operationReportId=="+operationReportId);
         //保存 季度运营报告
         this.saveQuarterOperationReport(operationReportId, strCnName.toString(), strEnName.toString(), quarterType,
                 beforeCurrentQuarterDealMoney, agoCurrentQuarterDealMoney, newQuarterDealMoney,

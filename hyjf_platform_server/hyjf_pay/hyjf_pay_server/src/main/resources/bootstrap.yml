@@ -29,3 +29,4 @@ management:
 
 logging:
   file: pay.log
+  file.max-size: 100MB
