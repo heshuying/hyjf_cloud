@@ -205,6 +205,7 @@ public class AdminMenuController extends BaseConfigController {
 		} else {
 			//throw new Exception("菜单不存在");
 			logger.error("menuUuid is null,菜单不存在");
+			return null;
 		}
 		return bean;
 		// modelAndView.addObject(AdminMenuDefine.ADMIN_MENU_FORM, bean);
