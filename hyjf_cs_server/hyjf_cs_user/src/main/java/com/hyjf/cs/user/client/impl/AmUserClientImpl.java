@@ -1130,8 +1130,9 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public void updateUserAuthLog(String logOrderId, String message) {
-		restTemplate.getForEntity(userService+"/userauth/updateUserAuthLog/"+logOrderId+"/"+message, IntegerResponse.class);
+	public void updateUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog) {
+
+		restTemplate.put(userService+"/userauth/updateUserAuthLog",hjhUserAuthLog);
 	}
 
 	/**

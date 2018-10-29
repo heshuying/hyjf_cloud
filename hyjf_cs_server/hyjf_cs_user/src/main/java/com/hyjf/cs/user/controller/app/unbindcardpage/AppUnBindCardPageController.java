@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.controller.app.unbindcardpage;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -85,7 +86,7 @@ public class AppUnBindCardPageController extends BaseUserController{
             ret.put("statusDesc", "用户未登录！");
             return ret;
         }
-        // 取得用户在汇付天下的客户号
+        // 取得用户的客户号
         BankOpenAccountVO accountChinapnrTender = unBindCardService.getBankOpenAccount(userId);
         if (accountChinapnrTender == null || org.apache.commons.lang3.StringUtils.isEmpty(accountChinapnrTender.getAccount())) {
             ret.put("status", "1");
@@ -135,7 +136,7 @@ public class AppUnBindCardPageController extends BaseUserController{
      */
     @PostMapping("/deleteCardPage")
     @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
-    public AppResult<Object> bindCardPage(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign,@RequestHeader(value = "bankNumber") String bankNumber,HttpServletRequest request) {
+    public AppResult<Object> bindCardPage(@RequestHeader(value = "userId") Integer userId, @RequestParam(value = "sign") String sign,@RequestParam(value = "bankNumber") String bankNumber,HttpServletRequest request) {
         // 平台
         String platform = request.getParameter("platform");
         AppResult<Object> result = new AppResult<Object>();
@@ -164,10 +165,12 @@ public class AppUnBindCardPageController extends BaseUserController{
         deleteCardPageBean.setName(userInfoVO.getTruename());
         deleteCardPageBean.setIdNo(userInfoVO.getIdcard());
         deleteCardPageBean.setCardNo(bankCardVO.getCardNo());// 银行卡号
+        deleteCardPageBean.setMobile(user.getMobile());
         deleteCardPageBean.setNotifyUrl(bgRetUrl);
         //调用解绑银行卡接口
-
-        unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_APP,sign,platform,request);
+        Map<String,Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_APP,sign,platform,request);
+        result.setStatus(BaseResult.SUCCESS);
+        result.setData(data);
         return result;
     }
 
@@ -180,11 +183,10 @@ public class AppUnBindCardPageController extends BaseUserController{
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
     @PostMapping(value = "/bgReturn")
     @ResponseBody
-    public BankCallResult bindCardBgReturn(BankCallBean bean, HttpServletRequest request) {
+    public BankCallResult bindCardBgReturn(@RequestBody BankCallBean bean, HttpServletRequest request) {
 
         BankCallResult result = new BankCallResult();
         logger.info("app端页面解卡异步回调start");
-        bean.convert();
         int userId = Integer.parseInt(bean.getLogUserId());
         // 绑卡后处理
         try {

@@ -375,5 +375,56 @@ public class CommonUtils {
 		return hjhUserAuthConfig;
 	}
 
+	/**
+	 * 检查还款授权和服务费授权状态
+	 * @param autoRepayStatus
+	 * @param paymentAuthStatus
+	 * @return
+	 */
+    public static int checkAuthStatus(Integer autoRepayStatus,Integer paymentAuthStatus) {
+		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(KEY_PAYMENT_AUTH);
+		HjhUserAuthConfigVO repayCconfig = getAuthConfigFromCache(KEY_REPAYMENT_AUTH);
+		if (paymenthCconfig != null && repayCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0
+				&& repayCconfig.getEnabledStatus() - 1 == 0) {
+			// 如果两个都开启了
+			if ((paymentAuthStatus == null || paymentAuthStatus - 1 != 0)
+					&& (autoRepayStatus == null || autoRepayStatus - 1 != 0)) {
+				// 借款人必须服务费授权
+				return 7;
+			}
+		}
+		// 服务费授权
+		if (paymenthCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0) {
+			if (paymentAuthStatus == null || paymentAuthStatus - 1 != 0) {
+				// 借款人必须服务费授权
+				return 5;
+			}
+		}
+		// 还款授权
+		if (repayCconfig != null && repayCconfig.getEnabledStatus() - 1 == 0) {
+			if (autoRepayStatus == null || autoRepayStatus - 1 != 0) {
+				// 借款人必须还款授权
+				return 6;
+			}
+		}
+		return 0;
+    }
 
+	/**
+	 * 检查服务费授权
+	 * @author sunss
+	 * @param authStatus
+	 * @return 0未授权   1已授权
+	 */
+	public static Integer checkPaymentAuthStatus(Integer authStatus){
+		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(KEY_PAYMENT_AUTH);
+		// 服务费授权
+		if (paymenthCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0) {
+			if (authStatus == null || authStatus - 1 != 0) {
+				// 借款人必须服务费授权
+				return 0;
+			}
+		}
+		return 1;
+	}
 }

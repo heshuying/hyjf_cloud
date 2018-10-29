@@ -19,6 +19,7 @@ import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.auth.AuthService;
+import com.hyjf.cs.user.vo.AuthVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -56,13 +57,12 @@ public class WeChatInvesAuthPagePlusController extends BaseUserController {
     /**
      * 用户自动投资授权
      * @param userId
-     * @param authorizedVO
      * @return
      */
     @ApiOperation(value = "用户自动投资授权", notes = "用户自动投资授权")
-    @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/page", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId,@RequestBody AuthorizedVO authorizedVO, HttpServletRequest request) {
+    public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
@@ -72,14 +72,14 @@ public class WeChatInvesAuthPagePlusController extends BaseUserController {
 
         // 拼装参数 调用江西银行
         // 失败页面
-        String errorPath = "/user/openError";
+        String errorPath = "/user/setting/authorization/result/failed";
         // 成功页面
-        String successPath = "/user/openSuccess";
+        String successPath = "/user/setting/authorization/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + errorPath +"?logOrdId="+orderId;
+        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_BID;
         String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + successPath;
-        String bgRetUrl = "http://CS-USER/hyjf-web/user/auth/invesauthpageplus/invesAuthBgreturn" ;
+        String bgRetUrl = "http://CS-USER/hyjf-wechat/bank/user/auth/invesauthpageplus/invesAuthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO=authService.getBankOpenAccount(userId);
@@ -142,7 +142,7 @@ public class WeChatInvesAuthPagePlusController extends BaseUserController {
         UserVO user = this.authService.getUsersById(userId);
         if(authService.checkDefaultConfig(bean, AuthBean.AUTH_TYPE_AUTO_BID)){
 
-            authService.updateUserAuthLog(bean.getLogOrderId(),"授权期限过短或额度过低，<br>请重新授权！");
+            authService.updateUserAuthLog(bean.getLogOrderId(),"QuotaError");
             logger.info("[用户自动投资授权完成后,回调结束]");
             result.setMessage("自动投资授权成功");
             result.setStatus(true);
@@ -178,9 +178,9 @@ public class WeChatInvesAuthPagePlusController extends BaseUserController {
     @ApiOperation(value = "查询授权失败原因", notes = "查询授权失败原因")
     @PostMapping("/seachFiledMess")
     @ResponseBody
-    public WebResult<Object> seachUserAuthErrorMessgae(@RequestBody @Valid String logOrdId) {
-        logger.info("查询授权失败原因start,logOrdId:{}", logOrdId);
-        WebResult<Object> result = authService.seachUserAuthErrorMessgae(logOrdId);
+    public WebResult<Object> seachUserAuthErrorMessgae(@RequestBody @Valid AuthVO vo) {
+        logger.info("查询授权失败原因start,logOrdId:{}", vo.getLogOrdId());
+        WebResult<Object> result = authService.seachUserAuthErrorMessgae(vo.getLogOrdId());
         return result;
     }
 

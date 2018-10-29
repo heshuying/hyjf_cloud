@@ -890,7 +890,9 @@
         when hydb.project_type = 13 then 'HJLC'
         else 'HZT'
         end project_type_code,
-        IFNULL(hydb.borrow_account_wait,0) borrowAccountWait
+        IFNULL(hydb.borrow_account_wait,0) borrowAccountWait,
+        hydb.increase_interest_flag increaseInterestFlag,
+        hbi.borrow_extra_yield borrowExtraYieldOld
         FROM
         ht_borrow hydb
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type

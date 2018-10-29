@@ -380,7 +380,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             bankCardBean.setCardNoInfo(cardNoInfo);
             bankCardBean.setCardNo(cardNo);
             bankCardBean.setIsDefault("2");// 卡类型
-            bankcards.add(bankCardBean);
 
             Integer bankId = banks.getBankId();
             BanksConfigVO banksConfig = amConfigClient.getBanksConfigByBankId(bankId + "");
@@ -389,6 +388,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 bankCardBean.setBankCode(banksConfig.getBankCode()==null?"":banksConfig.getBankCode());
                 bankCardBean.setLogo(banksConfig.getBankLogo()==null?"":banksConfig.getBankLogo());
             }
+            bankcards.add(bankCardBean);
 
             feeWithdraw = this.getWithdrawFee(userId, banks.getCardNo());
         }

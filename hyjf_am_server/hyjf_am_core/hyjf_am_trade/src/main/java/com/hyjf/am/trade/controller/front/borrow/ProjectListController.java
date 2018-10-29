@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
@@ -21,6 +22,7 @@ import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
@@ -501,9 +503,9 @@ public class ProjectListController extends BaseController {
      * @return
      */
     @GetMapping("/apphomepage/getAnnouncements")
-    public AppPushManageReponse selectAnnouncements(){
+    public AppPushManageResponse selectAnnouncements(){
 
-        AppPushManageReponse reponse = new AppPushManageReponse();
+        AppPushManageResponse reponse = new AppPushManageResponse();
         List<AppPushManageVO> resultList = projectListService.getAnnouncements();
         reponse.setResultList(resultList);
         return reponse;

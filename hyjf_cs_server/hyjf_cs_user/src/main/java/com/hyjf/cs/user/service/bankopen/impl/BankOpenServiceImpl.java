@@ -216,7 +216,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
 
         // State为0时候为0：交易失败 1：交易成功 2：开户成功设置交易密码失败
-        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) && "0".equals(bean.getStatus())) {
+        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || "0".equals(bean.getStatus())) {
             // 开户失败   将开户记录状态改为4
             // 查询失败原因
             String retMsg = bean.getRetMsg();
@@ -245,6 +245,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                 && "1".equals(bean.getStatus())) {
             user.setIsSetPassword(1);
         }
+        user.setRoleId(bean.getIdentity());
         RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
 
         // 查询银行卡绑定信息

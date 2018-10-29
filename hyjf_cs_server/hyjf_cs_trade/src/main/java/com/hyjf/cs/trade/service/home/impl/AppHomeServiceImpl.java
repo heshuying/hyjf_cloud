@@ -8,10 +8,10 @@ import com.hyjf.am.resquest.trade.AppHomePageRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.vo.UserDeviceUniqueCodeVO;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
-import com.hyjf.am.vo.trade.AppPushManageVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
@@ -487,6 +487,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         project.setButtonText(appHomePageCustomize.getStatusName());
         // 产品加息
         project.setBorrowExtraYield(appHomePageCustomize.getBorrowExtraYield());
+        project.setBorrowTheFirstDesc(appHomePageCustomize.getBorrowTheFirstDesc());
         return project;
     }
 
@@ -1029,6 +1030,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (listNewInvest != null && listNewInvest.size() > 0) {
             for (int i = 0; i < listNewInvest.size(); i++) {
                 AppProjectListCustomizeVO newInvest = listNewInvest.get(i);
+                if(!Validator.isIncrease(newInvest.getIncreaseInterestFlag(), newInvest.getBorrowExtraYieldOld())){
+                    newInvest.setBorrowExtraYield("");
+                }
                 projectList.add(newInvest);
             }
             return projectList;
@@ -1042,6 +1046,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (listNewOnTime != null && listNewOnTime.size() > 0) {
             for (int i = 0; i < listNewOnTime.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = listNewOnTime.get(i);
+                if(!Validator.isIncrease(newOnTime.getIncreaseInterestFlag(), newOnTime.getBorrowExtraYieldOld())){
+                    newOnTime.setBorrowExtraYield("");
+                }
                 projectList.add(newOnTime);
             }
             return projectList;
@@ -1054,6 +1061,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (reviewList != null && reviewList.size() > 0) {
             for (int i = 0; i < reviewList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = reviewList.get(i);
+                if(!Validator.isIncrease(newOnTime.getIncreaseInterestFlag(), newOnTime.getBorrowExtraYieldOld())){
+                    newOnTime.setBorrowExtraYield("");
+                }
                 projectList.add(newOnTime);
             }
             return projectList;
@@ -1065,6 +1075,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (repaymentList != null && repaymentList.size() > 0) {
             for (int i = 0; i < repaymentList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = repaymentList.get(i);
+                if(!Validator.isIncrease(newOnTime.getIncreaseInterestFlag(), newOnTime.getBorrowExtraYieldOld())){
+                    newOnTime.setBorrowExtraYield("");
+                }
                 projectList.add(newOnTime);
             }
             return projectList;

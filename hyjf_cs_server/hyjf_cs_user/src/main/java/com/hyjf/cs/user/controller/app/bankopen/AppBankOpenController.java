@@ -72,7 +72,7 @@ public class AppBankOpenController extends BaseUserController {
     @ApiOperation(value = "用户开户", notes = "用户开户")
     @PostMapping(value = "/openBankAccount")
     @ResponseBody
-    public AppResult<Object> openBankAccount(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public AppResult<Object> openBankAccount(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign, @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         AppResult<Object> result = new AppResult<Object>();
         // 验证请求参数
