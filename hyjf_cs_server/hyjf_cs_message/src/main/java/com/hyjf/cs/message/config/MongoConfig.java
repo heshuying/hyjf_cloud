@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.message.config;
 
+import com.hyjf.cs.message.converter.BigDecimalToDecimal128Converter;
+import com.hyjf.cs.message.converter.Decimal128ToBigDecimalConverter;
 import com.mongodb.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +18,7 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 import java.util.ArrayList;
@@ -61,7 +64,10 @@ public class MongoConfig {
 	@Autowired
 	private ApplicationContext appContext;
 
-	// 覆盖默认的MongoDbFactory
+	/**
+	 * 覆盖默认的MongoDbFactory
+	 * @return
+	 */
 	@Bean
 	MongoDbFactory mongoDbFactory() {
 		// 客户端配置（连接数、副本集群验证）
@@ -100,6 +106,11 @@ public class MongoConfig {
 		MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory),
 				mongoMappingContext);
 		converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+		List<Object> list = new ArrayList<>();
+		//自定义的类型转换器
+		list.add(new BigDecimalToDecimal128Converter());
+		list.add(new Decimal128ToBigDecimalConverter());
+		converter.setCustomConversions(new MongoCustomConversions(list));
 
 		return new MongoTemplate(mongoDbFactory, converter);
 	}
@@ -125,7 +136,6 @@ public class MongoConfig {
 		}
 		
 		return serverAddresses;
-		
 	}
 	
 

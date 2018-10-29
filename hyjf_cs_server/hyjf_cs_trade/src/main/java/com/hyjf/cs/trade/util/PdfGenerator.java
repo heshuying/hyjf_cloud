@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class PdfGenerator {
 
-	Logger logger = LoggerFactory.getLogger(PdfGenerator.class);
+	private  static Logger logger = LoggerFactory.getLogger(PdfGenerator.class);
 	private static SystemConfig systemConfig = SpringUtils.getBean(SystemConfig.class);
 
 	/**
@@ -117,6 +117,7 @@ public class PdfGenerator {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("****协议生成异常2***: ",e);
 		} finally {
 			if (outputStream != null) {
 				try {
@@ -205,6 +206,7 @@ public class PdfGenerator {
 			FileUtil.getServletFile(request, response, pdfUrl.substring(0, pdfUrl.length() - 1), fileName);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("****协议生成异常***: ",e);
 
 		}
 		return null;

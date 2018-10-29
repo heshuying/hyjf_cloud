@@ -1,6 +1,8 @@
 package com.hyjf.admin.controller.report;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.BorrowCommonImage;
+import com.hyjf.admin.beans.request.HjhPlanCapitalRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -8,12 +10,18 @@ import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.OperationReportService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
+import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.vo.datacollect.OperationReportVO;
 import com.hyjf.am.vo.datacollect.OperationSelectVO;
 import com.hyjf.am.vo.datacollect.QuarterOperationReportVO;
+import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -24,16 +32,16 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author tanyy
@@ -205,7 +213,7 @@ public class OperationReportController extends BaseController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "数据导出--运营报告", notes = "带条件导出EXCEL")
+    /*@ApiOperation(value = "数据导出--运营报告", notes = "带条件导出EXCEL")
     @PostMapping(value = "/exportAction")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody OperationReportRequest form) throws Exception {
         // 表格sheet名称
@@ -285,7 +293,90 @@ public class OperationReportController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+    }*/
+
+
+    /**
+     * @Description 数据导出--运营报告
+     * @Author
+     * @Version v0.1
+     * @Date
+     */
+    @ApiOperation(value = "数据导出--运营报告", notes = "带条件导出EXCEL")
+    @PostMapping(value = "/exportAction")
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody OperationReportRequest form) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "运营报告数据";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        OperationReportResponse operationReportResponse = operationReportService.getRecordList(form);
+        List<OperationReportVO> resultList =  operationReportResponse.getResultList();
+
+
+        Integer totalCount = operationReportResponse.getCount();
+
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+        }
+        for (int i = 1; i < sheetCount; i++) {
+
+            form.setPageSize(defaultRowMaxCount);
+            form.setCurrPage(i + 1);
+            OperationReportResponse operationReportResponse2 = operationReportService.getRecordList(form);
+            if (operationReportResponse2 != null && operationReportResponse2.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  operationReportResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("cnName", "标题名称");
+        map.put("allAmount", "累计交易额");
+        map.put("allProfit", "累计赚取收益");
+        map.put("registNum", "平台注册人数");
+        map.put("successDealNum", "本月（本季/本年）成交笔数");
+        map.put("operationAmount", "本月（本季/本年）成交金额");
+        map.put("operationProfit", "本月（本季/本年）为用户赚取收益");
+        map.put("isRelease", "状态");
+        map.put("releaseTimeStr", "发布时间");
+
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter isReleaseAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer value = (Integer) object;
+                if (1 == value) {
+                    return "已发布";
+                } else {
+                    return "未发布";
+                }
+            }
+        };
+
+        mapAdapter.put("isRelease", isReleaseAdapter);
+        return mapAdapter;
+    }
+
 
     private List<OperationSelectVO> initSelect() {
         List<OperationSelectVO> selectList = new ArrayList<OperationSelectVO>();
