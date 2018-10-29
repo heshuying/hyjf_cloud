@@ -24,6 +24,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(value = Exception.class)
 	@ResponseBody
 	public BaseResultBean defaultErrorHandler(HttpServletRequest req, Exception e) {
+		logger.error("请求路径:[{}]",req.getRequestURI());
 		logger.error("system error", e);
 		BaseResultBean response = new BaseResultBean();
 		response.setStatus(SYSTEM_ERROR);
@@ -34,6 +35,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(value = ReturnMessageException.class)
 	@ResponseBody
 	public BaseResultBean defaultReturnErrorHandler(HttpServletRequest req, ReturnMessageException e) {
+		logger.error("请求路径:[{}]",req.getRequestURI());
 		BaseResultBean response = new BaseResultBean();
 		response.setStatus(e.getError().getCode());
 		response.setStatusDesc(e.getError().getMsg());
