@@ -171,7 +171,10 @@ public class AccedeListServiceImpl implements AccedeListService{
 		bean.setOrdid(tenderAgreement.getTenderNid());
 		/*rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_DOWNDESSENESITIZATION_CONTRACT, JSONObject.toJSONString(bean));*/
         try {
+        	_log.info("-----------开始下载脱敏：" + bean.getOrdid() + ",开始推送脱敏队列");
 			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,JSON.toJSONBytes(bean)));
+			_log.info("-----------开始下载脱敏：" + bean.getOrdid() + ",推送脱敏队列完成1");
+
 		} catch (MQException e) {
 			e.printStackTrace();
 			_log.error("法大大发送下载脱敏消息失败...", e);	
@@ -180,10 +183,7 @@ public class AccedeListServiceImpl implements AccedeListService{
 
 	/**
 	 * 查询用户投资详情
-	 * @param tenderAgreement
-	 * @param borrowNid
-	 * @param transType
-	 * @param instCode
+	 * @param request
 	 */
 	@Override
 	public UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request) {
