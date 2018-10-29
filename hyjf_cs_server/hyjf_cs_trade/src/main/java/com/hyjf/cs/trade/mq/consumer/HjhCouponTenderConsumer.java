@@ -113,7 +113,7 @@ public class HjhCouponTenderConsumer extends Consumer {
 
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
-                logger.info("操作失败");
+                logger.info("操作失败",e);
                 logger.info("计划优惠券投资失败    "+JSONObject.toJSONString(e));
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             } finally {
