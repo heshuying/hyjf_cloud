@@ -947,7 +947,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         // 优惠券投资开始
         Integer couponGrantId = request.getCouponGrantId();
-        if (couponGrantId != null && couponGrantId != 0) {
+        if (couponGrantId != null && couponGrantId.intValue() >0) {
             logger.info("开始优惠券投资,userId{},平台{},优惠券{}", userId, request.getPlatform(), couponGrantId);
             // 优惠券投资校验
             try {
@@ -974,6 +974,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 hjhCouponTenderProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 
             } catch (Exception e) {
+                logger.error("加入计划 优惠券投资出错",e);
                 e.printStackTrace();
             }
         }

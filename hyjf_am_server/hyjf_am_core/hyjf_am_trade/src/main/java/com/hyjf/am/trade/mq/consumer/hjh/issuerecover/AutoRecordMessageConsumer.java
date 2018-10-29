@@ -210,6 +210,7 @@ public class AutoRecordMessageConsumer extends Consumer {
                                     Thread.sleep(rand);
                                 } catch (InterruptedException e) {
                                     logger.error("备案成功后随机睡异常！",e);
+                                    Thread.currentThread().interrupt();
                                 }
 
                             }
@@ -228,9 +229,8 @@ public class AutoRecordMessageConsumer extends Consumer {
             } catch (Exception e) {
                 logger.error("自动备案异常！",e);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } finally {
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
+
         }
     }
 }
