@@ -127,7 +127,7 @@ public class MyCouponListController {
         conn.setRequestProperty("Content-type", "application/x-java-serialized-object");
         conn.setRequestProperty("Accept-Charset", "UTF-8");
         // 设定请求的方法为"POST"，默认是GET
-        conn.setRequestMethod("POST");
+        conn.setRequestMethod("GET");
         DataInputStream input =null;
         ServletOutputStream output = null;
         byte[] buffer = new byte[1024];
