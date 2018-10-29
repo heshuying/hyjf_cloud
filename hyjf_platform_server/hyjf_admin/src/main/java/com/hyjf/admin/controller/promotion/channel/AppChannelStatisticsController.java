@@ -3,17 +3,25 @@
  */
 package com.hyjf.admin.controller.promotion.channel;
 
+import com.google.common.collect.Maps;
+import com.hyjf.admin.beans.request.HjhPlanCapitalRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AdminUtmReadPermissionsService;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsVO;
+import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -24,18 +32,20 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoyong
@@ -85,7 +95,7 @@ public class AppChannelStatisticsController extends BaseController {
         return new AdminResult<>(response);
     }
 
-    @ApiOperation(value = "导出", notes = "导出")
+    /*@ApiOperation(value = "导出", notes = "导出")
     @RequestMapping(value = "/export", method = RequestMethod.POST)
     public void export(HttpServletResponse response, HttpServletRequest request, @RequestBody AppChannelStatisticsRequest statisticsRequest) throws UnsupportedEncodingException {
         //获取后天用户登录id
@@ -248,5 +258,89 @@ public class AppChannelStatisticsController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+    }*/
+
+
+    @ApiOperation(value = "导出", notes = "导出")
+    @RequestMapping(value = "/export", method = RequestMethod.POST)
+    public void export(HttpServletResponse response, HttpServletRequest request, @RequestBody AppChannelStatisticsRequest statisticsRequest) throws UnsupportedEncodingException {
+        //获取后天用户登录id
+        AdminSystemVO adminSystemVO = getUser(request);
+        String userId = adminSystemVO.getId();
+        // 根据用户Id查询渠道账号管理
+        AdminUtmReadPermissionsVO permissionsVO = adminUtmReadPermissionsService.selectAdminUtmReadPermissions(userId);
+        if (permissionsVO != null) {
+            statisticsRequest.setUtmIds(permissionsVO.getUtmIds());
+        }
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "app渠道统计";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        // 渠道
+        String[] utmIds = new String[]{};
+        if (Validator.isNotNull(statisticsRequest.getUtmIds())) {
+            if (statisticsRequest.getUtmIds().contains(StringPool.COMMA)) {
+                utmIds = statisticsRequest.getUtmIds().split(StringPool.COMMA);
+                statisticsRequest.setUtmIdsSrch(utmIds);
+            } else {
+                utmIds = new String[]{statisticsRequest.getUtmIds()};
+                statisticsRequest.setUtmIdsSrch(utmIds);
+            }
+        }
+        AppChannelStatisticsResponse statisticsResponse = appChannelStatisticsService.exportList(statisticsRequest);
+        List<AppChannelStatisticsVO> resultList = statisticsResponse.getResultList();
+
+        Integer totalCount = resultList.size();
+
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("ChannelName", "渠道");
+        map.put("VisitCount", "访问数");
+        map.put("RegisterCount", "注册数");
+        map.put("RegisterAttrCount", "注册数(无主单)");
+        map.put("OpenAccountCount", "开户数");
+        map.put("OpenAccountAttrCount", "开户数(无主单)");
+        map.put("AccountNumberPc", "开户数(PC)");
+        map.put("AccountNumberIos", "开户数(iOS)");
+        map.put("AccountNumberAndroid", "开户数(Android)");
+        map.put("AccountNumberWechat", "开户数(微官网)");
+        map.put("InvestNumber", "投资人数");
+        map.put("InvestAttrNumber", "投资人数(无主单)");
+        map.put("TenderNumberPc", "投资人数(PC)");
+        map.put("TenderNumberIos", "投资人数(iOS)");
+        map.put("TenderNumberAndroid", "投资人数(Android)");
+        map.put("TenderNumberWechat", "投资人数(微官网)");
+        map.put("CumulativeCharge", "累计充值");
+        map.put("CumulativeAttrCharge", "累计充值(无主单)");
+        map.put("CumulativeInvest", "累计投资");
+        map.put("CumulativeAttrInvest", "累计投资(无主单)");
+        map.put("HztInvestSum", "汇直投投资金额");
+        map.put("HxfInvestSum", "汇消费投资金额");
+        map.put("HtlInvestSum", "汇天利投资金额");
+        map.put("HtjInvestSum", "汇添金投资金额");
+        map.put("RtbInvestSum", "汇金理财投资金额");
+        map.put("HzrInvestSum", "汇转让投资金额");
+
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        return mapAdapter;
     }
 }

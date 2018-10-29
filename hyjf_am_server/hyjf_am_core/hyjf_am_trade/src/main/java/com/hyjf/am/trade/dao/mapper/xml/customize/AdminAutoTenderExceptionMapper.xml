@@ -143,22 +143,22 @@
 		ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
 		<where>
 			<if test="debtPlanNid != null and debtPlanNid != ''">
-				AND hdp.plan_nid LIKE CONCAT(#{debtPlanNidSrch}, '%')
+				AND hdp.plan_nid LIKE CONCAT(#{debtPlanNid}, '%')
 			</if>
 			<if test="accedeOrderId != null and accedeOrderId != ''">
-				AND hdpa.accede_order_id LIKE CONCAT(#{accedeOrderIdSrch}, '%')
+				AND hdpa.accede_order_id LIKE CONCAT(#{accedeOrderId}, '%')
 			</if>
 			<if test="userName != null and userName != ''">
 				AND hdpa.user_name LIKE CONCAT(#{userNameSrch},'%')
 			</if>
 			<if test="refereeName != null and refereeName != ''">
-				AND hydui.username LIKE CONCAT(#{refereeNameSrch},'%')
+				AND hydui.username LIKE CONCAT(#{refereeName},'%')
 			</if>
 			<if test="orderStatus != null and orderStatus != ''">
 				AND hdpa.order_status <![CDATA[>=]]> #{orderStatus}
 			</if>
 			<if test="platform != null and platform != ''">
-				AND hdpa.client = #{platformSrch}
+				AND hdpa.client = #{platform}
 			</if>
 			<if test="searchStartDate != null and searchStartDate !='' ">
 				AND hdpa.create_time <![CDATA[>=]]> CONCAT(#{searchStartDate},' 00:00:00')
@@ -181,23 +181,23 @@
 		LEFT JOIN
 		ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
 		<where>
-			<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
-				AND hdp.plan_nid LIKE CONCAT( #{debtPlanNidSrch}, '%')
+			<if test="debtPlanNid != null and debtPlanNid != ''">
+				AND hdp.plan_nid LIKE CONCAT( #{debtPlanNid}, '%')
 			</if>
-			<if test="accedeOrderIdSrch != null and accedeOrderIdSrch != ''">
-				AND hdpa.accede_order_id LIKE CONCAT( #{accedeOrderIdSrch}, '%')
+			<if test="accedeOrderId != null and accedeOrderId != ''">
+				AND hdpa.accede_order_id LIKE CONCAT( #{accedeOrderId}, '%')
 			</if>
-			<if test="userNameSrch != null and userNameSrch != ''">
-				AND hdpa.user_name LIKE CONCAT(#{userNameSrch},'%')
+			<if test="userName != null and userName != ''">
+				AND hdpa.user_name LIKE CONCAT(#{userName},'%')
 			</if>
-			<if test="refereeNameSrch != null and refereeNameSrch != ''">
-				AND hydui.username LIKE CONCAT(#{refereeNameSrch},'%')
+			<if test="refereeName != null and refereeName != ''">
+				AND hydui.username LIKE CONCAT(#{refereeName},'%')
 			</if>
 			<if test="orderStatus != null and orderStatus != ''">
 				AND hdpa.order_status <![CDATA[>=]]> #{orderStatus}
 			</if>
-			<if test="platformSrch != null and platformSrch != ''">
-				AND hdpa.client = #{platformSrch}
+			<if test="platform != null and platform != ''">
+				AND hdpa.client = #{platform}
 			</if>
 			<if test="searchStartDate != null and searchStartDate !='' ">
 				AND hdpa.create_time <![CDATA[>=]]> CONCAT(#{searchStartDate},' 00:00:00')

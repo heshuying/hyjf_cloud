@@ -25,6 +25,8 @@ public class HjhPlanCapitalVO extends BaseVO implements Serializable {
 
     private Integer lockPeriod;
 
+    private String  lockPeriodView;
+
     private Integer isMonth;
 
     private BigDecimal reinvestAccount;
@@ -145,5 +147,13 @@ public class HjhPlanCapitalVO extends BaseVO implements Serializable {
 
     public void setDelFlg(Integer delFlg) {
         this.delFlg = delFlg;
+    }
+
+    public String getLockPeriodView() {
+        return lockPeriodView;
+    }
+
+    public void setLockPeriodView(String lockPeriodView) {
+        this.lockPeriodView = lockPeriodView;
     }
 }

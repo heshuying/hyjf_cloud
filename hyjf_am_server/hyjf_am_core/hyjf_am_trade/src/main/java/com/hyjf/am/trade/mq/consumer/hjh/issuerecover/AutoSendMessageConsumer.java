@@ -144,9 +144,8 @@ public class AutoSendMessageConsumer extends Consumer {
             } catch (Exception e) {
                 logger.error("自动录标异常！",e);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } finally {
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
+
         }
     }
 }

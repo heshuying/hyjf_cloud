@@ -13,10 +13,7 @@
 		SELECT
 			u.user_id,
 			u.username,
-			FROM_UNIXTIME(
-				u.reg_time,
-				'%Y-%m-%d %H:%i:%s'
-			) AS inviteTime,
+			date_format(u.reg_time, '%Y-%m-%d %H:%i:%s') AS inviteTime,
 			u.bank_open_account
 		FROM
 			ht_spreads_user su

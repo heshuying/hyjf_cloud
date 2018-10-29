@@ -3,19 +3,21 @@
  */
 package com.hyjf.cs.message.config;
 
+import com.hyjf.cs.message.converter.BigDecimalToDecimal128Converter;
+import com.hyjf.cs.message.converter.Decimal128ToBigDecimalConverter;
 import com.mongodb.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
-import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 import java.util.ArrayList;
@@ -26,107 +28,126 @@ import java.util.List;
  * @version MongoConfig.java, v0.1 2018年7月18日 下午5:22:58
  */
 @Configuration
-public class MongoConfig {
+public class MongoConfig extends AbstractMongoConfiguration {
 
-	@Value("${mongodb.hostports}")
-	private String hostports;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Value("${mongodb.username}")
-	private String username;
+    @Value("${mongodb.hostports}")
+    private String hostports;
 
-	@Value("${mongodb.password}")
-	private String password;
+    @Value("${mongodb.username}")
+    private String username;
 
-	@Value("${mongodb.authenticationDatabase}")
-	private String authenticationDatabase;
+    @Value("${mongodb.password}")
+    private String password;
 
-	@Value("${mongodb.database}")
-	private String database;
+    @Value("${mongodb.authenticationDatabase}")
+    private String authenticationDatabase;
 
-	@Value("${mongodb.minConnectionsPerHost}")
-	private Integer minConnectionsPerHost = 10;
+    @Value("${mongodb.database}")
+    private String database;
 
-	@Value("${mongodb.connectionsPerHost}")
-	private Integer connectionsPerHost = 100;
+    @Value("${mongodb.minConnectionsPerHost}")
+    private Integer minConnectionsPerHost = 10;
 
-	@Value("${mongodb.connectTimeout}")
-	private Integer connectTimeout;
+    @Value("${mongodb.connectionsPerHost}")
+    private Integer connectionsPerHost = 100;
 
-	@Value("${mongodb.maxWaitTime}")
-	private Integer maxWaitTime;
+    @Value("${mongodb.connectTimeout}")
+    private Integer connectTimeout;
 
-	@Value("${mongodb.socketTimeout}")
-	private Integer socketTimeout;
+    @Value("${mongodb.maxWaitTime}")
+    private Integer maxWaitTime;
 
-	@Autowired
-	private ApplicationContext appContext;
+    @Value("${mongodb.socketTimeout}")
+    private Integer socketTimeout;
 
-	// 覆盖默认的MongoDbFactory
-	@Bean
-	MongoDbFactory mongoDbFactory() {
-		// 客户端配置（连接数、副本集群验证）
-		MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
-		builder.connectionsPerHost(connectionsPerHost);
-		builder.minConnectionsPerHost(minConnectionsPerHost);
-		// builder.requiredReplicaSetName(replicaSet);
-		builder.connectTimeout(connectTimeout);
-		builder.maxWaitTime(maxWaitTime);
-		// builder.socketKeepAlive(socketKeepAlive)
-		builder.socketTimeout(socketTimeout);
-		builder.readPreference(ReadPreference.primaryPreferred());
+    @Override
+    @Bean
+    public MongoTemplate mongoTemplate() {
+        logger.info("mongoTemplate init ....");
+        return new MongoTemplate(this.dbFactory(), this.mappingMongoConverter());
+    }
 
-		MongoClientOptions mongoClientOptions = builder.build();
+    @Override
+    public MongoClient mongoClient() {
+        return new MongoClient(getHostPorts(), mongoCredential(), mongoClientOptions());
+    }
 
-		// MongoDB地址列表
-		List<ServerAddress> serverAddresses = getHostPorts();
+    @Override
+    protected String getDatabaseName() {
+        return database;
+    }
 
-		// 连接认证
-		MongoCredential mongoCredential = MongoCredential.createScramSha1Credential(username, authenticationDatabase,
-				password.toCharArray());
+    @Override
+    public MappingMongoConverter mappingMongoConverter() {
+        DefaultDbRefResolver dbRefResolver = new DefaultDbRefResolver(this.dbFactory());
+        MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, this.mongoMappingContext());
+        List<Object> list = new ArrayList<>();
+        //自定义的类型转换器
+        list.add(new BigDecimalToDecimal128Converter());
+        list.add(new Decimal128ToBigDecimalConverter());
+        converter.setCustomConversions(new MongoCustomConversions(list));
+        return converter;
+    }
 
-		// 创建客户端和Factory
-		MongoClient mongoClient = new MongoClient(serverAddresses, mongoCredential, mongoClientOptions);
-		MongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(mongoClient, database);
-		return mongoDbFactory;
-	}
+    @Override
+    public MongoMappingContext mongoMappingContext() {
+        MongoMappingContext mappingContext = new MongoMappingContext();
+        return mappingContext;
+    }
 
-	@Bean
-	public MongoTemplate mongoTemplate(@Qualifier("mongoDbFactory") MongoDbFactory mongoDbFactory) throws Exception {
-		// MongoDbFactory factory = mongoDbFactory();
+    /**
+     * 覆盖默认的MongoDbFactory
+     *
+     * @return
+     */
+    private MongoDbFactory dbFactory() {
+        MongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(mongoClient(), getDatabaseName());
+        return mongoDbFactory;
+    }
 
-		MongoMappingContext mongoMappingContext = new MongoMappingContext();
-		mongoMappingContext.setApplicationContext(appContext);
+    /**
+     * 获取形如host:port,host2:port2的复制集
+     *
+     * @return
+     */
+    private List<ServerAddress> getHostPorts() {
 
-		MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory),
-				mongoMappingContext);
-		converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        List<ServerAddress> serverAddresses = new ArrayList<>();
 
-		return new MongoTemplate(mongoDbFactory, converter);
-	}
-	
-	
-	/**
-	 * 获取形如host:port,host2:port2的复制集
-	 * @return
-	 */
-	private List<ServerAddress> getHostPorts() {
+        String[] hostAndports = hostports.split(",");
 
-		List<ServerAddress> serverAddresses = new ArrayList<ServerAddress>();
-		
-		String[] hostAndports =  hostports.split(",");
-		
-		for (String hostport : hostAndports) {
-			String[] hostAndport =  hostport.split(":");
-			String host = hostAndport[0];
+        for (String hostport : hostAndports) {
+            String[] hostAndport = hostport.split(":");
+            String host = hostAndport[0];
             Integer port = Integer.parseInt(hostAndport[1]);
-			
-			ServerAddress server = new ServerAddress(host,port);
-			serverAddresses.add(server);
-		}
-		
-		return serverAddresses;
-		
-	}
-	
 
+            ServerAddress server = new ServerAddress(host, port);
+            serverAddresses.add(server);
+        }
+        return serverAddresses;
+    }
+
+    private MongoClientOptions mongoClientOptions() {
+        // 客户端配置（连接数、副本集群验证）
+        MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
+        builder.connectionsPerHost(connectionsPerHost);
+        builder.minConnectionsPerHost(minConnectionsPerHost);
+        builder.connectTimeout(connectTimeout);
+        builder.maxWaitTime(maxWaitTime);
+        builder.socketTimeout(socketTimeout);
+        builder.readPreference(ReadPreference.primaryPreferred());
+        return builder.build();
+    }
+
+    /**
+     * 连接认证
+     *
+     * @return
+     */
+    private MongoCredential mongoCredential() {
+        return MongoCredential.createScramSha1Credential(username, authenticationDatabase,
+                password.toCharArray());
+    }
 }

@@ -82,7 +82,10 @@ public class FddHandle {
 	@Autowired
 	private MailProducer mailProducer;
 
+
+
 	/**
+	 *
 	 * 散标投资
 	 * 
 	 * @param bean
@@ -111,6 +114,7 @@ public class FddHandle {
 		}
 		// 借款详情
 		BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
+		BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrowNid);
 		if (borrow == null) {
 			throw new RuntimeException("根据标的编号检索借款详情失败,借款编号:[" + borrowNid + "].");
 		}
@@ -123,6 +127,7 @@ public class FddHandle {
 		String borrowIdCard = null;
 		// del by liuyang 20180326 借款人信息 借款主体为准
 		// modify by cwyang 20180320 散标情况下进行修改
+		logger.info("------------合同编号：" + tenderNid + ",开始获取客户编号，plannid = " + planNid);
 		if (StringUtils.isNotBlank(planNid)) {
 			// 借款人用户ID
 			Integer borrowUserId = borrow.getUserId();
@@ -154,7 +159,8 @@ public class FddHandle {
 				borrowerCustomerID = certificateAuthorityVO.getCustomerId();
 			}
 		} else {
-			if ("1".equals(borrow.getCompanyOrPersonal())) {
+			logger.info("------------合同编号：" + tenderNid + ",开始获取客户编号，borrowInfo.getCompanyOrPersonal() = " + borrowInfo.getCompanyOrPersonal());
+			if (borrowInfo.getCompanyOrPersonal() != null && borrowInfo.getCompanyOrPersonal() == 1) {
 				// 借款主体为企业借款
 				BorrowUserVO borrowUsers = this.amTradeClient.getBorrowUser(borrowNid);
 				if (borrowUsers == null) {
@@ -168,7 +174,7 @@ public class FddHandle {
 					throw new RuntimeException("企业借款获取CA认证客户编号失败,企业名称:[" + borrowUsers.getUsername() + "],社会统一信用代码:["
 							+ borrowUsers.getSocialCreditCode() + "].");
 				}
-			} else if ("2".equals(borrow.getCompanyOrPersonal())) {
+			} else if (borrowInfo.getCompanyOrPersonal() != null && borrowInfo.getCompanyOrPersonal() == 2) {
 				// 借款主体为个人借款
 				BorrowManinfoVO borrowManinfo = this.amTradeClient.getBorrowManinfo(borrowNid);
 				if (borrowManinfo == null) {
@@ -178,6 +184,7 @@ public class FddHandle {
 				borrowIdCard = borrowManinfo.getCardNo();
 				// 获取CA认证客户编号
 				borrowerCustomerID = this.getPersonCACustomerID(borrowManinfo);
+				logger.info("-----------，合同编号：" + tenderNid + ",获得借款人认证编号：" +borrowerCustomerID);
 				if (StringUtils.isBlank(borrowerCustomerID)) {
 					throw new RuntimeException("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:["
 							+ borrowManinfo.getCardNo() + "].");
@@ -246,6 +253,7 @@ public class FddHandle {
 		paramter.put("ecoverAccountInterest", tenderInterest.toString());// 借款人预期收益
 
 		bean.setBorrowerCustomerID(borrowerCustomerID);
+		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",获得借款人认证编号：" + bean.getBorrowerCustomerID());
 		bean.setContractName(FddGenerateContractConstant.CONTRACT_DOC_TITLE);
 
 		boolean isSign = this.isCreatContract(borrowTender.getNid());
@@ -392,6 +400,7 @@ public class FddHandle {
 					if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType) {// 居间服务协议
 						// 借款人签署
 						callBean.setCustomer_id(bean.getBorrowerCustomerID());
+						logger.info("-----------乙方签署，合同编号：" + bean.getOrdid() + ",乙方认证编号：" + bean.getBorrowerCustomerID());
 						callBean.setClient_role("4");
 						callBean.setSign_keyword(FddGenerateContractConstant.FDD_SIGN_KEYWORK_BORROWER);
 						callBean.setNotify_url(notifyUrl);
@@ -560,7 +569,7 @@ public class FddHandle {
                 bean.setTenderCompany(isTenderCompany);
                 bean.setCreditCompany(isCreditCompany);
                 try {
-					fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,JSON.toJSONBytes(bean)));
+					fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
 				} catch (MQException e) {
 					e.printStackTrace();
 					logger.error("法大大发送下载脱敏消息失败...", e);	
@@ -760,7 +769,8 @@ public class FddHandle {
 
             // 获取借款标的信息
             BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
-            if (borrow == null) {
+
+			if (borrow == null) {
                 //logger.info("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
                 throw new RuntimeException("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
             }

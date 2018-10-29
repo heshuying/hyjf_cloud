@@ -4,7 +4,9 @@
 package com.hyjf.admin.controller.productcenter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AllocationEngineViewRequest;
+import com.hyjf.admin.beans.request.HjhPlanCapitalRequestBean;
 import com.hyjf.admin.beans.vo.AdminHjhRegionVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -14,14 +16,19 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AllocationEngineService;
 import com.hyjf.admin.service.HjhLabelService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhAllocationEngineResponse;
+import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.response.admin.HjhRegionResponse;
 import com.hyjf.am.resquest.admin.AllocationEngineRuquest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
+import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.admin.HjhRegionVO;
+import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -35,6 +42,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,9 +50,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 /**
  * @author libin
  * @version AllocationEngineController.java, v0.1 2018年7月3日 上午11:46:27
@@ -240,7 +252,7 @@ public class AllocationEngineController extends BaseController{
 	 * @param request
 	 * @return 计划专区带条件导出
 	 */
-	@ApiOperation(value = "带条件导出EXCEL", notes = "带条件导出EXCEL")
+	/*@ApiOperation(value = "带条件导出EXCEL", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/regionexport")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
@@ -311,7 +323,87 @@ public class AllocationEngineController extends BaseController{
 		}
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+	}*/
+
+	/**
+	 * 计划专区带条件导出      已测试
+	 * @param request
+	 * @return 计划专区带条件导出
+	 */
+	@ApiOperation(value = "带条件导出EXCEL", notes = "带条件导出EXCEL")
+	@PostMapping(value = "/regionexport")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) throws Exception {
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "计划专区";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
+		// 带检索条件的列表查询(无分页)
+		List<HjhRegionVO> resultList = this.allocationEngineService.getHjhRegionListWithOutPage(form);
+
+
+		Integer totalCount = resultList.size();
+
+//		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		String sheetNameTmp = sheetName + "_第1页";
+		if (totalCount == 0) {
+
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}else {
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+		}
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}
+
+	private Map<String, String> buildMap() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("planNid", "计划编号");
+		map.put("planName", "计划名称");
+		map.put("configAddTime", "添加时间");
+		map.put("configStatus", "状态");
+
+		return map;
+	}
+	private Map<String, IValueFormatter> buildValueAdapter() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		IValueFormatter configAddTimeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Integer value = (Integer) object;
+				return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(value);
+			}
+		};
+
+		IValueFormatter configStatusAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Integer value = (Integer) object;
+				if (0 == value) {//数据库默认为0
+					return  "停用";
+				} else {
+					return "启用";
+				}
+			}
+		};
+
+
+		mapAdapter.put("configAddTime", configAddTimeAdapter);
+		mapAdapter.put("configStatus", configStatusAdapter);
+		return mapAdapter;
+	}
+
+
 	
 	                                     /*--------以下为计划专区下属 引擎配置画面各项机能----------*/
     /**
@@ -360,7 +452,7 @@ public class AllocationEngineController extends BaseController{
 	 * @param request
 	 * @return 计划专区带条件导出
 	 */
-	@ApiOperation(value = "带条件导出EXCEL", notes = "带条件导出EXCEL")
+	/*@ApiOperation(value = "带条件导出EXCEL", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/engineexport")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
@@ -439,8 +531,91 @@ public class AllocationEngineController extends BaseController{
 		}
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);	
+	}*/
+
+	/**
+	 * 计划配置画面带条件导出      已测试
+	 * @param request
+	 * @return 计划专区带条件导出
+	 */
+	@ApiOperation(value = "带条件导出EXCEL", notes = "带条件导出EXCEL")
+	@PostMapping(value = "/engineexport")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportPlanConfigAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) throws Exception {
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "计划配置";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
+		List<HjhAllocationEngineVO> resultList = null;
+		if(StringUtils.isNotEmpty(form.getPlanNidSrch())){
+			// 不带分页的查询
+			resultList = this.allocationEngineService.getAllocationList(form);
+		}
+
+		Integer totalCount = 0;
+		if(resultList != null){
+			totalCount = resultList.size();
+		}
+
+//		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+		Map<String, String> beanPropertyColumnMap = buildMapEnginee();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueEngineeAdapter();
+		String sheetNameTmp = sheetName + "_第1页";
+		if (totalCount == 0) {
+
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}else {
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+		}
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}
-	
+
+	private Map<String, String> buildMapEnginee() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("labelId", "标签编号");
+		map.put("labelName", "标签名称");
+		map.put("addTime", "添加时间");
+		map.put("labelStatus", "状态");
+		map.put("labelSort", "排序");
+
+		return map;
+	}
+	private Map<String, IValueFormatter> buildValueEngineeAdapter() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		IValueFormatter addTimeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Integer value = (Integer) object;
+				return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(value);
+			}
+		};
+
+		IValueFormatter labelStatusAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Integer value = (Integer) object;
+				if (0 == value) {//数据库默认为0
+					return  "停用";
+				} else {
+					return "启用";
+				}
+			}
+		};
+
+		mapAdapter.put("addTime", addTimeAdapter);
+		mapAdapter.put("labelStatus", labelStatusAdapter);
+		return mapAdapter;
+	}
+
     /**
      * 计划配置画面 停用/启用状态修改    已测试
      *

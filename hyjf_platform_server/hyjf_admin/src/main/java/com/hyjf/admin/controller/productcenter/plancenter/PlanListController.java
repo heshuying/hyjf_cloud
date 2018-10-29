@@ -4,6 +4,8 @@
 package com.hyjf.admin.controller.productcenter.plancenter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
+import com.hyjf.admin.beans.request.HjhPlanCapitalRequestBean;
 import com.hyjf.admin.beans.request.PlanListViewRequest;
 import com.hyjf.admin.beans.vo.AdminHjhPlanVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -15,9 +17,14 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PlanListService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
+import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.admin.PlanListRequest;
+import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -34,6 +41,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,9 +49,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 /**
  * @author libin
  * @version PlanListController.java, v0.1 2018年7月6日 上午9:08:43
@@ -472,7 +484,7 @@ public class PlanListController extends BaseController{
 	 * @param request
 	 * @param form
 	 */
-    @ApiOperation(value = "计划列表", notes = "计划列表导出")
+    /*@ApiOperation(value = "计划列表", notes = "计划列表导出")
     @PostMapping(value = "/export")
     @ResponseBody
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid PlanListViewRequest viewRequest) throws Exception {
@@ -618,5 +630,119 @@ public class PlanListController extends BaseController{
     	}
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
+
+	/**
+	 * 导出功能
+	 *
+	 * @param request
+	 * @param form
+	 */
+	@ApiOperation(value = "计划列表", notes = "计划列表导出")
+	@PostMapping(value = "/export")
+	@ResponseBody
+	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid PlanListViewRequest viewRequest) throws Exception {
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "资金计划";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+		// 初始化原子层请求实体
+		PlanListRequest form = new PlanListRequest();
+		BeanUtils.copyProperties(viewRequest, form);
+		// 不带分页的查询
+		List<HjhPlanVO> resultList = null;
+		HjhPlanResponse resultResponse = this.planListService.getHjhPlanListByParamWithoutPage(form);
+		resultList = resultResponse.getResultList();
+
+		Integer totalCount = resultList.size();
+
+		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		String sheetNameTmp = sheetName + "_第1页";
+		if (totalCount == 0) {
+
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}else {
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+		}
+
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+	}
+
+	private Map<String, String> buildMap() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("planNid", "计划编号");
+		map.put("planName", "计划名称");
+		map.put("borrowStyle", "还款方式");
+		map.put("lockPeriod", "锁定期");
+		map.put("expectApr", "预期年化收益率");
+		map.put("minInvestment", "最低加入金额（元）");
+		map.put("maxInvestment", "最高加入金额（元）");
+		map.put("investmentIncrement", "投资增量（元）");
+		map.put("minInvestCounts", "最小投资笔数");
+		map.put("availableInvestAccount", "开放额度（元）");
+		map.put("joinTotal", "累计加入金额（元）");
+		map.put("repayWaitAll", "待还总额（元）");
+		map.put("planInvestStatus", "计划状态");
+		map.put("addTime", "添加时间");
+
+		return map;
+	}
+	private Map<String, IValueFormatter> buildValueAdapter() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		IValueFormatter borrowStyleAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String value = (String) object;
+				if ("endday".equals(value)) {
+					return "按天计息，到期还本还息";
+				} else if ("end".equals(value)) {
+					return "按月计息，到期还本还息";
+				} else {
+					return value;
+				}
+			}
+		};
+
+		IValueFormatter expectAprAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				BigDecimal value = (BigDecimal) object;
+				return value.toString() + "%";
+			}
+		};
+
+		IValueFormatter planInvestStatusAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Integer value = (Integer) object;
+				if (value == 1) {
+					return "启用";
+				} else if (value == 2) {
+					return "关闭";
+				}else {
+					return "";
+				}
+			}
+		};
+
+		IValueFormatter addTimeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Integer value = (Integer) object;
+				return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(value);
+			}
+		};
+
+		mapAdapter.put("borrowStyle", borrowStyleAdapter);
+		mapAdapter.put("expectApr", expectAprAdapter);
+		mapAdapter.put("planInvestStatus", planInvestStatusAdapter);
+		mapAdapter.put("addTime", addTimeAdapter);
+		return mapAdapter;
+	}
 }

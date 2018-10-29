@@ -37,3 +37,4 @@ management:
       show-details: ALWAYS
 logging:
   file: turbine.log
+  file.max-size: 100MB

@@ -61,9 +61,7 @@ public class SubmissionsServiceImpl implements SubmissionsService {
         // 封装查询条件
         Map<String, Object> searchCon = new HashMap<String, Object>();
         // 用户名
-        String userName = StringUtils.isNotEmpty(form.getUserName()) ? form.getUserName() : null;
-        searchCon.put("userName", userName);
-        form.setUserName(userName);
+        searchCon.put("userId", form.getUserId());
         // 系统类别
         String sysType = form.getSysType();
         searchCon.put("sysType", sysType);
@@ -109,10 +107,7 @@ public class SubmissionsServiceImpl implements SubmissionsService {
         // 封装查询条件
         Map<String, Object> searchCon = new HashMap<String, Object>();
         // 用户名
-        String userName = StringUtils.isNotEmpty(form.getUserName()) ? form.getUserName() : null;
-
-        searchCon.put("userName", userName);
-        form.setUserName(userName);
+        searchCon.put("userId", form.getUserId());
         // 系统类别
         String sysType = form.getSysType();
         searchCon.put("sysType", sysType);

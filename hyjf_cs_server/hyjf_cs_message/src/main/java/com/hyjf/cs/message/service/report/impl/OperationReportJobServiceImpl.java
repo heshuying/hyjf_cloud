@@ -1,5 +1,6 @@
 package com.hyjf.cs.message.service.report.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.*;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.enums.DateEnum;
@@ -426,18 +427,20 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
             strCnName.append(year).append("年").append("第三季度");
             strEnName.append("The third Quarter Operation Report of ").append(year).toString();
         }
-
+        logger.info("季度报告进入=====");
         //业绩总览
         Map<String, BigDecimal> mapPerformanceSum = getPerformanceSum();
         if (CollectionUtils.isEmpty(mapPerformanceSum)) {
             throw new NullPointerException();
         }
+        logger.info("mapPerformanceSum====="+ JSONObject.toJSONString(mapPerformanceSum));
 
         //今年三个月成交金额
         List<OperationReportJobVO> listMonthDealMoney = getMonthDealMoney(0, 3);
         if (CollectionUtils.isEmpty(listMonthDealMoney)) {
             throw new NullPointerException();
         }
+        logger.info("listMonthDealMoney====="+ JSONObject.toJSONString(listMonthDealMoney));
         newQuarterDealMoney = listMonthDealMoney.get(2).getSumAccount();
         agoCurrentQuarterDealMoney = listMonthDealMoney.get(1).getSumAccount();
         beforeCurrentQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
@@ -460,6 +463,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         if (CollectionUtils.isEmpty(mapRevenueAndYield)) {
             throw new NullPointerException();
         }
+        logger.info("mapRevenueAndYield====="+ JSONObject.toJSONString(mapRevenueAndYield));
         operationProfit = mapRevenueAndYield.get("operationProfit");//本季度赚钱的收益
         lastYearProfit = mapRevenueAndYield.get("lastYearProfit");//去年本季度赚取收益
 
@@ -469,6 +473,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
         //渠道分析
         List<OperationReportInfoVO> listgetCompleteCount = getCompleteCount(3);
+        logger.info("listgetCompleteCount====="+ JSONObject.toJSONString(listgetCompleteCount));
         for (OperationReportInfoVO completeCountDto : listgetCompleteCount) {
             if ("pcDealNum".equals(completeCountDto.getTitle())) {
                 pcDealNum = completeCountDto.getDealSum();//pc成交笔数
@@ -494,7 +499,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
                 strEnName.toString(),
                 2, mapPerformanceSum.get("allAmount"), mapPerformanceSum.get("allProfit"), mapPerformanceSum.get("registNum"), sumCompleteCount,
                 quarterDealMoney, operationProfit, year);
-
+        logger.info("operationReportId=="+operationReportId);
         //保存 季度运营报告
         this.saveQuarterOperationReport(operationReportId, strCnName.toString(), strEnName.toString(), quarterType,
                 beforeCurrentQuarterDealMoney, agoCurrentQuarterDealMoney, newQuarterDealMoney,

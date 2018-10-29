@@ -929,7 +929,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		//判断密码错误次数是否超限
 		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>maxLoginErrorNum) {
 //			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
-			r.put("info","您的登录失败次数超限，请"+retTime+"之后重试!");
+			r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
 		}
 		String codeSalt = userVO.getSalt();
 		String passwordDb = userVO.getPassword();
@@ -950,6 +950,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				}
 			}
 			if (maxLoginErrorNum - value == 0){
+				logger.info("插入密码超限用户信息开始","-----userId:"+userVO.getUserId());
 				Integer	loginLockTime=LockedConfigManager.getInstance().getWebConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
 				// 同步输错密码超限锁定用户信息接口
 				String  requestUrl= "/lockeduser/insertLockedUser";
@@ -961,6 +962,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
 				lockedUserInfoVO.setFront(1);
 				String result = restTemplate.postForEntity(userService+requestUrl,lockedUserInfoVO,String.class).getBody();
+				r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
+				logger.info("插入密码超限用户信息结束","-----userId:"+userVO.getUserId());
 			}
 		}
 		return  r;

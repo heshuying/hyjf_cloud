@@ -650,8 +650,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 }
                 couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(),account.toString(), borrow.getBorrowPeriod());
             }
+            logger.info("获取投资成功结果  earnings:{} ",earnings.toString());
+            logger.info("获取投资成功结果  couponInterest:{} ",couponInterest.toString());
+            if (couponUser != null && couponUser.getCouponType() == 3) {
+                couponInterest = couponInterest.subtract(couponUser.getCouponQuota());
+                data.put("income", df.format(earnings.add(couponInterest)));
+            } else if (couponUser != null && couponUser.getCouponType() == 1) {
+                data.put("income", df.format(earnings.add(couponInterest)));
+            } else {
+                data.put("income", df.format(earnings.add(couponInterest)));
+            }
             //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
-            data.put("income", earnings.add(couponInterest));
             data.put("couponInterest", df.format(couponInterest));
 
         } else {
@@ -760,8 +769,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 } else {
                     couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), money, borrow.getBorrowPeriod());
                 }
-
+                logger.info("优惠券收益：：：{}",couponInterest);
                 couponUser.setCouponInterest(df.format(couponInterest));
+                // 加息券
                 if (couponUser.getCouponType() == 2) {
                     borrowApr = borrowApr.add(couponUser.getCouponQuota());
                 }
@@ -781,6 +791,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCapitalInterest(df.format(earnings));
             } else {
                 investInfo.setCapitalInterest(df.format(earnings.subtract(couponInterest)));
+                investInfo.setEarnings(df.format(earnings.add(couponInterest)));
             }
             investInfo.setCouponUser(couponUser);
 
