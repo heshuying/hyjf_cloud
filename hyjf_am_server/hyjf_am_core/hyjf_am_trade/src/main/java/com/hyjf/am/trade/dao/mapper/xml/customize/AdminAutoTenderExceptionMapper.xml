@@ -158,7 +158,7 @@
 				AND hdpa.order_status <![CDATA[>=]]> #{orderStatus}
 			</if>
 			<if test="platform != null and platform != ''">
-				AND hdpa.client = #{platformSrch}
+				AND hdpa.client = #{platform}
 			</if>
 			<if test="searchStartDate != null and searchStartDate !='' ">
 				AND hdpa.create_time <![CDATA[>=]]> CONCAT(#{searchStartDate},' 00:00:00')
@@ -196,8 +196,8 @@
 			<if test="orderStatus != null and orderStatus != ''">
 				AND hdpa.order_status <![CDATA[>=]]> #{orderStatus}
 			</if>
-			<if test="platformSrch != null and platformSrch != ''">
-				AND hdpa.client = #{platformSrch}
+			<if test="platform != null and platform != ''">
+				AND hdpa.client = #{platform}
 			</if>
 			<if test="searchStartDate != null and searchStartDate !='' ">
 				AND hdpa.create_time <![CDATA[>=]]> CONCAT(#{searchStartDate},' 00:00:00')
