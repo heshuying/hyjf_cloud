@@ -43,6 +43,12 @@ public class SystemConfig {
     @Value("${file.domain.url}")
     public String fileDomainUrl;
 
+    @Value("${file.physical.path}")
+    public String filePhysicalPath;
+
+    @Value("${file.upload.real.path}")
+    public String fileUploadRealPath;
+
     @Value("hyjf.notice.status")
     public String noticeStatus;
 
@@ -215,6 +221,9 @@ public class SystemConfig {
 
     @Value("${new.hjh.diary.ftl.name}")
     private String neweHhjDiaryFtlName;
+
+    @Value("${hyjf.wechat.invite.url}")
+    private String wechatInviteUrl;
 
     public String getNeweHhjDiaryFtlName() {
         return neweHhjDiaryFtlName;
@@ -732,5 +741,29 @@ public class SystemConfig {
 
     public void setHtjTenderContractFtlName(String htjTenderContractFtlName) {
         this.htjTenderContractFtlName = htjTenderContractFtlName;
+    }
+
+    public String getFilePhysicalPath() {
+        return filePhysicalPath;
+    }
+
+    public void setFilePhysicalPath(String filePhysicalPath) {
+        this.filePhysicalPath = filePhysicalPath;
+    }
+
+    public String getFileUploadRealPath() {
+        return fileUploadRealPath;
+    }
+
+    public void setFileUploadRealPath(String fileUploadRealPath) {
+        this.fileUploadRealPath = fileUploadRealPath;
+    }
+
+    public String getWechatInviteUrl() {
+        return wechatInviteUrl;
+    }
+
+    public void setWechatInviteUrl(String wechatInviteUrl) {
+        this.wechatInviteUrl = wechatInviteUrl;
     }
 }
