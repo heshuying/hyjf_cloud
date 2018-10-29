@@ -257,9 +257,8 @@ public class AutoIssueMessageConsumer extends Consumer {
             } catch (Exception e) {
                 logger.error("自动关联计划异常！",e);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } finally {
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
+            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         }
     }
 }
