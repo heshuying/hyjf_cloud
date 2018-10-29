@@ -65,7 +65,7 @@
         SELECT
         u.user_id
         FROM
-        ht_users u
+        ht_user u
         <where>
             <if test="sourceIdSrch != null and sourceIdSrch == 'ios'">
                 u.account_esb = 3
