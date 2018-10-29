@@ -111,6 +111,7 @@ public class FddHandle {
 		}
 		// 借款详情
 		BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
+		BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrowNid);
 		if (borrow == null) {
 			throw new RuntimeException("根据标的编号检索借款详情失败,借款编号:[" + borrowNid + "].");
 		}
@@ -154,7 +155,7 @@ public class FddHandle {
 				borrowerCustomerID = certificateAuthorityVO.getCustomerId();
 			}
 		} else {
-			if ("1".equals(borrow.getCompanyOrPersonal())) {
+			if ("1".equals(borrowInfo.getCompanyOrPersonal())) {
 				// 借款主体为企业借款
 				BorrowUserVO borrowUsers = this.amTradeClient.getBorrowUser(borrowNid);
 				if (borrowUsers == null) {
@@ -168,7 +169,7 @@ public class FddHandle {
 					throw new RuntimeException("企业借款获取CA认证客户编号失败,企业名称:[" + borrowUsers.getUsername() + "],社会统一信用代码:["
 							+ borrowUsers.getSocialCreditCode() + "].");
 				}
-			} else if ("2".equals(borrow.getCompanyOrPersonal())) {
+			} else if ("2".equals(borrowInfo.getCompanyOrPersonal())) {
 				// 借款主体为个人借款
 				BorrowManinfoVO borrowManinfo = this.amTradeClient.getBorrowManinfo(borrowNid);
 				if (borrowManinfo == null) {
@@ -760,7 +761,8 @@ public class FddHandle {
 
             // 获取借款标的信息
             BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
-            if (borrow == null) {
+
+			if (borrow == null) {
                 //logger.info("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
                 throw new RuntimeException("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
             }
