@@ -75,6 +75,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
 
             tenderAgreement = tenderAgreementsNid.get(0);
             if(tenderAgreement!=null){
+                logger.info("*******居间协议部分****");
                 if (recordList1.size() >0){
                     files = createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
                 }
@@ -85,6 +86,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
             }
         }
         if("13".equals(form.getProjectType())){
+            logger.info("form.getProjectType() = 13");
             // 融通宝静态打印 暂时注释掉
         }else{
             // 判断是否是汇添金专属标的导出
@@ -197,6 +199,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                         }
                         contents.put("userInvest", userInvest);
                     }else {
+                        logger.info("List<WebUserInvestListCustomizeVO> tzList = 0     ----11111");
                         return null;
                     }
                 } else{
@@ -212,6 +215,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                         }
                         contents.put("userInvest", userInvest);
                     }else {
+                        logger.info(" List<WebUserInvestListCustomizeVO> tzList.size() = 0     ----22222");
                         return null;
                     }
                 }
