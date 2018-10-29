@@ -32,3 +32,4 @@ management:
 
 logging:
   file: batch.log
+  file.max-size: 100MB

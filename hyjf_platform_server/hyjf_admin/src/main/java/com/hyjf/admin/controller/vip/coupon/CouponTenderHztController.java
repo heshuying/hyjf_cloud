@@ -69,12 +69,13 @@ public class CouponTenderHztController extends BaseController {
         couponTenderHztVo.setCouponReciveStatusList(list);
         Integer count = this.couponTenderHztService.countRecord(couponTenderRequest);
         lrs.setCount(count);
+        List<CouponTenderCustomize>  recordList = null;
         if (count != null && count > 0) {
             String investTotal=this.couponTenderHztService.queryInvestTotalHzt(couponTenderRequest);
-            List<CouponTenderCustomize>  recordList = this.couponTenderHztService.getRecordList(couponTenderRequest);
+            recordList = this.couponTenderHztService.getRecordList(couponTenderRequest);
             couponTenderHztVo.setInvestTotal(investTotal);
-            couponTenderHztVo.setRecordList(recordList);
         }
+        couponTenderHztVo.setRecordList(recordList==null?new ArrayList():recordList);
         lrs.setData(couponTenderHztVo);
         Page page = Page.initPage(couponTenderRequest.getCurrPage(), couponTenderRequest.getPageSize());
         page.setTotal(count);
@@ -243,6 +244,18 @@ public class CouponTenderHztController extends BaseController {
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList(),sumSmsCount);
         }else{
+            //实现多个参数判断返回问题
+            for(CouponTenderCustomize couponTenderCustomize : recordList.getResultList()){
+                if("1".equals(couponTenderCustomize.getCouponType())){
+                    couponTenderCustomize.setCouponQuota("￥"+couponTenderCustomize.getCouponQuota());
+                }
+                if("2".equals(couponTenderCustomize.getCouponType())){
+                    couponTenderCustomize.setCouponQuota(couponTenderCustomize.getCouponQuota()+"%");
+                }
+                if("3".equals(couponTenderCustomize.getCouponType())){
+                    couponTenderCustomize.setCouponQuota("￥"+couponTenderCustomize.getCouponQuota());
+                }
+            }
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList(),sumSmsCount);
         }
         for (int i = 1; i < sheetCount; i++) {

@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.finance.merchant.transfer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.response.TransferResponse;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -12,6 +13,8 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.admin.service.TransferService;
 import com.hyjf.admin.utils.ConvertUtils;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.response.trade.account.MerchantTransferResponse;
 import com.hyjf.am.resquest.admin.MerchantTransferListRequest;
@@ -30,6 +33,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,8 +43,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -231,9 +238,9 @@ public class TransferController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "导出")
-    @PostMapping("exportTransfer")
-    public void exportExcel(@RequestBody MerchantTransferListRequest form,HttpServletResponse response) throws Exception {
+    //@ApiOperation(value = "导出")
+    //@PostMapping("exportTransfer")
+    /*public void exportExcelBack(@RequestBody MerchantTransferListRequest form,HttpServletResponse response) throws Exception {
 
         // 表格sheet名称
         String sheetName = "平台子账户转账记录";
@@ -332,5 +339,146 @@ public class TransferController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+    }*/
+
+
+    /**
+     * 导出excel
+     *
+     * @param form
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "导出")
+    @PostMapping("exportTransfer")
+    public void exportExcelAccount(@RequestBody MerchantTransferListRequest form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // 封装查询条件
+        //设置默认查询时间
+        if(StringUtils.isEmpty(form.getTransferTimeStart())){
+            form.setTransferTimeStart(GetDate.getDate("yyyy-MM-dd"));
+        }
+        if(StringUtils.isEmpty(form.getTransferTimeEnd())){
+            form.setTransferTimeEnd(GetDate.getDate("yyyy-MM-dd"));
+        }
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "平台子账户转账记录";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        //form.setLimitFlg(true);
+        //请求第一页5000条
+        form.setPageSize(defaultRowMaxCount);
+        form.setCurrPage(1);
+        // 需要输出的结果列表
+        MerchantTransferResponse merchantTransferResponse = this.transferService.selectMerchantTransfer(form);
+        Integer totalCount = merchantTransferResponse.getRecordTotal();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, merchantTransferResponse.getResultList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            form.setPageSize(defaultRowMaxCount);
+            form.setCurrPage(i+1);
+            MerchantTransferResponse merchantTransferResponse2 = this.transferService.selectMerchantTransfer(form);
+            if (merchantTransferResponse2 != null && merchantTransferResponse2.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  merchantTransferResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("orderId", "订单号");
+        map.put("outAccountName", "转出子账户");
+        map.put("outAccountCode", "转出子账户代号");
+        map.put("inAccountName", "转入子账户");
+        map.put("inAccountCode", "转入子账户代号");
+        map.put("transferAmount", "转账金额");
+        map.put("remark", "备注");
+        map.put("transferType", "转账状态");
+        map.put("createUserName", "操作人");
+        map.put("transferStyle", "转账类型");
+        map.put("transferTime", "转账时间");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter transferAmountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal transferAmount = (BigDecimal) object;
+                return String.valueOf(transferAmount);
+            }
+        };
+
+        IValueFormatter transferTypeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer transferType = (Integer) object;
+                // 转账状态
+                String transferStatusStr = "";
+                Map<String, String> transferStatus = CacheUtil.getParamNameMap("MER_TRANS_STATUS");
+                Set<String> tranKey = transferStatus.keySet();
+                for (String key :tranKey){
+                    if(key.equals(String.valueOf(transferType))){
+                        transferStatusStr = transferStatus.get(key);
+                    }
+                }
+                return transferStatusStr;
+            }
+        };
+
+        IValueFormatter transferStyleAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer transferStyle = (Integer) object;
+                // 交易类型
+                String transferTypesStr = "";
+                Map<String, String> transferTypes = CacheUtil.getParamNameMap("MER_TRANS_TYPE");
+                Set<String> tranKey = transferTypes.keySet();
+                for (String key :tranKey){
+                    if(key.equals(String.valueOf(transferStyle))){
+                        transferTypesStr = transferTypes.get(key);
+                    }
+                }
+                return transferTypesStr;
+            }
+        };
+
+        IValueFormatter transferTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Date transferTime = (Date) object;
+                // 转账时间
+                String transferTimeStr = "";
+                if(transferTime == null){
+                    transferTimeStr = ("");
+                }else{
+                    transferTimeStr = (GetDate.date2Str(transferTime, GetDate.datetimeFormat));
+                }
+                return transferTimeStr;
+            }
+        };
+
+        mapAdapter.put("transferTime", transferTimeAdapter);
+        mapAdapter.put("transferAmount", transferAmountAdapter);
+        mapAdapter.put("transferType", transferTypeAdapter);
+        mapAdapter.put("transferStyle", transferStyleAdapter);
+        return mapAdapter;
     }
 }

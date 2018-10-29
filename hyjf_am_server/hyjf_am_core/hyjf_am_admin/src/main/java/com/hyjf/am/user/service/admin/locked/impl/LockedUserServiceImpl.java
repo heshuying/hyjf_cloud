@@ -4,6 +4,7 @@
 package com.hyjf.am.user.service.admin.locked.impl;
 
 import com.google.common.base.Preconditions;
+import com.hyjf.am.config.controller.admin.locked.LockedConfigManager;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.LockedUserInfoCustomizeMapper;
@@ -15,12 +16,16 @@ import com.hyjf.am.user.service.admin.locked.LockedUserService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.security.util.MD5;
+import com.hyjf.common.util.calculate.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,5 +102,72 @@ public class LockedUserServiceImpl implements LockedUserService {
 		logger.info(logInfo, user.getUsername(), result);
 
 		return result>0;
+	}
+
+	/**
+	 *@author koudeli
+	 * @param userName 用户名，手机号
+	 * @param loginPassword 登录密码
+	 * @return
+	 */
+	public Map<String, String> insertErrorPassword(String userName, String loginPassword){
+		Map<String, String> r=new HashMap<>();
+		UserExample userExample=new UserExample();
+		userExample.createCriteria().andUsernameEqualTo(userName);
+		List<User> users = userMapper.selectByExample(userExample);
+		if (users.size()<1){
+			return r;
+		}
+		//1.获取该用户密码错误次数
+		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + users.get(0).getUserId());
+		//2.获取用户允许输入的最大错误次数
+		Integer maxLoginErrorNum=LockedConfigManager.getInstance().getAdminConfig().getMaxLoginErrorNum();
+		//3.redis配置的超限有效时间
+		long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + users.get(0).getUserId());
+		//判断密码错误次数是否超限
+		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>maxLoginErrorNum) {
+//			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
+			r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
+		}
+		//查询到的密码
+		String passwordDb = users.get(0).getPassword();
+		// 页面传来的密码
+		String password = MD5.toMD5Code(loginPassword);
+		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
+		if (!password.equals(passwordDb)) {
+			long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ADMIN+ users.get(0).getUserId());//以用户手机号为key
+			for (int i=1;i<4;i++){
+				if (maxLoginErrorNum-value == i){
+//					CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_MAX,i);
+					r.put("info","登录失败,您的登录机会还剩"+i+"次!");
+				}
+			}
+			if (maxLoginErrorNum - value == 0){
+				Integer	loginLockTime=LockedConfigManager.getInstance().getAdminConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
+				// 同步输错密码超限锁定用户信息接口
+				String  requestUrl= "http://am-user/lockeduser/insertLockedUser";
+				LockedUserInfo lockedUserInfoVO=new LockedUserInfo();
+				lockedUserInfoVO.setUserid(users.get(0).getUserId());
+				lockedUserInfoVO.setUsername(users.get(0).getUsername());
+				lockedUserInfoVO.setMobile(users.get(0).getMobile());
+				lockedUserInfoVO.setLockTime(new Date());
+				lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
+				lockedUserInfoVO.setFront(1);
+				int insert=lockedUserInfoMapper.insert(lockedUserInfoVO);
+				r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
+			}
+		}
+		return  r;
+	}
+	/**@author koudeli
+	 * redis增加
+	 * @param key
+	 */
+	private long insertPassWordCount(String key) {
+		long retValue  = RedisUtils.incr(key);
+//		RedisUtils.expire(key,RedisUtils.getRemainMiao());//给key设置过期时间
+		Integer	loginErrorConfigManager=LockedConfigManager.getInstance().getAdminConfig().getLockLong();
+		RedisUtils.expire(key,loginErrorConfigManager*3600);//给key设置过期时间
+		return retValue;
 	}
 }

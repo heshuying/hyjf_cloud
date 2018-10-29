@@ -1,5 +1,6 @@
 package com.hyjf.common.util;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,9 +15,7 @@ import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -76,6 +75,16 @@ public class CommonUtils {
 		return colls;
 	}
 
+	/**
+	 * 如果为空就从collection中移除
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	public static void removeIfNullOrNullStr(Collection collection){
+		collection.removeAll(Collections.singleton(null));
+		collection.removeAll(Collections.singleton(""));
+	}
 	/**
 	 * 根据还款类型获取还款单位
 	 * 

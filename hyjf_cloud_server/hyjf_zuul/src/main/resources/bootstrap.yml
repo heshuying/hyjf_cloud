@@ -44,3 +44,4 @@ hystrix:
             timeoutInMilliseconds: 60000
 logging:
   file: zuul.log
+  file.max-size: 100MB

@@ -5,11 +5,11 @@ package com.hyjf.admin.controller.productcenter.plancenter;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AccedeListViewRequest;
 import com.hyjf.admin.beans.vo.AdminAccedeListCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
@@ -22,6 +22,8 @@ import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.service.PlanListService;
 import com.hyjf.admin.utils.PdfGenerator;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.resquest.admin.AccedeListRequest;
@@ -50,10 +52,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -194,7 +193,7 @@ public class AccedeListController extends BaseController{
 	 * @param modelAndView
 	 * @param form
 	 */
-    @ApiOperation(value = "汇计划加入明细列表", notes = "汇计划加入明细列表导出")
+    /*@ApiOperation(value = "汇计划加入明细列表", notes = "汇计划加入明细列表导出")
     @PostMapping(value = "/export")
     @ResponseBody
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) throws Exception {
@@ -204,7 +203,7 @@ public class AccedeListController extends BaseController{
 		java.math.BigDecimal hundred = new java.math.BigDecimal(100);
 		@SuppressWarnings("deprecation")
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-		/*String[] titles = new String[] { "序号","加入订单号", "计划编号","锁定期", "预定利率","用户名","投资人id","投资人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "投资人用户属性（投资时）","推荐人(投资时)", "推荐人ID（投资时）", "推荐人姓名（投资时）", "推荐人用户属性(投资时)", "分公司(投资时)", "部门(投资时)", "团队(投资时)", "加入金额", "已投资金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "计息时间", "加入时间" };*/
+		*//*String[] titles = new String[] { "序号","加入订单号", "计划编号","锁定期", "预定利率","用户名","投资人id","投资人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "投资人用户属性（投资时）","推荐人(投资时)", "推荐人ID（投资时）", "推荐人姓名（投资时）", "推荐人用户属性(投资时)", "分公司(投资时)", "部门(投资时)", "团队(投资时)", "加入金额", "已投资金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "计息时间", "加入时间" };*//*
 		String[] titles = new String[] { "序号","计划订单号", "计划编号",  "计划名称","锁定期", "预期年化收益率","用户名（投资人）","投资人id","投资人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "投资人用户属性（投资时）","推荐人(投资时)", "推荐人ID（投资时）", "推荐人姓名（投资时）", "推荐人用户属性(投资时)", "分公司(投资时)", "部门(投资时)", "团队(投资时)", "加入金额", 
 				"自动投标进度","可用余额(元) ", "冻结金额(元) ","公允价值(元) ","实际年化收益率","操作平台","订单状态","匹配期", "锁定时间", "加入时间" };
 		// 声明一个工作薄
@@ -455,7 +454,198 @@ public class AccedeListController extends BaseController{
 		}
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
+
+
+	/**
+	 * 导出功能     已测试
+	 */
+	@ApiOperation(value = "汇计划加入明细列表", notes = "汇计划加入明细列表导出")
+	@PostMapping(value = "/export")
+	@ResponseBody
+	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) throws Exception {
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "加入明细";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+		// 初始化原子层请求实体
+		AccedeListRequest form = new AccedeListRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
+		// 不带分页的查询
+		List<AccedeListCustomizeVO> resultList = this.accedeListService.getAccedeListByParamWithoutPage(form);
+		this.dataClean(resultList);
+
+		Integer totalCount = resultList.size();
+
+		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		String sheetNameTmp = sheetName + "_第1页";
+		if (totalCount == 0) {
+
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}else {
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+		}
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+	}
+
+	/**
+	 * 数据清洗
+	 * @param resultList
+	 * @return
+	 */
+	private List<AccedeListCustomizeVO> dataClean(List<AccedeListCustomizeVO> resultList) {
+		if (resultList == null) {
+			return Collections.emptyList();
+		}
+		java.math.BigDecimal num;
+		java.math.BigDecimal hundred = new java.math.BigDecimal(100);
+		for (AccedeListCustomizeVO record : resultList) {
+			if (record.getJalreadyInvest() == null && record.getjAccedeAccount() == null && record.getjAccedeAccount().equals(BigDecimal.ZERO)) {
+				record.setInvestScaleView("0%");
+			} else {
+				num = record.getJalreadyInvest().divide(record.getjAccedeAccount(), 2);
+				record.setInvestScaleView(num.multiply(hundred).toString().replace(".00", "") + "%");
+			}
+
+			if (StringUtils.isBlank(record.getAvailableInvestAccount())) {
+				record.setAvailableInvestAccount("0.0");
+			}
+
+			if (StringUtils.isBlank(record.getFrostAccount())) {
+				record.setFrostAccount("0.0");
+			}
+
+			if (StringUtils.isBlank(record.getFairValue())) {
+				record.setFairValue("0.0");
+			}
+
+			if (StringUtils.isBlank(record.getActualApr())) {
+				record.setActualApr(record.getActualApr() + "%");
+			}
+
+			if ("0".equals(record.getPlatform())) {
+				record.setPlatform("PC");
+			} else if ("1".equals(record.getPlatform())) {
+				record.setPlatform("微官网");
+			} else if ("2".equals(record.getPlatform())) {
+				record.setPlatform("android");
+			} else if ("3".equals(record.getPlatform())) {
+				record.setPlatform("ios");
+			}
+
+			if (0 == Integer.parseInt(record.getOrderStatus())) {
+				record.setOrderStatus("自动投标中");
+			} else if (2 == Integer.parseInt(record.getOrderStatus())) {
+				record.setOrderStatus("自动投标成功");
+			} else if (3 == Integer.parseInt(record.getOrderStatus())) {
+				record.setOrderStatus("锁定中");
+			} else if (5 == Integer.parseInt(record.getOrderStatus())) {
+				record.setOrderStatus("退出中");
+			} else if (7 == Integer.parseInt(record.getOrderStatus())) {
+				record.setOrderStatus("已退出");
+			} else if (99 == Integer.parseInt(record.getOrderStatus())) {
+				record.setOrderStatus("自动投资异常");
+			}
+
+			if (StringUtils.isNotEmpty(record.getMatchDates())) {
+				record.setMatchDates(record.getMatchDates() + "天");
+			}
+		}
+
+		return resultList;
+	}
+
+	private Map<String, String> buildMap() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("planOrderId", "计划订单号");
+		map.put("debtPlanNid", "计划编号");
+		map.put("debtPlanName", "计划名称");
+		map.put("debtLockPeriod", "锁定期");
+		map.put("expectApr", "预期年化收益率");
+		map.put("userName", "用户名（投资人）");
+		map.put("userId", "投资人id");
+		map.put("userAttribute", "投资人用户属性（当前)");
+		map.put("inviteUserRegionname2", "分公司(当前)");
+		map.put("inviteUserBranchname2", "部门(当前)");
+		map.put("inviteUserDepartmentname2", "团队(当前)");
+		map.put("refereeUserName", "推荐人（当前）");
+		map.put("refereeUserId", "推荐人ID（当前）");
+		map.put("refereeTrueName", "推荐人姓名（当前）");
+		map.put("recommendAttr", "推荐人用户属性（当前）");
+		map.put("inviteUserRegionname1", "分公司(当前)");
+		map.put("inviteUserBranchname1", "部门(当前)");
+		map.put("inviteUserDepartmentname1", "团队(当前)");
+		map.put("attribute", "投资人用户属性（投资时）");
+		map.put("inviteName", "推荐人(投资时)");
+		map.put("inviteUserId", "推荐人ID（投资时）");
+		map.put("inviteTrueName", "推荐人姓名（投资时）");
+		map.put("inviteUserAttributeName", "推荐人用户属性(投资时)");
+		map.put("inviteUserRegionname", "分公司(投资时)");
+		map.put("inviteUserBranchname", "部门(投资时)");
+		map.put("inviteUserDepartmentname", "团队(投资时)");
+		map.put("accedeAccount", "加入金额");
+		map.put("investScaleView", "自动投标进度");
+		map.put("availableInvestAccount", "可用余额(元) ");
+		map.put("frostAccount", "冻结金额(元) ");
+		map.put("fairValue", "公允价值(元) ");
+		map.put("actualApr", "实际年化收益率");
+		map.put("platform", "操作平台");
+		map.put("orderStatus", "订单状态");
+		map.put("matchDates", "匹配期");
+		map.put("countInterestTime", "锁定时间");
+		map.put("createTime", "加入时间");
+
+		return map;
+	}
+	private Map<String, IValueFormatter> buildValueAdapter() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		IValueFormatter userAttributeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String value = (String) object;
+				if ("0".equals(value)) {
+					return "无主单";
+				} else if ("1".equals(value)) {
+					return "有主单";
+				} else if ("2".equals(value)) {
+					return "线下员工";
+				} else if ("3".equals(value)) {
+					return "线上员工";
+				}else {
+					return value;
+				}
+			}
+		};
+
+		IValueFormatter attributeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String value = (String) object;
+				if ("0".equals(value)) {
+					return "无主单";
+				} else if ("1".equals(value)) {
+					return "有主单";
+				} else if ("2".equals(value)) {
+					return "线下员工";
+				} else if ("3".equals(value)) {
+					return "线上员工";
+				}else {
+					return value;
+				}
+			}
+		};
+
+		mapAdapter.put("userAttribute", userAttributeAdapter);
+		mapAdapter.put("attribute", attributeAdapter);
+		return mapAdapter;
+	}
     
 	/**
 	 * 跳转到协议发送入力页面(注意 ：微服务协议部分不参考旧代码，参考新的汇计划三期的代码)   已测试

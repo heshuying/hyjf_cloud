@@ -55,7 +55,7 @@
 				AND b.reverify_time <![CDATA[>=]]>  unix_timestamp(#{reAuthPassStartTime})
 			</if>
 			<if test="reAuthPassEndTime != null and reAuthPassEndTime != ''">
-				AND b.reverify_time <![CDATA[<=]]>  unix_timestamp(#{reAuthPassEndTime})
+				AND b.reverify_time <![CDATA[<=]]>  unix_timestamp(#{reAuthPassEndTime})+86399
 			</if>
 			<if test="instCodeSrch != null and instCodeSrch != ''">
 				AND bi.inst_code = #{instCodeSrch}

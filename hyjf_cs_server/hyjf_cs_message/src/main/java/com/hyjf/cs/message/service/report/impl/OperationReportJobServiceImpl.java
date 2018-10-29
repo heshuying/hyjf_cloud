@@ -1,5 +1,6 @@
 package com.hyjf.cs.message.service.report.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.*;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.enums.DateEnum;
@@ -118,25 +119,12 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
         // 投资人按照地域分布
         //查询出所有符合条件用户
-        List<OperationReportJobVO> cityUserIds = operationReportJobClient.getTenderCityGroupByList(getLastDay(cal));
-        //查询出所有符合条件用户的身份证号地址
-        List<OperationReportJobVO> cityBms = operationReportJobClient.getTenderCityGroupByUserIds(cityUserIds);
-        //分组
-        List<OperationReportJobVO> cityGroup = operationReportJobClient.getTenderCityGroupBy(cityBms);
-        for (int i=0;i<cityGroup.size();i++){
-            OperationReportJobVO city = cityGroup.get(i);
-            for (int j=0;j<cityBms.size();j++){
-                if(cityBms.get(j).getTitle().equals(city.getCitycode())){
-                    city.setCount(cityBms.get(j).getCount());
-                }
-            }
-        }
+        List<OperationReportJobVO> cityGroup = operationReportJobClient.getTenderCityGroupByList(getLastDay(cal));
         Map<Integer, String> cityMap = cityGrouptoMap(cityGroup);
         oegroup.setInvestorRegionMap(cityMap);
 
         // 投资人按照性别分布
-        List<OperationReportJobVO> userIds = operationReportJobClient.getTenderSexGroupByList(getLastDay(cal));
-        List<OperationReportJobVO> sexGroup = operationReportJobClient.getTenderSexGroupBy(getLastDay(cal),userIds);
+        List<OperationReportJobVO> sexGroup = operationReportJobClient.getTenderSexGroupByList(getLastDay(cal));
         Map<Integer, Integer> sexMap = sexGrouptoMap(sexGroup);
         oegroup.setInvestorSexMap(sexMap);
 
@@ -439,21 +427,34 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
             strCnName.append(year).append("年").append("第三季度");
             strEnName.append("The third Quarter Operation Report of ").append(year).toString();
         }
-
+        logger.info("季度报告进入=====");
         //业绩总览
         Map<String, BigDecimal> mapPerformanceSum = getPerformanceSum();
         if (CollectionUtils.isEmpty(mapPerformanceSum)) {
             throw new NullPointerException();
         }
+        logger.info("mapPerformanceSum====="+ JSONObject.toJSONString(mapPerformanceSum));
 
         //今年三个月成交金额
         List<OperationReportJobVO> listMonthDealMoney = getMonthDealMoney(0, 3);
         if (CollectionUtils.isEmpty(listMonthDealMoney)) {
             throw new NullPointerException();
         }
-        newQuarterDealMoney = listMonthDealMoney.get(2).getSumAccount();
-        agoCurrentQuarterDealMoney = listMonthDealMoney.get(1).getSumAccount();
-        beforeCurrentQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+        logger.info("listMonthDealMoney====="+ JSONObject.toJSONString(listMonthDealMoney));
+        //避免数据库数据不够出现问题
+        if(listMonthDealMoney.size()==3){
+            newQuarterDealMoney = listMonthDealMoney.get(2).getSumAccount();
+            agoCurrentQuarterDealMoney = listMonthDealMoney.get(1).getSumAccount();
+            beforeCurrentQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+        }else if(listMonthDealMoney.size()==2){
+            newQuarterDealMoney = listMonthDealMoney.get(1).getSumAccount();
+            agoCurrentQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+            beforeCurrentQuarterDealMoney = new BigDecimal(0);
+        }else if(listMonthDealMoney.size()==1){
+            newQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+            agoCurrentQuarterDealMoney = new BigDecimal(0);
+            beforeCurrentQuarterDealMoney = new BigDecimal(0);
+        }
         quarterDealMoney = newQuarterDealMoney.add(agoCurrentQuarterDealMoney).add(beforeCurrentQuarterDealMoney);
 
         //去年三个月成交金额
@@ -473,6 +474,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         if (CollectionUtils.isEmpty(mapRevenueAndYield)) {
             throw new NullPointerException();
         }
+        logger.info("mapRevenueAndYield====="+ JSONObject.toJSONString(mapRevenueAndYield));
         operationProfit = mapRevenueAndYield.get("operationProfit");//本季度赚钱的收益
         lastYearProfit = mapRevenueAndYield.get("lastYearProfit");//去年本季度赚取收益
 
@@ -482,6 +484,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
         //渠道分析
         List<OperationReportInfoVO> listgetCompleteCount = getCompleteCount(3);
+        logger.info("listgetCompleteCount====="+ JSONObject.toJSONString(listgetCompleteCount));
         for (OperationReportInfoVO completeCountDto : listgetCompleteCount) {
             if ("pcDealNum".equals(completeCountDto.getTitle())) {
                 pcDealNum = completeCountDto.getDealSum();//pc成交笔数
@@ -507,7 +510,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
                 strEnName.toString(),
                 2, mapPerformanceSum.get("allAmount"), mapPerformanceSum.get("allProfit"), mapPerformanceSum.get("registNum"), sumCompleteCount,
                 quarterDealMoney, operationProfit, year);
-
+        logger.info("operationReportId=="+operationReportId);
         //保存 季度运营报告
         this.saveQuarterOperationReport(operationReportId, strCnName.toString(), strEnName.toString(), quarterType,
                 beforeCurrentQuarterDealMoney, agoCurrentQuarterDealMoney, newQuarterDealMoney,

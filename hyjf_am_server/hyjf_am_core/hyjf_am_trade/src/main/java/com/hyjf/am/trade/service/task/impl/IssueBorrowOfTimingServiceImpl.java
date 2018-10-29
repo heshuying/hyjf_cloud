@@ -192,8 +192,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		// 当前时间
 		int nowTime = GetDate.getNowTime10();
 
-		//董泽杉要求加redis  add by yagnchangwei 2018-10-15
-		RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
+
 		// DB验证
 		// 有投资金额发生异常
 		BigDecimal zero = new BigDecimal("0");
@@ -216,9 +215,9 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean flag = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if (flag) {
-			// 可投金额写入redis
-			RedisUtils.set(borrow.getBorrowNid(), borrow.getBorrowAccountWait().toString());
 
+			//董泽杉要求加redis  add by yagnchangwei 2018-10-15
+			RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
 			logger.info("发标成功短信发送....");
 			// 发送发标短信
 			this.AfterIssueBorrowSuccessSendSms(borrow.getBorrowNid(), "【汇盈金服】", CustomConstants.PARAM_TPL_DSFB);

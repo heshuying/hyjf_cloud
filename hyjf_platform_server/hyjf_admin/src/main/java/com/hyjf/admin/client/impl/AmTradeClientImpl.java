@@ -33,7 +33,6 @@ import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -3376,10 +3375,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BankOpenAccountVO getBankOpenAccount(Integer userId) {
-        BankOpenAccountResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
+        if(userId != null){
+            BankOpenAccountResponse response = restTemplate
+                    .getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
+            if (response != null) {
+                return response.getResult();
+            }
         }
         return null;
     }
@@ -3400,6 +3401,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    @Override
+    public Integer queryBankAleveCount(BankAleveRequest request) {
+        IntegerResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/bankaleve/selectBankAleveInfoCount", request, IntegerResponse.class).getBody();
+        if (response != null) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
     /**
      * 根据筛选条件查询银行账务明细list
      *
@@ -3414,6 +3425,16 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultList();
         }
         return null;
+    }
+
+    @Override
+    public Integer queryBankEveCount(BankEveRequest request) {
+        IntegerResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/bankeve/selectBankEveInfoCount/", request, IntegerResponse.class).getBody();
+        if (response != null) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     @Override
