@@ -18,7 +18,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +41,8 @@ public class CouponCheckController extends BaseController {
     private static final String PERMISSIONS = "couponuser";
     @Autowired
     CouponCheckService couponCheckService;
+    @Value("${file.domain.url}")
+    String FileDomainUrl;
 
     @ApiOperation(value = "初始化页面", notes = "初始化页面")
     @PostMapping("/couponInit")
@@ -93,8 +98,10 @@ public class CouponCheckController extends BaseController {
 
     @ApiOperation(value = "下载文件", notes = "下载文件")
     @GetMapping("/downloadAction/{id}")
-    public void downloadFile(HttpServletResponse response, @PathVariable String id) {
-        couponCheckService.downloadFile(id, response);
+    public ModelAndView downloadFile(HttpServletResponse response, @PathVariable String id) {
+        String fileP = couponCheckService.downloadFile(id, response);
+        ModelAndView modelAndView = new ModelAndView(new RedirectView(FileDomainUrl + fileP));
+        return modelAndView;
     }
 
     @ApiOperation(value = "审核优惠券", notes = "审核优惠券")
