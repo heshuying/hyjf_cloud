@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -27,10 +28,12 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.BorrowLoanRepayProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.repay.RepayManageService;
 import com.hyjf.cs.trade.vo.BatchRepayPageRequestVO;
 import com.hyjf.cs.trade.vo.RepayDetailRequestVO;
@@ -87,6 +90,10 @@ public class RepayManageController extends BaseTradeController {
     RepayManageService repayManageService;
     @Autowired
     BorrowLoanRepayProducer borrowLoanRepayProducer;
+    @Autowired
+    AmUserClient amUserClient;
+    @Autowired
+    private AuthService authService;
 
     /**
      * 用户还款页面统计数据查询
@@ -116,7 +123,13 @@ public class RepayManageController extends BaseTradeController {
 
         resultMap.put("roleId", userVO.getRoleId());
         resultMap.put("userId", userVO.getUserId());
-
+        resultMap.put("repayAuthOn","0");
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+        resultMap.put("repayAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoRepayStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
         result.setData(resultMap);
         return result;
     }
@@ -359,11 +372,16 @@ public class RepayManageController extends BaseTradeController {
             result.setData(Collections.emptyMap());
             return result;
         }
-        // TODO 合规四期服务费授权
         resultMap.put("isAllRepay", isAllRepay);
-        resultMap.put("paymentAuthStatus", "");
-        resultMap.put("repayAuthStatus", "");
+        resultMap.put("repayAuthOn","0");
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+        resultMap.put("repayAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoRepayStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
         resultMap.put("repayProject", detaiResult);
+        resultMap.put("roleId", userVO.getRoleId());
         result.setData(resultMap);
 
         return result;
@@ -518,7 +536,11 @@ public class RepayManageController extends BaseTradeController {
 //        }
 
         resultMap.put("repayAuthStatus","");
-        // TODO 合规四期缴费授权
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
         webResult.setData(resultMap);
         return webResult;
     }
@@ -559,6 +581,14 @@ public class RepayManageController extends BaseTradeController {
         if(isTime){
             msg = "996";
             logger.info("==============垫付机构:" + userVO.getUserId() + "校验处->批量还款失败,还款区间大于28天!");
+            webResult.setData(msg);
+            return webResult;
+        }
+        // 服务费授权和还款授权校验
+        boolean isPaymentAuth = this.authService.checkPaymentAuthStatus(userId);
+        if (!isPaymentAuth) {
+            msg = "996";
+            logger.info("==============垫付机构:" + userVO.getUserId() + "校验处->批量还款失败,没缴费授权!");
             webResult.setData(msg);
             return webResult;
         }

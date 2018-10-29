@@ -245,6 +245,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                 && "1".equals(bean.getStatus())) {
             user.setIsSetPassword(1);
         }
+        user.setRoleId(bean.getIdentity());
         RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
 
         // 查询银行卡绑定信息
