@@ -5,6 +5,7 @@ import com.hyjf.am.config.dao.model.auto.Version;
 import com.hyjf.am.config.dao.model.auto.VersionExample;
 import com.hyjf.am.config.dao.model.customize.VersionConfigBean;
 import com.hyjf.am.config.service.AppVersionService;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +109,7 @@ public class AppVersionServiceImpl implements AppVersionService {
      */
     @Override
     public void deleteRecord(List<Integer> ids) {
+        CommonUtils.removeIfNullOrNullStr(ids);
         VersionExample example = new VersionExample();
         VersionExample.Criteria cra = example.createCriteria();
         cra.andIdIn(ids);

@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class PdfGenerator {
 
-	Logger logger = LoggerFactory.getLogger(PdfGenerator.class);
+	private  static Logger logger = LoggerFactory.getLogger(PdfGenerator.class);
 	private static SystemConfig systemConfig = SpringUtils.getBean(SystemConfig.class);
 
 	/**
@@ -40,39 +40,39 @@ public class PdfGenerator {
 	 * @throws Exception
 	 */
 	public static void generatePdf(HttpServletRequest request, HttpServletResponse response, String fileName, String fileType, Map<String, Object> variables) throws Exception {
-		String ftlPath = systemConfig.getContractFtlPath();//PropUtils.getSystem(CustomConstants.CONTRACT_FTL_PATH);
+		String ftlPath = systemConfig.getContractFtlPath();
 		String ftlName = "";
 		if (fileType.equals(CustomConstants.CREDIT_CONTRACT)) {
-			ftlName = systemConfig.getCreditContractFtlName();//PropUtils.getSystem(CustomConstants.CREDIT_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getCreditContractFtlName();
 		} else if (fileType.equals(CustomConstants.HJH_CREDIT_CONTRACT)) {
-				ftlName = systemConfig.getCreditHjhContractFtlName();//PropUtils.getSystem(CustomConstants.HJH_CREDIT_CONTRACT_FTL_NAME);
+				ftlName = systemConfig.getCreditHjhContractFtlName();
 		} else if (fileType.equals(CustomConstants.PLAN_CREDIT_CONTRACT)) {
-			ftlName = systemConfig.getPlanCreditContractFtlName();//PropUtils.getSystem(CustomConstants.PLAN_CREDIT_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getPlanCreditContractFtlName();
 		} else if (fileType.equals(CustomConstants.TENDER_CONTRACT)) {
-			ftlName = systemConfig.getTenderContractFtlName();//PropUtils.getSystem(CustomConstants.TENDER_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getTenderContractFtlName();
 		} else if (fileType.equals(CustomConstants.BORROWER_CONTRACT)) {
-			ftlName = systemConfig.getBorrowContractFtlName();//PropUtils.getSystem(CustomConstants.BORROWER_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getBorrowContractFtlName();
 		} else if (fileType.equals(CustomConstants.BORROWER_CONTRACT_HXF)) {
-			ftlName = systemConfig.getBorrowHXFContractFtlName();//PropUtils.getSystem(CustomConstants.BORROWER_HXF_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getBorrowHXFContractFtlName();
 		} else if (fileType.equals(CustomConstants.HTJ_TENDER_CONTRACT)) {
-			ftlName = systemConfig.getHtjTenderContractFtlName();//PropUtils.getSystem(CustomConstants.HTJ_TENDER_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getHtjTenderContractFtlName();
 		} else if (fileType.equals(CustomConstants.HTJ_INVEST_CONTRACT)) {
-			ftlName = systemConfig.getHtjInvestContractFtlName();//PropUtils.getSystem(CustomConstants.HTJ_INVEST_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getHtjInvestContractFtlName();
 		} else if (fileType.equals(CustomConstants.RTB_TENDER_CONTRACT)) {
-			ftlName = systemConfig.getRtbContractFtlName();//PropUtils.getSystem(CustomConstants.RTB_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getRtbContractFtlName();
 		} else if (fileType.equals(CustomConstants.RTB_TENDER_CONTRACT_ZSC)) {
-			ftlName = systemConfig.getRtbzscContractFtlName();//PropUtils.getSystem(CustomConstants.RTB_CONTRACT_ZSC_FTL_NAME);
+			ftlName = systemConfig.getRtbzscContractFtlName();
 		} else if (fileType.equals(CustomConstants.NEW_HJH_INVEST_CONTRACT)) {
-            ftlName = systemConfig.getNewHjhInvestContractFtlName();//PropUtils.getSystem(CustomConstants.NEW_HJH_INVEST_CONTRACT_FTL_NAME);
+            ftlName = systemConfig.getNewHjhInvestContractFtlName();
         } else if (fileType.equals(CustomConstants.NEW_TENDER_CONTRACT)) {
-            ftlName = systemConfig.getTenderNewContractFtlName();//PropUtils.getSystem(CustomConstants.NEW_TENDER_CONTRACT_FTL_NAME);
+            ftlName = systemConfig.getTenderNewContractFtlName();
         } else if (fileType.equals(CustomConstants.NEW_DIARY_CONTRACT)) {
-            ftlName = systemConfig.getNeweHhjDiaryFtlName();//PropUtils.getSystem(CustomConstants.NEW_HJH_DIARY_FTL_NAME);
+            ftlName = systemConfig.getNeweHhjDiaryFtlName();
         }
 
 
 
-		String fontPath = systemConfig.getHyjfContractFont();//PropUtils.getSystem(CustomConstants.CONTRACT_FONT_PATH);
+		String fontPath = systemConfig.getHyjfContractFont();
 		OutputStream outputStream = null;
 		try {
 			File fileDir = new File(systemConfig.getHyjfMakePdfPath() + "/sealpdf/");
@@ -117,6 +117,7 @@ public class PdfGenerator {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("****协议生成异常2***: ",e);
 		} finally {
 			if (outputStream != null) {
 				try {
@@ -205,6 +206,7 @@ public class PdfGenerator {
 			FileUtil.getServletFile(request, response, pdfUrl.substring(0, pdfUrl.length() - 1), fileName);
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("****协议生成异常***: ",e);
 
 		}
 		return null;
@@ -390,27 +392,27 @@ public class PdfGenerator {
 	 * @throws Exception
 	 */
 	public static File generatePdfFile(HttpServletRequest request, HttpServletResponse response, String fileName, String fileType, Map<String, Object> variables) throws Exception {
-		String ftlPath = systemConfig.getContractFtlPath();//PropUtils.getSystem(CustomConstants.CONTRACT_FTL_PATH);
+		String ftlPath = systemConfig.getContractFtlPath();
 		String ftlName = "";
 		if (fileType.equals(CustomConstants.CREDIT_CONTRACT)) {
-			ftlName = systemConfig.getCreditContractFtlName();//PropUtils.getSystem(CustomConstants.CREDIT_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getCreditContractFtlName();
 		} else if (fileType.equals(CustomConstants.TENDER_CONTRACT)) {
-			ftlName = systemConfig.getTenderContractFtlName();//PropUtils.getSystem(CustomConstants.TENDER_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getTenderContractFtlName();
 		} else if (fileType.equals(CustomConstants.BORROWER_CONTRACT)) {
-			ftlName = systemConfig.getBorrowContractFtlName();//PropUtils.getSystem(CustomConstants.BORROWER_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getBorrowContractFtlName();
 		} else if (fileType.equals(CustomConstants.BORROWER_CONTRACT_HXF)) {
-			ftlName = systemConfig.getBorrowHXFContractFtlName();//PropUtils.getSystem(CustomConstants.BORROWER_HXF_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getBorrowHXFContractFtlName();
 		} else if(fileType.equals(CustomConstants.CREDIT_CONTRACT)){
-			ftlName = systemConfig.getCreditContractFtlName();//PropUtils.getSystem(CustomConstants.CREDIT_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getCreditContractFtlName();
 		}//散标居间服务协议
         else if (fileType.equals(CustomConstants.NEW_TENDER_CONTRACT_FTL_NAME)) {
-            ftlName = systemConfig.getTenderNewContractFtlName();//PropUtils.getSystem(CustomConstants.NEW_TENDER_CONTRACT_FTL_NAME);
+            ftlName = systemConfig.getTenderNewContractFtlName();
         }
         //汇计划债转协议
         else if (fileType.equals(CustomConstants.HJH_CREDIT_CONTRACT)) {
-			ftlName = systemConfig.getCreditHjhContractFtlName();///.getSystem(CustomConstants.HJH_CREDIT_CONTRACT_FTL_NAME);
+			ftlName = systemConfig.getCreditHjhContractFtlName();
         }
-		String fontPath = systemConfig.getHyjfContractFont();//PropUtils.getSystem(CustomConstants.CONTRACT_FONT_PATH);
+		String fontPath = systemConfig.getHyjfContractFont();
 		OutputStream outputStream = null;
 		File nfile = null;
 		try {

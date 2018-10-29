@@ -127,7 +127,7 @@ public class LockedUserServiceImpl implements LockedUserService {
 		//判断密码错误次数是否超限
 		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>maxLoginErrorNum) {
 //			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
-			r.put("info","您的登录失败次数超限，请"+retTime+"之后重试!");
+			r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
 		}
 		//查询到的密码
 		String passwordDb = users.get(0).getPassword();
@@ -154,6 +154,7 @@ public class LockedUserServiceImpl implements LockedUserService {
 				lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
 				lockedUserInfoVO.setFront(1);
 				int insert=lockedUserInfoMapper.insert(lockedUserInfoVO);
+				r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
 			}
 		}
 		return  r;

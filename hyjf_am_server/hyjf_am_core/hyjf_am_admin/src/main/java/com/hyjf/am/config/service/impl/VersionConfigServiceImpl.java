@@ -6,6 +6,7 @@ import com.hyjf.am.config.dao.model.auto.VersionExample;
 import com.hyjf.am.config.service.VersionConfigService;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
 import com.hyjf.am.vo.admin.VersionVO;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +114,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      */
     @Override
     public void deleteVersionConfig( List<Integer> id) {
+        CommonUtils.removeIfNullOrNullStr(id);
         VersionExample example = new VersionExample();
         VersionExample.Criteria cra = example.createCriteria();
         cra.andIdIn(id);

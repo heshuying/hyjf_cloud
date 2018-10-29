@@ -41,3 +41,4 @@ management:
 
 logging:
   file: config.log
+  file.max-size: 100MB
