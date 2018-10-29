@@ -428,12 +428,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		}
 
 		bean.setRetUrl(authBean.getRetUrl());
-		if(authBean.getRetUrl().indexOf("&isSuccess=")!=-1){
-			authBean.getRetUrl().replace("&isSuccess=", "&isSuccess=1");
-		}else{
-			bean.setSuccessfulUrl(authBean.getRetUrl()+"&isSuccess=1");
-		}
-
+		bean.setSuccessfulUrl(authBean.getSuccessUrl());
 		bean.setNotifyUrl(authBean.getNotifyUrl());
 		bean.setForgotPwdUrl(authBean.getForgotPwdUrl());
 

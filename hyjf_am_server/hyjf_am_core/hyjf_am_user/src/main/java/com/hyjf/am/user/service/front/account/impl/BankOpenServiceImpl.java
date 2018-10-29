@@ -109,9 +109,9 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             openAccountLog = bankOpenAccountLogs.get(0);
         }
         trueName = openAccountLog.getName();
-        idNo = openAccountLog.getIdNo();
-        mobile = openAccountLog.getMobile();
-
+        if(mobile==null|| "".equals(mobile)){
+            mobile = openAccountLog.getMobile();
+        }
         BankOpenAccountLogExample accountLogExample = new BankOpenAccountLogExample();
         accountLogExample.createCriteria().andUserIdEqualTo(userId);
         boolean deleteLogFlag = this.bankOpenAccountLogMapper.deleteByExample(accountLogExample) > 0 ? true : false;
