@@ -650,6 +650,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 }
                 couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(),account.toString(), borrow.getBorrowPeriod());
             }
+            logger.info("获取投资成功结果  earnings:{} ",earnings.toString());
+            logger.info("获取投资成功结果  couponInterest:{} ",couponInterest.toString());
             if (couponUser != null && couponUser.getCouponType() == 3) {
                 data.put("income", df.format(earnings.add(couponUser.getCouponQuota()).subtract(couponInterest)));
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
