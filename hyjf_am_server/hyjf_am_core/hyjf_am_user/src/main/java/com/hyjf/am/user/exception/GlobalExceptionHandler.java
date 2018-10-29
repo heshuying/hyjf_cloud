@@ -23,6 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Response<BaseVO> defaultErrorHandler(HttpServletRequest req, Exception e) {
+        logger.error("请求路径:[{}]",req.getRequestURI());
         logger.error("system error", e);
         Response<BaseVO> response = new Response<BaseVO>();
         response.setRtn(Response.ERROR);
@@ -33,6 +34,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = ReturnMessageException.class)
     @ResponseBody
     public Response<BaseVO> defaultReturnErrorHandler(HttpServletRequest req, ReturnMessageException e) {
+        logger.error("请求路径:[{}]",req.getRequestURI());
         Response<BaseVO> response = new Response<BaseVO>();
         response.setRtn(e.getError().getCode());
         response.setMessage(e.getError().getMsg());
