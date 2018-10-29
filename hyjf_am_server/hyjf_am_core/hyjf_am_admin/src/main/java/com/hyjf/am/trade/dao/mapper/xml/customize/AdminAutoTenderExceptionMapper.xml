@@ -146,7 +146,7 @@
 				AND hdp.plan_nid LIKE CONCAT(#{debtPlanNid}, '%')
 			</if>
 			<if test="accedeOrderId != null and accedeOrderId != ''">
-				AND hdpa.accede_order_id LIKE CONCAT(#{accedeOrderIdSrch}, '%')
+				AND hdpa.accede_order_id LIKE CONCAT(#{accedeOrderId}, '%')
 			</if>
 			<if test="userName != null and userName != ''">
 				AND hdpa.user_name LIKE CONCAT(#{userName},'%')
