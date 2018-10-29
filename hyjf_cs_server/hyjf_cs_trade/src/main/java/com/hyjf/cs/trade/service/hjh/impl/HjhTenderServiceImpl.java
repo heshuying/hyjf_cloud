@@ -947,7 +947,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         // 优惠券投资开始
         Integer couponGrantId = request.getCouponGrantId();
-        if (couponGrantId != null && couponGrantId != 0) {
+        if (couponGrantId != null && couponGrantId.intValue() >0) {
             logger.info("开始优惠券投资,userId{},平台{},优惠券{}", userId, request.getPlatform(), couponGrantId);
             // 优惠券投资校验
             try {
