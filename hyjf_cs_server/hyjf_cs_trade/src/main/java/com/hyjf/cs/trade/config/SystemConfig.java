@@ -19,6 +19,8 @@ public class SystemConfig {
     @Value("${hyjf.web.user.host}")
     public String webUserHost;
 
+    @Value("${fdd.file.upload.real.path}")
+    public String fddFileUpload;
     /**
      * pc前端地址
      */
@@ -224,6 +226,14 @@ public class SystemConfig {
 
     @Value("${hyjf.wechat.invite.url}")
     private String wechatInviteUrl;
+
+    public String getFddFileUpload() {
+        return fddFileUpload;
+    }
+
+    public void setFddFileUpload(String fddFileUpload) {
+        this.fddFileUpload = fddFileUpload;
+    }
 
     public String getNeweHhjDiaryFtlName() {
         return neweHhjDiaryFtlName;

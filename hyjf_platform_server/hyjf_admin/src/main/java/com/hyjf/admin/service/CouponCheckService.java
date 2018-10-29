@@ -44,7 +44,7 @@ public interface CouponCheckService {
      * @param id
      * @param response
      */
-    void downloadFile(String id, HttpServletResponse response);
+    String downloadFile(String id, HttpServletResponse response);
 
     /**
      * 批量审核优惠券
