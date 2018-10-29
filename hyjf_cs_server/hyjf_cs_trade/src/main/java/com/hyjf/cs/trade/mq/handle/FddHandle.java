@@ -24,6 +24,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.FavFTPUtil;
 import com.hyjf.common.file.FileUtil;
 import com.hyjf.common.file.SFTPParameter;
+import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.pdf.ImageUtil;
 import com.hyjf.common.pdf.PDFToImage;
 import com.hyjf.common.util.CustomConstants;
@@ -81,6 +82,7 @@ public class FddHandle {
 	private FddProducer fddProducer;
 	@Autowired
 	private MailProducer mailProducer;
+
 
 
 
@@ -1876,6 +1878,9 @@ public class FddHandle {
 	 */
 	private void tmConduct(String imageSavePath, String imageFilePath, String fileName, boolean isCompanyUser,
 						   String trueImageFilePath, List jointPathList, int pages, int pdfType, boolean isTenderConmpany, boolean creditCompany){
+		String imghost = UploadFileUtils.getDoPath(systemConfig.getAppFrontHost());
+		imghost = imghost.substring(0, imghost.length() - 1);
+
 		//出让人、借款人真实姓名脱敏图片
 		String borrowTrueNametmImage = "/image/companyname.png";
 		//出让人、借款人签章图片
@@ -1925,9 +1930,8 @@ public class FddHandle {
 		}
 		String output = imageSavePath;
 		String source = imageFilePath;    //签章源图片路径
-		String path = this.getClass().getResource("/").getFile().toString();
-		File file = new File(path);
-		String fileParent = file.getParent();
+		String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFddFileUpload());
+		String fileParent = imghost + fileUploadTempPath;
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
 		String tenderSignIcon = fileParent + tenderSigntmImage; //投资人。承接人签章覆盖图片路径
 		String signimageName = fileName + tmName_sign;  //签章脱敏后图片名称
