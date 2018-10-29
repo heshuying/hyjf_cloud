@@ -974,6 +974,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 hjhCouponTenderProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 
             } catch (Exception e) {
+                logger.error("加入计划 优惠券投资出错",e);
                 e.printStackTrace();
             }
         }
