@@ -199,9 +199,9 @@ public class AutoPreAuditMessageConsumer extends Consumer {
             } catch (Exception e) {
                 logger.error("自动初审异常！",e);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } finally {
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
+
+            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         }
     }
 }
