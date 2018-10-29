@@ -4,26 +4,32 @@ import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminSystemService;
+import com.hyjf.am.config.service.locked.LockedConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.TreeResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
+import com.hyjf.am.user.service.admin.locked.LockedUserService;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
 import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/am-config/adminSystem")
 public class AdminSystemController extends BaseConfigController {
 	@Autowired
 	private AdminSystemService adminSystemService;
+	@Autowired
+	private LockedUserService lockedUserService;
 
 	/**
 	 * 获取该用户菜单
@@ -56,6 +62,14 @@ public class AdminSystemController extends BaseConfigController {
 		adminSystem.setUsername(adminSystemR.getUsername());
 		adminSystem.setPassword(MD5.toMD5Code(adminSystemR.getPassword()));
 		adminSystem.setState("NOT CHECK");
+		//判断用户输入的密码错误次数---开始
+		Map<String, String> errorInfo=lockedUserService.insertErrorPassword(adminSystemR.getUsername(),adminSystemR.getPassword());
+		if (!errorInfo.isEmpty()){
+			asr.setMessage(errorInfo.get("info"));
+			asr.setRtn(Response.ERROR);
+			return asr;
+		}
+		//判断用户输入的密码错误次数---结束
 		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
 		if (adminSystemr != null) {
 			AdminSystemVO asv = new AdminSystemVO();

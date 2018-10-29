@@ -178,6 +178,12 @@ public class HjhPlanCapitalController extends BaseController {
             }else {
                 sumRepayInterest = sumRepayInterest.add(recordList.get(i).getCreditAccount());
             }
+
+            if(recordList.get(i).getIsMonth() == 0){
+                recordList.get(i).setLockPeriodView(recordList.get(i).getLockPeriod() + "天");
+            }else{
+                recordList.get(i).setLockPeriodView(recordList.get(i).getLockPeriod() + "个月");
+            }
         }
 
         if (CollectionUtils.isNotEmpty(recordList)){

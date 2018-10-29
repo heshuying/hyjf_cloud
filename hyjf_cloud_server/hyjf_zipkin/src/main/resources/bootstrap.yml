@@ -37,3 +37,4 @@ management:
       show-details: ALWAYS
 logging:
   file: zipkin.log
+  file.max-size: 100MB

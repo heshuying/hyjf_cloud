@@ -100,7 +100,7 @@
 		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.attribute,
 		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
 		FROM ht_users u
-		LEFT JOIN ht_users_info ui ON u.user_id= ui.user_id
+		LEFT JOIN ht_user_info ui ON u.user_id= ui.user_id
 		LEFT JOIN ht_crm.oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
 		LEFT JOIN ht_crm.oa_department od ON od.id = ou.departmentid
 		LEFT JOIN ht_crm.oa_department od2 ON od2.id = od.parentid
@@ -111,12 +111,12 @@
 		</if>
 		group by u.user_id
 	</select>
-	
+
 	<!-- 根据员工user_id 查询员工信息  -->
 	<select id="selectUserInfoByUserId" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.sex
 		FROM ht_users u
-		LEFT JOIN ht_users_info ui ON u.user_id= ui.user_id
+		LEFT JOIN ht_user_info ui ON u.user_id= ui.user_id
 		WHERE 1=1
 	    <if test="user_id != null">
 			AND u.user_id= #{user_id}
