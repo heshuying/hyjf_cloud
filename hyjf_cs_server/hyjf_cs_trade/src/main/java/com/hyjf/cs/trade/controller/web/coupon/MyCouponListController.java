@@ -65,7 +65,7 @@ public class MyCouponListController {
             e.printStackTrace();
         }
 
-        String downloadUrl = systemConfig.getFrontHost() + "/hyjf-web/coupon/download";
+        String downloadUrl = systemConfig.webHost + "/hyjf-web/coupon/download";
         logger.info("二维码下载地址：" + downloadUrl);
 
         try {
