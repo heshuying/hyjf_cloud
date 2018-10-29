@@ -65,7 +65,7 @@ public class MyCouponListController {
             e.printStackTrace();
         }
 
-        String downloadUrl = systemConfig.getFrontHost() + "/hyjf-web/coupon/download";
+        String downloadUrl = systemConfig.webHost + "/hyjf-web/coupon/download";
         logger.info("二维码下载地址：" + downloadUrl);
 
         try {
@@ -127,7 +127,7 @@ public class MyCouponListController {
         conn.setRequestProperty("Content-type", "application/x-java-serialized-object");
         conn.setRequestProperty("Accept-Charset", "UTF-8");
         // 设定请求的方法为"POST"，默认是GET
-        conn.setRequestMethod("POST");
+        conn.setRequestMethod("GET");
         DataInputStream input =null;
         ServletOutputStream output = null;
         byte[] buffer = new byte[1024];

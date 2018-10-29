@@ -141,7 +141,13 @@ public class MyCouponListController extends BaseController {
      */
     @RequestMapping(value = "/getHJHUserCouponAvailableCount", method = RequestMethod.POST)
     public Integer getHJHUserCouponAvailableCount(@RequestBody @Valid MyCouponListRequest requestBean) {
-        return myCouponListService.getHJHUserCouponAvailableCount(requestBean);
+        try{
+            return  myCouponListService.getHJHUserCouponAvailableCount(requestBean);
+        }catch (Exception e){
+            logger.error("---",e);
+        }
+
+        return 0;
     }
 
     /**

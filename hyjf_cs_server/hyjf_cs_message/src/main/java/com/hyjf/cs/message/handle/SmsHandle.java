@@ -334,6 +334,7 @@ public class SmsHandle {
 				logger.error("无可用短信模板,查询条件为status:[1,开启状态的模板],TPLCode:[{}]",tplCode);
 				//下面这个抛出异常的，可以等上线再开启
 				//throw new RuntimeException("无可用短信模板...");
+				return status;
 			}
 			String messageStr = smsTemplate.getTplContent();
 			if (Validator.isNotNull(messageStr)) {

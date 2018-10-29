@@ -6,6 +6,8 @@ package com.hyjf.cs.message.config;
 import com.hyjf.cs.message.converter.BigDecimalToDecimal128Converter;
 import com.hyjf.cs.message.converter.Decimal128ToBigDecimalConverter;
 import com.mongodb.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +29,8 @@ import java.util.List;
  */
 @Configuration
 public class MongoConfig extends AbstractMongoConfiguration {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${mongodb.hostports}")
     private String hostports;
@@ -61,6 +65,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
     @Override
     @Bean
     public MongoTemplate mongoTemplate() {
+        logger.info("mongoTemplate init ....");
         return new MongoTemplate(this.dbFactory(), this.mappingMongoConverter());
     }
 
