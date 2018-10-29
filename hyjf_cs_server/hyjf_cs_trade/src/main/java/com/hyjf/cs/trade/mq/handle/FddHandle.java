@@ -82,7 +82,10 @@ public class FddHandle {
 	@Autowired
 	private MailProducer mailProducer;
 
+
+
 	/**
+	 *
 	 * 散标投资
 	 * 
 	 * @param bean
@@ -157,7 +160,7 @@ public class FddHandle {
 			}
 		} else {
 			logger.info("------------合同编号：" + tenderNid + ",开始获取客户编号，borrowInfo.getCompanyOrPersonal() = " + borrowInfo.getCompanyOrPersonal());
-			if ("1".equals(borrowInfo.getCompanyOrPersonal())) {
+			if (borrowInfo.getCompanyOrPersonal() != null && borrowInfo.getCompanyOrPersonal() == 1) {
 				// 借款主体为企业借款
 				BorrowUserVO borrowUsers = this.amTradeClient.getBorrowUser(borrowNid);
 				if (borrowUsers == null) {
@@ -171,7 +174,7 @@ public class FddHandle {
 					throw new RuntimeException("企业借款获取CA认证客户编号失败,企业名称:[" + borrowUsers.getUsername() + "],社会统一信用代码:["
 							+ borrowUsers.getSocialCreditCode() + "].");
 				}
-			} else if ("2".equals(borrowInfo.getCompanyOrPersonal())) {
+			} else if (borrowInfo.getCompanyOrPersonal() != null && borrowInfo.getCompanyOrPersonal() == 2) {
 				// 借款主体为个人借款
 				BorrowManinfoVO borrowManinfo = this.amTradeClient.getBorrowManinfo(borrowNid);
 				if (borrowManinfo == null) {
