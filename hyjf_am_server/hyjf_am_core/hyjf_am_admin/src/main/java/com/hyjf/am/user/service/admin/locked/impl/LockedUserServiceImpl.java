@@ -125,7 +125,7 @@ public class LockedUserServiceImpl implements LockedUserService {
 		//3.redis配置的超限有效时间
 		long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + users.get(0).getUserId());
 		//判断密码错误次数是否超限
-		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>maxLoginErrorNum) {
+		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
 //			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
 			r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
 		}

@@ -4,13 +4,14 @@
 package com.hyjf.am.user.service.front.user;
 
 
+import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 
 /**
  * @author cui
  * @version LockedUserService, v0.1 2018/9/25 11:34
  */
-public interface LockedUserService {
+public interface LockedUserService extends BaseService {
 
     /**
      * 插入密码错误超限用户信息

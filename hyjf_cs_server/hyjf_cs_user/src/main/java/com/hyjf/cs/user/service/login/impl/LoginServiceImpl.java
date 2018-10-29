@@ -917,7 +917,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 */
 	@Override
 	public Map<String, String> insertErrorPassword(String userName,String loginPassword,String channel) {
-		UserVO userVO = this.getUser(userName);
+		UserVO userVO = amUserClient.findUserByUserNameOrMobile(userName);
 		CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
 		Map<String, String> r=new HashMap<>();
 		//1.获取该用户密码错误次数
@@ -927,7 +927,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		//3.redis配置的超限有效时间
 		long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
 		//判断密码错误次数是否超限
-		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>maxLoginErrorNum) {
+		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
 //			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
 			r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
 		}
@@ -953,7 +953,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				logger.info("插入密码超限用户信息开始","-----userId:"+userVO.getUserId());
 				Integer	loginLockTime=LockedConfigManager.getInstance().getWebConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
 				// 同步输错密码超限锁定用户信息接口
-				String  requestUrl= "/lockeduser/insertLockedUser";
 				LockedUserInfoVO lockedUserInfoVO=new LockedUserInfoVO();
 				lockedUserInfoVO.setUserid(userVO.getUserId());
 				lockedUserInfoVO.setUsername(userVO.getUsername());
@@ -961,7 +960,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				lockedUserInfoVO.setLockTime(new Date());
 				lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
 				lockedUserInfoVO.setFront(1);
-				String result = restTemplate.postForEntity(userService+requestUrl,lockedUserInfoVO,String.class).getBody();
+				amUserClient.inserLockedUser(lockedUserInfoVO);
 				r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
 				logger.info("插入密码超限用户信息结束","-----userId:"+userVO.getUserId());
 			}

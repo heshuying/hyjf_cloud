@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class LockedUserServiceImpl implements LockedUserService {
+public abstract class LockedUserServiceImpl implements LockedUserService {
     @Autowired
     protected LockedUserInfoMapper lockedUserInfoMapper;
     /**
