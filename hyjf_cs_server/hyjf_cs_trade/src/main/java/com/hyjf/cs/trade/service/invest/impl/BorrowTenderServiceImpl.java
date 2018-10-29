@@ -653,7 +653,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             logger.info("获取投资成功结果  earnings:{} ",earnings.toString());
             logger.info("获取投资成功结果  couponInterest:{} ",couponInterest.toString());
             if (couponUser != null && couponUser.getCouponType() == 3) {
-                data.put("income", df.format(earnings.add(couponUser.getCouponQuota()).subtract(couponInterest)));
+                couponInterest = couponInterest.subtract(couponUser.getCouponQuota());
+                data.put("income", df.format(earnings.add(couponInterest)));
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
                 data.put("income", df.format(earnings.add(couponInterest)));
             } else {

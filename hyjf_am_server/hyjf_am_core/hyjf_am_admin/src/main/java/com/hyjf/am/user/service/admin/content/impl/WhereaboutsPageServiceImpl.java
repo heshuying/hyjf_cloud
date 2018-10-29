@@ -6,7 +6,6 @@ package com.hyjf.am.user.service.admin.content.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
@@ -47,8 +46,6 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 			response.setResultList(list);
 			return response;
 		}
-		response.setRtn(Response.FAIL);
-		response.setMessage(Response.FAIL_MSG);
 		return response;
 	}
 
