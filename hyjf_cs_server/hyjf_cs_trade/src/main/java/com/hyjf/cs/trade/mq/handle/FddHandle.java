@@ -124,6 +124,7 @@ public class FddHandle {
 		String borrowIdCard = null;
 		// del by liuyang 20180326 借款人信息 借款主体为准
 		// modify by cwyang 20180320 散标情况下进行修改
+		logger.info("------------合同编号：" + tenderNid + ",开始获取客户编号，plannid = " + planNid);
 		if (StringUtils.isNotBlank(planNid)) {
 			// 借款人用户ID
 			Integer borrowUserId = borrow.getUserId();
@@ -155,6 +156,7 @@ public class FddHandle {
 				borrowerCustomerID = certificateAuthorityVO.getCustomerId();
 			}
 		} else {
+			logger.info("------------合同编号：" + tenderNid + ",开始获取客户编号，borrowInfo.getCompanyOrPersonal() = " + borrowInfo.getCompanyOrPersonal());
 			if ("1".equals(borrowInfo.getCompanyOrPersonal())) {
 				// 借款主体为企业借款
 				BorrowUserVO borrowUsers = this.amTradeClient.getBorrowUser(borrowNid);
