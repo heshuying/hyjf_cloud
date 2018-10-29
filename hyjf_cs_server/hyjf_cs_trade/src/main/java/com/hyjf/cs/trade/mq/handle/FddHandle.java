@@ -181,6 +181,7 @@ public class FddHandle {
 				borrowIdCard = borrowManinfo.getCardNo();
 				// 获取CA认证客户编号
 				borrowerCustomerID = this.getPersonCACustomerID(borrowManinfo);
+				logger.info("-----------，合同编号：" + tenderNid + ",获得借款人认证编号：" +borrowerCustomerID);
 				if (StringUtils.isBlank(borrowerCustomerID)) {
 					throw new RuntimeException("获取个人借款CA认证客户编号失败,姓名:[" + borrowManinfo.getName() + "],身份证号:["
 							+ borrowManinfo.getCardNo() + "].");
@@ -249,6 +250,7 @@ public class FddHandle {
 		paramter.put("ecoverAccountInterest", tenderInterest.toString());// 借款人预期收益
 
 		bean.setBorrowerCustomerID(borrowerCustomerID);
+		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",获得借款人认证编号：" + bean.getBorrowerCustomerID());
 		bean.setContractName(FddGenerateContractConstant.CONTRACT_DOC_TITLE);
 
 		boolean isSign = this.isCreatContract(borrowTender.getNid());
@@ -395,6 +397,7 @@ public class FddHandle {
 					if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType) {// 居间服务协议
 						// 借款人签署
 						callBean.setCustomer_id(bean.getBorrowerCustomerID());
+						logger.info("-----------乙方签署，合同编号：" + bean.getOrdid() + ",乙方认证编号：" + bean.getBorrowerCustomerID());
 						callBean.setClient_role("4");
 						callBean.setSign_keyword(FddGenerateContractConstant.FDD_SIGN_KEYWORK_BORROWER);
 						callBean.setNotify_url(notifyUrl);
