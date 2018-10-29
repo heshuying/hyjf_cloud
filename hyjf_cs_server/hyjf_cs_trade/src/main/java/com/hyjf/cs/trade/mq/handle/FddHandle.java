@@ -1932,7 +1932,9 @@ public class FddHandle {
 		String source = imageFilePath;    //签章源图片路径
 		String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFddFileUpload());
 		String fileParent = imghost + fileUploadTempPath;
+		logger.info("-----------开始下载脱敏，获得签章图片父级别路径" + fileParent);
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
+		logger.info("-----------开始下载脱敏，获得签章图片路径" + signIcon);
 		String tenderSignIcon = fileParent + tenderSigntmImage; //投资人。承接人签章覆盖图片路径
 		String signimageName = fileName + tmName_sign;  //签章脱敏后图片名称
 		String imageType = "png";  //图片类型jpg,jpeg,png,gif
