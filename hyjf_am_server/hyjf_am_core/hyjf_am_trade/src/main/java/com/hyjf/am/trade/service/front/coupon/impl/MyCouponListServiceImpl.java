@@ -356,6 +356,9 @@ public class MyCouponListServiceImpl implements MyCouponListService {
         String userId = requestBean.getUserId();
         String borrowNid = requestBean.getBorrowNid();
         String money = requestBean.getMoney();
+        if(money==null||"".equals(money)){
+            money = "0";
+        }
         String platform = requestBean.getPlatform();
         map.put("userId", userId);
         // 查询项目信息
