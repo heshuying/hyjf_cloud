@@ -71,7 +71,8 @@ public class WebUnBindCardPageController extends BaseUserController{
         deleteCardPageBean.setMobile(user.getMobile());
 
         //调用解绑银行卡接口
-        unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_PC,null,"0",request);
+        Map<String,Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_PC,null,"0",request);
+        result.setData(data);
         return result;
     }
 
