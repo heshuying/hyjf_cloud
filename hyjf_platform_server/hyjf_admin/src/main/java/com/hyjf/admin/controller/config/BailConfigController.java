@@ -267,8 +267,9 @@ public class BailConfigController extends BaseController {
      * @return
      */
     @ApiOperation(value = "下拉联动", notes = "下拉联动")
-    @PostMapping("/instcode_change_action")
-    public BailConfigInfoCustomizeVO instCodeChangeAction(String instCode) {
+    @GetMapping("/instcode_change_action/{instCode}")
+    @ResponseBody
+    public AdminResult<BailConfigInfoCustomizeVO> instCodeChangeAction(@PathVariable String instCode) {
 
         BailConfigInfoCustomizeVO hjhBailConfigInfoCustomize = new BailConfigInfoCustomizeVO();
         hjhBailConfigInfoCustomize.setEndDEL(1);
@@ -305,8 +306,10 @@ public class BailConfigController extends BaseController {
                     hjhBailConfigInfoCustomize.setEndmonthsDEL(0);
                 }
             }
+        } else {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return hjhBailConfigInfoCustomize;
+        return new AdminResult<>(hjhBailConfigInfoCustomize);
     }
 
 

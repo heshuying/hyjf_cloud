@@ -13,6 +13,7 @@ import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
+import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponConfigService;
 import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
@@ -349,7 +350,11 @@ public class CouponConfigController extends BaseController {
     @RequestMapping("/insertcouponrecover")
     public CouponConfigResponse insertCouponRecover(@RequestBody CouponRecoverVO cr) {
         CouponConfigResponse response = new CouponConfigResponse();
-        Integer count = couponConfigService.insertCouponRecover(cr);
+        CouponRecover couponRecover=CommonUtils.convertBean(cr,CouponRecover.class);
+        if (!"null".equals(cr.getRecoverPeriod()) && StringUtils.isNotBlank(cr.getRecoverPeriod())){
+            couponRecover.setRecoverPeriod(Integer.parseInt(cr.getRecoverPeriod()));
+        }
+        Integer count = couponConfigService.insertCouponRecover(couponRecover);
         response.setCount(count);
         return response;
     }

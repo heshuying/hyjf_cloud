@@ -90,7 +90,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         int userId = user.getUserId();
 
         // 2. 写入用户详情表
-        this.insertUserInfo(userId, loginIp, attribute,instType);
+        this.insertUserInfo(userId, loginIp, attribute,instType,userRequest.getProvince(),userRequest.getCity());
 
         // 3. 写入用户账户表 迁移到组合层发送mq消息 避免连接mq超时引起长事务
         // this.insertAccount(userId);
@@ -185,8 +185,11 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         UserExample.Criteria criteria = usersExample.createCriteria();
         if (Validator.isMobile(reffer)) {
             criteria.andMobileEqualTo(reffer);
-        } else {
+        } else if(Validator.isNumber(reffer)){
             criteria.andUserIdEqualTo(Integer.valueOf(reffer));
+        }else{
+            logger.error("参数reffer:[{}] -> 既不是手机号,又不是userId");
+            return null;
         }
         List<User> usersList = userMapper.selectByExample(usersExample);
         if (!CollectionUtils.isEmpty(usersList)) {
@@ -392,7 +395,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
      * @param loginIp
      * @param attribute
      */
-    private void insertUserInfo(int userId, String loginIp, Integer attribute,Integer instType) {
+    private void insertUserInfo(int userId, String loginIp, Integer attribute,Integer instType,String province,String city ) {
         UserInfo userInfo = new UserInfo();
         userInfo.setAttribute(0);
         // 默认为无主单
@@ -422,6 +425,11 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         userInfo.setEmailIsapprove(0);
         userInfo.setIsContact(0);
         userInfo.setAttribute(attribute);
+		// add by libin 20181030
+		userInfo.setProvince(province);
+		userInfo.setCity(city);
+		userInfo.setArea("");//目前不获取县区
+		// add by libin 20181030
         logger.info("注册插入userInfo：{}", JSON.toJSONString(userInfo));
         userInfoMapper.insertSelective(userInfo);
     }
@@ -1227,7 +1235,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         int userId = user.getUserId();
 
         // 2. 写入用户详情表
-        this.insertUserInfo(userId, loginIp, 2,1);
+        this.insertUserInfo(userId, loginIp, 2,1,userRequest.getProvince(),userRequest.getCity());
 
         // 4. 保存用户注册日志
         this.insertRegLog(userId, loginIp);

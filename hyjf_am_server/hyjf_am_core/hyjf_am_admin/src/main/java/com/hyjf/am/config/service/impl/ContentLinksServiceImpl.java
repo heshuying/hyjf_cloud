@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -49,10 +50,20 @@ public class ContentLinksServiceImpl implements ContentLinksService {
             criteria.andStatusEqualTo(bean.getStatus());
         }
         if (StringUtils.isNotEmpty(bean.getStartCreate())) {
-            criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Timestamp(bean.getStartCreate()));
+            try {
+                criteria.andCreateTimeGreaterThanOrEqualTo
+                        (GetDate.parseDate(GetDate.getDayStart(bean.getStartCreate()),GetDate.datetimeFormat_key));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         if (StringUtils.isNotEmpty(bean.getEndCreate())) {
-            criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Timestamp(bean.getEndCreate()));
+            try {
+                criteria.andCreateTimeLessThanOrEqualTo
+                (GetDate.parseDate(GetDate.getDayEnd(bean.getEndCreate()),GetDate.datetimeFormat_key));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         example.setOrderByClause("`partner_type` ASC,`order` Asc,`create_time` Desc");
         return linkMapper.selectByExample(example);

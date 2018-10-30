@@ -30,9 +30,3 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-logging:
-  file: cs-user.log
-  file.max-size: 100MB
-swagger:
- enable: true
