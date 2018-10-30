@@ -7,6 +7,8 @@ import org.apache.commons.lang.StringUtils;
 import org.lionsoul.ip2region.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,16 +19,32 @@ import java.lang.reflect.Method;
  * @author libin
  * @version GetInfoByUserIp.java, v0.1 2018年10月26日 下午2:49:26
  */
+@Component
 public class GetInfoByUserIp {
 	
 	private static final Logger _log = LoggerFactory.getLogger(GetInfoByUserIp.class);
-	
-	public static String getInfoByUserIp(String ipAddress) {//例如：101.105.35.57
+
+    private static final String IP_NAME = "/ip2region.db";
+
+    public static String ipAddress;
+
+
+    @Value("${hyjf.ip.address}")
+    public void setIpAddress(String ipAddress) {
+        GetInfoByUserIp.ipAddress = ipAddress;
+    }
+
+    public static String getIpAddress() {
+        System.out.println( GetInfoByUserIp.ipAddress);
+        return GetInfoByUserIp.ipAddress;
+    }
+
+    public static String getInfoByUserIp(String ipAddress) {//例如：101.105.35.57
 		// 返回的拼装信息
 		String info = "";
 		// DB文件路径
 		//String DBfilePath = "D:\\Workspace4\\ip2region\\data\\ip2region.db";//之后放在项目里
-		String DBfilePath = GetInfoByUserIp.class.getResource("/ip2region.db").getPath();//相对路径
+		String DBfilePath = getIpAddress()+IP_NAME;
 		// 出入ip地址判空
 		if(ipAddress == null & StringUtils.isEmpty(ipAddress)){
 			_log.error("未获取到IP地址！");

@@ -37,7 +37,7 @@
 				AND hdpa.lock_period = #{debtLockPeriodSrch}
 			</if>
 			<if test="refereeNameSrch != null and refereeNameSrch != ''">
-				AND hydui.username LIKE CONCAT( #{refereeNameSrch},'%')
+				AND ruser1.username LIKE CONCAT( #{refereeNameSrch},'%')
 			</if>
 			<if test="orderStatus != null and orderStatus != ''">
 				AND hdpa.order_status LIKE CONCAT( #{orderStatus},'%')
@@ -306,7 +306,7 @@
 					AND hdpa.lock_period = #{debtLockPeriodSrch}
 				</if>
 				<if test="refereeNameSrch != null and refereeNameSrch != ''">
-					AND hydui.username LIKE CONCAT( #{refereeNameSrch},'%')
+					AND ruser1.username LIKE CONCAT( #{refereeNameSrch},'%')
 				</if>
 				<if test="orderStatus != null and orderStatus != ''">
 					AND hdpa.order_status LIKE CONCAT( #{orderStatus},'%')
@@ -406,7 +406,7 @@
 					AND hdpa.user_name LIKE CONCAT( #{userNameSrch},'%')
 				</if>
 				<if test="refereeNameSrch != null and refereeNameSrch != ''">
-					AND hydui.username LIKE CONCAT( #{refereeNameSrch},'%')
+					AND ruser1.username LIKE CONCAT( #{refereeNameSrch},'%')
 				</if>
 				<if test="orderStatus != null and orderStatus != ''">
 					AND hdpa.order_status LIKE CONCAT( #{orderStatus},'%')

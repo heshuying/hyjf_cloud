@@ -1520,10 +1520,6 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public List<ChannelCustomizeVO> getChannelList(ChannelCustomizeVO channelCustomizeVO) {
-		if (channelCustomizeVO.getCurrPage() > 0 && channelCustomizeVO.getPageSize() > 0) {
-			channelCustomizeVO.setLimitStart((channelCustomizeVO.getCurrPage() - 1) * channelCustomizeVO.getPageSize());
-			channelCustomizeVO.setLimitEnd(channelCustomizeVO.getPageSize());
-		}
 		UtmResponse response = restTemplate
 				.postForEntity("http://AM-ADMIN/am-user/channel/getchannellist", channelCustomizeVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {

@@ -4,7 +4,7 @@
 package com.hyjf.am.user.service.admin.locked.impl;
 
 import com.google.common.base.Preconditions;
-import com.hyjf.am.config.controller.admin.locked.LockedConfigManager;
+import com.hyjf.am.user.controller.admin.locked.LockedConfigManager;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.LockedUserInfoCustomizeMapper;

@@ -64,10 +64,9 @@
 	</select>
 	<select id="selectChannelNameByUserId" resultType="java.lang.String" parameterType="int">
 		SELECT
-			IFNULL(
 				hydup.source_name
 -- 				hacsd.source_name
-			) source_name
+			AS source_name
 		FROM
 			ht_user hydu
 -- 		LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id

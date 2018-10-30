@@ -64,16 +64,15 @@ public class UserPortraitManagerController extends BaseController {
         if (request.getPageSize() == 0) {
             paginator = new Paginator(request.getCurrPage(), registCount);
         }
-        int limitStart = 0;
-        int limitEnd = 1000;
-        //查询导出数据
-        if (request.isLimitFlg()) {
-            limitStart = paginator.getOffset();
-            limitEnd = paginator.getLimit();
+        int limitStart = paginator.getOffset();
+        int limitEnd =  paginator.getLimit();
+        if(request.isLimitFlg()) {
+            limitEnd = 0;
+            limitStart = 0;
         }
-        List<UserPortraitVO> listUserPortrait = userPortraitManagerService.selectRecordList(mapParam, limitStart, limitEnd);
         response.setCount(registCount);
         if (registCount > 0) {
+            List<UserPortraitVO> listUserPortrait = userPortraitManagerService.selectRecordList(mapParam, limitStart, limitEnd);
             if (!CollectionUtils.isEmpty(listUserPortrait)) {
                 response.setResultList(listUserPortrait);
                 response.setRtn(Response.SUCCESS);
