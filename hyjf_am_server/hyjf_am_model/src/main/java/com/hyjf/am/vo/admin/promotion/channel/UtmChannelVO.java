@@ -34,6 +34,8 @@ public class UtmChannelVO extends BaseVO implements Serializable {
 
     private Integer status;
 
+    private String url;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getUtmId() {
@@ -130,5 +132,13 @@ public class UtmChannelVO extends BaseVO implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
