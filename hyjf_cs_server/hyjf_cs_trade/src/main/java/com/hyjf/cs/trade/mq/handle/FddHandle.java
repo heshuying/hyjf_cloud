@@ -1930,7 +1930,7 @@ public class FddHandle {
 		}
 		String output = imageSavePath;
 		String source = imageFilePath;    //签章源图片路径
-		String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFddFileUpload());
+		String fileUploadTempPath = systemConfig.getFddFileUpload();
 		String fileParent = imghost + fileUploadTempPath;
 		logger.info("-----------开始下载脱敏，获得签章图片父级别路径" + fileParent);
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
