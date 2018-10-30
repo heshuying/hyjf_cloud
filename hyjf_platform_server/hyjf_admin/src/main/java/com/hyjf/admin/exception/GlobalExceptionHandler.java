@@ -1,6 +1,7 @@
 package com.hyjf.admin.exception;
 
 import com.hyjf.am.bean.result.BaseResult;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author xiasq
@@ -40,6 +42,24 @@ public class GlobalExceptionHandler {
 		response.setStatus(e.getError().getCode());
 		response.setStatusDesc(e.getError().getMsg());
 		return response;
+	}
+
+
+	/**
+	 * 传入信息验证错误异常处理
+	 * @param request
+	 * @param response
+	 * @param ex
+	 * @return
+	 * @author liubin
+	 */
+	@ExceptionHandler(CheckException.class)
+	@ResponseBody
+	public com.hyjf.admin.common.result.BaseResult<?> CheckExceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception ex) {
+		CheckException e = (CheckException)ex;
+		com.hyjf.admin.common.result.BaseResult<?> result = new com.hyjf.admin.common.result.BaseResult<>(e.getData());
+		result.setStatusInfo(e.getCode(), ex.getLocalizedMessage());
+		return result;
 	}
 
 }
