@@ -134,6 +134,19 @@ public class BailConfigController extends BaseController {
 
     /**
      * @Author: liushouyi
+     * @Desc 根据该机构可用还款方式更新可用授信方式
+     */
+    @ApiOperation(value = "根据该机构可用还款方式更新可用授信方式")
+    @GetMapping("/update_bail_info_delflg_by_id/{id}")
+    public BooleanResponse updateBailInfoDelFlgById(@PathVariable Integer id) {
+        BooleanResponse response = new BooleanResponse();
+        response.setResultBoolean(bailConfigService.updateBailInfoDelFlgById(id));
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+    /**
+     * @Author: liushouyi
      * @Desc 添加保证金配置
      */
     @ApiOperation(value = "添加保证金配置")

@@ -41,6 +41,9 @@ import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.GetInfoByUserIp;
 import com.hyjf.cs.user.vo.RegisterRequest;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +61,7 @@ import java.util.regex.Pattern;
  * @version RegistServiceImpl, v0.1 2018/6/11 15:10
  */
 @Service
+@DefaultProperties(defaultFallback = "defaultFallback")
 public class RegisterServiceImpl extends BaseUserServiceImpl implements RegisterService {
 
     private static final Logger logger = LoggerFactory.getLogger(RegisterServiceImpl.class);
@@ -255,6 +259,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @throws ReturnMessageException
      */
     @Override
+    @HystrixCommand
     public WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip)
             throws ReturnMessageException {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform);
@@ -302,6 +307,14 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         // 3.注册后处理
         return this.afterRegisterHandle(userVO);
+    }
+    
+    /**
+     * 默认fallback
+     * @return
+     */
+    private WebViewUserVO defaultFallback() {
+    	return null;
     }
 
     /**
