@@ -56,9 +56,6 @@ public class ChannelController extends BaseController {
     @PostMapping("/init")
     public UtmResultResponse channelListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO) {
         UtmResultResponse adminResult = new UtmResultResponse();
-        Map<String, Object> map = new HashMap<>();
-        map.put("source_type","0");
-        map.put("del_flag","0");
         Integer count = this.channelService.countList(channelCustomizeVO);
         if(null != count){
             channelCustomizeVO.setLimitStart(channelCustomizeVO.getLimitStart());
@@ -66,7 +63,7 @@ public class ChannelController extends BaseController {
             List<ChannelCustomizeVO> channelList = channelService.getByPageList(channelCustomizeVO);
             adminResult.setData(channelList);
         }
-        List<UtmPlatVO> utmPlatVOList = channelService.getAllUtmPlat(map);
+        List<UtmPlatVO> utmPlatVOList = channelService.getUtmPlat();
         adminResult.setUtmPlatList(utmPlatVOList);
         adminResult.setTotal(count);
         return adminResult;
@@ -142,7 +139,7 @@ public class ChannelController extends BaseController {
      */
     public void validatorFieldCheck(UtmResultResponse adminResult,ChannelCustomizeVO channelCustomizeVO){
         ModelAndView modelAndView = new ModelAndView();
-        // 渠道
+        // 渠道CheckUtil
         if(StringUtils.isNotEmpty(channelCustomizeVO.getSourceId())){
             // 推广方式
             ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmMedium", channelCustomizeVO.getUtmMedium(), 50, false);
