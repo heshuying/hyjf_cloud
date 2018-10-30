@@ -1619,8 +1619,7 @@ public class FddHandle {
 			}
 
 		} catch (Exception e) {
-			logger.info("------------脱敏协议错误，错误信息" + e.getMessage());
-			e.printStackTrace();
+			logger.error("-----------脱敏协议错误，错误信息",e);
 		}
 
 	}
