@@ -71,9 +71,9 @@ public class UserPortraitManagerController extends BaseController {
             limitStart = paginator.getOffset();
             limitEnd = paginator.getLimit();
         }
-        List<UserPortraitVO> listUserPortrait = userPortraitManagerService.selectRecordList(mapParam, limitStart, limitEnd);
         response.setCount(registCount);
         if (registCount > 0) {
+            List<UserPortraitVO> listUserPortrait = userPortraitManagerService.selectRecordList(mapParam, limitStart, limitEnd);
             if (!CollectionUtils.isEmpty(listUserPortrait)) {
                 response.setResultList(listUserPortrait);
                 response.setRtn(Response.SUCCESS);
