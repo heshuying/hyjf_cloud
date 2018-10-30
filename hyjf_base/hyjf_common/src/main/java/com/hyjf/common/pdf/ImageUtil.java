@@ -1,5 +1,8 @@
 package com.hyjf.common.pdf;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -7,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class ImageUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(ImageUtil.class);
     /**
      * @param args
      */
@@ -98,7 +103,7 @@ public class ImageUtil {
             ImageIO.write(bi, imageType, sf); // 保存图片
             result = "图片完成添加Icon水印";
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("脱敏图片错误，",e);
         }
         return result;
     }
