@@ -63,7 +63,7 @@ public class ChannelController extends BaseController {
             List<ChannelCustomizeVO> channelList = channelService.getByPageList(channelCustomizeVO);
             adminResult.setData(channelList);
         }
-        List<UtmPlatVO> utmPlatVOList = channelService.getAllUtmPlat();
+        List<UtmPlatVO> utmPlatVOList = channelService.getUtmPlat();
         adminResult.setUtmPlatList(utmPlatVOList);
         adminResult.setTotal(count);
         return adminResult;
@@ -139,7 +139,7 @@ public class ChannelController extends BaseController {
      */
     public void validatorFieldCheck(UtmResultResponse adminResult,ChannelCustomizeVO channelCustomizeVO){
         ModelAndView modelAndView = new ModelAndView();
-        // 渠道
+        // 渠道CheckUtil
         if(StringUtils.isNotEmpty(channelCustomizeVO.getSourceId())){
             // 推广方式
             ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmMedium", channelCustomizeVO.getUtmMedium(), 50, false);

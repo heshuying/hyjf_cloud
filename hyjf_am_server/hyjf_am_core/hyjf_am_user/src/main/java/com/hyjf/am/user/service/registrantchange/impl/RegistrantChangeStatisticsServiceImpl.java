@@ -20,8 +20,9 @@ public class RegistrantChangeStatisticsServiceImpl extends BaseServiceImpl imple
     public Integer queryRegistrantChangeStatisticsCount(Date startTime, Date endTime) {
         UserExample userExample = new UserExample();
         UserExample.Criteria criteria = userExample.createCriteria();
-
-        criteria.andRegTimeBetween(startTime, endTime);
+        if(startTime != null && endTime != null){
+            criteria.andRegTimeBetween(startTime, endTime);
+        }
         return userMapper.countByExample(userExample);
     }
 }
