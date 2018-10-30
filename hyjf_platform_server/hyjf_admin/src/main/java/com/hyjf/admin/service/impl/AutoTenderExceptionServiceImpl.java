@@ -389,7 +389,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     }
                     //汇计划自动投资(收债转服务费)
                     logger.info("[" + hjhAccede.getAccedeOrderId() + "]" + "承接用计算完成"
-                            + "\n,分期数据结果:" + resultVO.getAssignResult()
+                            + "\n,分期数据结果:" + resultVO.getAssignResult().toString()
                             + "\n,承接总额:" + resultVO.getAssignAccount()
                             + "\n,承接本金:" + resultVO.getAssignCapital()
                             + "\n,承接利息:" + resultVO.getAssignInterest()

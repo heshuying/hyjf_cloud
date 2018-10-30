@@ -441,9 +441,20 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
             throw new NullPointerException();
         }
         logger.info("listMonthDealMoney====="+ JSONObject.toJSONString(listMonthDealMoney));
-        newQuarterDealMoney = listMonthDealMoney.get(2).getSumAccount();
-        agoCurrentQuarterDealMoney = listMonthDealMoney.get(1).getSumAccount();
-        beforeCurrentQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+        //避免数据库数据不够出现问题
+        if(listMonthDealMoney.size()==3){
+            newQuarterDealMoney = listMonthDealMoney.get(2).getSumAccount();
+            agoCurrentQuarterDealMoney = listMonthDealMoney.get(1).getSumAccount();
+            beforeCurrentQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+        }else if(listMonthDealMoney.size()==2){
+            newQuarterDealMoney = listMonthDealMoney.get(1).getSumAccount();
+            agoCurrentQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+            beforeCurrentQuarterDealMoney = new BigDecimal(0);
+        }else if(listMonthDealMoney.size()==1){
+            newQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+            agoCurrentQuarterDealMoney = new BigDecimal(0);
+            beforeCurrentQuarterDealMoney = new BigDecimal(0);
+        }
         quarterDealMoney = newQuarterDealMoney.add(agoCurrentQuarterDealMoney).add(beforeCurrentQuarterDealMoney);
 
         //去年三个月成交金额

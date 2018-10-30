@@ -214,11 +214,5 @@ public class WrbParseParamUtil {
         String encodeStr = URLEncoder.encode(signStr, ENCODE_STRING);
         System.out.println("编码后的字符串：" + encodeStr);
         parseParam(signStr);
-        // System.out.println("解密:" + WrbCoopDESUtil.desDecrypt(WrbCoopDESUtil.KEY,
-        // URLDecoder.decode(encodeStr,"utf-8")));
-        //Map<String, String> params = new HashMap<>();
-        //params.put("key1", "value1");
-        // params.put("key2", "value2");
-        //System.out.println(buildRequestParam("", params));
     }
 }
