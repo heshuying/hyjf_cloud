@@ -72,7 +72,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
 
     @Override
     public int updateTenderAgreement(TenderAgreement tenderAgreement) {
-        return this.tenderAgreementMapper.updateByPrimaryKey(tenderAgreement);
+        return this.tenderAgreementMapper.updateByPrimaryKeySelective(tenderAgreement);
     }
 
     @Override
