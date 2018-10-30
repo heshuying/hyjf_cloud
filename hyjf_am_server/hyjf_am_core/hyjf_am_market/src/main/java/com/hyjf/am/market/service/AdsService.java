@@ -20,4 +20,13 @@ public interface AdsService {
     List<AppAdsCustomize> searchBanner(Map<String, Object> ads);
 
     List<Ads> getBannerList(AdsRequest request);
+
+    /**
+     *
+     * 根据广告类型获取广告
+     * @author liuyang
+     * @param adsType
+     * @return
+     */
+    public List<Ads> getAdsList(String adsType);
 }

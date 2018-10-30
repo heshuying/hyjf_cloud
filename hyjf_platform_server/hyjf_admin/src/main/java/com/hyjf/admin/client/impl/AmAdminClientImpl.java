@@ -194,6 +194,19 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
+     * 更新机构可用还款方式
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean updateBailInfoDelFlgById(Integer id) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/update_bail_info_delflg_by_id/" + id;
+        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
      * 更新保证金配置
      *
      * @param bailConfigAddRequest

@@ -59,13 +59,13 @@ public class MyCouponListController {
         WebViewUserVO userVO = myCouponListService.getUserFromCache(userId);
         logger.info("获取我的优惠券列表数据开始，userId:{}", userVO.getUserId());
 
-        try {
-            QRCodeUtil.encode(systemConfig.getWechatInviteUrl() +userId+".html",String.valueOf(userId),systemConfig.getFilePhysicalPath() + systemConfig.getFileUploadRealPath(), false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            QRCodeUtil.encode(systemConfig.getWechatInviteUrl() +userId+".html",String.valueOf(userId),systemConfig.getFilePhysicalPath() + systemConfig.getFileUploadRealPath(), false);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-        String downloadUrl = systemConfig.webHost + "/hyjf-web/coupon/download";
+        String downloadUrl = systemConfig.webHost + "/hyjf-web/coupon/download/" + userId;
         logger.info("二维码下载地址：" + downloadUrl);
 
         try {
@@ -92,8 +92,15 @@ public class MyCouponListController {
     /**
      * 下载二维码
      */
-    @GetMapping("download")
-    public void download(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request, HttpServletResponse response){
+    @GetMapping("/download/{userId}")
+    public void download(@PathVariable  Integer userId, HttpServletRequest request, HttpServletResponse response){
+        logger.info("开始生成二维码图片，userId：" + userId);
+        try {
+            QRCodeUtil.encode(systemConfig.getWechatInviteUrl() +userId+".html",String.valueOf(userId),systemConfig.getFilePhysicalPath() + systemConfig.getFileUploadRealPath(), false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         String webhost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         String fileUploadRealPath = UploadFileUtils.getDoPath(systemConfig.getFileUploadRealPath());
         logger.info("开始下载二维码：userid：" + userId + " webhost: " + webhost +" fileUploadRealPath: " + fileUploadRealPath);

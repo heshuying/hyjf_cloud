@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author fq
@@ -132,4 +133,16 @@ public class ChannelReconciliationRequest extends BasePage {
     public void setUtmPlat(String[] utmPlat) {
         this.utmPlat = utmPlat;
     }
+    // 用户id集合
+    private List<Integer> userIdList;
+
+    public List<Integer> getUserIdList() {
+        return userIdList;
+    }
+
+    public void setUserIdList(List<Integer> userIdList) {
+        this.userIdList = userIdList;
+    }
+
+
 }

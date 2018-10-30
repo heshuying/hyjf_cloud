@@ -96,4 +96,12 @@ public interface BailConfigService extends BaseService {
      * @return
      */
     List<String> selectRepayMethod(String instCode);
+
+    /**
+     * 更新机构可用还款方式
+     *
+     * @param id
+     * @return
+     */
+    boolean updateBailInfoDelFlgById(Integer id);
 }
