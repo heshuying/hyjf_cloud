@@ -19,6 +19,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
+import io.swagger.models.auth.In;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -772,9 +773,11 @@ public class UserController extends BaseController {
      * @param lockedUserInfoVO
      * @return
      */
-    @RequestMapping(value = "/insertLockedUser", method = RequestMethod.POST)
-    public void insertLockedUser(@RequestBody LockedUserInfoVO lockedUserInfoVO) {
-         userService.inserLockedUser(lockedUserInfoVO);
+    @RequestMapping("/insertLockedUser")
+    public Integer insertLockedUser(@RequestBody LockedUserInfoVO lockedUserInfoVO) {
+        logger.info("insertLockedUser:" + JSONObject.toJSONString(lockedUserInfoVO));
+         int insertLockedUser=userService.inserLockedUser(lockedUserInfoVO);
+         return insertLockedUser;
     }
 
     /**

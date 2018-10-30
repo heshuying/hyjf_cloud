@@ -30,11 +30,3 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-logging:
-  file: cs-market.log
-  file.max-size: 100MB
-  
-#swagger启用开关
-swagger:
- enable: true
