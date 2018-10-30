@@ -1857,17 +1857,21 @@ public class FddHandle {
 		return true;
 	}
 
-	public static void main(String[] args) {
-
-		String signIcon = "/Applications/work/需求池/脱敏样式/cardno.png";
-
-		String source = "/Applications/work/aaa.png";
-
-		String output = "/Applications/work/jjfw/";
-		Integer index_x = 100;
-		Integer index_y = 100;
-		ImageUtil.markImageByMoreIcon(signIcon, source, output, "tm", "png", null, index_x, index_y);
-	}
+//	public static void main(String[] args) {
+//
+////		String signIcon = "/Applications/work/需求池/脱敏样式/cardno.png";
+////
+////		String source = "/Applications/work/aaa.png";
+////
+////		String output = "/Applications/work/jjfw/";
+////		Integer index_x = 100;
+////		Integer index_y = 100;
+////		ImageUtil.markImageByMoreIcon(signIcon, source, output, "tm", "png", null, index_x, index_y);
+////		FddHandle handle = new FddHandle();
+//		String path = "file:/opt/micro/hyjf-cs-trade.jar!/BOOT-INF/classes!/";
+//		String substring = path.substring(5);
+//		System.out.println(substring);
+//	}
 	/**
 	 * 脱敏处理
 	 * @param imageSavePath
@@ -1940,6 +1944,7 @@ public class FddHandle {
 		String output = imageSavePath;
 		String source = imageFilePath;    //签章源图片路径
 		String fileParent = this.getClass().getResource("/").getPath();
+		fileParent = fileParent.substring(5);
 		logger.info("-----------开始下载脱敏，获得签章图片父级别路径" + fileParent);
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
 		logger.info("-----------开始下载脱敏，获得签章图片路径" + signIcon);
