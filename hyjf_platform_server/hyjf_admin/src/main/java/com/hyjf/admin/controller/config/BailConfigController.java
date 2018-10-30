@@ -270,6 +270,7 @@ public class BailConfigController extends BaseController {
     @PostMapping("/instcode_change_action")
     public BailConfigInfoCustomizeVO instCodeChangeAction(String instCode) {
 
+        logger.info("保证金配置下拉联动，instCode:" + instCode);
         BailConfigInfoCustomizeVO hjhBailConfigInfoCustomize = new BailConfigInfoCustomizeVO();
         hjhBailConfigInfoCustomize.setEndDEL(1);
         hjhBailConfigInfoCustomize.setEnddayDEL(1);
@@ -281,27 +282,35 @@ public class BailConfigController extends BaseController {
 
         // 获取当前机构可用还款方式
         List<String> repayMethodList = this.bailConfigService.selectRepayMethod(instCode);
+        logger.info("保证金配置下拉联动，repayMethodList:" +repayMethodList);
         if (repayMethodList != null && repayMethodList.size() > 0) {
             for (String repayMethod : repayMethodList) {
                 if ("end".equals(repayMethod)) {
+                    logger.info("保证金配置下拉联动，end!");
                     hjhBailConfigInfoCustomize.setEndDEL(0);
                 }
                 if ("endday".equals(repayMethod)) {
+                    logger.info("保证金配置下拉联动，endday!");
                     hjhBailConfigInfoCustomize.setEnddayDEL(0);
                 }
                 if ("month".equals(repayMethod)) {
+                    logger.info("保证金配置下拉联动，month!");
                     hjhBailConfigInfoCustomize.setMonthDEL(0);
                 }
                 if ("endmonth".equals(repayMethod)) {
+                    logger.info("保证金配置下拉联动，endmonth!");
                     hjhBailConfigInfoCustomize.setEndmonthDEL(0);
                 }
                 if ("principal".equals(repayMethod)) {
+                    logger.info("保证金配置下拉联动，principal!");
                     hjhBailConfigInfoCustomize.setPrincipalDEL(0);
                 }
                 if ("season".equals(repayMethod)) {
+                    logger.info("保证金配置下拉联动，season!");
                     hjhBailConfigInfoCustomize.setSeasonDEL(0);
                 }
                 if ("endmonths".equals(repayMethod)) {
+                    logger.info("保证金配置下拉联动，endmonths!");
                     hjhBailConfigInfoCustomize.setEndmonthsDEL(0);
                 }
             }
