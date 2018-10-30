@@ -44,7 +44,7 @@ public class BorrowRegistController extends BaseController {
     AdminCommonService adminCommonService;
 
     /** 权限 */
-    public static final String PERMISSIONS = "borrowregist";
+    public static final String PERMISSIONS = "borrowRegist";
 
     /**
      * 标的备案初始化

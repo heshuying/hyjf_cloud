@@ -1,6 +1,7 @@
 package com.hyjf.cs.message.client.impl;
 
 import com.hyjf.am.response.market.ActivityListResponse;
+import com.hyjf.am.response.market.AdsResponse;
 import com.hyjf.cs.message.client.AmMarketClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,14 @@ public class AmMarketClientImpl implements AmMarketClient {
                 .getBody();
         return response;
     }
-
+    @Override
+    public AdsResponse getAdsList(String adsType){
+        AdsResponse response = restTemplate
+                .getForEntity("http://AM-MARKET//am-market/ads/getAdsList/"+adsType+"/",
+                        AdsResponse.class)
+                .getBody();
+        return response;
+    }
 
 
 }
