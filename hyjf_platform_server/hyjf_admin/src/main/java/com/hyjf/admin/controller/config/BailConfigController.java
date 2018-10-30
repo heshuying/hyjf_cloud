@@ -106,6 +106,11 @@ public class BailConfigController extends BaseController {
         if (null == id || 0 == id) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+        // 更新当前机构可用的还款方式
+        if(!this.bailConfigService.updateBailInfoDelFlgById(id)){
+            return new AdminResult<>(FAIL, "当前机构更新还款方式失败！");
+        }
+        // 查询当前机构的保证金详情
         BailConfigInfoCustomizeVO bailConfigInfoCustomizeVO = bailConfigService.selectBailConfigById(id);
         if (null == bailConfigInfoCustomizeVO) {
             return new AdminResult<>(FAIL, FAIL_DESC);
