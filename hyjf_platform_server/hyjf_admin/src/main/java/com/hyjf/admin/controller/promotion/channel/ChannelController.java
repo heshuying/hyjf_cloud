@@ -141,25 +141,25 @@ public class ChannelController extends BaseController {
         // 渠道CheckUtil
         if(StringUtils.isNotEmpty(channelCustomizeVO.getSourceId())){
             // 推广方式
-            CheckUtil.check(channelCustomizeVO.getUtmMedium()!=null&&channelCustomizeVO.getUtmMedium().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"推广方式");
+            CheckUtil.check(channelCustomizeVO.getUtmMedium()==null||channelCustomizeVO.getUtmMedium().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"推广方式");
            // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmMedium", channelCustomizeVO.getUtmMedium(), 50, false);
             // 推广单元
-            CheckUtil.check(channelCustomizeVO.getUtmContent()!=null&&channelCustomizeVO.getUtmContent().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"推广单元");
+            CheckUtil.check(channelCustomizeVO.getUtmContent()==null||channelCustomizeVO.getUtmContent().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"推广单元");
            // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmContent", channelCustomizeVO.getUtmContent(), 50, false);
             // 推广计划
-            CheckUtil.check(channelCustomizeVO.getUtmCampaign()!=null&&channelCustomizeVO.getUtmCampaign().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"推广计划");
+            CheckUtil.check(channelCustomizeVO.getUtmCampaign()==null||channelCustomizeVO.getUtmCampaign().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"推广计划");
             // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmCampaign", channelCustomizeVO.getUtmCampaign(), 50, false);
             // 关键字
-            CheckUtil.check(channelCustomizeVO.getUtmTerm()!=null&&channelCustomizeVO.getUtmTerm().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"关键字");
+            CheckUtil.check(channelCustomizeVO.getUtmTerm()==null||channelCustomizeVO.getUtmTerm().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"关键字");
             //boolean utmTermFlag = ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmTerm", channelCustomizeVO.getUtmTerm(), 50, false);
 
             // 链接地址
             CheckUtil.check(StringUtils.isNotBlank(channelCustomizeVO.getLinkAddress()), MsgEnum.ERR_OBJECT_REQUIRED,"链接地址");
             // ValidatorFieldCheckUtil.validateRequired(modelAndView, "linkAddress", channelCustomizeVO.getLinkAddress());
-            CheckUtil.check(channelCustomizeVO.getLinkAddress()!=null&&channelCustomizeVO.getLinkAddress().length()<=250, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"链接地址");
+            CheckUtil.check(channelCustomizeVO.getLinkAddress()==null||channelCustomizeVO.getLinkAddress().length()<=250, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"链接地址");
             //ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "linkAddress", channelCustomizeVO.getLinkAddress(), 250, false);
             // 备注说明
-            CheckUtil.check(channelCustomizeVO.getRemark()!=null&&channelCustomizeVO.getRemark().length()<=100, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"备注说明");
+            CheckUtil.check(channelCustomizeVO.getRemark()==null||channelCustomizeVO.getRemark().length()<=100, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"备注说明");
            // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", channelCustomizeVO.getRemark(), 100, false);
             adminResult.setStatus(AdminResult.SUCCESS);
         }else{
