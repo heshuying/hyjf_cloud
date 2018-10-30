@@ -185,8 +185,11 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         UserExample.Criteria criteria = usersExample.createCriteria();
         if (Validator.isMobile(reffer)) {
             criteria.andMobileEqualTo(reffer);
-        } else {
+        } else if(Validator.isNumber(reffer)){
             criteria.andUserIdEqualTo(Integer.valueOf(reffer));
+        }else{
+            logger.error("参数reffer:[{}] -> 既不是手机号,又不是userId");
+            return null;
         }
         List<User> usersList = userMapper.selectByExample(usersExample);
         if (!CollectionUtils.isEmpty(usersList)) {

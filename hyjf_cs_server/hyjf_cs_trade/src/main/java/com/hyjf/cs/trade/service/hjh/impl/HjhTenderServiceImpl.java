@@ -885,6 +885,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setEarnings(earnings);
         request.setAccountDecimal(accountDecimal);
         request.setNowTime(nowTime);
+        request.setOrderId(planOrderId);
         if (Validator.isNotNull(userInfo)) {
             UserVO spreadsUsers = amUserClient.getSpreadsUsersByUserId(userId);
 
