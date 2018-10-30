@@ -263,7 +263,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         //add by libin 用户注册时通过ip获得用户所在的省，市 start
         logger.info("获取到的用户ip为：" + ip);
         String info = GetInfoByUserIp.getInfoByUserIp(ip);
-        if(info == null && StringUtils.isEmpty(info)){
+        if(info == null || StringUtils.isEmpty(info)){
         	logger.error("通过httpRequest获取的ip解析后未获取到省市信息！");
         	registerUserRequest.setProvince("");
         	registerUserRequest.setCity("");
