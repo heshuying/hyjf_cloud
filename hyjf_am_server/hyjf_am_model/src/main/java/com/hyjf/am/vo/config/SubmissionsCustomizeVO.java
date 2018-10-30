@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.config;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hyjf.common.util.GetDate;
 
 import java.util.Date;
 
@@ -65,6 +66,8 @@ public class SubmissionsCustomizeVO  {
     private Integer userId;
 
     private String status;
+
+    private String createTime;
 
     public String getImg() {
         return img;
@@ -169,4 +172,15 @@ public class SubmissionsCustomizeVO  {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public String getCreateTime() {
+        return GetDate.date2Str(addTime, GetDate.datetimeFormat);
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+
+
 }
