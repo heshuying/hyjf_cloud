@@ -1857,6 +1857,17 @@ public class FddHandle {
 		return true;
 	}
 
+	public static void main(String[] args) {
+
+		String signIcon = "/Applications/work/需求池/脱敏样式/cardno.png";
+
+		String source = "/Applications/work/aaa.png";
+
+		String output = "/Applications/work/jjfw/";
+		Integer index_x = 100;
+		Integer index_y = 100;
+		ImageUtil.markImageByMoreIcon(signIcon, source, output, "tm", "png", null, index_x, index_y);
+	}
 	/**
 	 * 脱敏处理
 	 * @param imageSavePath
@@ -1878,8 +1889,6 @@ public class FddHandle {
 	 */
 	private void tmConduct(String imageSavePath, String imageFilePath, String fileName, boolean isCompanyUser,
 						   String trueImageFilePath, List jointPathList, int pages, int pdfType, boolean isTenderConmpany, boolean creditCompany){
-		String imghost = UploadFileUtils.getDoPath(systemConfig.getAppFrontHost());
-		imghost = imghost.substring(0, imghost.length() - 1);
 
 		//出让人、借款人真实姓名脱敏图片
 		String borrowTrueNametmImage = "/image/companyname.png";
@@ -1930,8 +1939,7 @@ public class FddHandle {
 		}
 		String output = imageSavePath;
 		String source = imageFilePath;    //签章源图片路径
-		String fileUploadTempPath = systemConfig.getFddFileUpload();
-		String fileParent = imghost + fileUploadTempPath;
+		String fileParent = this.getClass().getResource("/").getPath();
 		logger.info("-----------开始下载脱敏，获得签章图片父级别路径" + fileParent);
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
 		logger.info("-----------开始下载脱敏，获得签章图片路径" + signIcon);
