@@ -168,7 +168,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<ContentHelp> getContentHelpList(ContentHelpBeanRequest contentHelpBeanRequest) {
         ContentHelpExample con = dealContentHelpParam(contentHelpBeanRequest);
         con.setLimitStart((contentHelpBeanRequest.getCurrPage()-1) * contentHelpBeanRequest.getPageSize());
-        con.setLimitEnd((contentHelpBeanRequest.getCurrPage()) * contentHelpBeanRequest.getPageSize());
+        con.setLimitEnd(contentHelpBeanRequest.getPageSize());
         return contentHelpMapper.selectByExample(con);
     }
 
@@ -233,11 +233,11 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_begin())) {
-            conCriteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(contentHelpBeanRequest.getPost_time_begin(),GetDate.datetimeFormat));
+            conCriteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(contentHelpBeanRequest.getPost_time_begin() + " 00:00:00",GetDate.datetimeFormat));
         }
 
         if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_end())) {
-            conCriteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(contentHelpBeanRequest.getPost_time_end(),GetDate.datetimeFormat));
+            conCriteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(contentHelpBeanRequest.getPost_time_end()+ " 23:59:59",GetDate.datetimeFormat));
         }
         return con;
     }
