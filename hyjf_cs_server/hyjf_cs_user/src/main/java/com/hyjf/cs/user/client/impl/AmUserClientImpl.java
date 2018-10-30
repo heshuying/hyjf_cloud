@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -1115,14 +1116,21 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public BankOpenAccountVO selectBankAccountById(Integer userId) {
-		if(userId != null){
-			String url = "http://AM-USER/am-user/bankopen/selectById/" + userId;
-			BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
-			if (response != null) {
-				return response.getResult();
-			}
+		String url = "http://AM-USER/am-user/bankopen/selectById/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
 		}
 		return null;
+	}
+	/**
+	 * 插入密码错误超限用户信息
+	 * @param lockedUserInfoVO
+	 * @return
+	 */
+	public void inserLockedUser(LockedUserInfoVO lockedUserInfoVO){
+		restTemplate
+				.postForEntity(userService+"/user/inserLockedUser",lockedUserInfoVO,LockedUserInfoVO.class).getBody();
 	}
 
 }

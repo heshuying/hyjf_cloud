@@ -6,6 +6,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author walter.limeng
@@ -85,7 +86,7 @@ public interface ChannelService {
      * @Param null
      * @return
      */
-    List<UtmPlatVO> getAllUtmPlat();
+    List<UtmPlatVO> getAllUtmPlat(Map<String, Object> map);
 
     /**
      * 新增信息
