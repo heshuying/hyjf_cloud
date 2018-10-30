@@ -177,12 +177,9 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public VersionVO getUpdateversion(Integer type, Integer isupdate, String versionStr) {
-        if(type != null && isupdate != null){
-            VersionConfigBeanResponse response = restTemplate
+        VersionConfigBeanResponse response = restTemplate
                     .getForEntity(configService+"/appversion/getUpdateversion/" + type+"/"+isupdate+"/"+versionStr, VersionConfigBeanResponse.class).getBody();
-            return response.getResult();
-        }
-        return null;
+        return response.getResult();
     }
 
     /**
