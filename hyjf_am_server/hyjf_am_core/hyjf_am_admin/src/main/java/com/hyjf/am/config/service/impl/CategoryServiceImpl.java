@@ -24,10 +24,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Auther: walter.limeng
@@ -232,12 +229,18 @@ public class CategoryServiceImpl implements CategoryService {
             conCriteria.andStatusEqualTo(contentHelpBeanRequest.getStatus());
         }
 
-        if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_begin())) {
-            conCriteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(contentHelpBeanRequest.getPost_time_begin(),GetDate.datetimeFormat));
+        if (StringUtils.isNotBlank(contentHelpBeanRequest.getPost_time_begin())) {
+            Date startDate = GetDate.str2Date(contentHelpBeanRequest.getPost_time_begin(),GetDate.datetimeFormat);
+            if(startDate != null){
+                conCriteria.andCreateTimeGreaterThanOrEqualTo(startDate);
+            }
         }
 
-        if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_end())) {
-            conCriteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(contentHelpBeanRequest.getPost_time_end(),GetDate.datetimeFormat));
+        if (StringUtils.isNotBlank(contentHelpBeanRequest.getPost_time_end())) {
+            Date endDate = GetDate.str2Date(contentHelpBeanRequest.getPost_time_end(),GetDate.datetimeFormat);
+            if(endDate != null){
+                conCriteria.andCreateTimeLessThanOrEqualTo(endDate);
+            }
         }
         return con;
     }

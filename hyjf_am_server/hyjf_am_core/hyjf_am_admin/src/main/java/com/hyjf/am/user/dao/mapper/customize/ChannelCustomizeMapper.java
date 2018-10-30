@@ -1,6 +1,7 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
 import com.hyjf.am.user.dao.model.customize.ChannelCustomize;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface ChannelCustomizeMapper {
 	 * @param channelCustomize
 	 * @return
 	 */
-	List<ChannelCustomize> selectList(ChannelCustomize channelCustomize);
+	List<ChannelCustomize> selectList(ChannelCustomizeVO channelCustomize);
 
 	/**
 	 * COUNT
