@@ -3,18 +3,15 @@
  */
 package com.hyjf.cs.user.util;
 
+import org.apache.commons.lang.StringUtils;
+import org.lionsoul.ip2region.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.apache.commons.lang.StringUtils;
-import org.lionsoul.ip2region.DataBlock;
-import org.lionsoul.ip2region.DbConfig;
-import org.lionsoul.ip2region.DbMakerConfigException;
-import org.lionsoul.ip2region.DbSearcher;
-import org.lionsoul.ip2region.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author libin
@@ -29,7 +26,7 @@ public class GetInfoByUserIp {
 		String info = "";
 		// DB文件路径
 		//String DBfilePath = "D:\\Workspace4\\ip2region\\data\\ip2region.db";//之后放在项目里
-		String DBfilePath = "src/main/resources/ip2region.db";
+		String DBfilePath = GetInfoByUserIp.class.getResource("/ip2region.db").getPath();
 		// 出入ip地址判空
 		if(ipAddress == null & StringUtils.isEmpty(ipAddress)){
 			_log.error("未获取到IP地址！");
@@ -107,8 +104,8 @@ public class GetInfoByUserIp {
 	}
 	
 	
-/*    public static void main(String[] argv){  
-    	String ip = "101.105.35.57";
+ /*   public static void main(String[] argv){
+    	String ip = "47.104.250.73";
     	String ip1 = "sadasd";
     	String ip2 = "";
     	String info = getInfoByUserIp(ip);
