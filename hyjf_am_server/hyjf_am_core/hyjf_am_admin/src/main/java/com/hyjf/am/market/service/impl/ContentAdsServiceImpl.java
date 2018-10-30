@@ -20,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -109,10 +110,20 @@ public class ContentAdsServiceImpl implements ContentAdsService {
             criteria.andStatusEqualTo(bean.getStatus());
         }
         if (StringUtils.isNotEmpty(bean.getStartCreate()) && StringUtils.isNotEmpty(bean.getEndCreate())) {
-            criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Timestamp((GetDate.getDayStart(bean.getStartCreate()))));
+            try {
+                criteria.andCreateTimeGreaterThanOrEqualTo
+                        (GetDate.parseDate(GetDate.getDayStart(bean.getStartCreate()),GetDate.datetimeFormat_key));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         if (StringUtils.isNotEmpty(bean.getEndCreate())) {
-            criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Timestamp(GetDate.getDayEnd(bean.getEndCreate())));
+            try {
+                criteria.andCreateTimeLessThanOrEqualTo
+                        (GetDate.parseDate(GetDate.getDayEnd(bean.getEndCreate()),GetDate.datetimeFormat_key));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         if (limitStart != -1) {
             example.setLimitStart(limitStart);

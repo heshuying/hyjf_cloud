@@ -1,5 +1,6 @@
 package com.hyjf.cs.message.service.report.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.*;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.enums.DateEnum;
@@ -432,15 +433,28 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         if (CollectionUtils.isEmpty(mapPerformanceSum)) {
             throw new NullPointerException();
         }
+        logger.info("mapPerformanceSum====="+ JSONObject.toJSONString(mapPerformanceSum));
 
         //今年三个月成交金额
         List<OperationReportJobVO> listMonthDealMoney = getMonthDealMoney(0, 3);
         if (CollectionUtils.isEmpty(listMonthDealMoney)) {
             throw new NullPointerException();
         }
-        newQuarterDealMoney = listMonthDealMoney.get(2).getSumAccount();
-        agoCurrentQuarterDealMoney = listMonthDealMoney.get(1).getSumAccount();
-        beforeCurrentQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+        logger.info("listMonthDealMoney====="+ JSONObject.toJSONString(listMonthDealMoney));
+        //避免数据库数据不够出现问题
+        if(listMonthDealMoney.size()==3){
+            newQuarterDealMoney = listMonthDealMoney.get(2).getSumAccount();
+            agoCurrentQuarterDealMoney = listMonthDealMoney.get(1).getSumAccount();
+            beforeCurrentQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+        }else if(listMonthDealMoney.size()==2){
+            newQuarterDealMoney = listMonthDealMoney.get(1).getSumAccount();
+            agoCurrentQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+            beforeCurrentQuarterDealMoney = new BigDecimal(0);
+        }else if(listMonthDealMoney.size()==1){
+            newQuarterDealMoney = listMonthDealMoney.get(0).getSumAccount();
+            agoCurrentQuarterDealMoney = new BigDecimal(0);
+            beforeCurrentQuarterDealMoney = new BigDecimal(0);
+        }
         quarterDealMoney = newQuarterDealMoney.add(agoCurrentQuarterDealMoney).add(beforeCurrentQuarterDealMoney);
 
         //去年三个月成交金额
@@ -460,6 +474,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         if (CollectionUtils.isEmpty(mapRevenueAndYield)) {
             throw new NullPointerException();
         }
+        logger.info("mapRevenueAndYield====="+ JSONObject.toJSONString(mapRevenueAndYield));
         operationProfit = mapRevenueAndYield.get("operationProfit");//本季度赚钱的收益
         lastYearProfit = mapRevenueAndYield.get("lastYearProfit");//去年本季度赚取收益
 
@@ -469,6 +484,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
         //渠道分析
         List<OperationReportInfoVO> listgetCompleteCount = getCompleteCount(3);
+        logger.info("listgetCompleteCount====="+ JSONObject.toJSONString(listgetCompleteCount));
         for (OperationReportInfoVO completeCountDto : listgetCompleteCount) {
             if ("pcDealNum".equals(completeCountDto.getTitle())) {
                 pcDealNum = completeCountDto.getDealSum();//pc成交笔数

@@ -267,10 +267,18 @@ public class BailConfigController extends BaseController {
      * @return
      */
     @ApiOperation(value = "下拉联动", notes = "下拉联动")
-    @PostMapping("/instcode_change_action")
-    public BailConfigInfoCustomizeVO instCodeChangeAction(String instCode) {
+    @GetMapping("/instcode_change_action/{instCode}")
+    @ResponseBody
+    public AdminResult<BailConfigInfoCustomizeVO> instCodeChangeAction(@PathVariable String instCode) {
 
         BailConfigInfoCustomizeVO hjhBailConfigInfoCustomize = new BailConfigInfoCustomizeVO();
+        hjhBailConfigInfoCustomize.setEndDEL(1);
+        hjhBailConfigInfoCustomize.setEnddayDEL(1);
+        hjhBailConfigInfoCustomize.setMonthDEL(1);
+        hjhBailConfigInfoCustomize.setEndmonthDEL(1);
+        hjhBailConfigInfoCustomize.setPrincipalDEL(1);
+        hjhBailConfigInfoCustomize.setSeasonDEL(1);
+        hjhBailConfigInfoCustomize.setEndmonthsDEL(1);
 
         // 获取当前机构可用还款方式
         List<String> repayMethodList = this.bailConfigService.selectRepayMethod(instCode);
@@ -298,8 +306,10 @@ public class BailConfigController extends BaseController {
                     hjhBailConfigInfoCustomize.setEndmonthsDEL(0);
                 }
             }
+        } else {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return hjhBailConfigInfoCustomize;
+        return new AdminResult<>(hjhBailConfigInfoCustomize);
     }
 
 

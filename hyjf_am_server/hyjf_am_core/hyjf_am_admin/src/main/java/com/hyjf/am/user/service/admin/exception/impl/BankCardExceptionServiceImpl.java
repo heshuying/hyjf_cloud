@@ -115,7 +115,6 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
                         JSONArray array = JSONObject.parseArray(UsrCardInfolist);
                         if (array.size() != 0) {
                             // if(accountChinapnr.getUserId()==500018){
-                            // System.out.println(1);
                             // }
                             // =============================两步:第一步:更新银行卡,第二步:更新身份证号等等=============================
                             // =============================第一步:更新银行卡=============================

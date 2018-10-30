@@ -24,6 +24,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.FavFTPUtil;
 import com.hyjf.common.file.FileUtil;
 import com.hyjf.common.file.SFTPParameter;
+import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.pdf.ImageUtil;
 import com.hyjf.common.pdf.PDFToImage;
 import com.hyjf.common.util.CustomConstants;
@@ -82,7 +83,11 @@ public class FddHandle {
 	@Autowired
 	private MailProducer mailProducer;
 
+
+
+
 	/**
+	 *
 	 * 散标投资
 	 * 
 	 * @param bean
@@ -157,7 +162,7 @@ public class FddHandle {
 			}
 		} else {
 			logger.info("------------合同编号：" + tenderNid + ",开始获取客户编号，borrowInfo.getCompanyOrPersonal() = " + borrowInfo.getCompanyOrPersonal());
-			if ("1".equals(borrowInfo.getCompanyOrPersonal())) {
+			if (borrowInfo.getCompanyOrPersonal() != null && borrowInfo.getCompanyOrPersonal() == 1) {
 				// 借款主体为企业借款
 				BorrowUserVO borrowUsers = this.amTradeClient.getBorrowUser(borrowNid);
 				if (borrowUsers == null) {
@@ -171,7 +176,7 @@ public class FddHandle {
 					throw new RuntimeException("企业借款获取CA认证客户编号失败,企业名称:[" + borrowUsers.getUsername() + "],社会统一信用代码:["
 							+ borrowUsers.getSocialCreditCode() + "].");
 				}
-			} else if ("2".equals(borrowInfo.getCompanyOrPersonal())) {
+			} else if (borrowInfo.getCompanyOrPersonal() != null && borrowInfo.getCompanyOrPersonal() == 2) {
 				// 借款主体为个人借款
 				BorrowManinfoVO borrowManinfo = this.amTradeClient.getBorrowManinfo(borrowNid);
 				if (borrowManinfo == null) {
@@ -566,7 +571,7 @@ public class FddHandle {
                 bean.setTenderCompany(isTenderCompany);
                 bean.setCreditCompany(isCreditCompany);
                 try {
-					fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,JSON.toJSONBytes(bean)));
+					fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
 				} catch (MQException e) {
 					e.printStackTrace();
 					logger.error("法大大发送下载脱敏消息失败...", e);	
@@ -1852,6 +1857,21 @@ public class FddHandle {
 		return true;
 	}
 
+//	public static void main(String[] args) {
+//
+////		String signIcon = "/Applications/work/需求池/脱敏样式/cardno.png";
+////
+////		String source = "/Applications/work/aaa.png";
+////
+////		String output = "/Applications/work/jjfw/";
+////		Integer index_x = 100;
+////		Integer index_y = 100;
+////		ImageUtil.markImageByMoreIcon(signIcon, source, output, "tm", "png", null, index_x, index_y);
+////		FddHandle handle = new FddHandle();
+//		String path = "file:/opt/micro/hyjf-cs-trade.jar!/BOOT-INF/classes!/";
+//		String substring = path.substring(5);
+//		System.out.println(substring);
+//	}
 	/**
 	 * 脱敏处理
 	 * @param imageSavePath
@@ -1873,42 +1893,43 @@ public class FddHandle {
 	 */
 	private void tmConduct(String imageSavePath, String imageFilePath, String fileName, boolean isCompanyUser,
 						   String trueImageFilePath, List jointPathList, int pages, int pdfType, boolean isTenderConmpany, boolean creditCompany){
+
 		//出让人、借款人真实姓名脱敏图片
-		String borrowTrueNametmImage = "/image/companyname.png";
+		String borrowTrueNametmImage = "image/companyname.png";
 		//出让人、借款人签章图片
-		String borrowSigntmImage = "/image/companyname.png";
+		String borrowSigntmImage = "image/companyname.png";
 		//出让人、借款人身份证号码图片
-		String borrowCardNoImage = "/image/cardno.png";
+		String borrowCardNoImage = "image/cardno.png";
 
 		//承接人、投资人真实姓名脱敏图片
-		String tenderTrueNametmImage = "/image/companyname.png";
+		String tenderTrueNametmImage = "image/companyname.png";
 		//承接人、投资人签章图片
-		String tenderSigntmImage = "/image/companyname.png";
+		String tenderSigntmImage = "image/companyname.png";
 		//承接人、投资人身份证号码图片
-		String tenderCardNoImage = "/image/cardno.png";
+		String tenderCardNoImage = "image/cardno.png";
 
 		if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
 			if(creditCompany){//出让人为企业
-				borrowTrueNametmImage = "/image/companyname.png";
-				borrowSigntmImage = "/image/seal.png";
+				borrowTrueNametmImage = "image/companyname.png";
+				borrowSigntmImage = "image/seal.png";
 				borrowCardNoImage = borrowTrueNametmImage;
 			}
 			if(isTenderConmpany){//承接人为企业
-				tenderTrueNametmImage = "/image/companyname.png";
-				tenderSigntmImage = "/image/seal.png";
+				tenderTrueNametmImage = "image/companyname.png";
+				tenderSigntmImage = "image/seal.png";
 				tenderCardNoImage = tenderTrueNametmImage;
 			}
 
 		}else{
 			if(isCompanyUser){
-				borrowTrueNametmImage = "/image/companyname.png";
-				borrowSigntmImage = "/image/seal.png";
+				borrowTrueNametmImage = "image/companyname.png";
+				borrowSigntmImage = "image/seal.png";
 				borrowCardNoImage = borrowTrueNametmImage;
 			}
 			if(isTenderConmpany){
-				tenderTrueNametmImage = "/image/companyname.png";
-				tenderSigntmImage = "/image/seal.png";
+				tenderTrueNametmImage = "image/companyname.png";
+				tenderSigntmImage = "image/seal.png";
 				tenderCardNoImage = tenderTrueNametmImage;
 			}
 		}
@@ -1922,10 +1943,11 @@ public class FddHandle {
 		}
 		String output = imageSavePath;
 		String source = imageFilePath;    //签章源图片路径
-		String path = this.getClass().getResource("/").getFile().toString();
-		File file = new File(path);
-		String fileParent = file.getParent();
+		String fileParent = this.getClass().getResource("/").getPath();
+		fileParent = fileParent.substring(5);
+		logger.info("-----------开始下载脱敏，获得签章图片父级别路径" + fileParent);
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
+		logger.info("-----------开始下载脱敏，获得签章图片路径" + signIcon);
 		String tenderSignIcon = fileParent + tenderSigntmImage; //投资人。承接人签章覆盖图片路径
 		String signimageName = fileName + tmName_sign;  //签章脱敏后图片名称
 		String imageType = "png";  //图片类型jpg,jpeg,png,gif
