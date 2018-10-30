@@ -4,8 +4,10 @@
 package com.hyjf.admin.controller.finance.bank.merchant.poundage;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankPoundageAccountService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.response.admin.BankMerchantAccountListCustomizeResponse;
@@ -32,6 +34,8 @@ import java.util.*;
 @RequestMapping("/hyjf-admin/bank/merchant/poundage")
 public class BankPoundageAccountController extends BaseController {
 
+    public static final String PERMISSIONS = "bankpoundageaccount";
+
     @Autowired
     BankPoundageAccountService bankPoundageAccountService;
 
@@ -44,6 +48,7 @@ public class BankPoundageAccountController extends BaseController {
      */
     @ApiOperation(value = "手续费账户明细",notes = "手续费账户明细")
     @PostMapping(value = "init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult init(@RequestBody BankPoundageAccountListBean form) {
         Map<String,Object> result = new HashMap<>();
         form.setBankAccountCode(systemConfig.getBANK_MERS_ACCOUNT());
