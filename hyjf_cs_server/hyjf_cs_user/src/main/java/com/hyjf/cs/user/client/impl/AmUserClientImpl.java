@@ -1129,8 +1129,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	public void inserLockedUser(LockedUserInfoVO lockedUserInfoVO){
-		restTemplate
-				.postForEntity(userService+"/user/inserLockedUser",lockedUserInfoVO,LockedUserInfoVO.class).getBody();
+		int result = restTemplate
+				.postForEntity(userService+"/user/insertLockedUser",lockedUserInfoVO,Integer.class).getBody();
 	}
 
 }

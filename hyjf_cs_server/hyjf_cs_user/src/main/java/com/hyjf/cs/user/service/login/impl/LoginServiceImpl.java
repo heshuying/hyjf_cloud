@@ -961,6 +961,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                     lockedUserInfoVO.setLockTime(new Date());
                     lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
                     lockedUserInfoVO.setFront(1);
+                    lockedUserInfoVO.setUnlocked(0);
                     amUserClient.inserLockedUser(lockedUserInfoVO);
                     r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
                     logger.info("插入密码超限用户信息结束","-----userId:"+userVO.getUserId());

@@ -31,9 +31,3 @@ management:
     health:
       show-details: ALWAYS
 
-logging:
-  file: cs-message.log
-  file.max-size: 100MB
-#swagger启用开关
-swagger:
- enable: true

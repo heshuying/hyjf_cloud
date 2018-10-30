@@ -1857,6 +1857,17 @@ public class FddHandle {
 		return true;
 	}
 
+	public static void main(String[] args) {
+
+		String signIcon = "/Applications/work/需求池/脱敏样式/cardno.png";
+
+		String source = "/Applications/work/aaa.png";
+
+		String output = "/Applications/work/jjfw/";
+		Integer index_x = 100;
+		Integer index_y = 100;
+		ImageUtil.markImageByMoreIcon(signIcon, source, output, "tm", "png", null, index_x, index_y);
+	}
 	/**
 	 * 脱敏处理
 	 * @param imageSavePath
@@ -1878,45 +1889,43 @@ public class FddHandle {
 	 */
 	private void tmConduct(String imageSavePath, String imageFilePath, String fileName, boolean isCompanyUser,
 						   String trueImageFilePath, List jointPathList, int pages, int pdfType, boolean isTenderConmpany, boolean creditCompany){
-		String imghost = UploadFileUtils.getDoPath(systemConfig.getAppFrontHost());
-		imghost = imghost.substring(0, imghost.length() - 1);
 
 		//出让人、借款人真实姓名脱敏图片
-		String borrowTrueNametmImage = "/image/companyname.png";
+		String borrowTrueNametmImage = "image/companyname.png";
 		//出让人、借款人签章图片
-		String borrowSigntmImage = "/image/companyname.png";
+		String borrowSigntmImage = "image/companyname.png";
 		//出让人、借款人身份证号码图片
-		String borrowCardNoImage = "/image/cardno.png";
+		String borrowCardNoImage = "image/cardno.png";
 
 		//承接人、投资人真实姓名脱敏图片
-		String tenderTrueNametmImage = "/image/companyname.png";
+		String tenderTrueNametmImage = "image/companyname.png";
 		//承接人、投资人签章图片
-		String tenderSigntmImage = "/image/companyname.png";
+		String tenderSigntmImage = "image/companyname.png";
 		//承接人、投资人身份证号码图片
-		String tenderCardNoImage = "/image/cardno.png";
+		String tenderCardNoImage = "image/cardno.png";
 
 		if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
 			if(creditCompany){//出让人为企业
-				borrowTrueNametmImage = "/image/companyname.png";
-				borrowSigntmImage = "/image/seal.png";
+				borrowTrueNametmImage = "image/companyname.png";
+				borrowSigntmImage = "image/seal.png";
 				borrowCardNoImage = borrowTrueNametmImage;
 			}
 			if(isTenderConmpany){//承接人为企业
-				tenderTrueNametmImage = "/image/companyname.png";
-				tenderSigntmImage = "/image/seal.png";
+				tenderTrueNametmImage = "image/companyname.png";
+				tenderSigntmImage = "image/seal.png";
 				tenderCardNoImage = tenderTrueNametmImage;
 			}
 
 		}else{
 			if(isCompanyUser){
-				borrowTrueNametmImage = "/image/companyname.png";
-				borrowSigntmImage = "/image/seal.png";
+				borrowTrueNametmImage = "image/companyname.png";
+				borrowSigntmImage = "image/seal.png";
 				borrowCardNoImage = borrowTrueNametmImage;
 			}
 			if(isTenderConmpany){
-				tenderTrueNametmImage = "/image/companyname.png";
-				tenderSigntmImage = "/image/seal.png";
+				tenderTrueNametmImage = "image/companyname.png";
+				tenderSigntmImage = "image/seal.png";
 				tenderCardNoImage = tenderTrueNametmImage;
 			}
 		}
@@ -1930,8 +1939,7 @@ public class FddHandle {
 		}
 		String output = imageSavePath;
 		String source = imageFilePath;    //签章源图片路径
-		String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFddFileUpload());
-		String fileParent = imghost + fileUploadTempPath;
+		String fileParent = this.getClass().getResource("/").getPath();
 		logger.info("-----------开始下载脱敏，获得签章图片父级别路径" + fileParent);
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
 		logger.info("-----------开始下载脱敏，获得签章图片路径" + signIcon);

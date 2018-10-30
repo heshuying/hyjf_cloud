@@ -181,7 +181,10 @@ public class SmsHandle {
 				request.setName(tplCode);
 				SmsNoticeConfigVO smsNoticeConfig = amConfigClient.findSmsNotice(request);
 				if (smsNoticeConfig == null) {
-					throw new RuntimeException("无可用通知配置模板");
+					logger.error("无可用通知配置模板,status:[{}],name:[{}]",request.getStatus(),tplCode);
+					//下面这个抛出异常的，可以等上线再开启
+					//throw new RuntimeException("无可用通知配置模板");
+					return status;
 				}
 				String mobile = smsNoticeConfig.getConfigValue();
 				String messageStr = smsNoticeConfig.getContent();
@@ -225,7 +228,10 @@ public class SmsHandle {
 				request.setName(tplCode);
 				SmsNoticeConfigVO smsNoticeConfig = amConfigClient.findSmsNotice(request);
 				if (smsNoticeConfig == null) {
-					throw new RuntimeException("无可用通知配置模板");
+					logger.error("无可用通知配置模板,status:[{}],name:[{}]",request.getStatus(),tplCode);
+					//下面这个抛出异常的，可以等上线再开启
+					//throw new RuntimeException("无可用通知配置模板");
+					return status;
 				}
 				String mobile = smsNoticeConfig.getConfigValue();
 				String messageStr = smsNoticeConfig.getContent();
@@ -265,7 +271,10 @@ public class SmsHandle {
 		int status = -1;
 		try {
 			if (Validator.isNull(userId)) {
-				throw new Exception("用户ID不可为空");
+				logger.error("用户ID不可为空");
+				//下面这个抛出异常的，可以等上线再开启
+				//throw new Exception("用户ID不可为空");
+				return status;
 			}
 
 			UserVO user = amUserClient.findUserById(userId);
@@ -291,10 +300,16 @@ public class SmsHandle {
 			}
 			String mobile = user.getMobile();
 			if (StringUtils.isEmpty(mobile)) {
-				throw new Exception("用户电话为空");
+				logger.error("用户电话为空");
+				//下面这个抛出异常的，可以等上线再开启
+				//throw new Exception("用户电话为空");
+				return status;
 			}
 			if (!Validator.isPhoneNumber(mobile)) {
-				throw new Exception("用户电话号码格式不正确");
+				logger.error("用户电话号码格式不正确");
+				//下面这个抛出异常的，可以等上线再开启
+				//throw new Exception("用户电话号码格式不正确");
+				return status;
 			}
 
 			UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
