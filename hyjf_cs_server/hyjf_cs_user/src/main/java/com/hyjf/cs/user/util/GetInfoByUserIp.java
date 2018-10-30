@@ -26,7 +26,7 @@ public class GetInfoByUserIp {
 		String info = "";
 		// DB文件路径
 		//String DBfilePath = "D:\\Workspace4\\ip2region\\data\\ip2region.db";//之后放在项目里
-		String DBfilePath = GetInfoByUserIp.class.getResource("/ip2region.db").getPath();
+		String DBfilePath = GetInfoByUserIp.class.getResource("/ip2region.db").getPath();//相对路径
 		// 出入ip地址判空
 		if(ipAddress == null & StringUtils.isEmpty(ipAddress)){
 			_log.error("未获取到IP地址！");
