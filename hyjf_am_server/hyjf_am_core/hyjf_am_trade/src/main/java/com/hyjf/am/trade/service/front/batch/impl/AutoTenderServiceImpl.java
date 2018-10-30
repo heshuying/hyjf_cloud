@@ -775,6 +775,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             if (debtDetailOldList != null && debtDetailOldList.size() == 1) {
                 HjhDebtDetail debtDetailOld = debtDetailOldList.get(0);
                 // 承接人承接本金
+                logger.info(assignPay  + "*" + debtDetailOld.getLoanCapital() + "/" + credit.getLiquidationFairValue());
                 assignCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
                         debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
                 // 承接人承接利息

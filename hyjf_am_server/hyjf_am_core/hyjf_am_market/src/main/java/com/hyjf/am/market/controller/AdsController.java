@@ -102,4 +102,15 @@ public class AdsController {
 		}
 		return response;
 	}
+	@RequestMapping("/getAdsList/{adsType}")
+	public AdsResponse getAdsList(@PathVariable String adsType) {
+		AdsResponse response = new AdsResponse();
+		List<Ads> list = adsService.getAdsList(adsType);
+		if (!CollectionUtils.isEmpty(list)) {
+			List<AdsVO> adsList = CommonUtils.convertBeanList(list,AdsVO.class);
+			response.setResultList(adsList);
+		}
+		return response;
+	}
+
 }

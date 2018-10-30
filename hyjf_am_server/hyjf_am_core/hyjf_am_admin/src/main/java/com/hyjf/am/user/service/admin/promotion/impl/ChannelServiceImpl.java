@@ -6,6 +6,7 @@ package com.hyjf.am.user.service.admin.promotion.impl;
 import com.hyjf.am.user.dao.model.customize.ChannelCustomize;
 import com.hyjf.am.user.service.admin.promotion.ChannelService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
     }
 
     @Override
-    public List<ChannelCustomize> getChannelList(ChannelCustomize channelCustomize) {
+    public List<ChannelCustomize> getChannelList(ChannelCustomizeVO channelCustomize) {
         return channelCustomizeMapper.selectList(channelCustomize);
     }
 }

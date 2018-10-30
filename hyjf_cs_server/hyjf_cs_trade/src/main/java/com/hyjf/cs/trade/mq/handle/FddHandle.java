@@ -1981,10 +1981,15 @@ public class FddHandle {
 				index_y = 1100;
 			}
 		}
+		logger.info("--------下载脱敏开始脱敏图片，图片来源：" + source + ",图片存储地点：" + output);
+		boolean b = FileUtil.judeFileExists(source);
+		logger.info("---------脱敏图片是否存在：" + b);
 		ImageUtil.markImageByMoreIcon(signIcon, source, output, signimageName, imageType, degree, index_x, index_y);
 
 		//受让人/投资人 脱敏签章（个人显示第一个字，企业全部脱敏）
 		source = output + "/" + signimageName + ".png";
+		boolean ise = FileUtil.judeFileExists(source);
+		logger.info("-----------下载脱敏图片完成，脱敏后图片地址：" + source + ",是否存在：" + ise);
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
 			index_x = 440;
 			index_y = 920;
