@@ -1,14 +1,19 @@
 package com.hyjf.am.trade.service.front.repay.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
@@ -18,6 +23,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -36,6 +42,9 @@ import java.util.*;
 public class RepayManageServiceImpl extends BaseServiceImpl implements RepayManageService {
 
     public static JedisPool pool = RedisUtils.getPool();
+
+    @Autowired
+    private BorrowLoanRepayProducer borrowLoanRepayProducer;
 
     /**
      * 普通借款人管理费总待还
@@ -4381,6 +4390,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         boolean apiCronFlag = borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                         if (apiCronFlag) {
                             repayFlag = true;
+                            sendRepayMessage(borrowApicron);// 用户还款后直接发起还款消息
                         } else {
                             throw new Exception("还款失败，项目编号：" + borrowNid);
                         }
@@ -4765,6 +4775,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     boolean apiCronFlag = borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                     if (apiCronFlag) {
                         repayFlag = true;
+                        sendRepayMessage(borrowApicron);// 用户还款后直接发起还款消息
                     } else {
                         throw new RuntimeException("重复还款");
                     }
@@ -4782,6 +4793,24 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         }
         map.put("repayFlag",repayFlag);
         return map;
+    }
+
+    /**
+     * 发送发起还款消息
+     * 由于是在事务内提交 会发生MQ消费时事务还没提交的情况 所以改成延时队列
+     * @author wgx
+     * @date 2018/10/17
+     */
+    public void sendRepayMessage(BorrowApicron apiCron) {
+        try {
+            borrowLoanRepayProducer.messageSendDelay(new MessageContent(MQConstant.BORROW_REPAY_REQUEST_TOPIC,
+                    apiCron.getBorrowNid(), JSON.toJSONBytes(apiCron)),2);
+            logger.info("【还款】发起还款消息:还款项目编号:[" + apiCron.getBorrowNid() + ",还款期数:[第" + apiCron.getPeriodNow() +
+                    "],计划编号:[" + (org.apache.commons.lang3.StringUtils.isEmpty(apiCron.getPlanNid()) ? "" : apiCron.getPlanNid()));
+        } catch (MQException e) {
+            e.printStackTrace();
+            logger.info("【还款】发起还款消息发生异常 ", e);
+        }
     }
 
     /**

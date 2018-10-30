@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -27,10 +28,12 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
-import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.BorrowLoanRepayProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.repay.RepayManageService;
 import com.hyjf.cs.trade.vo.BatchRepayPageRequestVO;
 import com.hyjf.cs.trade.vo.RepayDetailRequestVO;
@@ -85,9 +88,13 @@ public class RepayManageController extends BaseTradeController {
     SmsProducer smsProducer;
     @Autowired
     RepayManageService repayManageService;
-
     @Autowired
-    SystemConfig systemConfig;
+    BorrowLoanRepayProducer borrowLoanRepayProducer;
+    @Autowired
+    AmUserClient amUserClient;
+    @Autowired
+    private AuthService authService;
+
     /**
      * 用户还款页面统计数据查询
      */
@@ -116,7 +123,13 @@ public class RepayManageController extends BaseTradeController {
 
         resultMap.put("roleId", userVO.getRoleId());
         resultMap.put("userId", userVO.getUserId());
-
+        resultMap.put("repayAuthOn","0");
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+        resultMap.put("repayAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoRepayStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
         result.setData(resultMap);
         return result;
     }
@@ -359,11 +372,16 @@ public class RepayManageController extends BaseTradeController {
             result.setData(Collections.emptyMap());
             return result;
         }
-        // TODO 合规四期服务费授权
         resultMap.put("isAllRepay", isAllRepay);
-        resultMap.put("paymentAuthStatus", "");
-        resultMap.put("repayAuthStatus", "");
+        resultMap.put("repayAuthOn","0");
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+        resultMap.put("repayAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoRepayStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
         resultMap.put("repayProject", detaiResult);
+        resultMap.put("roleId", userVO.getRoleId());
         result.setData(resultMap);
 
         return result;
@@ -518,7 +536,11 @@ public class RepayManageController extends BaseTradeController {
 //        }
 
         resultMap.put("repayAuthStatus","");
-        // TODO 合规四期缴费授权
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        resultMap.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
         webResult.setData(resultMap);
         return webResult;
     }
@@ -559,6 +581,14 @@ public class RepayManageController extends BaseTradeController {
         if(isTime){
             msg = "996";
             logger.info("==============垫付机构:" + userVO.getUserId() + "校验处->批量还款失败,还款区间大于28天!");
+            webResult.setData(msg);
+            return webResult;
+        }
+        // 服务费授权和还款授权校验
+        boolean isPaymentAuth = this.authService.checkPaymentAuthStatus(userId);
+        if (!isPaymentAuth) {
+            msg = "996";
+            logger.info("==============垫付机构:" + userVO.getUserId() + "校验处->批量还款失败,没缴费授权!");
             webResult.setData(msg);
             return webResult;
         }
@@ -785,40 +815,34 @@ public class RepayManageController extends BaseTradeController {
                 // 更新相应的放款请求校验失败
                 return JSONObject.toJSONString(result, true);
             } else {
-                // 查询批次放款状态
-                BankCallBean batchResult = this.repayManageService.batchQuery(apicron);
-                if (Validator.isNotNull(batchResult)) {
-                    // 批次放款返回码
-                    String retCode = StringUtils.isNotBlank(batchResult.getRetCode()) ? batchResult.getRetCode() : "";
-                    if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
-                        // 批次放款状态
-                        String batchState = batchResult.getBatchState();
-                        if (StringUtils.isNotBlank(batchState)) {
-                            // 如果是批次处理失败
-                            if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_FAIL)) {
-                                String failMsg = batchResult.getFailMsg();// 失败原因
-                                if (StringUtils.isNotBlank(failMsg)) {
-                                    apicron.setData(failMsg);
-                                    apicron.setFailTimes((apicron.getFailTimes() + 1));
-                                    // 更新任务API状态
-                                    boolean apicronResultFlag = this.repayManageService.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
-                                    if (apicronResultFlag) {
-                                        result.setStatus(true);
-                                        return JSONObject.toJSONString(result, true);
-                                    } else {
-                                        throw new Exception("更新状态为（放款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
-                                    }
-                                }
-                            }
-                        } else {
-                            throw new Exception("放款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
-                        }
-                    } else {
-                        String retMsg = batchResult.getRetMsg();
-                        throw new Exception("放款状态查询失败！银行返回信息：" + retMsg + ",[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+                // update 2018/10/17   wgx  银行异步回调成功认为还款成功, 直接发送消息处理还款
+                String sucCount = bean.getSucCounts();// 成功笔数
+                Integer txCounts = apicron.getTxCounts();
+                if (sucCount != null && txCounts != null && !sucCount.equals(txCounts.toString())) {
+                    String failCounts = bean.getFailCounts();// 失败笔数
+                    String failAmount = bean.getFailAmount();// 失败金额
+                    if(StringUtils.isNotBlank(failCounts)) {
+                        logger.error("【还款业务处理结果异步通知】银行唯一订单号：" + bankSeqNo + ",失败笔数:{}，失败金额:{}", failCounts, failAmount);
                     }
-                } else {
-                    throw new Exception("放款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+                }
+                try {
+                    // 还款任务
+                    if (StringUtils.isBlank(apicron.getPlanNid())) {
+                        // 直投类还款
+                        borrowLoanRepayProducer.messageSend(new MessageContent(MQConstant.BORROW_REPAY_ZT_RESULT_TOPIC,
+                                apicron.getBorrowNid(), JSON.toJSONBytes(apicron)));
+                        logger.info("【还款业务处理结果异步通知】发送散标还款结果处理消息:还款项目编号:[{}]", apicron.getBorrowNid());
+                    } else {
+                        // 计划类还款
+                        borrowLoanRepayProducer.messageSend(new MessageContent(MQConstant.BORROW_REPAY_PLAN_RESULT_TOPIC,
+                                apicron.getBorrowNid(), JSON.toJSONBytes(apicron)));
+                        logger.info("【还款业务处理结果异步通知】发送计划还款结果处理消息:还款项目编号:[{}],计划编号:{}",
+                                apicron.getBorrowNid(), apicron.getPlanNid());
+                    }
+                } catch (MQException e) {
+                    e.printStackTrace();
+                    logger.info("【还款业务处理结果异步通知】发送还款结果处理消息失败:还款项目编号:[{}]{}",
+                            apicron.getBorrowNid(), StringUtils.isNotBlank(apicron.getPlanNid()) ? ",计划编号:" + apicron.getPlanNid() : "");
                 }
             }
         } else {

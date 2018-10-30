@@ -8,10 +8,10 @@ import com.hyjf.am.resquest.trade.AppHomePageRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.vo.UserDeviceUniqueCodeVO;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
-import com.hyjf.am.vo.trade.AppPushManageVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
@@ -487,6 +487,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         project.setButtonText(appHomePageCustomize.getStatusName());
         // 产品加息
         project.setBorrowExtraYield(appHomePageCustomize.getBorrowExtraYield());
+        project.setBorrowTheFirstDesc(appHomePageCustomize.getBorrowTheFirstDesc());
         return project;
     }
 

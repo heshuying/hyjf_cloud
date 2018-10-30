@@ -11,6 +11,7 @@ import com.hyjf.am.trade.service.front.borrow.ProjectListService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CommonUtils;
@@ -511,7 +512,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         criteria.andStatusEqualTo(1);
         criteria.andTimeStartLessThanOrEqualTo(new Date());
         criteria.andTimeEndGreaterThanOrEqualTo(new Date());
-        example.setOrderByClause(" `order` asc ,create_time desc");
+        example.setOrderByClause(" `order_id` asc ,create_time desc");
         List<AppPushManage> pushManageList = this.appPushManageMapper.selectByExample(example);
         if(pushManageList != null && pushManageList.size() > 0){
             List<AppPushManageVO> appPushManageVOS = CommonUtils.convertBeanList(pushManageList, AppPushManageVO.class);

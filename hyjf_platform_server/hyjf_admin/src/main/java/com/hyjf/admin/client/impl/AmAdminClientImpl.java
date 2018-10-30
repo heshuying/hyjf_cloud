@@ -1,5 +1,6 @@
 package com.hyjf.admin.client.impl;
 
+import com.hyjf.admin.beans.request.AppPushManageRequestBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
@@ -1311,5 +1312,59 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getResultList();
         }
         return null;
+    }
+
+    /**
+     * 移动客户端 - App 推送管理 列表
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public AppPushManageResponse getPushManageList(AppPushManageRequestBean requestBean) {
+        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/selectPushManageList/", requestBean, AppPushManageResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 移动客户端 - App 推送管理 添加
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public AppPushManageResponse insterPushManage(AppPushManageRequestBean requestBean){
+        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/insertPushManage/", requestBean, AppPushManageResponse.class).getBody();
+        if (response != null){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 移动客户端 - App 推送管理 更新
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean updatePushManage(AppPushManageRequestBean requestBean) {
+        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/updatePushManage/", requestBean, BooleanResponse.class).getBody();
+        return booleanResponse.getResultBoolean();
+    }
+
+    /**
+     * 移动客户端 - App 推送管理 删除
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean deletePushManage(Integer id) {
+        BooleanResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/appPushManage/deletePushManage/" + id, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
     }
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
@@ -43,6 +44,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private String ipInfoUrl;
 	@Autowired
 	QianleUserCustomizeMapper qianleUserCustomizeMapper;
+	@Autowired
+	HjhUserAuthMapper hjhUserAuthMapper;
 
 	/**
 	 * 注册
@@ -1561,8 +1564,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			if(info.getRoleId()!=2) {
 				return 4;
 			}
-
-			return 0;
+			// 判断是否服务费授权 和还款授权
+			HjhUserAuth auth = this.getHjhUserAuthByUserId(user.get(0).getUserId());
+			return  CommonUtils.checkAuthStatus(auth==null?null:auth.getAutoRepayStatus(),auth==null?null:auth.getAutoPaymentStatus());
 		}
 		return 1;
 	}
