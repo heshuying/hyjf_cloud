@@ -2431,7 +2431,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					borrowHouses.setBorrowNid(borrowNid);
 					borrowHouses.setBorrowPreNid(borrow.getBorrowPreNid());
 					BorrowHouses bh=new BorrowHouses();
-					BeanUtils.copyProperties(borrowHouses,new BorrowHouses());
+					BeanUtils.copyProperties(borrowHouses,bh);
 					this.borrowHousesMapper.insertSelective(bh);
 				}
 			}

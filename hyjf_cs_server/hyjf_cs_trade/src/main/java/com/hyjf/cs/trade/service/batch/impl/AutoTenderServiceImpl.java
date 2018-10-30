@@ -134,8 +134,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         RedisUtils.lpoprpush(queueName + RedisConstants.HJH_SLASH_TMP, queueName);
         // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
 
-        logger.info("====[" + accedeOrderId + "]" + "加入计划金额：" + accedeAccount.toString());
-        logger.info("====[" + accedeOrderId + "]" + "初始可投金额：" + ketouplanAmoust.toString());
+        logger.info("====[" + accedeOrderId + "]" + "加入计划金额：" + accedeAccount.toString()+ "，初始可投金额：" + ketouplanAmoust.toString());
 
         /** 1. 取得投资人信息（授权账户等） */
         //获取投资授权码

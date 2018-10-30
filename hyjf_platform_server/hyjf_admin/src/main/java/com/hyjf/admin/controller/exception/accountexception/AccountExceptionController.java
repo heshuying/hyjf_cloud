@@ -83,74 +83,74 @@ public class AccountExceptionController extends BaseController {
         return new AdminResult(SUCCESS,SUCCESS_DESC);
     }
 
-    public void exportAccountExceptionList(HttpServletResponse response, @RequestBody AccountExceptionRequest request) throws UnsupportedEncodingException {
-        // currPage<0 为全部,currPage>0 为具体某一页
-        request.setCurrPage(-1);
-        // 表格sheet名称
-        String sheetName = "注册信息";
-        // 文件名称
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
-                + CustomConstants.EXCEL_EXT;
-
-        List<AccountExceptionVO> recordList = accountExceptionService.searchAccountExceptionList(request);
-        String[] titles = new String[] { "序号", "用户名", "客户号", "手机号","角色", "平台可用金额", "平台冻结金额", "汇付可用金额", "汇付冻结金额" };
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
-        if (recordList != null && recordList.size() > 0) {
-
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < recordList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles,
-                            (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    AccountExceptionVO exceptionAccount = recordList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {// 序号
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) {
-                        cell.setCellValue(exceptionAccount.getUsername());
-                    } else if (celLength == 2) {
-                        cell.setCellValue(exceptionAccount.getCustomId());
-                    } else if (celLength == 3) {
-                        cell.setCellValue(exceptionAccount.getMobile());
-                    } else if (celLength == 4) {
-                        cell.setCellValue(exceptionAccount.getRole());
-                    } else if (celLength == 5) {
-                        cell.setCellValue(exceptionAccount.getBalancePlat().toString());
-                    } else if (celLength == 6) {
-                        cell.setCellValue(exceptionAccount.getFrostPlat().toString());
-                    } else if (celLength == 7) {
-                        cell.setCellValue(exceptionAccount.getBalanceHuifu().toString());
-                    } else if (celLength == 8) {
-                        cell.setCellValue(exceptionAccount.getFrostHuifu().toString());
-                    }else {
-                        long time = Long.valueOf(exceptionAccount.getCreateTime()) * 1000;
-                        Date date = new Date(time);
-                        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        String s = dateformat.format(date);
-                        cell.setCellValue(s);
-                    }
-                }
-            }
-        }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+//    public void exportAccountExceptionList(HttpServletResponse response, @RequestBody AccountExceptionRequest request) throws UnsupportedEncodingException {
+//        // currPage<0 为全部,currPage>0 为具体某一页
+//        request.setCurrPage(-1);
+//        // 表格sheet名称
+//        String sheetName = "注册信息";
+//        // 文件名称
+//        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+//                + CustomConstants.EXCEL_EXT;
+//
+//        List<AccountExceptionVO> recordList = accountExceptionService.searchAccountExceptionList(request);
+//        String[] titles = new String[] { "序号", "用户名", "客户号", "手机号","角色", "平台可用金额", "平台冻结金额", "汇付可用金额", "汇付冻结金额" };
+//        // 声明一个工作薄
+//        HSSFWorkbook workbook = new HSSFWorkbook();
+//        // 生成一个表格
+//        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+//
+//        if (recordList != null && recordList.size() > 0) {
+//
+//            int sheetCount = 1;
+//            int rowNum = 0;
+//
+//            for (int i = 0; i < recordList.size(); i++) {
+//                rowNum++;
+//                if (i != 0 && i % 60000 == 0) {
+//                    sheetCount++;
+//                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles,
+//                            (sheetName + "_第" + sheetCount + "页"));
+//                    rowNum = 1;
+//                }
+//
+//                // 新建一行
+//                Row row = sheet.createRow(rowNum);
+//                // 循环数据
+//                for (int celLength = 0; celLength < titles.length; celLength++) {
+//                    AccountExceptionVO exceptionAccount = recordList.get(i);
+//                    // 创建相应的单元格
+//                    Cell cell = row.createCell(celLength);
+//                    if (celLength == 0) {// 序号
+//                        cell.setCellValue(i + 1);
+//                    } else if (celLength == 1) {
+//                        cell.setCellValue(exceptionAccount.getUsername());
+//                    } else if (celLength == 2) {
+//                        cell.setCellValue(exceptionAccount.getCustomId());
+//                    } else if (celLength == 3) {
+//                        cell.setCellValue(exceptionAccount.getMobile());
+//                    } else if (celLength == 4) {
+//                        cell.setCellValue(exceptionAccount.getRole());
+//                    } else if (celLength == 5) {
+//                        cell.setCellValue(exceptionAccount.getBalancePlat().toString());
+//                    } else if (celLength == 6) {
+//                        cell.setCellValue(exceptionAccount.getFrostPlat().toString());
+//                    } else if (celLength == 7) {
+//                        cell.setCellValue(exceptionAccount.getBalanceHuifu().toString());
+//                    } else if (celLength == 8) {
+//                        cell.setCellValue(exceptionAccount.getFrostHuifu().toString());
+//                    }else {
+//                        long time = Long.valueOf(exceptionAccount.getCreateTime()) * 1000;
+//                        Date date = new Date(time);
+//                        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                        String s = dateformat.format(date);
+//                        cell.setCellValue(s);
+//                    }
+//                }
+//            }
+//        }
+//        // 导出
+//        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+//    }
     /**
      * 汇付对账列表导出
      * @auth sunpeikai

@@ -1,4 +1,4 @@
-package com.hyjf.am.config.service.locked;
+package com.hyjf.am.user.service.admin.locked;
 
 import com.hyjf.am.bean.admin.LockedConfig;
 

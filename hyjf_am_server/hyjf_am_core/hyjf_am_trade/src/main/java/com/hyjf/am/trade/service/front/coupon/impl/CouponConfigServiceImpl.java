@@ -219,14 +219,8 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	}
 
 	@Override
-	public Integer insertCouponRecover(CouponRecoverVO cr) {
-		CouponRecover couponRecover=CommonUtils.convertBean(cr,CouponRecover.class);
-		Integer recoverPeriod = null;
-		if (!"null".equals(cr.getRecoverPeriod()) && StringUtils.isNotBlank(cr.getRecoverPeriod())){
-			recoverPeriod = Integer.parseInt(cr.getRecoverPeriod());
-		}
-		couponRecover.setRecoverPeriod(recoverPeriod);
-		return  couponRecoverMapper.insertSelective(CommonUtils.convertBean(cr,CouponRecover.class));
+	public Integer insertCouponRecover(CouponRecover cr) {
+		return  couponRecoverMapper.insertSelective(cr);
 	}
 
 	@Override
