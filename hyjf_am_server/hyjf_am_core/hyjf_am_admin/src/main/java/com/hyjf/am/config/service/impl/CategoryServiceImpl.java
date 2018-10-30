@@ -165,7 +165,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<ContentHelp> getContentHelpList(ContentHelpBeanRequest contentHelpBeanRequest) {
         ContentHelpExample con = dealContentHelpParam(contentHelpBeanRequest);
         con.setLimitStart((contentHelpBeanRequest.getCurrPage()-1) * contentHelpBeanRequest.getPageSize());
-        con.setLimitEnd((contentHelpBeanRequest.getCurrPage()) * contentHelpBeanRequest.getPageSize());
+        con.setLimitEnd(contentHelpBeanRequest.getPageSize());
         return contentHelpMapper.selectByExample(con);
     }
 
@@ -229,18 +229,12 @@ public class CategoryServiceImpl implements CategoryService {
             conCriteria.andStatusEqualTo(contentHelpBeanRequest.getStatus());
         }
 
-        if (StringUtils.isNotBlank(contentHelpBeanRequest.getPost_time_begin())) {
-            Date startDate = GetDate.str2Date(contentHelpBeanRequest.getPost_time_begin(),GetDate.datetimeFormat);
-            if(startDate != null){
-                conCriteria.andCreateTimeGreaterThanOrEqualTo(startDate);
-            }
+        if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_begin())) {
+            conCriteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(contentHelpBeanRequest.getPost_time_begin(),GetDate.datetimeFormat));
         }
 
-        if (StringUtils.isNotBlank(contentHelpBeanRequest.getPost_time_end())) {
-            Date endDate = GetDate.str2Date(contentHelpBeanRequest.getPost_time_end(),GetDate.datetimeFormat);
-            if(endDate != null){
-                conCriteria.andCreateTimeLessThanOrEqualTo(endDate);
-            }
+        if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_end())) {
+            conCriteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(contentHelpBeanRequest.getPost_time_end(),GetDate.datetimeFormat));
         }
         return con;
     }
