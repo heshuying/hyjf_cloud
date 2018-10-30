@@ -5,20 +5,20 @@ spring:
     admin:
       client:
         url: http://micoserver:18080
-  profiles:
-    active: native
+#  profiles:
+#    active: native
   cloud:
     config:
       server:
-        native:
-          searchLocations: D:/hyjf/git/1030/micro-deploy/src/main/resources
-#        git:
-#          uri: http://gitlab.hyjf.com:6080/microserver/micro-deploy.git
-#          searchPaths: src/main/resources
-#          username: deployment
-#          password: deploy2018
-#  profiles:
-#    active: dev
+#        native:
+#          searchLocations: D:/hyjf/git/1030/micro-deploy/src/main/resources
+        git:
+          uri: http://gitlab.hyjf.com:6080/microserver/micro-deploy.git
+          searchPaths: src/main/resources
+          username: deployment
+          password: deploy2018
+  profiles:
+    active: dev
 
 eureka:
   client:

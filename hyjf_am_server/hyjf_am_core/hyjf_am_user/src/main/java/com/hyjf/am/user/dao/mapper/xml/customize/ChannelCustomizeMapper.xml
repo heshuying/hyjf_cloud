@@ -36,7 +36,7 @@
 		<result column="remark" property="remark" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="selectList" resultMap="selectListMap" parameterType="com.hyjf.am.user.dao.model.customize.ChannelCustomize">
+	<select id="selectList" resultMap="selectListMap" parameterType="com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO">
 		SELECT
 		  utm.utm_id,
 		  utm.utm_source,

@@ -7,6 +7,7 @@ import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.customize.ChannelCustomize;
 import com.hyjf.am.user.service.admin.promotion.ChannelService;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,9 @@ public class ChannelController extends BaseController {
      * @return
      */
     @RequestMapping("/getchannellist")
-    public UtmResponse getChannelList(@RequestBody @Valid ChannelCustomize channelCustomize) {
+    public UtmResponse getChannelList(@RequestBody @Valid ChannelCustomizeVO channelCustomizeVO) {
         UtmResponse response = new UtmResponse();
-        List<ChannelCustomize> pageList = channelService.getChannelList(channelCustomize);
+        List<ChannelCustomize> pageList = channelService.getChannelList(channelCustomizeVO);
         if (pageList != null) {
             response.setResultList(pageList);
         }

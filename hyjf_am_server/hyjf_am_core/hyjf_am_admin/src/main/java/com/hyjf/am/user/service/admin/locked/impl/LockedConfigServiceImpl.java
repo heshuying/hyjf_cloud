@@ -1,33 +1,27 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.config.service.locked.impl;
+package com.hyjf.am.user.service.admin.locked.impl;
 
 import com.hyjf.am.bean.admin.LockedConfig;
-import com.hyjf.am.config.controller.admin.locked.LockedConfigManager;
+import com.hyjf.am.user.controller.admin.locked.LockedConfigManager;
 import com.hyjf.am.config.dao.mapper.customize.AdminCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.Admin;
-import com.hyjf.am.config.service.locked.LockedConfigService;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.model.auto.LockedUserInfo;
 import com.hyjf.am.user.dao.model.auto.LockedUserInfoExample;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserExample;
-import com.hyjf.am.user.service.admin.locked.impl.LockedUserServiceImpl;
-import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.user.service.admin.locked.LockedConfigService;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.security.util.MD5;
-import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.util.calculate.DateUtils;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import redis.clients.jedis.Jedis;
