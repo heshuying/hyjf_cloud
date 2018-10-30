@@ -91,6 +91,16 @@ public class AdsServiceImpl implements AdsService {
 		List<Ads> adsList = adsMapper.selectByExample(example);
 		return adsList;
 	}
-
+	@Override
+	public List<Ads> getAdsList(String adsType) {
+		AdsExample example = new AdsExample();
+		AdsExample.Criteria cra = example.createCriteria();
+		cra.andTypeIdEqualTo(Integer.parseInt(adsType));
+		cra.andStatusEqualTo(1);
+		cra.andStartTimeLessThanOrEqualTo(GetDate.getDataString(GetDate.datetimeFormat));// 活动开始时间要小于当前时间
+		cra.andEndTimeGreaterThanOrEqualTo(GetDate.getDataString(GetDate.datetimeFormat));// 活动结束时间要大于当前时间
+		example.setOrderByClause(" `order` asc");
+		return adsMapper.selectByExample(example);
+	}
 
 }

@@ -5,6 +5,7 @@ package com.hyjf.am.user.service.admin.promotion;
 
 import com.hyjf.am.user.dao.model.customize.ChannelCustomize;
 import com.hyjf.am.user.service.BaseService;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 
 import java.util.List;
 
@@ -31,5 +32,5 @@ public interface ChannelService extends BaseService{
      * @Param channelCustomizeVO
      * @return List<ChannelCustomizeVO>
      */
-    List<ChannelCustomize> getChannelList(ChannelCustomize channelCustomize);
+    List<ChannelCustomize> getChannelList(ChannelCustomizeVO channelCustomizeVO);
 }

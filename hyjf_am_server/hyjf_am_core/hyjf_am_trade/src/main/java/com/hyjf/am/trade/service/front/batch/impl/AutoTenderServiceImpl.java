@@ -775,6 +775,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             if (debtDetailOldList != null && debtDetailOldList.size() == 1) {
                 HjhDebtDetail debtDetailOld = debtDetailOldList.get(0);
                 // 承接人承接本金
+                logger.info(assignPay  + "*" + debtDetailOld.getLoanCapital() + "/" + credit.getLiquidationFairValue());
                 assignCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
                         debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
                 // 承接人承接利息
@@ -1307,7 +1308,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                         }
                         // add 汇计划二期迭代 复投债转的状态追加 liubin 20180330 end
                         boolean debtCreditTenderFlag = this.hjhDebtCreditTenderMapper.insertSelective(debtCreditTender) > 0 ? true : false;
+                        logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCreditTender插入开始！");
                         if (debtCreditTenderFlag) {
+                            logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCreditTender插入成功！");
+                            logger.info("^^^^^^^^^^^^^^^^^^" + debtCredit.getCreditAccountWait() +"-"+debtCreditTender.getAssignAccount());
                             // 5.更新borrow_credit
                             debtCredit.setCreditAccountWait(debtCredit.getCreditAccountWait().subtract(debtCreditTender.getAssignAccount()));// 待承接总金额 认购本息（不包含垫付利息）
                             debtCredit.setCreditCapitalWait(debtCredit.getCreditCapitalWait().subtract(debtCreditTender.getAssignCapital()));//待承接本金
@@ -1340,8 +1344,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                 debtCredit.setEndTime(nowTime);
                             }
                             // add 汇计划二期迭代 债转结束时间追加 liubin 20180402 end
+                            logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCredit更新开始！");
                             boolean debtCreditFlag = hjhDebtCreditMapper.updateByPrimaryKey(debtCredit) > 0 ? true : false;
                             if (debtCreditFlag) {
+                                logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCredit更新成功！");
                                 Account assignAccount = this.selectUserAccount(userId);
                                 if (Validator.isNotNull(assignAccount)) {
                                     // 插入相应的承接人汇添金资金明细表
