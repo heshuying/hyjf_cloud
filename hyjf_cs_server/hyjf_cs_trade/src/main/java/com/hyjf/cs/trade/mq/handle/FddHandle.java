@@ -1891,41 +1891,41 @@ public class FddHandle {
 						   String trueImageFilePath, List jointPathList, int pages, int pdfType, boolean isTenderConmpany, boolean creditCompany){
 
 		//出让人、借款人真实姓名脱敏图片
-		String borrowTrueNametmImage = "/image/companyname.png";
+		String borrowTrueNametmImage = "image/companyname.png";
 		//出让人、借款人签章图片
-		String borrowSigntmImage = "/image/companyname.png";
+		String borrowSigntmImage = "image/companyname.png";
 		//出让人、借款人身份证号码图片
-		String borrowCardNoImage = "/image/cardno.png";
+		String borrowCardNoImage = "image/cardno.png";
 
 		//承接人、投资人真实姓名脱敏图片
-		String tenderTrueNametmImage = "/image/companyname.png";
+		String tenderTrueNametmImage = "image/companyname.png";
 		//承接人、投资人签章图片
-		String tenderSigntmImage = "/image/companyname.png";
+		String tenderSigntmImage = "image/companyname.png";
 		//承接人、投资人身份证号码图片
-		String tenderCardNoImage = "/image/cardno.png";
+		String tenderCardNoImage = "image/cardno.png";
 
 		if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
 			if(creditCompany){//出让人为企业
-				borrowTrueNametmImage = "/image/companyname.png";
-				borrowSigntmImage = "/image/seal.png";
+				borrowTrueNametmImage = "image/companyname.png";
+				borrowSigntmImage = "image/seal.png";
 				borrowCardNoImage = borrowTrueNametmImage;
 			}
 			if(isTenderConmpany){//承接人为企业
-				tenderTrueNametmImage = "/image/companyname.png";
-				tenderSigntmImage = "/image/seal.png";
+				tenderTrueNametmImage = "image/companyname.png";
+				tenderSigntmImage = "image/seal.png";
 				tenderCardNoImage = tenderTrueNametmImage;
 			}
 
 		}else{
 			if(isCompanyUser){
-				borrowTrueNametmImage = "/image/companyname.png";
-				borrowSigntmImage = "/image/seal.png";
+				borrowTrueNametmImage = "image/companyname.png";
+				borrowSigntmImage = "image/seal.png";
 				borrowCardNoImage = borrowTrueNametmImage;
 			}
 			if(isTenderConmpany){
-				tenderTrueNametmImage = "/image/companyname.png";
-				tenderSigntmImage = "/image/seal.png";
+				tenderTrueNametmImage = "image/companyname.png";
+				tenderSigntmImage = "image/seal.png";
 				tenderCardNoImage = tenderTrueNametmImage;
 			}
 		}
