@@ -137,10 +137,12 @@ public class BankOpenController extends BaseController {
 	}
 
 	@RequestMapping("/selectById/{userId}")
-	public BankOpenAccountResponse selectById(@PathVariable int userId) {
+	public BankOpenAccountResponse selectById(@PathVariable String userId) {
 		BankOpenAccountExample accountExample = new BankOpenAccountExample();
 		BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
-		crt.andUserIdEqualTo(userId);
+		if(userId != null && !"".equals(userId) && !"null".equalsIgnoreCase(userId)){
+			crt.andUserIdEqualTo(Integer.valueOf(userId));
+		}
 		BankOpenAccountResponse response = new BankOpenAccountResponse();
 		BankOpenAccount bankOpenAccount = bankOpenService.selectByExample(accountExample);
 		if(bankOpenAccount != null){

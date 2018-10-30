@@ -54,7 +54,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据userName查询user信息
-	 * 
+	 *
 	 * @auth sunpeikai
 	 * @param
 	 * @return
@@ -71,7 +71,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据userId查询accountChinapnr开户信息
-	 * 
+	 *
 	 * @auth sunpeikai
 	 * @param
 	 * @return
@@ -88,7 +88,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据userId查询用户信息
-	 * 
+	 *
 	 * @auth sunpeikai
 	 * @param userId
 	 *            用户id
@@ -106,7 +106,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据accountId获取用户
-	 * 
+	 *
 	 * @auther: hesy
 	 * @date: 2018/7/14
 	 */
@@ -164,7 +164,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据userId列表查询user列表
-	 * 
+	 *
 	 * @auth sunpeikai
 	 * @param userIds
 	 *            用户id列表
@@ -182,7 +182,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 利用borrowNid查询出来的异常标的借款人userId查询银行账户
-	 * 
+	 *
 	 * @auth sunpeikai
 	 * @param userId
 	 *            用户id
@@ -200,7 +200,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户名获取自定义属性的user信息
-	 * 
+	 *
 	 * @auth sunpeikai
 	 * @param userName
 	 *            用户名
@@ -218,7 +218,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id查询自定义用户信息
-	 * 
+	 *
 	 * @auth sunpeikai
 	 * @param userId
 	 *            用户名
@@ -236,7 +236,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id查询推荐人表信息
-	 * 
+	 *
 	 * @auth sunpeikai
 	 * @param userId
 	 *            用户id
@@ -254,7 +254,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id查询employee
-	 * 
+	 *
 	 * @auth sunpeikai
 	 * @param userId
 	 *            用户id
@@ -272,7 +272,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 查询自动投资债转异常列表
-	 * 
+	 *
 	 * @auth sunpeikai
 	 * @param
 	 * @return
@@ -287,7 +287,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 同步用户授权状态
-	 * 
+	 *
 	 * @auth sunpeikai
 	 * @param type
 	 *            1自动投资授权 2债转授权
@@ -304,7 +304,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更具userName获取开户信息
-	 * 
+	 *
 	 * @auther: hesy
 	 * @date: 2018/7/14
 	 */
@@ -340,7 +340,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据筛选条件查找用户总数
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param request
 	 * @return
@@ -358,7 +358,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取用户详情
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -377,7 +377,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取测评信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -396,7 +396,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取开户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -415,7 +415,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取企业用户开户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -434,7 +434,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取第三方平台绑定信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -453,7 +453,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取用户CA认证记录表
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -472,7 +472,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取用户修改信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -491,7 +491,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更新用户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param request
 	 * @return
@@ -508,7 +508,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取推荐人信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -527,7 +527,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 校验手机号
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @param mobile
@@ -544,7 +544,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 校验推荐人
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @param recommendName
@@ -561,7 +561,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id查找用户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -579,7 +579,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id查找用户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -597,7 +597,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更新企业用户开户记录
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param request
 	 * @return
@@ -612,7 +612,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 插入企业用户开户记录
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param request
 	 * @return
@@ -627,7 +627,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 获取银行卡配置信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param bankId
 	 * @return
@@ -642,7 +642,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更新用户绑定的银行卡
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param request
 	 * @return
@@ -656,7 +656,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 保存用户绑定的银行卡
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param request
 	 * @return
@@ -670,7 +670,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 单表查询开户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @return
 	 */
@@ -688,7 +688,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更新开户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param request
 	 * @return
@@ -703,7 +703,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 插入开户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param request
 	 * @return
@@ -735,7 +735,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更新用户信息表
-	 * 
+	 *
 	 * @auther: nxl
 	 * @return
 	 */
@@ -754,7 +754,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更新用户表
-	 * 
+	 *
 	 * @return
 	 * @auther: nxl
 	 */
@@ -772,7 +772,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 获取某一用户的信息修改列表
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -790,7 +790,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据推荐人姓名查找用户
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param recommendName
 	 * @return
@@ -809,7 +809,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据userId查找推荐人信息
-	 * 
+	 *
 	 * @param userId
 	 * @auther: nxl
 	 * @return
@@ -828,7 +828,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 修改推荐人信息
-	 * 
+	 *
 	 * @param request
 	 * @auther: nxl
 	 * @return
@@ -846,7 +846,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 修改用户身份证
-	 * 
+	 *
 	 * @param request
 	 * @auther: nxl
 	 * @return
@@ -863,7 +863,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 修改用户身份证
-	 * 
+	 *
 	 * @param updCompanyRequest
 	 * @auther: nxl
 	 * @return
@@ -878,7 +878,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据参数查询用户画像信息
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -912,20 +912,18 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 	/**
 	 * 根据用户id查找用户画像
-	 * 
+	 *
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public UserPortraitVO selectUsersPortraitByUserId(Integer userId) {
-		if(userId != null){
-			UserPortraitResponse response = restTemplate
-					.getForEntity("http://AM-ADMIN/am-user/userPortraitManage/selectUserPortraitByUserId/" + userId,
-							UserPortraitResponse.class)
-					.getBody();
-			if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-				return response.getResult();
-			}
+		UserPortraitResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userPortraitManage/selectUserPortraitByUserId/" + userId,
+						UserPortraitResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
 		}
 		return null;
 	}
@@ -951,12 +949,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public BankOpenAccountVO getBankOpenAccountByUserId(Integer userId) {
-		if(userId != null){
-			String url = "http://AM-ADMIN/am-user/bankopen/selectById/" + userId;
-			BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
-			if (response != null) {
-				return response.getResult();
-			}
+		String url = "http://AM-ADMIN/am-user/bankopen/selectById/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
 		}
 		return null;
 	}
@@ -986,7 +982,7 @@ public class AmUserClientImpl implements AmUserClient {
 	/* 加入明细end */
 	/**
 	 * 查找注册记录列表
-	 * 
+	 *
 	 * @author nxl
 	 * @param request
 	 * @return
@@ -1003,7 +999,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 查找借款盖章用户信息
-	 * 
+	 *
 	 * @author nxl
 	 * @param request
 	 * @return
@@ -1022,7 +1018,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 保存借款盖章用户信息
-	 * 
+	 *
 	 * @param request
 	 * @author nxl
 	 */
@@ -1039,7 +1035,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据证件号码查找借款主体CA认证记录表
-	 * 
+	 *
 	 * @param strIdNo
 	 * @author nxl
 	 * @return
@@ -1059,7 +1055,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据id查找借款主体CA认证记录表
-	 * 
+	 *
 	 * @param strId
 	 * @author nxl
 	 * @return
@@ -1078,7 +1074,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更新借款盖章用户记录
-	 * 
+	 *
 	 * @param request
 	 * @author nxl
 	 * @return
@@ -1096,7 +1092,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据筛选条件查找(用户测评列表显示)
-	 * 
+	 *
 	 * @author nxl
 	 * @param request
 	 * @return
@@ -1115,7 +1111,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 查找用户测评结果
-	 * 
+	 *
 	 * @author nxl
 	 * @param userId
 	 * @return
@@ -1134,7 +1130,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 查找汇付银行开户记录列表
-	 * 
+	 *
 	 * @author nixiaoling
 	 * @param request
 	 * @return
@@ -1153,7 +1149,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 查找江西银行开户记录列表
-	 * 
+	 *
 	 * @author nixiaoling
 	 * @param request
 	 * @return
@@ -1172,7 +1168,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据筛选条件查找汇付银行卡信息列表
-	 * 
+	 *
 	 * @param request
 	 *            筛选条件
 	 * @return
@@ -1191,7 +1187,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据筛选条件查找江西银行卡信息列表
-	 * 
+	 *
 	 * @author nixiaoling
 	 * @return
 	 */
@@ -1209,7 +1205,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 查找用户银行卡操作记录表
-	 * 
+	 *
 	 * @param request
 	 * @author nixiaoling
 	 * @return
@@ -1228,7 +1224,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据证件号码和姓名查找用户CA认证记录表
-	 * 
+	 *
 	 * @param tureName
 	 * @return
 	 */
@@ -1245,7 +1241,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据证件号码和姓名查找用户CA认证记录表
-	 * 
+	 *
 	 * @param
 	 * @param
 	 * @return
@@ -1264,25 +1260,25 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public AdminUserAuthListResponse userauthlist(AdminUserAuthListRequest adminUserAuthListRequest) {
 		AdminUserAuthListResponse response = restTemplate
-	                .postForEntity("http://AM-ADMIN/am-user/userauth/userauthlist",adminUserAuthListRequest, AdminUserAuthListResponse.class)
-	                .getBody();
+				.postForEntity("http://AM-ADMIN/am-user/userauth/userauthlist",adminUserAuthListRequest, AdminUserAuthListResponse.class)
+				.getBody();
 
-	        return response;
+		return response;
 	}
 
 	@Override
 	public AdminUserAuthListResponse cancelInvestAuth(int userId) {
 		AdminUserAuthListResponse response = restTemplate.
-                getForEntity("http://AM-ADMIN/am-user/userauth/userinvescancel/" + userId , AdminUserAuthListResponse.class).
-                getBody();
+				getForEntity("http://AM-ADMIN/am-user/userauth/userinvescancel/" + userId , AdminUserAuthListResponse.class).
+				getBody();
 		return response;
 	}
 
 	@Override
 	public AdminUserAuthListResponse cancelCreditAuth(int userId) {
 		AdminUserAuthListResponse response = restTemplate.
-                getForEntity("http://AM-ADMIN/am-user/userauth/usercreditcancel/" + userId, AdminUserAuthListResponse.class).
-                getBody();
+				getForEntity("http://AM-ADMIN/am-user/userauth/usercreditcancel/" + userId, AdminUserAuthListResponse.class).
+				getBody();
 		return response;
 	}
 
@@ -1290,10 +1286,10 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public AdminUserAuthLogListResponse userauthLoglist(AdminUserAuthLogListRequest adminUserAuthListRequest) {
 		AdminUserAuthLogListResponse response = restTemplate
-                .postForEntity("http://AM-ADMIN/am-user/userauth/userauthloglist",adminUserAuthListRequest, AdminUserAuthLogListResponse.class)
-                .getBody();
+				.postForEntity("http://AM-ADMIN/am-user/userauth/userauthloglist",adminUserAuthListRequest, AdminUserAuthLogListResponse.class)
+				.getBody();
 
-        return response;
+		return response;
 	}
 	@Override
 	public CertificateAuthorityResponse getRecordList(CertificateAuthorityExceptionRequest aprlr) {
@@ -1490,7 +1486,7 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-    public UtmResponse getByPageList(Map<String, Object> map) {
+	public UtmResponse getByPageList(Map<String, Object> map) {
 
 		ResponseEntity<UtmResponse<UtmVO>> response = restTemplate.exchange(
 				"http://AM-ADMIN/am-user/promotion/utm/getbypagelist", HttpMethod.POST, new HttpEntity<>(map),
@@ -1845,7 +1841,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public MspResponse deleteAction(MspRequest mspRequest) {
-		 MspResponse mspResponse = restTemplate
+		MspResponse mspResponse = restTemplate
 				.postForEntity("http://AM-ADMIN/am-user/mspapplyconfigure/deleteAction" ,mspRequest,
 						MspResponse.class)
 				.getBody();
@@ -1857,14 +1853,14 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public MspResponse checkAction(MspRequest mspRequest) {
-		 MspResponse mspResponse = restTemplate
-					.postForEntity("http://AM-ADMIN/am-user/mspapplyconfigure/checkAction" ,mspRequest,
-							MspResponse.class)
-					.getBody();
-			if (mspResponse != null) {
-				return mspResponse;
-			}
-			return null;
+		MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/mspapplyconfigure/checkAction" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
 	}
 
 	/**
@@ -2110,11 +2106,11 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
-     * 获取用户账户信息byaccountId
-     * @auth libin
-     * @param accountId
-     * @return
-     */
+	 * 获取用户账户信息byaccountId
+	 * @auth libin
+	 * @param accountId
+	 * @return
+	 */
 	@Override
 	public BankOpenAccountVO getBankOpenAccountByAccountId(String accountId) {
 		String url = "http://AM-ADMIN/am-user/bankopen/getBankOpenAccountByAccountId/" + accountId;
@@ -2330,10 +2326,10 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int isExistsUser(String userId) {
-        int response = restTemplate
-                .getForEntity("http://AM-ADMIN/am-user/user/isExistsUser/" + userId, Integer.class)
-                .getBody();
-        return response;
+		int response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/user/isExistsUser/" + userId, Integer.class)
+				.getBody();
+		return response;
 	}
 	/**
 	 * 根据推荐人id查找用信息
@@ -2402,7 +2398,7 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 	/**
 	 * 根据证件号码和姓名查找用户CA认证记录表
-	 * 
+	 *
 	 * @param tureName
 	 * @return
 	 */
