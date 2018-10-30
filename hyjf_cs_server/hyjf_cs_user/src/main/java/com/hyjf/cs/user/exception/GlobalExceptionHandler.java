@@ -24,16 +24,18 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(value = Exception.class)
 	@ResponseBody
 	public BaseResult defaultErrorHandler(HttpServletRequest req, Exception e) {
+		logger.error("请求路径:[{}]",req.getRequestURI());
 		logger.error("system error", e);
 		BaseResult response = new BaseResult();
 		response.setStatus(SYSTEM_ERROR);
-		response.setStatusDesc(e.getMessage() == null ? SYSTEM_ERROR_MSG : e.getMessage());
+		response.setStatusDesc(SYSTEM_ERROR_MSG);
 		return response;
 	}
 
 	@ExceptionHandler(value = ReturnMessageException.class)
 	@ResponseBody
 	public BaseResult defaultReturnErrorHandler(HttpServletRequest req, ReturnMessageException e) {
+		logger.error("请求路径:[{}]",req.getRequestURI());
 		BaseResult response = new BaseResult();
 		response.setStatus(e.getError().getCode());
 		response.setStatusDesc(e.getError().getMsg());

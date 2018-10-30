@@ -105,6 +105,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_WITHDRAW_AMOUNT_GREATER_THAN_ONE("EAM000102","提现金额需大于1元"),
 	ERR_AMT_WITHDRAW_CARD("EAM000103","银行卡号不正确，请确认后再次提现"),
 	ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED("EAM000104","大额提现时,开户行号不能为空"),
+	ERR_AMT_WITHDRAW_BANK_MORETHEN_BANLANCE("EAM000105","提现金额大于可用余额，请确认后再次提现"),
 
 
 	// 资金-投资相关错误信息ERR_AMT_TENDER_
@@ -212,6 +213,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_PASSWORD_MODIFY("EPW000008","修改密码失败,未作任何操作"),
 	ERR_PASSWORD_OLD_REQUIRED("EPW000009","原始登录密码不能为空"),
 	ERR_PASSWORD_INVALID("EPW000010","输入的密码不正确"),
+	ERR_PASSWORD_ERROR_TOO_MAX("EPW000011", "您的登录失败次数超限，请{0}之后重试！"),
+	ERR_PASSWORD_ERROR_MAX("EPW0000012", "登录失败,您的登录机会还剩{0}次！"),
 	//交易密码相关错误信息ERR_TRADE_PASSWORD_
 	ERR_TRADE_PASSWORD_NOT_SET("EPW000101", "未设置交易密码"),
 	ERR_TRADE_PASSWORD_ALREADY_SET("EPW000102","已设置交易密码"),

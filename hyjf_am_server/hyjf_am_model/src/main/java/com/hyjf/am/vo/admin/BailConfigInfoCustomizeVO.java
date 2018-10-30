@@ -317,4 +317,94 @@ public class BailConfigInfoCustomizeVO extends BailConfigCustomizeVO implements 
     public void setEndmonthsDEL(Integer endmonthsDEL) {
         this.endmonthsDEL = endmonthsDEL;
     }
+
+    public String getMonthLLL() {
+        StringBuffer sb = new StringBuffer();
+        if (null != this.monthNCL && this.monthNCL == 1) {
+            sb.append("新增授信+");
+        }
+        if (null != this.monthLCL && this.monthLCL == 1) {
+            sb.append("在贷授信+");
+        }
+        if (null != this.monthRCT && this.monthRCT == 0) {
+            sb.append("到期回滚");
+        } else if (null != this.monthRCT && this.monthRCT == 1) {
+            sb.append("分期回滚");
+        } else if (null != this.monthRCT && this.monthRCT == 2) {
+            sb.append("不回滚");
+        }
+        return sb.toString();
+    }
+
+    public String getEndLLL() {
+        StringBuffer sb = new StringBuffer();
+        if (null != this.endNCL && this.endNCL == 1) {
+            sb.append("新增授信+");
+        }
+        if (null != this.endLCL && this.endLCL == 1) {
+            sb.append("在贷授信+");
+        }
+        if (null != this.endRCT && this.endRCT == 0) {
+            sb.append("到期回滚");
+        } else if (null != this.endRCT && this.endRCT == 1) {
+            sb.append("分期回滚");
+        } else if (null != this.endRCT && this.endRCT == 2) {
+            sb.append("不回滚");
+        }
+        return sb.toString();
+    }
+
+    public String getEndmonthLLL() {
+        StringBuffer sb = new StringBuffer();
+        if (null != this.endmonthNCL && this.endmonthNCL == 1) {
+            sb.append("新增授信+");
+        }
+        if (null != this.endmonthNCL && this.endmonthLCL == 1) {
+            sb.append("在贷授信+");
+        }
+        if (null != this.endmonthRCT && this.endmonthRCT == 0) {
+            sb.append("到期回滚");
+        } else if (null != this.endmonthRCT && this.endmonthRCT == 1) {
+            sb.append("分期回滚");
+        } else if (null != this.endmonthRCT && this.endmonthRCT == 2) {
+            sb.append("不回滚");
+        }
+        return sb.toString();
+    }
+
+    public String getEnddayLLL() {
+        StringBuffer sb = new StringBuffer();
+        if (null != this.enddayNCL && this.enddayNCL == 1) {
+            sb.append("新增授信+");
+        }
+        if (null != this.enddayLCL && this.enddayLCL == 1) {
+            sb.append("在贷授信+");
+        }
+        if (null != this.enddayRCT && this.enddayRCT == 0) {
+            sb.append("到期回滚");
+        } else if (null != this.enddayRCT && this.enddayRCT == 1) {
+            sb.append("分期回滚");
+        } else if (null != this.enddayRCT && this.enddayRCT == 2) {
+            sb.append("不回滚");
+        }
+        return sb.toString();
+    }
+
+    public String getPrincipalLLL() {
+        StringBuffer sb = new StringBuffer();
+        if (null != this.principalNCL && this.principalNCL == 1) {
+            sb.append("新增授信+");
+        }
+        if (null != this.principalLCL && this.principalLCL == 1) {
+            sb.append("在贷授信+");
+        }
+        if (null != this.principalRCT && this.principalRCT == 0) {
+            sb.append("到期回滚");
+        } else if (null != this.principalRCT && this.principalRCT == 1) {
+            sb.append("分期回滚");
+        } else if (null != this.principalRCT && this.principalRCT == 2) {
+            sb.append("不回滚");
+        }
+        return sb.toString();
+    }
 }

@@ -74,4 +74,25 @@ public interface BorrowTenderCustomizeMapper {
      * @return
      */
 	WrbTenderNotifyCustomizeVO searchBorrowTenderByNid(Map<String,Object> paramMap);
+
+	List<WrbTenderNotifyCustomizeVO> getBorrowTenderByAddtime(@Param("sourceIdSrch")String sourceIdSrch,@Param("timeStartSrch") String dayStart,
+														@Param("timeEndSrch") String dayEnd);
+
+	List<WrbTenderNotifyCustomizeVO> getCreditTenderByAddtime(@Param("timeStartSrch") String dayStart,
+															  @Param("timeEndSrch") String dayEnd);
+
+	List<WrbTenderNotifyCustomizeVO> getAccountRechargeByAddtime(@Param("timeStartSrch") String dayStart,
+															  @Param("timeEndSrch") String dayEnd);
+
+	List<WrbTenderNotifyCustomizeVO> getBorrowTenderByClient(@Param("sourceIdSrch") String sourceIdSrch,@Param("timeStartSrch") String dayStart,
+																 @Param("timeEndSrch") String dayEnd);
+
+	List<WrbTenderNotifyCustomizeVO> getProductListByClient(@Param("sourceIdSrch") String sourceIdSrch,@Param("timeStartSrch") String dayStart,
+															 @Param("timeEndSrch") String dayEnd);
+
+	List<WrbTenderNotifyCustomizeVO> getDebtPlanAccedeByClient(@Param("sourceIdSrch") String sourceIdSrch,@Param("timeStartSrch") String dayStart,
+															@Param("timeEndSrch") String dayEnd);
+
+	List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(@Param("sourceIdSrch") String sourceIdSrch,@Param("timeStartSrch") String dayStart,
+															   @Param("timeEndSrch") String dayEnd);
 }

@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.exception.bankdebtend;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
@@ -58,19 +59,23 @@ public class BankCreditEndExceptionController extends BaseController {
     @ApiOperation(value = "结束债权(新)同步", notes = "结束债权(新)同步")
     @PostMapping("/update_frombank")
     public AdminResult updateFromBank(@RequestBody BankCreditEndUpdateRequest requestBean){
+        logger.info("结束债权(新)同步, requestBean: " + JSON.toJSONString(requestBean));
         //请求参数校验
         boolean checkResult = bankCreditEndService.checkForUpdate(requestBean);
         if(!checkResult){
+            logger.error("结束债权(新)同步请求参数错误");
             return new AdminResult<>(FAIL, "请求参数错误");
         }
 
         List<BankCallBean> queryList = bankCreditEndService.queryBatchDetails(requestBean);
         if(queryList == null){
+            logger.error("结束债权(新)同步，请求银行接口失败返回null");
             return new AdminResult<>(FAIL, "请求银行接口失败");
         }
 
         boolean updateResult = bankCreditEndService.updateBankCreditEndFromBankQuery(queryList);
         if(!updateResult){
+            logger.error("结束债权(新)同步，更新数据库失败");
             return new AdminResult<>(FAIL, "更新数据库失败");
         }
 
@@ -85,19 +90,23 @@ public class BankCreditEndExceptionController extends BaseController {
     @ApiOperation(value = "结束债权(新)更新为初始状态", notes = "结束债权(新)更新为初始状态")
     @PostMapping("/update_forinitial")
     public AdminResult updateForInitial(@RequestBody BankCreditEndUpdateRequest requestBean){
+        logger.info("结束债权(新)更新为初始状态，requestBean：" + JSON.toJSONString(requestBean));
         //请求参数校验
         boolean checkResult = bankCreditEndService.checkForUpdateInitial(requestBean);
         if(!checkResult){
+            logger.error("结束债权(新)更新为初始状态，请求参数错误");
             return new AdminResult<>(FAIL, "请求参数错误");
         }
 
         BankCreditEndVO creditEndVO = bankCreditEndService.getCreditEndByOrderId(requestBean.getOrderId());
         if(creditEndVO == null){
+            logger.error("结束债权(新)更新为初始状态,没有查到记录");
             return new AdminResult<>(FAIL, "更新状态失败，没有记录");
         }
 
         boolean updateResult = bankCreditEndService.updateCreditEndForInitial(creditEndVO);
         if(!updateResult){
+            logger.error("结束债权(新)更新为初始状态,更新数据库失败");
             return new AdminResult<>(FAIL, "更新数据库失败");
         }
 

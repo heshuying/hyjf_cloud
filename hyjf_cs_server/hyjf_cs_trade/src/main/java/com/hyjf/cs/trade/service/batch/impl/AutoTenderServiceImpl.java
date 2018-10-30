@@ -9,6 +9,7 @@ import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.common.bean.RedisBorrow;
@@ -31,7 +32,6 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 自动投资
@@ -325,34 +325,29 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     // 债权承接订单日期
                     String orderDate = GetOrderIdUtils.getTxDate();
                     // 计算计划债转实际金额 保存creditTenderLog表
-                    Map<String, Object> resultMap = this.amTradeClient.saveCreditTenderLog(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
-                    if (Validator.isNull(resultMap)) {
+                    HjhCreditCalcResultVO resultVO = this.amTradeClient.saveCreditTenderLog(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
+                    if (Validator.isNull(resultVO)) {
                         throw new Exception("保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                     }
                     //承接支付金额
-                    BigDecimal assignPay = (BigDecimal) resultMap.get("assignPay");
+                    BigDecimal assignPay = resultVO.getAssignPay();
                     //承接本金
-                    BigDecimal assignCapital = (BigDecimal) resultMap.get("assignCapital");
+                    BigDecimal assignCapital = resultVO.getAssignCapital();
                     //承接服务费
-                    BigDecimal serviceFee = (BigDecimal) resultMap.get("serviceFee");
+                    BigDecimal serviceFee = resultVO.getServiceFee();
                     logger.info("[" + accedeOrderId + "]" + "承接用计算完成"
-                            + "\n,分期数据结果:" + resultMap.get("assignResult")
-                            + "\n,承接总额:" + resultMap.get("assignAccount")
-                            + "\n,承接本金:" + resultMap.get("assignCapital")
-                            + "\n,承接利息:" + resultMap.get("assignInterest")
-                            + "\n,承接支付金额:" + resultMap.get("assignPay")
-                            + "\n,承接垫付利息:" + resultMap.get("assignAdvanceMentInterest")
-                            + "\n,承接延期利息:" + resultMap.get("assignRepayDelayInterest")
-                            + "\n,承接逾期利息:" + resultMap.get("assignRepayLateInterest")
-                            + "\n,分期本金:" + resultMap.get("assignPeriodCapital")
-                            + "\n,分期利息:" + resultMap.get("assignPeriodInterest")
-                            + "\n,分期垫付利息:" + resultMap.get("assignPeriodAdvanceMentInterest")
-                            + "\n,分期承接延期利息:" + resultMap.get("assignPeriodRepayDelayInterest")
-                            + "\n,分期承接延期利息:" + resultMap.get("assignPeriodRepayLateInterest")
+                            + "\n,分期数据结果:" + resultVO.getAssignResult().toString()
+                            + "\n,承接总额:" + resultVO.getAssignAccount()
+                            + "\n,承接本金:" + resultVO.getAssignCapital()
+                            + "\n,承接利息:" + resultVO.getAssignInterest()
+                            + "\n,承接支付金额:" + resultVO.getAssignPay()
+                            + "\n,承接垫付利息:" + resultVO.getAssignAdvanceMentInterest()
+                            + "\n,承接延期利息:" + resultVO.getAssignRepayDelayInterest()
+                            + "\n,承接逾期利息:" + resultVO.getAssignRepayLateInterest()
                             // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
-                            + "\n,承接服务率:" + resultMap.get("serviceApr")
+                            + "\n,承接服务率:" + resultVO.getServiceApr()
                             // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
-                            + "\n,承接服务费:" + resultMap.get("serviceFee"));
+                            + "\n,承接服务费:" + resultVO.getServiceFee());
 
                     logger.info("[" + accedeOrderId + "]" + " 银行自动购买债权接口调用前  " + credit.getCreditNid());
 
@@ -401,11 +396,11 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     /** 4.6. 更新同步数据库	 */
                     try {
                         this.amTradeClient.updateCreditForAutoTender(credit.getCreditNid(), hjhAccede.getAccedeOrderId(), hjhPlan.getPlanNid(),
-                                bean, tenderUsrcustid, sellerUsrcustid, resultMap);
+                                bean, tenderUsrcustid, sellerUsrcustid, resultVO);
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
-                                       , e);
+                                , e);
                         return false;
                     }
 
@@ -534,7 +529,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
-                                    , e);
+                                , e);
                         return false;
                     }
                 } else {
@@ -544,7 +539,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             } catch (Exception e) {
                 this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
                 logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_ERR + "，请后台异常处理。"
-                             , e);
+                        , e);
                 return false;
             } finally {
                 //删除债转中的redis，可以还款
@@ -553,6 +548,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                 } else {
                     String redisStr = JSON.toJSONString(redisBorrow);
                     RedisUtils.rightpush(queueName, redisStr);//redis相应计划//可能放两遍
+                    logger.info("[" + accedeOrderId + "]" + "剩余金额推回redis" + redisStr);
 //				    break;
                 }
             }
@@ -654,6 +650,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
     /**
      * 调用同步银行接口（投资）
+     *
      * @return
      */
     private BankCallBean autotenderApi(BorrowAndInfoVO borrow, HjhAccedeVO hjhAccede, HjhUserAuthVO hjhUserAuth, BigDecimal account, String tenderUsrcustid, boolean isLast) {
@@ -692,6 +689,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
     /**
      * 调用同步银行接口（自动债转）
+     *
      * @return
      */
     private BankCallBean autoCreditApi(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhUserAuthVO hjhUserAuth,
@@ -798,6 +796,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
     /**
      * 更新 自动投资临时表
+     *
      * @param accedeOrderId
      * @param borrowNid
      * @param bankResult

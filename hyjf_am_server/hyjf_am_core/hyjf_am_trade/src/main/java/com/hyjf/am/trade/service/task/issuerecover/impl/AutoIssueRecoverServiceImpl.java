@@ -778,9 +778,11 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         }
         // 根据项目类型设置下列
         BorrowProjectType borrowProjectType = getProjectType(hjhAssetBorrowType.getBorrowCd()+"");
-        borrowInfo.setBorrowIncreaseMoney(borrowProjectType.getIncreaseMoney()); //递增投资金额
-        borrowInfo.setBorrowInterestCoupon(borrowProjectType.getInterestCoupon());
-        borrowInfo.setBorrowTasteMoney(borrowProjectType.getTasteMoney());//体验金
+        if(borrowProjectType != null){
+            borrowInfo.setBorrowIncreaseMoney(borrowProjectType.getIncreaseMoney()); //递增投资金额
+            borrowInfo.setBorrowInterestCoupon(borrowProjectType.getInterestCoupon());
+            borrowInfo.setBorrowTasteMoney(borrowProjectType.getTasteMoney());//体验金
+        }
         borrowInfo.setApplicant(hjhPlanAsset.getIdcard());
         String repayOrgName = hjhAssetBorrowType.getRepayOrgName();
         // 垫付机构用户名不为空的情况

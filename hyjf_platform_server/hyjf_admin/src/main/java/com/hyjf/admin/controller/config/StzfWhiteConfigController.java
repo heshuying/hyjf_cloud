@@ -71,9 +71,9 @@ public class StzfWhiteConfigController extends BaseController {
 		AdminSystemVO adminUser = getUser(request);
 		requestBean.setCreateuser(adminUser.getId());
 		requestBean.setUpdateuser(adminUser.getId());
-		if (requestBean.getInstname() != null) {
+		if (requestBean.getInstcode() != null) {
 			// 机构编号
-			requestBean.setInstcode(requestBean.getInstname());
+//			requestBean.setInstcode(requestBean.getInstname());
 			HjhInstConfigVO hjhInstConfigVO = stzfWhiteConfigService.selectHjhInstConfig(requestBean.getInstcode());
 			if (hjhInstConfigVO != null) {
 				requestBean.setInstname(hjhInstConfigVO.getInstName());
@@ -95,9 +95,9 @@ public class StzfWhiteConfigController extends BaseController {
 		AdminSystemVO adminUser = getUser(request);
 		requestBean.setCreateuser(adminUser.getId());
 		requestBean.setUpdateuser(adminUser.getId());
-		if (requestBean.getInstname() != null) {
+		if (requestBean.getInstcode() != null) {
 			// 机构编号
-			requestBean.setInstcode(requestBean.getInstname());
+//			requestBean.setInstcode(requestBean.getInstcode());
 			HjhInstConfigVO hjhInstConfigVO = stzfWhiteConfigService.selectHjhInstConfig(requestBean.getInstcode());
 			if (hjhInstConfigVO != null) {
 				requestBean.setInstname(hjhInstConfigVO.getInstName());

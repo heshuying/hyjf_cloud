@@ -91,7 +91,7 @@ public class HjhCouponTenderConsumer extends Consumer {
                 HjhPlanVO plan = borrowClient.getPlanByNid(borrowNid);
 
                 // 检查优惠券能用不
-                logger.info("优惠券投资校验开始,userId{},平台{},券为:{}", userId, platform, couponGrantId);
+                logger.info("优惠券投资校验开始,userId{},平台{},券为:{}  ordId:{}", userId, platform, couponGrantId,mainTenderNid);
                 Map<String, String> validateMap = couponService.validateCoupon(userId, money, couponGrantId,
                         platform, plan.getLockPeriod(),plan.getCouponConfig());
                 logger.info("优惠券投资校验结果  "+JSONObject.toJSONString(validateMap));
@@ -113,8 +113,8 @@ public class HjhCouponTenderConsumer extends Consumer {
 
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
-                logger.info("操作失败");
-                logger.info("计划优惠券投资失败    "+JSONObject.toJSONString(e));
+                logger.error("计划优惠券投资失败 ",e);
+                logger.error("计划优惠券投资失败    "+JSONObject.toJSONString(e));
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             } finally {
                 if(couponGrantId!=null){

@@ -2,39 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper
 		namespace="com.hyjf.am.trade.dao.mapper.customize.BorrowTenderCustomizeMapper">
-	<select id="getUtmTenderNum" resultType="INTEGER" parameterType="map">
+	<select id="getUtmTenderNum" resultType="INTEGER" >
 		SELECT count(*) FROM (
-			SELECT user_id FROM ht_borrow_tender where client=#{type}
-			UNION ALL
-			SELECT user_id FROM ht_product_list where client=#{type}
-			UNION ALL
-			SELECT user_id FROM ht_debt_plan_accede where client=#{type}
-			UNION ALL
-			SELECT user_id FROM ht_credit_tender) a
-			<where>
-				a.client=#{type}
-				<if test="list != null">
-					and a.user_id in
-					<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
-						#{item}
-					</foreach>
-				</if>
-				<if test="dayStart != null and dayStart != ''">
-					AND a.create_time <![CDATA[>=]]> #{dayStart}
-				</if>
-				<if test="dayEnd != null and dayEnd != ''">
-					AND a.create_time <![CDATA[<=]]> #{dayEnd}
-				</if>
-			</where>
-			
+		SELECT user_id FROM ht_borrow_tender
+		UNION ALL
+		SELECT user_id FROM ht_product_list
+		UNION ALL
+		SELECT user_id FROM ht_debt_plan_accede
+		UNION ALL
+		SELECT user_id FROM ht_credit_tender) a
+		<where>
+			<if test="type != null and type != ''">
+				AND a.client=#{type}
+			</if>
+			<if test="list != null and list.size() > 0">
+				and a.user_id in
+				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
+					#{item}
+				</foreach>
+			</if>
+			<if test="dayStart != null and dayStart != ''">
+				AND a.create_time <![CDATA[>=]]> #{dayStart}
+			</if>
+			<if test="dayEnd != null and dayEnd != ''">
+				AND a.create_time <![CDATA[<=]]> #{dayEnd}
+			</if>
+		</where>
+
 	</select>
-	
-	<select id="getHztTenderPrice" resultType="DECIMAL" parameterType="map">
+
+	<select id="getHztTenderPrice" resultType="DECIMAL" >
 		select sum(hbt.account) from ht_borrow_tender hbt left join ht_borrow hb on hbt.borrow_nid = hb.user_id
 		<where>
 			hb.project_type <![CDATA[<>]]> 8
 			AND hb.project_type <![CDATA[<>]]> 13
-			<if test="list != null">
+			<if test="list != null and list.size() > 0">
 				and hbt.user_id in
 				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
 					#{item}
@@ -48,12 +50,12 @@
 			</if>
 		</where>
 	</select>
-	
-	<select id="getHxfTenderPrice" resultType="DECIMAL" parameterType="map">
+
+	<select id="getHxfTenderPrice" resultType="DECIMAL" >
 		select sum(hbt.account) from ht_borrow_tender hbt left join ht_borrow hb on hbt.borrow_nid = hb.user_id
 		<where>
 			hb.project_type = 8
-			<if test="list != null">
+			<if test="list != null and list.size() > 0">
 				and hbt.user_id in
 				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
 					#{item}
@@ -67,12 +69,12 @@
 			</if>
 		</where>
 	</select>
-	
-	<select id="getRtbTenderPrice" resultType="DECIMAL" parameterType="map">
-	select sum(hbt.account) from ht_borrow_tender hbt left join ht_borrow hb on hbt.borrow_nid = hb.user_id
+
+	<select id="getRtbTenderPrice" resultType="DECIMAL" >
+		select sum(hbt.account) from ht_borrow_tender hbt left join ht_borrow hb on hbt.borrow_nid = hb.user_id
 		<where>
 			hb.project_type = 13
-			<if test="list != null">
+			<if test="list != null and list.size() > 0">
 				and hbt.user_id in
 				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
 					#{item}
@@ -97,27 +99,27 @@
 	</resultMap>
 
 	<select id="getCurrentCouponRecover" resultMap="currentCouponRecover" parameterType="java.util.Map">
-			SELECT
-				cr.id,
-				cr.recover_interest,
-				cr.recover_account,
-				cr.recover_capital,
-				cc.coupon_type,
-				cu.coupon_user_code
-			FROM
-				ht_coupon_recover cr
-			INNER JOIN ht_coupon_tender ct ON cr.tender_id = ct.order_id
-			INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id
-			INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
-			WHERE
-				cr.tender_id = #{tenderNid}
-			AND cr.recover_period = #{periodNow}
-			AND cr.recover_status = 0
-			AND cr.received_flg = 1
-			AND cr.del_flag = 0
-			AND ct.del_flag = 0
-			AND cu.del_flag = 0
-			AND cc.del_flag = 0
+		SELECT
+		cr.id,
+		cr.recover_interest,
+		cr.recover_account,
+		cr.recover_capital,
+		cc.coupon_type,
+		cu.coupon_user_code
+		FROM
+		ht_coupon_recover cr
+		INNER JOIN ht_coupon_tender ct ON cr.tender_id = ct.order_id
+		INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id
+		INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		WHERE
+		cr.tender_id = #{tenderNid}
+		AND cr.recover_period = #{periodNow}
+		AND cr.recover_status = 0
+		AND cr.received_flg = 1
+		AND cr.del_flag = 0
+		AND ct.del_flag = 0
+		AND cu.del_flag = 0
+		AND cc.del_flag = 0
 	</select>
 
 	<resultMap id="tenderNotifyMap" type="com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO">
@@ -149,5 +151,178 @@
 		WHERE t.user_id = #{userId}
 		AND t.nid = #{nid}
 	</select>
-	
+
+	<select id="getBorrowTenderByAddtime" resultMap="tenderNotifyMap" >
+		SELECT
+		tender.user_id,
+		tender.borrow_nid,
+		tender.account
+		FROM
+		ht_borrow_tender tender
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = tender.borrow_nid
+		<where>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'hztTenderPrice'">
+				borrow.project_type <![CDATA[<>]]> 8
+				AND borrow.project_type <![CDATA[<>]]> 13
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'hxfTenderPrice'">
+				borrow.project_type = 8
+			</if>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' )  <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' )  <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+	</select>
+
+	<select id="getCreditTenderByAddtime" resultMap="tenderNotifyMap" >
+		SELECT
+		hct.user_id,
+		hct.assign_capital as account
+		FROM
+		ht_credit_tender hct
+		<where>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+	</select>
+
+	<select id="getAccountRechargeByAddtime" resultMap="tenderNotifyMap" >
+		SELECT
+		recharge.user_id,
+		recharge.money as account
+		FROM
+		ht_account_recharge recharge
+		<where>
+			recharge.`status` = 1
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( recharge.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( recharge.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+	</select>
+
+	<select id="getBorrowTenderByClient" resultMap="tenderNotifyMap" >
+		SELECT
+		tender.user_id
+		FROM
+		ht_borrow_tender tender
+		<where>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'ios'">
+				tender.client = 3
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'android'">
+				tender.client = 2
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'pc'">
+				tender.client = 0
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'wechat'">
+				tender.client = 1
+			</if>
+
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+	</select>
+
+	<select id="getProductListByClient" resultMap="tenderNotifyMap" >
+
+		SELECT
+		list.user_id
+		FROM
+		ht_product_list list
+		<where>
+
+			<if test="sourceIdSrch != null and sourceIdSrch == 'ios'">
+				list.client = 3
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'android'">
+				list.client = 2
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'pc'">
+				list.client = 0
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'wechat'">
+				list.client = 1
+			</if>
+			AND list.invest_status = 0
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( list.invest_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( list.invest_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+
+	</select>
+
+	<select id="getDebtPlanAccedeByClient" resultMap="tenderNotifyMap" >
+		SELECT
+		hdpa.user_id
+		FROM
+		ht_debt_plan_accede hdpa
+		<where>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'ios'">
+				hdpa.client = 3
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'android'">
+				hdpa.client = 2
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'pc'">
+				hdpa.client = 0
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'wechat'">
+				hdpa.client = 1
+			</if>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( hdpa.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( hdpa.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+
+	</select>
+
+	<select id="getCreditTenderByClient" resultMap="tenderNotifyMap" >
+		SELECT
+		hct.user_id
+		FROM
+		ht_credit_tender hct
+		<where>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'ios'">
+				hct.client = 3
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'android'">
+				hct.client = 2
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'pc'">
+				hct.client = 0
+			</if>
+			<if test="sourceIdSrch != null and sourceIdSrch == 'wechat'">
+				hct.client = 1
+			</if>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+
+	</select>
+
 </mapper>

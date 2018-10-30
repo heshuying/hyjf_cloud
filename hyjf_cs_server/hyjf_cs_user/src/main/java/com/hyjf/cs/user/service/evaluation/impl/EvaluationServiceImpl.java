@@ -19,6 +19,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.MD5;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
@@ -139,7 +140,9 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
                 JSONObject params = new JSONObject();
                 params.put("mqMsgId", GetCode.getRandomCode(10));
                 params.put("userId", String.valueOf(userId));
-                params.put("sendFlg", "1");
+                params.put("sendFlg", "11");
+                String signValue = StringUtils.lowerCase(MD5.toMD5Code(systemConfig.couponAccesskey + String.valueOf(userId) + 11 + systemConfig.couponAccesskey));
+                params.put("sign", signValue);
                 couponProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
                         UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
             } catch (MQException e) {

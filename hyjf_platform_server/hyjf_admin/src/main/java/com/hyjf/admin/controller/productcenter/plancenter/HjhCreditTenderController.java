@@ -5,12 +5,12 @@ package com.hyjf.admin.controller.productcenter.plancenter;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AdminHjhCreditTenderRequest;
 import com.hyjf.admin.beans.vo.AdminHjhCreditTenderCustomizeVO;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
@@ -21,6 +21,8 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.HjhCreditTenderService;
 import com.hyjf.admin.service.TenderCancelExceptionService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
@@ -42,10 +44,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -54,10 +53,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author libin
@@ -192,7 +188,7 @@ public class HjhCreditTenderController extends BaseController{
      * @param request
      * @return 汇计划承接记录列表查询        已测试
      */
-    @ApiOperation(value = "汇计划承接记录列表", notes = "汇计划承接记录列表导出")
+    /*@ApiOperation(value = "汇计划承接记录列表", notes = "汇计划承接记录列表导出")
     @PostMapping(value = "/export")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
@@ -285,11 +281,11 @@ public class HjhCreditTenderController extends BaseController{
 					else if (celLength == 13){
 						cell.setCellValue(debtCreditTender.getAssignServiceFee());
 					}
-					/*updte  by  zhangyk 修改导出数据表格 start*/
+					*//*updte  by  zhangyk 修改导出数据表格 start*//*
 					// 是否复投承接
-					/*else if (celLength == 14){
+					*//*else if (celLength == 14){
 						cell.setCellValue(debtCreditTender.getTenderType());
-					}*/
+					}*//*
 
 					// 承接方式
 					else if (celLength == 14) {
@@ -303,13 +299,79 @@ public class HjhCreditTenderController extends BaseController{
 					else if (celLength == 16) {
 						cell.setCellValue(debtCreditTender.getAssignPeriod());
 					}
-					/*updte  by  zhangyk 修改导出数据表格 end*/
+					*//*updte  by  zhangyk 修改导出数据表格 end*//*
 				}
 			}
 		}
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+    }*/
+
+
+	/**
+	 * 导出功能
+	 *
+	 * @param request
+	 * @return 汇计划承接记录列表查询        已测试
+	 */
+	@ApiOperation(value = "汇计划承接记录列表", notes = "汇计划承接记录列表导出")
+	@PostMapping(value = "/export")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AdminHjhCreditTenderRequest viewRequest) throws Exception {
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+		// 表格sheet名称
+		String sheetName = "资金计划";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		// 声明一个工作薄
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+		HjhCreditTenderRequest form = new HjhCreditTenderRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
+		List<HjhCreditTenderCustomizeVO> resultList = this.hjhCreditTenderService.getHjhCreditTenderListByParamWithOutPage(form);
+
+
+		Integer totalCount = resultList.size();
+
+		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+		String sheetNameTmp = sheetName + "_第1页";
+		if (totalCount == 0) {
+
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}else {
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+		}
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+	}
+
+	private Map<String, String> buildMap() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("assignUserName", "承接人");
+		map.put("assignPlanNid", "承接计划编号");
+		map.put("assignOrderId", "承接计划订单号");
+		map.put("creditUserName", "出让人");
+		map.put("creditNid", "债转编号");
+		map.put("borrowNid", "原项目编号");
+		map.put("repayStyleName", "还款方式");
+		map.put("assignCapital", "承接本金");
+		map.put("assignInterestAdvance", "垫付利息");
+		map.put("assignPay", "实际支付金额");
+		map.put("assignTime", "承接时间");
+		map.put("tenderType", "承接方式");
+		map.put("borrowPeriod", "项目总期数");
+		map.put("assignPeriod", "承接时所在期数");
+
+		return map;
+	}
+	private Map<String, IValueFormatter> buildValueAdapter() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		return mapAdapter;
+	}
+
 	
 	/**
 	 * PDF脱敏图片预览    已测试

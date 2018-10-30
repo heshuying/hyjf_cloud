@@ -735,9 +735,36 @@ public class CouponUserController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-            String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            //操作平台
+            Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+            for(CouponUserCustomizeVO couponUserCustomizeVO:customizeResponse.getResultList()){
+                //循环计数（每循环一次是一行）根据行数下标位置获取数组，无法确定当前行下标
+                int s = 1;
+                String clientString = "";
+                String clientSed[] = StringUtils.split(couponUserCustomizeVO.getCouponSystem(), ",");
+                for (int k = 0; k < clientSed.length; k++) {
+                    if ("-1".equals(clientSed[k])) {
+                        clientString = clientString + "不限";
+                        break;
+                    } else {
+                        for (String key : client.keySet()) {
+                            if (clientSed[s].equals(key)) {
+                                if (s != 0 && clientString.length() != 0) {
+                                    clientString = clientString + "/";
+                                }
+                                clientString = clientString + client.get(key);
+                            }
+                        }
+                    }
+                    couponUserCustomizeVO.setCouponSystem(clientString);
+                }
+                s++;
+            }
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, customizeResponse.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
             beanRequest.setPageSize(defaultRowMaxCount);
@@ -770,7 +797,7 @@ public class CouponUserController extends BaseController {
                     }
                     s++;
                 }
-                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  customizeResponse2.getResultList());
             } else {
                 break;

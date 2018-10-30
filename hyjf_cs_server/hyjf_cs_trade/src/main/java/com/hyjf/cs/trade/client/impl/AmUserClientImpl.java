@@ -564,10 +564,12 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public List<UserInfoCustomizeVO> queryDepartmentInfoByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/userInfo/queryDepartmentInfoByUserId/" + userId;
-		UserInfoListCustomizeReponse response = restTemplate.getForEntity(url, UserInfoListCustomizeReponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
+		if(userId != null){
+			String url = "http://AM-USER/am-user/userInfo/queryDepartmentInfoByUserId/" + userId;
+			UserInfoListCustomizeReponse response = restTemplate.getForEntity(url, UserInfoListCustomizeReponse.class).getBody();
+			if (response != null) {
+				return response.getResult();
+			}
 		}
 		return null;
 	}

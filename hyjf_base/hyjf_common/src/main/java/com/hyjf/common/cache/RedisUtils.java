@@ -718,6 +718,7 @@ public class RedisUtils {
             // 释放
             // 返还到连接池
             returnResource(pool, jedis);
+            logger.info("leftpush：" + key + "：" + values.toString());
         }
         return result;
     }
@@ -744,6 +745,7 @@ public class RedisUtils {
             // 释放
             // 返还到连接池
             returnResource(pool, jedis);
+            logger.info("rightpush：" + key + "：" + values.toString());
         }
         return result;
     }
@@ -941,7 +943,29 @@ public class RedisUtils {
         }
         return result;
     }
-
+    /**
+     *
+     * redis获取key的剩余时间
+     * @param key
+     * @return
+     */
+    public static long ttl(String key) {
+        long result = -1L;
+        JedisPool pool = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+            result = jedis.ttl(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+        return result;
+    }
     // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
     /**
      * Redis中From队列中的成员移动到To队列中（队头→队尾）
@@ -1016,4 +1040,5 @@ public class RedisUtils {
             returnResource(pool, jedis);
         }
     }
+
 }

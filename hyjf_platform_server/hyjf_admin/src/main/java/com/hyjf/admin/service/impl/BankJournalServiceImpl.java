@@ -27,4 +27,9 @@ public class BankJournalServiceImpl implements BankJournalService {
         return amTradeClient.queryBankEveList(request);
     }
 
+
+    @Override
+    public Integer queryBankEveCount(BankEveRequest request) {
+        return  amTradeClient.queryBankEveCount(request);
+    }
 }

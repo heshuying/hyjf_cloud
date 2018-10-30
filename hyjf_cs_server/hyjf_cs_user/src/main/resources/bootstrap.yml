@@ -30,8 +30,3 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-logging:
-  file: cs-user.log
-swagger:
- enable: true

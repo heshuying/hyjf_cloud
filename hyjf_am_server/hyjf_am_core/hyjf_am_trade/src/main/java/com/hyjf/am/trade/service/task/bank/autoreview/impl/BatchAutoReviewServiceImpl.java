@@ -115,7 +115,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
         /*------------upd by liushouyi HJH3 Start-------------------*/
         //不使用引擎：散标(仅使用borrowNid、使用前先通过borrownid查询借款详情)
         BorrowExample  example = new BorrowExample();
-        example.createCriteria().andStatusEqualTo(3).andBorrowFullStatusEqualTo(1).andPlanNidIsNotNull();
+        example.createCriteria().andStatusEqualTo(3).andBorrowFullStatusEqualTo(1).andPlanNidIsNull();
         List<Borrow> borrowList = borrowMapper.selectByExample(example);
         /*------------upd by liushouyi HJH3 End-------------------*/
         return borrowList;
@@ -225,10 +225,11 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                                 boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                                 if (apicronFlag) {
                                     //2018-10-15 复审之后之后发送MQ进行放款
+                                    //由于是在事务内提交 会发生MQ消费时事务还没提交的情况 所以改成延时队列
                                     logger.debug("自动复审更新数据完成，开始发送放款MQ，标的编号：{}", borrowNid);
                                     try {
-                                        borrowLoanRepayProducer.messageSend(
-                                                new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)));
+                                        borrowLoanRepayProducer.messageSendDelay(
+                                                new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)), 2);
                                     } catch (MQException e) {
                                         logger.error("[编号：" + borrowNid + "]发送直投放款MQ失败！", e);
                                     }
@@ -304,10 +305,13 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
         if (!tenderTmpFlag) {
             throw new Exception("删除投资日志表失败，投资订单号：" + tenderTmp.getNid());
         }
+        Account account = this.getAccountByUserId(userId);
         FreezeHistory freezeHistory = new FreezeHistory();
         freezeHistory.setTrxId(tenderTmp.getNid());
         freezeHistory.setNotes("自动任务银行投资撤销");
-        freezeHistory.setFreezeUser(this.getAccountByUserId(userId).getUserName());
+        if(account != null){
+            freezeHistory.setFreezeUser(account.getUserName());
+        }
         freezeHistory.setFreezeTime(GetDate.getNowTime10());
         boolean freezeHisLog = this.freezeHistoryMapper.insert(freezeHistory) > 0 ? true : false;
         if (!freezeHisLog) {
@@ -328,6 +332,8 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
      */
     public BankCallBean bidCancel(Integer userId, String accountId, String productId, String orgOrderId, String txAmount) {
         // 标的投资撤销
+        Account account = this.getAccountByUserId(userId);
+
         BankCallBean bean = new BankCallBean();
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         bean.setVersion(BankCallConstant.VERSION_10); // 版本号(必须)
@@ -344,7 +350,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
         bean.setLogOrderId(orderId);// 订单号
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单日期
         bean.setLogUserId(String.valueOf(userId));// 用户Id
-        bean.setLogUserName(this.getAccountByUserId(userId).getUserName()); // 用户名
+        bean.setLogUserName(account.getUserName()); // 用户名
         bean.setLogRemark("投标申请撤销"); // 备注
         // 调用汇付接口
         BankCallBean result = BankCallUtils.callApiBg(bean);

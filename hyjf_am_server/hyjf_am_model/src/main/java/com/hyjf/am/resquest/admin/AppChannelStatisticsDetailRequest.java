@@ -15,7 +15,7 @@ public class AppChannelStatisticsDetailRequest  extends BasePage implements Seri
     /**
      * 渠道查询
      */
-    private String sourceIdSrch;
+    private Integer sourceIdSrch;
     /**
      * 用户查询
      */
@@ -23,11 +23,11 @@ public class AppChannelStatisticsDetailRequest  extends BasePage implements Seri
 
 
 
-    public String getSourceIdSrch() {
+    public Integer getSourceIdSrch() {
         return sourceIdSrch;
     }
 
-    public void setSourceIdSrch(String sourceIdSrch) {
+    public void setSourceIdSrch(Integer sourceIdSrch) {
         this.sourceIdSrch = sourceIdSrch;
     }
 

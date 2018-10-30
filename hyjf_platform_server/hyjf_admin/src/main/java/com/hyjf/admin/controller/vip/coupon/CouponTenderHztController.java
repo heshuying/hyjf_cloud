@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.coupon.CouponTenderHjhService;
 import com.hyjf.admin.service.coupon.CouponTenderHztService;
@@ -24,14 +23,9 @@ import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,7 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -69,12 +62,13 @@ public class CouponTenderHztController extends BaseController {
         couponTenderHztVo.setCouponReciveStatusList(list);
         Integer count = this.couponTenderHztService.countRecord(couponTenderRequest);
         lrs.setCount(count);
+        List<CouponTenderCustomize>  recordList = null;
         if (count != null && count > 0) {
             String investTotal=this.couponTenderHztService.queryInvestTotalHzt(couponTenderRequest);
-            List<CouponTenderCustomize>  recordList = this.couponTenderHztService.getRecordList(couponTenderRequest);
+            recordList = this.couponTenderHztService.getRecordList(couponTenderRequest);
             couponTenderHztVo.setInvestTotal(investTotal);
-            couponTenderHztVo.setRecordList(recordList);
         }
+        couponTenderHztVo.setRecordList(recordList==null?new ArrayList():recordList);
         lrs.setData(couponTenderHztVo);
         Page page = Page.initPage(couponTenderRequest.getCurrPage(), couponTenderRequest.getPageSize());
         page.setTotal(count);
@@ -238,10 +232,24 @@ public class CouponTenderHztController extends BaseController {
 
         String investTotal=this.couponTenderHztService.queryInvestTotalHzt(couponTenderRequest);
         //总条数
-        String[] sumSmsCount = new String[]{"合计", "","","", "", "", "","","", "￥"+investTotal, "", "","",""};
+        String[] sumSmsCount = new String[]{"合计", "","","", "", "", "","","", "", "￥"+ (investTotal == null ? "" : investTotal), "","",""};
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList(),sumSmsCount);
+        }else{
+            //实现多个参数判断返回问题
+            for(CouponTenderCustomize couponTenderCustomize : recordList.getResultList()){
+                if("1".equals(couponTenderCustomize.getCouponType())){
+                    couponTenderCustomize.setCouponQuota("￥"+couponTenderCustomize.getCouponQuota());
+                }
+                if("2".equals(couponTenderCustomize.getCouponType())){
+                    couponTenderCustomize.setCouponQuota(couponTenderCustomize.getCouponQuota()+"%");
+                }
+                if("3".equals(couponTenderCustomize.getCouponType())){
+                    couponTenderCustomize.setCouponQuota("￥"+couponTenderCustomize.getCouponQuota());
+                }
+            }
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList(),sumSmsCount);
         }
         for (int i = 1; i < sheetCount; i++) {
             couponTenderRequest.setPageSize(defaultRowMaxCount);

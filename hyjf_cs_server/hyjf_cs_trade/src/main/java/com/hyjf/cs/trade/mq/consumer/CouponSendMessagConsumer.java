@@ -21,6 +21,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.Map;
  * @Date: 2018/7/16 15:11
  * @Description: CouponSendMessagConsumer
  */
+@Component
 public class CouponSendMessagConsumer extends Consumer {
     private static final Logger logger = LoggerFactory.getLogger(CouponSendMessagConsumer.class);
     @Autowired

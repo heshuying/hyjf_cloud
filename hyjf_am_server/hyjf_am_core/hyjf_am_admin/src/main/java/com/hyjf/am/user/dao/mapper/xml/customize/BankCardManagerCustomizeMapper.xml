@@ -38,7 +38,7 @@
 --         LEFT JOIN ht_bank_config hydbc ON hydbc. CODE = hyduab.bank
         <include refid="Where_Clause" />
         ORDER BY hyduab.create_time DESC
-        <if test="limitStart != null and limitEnd !=null" >
+        <if test="limitStart >= 0 and limitEnd >0" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
     </select>

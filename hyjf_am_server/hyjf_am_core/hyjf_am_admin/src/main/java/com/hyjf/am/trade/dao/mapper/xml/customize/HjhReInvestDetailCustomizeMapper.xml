@@ -16,6 +16,7 @@
         <result column="invest_type" property="investType" jdbcType="VARCHAR" />
         <result column="count_interest_time" property="countInterestTime" jdbcType="VARCHAR" />
         <result column="add_time" property="addTime" jdbcType="VARCHAR" />
+        <result column="borrow_period_view" property="borrowPeriodView" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Where_Clause">
@@ -61,6 +62,10 @@
         bt.borrow_nid,
         concat(hp.expect_apr,'%') as expect_apr,
         hb.borrow_period,
+        concat(
+        hb.borrow_period,
+        (IF(hb.borrow_style = 'endday','天','个月'))
+        ) AS borrow_period_view,
         CASE WHEN hb.borrow_style = 'endday' THEN '天' ELSE '个月' END AS is_month,
         bt.account,
         bs.`name` AS borrow_style_name,

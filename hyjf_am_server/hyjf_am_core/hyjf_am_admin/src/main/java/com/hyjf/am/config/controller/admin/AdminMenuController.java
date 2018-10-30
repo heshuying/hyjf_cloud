@@ -1,6 +1,7 @@
 package com.hyjf.am.config.controller.admin;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminMenuService;
@@ -28,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-config/menu")
-public class AdminMenuController {
+public class AdminMenuController extends BaseConfigController {
 
 	@Autowired
 	private AdminMenuService adminMenuService;
@@ -202,7 +203,9 @@ public class AdminMenuController {
 			List<AdminSystem> list = this.adminMenuService.getMenuPermissionsList(menuUuid);
 			bean.setResultList(CommonUtils.convertBeanList(list, AdminSystemVO.class));
 		} else {
-			throw new Exception("菜单不存在");
+			//throw new Exception("菜单不存在");
+			logger.error("menuUuid is null,菜单不存在");
+			return null;
 		}
 		return bean;
 		// modelAndView.addObject(AdminMenuDefine.ADMIN_MENU_FORM, bean);

@@ -97,7 +97,7 @@ public class CouponRepayMessageConsumer extends Consumer {
 
                 if(failTimes > 0){
                     logger.info("【优惠券还款】锁等待超时次数：" + failTimes, "重新放回消息队列等待再次执行,borrowNid:" + repayBean.getBorrowNid());
-                    Thread.sleep(1000*5);
+                    Thread.sleep(1000L*5);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
 

@@ -8,7 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UserActionUtmRequest;
-import com.hyjf.am.vo.market.AdsVO;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -33,11 +33,13 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.AccountProducer;
+import com.hyjf.cs.user.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.register.RegisterService;
+import com.hyjf.cs.user.util.GetInfoByUserIp;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -47,8 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,6 +74,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     private SystemConfig systemConfig;
     @Autowired
     private AmMarketClient amMarketClient;
+
+    @Autowired
+    private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
 
     /**
      * api注册参数校验
@@ -255,8 +259,46 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             throws ReturnMessageException {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform);
         registerUserRequest.setLoginIp(ip);
+        
+        //add by libin 用户注册时通过ip获得用户所在的省，市 start
+        logger.info("获取到的用户ip为：" + ip);
+        String info = GetInfoByUserIp.getInfoByUserIp(ip);
+        if(info == null || StringUtils.isEmpty(info)){
+        	logger.error("通过httpRequest获取的ip解析后未获取到省市信息！");
+        	registerUserRequest.setProvince("");
+        	registerUserRequest.setCity("");
+        } else {
+        	StringBuffer line = new StringBuffer(info);
+        	int first_idx   = line.indexOf("|");
+        	String country = line.substring(0, first_idx);//所属国家暂时不用先保留
+        	
+        	line = new StringBuffer(line.substring(first_idx + 1) );
+        	int second_idx   = line.indexOf("|");
+        	String number = line.substring(0, second_idx);//所属数字暂时不用先保留
+        	
+            line = new StringBuffer(line.substring(second_idx + 1) );
+            int thrid_idx   = line.indexOf("|");
+            String province = line.substring(0, thrid_idx);//省
+            if(province != null && StringUtils.isNotEmpty(province)){
+            	registerUserRequest.setProvince(province);
+            } else {
+            	registerUserRequest.setProvince("");
+            }
+            
+            line = new StringBuffer(line.substring(thrid_idx + 1) );
+            int fouth_idx   = line.indexOf("|");
+            String city = line.substring(0, fouth_idx);//市
+            if(city != null && StringUtils.isNotEmpty(city)){
+            	registerUserRequest.setCity(city);
+            } else {
+            	registerUserRequest.setCity("");
+            }
+        }
+        //add by libin 用户注册时通过ip获得用户所在的省，市 end
+        
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
+        logger.info("注册之后user值是否为空："+(userVO==null));
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         // 3.注册后处理
         return this.afterRegisterHandle(userVO);
@@ -328,6 +370,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         // 活动有效期校验
         try {
             Integer activityId = systemConfig.getActivity888Id();
+            logger.info("注册送188元新手红包:"+activityId);
             if (!checkActivityIfAvailable(activityId)) {
                 sendCoupon(userVO);
             }
@@ -343,16 +386,14 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         if (activityId == null) {
             return false;
         }
-
-        AdsVO adsVO = amMarketClient.findAdsById(activityId);
-
-        if (adsVO == null) {
+        ActivityListVO activityListVO = amMarketClient.selectActivityList(activityId);
+        if (activityListVO == null) {
             return false;
         }
-        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeStart()) > GetDate.getNowTime10()) {
+        if (activityListVO.getTimeStart() > GetDate.getNowTime10()) {
             return false;
         }
-        if (GetDate.strYYYYMMDDTimestamp(adsVO.getTimeEnd()) < GetDate.getNowTime10()) {
+        if( activityListVO.getTimeEnd() < GetDate.getNowTime10()) {
             return false;
         }
 
@@ -417,7 +458,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 return vo;
             }
 
-            if (password.length() < 6 || password.length() > 16) {
+            if (password.length() < 8 || password.length() > 16) {
                 vo.setEnum(ResultEnum.ERROR_013);
                 vo.setSuccessUrl("");
                 return vo;
@@ -547,6 +588,39 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         return null;
     }
 
+    @Override
+    public void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO) {
+        Integer sourceId = null;
+        if (StringUtils.isNotBlank(version)) {
+            String[] shuzu = version.split("\\.");
+            if (shuzu.length >= 4) {
+                try {
+                    sourceId = Integer.parseInt(shuzu[3]);
+                } catch (Exception e) {
+                }
+                // 查询推广渠道
+                    UtmPlatVO plat = amUserClient.selectUtmPlatByUtmId(sourceId.toString());
+
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("sourceId",sourceId);
+                    params.put("sourceName",plat!=null&&plat.getSourceName() != null ? plat.getSourceName() : "");
+                    params.put("userId",webViewUserVO.getUserId());
+                    params.put("userName",webViewUserVO.getUsername());
+                    params.put("firstInvestTime",0);
+                    params.put("investAmount",0.00);
+                    params.put("registerTime",new Date());
+                    params.put("cumulativeInvest",BigDecimal.ZERO);
+                    try {
+                        appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                                MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                    } catch (MQException e) {
+                        e.printStackTrace();
+                        logger.error("app注册推广保存用户数据！！！");
+                    }
+            }
+        }
+    }
+
     /**
      * 注册保存账户表
      *
@@ -592,9 +666,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         account.setPlanRepayInterest(BigDecimal.ZERO);
         logger.info("注册插入account：{}", JSON.toJSONString(account));
         try {
-            logger.info("发送mq开始");
             accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(account)));
-            logger.info("发送mq结束");
         } catch (MQException e) {
             logger.error("注册成功推送account——mq失败.... user_id is :{}", userId);
             throw new RuntimeException("注册成功推送account——mq失败...");
@@ -613,8 +685,10 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             params.put("mqMsgId", GetCode.getRandomCode(10));
             params.put("userId", String.valueOf(userId));
             params.put("sendFlg", "11");
-            couponProducer.messageSend(new MessageContent(MQConstant.REGISTER_COUPON_TOPIC,
-                    MQConstant.REGISTER_COUPON_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            String signValue = StringUtils.lowerCase(MD5.toMD5Code(systemConfig.couponAccesskey + String.valueOf(userId) + 11 + systemConfig.couponAccesskey));
+            params.put("sign", signValue);
+            couponProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
+                    UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
         } catch (Exception e) {
             logger.error("注册发放888红包失败...", e);
         }
@@ -688,4 +762,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         }
         return "";
     }
+
+
 }

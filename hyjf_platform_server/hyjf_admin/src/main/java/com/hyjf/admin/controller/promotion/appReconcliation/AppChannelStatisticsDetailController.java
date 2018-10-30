@@ -1,8 +1,11 @@
 package com.hyjf.admin.controller.promotion.appReconcliation;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.promotion.AppChannelReconciliationService;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
@@ -10,24 +13,21 @@ import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.ExportExcel;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * app渠道统计明细
@@ -64,7 +64,7 @@ public class AppChannelStatisticsDetailController extends BaseController {
      * @param
      * @param form
      */
-    @ApiOperation(value = "app渠道统计明细-导出", notes = "app渠道统计明细-导出")
+    /*@ApiOperation(value = "app渠道统计明细-导出", notes = "app渠道统计明细-导出")
     @GetMapping("/exportAction")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, AppChannelStatisticsDetailRequest form) throws Exception {
         // 表格sheet名称
@@ -173,5 +173,89 @@ public class AppChannelStatisticsDetailController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+    }*/
+
+    /**
+     * 导出功能
+     *
+     * @param request
+     * @param
+     * @param form
+     */
+    @ApiOperation(value = "app渠道统计明细-导出", notes = "app渠道统计明细-导出")
+    @GetMapping("/exportAction")
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, AppChannelStatisticsDetailRequest form) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "app渠道统计明细";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        AppChannelStatisticsDetailResponse appChannelStatisticsDetailResponse = this.appChannelStatisticsDetailService.exportStatisticsList(form);
+        List<AppChannelStatisticsDetailVO> resultList = appChannelStatisticsDetailResponse.getResultList();
+
+
+        Integer totalCount = resultList.size();
+
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("sourceName", "渠道");
+        map.put("userId", "用户ID");
+        map.put("userName", "用户名");
+        map.put("registerTime", "注册时间");
+        map.put("openAccountTime", "开户时间");
+        map.put("firstInvestTimeT", "首次投资时间");
+        map.put("investProjectType", "首投项目类型");
+        map.put("investProjectPeriod", "首投项目期限");
+        map.put("investAmount", "首投金额");
+        map.put("cumulativeInvest", "累计投资金额");
+
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter registerTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Date value = (Date) object;
+                return GetDate.date2Str(value, GetDate.datetimeFormat);
+            }
+        };
+
+        IValueFormatter openAccountTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Date value = (Date) object;
+                return GetDate.date2Str(value, GetDate.datetimeFormat);
+            }
+        };
+
+        IValueFormatter firstInvestTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer value = (Integer) object;
+                return GetDate.formatDateTime(value);
+            }
+        };
+
+        mapAdapter.put("registerTime", registerTimeAdapter);
+        mapAdapter.put("openAccountTime", openAccountTimeAdapter);
+        mapAdapter.put("firstInvestTime", firstInvestTimeAdapter);
+        return mapAdapter;
     }
 }

@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -1121,6 +1122,15 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+	/**
+	 * 插入密码错误超限用户信息
+	 * @param lockedUserInfoVO
+	 * @return
+	 */
+	public void inserLockedUser(LockedUserInfoVO lockedUserInfoVO){
+		int result = restTemplate
+				.postForEntity(userService+"/user/insertLockedUser",lockedUserInfoVO,Integer.class).getBody();
 	}
 
 }
