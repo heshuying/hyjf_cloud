@@ -7,9 +7,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.response.TransferResponse;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.admin.service.TransferService;
 import com.hyjf.admin.utils.ConvertUtils;
@@ -19,7 +20,6 @@ import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.response.trade.account.MerchantTransferResponse;
 import com.hyjf.am.resquest.admin.MerchantTransferListRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.trade.account.MerchantTransferVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
@@ -29,12 +29,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,7 +41,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -58,6 +52,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/hyjf-admin/finance/transfer")
 public class TransferController extends BaseController {
+
+    public static final String PERMISSIONS = "merchanttransferlist";
 
     @Autowired
     TransferService transferService;
@@ -75,6 +71,7 @@ public class TransferController extends BaseController {
      */
     @ApiOperation(value = "用户转账列表", notes = "用户转账列表")
     @PostMapping(value = "/transferList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult init(@RequestBody MerchantTransferListRequest form) {
         TransferResponse response = new TransferResponse();
         Map<String, String> transferStatus = CacheUtil.getParamNameMap("TRANSFER_STATUS");
@@ -122,6 +119,7 @@ public class TransferController extends BaseController {
      */
     @ApiOperation(value = "初始化用户转账画面")
     @PostMapping("/addTransfer")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult addTransfer(HttpServletRequest request, @RequestBody MerchantTransferListRequest form) {
         AdminResult result = new AdminResult();
         JSONObject ret = this.transferService.checkMerchantTransferParam(form);
@@ -180,7 +178,6 @@ public class TransferController extends BaseController {
                             result.setData(map);
                         }else{
                             //转账成功，更新状态失败
-                           // ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.success","更新转账成功状态失败!");
                             map.put("99","更新转账成功状态失败");
                             map.put("merchanttransferForm", form);
                             result.setData(map);
@@ -197,8 +194,6 @@ public class TransferController extends BaseController {
                         }else{
                             logger.info("更新转账失败状态失败,订单号："+orderId);
                         }
-//                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.fail","调用子账户转账接口失败!");
-//                        modelAndView.addObject("merchanttransferForm", form);
                         map.put("99","调用子账户转账接口失败");
                         map.put("merchanttransferForm", form);
                         result.setData(map);
@@ -211,16 +206,12 @@ public class TransferController extends BaseController {
                     }else{
                         logger.info("调用子账户转账接口异常，更新转账失败状态失败,订单号："+orderId);
                     }
-//                    ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.exception","调用子账户转账接口异常!");
-//                    modelAndView.addObject("merchanttransferForm", form);
                     map.put("99","调用子账户转账接口异常");
                     map.put("merchanttransferForm", form);
                     result.setData(map);
                 }
             } else {
                 logger.info("数据预插入失败,订单号："+orderId);
-//                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.error","数据预插入失败!");
-//                modelAndView.addObject("merchanttransferForm", form);
                 map.put("99","数据预插入失败");
                 map.put("merchanttransferForm", form);
                 result.setData(map);
@@ -228,119 +219,6 @@ public class TransferController extends BaseController {
         }
         return result;
     }
-
-
-    /**
-     * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
-     * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
-     * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
-     * @param form
-     * @param response
-     * @throws Exception
-     */
-    //@ApiOperation(value = "导出")
-    //@PostMapping("exportTransfer")
-    /*public void exportExcelBack(@RequestBody MerchantTransferListRequest form,HttpServletResponse response) throws Exception {
-
-        // 表格sheet名称
-        String sheetName = "平台子账户转账记录";
-        // 文件名称
-        String fileName = URLEncoder.encode(sheetName,"UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
-                + CustomConstants.EXCEL_EXT;
-        //设置默认查询时间
-        if(StringUtils.isEmpty(form.getTransferTimeStart())){
-            form.setTransferTimeStart(GetDate.getDate("yyyy-MM-dd"));
-        }
-        if(StringUtils.isEmpty(form.getTransferTimeEnd())){
-            form.setTransferTimeEnd(GetDate.getDate("yyyy-MM-dd"));
-        }
-        form.setPageSize(-1);
-        // 需要输出的结果列表
-        MerchantTransferResponse merchantTransferResponse = this.transferService.selectMerchantTransfer(form);
-        List<MerchantTransferVO> recordList = merchantTransferResponse.getResultList();
-        String[] titles = new String[] { "序号", "订单号","转出子账户","转出子账户代号", "转入子账户","转入子账户代号","转账金额","备注", "转账状态", "操作人", "转账类型","转账时间" };
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-        if (recordList != null && recordList.size() > 0) {
-            int sheetCount = 1;
-            int rowNum = 0;
-            for (int i = 0; i < recordList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles,
-                            (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    MerchantTransferVO transfer = recordList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {
-                        // 序号
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) {
-                        // 订单号
-                        cell.setCellValue(transfer.getOrderId());
-                    } else if (celLength == 2) {
-                        // 转出子账户
-                        cell.setCellValue(transfer.getOutAccountName());
-                    } else if (celLength == 3) {
-                        // 转出子账户代号
-                        cell.setCellValue(transfer.getOutAccountCode());
-                    } else if (celLength == 4) {
-                        // 转入子账户
-                        cell.setCellValue(transfer.getInAccountName());
-                    } else if (celLength == 5) {
-                        // 转入子账户代号
-                        cell.setCellValue(transfer.getInAccountCode());
-                    } else if (celLength == 6) {
-                        // 转账金额
-                        cell.setCellValue(String.valueOf(transfer.getTransferAmount()));
-                    } else if (celLength == 7) {
-                        // 备注
-                        cell.setCellValue(transfer.getRemark());
-                    } else if (celLength == 8) {
-                        // 转账状态
-                        Map<String, String> transferStatus = CacheUtil.getParamNameMap("MER_TRANS_STATUS");
-                        Set<String> tranKey = transferStatus.keySet();
-                        for (String key :tranKey){
-                            if(key.equals(String.valueOf(transfer.getTransferType()))){
-                                cell.setCellValue(transferStatus.get(key));
-                            }
-                        }
-                    }else if (celLength == 9 ) {
-                        // 操作人
-                        cell.setCellValue(transfer.getCreateUserName());
-                    }else if (celLength == 10 ) {
-                        // 交易类型
-                        Map<String, String> transferTypes = CacheUtil.getParamNameMap("MER_TRANS_TYPE");
-                        Set<String> tranKey = transferTypes.keySet();
-                        for (String key :tranKey){
-                            if(key.equals(String.valueOf(transfer.getTransferType()))){
-                                cell.setCellValue(transferTypes.get(key));
-                            }
-                        }
-                    }else if (celLength == 11) {
-                        // 转账时间
-                        if(transfer.getTransferTime() == null){
-                            cell.setCellValue("");
-                        }else{
-                            cell.setCellValue(GetDate.date2Str(transfer.getTransferTime(), GetDate.datetimeFormat));
-                        }
-                    }
-                }
-            }
-        }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }*/
-
 
     /**
      * 导出excel
@@ -352,6 +230,7 @@ public class TransferController extends BaseController {
      */
     @ApiOperation(value = "导出")
     @PostMapping("exportTransfer")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportExcelAccount(@RequestBody MerchantTransferListRequest form,HttpServletRequest request, HttpServletResponse response) throws Exception {
         // 封装查询条件
         //设置默认查询时间

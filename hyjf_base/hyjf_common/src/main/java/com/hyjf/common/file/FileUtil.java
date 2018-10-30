@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -636,6 +637,31 @@ public class FileUtil {
 			e.getStackTrace();
 			throw new RuntimeException();
 		}
+	}
+
+	/**
+	 * 获取文件夹下的所有文件名称
+	 * add by cwyang 20181030
+	 * @param path
+	 * @return
+	 */
+	public static List getFileName(String path) {
+		ArrayList list = new ArrayList();
+		File f = new File(path);
+		if (!f.exists()) {
+			list.add(path + " not exists");
+			return list;
+		}
+		File fa[] = f.listFiles();
+		for (int i = 0; i < fa.length; i++) {
+			File fs = fa[i];
+			if (fs.isDirectory()) {
+				list.add(fs.getName() + " [目录]");
+			} else {
+				list.add(fs.getName());
+			}
+		}
+		return list;
 	}
 
 }

@@ -1552,7 +1552,17 @@ public class FddHandle {
 			List jointPathList = new ArrayList();
 			String imageSavePath = savePath + fileName;
 			//转换成图片
+			logger.info("---------------脱敏下载开始将PDF转换成图片：" + filePath);
 			PDFToImage.pdf2img(filePath, imageSavePath, PDFToImage.IMG_TYPE_PNG);
+			logger.info("---------------脱敏下载将PDF转换成图片完成，pages:" + pages);
+			List fileNamelist = FileUtil.getFileName(imageSavePath);
+			if(!fileNamelist.isEmpty()){
+				for (Object name: fileNamelist
+					 ) {
+					logger.info("---------------脱敏下载将PDF转换成图片完成，转换后图片:" + name);
+				}
+			}
+
 			//签章待脱敏图片地址
 			String imageFilePath = imageSavePath +"/"+  fileName + fileType;
 			//真实姓名待脱敏图片地址
@@ -1609,8 +1619,7 @@ public class FddHandle {
 			}
 
 		} catch (Exception e) {
-			logger.info("------------脱敏协议错误，错误信息" + e.getMessage());
-			e.printStackTrace();
+			logger.error("-----------脱敏协议错误，错误信息",e);
 		}
 
 	}
@@ -1857,21 +1866,22 @@ public class FddHandle {
 		return true;
 	}
 
-//	public static void main(String[] args) {
+	public static void main(String[] args) {
+
+//		String signIcon = "/Applications/work/需求池/脱敏样式/cardno.png";
 //
-////		String signIcon = "/Applications/work/需求池/脱敏样式/cardno.png";
-////
-////		String source = "/Applications/work/aaa.png";
-////
-////		String output = "/Applications/work/jjfw/";
-////		Integer index_x = 100;
-////		Integer index_y = 100;
-////		ImageUtil.markImageByMoreIcon(signIcon, source, output, "tm", "png", null, index_x, index_y);
-////		FddHandle handle = new FddHandle();
-//		String path = "file:/opt/micro/hyjf-cs-trade.jar!/BOOT-INF/classes!/";
-//		String substring = path.substring(5);
-//		System.out.println(substring);
-//	}
+//		String source = "/Applications/work/aaa.png";
+//
+//		String output = "/Applications/work/jjfw/";
+//		Integer index_x = 100;
+//		Integer index_y = 100;
+//		ImageUtil.markImageByMoreIcon(signIcon, source, output, "tm", "png", null, index_x, index_y);
+//		FddHandle handle = new FddHandle();
+
+
+//		PDFToImage.pdf2img("/Users/yangchangwei/Downloads/jjfw(1).pdf", "/Users/yangchangwei/Downloads/jjfw", PDFToImage.IMG_TYPE_PNG);
+
+	}
 	/**
 	 * 脱敏处理
 	 * @param imageSavePath
