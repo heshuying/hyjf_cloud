@@ -129,7 +129,7 @@ public class UserPortraitRequest extends BasePage {
 
     private static final long serialVersionUID = 1L;
     //默认为true ,获取全部数据，为false时，获取部分数据
-    public boolean limitFlg = true;
+    public boolean limitFlg = false;
     //查询用
     public String yesterdayEndTime;
     public String yesterdayBeginTime;
