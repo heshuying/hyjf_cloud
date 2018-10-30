@@ -4,7 +4,9 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * 自动承接用计算结果bean
  * @author liubin
@@ -14,7 +16,7 @@ public class HjhCreditCalcResultVO extends BaseVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     //分期数据结果
-    private List<HjhCreditCalcPeriodResultVO> assignResult;
+    private Map<Integer, HjhCreditCalcPeriodResultVO> assignResult;
     //承接总额
     private BigDecimal assignAccount;
     //承接本金
@@ -29,26 +31,16 @@ public class HjhCreditCalcResultVO extends BaseVO implements Serializable {
     private BigDecimal assignRepayDelayInterest;
     //承接逾期利息
     private BigDecimal assignRepayLateInterest;
-//    //分期本金
-//    private BigDecimal assignPeriodCapital;
-//    //分期利息
-//    private BigDecimal assignPeriodInterest;
-//    //分期垫付利息
-//    private BigDecimal assignPeriodAdvanceMentInterest;
-//    //分期承接延期利息
-//    private BigDecimal assignPeriodRepayDelayInterest;
-//    //分期承接延期利息
-//    private BigDecimal assignPeriodRepayLateInterest;
     //承接服务率
     private BigDecimal serviceApr;
     //承接服务费
     private BigDecimal serviceFee;
 
-    public List<HjhCreditCalcPeriodResultVO> getAssignResult() {
+    public Map<Integer, HjhCreditCalcPeriodResultVO> getAssignResult() {
         return assignResult;
     }
 
-    public void setAssignResult(List<HjhCreditCalcPeriodResultVO> assignResult) {
+    public void setAssignResult(Map<Integer, HjhCreditCalcPeriodResultVO> assignResult) {
         this.assignResult = assignResult;
     }
 
@@ -107,46 +99,6 @@ public class HjhCreditCalcResultVO extends BaseVO implements Serializable {
     public void setAssignRepayLateInterest(BigDecimal assignRepayLateInterest) {
         this.assignRepayLateInterest = assignRepayLateInterest;
     }
-
-//    public BigDecimal getAssignPeriodCapital() {
-//        return assignPeriodCapital;
-//    }
-//
-//    public void setAssignPeriodCapital(BigDecimal assignPeriodCapital) {
-//        this.assignPeriodCapital = assignPeriodCapital;
-//    }
-//
-//    public BigDecimal getAssignPeriodInterest() {
-//        return assignPeriodInterest;
-//    }
-//
-//    public void setAssignPeriodInterest(BigDecimal assignPeriodInterest) {
-//        this.assignPeriodInterest = assignPeriodInterest;
-//    }
-//
-//    public BigDecimal getAssignPeriodAdvanceMentInterest() {
-//        return assignPeriodAdvanceMentInterest;
-//    }
-//
-//    public void setAssignPeriodAdvanceMentInterest(BigDecimal assignPeriodAdvanceMentInterest) {
-//        this.assignPeriodAdvanceMentInterest = assignPeriodAdvanceMentInterest;
-//    }
-//
-//    public BigDecimal getAssignPeriodRepayDelayInterest() {
-//        return assignPeriodRepayDelayInterest;
-//    }
-//
-//    public void setAssignPeriodRepayDelayInterest(BigDecimal assignPeriodRepayDelayInterest) {
-//        this.assignPeriodRepayDelayInterest = assignPeriodRepayDelayInterest;
-//    }
-//
-//    public BigDecimal getAssignPeriodRepayLateInterest() {
-//        return assignPeriodRepayLateInterest;
-//    }
-//
-//    public void setAssignPeriodRepayLateInterest(BigDecimal assignPeriodRepayLateInterest) {
-//        this.assignPeriodRepayLateInterest = assignPeriodRepayLateInterest;
-//    }
 
     public BigDecimal getServiceApr() {
         return serviceApr;

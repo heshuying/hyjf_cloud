@@ -407,7 +407,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         String borrowNid = tenderBg.getBorrowNid();
         // 满标处理
         if (accountWait.compareTo(new BigDecimal(0)) == 0) {
-            System.out.println("用户:" + userId + "***********************************项目满标，订单号：" + tenderBg.getOrderId());
+            logger.info("用户:" + userId + "***********************************项目满标，订单号：" + tenderBg.getOrderId());
             Map<String, Object> borrowFull = new HashMap<String, Object>();
             borrowFull.put("borrowId", borrowNid);
             boolean fullFlag = borrowCustomizeMapper.updateOfFullBorrow(borrowFull) > 0 ? true : false;

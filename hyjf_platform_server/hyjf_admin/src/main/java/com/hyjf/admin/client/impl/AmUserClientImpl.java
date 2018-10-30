@@ -918,12 +918,14 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public UserPortraitVO selectUsersPortraitByUserId(Integer userId) {
-		UserPortraitResponse response = restTemplate
-				.getForEntity("http://AM-ADMIN/am-user/userPortraitManage/selectUserPortraitByUserId/" + userId,
-						UserPortraitResponse.class)
-				.getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResult();
+		if(userId != null){
+			UserPortraitResponse response = restTemplate
+					.getForEntity("http://AM-ADMIN/am-user/userPortraitManage/selectUserPortraitByUserId/" + userId,
+							UserPortraitResponse.class)
+					.getBody();
+			if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+				return response.getResult();
+			}
 		}
 		return null;
 	}

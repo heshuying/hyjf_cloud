@@ -1373,7 +1373,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			//userInfo.setPromoteway(0);
 			//userInfo.setIsContact(false);
 			userInfo.setIsContact(0);
-			System.out.println("saveRegistUser***********************************预插入userInfo："
+			logger.info("saveRegistUser***********************************预插入userInfo："
 					+ JSON.toJSONString(userInfo));
 			userInfoMapper.insertSelective(userInfo);
 
@@ -1387,7 +1387,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 				spreadUser.setType("reg");
 				spreadUser.setOpernote("reg");
 				spreadUser.setOperation(userId + "");
-				System.out.println("saveRegistUser***********************************预插入spreadUser："
+				logger.info("saveRegistUser***********************************预插入spreadUser："
 						+ JSON.toJSONString(spreadUser));
 				spreadsUserMapper.insertSelective(spreadUser);
 			}
@@ -1403,7 +1403,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 					utmReg.setOpenAccount(0);
 					utmReg.setBindCard(0);
 					utmRegMapper.insertSelective(utmReg);
-					System.out.println("updateRegistUser***********************************预插入utmReg："
+					logger.info("updateRegistUser***********************************预插入utmReg："
 							+ JSON.toJSONString(utmReg));
 				}
 			}
@@ -1414,7 +1414,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 				userLog.setIp(loginIp);
 				userLog.setEvent("register");
 				userLog.setContent("注册成功");
-				System.out.println("saveRegistUser***********************************预插入userLog："
+				logger.info("saveRegistUser***********************************预插入userLog："
 						+ JSON.toJSONString(userLog));
 				userLogMapper.insertSelective(userLog);
 			}
