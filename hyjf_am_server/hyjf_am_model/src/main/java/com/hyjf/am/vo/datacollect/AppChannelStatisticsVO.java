@@ -83,7 +83,7 @@ public class AppChannelStatisticsVO extends BaseVO implements Serializable {
 			Integer accountNumberPc, Integer accountNumberAndroid, Integer accountNumberWechat,
 			Integer tenderNumberAndroid, Integer tenderNumberIos, Integer tenderNumberPc, Integer tenderNumberWechat,
 			BigDecimal cumulativeAttrCharge, Integer openAccountAttrCount, Integer investAttrNumber,
-			BigDecimal cumulativeAttrInvest) {
+			BigDecimal cumulativeAttrInvest,BigDecimal cumulativeInvest) {
 		this.sourceId = sourceId;
 		this.channelName = channelName;
 		this.visitCount = visitCount;
@@ -111,6 +111,7 @@ public class AppChannelStatisticsVO extends BaseVO implements Serializable {
 		this.openAccountAttrCount = openAccountAttrCount;
 		this.investAttrNumber = investAttrNumber;
 		this.cumulativeAttrInvest = cumulativeAttrInvest;
+		this.cumulativeInvest = cumulativeInvest;
 	}
 
 	public Integer getId() {
