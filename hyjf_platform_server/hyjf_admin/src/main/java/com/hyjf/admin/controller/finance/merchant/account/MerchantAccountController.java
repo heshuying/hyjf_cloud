@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.finance.merchant.account;
 import com.hyjf.admin.beans.request.MerchantAccountListBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MerchantAccountService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
@@ -33,6 +35,8 @@ import java.math.BigDecimal;
 @RequestMapping("/hyjf-admin/merchant/account")
 public class MerchantAccountController extends BaseController {
 
+    public static final String PERMISSIONS = "merchantaccountlist";
+
     @Autowired
     MerchantAccountService merchantAccountService;
 
@@ -43,6 +47,7 @@ public class MerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "账户信息",notes = "账户信息")
     @PostMapping(value = "/accountList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult init(@RequestBody MerchantAccountListBean form) {
         MerchantAccountListRequest request = new MerchantAccountListRequest();
         BeanUtils.copyProperties(form, request);
