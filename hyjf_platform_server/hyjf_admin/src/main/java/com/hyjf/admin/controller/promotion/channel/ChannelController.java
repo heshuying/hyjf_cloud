@@ -56,6 +56,9 @@ public class ChannelController extends BaseController {
     @PostMapping("/init")
     public UtmResultResponse channelListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO) {
         UtmResultResponse adminResult = new UtmResultResponse();
+        Map<String, Object> map = new HashMap<>();
+        map.put("source_type","0");
+        map.put("del_flag","0");
         Integer count = this.channelService.countList(channelCustomizeVO);
         if(null != count){
             channelCustomizeVO.setLimitStart(channelCustomizeVO.getLimitStart());
@@ -63,7 +66,7 @@ public class ChannelController extends BaseController {
             List<ChannelCustomizeVO> channelList = channelService.getByPageList(channelCustomizeVO);
             adminResult.setData(channelList);
         }
-        List<UtmPlatVO> utmPlatVOList = channelService.getAllUtmPlat();
+        List<UtmPlatVO> utmPlatVOList = channelService.getAllUtmPlat(map);
         adminResult.setUtmPlatList(utmPlatVOList);
         adminResult.setTotal(count);
         return adminResult;
