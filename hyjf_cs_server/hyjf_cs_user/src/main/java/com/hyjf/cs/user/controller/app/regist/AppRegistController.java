@@ -4,15 +4,15 @@
 package com.hyjf.cs.user.controller.app.regist;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.DES;
-import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.*;
 import com.hyjf.cs.common.util.GetJumpCommand;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -84,6 +85,9 @@ public class AppRegistController extends BaseUserController {
         String password = request.getParameter("password");
         // 推荐人
         String reffer = request.getParameter("reffer");
+        // 神策预置属性
+        String presetProps = request.getParameter("presetProps");
+
         String jumpCommand = GetJumpCommand.getLinkJumpPrefix(request, version);
         //检查版本
         if(version.length()>=5){
@@ -123,6 +127,25 @@ public class AppRegistController extends BaseUserController {
         WebViewUserVO webViewUserVO = registService.register(register.getMobile(),
                 register.getVerificationCode(), register.getPassword(),
                 register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), platform, GetCilentIP.getIpAddr(request));
+
+        // add by liuyang 神策数据统计追加 20181029 start
+        if (webViewUserVO != null && webViewUserVO.getUserId() != null && webViewUserVO.getUserId() != 0) {
+            if (StringUtils.isNotBlank(presetProps)) {
+                try {
+                    SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                    // 将json串转换成Bean
+                    Map<String, Object> sensorsDataMap = JSONObject.parseObject(presetProps, new TypeReference<Map<String, Object>>() {
+                    });
+                    sensorsDataBean.setPresetProps(sensorsDataMap);
+                    sensorsDataBean.setUserId(webViewUserVO.getUserId());
+                    // 发送神策数据统计MQ
+                    this.registService.sendSensorsDataMQ(sensorsDataBean);
+                } catch (MQException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        // add by liuyang 神策数据统计追加 20181029 end
 
         String statusDesc = "注册成功";
         boolean active = false;

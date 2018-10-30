@@ -3,6 +3,9 @@
  */
 package com.hyjf.cs.user.controller.wechat.login;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
@@ -28,7 +31,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -57,6 +63,8 @@ public class WeChatLoginController extends BaseUserController {
     public BaseResultBean login(HttpServletRequest request, @RequestParam String userName, @RequestParam String password,
                                 @RequestParam(value = "env", defaultValue = "") String env) {
         LoginResultBean result = new LoginResultBean();
+        // 从payload里面获取预置属性
+        String presetProps = getStringFromStream(request);
         StringBuffer url = request.getRequestURL();
         String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).toString();
         CheckUtil.check(null != userName && null != password, MsgEnum.STATUS_CE000001);
@@ -73,6 +81,25 @@ public class WeChatLoginController extends BaseUserController {
         WebViewUserVO userVO = loginService.login(userName, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
         if (userVO != null) {
             logger.info("weChat端登录成功, userId is :{}", userVO.getUserId());
+            // add by liuyang 神策数据统计追加 登录成功后 将用户ID返回前端 20180717 start
+            // 登录成功后,将用户ID返回给前端
+            result.setUserId(String.valueOf(userVO.getUserId()));
+            // 预置属性不为空,发送神策登陆事件MQ
+            logger.info("presetProps:" + presetProps);
+            if (StringUtils.isNotBlank(presetProps)){
+                try {
+                    SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                    // 将json串转换成Bean
+                    Map<String, Object> sensorsDataMap = JSONObject.parseObject(presetProps, new TypeReference<Map<String, Object>>() {
+                    });
+                    sensorsDataBean.setPresetProps(sensorsDataMap);
+                    sensorsDataBean.setUserId(userVO.getUserId());
+                    // 发送神策数据统计MQ
+                    this.loginService.sendSensorsDataMQ(sensorsDataBean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             if (StringUtils.isNotBlank(env)) {
                 //登录成功之后风车理财的特殊标记，供后续投资使用
                 RedisUtils.del("loginFrom" + userVO.getUserId());
@@ -119,4 +146,30 @@ public class WeChatLoginController extends BaseUserController {
         return result;
     }
 
+
+    /**
+     * 从payload里面取神策预置属性,为解决从request里面取乱码的问题
+     *
+     * @param req
+     * @return
+     */
+    private String getStringFromStream(HttpServletRequest req) {
+        ServletInputStream is;
+        try {
+            is = req.getInputStream();
+            int nRead = 1;
+            int nTotalRead = 0;
+            byte[] bytes = new byte[10240];
+            while (nRead > 0) {
+                nRead = is.read(bytes, nTotalRead, bytes.length - nTotalRead);
+                if (nRead > 0)
+                    nTotalRead = nTotalRead + nRead;
+            }
+            String str = new String(bytes, 0, nTotalRead, "utf-8");
+            return str;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }

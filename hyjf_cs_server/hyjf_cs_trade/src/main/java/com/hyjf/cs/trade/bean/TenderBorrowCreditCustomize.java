@@ -57,6 +57,12 @@ public class TenderBorrowCreditCustomize extends CreditDetailsRequestBean{
 
 	private String ip;
 
+	// 神策预置属性
+	private String presetProps;
+
+	// 债转编号
+	private String creditNid;
+
 	public String getCode() {
 		return code;
 	}
@@ -137,5 +143,21 @@ public class TenderBorrowCreditCustomize extends CreditDetailsRequestBean{
 
 	public void setIp(String ip) {
 		this.ip = ip;
+	}
+
+	public String getPresetProps() {
+		return presetProps;
+	}
+
+	public void setPresetProps(String presetProps) {
+		this.presetProps = presetProps;
+	}
+
+	public String getCreditNid() {
+		return creditNid;
+	}
+
+	public void setCreditNid(String creditNid) {
+		this.creditNid = creditNid;
 	}
 }

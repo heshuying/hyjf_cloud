@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
 import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -23,6 +24,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
@@ -39,6 +41,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.mq.producer.sensorsdate.withdraw.SensorsDataWithdrawProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
@@ -93,6 +96,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     @Autowired
     SmsProducer smsProducer;
+
+    @Autowired
+    private SensorsDataWithdrawProducer sensorsDataWithdrawProducer;
 
     @Value("${hyjf.bank.fee}")
     private String FEETMP;
@@ -264,6 +270,18 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                             }
                             // TODO 活动统计 需要的时候放开
                             /*CommonSoaUtils.listedTwoWithdraw(userId, total);*/
+
+                            try{
+                                // 提现成功后,发送神策数据统计MQ
+                                SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                                sensorsDataBean.setOrderId(bean.getLogOrderId());
+                                sensorsDataBean.setEventCode("withdraw_result");
+                                sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
+                                this.sendSensorsDataMQ(sensorsDataBean);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
                             return jsonMessage("提现成功!", "0");
                         } catch (Exception e) {
                             // 回滚事务
@@ -293,7 +311,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         }
         return null;
     }
-
 
 
     @Override
@@ -1871,6 +1888,15 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             resultList.add(result);
         }
         return resultList;
+    }
+
+    /**
+     * 提现成功后,发送神策数据统计MQ
+     *
+     * @param sensorsDataBean
+     */
+    private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataWithdrawProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_WITHDRAW_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
     }
 
 }

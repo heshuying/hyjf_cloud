@@ -5,8 +5,10 @@ package com.hyjf.cs.user.controller.wechat.regist;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -117,6 +119,8 @@ public class WeChatRegistController extends BaseUserController {
         String verificationCode = request.getParameter("verificationCode");
         // 登录密码
         String password = request.getParameter("password");
+        // 神策预置属性
+        String presetProps = request.getParameter("presetProps");
         //密码解密
         password = RSAJSPUtil.rsaToPassword(password);
         // 推荐人
@@ -144,6 +148,23 @@ public class WeChatRegistController extends BaseUserController {
              ret.setSuccessUrl("");
              return ret;
          }
+
+        // add by liuyang 神策数据统计追加 20181029 start
+        if (StringUtils.isNotBlank(presetProps)) {
+            try {
+                SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                // 将json串转换成Bean
+                Map<String, Object> sensorsDataMap = JSONObject.parseObject(presetProps, new TypeReference<Map<String, Object>>() {
+                });
+                sensorsDataBean.setPresetProps(sensorsDataMap);
+                sensorsDataBean.setUserId(webViewUserVO.getUserId());
+                // 发送神策数据统计MQ
+                this.registService.sendSensorsDataMQ(sensorsDataBean);
+            } catch (MQException e) {
+                e.printStackTrace();
+            }
+        }
+        // add by liuyang 神策数据统计追加 20181029 end
         String statusDesc = "注册成功";
         if (registService.checkActivityIfAvailable(systemConfig.getActivity888Id())) {
             BaseMapBean baseMapBean=new BaseMapBean();

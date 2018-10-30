@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -36,6 +37,7 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.CouponTenderProducer;
+import com.hyjf.cs.trade.mq.producer.sensorsdate.hzt.SensorsDataHztInvestProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
@@ -94,6 +96,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private BorrowCreditTenderService borrowTenderService;
     @Autowired
     private AuthService authService;
+    @Autowired
+    private SensorsDataHztInvestProducer sensorsDataHztInvestProducer;
     /**
      * @param request
      * @Description 散标投资
@@ -1857,6 +1861,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             } catch (MQException e) {
                 e.printStackTrace();
             }
+
+            // 投资成功后,发送神策数据统计MQ
+            // add by liuyang 神策数据统计 20180823 start
+            try {
+                // 投资成功后,发送神策数据统计MQ
+                SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
+                sensorsDataBean.setOrderId(bean.getLogOrderId());
+                sensorsDataBean.setEventCode("submit_tender");
+                this.sendSensorsDataMQ(sensorsDataBean);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // add by liuyang 神策数据统计 20180823 end
         }else{
             logger.error("投资失败  对象:{}",JSONObject.toJSONString(tenderBg));
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
@@ -1967,4 +1985,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/
     }
+
+    /**
+     * 投资成功后,发送神策数据统计MQ
+     *
+     * @param sensorsDataBean
+     * @throws MQException
+     */
+    private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataHztInvestProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_HZT_INVEST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+    }
+
 }

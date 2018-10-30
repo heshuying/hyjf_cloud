@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.service.invest.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -35,6 +36,7 @@ import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.*;
+import com.hyjf.cs.trade.mq.producer.sensorsdate.credit.SensorsDataCreditProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
@@ -80,6 +82,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private AccountWebListProducer accountWebListProducer;
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
+
+    @Autowired
+    private SensorsDataCreditProducer sensorsDataCreditProducer;
 
     private static String regex = "^[-+]?(([0-9]+)(([0-9]+))?|(([0-9]+))?)$";
     private static DecimalFormat DF_COM_VIEW = new DecimalFormat("######0.00");
@@ -938,6 +943,21 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                             logger.error("更新网站收支明细失败！logOrdId:{},userId:{}",logOrderId,userId);
                         }
                     }
+
+                    // 承接成功后, 发送神策数据统计MQ
+                    // 神策数据统计 add by liuyang 20180726 start
+                    try {
+                        SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                        sensorsDataBean.setUserId(userId);
+                        sensorsDataBean.setEventCode("receive_credit_assign");
+                        sensorsDataBean.setOrderId(creditTender.getAssignNid());
+                        // 发送神策数据统计MQ
+                        logger.info("承接成功后发送神策数据统计MQ,承接订单号:[" + creditTender.getAssignNid() + "].");
+                        this.sendSensorsDataMQ(sensorsDataBean);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    // 神策数据统计 add by liuyang 20180726 end
                     return true;
                 }
             }else{
@@ -1366,5 +1386,15 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 债转编号和承接本金必须是数字格式
             throw new CheckException(MsgEnum.ERROR_CREDIT_NID_CAPITAL_NUMBER);
         }
+    }
+
+
+    /**
+     * 承接成功后,发送神策数据统计
+     *
+     * @param sensorsDataBean
+     */
+    private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataCreditProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
     }
 }

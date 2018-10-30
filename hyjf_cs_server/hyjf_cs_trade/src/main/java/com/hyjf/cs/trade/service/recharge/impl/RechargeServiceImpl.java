@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service.recharge.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -17,6 +18,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
@@ -30,6 +32,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.mq.producer.sensorsdate.recharge.SensorsDataRechargeProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
@@ -86,7 +89,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	// 充值状态:成功
 	private static final int RECHARGE_STATUS_SUCCESS = 2;
 
-
+	@Autowired
+	private SensorsDataRechargeProducer sensorsDataRechargeProducer;
 
 	@Override
 	public AccountVO getAccount(Integer userId) {
@@ -212,6 +216,18 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 								appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
 										UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 							}
+
+							// 神策数据统计 add by liuyang 20180725 start
+							try {
+								SensorsDataBean sensorsDataBean = new SensorsDataBean();
+								sensorsDataBean.setEventCode("recharge_result");
+								sensorsDataBean.setOrderId(bean.getLogOrderId());
+								sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
+								this.sendSensorsDataMQ(sensorsDataBean);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							// 神策数据统计 add by liuyang 20180725 end
 							return jsonMessage("充值成功!", "0");
 						} else {
 							// 查询充值交易状态
@@ -544,6 +560,16 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 				throw new ReturnMessageException(MsgEnum.ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL);
 			}
 		}
+	}
+
+
+	/**
+	 * 充值成功后,发送神策数据统计MQ
+	 *
+	 * @param sensorsDataBean
+	 */
+	private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+		this.sensorsDataRechargeProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_RECHARGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
 	}
 
 

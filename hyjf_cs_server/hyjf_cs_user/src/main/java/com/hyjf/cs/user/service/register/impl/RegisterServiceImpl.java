@@ -6,6 +6,7 @@ package com.hyjf.cs.user.service.register.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UserActionUtmRequest;
 import com.hyjf.am.vo.market.AdsVO;
@@ -35,6 +36,7 @@ import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.AccountProducer;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
+import com.hyjf.cs.user.mq.producer.sensorsdate.register.SensorsDataRegisterProducer;
 import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.register.RegisterService;
@@ -73,6 +75,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     private SystemConfig systemConfig;
     @Autowired
     private AmMarketClient amMarketClient;
+
+    @Autowired
+    private SensorsDataRegisterProducer sensorsDataRegisterProducer;
 
     /**
      * api注册参数校验
@@ -545,6 +550,16 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             return String.valueOf(hjhUserAuth.getAutoInvesStatus());
         }
         return null;
+    }
+
+    /**
+     * 注册成功后,发送神策统计MQ
+     *
+     * @param sensorsDataBean
+     */
+    @Override
+    public void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataRegisterProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_REGISTER_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)),2);
     }
 
     /**

@@ -28,6 +28,9 @@ public class RegisterRequest extends AppBaseRequest {
     @ApiModelProperty(value = "注册渠道web")
     private String utmId;
 
+    @ApiModelProperty(value = "神策预置属性")
+    private String presetProps;
+
     public String getInstCode() {
         return instCode;
     }
@@ -74,5 +77,13 @@ public class RegisterRequest extends AppBaseRequest {
 
     public void setReffer(String reffer) {
         this.reffer = reffer;
+    }
+
+    public String getPresetProps() {
+        return presetProps;
+    }
+
+    public void setPresetProps(String presetProps) {
+        this.presetProps = presetProps;
     }
 }

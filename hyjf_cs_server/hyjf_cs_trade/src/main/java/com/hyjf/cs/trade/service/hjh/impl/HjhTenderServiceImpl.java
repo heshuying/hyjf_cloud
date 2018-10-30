@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -38,6 +39,7 @@ import com.hyjf.cs.trade.mq.producer.AmTradeProducer;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
+import com.hyjf.cs.trade.mq.producer.sensorsdate.hjh.SensorsDataHjhInvestProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.coupon.AppCouponService;
@@ -94,6 +96,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     private SystemConfig systemConfig;
     @Autowired
     private AuthService authService ;
+    @Autowired
+    private SensorsDataHjhInvestProducer sensorsDataHjhInvestProducer;
     /**
      * @param request
      * @Description 检查加入计划的参数
@@ -586,6 +590,16 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     }
 
     /**
+     * 加入计划成功后,发送神策数据统计MQ
+     *
+     * @param sensorsDataBean
+     */
+    @Override
+    public void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataHjhInvestProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_HJH_INVEST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+    }
+
+    /**
      * 计算预期收益
      * @param resultVo
      * @param couponConfig
@@ -770,6 +784,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 投资的计划
         result.put("borrowNid", plan.getPlanNid());
 
+        // 神策数据统计追加
+        // 计划加入订单号
+        result.put("accedeOrderId",request.getPlanOrderId());
+
         result.put("plan","1");
         // 如果有优惠券  放上优惠券面值和类型
         if (cuc != null) {
@@ -803,6 +821,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         String accountStr = request.getAccount();
         Integer userId = request.getUser().getUserId();
         String planOrderId = GetOrderIdUtils.getOrderId0(userId);
+        // add by liuyang 神策数据统计追加 start
+        request.setPlanOrderId(planOrderId);
+        // add by liuyang 神策数据统计追加 end
         int nowTime = GetDate.getNowTime10();
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         // 预期年利率

@@ -4,10 +4,13 @@
 package com.hyjf.cs.user.controller.web.login;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -17,12 +20,14 @@ import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -57,7 +62,23 @@ public class WebLoginController extends BaseUserController {
         WebViewUserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC);
         if (userVO != null) {
             logger.info("web端登录成功 userId is :{}", userVO.getUserId());
-
+            // add by liuyang 神策数据统计追加 20181029 start
+            if (user != null && StringUtils.isNotBlank(user.getPresetProps())) {
+                logger.info("Web登录事件,神策预置属性:" + user.getPresetProps());
+                try {
+                    SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                    // 将json串转换成Bean
+                    Map<String, Object> sensorsDataMap = JSONObject.parseObject(user.getPresetProps(), new TypeReference<Map<String, Object>>() {
+                    });
+                    sensorsDataBean.setPresetProps(sensorsDataMap);
+                    sensorsDataBean.setUserId(userVO.getUserId());
+                    // 发送神策数据统计MQ
+                    this.loginService.sendSensorsDataMQ(sensorsDataBean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            // add by liuyang 神策数据统计追加 20181029 end
             result.setData(userVO);
         } else {
             logger.error("web端登录失败...");

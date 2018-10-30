@@ -3,8 +3,10 @@
  */
 package com.hyjf.cs.user.service.login;
 
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.UserParameters;
 
@@ -106,4 +108,12 @@ public interface LoginService extends BaseUserService {
 	UserVO getUserByIdCard(String idCard);
 
 	Map<String, String> updateLoginInAction(String userName, String password, String ipAddr);
+
+    /**
+     * 发送神策数据统计MQ
+     *
+     * @param sensorsDataBean
+     * @throws MQException
+     */
+    void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException;
 }
