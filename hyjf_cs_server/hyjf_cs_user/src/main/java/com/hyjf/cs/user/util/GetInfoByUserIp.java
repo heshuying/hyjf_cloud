@@ -122,7 +122,7 @@ public class GetInfoByUserIp {
 	}
 	
 	
-    /*public static void main(String[] argv){
+ /*   public static void main(String[] argv){
     	String ip = "47.104.250.73";
     	String ip1 = "sadasd";
     	String ip2 = "";
@@ -133,16 +133,16 @@ public class GetInfoByUserIp {
     		StringBuffer line = new StringBuffer(info);
             int first_idx   = line.indexOf("|");
             String country = line.substring(0, first_idx);
-
+           
             line = new StringBuffer(line.substring(first_idx + 1) );
             //get second ip
             int second_idx   = line.indexOf("|");
             String number = line.substring(0, second_idx);
-
+            
             line = new StringBuffer(line.substring(second_idx + 1) );
             int thrid_idx   = line.indexOf("|");
             String province = line.substring(0, thrid_idx);
-
+           
             line = new StringBuffer(line.substring(thrid_idx + 1) );
             int fouth_idx   = line.indexOf("|");
             String city = line.substring(0, fouth_idx);
