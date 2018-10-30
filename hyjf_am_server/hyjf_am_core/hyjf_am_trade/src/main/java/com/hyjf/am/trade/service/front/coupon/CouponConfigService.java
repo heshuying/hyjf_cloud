@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.front.coupon;
 
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
+import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigExportCustomize;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
@@ -117,7 +118,7 @@ public interface CouponConfigService {
      * @Param CouponRecoverVO
      * @return
      */
-    Integer insertCouponRecover(CouponRecoverVO cr);
+    Integer insertCouponRecover(CouponRecover cr);
 
     /**
      * @Author walter.limeng
