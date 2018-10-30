@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.datacollect;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -25,6 +26,8 @@ public class AppChannelStatisticsDetailVO extends BaseVO implements Serializable
     private Date openAccountTime;
 
     private Integer firstInvestTime;
+
+    private String firstInvestTimeT;
 
     private BigDecimal investAmount;
 
@@ -122,5 +125,16 @@ public class AppChannelStatisticsDetailVO extends BaseVO implements Serializable
 
     public void setCumulativeInvest(BigDecimal cumulativeInvest) {
         this.cumulativeInvest = cumulativeInvest;
+    }
+
+    public String getFirstInvestTimeT() {
+        if(firstInvestTime != null&&firstInvestTime!=0){
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(firstInvestTime);
+        }
+        return null;
+    }
+
+    public void setFirstInvestTimeT(String firstInvestTimeT) {
+        this.firstInvestTimeT = firstInvestTimeT;
     }
 }
