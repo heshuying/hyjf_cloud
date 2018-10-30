@@ -3,33 +3,48 @@
  */
 package com.hyjf.cs.user.util;
 
+import org.apache.commons.lang.StringUtils;
+import org.lionsoul.ip2region.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.apache.commons.lang.StringUtils;
-import org.lionsoul.ip2region.DataBlock;
-import org.lionsoul.ip2region.DbConfig;
-import org.lionsoul.ip2region.DbMakerConfigException;
-import org.lionsoul.ip2region.DbSearcher;
-import org.lionsoul.ip2region.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author libin
  * @version GetInfoByUserIp.java, v0.1 2018年10月26日 下午2:49:26
  */
+@Component
 public class GetInfoByUserIp {
 	
 	private static final Logger _log = LoggerFactory.getLogger(GetInfoByUserIp.class);
-	
-	public static String getInfoByUserIp(String ipAddress) {//例如：101.105.35.57
+
+    private static final String IP_NAME = "/ip2region.db";
+
+    public static String ipAddress;
+
+
+    @Value("${hyjf.ip.address}")
+    public void setIpAddress(String ipAddress) {
+        GetInfoByUserIp.ipAddress = ipAddress;
+    }
+
+    public static String getIpAddress() {
+        System.out.println( GetInfoByUserIp.ipAddress);
+        return GetInfoByUserIp.ipAddress;
+    }
+
+    public static String getInfoByUserIp(String ipAddress) {//例如：101.105.35.57
 		// 返回的拼装信息
 		String info = "";
 		// DB文件路径
 		//String DBfilePath = "D:\\Workspace4\\ip2region\\data\\ip2region.db";//之后放在项目里
-		String DBfilePath = "src/main/resources/ip2region.db";
+		String DBfilePath = getIpAddress()+IP_NAME;
 		// 出入ip地址判空
 		if(ipAddress == null & StringUtils.isEmpty(ipAddress)){
 			_log.error("未获取到IP地址！");
@@ -107,8 +122,8 @@ public class GetInfoByUserIp {
 	}
 	
 	
-/*    public static void main(String[] argv){  
-    	String ip = "101.105.35.57";
+ /*   public static void main(String[] argv){
+    	String ip = "47.104.250.73";
     	String ip1 = "sadasd";
     	String ip2 = "";
     	String info = getInfoByUserIp(ip);
