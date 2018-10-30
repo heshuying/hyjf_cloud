@@ -14,6 +14,10 @@ public class RegisterUserRequest {
     private String platform;
     private String instCode;
     private Integer instType;
+    // add by libin start
+    private String province;
+    private String city;
+    // add by libin end
 
     public RegisterUserRequest() {
 
@@ -111,4 +115,20 @@ public class RegisterUserRequest {
     public void setInstType(Integer instType) {
         this.instType = instType;
     }
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
 }
