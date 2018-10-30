@@ -134,4 +134,15 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
     public List<String> selectRepayMethod(String instCode) {
         return amAdminClient.selectRepayMethod(instCode);
     }
+
+    /**
+     * 更新机构可用还款方式
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean updateBailInfoDelFlgById(Integer id) {
+        return amAdminClient.updateBailInfoDelFlgById(id);
+    }
 }

@@ -686,4 +686,12 @@ public interface AmAdminClient {
      * @return
      */
     void updateBindCard(BindCardExceptionRequest request);
+
+    /**
+     * 更新机构可用还款方式
+     *
+     * @param id
+     * @return
+     */
+    boolean updateBailInfoDelFlgById(Integer id);
 }
