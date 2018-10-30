@@ -148,7 +148,9 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     }
 
     @Override
-    public String downloadFile(String id, HttpServletResponse response) {
+    public void downloadFile(String id, HttpServletResponse response) {
+        FileInputStream in = null;
+        OutputStream out = null;
         CouponCheckVO couponCheck = amConfigClient.selectCoupon(Integer.valueOf(id));
         String fileP = "";
         String fileN = "";
@@ -159,10 +161,10 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         try {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
-
-            FileInputStream in = new FileInputStream(fileP);
+            response.setContentType("multipart/form-data");
+            in = new FileInputStream(fileP);
             // 创建输出流
-            OutputStream out = response.getOutputStream();
+            out = response.getOutputStream();
             // 创建缓冲区
             byte buffer[] = new byte[1024];
             int len = 0;
@@ -171,18 +173,31 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 // 输出缓冲区内容到浏览器，实现文件下载
                 out.write(buffer, 0, len);
             }
-            // 关闭文件流
-            if(in!= null){
-            	in.close();
-            }
+            out.flush();
             // 关闭输出流
-            if(out!=null){
-            	out.close();
-            }
+            out.close();
+            // 关闭文件流
+            in.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(couponCheck.getFileName() + "下载失败");
+        } finally {
+            try{
+                if(out != null){
+                    out.flush();
+                    out.close();
+                }
+            }catch (Exception e){
+                logger.info("关闭输出流失败");
+            }
+            // 关闭输入流
+            try{
+                if(in != null){
+                    in.close();
+                }
+            }catch (Exception e){
+                logger.info("关闭输入流失败");
+            }
         }
-        return fileP;
     }
 
     @Override

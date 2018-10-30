@@ -137,10 +137,14 @@ public class BankOpenController extends BaseController {
 	}
 
 	@RequestMapping("/selectById/{userId}")
-	public BankOpenAccountResponse selectById(@PathVariable int userId) {
+	public BankOpenAccountResponse selectById(@PathVariable String userId) {
+		if(userId == null || "".equals(userId) || "null".equalsIgnoreCase(userId)){
+			logger.error("直接返回null,原因userId为:[{}]",userId);
+			return null;
+		}
 		BankOpenAccountExample accountExample = new BankOpenAccountExample();
 		BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
-		crt.andUserIdEqualTo(userId);
+		crt.andUserIdEqualTo(Integer.valueOf(userId));
 		BankOpenAccountResponse response = new BankOpenAccountResponse();
 		BankOpenAccount bankOpenAccount = bankOpenService.selectByExample(accountExample);
 		if(bankOpenAccount != null){
