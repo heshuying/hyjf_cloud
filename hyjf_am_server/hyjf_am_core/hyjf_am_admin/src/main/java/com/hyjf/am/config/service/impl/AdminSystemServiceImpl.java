@@ -1,7 +1,10 @@
 package com.hyjf.am.config.service.impl;
 
+import com.hyjf.am.config.dao.mapper.auto.AdminMapper;
 import com.hyjf.am.config.dao.mapper.auto.ConfigApplicantMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminSystemMapper;
+import com.hyjf.am.config.dao.model.auto.Admin;
+import com.hyjf.am.config.dao.model.auto.AdminExample;
 import com.hyjf.am.config.dao.model.auto.ConfigApplicant;
 import com.hyjf.am.config.dao.model.auto.ConfigApplicantExample;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
@@ -25,6 +28,9 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 	
 	@Autowired
 	protected ConfigApplicantMapper configApplicantMapper;
+
+	@Autowired
+	private AdminMapper adminMapper;
 	/**
 	 * 
 	 * 获取菜单列表
@@ -189,5 +195,16 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 			return 1;
 		}
 		return 0;
+	}
+	@Override
+	public Admin getUserInfoAll(AdminSystem adminSystem){
+		AdminExample adminExample=new AdminExample();
+		adminExample.createCriteria().andUsernameEqualTo(adminSystem.getUsername());
+		List<Admin> admins=adminMapper.selectByExample(adminExample);
+		if (admins.size()<1){
+			return null;
+		}else {
+			return admins.get(0);
+		}
 	}
 }
