@@ -51,7 +51,7 @@ import java.util.Map;
 public class HjhDebtCreditController extends BaseController{
 
 
-    private static final String PERMISSIONS = "HjhDebtCredit";
+    private static final String PERMISSIONS = "hjhDebtCredit";
 
     @Autowired
     private HjhDebtCreditService hjhDebtCreditService;
