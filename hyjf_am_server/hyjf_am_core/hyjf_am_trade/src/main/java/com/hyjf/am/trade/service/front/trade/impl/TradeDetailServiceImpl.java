@@ -33,7 +33,7 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         String endDate = StringUtils.isNotEmpty(request.getEndDate()) ? request.getEndDate() : null;
         params.put("userId", userId);
         params.put("roleId", roleId);
-        params.put("trade", tradeType);
+        params.put("tradeType", tradeType);
         params.put("startDate", startDate);
         params.put("endDate", endDate);
         if (request.getLimitStart() == 0 || request.getLimitStart() > 0) {
