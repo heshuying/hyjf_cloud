@@ -148,7 +148,7 @@ public class LockedUserServiceImpl implements LockedUserService {
 				lockedUserInfoVO.setMobile(admin.getMobile());
 				lockedUserInfoVO.setLockTime(new Date());
 				lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
-				lockedUserInfoVO.setFront(1);
+				lockedUserInfoVO.setFront(0);
 				lockedUserInfoVO.setUnlocked(0);
 				int insert=lockedUserInfoMapper.insert(lockedUserInfoVO);
 				r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
