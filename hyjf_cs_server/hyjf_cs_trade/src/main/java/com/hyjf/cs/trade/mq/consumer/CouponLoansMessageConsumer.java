@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +55,12 @@ public class CouponLoansMessageConsumer extends Consumer {
         logger.info("====CouponLoansHjhMessageConsumer start=====");
     }
 
+    public static void main(String[] args) {
+        ArrayList a  =  null;
+        boolean empty = a.isEmpty();
+        System.out.println(empty);
+    }
+
     public class MessageListener implements MessageListenerConcurrently {
 
         @Override
@@ -65,6 +72,7 @@ public class CouponLoansMessageConsumer extends Consumer {
             try {
                 loansBean = JSONObject.parseObject(msgBody, CouponLoansBean.class);
 
+                logger.info("----------------散标优惠券放款，msgBody:" + msgBody);
 //验证请求参数
                 if (Validator.isNull(loansBean.getBorrowNid())) {
                     logger.error("【优惠券放款】接收到的消息中信息不全");
@@ -80,6 +88,9 @@ public class CouponLoansMessageConsumer extends Consumer {
 
                 List<BorrowTenderCpnVO> listTenderCpn = couponLoansService.getBorrowTenderCpnList(loansBean.getBorrowNid());
 
+                if(listTenderCpn == null || listTenderCpn.isEmpty()){
+                    logger.info("----------散标优惠券放款没有投资详情，borrowNid：" + loansBean.getBorrowNid());
+                }
                 /** 循环优惠券投资详情列表 */
                 for (BorrowTenderCpnVO borrowTenderCpn : listTenderCpn) {
                     try {
@@ -99,9 +110,9 @@ public class CouponLoansMessageConsumer extends Consumer {
                             // 发送短信
                             couponLoansService.sendSmsCoupon(msgList);
                             // 发送push消息
-                            System.out.println("--------------准备调用sendAppMSCoupon方法推送push消息--------");
+                            logger.info("--------------准备调用sendAppMSCoupon方法推送push消息--------");
                             couponLoansService.sendAppMSCoupon(msgList);
-                            System.out.println("--------------调用sendAppMSCoupon方法发送push消息结束");
+                            logger.info("--------------调用sendAppMSCoupon方法发送push消息结束");
                         }
                     } catch (Exception e) {
                         logger.error("---优惠券放款异常。。。"+"标的编号："+loansBean.getBorrowNid() + " 优惠券使用orderId: " + borrowTenderCpn.getNid(), e);
