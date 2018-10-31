@@ -67,7 +67,7 @@ public class CouponLoansHjhMessageConsumer extends Consumer {
             String msgBody = new String(paramBean.getBody());
             try {
                 couponLoansBean = JSONObject.parseObject(msgBody, CouponLoansBean.class);
-
+                logger.info("-----------汇计划优惠券放款，msgBody:" + msgBody);
                 //验证请求参数
                 if (Validator.isNull(couponLoansBean.getOrderId()) && Validator.isNull(couponLoansBean.getOrderIdCoupon())) {
                     logger.error("【汇计划优惠券放款】接收到的消息中信息不全");
