@@ -226,26 +226,21 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         }
 
         AccountVO accountVO = getAccountByUserId(user.getUserId());
-        try {
-            if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
+        if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
+            // ** 用户符合还款条件，可以还款 *//*
+            // 查询用户在银行电子账户的余额
+            BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),user.getBankAccount());
+            if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
                 // ** 用户符合还款条件，可以还款 *//*
-                // 查询用户在银行电子账户的余额
-                BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),user.getBankAccount());
-                if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
-                    // ** 用户符合还款条件，可以还款 *//*
-                } else {
-                    // 银行账户余额不足
-                    throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
-                }
             } else {
-                // 平台账户余额不足
+                // 银行账户余额不足
                 throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
             }
-
-        } catch (Exception e) {
-            logger.error("还款申请可用余额校验异常", e);
-            throw new ReturnMessageException(MsgEnum.STATUS_CE999999);
+        } else {
+            // 平台账户余额不足
+            throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
         }
+
 
     }
 
