@@ -130,6 +130,10 @@ public class CouponCheckController extends BaseController {
                 if (flag) {
                     checkRequest.setStatus(2);
                     results = couponCheckService.updateCoupon(checkRequest);
+                    if (results) {
+                        ccr.setMessage("审核成功,正在发放优惠券");
+                        return new AdminResult<>(SUCCESS, ccr.getMessage());
+                    }
                 } else {
                     ccr.setMessage("审核异常，请检查上传的Excel文件！");
                     return new AdminResult<>(FAIL, ccr.getMessage());
@@ -145,13 +149,10 @@ public class CouponCheckController extends BaseController {
             ccr.setMessage("审核不通过需要填写备注,备注20字以内");
             return new AdminResult<>(FAIL, ccr.getMessage());
         }
-        if (results) {
-            ccr.setMessage("审核成功,正在发放优惠券");
-            return new AdminResult<>(SUCCESS, ccr.getMessage());
-        } else {
+        if (!results) {
             ccr.setMessage("审核失败");
             return new AdminResult<>(FAIL, ccr.getMessage());
         }
+        return new AdminResult<>();
     }
-
 }
