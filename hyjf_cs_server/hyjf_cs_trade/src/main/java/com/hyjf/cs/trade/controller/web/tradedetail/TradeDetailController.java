@@ -64,10 +64,9 @@ public class TradeDetailController  extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户收支明细列表分页数据", notes = "获取用户收支明细列表分页数据")
     @PostMapping(value = "/searchUserTradeList", produces = "application/json;charset=utf-8")
-    public TradeDetailBean searchUserTradeList(@RequestHeader(value = "userId") int userId,HttpServletRequest request) {
+    public TradeDetailBean searchUserTradeList(@RequestHeader(value = "userId") int userId,HttpServletRequest request,@RequestBody @Valid TradeDetailBeanRequest form) {
         logger.info("web获取用户收支明细列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
         WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
-        TradeDetailBeanRequest form=createTradeDetailBeanRequest(request);
         TradeDetailBean result = new TradeDetailBean();
         if(user != null){
             CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
