@@ -4,6 +4,9 @@
 package com.hyjf.am.user.service.admin.locked.impl;
 
 import com.google.common.base.Preconditions;
+import com.hyjf.am.config.dao.mapper.auto.AdminMapper;
+import com.hyjf.am.config.dao.model.auto.Admin;
+import com.hyjf.am.config.dao.model.auto.AdminExample;
 import com.hyjf.am.user.controller.admin.locked.LockedConfigManager;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
@@ -110,32 +113,26 @@ public class LockedUserServiceImpl implements LockedUserService {
 	 * @param loginPassword 登录密码
 	 * @return
 	 */
-	public Map<String, String> insertErrorPassword(String userName, String loginPassword){
+	public Map<String, String> insertErrorPassword(String userName, String loginPassword,Admin admin){
 		Map<String, String> r=new HashMap<>();
-		UserExample userExample=new UserExample();
-		userExample.createCriteria().andUsernameEqualTo(userName);
-		List<User> users = userMapper.selectByExample(userExample);
-		if (users.size()<1){
-			return r;
-		}
 		//1.获取该用户密码错误次数
-		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + users.get(0).getUserId());
+		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + admin.getId());
 		//2.获取用户允许输入的最大错误次数
 		Integer maxLoginErrorNum=LockedConfigManager.getInstance().getAdminConfig().getMaxLoginErrorNum();
 		//3.redis配置的超限有效时间
-		long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + users.get(0).getUserId());
+		long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + admin.getId());
 		//判断密码错误次数是否超限
 		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
 //			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
 			r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
 		}
 		//查询到的密码
-		String passwordDb = users.get(0).getPassword();
+		String passwordDb = admin.getPassword();
 		// 页面传来的密码
 		String password = MD5.toMD5Code(loginPassword);
 		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
 		if (!password.equals(passwordDb)) {
-			long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ADMIN+ users.get(0).getUserId());//以用户手机号为key
+			long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ADMIN+ admin.getId());//以用户手机号为key
 			for (int i=1;i<4;i++){
 				if (maxLoginErrorNum-value == i){
 //					CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_MAX,i);
@@ -146,9 +143,9 @@ public class LockedUserServiceImpl implements LockedUserService {
 				Integer	loginLockTime=LockedConfigManager.getInstance().getAdminConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
 				// 同步输错密码超限锁定用户信息接口
 				LockedUserInfo lockedUserInfoVO=new LockedUserInfo();
-				lockedUserInfoVO.setUserid(users.get(0).getUserId());
-				lockedUserInfoVO.setUsername(users.get(0).getUsername());
-				lockedUserInfoVO.setMobile(users.get(0).getMobile());
+				lockedUserInfoVO.setUserid(admin.getId());
+				lockedUserInfoVO.setUsername(admin.getUsername());
+				lockedUserInfoVO.setMobile(admin.getMobile());
 				lockedUserInfoVO.setLockTime(new Date());
 				lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
 				lockedUserInfoVO.setFront(1);
