@@ -671,18 +671,34 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                 hjhPlan.getExpectApr(), resultVO,
                 tenderUsrcustid, sellerUsrcustid);
         // mod 汇计划三期 汇计划自动投资 liubin 20180515 end
+
+
+        // ^^^^^^^^^^^^^^
+        HjhDebtCredit credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^saveCreditTender"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         if (!creditTenderFlag) {
             return creditTenderFlag;
         }
 
         // 删除临时表 OK
         this.hjhPlanBorrowTmpService.deleteHjhPlanBorrowTmpByAccedeBorrow(credit.getCreditNid(), hjhAccede.getAccedeOrderId());
-
+        // ^^^^^^^^^^^^^^
+        credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^deleteHjhPlanBorrowTmpByAccedeBorrow"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         // 复投时，减去该计划的开放额度
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
-
+        // ^^^^^^^^^^^^^^
+        credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^updateAvailableInvestAccount"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         // 调用MQ,生成计划债权转让协议
         planCreditGenerateContractByMQ(bean.getOrderId());
+        // ^^^^^^^^^^^^^^
+        credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^planCreditGenerateContractByMQ"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         result = true;
         return result;
     }
@@ -775,7 +791,6 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             if (debtDetailOldList != null && debtDetailOldList.size() == 1) {
                 HjhDebtDetail debtDetailOld = debtDetailOldList.get(0);
                 // 承接人承接本金
-                logger.info(assignPay  + "*" + debtDetailOld.getLoanCapital() + "/" + credit.getLiquidationFairValue());
                 assignCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
                         debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
                 // 承接人承接利息
