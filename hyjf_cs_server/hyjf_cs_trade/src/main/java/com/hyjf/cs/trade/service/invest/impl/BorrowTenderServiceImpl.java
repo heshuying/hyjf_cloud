@@ -747,6 +747,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
 
         // 设置产品加息 显示收益率
+        logger.info("产品加息：{}   {}    {} ",borrow.getIncreaseInterestFlag(),borrow.getBorrowExtraYield(),Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield()));
         if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
             investInfo.setBorrowExtraYield(df.format(borrow.getBorrowExtraYield()));
         }
@@ -800,8 +801,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if (couponUser != null && couponUser.getCouponType() == 3){
                     money = new BigDecimal(money).subtract(couponUser.getCouponQuota()).toString();
                 }
+                logger.info("开始计算加息收益   money:{}   BorrowExtraYield:{}",money ,borrow.getBorrowExtraYield());
                 BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrow.getBorrowExtraYield());
-                //BigDecimal oldEarnings = new BigDecimal(investInfo.getEarnings());
+                logger.info("开始计算加息收益   incEarnings:{}  ",incEarnings );
                 investInfo.setEarnings(df.format(incEarnings.add(earnings)));
             }
         }
