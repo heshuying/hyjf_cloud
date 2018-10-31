@@ -74,6 +74,9 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	@Override
 	public UserCrmInfoCustomize findUserCrmInfoByUserId(Integer userId) {
 		List<UserCrmInfoCustomize> list = userCrmInfoCustomizeMapper.findUserCrmInfoByUserId(userId);
+		if(list!=null&&list.size()>0){
+			return list.get(0);
+		}
 		return null;
 	}
 

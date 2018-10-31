@@ -662,7 +662,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         this.updateAccountForHjh(hjhProcess, hjhAccede.getUserId(), accountDecimal, null);
         // 汇计划重算更新汇计划加入明细表(承接人)
         this.updateHjhAccedeForHjh(hjhProcess, hjhAccede.getId(), accountDecimal, null, null);
-
+        // ^^^^^^^^^^^^^^
+        HjhDebtCredit credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^updateHjhAccedeForHjh"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         // 债权承接成功后后续处理
         // mod 汇计划三期 汇计划自动投资 liubin 20180515 start
         boolean creditTenderFlag = this.saveCreditTender(sellerHjhAccede, credit,
@@ -671,18 +674,34 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                 hjhPlan.getExpectApr(), resultVO,
                 tenderUsrcustid, sellerUsrcustid);
         // mod 汇计划三期 汇计划自动投资 liubin 20180515 end
+
+
+        // ^^^^^^^^^^^^^^
+        credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^saveCreditTender"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         if (!creditTenderFlag) {
             return creditTenderFlag;
         }
 
         // 删除临时表 OK
         this.hjhPlanBorrowTmpService.deleteHjhPlanBorrowTmpByAccedeBorrow(credit.getCreditNid(), hjhAccede.getAccedeOrderId());
-
+        // ^^^^^^^^^^^^^^
+        credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^deleteHjhPlanBorrowTmpByAccedeBorrow"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         // 复投时，减去该计划的开放额度
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
-
+        // ^^^^^^^^^^^^^^
+        credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^updateAvailableInvestAccount"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         // 调用MQ,生成计划债权转让协议
         planCreditGenerateContractByMQ(bean.getOrderId());
+        // ^^^^^^^^^^^^^^
+        credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^planCreditGenerateContractByMQ"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         result = true;
         return result;
     }
@@ -1307,7 +1326,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                         }
                         // add 汇计划二期迭代 复投债转的状态追加 liubin 20180330 end
                         boolean debtCreditTenderFlag = this.hjhDebtCreditTenderMapper.insertSelective(debtCreditTender) > 0 ? true : false;
+                        logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCreditTender插入开始！");
                         if (debtCreditTenderFlag) {
+                            logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCreditTender插入成功！");
+                            logger.info("^^^^^^^^^^^^^^^^^^" + debtCredit.getCreditAccountWait() +"-"+debtCreditTender.getAssignAccount());
                             // 5.更新borrow_credit
                             debtCredit.setCreditAccountWait(debtCredit.getCreditAccountWait().subtract(debtCreditTender.getAssignAccount()));// 待承接总金额 认购本息（不包含垫付利息）
                             debtCredit.setCreditCapitalWait(debtCredit.getCreditCapitalWait().subtract(debtCreditTender.getAssignCapital()));//待承接本金
@@ -1340,8 +1362,11 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                 debtCredit.setEndTime(nowTime);
                             }
                             // add 汇计划二期迭代 债转结束时间追加 liubin 20180402 end
+                            logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCredit更新开始！");
                             boolean debtCreditFlag = hjhDebtCreditMapper.updateByPrimaryKey(debtCredit) > 0 ? true : false;
                             if (debtCreditFlag) {
+                                logger.info("^^^^^^^^^^^^^^^^^^" + debtCredit.getCreditAccountWait());
+                                logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCredit更新成功！");
                                 Account assignAccount = this.selectUserAccount(userId);
                                 if (Validator.isNotNull(assignAccount)) {
                                     // 插入相应的承接人汇添金资金明细表

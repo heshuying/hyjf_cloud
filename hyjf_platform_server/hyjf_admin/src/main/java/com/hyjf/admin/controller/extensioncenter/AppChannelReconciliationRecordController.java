@@ -47,7 +47,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @PostMapping("/search")
     public AdminResult searchAction(@RequestBody ChannelReconciliationRequest request) {
         List<UtmVO> list = channelService.searchUtmList(1);
-        if (request.getUtmPlat() == null) {
+     /*   if (request.getUtmPlat() == null) {
             List<String> utmList = new ArrayList<>();
             for (UtmVO vo : list) {
                 utmList.add(vo.getSourceId().toString());
@@ -55,7 +55,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
             String[] integers = new String[utmList.size()];
             String[] array = utmList.toArray(integers);
             request.setUtmPlat(array);
-        }
+        }*/
         ChannelReconciliationResponse response = channelService.searchAppAction(request);
         return new AdminResult(response);
     }

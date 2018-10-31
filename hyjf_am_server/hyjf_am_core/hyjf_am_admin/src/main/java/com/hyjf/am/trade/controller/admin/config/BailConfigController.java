@@ -74,13 +74,13 @@ public class BailConfigController extends BaseController {
 
     /**
      * @Author: liushouyi
-     * @Desc 根据主键获取保证金配置
+     * @Desc 更新机构可用还款方式并返回最新的保证金配置
      */
-    @ApiOperation(value = "根据主键获取保证金配置")
-    @GetMapping("/select_bail_config_by_id/{id}")
-    public BailConfigInfoCustomizeResponse selectBailConfigById(@PathVariable String id) {
+    @ApiOperation(value = "更新机构可用还款方式并返回最新的保证金配置")
+    @GetMapping("/update_select_bail_config_by_id/{id}")
+    public BailConfigInfoCustomizeResponse updateSelectBailConfigById(@PathVariable String id) {
         BailConfigInfoCustomizeResponse response = new BailConfigInfoCustomizeResponse();
-        BailConfigInfoCustomizeVO bailConfigInfoCustomizeVO = bailConfigService.selectBailConfigById(GetterUtil.getInteger(id));
+        BailConfigInfoCustomizeVO bailConfigInfoCustomizeVO = bailConfigService.updateBailInfoDelFlgById(GetterUtil.getInteger(id));
         if (null != bailConfigInfoCustomizeVO) {
             response.setResult(bailConfigInfoCustomizeVO);
             response.setRtn(Response.SUCCESS);

@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.config.controller.admin.locked;
+package com.hyjf.am.user.controller.admin.locked;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Preconditions;
