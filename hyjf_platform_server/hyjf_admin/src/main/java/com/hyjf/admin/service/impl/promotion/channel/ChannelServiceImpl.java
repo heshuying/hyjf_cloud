@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,8 +71,7 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public List<UtmPlatVO> getAllUtmPlat() {
-        Map<String, Object> map = new HashMap<>();
+    public List<UtmPlatVO> getAllUtmPlat(Map<String, Object> map) {
         UtmPlatResponse utmPlatResponse = amUserClient.getAllUtmPlat(map);
         List<UtmPlatVO> utmPlatVOList = new ArrayList<UtmPlatVO>();
         if(null != utmPlatResponse){

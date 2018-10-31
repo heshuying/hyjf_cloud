@@ -123,8 +123,7 @@ public class HjhPlanCapitalController extends BaseController {
                 logger.info("汇计划资本预估统计(每日)任务 更新前一天的汇计划日交易量 OK ");
 
             } catch (Exception e) {
-                logger.error("汇计划资本预估统计(每日)任务 失败... ");
-                e.printStackTrace();
+                logger.error("汇计划资本预估统计(每日)任务 失败... ", e);
             }
             logger.info("汇计划资本预估统计(每日)任务 结束... ");
 

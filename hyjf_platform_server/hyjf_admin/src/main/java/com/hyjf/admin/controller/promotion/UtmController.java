@@ -3,9 +3,10 @@ package com.hyjf.admin.controller.promotion;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.promotion.UtmService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.validator.CheckUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -61,16 +62,10 @@ public class UtmController extends BaseController {
         //根据utmId判断，如存在，则为修改，如不存在，则为新增
         ModelAndView modelAndView = new ModelAndView();
         validatorFieldCheck(modelAndView,utmPlatVO);
-
-        if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
-                adminResult.setStatus(AdminResult.FAIL);
-                adminResult.setStatusDesc("系统异常，请联系管理员!");
-        }else{
-            boolean flag = utmService.insertOrUpdateUtmPlat(utmPlatVO);
-            if(!flag){
-                adminResult.setStatus(AdminResult.FAIL);
-                adminResult.setStatusDesc("系统异常，请联系管理员!");
-            }
+        boolean flag = utmService.insertOrUpdateUtmPlat(utmPlatVO);
+        if(!flag){
+            adminResult.setStatus(AdminResult.FAIL);
+            adminResult.setStatusDesc("系统异常，请联系管理员!");
         }
         return adminResult;
     }
@@ -100,22 +95,30 @@ public class UtmController extends BaseController {
      * @param form
      */
     private void validatorFieldCheck(ModelAndView modelAndView, UtmPlatVO form) {
+        String sourseId = String.valueOf(form.getSourceId());
+        CheckUtil.check(StringUtils.isNotBlank(sourseId), MsgEnum.ERR_OBJECT_REQUIRED,"渠道编号");
+        CheckUtil.check(sourseId!=null&&sourseId.length()<=10, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"渠道编号");
+        //CheckUtil.check(sourseId!=null&&(!GenericValidator.isInt(sourseId) || !NumberUtils.isNumber(sourseId) || Integer.valueOf(sourseId) < 0), MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"渠道编号");
         // 渠道编号
-        boolean flag1 = ValidatorFieldCheckUtil.validateSignlessNum(modelAndView, "sourceId", form.getSourceId()+"", 10, true);
+       //boolean flag1 = ValidatorFieldCheckUtil.validateSignlessNum(modelAndView, "sourceId", form.getSourceId()+"", 10, true);
         // 名称
-        boolean flag2 = ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "sourceName", form.getSourceName(), 50, true);
+        CheckUtil.check(StringUtils.isNotBlank(form.getSourceName()), MsgEnum.ERR_OBJECT_REQUIRED,"渠道");
+        CheckUtil.check(form.getSourceName()!=null&&form.getSourceName().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"渠道");
+       // boolean flag2 = ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "sourceName", form.getSourceName(), 50, true);
         // 发标时间
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "delFlag", form.getDelFlag()+"");
+        CheckUtil.check(StringUtils.isNotBlank(String.valueOf(form.getDelFlag())), MsgEnum.ERR_OBJECT_REQUIRED,"状态");
+        //ValidatorFieldCheckUtil.validateRequired(modelAndView, "delFlag", form.getDelFlag()+"");
         // 备注说明
-        ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", form.getRemark(), 225, false);
 
-        if (flag1 && flag2) {
-            int record = utmService.sourceNameIsExists(form.getSourceName(), form.getSourceId());
-            if (record == 1) {
-                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "sourceName", "repeat");
-            }
+        CheckUtil.check(form.getRemark()==null||form.getRemark().length()<=225, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"说明");
+
+        //ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", form.getRemark(), 225, false);
+
+        int record = utmService.sourceNameIsExists(form.getSourceName(), form.getSourceId());
+        if (record == 1) {
+            CheckUtil.check(false,MsgEnum.NAME_REPEAT,"渠道名称");
+            //ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "sourceName", "repeat");
         }
-
     }
 
     /**

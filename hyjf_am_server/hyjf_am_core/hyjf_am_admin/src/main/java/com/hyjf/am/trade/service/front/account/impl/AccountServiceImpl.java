@@ -193,7 +193,7 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
             // 如果信息未被处理
             if (accountwithdraw.getStatus() == WITHDRAW_STATUS_SUCCESS) {
                 // 如果是已经提现成功了
-                System.out.println("提现订单已被处理:提现订单号:" + nid + ",用户ID:" + userId);
+                logger.info("提现订单已被处理:提现订单号:" + nid + ",用户ID:" + userId);
                 return false;
             } else {
                 // 查询是否已经处理过

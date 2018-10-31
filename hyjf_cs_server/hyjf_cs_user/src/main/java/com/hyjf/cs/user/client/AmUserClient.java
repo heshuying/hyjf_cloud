@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -543,4 +544,12 @@ public interface AmUserClient {
 	Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest);
 
     BankOpenAccountVO selectBankAccountById(Integer userId);
+
+	/**
+	 * 插入密码错误超限用户信息
+	 * @author kdl 2018.10.29
+	 * @param lockedUserInfoVO
+	 * @return
+	 */
+	public void inserLockedUser(LockedUserInfoVO lockedUserInfoVO);
 }

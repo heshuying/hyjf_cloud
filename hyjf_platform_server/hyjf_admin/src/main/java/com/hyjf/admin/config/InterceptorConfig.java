@@ -4,16 +4,18 @@
 package com.hyjf.admin.config;
 
 import com.hyjf.admin.interceptor.AdminInterceptor;
+
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author dongzeshan
- * @version WebMvcConfig, v0.1 2018/6/22 10:56
+ * @version InterceptorConfig, v0.1 2018/6/22 10:56
  */
 
-//@Configuration
+@Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
@@ -23,9 +25,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		//不拦截的请求
 		addIn.excludePathPatterns(
 				"/hyjf-admin/login/login",
-				"/swagger-ui.html",
-				"/swagger-resources/**",
-				"/v2/**"
-		);
+				"/hyjf-admin/login/getPicture"
+		).excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
 	}
 }

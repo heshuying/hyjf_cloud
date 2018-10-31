@@ -26,10 +26,7 @@ import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetterUtil;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +95,15 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
      */
     @Override
     public List<PushMoneyCustomize> searchPushMoneyList(PushMoneyRequest request) {
+        // 部门
+        if (Validator.isNotNull(request.getCombotreeSrch())) {
+            if (request.getCombotreeSrch().contains(StringPool.COMMA)) {
+                String[] list = request.getCombotreeSrch().split(StringPool.COMMA);
+                request.setCombotreeListSrch(list);
+            } else {
+                request.setCombotreeListSrch(new String[] { request.getCombotreeSrch() });
+            }
+        }
         return pushMoneyCustomizeMapper.queryPushMoneyDetail(request);
     }
 

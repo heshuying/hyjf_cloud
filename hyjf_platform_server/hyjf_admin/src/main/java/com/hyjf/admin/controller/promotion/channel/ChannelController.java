@@ -8,15 +8,16 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.excel.ReadExcel;
 import com.hyjf.admin.service.promotion.channel.ChannelService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
+import com.hyjf.common.validator.CheckUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -58,12 +59,10 @@ public class ChannelController extends BaseController {
         UtmResultResponse adminResult = new UtmResultResponse();
         Integer count = this.channelService.countList(channelCustomizeVO);
         if(null != count){
-            channelCustomizeVO.setLimitStart(channelCustomizeVO.getLimitStart());
-            channelCustomizeVO.setLimitEnd(channelCustomizeVO.getLimitEnd());
             List<ChannelCustomizeVO> channelList = channelService.getByPageList(channelCustomizeVO);
             adminResult.setData(channelList);
         }
-        List<UtmPlatVO> utmPlatVOList = channelService.getAllUtmPlat();
+        List<UtmPlatVO> utmPlatVOList = channelService.getUtmPlat();
         adminResult.setUtmPlatList(utmPlatVOList);
         adminResult.setTotal(count);
         return adminResult;
@@ -85,6 +84,7 @@ public class ChannelController extends BaseController {
             if (record != null) {
                 url = getUrl(record);
             }
+            record.setUrl(url);
             adminResult.setUrl(url);
             adminResult.setData(record);
         }else{
@@ -139,49 +139,29 @@ public class ChannelController extends BaseController {
      */
     public void validatorFieldCheck(UtmResultResponse adminResult,ChannelCustomizeVO channelCustomizeVO){
         ModelAndView modelAndView = new ModelAndView();
-        // 渠道
+        // 渠道CheckUtil
         if(StringUtils.isNotEmpty(channelCustomizeVO.getSourceId())){
             // 推广方式
-            ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmMedium", channelCustomizeVO.getUtmMedium(), 50, false);
+            CheckUtil.check(channelCustomizeVO.getUtmMedium()==null||channelCustomizeVO.getUtmMedium().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"推广方式");
+           // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmMedium", channelCustomizeVO.getUtmMedium(), 50, false);
             // 推广单元
-            ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmContent", channelCustomizeVO.getUtmContent(), 50, false);
+            CheckUtil.check(channelCustomizeVO.getUtmContent()==null||channelCustomizeVO.getUtmContent().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"推广单元");
+           // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmContent", channelCustomizeVO.getUtmContent(), 50, false);
             // 推广计划
-            ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmCampaign", channelCustomizeVO.getUtmCampaign(), 50, false);
+            CheckUtil.check(channelCustomizeVO.getUtmCampaign()==null||channelCustomizeVO.getUtmCampaign().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"推广计划");
+            // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmCampaign", channelCustomizeVO.getUtmCampaign(), 50, false);
             // 关键字
-            boolean utmTermFlag = ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmTerm", channelCustomizeVO.getUtmTerm(), 50, false);
-            // 推荐人
-//		boolean utmReferrerFlag = ValidatorFieldCheckUtil.validateRequired(modelAndView, "utmReferrer", form.getUtmReferrer());
-//		if (utmReferrerFlag) {
-//			int usersFlag = this.channelService.checkUtmReferrer(form.getUtmReferrer());
-//			if (usersFlag == 1) {
-//				ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "utmReferrer", "referrer_username.not.exists");
-//			}
-//		}
-            // 链接地址
-            ValidatorFieldCheckUtil.validateRequired(modelAndView, "linkAddress", channelCustomizeVO.getLinkAddress());
-            ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "linkAddress", channelCustomizeVO.getLinkAddress(), 250, false);
-            // 备注说明
-            ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", channelCustomizeVO.getRemark(), 100, false);
+            CheckUtil.check(channelCustomizeVO.getUtmTerm()==null||channelCustomizeVO.getUtmTerm().length()<=50, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"关键字");
+            //boolean utmTermFlag = ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "utmTerm", channelCustomizeVO.getUtmTerm(), 50, false);
 
-//            if (sourceIdFlag && utmTermFlag && StringUtils.isNotEmpty(channelCustomizeVO.getUtmTerm())) {
-//                Utm utm = this.channelService.getRecord(channelCustomizeVO.getSourceId(), channelCustomizeVO.getUtmTerm());
-//                if (utm != null) {
-//                    if(StringUtils.isNotEmpty(channelCustomizeVO.getUtmId())){
-//                        if(utm.getUtmId() != Integer.parseInt(channelCustomizeVO.getUtmId())){
-//                            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "sourceId-utmTerm", "exists.sourceid.utmterm");
-//                        }
-//                    }else{
-//                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "sourceId-utmTerm", "exists.sourceid.utmterm");
-//                    }
-//                }
-//
-//            }
-//            if("000".equals(modelAndView.getStatus())){
-//                adminResult.setStatus(AdminResult.SUCCESS);
-//            }else{
-//                adminResult.setStatus(UtmResultResponse.FAIL);
-//                adminResult.setStatusDesc("参数异常！");
-//            }
+            // 链接地址
+            CheckUtil.check(StringUtils.isNotBlank(channelCustomizeVO.getLinkAddress()), MsgEnum.ERR_OBJECT_REQUIRED,"链接地址");
+            // ValidatorFieldCheckUtil.validateRequired(modelAndView, "linkAddress", channelCustomizeVO.getLinkAddress());
+            CheckUtil.check(channelCustomizeVO.getLinkAddress()==null||channelCustomizeVO.getLinkAddress().length()<=250, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"链接地址");
+            //ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "linkAddress", channelCustomizeVO.getLinkAddress(), 250, false);
+            // 备注说明
+            CheckUtil.check(channelCustomizeVO.getRemark()==null||channelCustomizeVO.getRemark().length()<=100, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"备注说明");
+           // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", channelCustomizeVO.getRemark(), 100, false);
             adminResult.setStatus(AdminResult.SUCCESS);
         }else{
             adminResult.setStatus(UtmResultResponse.FAIL);

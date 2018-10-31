@@ -6,8 +6,9 @@ package com.hyjf.admin.controller.finance.couponrepaymonitor;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.CouponRepayService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -19,10 +20,6 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -50,8 +47,11 @@ public class CouponRepayController extends BaseController {
     @Autowired
     private CouponRepayService couponRepayService;
 
+    public static final String PERMISSIONS = "couponrepaymonitor";
+
     @ApiOperation(value = "统计图表画面 ",notes = "统计图表画面 ")
     @PostMapping(value = "/chart")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult chart(@RequestBody CouponRepayRequest form) {
         Map<String, Object> map = new HashMap<>();
         form.setLimitStart(0);
@@ -106,6 +106,7 @@ public class CouponRepayController extends BaseController {
      */
     @ApiOperation(value = "画面初始化",notes = "画面初始化")
     @PostMapping(value = "/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult init(@RequestBody CouponRepayRequest form) {
         Map<String,Object> result = new HashMap<>();
         AdminCouponRepayMonitorCustomizeResponse response = couponRepayService.couponRepayMonitorCreatePage(form);
@@ -132,6 +133,7 @@ public class CouponRepayController extends BaseController {
      */
     @ApiOperation(value = "数据导出",notes = "数据导出")
     @PostMapping("/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponRepayRequest form) throws UnsupportedEncodingException {
 
         //sheet默认最大行数

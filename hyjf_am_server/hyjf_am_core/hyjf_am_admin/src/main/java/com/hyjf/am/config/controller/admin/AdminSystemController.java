@@ -4,7 +4,6 @@ import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminSystemService;
-import com.hyjf.am.config.service.locked.LockedConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
@@ -62,14 +61,6 @@ public class AdminSystemController extends BaseConfigController {
 		adminSystem.setUsername(adminSystemR.getUsername());
 		adminSystem.setPassword(MD5.toMD5Code(adminSystemR.getPassword()));
 		adminSystem.setState("NOT CHECK");
-		//判断用户输入的密码错误次数---开始
-		Map<String, String> errorInfo=lockedUserService.insertErrorPassword(adminSystemR.getUsername(),adminSystemR.getPassword());
-		if (!errorInfo.isEmpty()){
-			asr.setMessage(errorInfo.get("info"));
-			asr.setRtn(Response.ERROR);
-			return asr;
-		}
-		//判断用户输入的密码错误次数---结束
 		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
 		if (adminSystemr != null) {
 			AdminSystemVO asv = new AdminSystemVO();
@@ -83,6 +74,14 @@ public class AdminSystemController extends BaseConfigController {
 			asr.setResult(asv);
 			return asr;
 		} else {
+			//判断用户输入的密码错误次数---开始
+			Map<String, String> errorInfo=lockedUserService.insertErrorPassword(adminSystemR.getUsername(),adminSystemR.getPassword());
+			if (!errorInfo.isEmpty()){
+				asr.setMessage(errorInfo.get("info"));
+				asr.setRtn(Response.ERROR);
+				return asr;
+			}
+			//判断用户输入的密码错误次数---结束
 			asr.setRtn(Response.ERROR);
 			asr.setMessage("用户名或者密码无效");
 			return asr;

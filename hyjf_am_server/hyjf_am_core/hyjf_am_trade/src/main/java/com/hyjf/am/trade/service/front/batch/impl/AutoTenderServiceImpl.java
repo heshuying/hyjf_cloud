@@ -662,7 +662,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         this.updateAccountForHjh(hjhProcess, hjhAccede.getUserId(), accountDecimal, null);
         // 汇计划重算更新汇计划加入明细表(承接人)
         this.updateHjhAccedeForHjh(hjhProcess, hjhAccede.getId(), accountDecimal, null, null);
-
+        // ^^^^^^^^^^^^^^
+        HjhDebtCredit credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^updateHjhAccedeForHjh"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         // 债权承接成功后后续处理
         // mod 汇计划三期 汇计划自动投资 liubin 20180515 start
         boolean creditTenderFlag = this.saveCreditTender(sellerHjhAccede, credit,
@@ -671,18 +674,34 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                 hjhPlan.getExpectApr(), resultVO,
                 tenderUsrcustid, sellerUsrcustid);
         // mod 汇计划三期 汇计划自动投资 liubin 20180515 end
+
+
+        // ^^^^^^^^^^^^^^
+        credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^saveCreditTender"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         if (!creditTenderFlag) {
             return creditTenderFlag;
         }
 
         // 删除临时表 OK
         this.hjhPlanBorrowTmpService.deleteHjhPlanBorrowTmpByAccedeBorrow(credit.getCreditNid(), hjhAccede.getAccedeOrderId());
-
+        // ^^^^^^^^^^^^^^
+        credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^deleteHjhPlanBorrowTmpByAccedeBorrow"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         // 复投时，减去该计划的开放额度
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
-
+        // ^^^^^^^^^^^^^^
+        credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^updateAvailableInvestAccount"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         // 调用MQ,生成计划债权转让协议
         planCreditGenerateContractByMQ(bean.getOrderId());
+        // ^^^^^^^^^^^^^^
+        credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^planCreditGenerateContractByMQ"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         result = true;
         return result;
     }
@@ -810,8 +829,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             BigDecimal assignPeriodInterestTotal = BigDecimal.ZERO;
             // 校验数据完整性
             if (debtDetailOldList != null && debtDetailOldList.size() > 0) {
-                List<HjhCreditCalcPeriodResultVO> periodResultList = new ArrayList<HjhCreditCalcPeriodResultVO>();
-                periodResultList.add(0, null);
+                Map<Integer, HjhCreditCalcPeriodResultVO> periodResultMap = new HashMap<>();
                 for (int i = 0; i < debtDetailOldList.size(); i++) {
                     // 承接人此次承接的分期承接本金
                     BigDecimal assignPeriodCapital = BigDecimal.ZERO;
@@ -841,17 +859,19 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                     assignPeriodCapitalTotal = assignPeriodCapitalTotal.add(assignPeriodCapital);
                     // 承接人此次承接的总待收利息
                     assignPeriodInterestTotal = assignPeriodInterestTotal.add(assignPeriodInterest);
-                    // 返回结果集
+                    // 返回分期结果集
                     HjhCreditCalcPeriodResultVO periodResult = new HjhCreditCalcPeriodResultVO();
                     periodResult.setAssignPeriodCapital(assignPeriodCapital);
                     periodResult.setAssignPeriodInterest(assignPeriodInterest);
                     periodResult.setAssignPeriodAdvanceMentInterest(assignPeriodAdvanceMentInterest);
                     periodResult.setAssignPeriodRepayDelayInterest(assignPeriodRepayDelayInterest);
                     periodResult.setAssignPeriodRepayLateInterest(assignPeriodRepayLateInterest);
-                    periodResultList.add(i+1,periodResult);
+
+                    periodResultMap.put(waitRepayPeriod, periodResult);
+                    logger.info("periodResultMap.put  "+waitRepayPeriod+":"+periodResult.toString());
                 }
                 // 分期利息计算结果
-                resultVO.setAssignResult(periodResultList);
+                resultVO.setAssignResult(periodResultMap);
             }
             // 重置承接人承接总本金
             assignCapital = assignPeriodCapitalTotal;
@@ -1061,7 +1081,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             BigDecimal assignPeriodInterestTotal = BigDecimal.ZERO;
             // 校验数据完整性
             if (debtDetailOldList != null && debtDetailOldList.size() > 0) {
-                List<HjhCreditCalcPeriodResultVO> periodResultList = new ArrayList<HjhCreditCalcPeriodResultVO>();
+                Map<Integer, HjhCreditCalcPeriodResultVO> periodResultMap = new HashMap<>();
                 for (int i = 0; i < debtDetailOldList.size(); i++) {
                     // 承接人此次承接的分期承接本金
                     BigDecimal assignPeriodCapital = BigDecimal.ZERO;
@@ -1091,17 +1111,19 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                     assignPeriodCapitalTotal = assignPeriodCapitalTotal.add(assignPeriodCapital);
                     // 承接人此次承接的总待收利息
                     assignPeriodInterestTotal = assignPeriodInterestTotal.add(assignPeriodInterest);
-                    // 返回结果集
+                    // 返回分期结果集
                     HjhCreditCalcPeriodResultVO periodResult = new HjhCreditCalcPeriodResultVO();
                     periodResult.setAssignPeriodCapital(assignPeriodCapital);
                     periodResult.setAssignPeriodInterest(assignPeriodInterest);
                     periodResult.setAssignPeriodAdvanceMentInterest(assignPeriodAdvanceMentInterest);
                     periodResult.setAssignPeriodRepayDelayInterest(assignPeriodRepayDelayInterest);
                     periodResult.setAssignPeriodRepayLateInterest(assignPeriodRepayLateInterest);
-                    periodResultList.add(i+1,periodResult);
+
+                    periodResultMap.put(waitRepayPeriod, periodResult);
+                    logger.info("periodResultMap.put  "+waitRepayPeriod+":"+periodResult.toString());
                 }
                 // 分期利息计算结果
-                resultVO.setAssignResult(periodResultList);
+                resultVO.setAssignResult(periodResultMap);
             }
             // 重置承接人承接总本金
             assignCapital = assignPeriodCapitalTotal;
@@ -1304,7 +1326,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                         }
                         // add 汇计划二期迭代 复投债转的状态追加 liubin 20180330 end
                         boolean debtCreditTenderFlag = this.hjhDebtCreditTenderMapper.insertSelective(debtCreditTender) > 0 ? true : false;
+                        logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCreditTender插入开始！");
                         if (debtCreditTenderFlag) {
+                            logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCreditTender插入成功！");
+                            logger.info("^^^^^^^^^^^^^^^^^^" + debtCredit.getCreditAccountWait() +"-"+debtCreditTender.getAssignAccount());
                             // 5.更新borrow_credit
                             debtCredit.setCreditAccountWait(debtCredit.getCreditAccountWait().subtract(debtCreditTender.getAssignAccount()));// 待承接总金额 认购本息（不包含垫付利息）
                             debtCredit.setCreditCapitalWait(debtCredit.getCreditCapitalWait().subtract(debtCreditTender.getAssignCapital()));//待承接本金
@@ -1337,8 +1362,11 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                 debtCredit.setEndTime(nowTime);
                             }
                             // add 汇计划二期迭代 债转结束时间追加 liubin 20180402 end
+                            logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCredit更新开始！");
                             boolean debtCreditFlag = hjhDebtCreditMapper.updateByPrimaryKey(debtCredit) > 0 ? true : false;
                             if (debtCreditFlag) {
+                                logger.info("^^^^^^^^^^^^^^^^^^" + debtCredit.getCreditAccountWait());
+                                logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCredit更新成功！");
                                 Account assignAccount = this.selectUserAccount(userId);
                                 if (Validator.isNotNull(assignAccount)) {
                                     // 插入相应的承接人汇添金资金明细表
@@ -1684,11 +1712,13 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                             HjhDebtDetail debtDetailOld = debtDetailList.get(i);
                                                             // 还款期数
                                                             int waitRepayPeriod = debtDetailOld.getRepayPeriod();
-                                                            @SuppressWarnings("unchecked")
-                                                            List<HjhCreditCalcPeriodResultVO> periodResultList = resultVO.getAssignResult();
-                                                            @SuppressWarnings("unchecked")
-                                                            HjhCreditCalcPeriodResultVO periodResult = periodResultList.get(waitRepayPeriod);
-
+                                                            Map<Integer, HjhCreditCalcPeriodResultVO> periodResultMap = resultVO.getAssignResult();
+                                                            HjhCreditCalcPeriodResultVO periodResult;
+                                                            if (periodResultMap.containsKey(waitRepayPeriod)){
+                                                                periodResult = periodResultMap.get(waitRepayPeriod);
+                                                            }else{
+                                                                throw new RuntimeException("分期计算结果取得失败，债权编号：" + debtCredit.getCreditNid() + "期数：" + waitRepayPeriod);
+                                                            }
                                                             // 承接人此次承接的分期待收本金
                                                             BigDecimal assignPeriodCapital = periodResult.getAssignPeriodCapital();
                                                             // 承接人此次承接的分期待收利息

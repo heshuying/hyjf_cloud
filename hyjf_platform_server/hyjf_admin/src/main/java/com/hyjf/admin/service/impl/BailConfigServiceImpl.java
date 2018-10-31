@@ -49,14 +49,14 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
     }
 
     /**
-     * 根据主键获取保证金配置
+     * 更新当前机构可用的还款方式并返回最新保证金详情
      *
      * @param id
      * @return
      */
     @Override
-    public BailConfigInfoCustomizeVO selectBailConfigById(Integer id) {
-        return amAdminClient.selectBailConfigById(id);
+    public BailConfigInfoCustomizeVO updateSelectBailConfigById(Integer id) {
+        return amAdminClient.updateSelectBailConfigById(id);
     }
 
     /**

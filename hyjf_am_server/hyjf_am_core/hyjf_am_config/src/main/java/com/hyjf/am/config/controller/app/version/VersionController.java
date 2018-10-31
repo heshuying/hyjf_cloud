@@ -33,9 +33,13 @@ public class VersionController {
 
 
     @RequestMapping("/getUpdateversion/{type}/{isupdate}/{versionStr}")
-    public VersionConfigBeanResponse getUpdateversion(@PathVariable Integer type,@PathVariable Integer isupdate,@PathVariable String versionStr ){
+    public VersionConfigBeanResponse getUpdateversion(@PathVariable Integer type,@PathVariable String isupdate,@PathVariable String versionStr ){
+        Integer isUpdate = null;
+        if(isupdate != null && !"null".equalsIgnoreCase(isupdate)){
+            isUpdate = Integer.valueOf(isupdate);
+        }
         VersionConfigBeanResponse response = new VersionConfigBeanResponse();
-        Version version = appVersionService.getUpdateversion(type,isupdate,versionStr);
+        Version version = appVersionService.getUpdateversion(type,isUpdate,versionStr);
         if (null!= version){
             VersionVO versionVO = CommonUtils.convertBean(version, VersionVO.class);
             response.setResult(versionVO);

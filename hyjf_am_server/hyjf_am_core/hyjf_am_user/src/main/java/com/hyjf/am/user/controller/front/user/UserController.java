@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
@@ -18,6 +19,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
+import io.swagger.models.auth.In;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -764,6 +766,18 @@ public class UserController extends BaseController {
             response.setRtn(Response.SUCCESS);
         }
         return response;
+    }
+    /**
+     * 输错密码次数超限的用户信息
+     *
+     * @param lockedUserInfoVO
+     * @return
+     */
+    @RequestMapping("/insertLockedUser")
+    public Integer insertLockedUser(@RequestBody LockedUserInfoVO lockedUserInfoVO) {
+        logger.info("insertLockedUser:" + JSONObject.toJSONString(lockedUserInfoVO));
+         int insertLockedUser=userService.inserLockedUser(lockedUserInfoVO);
+         return insertLockedUser;
     }
 
     /**

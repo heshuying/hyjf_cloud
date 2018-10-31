@@ -4,7 +4,7 @@
 package com.hyjf.am.user.service.admin.locked.impl;
 
 import com.google.common.base.Preconditions;
-import com.hyjf.am.config.controller.admin.locked.LockedConfigManager;
+import com.hyjf.am.user.controller.admin.locked.LockedConfigManager;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.LockedUserInfoCustomizeMapper;
@@ -125,7 +125,7 @@ public class LockedUserServiceImpl implements LockedUserService {
 		//3.redis配置的超限有效时间
 		long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + users.get(0).getUserId());
 		//判断密码错误次数是否超限
-		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>maxLoginErrorNum) {
+		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
 //			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
 			r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
 		}
@@ -145,7 +145,6 @@ public class LockedUserServiceImpl implements LockedUserService {
 			if (maxLoginErrorNum - value == 0){
 				Integer	loginLockTime=LockedConfigManager.getInstance().getAdminConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
 				// 同步输错密码超限锁定用户信息接口
-				String  requestUrl= "http://am-user/lockeduser/insertLockedUser";
 				LockedUserInfo lockedUserInfoVO=new LockedUserInfo();
 				lockedUserInfoVO.setUserid(users.get(0).getUserId());
 				lockedUserInfoVO.setUsername(users.get(0).getUsername());
@@ -153,6 +152,7 @@ public class LockedUserServiceImpl implements LockedUserService {
 				lockedUserInfoVO.setLockTime(new Date());
 				lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
 				lockedUserInfoVO.setFront(1);
+				lockedUserInfoVO.setUnlocked(0);
 				int insert=lockedUserInfoMapper.insert(lockedUserInfoVO);
 				r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
 			}

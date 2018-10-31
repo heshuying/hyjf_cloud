@@ -67,13 +67,13 @@ public class CouponLoansHjhMessageConsumer extends Consumer {
             String msgBody = new String(paramBean.getBody());
             try {
                 couponLoansBean = JSONObject.parseObject(msgBody, CouponLoansBean.class);
-
+                logger.info("-----------汇计划优惠券放款，msgBody:" + msgBody);
                 //验证请求参数
                 if (Validator.isNull(couponLoansBean.getOrderId()) && Validator.isNull(couponLoansBean.getOrderIdCoupon())) {
                     logger.error("【汇计划优惠券放款】接收到的消息中信息不全");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
-
+                logger.info("-----------汇计划优惠券放款，OrderId:"+couponLoansBean.getOrderId() + ",OrderIdCoupon:"+couponLoansBean.getOrderIdCoupon());
                 String redisKey = "couponloanshjh:" + (Validator.isNull(couponLoansBean.getOrderId())? couponLoansBean.getOrderIdCoupon() : couponLoansBean.getOrderId());
                 boolean result = RedisUtils.tranactionSet(redisKey, 300);
                 if(!result){
@@ -87,7 +87,7 @@ public class CouponLoansHjhMessageConsumer extends Consumer {
                 }else if(StringUtils.isNotEmpty(couponLoansBean.getOrderIdCoupon())){
                     listTenderCpn = couponLoansService.getBorrowTenderCpnHjhCouponOnlyList(couponLoansBean.getOrderIdCoupon());
                 }
-
+                logger.info("-----------汇计划优惠券放款，listTenderCpn:"+listTenderCpn);
                 /** 循环优惠券投资详情列表 */
                 for (BorrowTenderCpnVO borrowTenderCpn : listTenderCpn) {
                     try {
@@ -123,7 +123,7 @@ public class CouponLoansHjhMessageConsumer extends Consumer {
 
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
-                logger.info("汇计划优惠券放款失败");
+                logger.info("汇计划优惠券放款失败",e);
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
         }

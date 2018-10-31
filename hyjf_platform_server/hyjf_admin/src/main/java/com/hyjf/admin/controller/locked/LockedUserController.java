@@ -66,7 +66,7 @@ public class LockedUserController extends BaseController {
 
         buildVO(lockedUserInfoVO, request);
 
-        Response response = lockedUserService.unlock(lockedUserInfoVO,false);
+        Response response = lockedUserService.unlock(lockedUserInfoVO,true);
 
         Boolean isSuccess=response.getRtn().equals(Response.SUCCESS);
 

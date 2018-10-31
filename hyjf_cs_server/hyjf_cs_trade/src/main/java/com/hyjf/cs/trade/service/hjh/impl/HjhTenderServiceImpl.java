@@ -885,6 +885,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setEarnings(earnings);
         request.setAccountDecimal(accountDecimal);
         request.setNowTime(nowTime);
+        request.setOrderId(planOrderId);
         if (Validator.isNotNull(userInfo)) {
             UserVO spreadsUsers = amUserClient.getSpreadsUsersByUserId(userId);
 
@@ -893,6 +894,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 logger.info("推荐人信息：" + refUserId);
                 // 查找用户推荐人详情信息  部门啥的
                 UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(refUserId);
+                logger.info("查询推荐人1   :{}",JSONObject.toJSONString(userInfoCustomize));
                 if (Validator.isNotNull(userInfoCustomize)) {
                     planAccede.setInviteUserId(userInfoCustomize.getUserId());
                     planAccede.setInviteUserName(userInfoCustomize.getUserName());
@@ -904,6 +906,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             } else if (userInfo.getAttribute() == 2 || userInfo.getAttribute() == 3) {
                 // 查找用户推荐人详情信息
                 UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(userId);
+                logger.info("查询推荐人2   :{}",JSONObject.toJSONString(userInfoCustomize));
                 if (Validator.isNotNull(userInfoCustomize)) {
                     planAccede.setInviteUserId(userInfoCustomize.getUserId());
                     planAccede.setInviteUserName(userInfoCustomize.getUserName());
