@@ -928,9 +928,9 @@ public class FddHandle {
                     dzqzCallBean.setTemplate_id(templetId);
                     if ("success".equals(result) && FddGenerateContractConstant.FDD_RETURN_CODE_1000.equals(code)) {
                         //协议生成成功，开始签署并进行脱敏处理
-                        //TODO 存储下载地址
+
                         updateSaveDownUrl(dzqzCallBean, bean);
-                        //TODO 签署
+
                         updateSignContract(bean);
                     } else {
                         logger.info("--------------开始生成债转投资协议返回错误，订单号：" + bean.getOrdid() + "错误码：" + code + ",错误描述：" + dzqzCallBean.getMsg());
@@ -1962,7 +1962,7 @@ public class FddHandle {
 		}
 		String output = imageSavePath;
 		String source = imageFilePath;    //签章源图片路径
-		String fileParent = "/fddpdf/tm/";
+		String fileParent = systemConfig.getFddFileUpload();
 		logger.info("-----------开始下载脱敏，获得签章图片父级别路径" + fileParent);
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
 		logger.info("-----------开始下载脱敏，获得签章图片路径" + signIcon);
