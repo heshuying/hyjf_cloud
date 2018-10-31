@@ -103,5 +103,5 @@ public interface BailConfigService extends BaseService {
      * @param id
      * @return
      */
-    Boolean updateBailInfoDelFlgById(Integer id);
+    BailConfigInfoCustomizeVO updateBailInfoDelFlgById(Integer id);
 }
