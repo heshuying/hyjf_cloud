@@ -928,9 +928,9 @@ public class FddHandle {
                     dzqzCallBean.setTemplate_id(templetId);
                     if ("success".equals(result) && FddGenerateContractConstant.FDD_RETURN_CODE_1000.equals(code)) {
                         //协议生成成功，开始签署并进行脱敏处理
-                        //TODO 存储下载地址
+
                         updateSaveDownUrl(dzqzCallBean, bean);
-                        //TODO 签署
+
                         updateSignContract(bean);
                     } else {
                         logger.info("--------------开始生成债转投资协议返回错误，订单号：" + bean.getOrdid() + "错误码：" + code + ",错误描述：" + dzqzCallBean.getMsg());
@@ -1596,9 +1596,13 @@ public class FddHandle {
 			replaceImageToPdf(jointPathList,tmpdfPath);
 
 			boolean uploadPDF = uplodTmImage(tmpdfPath, ftpPath, 0);
+			logger.info("------------------脱敏pdf完成，上传PDF是否成功：" + uploadPDF);
 			if(uploadPDF){
 				boolean upResult = uplodTmImage(imageSavePath + "/pdfimage.png",ftpPath,1);
+				logger.info("------------------上传pdf完成，上传脱敏图片是否成功：" + upResult);
 				if(upResult){
+					logger.info("------------------上传脱敏图片完成，开始变更数据库数据");
+
 					this.updateTenderAgreementImageURL(tenderAgreementID,ftpPath+"pdfimage.png",ftpPath + fileName +"_tm.pdf");
 
 					// 发送邮件
@@ -1826,7 +1830,12 @@ public class FddHandle {
 		tenderAgreement.setImgUrl(iamgeurl);
 		tenderAgreement.setPdfUrl(tmpdfPath);
 		tenderAgreement.setStatus(3);//下载成功
-		this.amTradeClient.updateTenderAgreement(tenderAgreement);
+		int i = this.amTradeClient.updateTenderAgreement(tenderAgreement);
+		if(i>0){
+			logger.info("---------------脱敏文件变更数据库成功！");
+		}else{
+			logger.info("---------------脱敏文件变更数据库失败！");
+		}
 	}
 
 
@@ -1953,8 +1962,7 @@ public class FddHandle {
 		}
 		String output = imageSavePath;
 		String source = imageFilePath;    //签章源图片路径
-		String fileParent = this.getClass().getResource("/").getPath();
-		fileParent = fileParent.substring(5);
+		String fileParent = systemConfig.getFddFileUpload();
 		logger.info("-----------开始下载脱敏，获得签章图片父级别路径" + fileParent);
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
 		logger.info("-----------开始下载脱敏，获得签章图片路径" + signIcon);
@@ -1981,10 +1989,15 @@ public class FddHandle {
 				index_y = 1100;
 			}
 		}
+		logger.info("--------下载脱敏开始脱敏图片，图片来源：" + source + ",图片存储地点：" + output);
+		boolean b = FileUtil.judeFileExists(source);
+		logger.info("---------脱敏图片是否存在：" + b);
 		ImageUtil.markImageByMoreIcon(signIcon, source, output, signimageName, imageType, degree, index_x, index_y);
 
 		//受让人/投资人 脱敏签章（个人显示第一个字，企业全部脱敏）
 		source = output + "/" + signimageName + ".png";
+		boolean ise = FileUtil.judeFileExists(source);
+		logger.info("-----------下载脱敏图片完成，脱敏后图片地址：" + source + ",是否存在：" + ise);
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
 			index_x = 440;
 			index_y = 920;

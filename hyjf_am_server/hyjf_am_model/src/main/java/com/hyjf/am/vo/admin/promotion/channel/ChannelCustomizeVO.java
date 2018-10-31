@@ -213,7 +213,7 @@ public class ChannelCustomizeVO implements Serializable {
     }
 
     public int getLimitEnd() {
-        return getCurrPage() * getPageSize();
+        return getPageSize();
     }
 
     public void setLimitEnd(int limitEnd) {

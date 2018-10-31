@@ -59,8 +59,6 @@ public class ChannelController extends BaseController {
         UtmResultResponse adminResult = new UtmResultResponse();
         Integer count = this.channelService.countList(channelCustomizeVO);
         if(null != count){
-            channelCustomizeVO.setLimitStart(channelCustomizeVO.getLimitStart());
-            channelCustomizeVO.setLimitEnd(channelCustomizeVO.getLimitEnd());
             List<ChannelCustomizeVO> channelList = channelService.getByPageList(channelCustomizeVO);
             adminResult.setData(channelList);
         }
@@ -86,6 +84,7 @@ public class ChannelController extends BaseController {
             if (record != null) {
                 url = getUrl(record);
             }
+            record.setUrl(url);
             adminResult.setUrl(url);
             adminResult.setData(record);
         }else{

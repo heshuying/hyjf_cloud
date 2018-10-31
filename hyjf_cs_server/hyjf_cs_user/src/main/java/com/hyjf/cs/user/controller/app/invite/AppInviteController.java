@@ -83,7 +83,7 @@ public class AppInviteController {
         for (MyInviteListCustomizeVO user : list) {
             JSONObject detailsJson = new JSONObject();
             detailsJson.put("friendName", user.getUsername());
-            detailsJson.put("date", GetDate.timestamptoStrYYYYMMDDHHMM(user.getInviteTime()));
+            detailsJson.put("date", user.getInviteTime());
 
             if ("0".equals(user.getUserStatus())) {
                 detailsJson.put("openStatus", "未开户");
@@ -95,5 +95,9 @@ public class AppInviteController {
         ret.put("list", jsonArray);
         return ret;
 
+    }
+
+    public static void main(String[] args) {
+        GetDate.timestamptoStrYYYYMMDDHHMM("2018-10-30 14:16:51");
     }
 }
