@@ -18,7 +18,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +41,8 @@ public class CouponCheckController extends BaseController {
     private static final String PERMISSIONS = "couponuser";
     @Autowired
     CouponCheckService couponCheckService;
+    @Value("${file.domain.url}")
+    String FileDomainUrl;
 
     @ApiOperation(value = "初始化页面", notes = "初始化页面")
     @PostMapping("/couponInit")
@@ -125,6 +130,10 @@ public class CouponCheckController extends BaseController {
                 if (flag) {
                     checkRequest.setStatus(2);
                     results = couponCheckService.updateCoupon(checkRequest);
+                    if (results) {
+                        ccr.setMessage("审核成功,正在发放优惠券");
+                        return new AdminResult<>(SUCCESS, ccr.getMessage());
+                    }
                 } else {
                     ccr.setMessage("审核异常，请检查上传的Excel文件！");
                     return new AdminResult<>(FAIL, ccr.getMessage());
@@ -140,13 +149,10 @@ public class CouponCheckController extends BaseController {
             ccr.setMessage("审核不通过需要填写备注,备注20字以内");
             return new AdminResult<>(FAIL, ccr.getMessage());
         }
-        if (results) {
-            ccr.setMessage("审核成功,正在发放优惠券");
-            return new AdminResult<>(SUCCESS, ccr.getMessage());
-        } else {
+        if (!results) {
             ccr.setMessage("审核失败");
             return new AdminResult<>(FAIL, ccr.getMessage());
         }
+        return new AdminResult<>();
     }
-
 }

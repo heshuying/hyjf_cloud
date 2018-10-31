@@ -42,6 +42,4 @@ management:
   web:
     server:
       auto-time-requests: true
-logging:
-  file: am-config.log
 

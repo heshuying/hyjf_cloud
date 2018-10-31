@@ -29,18 +29,3 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-# ribbon超时时间设置 - 使用serviceId路由超时策略
-ribbon:
-  ConnectTimeout: 10000
-  ReadTimeout: 15000
-
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 60000
-logging:
-  file: zuul.log

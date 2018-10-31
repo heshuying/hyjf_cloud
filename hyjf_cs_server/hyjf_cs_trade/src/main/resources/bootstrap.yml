@@ -30,9 +30,3 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-logging:
-  file: cs-trade.log
-#swagger启用开关
-swagger:
- enable: true

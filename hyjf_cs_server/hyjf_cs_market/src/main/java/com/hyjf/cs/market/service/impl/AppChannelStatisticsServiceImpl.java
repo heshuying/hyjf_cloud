@@ -110,14 +110,16 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 				Integer investNumber = getTenderNumber(request,"all");
 				// 查询相应的app渠道无主单用户充值数
 				BigDecimal cumulativeAttrCharge = getCumulativeAttrCharge(request);
-				// 查询相应的app渠道用户投资总额
+				// 查询相应的app渠道无主单用户投资总额
 				BigDecimal cumulativeAttrInvest = hztTenderPrice.add(hxfTenderPrice).add(hzrTenderPrice);
+				// 查询相应的app渠道累计投资
+				BigDecimal cumulativeInvest = hztTenderPrice.add(hxfTenderPrice).add(hzrTenderPrice);
 				AppChannelStatisticsVO statisticsVO = new AppChannelStatisticsVO(sourceId, vo.getSourceName(),
 						accessNumber, registNumber, openaccountnumber, investNumber, cumulativeRecharge, hztTenderPrice,
 						hxfTenderPrice, htlTenderPrice, htjTenderPrice, rtbTenderPrice, hzrTenderPrice, new Date(),
 						registerAttrCount, accountNumberIos, accountNumberPc, accountNumberAndroid, accountNumberWechat,
 						tenderNumberAndroid, tenderNumberIos, tenderNumberPc, tenderNumberWechat, cumulativeAttrCharge,
-						openAccountAttrCount, investAttrNumber, cumulativeAttrInvest);
+						openAccountAttrCount, investAttrNumber, cumulativeAttrInvest,cumulativeInvest);
 				try {
 					producer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_TOPIC,
 							System.currentTimeMillis() + "", JSONObject.toJSONBytes(statisticsVO)));

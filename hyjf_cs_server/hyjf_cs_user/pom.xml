@@ -90,6 +90,13 @@
 			<artifactId>hyjf_cs_common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		
+		<!-- https://gitee.com/lionsoul/ip2region -->
+		<dependency>
+			<groupId>org.lionsoul</groupId>
+			<artifactId>ip2region</artifactId>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

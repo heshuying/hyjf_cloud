@@ -22,6 +22,9 @@ public class HjhReInvestDetailVO extends BaseVO implements Serializable {
 
     private String borrowPeriod;
 
+    //借款期限（带单位）
+    private String borrowPeriodView;
+
     private String isMonth;
 
     private String accedeAccount;
@@ -146,4 +149,11 @@ public class HjhReInvestDetailVO extends BaseVO implements Serializable {
         this.addTime = addTime;
     }
 
+    public String getBorrowPeriodView() {
+        return borrowPeriodView;
+    }
+
+    public void setBorrowPeriodView(String borrowPeriodView) {
+        this.borrowPeriodView = borrowPeriodView;
+    }
 }

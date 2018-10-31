@@ -120,7 +120,7 @@ public class SubmissionsController extends BaseController {
      */
     @ApiOperation(value = "意见反馈导出", notes = "意见反馈导出")
     @PostMapping("/exportListAction")
-    public void exportListAction(HttpServletRequest request,@RequestBody SubmissionsRequest form,
+    public void exportListAction(HttpServletRequest request, @RequestBody SubmissionsRequest form,
                                  HttpServletResponse response) throws Exception {
 
         //sheet默认最大行数
@@ -197,7 +197,7 @@ public class SubmissionsController extends BaseController {
         map.put("platformVersion","版本号");
         map.put("phoneType","手机型号");
         map.put("content","反馈内容");
-        map.put("addTime","时间");
+        map.put("createTime","时间");
         return map;
     }
 

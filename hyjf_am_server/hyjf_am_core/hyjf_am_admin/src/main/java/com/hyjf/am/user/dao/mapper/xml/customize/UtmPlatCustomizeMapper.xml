@@ -55,7 +55,7 @@
         SELECT
         ui.user_id
         FROM
-        ht_users_info ui
+        ht_user_info ui
         <where>
             ui.attribute = 0
         </where>
@@ -65,7 +65,7 @@
         SELECT
         u.user_id
         FROM
-        ht_users u
+        ht_user u
         <where>
             <if test="sourceIdSrch != null and sourceIdSrch == 'ios'">
                 u.account_esb = 3

@@ -134,8 +134,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         RedisUtils.lpoprpush(queueName + RedisConstants.HJH_SLASH_TMP, queueName);
         // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
 
-        logger.info("====[" + accedeOrderId + "]" + "加入计划金额：" + accedeAccount.toString());
-        logger.info("====[" + accedeOrderId + "]" + "初始可投金额：" + ketouplanAmoust.toString());
+        logger.info("====[" + accedeOrderId + "]" + "加入计划金额：" + accedeAccount.toString()+ "，初始可投金额：" + ketouplanAmoust.toString());
 
         /** 1. 取得投资人信息（授权账户等） */
         //获取投资授权码
@@ -336,7 +335,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     //承接服务费
                     BigDecimal serviceFee = resultVO.getServiceFee();
                     logger.info("[" + accedeOrderId + "]" + "承接用计算完成"
-                            + "\n,分期数据结果:" + resultVO.getAssignResult()
+                            + "\n,分期数据结果:" + resultVO.getAssignResult().toString()
                             + "\n,承接总额:" + resultVO.getAssignAccount()
                             + "\n,承接本金:" + resultVO.getAssignCapital()
                             + "\n,承接利息:" + resultVO.getAssignInterest()
@@ -400,7 +399,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
-                                       , e);
+                                , e);
                         return false;
                     }
 
@@ -529,7 +528,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
-                                    , e);
+                                , e);
                         return false;
                     }
                 } else {
@@ -539,7 +538,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             } catch (Exception e) {
                 this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
                 logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_ERR + "，请后台异常处理。"
-                             , e);
+                        , e);
                 return false;
             } finally {
                 //删除债转中的redis，可以还款
@@ -548,6 +547,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                 } else {
                     String redisStr = JSON.toJSONString(redisBorrow);
                     RedisUtils.rightpush(queueName, redisStr);//redis相应计划//可能放两遍
+                    logger.info("[" + accedeOrderId + "]" + "剩余金额推回redis" + redisStr);
 //				    break;
                 }
             }
@@ -649,6 +649,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
     /**
      * 调用同步银行接口（投资）
+     *
      * @return
      */
     private BankCallBean autotenderApi(BorrowAndInfoVO borrow, HjhAccedeVO hjhAccede, HjhUserAuthVO hjhUserAuth, BigDecimal account, String tenderUsrcustid, boolean isLast) {
@@ -687,6 +688,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
     /**
      * 调用同步银行接口（自动债转）
+     *
      * @return
      */
     private BankCallBean autoCreditApi(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhUserAuthVO hjhUserAuth,
@@ -793,6 +795,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
     /**
      * 更新 自动投资临时表
+     *
      * @param accedeOrderId
      * @param borrowNid
      * @param bankResult

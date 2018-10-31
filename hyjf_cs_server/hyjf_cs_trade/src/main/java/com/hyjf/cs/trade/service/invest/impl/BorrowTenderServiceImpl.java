@@ -579,6 +579,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         Map<String, Object> data = new HashedMap();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         // 查看tmp表
         BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
         borrowTenderRequest.setBorrowNid(borrowNid);
@@ -623,8 +624,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     break;
             }
             // 产品加息预期收益
-            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
-                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(),account , borrow.getBorrowExtraYield());
+            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(),account , borrowInfo.getBorrowExtraYield());
                 BigDecimal oldEarnings = new BigDecimal(interest);
                 earnings = incEarnings.add(oldEarnings);
             }
@@ -650,8 +651,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 }
                 couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(),account.toString(), borrow.getBorrowPeriod());
             }
+            logger.info("获取投资成功结果  earnings:{} ",earnings.toString());
+            logger.info("获取投资成功结果  couponInterest:{} ",couponInterest.toString());
+            if (couponUser != null && couponUser.getCouponType() == 3) {
+                couponInterest = couponInterest.subtract(couponUser.getCouponQuota());
+                data.put("income", df.format(earnings.add(couponInterest)));
+            } else if (couponUser != null && couponUser.getCouponType() == 1) {
+                data.put("income", df.format(earnings.add(couponInterest)));
+            } else {
+                data.put("income", df.format(earnings.add(couponInterest)));
+            }
             //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
-            data.put("income", earnings.add(couponInterest));
             data.put("couponInterest", df.format(couponInterest));
 
         } else {
@@ -738,8 +748,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
 
         // 设置产品加息 显示收益率
-        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
-            investInfo.setBorrowExtraYield(df.format(borrow.getBorrowExtraYield()));
+        logger.info("产品加息：{}   {}    {} ",borrow.getIncreaseInterestFlag(),borrowInfo.getBorrowExtraYield(),Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield()));
+        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+            investInfo.setBorrowExtraYield(df.format(borrowInfo.getBorrowExtraYield()));
         }
 
         // 如果投资金额不为空
@@ -749,8 +760,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 收益率
             BigDecimal borrowApr = borrow.getBorrowApr();
             //TODO:开始时这里是有的
-/*            if (borrow.getProjectType() == 13 && borrow.getBorrowExtraYield() != null && borrow.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
-                borrowApr = borrowApr.add(borrow.getBorrowExtraYield());
+/*            if (borrow.getProjectType() == 13 && borrowInfo.getBorrowExtraYield() != null && borrowInfo.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
+                borrowApr = borrowApr.add(borrowInfo.getBorrowExtraYield());
             }*/
             BigDecimal couponInterest = BigDecimal.ZERO;
             /** 叠加收益率开始*/
@@ -760,8 +771,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 } else {
                     couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), money, borrow.getBorrowPeriod());
                 }
-
+                logger.info("优惠券收益：：：{}",couponInterest);
                 couponUser.setCouponInterest(df.format(couponInterest));
+                // 加息券
                 if (couponUser.getCouponType() == 2) {
                     borrowApr = borrowApr.add(couponUser.getCouponQuota());
                 }
@@ -781,16 +793,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCapitalInterest(df.format(earnings));
             } else {
                 investInfo.setCapitalInterest(df.format(earnings.subtract(couponInterest)));
+                investInfo.setEarnings(df.format(earnings.add(couponInterest)));
             }
             investInfo.setCouponUser(couponUser);
 
             // 产品加息预期收益
-            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
                 if (couponUser != null && couponUser.getCouponType() == 3){
                     money = new BigDecimal(money).subtract(couponUser.getCouponQuota()).toString();
                 }
-                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrow.getBorrowExtraYield());
-                //BigDecimal oldEarnings = new BigDecimal(investInfo.getEarnings());
+                logger.info("开始计算加息收益   money:{}   BorrowExtraYield:{}",money ,borrowInfo.getBorrowExtraYield());
+                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrowInfo.getBorrowExtraYield());
+                logger.info("开始计算加息收益   incEarnings:{}  ",incEarnings );
                 investInfo.setEarnings(df.format(incEarnings.add(earnings)));
             }
         }
@@ -981,8 +995,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
 
             // 设置产品加息 显示收益率
-            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
-                investInfo.setBorrowExtraYield(df.format(borrow.getBorrowExtraYield())+"%");
+            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+                investInfo.setBorrowExtraYield(df.format(borrowInfo.getBorrowExtraYield())+"%");
             }
 
             BigDecimal earnings = new BigDecimal("0");
@@ -1051,15 +1065,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             /**
              * 产品加息
              */
-            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
                 investInfo.setDesc0("历史年回报率: " + borrow.getBorrowApr() + "% + "
-                        + borrow.getBorrowExtraYield() + "%");
+                        + borrowInfo.getBorrowExtraYield() + "%");
             }else{
                 investInfo.setDesc0("历史年回报率: "+borrow.getBorrowApr()+"%");
             }
             // 产品加息预期收益
-            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
-                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrow.getBorrowExtraYield());
+            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrowInfo.getBorrowExtraYield());
                 borrowInterest = incEarnings.add(borrowInterest);
             }
 

@@ -31,8 +31,3 @@ management:
     health:
       show-details: ALWAYS
 
-logging:
-  file: cs-message.log
-#swagger启用开关
-swagger:
- enable: true

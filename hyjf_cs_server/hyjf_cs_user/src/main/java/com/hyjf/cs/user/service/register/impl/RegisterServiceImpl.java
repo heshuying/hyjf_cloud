@@ -39,7 +39,11 @@ import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.register.RegisterService;
+import com.hyjf.cs.user.util.GetInfoByUserIp;
 import com.hyjf.cs.user.vo.RegisterRequest;
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +61,7 @@ import java.util.regex.Pattern;
  * @version RegistServiceImpl, v0.1 2018/6/11 15:10
  */
 @Service
+@DefaultProperties(defaultFallback = "defaultFallback")
 public class RegisterServiceImpl extends BaseUserServiceImpl implements RegisterService {
 
     private static final Logger logger = LoggerFactory.getLogger(RegisterServiceImpl.class);
@@ -254,16 +259,62 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @throws ReturnMessageException
      */
     @Override
+    @HystrixCommand
     public WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip)
             throws ReturnMessageException {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform);
         registerUserRequest.setLoginIp(ip);
+        
+        //add by libin 用户注册时通过ip获得用户所在的省，市 start
+        logger.info("获取到的用户ip为：" + ip);
+        String info = GetInfoByUserIp.getInfoByUserIp(ip);
+        if(info == null || StringUtils.isEmpty(info)){
+        	logger.error("通过httpRequest获取的ip解析后未获取到省市信息！");
+        	registerUserRequest.setProvince("");
+        	registerUserRequest.setCity("");
+        } else {
+        	StringBuffer line = new StringBuffer(info);
+        	int first_idx   = line.indexOf("|");
+        	String country = line.substring(0, first_idx);//所属国家暂时不用先保留
+        	
+        	line = new StringBuffer(line.substring(first_idx + 1) );
+        	int second_idx   = line.indexOf("|");
+        	String number = line.substring(0, second_idx);//所属数字暂时不用先保留
+        	
+            line = new StringBuffer(line.substring(second_idx + 1) );
+            int thrid_idx   = line.indexOf("|");
+            String province = line.substring(0, thrid_idx);//省
+            if(province != null && StringUtils.isNotEmpty(province)){
+            	registerUserRequest.setProvince(province);
+            } else {
+            	registerUserRequest.setProvince("");
+            }
+            
+            line = new StringBuffer(line.substring(thrid_idx + 1) );
+            int fouth_idx   = line.indexOf("|");
+            String city = line.substring(0, fouth_idx);//市
+            if(city != null && StringUtils.isNotEmpty(city)){
+            	registerUserRequest.setCity(city);
+            } else {
+            	registerUserRequest.setCity("");
+            }
+        }
+        //add by libin 用户注册时通过ip获得用户所在的省，市 end
+        
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
         logger.info("注册之后user值是否为空："+(userVO==null));
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         // 3.注册后处理
         return this.afterRegisterHandle(userVO);
+    }
+    
+    /**
+     * 默认fallback
+     * @return
+     */
+    private WebViewUserVO defaultFallback() {
+    	return null;
     }
 
     /**

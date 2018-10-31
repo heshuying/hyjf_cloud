@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.BaseService;
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
@@ -280,4 +281,11 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
     User selectUserInfoByUsername(String userName);
+	/**
+	 * 插入密码错误超限用户信息
+	 * @author kdl 2018.10.29
+	 * @param lockedUserInfoVO
+	 * @return
+	 */
+	public int inserLockedUser(LockedUserInfoVO lockedUserInfoVO);
 }

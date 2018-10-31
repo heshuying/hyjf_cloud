@@ -6,8 +6,10 @@ package com.hyjf.admin.controller.finance.bank.merchant;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankMerchantAccountService;
 import com.hyjf.am.response.admin.BankMerchantAccountResponse;
 import com.hyjf.am.resquest.admin.BankMerchantAccountListRequest;
@@ -63,6 +65,8 @@ public class BankMerchantAccountController extends BaseController {
 
     private static final String REQUEST_MAPPING = "/hyjf-admin/bank/merchant/account";
 
+    public static final String PERMISSIONS = "bankmerchantaccount";
+
     @Autowired
     private BankMerchantAccountService bankMerchantAccountService;
 
@@ -77,6 +81,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "账户信息")
     @PostMapping(value = "init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult init(HttpServletRequest request, @RequestBody BankMerchantAccountListRequest form) {
         AdminResult result = new AdminResult();
         AdminSystemVO adminSystem = getUser(request);
@@ -694,6 +699,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "发红包")
     @PostMapping(value = "/redPocketSendAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_REDPOCKETSEND)
     public AdminResult redPocketSendAction(HttpServletRequest request, @RequestBody RedPocketBean form) {
         AdminResult result = new AdminResult();
         // 查询商户子账户余额

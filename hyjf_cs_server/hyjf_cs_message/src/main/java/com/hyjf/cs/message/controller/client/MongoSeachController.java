@@ -123,17 +123,17 @@ public class MongoSeachController extends BaseController {
         AppChannelStatisticsDetailResponse response = new AppChannelStatisticsDetailResponse();
         Query query = new Query();
         String userNameSrch = request.getUserNameSrch();
-        String sourceIdSrch = request.getSourceIdSrch();
+        Integer sourceIdSrch = request.getSourceIdSrch();
         Criteria criteria = new Criteria();
         if (StringUtils.isNotEmpty(userNameSrch)) {
             criteria.and("userName").is(userNameSrch);
         }
-        if (StringUtils.isNotEmpty(sourceIdSrch)) {
+        if (sourceIdSrch!=null) {
             criteria.and("sourceId").is(sourceIdSrch);
         }
+        query.addCriteria(criteria);
         Long count = appChannelStatisticsDetailDao.count(query);
         if (count>0) {
-            query.addCriteria(criteria);
             int currPage = request.getCurrPage();
             int pageSize = request.getPageSize();
             int limitStart = (currPage-1) * pageSize;
@@ -155,23 +155,24 @@ public class MongoSeachController extends BaseController {
      * @return
      */
     @RequestMapping("/exportStatisticsList")
-    public AppChannelStatisticsDetailResponse exportStatisticsList(@RequestBody  AppChannelStatisticsDetailRequest request) {
+    public AppChannelStatisticsDetailResponse exportStatisticsList(@RequestBody AppChannelStatisticsDetailRequest request) {
         AppChannelStatisticsDetailResponse response = new AppChannelStatisticsDetailResponse();
         Query query = new Query();
         String userNameSrch = request.getUserNameSrch();
-        String sourceIdSrch = request.getSourceIdSrch();
+        Integer sourceIdSrch = request.getSourceIdSrch();
         Criteria criteria = new Criteria();
         if (StringUtils.isNotEmpty(userNameSrch)) {
             criteria.and("userName").is(userNameSrch);
         }
-        if (StringUtils.isNotEmpty(sourceIdSrch)) {
+        if (sourceIdSrch != null) {
             criteria.and("sourceId").is(sourceIdSrch);
         }
-            List<AppChannelStatisticsDetail> list = appChannelStatisticsDetailDao.find(query);
-            if (!CollectionUtils.isEmpty(list)) {
-                List<AppChannelStatisticsDetailVO> voList = CommonUtils.convertBeanList(list, AppChannelStatisticsDetailVO.class);
-                response.setResultList(voList);
-            }
+        query.addCriteria(criteria);
+        List<AppChannelStatisticsDetail> list = appChannelStatisticsDetailDao.find(query);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<AppChannelStatisticsDetailVO> voList = CommonUtils.convertBeanList(list, AppChannelStatisticsDetailVO.class);
+            response.setResultList(voList);
+        }
         return response;
     }
     /**

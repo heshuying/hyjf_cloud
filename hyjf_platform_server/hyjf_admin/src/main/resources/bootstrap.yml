@@ -38,10 +38,3 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-logging:
-  file: admin.log
-
-#swagger启用开关
-swagger:
- enable: true

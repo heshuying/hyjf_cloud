@@ -215,7 +215,7 @@ public class BankCallUtils implements Serializable {
 			}
 			// 调用银行接口
 			String url = payurl + REQUEST_MAPPING_CALLAPIBG;
-			logger.info("调用银行接口url: {}", url);
+			logger.info("调用银行接口url: {}, txCode: [{}], orderId: [{}]", url, bean == null ? "" : bean.getTxCode(), bean == null ? "" : bean.getOrderId());
 //			String result = HttpDeal.post(url, allParams);
 			String result = restTemplate
 					 .postForEntity(url, allParams, String.class).getBody();

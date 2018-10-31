@@ -718,6 +718,7 @@ public class RedisUtils {
             // 释放
             // 返还到连接池
             returnResource(pool, jedis);
+            logger.info("leftpush：" + key + "：" + values.toString());
         }
         return result;
     }
@@ -744,6 +745,7 @@ public class RedisUtils {
             // 释放
             // 返还到连接池
             returnResource(pool, jedis);
+            logger.info("rightpush：" + key + "：" + values.toString());
         }
         return result;
     }
