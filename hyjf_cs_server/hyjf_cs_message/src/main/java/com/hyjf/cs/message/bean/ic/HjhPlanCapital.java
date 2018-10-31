@@ -32,11 +32,11 @@ public class HjhPlanCapital implements Serializable {
 
     private Integer createUser;
 
-    private Integer createTime;
+    private Date createTime;
 
     private Integer updateUser;
 
-    private String updateTime;
+    private Date updateTime;
 
     private Integer delFlg;
 
@@ -112,11 +112,11 @@ public class HjhPlanCapital implements Serializable {
         this.createUser = createUser;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -128,11 +128,11 @@ public class HjhPlanCapital implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public String getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(String updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 

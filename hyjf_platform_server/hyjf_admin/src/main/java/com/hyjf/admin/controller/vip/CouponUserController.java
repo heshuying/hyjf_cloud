@@ -721,7 +721,7 @@ public class CouponUserController extends BaseController {
         // 表格sheet名称
         String sheetName = "借款盖章用户查询";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
@@ -745,22 +745,24 @@ public class CouponUserController extends BaseController {
                 //循环计数（每循环一次是一行）根据行数下标位置获取数组，无法确定当前行下标
                 int s = 1;
                 String clientString = "";
-                String clientSed[] = StringUtils.split(couponUserCustomizeVO.getCouponSystem(), ",");
-                for (int k = 0; k < clientSed.length; k++) {
-                    if ("-1".equals(clientSed[k])) {
-                        clientString = clientString + "不限";
-                        break;
-                    } else {
-                        for (String key : client.keySet()) {
-                            if (clientSed[s].equals(key)) {
-                                if (s != 0 && clientString.length() != 0) {
-                                    clientString = clientString + "/";
+                if(StringUtils.isNotEmpty(couponUserCustomizeVO.getCouponSystem())){
+                    String clientSed[] = StringUtils.split(couponUserCustomizeVO.getCouponSystem(), ",");
+                    for (int k = 0; k < clientSed.length; k++) {
+                        if ("-1".equals(clientSed[k])) {
+                            clientString = clientString + "不限";
+                            break;
+                        } else {
+                            for (String key : client.keySet()) {
+                                if (clientSed[s].equals(key)) {
+                                    if (s != 0 && clientString.length() != 0) {
+                                        clientString = clientString + "/";
+                                    }
+                                    clientString = clientString + client.get(key);
                                 }
-                                clientString = clientString + client.get(key);
                             }
                         }
+                        couponUserCustomizeVO.setCouponSystem(clientString);
                     }
-                    couponUserCustomizeVO.setCouponSystem(clientString);
                 }
                 s++;
             }

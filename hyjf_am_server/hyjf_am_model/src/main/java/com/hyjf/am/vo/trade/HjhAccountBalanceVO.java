@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class HjhAccountBalanceVO extends BaseVO implements Serializable {
 
-    private Integer id;
+    private String id;
 
     private Date date;
 
@@ -39,11 +39,11 @@ public class HjhAccountBalanceVO extends BaseVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
