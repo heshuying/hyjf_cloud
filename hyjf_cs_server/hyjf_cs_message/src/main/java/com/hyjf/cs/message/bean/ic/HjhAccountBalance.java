@@ -15,9 +15,9 @@ import java.util.Date;
  * @version HjhAccountBalance, v0.1 2018/7/31 14:05
  */
 @Document(collection = "ht_hjh_account_balance")
-public class HjhAccountBalance extends BaseVO implements Serializable {
+public class HjhAccountBalance implements Serializable {
 
-    private Integer id;
+    private String id;
 
     private Date date;
 
@@ -31,21 +31,21 @@ public class HjhAccountBalance extends BaseVO implements Serializable {
 
     private Integer createUser;
 
-    private Integer createTime;
+    private Date createTime;
 
     private Integer updateUser;
 
-    private Integer updateTime;
+    private Date updateTime;
 
     private Integer delFlg;
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -97,11 +97,11 @@ public class HjhAccountBalance extends BaseVO implements Serializable {
         this.createUser = createUser;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -113,11 +113,11 @@ public class HjhAccountBalance extends BaseVO implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
