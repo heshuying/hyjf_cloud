@@ -10,7 +10,7 @@ spring:
       client:
         url: ${boot.admin.clientUrl}
 # zipkin 监控端点
-  zipkin: 
+  zipkin:
     base-url: http://micoserver:9411
   sleuth:
     sampler:
@@ -30,7 +30,3 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-logging:
-  file: am-user.log
-  file.max-size: 100MB
