@@ -4,7 +4,7 @@
 
 
     <select id="updateRepayInstitutionAmount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
-        UPDATE hyjf_hjh_bail_config
+        UPDATE ht_hjh_bail_config
         SET remain_mark_line = remain_mark_line + #{amount,jdbcType=DECIMAL},
             loan_balance = loan_balance - #{amount,jdbcType=DECIMAL},
             repayed_capital = repayed_capital + #{amount,jdbcType=DECIMAL}
@@ -13,7 +13,7 @@
     </select>
 
     <select id="updateLoanInstitutionAmount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
-        UPDATE hyjf_hjh_bail_config
+        UPDATE ht_hjh_bail_config
         SET remain_mark_line = remain_mark_line + #{amount,jdbcType=DECIMAL},
         loan_Balance = loan_Balance - #{amount,jdbcType=DECIMAL},
         new_credit_line = new_credit_line + #{amount,jdbcType=DECIMAL},
@@ -23,7 +23,7 @@
     </select>
 
     <select id="updateForSendBorrow" resultType="java.lang.Integer" parameterType="java.util.HashMap">
-        UPDATE hyjf_hjh_bail_config
+        UPDATE ht_hjh_bail_config
         SET remain_mark_line = remain_mark_line - #{amount,jdbcType=DECIMAL},
             cyc_loan_total = cyc_loan_total + #{amount,jdbcType=DECIMAL},
             loan_mark_line = loan_mark_line + #{amount,jdbcType=DECIMAL},
