@@ -662,7 +662,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         this.updateAccountForHjh(hjhProcess, hjhAccede.getUserId(), accountDecimal, null);
         // 汇计划重算更新汇计划加入明细表(承接人)
         this.updateHjhAccedeForHjh(hjhProcess, hjhAccede.getId(), accountDecimal, null, null);
-
+        // ^^^^^^^^^^^^^^
+        HjhDebtCredit credits = this.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^updateHjhAccedeForHjh"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         // 债权承接成功后后续处理
         // mod 汇计划三期 汇计划自动投资 liubin 20180515 start
         boolean creditTenderFlag = this.saveCreditTender(sellerHjhAccede, credit,
@@ -674,7 +677,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
 
         // ^^^^^^^^^^^^^^
-        HjhDebtCredit credits = this.selectCreditByNid(creditNid);
+        credits = this.selectCreditByNid(creditNid);
         logger.info("^^^^^^^^^^^^^^saveCreditTender"+credits.getCreditAccountWait());
         // ^^^^^^^^^^^^^^
         if (!creditTenderFlag) {
@@ -1362,6 +1365,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                             logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCredit更新开始！");
                             boolean debtCreditFlag = hjhDebtCreditMapper.updateByPrimaryKey(debtCredit) > 0 ? true : false;
                             if (debtCreditFlag) {
+                                logger.info("^^^^^^^^^^^^^^^^^^" + debtCredit.getCreditAccountWait());
                                 logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCredit更新成功！");
                                 Account assignAccount = this.selectUserAccount(userId);
                                 if (Validator.isNotNull(assignAccount)) {
