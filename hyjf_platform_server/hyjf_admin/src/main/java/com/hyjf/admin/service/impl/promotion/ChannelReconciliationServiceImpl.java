@@ -107,6 +107,47 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
 
     @Override
     public ChannelReconciliationResponse searchAppHJHAction(ChannelReconciliationRequest request) {
-        return amAdminClient.selectAppChannelReconciliationRecordHjh(request);
+        // app渠道信息
+        AppChannelStatisticsDetailRequest request1 = new AppChannelStatisticsDetailRequest();
+        if (request.getUtmPlat() != null) {
+            request1.setSourceIdSrch(Integer.valueOf(request.getUtmPlat()[0]));
+        }
+        AppChannelStatisticsDetailResponse appResponse = csMessageClient.exportStatisticsList(request1);
+        if (appResponse != null) {
+            List<AppChannelStatisticsDetailVO> appResultList = appResponse.getResultList();
+            if (!CollectionUtils.isEmpty(appResultList)) {
+                List<Integer> userIdList = new ArrayList<>();
+                for (AppChannelStatisticsDetailVO appVo: appResultList) {
+                    Integer userId = appVo.getUserId();
+                    userIdList.add(userId);
+                }
+                request.setUserIdList(userIdList);
+            } else {
+                return new ChannelReconciliationResponse();
+            }
+        } else {
+            return new ChannelReconciliationResponse();
+        }
+        // 投资信息
+        ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationRecordHjh(request);
+        if (response != null) {
+            List<ChannelReconciliationVO> resultList = response.getResultList();
+            if (!CollectionUtils.isEmpty(resultList)) {
+                for (ChannelReconciliationVO vo : resultList) {
+                    if (appResponse != null) {
+                        List<AppChannelStatisticsDetailVO> appResultList = appResponse.getResultList();
+                        if (!CollectionUtils.isEmpty(appResultList)) {
+                            for (AppChannelStatisticsDetailVO appVo: appResultList) {
+                                if (appVo.getUserId().equals(vo.getUserId())) {
+                                    vo.setUtmName(appVo.getSourceName());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return response;
     }
 }
