@@ -145,6 +145,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
         String borrowNid = borrowFullRequest.getBorrowNidSrch();
         // 标的
         Borrow borrow = getBorrow(borrowNid);
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
         // 借款人userId
         Integer borrowUserId = borrow.getUserId();
         // 借款人用户名
@@ -225,8 +226,9 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
                     borrowApicron.setPeriodNow(0);
                     // 债转还款状态
                     borrowApicron.setCreditRepayStatus(0);
-                    // 融通宝相关
-                    if (projectType == 13) {
+                    //add by cwyang 20180730 加息需求变更
+                    boolean increase = Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield());
+                    if (increase) {
                         borrowApicron.setExtraYieldStatus(0);
                         borrowApicron.setExtraYieldRepayStatus(0);
                     } else {

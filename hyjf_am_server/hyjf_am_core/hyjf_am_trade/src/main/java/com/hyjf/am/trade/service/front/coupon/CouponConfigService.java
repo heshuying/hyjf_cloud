@@ -213,4 +213,13 @@ public interface CouponConfigService {
      * @return
      */
     List<CouponConfigExportCustomize> exoportRecordList(CouponConfigCustomize configCustomize);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据tenderNid查询总数
+     * @Date 17:15 2018/11/1
+     * @Param tenderNid
+     * @return
+     */
+    Integer countByTenderNid(String tenderNid);
 }

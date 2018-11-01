@@ -127,84 +127,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
 		}
 		return new AdminResult();
     }
-    /**
-     * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
-     * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
-     * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
-     *
-     * @param request
-     * @param response
-     * @throws Exception
-     */
-    //@PostMapping("/exportAction")
- 	//@ApiOperation(value = "CA导出列表", notes = "CA导出列表")
- 	//@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    /*public void exportExcel(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        // 表格sheet名称
-        String sheetName = "CA认证记录";
-        // 文件名称
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
-        // 需要输出的结果列表
-		// 可以直接使用
-        certificateAuthorityExceptionBean.setCurrPage(-1);
-        certificateAuthorityExceptionBean.setPageSize(-1);
-        List<CertificateAuthorityVO> recordList =certificateAuthorityExceptionService.getRecordList(certificateAuthorityExceptionBean).getResultList();
-        String[] titles = new String[] { "序号", "用户名", "CA认证手机号", "姓名/名称","证件号码" ,"用户类型", "邮箱", "客户编号", "状态", "申请时间", "备注" };
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
-        if (recordList != null && recordList.size() > 0) {
-
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < recordList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                	CertificateAuthorityVO data = recordList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {// 序号
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) {// 用户名
-                        cell.setCellValue(data.getUserName());
-                    } else if (celLength == 2) {// ca认证手机号
-                        cell.setCellValue(data.getMobile());
-                    } else if (celLength == 3) {// 姓名/名称
-                        cell.setCellValue(data.getTrueName());
-                    }   else if (celLength == 4){
-                        cell.setCellValue(StringUtils.isBlank(data.getIdNo())?"":data.getIdNo());
-                    } else if (celLength == 5) {// 用户类型
-                        cell.setCellValue(data.getIdType().compareTo(0) == 0?"个人":"企业");
-                    }else if (celLength == 6) {// 邮箱
-                        cell.setCellValue(data.getEmail());
-                    } else if (celLength == 7) {// 客户编号
-                        cell.setCellValue(data.getCustomerId());
-                    } else if (celLength == 8) {// 状态
-                        cell.setCellValue(data.getCode().equals("1000")?"认证成功":"未认证或认证失败");
-                    } else if (celLength == 9) {// 申请时间
-                        cell.setCellValue( GetDateUtils.format(data.getCreateTime()));
-                    } else if (celLength == 10) {// 备注
-                        cell.setCellValue(data.getRemark());
-                    }
-                }
-            }
-        }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }*/
 
     /**
      * 导出excel
@@ -259,6 +182,60 @@ public class CertificateAuthorityExceptionController extends BaseController {
         }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
+
+
+    /**
+     * 导出CA认证异常EXCEL
+     * add by jijun 20181031
+     * @return
+     */
+    @PostMapping("/exportCAExceptionListExcel")
+    @ApiOperation(value = "CA认证异常列表导出", notes = "CA认证异常列表导出")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+    public void exportCAExceptionListExcel(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean, HttpServletRequest request, HttpServletResponse response)throws Exception {
+        // 封装查询条件
+        CertificateAuthorityExceptionRequest certificateBean = new CertificateAuthorityExceptionRequest();
+        BeanUtils.copyProperties(certificateAuthorityExceptionBean,certificateBean);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "CA认证记录";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        certificateBean.setLimitFlg(true);
+        //请求第一页5000条
+        certificateBean.setPageSize(defaultRowMaxCount);
+        certificateBean.setCurrPage(1);
+        // 需要输出的结果列表
+        CertificateAuthorityResponse recordList = certificateAuthorityExceptionService.getExceptionRecordList(certificateAuthorityExceptionBean);
+        Integer totalCount = recordList.getRecordTotal();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMapBkAcc();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterBkAcc();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else{
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            certificateBean.setPageSize(defaultRowMaxCount);
+            certificateBean.setCurrPage(i+1);
+            CertificateAuthorityResponse recordList2 = certificateAuthorityExceptionService.getExceptionRecordList(certificateAuthorityExceptionBean);
+            if (recordList2 != null && recordList2.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+
 
     private Map<String, String> buildMapBkAcc() {
         Map<String, String> map = Maps.newLinkedHashMap();

@@ -1,6 +1,7 @@
 package com.hyjf.am.config.controller.admin;
 
 import com.hyjf.am.config.controller.BaseConfigController;
+import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminSystemService;
@@ -51,7 +52,7 @@ public class AdminSystemController extends BaseConfigController {
 	/**
 	 * 登陆用户
 	 * 
-	 * @param AdminSystemRequest
+	 * @param adminSystemR
 	 * @return
 	 */
 	@RequestMapping("/getuser")
@@ -74,14 +75,19 @@ public class AdminSystemController extends BaseConfigController {
 			asr.setResult(asv);
 			return asr;
 		} else {
-			//判断用户输入的密码错误次数---开始
-			Map<String, String> errorInfo=lockedUserService.insertErrorPassword(adminSystemR.getUsername(),adminSystemR.getPassword());
-			if (!errorInfo.isEmpty()){
-				asr.setMessage(errorInfo.get("info"));
-				asr.setRtn(Response.ERROR);
-				return asr;
+			AdminSystem adminSystem1 = new AdminSystem();
+			adminSystem1.setUsername(adminSystemR.getUsername());
+			Admin admin = adminSystemService.getUserInfoAll(adminSystem1);
+			if (admin!=null){
+				//判断用户输入的密码错误次数---开始
+				Map<String, String> errorInfo=lockedUserService.insertErrorPassword(adminSystemR.getUsername(),adminSystemR.getPassword(),admin);
+				if (!errorInfo.isEmpty()){
+					asr.setMessage(errorInfo.get("info"));
+					asr.setRtn(Response.ERROR);
+					return asr;
+				}
+				//判断用户输入的密码错误次数---结束
 			}
-			//判断用户输入的密码错误次数---结束
 			asr.setRtn(Response.ERROR);
 			asr.setMessage("用户名或者密码无效");
 			return asr;
@@ -91,7 +97,7 @@ public class AdminSystemController extends BaseConfigController {
 	/**
 	 * 获取该用户权限
 	 * 
-	 * @param userId
+	 * @param userName
 	 * @return
 	 */
 	@GetMapping("/getpermissions/{userName}")
@@ -138,7 +144,7 @@ public class AdminSystemController extends BaseConfigController {
 	}
 	/**
 	 * 项目申请人是否存在
-	 * @param request
+	 * @param applicant
 	 * @return
 	 */
 	@GetMapping(value = "/isexistsapplicant/{applicant}")

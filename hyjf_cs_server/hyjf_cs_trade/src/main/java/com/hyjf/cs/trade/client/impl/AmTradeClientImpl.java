@@ -16,6 +16,7 @@ import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.calculate.HjhCreditCalcResultResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
@@ -65,6 +66,7 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
@@ -455,8 +457,12 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO) {
         String url = urlBase + "hjhDebtCredit/updateHjhDebtCreditByPK";
-        hjhDebtCreditVO.setCreditStatus(2);//转让状态 2完全承接
-        hjhDebtCreditVO.setIsLiquidates(1);
+
+        HjhDebtCreditVO hjhDebtCreditNew = new HjhDebtCreditVO();
+        hjhDebtCreditNew.setId(hjhDebtCreditVO.getId());
+        hjhDebtCreditNew.setCreditStatus(2);//转让状态 2完全承接
+        hjhDebtCreditNew.setIsLiquidates(1);//1:已清算(无需清算)
+        hjhDebtCreditNew.setUpdateTime(GetDate.getDate());
         IntegerResponse response = restTemplate.postForEntity(url, hjhDebtCreditVO, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
@@ -2620,9 +2626,9 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<BorrowTenderCpnVO> getBorrowTenderCpnHjhList(String orderId) {
-        CouponResponse response = new CouponResponse();
+        HjhCouponLoansResponse response = new HjhCouponLoansResponse();
         response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhlist/"+orderId, CouponResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhlist/"+orderId, HjhCouponLoansResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -2631,9 +2637,9 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<BorrowTenderCpnVO> getBorrowTenderCpnHjhCouponOnlyList(String couponOrderId) {
-        CouponResponse response = new CouponResponse();
+        HjhCouponLoansResponse response = new HjhCouponLoansResponse();
         response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhcoupononlylist/"+couponOrderId, CouponResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhcoupononlylist/"+couponOrderId, HjhCouponLoansResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
