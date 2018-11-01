@@ -72,13 +72,13 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
 
         // 拼装参数 调用江西银行
         // 失败页面
-        String errorPath = "/bank/user/repayauth/error";
+        String errorPath = "/user/setting/repayauth/result/failed";
         // 成功页面
-        String successPath = "/bank/user/repayauth/success";
+        String successPath = "/user/setting/repayauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
-        String successUrl = super.getFrontHost(systemConfig,platform) + successPath;
+        String successUrl = super.getFrontHost(systemConfig,platform) + successPath+ errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/repayauthpageplus/repayauthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);

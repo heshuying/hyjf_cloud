@@ -63,7 +63,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 
 
 			//更新用户签约授权状态信息表
-			if(hjhUserAuth==null){
+			if(hjhUserAuth==null||hjhUserAuth.getId()==null){
 				hjhUserAuth=new HjhUserAuthVO();
 				hjhUserAuth.setUserId(user.getUserId());
 				// 设置状态
@@ -248,7 +248,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			//自动投标功能开通标志
 			String autoBidStatus = bean.getAutoBid();
 			//自动债转功能开通标志
-			String autoTransfer = bean.getAutoTransfer();
+			String autoTransfer = bean.getAutoCredit();
 			//缴费授权
 			String paymentAuth = bean.getPaymentAuth();
 			//还款授权

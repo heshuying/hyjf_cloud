@@ -77,7 +77,7 @@ public class AppCreditAuthPagePlusController extends BaseUserController {
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT;
-        String successUrl = super.getFrontHost(systemConfig,platform) + successPath;
+        String successUrl = super.getFrontHost(systemConfig,platform) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT;
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/creditauthpageplus/creditAuthBgreturn";
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);

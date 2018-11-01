@@ -78,7 +78,7 @@ public class WeChatInvesAuthPagePlusController extends BaseUserController {
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_BID;
-        String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + successPath;
+        String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_BID;
         String bgRetUrl = "http://CS-USER/hyjf-wechat/bank/user/auth/invesauthpageplus/invesAuthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
