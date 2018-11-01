@@ -85,6 +85,8 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
         if(StringUtils.isNotEmpty(request.getCreateTimeEndSrch())){
         	crt.andCreateTimeLessThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getCreateTimeEndSrch()), "yyyy-MM-dd HH:mm:ss"));
         }
+		// 传入排序
+		example.setOrderByClause("create_time Desc");
         list = hjhLabelMapper.selectByExample(example);
 		return list.size();
 	}
@@ -131,6 +133,10 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
         if(StringUtils.isNotEmpty(request.getCreateTimeEndSrch())){
         	crt.andCreateTimeLessThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getCreateTimeEndSrch()), "yyyy-MM-dd HH:mm:ss"));
         }
+        
+		// 传入排序
+		example.setOrderByClause("create_time Desc");
+        
         list = hjhLabelMapper.selectByExample(example);
         List<HjhLabelCustomizeVO> volist = CommonUtils.convertBeanList(list, HjhLabelCustomizeVO.class);
 		return volist;

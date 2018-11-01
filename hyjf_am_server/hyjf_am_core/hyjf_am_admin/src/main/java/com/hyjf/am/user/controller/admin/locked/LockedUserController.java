@@ -69,7 +69,7 @@ public class LockedUserController {
 		int recordTotal = lockedUserService.countRecordTotal(parameterMap);
 		if (recordTotal > 0) {
 			response.setCount(recordTotal);
-			Paginator paginator = new Paginator(qo.getCurrPage(), recordTotal);
+			Paginator paginator = new Paginator(qo.getCurrPage(), recordTotal,qo.getPageSize());
 
 			parameterMap.put("limitStart", paginator.getOffset());
 			parameterMap.put("limitEnd", paginator.getLimit());
