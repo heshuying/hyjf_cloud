@@ -142,7 +142,9 @@ public class AdminHjhCommissionController {
 	public TenderCommissionResponse queryCrmCuttype(@PathVariable Integer userId) {
 		TenderCommissionResponse response = new TenderCommissionResponse();
 		Integer type = adminHjhCommissionService.queryCrmCuttype(userId);
-		response.setType(type);
+		if(type != null){
+			response.setType(type);
+		}
 		return response;
 	}
 	
