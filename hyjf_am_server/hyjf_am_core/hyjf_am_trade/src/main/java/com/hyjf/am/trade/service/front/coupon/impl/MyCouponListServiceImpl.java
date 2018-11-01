@@ -531,6 +531,20 @@ public class MyCouponListServiceImpl implements MyCouponListService {
                     continue;
                 }
             }
+
+            //是否与本金公用
+            boolean addFlg = false;
+            if (bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
+                addFlg = true;
+            }
+            if (addFlg) {
+                /*CouponBean couponBean =
+                        createCouponBean(userCouponConfigCustomize, "不能与本金共用");*/
+//                notAvailableCouponList.add(couponBean);
+                continue;
+            }
+            /**************逻辑修改 pcc end***************/
+
             // 验证优惠券适用的项目 新逻辑 pcc20160715
             boolean ifprojectType = dealBorrowClass(bestCoupon.getProjectType(),borrowProjectType.getBorrowClass());
             if (ifprojectType) {

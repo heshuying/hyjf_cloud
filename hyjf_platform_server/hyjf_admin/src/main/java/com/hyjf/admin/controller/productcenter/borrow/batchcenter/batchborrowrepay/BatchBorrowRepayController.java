@@ -41,7 +41,7 @@ public class BatchBorrowRepayController extends BaseController{
 
     private static final String NAME_CLASS = "REPAY_STATUS";
 
-    private static final String PERMISSIONS = "HjhDebtCredit";
+    private static final String PERMISSIONS = "batchborrowrepay";
 
     @Autowired
     private BatchBorrowRecoverService batchBorrowRecoverService;

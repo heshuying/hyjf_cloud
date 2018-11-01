@@ -204,9 +204,9 @@
 		LEFT JOIN ht_hjh_accede hha ON hha.accede_order_id = tc.ordid
 		WHERE 1=1 AND tc.commission > 0 
 		<include refid="where-all-page-condition-detail"/>
-<!-- 	   <if test="limitStart >= 0" >
+	    <if test="limitStart >= 0" >
 	      LIMIT #{limitStart} , #{limitEnd}
-	    </if> -->
+	    </if>
 	</select>
 	
 	<!-- 查询部门信息  -->

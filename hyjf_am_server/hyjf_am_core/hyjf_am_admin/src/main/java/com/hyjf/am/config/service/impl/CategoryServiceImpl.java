@@ -24,10 +24,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Auther: walter.limeng
@@ -168,7 +165,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<ContentHelp> getContentHelpList(ContentHelpBeanRequest contentHelpBeanRequest) {
         ContentHelpExample con = dealContentHelpParam(contentHelpBeanRequest);
         con.setLimitStart((contentHelpBeanRequest.getCurrPage()-1) * contentHelpBeanRequest.getPageSize());
-        con.setLimitEnd((contentHelpBeanRequest.getCurrPage()) * contentHelpBeanRequest.getPageSize());
+        con.setLimitEnd(contentHelpBeanRequest.getPageSize());
         return contentHelpMapper.selectByExample(con);
     }
 
@@ -233,11 +230,11 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_begin())) {
-            conCriteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(contentHelpBeanRequest.getPost_time_begin(),GetDate.datetimeFormat));
+            conCriteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(GetDate.getDayStart(contentHelpBeanRequest.getPost_time_begin()),GetDate.datetimeFormat));
         }
 
         if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_end())) {
-            conCriteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(contentHelpBeanRequest.getPost_time_end(),GetDate.datetimeFormat));
+            conCriteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(GetDate.getDayEnd(contentHelpBeanRequest.getPost_time_end()),GetDate.datetimeFormat));
         }
         return con;
     }
