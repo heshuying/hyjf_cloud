@@ -98,7 +98,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
         BorrowAndInfoVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
 
         // 根据项目编号取得borrowTender表
-        List<BorrowTenderVO> borrowTenderList = this.amTradeClient.getBorrowTenderListByNid(borrowNid);
+        List<BorrowTenderVO> borrowTenderList = this.amTradeClient.searchBorrowTenderByBorrowNid(borrowNid);
         // 循环BorrowTender表,计算提成
         for (BorrowTenderVO borrowTender : borrowTenderList) {
             boolean is51 = false;
@@ -111,7 +111,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             // 投资金额
             tenderCommissionRequest.setAccountTender(borrowTender.getAccount());
             // 项目编号
-            tenderCommissionRequest.setBorrowNid(borrow.getBorrowNid());
+            tenderCommissionRequest.setBorrowNid(borrowNid);
             // 投资ID
             tenderCommissionRequest.setTenderId(borrowTender.getId());
             // 投资时间
