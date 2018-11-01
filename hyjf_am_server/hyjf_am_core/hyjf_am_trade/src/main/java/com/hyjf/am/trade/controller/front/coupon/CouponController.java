@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.CoupUserResponse;
-import com.hyjf.am.response.trade.coupon.AppCouponInfoResponse;
-import com.hyjf.am.response.trade.coupon.AppCouponResponse;
-import com.hyjf.am.response.trade.coupon.CouponRepayResponse;
-import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.response.trade.coupon.*;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.auto.CouponRecover;
@@ -114,8 +111,8 @@ public class CouponController extends BaseController {
 
     @ApiOperation(value = "获取汇计划投资列表（优惠券）")
     @GetMapping("/getborrowtendercpnhjhlist/{orderId}")
-    public CouponResponse getBorrowTenderCpnHjhList(@PathVariable String orderId){
-        CouponResponse response=new CouponResponse();
+    public HjhCouponLoansResponse getBorrowTenderCpnHjhList(@PathVariable String orderId){
+        HjhCouponLoansResponse response=new HjhCouponLoansResponse();
         List<BorrowTenderCpn> list = couponService.getBorrowTenderCpnHjhList(orderId);
         response.setResultList(CommonUtils.convertBeanList(list,BorrowTenderCpnVO.class));
         return response;
@@ -123,8 +120,8 @@ public class CouponController extends BaseController {
 
     @ApiOperation(value = "优惠券单独投资时用")
     @GetMapping("/getborrowtendercpnhjhcoupononlylist/{couponOrderId}")
-    public CouponResponse getBorrowTenderCpnHjhCouponOnlyList(@PathVariable String couponOrderId){
-        CouponResponse response=new CouponResponse();
+    public HjhCouponLoansResponse getBorrowTenderCpnHjhCouponOnlyList(@PathVariable String couponOrderId){
+        HjhCouponLoansResponse response=new HjhCouponLoansResponse();
         List<BorrowTenderCpn> list = couponService.getBorrowTenderCpnHjhCouponOnlyList(couponOrderId);
         response.setResultList(CommonUtils.convertBeanList(list,BorrowTenderCpnVO.class));
         return response;
