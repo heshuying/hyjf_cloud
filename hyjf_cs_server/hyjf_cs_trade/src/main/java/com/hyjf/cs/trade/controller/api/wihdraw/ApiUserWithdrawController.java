@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version: UserWithdrawController, v0.1 2018/8/30 10:26
  */
 @Api(value = "api端-用户提现接口",tags = "api端-用户提现接口")
-@Controller
+@RestController
 @RequestMapping(value = "/hyjf-api/server/user/withdraw")
 public class ApiUserWithdrawController extends BaseTradeController {
 

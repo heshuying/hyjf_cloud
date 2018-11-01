@@ -1,5 +1,6 @@
 package com.hyjf.am.user.service.admin.locked;
 
+import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.user.dao.model.auto.LockedUserInfo;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 
@@ -27,6 +28,6 @@ public interface LockedUserService {
      * @param loginPassword 登录密码
      * @return
      */
-    public Map<String, String> insertErrorPassword(String userName, String loginPassword);
+    public Map<String, String> insertErrorPassword(String userName, String loginPassword,Admin admin);
 
 }

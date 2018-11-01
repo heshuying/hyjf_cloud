@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.controller.admin.membercentre;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UserPortraitScoreResponse;
@@ -56,7 +57,7 @@ public class UserPortraitManagerController extends BaseController {
      */
     @RequestMapping("/findUserPortraitRecord")
     public UserPortraitResponse findUserPortraitRecord(@RequestBody @Valid UserPortraitRequest request) {
-        logger.info("---findUserPortraitRecord by param---  " + request);
+        logger.info("---findUserPortraitRecord by param---  " + JSONObject.toJSON(request));
         Map<String, Object> mapParam = paramToMap(request);
         UserPortraitResponse response = new UserPortraitResponse();
         Integer registCount = userPortraitManagerService.countLoanSubjectCertificateAuthority(mapParam);
