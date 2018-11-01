@@ -9,6 +9,7 @@ import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
+import com.hyjf.am.response.message.UserOperationLogResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
@@ -313,4 +314,13 @@ public interface CsMessageClient {
      * @return
      */
     AppChannelStatisticsDetailResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
+
+
+
+    /**
+     * 查询会员操作日志列表
+
+     * @return
+     */
+    UserOperationLogResponse  getOperationLogList(UserOperationLogRequest request);
 }

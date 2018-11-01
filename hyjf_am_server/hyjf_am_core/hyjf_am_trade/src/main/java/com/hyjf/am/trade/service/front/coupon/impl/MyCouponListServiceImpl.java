@@ -534,7 +534,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
 
             //是否与本金公用
             boolean addFlg = false;
-            if (bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
+            if (null != bestCoupon.getAddFlag() && bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
                 addFlg = true;
             }
             if (addFlg) {

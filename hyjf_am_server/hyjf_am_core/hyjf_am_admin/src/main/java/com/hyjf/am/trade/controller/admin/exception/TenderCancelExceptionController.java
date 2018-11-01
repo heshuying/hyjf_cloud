@@ -94,6 +94,25 @@ public class TenderCancelExceptionController extends BaseController {
     }
 
     /**
+     * 根据orderId查询BorrowTender
+     * @auth sunpeikai
+     * @param borrowNid 订单号
+     * @return
+     */
+    @ApiOperation(value = "根据borrowNid查询BorrowTender", notes = "根据borrowNid查询BorrowTender")
+    @GetMapping(value = "/searchborrowtenderbyboorownid/{borrowNid}")
+    public BorrowTenderResponse searchBorrowTenderByBorrowNid(@PathVariable String borrowNid){
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        List<BorrowTender> borrowTenderList = tenderCancelExceptionService.searchBorrowTenderByBorrowNid(borrowNid);
+        if(!CollectionUtils.isEmpty(borrowTenderList)){
+            List<BorrowTenderVO> borrowTenderVOList = CommonUtils.convertBeanList(borrowTenderList,BorrowTenderVO.class);
+            response.setResultList(borrowTenderVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
      * 根据orderId查询BorrowTenderTmp
      * @auth sunpeikai
      * @param orderId 订单号

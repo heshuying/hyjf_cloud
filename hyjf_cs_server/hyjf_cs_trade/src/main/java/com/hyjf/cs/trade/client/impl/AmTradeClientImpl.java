@@ -16,6 +16,7 @@ import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.calculate.HjhCreditCalcResultResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
@@ -2625,9 +2626,9 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<BorrowTenderCpnVO> getBorrowTenderCpnHjhList(String orderId) {
-        CouponResponse response = new CouponResponse();
+        HjhCouponLoansResponse response = new HjhCouponLoansResponse();
         response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhlist/"+orderId, CouponResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhlist/"+orderId, HjhCouponLoansResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -2636,9 +2637,9 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<BorrowTenderCpnVO> getBorrowTenderCpnHjhCouponOnlyList(String couponOrderId) {
-        CouponResponse response = new CouponResponse();
+        HjhCouponLoansResponse response = new HjhCouponLoansResponse();
         response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhcoupononlylist/"+couponOrderId, CouponResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhcoupononlylist/"+couponOrderId, HjhCouponLoansResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
