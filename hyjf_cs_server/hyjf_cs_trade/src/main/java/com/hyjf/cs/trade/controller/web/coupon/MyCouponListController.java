@@ -96,7 +96,7 @@ public class MyCouponListController {
     public void download(@PathVariable  Integer userId, HttpServletRequest request, HttpServletResponse response){
         logger.info("开始生成二维码图片，userId：" + userId);
         try {
-            QRCodeUtil.encode(systemConfig.getWechatInviteUrl() +userId+".html",String.valueOf(userId),systemConfig.getFilePhysicalPath() + systemConfig.getFileUploadRealPath(), false);
+            QRCodeUtil.encode(systemConfig.getWechatInviteUrl() + "/landingPage?refferUserId=" + userId,String.valueOf(userId),systemConfig.getFilePhysicalPath() + systemConfig.getFileUploadRealPath(), false);
         } catch (Exception e) {
             e.printStackTrace();
         }
