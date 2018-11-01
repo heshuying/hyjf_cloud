@@ -14,13 +14,13 @@ import java.util.List;
  */
 public class UserOperationLogResponse extends Response<UserOperationLogEntityVO> {
     //总条数
-    private Integer count;
+    private int count;
     private List<UserOperationLogEntityVO> userOperationLogEntityVOList;
-    public Integer getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(int count) {
 
         this.count = count;
     }

@@ -72,7 +72,6 @@ public class UserOperationLogRequest extends UserOperationLogEntityVO implements
         return paginatorPage;
     }
 
-    private List<UserOperationLogEntityVO> recordList;
 
     public String getOperationTimeStart() {
         return operationTimeStart;
@@ -101,15 +100,6 @@ public class UserOperationLogRequest extends UserOperationLogEntityVO implements
     public void setPaginator(Paginator paginator) {
         this.paginator = paginator;
     }
-
-    public List<UserOperationLogEntityVO> getRecordList() {
-        return recordList;
-    }
-
-    public void setRecordList(List<UserOperationLogEntityVO> recordList) {
-        this.recordList = recordList;
-    }
-
 
     public int getOffset() {
         return offset;
