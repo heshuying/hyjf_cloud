@@ -1916,14 +1916,14 @@ public class FddHandle {
 		//出让人、借款人真实姓名脱敏图片
 		String borrowTrueNametmImage = "image/companyname.png";
 		//出让人、借款人签章图片
-		String borrowSigntmImage = "image/companyname.png";
+		String borrowSigntmImage = "image/namesign.png";
 		//出让人、借款人身份证号码图片
 		String borrowCardNoImage = "image/cardno.png";
 
 		//承接人、投资人真实姓名脱敏图片
 		String tenderTrueNametmImage = "image/companyname.png";
 		//承接人、投资人签章图片
-		String tenderSigntmImage = "image/companyname.png";
+		String tenderSigntmImage = "image/namesign.png";
 		//承接人、投资人身份证号码图片
 		String tenderCardNoImage = "image/cardno.png";
 
@@ -1974,11 +1974,11 @@ public class FddHandle {
 		int index_x = 0;
 		int index_y = 0;
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 440;
-			index_y = 1120;
+			index_x = 948;
+			index_y = 953;
 			if(isCompanyUser){
-				index_x = 380;
-				index_y = 1000;
+				index_x = 885;
+				index_y = 835;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
@@ -1986,7 +1986,7 @@ public class FddHandle {
 			index_y = 1100;
 			if(creditCompany){
 				index_x = 410;
-				index_y = 1100;
+				index_y = 1050;
 			}
 		}
 		logger.info("--------下载脱敏开始脱敏图片，图片来源：" + source + ",图片存储地点：" + output);
@@ -1999,11 +1999,11 @@ public class FddHandle {
 		boolean ise = FileUtil.judeFileExists(source);
 		logger.info("-----------下载脱敏图片完成，脱敏后图片地址：" + source + ",是否存在：" + ise);
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 440;
-			index_y = 920;
+			index_x = 435;
+			index_y = 950;
 			if(isTenderConmpany){
-				index_x = 380;
-				index_y = 920;
+				index_x = 370;
+				index_y = 835;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
