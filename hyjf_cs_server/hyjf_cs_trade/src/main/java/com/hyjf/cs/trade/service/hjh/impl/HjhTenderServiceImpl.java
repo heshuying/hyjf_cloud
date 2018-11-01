@@ -212,6 +212,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             /** 计算最优优惠券结束 */
 
             /** 可用优惠券张数开始 */
+            request.setMoney(money);
             int availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(request);
             investInfo.setCouponAvailableCount(availableCouponListCount);
             /** 可用优惠券张数结束 */
