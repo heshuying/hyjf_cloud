@@ -47,7 +47,7 @@ public class WebLandingPageController extends BaseController {
         JSONObject jsonObject = new JSONObject();
         long t= GetDate.getMillis();
         //毫秒数 13位  记录初始化时间
-        request.getSession().setAttribute("inittime", t);
+        jsonObject.put("inittime",t);
         // 着陆页banner1 List
         List<AdsVO> landingPageBanner1 = this.landingPageService.getAdsList(LAND_ADS_TYPE1);
         if(userId==null){

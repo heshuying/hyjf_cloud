@@ -731,6 +731,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             request.setBorrowNid(tender.getBorrowNid());
             request.setUserId(String.valueOf(loginUser.getUserId()));
             request.setPlatform(tender.getPlatform());
+            request.setMoney(tender.getAccount());
             Integer couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
             investInfo.setCouponAvailableCount(couponAvailableCount);
             // 优惠券总张数
@@ -903,6 +904,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             request.setBorrowNid(tender.getBorrowNid());
             request.setUserId(String.valueOf(loginUser.getUserId()));
             request.setPlatform(tender.getPlatform());
+            request.setMoney(tender.getMoney());
             couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
             investInfo.setCouponAvailableCount(couponAvailableCount + "");
             // 优惠券总张数
@@ -1276,6 +1278,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         request.setBorrowNid(tender.getBorrowNid());
         request.setUserId(String.valueOf(tender.getUserId()));
         request.setPlatform(tender.getPlatform());
+        request.setMoney(tender.getMoney());
         // 可用优惠券张数
         couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
         // 优惠券总张数

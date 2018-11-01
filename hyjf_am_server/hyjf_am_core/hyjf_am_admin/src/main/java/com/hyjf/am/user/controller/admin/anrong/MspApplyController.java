@@ -307,6 +307,7 @@ public class MspApplyController  {
         // 数据修改
 		MspApply mspapply=new MspApply();
 		BeanUtils.copyProperties(form,mspapply);
+		this.mspApplyService.insertResult(postResultJson, form.getApplyId());
         this.mspApplyService.updateRecord(mspapply);
         result.setRtn(Response.SUCCESS);
         return result;

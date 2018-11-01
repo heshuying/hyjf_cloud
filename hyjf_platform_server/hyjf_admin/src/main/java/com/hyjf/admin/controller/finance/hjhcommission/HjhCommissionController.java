@@ -156,10 +156,10 @@ public class HjhCommissionController extends BaseController{
 			jsonObject.put("error", FAIL);
 			return jsonObject;
 		}
-		if(response.getTotalMap().isEmpty()){
+/*		if(response.getTotalMap() == null || response.getTotalMap().isEmpty()){
 			jsonObject.put("error", FAIL);
 			return jsonObject;
-		}
+		}*/
 		jsonObject.put("totalMap", response.getTotalMap());
 		jsonObject.put("status", SUCCESS);
 		return jsonObject;
