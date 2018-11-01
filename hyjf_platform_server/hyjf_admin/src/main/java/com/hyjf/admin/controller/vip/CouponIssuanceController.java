@@ -240,6 +240,9 @@ public class CouponIssuanceController extends BaseController {
                 couponConfigRequest.setTenderQuotaMin(1000000);
             }
         }
+        if (couponConfigRequest.getCouponType() != 1) {
+            couponConfigRequest.setAddFlag(0);
+        }
         couponConfigRequest.setCreateUserId(Integer.parseInt(userId));
         couponConfigRequest.setUpdateUserId(Integer.parseInt(userId));
         CouponConfigResponse ccr = couponConfigService.insertAction(couponConfigRequest);
