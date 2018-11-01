@@ -97,7 +97,7 @@ public class StzfWhiteConfigController extends BaseController {
 		requestBean.setUpdateuser(adminUser.getId());
 		if (requestBean.getInstname() != null) {
 			// 机构编号
-			requestBean.setInstcode(requestBean.getInstcode());
+			requestBean.setInstcode(requestBean.getInstname());
 			HjhInstConfigVO hjhInstConfigVO = stzfWhiteConfigService.selectHjhInstConfig(requestBean.getInstcode());
 			if (hjhInstConfigVO != null) {
 				requestBean.setInstname(hjhInstConfigVO.getInstName());
