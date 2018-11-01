@@ -1,5 +1,6 @@
 package com.hyjf.am.user.service.admin.anrong;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.BaseService;
 
@@ -104,4 +105,6 @@ public interface MspApplyService extends BaseService{
 	public List<MspAbnormalcredit> getAbnormalCredit(String applyId);
 	
 	 public int countByExample(MspApply record);
+
+	void insertResult(JSONObject resultJson, String appid);
 }

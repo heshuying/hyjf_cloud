@@ -427,6 +427,15 @@ public interface AmTradeClient {
      * @return
      */
     List<BorrowTenderVO> searchBorrowTenderByOrderId(String orderId);
+
+    /**
+     * 根据orderId查询BorrowTender
+     *
+     * @param borrowNid 订单号
+     * @return
+     * @auth zdj
+     */
+    List<BorrowTenderVO> searchBorrowTenderByBorrowNid(String borrowNid);
     /**
      * 根据orderId查询BorrowTenderTmp
      * @auth sunpeikai

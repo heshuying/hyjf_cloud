@@ -64,13 +64,27 @@ public class TenderCancelExceptionServiceImpl extends BaseServiceImpl implements
      * 根据orderId查询BorrowTender
      * @auth sunpeikai
      * @param orderId 订单号
-     * @return
+     * @return List<BorrowTender>
      */
     @Override
     public List<BorrowTender> searchBorrowTenderByOrderId(String orderId) {
         BorrowTenderExample example = new BorrowTenderExample();
         BorrowTenderExample.Criteria criteria = example.createCriteria();
         criteria.andNidEqualTo(orderId);
+        return borrowTenderMapper.selectByExample(example);
+    }
+
+    /**
+     * 根据borrowNid查询BorrowTender
+     * @auth zdj
+     * @param borrowNid 订单号
+     * @return List<BorrowTender> searchBorrowTenderByBorrowNid(String borrowNid);
+     */
+    @Override
+    public List<BorrowTender> searchBorrowTenderByBorrowNid(String borrowNid) {
+        BorrowTenderExample example = new BorrowTenderExample();
+        BorrowTenderExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
         return borrowTenderMapper.selectByExample(example);
     }
 

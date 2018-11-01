@@ -52,7 +52,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	private TransferExceptionLogMapper transferExceptionLogMapper;
 	@Resource
 	private CouponRecoverCustomizeMapper couponRecoverCustomizeMapper;
-	@Autowired
+	@Resource
 	private CouponOperationHistoryMapper couponOperationHistoryMapper;
 	/**
 	 * 根据优惠券编号查找优惠券配置
@@ -315,6 +315,13 @@ public class CouponConfigServiceImpl implements CouponConfigService {
     @Override
     public List<CouponConfigExportCustomize> exoportRecordList(CouponConfigCustomize configCustomize) {
         return couponConfigCustomizeMapper.exportCouponConfigList(configCustomize);
+    }
+
+    @Override
+    public Integer countByTenderNid(String tenderNid) {
+		CouponRecoverExample checkExample = new CouponRecoverExample();
+		checkExample.createCriteria().andTenderIdEqualTo(tenderNid);
+		return this.couponRecoverMapper.countByExample(checkExample);
     }
 
 }

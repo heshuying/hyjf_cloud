@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.mq.consumer;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Maps;
 import com.hyjf.am.bean.crmtender.BorrowTenderMsgBean;
 import com.hyjf.am.bean.crmtender.HjhAccedeMsgBean;
@@ -92,7 +93,7 @@ public class CrmInvestMessageConsumer extends Consumer {
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
             logger.info("======" + CONSUMER_NAME + "消费开始 ========");
             try {
-                logger.info("========" + CONSUMER_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs));
+                logger.info("========" + CONSUMER_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs,SerializerFeature.IgnoreNonFieldGetter));
                 MessageExt msg = msgs.get(0);
                 String msgBody = new String(msg.getBody());
                 JSONObject json = JSON.parseObject(msgBody);
