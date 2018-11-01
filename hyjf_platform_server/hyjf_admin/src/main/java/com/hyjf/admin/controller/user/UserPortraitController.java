@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.user;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.UserPortraitRequestBean;
 import com.hyjf.admin.beans.vo.UserPortraitCustomizeVO;
@@ -53,7 +54,7 @@ import java.util.List;
 @RequestMapping("/hyjf-admin/userPortrait")
 public class UserPortraitController extends BaseController {
 
-    private static final String PERMISSIONS = "userPortrait";
+    public static final String PERMISSIONS = "userPortrait";
 
     @Autowired
     private UserPortraitService userPortraitService;
@@ -71,8 +72,10 @@ public class UserPortraitController extends BaseController {
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<UserPortraitCustomizeVO>> selectUserPortraitList(HttpServletRequest request, @RequestBody UserPortraitRequestBean userPortraitRequestBean) {
+        logger.info("---获取用户画像列表 by param---  " + JSONObject.toJSON(userPortraitRequestBean));
         UserPortraitRequest userPortraitRequest = new UserPortraitRequest();
         BeanUtils.copyProperties(userPortraitRequestBean, userPortraitRequest);
+        logger.info("---userPortraitRequest ---  " + JSONObject.toJSON(userPortraitRequest));
         UserPortraitResponse responseUserPortrait = userPortraitService.selectRecordList(userPortraitRequest);
         if (responseUserPortrait == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
