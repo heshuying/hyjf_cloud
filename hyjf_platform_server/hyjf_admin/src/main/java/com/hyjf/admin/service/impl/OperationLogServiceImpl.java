@@ -2,8 +2,11 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.OperationLogService;
 import com.hyjf.am.response.admin.AdminOperationLogResponse;
+import com.hyjf.am.response.message.UserOperationLogResponse;
+import com.hyjf.am.resquest.admin.UserOperationLogRequest;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,8 @@ public class OperationLogServiceImpl implements OperationLogService {
     public AmTradeClient amTradeClient;
     @Autowired
     private AmConfigClient amConfigClient;
+    @Autowired
+    private CsMessageClient csMessageClient;
     /**
      * 查询配置中心操作日志配置
      * @param map
@@ -53,4 +58,12 @@ public class OperationLogServiceImpl implements OperationLogService {
     public List<HjhAssetTypeVO> getHjhAssetType(){
         return this.amTradeClient.getHjhAssetType();
     }
+
+
+    @Override
+    public UserOperationLogResponse  getOperationLogList(UserOperationLogRequest request)
+    {
+        return csMessageClient.getOperationLogList(request);
+    }
+
 }

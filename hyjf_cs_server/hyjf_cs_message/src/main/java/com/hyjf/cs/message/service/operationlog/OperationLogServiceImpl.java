@@ -63,9 +63,7 @@ public class OperationLogServiceImpl  implements OperationLogService {
 			criteria.and("operationTime").gte(operationTimeStart).lte(operationTimeEnd);
 		}
 		query.addCriteria(criteria);
-		if(limitStart!=-1) {
-			query.skip(limitStart).limit(limitEnd);
-		}
+		query.skip(limitStart).limit(limitEnd);
 		query.with(new Sort(Sort.Direction.DESC, "operationTime"));
 		List<UserOperationLogEntity> list = userOperationLogMongDao.find(query);
 		return list;
