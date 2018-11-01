@@ -48,6 +48,7 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     private Integer projectExpirationLengthMax;
 
+    //是否与本金投资共用，0：共用，1：单独使用
     private Integer addFlag;
 
     private String tenderQuotaAmount;

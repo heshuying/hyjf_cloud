@@ -1,5 +1,6 @@
 package com.hyjf.am.config.service;
 
+import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 
@@ -33,4 +34,8 @@ public interface AdminSystemService {
 	 * 验证项目申请人是否存在
 	 */
 	public int isExistsApplicant(String applicant);
+	/**
+	 * 通过username获取用户详细信息
+	 */
+	public Admin getUserInfoAll(AdminSystem adminSystem);
 }

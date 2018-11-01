@@ -8,13 +8,13 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.common.util.ErrorViewConstant;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
-import com.hyjf.cs.user.constants.ErrorViewConstant;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -70,7 +70,7 @@ public class ApiPassWordController extends BaseController {
         Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean,BankCallConstant.TXCODE_PASSWORD_SET, BaseDefine.METHOD_SERVER_SET_PASSWORD);
         if (null==map.get("flag")){
             //return (ModelAndView) map.get("modelAndView");
-            redirectAttributes.addFlashAttribute(ErrorViewConstant.ERROR_FORM_BEAN,map);
+            redirectAttributes.addFlashAttribute(ErrorViewConstant.ERROR_FORM_BEAN,(ModelAndView) map.get("modelAndView"));
             modelAndView.setViewName(ErrorViewConstant.ERROR_VIEW_REDIRECT_URL);
             return modelAndView;
         }

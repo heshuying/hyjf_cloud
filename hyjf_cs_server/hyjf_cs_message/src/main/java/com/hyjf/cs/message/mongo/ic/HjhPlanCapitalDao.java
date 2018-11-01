@@ -159,7 +159,7 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
      */
     public boolean insertHjhPlanCapital(HjhPlanCapitalVO hjhPlanCapitalVO) {
         HjhPlanCapital hjhPlanCapital = CommonUtils.convertBean(hjhPlanCapitalVO, getEntityClass());
-        hjhPlanCapital.setCreateTime(GetDate.getNowTime10());
+        hjhPlanCapital.setCreateTime(GetDate.getDate());
         hjhPlanCapital.setDelFlg(0);
         this.insert(hjhPlanCapital);
         return true;

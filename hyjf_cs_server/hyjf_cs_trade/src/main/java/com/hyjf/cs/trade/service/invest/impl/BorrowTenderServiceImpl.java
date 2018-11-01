@@ -731,6 +731,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             request.setBorrowNid(tender.getBorrowNid());
             request.setUserId(String.valueOf(loginUser.getUserId()));
             request.setPlatform(tender.getPlatform());
+            request.setMoney(tender.getAccount());
             Integer couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
             investInfo.setCouponAvailableCount(couponAvailableCount);
             // 优惠券总张数

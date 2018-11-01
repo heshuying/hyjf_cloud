@@ -65,6 +65,7 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
@@ -455,8 +456,12 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO) {
         String url = urlBase + "hjhDebtCredit/updateHjhDebtCreditByPK";
-        hjhDebtCreditVO.setCreditStatus(2);//转让状态 2完全承接
-        hjhDebtCreditVO.setIsLiquidates(1);
+
+        HjhDebtCreditVO hjhDebtCreditNew = new HjhDebtCreditVO();
+        hjhDebtCreditNew.setId(hjhDebtCreditVO.getId());
+        hjhDebtCreditNew.setCreditStatus(2);//转让状态 2完全承接
+        hjhDebtCreditNew.setIsLiquidates(1);//1:已清算(无需清算)
+        hjhDebtCreditNew.setUpdateTime(GetDate.getDate());
         IntegerResponse response = restTemplate.postForEntity(url, hjhDebtCreditVO, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;

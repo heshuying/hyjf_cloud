@@ -132,7 +132,7 @@ public interface OperationReportInfoJobCustomizeMapper {
      * @param endAge	年龄上限
      * @return
      */
-    List<OperationReportJobVO>  getTenderAgeByRangeList(Date date, int firstAge, int endAge);
+    List<OperationReportJobVO>  getTenderAgeByRangeList(@Param("date")Date date, @Param("firstAge")int firstAge, @Param("endAge")int endAge);
 
     /**
      * 按照省份统计投资人的分布

@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.constants;
+package com.hyjf.cs.common.util;
 
 public class ErrorViewConstant {
 
