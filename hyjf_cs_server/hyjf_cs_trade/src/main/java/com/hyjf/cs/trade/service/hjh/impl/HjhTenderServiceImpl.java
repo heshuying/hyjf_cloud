@@ -178,15 +178,24 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             //couponConfig = amTradeClient.selectHJHBestCoupon(request);
             couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
         }
+        /** 计算最优优惠券开始 isThereCoupon 1是有最优优惠券，0无最有优惠券 */
+        MyCouponListRequest request = new MyCouponListRequest();
+        request.setBorrowNid(tender.getBorrowNid());
+        request.setUserId(String.valueOf(loginUser.getUserId()));
+        request.setPlatform(tender.getPlatform());
+        /** 可用优惠券张数开始 */
+        request.setMoney(money);
+        int availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(request);
+        investInfo.setCouponAvailableCount(availableCouponListCount);
+        /** 可用优惠券张数结束 */
+
+        /** 获取用户优惠券总张数开始 */
+        int recordTotal = amTradeClient.getUserCouponCount(tender.getUser().getUserId(), "0");
+        investInfo.setRecordTotal(recordTotal);
+        /** 获取用户优惠券总张数结束 */
         //BestCouponListVO couponConfig = new BestCouponListVO();
         if (!"0".equals(plan.getCouponConfig()) && loginUser != null) {
             BigDecimal borrowApr = plan.getExpectApr();
-            /** 计算最优优惠券开始 isThereCoupon 1是有最优优惠券，0无最有优惠券 */
-            MyCouponListRequest request = new MyCouponListRequest();
-            request.setBorrowNid(tender.getBorrowNid());
-            request.setUserId(String.valueOf(loginUser.getUserId()));
-            request.setPlatform(tender.getPlatform());
-
             if (couponUser != null) {
                 investInfo.setIsThereCoupon(1);
                 if (couponUser != null) {
@@ -210,17 +219,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
             investInfo.setCouponUser(couponUser);
             /** 计算最优优惠券结束 */
-
-            /** 可用优惠券张数开始 */
-            request.setMoney(money);
-            int availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(request);
-            investInfo.setCouponAvailableCount(availableCouponListCount);
-            /** 可用优惠券张数结束 */
-
-            /** 获取用户优惠券总张数开始 */
-            int recordTotal = amTradeClient.getUserCouponCount(tender.getUser().getUserId(), "0");
-            investInfo.setRecordTotal(recordTotal);
-            /** 获取用户优惠券总张数结束 */
             investInfo.setCouponCapitalInterest(df.format(couponInterest));
         } else {
             investInfo.setCouponAvailableCount(0);
