@@ -28,10 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author yaoyong
@@ -61,14 +58,14 @@ public class UserOperationLogController extends BaseController {
         //封装查询条件
         Map<String, Object> operationLog = this.buildQueryCondition(form);
         int recordTotal = operationLogService.countOperationLog(operationLog);
+        List<UserOperationLogEntity> recordList = new ArrayList<>();
         if (recordTotal > 0) {
             response.setCount(recordTotal);
             Paginator paginator = new Paginator(form.getCurrPage(), recordTotal,form.getPageSize()==0?10:form.getPageSize());
-            List<UserOperationLogEntity> recordList = operationLogService.getOperationLogList(operationLog,
+            recordList = operationLogService.getOperationLogList(operationLog,
                     paginator.getOffset(), paginator.getLimit());
-            form.setPaginator(paginator);
-            form.setRecordList(CommonUtils.convertBeanList(recordList, UserOperationLogEntityVO.class));
         }
+        response.setUserOperationLogEntityVOList(CommonUtils.convertBeanList(recordList, UserOperationLogEntityVO.class));
         return response;
     }
 
