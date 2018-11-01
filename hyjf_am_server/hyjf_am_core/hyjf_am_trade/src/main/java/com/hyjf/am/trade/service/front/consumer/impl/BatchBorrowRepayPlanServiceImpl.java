@@ -4372,9 +4372,11 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			try {
 				//生成并签署加入计划投资服务协议 add by cwyang 2018-2-26
 				sendPlanContract(hjhAccede.getUserId(),hjhAccede.getAccedeOrderId(),hjhAccede.getQuitTime(),hjhAccede.getCountInterestTime(),hjhAccede.getWaitTotal());
+				logger.info("=================计划进入锁定期优惠券放款开始=，订单号："+hjhAccede.getAccedeOrderId()+"=============");
 				//优惠券放款
 				couponLoan(hjhAccede);
 				//双十二活动
+				logger.info("=================计划进入锁定期优惠券放款完毕=，订单号："+hjhAccede.getAccedeOrderId()+"=============");
 //				actBalloonTender(hjhAccede);
 			} catch (Exception e) {
 				logger.info("=================优惠券放款失败,投资订单号:" + hjhAccede.getAccedeOrderId());
