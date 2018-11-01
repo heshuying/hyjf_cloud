@@ -10,6 +10,7 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.CouponCheckService;
 import com.hyjf.admin.service.coupon.CouponUserService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -76,6 +77,8 @@ public class CouponUserController extends BaseController {
 
     @Autowired
     private CouponUserService couponUserService;
+    @Autowired
+    private CouponCheckService couponCheckService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @PostMapping("/couponUserList")
@@ -141,6 +144,7 @@ public class CouponUserController extends BaseController {
         if (couponUserBeanRequest.getAmount() == null || couponUserBeanRequest.getAmount() < 0) {
             couponUserBeanRequest.setAmount(1);
         }
+
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         //根据用户名获取用户id
         String userName = couponUserBeanRequest.getUserName();
@@ -188,6 +192,10 @@ public class CouponUserController extends BaseController {
         couponUserRequest.setAttribute(userInfoVO.getAttribute());
         couponUserRequest.setChannel(channelName);
         for (int i = 0; i < couponUserBeanRequest.getAmount(); i++) {
+            boolean  result = couponCheckService.checkSendNum(couponUserBeanRequest.getCouponCode());
+            if (!result) {
+                return new AdminResult(AdminResult.FAIL, "优惠券发行数量超出上限，不再发放！");
+            }
             couponUserResponse = couponUserService.insertCouponUser(couponUserRequest);
         }
         return new AdminResult<>(couponUserResponse);
