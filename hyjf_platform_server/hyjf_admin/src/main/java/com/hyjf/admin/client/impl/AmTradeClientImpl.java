@@ -821,6 +821,23 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 根据orderId查询BorrowTender
+     *
+     * @param borrowNid 订单号
+     * @return
+     * @auth zdj
+     */
+    @Override
+    public List<BorrowTenderVO> searchBorrowTenderByBorrowNid(String borrowNid) {
+        String url = "http://AM-ADMIN/am-trade/tendercancelexception/searchborrowtenderbyboorownid/" + borrowNid;
+        BorrowTenderResponse response = restTemplate.getForEntity(url, BorrowTenderResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      * 根据orderId查询BorrowTenderTmp
      *
      * @param orderId 订单号
