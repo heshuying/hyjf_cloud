@@ -79,8 +79,6 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
     public void updateUserCAInfo(Integer userId, User user, UserInfo userInfo) throws Exception {
         String throwInfo = "CA认证成功后,更新用户表CA标识失败,用户ID:[" + userId + "].";
         logger.info("CA认证用户ID:[" + userId + "].");
-        // 根据用户ID查询用户CA认证信息
-        CertificateAuthority certificateAuthority = selectCAInfoByUserId(userId);
         // 用户类型 0普通用户 1企业用户
         Integer userType = user.getUserType();
         // 手机号
@@ -116,13 +114,16 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                 logger.info("CA认证成功:用户ID:[" + userId + "].");
                 if ("success".equals(result.getResult())) {
                     user.setIsCaFlag(1);
-                    boolean isUserUpdateFlag = this.userMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
+                    boolean isUserUpdateFlag = this.userMapper.updateByPrimaryKeySelective(user) > 0;
                     if (!isUserUpdateFlag) {
                         throw new Exception(throwInfo);
                     }
                 }
+                // 根据用户ID查询用户CA认证信息
+                CertificateAuthority certificateAuthority = selectCAInfoByUserId(userId);
                 //  如果用户没有进行过CA认证
                 if (certificateAuthority == null) {
+                    logger.info("普通用户CA认证,用户没有进行过CA认证,插入一条新记录,userId:[{}]",userId);
                     CertificateAuthority newCertificateAuthority = new CertificateAuthority();
                     newCertificateAuthority.setUserId(userId);
                     newCertificateAuthority.setUserName(user.getUsername());
@@ -141,12 +142,13 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                     newCertificateAuthority.setCreateUserId(userId);
                     newCertificateAuthority.setUpdateTime(new Date());
                     newCertificateAuthority.setUpdateUserId(userId);
-                    boolean isInsertFlag = this.certificateAuthorityMapper.insertSelective(newCertificateAuthority) > 0 ? true : false;
+                    boolean isInsertFlag = this.certificateAuthorityMapper.insertSelective(newCertificateAuthority) > 0;
                     if (!isInsertFlag) {
                         throw new Exception(throwInfo);
                     }
                 } else {
                     // 如果用户已进行过CA认证,更新用户CA认证记录
+                    logger.info("普通用户CA认证,用户已进行过CA认证,更新用户CA认证记录,userId:[{}]",userId);
                     certificateAuthority.setMobile(mobile);
                     certificateAuthority.setTrueName(userInfo.getTruename());
                     certificateAuthority.setIdType(0);
@@ -158,7 +160,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                     certificateAuthority.setRemark(StringUtils.isBlank(result.getMsg()) ? "" : result.getMsg());
                     certificateAuthority.setUpdateTime(new Date());
                     certificateAuthority.setUpdateUserId(userId);
-                    boolean isUpdateFlag = this.certificateAuthorityMapper.updateByPrimaryKeySelective(certificateAuthority) > 0 ? true : false;
+                    boolean isUpdateFlag = this.certificateAuthorityMapper.updateByPrimaryKeySelective(certificateAuthority) > 0;
                     if (!isUpdateFlag) {
                         throw new Exception(throwInfo);
                     }
@@ -197,14 +199,17 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                 if ("success".equals(result.getResult())) {
                     logger.info("CA认证成功:用户ID:[" + userId + "].");
                     user.setIsCaFlag(1);
-                    boolean isUserUpdateFlag = this.userMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
+                    boolean isUserUpdateFlag = this.userMapper.updateByPrimaryKeySelective(user) > 0;
                     if (!isUserUpdateFlag) {
                         throw new Exception(throwInfo);
                     }
                 }
+                // 根据用户ID查询用户CA认证信息
+                CertificateAuthority certificateAuthority = selectCAInfoByUserId(userId);
                 // 如果没有做过CA认证
                 if (certificateAuthority == null) {
                     // 插入CA认证记录
+                    logger.info("企业用户CA认证,用户没有进行过CA认证,插入一条新记录,userId:[{}]",userId);
                     CertificateAuthority newCertificateAuthority = new CertificateAuthority();
                     newCertificateAuthority.setUserId(userId);
                     newCertificateAuthority.setUserName(user.getUsername());
@@ -221,12 +226,13 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                     newCertificateAuthority.setCreateUserId(userId);
                     newCertificateAuthority.setUpdateTime(new Date());
                     newCertificateAuthority.setUpdateUserId(userId);
-                    boolean isInsertFlag = this.certificateAuthorityMapper.insertSelective(newCertificateAuthority) > 0 ? true : false;
+                    boolean isInsertFlag = this.certificateAuthorityMapper.insertSelective(newCertificateAuthority) > 0;
                     if (!isInsertFlag) {
                         throw new Exception(throwInfo);
                     }
                 } else {
                     // 如果已经做过CA认证,更新CA认证记录表
+                    logger.info("企业用户CA认证,用户已进行过CA认证,更新用户CA认证记录,userId:[{}]",userId);
                     certificateAuthority.setMobile(mobile);
                     certificateAuthority.setTrueName(userInfo.getTruename());
                     certificateAuthority.setIdType(1);
@@ -238,7 +244,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                     certificateAuthority.setRemark(StringUtils.isBlank(result.getMsg()) ? "" : result.getMsg());
                     certificateAuthority.setUpdateTime(new Date());
                     certificateAuthority.setUpdateUserId(userId);
-                    boolean isUpdateFlag = this.certificateAuthorityMapper.updateByPrimaryKeySelective(certificateAuthority) > 0 ? true : false;
+                    boolean isUpdateFlag = this.certificateAuthorityMapper.updateByPrimaryKeySelective(certificateAuthority) > 0;
                     if (!isUpdateFlag) {
                         throw new Exception(throwInfo);
                     }
