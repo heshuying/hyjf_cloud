@@ -134,7 +134,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
     @Override
     public List<BorrowApicron> selectBorrowApicronListByBorrowNid(String borrowNid) {
         BorrowApicronExample example = new BorrowApicronExample();
-        example.createCriteria().andBorrowNidEqualTo(borrowNid).andApiTypeEqualTo(0).andStatusNotEqualTo(6);
+        example.createCriteria().andBorrowNidEqualTo(borrowNid).andApiTypeEqualTo(0);
         return this.borrowApicronMapper.selectByExample(example);
     }
 
