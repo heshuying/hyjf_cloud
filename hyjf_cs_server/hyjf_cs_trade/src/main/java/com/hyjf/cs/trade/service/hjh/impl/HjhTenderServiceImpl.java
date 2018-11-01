@@ -1098,17 +1098,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 //CheckUtil.check();
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_LESS_NEED_BUY_ALL,balance);
             }
-        }
-        if (accountBigDecimal.compareTo(plan.getMinInvestment()) == -1) {
-            if (accountBigDecimal.compareTo(BigDecimal.ZERO) == 0) {
-                if (cuc != null && cuc.getCouponType() != 3
-                        && cuc.getCouponType() != 1) {
+        } else {
+            if (accountBigDecimal.compareTo(plan.getMinInvestment()) == -1) {
+                if (accountBigDecimal.compareTo(BigDecimal.ZERO) == 0) {
+                    if (cuc != null && cuc.getCouponType() != 3
+                            && cuc.getCouponType() != 1) {
+                        // plan.getMinInvestment() + "元起投"
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT, plan.getMinInvestment());
+                    }
+                } else {
                     // plan.getMinInvestment() + "元起投"
-                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,plan.getMinInvestment());
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT, plan.getMinInvestment());
                 }
-            } else {
-                // plan.getMinInvestment() + "元起投"
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,plan.getMinInvestment());
             }
         }
         BigDecimal max = plan.getMaxInvestment();
