@@ -307,7 +307,6 @@ public class MspApplyController  {
         // 数据修改
 		MspApply mspapply=new MspApply();
 		BeanUtils.copyProperties(form,mspapply);
-		this.mspApplyService.insertResult(postResultJson, form.getApplyId());
         this.mspApplyService.updateRecord(mspapply);
         result.setRtn(Response.SUCCESS);
         return result;
@@ -444,6 +443,12 @@ public class MspApplyController  {
         log.info("调用安融接口返回结果："+result);
         JSONObject resultJson = JSONObject.parseObject(result);
         JSONObject isOk = getResult(ret, resultJson,anRongBean.getLoanId());
+        if(isOk.getBooleanValue(AnRongDefine.RESULT_JSON_KEY_FQZ_SUCCESS)||isOk.getBooleanValue(AnRongDefine.RESULT_JSON_KEY_MSP_SUCCESS)){
+            // 插入数据
+        	this.mspApplyService.insertResult(resultJson, anRongBean.getLoanId());
+           }
+		
+      
         return isOk.toString();
     }
     
