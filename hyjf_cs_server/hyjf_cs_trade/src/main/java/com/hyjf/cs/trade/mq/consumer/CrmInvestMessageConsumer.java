@@ -91,8 +91,8 @@ public class CrmInvestMessageConsumer extends Consumer {
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
             logger.info("======" + CONSUMER_NAME + "消费开始 ========");
-            logger.info("========" + CONSUMER_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs));
             try {
+                logger.info("========" + CONSUMER_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs));
                 MessageExt msg = msgs.get(0);
                 String msgBody = new String(msg.getBody());
                 JSONObject json = JSON.parseObject(msgBody);
@@ -132,7 +132,7 @@ public class CrmInvestMessageConsumer extends Consumer {
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             } catch (Exception e) {
-                logger.error("====="+CONSUMER_NAME+"消费过程发生异常,重新投递=====");
+                logger.error("====="+CONSUMER_NAME+"消费过程发生异常,重新投递 =====",e);
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
         }
