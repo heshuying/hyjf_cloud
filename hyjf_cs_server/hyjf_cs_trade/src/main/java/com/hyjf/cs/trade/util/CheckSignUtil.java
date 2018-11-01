@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.util;
 
+import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.RSAHelper;
 import com.hyjf.common.util.RSAKeyUtil;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -15,8 +16,8 @@ import java.util.TreeMap;
 public class CheckSignUtil {
     private static Logger logger = LoggerFactory.getLogger(CheckSignUtil.class);
 
-    @Autowired
-    private SystemConfig systemConfig;
+    private static SystemConfig systemConfig = SpringUtils.getBean(SystemConfig.class);
+
 
 
     /**
