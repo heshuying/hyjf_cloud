@@ -419,7 +419,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         }
                         logger.info("[" + accedeOrderId + "]被承接标的" + redisBorrow.getBorrowNid() + "被完全承接，银行结束债权成功。");
                         //银行结束债权后，更新债权表为完全承接
-                        ret = this.amTradeClient.updateHjhDebtCreditForEnd(credit) > 1 ? true : false;
+                        ret = this.amTradeClient.updateHjhDebtCreditForEnd(credit) > 0 ? true : false;
                         if (!ret) {
                             logger.info("[" + accedeOrderId + "]银行结束债权后，更新债权表为完全承接失败。");
                         }
