@@ -90,6 +90,7 @@ public class CrmInvestMessageConsumer extends Consumer {
 
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+            logger.info("======" + CONSUMER_NAME + "消费开始 ========");
             logger.info("========" + CONSUMER_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs));
             try {
                 MessageExt msg = msgs.get(0);
@@ -127,6 +128,7 @@ public class CrmInvestMessageConsumer extends Consumer {
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 } else {
                     logger.info("=====" + CONSUMER_NAME + "数据同步成功=====");
+                    logger.info("=====" + CONSUMER_NAME + "消费结束 =====");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             } catch (Exception e) {
