@@ -74,13 +74,13 @@ public class BailConfigController extends BaseController {
 
     /**
      * @Author: liushouyi
-     * @Desc 根据主键获取保证金配置
+     * @Desc 更新机构可用还款方式并返回最新的保证金配置
      */
-    @ApiOperation(value = "根据主键获取保证金配置")
-    @GetMapping("/select_bail_config_by_id/{id}")
-    public BailConfigInfoCustomizeResponse selectBailConfigById(@PathVariable String id) {
+    @ApiOperation(value = "更新机构可用还款方式并返回最新的保证金配置")
+    @GetMapping("/update_select_bail_config_by_id/{id}")
+    public BailConfigInfoCustomizeResponse updateSelectBailConfigById(@PathVariable String id) {
         BailConfigInfoCustomizeResponse response = new BailConfigInfoCustomizeResponse();
-        BailConfigInfoCustomizeVO bailConfigInfoCustomizeVO = bailConfigService.selectBailConfigById(GetterUtil.getInteger(id));
+        BailConfigInfoCustomizeVO bailConfigInfoCustomizeVO = bailConfigService.updateBailInfoDelFlgById(GetterUtil.getInteger(id));
         if (null != bailConfigInfoCustomizeVO) {
             response.setResult(bailConfigInfoCustomizeVO);
             response.setRtn(Response.SUCCESS);
@@ -128,19 +128,6 @@ public class BailConfigController extends BaseController {
     public BooleanResponse updateBailInfoDelFlg(@PathVariable String instCode) {
         BooleanResponse response = new BooleanResponse();
         response.setResultBoolean(bailConfigService.updateBailInfoDelFlg(instCode));
-        response.setRtn(Response.SUCCESS);
-        return response;
-    }
-
-    /**
-     * @Author: liushouyi
-     * @Desc 根据该机构可用还款方式更新可用授信方式
-     */
-    @ApiOperation(value = "根据该机构可用还款方式更新可用授信方式")
-    @GetMapping("/update_bail_info_delflg_by_id/{id}")
-    public BooleanResponse updateBailInfoDelFlgById(@PathVariable Integer id) {
-        BooleanResponse response = new BooleanResponse();
-        response.setResultBoolean(bailConfigService.updateBailInfoDelFlgById(id));
         response.setRtn(Response.SUCCESS);
         return response;
     }

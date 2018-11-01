@@ -64,8 +64,7 @@ public class TradeDetailController  extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户收支明细列表分页数据", notes = "获取用户收支明细列表分页数据")
     @PostMapping(value = "/searchUserTradeList", produces = "application/json;charset=utf-8")
-    public TradeDetailBean searchUserTradeList(@RequestHeader(value = "userId") int userId,
-                                               @RequestBody @Valid TradeDetailBeanRequest form) {
+    public TradeDetailBean searchUserTradeList(@RequestHeader(value = "userId") int userId,HttpServletRequest request,@RequestBody @Valid TradeDetailBeanRequest form) {
         logger.info("web获取用户收支明细列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
         WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
         TradeDetailBean result = new TradeDetailBean();
@@ -91,10 +90,10 @@ public class TradeDetailController  extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户充值记录列表分页数据", notes = "获取用户充值记录列表分页数据")
     @PostMapping(value = "/searchUserRechargeList", produces = "application/json;charset=utf-8")
-    public TradeDetailBean searchUserRechargeList(@RequestHeader(value = "userId", required = true) int userId,
-                                               @RequestBody @Valid TradeDetailBeanRequest form) {
+    public TradeDetailBean searchUserRechargeList(@RequestHeader(value = "userId", required = true) int userId,HttpServletRequest request) {
         logger.info("web获取用户充值记录列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
         WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
+        TradeDetailBeanRequest form=createTradeDetailBeanRequest(request);
         TradeDetailBean result = new TradeDetailBean();
         if(user != null){
             CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
@@ -116,11 +115,11 @@ public class TradeDetailController  extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户提现记录列表分页数据", notes = "获取用户提现记录列表分页数据")
     @PostMapping(value = "/searchUserWithdrawList", produces = "application/json;charset=utf-8")
-    public TradeDetailBean searchUserWithdrawList(@RequestHeader(value = "userId", required = true) int userId,
-                                                  @RequestBody @Valid TradeDetailBeanRequest form) {
+    public TradeDetailBean searchUserWithdrawList(@RequestHeader(value = "userId", required = true) int userId,HttpServletRequest request) {
         logger.info("web获取用户提现记录列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
         WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
         TradeDetailBean result = new TradeDetailBean();
+        TradeDetailBeanRequest form=createTradeDetailBeanRequest(request);
         if(user != null){
             CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
             if(user.getRoleId()!= null){
@@ -131,5 +130,14 @@ public class TradeDetailController  extends BaseTradeController {
             result.setListType("withdraw");	
         }
         return result;
+    }
+
+    private TradeDetailBeanRequest createTradeDetailBeanRequest(HttpServletRequest request) {
+        TradeDetailBeanRequest bean=new TradeDetailBeanRequest();
+        bean.setTrade(request.getParameter("trade"));
+        bean.setStartDate(request.getParameter("startDate"));
+        bean.setEndDate(request.getParameter("endDate"));
+        return bean;
+
     }
 }

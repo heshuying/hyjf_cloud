@@ -81,7 +81,7 @@ public interface BatchBorrowRepayPlanService extends BaseService {
 	 * @param borrowNid
 	 * @return
 	 */
-	List<BorrowRecover> getBorrowRecoverList(String borrowNid);
+	List<BorrowRecover> getBorrowRecoverList(String borrowNid, BorrowApicron apicron);
 
 	/**
 	 * 退出计划

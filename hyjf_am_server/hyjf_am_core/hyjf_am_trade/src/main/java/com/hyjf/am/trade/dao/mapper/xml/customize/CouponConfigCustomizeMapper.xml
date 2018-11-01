@@ -364,7 +364,7 @@
 		<result column="repay_time_config" property="repayTimeConfig" jdbcType="INTEGER" />
 	</resultMap>
 
-	<select id="getCouponConfig" resultMap="couponConfigData" parameterType="java.lang.String">
+	<select id="getCouponConfigByOrderId" resultMap="couponConfigData" parameterType="java.lang.String">
 		SELECT
 		    cc.coupon_code,
 		    cc.coupon_quota,

@@ -106,12 +106,8 @@ public class BailConfigController extends BaseController {
         if (null == id || 0 == id) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        // 更新当前机构可用的还款方式
-        if(!this.bailConfigService.updateBailInfoDelFlgById(id)){
-            return new AdminResult<>(FAIL, "当前机构更新还款方式失败！");
-        }
-        // 查询当前机构的保证金详情
-        BailConfigInfoCustomizeVO bailConfigInfoCustomizeVO = bailConfigService.selectBailConfigById(id);
+        // 更新当前机构可用的还款方式并返回最新保证金详情(更新查询分开事务、查询取不到最新更新的数据)
+        BailConfigInfoCustomizeVO bailConfigInfoCustomizeVO = bailConfigService.updateSelectBailConfigById(id);
         if (null == bailConfigInfoCustomizeVO) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -358,7 +354,7 @@ public class BailConfigController extends BaseController {
                 Row row = sheet.createRow(rowNum);
                 // 循环数据
                 for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BailConfigInfoCustomizeVO record = this.bailConfigService.selectBailConfigById(recordList.get(i).getId());
+                    BailConfigInfoCustomizeVO record = this.bailConfigService.updateSelectBailConfigById(recordList.get(i).getId());
                     // 创建相应的单元格
                     Cell cell = row.createCell(celLength);
                     // 序号
@@ -531,7 +527,7 @@ public class BailConfigController extends BaseController {
         String sheetNameTmp = sheetName + "_第1页";
         List<BailConfigInfoCustomizeVO>  rList = new ArrayList<BailConfigInfoCustomizeVO>();
         for (int i = 0; i < recordList.size(); i++) {
-        	BailConfigInfoCustomizeVO record = this.bailConfigService.selectBailConfigById(recordList.get(i).getId());
+        	BailConfigInfoCustomizeVO record = this.bailConfigService.updateSelectBailConfigById(recordList.get(i).getId());
         	rList.add(record);
         }
 
