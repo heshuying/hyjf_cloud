@@ -60,6 +60,7 @@ public class HjhCommisionComputeServiceImpl extends BaseTradeServiceImpl impleme
             UserInfoVO commissioUserInfoVO = null;
             if(commissionUserID != null && commissionUserID > 0 ){
                 commissioUserInfoVO = amUserClient.selectUserInfoByUserId(commissionUserID);
+                logger.info("【汇计划计算提成】加入等单号:{}, 提成用户id：{}", accedeOrderId, commissionUserID);
             }
             BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(commissionUserID);
             List<UserInfoCustomizeVO> userInfoCustomizeVOS = amUserClient.queryDepartmentInfoByUserId(commissionUserID);
