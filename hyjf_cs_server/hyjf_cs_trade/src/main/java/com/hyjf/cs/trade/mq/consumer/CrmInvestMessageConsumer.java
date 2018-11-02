@@ -122,8 +122,7 @@ public class CrmInvestMessageConsumer extends Consumer {
                     result = postJson(postUrl, postData);
                     logger.info("=====" + CONSUMER_NAME + "投递CRM结果 :" +JSON.toJSONString(result));
                 } catch (Exception e) {
-                    logger.error(e.getMessage());
-                    logger.error("=====" + CONSUMER_NAME + ",发生异常,重新投递=====");
+                    logger.error("=====" + CONSUMER_NAME + ",发生异常,重新投递=====",e);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
 
