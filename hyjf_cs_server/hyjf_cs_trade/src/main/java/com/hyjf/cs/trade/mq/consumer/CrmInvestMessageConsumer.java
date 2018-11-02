@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Maps;
-import com.hyjf.am.bean.crmtender.BorrowTenderMsgBean;
-import com.hyjf.am.bean.crmtender.HjhAccedeMsgBean;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
@@ -14,6 +12,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -104,8 +103,10 @@ public class CrmInvestMessageConsumer extends Consumer {
                 String accId = json.getString("planNid");
                 Object obj = null;
                 if (StringUtils.isNotBlank(accId)) {
+                    logger.info("------计划投资------");
                     obj = JSONObject.parseObject(msgBody, HjhAccedeVO.class);
                 } else {
+                    logger.info("-----散标投资------");
                     obj = JSONObject.parseObject(msgBody, BorrowTenderVO.class);
                 }
                 if (obj == null) {
@@ -148,8 +149,8 @@ public class CrmInvestMessageConsumer extends Consumer {
         JSONObject ret = new JSONObject();
         Map<String, Object> map = Maps.newHashMap();
         // 根据数据类型判断投资类型。直投类
-        if (obj instanceof BorrowTenderMsgBean) {
-            BorrowTenderMsgBean bt = (BorrowTenderMsgBean) obj;
+        if (obj instanceof BorrowTenderVO) {
+            BorrowTenderVO bt = (BorrowTenderVO) obj;
             UserInfoVO userInfo = amUserClient.findUsersInfoById(bt.getUserId());
             BorrowAndInfoVO borrowInfo = amTradeClient.getBorrowByNid(bt.getBorrowNid());
             String borrowStyle = borrowInfo.getBorrowStyle();
@@ -167,7 +168,7 @@ public class CrmInvestMessageConsumer extends Consumer {
                             || CustomConstants.BORROW_STYLE_END.equals(borrowStyle) ? 2 : 1);
             map.put("term", borrowInfo.getBorrowPeriod());
             map.put("account", bt.getAccount());
-            map.put("addTime", bt.getAddtime());
+            map.put("addTime", GetDate.getTime10(bt.getCreateTime()));
             map.put("loanTime", getDate(bt.getLoanOrderDate()));
             if (StringUtils.isNotBlank(borrowInfo.getPlanNid())) {
                 map.put("productNo", 1007);
@@ -177,8 +178,8 @@ public class CrmInvestMessageConsumer extends Consumer {
             map.put("referrerDepartmentId", bt.getInviteDepartmentId());
         }
         // 计划类投资
-        else if (obj instanceof HjhAccedeMsgBean) {
-            HjhAccedeMsgBean hj = (HjhAccedeMsgBean) obj;
+        else if (obj instanceof HjhAccedeVO) {
+            HjhAccedeVO hj = (HjhAccedeVO) obj;
             UserInfoVO userInfo = amUserClient.findUsersInfoById(hj.getUserId());
             HjhPlanResponse response = baseClient.getExe("http://AM-TRADE/am-config/hjhplan/getHjhPlanByPlanNid/" + hj.getPlanNid(), HjhPlanResponse.class);
             HjhPlanVO hjhPlan = response.getResult();
@@ -192,8 +193,8 @@ public class CrmInvestMessageConsumer extends Consumer {
             map.put("unit", hjhPlan.getIsMonth() == 0 ? 1 : 2);
             map.put("term", hjhPlan.getLockPeriod());
             map.put("account", hj.getAccedeAccount());
-            map.put("addTime", hj.getAddTime());
-            map.put("loanTime", hj.getAddTime());
+            map.put("addTime", GetDate.getTime10(hj.getCreateTime()));
+            map.put("loanTime", GetDate.getTime10(hj.getCreateTime()));
             map.put("productNo", 1002);
 
         }
