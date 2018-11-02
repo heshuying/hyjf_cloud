@@ -27,6 +27,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -53,6 +54,10 @@ public class CrmInvestMessageConsumer extends Consumer {
     private static final String CONSUMER_NAME = "<<CRM投资信息同步>>:";
 
     private static final String CONSUMER_QUIT = "消费退出";
+
+    private static final String SUCCESS = "success";
+    private static final String FAILUE = "failue";
+    private static final String TRY = "try";
 
 
     @Autowired
@@ -115,27 +120,29 @@ public class CrmInvestMessageConsumer extends Consumer {
                     logger.info("=====" + CONSUMER_NAME + "实体转换异常," + CONSUMER_QUIT + "=====");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
-                CloseableHttpResponse result = null;
+                String result = "" ;
                 try {
                     String postUrl = systemConfig.getCrmTenderUrl();
                     logger.info("======="+ CONSUMER_NAME  +"消息转换实体信息 [{}]",JSON.toJSONString(obj));
                     String postData = buildData(obj).toJSONString();
                     logger.info("=====" + CONSUMER_NAME + "postUrl:[{}] =====", postUrl);
                     logger.info("=====" + CONSUMER_NAME + "postParam: [{}] ====",postData);
-                    result = postJson(postUrl, postData);
+                    result =postJson(postUrl, postData);
                     logger.info("=====" + CONSUMER_NAME + "投递CRM结果 :" +JSON.toJSONString(result));
                 } catch (Exception e) {
                     logger.error("=====" + CONSUMER_NAME + ",发生异常,重新投递=====",e);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
 
-                if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                    logger.info("返回码statusCode = " ,result.getStatusLine().getStatusCode() );
-                    logger.info("=====" + CONSUMER_NAME + "网络异常，重新投递======");
+                if (TRY.equals(result)) {
+                    logger.info("=====" + CONSUMER_NAME + "网络或者链接异常，重新投递======");
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                } else {
+                } else if (SUCCESS.equals(result)){
                     logger.info("=====" + CONSUMER_NAME + "数据同步成功=====");
                     logger.info("=====" + CONSUMER_NAME + "消费结束 =====");
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                }else {
+                    logger.info("=====" + CONSUMER_NAME + "CRM返回未正常处理,不在重复投递 =====");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             } catch (Exception e) {
@@ -217,7 +224,7 @@ public class CrmInvestMessageConsumer extends Consumer {
      * @param url 参数
      * @return json
      */
-    private CloseableHttpResponse postJson(String url, String jsonStr) {
+    private String postJson(String url, String jsonStr) {
 
         // 实例化httpClient
         CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -235,8 +242,25 @@ public class CrmInvestMessageConsumer extends Consumer {
             httpPost.setEntity(uefEntity);
             // 执行post方法
             response = httpclient.execute(httpPost);
+
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+                String content = EntityUtils.toString(response.getEntity());
+                logger.info("====="+ CONSUMER_NAME +"crm 投递返回值：[{}]=====",content);
+                if (StringUtils.isNotBlank(content)){
+                    JSONObject  jasonObject = JSONObject.parseObject(content);
+                    Map map = (Map)jasonObject;
+                    if (map!=null && "000".equals(String.valueOf(map.get("status")))){
+                        return SUCCESS;
+                    }
+                }
+                // 网络状态200， 但是业务处理失败， 标记处理失败  不重试
+                return FAILUE;
+            }
+            // 网络异常 重试
+            return TRY;
         } catch (Exception e) {
             e.printStackTrace();
+            return TRY;
         } finally {
             if (response != null) {
                 try {
@@ -253,6 +277,5 @@ public class CrmInvestMessageConsumer extends Consumer {
                 }
             }
         }
-        return response;
     }
 }
