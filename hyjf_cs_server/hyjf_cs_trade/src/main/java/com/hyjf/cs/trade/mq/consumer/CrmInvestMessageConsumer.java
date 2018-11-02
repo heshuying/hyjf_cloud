@@ -181,7 +181,7 @@ public class CrmInvestMessageConsumer extends Consumer {
         else if (obj instanceof HjhAccedeVO) {
             HjhAccedeVO hj = (HjhAccedeVO) obj;
             UserInfoVO userInfo = amUserClient.findUsersInfoById(hj.getUserId());
-            HjhPlanResponse response = baseClient.getExe("http://AM-TRADE/am-config/hjhplan/getHjhPlanByPlanNid/" + hj.getPlanNid(), HjhPlanResponse.class);
+            HjhPlanResponse response = baseClient.getExe("http://AM-TRADE/am-trade/hjhplan/getHjhPlanByPlanNid/" + hj.getPlanNid(), HjhPlanResponse.class);
             HjhPlanVO hjhPlan = response.getResult();
 
             map.put("idNum", userInfo.getIdcard());
