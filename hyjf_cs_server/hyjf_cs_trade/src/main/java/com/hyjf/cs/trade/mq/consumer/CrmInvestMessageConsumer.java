@@ -5,8 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Maps;
 import com.hyjf.am.response.user.HjhPlanResponse;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -153,8 +154,9 @@ public class CrmInvestMessageConsumer extends Consumer {
         if (obj instanceof BorrowTenderVO) {
             BorrowTenderVO bt = (BorrowTenderVO) obj;
             UserInfoVO userInfo = amUserClient.findUsersInfoById(bt.getUserId());
-            BorrowAndInfoVO borrowInfo = amTradeClient.getBorrowByNid(bt.getBorrowNid());
-            String borrowStyle = borrowInfo.getBorrowStyle();
+            RightBorrowVO borrowVO = amTradeClient.getRightBorrowByNid(bt.getBorrowNid());
+            BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(bt.getBorrowNid());
+            String borrowStyle = borrowVO.getBorrowStyle();
 
             map.put("idNum", userInfo.getIdcard());
             map.put("referrerIdCard", "");
@@ -167,11 +169,11 @@ public class CrmInvestMessageConsumer extends Consumer {
                             || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
                             || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)
                             || CustomConstants.BORROW_STYLE_END.equals(borrowStyle) ? 2 : 1);
-            map.put("term", borrowInfo.getBorrowPeriod());
+            map.put("term", borrowVO.getBorrowPeriod());
             map.put("account", bt.getAccount());
             map.put("addTime", GetDate.getTime10(bt.getCreateTime()));
             map.put("loanTime", getDate(bt.getLoanOrderDate()));
-            if (StringUtils.isNotBlank(borrowInfo.getPlanNid())) {
+            if (StringUtils.isNotBlank(borrowVO.getPlanNid())) {
                 map.put("productNo", 1007);
             } else {
                 map.put("productNo", 1001);
