@@ -5660,6 +5660,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 根据条件查询垫付机构冻结日志
+     * @author wgx
+     * @date 2018/10/16
+     */
+    @Override
+    public List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String borrowNid) {
+        StringBuilder url = new StringBuilder("http://AM-TRADE/am-trade/repayOrgFreezeLog/getByNid/");
+        url.append("/").append(borrowNid);
+        IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
      * 获取有效公告
      * @author cwyang 2018-10-18
      * @return

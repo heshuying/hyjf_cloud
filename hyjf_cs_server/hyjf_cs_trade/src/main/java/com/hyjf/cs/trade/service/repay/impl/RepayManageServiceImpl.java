@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
@@ -391,14 +392,14 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public boolean checkRepayInfo(Integer userId, String borrowNid) {
         BankRepayFreezeLogVO log = amTradeClient.getFreezeLogValid(userId, borrowNid);
-        if(log == null){
-            return true;
+        if(log != null){
+            return false;
         }
-        List<BankRepayOrgFreezeLogVO> orgList = amTradeClient.getBankRepayOrgFreezeLogList(null,borrowNid);
+        List<BankRepayOrgFreezeLogVO> orgList = amTradeClient.getBankRepayOrgFreezeLogList(borrowNid);
         if (orgList != null && orgList.size() > 0) {
             return false;
         }
-        return false;
+        return true;
     }
 
     /**
@@ -524,6 +525,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public Integer insertRepayOrgFreezeLof(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         BankRepayOrgFreezeLogRequest requestBean = new BankRepayOrgFreezeLogRequest();
         requestBean.setRepayUserId(userId);// 还款人用户userId
         requestBean.setRepayUserName(userName);// 还款人用户名
@@ -533,7 +535,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         requestBean.setOrderId(orderId);// 订单号:txDate+txTime+seqNo
         requestBean.setBorrowNid(borrow.getBorrowNid());// 借款编号
         requestBean.setPlanNid(borrow.getPlanNid());// 计划编号
-        requestBean.setInstCode(borrow.getInstCode());// 资产来源
+        requestBean.setInstCode(borrowInfo.getInstCode());// 资产来源
         requestBean.setAmount(borrow.getAccount());// 借款金额
         requestBean.setAmountFreeze(borrow.getRepayAccountAll());// 冻结金额
         requestBean.setRepayAccount(repay.getRepayAccount());// 应还本息
@@ -714,12 +716,19 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         bean.setLogClient(0);
         bean.setLogIp(ip);
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_REFINANCE_FREEZE_PAGE);
-        // 同步调用路径
-        String retUrl = systemConfig.getFrontHost() + "/hyjf-web/repay/getRepaySyncReturn";
+        // 同步调用失败页面路径
+        String retUrl = systemConfig.getFrontHost() + "/user/repay/batchFail";
+        // 同步调用成功页面路径
+        String successfulUrl = systemConfig.getFrontHost() + "/user/repay";
         // 异步调用路
-        String bgRetUrl = systemConfig.getFrontHost() + "/hyjf-web/repay/getRepayAsyncReturn";
-        bean.setRetUrl(retUrl);// 页面同步返回 URL
-        bean.setSuccessfulUrl(retUrl + "?orderId=" + orderId + "&isBatchRepay=" + StringUtils.isBlank(borrowNid));
+        String bgRetUrl = "http://CS-TRADE/hyjf-web/repay/getRepayAsyncReturn";
+        bean.setRetUrl(retUrl + "?logOrdId=" + bean.getLogOrderId());
+        if(StringUtils.isNotBlank(borrowNid)){
+            BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
+            bean.setSuccessfulUrl(successfulUrl + "/repaySuccess?borrowNid=" + borrowNid + "&borrowName=" + borrowInfo.getName());
+        }else{
+            bean.setSuccessfulUrl(successfulUrl + "/batchSuccess");// 批次成功页面
+        }
         bean.setNotifyUrl(bgRetUrl + "?orderId=" + orderId + "&isBatchRepay=" + StringUtils.isBlank(borrowNid));// 页面异步返回URL(必须)
         try {
             logger.info("【代偿冻结】调用还款申请冻结资金接口成功,订单号:{}", orderId);
