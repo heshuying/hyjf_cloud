@@ -164,7 +164,7 @@ public class PlanListController extends BaseController{
 		String planNid = form.getDebtPlanNid();
 		if (StringUtils.isNotBlank(planNid) && planNid.length() < 3
 				&& !"HJH".equals(planNid.substring(0, 3))) {
-			jsonObject.put("error", "计划编号必须以HJH开头");
+			jsonObject.put("error", "智投编号必须以HJH开头");
 		}
 		if (StringUtils.isNotEmpty(planNid)) {
 			List<HjhPlanDetailVO> planList = this.planListService.getHjhPlanDetailByPlanNid(form);
@@ -176,7 +176,7 @@ public class PlanListController extends BaseController{
 				jsonObject.put("status", SUCCESS);
 			} else {
 				// 如果没有查到记录，说明需要修改的这个 计划编号 在DB没有查到记录
-				jsonObject.put("error", "计划编号"+ planNid +"不存在");
+				jsonObject.put("error", "智投编号"+ planNid +"不存在");
 				jsonObject.put("status", FAIL);
 			}
 		}
@@ -431,7 +431,7 @@ public class PlanListController extends BaseController{
 			String planName = form.getDebtPlanName();
 			int count = this.planListService.countByPlanName(planName);
 			if (count > 0) {
-				jsonObject.put("errorMsg", "计划编号重复！");
+				jsonObject.put("errorMsg", "智投编号重复！");
 			}
 		}
 		// 计划期限+还款方式
@@ -645,7 +645,7 @@ public class PlanListController extends BaseController{
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
-		String sheetName = "资金计划";
+		String sheetName = "智投管理";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
 		// 声明一个工作薄
@@ -676,19 +676,19 @@ public class PlanListController extends BaseController{
 
 	private Map<String, String> buildMap() {
 		Map<String, String> map = Maps.newLinkedHashMap();
-		map.put("planNid", "计划编号");
-		map.put("planName", "计划名称");
+		map.put("planNid", "智投编号");
+		map.put("planName", "智投名称");
 		map.put("borrowStyle", "还款方式");
-		map.put("lockPeriod", "锁定期");
-		map.put("expectApr", "预期年化收益率");
-		map.put("minInvestment", "最低加入金额（元）");
-		map.put("maxInvestment", "最高加入金额（元）");
+		map.put("lockPeriod", "服务回报期限");
+		map.put("expectApr", "参考年回报率");
+		map.put("minInvestment", "最低授权服务金额（元）");
+		map.put("maxInvestment", "最高授权服务金额（元）");
 		map.put("investmentIncrement", "投资增量（元）");
 		map.put("minInvestCounts", "最小投资笔数");
 		map.put("availableInvestAccount", "开放额度（元）");
-		map.put("joinTotal", "累计加入金额（元）");
+		map.put("joinTotal", "累计授权服务金额（元）");
 		map.put("repayWaitAll", "待还总额（元）");
-		map.put("planInvestStatus", "计划状态");
+		map.put("planInvestStatus", "智投状态");
 		map.put("addTime", "添加时间");
 
 		return map;

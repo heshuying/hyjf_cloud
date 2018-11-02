@@ -201,7 +201,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
     public void exportHjhAction(@RequestBody ChannelReconciliationRequest request, HttpServletResponse response) throws Exception {
 
         // 表格sheet名称
-        String sheetName = "PC渠道对账-汇计划";
+        String sheetName = "PC渠道对账-智投服务";
 
         ChannelReconciliationResponse channelReconciliationResponse = channelService.searchHJHAction(request);
 
@@ -209,7 +209,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
             List<ChannelReconciliationVO> recordList = channelReconciliationResponse.getResultList();
             String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-            String[] titles = new String[] { "序号", "用户名", "渠道","注册时间", "计划订单号", "计划编号", "计划锁定期", "投资金额","是否首投", "投资时间" };
+            String[] titles = new String[] { "序号", "用户名", "渠道","注册时间", "智投订单号", "智投编号", "服务回报期限", "授权服务金额","是否首投", "投资时间" };
             // 声明一个工作薄
             HSSFWorkbook workbook = new HSSFWorkbook();
 

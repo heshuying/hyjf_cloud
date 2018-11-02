@@ -163,45 +163,51 @@ public class AutoTenderExceptionController extends BaseController {
                     if (celLength == 0) {
                         cell.setCellValue(i + 1);
                     }
-                    // 计划订单号
+                    // 智投订单号
                     else if (celLength == 1) {
-                        cell.setCellValue(org.apache.commons.lang.StringUtils.isEmpty(planAccedeDetail.getPlanOrderId()) ? org.apache.commons.lang.StringUtils.EMPTY : planAccedeDetail.getPlanOrderId());
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getPlanOrderId()) ? StringUtils.EMPTY : planAccedeDetail.getPlanOrderId());
                     }
-                    // 计划编号
+                    // 智投编号
                     else if (celLength == 2) {
                         cell.setCellValue(planAccedeDetail.getDebtPlanNid());
                     }
-                    // 锁定期
+                    // 服务回报期限
                     else if (celLength == 3) {
-                        cell.setCellValue(org.apache.commons.lang.StringUtils.isEmpty(planAccedeDetail.getDebtLockPeriod()) ? org.apache.commons.lang.StringUtils.EMPTY : planAccedeDetail.getDebtLockPeriod() + "天");
+                        String dateUnit="";
+                        if (planAccedeDetail.getIsMonth()==0){
+                            dateUnit="天";
+                        }else if(planAccedeDetail.getIsMonth()==1){
+                            dateUnit="个月";
+                        }
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getDebtLockPeriod()) ? StringUtils.EMPTY : planAccedeDetail.getDebtLockPeriod() + dateUnit);
                     }
                     // 用户名
                     else if (celLength == 4) {
-                        cell.setCellValue(org.apache.commons.lang.StringUtils.isEmpty(planAccedeDetail.getUserName()) ? org.apache.commons.lang.StringUtils.EMPTY : planAccedeDetail.getUserName());
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getUserName()) ? StringUtils.EMPTY : planAccedeDetail.getUserName());
                     }
                     // 加入金额
-                    else if (celLength == 6) {
-                        cell.setCellValue(org.apache.commons.lang.StringUtils.isEmpty(planAccedeDetail.getAccedeAccount()) ? org.apache.commons.lang.StringUtils.EMPTY : planAccedeDetail.getAccedeAccount());
+                    else if (celLength == 5) {
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getAccedeAccount()) ? StringUtils.EMPTY : planAccedeDetail.getAccedeAccount());
                     }
                     // 已投资金额
-                    else if (celLength == 7) {
-                        cell.setCellValue(org.apache.commons.lang.StringUtils.isEmpty(planAccedeDetail.getAlreadyInvest()) ? org.apache.commons.lang.StringUtils.EMPTY : planAccedeDetail.getAlreadyInvest());
+                    else if (celLength == 6) {
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getAlreadyInvest()) ? StringUtils.EMPTY : planAccedeDetail.getAlreadyInvest());
                     }
                     // 待收总额
-                    else if (celLength == 8) {
-                        cell.setCellValue(org.apache.commons.lang.StringUtils.isEmpty(planAccedeDetail.getWaitTotal()) ? org.apache.commons.lang.StringUtils.EMPTY : planAccedeDetail.getWaitTotal());
+                    else if (celLength == 7) {
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getWaitTotal()) ? StringUtils.EMPTY : planAccedeDetail.getWaitTotal());
                     }
                     // 待收本金
-                    else if (celLength == 9) {
-                        cell.setCellValue(org.apache.commons.lang.StringUtils.isEmpty(planAccedeDetail.getWaitCaptical()) ? org.apache.commons.lang.StringUtils.EMPTY : planAccedeDetail.getWaitCaptical());
+                    else if (celLength == 8) {
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getWaitCaptical()) ? StringUtils.EMPTY : planAccedeDetail.getWaitCaptical());
                     }
-                    // 待收利息
-                    else if (celLength == 10) {
-                        cell.setCellValue(org.apache.commons.lang.StringUtils.isEmpty(planAccedeDetail.getWaitInterest()) ? org.apache.commons.lang.StringUtils.EMPTY : planAccedeDetail.getWaitInterest());
+                    // 待还利息
+                    else if (celLength == 9) {
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getWaitInterest()) ? StringUtils.EMPTY : planAccedeDetail.getWaitInterest());
                     }
 
                     // 平台
-                    else if (celLength == 11) {
+                    else if (celLength == 10) {
                         if ("0".equals(planAccedeDetail.getPlatform())) {
                             cell.setCellValue("PC");
                         } else if ("1".equals(planAccedeDetail.getPlatform())) {
@@ -213,7 +219,7 @@ public class AutoTenderExceptionController extends BaseController {
                         }
                     }
                     // 订单状态
-                    else if (celLength == 12) {
+                    else if (celLength == 11) {
                         if (0 == Integer.parseInt(planAccedeDetail.getOrderStatus())) {
                             cell.setCellValue("自动投标中");
                         } else if (2 == Integer.parseInt(planAccedeDetail.getOrderStatus())) {
@@ -226,26 +232,28 @@ public class AutoTenderExceptionController extends BaseController {
                             cell.setCellValue("已退出");
                         } else if (99 == Integer.parseInt(planAccedeDetail.getOrderStatus())) {
                             cell.setCellValue("自动投资异常");
+                        } else{
+                            cell.setCellValue(planAccedeDetail.getOrderStatus());
                         }
                     }
                     // 计息时间
-                    else if (celLength == 13) {
-                        if (org.apache.commons.lang.StringUtils.isNotEmpty(planAccedeDetail.getCountInterestTime())) {
+                    else if (celLength == 12) {
+                        if (StringUtils.isNotEmpty(planAccedeDetail.getCountInterestTime())) {
                             cell.setCellValue(planAccedeDetail.getCountInterestTime());
                         }
                     }
                     // 加入时间
-                    else if (celLength == 14) {
-                        if (org.apache.commons.lang.StringUtils.isNotEmpty(planAccedeDetail.getCreateTime())) {
+                    else if (celLength == 13) {
+                        if (StringUtils.isNotEmpty(planAccedeDetail.getCreateTime())) {
                             cell.setCellValue(planAccedeDetail.getCreateTime());
                         }
                     }
                     // 预期年化
-                    else if (celLength == 15) {
-                        cell.setCellValue(org.apache.commons.lang.StringUtils.isEmpty(planAccedeDetail.getExpectApr()) ? org.apache.commons.lang.StringUtils.EMPTY : planAccedeDetail.getExpectApr() + "%");
+                    else if (celLength == 14) {
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getExpectApr()) ? StringUtils.EMPTY : planAccedeDetail.getExpectApr() + "%");
                     }
                     // 用户属性（当前）
-                    else if (celLength == 16) {
+                    else if (celLength == 15) {
                         if ("0".equals(planAccedeDetail.getUserAttribute())) {
                             cell.setCellValue("无主单");
                         } else if ("1".equals(planAccedeDetail.getUserAttribute())) {

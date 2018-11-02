@@ -10,10 +10,10 @@ public class HjhReInvestDetailRequestBean {
     @ApiModelProperty(value = "日期,默认值")
     private String date;
 
-    @ApiModelProperty(value = "计划编号,默认值")
+    @ApiModelProperty(value = "智投编号,默认值")
     private String planNid;
 
-    @ApiModelProperty(value = "计划订单号")
+    @ApiModelProperty(value = "智投订单号")
     private String accedeOrderIdSrch;
 
     @ApiModelProperty(value = "用户名")
