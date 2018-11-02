@@ -41,7 +41,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     @Autowired
     private ContentArticleCustomizeMapper contentArticleCustomizeMapper;
 
-    @Value("hyjf.web.host")
+    @Value("${hyjf.web.host}")
     private String webUrl;
 
     @Override
