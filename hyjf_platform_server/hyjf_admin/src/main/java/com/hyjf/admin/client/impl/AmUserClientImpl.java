@@ -1766,7 +1766,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse download(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/mspapply/download" ,mspApplytRequest,
+				.postForEntity("http://AM-ADMIN/am-user/mspapply/downloadFile" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {

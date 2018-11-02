@@ -89,10 +89,10 @@
 				AND hup.invest_process = #{investProcess}
 			</if>
 			<if test="regTimeStart != null and regTimeStart !='' ">
-				AND hydur.reg_time <![CDATA[>=]]> str_to_date(#{regTimeStart},'%Y-%m-%d %H:%i:%s')
+				AND unix_timestamp(hydur.reg_time) <![CDATA[>=]]> unix_timestamp(#{regTimeStart})
 			</if>
 			<if test="regTimeEnd != null and regTimeEnd !='' ">
-				AND hydur.reg_time <![CDATA[<=]]> str_to_date(#{regTimeEnd},'%Y-%m-%d %H:%i:%s')
+				AND unix_timestamp(hydur.reg_time) <![CDATA[<=]]> unix_timestamp(#{regTimeEnd})
 			</if>
 		</where>
 	</sql>

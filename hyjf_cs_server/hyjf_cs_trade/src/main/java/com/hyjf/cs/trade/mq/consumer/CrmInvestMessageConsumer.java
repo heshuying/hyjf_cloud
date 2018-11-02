@@ -115,9 +115,11 @@ public class CrmInvestMessageConsumer extends Consumer {
                 CloseableHttpResponse result = null;
                 try {
                     String postUrl = systemConfig.getCrmTenderUrl();
-                    logger.info("=====" + CONSUMER_NAME + "postUrl:{} =====", postUrl);
                     String postData = buildData(obj).toJSONString();
+                    logger.info("=====" + CONSUMER_NAME + "postUrl:[{}] =====", postUrl);
+                    logger.info("=====" + CONSUMER_NAME + "postParam: [{}] ====",postData);
                     result = postJson(postUrl, postData);
+                    logger.info("=====" + CONSUMER_NAME + "投递CRM结果 :" +JSON.toJSONString(result));
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                     logger.error("=====" + CONSUMER_NAME + ",发生异常,重新投递=====");
@@ -125,6 +127,7 @@ public class CrmInvestMessageConsumer extends Consumer {
                 }
 
                 if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                    logger.info("返回码statusCode = " ,result.getStatusLine().getStatusCode() );
                     logger.info("=====" + CONSUMER_NAME + "网络异常，重新投递======");
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 } else {
