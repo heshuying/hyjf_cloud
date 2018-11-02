@@ -400,13 +400,6 @@ public interface AmUserClient {
 	 */
 	UtmPlatVO selectUtmPlatBySourceId(Integer sourceId);
 
-	/**
-	 * 根据用户ID查询是否App渠道过来的用户
-	 *
-	 * @param userId
-	 * @return
-	 */
-	AppChannelStatisticsDetailVO selectAppChannelStatisticsDetailByUserId(Integer userId);
 
 	/**
 	 * 根据用户Id查询用户部门信息

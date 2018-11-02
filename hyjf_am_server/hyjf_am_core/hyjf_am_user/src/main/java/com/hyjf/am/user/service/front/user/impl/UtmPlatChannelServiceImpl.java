@@ -10,12 +10,8 @@ import com.hyjf.am.user.dao.model.auto.UtmPlatExample;
 import com.hyjf.am.user.service.front.user.UtmPlatChannelService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
-import com.hyjf.cs.message.bean.ic.AppChannelStatisticsDetail;
-import com.hyjf.cs.message.mongo.ic.AppChannelStatisticsDetailDao;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -30,8 +26,7 @@ import java.util.List;
 @Service
 public class UtmPlatChannelServiceImpl extends BaseServiceImpl implements UtmPlatChannelService {
 
-    @Autowired
-    private AppChannelStatisticsDetailDao appChannelStatisticsDetailDao;
+
     /**
      * 根据utmId查询渠道信息
      *
@@ -73,24 +68,4 @@ public class UtmPlatChannelServiceImpl extends BaseServiceImpl implements UtmPla
         }
         return null;
     }
-
-
-    /**
-     * 根据用户ID查询是否App渠道过来的用户
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public AppChannelStatisticsDetailVO selectAppChannelStatisticsDetailByUserId(Integer userId) {
-        AppChannelStatisticsDetailVO appChannelStatisticsDetailVO = new AppChannelStatisticsDetailVO();
-        AppChannelStatisticsDetail appChannelStatisticsDetail = appChannelStatisticsDetailDao.findByUserId(userId);
-        if (appChannelStatisticsDetail != null){
-            BeanUtils.copyProperties(appChannelStatisticsDetail, appChannelStatisticsDetailVO);
-            return appChannelStatisticsDetailVO;
-        }
-        return null;
-    }
-
-
 }

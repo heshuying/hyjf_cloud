@@ -32,11 +32,4 @@ public interface UtmPlatChannelService extends BaseService {
      */
     UtmPlatVO selectUtmPlatBySourceId(Integer sourceId);
 
-    /**
-     * 根据用户ID查询是否App渠道过来的用户
-     *
-     * @param userId
-     * @return
-     */
-    AppChannelStatisticsDetailVO selectAppChannelStatisticsDetailByUserId(Integer userId);
 }

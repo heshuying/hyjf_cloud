@@ -10,6 +10,7 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.consumer.SensorsDataRegisterService;
 import com.sensorsdata.analytics.javasdk.SensorsAnalytics;
@@ -36,6 +37,9 @@ public class SensorsDataRegisterServiceImpl extends BaseServiceImpl implements S
 
     @Autowired
     private SystemConfig systemConfig;
+
+    @Autowired
+    private CsMessageClient csMessageClient;
 
 
     /**
@@ -117,7 +121,7 @@ public class SensorsDataRegisterServiceImpl extends BaseServiceImpl implements S
         }
 
         // 如果 是用户app注册渠道过来的
-        AppChannelStatisticsDetailVO appChannelStatisticsDetail = this.amUserClient.selectAppChannelStatisticsDetailByUserId(userId);
+        AppChannelStatisticsDetailVO appChannelStatisticsDetail = this.csMessageClient.getAppChannelStatisticsDetailByUserId(userId);
         if (appChannelStatisticsDetail != null) {
             // 注册渠道
             profiles.put("registerChannel", StringUtils.isBlank(appChannelStatisticsDetail.getSourceName()) ? "" : appChannelStatisticsDetail.getSourceName());

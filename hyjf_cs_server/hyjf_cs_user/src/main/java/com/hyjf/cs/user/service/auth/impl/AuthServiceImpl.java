@@ -1,14 +1,20 @@
 package com.hyjf.cs.user.service.auth.impl;
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.UserAuthRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.AuthBean;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.sensorsdate.auth.SensorsDataAuthProducer;
 import com.hyjf.cs.user.service.auth.AuthService;
 
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
@@ -16,6 +22,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -23,10 +30,14 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 
 @Service
 public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService {
+
+	@Autowired
+	private SensorsDataAuthProducer sensorsDataAuthProducer;
 
 	@Override
 	public HjhUserAuthVO getHjhUserAuthByUserId(Integer userId) {
@@ -119,7 +130,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						hjhUserAuth.setAutoBidEndTime(bean.getAutoBidDeadline());
 						hjhUserAuth.setInvesMaxAmt(bean.getAutoBidMaxAmt());
 						// add by liuyang 神策数据统计修改 20180927 start
-						/*if ("10000000".equals(users.getInstCode())) {
+						if ("10000000".equals(users.getInstCode())) {
 							try {
 								SensorsDataBean sensorsDataBean = new SensorsDataBean();
 								sensorsDataBean.setUserId(userId);
@@ -132,7 +143,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-						}*/
+						}
 						// add by liuyang 神策数据统计修改 20180927 end
 
 					}
@@ -147,7 +158,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						hjhUserAuth.setAutoCreditEndTime(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
 
 						// add by liuyang 神策数据统计修改 20180927 start
-						/*if ("10000000".equals(users.getInstCode())) {
+						if ("10000000".equals(users.getInstCode())) {
 							try {
 								SensorsDataBean sensorsDataBean = new SensorsDataBean();
 								sensorsDataBean.setUserId(userId);
@@ -160,7 +171,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-						}*/
+						}
 						// add by liuyang 神策数据统计修改 20180927 end
 
 					}
@@ -173,7 +184,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						hjhUserAuth.setPaymentMaxAmt(bean.getPaymentMaxAmt());
 
 						// add by liuyang 神策数据统计修改 20180927 start
-						/*if ("10000000".equals(users.getInstCode())) {
+						if ("10000000".equals(users.getInstCode())) {
 							try {
 								SensorsDataBean sensorsDataBean = new SensorsDataBean();
 								sensorsDataBean.setUserId(userId);
@@ -186,7 +197,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-						}*/
+						}
 						// add by liuyang 神策数据统计修改 20180927 end
 					}
 					break;
@@ -224,7 +235,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 					}
 
 					// add by liuyang 神策数据统计修改 20180927 start
-					/*if ("10000000".equals(users.getInstCode())) {
+					if ("10000000".equals(users.getInstCode())) {
 						try {
 							SensorsDataBean sensorsDataBean = new SensorsDataBean();
 							sensorsDataBean.setUserId(userId);
@@ -237,7 +248,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-					}*/
+					}
 					// add by liuyang 神策数据统计修改 20180927 end
 					break;
 				default:
@@ -934,4 +945,15 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		HjhUserAuthConfigVO hjhUserAuthConfig=RedisUtils.getObj(key,HjhUserAuthConfigVO.class);
 		return hjhUserAuthConfig;
 	}
+
+
+	/**
+	 * 授权成功后,发送数据统计MQ
+	 *
+	 * @param sensorsDataBean
+	 */
+	private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+		this.sensorsDataAuthProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_AUTH_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+	}
+
 }
