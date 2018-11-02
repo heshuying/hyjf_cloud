@@ -456,7 +456,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO) {
         String url = urlBase + "hjhDebtCredit/updateHjhDebtCreditByPK";
-
+        logger.info("^^^^^^^^^^^^hjhDebtCreditVO.getId():" + hjhDebtCreditVO.getId());
         HjhDebtCreditVO hjhDebtCreditNew = new HjhDebtCreditVO();
         hjhDebtCreditNew.setId(hjhDebtCreditVO.getId());
         hjhDebtCreditNew.setCreditStatus(2);//转让状态 2完全承接
