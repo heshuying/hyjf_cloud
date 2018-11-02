@@ -185,4 +185,19 @@ public class LoginController extends BaseController {
         } catch (IOException e) {
         }
     }
+    /**
+     * @Author: dongzeshan
+     * @Desc :获取菜单
+     * @Param: * @param map
+     * @Date: 16:43 2018/6/15
+     * @Return: JSONObject
+     */
+    @ApiOperation(value = "admin登出", notes = "admin登出")
+    @PostMapping(value = "/loginOut")
+	@ResponseBody
+	public AdminResult loginOut(HttpServletRequest request) {
+		request.getSession().removeAttribute(BaseController.USER);
+		return new AdminResult<>();
+		
+    }
 }

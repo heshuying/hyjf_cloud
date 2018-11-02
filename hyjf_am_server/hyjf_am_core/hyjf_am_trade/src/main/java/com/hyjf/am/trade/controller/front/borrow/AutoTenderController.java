@@ -138,7 +138,7 @@ public class AutoTenderController extends BaseController {
      * @return
      */
     @RequestMapping("/updateCreditForAutoTender")
-    public Response updateCreditForAutoTender(@RequestBody UpdateCreditForAutoTenderRequest request) {
+    public Response updateCreditForAutoTender(@RequestBody UpdateCreditForAutoTenderRequest request) throws InterruptedException {
         //参数转换
         BankCallBean bean = new BankCallBean();
         String creditNid = request.getCreditNid();
@@ -156,6 +156,11 @@ public class AutoTenderController extends BaseController {
         if (!result) {
             return new Response(Response.FAIL, Response.FAIL_MSG);
         }
+        // ^^^^^^^^^^^^^^
+        Thread.sleep(2000);
+        HjhDebtCredit credits = autoTenderService.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^updateCreditForAutoTender结束"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^
         return new Response();
     }
 

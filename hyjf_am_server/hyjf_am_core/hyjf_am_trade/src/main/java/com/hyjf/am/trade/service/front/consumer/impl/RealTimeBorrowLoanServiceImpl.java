@@ -14,6 +14,7 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -28,6 +29,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -481,7 +483,10 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 
 							//crm投资推送 //确认CRM 队列更新
 							try {
-								amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowTender)));
+								//与消费端统一 改成发送BorrowTenderVO
+								BorrowTenderVO borrowTenderVO = new BorrowTenderVO();
+								BeanUtils.copyProperties(borrowTender, borrowTenderVO);
+								amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowTenderVO)));
 							} catch (Exception e) {
 								logger.error("发送CRM消息失败:" + e.getMessage());
 							}
