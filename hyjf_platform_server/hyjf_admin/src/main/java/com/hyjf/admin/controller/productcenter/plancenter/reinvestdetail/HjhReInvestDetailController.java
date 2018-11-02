@@ -359,8 +359,8 @@ public class HjhReInvestDetailController extends BaseController {
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("accedeOrderId", "计划订单号");
-        map.put("planNid", "计划编号");
+        map.put("accedeOrderId", "智投订单号");
+        map.put("planNid", "智投编号");
         map.put("userName", "用户名");
         map.put("inviteUserName", "推荐人");
         map.put("userAttribute", "用户属性");

@@ -275,5 +275,39 @@
 			u.mobile = #{mobile}
 			limit 1
   </select>
+
+	<resultMap id="UserLoginLogMap" type="com.hyjf.am.user.dao.model.auto.UserLoginLog" >
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="login_times" property="loginTimes" jdbcType="INTEGER" />
+		<result column="login_ip" property="loginIp" jdbcType="VARCHAR" />
+		<result column="login_time" property="loginTime" jdbcType="TIMESTAMP" />
+		<result column="last_ip" property="lastIp" jdbcType="VARCHAR" />
+		<result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="User_Login_Log_Column" >
+		user_id, login_times, login_ip, login_time, last_ip, last_time, create_time, update_time
+	</sql>
+
+	<select id="selectLoginUserByTime" parameterType="java.util.Map" resultMap="UserLoginLogMap">
+		SELECT
+		<if test="distinct" >
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from ht_user_login_log a
+		LEFT JOIN ht_user_info b ON b.user_id = a.user_id
+		<where>
+		  b.role_id = 1
+		<if test="yesterdayBegin != null">
+			AND a.login_time >= #{yesterdayBegin}
+		</if>
+		<if test="yesterdayEnd != null">
+			AND a.login_time <![CDATA[<=]]> #{yesterdayEnd}
+		</if>
+		</where>
+	</select>
 </mapper>
 

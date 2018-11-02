@@ -4,16 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Maps;
-import com.hyjf.am.bean.crmtender.BorrowTenderMsgBean;
-import com.hyjf.am.bean.crmtender.HjhAccedeMsgBean;
 import com.hyjf.am.response.user.HjhPlanResponse;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -96,6 +96,7 @@ public class CrmInvestMessageConsumer extends Consumer {
                 logger.info("========" + CONSUMER_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs,SerializerFeature.IgnoreNonFieldGetter));
                 MessageExt msg = msgs.get(0);
                 String msgBody = new String(msg.getBody());
+                logger.info("======="+ CONSUMER_NAME +" msgBody [{}] ",msgBody);
                 JSONObject json = JSON.parseObject(msgBody);
                 if (json == null) {
                     logger.info("=====" + CONSUMER_NAME + "json解析为空," + CONSUMER_QUIT + "=====");
@@ -104,8 +105,10 @@ public class CrmInvestMessageConsumer extends Consumer {
                 String accId = json.getString("planNid");
                 Object obj = null;
                 if (StringUtils.isNotBlank(accId)) {
+                    logger.info("------计划投资------");
                     obj = JSONObject.parseObject(msgBody, HjhAccedeVO.class);
                 } else {
+                    logger.info("-----散标投资------");
                     obj = JSONObject.parseObject(msgBody, BorrowTenderVO.class);
                 }
                 if (obj == null) {
@@ -115,16 +118,19 @@ public class CrmInvestMessageConsumer extends Consumer {
                 CloseableHttpResponse result = null;
                 try {
                     String postUrl = systemConfig.getCrmTenderUrl();
-                    logger.info("=====" + CONSUMER_NAME + "postUrl:{} =====", postUrl);
+                    logger.info("======="+ CONSUMER_NAME  +"消息转换实体信息 [{}]",JSON.toJSONString(obj));
                     String postData = buildData(obj).toJSONString();
+                    logger.info("=====" + CONSUMER_NAME + "postUrl:[{}] =====", postUrl);
+                    logger.info("=====" + CONSUMER_NAME + "postParam: [{}] ====",postData);
                     result = postJson(postUrl, postData);
+                    logger.info("=====" + CONSUMER_NAME + "投递CRM结果 :" +JSON.toJSONString(result));
                 } catch (Exception e) {
-                    logger.error(e.getMessage());
-                    logger.error("=====" + CONSUMER_NAME + ",发生异常,重新投递=====");
+                    logger.error("=====" + CONSUMER_NAME + ",发生异常,重新投递=====",e);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
 
                 if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                    logger.info("返回码statusCode = " ,result.getStatusLine().getStatusCode() );
                     logger.info("=====" + CONSUMER_NAME + "网络异常，重新投递======");
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 } else {
@@ -145,11 +151,12 @@ public class CrmInvestMessageConsumer extends Consumer {
         JSONObject ret = new JSONObject();
         Map<String, Object> map = Maps.newHashMap();
         // 根据数据类型判断投资类型。直投类
-        if (obj instanceof BorrowTenderMsgBean) {
-            BorrowTenderMsgBean bt = (BorrowTenderMsgBean) obj;
+        if (obj instanceof BorrowTenderVO) {
+            BorrowTenderVO bt = (BorrowTenderVO) obj;
             UserInfoVO userInfo = amUserClient.findUsersInfoById(bt.getUserId());
-            BorrowAndInfoVO borrowInfo = amTradeClient.getBorrowByNid(bt.getBorrowNid());
-            String borrowStyle = borrowInfo.getBorrowStyle();
+            RightBorrowVO borrowVO = amTradeClient.getRightBorrowByNid(bt.getBorrowNid());
+            BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(bt.getBorrowNid());
+            String borrowStyle = borrowVO.getBorrowStyle();
 
             map.put("idNum", userInfo.getIdcard());
             map.put("referrerIdCard", "");
@@ -162,11 +169,11 @@ public class CrmInvestMessageConsumer extends Consumer {
                             || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
                             || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)
                             || CustomConstants.BORROW_STYLE_END.equals(borrowStyle) ? 2 : 1);
-            map.put("term", borrowInfo.getBorrowPeriod());
+            map.put("term", borrowVO.getBorrowPeriod());
             map.put("account", bt.getAccount());
-            map.put("addTime", bt.getAddtime());
+            map.put("addTime", GetDate.getTime10(bt.getCreateTime()));
             map.put("loanTime", getDate(bt.getLoanOrderDate()));
-            if (StringUtils.isNotBlank(borrowInfo.getPlanNid())) {
+            if (StringUtils.isNotBlank(borrowVO.getPlanNid())) {
                 map.put("productNo", 1007);
             } else {
                 map.put("productNo", 1001);
@@ -174,10 +181,10 @@ public class CrmInvestMessageConsumer extends Consumer {
             map.put("referrerDepartmentId", bt.getInviteDepartmentId());
         }
         // 计划类投资
-        else if (obj instanceof HjhAccedeMsgBean) {
-            HjhAccedeMsgBean hj = (HjhAccedeMsgBean) obj;
+        else if (obj instanceof HjhAccedeVO) {
+            HjhAccedeVO hj = (HjhAccedeVO) obj;
             UserInfoVO userInfo = amUserClient.findUsersInfoById(hj.getUserId());
-            HjhPlanResponse response = baseClient.getExe("http://AM-TRADE/am-config/hjhplan/getHjhPlanByPlanNid/" + hj.getPlanNid(), HjhPlanResponse.class);
+            HjhPlanResponse response = baseClient.getExe("http://AM-TRADE/am-trade/hjhPlan/getHjhPlanByPlanNid/" + hj.getPlanNid(), HjhPlanResponse.class);
             HjhPlanVO hjhPlan = response.getResult();
 
             map.put("idNum", userInfo.getIdcard());
@@ -189,8 +196,8 @@ public class CrmInvestMessageConsumer extends Consumer {
             map.put("unit", hjhPlan.getIsMonth() == 0 ? 1 : 2);
             map.put("term", hjhPlan.getLockPeriod());
             map.put("account", hj.getAccedeAccount());
-            map.put("addTime", hj.getAddTime());
-            map.put("loanTime", hj.getAddTime());
+            map.put("addTime", GetDate.getTime10(hj.getCreateTime()));
+            map.put("loanTime", GetDate.getTime10(hj.getCreateTime()));
             map.put("productNo", 1002);
 
         }
