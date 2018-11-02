@@ -405,36 +405,20 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
                     /** 4.7. 完全承接时，结束债券  */
                     if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) == 0) {
-                        //^^^^^^^^^^^^^^^^
-                        HjhDebtCreditVO credittest = this.amTradeClient.selectHjhDebtCreditByCreditNid(redisBorrow.getBorrowNid());
-                        logger.info("^^^^^^^^^^^^getSellerAuthCode前：" + credittest.getCreditCapitalWait());
-                        //^^^^^^^^^^^^^^^^
                         //获取出让人投标成功的授权号
                         String sellerAuthCode = this.amTradeClient.getSellerAuthCode(credit.getSellOrderId(), credit.getSourceType());
                         if (sellerAuthCode == null) {
                             logger.info("[" + accedeOrderId + "]未取得出让人" + credit.getUserId() + "的债权类型" +
                                     credit.getSourceType() + "(1原始0原始)的授权码，结束债权失败。");
                         }
-                        //^^^^^^^^^^^^^^^^
-                         credittest = this.amTradeClient.selectHjhDebtCreditByCreditNid(redisBorrow.getBorrowNid());
-                        logger.info("^^^^^^^^^^^^requestDebtEnd前：" + credittest.getCreditCapitalWait());
-                        //^^^^^^^^^^^^^^^^
                         //调用银行结束债权接口
                         boolean ret = this.amTradeClient.requestDebtEnd(credit, sellerUsrcustid, sellerAuthCode) > 0 ? true : false;
                         if (!ret) {
                             logger.info("[" + accedeOrderId + "]被承接标的" + redisBorrow.getBorrowNid() + "被完全承接，银行结束债权失败。");
                         }
                         logger.info("[" + accedeOrderId + "]被承接标的" + redisBorrow.getBorrowNid() + "被完全承接，银行结束债权成功。");
-                        //^^^^^^^^^^^^^^^^
-                         credittest = this.amTradeClient.selectHjhDebtCreditByCreditNid(redisBorrow.getBorrowNid());
-                        logger.info("^^^^^^^^^^^^selectHjhDebtCreditByCreditNid前：" + credittest.getCreditCapitalWait());
-                        //^^^^^^^^^^^^^^^^
                         //银行结束债权后，更新债权表为完全承接
                         ret = this.amTradeClient.updateHjhDebtCreditForEnd(credit) > 0 ? true : false;
-                        //^^^^^^^^^^^^^^^^
-                         credittest = this.amTradeClient.selectHjhDebtCreditByCreditNid(redisBorrow.getBorrowNid());
-                        logger.info("^^^^^^^^^^^^selectHjhDebtCreditByCreditNid后：" + credittest.getCreditCapitalWait());
-                        //^^^^^^^^^^^^^^^^
                         if (!ret) {
                             logger.info("[" + accedeOrderId + "]银行结束债权后，更新债权表为完全承接失败。");
                         }
