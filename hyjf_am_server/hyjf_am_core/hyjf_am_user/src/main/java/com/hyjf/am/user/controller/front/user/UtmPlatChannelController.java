@@ -75,23 +75,4 @@ public class UtmPlatChannelController extends BaseController {
         return response;
     }
 
-    /**
-     * 根据用户ID查询是否App渠道过来的用户
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping("/selectAppChannelStatisticsDetailByUserId")
-    public AppChannelStatisticsDetailResponse selectAppChannelStatisticsDetailByUserId(@RequestBody @Valid AppChannelStatisticsDetailRequest request) {
-        AppChannelStatisticsDetailResponse response = new AppChannelStatisticsDetailResponse();
-        try {
-            Integer userId = request.getUserId();
-            AppChannelStatisticsDetailVO appChannelStatisticsDetailVO = utmPlatChannelService.selectAppChannelStatisticsDetailByUserId(userId);
-            response.setResult(appChannelStatisticsDetailVO);
-            response.setRtn(AppChannelStatisticsDetailResponse.SUCCESS);
-        } catch (Exception e) {
-            response.setRtn(AppChannelStatisticsDetailResponse.FAIL);
-        }
-        return response;
-    }
 }

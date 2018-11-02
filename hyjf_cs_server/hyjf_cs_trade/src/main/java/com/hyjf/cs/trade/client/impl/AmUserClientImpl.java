@@ -966,24 +966,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	/**
-	 * 根据用户ID查询是否App渠道过来的用户
-	 *
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public AppChannelStatisticsDetailVO selectAppChannelStatisticsDetailByUserId(Integer userId) {
-		AppChannelStatisticsDetailRequest request = new AppChannelStatisticsDetailRequest();
-		request.setUserId(userId);
-		AppChannelStatisticsDetailResponse response = restTemplate
-				.postForEntity(userService + "/utm/selectAppChannelStatisticsDetailByUserId", request, AppChannelStatisticsDetailResponse.class)
-				.getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResult();
-		}
-		return null;
-	}
 
 	/**
 	 * 根据用户ID查询用户部门信息

@@ -10,10 +10,8 @@ import com.hyjf.am.user.dao.model.auto.UtmPlatExample;
 import com.hyjf.am.user.service.front.user.UtmPlatChannelService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -70,19 +68,4 @@ public class UtmPlatChannelServiceImpl extends BaseServiceImpl implements UtmPla
         }
         return null;
     }
-
-
-    /**
-     * 根据用户ID查询是否App渠道过来的用户
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public AppChannelStatisticsDetailVO selectAppChannelStatisticsDetailByUserId(Integer userId) {
-
-        return null;
-    }
-
-
 }

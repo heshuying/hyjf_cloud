@@ -16,13 +16,12 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.consumer.SensorsDataLoginService;
 import com.sensorsdata.analytics.javasdk.SensorsAnalytics;
 import com.sensorsdata.analytics.javasdk.exceptions.InvalidArgumentException;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +47,9 @@ public class SensorsDataLoginServiceImpl extends BaseServiceImpl implements Sens
 
     @Autowired
     private SystemConfig systemConfig;
+
+    @Autowired
+    private CsMessageClient csMessageClient;
 
     /**
      * 发送神策数据统计
@@ -116,7 +118,7 @@ public class SensorsDataLoginServiceImpl extends BaseServiceImpl implements Sens
         }
 
         // 如果 是用户app注册渠道过来的
-        AppChannelStatisticsDetailVO appChannelStatisticsDetail = this.amUserClient.selectAppChannelStatisticsDetailByUserId(userId);
+        AppChannelStatisticsDetailVO appChannelStatisticsDetail = this.csMessageClient.getAppChannelStatisticsDetailByUserId(userId);
         if (appChannelStatisticsDetail != null) {
             // 注册渠道
             profiles.put("registerChannel", StringUtils.isBlank(appChannelStatisticsDetail.getSourceName()) ? "" : appChannelStatisticsDetail.getSourceName());
