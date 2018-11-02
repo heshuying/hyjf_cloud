@@ -129,7 +129,7 @@ public class HjhReInvestDetailController extends BaseController {
         }
 
         if (StringUtils.isEmpty(requestBean.getPlanNid())){
-            return new AdminResult<>(FAIL, "计划编号不能为空!");
+            return new AdminResult<>(FAIL, "智投编号不能为空!");
         }
 
         // 初始化范湖List
