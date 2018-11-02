@@ -44,7 +44,7 @@ public class AboutUsController extends BaseController {
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
 
-	@Value("hyjf.web.host")
+	@Value("${hyjf.web.host}")
 	private String webUrl;
 
 	@Autowired
