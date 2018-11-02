@@ -54,10 +54,7 @@ import redis.clients.jedis.Transaction;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @Description 加入计划
@@ -925,6 +922,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
         }
         planAccede.setRequest(request);
+        planAccede.setCreateTime(new Date());
         // 插入汇计划加入明细表
         logger.info("插入汇计划加入明细表  planAccede: {} ", JSONObject.toJSONString(planAccede) );
         boolean trenderFlag = amTradeClient.insertHJHPlanAccede(planAccede);

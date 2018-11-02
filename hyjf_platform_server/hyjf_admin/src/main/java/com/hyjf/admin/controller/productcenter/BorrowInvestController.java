@@ -399,9 +399,12 @@ public class BorrowInvestController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        List<BorrowInvestCustomizeVO> resultList = this.borrowInvestService.getExportBorrowInvestList(borrowInvestRequest);
-
-
+        // mod by liuyang 20181102 需求迁移 投资明细导出追加时间判断 对应svn 版本号:53180 start
+        List<BorrowInvestCustomizeVO> resultList = new ArrayList<BorrowInvestCustomizeVO>();
+        if (StringUtils.isNotBlank(borrowInvestRequest.getTimeEndSrch()) || StringUtils.isNotBlank(borrowInvestRequest.getTimeStartSrch())) {
+            resultList = this.borrowInvestService.getExportBorrowInvestList(borrowInvestRequest);
+        }
+        // mod by liuyang 20181102 需求迁移 投资明细导出追加时间判断 对应svn 版本号:53180 end
         Integer totalCount = resultList.size();
 
         Map<String, String> beanPropertyColumnMap = buildMap();
