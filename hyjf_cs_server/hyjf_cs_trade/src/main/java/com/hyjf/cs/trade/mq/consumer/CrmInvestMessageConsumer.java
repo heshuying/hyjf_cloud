@@ -115,8 +115,9 @@ public class CrmInvestMessageConsumer extends Consumer {
                 CloseableHttpResponse result = null;
                 try {
                     String postUrl = systemConfig.getCrmTenderUrl();
-                    logger.info("=====" + CONSUMER_NAME + "postUrl:{} =====", postUrl);
                     String postData = buildData(obj).toJSONString();
+                    logger.info("=====" + CONSUMER_NAME + "postUrl:[{}] =====", postUrl);
+                    logger.info("=====" + CONSUMER_NAME + "postParam: [{}] ====",postData);
                     result = postJson(postUrl, postData);
                     logger.info("=====" + CONSUMER_NAME + "投递CRM结果 :" +JSON.toJSONString(result));
                 } catch (Exception e) {
