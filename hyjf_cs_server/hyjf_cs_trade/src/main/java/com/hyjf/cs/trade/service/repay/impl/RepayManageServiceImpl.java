@@ -2,39 +2,63 @@ package com.hyjf.cs.trade.service.repay.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.resquest.trade.*;
+import com.hyjf.am.vo.admin.BorrowCustomizeVO;
+import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
+import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.file.FavFTPUtil;
+import com.hyjf.common.file.SFTPParameter;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.MD5;
 import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
+import com.hyjf.cs.trade.bean.repay.ProjectRepayListBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.repay.RepayManageService;
+import com.hyjf.cs.trade.util.PdfGenerator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 还款管理列表
@@ -44,6 +68,8 @@ import java.util.Map;
  */
 @Service
 public class RepayManageServiceImpl extends BaseTradeServiceImpl implements RepayManageService {
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 普通用户管理费总待还
@@ -483,5 +509,202 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         requestBean.setStartDate(startDate);
         requestBean.setEndDate(endDate);
         return amTradeClient.getOrgBatchRepayData(requestBean);
+    }
+
+    /**
+     * 下载汇盈金服互联网金融服务平台居间服务协议—————— 借款人
+     */
+    @Override
+    public File createAgreementPDFFileRepay(HttpServletRequest request, HttpServletResponse response, String borrowNid, String nid, String flag, Integer userId) {
+        logger.info("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）");
+        if (borrowNid == null || "".equals(borrowNid.trim())) {
+            System.out.println("标的信息不存在,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
+            return null;
+        }
+        // 查询借款人用户名
+        Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("borrowNidSrch", borrowNid);
+        BorrowCommonCustomizeVO borrowCommonCustomize = new BorrowCommonCustomizeVO();
+        // 借款编码
+        borrowCommonCustomize.setBorrowNidSrch(borrowNid);
+        List<BorrowCustomizeVO> recordList1 = amTradeClient.searchBorrowList(paraMap);
+        // 出让人userid
+        TenderAgreementVO tenderAgreement = new TenderAgreementVO();
+        List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(nid);//居间协议
+        File filePdf= null;
+        //下载法大大协议--居间
+        if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+            tenderAgreement = tenderAgreementsNid.get(0);
+            if(tenderAgreement!=null){
+                filePdf = createFaddPDFImgFileOne(tenderAgreement);//下载脱敏
+            }
+            return filePdf;
+        }
+        List<BorrowCustomizeVO> recordList = recordList1;
+        Map<String, Object> contents = new HashMap<String, Object>();
+        contents.put("record", recordList.get(0));
+        contents.put("borrowNid", borrowNid);
+        contents.put("nid", nid);
+
+        contents.put("recoverLastDay", recordList.get(0).getRecoverLastDay());// 最后一笔的放款完成时间
+        if (org.apache.commons.lang.StringUtils.isNotBlank(recordList.get(0).getRecoverLastTime())) {
+            // 最后一笔的放款完成时间 (协议签订日期)
+            contents.put("recoverTime", recordList.get(0).getRecoverLastTime());
+        } else {
+            // 设置为满标时间
+            contents.put("recoverTime", recordList.get(0).getReverifyTime());
+        }
+
+        // 借款人用户名
+        int userIds = recordList.get(0).getUserId();
+        UserInfoVO userInfo= amUserClient.findUserInfoById(userIds);
+        String borrowUsername = userInfo.getTruename();
+        System.out.println("2221------------------------idCard:"+userInfo.getIdcard());
+        if(flag!=null && flag=="1"){
+            List<WebUserInvestListCustomizeVO> tzList = selectUserInvestList(borrowNid);
+            if (tzList != null && tzList.size() > 0) {
+                WebUserInvestListCustomizeVO userInvest = tzList.get(0);
+                if(userInvest.getUserId().equals(String.valueOf(userId))){
+
+                    userInvest.setRealName(userInvest.getRealName().substring(0,1)+"**");
+                    userInvest.setUsername(userInvest.getUsername().substring(0,1)+"*****");
+                    userInvest.setIdCard(userInvest.getIdCard().substring(0,4)+"**************");
+                }
+                contents.put("userInvest", userInvest);
+            }else {
+                return null;
+            }
+        } else {
+            List<WebUserInvestListCustomizeVO> tzList = selectUserInvestList(borrowNid);
+            if (tzList != null && tzList.size() > 0) {
+                WebUserInvestListCustomizeVO userInvest = tzList.get(0);
+                if(userInvest.getUserId().equals(String.valueOf(userId))){
+                    userInvest.setRealName(userInvest.getRealName().substring(0,1)+"**");
+                    userInvest.setUsername(userInvest.getUsername().substring(0,1)+"*****");
+                    userInvest.setIdCard(userInvest.getIdCard().substring(0,4)+"**************");
+                }
+                contents.put("userInvest", userInvest);
+            }else {
+                return null;
+            }
+        }
+        if(!(userId+"").equals(userInfo.getUserId()+"") ){
+            borrowUsername = borrowUsername.substring(0,1)+"**";
+
+        }
+        contents.put("borrowUsername", borrowUsername);
+        // 如果是分期还款，查询分期信息
+        String borrowStyle = recordList.get(0).getBorrowStyle();// 还款模式
+        if (borrowStyle != null) {
+            //计算预期收益
+            BigDecimal earnings = new BigDecimal("0");
+            // 收益率
+
+            String borrowAprString = org.apache.commons.lang.StringUtils.isEmpty(recordList.get(0).getBorrowApr())?"0.00":recordList.get(0).getBorrowApr().replace("%", "");
+            BigDecimal borrowApr = new BigDecimal(borrowAprString);
+            //投资金额
+            String accountString = org.apache.commons.lang.StringUtils.isEmpty(recordList.get(0).getAccount())?"0.00":recordList.get(0).getAccount().replace(",", "");
+            BigDecimal account = new BigDecimal(accountString);
+            // 周期
+            String borrowPeriodString = org.apache.commons.lang.StringUtils.isEmpty(recordList.get(0).getBorrowPeriod())?"0":recordList.get(0).getBorrowPeriod();
+            String regEx="[^0-9]";
+            Pattern p = Pattern.compile(regEx);
+            Matcher m = p.matcher(borrowPeriodString);
+            borrowPeriodString = m.replaceAll("").trim();
+            Integer borrowPeriod = Integer.valueOf(borrowPeriodString);
+            if (org.apache.commons.lang.StringUtils.equals("endday", borrowStyle)){
+                // 还款方式为”按天计息，到期还本还息“：预期收益=投资金额*年化收益÷365*锁定期；
+                earnings = DuePrincipalAndInterestUtils.getDayInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
+            } else {
+                // 还款方式为”按月计息，到期还本还息“：预期收益=投资金额*年化收益÷12*月数；
+                earnings = DuePrincipalAndInterestUtils.getMonthInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
+
+            }
+            contents.put("earnings", earnings);
+            if ("month".equals(borrowStyle) || "principal".equals(borrowStyle)
+                    || "endmonth".equals(borrowStyle)) {
+                Map<String,Object> paraBean = new HashMap<>();
+                paraBean.put("userId", userId);
+                paraBean.put("borrowNid", borrowNid);
+                paraBean.put("nid", nid);
+                int recordTotal = amTradeClient.countProjectRepayPlanRecordTotal(paraMap);
+                if (recordTotal > 0) {
+                    Paginator paginator = new Paginator(1, recordTotal);
+                    List<WebProjectRepayListCustomizeVO> fqList = amTradeClient.selectProjectRepayPlanList(paraMap);
+                    contents.put("paginator", paginator);
+                    contents.put("repayList", fqList);
+                } else {
+                    Paginator paginator = new Paginator(1, recordTotal);
+                    contents.put("paginator", paginator);
+                    contents.put("repayList", "");
+                }
+            }
+        }
+
+        // 导出PDF文件
+        try {
+            String flag1 = flag;
+            if(flag1!=null && flag1=="1"){
+                File file  =  PdfGenerator.generatePdfFile(request, response, borrowNid + "_" + nid + ".pdf",
+                        CustomConstants.TENDER_CONTRACT, contents);
+                return file;
+            }else {
+                PdfGenerator.generatePdf(request, response, borrowNid + "_" + nid + ".pdf",
+                        CustomConstants.TENDER_CONTRACT, contents);
+            }
+
+        } catch (Exception e) {
+            logger.error("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）", e);
+        }
+
+        logger.info("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）");
+        return null;
+    }
+
+    public File createFaddPDFImgFileOne(TenderAgreementVO tenderAgreement) {
+        SFTPParameter para = new SFTPParameter() ;
+        String ftpIP = systemConfig.getHyjfFtpIp();
+        String port = systemConfig.getHyjfFtpPort();
+        String basePathImage = systemConfig.getHyjfFtpBasepathImg();
+        String basePathPdf = systemConfig.getHyjfFtpBasepathPdf();
+        String password = systemConfig.getHyjfFtpPassword();
+        String username = systemConfig.getHyjfFtpUsername();
+        para.hostName = ftpIP;//ftp服务器地址
+        para.userName = username;//ftp服务器用户名
+        para.passWord = password;//ftp服务器密码
+        para.port = Integer.valueOf(port);//ftp服务器端口
+        para.savePath = "/pdf_tem/pdf/" + tenderAgreement.getTenderNid();
+        para.fileName=tenderAgreement.getTenderNid();
+        String imgUrl = tenderAgreement.getImgUrl();
+        String pdfUrl = tenderAgreement.getPdfUrl();
+        if(org.apache.commons.lang.StringUtils.isNotBlank(pdfUrl)){
+            //获取文件目录
+            int index = pdfUrl.lastIndexOf("/");
+            String pdfPath = pdfUrl.substring(0,index);
+            //文件名称
+            String pdfName = pdfUrl.substring(index+1);
+            para.downloadPath = basePathPdf + "/" + pdfPath;
+            para.sftpKeyFile = pdfName;
+
+        }else if(org.apache.commons.lang.StringUtils.isNotBlank(imgUrl)){
+            int index = imgUrl.lastIndexOf("/");
+            String imgPath = imgUrl.substring(0,index);
+            //文件名称
+            String imgName = imgUrl.substring(index+1);
+            para.downloadPath = "/" + basePathImage + "/" + imgPath;
+            para.sftpKeyFile = imgName;
+        }else{
+            return null;
+        }
+        File file =  FavFTPUtil.downloadDirectory(para);
+        return file;
+    }
+
+    @Override
+    public List<WebUserInvestListCustomizeVO> selectUserInvestList(String borrowNid) {
+        Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("borrowNid", borrowNid);
+
+        return amTradeClient.selectUserInvestList(paraMap);
     }
 }

@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.account.AccountService;
@@ -4643,5 +4644,31 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     @Override
     public List<WebUserInvestListCustomizeVO> selectUserInvestList(Map<String, Object> param) {
         return borrowCustomizeMapper.selectUserInvestList(param);
+    }
+
+    @Override
+    public List<BorrowCustomizeVO> searchBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO) {
+        return  borrowCustomizeMapper.searchBorrowList(borrowCommonCustomizeVO);
+    }
+
+    @Override
+    public int countProjectRepayPlanRecordTotal(String borrowNid, String userId, String nid) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        params.put("borrowNid", borrowNid);
+        params.put("nid", nid);
+        int total = webUserInvestListCustomizeMapper.countProjectRepayPlanRecordTotal(params);
+        return total;
+    }
+
+    @Override
+    public List<WebProjectRepayListCustomize> selectProjectRepayPlanList(String borrowNid, String userId, String nid) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        params.put("borrowNid", borrowNid);
+        params.put("nid", nid);
+        List<WebProjectRepayListCustomize> projectRepayList =
+                webUserInvestListCustomizeMapper.selectProjectRepayPlanList(params);
+        return projectRepayList;
     }
 }

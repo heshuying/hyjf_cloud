@@ -157,4 +157,10 @@ public interface BorrowCustomizeMapper {
     int myTenderCountProjectRepayPlanRecordTotal(Map<String,Object> param);
 
     List<WebUserInvestListCustomizeVO> selectUserInvestList(Map<String,Object> param);
+    /**
+     * 借款列表
+     *
+     * @return
+     */
+    List<BorrowCustomizeVO> searchBorrowList(BorrowCommonCustomizeVO BorrowCommonCustomizeVO);
 }

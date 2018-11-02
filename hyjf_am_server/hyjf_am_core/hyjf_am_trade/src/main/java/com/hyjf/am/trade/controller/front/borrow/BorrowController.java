@@ -6,11 +6,13 @@ package com.hyjf.am.trade.controller.front.borrow;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.response.admin.BorrowCustomizeResponse;
 import com.hyjf.am.response.admin.WebProjectRepayListCustomizeResponse;
 import com.hyjf.am.response.admin.WebUserInvestListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.BorrowAccountResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
+import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
@@ -19,11 +21,14 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.borrow.BorrowStyleService;
 import com.hyjf.am.trade.service.front.hjh.HjhInstConfigService;
+import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
@@ -36,6 +41,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -496,6 +502,17 @@ public class BorrowController extends BaseController {
 		return response;
 	}
 
+	@PostMapping("/searchBorrowList")
+	public BorrowCustomizeXYResponse searchBorrowList(@RequestBody BorrowCommonCustomizeVO borrowCommonCustomizeVO){
+		logger.info("searchBorrowList param = {}",JSON.toJSON(borrowCommonCustomizeVO));
+		BorrowCustomizeXYResponse response = new BorrowCustomizeXYResponse();
+		List<BorrowCustomizeVO> list = borrowService.searchBorrowList(borrowCommonCustomizeVO);
+		if (CollectionUtils.isNotEmpty(list)){
+			response.setResultList(list);
+		}
+		return response;
+	}
+
 	@PostMapping("/getDebtBorrowList")
 	public DebtBorrowListResponse getDebtBorrowList(@RequestBody Map<String,Object> param){
 		DebtBorrowListResponse response = new DebtBorrowListResponse();
@@ -550,6 +567,30 @@ public class BorrowController extends BaseController {
 		IntegerResponse response = new IntegerResponse();
 		int count = borrowService.myTenderCountProjectRepayPlanRecordTotal(param);
 		response.setResultInt(count);
+		return response;
+	}
+
+	/**
+	 * 标的放款记录-分期 count
+	 * @param borrowInvestRequest
+	 * @return
+	 */
+	@RequestMapping("/count_project_repay")
+	public WebProjectRepayListCustomizeResponse countProjectRepayPlanRecordTotal(@RequestBody @Valid BorrowInvestRequest borrowInvestRequest){
+		WebProjectRepayListCustomizeResponse response = new WebProjectRepayListCustomizeResponse();
+		int count = borrowService.countProjectRepayPlanRecordTotal(borrowInvestRequest.getBorrowNid(),String.valueOf(borrowInvestRequest.getUserId()),borrowInvestRequest.getNid());
+		response.setTotal(count);
+		return response;
+	}
+
+	@RequestMapping("/selectProjectRepayPlanList")
+	public WebProjectRepayListCustomizeResponse selectProjectRepayPlanList(@RequestBody @Valid BorrowInvestRequest borrowInvestRequest){
+		WebProjectRepayListCustomizeResponse response = new WebProjectRepayListCustomizeResponse();
+		List<WebProjectRepayListCustomize> resultList = borrowService.selectProjectRepayPlanList(borrowInvestRequest.getBorrowNid(),String.valueOf(borrowInvestRequest.getUserId()),borrowInvestRequest.getNid());
+		if (!CollectionUtils.isEmpty(resultList)) {
+			List<WebProjectRepayListCustomizeVO> voList = CommonUtils.convertBeanList(resultList, WebProjectRepayListCustomizeVO.class);
+			response.setResultList(voList);
+		}
 		return response;
 	}
 
