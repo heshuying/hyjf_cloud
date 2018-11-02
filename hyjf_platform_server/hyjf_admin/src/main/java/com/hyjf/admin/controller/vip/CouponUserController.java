@@ -751,7 +751,6 @@ public class CouponUserController extends BaseController {
             Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
             for(CouponUserCustomizeVO couponUserCustomizeVO:customizeResponse.getResultList()){
                 //循环计数（每循环一次是一行）根据行数下标位置获取数组，无法确定当前行下标
-                int s = 1;
                 String clientString = "";
                 if(StringUtils.isNotEmpty(couponUserCustomizeVO.getCouponSystem())){
                     String clientSed[] = StringUtils.split(couponUserCustomizeVO.getCouponSystem(), ",");
@@ -761,18 +760,18 @@ public class CouponUserController extends BaseController {
                             break;
                         } else {
                             for (String key : client.keySet()) {
-                                if (clientSed[s].equals(key)) {
-                                    if (s != 0 && clientString.length() != 0) {
+                                if (clientSed[k].equals(key)) {
+                                    if (clientString.length() != 0) {
                                         clientString = clientString + "/";
                                     }
                                     clientString = clientString + client.get(key);
                                 }
                             }
                         }
-                        couponUserCustomizeVO.setCouponSystem(clientString);
+                        //couponUserCustomizeVO.setCouponSystem(clientString);
                     }
                 }
-                s++;
+                couponUserCustomizeVO.setCouponSystem(clientString);
             }
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, customizeResponse.getResultList());
         }
@@ -786,7 +785,6 @@ public class CouponUserController extends BaseController {
             if (customizeResponse2 != null && customizeResponse2.getResultList().size()> 0) {
                 for(CouponUserCustomizeVO couponUserCustomizeVO:customizeResponse2.getResultList()){
                     //循环计数（每循环一次是一行）根据行数下标位置获取数组，无法确定当前行下标
-                    int s = 1;
                     String clientString = "";
                     String clientSed[] = StringUtils.split(couponUserCustomizeVO.getCouponSystem(), ",");
                     for (int k = 0; k < clientSed.length; k++) {
@@ -795,17 +793,17 @@ public class CouponUserController extends BaseController {
                             break;
                         } else {
                             for (String key : client.keySet()) {
-                                if (clientSed[s].equals(key)) {
-                                    if (s != 0 && clientString.length() != 0) {
+                                if (clientSed[k].equals(key)) {
+                                    if (clientString.length() != 0) {
                                         clientString = clientString + "/";
                                     }
                                     clientString = clientString + client.get(key);
                                 }
                             }
                         }
-                        couponUserCustomizeVO.setCouponSystem(clientString);
+                        //couponUserCustomizeVO.setCouponSystem(clientString);
                     }
-                    s++;
+                    couponUserCustomizeVO.setCouponSystem(clientString);
                 }
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  customizeResponse2.getResultList());
