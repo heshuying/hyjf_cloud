@@ -176,10 +176,19 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 	 */
 	@Override
 	public Map<String,Object> callUnBindCardPage(DeleteCardPageBean bean,String channel,String sign,String platform,HttpServletRequest request){
+		Map<String, Object> mv = new HashMap<>();
+		//
+		bean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_UNBINDCARD_PAGE);
+		bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
+		bean.setChannel(channel);// 交易渠道
+		bean.setPlatform(platform);
+
+		BankCallBean bindCardBean = getCallbankMV(bean);
+
 		// 失败页面
-		String errorPath = "/bank/user/bankcardNew/closebindcard-error";
+		String errorPath = "/user/bindCardError?bind=false&unbind=true&logOrdId="+bindCardBean.getLogOrderId();
 		// 成功页面
-		String successPath = "/bank/user/bankcardNew/closebindcard-success";
+		String successPath = "/user/bindCardSuccess?bind=false&unbind=true&msg=解绑银行卡成功!";
 		// 回调路径
 		String retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath;
 		String successUrl = super.getFrontHost(systemConfig,channel) + successPath;
@@ -196,18 +205,14 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 
 		// 忘记密码跳转链接
 		String forgetPassworedUrl = getForgotPwdUrl(channel,request,systemConfig);
-		//
-		bean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_UNBINDCARD_PAGE);
-		bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
-		bean.setForgotPwdUrl(forgetPassworedUrl);
-		bean.setRetUrl(retUrl);
-		bean.setSuccessfulUrl(successUrl);
-		bean.setChannel(channel);// 交易渠道
-		bean.setPlatform(platform);
+		bindCardBean.setForgotPwdUrl(forgetPassworedUrl);
+		bindCardBean.setRetUrl(retUrl);
+		bindCardBean.setSuccessfulUrl(successUrl);
+
 		try {
 			// 拼装参数 调用江西银行
-			Map<String,Object> map = getCallbankMV(bean);
-			return map;
+			mv = BankCallUtils.callApiMap(bindCardBean);
+			return mv;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -218,8 +223,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 	 * @param bean
 	 * @return
 	 */
-	public  Map<String, Object> getCallbankMV(DeleteCardPageBean bean) {
-		Map<String, Object> mv = new HashMap<>();
+	public  BankCallBean getCallbankMV(DeleteCardPageBean bean) {
 		// 获取共同参数
 		String bankCode = systemConfig.getBankCode();
 		String bankInstCode = systemConfig.getBankInstcode();
@@ -248,9 +252,9 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 		bindCardBean.setIdNo(bean.getIdNo());
 		bindCardBean.setCardNo(bean.getCardNo());
 		bindCardBean.setMobile(bean.getMobile());
-		bindCardBean.setRetUrl(bean.getRetUrl());
+/*		bindCardBean.setRetUrl(bean.getRetUrl());
 		bindCardBean.setForgotPwdUrl(bean.getForgotPwdUrl());
-		bindCardBean.setSuccessfulUrl(bean.getSuccessfulUrl());
+		bindCardBean.setSuccessfulUrl(bean.getSuccessfulUrl());*/
 		bindCardBean.setNotifyUrl(bean.getNotifyUrl());
 
 		// 页面调用必须传的
@@ -262,13 +266,7 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 		bindCardBean.setLogRemark("外部服务接口:绑卡页面");
 		bindCardBean.setLogIp(bean.getIp());
 		bindCardBean.setLogClient(Integer.parseInt(bean.getPlatform()));
-		try {
-			// 拼装参数 调用江西银行
-			mv = BankCallUtils.callApiMap(bindCardBean);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return mv;
+		return bindCardBean;
 	}
 	/**
 	 * 解绑银行卡后(异步回调删除)
