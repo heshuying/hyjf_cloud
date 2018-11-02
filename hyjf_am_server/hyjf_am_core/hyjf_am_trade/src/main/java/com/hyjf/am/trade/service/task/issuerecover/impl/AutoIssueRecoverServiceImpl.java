@@ -770,6 +770,9 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrowInfo.setUserId(hjhPlanAsset.getUserId());
         borrowInfo.setAccountContents("");
 
+        borrowInfo.setAddIp(borrow.getAddIp());
+
+
         // 受托支付
         if (hjhPlanAsset.getEntrustedFlg() != null && hjhPlanAsset.getEntrustedFlg().intValue() ==1) {
             borrowInfo.setEntrustedFlg(1);

@@ -349,8 +349,8 @@ public class HjhReInvestDebtController extends BaseController {
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("AssignPlanOrderId", "计划订单号");
-        map.put("AssignPlanNid", "承接计划编号");
+        map.put("AssignPlanOrderId", "智投订单号");
+        map.put("AssignPlanNid", "承接智投编号");
         map.put("AssignOrderId", "承接订单号");
         map.put("UserName", "承接人");
         map.put("CreditUserName", "出让人");

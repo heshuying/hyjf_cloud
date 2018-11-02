@@ -411,7 +411,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                             logger.info("[" + accedeOrderId + "]未取得出让人" + credit.getUserId() + "的债权类型" +
                                     credit.getSourceType() + "(1原始0原始)的授权码，结束债权失败。");
                         }
-
                         //调用银行结束债权接口
                         boolean ret = this.amTradeClient.requestDebtEnd(credit, sellerUsrcustid, sellerAuthCode) > 0 ? true : false;
                         if (!ret) {

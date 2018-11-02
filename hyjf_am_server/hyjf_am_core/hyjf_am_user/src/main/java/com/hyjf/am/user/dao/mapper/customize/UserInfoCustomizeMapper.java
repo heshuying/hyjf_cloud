@@ -1,5 +1,6 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.user.dao.model.auto.UserLoginLog;
 import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import org.apache.ibatis.annotations.Param;
@@ -72,4 +73,11 @@ public interface UserInfoCustomizeMapper {
      * @return
      */
     AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile);
+
+    /**
+     * 查询前一天登录的用户
+     * @param map
+     * @return
+     */
+    List<UserLoginLog> selectLoginUserByTime(Map<String, Object> map);
 }

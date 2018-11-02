@@ -128,7 +128,11 @@ public interface MQConstant {
 
 
 
-
+	/**
+	 * 会员操作日志
+	 */
+	String USER_OPERATION_LOG_GROUP = "USER_OPERATION_LOG_GROUP";
+	String USER_OPERATION_LOG_TOPIC = "USER_OPERATION_LOG_TOPIC";
 
 	/**
 	 * 新PC渠道统计
