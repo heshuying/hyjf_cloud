@@ -121,14 +121,14 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
-     * 根据主键获取保证金配置
+     * 更新当前机构可用的还款方式并返回最新保证金详情
      *
      * @param id
      * @return
      */
     @Override
-    public BailConfigInfoCustomizeVO selectBailConfigById(Integer id) {
-        String url = "http://AM-ADMIN/am-trade/bail_config/select_bail_config_by_id/" + id;
+    public BailConfigInfoCustomizeVO updateSelectBailConfigById(Integer id) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/update_select_bail_config_by_id/" + id;
         BailConfigInfoCustomizeResponse response = restTemplate.getForEntity(url,BailConfigInfoCustomizeResponse.class).getBody();
         if (BailConfigInfoCustomizeResponse.isSuccess(response)) {
             return response.getResult();
@@ -189,19 +189,6 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public boolean updateBailInfoDelFlg(String instCode) {
         String url = "http://AM-ADMIN/am-trade/bail_config/update_bail_info_delflg/" + instCode;
-        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
-        return response.getResultBoolean();
-    }
-
-    /**
-     * 更新机构可用还款方式
-     *
-     * @param id
-     * @return
-     */
-    @Override
-    public boolean updateBailInfoDelFlgById(Integer id) {
-        String url = "http://AM-ADMIN/am-trade/bail_config/update_bail_info_delflg_by_id/" + id;
         BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
         return response.getResultBoolean();
     }

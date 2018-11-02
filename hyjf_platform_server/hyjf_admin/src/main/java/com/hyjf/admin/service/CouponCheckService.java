@@ -74,4 +74,11 @@ public interface CouponCheckService {
      * @return
      */
     CouponCheckVO getCouponCheckById(int id);
+
+    /**
+     * 校验优惠券的已发行数量
+     * @param couponCode
+     * @return
+     */
+    boolean checkSendNum(String couponCode);
 }

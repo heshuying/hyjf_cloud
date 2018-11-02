@@ -339,16 +339,23 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
     }
 
     /**
-     * 更新机构可用还款方式
+     * 更新机构可用还款方式并返回最新的保证金配置
      *
      * @param id
      * @return
      */
     @Override
-    public Boolean updateBailInfoDelFlgById(Integer id) {
+    public BailConfigInfoCustomizeVO updateBailInfoDelFlgById(Integer id) {
         // 根据主键获取机构编号
         HjhBailConfig hjhBailConfig = hjhBailConfigMapper.selectByPrimaryKey(id);
-        return updateBailInfoDelFlg(hjhBailConfig.getInstCode());
+        if(null == hjhBailConfig){
+            return null;
+        }
+        // 更新机构可用还款方式并返回最新的保证金配置
+        if(updateBailInfoDelFlg(hjhBailConfig.getInstCode())) {
+            return selectBailConfigById(id);
+        }
+        return null;
     }
 
     /**

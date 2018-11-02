@@ -1,6 +1,8 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.AdminOperationLogResponse;
+import com.hyjf.am.response.message.UserOperationLogResponse;
+import com.hyjf.am.resquest.admin.UserOperationLogRequest;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
@@ -33,4 +35,11 @@ public interface OperationLogService {
      * @return
      */
     public List<HjhAssetTypeVO> getHjhAssetType();
+
+    /**
+     * 查询会员操作日志列表
+     * @param request
+     * @return
+     */
+    UserOperationLogResponse  getOperationLogList(UserOperationLogRequest request);
 }

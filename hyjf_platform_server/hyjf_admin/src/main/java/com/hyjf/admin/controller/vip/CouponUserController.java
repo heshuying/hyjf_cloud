@@ -10,6 +10,7 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.CouponCheckService;
 import com.hyjf.admin.service.coupon.CouponUserService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -76,6 +77,8 @@ public class CouponUserController extends BaseController {
 
     @Autowired
     private CouponUserService couponUserService;
+    @Autowired
+    private CouponCheckService couponCheckService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @PostMapping("/couponUserList")
@@ -141,6 +144,7 @@ public class CouponUserController extends BaseController {
         if (couponUserBeanRequest.getAmount() == null || couponUserBeanRequest.getAmount() < 0) {
             couponUserBeanRequest.setAmount(1);
         }
+
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         //根据用户名获取用户id
         String userName = couponUserBeanRequest.getUserName();
@@ -188,6 +192,10 @@ public class CouponUserController extends BaseController {
         couponUserRequest.setAttribute(userInfoVO.getAttribute());
         couponUserRequest.setChannel(channelName);
         for (int i = 0; i < couponUserBeanRequest.getAmount(); i++) {
+            boolean  result = couponCheckService.checkSendNum(couponUserBeanRequest.getCouponCode());
+            if (!result) {
+                return new AdminResult(AdminResult.FAIL, "优惠券发行数量超出上限，不再发放！");
+            }
             couponUserResponse = couponUserService.insertCouponUser(couponUserRequest);
         }
         return new AdminResult<>(couponUserResponse);
@@ -721,7 +729,7 @@ public class CouponUserController extends BaseController {
         // 表格sheet名称
         String sheetName = "借款盖章用户查询";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
@@ -745,22 +753,24 @@ public class CouponUserController extends BaseController {
                 //循环计数（每循环一次是一行）根据行数下标位置获取数组，无法确定当前行下标
                 int s = 1;
                 String clientString = "";
-                String clientSed[] = StringUtils.split(couponUserCustomizeVO.getCouponSystem(), ",");
-                for (int k = 0; k < clientSed.length; k++) {
-                    if ("-1".equals(clientSed[k])) {
-                        clientString = clientString + "不限";
-                        break;
-                    } else {
-                        for (String key : client.keySet()) {
-                            if (clientSed[s].equals(key)) {
-                                if (s != 0 && clientString.length() != 0) {
-                                    clientString = clientString + "/";
+                if(StringUtils.isNotEmpty(couponUserCustomizeVO.getCouponSystem())){
+                    String clientSed[] = StringUtils.split(couponUserCustomizeVO.getCouponSystem(), ",");
+                    for (int k = 0; k < clientSed.length; k++) {
+                        if ("-1".equals(clientSed[k])) {
+                            clientString = clientString + "不限";
+                            break;
+                        } else {
+                            for (String key : client.keySet()) {
+                                if (clientSed[s].equals(key)) {
+                                    if (s != 0 && clientString.length() != 0) {
+                                        clientString = clientString + "/";
+                                    }
+                                    clientString = clientString + client.get(key);
                                 }
-                                clientString = clientString + client.get(key);
                             }
                         }
+                        couponUserCustomizeVO.setCouponSystem(clientString);
                     }
-                    couponUserCustomizeVO.setCouponSystem(clientString);
                 }
                 s++;
             }

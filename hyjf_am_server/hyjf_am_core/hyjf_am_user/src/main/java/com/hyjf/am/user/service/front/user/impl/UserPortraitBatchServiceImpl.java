@@ -15,13 +15,12 @@ import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author: sunpeikai
@@ -57,10 +56,13 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
         String yesterdayEnd = endDay + " 23:59:59";
 
         // 从UserInfo中获得所有昨天登录过的userId
-        UserLoginLogExample example = new UserLoginLogExample();
-        UserLoginLogExample.Criteria criteria = example.createCriteria();
-        criteria.andLoginTimeBetween(GetDate.stringToDate(yesterdayBegin), GetDate.stringToDate(yesterdayEnd));
-        List<UserLoginLog> userLoginLogList = userLoginLogMapper.selectByExample(example);
+//        UserLoginLogExample example = new UserLoginLogExample();
+//        UserLoginLogExample.Criteria criteria = example.createCriteria();
+//        criteria.andLoginTimeBetween(GetDate.stringToDate(yesterdayBegin), GetDate.stringToDate(yesterdayEnd));
+        Map<String, Object> map = new HashMap<>();
+        map.put("yesterdayBegin", GetDate.stringToDate(yesterdayBegin));
+        map.put("yesterdayEnd", GetDate.stringToDate(yesterdayEnd));
+        List<UserLoginLog> userLoginLogList = userInfoCustomizeMapper.selectLoginUserByTime(map);
 
 
         List<UserAndSpreadsUserVO> result = new ArrayList<>();

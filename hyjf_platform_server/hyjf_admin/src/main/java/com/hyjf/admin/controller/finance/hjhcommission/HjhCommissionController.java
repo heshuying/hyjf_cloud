@@ -138,7 +138,7 @@ public class HjhCommissionController extends BaseController{
 	@ApiOperation(value = "汇计划提成列表 加入金额/提成金额 累计", notes = "汇计划提成列表 加入金额/提成金额 累计")
 	@PostMapping(value = "/sum")
 	@ResponseBody
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
 	public JSONObject getSumTotal(HttpServletRequest request, @RequestBody @Valid HjhCommissionViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		// 初始化原子层请求实体
@@ -156,10 +156,10 @@ public class HjhCommissionController extends BaseController{
 			jsonObject.put("error", FAIL);
 			return jsonObject;
 		}
-		if(response.getTotalMap().isEmpty()){
+/*		if(response.getTotalMap() == null || response.getTotalMap().isEmpty()){
 			jsonObject.put("error", FAIL);
 			return jsonObject;
-		}
+		}*/
 		jsonObject.put("totalMap", response.getTotalMap());
 		jsonObject.put("status", SUCCESS);
 		return jsonObject;

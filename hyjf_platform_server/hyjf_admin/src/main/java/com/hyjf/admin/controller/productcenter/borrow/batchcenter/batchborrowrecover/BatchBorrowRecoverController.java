@@ -47,7 +47,7 @@ public class BatchBorrowRecoverController extends BaseController{
 
     public static final String NAME_CLASS = "REVERIFY_STATUS";
 
-    private static final String PERMISSIONS = "HjhDebtCredit";
+    private static final String PERMISSIONS = "batchborrowrecover";
 
     @ApiOperation(value = "批次中心-批次放款页面初始化", notes = "页面初始化")
     @PostMapping(value = "/batchBorrowRecoverInit")

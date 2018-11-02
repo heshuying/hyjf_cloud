@@ -38,10 +38,10 @@ public class HjhAccountBalanceDao extends BaseMongoDao<HjhAccountBalance> {
         Criteria criteria = Criteria.where("date").is(hjhAccountBalanceVO.getDate());
         query.addCriteria(criteria);
         Update update = new Update();
-        update.set("investAccount", hjhAccountBalanceVO.getReinvestAccount())
+        update.set("investAccount", hjhAccountBalanceVO.getInvestAccount())
                 .set("creditAccount", hjhAccountBalanceVO.getCreditAccount())
-                .set("reinvestAccount", hjhAccountBalanceVO.getCreditAccount())
-                .set("addAccount", hjhAccountBalanceVO.getCreditAccount())
+                .set("reinvestAccount", hjhAccountBalanceVO.getReinvestAccount())
+                .set("addAccount", hjhAccountBalanceVO.getAddAccount())
                 .set("updateTime", GetDate.getDate()).set("delFlg", 0);
         this.update(query, update);
         return true;
@@ -49,7 +49,7 @@ public class HjhAccountBalanceDao extends BaseMongoDao<HjhAccountBalance> {
 
     public boolean insertHjhAccountBalance(HjhAccountBalanceVO hjhAccountBalanceVO) {
         HjhAccountBalance hjhAccountBalance = CommonUtils.convertBean(hjhAccountBalanceVO, getEntityClass());
-        hjhAccountBalance.setCreateTime(GetDate.getNowTime10());
+        hjhAccountBalance.setCreateTime(GetDate.getDate());
         hjhAccountBalance.setDelFlg(0);
         this.insert(hjhAccountBalance);
         return true;

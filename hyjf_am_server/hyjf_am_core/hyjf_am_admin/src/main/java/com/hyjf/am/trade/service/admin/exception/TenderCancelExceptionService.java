@@ -40,6 +40,14 @@ public interface TenderCancelExceptionService {
     List<BorrowTender> searchBorrowTenderByOrderId(String orderId);
 
     /**
+     * 根据borrowNid查询BorrowTender
+     * @auth zdj
+     * @param borrowNid 订单号
+     * @return List<BorrowTender> searchBorrowTenderByBorrowNid(String borrowNid);
+     */
+    List<BorrowTender> searchBorrowTenderByBorrowNid(String borrowNid);
+
+    /**
      * 根据orderId查询BorrowTenderTmp
      * @auth sunpeikai
      * @param orderId 订单号

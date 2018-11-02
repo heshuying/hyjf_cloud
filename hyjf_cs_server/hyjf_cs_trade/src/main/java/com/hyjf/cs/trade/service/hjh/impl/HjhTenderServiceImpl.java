@@ -54,10 +54,7 @@ import redis.clients.jedis.Transaction;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @Description 加入计划
@@ -178,15 +175,24 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             //couponConfig = amTradeClient.selectHJHBestCoupon(request);
             couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
         }
+        /** 计算最优优惠券开始 isThereCoupon 1是有最优优惠券，0无最有优惠券 */
+        MyCouponListRequest request = new MyCouponListRequest();
+        request.setBorrowNid(tender.getBorrowNid());
+        request.setUserId(String.valueOf(loginUser.getUserId()));
+        request.setPlatform(tender.getPlatform());
+        /** 可用优惠券张数开始 */
+        request.setMoney(money);
+        int availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(request);
+        investInfo.setCouponAvailableCount(availableCouponListCount);
+        /** 可用优惠券张数结束 */
+
+        /** 获取用户优惠券总张数开始 */
+        int recordTotal = amTradeClient.getUserCouponCount(tender.getUser().getUserId(), "0");
+        investInfo.setRecordTotal(recordTotal);
+        /** 获取用户优惠券总张数结束 */
         //BestCouponListVO couponConfig = new BestCouponListVO();
         if (!"0".equals(plan.getCouponConfig()) && loginUser != null) {
             BigDecimal borrowApr = plan.getExpectApr();
-            /** 计算最优优惠券开始 isThereCoupon 1是有最优优惠券，0无最有优惠券 */
-            MyCouponListRequest request = new MyCouponListRequest();
-            request.setBorrowNid(tender.getBorrowNid());
-            request.setUserId(String.valueOf(loginUser.getUserId()));
-            request.setPlatform(tender.getPlatform());
-
             if (couponUser != null) {
                 investInfo.setIsThereCoupon(1);
                 if (couponUser != null) {
@@ -210,16 +216,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
             investInfo.setCouponUser(couponUser);
             /** 计算最优优惠券结束 */
-
-            /** 可用优惠券张数开始 */
-            int availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(request);
-            investInfo.setCouponAvailableCount(availableCouponListCount);
-            /** 可用优惠券张数结束 */
-
-            /** 获取用户优惠券总张数开始 */
-            int recordTotal = amTradeClient.getUserCouponCount(tender.getUser().getUserId(), "0");
-            investInfo.setRecordTotal(recordTotal);
-            /** 获取用户优惠券总张数结束 */
             investInfo.setCouponCapitalInterest(df.format(couponInterest));
         } else {
             investInfo.setCouponAvailableCount(0);
@@ -754,30 +750,38 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * 获取预期收益
      * @param request
      * @param plan
-     * @param cuc
+     * @param couponUser
      * @return
      */
-    private Map<String, Object> getTenderEarnings(TenderRequest request, HjhPlanVO plan, CouponUserVO cuc) {
+    private Map<String, Object> getTenderEarnings(TenderRequest request, HjhPlanVO plan, CouponUserVO couponUser) {
         Map<String, Object> result = new HashedMap();
         // 历史回报
-        result.put("earnings", request.getEarnings());
+        result.put("earnings", CommonUtils.formatAmount(null, request.getEarnings().add(request.getEarnings())));
         // 优惠券收益
         result.put("couponInterest", request.getCouponInterest()==null?0:request.getCouponInterest());
         // 投资金额
-        result.put("account", request.getAccount());
+        result.put("account", CommonUtils.formatAmount(null, request.getAccount()));
         // 投资的计划
         result.put("borrowNid", plan.getPlanNid());
 
         result.put("plan","1");
         // 如果有优惠券  放上优惠券面值和类型
-        if (cuc != null) {
+        if (couponUser != null) {
+            BigDecimal couponInterest = BigDecimal.ZERO;
+            if (couponUser.getCouponType() == 1) {
+                couponInterest = couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), plan.getExpectApr());
+            } else {
+                couponInterest = couponService.getInterest(plan.getBorrowStyle(), couponUser.getCouponType(), plan.getExpectApr(), couponUser.getCouponQuota(), request.getAccount(), plan.getLockPeriod());
+            }
+            logger.info("优惠券收益为：{}",couponInterest);
             // 优惠券类别
-            result.put("couponType", cuc.getCouponType());
+            result.put("couponType", couponUser.getCouponType());
             // 优惠券额度
-            result.put("couponQuota", cuc.getCouponQuota());
+            result.put("couponQuota", couponUser.getCouponQuota());
             // 优惠券ID
-            result.put("couponGrantId", cuc.getId());
-            result.put("projectType",cuc.getProjectType());
+            result.put("couponGrantId", couponUser.getId());
+            result.put("projectType",couponUser.getProjectType());
+            result.put("earnings", CommonUtils.formatAmount(null, request.getEarnings().add(couponInterest)));
         }else{
             // 优惠券类别
             result.put("couponType", "");
@@ -918,6 +922,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
         }
         planAccede.setRequest(request);
+        planAccede.setCreateTime(new Date());
         // 插入汇计划加入明细表
         logger.info("插入汇计划加入明细表  planAccede: {} ", JSONObject.toJSONString(planAccede) );
         boolean trenderFlag = amTradeClient.insertHJHPlanAccede(planAccede);
@@ -1089,17 +1094,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 //CheckUtil.check();
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_LESS_NEED_BUY_ALL,balance);
             }
-        }
-        if (accountBigDecimal.compareTo(plan.getMinInvestment()) == -1) {
-            if (accountBigDecimal.compareTo(BigDecimal.ZERO) == 0) {
-                if (cuc != null && cuc.getCouponType() != 3
-                        && cuc.getCouponType() != 1) {
+        } else {
+            if (accountBigDecimal.compareTo(plan.getMinInvestment()) == -1) {
+                if (accountBigDecimal.compareTo(BigDecimal.ZERO) == 0) {
+                    if (cuc != null && cuc.getCouponType() != 3
+                            && cuc.getCouponType() != 1) {
+                        // plan.getMinInvestment() + "元起投"
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT, plan.getMinInvestment());
+                    }
+                } else {
                     // plan.getMinInvestment() + "元起投"
-                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,plan.getMinInvestment());
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT, plan.getMinInvestment());
                 }
-            } else {
-                // plan.getMinInvestment() + "元起投"
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,plan.getMinInvestment());
             }
         }
         BigDecimal max = plan.getMaxInvestment();

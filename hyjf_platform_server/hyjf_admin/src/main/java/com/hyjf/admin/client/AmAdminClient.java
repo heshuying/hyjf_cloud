@@ -500,12 +500,12 @@ public interface AmAdminClient {
     BooleanResponse saveAdminConfig(LockedConfig.Config adminConfig);
 
     /**
-     * 根据主键获取保证金配置
+     * 更新当前机构可用的还款方式并返回最新保证金详情
      *
      * @param id
      * @return
      */
-    BailConfigInfoCustomizeVO selectBailConfigById(Integer id);
+    BailConfigInfoCustomizeVO updateSelectBailConfigById(Integer id);
 
     /**
      * 未配置保证金的机构编号
@@ -686,12 +686,4 @@ public interface AmAdminClient {
      * @return
      */
     void updateBindCard(BindCardExceptionRequest request);
-
-    /**
-     * 更新机构可用还款方式
-     *
-     * @param id
-     * @return
-     */
-    boolean updateBailInfoDelFlgById(Integer id);
 }

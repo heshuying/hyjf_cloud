@@ -89,10 +89,10 @@
 				AND hup.invest_process = #{investProcess}
 			</if>
 			<if test="regTimeStart != null and regTimeStart !='' ">
-				AND hydur.reg_time <![CDATA[>=]]> unix_timestamp(#{regTimeStart})
+				AND hydur.reg_time <![CDATA[>=]]> str_to_date(#{regTimeStart},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="regTimeEnd != null and regTimeEnd !='' ">
-				AND hydur.reg_time <![CDATA[<=]]> unix_timestamp(#{regTimeEnd})
+				AND hydur.reg_time <![CDATA[<=]]> str_to_date(#{regTimeEnd},'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>
@@ -120,7 +120,7 @@
 			ht_user_portrait hup
 		LEFT JOIN hyjf_user.ht_user hydur ON hydur.user_id = hup.user_id
 		<include refid="Where_Clause_UserPortrait"/>
-		ORDER BY regTime DESC
+		ORDER BY hydur.reg_time DESC,hup.user_id DESC
 		<if test="limitStart != null and limitEnd !=null ">
 			limit #{limitStart},#{limitEnd}
 		</if>

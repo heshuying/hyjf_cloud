@@ -283,7 +283,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
 				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
 		// 取得投资详情列表
-		List<BorrowRecover> listRecovers = this.getBorrowRecoverList(borrowNid);
+		List<BorrowRecover> listRecovers = this.getBorrowRecoverList(borrowNid,apicron);
 		// 是否有待还款记录
 		if (listRecovers == null || listRecovers.size() == 0) {
 			//return false;
@@ -1022,7 +1022,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				}
 			}
 			// 取得投资详情列表
-			List<BorrowRecover> borrowRecoverList = this.getBorrowRecoverList(borrowNid);
+			List<BorrowRecover> borrowRecoverList = this.getBorrowRecoverList(borrowNid,apicron);
 			if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
 				// 遍历进行还款
 				for (int i = 0; i < borrowRecoverList.size(); i++) {
@@ -4030,11 +4030,15 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 * @return
 	 */
 	@Override
-	public List<BorrowRecover> getBorrowRecoverList(String borrowNid) {
+	public List<BorrowRecover> getBorrowRecoverList(String borrowNid,BorrowApicron apicron) {
 		BorrowRecoverExample example = new BorrowRecoverExample();
 		BorrowRecoverExample.Criteria criteria = example.createCriteria();
 		criteria.andBorrowNidEqualTo(borrowNid);
-		criteria.andRecoverStatusNotEqualTo(1); // 0初始 1还款成功 2还款失败
+		// 一次性还款的情况，因为最后一期会更新导致前期更新不到位 by dxj&wanggongxi
+		if(apicron.getIsAllrepay().intValue() == 0) {
+			criteria.andRecoverStatusNotEqualTo(1); // 0初始 1还款成功 2还款失败
+		}
+		
 		example.setOrderByClause(" id asc ");
 		List<BorrowRecover> list = this.borrowRecoverMapper.selectByExample(example);
 		return list;
@@ -4368,9 +4372,11 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			try {
 				//生成并签署加入计划投资服务协议 add by cwyang 2018-2-26
 				sendPlanContract(hjhAccede.getUserId(),hjhAccede.getAccedeOrderId(),hjhAccede.getQuitTime(),hjhAccede.getCountInterestTime(),hjhAccede.getWaitTotal());
+				logger.info("=================计划进入锁定期优惠券放款开始=，订单号："+hjhAccede.getAccedeOrderId()+"=============");
 				//优惠券放款
 				couponLoan(hjhAccede);
 				//双十二活动
+				logger.info("=================计划进入锁定期优惠券放款完毕=，订单号："+hjhAccede.getAccedeOrderId()+"=============");
 //				actBalloonTender(hjhAccede);
 			} catch (Exception e) {
 				logger.info("=================优惠券放款失败,投资订单号:" + hjhAccede.getAccedeOrderId());

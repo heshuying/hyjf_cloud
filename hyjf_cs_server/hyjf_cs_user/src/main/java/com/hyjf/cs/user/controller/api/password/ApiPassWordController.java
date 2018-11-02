@@ -14,7 +14,6 @@ import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
-import com.hyjf.cs.user.constants.ErrorViewConstant;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -70,9 +69,7 @@ public class ApiPassWordController extends BaseController {
         Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean,BankCallConstant.TXCODE_PASSWORD_SET, BaseDefine.METHOD_SERVER_SET_PASSWORD);
         if (null==map.get("flag")){
             //return (ModelAndView) map.get("modelAndView");
-            redirectAttributes.addFlashAttribute(ErrorViewConstant.ERROR_FORM_BEAN,map);
-            modelAndView.setViewName(ErrorViewConstant.ERROR_VIEW_REDIRECT_URL);
-            return modelAndView;
+            return callbackErrorView((ModelAndView) map.get("modelAndView"));
         }
         UserVO user = (UserVO) map.get("user");
         BankOpenAccountVO bankOpenAccount = (BankOpenAccountVO) map.get("bankOpenAccount");

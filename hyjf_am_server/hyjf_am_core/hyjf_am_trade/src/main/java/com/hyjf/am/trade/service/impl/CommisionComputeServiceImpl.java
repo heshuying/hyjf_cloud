@@ -94,16 +94,19 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
         // 计算提成用户id
         UserInfoVO userInfoCommision = hjhLockVo.getCommissioUserInfoVO();
         if(userInfoCommision == null){
+            logger.info("汇计划提成：计算提成用户id未获取到相应用户信息！");
             statusUpdate(record, 1);
             return;
         }
         commisionUserId = userInfoCommision.getUserId();
         if(commisionUserId == null){
+            logger.info("汇计划提成：查询出的用户信息的userid为空！");
             statusUpdate(record, 1);
             return;
         }
 
         if(userInfoCommision.getAttribute() != 3 && userInfoCommision.getIs51() ==1 && pushMoney51.getRewardSend() == 0){
+            logger.info("汇计划提成：查询出的用户信息的用户类型不符合条件！");
             statusUpdate(record, 1);
             return;
         }
@@ -142,8 +145,8 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
         commission = compute(record, userInfoCommision, plan, rateDay, rateMonth, accountTender);
 
         if(commission.compareTo(BigDecimal.ZERO) <= 0){
+            logger.info("汇计划提成：提成金额计算结果为0！");
             statusUpdate(record, 1);
-
             return;
         }
 
@@ -204,8 +207,8 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
                     statusUpdate(record, 1);
                 }
             }
-
             transactionManager.commit(txStatus);
+            logger.info("汇计划提成：提成计算成功入库！");
         } catch (Exception e) {
             logger.error("发生异常，提成计算失败", e);
             transactionManager.rollback(txStatus);

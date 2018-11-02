@@ -35,12 +35,12 @@ public interface BailConfigService extends BaseService {
     List<BailConfigCustomizeVO> selectRecordList(BailConfigRequest request);
 
     /**
-     * 根据主键获取保证金配置
+     * 更新当前机构可用的还款方式并返回最新保证金详情
      *
      * @param id
      * @return
      */
-    BailConfigInfoCustomizeVO selectBailConfigById(Integer id);
+    BailConfigInfoCustomizeVO updateSelectBailConfigById(Integer id);
 
     /**
      * 未配置保证金的机构编号
@@ -96,12 +96,4 @@ public interface BailConfigService extends BaseService {
      * @return
      */
     List<String> selectRepayMethod(String instCode);
-
-    /**
-     * 更新机构可用还款方式
-     *
-     * @param id
-     * @return
-     */
-    boolean updateBailInfoDelFlgById(Integer id);
 }
