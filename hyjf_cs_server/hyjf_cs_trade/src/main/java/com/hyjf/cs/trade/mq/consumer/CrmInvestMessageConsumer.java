@@ -95,6 +95,7 @@ public class CrmInvestMessageConsumer extends Consumer {
                 logger.info("========" + CONSUMER_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs,SerializerFeature.IgnoreNonFieldGetter));
                 MessageExt msg = msgs.get(0);
                 String msgBody = new String(msg.getBody());
+                logger.info("======="+ CONSUMER_NAME +" msgBody [{}] ",msgBody);
                 JSONObject json = JSON.parseObject(msgBody);
                 if (json == null) {
                     logger.info("=====" + CONSUMER_NAME + "json解析为空," + CONSUMER_QUIT + "=====");
@@ -116,6 +117,7 @@ public class CrmInvestMessageConsumer extends Consumer {
                 CloseableHttpResponse result = null;
                 try {
                     String postUrl = systemConfig.getCrmTenderUrl();
+                    logger.info("======="+ CONSUMER_NAME  +"消息转换实体信息 [{}]",JSON.toJSONString(obj));
                     String postData = buildData(obj).toJSONString();
                     logger.info("=====" + CONSUMER_NAME + "postUrl:[{}] =====", postUrl);
                     logger.info("=====" + CONSUMER_NAME + "postParam: [{}] ====",postData);
