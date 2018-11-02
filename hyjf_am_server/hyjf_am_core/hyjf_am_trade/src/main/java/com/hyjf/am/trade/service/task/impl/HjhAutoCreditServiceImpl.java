@@ -935,7 +935,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                             // 待还利息
                             hjhDebtCredit.setRepayInterestWait(interest);
                             // 债权价值
-                            BigDecimal fairValue = capital.add(creditValue);
+                            BigDecimal fairValue = capital.add(creditValue).subtract(advanceCreditValue);
                             // 加入订单的债权价值
                             totalFairValue = totalFairValue.add(fairValue);
                             // 计算此时的公允价值
@@ -993,7 +993,33 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
         // 清算出债权之后,更新自动债转是否完成标示
         if (isRepayFlag == 0) {
             // 如果没有正在还款的债权,更新清算完成标志位为1.
-            this.updateAccedeCreditCompleteFlag(accedeOrderId);
+            this.updateAccedeCreditCompleteFlag(accedeOrderId,1);
+        }
+
+        // 根据加入订单号查询投资的标的
+        List<BorrowTender> borrowTenderList =  this.selectBorrowTenderList(accedeOrderId);
+
+        if (borrowTenderList != null && borrowTenderList.size() > 0) {
+            // 循环已投资的投资记录
+            for (int i = 0; i < borrowTenderList.size(); i++) {
+                BorrowTender borrowTender = borrowTenderList.get(i);
+                // 判断投资的标的是否未放款
+                Borrow tenderBorrow = this.getBorrow(borrowTender.getBorrowNid());
+                if (tenderBorrow == null) {
+                    throw new RuntimeException("根据标的编号查询标的信息失败,标的编号:[" + borrowTender.getBorrowNid() + "].");
+                }
+                BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowTender.getBorrowNid());
+                if (borrowInfo == null) {
+                    throw new RuntimeException("根据标的编号查询标的详情失败,标的编号:[" + borrowTender.getBorrowNid() + "].");
+                }
+                // 标的状态
+                Integer loanStatus = tenderBorrow.getStatus();
+                // 如果标的状态<4 说明这笔投资的标的未放款完成
+                if (loanStatus < 4) {
+                    // 更新加入订单的清算标志位为2,需要再次清算
+                    this.updateAccedeCreditCompleteFlag(accedeOrderId, 2);
+                }
+            }
         }
         return creditList;
     }
@@ -1212,26 +1238,24 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
 
     /**
      * 更新加入订单的是否清算完成状态
-     *
      * @param accedeOrderId
+     * @param creditCompleteFlag
      */
-    private void updateAccedeCreditCompleteFlag(String accedeOrderId) {
+    private void updateAccedeCreditCompleteFlag(String accedeOrderId,Integer creditCompleteFlag) {
         // 根据订单号查询加入订单
         HjhAccedeExample example = new HjhAccedeExample();
         HjhAccedeExample.Criteria cra = example.createCriteria();
         cra.andAccedeOrderIdEqualTo(accedeOrderId);
         List<HjhAccede> hjhAccedeList = this.hjhAccedeMapper.selectByExample(example);
-        if (CollectionUtils.isNotEmpty(hjhAccedeList)) {
+        if (hjhAccedeList != null && hjhAccedeList.size() == 1) {
             HjhAccede hjhAccede = hjhAccedeList.get(0);
-            hjhAccede.setCreditCompleteFlag(1);
+            hjhAccede.setCreditCompleteFlag(creditCompleteFlag);
             boolean isUpdate = this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede) > 0 ? true : false;
             if (isUpdate) {
                 logger.info("更新加入计划订单是否完成清算状态:已清算,加入订单号:[" + accedeOrderId + "].");
             }
         }
     }
-
-
     /**
      * 更新加入明细表的相关状态
      *
@@ -1287,5 +1311,18 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
             e.printStackTrace();
             logger.error("清算完成后,发送MQ失败,债转编号:[" + creditNid + "].");
         }
+    }
+
+    /**
+     * 根据投资订单号查询投资的原始标的
+     * @param accedeOrderId
+     * @return
+     */
+    private List<BorrowTender> selectBorrowTenderList(String accedeOrderId) {
+        BorrowTenderExample example = new BorrowTenderExample();
+        BorrowTenderExample.Criteria cra = example.createCriteria();
+        cra.andAccedeOrderIdEqualTo(accedeOrderId);
+        List<BorrowTender> list = this.borrowTenderMapper.selectByExample(example);
+        return list;
     }
 }
