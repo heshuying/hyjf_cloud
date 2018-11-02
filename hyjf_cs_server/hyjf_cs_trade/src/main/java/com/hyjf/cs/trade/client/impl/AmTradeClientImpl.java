@@ -463,7 +463,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         hjhDebtCreditNew.setCreditStatus(2);//转让状态 2完全承接
         hjhDebtCreditNew.setIsLiquidates(1);//1:已清算(无需清算)
         hjhDebtCreditNew.setUpdateTime(GetDate.getDate());
-        IntegerResponse response = restTemplate.postForEntity(url, hjhDebtCreditVO, IntegerResponse.class).getBody();
+        IntegerResponse response = restTemplate.postForEntity(url, hjhDebtCreditNew, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
         }
