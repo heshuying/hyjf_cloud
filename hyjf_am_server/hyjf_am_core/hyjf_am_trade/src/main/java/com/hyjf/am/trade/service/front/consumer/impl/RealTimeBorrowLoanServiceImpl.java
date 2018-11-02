@@ -485,7 +485,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 							try {
 								//与消费端统一 改成发送BorrowTenderVO
 								BorrowTenderVO borrowTenderVO = new BorrowTenderVO();
-								BeanUtils.copyProperties(borrowTender, borrowTenderVO);
+								BeanUtils.copyProperties(borrowTenderVO, borrowTender);
 								amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowTenderVO)));
 							} catch (Exception e) {
 								logger.error("发送CRM消息失败:" + e.getMessage());
