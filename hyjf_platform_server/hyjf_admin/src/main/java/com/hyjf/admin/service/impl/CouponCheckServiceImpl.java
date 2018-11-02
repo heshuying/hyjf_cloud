@@ -438,7 +438,8 @@ public class CouponCheckServiceImpl implements CouponCheckService {
      *
      * @return
      */
-    private boolean checkSendNum(String couponCode) {
+    @Override
+    public boolean checkSendNum(String couponCode) {
         CouponRecoverCustomizeResponse response = amTradeClient.checkCouponSendExcess(couponCode);
         int remain = response.getCount();
         return remain > 0 ? true : false;

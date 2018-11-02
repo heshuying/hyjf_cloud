@@ -516,4 +516,17 @@ public class CouponConfigController extends BaseController {
 //        }
 //        return response;
 //    }
+
+    /**
+     * 根据tenderNid查询总数
+     * @param tenderNid
+     * @return
+     */
+    @RequestMapping("/countbytendernid/{tenderNid}")
+    public CouponResponse countByTenderNid(@PathVariable String tenderNid) {
+        CouponResponse response = new CouponResponse();
+        Integer count = couponConfigService.countByTenderNid(tenderNid);
+        response.setTotalRecord(count);
+        return response;
+    }
 }

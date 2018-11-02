@@ -11,6 +11,7 @@ import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
+import com.hyjf.am.response.message.UserOperationLogResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
@@ -18,10 +19,7 @@ import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
-import com.hyjf.am.vo.admin.AssociatedRecordListVO;
-import com.hyjf.am.vo.admin.BindLogVO;
-import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
-import com.hyjf.am.vo.admin.MessagePushMsgVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -500,5 +498,13 @@ public class CsMessageClientImpl implements CsMessageClient {
             return response.getLogCount();
         }
         return 0;
+    }
+
+
+    @Override
+    public UserOperationLogResponse  getOperationLogList(UserOperationLogRequest request) {
+        UserOperationLogResponse response  = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/manager/operationlog/init", request, UserOperationLogResponse.class).getBody();
+        return response;
     }
 }
