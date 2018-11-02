@@ -108,7 +108,7 @@ public class PcChannelReconciliationController extends BaseController {
 
             String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-            String[] titles = new String[] { "序号", "用户名", "渠道","注册时间","投资订单", "借款编号", "标的期限", "投资金额","是否首投", "投资时间" };
+            String[] titles = new String[] { "序号", "用户名", "渠道","注册时间","投资订单", "借款编号", "标的期限", "授权服务金额","是否首投", "投资时间" };
             // 声明一个工作薄
             HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -248,7 +248,7 @@ public class PcChannelReconciliationController extends BaseController {
         map.put("orderCode", "投资订单");
         map.put("borrowNid", "借款编号");
         map.put("borrowPeriod", "标的期限");
-        map.put("investAmount", "投资金额");
+        map.put("investAmount", "授权服务金额");
         map.put("firstFlag", "是否首投");
         map.put("investTime", "投资时间");
         return map;
@@ -290,7 +290,7 @@ public class PcChannelReconciliationController extends BaseController {
     public void exportHjhAction_bak(@RequestBody ChannelReconciliationRequest request, HttpServletResponse response) throws Exception {
 
         // 表格sheet名称
-        String sheetName = "PC渠道对账-汇计划";
+        String sheetName = "PC渠道对账-智投服务";
 
         ChannelReconciliationResponse channelReconciliationResponse = channelService.searchHJHAction(request);
 
@@ -298,7 +298,7 @@ public class PcChannelReconciliationController extends BaseController {
             List<ChannelReconciliationVO> recordList = channelReconciliationResponse.getResultList();
             String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-            String[] titles = new String[] { "序号", "用户名", "渠道","注册时间", "计划订单号", "计划编号", "计划锁定期", "投资金额","是否首投", "投资时间" };
+            String[] titles = new String[] { "序号", "用户名", "渠道","注册时间", "智投订单号", "智投编号", "服务回报期限", "授权服务金额","是否首投", "投资时间" };
             // 声明一个工作薄
             HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -386,7 +386,7 @@ public class PcChannelReconciliationController extends BaseController {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "PC渠道对账-汇计划";
+        String sheetName = "PC渠道对账-智投服务";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
         // 声明一个工作薄
@@ -429,10 +429,10 @@ public class PcChannelReconciliationController extends BaseController {
         map.put("userName", "姓名");
         map.put("utmName", "渠道");
         map.put("registTime", "注册时间");
-        map.put("orderCode", "计划订单号");
-        map.put("borrowNid", "计划编号");
-        map.put("borrowPeriod", "计划锁定期");
-        map.put("investAmount", "投资金额");
+        map.put("orderCode", "智投订单号");
+        map.put("borrowNid", "智投编号");
+        map.put("borrowPeriod", "服务回报期限");
+        map.put("investAmount", "授权服务金额");
         map.put("firstFlag", "是否首投");
         map.put("investTime", "投资时间");
         return map;
