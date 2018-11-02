@@ -25,6 +25,12 @@ public class DataSearchRequest implements Serializable {
     private int currPage;
     @ApiModelProperty(value = "当前页条数")
     private int pageSize;
+    @ApiModelProperty(value = "姓名")
+    private String truename;
+    @ApiModelProperty(value = "用户名")
+    private String username;
+    @ApiModelProperty(value = "推荐人姓名")
+    private String reffername;
 
     private List<Integer> userIds;
 
@@ -92,5 +98,29 @@ public class DataSearchRequest implements Serializable {
 
     public void setUserIds(List<Integer> userIds) {
         this.userIds = userIds;
+    }
+
+    public String getTruename() {
+        return truename;
+    }
+
+    public void setTruename(String truename) {
+        this.truename = truename;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getReffername() {
+        return reffername;
+    }
+
+    public void setReffername(String reffername) {
+        this.reffername = reffername;
     }
 }
