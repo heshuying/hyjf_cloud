@@ -62,6 +62,8 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
 			crt.andConfigAddTimeLessThanOrEqualTo((int)end+86399);
 			crt.andConfigAddTimeGreaterThanOrEqualTo((int)start);
 		}
+		// 传入排序
+		example.setOrderByClause("create_time Desc");
 		// 总计查询不带分页参数
 		list = hjhRegionMapper.selectByExample(example);
 		return list.size();
@@ -104,6 +106,11 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
  			crt.andConfigAddTimeLessThanOrEqualTo((int)end+86399);
  			crt.andConfigAddTimeGreaterThanOrEqualTo((int)start);
  		}
+ 		
+		// 传入排序
+		example.setOrderByClause("create_time Desc");
+ 		
+ 		
  		list = hjhRegionMapper.selectByExample(example);
  		List<HjhRegionVO> volist = CommonUtils.convertBeanList(list, HjhRegionVO.class);
 		return volist;
