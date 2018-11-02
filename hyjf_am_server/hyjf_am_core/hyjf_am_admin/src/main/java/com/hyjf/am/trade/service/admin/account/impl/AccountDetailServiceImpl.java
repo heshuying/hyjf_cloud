@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.admin.account.impl;
 
 import com.hyjf.am.resquest.admin.AccountListRequest;
+import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
 import com.hyjf.am.trade.dao.model.customize.AdminAccountDetailCustomize;
@@ -122,5 +123,23 @@ public class AccountDetailServiceImpl extends BaseServiceImpl implements Account
             throw new RuntimeException("============更新用户的交易明细失败!========");
         }
         return updFlg;
+    }
+
+    /**
+     * 修改Account表的字段
+     *
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    @Override
+    public Integer updateAccountNumberByUserId(Integer userId, String accountId) {
+        Account account = getAccount(userId);
+        if(account!=null){
+            account.setAccountId(accountId);
+            return this.accountMapper.updateByPrimaryKeySelective(account);
+        }
+
+        return 0;
     }
 }

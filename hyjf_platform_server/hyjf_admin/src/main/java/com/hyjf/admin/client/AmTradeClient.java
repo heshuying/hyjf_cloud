@@ -3041,6 +3041,14 @@ public interface AmTradeClient {
      */
     AssetListCustomizeResponse findBZJBZList(AssetListRequest request);
 
+    /**
+     * 开户成功  修改trade的account
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    boolean updateAccountNumberByUserId(Integer userId, String accountId);
+
     /** 加息接口开始*/
     /** 枚举类型 */
     enum IncreaseProperty {VO,STR,STR1}

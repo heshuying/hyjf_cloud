@@ -76,4 +76,11 @@ public interface AccountDetailService {
      */
     int updateAccountList(AccountListRequest accountListRequest);
 
+    /**
+     * 修改Account表的字段
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    Integer updateAccountNumberByUserId(Integer userId, String accountId);
 }

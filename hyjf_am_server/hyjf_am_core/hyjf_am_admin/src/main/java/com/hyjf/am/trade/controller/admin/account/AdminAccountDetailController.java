@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.admin.account;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
@@ -200,6 +201,23 @@ public class AdminAccountDetailController {
     @RequestMapping(value = "/updateAccountList", method = RequestMethod.POST)
     public int selectAccountTradeByValue(@RequestBody @Valid AccountListRequest request) {
         return accountDetailService.updateAccountList(request);
+    }
+
+    /**
+     * 开户成功后更新account的accountid
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    @GetMapping("/updateAccountNumberByUserId/{userId}/{accountId}")
+    public IntegerResponse updateAccountNumberByUserId(@PathVariable Integer userId, @PathVariable String accountId){
+        IntegerResponse response = new IntegerResponse();
+        try {
+            response.setResultInt(accountDetailService.updateAccountNumberByUserId(userId,accountId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
 }
