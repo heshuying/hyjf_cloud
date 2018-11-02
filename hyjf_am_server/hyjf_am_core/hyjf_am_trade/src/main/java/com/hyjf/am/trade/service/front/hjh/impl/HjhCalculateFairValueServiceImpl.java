@@ -89,11 +89,6 @@ public class HjhCalculateFairValueServiceImpl extends BaseServiceImpl implements
                     throw new RuntimeException("根据标的编号查询标的详情失败,标的编号:[" + borrowNid + "].");
                 }
 
-                // 还款方式
-                String borrowStyle = borrow.getBorrowStyle();
-                // 是否月标(true:月标, false:天标)
-                boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
-                        || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
                 // 查询完全承接的债权
                 HjhDebtCredit assignComplete = this.selectHjhDebtCreditAssignComplete(hjhDebtDetail.getBorrowNid(), hjhDebtDetail.getOrderId());
                 if (assignComplete != null) {
@@ -175,6 +170,7 @@ public class HjhCalculateFairValueServiceImpl extends BaseServiceImpl implements
                         }
                         // 按天计息,到期还本还息
                         if (CustomConstants.BORROW_STYLE_ENDDAY.equals(hjhDebtDetail.getBorrowStyle())) {
+                            // 剩余天数 = 标的期限 - 持有天数
                             remainDays = borrow.getBorrowPeriod() - holdDays;
                         } else {
                             // 按月计息,到期还本还息
@@ -294,8 +290,6 @@ public class HjhCalculateFairValueServiceImpl extends BaseServiceImpl implements
                             // 判断是否提前还款
                             // 如果债权已还款
                             if (currentPeriodDebtDetail.getRepayStatus() == 1) {
-                                // 债权实际还款时间
-                                Integer repayActionTime = currentPeriodDebtDetail.getRepayActionTime();
                                 // 债权应还时间
                                 Integer repayTimeDebtDetail = currentPeriodDebtDetail.getRepayTime();
                                 // 应还时间 > 当前清算时间
@@ -513,6 +507,11 @@ public class HjhCalculateFairValueServiceImpl extends BaseServiceImpl implements
         }
         if (liquidationInterest.compareTo(BigDecimal.ZERO) > 0 && creditFairValue.compareTo(BigDecimal.ZERO) > 0) {
             serviceRate = (liquidationInterest.divide(creditFairValue, 12, BigDecimal.ROUND_DOWN)).setScale(8, BigDecimal.ROUND_DOWN);
+        }
+
+        // 如果清算服务费率 > 1 按1收取服务费
+        if (serviceRate.compareTo(BigDecimal.ONE) > 0) {
+            serviceRate = BigDecimal.ONE;
         }
         // 清算进度
         BigDecimal lqdProgress = hjhAccede.getLqdProgress();

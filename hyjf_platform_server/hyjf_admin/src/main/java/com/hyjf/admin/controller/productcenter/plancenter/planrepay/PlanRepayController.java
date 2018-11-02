@@ -621,32 +621,32 @@ public class PlanRepayController extends BaseController {
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("accedeOrderId", "计划订单号");
-        map.put("planNid", "计划编号");
-        map.put("planName", "计划名称");
-        map.put("lockPeriod", "锁定期");
-        map.put("expectApr", "预期年化收益率");
+        map.put("accedeOrderId", "智投订单号");
+        map.put("planNid", "智投编号");
+        map.put("planName", "智投名称");
+        map.put("lockPeriod", "服务回报期限");
+        map.put("expectApr", "参考年回报率");
         map.put("userName", "用户名（投资人）");
         map.put("recommendAttr", "投资人用户属性（当前）");
         map.put("inviteUserName", "推荐人(当前)");
         map.put("inviteUserRegionName", "分公司(当前)");
         map.put("inviteUserBranchName", "部门(当前)");
         map.put("inviteUserDepartmentName", "团队(当前)");
-        map.put("accedeAccount", "加入金额(元)");
-        map.put("repayInterest", "预期收益(元)");
+        map.put("accedeAccount", "授权服务金额(元)");
+        map.put("repayInterest", "参考回报(元)");
         map.put("actualRevenue", "实际收益(元)");
-        map.put("actualPayTotal", "实际回款总额(元)");
+        map.put("actualPayTotal", "已退出金额(元)");
         map.put("borrowStyle", "还款方式");
         map.put("orderStatus", "订单状态");
         map.put("repayActualTime", "实际退出时间");
-        map.put("repayShouldTime", "清算时间");
+        map.put("repayShouldTime", "预计开始退出时间");
         map.put("lqdServiceFee", "清算服务费");
         map.put("lqdServiceApr", "清算服务费率");
         map.put("investServiceApr", "投资服务费率");
         map.put("lqdProgress", "清算进度");
         map.put("lastQuitTime", "最晚退出时间");
-        map.put("joinTime", "加入时间");
-        map.put("orderLockTime", "订单锁定时间");
+        map.put("joinTime", "授权服务时间");
+        map.put("orderLockTime", "开始计息时间");
 
         return map;
     }

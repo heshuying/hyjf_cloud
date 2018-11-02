@@ -296,7 +296,7 @@
 		<if test="distinct" >
 			distinct
 		</if>
-		<include refid="Base_Column_List" />
+		<include refid="User_Login_Log_Column" />
 		from ht_user_login_log a
 		LEFT JOIN ht_user_info b ON b.user_id = a.user_id
 		<where>
