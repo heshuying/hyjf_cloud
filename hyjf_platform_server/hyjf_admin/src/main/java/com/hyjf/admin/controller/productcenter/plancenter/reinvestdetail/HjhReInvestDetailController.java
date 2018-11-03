@@ -370,7 +370,7 @@ public class HjhReInvestDetailController extends BaseController {
         map.put("accedeAccount", "投资金额（元）");
         map.put("borrowStyle", "还款方式");
         map.put("investType", "投资方式");
-        map.put("countInterestTime", "计息时间");
+        map.put("countInterestTime", "开始计息时间");
         map.put("addTime", "投资时间");
 
         return map;

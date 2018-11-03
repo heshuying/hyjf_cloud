@@ -6,6 +6,8 @@ package com.hyjf.am.trade.service.admin.hjhplan.impl;
 import com.hyjf.am.resquest.admin.HjhLabelInfoRequest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.AdminHjhLabelCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminHjhLabelCustomizeExample;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhLabelService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
@@ -92,10 +94,10 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 	}
 
 	@Override
-	public List<HjhLabelCustomizeVO> selectHjhLabelList(HjhLabelRequest request, int limitStart, int limitEnd) {
+	public List<AdminHjhLabelCustomize> selectHjhLabelList(HjhLabelRequest request, int limitStart, int limitEnd) {
 		List<HjhLabel> list = null;
-		HjhLabelExample example = new HjhLabelExample();
-		HjhLabelExample.Criteria crt = example.createCriteria();
+		AdminHjhLabelCustomizeExample example = new AdminHjhLabelCustomizeExample();
+        AdminHjhLabelCustomizeExample.Criteria crt = example.createCriteria();
         if (limitStart != -1) {
             example.setLimitStart(limitStart);
             example.setLimitEnd(limitEnd);
@@ -104,6 +106,12 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
         if (StringUtils.isNotEmpty(request.getLabelNameSrch())) {
         	crt.andLabelNameLike("%" + request.getLabelNameSrch() + "%");
         }
+
+        //智投编号搜索
+        if (StringUtils.isNotEmpty(request.getPlanNidSrch())){
+            crt.andPlanNidEqualTo(request.getPlanNidSrch());
+        }
+
         // 资产来源
         if (StringUtils.isNotEmpty(request.getInstCodeSrch())) {
         	crt.andInstCodeEqualTo(request.getInstCodeSrch());
@@ -133,13 +141,18 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
         if(StringUtils.isNotEmpty(request.getCreateTimeEndSrch())){
         	crt.andCreateTimeLessThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getCreateTimeEndSrch()), "yyyy-MM-dd HH:mm:ss"));
         }
-        
+
+        if (StringUtils.isNotEmpty(request.getUpdateTimeStartSrch())) {
+            crt.andUpdateTimeGreaterThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getUpdateTimeStartSrch()),"yyyy-MM-dd HH:mm:ss"));
+        }
+        if(StringUtils.isNotEmpty(request.getUpdateTimeEndSrch())){
+            crt.andUpdateTimeLessThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayEnd(request.getUpdateTimeEndSrch()),"yyyy-MM-dd HH:mm:ss"));
+        }
+
 		// 传入排序
 		example.setOrderByClause("create_time Desc");
         
-        list = hjhLabelMapper.selectByExample(example);
-        List<HjhLabelCustomizeVO> volist = CommonUtils.convertBeanList(list, HjhLabelCustomizeVO.class);
-		return volist;
+        return adminHjhLabelCustomizeMapper.selectByExample(example);
 	}
 
 	@Override

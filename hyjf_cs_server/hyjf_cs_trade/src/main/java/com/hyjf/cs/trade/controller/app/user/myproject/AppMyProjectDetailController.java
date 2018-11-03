@@ -1,9 +1,21 @@
 package com.hyjf.cs.trade.controller.app.user.myproject;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.UserOperationLogProducer;
+import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * 我的散标详情
@@ -24,7 +38,10 @@ public class AppMyProjectDetailController extends BaseTradeController {
 
     @Autowired
     private AppMyProjectService appMyProjectService;
-
+    @Autowired
+    NifaContractEssenceMessageService nifaContractEssenceMessageService;
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
     /**
      * 用户中心我的散标详情
      * @date 2018/7/2 16:27
@@ -54,8 +71,36 @@ public class AppMyProjectDetailController extends BaseTradeController {
      */
     @ApiOperation(value = "App端:用户中心债转提交保存", notes = "App端:用户中心债转提交保存")
     @PostMapping(value = "/saveTenderToCredit", produces = "application/json; charset=utf-8")
-    public JSONObject saveTenderToCredit(@ModelAttribute TenderBorrowCreditCustomize request,@RequestHeader(value = "userId",required = false) Integer userId){
-    	JSONObject  result =  appMyProjectService.saveTenderToCredit(request,userId);
+    public JSONObject saveTenderToCredit(@ModelAttribute TenderBorrowCreditCustomize request,@RequestHeader(value = "userId",required = true) Integer userId,HttpServletRequest httpServletRequest){
+    	String platform = httpServletRequest.getParameter("platform");
+        JSONObject  result =  appMyProjectService.saveTenderToCredit(request,userId);
+        //保存用户日志mq
+        BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(request.getBorrowNid());
+        boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
+                || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());
+
+        String dayOrMonth ="";
+        String lockPeriod = String.valueOf(borrow.getBorrowPeriod());
+        if(isMonth){//月标
+            dayOrMonth = lockPeriod + "个月散标";
+        }else{
+            dayOrMonth = lockPeriod + "天散标";
+        }
+        UserVO userVO = appMyProjectService.getUserByUserId(userId);
+        UserInfoVO userInfoVO = appMyProjectService.getUsersInfoByUserId(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE5);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(httpServletRequest));
+        userOperationLogEntity.setPlatform(httpServletRequest.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(httpServletRequest.getParameter("realPlatform")));
+        userOperationLogEntity.setRemark(dayOrMonth);
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(userVO.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
     	return result;
     }
 

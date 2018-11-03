@@ -10,6 +10,7 @@ import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.resquest.admin.HjhLabelInfoRequest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
+import com.hyjf.am.trade.dao.model.customize.AdminHjhLabelCustomize;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminAllocationEngineService;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhLabelService;
 import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
@@ -17,6 +18,7 @@ import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,10 +93,10 @@ public class AdminHjhLabelController {
 			// 前台未传分页那默认10
 			paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
 		}
-		List<HjhLabelCustomizeVO> list = adminHjhLabelService.selectHjhLabelList(request,paginator.getOffset(), paginator.getLimit());
+		List<AdminHjhLabelCustomize> list = adminHjhLabelService.selectHjhLabelList(request,paginator.getOffset(), paginator.getLimit());
         if(count > 0){
             if (!CollectionUtils.isEmpty(list)) {
-            	for(HjhLabelCustomizeVO vo:list){
+            	for(AdminHjhLabelCustomize vo:list){
             		List<HjhAllocationEngineVO> alist = adminAllocationEngineService.selectHjhAllocationEngineListByLabelId(vo.getId());
             		//如果通过标签表中的标签编号去查询引擎表发现可以在引擎表查到记录，则说明此标签已经在引擎中使用
             		if(alist.size() > 0){
@@ -103,7 +105,7 @@ public class AdminHjhLabelController {
             			vo.setLabelisUsed("0");//未使用
             		}
             	}
-                response.setResultList(list);
+                response.setResultList(CommonUtils.convertBeanList(list,HjhLabelCustomizeVO.class));
                 response.setCount(count);
                 response.setRtn(Response.SUCCESS);//代表成功
             }

@@ -9,6 +9,7 @@ import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
+import com.hyjf.am.trade.dao.model.customize.AdminHjhLabelCustomize;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
@@ -39,7 +40,7 @@ public interface AdminHjhLabelService {
 	 * 标签配置列表
 	 * @return
 	*/
-   List<HjhLabelCustomizeVO> selectHjhLabelList(HjhLabelRequest request, int limitStart, int limitEnd);
+   List<AdminHjhLabelCustomize> selectHjhLabelList(HjhLabelRequest request, int limitStart, int limitEnd);
    
    /**
 	 * 标签配置列表

@@ -3,11 +3,20 @@
  */
 package com.hyjf.cs.user.controller.app.riskassesment;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.result.RiskAssesmentResponse;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.vo.UserAnswerRequestBean;
@@ -20,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 风险测评
@@ -36,6 +46,9 @@ public class AppRiskAssesmentController extends BaseUserController {
 
     @Autowired
     SystemConfig systemConfig;
+
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
     /**
      * 风险测评
      *
@@ -52,6 +65,21 @@ public class AppRiskAssesmentController extends BaseUserController {
             response.setStatus(RiskAssesmentResponse.FAIL);
             response.setStatusDesc("用户未登录");
             return response;
+        }
+        UserInfoVO userInfoVO =  evaluationService.getUserInfo(userId);
+        UserVO userVO = evaluationService.getUsersById(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE12);
+        userOperationLogEntity.setIp(com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(request.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(request.getParameter("realPlatform")));
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(userVO.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
         }
         UserEvalationResultVO ueResult = evaluationService.selectUserEvalationResultByUserId(userId);
         if (ueResult == null) {

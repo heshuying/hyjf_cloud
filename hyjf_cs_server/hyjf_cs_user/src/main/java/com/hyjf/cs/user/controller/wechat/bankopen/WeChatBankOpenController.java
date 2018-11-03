@@ -1,15 +1,23 @@
 package com.hyjf.cs.user.controller.wechat.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -25,7 +33,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author sunss
@@ -38,7 +48,8 @@ public class WeChatBankOpenController extends BaseUserController {
 
     @Autowired
     private BankOpenService bankOpenService;
-
+    @Autowired
+    private UserOperationLogProducer userOperationLogProducer;
     /**
      * 获取开户信息
      *
@@ -48,12 +59,26 @@ public class WeChatBankOpenController extends BaseUserController {
     @ApiOperation(value = "微信端获取开户信息", notes = "微信端获取开户信息")
     @GetMapping(value = "/initopen")
     @ResponseBody
-    public Map userInfo(@RequestHeader(value = "userId") int userId) {
+    public Map userInfo(@RequestHeader(value = "userId") int userId, HttpServletRequest request) {
         logger.info("openAccount userInfo start, userId is :{}", userId);
         Map<String,String> result = new HashedMap();
         UserVO userVO = bankOpenService.getUsersById(userId);
         if (userVO != null) {
             logger.info("app openAccount userInfo, success, userId is :{}", userVO.getUserId());
+            UserInfoVO userInfoVO =  bankOpenService.getUserInfo(userId);
+            UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE3);
+            userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+            userOperationLogEntity.setPlatform(1);
+            userOperationLogEntity.setRemark("");
+            userOperationLogEntity.setOperationTime(new Date());
+            userOperationLogEntity.setUserName(userVO.getUsername());
+            userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+            try {
+                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            } catch (MQException e) {
+                logger.error("保存用户日志失败" , e);
+            }
             String mobile = userVO.getMobile();
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";

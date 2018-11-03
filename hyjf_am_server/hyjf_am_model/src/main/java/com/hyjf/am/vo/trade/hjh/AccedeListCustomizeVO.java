@@ -7,6 +7,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author libin
@@ -300,13 +301,21 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 	 * 计算用已投资金额
 	 */
 	private BigDecimal jalreadyInvest;
-
 	/**
 	 * 自动投标进度
 	 * @return
 	 */
 	private String investScaleView;
-	
+
+	/**
+	 * 实际退出时间
+	 */
+	private Integer acctualPaymentTime;
+	/**
+	 * 预计开始退出时间
+	 */
+	private Date endDate;
+
 	public String getPlanOrderId() {
 		return planOrderId;
 	}
@@ -865,5 +874,21 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 
 	public void setInvestScaleView(String investScaleView) {
 		this.investScaleView = investScaleView;
+	}
+
+	public Integer getAcctualPaymentTime() {
+		return acctualPaymentTime;
+	}
+
+	public void setAcctualPaymentTime(Integer acctualPaymentTime) {
+		this.acctualPaymentTime = acctualPaymentTime;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 }

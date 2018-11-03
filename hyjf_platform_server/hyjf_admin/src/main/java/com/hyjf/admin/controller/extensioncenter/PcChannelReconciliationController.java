@@ -64,7 +64,7 @@ public class PcChannelReconciliationController extends BaseController {
         return new AdminResult(response);
     }
 
-    @ApiOperation(value = "计划列表查询", notes = "计划列表查询")
+    @ApiOperation(value = "智投列表查询", notes = "智投列表查询")
     @PostMapping("/search_hjh")
     public AdminResult searchHJHAction(@RequestBody ChannelReconciliationRequest request) {
         List<UtmVO> list = channelService.searchUtmList(0);
@@ -298,7 +298,8 @@ public class PcChannelReconciliationController extends BaseController {
             List<ChannelReconciliationVO> recordList = channelReconciliationResponse.getResultList();
             String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-            String[] titles = new String[] { "序号", "用户名", "渠道","注册时间", "智投订单号", "智投编号", "服务回报期限", "授权服务金额","是否首投", "投资时间" };
+            String[] titles = new String[] { "序号", "用户名", "渠道","注册时间", "智投订单号", "智投编号", "服务回报期限",
+                    "授权服务金额","是否首投", "投资时间" };
             // 声明一个工作薄
             HSSFWorkbook workbook = new HSSFWorkbook();
 
