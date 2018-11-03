@@ -381,7 +381,7 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
                              String investTotal, String fileName, HttpServletResponse response,CouponBackMoneyCustomize couponBackMoneyCustomize) {
 
         String[] titles = new String[] {"序号", "订单号", "用户名","优惠券id","优惠券类型编号",
-                "项目编号","回款期数","应回款（元）","转账订单号","状态" ,"应回款日期" ,"使用时间" ,"投资金额" ,"来源" ,"内容"};
+                "项目编号","回款期数","应回款（元）","转账订单号","状态" ,"应回款日期" ,"使用时间" , "授权服务金额" ,"来源" ,"内容"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
