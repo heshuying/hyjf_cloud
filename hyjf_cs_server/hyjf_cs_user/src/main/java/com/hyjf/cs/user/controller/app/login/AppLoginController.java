@@ -5,9 +5,15 @@ package com.hyjf.cs.user.controller.app.login;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.AppUserToken;
 import com.hyjf.common.util.DES;
@@ -16,6 +22,8 @@ import com.hyjf.common.util.SignValue;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.UserParameters;
@@ -32,7 +40,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author zhangqingqing
@@ -51,6 +61,8 @@ public class AppLoginController extends BaseUserController {
 
     @Autowired
     SystemConfig systemConfig;
+    @Autowired
+    private UserOperationLogProducer userOperationLogProducer;
     /**
      * 登录
      *
@@ -112,7 +124,20 @@ public class AppLoginController extends BaseUserController {
             WebViewUserVO webViewUserVO = loginService.login(username, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP);
             if (webViewUserVO != null) {
                 logger.info("app端登录成功 userId is :{}", webViewUserVO.getUserId());
-
+                //登录成功发送mq
+                UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+                userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE1);
+                userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+                userOperationLogEntity.setPlatform(request.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(request.getParameter("realPlatform")));
+                userOperationLogEntity.setRemark("");
+                userOperationLogEntity.setOperationTime(new Date());
+                userOperationLogEntity.setUserName(webViewUserVO.getUsername());
+                userOperationLogEntity.setUserRole(webViewUserVO.getRoleId());
+                try {
+                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                } catch (MQException e) {
+                    logger.error("保存用户日志失败", e);
+                }
                 this.appAfterLogin(sign, webViewUserVO, username);
                 ret.put("status", "0");
                 ret.put("statusDesc", "登录成功");
@@ -167,7 +192,21 @@ public class AppLoginController extends BaseUserController {
         try {
             if (userId != null) {
                 clearMobileCode(userId,sign);
-
+                UserInfoVO userInfoVO =  loginService.getUserInfo(userId);
+                UserVO userVO = loginService.getUsersById(userId);
+                UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+                userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE2);
+                userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+                userOperationLogEntity.setPlatform(request.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(request.getParameter("realPlatform")));
+                userOperationLogEntity.setRemark("");
+                userOperationLogEntity.setOperationTime(new Date());
+                userOperationLogEntity.setUserName(userVO.getUsername());
+                userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+                try {
+                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                } catch (MQException e) {
+                    logger.error("保存用户日志失败", e);
+                }
                 // 移除sign
                 if(version.substring(0,5).equals(systemConfig.getNewVersion()) && "6bcbd50a-27c4-4aac-b448-ea6b1b9228f43GYE604".equals(sign)){
                     logger.info("sign不做移除");
