@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
@@ -250,4 +251,9 @@ public interface BorrowService extends BaseService {
 
 	public List<WebUserInvestListCustomizeVO> selectUserInvestList(Map<String,Object> param);
 
+	public List<BorrowCustomizeVO> searchBorrowList(BorrowCommonCustomizeVO BorrowCommonCustomizeVO);
+
+    int countProjectRepayPlanRecordTotal(String borrowNid, String userId, String nid);
+
+	List<WebProjectRepayListCustomize> selectProjectRepayPlanList(String userId, String borrowNid, String nid);
 }

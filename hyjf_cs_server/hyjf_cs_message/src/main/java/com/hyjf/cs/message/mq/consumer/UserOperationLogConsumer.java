@@ -1,6 +1,7 @@
 package com.hyjf.cs.message.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.message.bean.mc.UserOperationLogEntity;
@@ -17,6 +18,7 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -56,11 +58,13 @@ public class UserOperationLogConsumer extends Consumer {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 			MessageExt msg = msgs.get(0);
-			UserOperationLogEntity userOperationLogEntity = JSONObject.parseObject(msg.getBody(), AppMsMessage.class);
+			UserOperationLogEntityVO userOperationLogEntity = JSONObject.parseObject(msg.getBody(), AppMsMessage.class);
 			logger.debug("UserOperationLogConsumer 收到请求，userOperationLogEntity is：{}", userOperationLogEntity);
 			if (null != userOperationLogEntity&& StringUtils.isNotBlank(userOperationLogEntity.getUserName())) {
 				userOperationLogEntity.setOperationTime(new Date());
-				userOperationLogMongDao.save(userOperationLogEntity);
+                UserOperationLogEntity operationLogEntity = new UserOperationLogEntity();
+                BeanUtils.copyProperties(userOperationLogEntity,operationLogEntity);
+                userOperationLogMongDao.save(operationLogEntity);
 			}
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 		}

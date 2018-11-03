@@ -5,10 +5,7 @@ import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
-import com.hyjf.am.resquest.admin.AssetListRequest;
-import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
-import com.hyjf.am.resquest.admin.CouponRepayRequest;
-import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
@@ -2272,4 +2269,9 @@ public interface AmTradeClient {
 
     int myTenderCountProjectRepayPlanRecordTotal(Map<String,Object> map);
 
+    List<BorrowCustomizeVO> searchBorrowList(Map<String, Object> params);
+
+    Integer countProjectRepayPlanRecordTotal(Map<String,Object> paraMap);
+
+    List<WebProjectRepayListCustomizeVO> selectProjectRepayPlanList(Map<String, Object> map);
 }

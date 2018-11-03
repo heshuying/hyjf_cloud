@@ -1509,4 +1509,142 @@ WHERE
 			</if>
 		</where>
 	</sql>
+
+	<select id="searchBorrowList" resultMap="selectBorrowListMap" parameterType="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
+		SELECT
+		bi.borrow_increase_money increase_money,
+		truncate(bi.tender_account_min/10000,2) tender_account_min_wan,
+		bi.contract_period,
+		bi.borrow_extra_yield,
+		bi.borrow_asset_number,
+		bi.borrow_publisher,
+		CASE WHEN b.borrow_style = 'endday' THEN '天' ELSE '个月' END AS borrow_period_type,
+		b.borrow_nid,
+		bi.`name` AS borrow_name,
+		bi.project_name,
+		bi.applicant,
+		b.borrow_user_name AS username,
+		b.user_id AS userId,
+		FORMAT(b.account, 2) AS account,
+		FORMAT(b.borrow_account_yes, 2) AS borrow_account_yes,
+		FORMAT(b.borrow_account_wait, 2) AS borrow_account_wait,
+		CONCAT(b.borrow_account_scale, '%') borrow_account_scale,
+		b.borrow_style,
+		bs.`name` AS borrow_style_name,
+		b.project_type,
+		bpt.borrow_name AS project_type_name,
+		CASE WHEN borrow_style = 'endday' THEN CONCAT(b.borrow_period, '天') ELSE CONCAT(b.borrow_period, '个月') END borrow_period,
+		CONCAT(b.borrow_apr, '%') borrow_apr,
+		FROM_UNIXTIME( b.reverify_time, '%Y-%m-%d %H:%i:%s' ) AS reverify_time,
+		CASE
+		WHEN ( ( b.`status` = 0 AND ( NOT EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) OR ( b.`status` = 0 AND b.verify_status = 0 AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '初审中'
+		WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '待发布'
+		WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
+		WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
+		WHEN ( b.`status` = 3 AND b.repay_full_status = 0 ) THEN '还款中'
+		WHEN ( b.`status` = 3 AND b.repay_full_status = 1 ) THEN '已还款'
+		WHEN b.`status` = 2 THEN '已流标'
+		ELSE
+		''
+		END AS `status`,
+		FROM_UNIXTIME( b.create_time, '%Y-%m-%d %H:%i:%s' ) AS addtime,
+		CASE WHEN b.borrow_full_time IS NOT NULL THEN FROM_UNIXTIME( b.borrow_full_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS borrow_full_time,
+		CASE WHEN b.recover_last_time <![CDATA[<>]]> 0 AND b.recover_last_time IS NOT NULL THEN FROM_UNIXTIME( b.recover_last_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS recover_last_time,
+		CASE WHEN b.recover_last_time <![CDATA[<>]]> 0 AND b.recover_last_time IS NOT NULL THEN FROM_UNIXTIME( b.recover_last_time, '%Y-%m-%d' ) ELSE '' END AS recover_last_day
+		FROM
+		ht_borrow b
+
+
+		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_borrow_info bi on bi.borrow_nid = b.borrow_nid
+		where
+		1=1
+		<if test="borrowNidSrch != null and borrowNidSrch != ''">
+			AND b.borrow_nid = #{borrowNidSrch}
+		</if>
+		<if test="borrowNameSrch != null and borrowNameSrch != ''">
+			AND bi.`name` LIKE CONCAT('%', #{borrowNameSrch}, '%')
+		</if>
+		<if test="usernameSrch != null and usernameSrch != ''">
+			AND b.borrow_user_name LIKE CONCAT('%', #{usernameSrch}, '%')
+		</if>
+
+		<!-- 初审中 -->
+		<if test="statusSrch == '0'.toString()">
+			AND
+			(
+			( b.`status` = 0 AND ( NOT EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) )
+			OR
+			( b.`status` = 0 AND b.verify_status = 0 AND ( EXISTS ( SELECT 1 FROM _borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) )
+			)
+		</if>
+		<!-- 待发布 -->
+		<if test="statusSrch == '10'.toString()">
+			AND ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) )
+		</if>
+		<!-- 投资中 -->
+		<if test="statusSrch == '12'.toString()">
+			AND (
+			b.`status` = 1
+			AND b.borrow_status = 1
+			AND b.borrow_account_yes <![CDATA[<]]> b.account
+			AND b.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+			)
+		</if>
+		<!-- 复审中 -->
+		<if test="statusSrch == '15'.toString()">
+			AND
+			( b.`status` = 1 AND b.reverify_time = '0'
+			AND
+			(
+			( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account )
+			OR
+			( b.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) )
+			)
+			)
+		</if>
+		<!-- 还款中 -->
+		<if test="statusSrch == '20'.toString()">
+			AND ( b.`status` = 3 AND b.repay_full_status = 0 )
+		</if>
+		<!-- 已还款 -->
+		<if test="statusSrch == '25'.toString()">
+			AND ( b.`status` = 3 AND b.repay_full_status = 1 )
+		</if>
+		<!-- 已流标 -->
+		<if test="statusSrch == '2'.toString()">
+			AND b.`status` = 2
+		</if>
+
+		<if test="borrowPeriod != null and borrowPeriod != ''">
+			AND b.borrow_period = #{borrowPeriod}
+		</if>
+		<if test="projectTypeSrch != null and projectTypeSrch != ''">
+			AND b.project_type = #{projectTypeSrch}
+		</if>
+		<if test="borrowStyleSrch != null and borrowStyleSrch != ''">
+			AND b.borrow_style = #{borrowStyleSrch}
+		</if>
+		<if test="recoverTimeStartSrch != null and recoverTimeStartSrch != ''">
+			AND b.recover_last_time <![CDATA[>=]]> unix_timestamp(#{recoverTimeStartSrch})
+		</if>
+		<if test="recoverTimeEndSrch != null and recoverTimeEndSrch != ''">
+			AND b.recover_last_time <![CDATA[<=]]> unix_timestamp(#{recoverTimeEndSrch})+86399
+		</if>
+		<if test="timeStartSrch != null and timeStartSrch != ''">
+			AND b.create_time <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
+		</if>
+		<if test="timeEndSrch != null and timeEndSrch != ''">
+			AND b.create_time <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})+86399
+		</if>
+		ORDER BY
+		<if test="col != null and col != '' and sort != null and sort != ''">
+			${col} ${sort},
+		</if>
+		b.create_time DESC, b.id DESC
+		<if test="limitStart != null and limitStart !=-1" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
 </mapper>

@@ -3,9 +3,15 @@
  */
 package com.hyjf.cs.user.controller.wechat.login;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.AppUserToken;
 import com.hyjf.common.util.CommonUtils;
@@ -15,6 +21,8 @@ import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -29,7 +37,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author zhangqingqing
@@ -42,6 +52,8 @@ public class WeChatLoginController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(WeChatLoginController.class);
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private UserOperationLogProducer userOperationLogProducer;
 
     /**
      * 登录接口
@@ -83,6 +95,20 @@ public class WeChatLoginController extends BaseUserController {
         WebViewUserVO userVO = loginService.login(userName, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
         if (userVO != null) {
             logger.info("weChat端登录成功, userId is :{}", userVO.getUserId());
+            //登录成功发送mq
+            UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE1);
+            userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+            userOperationLogEntity.setPlatform(1);
+            userOperationLogEntity.setRemark("");
+            userOperationLogEntity.setOperationTime(new Date());
+            userOperationLogEntity.setUserName(userVO.getUsername());
+            userOperationLogEntity.setUserRole(userVO.getRoleId());
+            try {
+                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            } catch (MQException e) {
+                logger.error("保存用户日志失败", e);
+            }
             if (StringUtils.isNotBlank(env)) {
                 //登录成功之后风车理财的特殊标记，供后续投资使用
                 RedisUtils.del("loginFrom" + userVO.getUserId());
@@ -110,17 +136,29 @@ public class WeChatLoginController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "登出", notes = "登出")
     @PostMapping(value = "/doLoginOut.do")
-    public BaseResultBean doLoginOut( String sign) {
+    public BaseResultBean doLoginOut( String sign,HttpServletRequest request) {
         LoginResultBean result = new LoginResultBean();
         result.setStatus(ResultEnum.SUCCESS.getStatus());
         result.setStatusDesc("退出成功");
-
         if(StringUtils.isBlank(sign)){
             return result.setEnum(ResultEnum.PARAM);
         }
         AppUserToken token = SecretUtil.getAppUserToken(sign);
         if (token != null && token.getUserId() != null) {
-            // 清除sign
+            UserInfoVO userInfoVO =  loginService.getUserInfo(token.getUserId());
+            UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE2);
+            userOperationLogEntity.setIp(com.hyjf.common.util.GetCilentIP.getIpAddr(request));
+            userOperationLogEntity.setPlatform(1);
+            userOperationLogEntity.setRemark("");
+            userOperationLogEntity.setOperationTime(new Date());
+            userOperationLogEntity.setUserName(token.getUsername());
+            userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+            try {
+                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            } catch (MQException e) {
+                logger.error("保存用户日志失败", e);
+            }            // 清除sign
             SecretUtil.clearToken(sign);
             RedisUtils.del("loginFrom"+token.getUserId());
         } else {
