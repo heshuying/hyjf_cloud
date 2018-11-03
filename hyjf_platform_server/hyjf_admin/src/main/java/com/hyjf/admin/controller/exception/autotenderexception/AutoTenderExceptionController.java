@@ -134,7 +134,8 @@ public class AutoTenderExceptionController extends BaseController {
         if(null!=autoTenderExceptionResponse){
             resultList = autoTenderExceptionResponse.getResultList();
         }
-        String[] titles = new String[] { "序号","加入订单号", "计划编号","锁定期", "用户名", "加入金额", "已投资金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "计息时间", "加入时间" };
+        String[] titles = new String[] { "序号","智投订单号", "智投编号","服务回报期限", "用户名", "授权服务金额",
+                "已投资金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "开始计息时间", "授权服务时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
