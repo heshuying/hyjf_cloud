@@ -593,7 +593,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 creditTender.setAssignRepayYesTime(creditTenderLog.getAssignRepayYesTime());
                 creditTender.setAssignRepayPeriod(creditTenderLog.getAssignRepayPeriod());
                 // 还款期数
-                creditTender.setAddip(creditTenderLog.getAddIp());
+                creditTender.setAddIp(creditTenderLog.getAddIp());
                 // 客户端
                 creditTender.setClient(creditTenderLog.getClient());
                 // 银行存管新增授权码

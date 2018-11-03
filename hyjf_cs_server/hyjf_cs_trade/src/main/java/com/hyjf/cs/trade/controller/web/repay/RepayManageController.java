@@ -99,8 +99,6 @@ public class RepayManageController extends BaseTradeController {
     AmUserClient amUserClient;
     @Autowired
     private AuthService authService;
-    @Autowired
-    BorrowLoanRepayProducer borrowLoanRepayProducer;
 
     /**
      * 用户还款页面统计数据查询

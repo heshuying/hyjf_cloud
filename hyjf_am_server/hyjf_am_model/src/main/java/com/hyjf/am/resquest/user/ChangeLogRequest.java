@@ -61,11 +61,7 @@ public class ChangeLogRequest extends BasePage {
     private String idCard;
     //合规四期(添加邮箱) add by nxl
     private String email;
-	    private String remark;
 
-	    private String borrowerType;
-
-	    private String idCard;
 		// 分页区分
 		private boolean limitFlg =false;
 

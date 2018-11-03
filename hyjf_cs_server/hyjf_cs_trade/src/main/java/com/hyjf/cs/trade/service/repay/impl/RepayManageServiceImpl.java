@@ -81,9 +81,6 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     SystemConfig systemConfig;
 
     @Autowired
-    SystemConfig systemConfig;
-
-    @Autowired
     private AuthService authService;
     /**
      * 普通用户管理费总待还
@@ -395,11 +392,10 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      * @date: 2018/7/10
      */
     @Override
-    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay){
+    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean){
         RepayRequestUpdateRequest requestBean = new RepayRequestUpdateRequest();
         requestBean.setRepayBeanData(JSON.toJSONString(repayBean));
         requestBean.setBankCallBeanData(JSON.toJSONString(bankCallBean));
-        requestBean.setAllRepay(isAllRepay);
 
         return amTradeClient.repayRequestUpdate(requestBean);
     }

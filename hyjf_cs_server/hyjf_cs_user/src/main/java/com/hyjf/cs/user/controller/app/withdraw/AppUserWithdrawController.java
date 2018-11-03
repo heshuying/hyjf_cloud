@@ -161,12 +161,6 @@ public class AppUserWithdrawController extends BaseUserController {
                         dayLimitAmount = (dayLimitAmount == null)?BigDecimal.ZERO:dayLimitAmount;
                         monthLimitAmount = (monthLimitAmount == null)?BigDecimal.ZERO:monthLimitAmount;
 
-                        String symbol = ",";
-                        String symBol2 = ",";
-                        if(BigDecimal.ZERO.compareTo(dayLimitAmount)==0 && BigDecimal.ZERO.compareTo(monthLimitAmount)==0){
-                            symbol = "";
-                            symBol2 = "";
-                        }
                         // 是否支持快捷支付1:支持 2:不支持
                         //Integer quickPayment = jxBankConfigVO.getQuickPayment();
                         // modify by yangchangwei app3.1.1 迁移 2018-10-15

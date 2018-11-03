@@ -3074,13 +3074,6 @@ public interface AmTradeClient {
      */
     PushMoneyResponse getInfoAction(Integer id);
 
-    /**
-     * 保证金不足列表
-     * @param request
-     * @return
-     */
-    AssetListCustomizeResponse findBZJBZList(AssetListRequest request);
-
     Boolean updateBorrowCreditStautus(String borrowNid);
 
     Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean);

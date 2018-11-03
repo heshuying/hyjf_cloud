@@ -49,12 +49,4 @@ public class InitCashDepositListResponse {
 	public void setHjhInstConfigList(List<AdminHjhInstConfigAPIVO> hjhInstConfigList) {
 		HjhInstConfigList = hjhInstConfigList;
 	}
-
-    public void setAssetCount(Integer assetCount) {
-        this.assetCount = assetCount;
-    }
-
-    public Integer getAssetCount() {
-        return assetCount;
-    }
 }

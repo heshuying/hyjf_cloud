@@ -97,8 +97,6 @@ public class CreditTenderVO extends BaseVO implements Serializable {
 
     private String addIp;
 
-    private Date createTime;
-
     private static final long serialVersionUID = 1L;
 
     public Integer getAssignId() {
