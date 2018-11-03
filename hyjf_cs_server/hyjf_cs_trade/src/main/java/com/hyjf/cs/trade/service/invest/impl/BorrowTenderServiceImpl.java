@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -36,6 +37,8 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.CouponTenderProducer;
+import com.hyjf.cs.trade.mq.producer.sensorsdate.hzt.SensorsDataHztInvestProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -56,6 +59,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -90,7 +94,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private HjhTenderService hjhTenderService;
     @Autowired
     private BorrowCreditTenderService borrowTenderService;
-
+    @Autowired
+    private AuthService authService;
+    @Autowired
+    private SensorsDataHztInvestProducer sensorsDataHztInvestProducer;
     /**
      * @param request
      * @Description 散标投资
@@ -330,13 +337,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @param userInfo
      */
     private void checkUser(UserVO user, UserInfoVO userInfo) {
-        // 担保机构用户
-        if (userInfo.getRoleId() == 3) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
-        }
-        // 借款人不能投资
-        if (userInfo.getRoleId() == 2) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+        if (null != userInfo) {
+            // 合规校验角色
+            String roleIsOpen = systemConfig.getRoleIsopen();
+            if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+                if (userInfo.getRoleId() != 1) {
+                    // 仅限出借人进行投资
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+                }
+            }
         }
         // 判断用户是否禁用// 0启用，1禁用
         if (user.getStatus() == 1) {
@@ -352,6 +361,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 风险测评校验
         this.checkEvaluation(user);
+        // 缴费授权状态
+        if (!authService.checkPaymentAuthStatus(user.getUserId())) {
+            // 未进行服务费授权
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
+        }
     }
 
     /**
@@ -458,6 +472,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 tmpInfo += " 微信端  ";
             }
             throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PLAT,tmpInfo);
+        }
+        UserInfoVO usersInfo = amUserClient.findUsersInfoById(borrow.getUserId());
+        if (null != usersInfo) {
+            String roleIsOpen = systemConfig.getRoleIsopen();
+            if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+                if (usersInfo.getRoleId() != 1) {// 非投资用户
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+                }
+            }
         }
 
         // 借款人不可以自己投资项目
@@ -845,6 +868,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         return earnings;
     }
+
+
     /**
      * 获取APP端投资信息
      *
@@ -863,6 +888,23 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 投资类型
         String investType = tender.getBorrowNid().substring(0, 3);
         String creditNid = tender.getBorrowNid().substring(3);
+        String isConfirm = tender.getIsConfirm();//是否最后确认
+
+
+        //add by cwyang APP3.0.9 确认是否为最后一次确认，如果是最后一次确认则必须进行投资校验
+        if(isConfirm != null && "1".equals(isConfirm)){
+            AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
+
+            try{
+                appTenderCheck(tender);
+            }catch (Exception e){
+                resultVo.setStatus("1");
+                resultVo.setStatusDesc("投资校验失败！");
+                return resultVo;
+            }
+
+        }
+
         logger.info("investType:[{}]",investType);
         String money = tender.getMoney();
         {
@@ -872,12 +914,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if ("HZR".equals(investType) && StringUtils.isNotEmpty(creditNid)) {
             AppInvestInfoResultVO result = borrowTenderService.getInterestInfoApp(tender,creditNid,tender.getMoney());
             this.setProtocolsToResultVO(result, investType);
+
             return result;
         }
         // 计划的
         if ("HJH".equals(investType)) {
             AppInvestInfoResultVO result = hjhTenderService.getInvestInfoApp(tender);
             this.setProtocolsToResultVO(result, investType);
+
             return result;
         }
 
@@ -934,6 +978,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if (couponConfig.getCouponType() == 3) {
                     investInfo.setCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     investInfo.setCouponType("代金券");
+                    investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
                 }
                 investInfo.setCouponQuota(couponConfig.getCouponQuota().toString());
                 investInfo.setCouponId(tender.getCouponGrantId()+"");
@@ -1004,6 +1049,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             BigDecimal earnings = new BigDecimal("0");
 
             if (!StringUtils.isBlank(money) && Double.parseDouble(money) >= 0) {
+                if( "1".equals(isConfirm)){
+                    investInfo.setRealAmount(money);
+                }
                 String borrowStyle = borrow.getBorrowStyle();
                 // 收益率
                 BigDecimal borrowApr = borrow.getBorrowApr();
@@ -1129,12 +1177,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setEndTime("");
             investInfo.setButtonWord("");
             investInfo.setStandardValues("");
+            investInfo.setUsedCouponDes("未使用");
             // 投资协议
             if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
-                investInfo.setRealAmount("");
+                investInfo.setRealAmount("0");
                 investInfo.setButtonWord("确认");
             } else {
-                investInfo.setRealAmount("");
+                investInfo.setRealAmount("¥" + money);
                 investInfo.setButtonWord("确认投资" + CommonUtils.formatAmount(null, money) + "元");
             }
 
@@ -1153,6 +1202,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         list.add(newAgreementBean);
         investInfo.setProtocols(list);
         investInfo.setProtocolUrlDesc("协议列表");
+        investInfo.setUsedCouponDes("未使用");
+        investInfo.setIsUsedCoupon("0");
     }
 
     /**
@@ -1260,6 +1311,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         Integer recordTotal = 0;
         // 可用优惠券张数
         Integer couponAvailableCount;
+
+        UserInfoVO userInfo = amUserClient.findUserInfoById(tender.getUserId());
+        String roleIsOpen = systemConfig.getRoleIsopen();
+        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+            if (userInfo.getRoleId() != 1) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+            }
+        }
+
         BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(tender.getBorrowNid());
         if (null == borrow) {
             // 标的不存在
@@ -1916,6 +1976,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             } catch (MQException e) {
                 e.printStackTrace();
             }
+
+            // 投资成功后,发送神策数据统计MQ
+            // add by liuyang 神策数据统计 20180823 start
+            try {
+                // 投资成功后,发送神策数据统计MQ
+                SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
+                sensorsDataBean.setOrderId(bean.getLogOrderId());
+                sensorsDataBean.setEventCode("submit_tender");
+                this.sendSensorsDataMQ(sensorsDataBean);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // add by liuyang 神策数据统计 20180823 end
         }else{
             logger.error("投资失败  对象:{}",JSONObject.toJSONString(tenderBg));
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
@@ -2026,4 +2100,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/
     }
+
+    /**
+     * 投资成功后,发送神策数据统计MQ
+     *
+     * @param sensorsDataBean
+     * @throws MQException
+     */
+    private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataHztInvestProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_HZT_INVEST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+    }
+
 }

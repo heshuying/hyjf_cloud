@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.service.invest.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -36,6 +37,8 @@ import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.*;
+import com.hyjf.cs.trade.mq.producer.sensorsdate.credit.SensorsDataCreditProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -72,7 +75,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
     @Autowired
     private AppMessageProducer appMsProcesser;
-
+    @Autowired
+    private AuthService authService;
     @Autowired
     private SmsProducer smsProducer;
     @Autowired
@@ -81,6 +85,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
     @Autowired
     private FddProducer fddProducer;
+
+    @Autowired
+    private SensorsDataCreditProducer sensorsDataCreditProducer;
 
     private static String regex = "^[-+]?(([0-9]+)(([0-9]+))?|(([0-9]+))?)$";
     private static DecimalFormat DF_COM_VIEW = new DecimalFormat("######0.00");
@@ -308,7 +315,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setRealAmount("");
             result.setButtonWord("确认");
         } else {
-            result.setRealAmount("");
+            result.setRealAmount("¥" + CommonUtils.formatAmount(null, money));
             result.setButtonWord("确认投资"+CommonUtils.formatAmount(null, money)+"元");
         }
         result.setBorrowNid(creditNid);
@@ -540,7 +547,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 服务费
                 creditTender.setCreditFee(creditTenderLog.getCreditFee());
                 // 添加时间
-                creditTender.setAddTime(new Date());
+                creditTender.setCreateTime(new Date());
                 // 投资本金
                 creditTender.setAssignCapital(creditTenderLog.getAssignCapital());
                 // 用户名称
@@ -587,7 +594,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 creditTender.setAssignRepayPeriod(creditTenderLog.getAssignRepayPeriod());
                 // 还款期数
                 creditTender.setAddip(creditTenderLog.getAddIp());
-                creditTender.setAddIp(creditTenderLog.getAddIp());
                 // 客户端
                 creditTender.setClient(creditTenderLog.getClient());
                 // 银行存管新增授权码
@@ -738,7 +744,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         // 认购日期
                         creditRepay.setAssignCreateDate(creditTender.getAssignCreateDate());
                         // ip
-                        creditRepay.setAddIp(creditTender.getAddip());
+                        creditRepay.setAddIp(creditTender.getAddIp());
                         // 客户端
                         creditRepay.setClient(creditTenderLog.getClient());
                         // 原标还款期数
@@ -845,6 +851,21 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                             logger.error("更新网站收支明细失败！logOrdId:{},userId:{}",logOrderId,userId);
                         }
                     }
+
+                    // 承接成功后, 发送神策数据统计MQ
+                    // 神策数据统计 add by liuyang 20180726 start
+                    try {
+                        SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                        sensorsDataBean.setUserId(userId);
+                        sensorsDataBean.setEventCode("receive_credit_assign");
+                        sensorsDataBean.setOrderId(creditTender.getAssignNid());
+                        // 发送神策数据统计MQ
+                        logger.info("承接成功后发送神策数据统计MQ,承接订单号:[" + creditTender.getAssignNid() + "].");
+                        this.sendSensorsDataMQ(sensorsDataBean);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    // 神策数据统计 add by liuyang 20180726 end
                     return true;
                 }
             }else{
@@ -1290,13 +1311,12 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @param borrowCredit
      */
     private void checkUser(UserVO user, UserInfoVO userInfo, BankOpenAccountVO bankOpenAccount, BorrowCreditVO borrowCredit) {
-        // 担保机构用户
-        if (userInfo.getRoleId() == 3) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
-        }
-        // 借款人不能投资
-        if (userInfo.getRoleId() == 2) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+
+        String roleIsOpen = systemConfig.getRoleIsopen();
+        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+            if (userInfo.getRoleId() != 1) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+            }
         }
         // 判断用户是否禁用  0启用，1禁用
         if (user.getStatus() == 1) {
@@ -1320,6 +1340,12 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 不可以承接自己出让的债权
             throw new CheckException(MsgEnum.ERROR_CREDIT_CANT_BBY_YOURSELF);
         }
+
+        if (!authService.checkPaymentAuthStatus(user.getUserId())) {
+            // 未进行服务费授权
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
+
+        }
     }
 
     /**
@@ -1335,5 +1361,15 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 债转编号和承接本金必须是数字格式
             throw new CheckException(MsgEnum.ERROR_CREDIT_NID_CAPITAL_NUMBER);
         }
+    }
+
+
+    /**
+     * 承接成功后,发送神策数据统计
+     *
+     * @param sensorsDataBean
+     */
+    private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataCreditProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
     }
 }

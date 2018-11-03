@@ -4,6 +4,7 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.repaybean.RepayBean;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.IntegerResponse;
@@ -20,6 +21,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
+import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
@@ -3078,6 +3080,27 @@ public interface AmTradeClient {
      * @return
      */
     AssetListCustomizeResponse findBZJBZList(AssetListRequest request);
+
+    Boolean updateBorrowCreditStautus(String borrowNid);
+
+    Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean);
+
+    RepayBean getRepayBean(Map<String, String> paraMap);
+
+    /**
+     * 保证金不足列表
+     * @param request
+     * @return
+     */
+    AssetListCustomizeResponse findBZJBZList(AssetListRequest request);
+
+    /**
+     * 开户成功  修改trade的account
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    boolean updateAccountNumberByUserId(Integer userId, String accountId);
 
     /** 加息接口开始*/
     /** 枚举类型 */

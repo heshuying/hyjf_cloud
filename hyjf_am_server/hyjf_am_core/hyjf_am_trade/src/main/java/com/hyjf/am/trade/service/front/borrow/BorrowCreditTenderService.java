@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.front.borrow;
 
 import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
+import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowCreditTenderCustomize;
 import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
@@ -89,4 +90,20 @@ public interface BorrowCreditTenderService {
      * @date 2018/8/30 11:11
      */
     String getCreditTenderServiceFee(String creditNid);
+
+    /**
+     * 根据用户Id查询用户承接记录
+     *
+     * @param userId
+     * @return
+     */
+    List<CreditTender> selectCreditTenderByUserId(Integer userId);
+
+    /**
+     * 根据承接订单号查询用户承接记录
+     *
+     * @param assignOrderId
+     * @return
+     */
+    CreditTender selectCreditTenderByAssignOrderId(String assignOrderId);
 }

@@ -6,6 +6,7 @@ package com.hyjf.cs.user.service.register.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UserActionUtmRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
@@ -36,6 +37,7 @@ import com.hyjf.cs.user.mq.producer.AccountProducer;
 import com.hyjf.cs.user.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
+import com.hyjf.cs.user.mq.producer.sensorsdate.register.SensorsDataRegisterProducer;
 import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.register.RegisterService;
@@ -81,6 +83,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     @Autowired
     private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
+
+    @Autowired
+    private SensorsDataRegisterProducer sensorsDataRegisterProducer;
 
     /**
      * api注册参数校验
@@ -264,7 +269,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             throws ReturnMessageException {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform);
         registerUserRequest.setLoginIp(ip);
-        
+
         //add by libin 用户注册时通过ip获得用户所在的省，市 start
         logger.info("获取到的用户ip为：" + ip);
         String info = GetInfoByUserIp.getInfoByUserIp(ip);
@@ -276,11 +281,11 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         	StringBuffer line = new StringBuffer(info);
         	int first_idx   = line.indexOf("|");
         	String country = line.substring(0, first_idx);//所属国家暂时不用先保留
-        	
+
         	line = new StringBuffer(line.substring(first_idx + 1) );
         	int second_idx   = line.indexOf("|");
         	String number = line.substring(0, second_idx);//所属数字暂时不用先保留
-        	
+
             line = new StringBuffer(line.substring(second_idx + 1) );
             int thrid_idx   = line.indexOf("|");
             String province = line.substring(0, thrid_idx);//省
@@ -289,7 +294,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             } else {
             	registerUserRequest.setProvince("");
             }
-            
+
             line = new StringBuffer(line.substring(thrid_idx + 1) );
             int fouth_idx   = line.indexOf("|");
             String city = line.substring(0, fouth_idx);//市
@@ -300,7 +305,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             }
         }
         //add by libin 用户注册时通过ip获得用户所在的省，市 end
-        
+
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
         logger.info("注册之后user值是否为空："+(userVO==null));
@@ -308,7 +313,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         // 3.注册后处理
         return this.afterRegisterHandle(userVO);
     }
-    
+
     /**
      * 默认fallback
      * @return
@@ -632,6 +637,16 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                     }
             }
         }
+    }
+
+    /**
+     * 注册成功后,发送神策统计MQ
+     *
+     * @param sensorsDataBean
+     */
+    @Override
+    public void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataRegisterProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_REGISTER_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)),2);
     }
 
     /**

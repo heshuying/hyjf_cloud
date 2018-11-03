@@ -14,6 +14,9 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample.Criteria;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.user.dao.mapper.auto.UserMapper;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserExample;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
@@ -54,6 +57,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
     private AutoIssueMessageProducer autoIssueMessageProducer;
     @Autowired
     private AutoRecordMessageProducer autoRecordMessageProducer;
+
+	@Autowired
+	private UserMapper userMapper;
 	@Value("${file.domain.url}")
     private String url; 
 	@Value("${file.physical.path}")
@@ -5745,6 +5751,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	@Override
 	public int isEntrustedExistsUser(String userName) {
 		if (StringUtils.isNotEmpty(userName)) {
+			UserExample example = new UserExample();
+			UserExample.Criteria cra = example.createCriteria();
+			cra.andUsernameEqualTo(userName);
+			List<User> userList = this.userMapper.selectByExample(example);
 //			UserExample example = new UsersExample();
 //			UsersExample.Criteria cra = example.createCriteria();
 //			cra.andUsernameEqualTo(userName);
@@ -5775,6 +5785,12 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 			if(whiteList.get(0).getState() == 0){//状态 1启用  0禁用
 				return 6;
+			}
+			// 检查是否服务费授权
+			Integer isPaymentAuth = CommonUtils.checkPaymentAuthStatus(userList.get(0).getPaymentAuthStatus());
+			if(isPaymentAuth-0==0){
+				// 未服务费授权
+				return 7;
 			}
 		}
 		return 0;

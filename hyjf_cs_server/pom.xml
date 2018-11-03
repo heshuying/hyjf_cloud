@@ -42,5 +42,10 @@
 			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
 		</dependency>
 
+        <dependency>
+            <groupId>SensorsAnalyticsSDK</groupId>
+            <artifactId>SensorsAnalyticsSDK</artifactId>
+            <version>3.1.6-standalone</version>
+        </dependency>
     </dependencies>
 </project>

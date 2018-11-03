@@ -53,6 +53,9 @@ public class AutoMapper {
     protected BankRepayFreezeLogMapper bankRepayFreezeLogMapper;
 
     @Resource
+    protected BankRepayOrgFreezeLogMapper bankRepayOrgFreezeLogMapper;
+
+    @Resource
     protected BorrowMapper borrowMapper;
 
     @Resource
@@ -504,5 +507,8 @@ public class AutoMapper {
 
     @Resource
     protected HjhBailConfigInfoMapper hjhBailConfigInfoMapper;
+
+    @Resource
+    protected AppPushManageMapper appPushManageMapper;
 }
 

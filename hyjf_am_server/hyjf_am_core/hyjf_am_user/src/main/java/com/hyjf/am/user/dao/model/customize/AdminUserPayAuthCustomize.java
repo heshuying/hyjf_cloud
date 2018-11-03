@@ -17,7 +17,8 @@ public class AdminUserPayAuthCustomize {
 	private String signEndDate;
 	//授权时间
 	private String signDate;
-	
+	//缴费授权单笔最大金额
+	private String paymentMaxAmt;
 	
 	
 	
@@ -71,6 +72,14 @@ public class AdminUserPayAuthCustomize {
 //	public void setOperateEsb(String operateEsb) {
 //		this.operateEsb = operateEsb;
 //	}
-	
-	
+
+
+
+	public String getPaymentMaxAmt() {
+		return paymentMaxAmt;
+	}
+
+	public void setPaymentMaxAmt(String paymentMaxAmt) {
+		this.paymentMaxAmt = paymentMaxAmt;
+	}
 }

@@ -68,11 +68,22 @@ public class AppRechargeInfoResult extends BaseResultBean {
     private String cardNo_info = "";
     // 重要提示
     private String hints = "";
+    //add by cwyang 2018-06-29 APP3.0.9新增参数转账指南
+    /**app转账指南*/
+    private String transferGuideURL = "";
 
     /**
      * 此处为属性说明
      */
     private static final long serialVersionUID = -3095160356825014456L;
+
+    public String getTransferGuideURL() {
+        return transferGuideURL;
+    }
+
+    public void setTransferGuideURL(String transferGuideURL) {
+        this.transferGuideURL = transferGuideURL;
+    }
 
     public String getFee() {
         return fee;

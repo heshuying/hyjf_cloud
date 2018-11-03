@@ -94,7 +94,7 @@
 	    values (
 	      #{seqNo,jdbcType=INTEGER},
 	      #{bankSeqNo,jdbcType=INTEGER},
-	      #{txTime,jdbcType=VARCHAR},
+		  #{txTime,jdbcType=TIMESTAMP},
 	      #{userName,jdbcType=VARCHAR},
 	      #{accountId,jdbcType=VARCHAR},
 	      #{isBank,jdbcType=VARCHAR},
@@ -103,7 +103,7 @@
 	      #{amount,jdbcType=VARCHAR},
 	      #{status,jdbcType=VARCHAR},
 	      #{createUserId,jdbcType=INTEGER},
-	      #{createTime,jdbcType=INTEGER}
+		  #{createTime,jdbcType=TIMESTAMP}
 	      )
 	</insert>
 	

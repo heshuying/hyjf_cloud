@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service.myproject.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
 import com.hyjf.am.response.trade.account.BorrowAccountResponse;
@@ -9,6 +10,7 @@ import com.hyjf.am.response.trade.coupon.AppCouponInfoResponse;
 import com.hyjf.am.response.trade.coupon.CouponRepayResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
@@ -36,6 +38,7 @@ import com.hyjf.cs.trade.bean.BorrowProjectDetailBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.mq.producer.sensorsdate.credit.SensorsDataCreditProducer;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
@@ -85,6 +88,9 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     @Autowired
     private MyCreditListService myCreditListService;
+
+    @Autowired
+    private SensorsDataCreditProducer sensorsDataCreditProducer;
     
     /**
      * 折让率格式
@@ -669,6 +675,24 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                         .replace(priceStr,URLEncoder.encode(request.getCreditPrice(),"utf-8"))
                         .replace(endTimeStr, URLEncoder.encode(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getCreditEndTime()),"utf-8"));
                 // 业务手动抛出的异常
+                // 保存成功后,发送神策统计数据
+                if(StringUtils.isNotEmpty(request.getPresetProps())){
+                    SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                    // 将json串转换成Bean
+                    try {
+                        Map<String, Object> sensorsDataMap = JSONObject.parseObject(request.getPresetProps(), new TypeReference<Map<String, Object>>() {
+                        });
+                        sensorsDataBean.setPresetProps(sensorsDataMap);
+                        sensorsDataBean.setUserId(userId);
+                        sensorsDataBean.setEventCode("submit_credit_assign");
+                        sensorsDataBean.setCreditNid(String.valueOf(request.getCreditNid()));
+                        // 发送神策数据统计MQ
+                        this.sendSensorsDataMQ(sensorsDataBean);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }catch (CheckException e){
                 result.put(CustomConstants.APP_STATUS, e.getCode());
                 result.put(CustomConstants.APP_STATUS_DESC,e.getMessage());
@@ -695,6 +719,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         result.put("resultUrl",resultUrl);
         return result;
 	}
+
 
     /**
      * 债转各项金额计算
@@ -1207,5 +1232,14 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         resultMap.put("creditCapital", creditCapital.setScale(2, BigDecimal.ROUND_DOWN));// 可转本金
         resultMap.put("creditPrice", creditPrice.setScale(2, BigDecimal.ROUND_DOWN));// 折后价格
         return resultMap;
+    }
+
+    /**
+     * 发起转让成功后,发送神策数据统计
+     * @param sensorsDataBean
+     * @throws MQException
+     */
+    private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataCreditProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
     }
 }

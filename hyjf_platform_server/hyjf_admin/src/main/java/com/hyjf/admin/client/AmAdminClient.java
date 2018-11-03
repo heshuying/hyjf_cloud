@@ -1,9 +1,11 @@
 package com.hyjf.admin.client;
 
+import com.hyjf.admin.beans.request.AppPushManageRequestBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.am.bean.admin.LockedConfig;
+import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.EmailRecipientResponse;
 import com.hyjf.am.response.IntegerResponse;
@@ -20,6 +22,7 @@ import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
+import com.hyjf.am.response.user.BankRepayFreezeOrgResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
@@ -35,6 +38,7 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
@@ -686,4 +690,44 @@ public interface AmAdminClient {
      * @return
      */
     void updateBindCard(BindCardExceptionRequest request);
+
+    List<BankRepayFreezeOrgCustomizeVO> getBankReapyFreezeOrgList(RepayFreezeOrgRequest request);
+
+    Integer getBankReapyFreezeOrgCount(RepayFreezeOrgRequest request);
+
+    Integer deleteOrgFreezeLog(String orderId);
+
+    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId);
+
+    /**
+     * 移动客户端 - App 推送管理 列表
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    AppPushManageResponse getPushManageList(AppPushManageRequestBean requestBean);
+
+    /**
+     * 移动客户端 - App 推送管理 添加
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    AppPushManageResponse insterPushManage(AppPushManageRequestBean requestBean);
+
+    /**
+     * 移动客户端 - App 推送管理 更新
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    boolean updatePushManage(AppPushManageRequestBean requestBean);
+
+    /**
+     * 移动客户端 - App 推送管理 删除
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    boolean deletePushManage(Integer id);
 }

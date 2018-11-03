@@ -289,4 +289,12 @@ public class ManualReverseCustomize implements Serializable {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+    public String getTxTimeView() {
+        return txTimeView;
+    }
+
+    public void setTxTimeView(String txTimeView) {
+        this.txTimeView = txTimeView;
+    }
 }

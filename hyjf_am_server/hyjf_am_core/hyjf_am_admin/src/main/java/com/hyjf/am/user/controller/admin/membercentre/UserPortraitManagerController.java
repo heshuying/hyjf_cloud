@@ -73,9 +73,10 @@ public class UserPortraitManagerController extends BaseController {
         }
         response.setCount(registCount);
         if (registCount > 0) {
-            List<UserPortraitVO> listUserPortrait = userPortraitManagerService.selectRecordList(mapParam, limitStart, limitEnd);
+            List<UserPortrait> listUserPortrait = userPortraitManagerService.selectRecordList(mapParam, limitStart, limitEnd);
             if (!CollectionUtils.isEmpty(listUserPortrait)) {
-                response.setResultList(listUserPortrait);
+                List<UserPortraitVO> userVoList = CommonUtils.convertBeanList(listUserPortrait, UserPortraitVO.class);
+                response.setResultList(userVoList);
                 response.setRtn(Response.SUCCESS);
             }
         }

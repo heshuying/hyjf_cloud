@@ -4,11 +4,15 @@
 package com.hyjf.cs.user.controller.web.regist;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.RandomValidateCode;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
@@ -21,6 +25,7 @@ import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +107,24 @@ public class WebRegistController extends BaseUserController {
         WebViewUserVO webViewUserVO = registService.register(registerRequest.getMobile(),
                 registerRequest.getVerificationCode(), registerRequest.getPassword(),
                 registerRequest.getReffer(), CommonConstant.HYJF_INST_CODE, registerRequest.getUtmId(), String.valueOf(ClientConstants.WEB_CLIENT), GetCilentIP.getIpAddr(request));
+
         if (webViewUserVO != null) {
+            // add by liuyang 神策数据统计追加 20181029 start
+            if (registerRequest != null && StringUtils.isNotBlank(registerRequest.getPresetProps())) {
+                try {
+                    SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                    // 将json串转换成Bean
+                    Map<String, Object> sensorsDataMap = JSONObject.parseObject(registerRequest.getPresetProps(), new TypeReference<Map<String, Object>>() {
+                    });
+                    sensorsDataBean.setPresetProps(sensorsDataMap);
+                    sensorsDataBean.setUserId(webViewUserVO.getUserId());
+                    // 发送神策数据统计MQ
+                    this.registService.sendSensorsDataMQ(sensorsDataBean);
+                } catch (MQException e) {
+                    e.printStackTrace();
+                }
+            }
+            // add by liuyang 神策数据统计追加 20181029 end
             logger.info("Web端用户注册成功, userId is :{}", webViewUserVO.getUserId());
             result.setData(webViewUserVO);
         } else {

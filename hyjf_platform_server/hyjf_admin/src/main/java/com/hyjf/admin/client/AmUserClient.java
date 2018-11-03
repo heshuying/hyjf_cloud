@@ -287,6 +287,16 @@ public interface AmUserClient {
     UserVO selectUserByUserId(int userId);
 
     /**
+     * 根据用户List id查找用户表
+     *
+     * @param userId
+     * @param userId
+     * @return
+     * @auth nxl
+     */
+    List<UserVO> selectUserByListUserId(List userId);
+
+    /**
      * 根据用户id查找用户信息
      *
      * @param userId
@@ -385,6 +395,13 @@ public interface AmUserClient {
     int updateUserInfoByUserInfo(UserInfoVO userInfoVO);
 
     /**
+     * 开户掉单更新用户信息
+     * @param userInfoVO
+     * @return
+     */
+    int updateUserInfoByUserInfoSelective(UserInfoVO userInfoVO);
+
+    /**
      * 更新用户表
      *
      * @param userVO
@@ -392,6 +409,15 @@ public interface AmUserClient {
      * @auth nxl
      */
     int updateUser(UserVO userVO);
+
+    /**
+     * 更新用户表--开户掉单
+     *
+     * @param userVO
+     * @return
+     * @auth nxl
+     */
+    int updateUserSelective(UserVO userVO);
 
     /**
      * 获取某一用户的信息修改列表
@@ -412,8 +438,7 @@ public interface AmUserClient {
     UserVO selectUserByRecommendName(String recommendName);
 
     SpreadsUserVO selectSpreadsUsersByUserId(String userId);
-
-    /**
+      /**
      * 修改推荐人信息
      *
      * @param request
@@ -1193,6 +1218,90 @@ public interface AmUserClient {
      * @param voList
      */
     void insertUtmList(List<ChannelCustomizeVO> voList);
+    /**
+     * 根据用户id获取开户信息
+     *
+     * @auther: nxl
+     * @param userId
+     * @return
+     */
+    BankCardVO getBankCardByUserId(int userId);
+    /**
+     * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+     *
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    int updateUserBaseInfo(UserInfosUpdCustomizeRequest request);
+    /**
+     * 更新银行卡信息
+     *
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    int updateUserBankInfo(UserInfosUpdCustomizeRequest request);
+
+    void updateUserAuth(UserAuthRequest request);
+
+    HjhUserAuthLogVO selectByExample(String orderId);
+    /**
+     * 根据用户的查询条件查询用户缴费授权列表
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    UserPayAuthResponse selectUserPayAuthList(UserPayAuthRequest request);
+    /**
+     * 根据用户id查询用户签约授权信息
+     * @param userId
+     * @auther: nxl
+     * @return
+     */
+    HjhUserAuthResponse selectUserPayAuthByUserId(int userId);
+    /**
+     * 查看该用户在投资表和标的放款记录中是否存在
+     * @param userId
+     * @auther: nxl
+     * @return
+     */
+    int isDismissPay(int userId);
+    /**
+     * 查看该用户在投标的还款记录中是否存在
+     * @param userId
+     * @auther: nxl
+     * @return
+     */
+    int isDismissRePay(int userId);
+    /**
+     * 缴费授权解约
+     * @param userId
+     * @return
+     * @auther: nxl
+     */
+   boolean updateCancelPayAuth(int userId);
+    /**
+     * 插入授权记录表
+     * @param hjhUserAuthLogRequest
+     * @return
+     * @auther: nxl
+     */
+    boolean insertUserAuthLog2(HjhUserAuthLogRequest hjhUserAuthLogRequest);
+    /**
+     * 根据用户的查询条件查询用户还款授权列表
+     * @param request
+     * @auther: nxl
+     * @return
+     */
+    UserPayAuthResponse selectRecordListRePay(UserPayAuthRequest request);
+    /**
+     * 还款授权解约
+     * @param userId
+     * @return
+     * @auther: nxl
+     */
+    int updateCancelRePayAuth(int userId);
 
 	CertificateAuthorityResponse selectCertificateAuthorityByCAName(String tureName);
 

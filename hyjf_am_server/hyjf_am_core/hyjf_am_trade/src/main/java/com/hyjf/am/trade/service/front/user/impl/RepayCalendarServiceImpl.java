@@ -60,6 +60,16 @@ public class RepayCalendarServiceImpl extends BaseServiceImpl implements RepayCa
             AppReapyCalendarResultVO result = null;
             for (AppRepayCalendarCustomize repayCalendarCustomize : list) {
                 result = new AppReapyCalendarResultVO();
+                //add by jijun start 添加退出标记
+                Integer orderStatus = repayCalendarCustomize.getOrderStatus();
+                if (orderStatus != null && orderStatus == 5) {
+                    //订单状态为0或者不到锁定期时 不显示退出中标签
+                    result.setIsExiting(1);
+                }else {
+                    result.setIsExiting(0);
+
+                }
+                //add by jijun end 添加退出标记
                 Calendar repayTimeCalendar = parseCalendarFromString(repayCalendarCustomize.getRepayTime());
                 String tradeYear = String.valueOf(repayTimeCalendar.get(Calendar.YEAR));
                 // +1 是因为日历对象取出的月份从0开始
@@ -162,12 +172,16 @@ public class RepayCalendarServiceImpl extends BaseServiceImpl implements RepayCa
             // type = 6,5 是计划详情 其他是散标详情
             if (Arrays.asList("6", "5").contains(customize.getType())) {
                 result.setBorrowUrl(systemConfig.getAppFrontHost() + "/user/plan" + "/" + customize.getOrderId() + "?type="
+                // mod by nxl 智投服务 项目期限->回报期限
+                result.setBorrowTheSecondDesc("回报期限");
+                result.setBorrowUrl(systemConfig.getAppFrontHost() + "/user/plan" + "/" + customize.getOrderId() + "?type="
                         + customize.getType() + "&couponType=" + customize.getCouponType().concat("&investStatusDesc=还款中"));
                 // add 汇计划二期前端优化  计划的回款日历计划显示退出时间 20180509 start
                 result.setBorrowTheThirdDesc("退出时间");
                 // add 汇计划二期前端优化  计划的回款日历计划显示退出时间 20180509 end
             } else {
                 String borrowUrl = systemConfig.getAppFrontHost() + "/user/borrow" + "/" + customize.getBorrowNid()
+                String borrowUrl = systemConfig.getAppFrontHost() +"/user/borrow" + "/" + customize.getBorrowNid()
                         + "?couponType=" + customize.getCouponType();
                 String assignNid =  customize.getAssignNid();
                 if (StringUtils.isNotBlank(assignNid)) {
