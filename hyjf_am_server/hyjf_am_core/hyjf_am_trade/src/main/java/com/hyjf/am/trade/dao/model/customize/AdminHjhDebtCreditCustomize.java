@@ -1,5 +1,7 @@
 package com.hyjf.am.trade.dao.model.customize;
 
+import java.util.Date;
+
 /**
  * @Auther:yangchangwei
  * @Date:2018/7/5
@@ -150,6 +152,19 @@ public class AdminHjhDebtCreditCustomize {
     private int limitStart = -1;
 
     private int limitEnd = -1;
+
+    /**
+     * 预计开始退出时间
+     */
+    private Date endDate;
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
     public String getCreditStatus() {
         return creditStatus;
