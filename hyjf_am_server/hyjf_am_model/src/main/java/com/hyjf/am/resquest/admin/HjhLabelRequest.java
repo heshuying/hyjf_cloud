@@ -37,7 +37,14 @@ public class HjhLabelRequest extends BasePage implements Serializable {
 	private String borrowStyleSrch;
 	// 使用状态 Integer
 	private Integer engineIdSrch;
-	
+	//智投编号
+	private String planNidSrch;
+
+	// 修改时间开始
+	private String updateTimeStartSrch;
+	// 修改时间结束
+	private String updateTimeEndSrch;
+
 	public int limit;
 
 	private int paginatorPage = 1;
@@ -117,5 +124,28 @@ public class HjhLabelRequest extends BasePage implements Serializable {
 	}
 	public void setLabelIdSrch(Integer labelIdSrch) {
 		this.labelIdSrch = labelIdSrch;
+	}
+
+    public String getPlanNidSrch() {
+        return planNidSrch;
+    }
+
+    public void setPlanNidSrch(String planNidSrch) {
+        this.planNidSrch = planNidSrch;
+    }
+
+	public String getUpdateTimeStartSrch() {
+		return updateTimeStartSrch;
+	}
+	public void setUpdateTimeStartSrch(String updateTimeStartSrch) {
+		this.updateTimeStartSrch = updateTimeStartSrch;
+	}
+
+	public String getUpdateTimeEndSrch() {
+		return updateTimeEndSrch;
+	}
+
+	public void setUpdateTimeEndSrch(String updateTimeEndSrch) {
+		this.updateTimeEndSrch = updateTimeEndSrch;
 	}
 }
