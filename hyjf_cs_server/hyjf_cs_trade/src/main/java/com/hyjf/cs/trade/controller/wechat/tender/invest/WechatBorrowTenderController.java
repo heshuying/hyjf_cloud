@@ -3,16 +3,29 @@
  */
 package com.hyjf.cs.trade.controller.wechat.tender.invest;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.UserOperationLogProducer;
+import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -24,7 +37,9 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * wechat端-散标投资
@@ -36,6 +51,10 @@ public class WechatBorrowTenderController extends BaseTradeController {
 
     @Autowired
     private BorrowTenderService borrowTenderService;
+    @Autowired
+    NifaContractEssenceMessageService nifaContractEssenceMessageService;
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
 
     @ApiOperation(value = "散标投资", notes = "散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
@@ -52,6 +71,32 @@ public class WechatBorrowTenderController extends BaseTradeController {
         WeChatResult weChatResult = new WeChatResult();
         try{
             result =  borrowTenderService.borrowTender(tender);
+            BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(tender.getBorrowNid());
+            boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
+                    || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());
+
+            String dayOrMonth ="";
+            String lockPeriod = String.valueOf(borrow.getBorrowPeriod());
+            if(isMonth){//月标
+                dayOrMonth = lockPeriod + "个月散标";
+            }else{
+                dayOrMonth = lockPeriod + "天散标";
+            }
+            UserVO userVO = borrowTenderService.getUsers(userId);
+            UserInfoVO usersInfo = borrowTenderService.getUsersInfoByUserId(userId);
+            UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE4);
+            userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+            userOperationLogEntity.setPlatform(1);
+            userOperationLogEntity.setRemark(dayOrMonth);
+            userOperationLogEntity.setOperationTime(new Date());
+            userOperationLogEntity.setUserName(userVO.getUsername());
+            userOperationLogEntity.setUserRole(String.valueOf(usersInfo.getRoleId()));
+            try {
+                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            } catch (MQException e) {
+                logger.error("保存用户日志失败", e);
+            }
             weChatResult.setStatus(result.getStatus());
             weChatResult.setData(result.getData());
         }catch (CheckException e){
