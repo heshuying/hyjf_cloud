@@ -11,6 +11,7 @@ import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
@@ -77,7 +78,7 @@ public class WeChatEvaluationController {
         UserVO userVO = evaluationService.getUsersById(userId);
         UserInfoVO userInfoVO =  evaluationService.getUserInfo(userId);
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
-        userOperationLogEntity.setOperationType(12);
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE12);
         userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
         userOperationLogEntity.setPlatform(1);
         userOperationLogEntity.setRemark("");

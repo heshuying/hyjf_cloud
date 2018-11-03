@@ -5,6 +5,7 @@ import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -66,7 +67,7 @@ public class WeChatBankOpenController extends BaseUserController {
             logger.info("app openAccount userInfo, success, userId is :{}", userVO.getUserId());
             UserInfoVO userInfoVO =  bankOpenService.getUserInfo(userId);
             UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
-            userOperationLogEntity.setOperationType(3);
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE3);
             userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
             userOperationLogEntity.setPlatform(1);
             userOperationLogEntity.setRemark("");
