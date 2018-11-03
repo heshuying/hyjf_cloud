@@ -5,14 +5,18 @@ package com.hyjf.cs.user.controller.app.password;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.validator.CheckUtil;
@@ -20,6 +24,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -34,7 +40,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,6 +62,8 @@ public class AppPassWordController extends BaseUserController {
 
     @Autowired
     SystemConfig systemConfig;
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
 
     private static final Logger logger = LoggerFactory.getLogger(AppPassWordController.class);
 
@@ -97,6 +107,20 @@ public class AppPassWordController extends BaseUserController {
         try {
             boolean success = passWordService.updatePassWd(userVO, newPassword);
             if (success) {
+                UserInfoVO userInfoVO =  passWordService.getUserInfo(userId);
+                UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+                userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE7);
+                userOperationLogEntity.setIp(com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request));
+                userOperationLogEntity.setPlatform(request.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(request.getParameter("realPlatform")));
+                userOperationLogEntity.setRemark("");
+                userOperationLogEntity.setOperationTime(new Date());
+                userOperationLogEntity.setUserName(userVO.getUsername());
+                userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+                try {
+                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                } catch (MQException e) {
+                    logger.error("保存用户日志失败", e);
+                }
                 //如果修改密码成功或者重置密码就将登陆密码错误次数的key删除
                 RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_APP + userVO.getUsername());
                 ret.put("status", "0");
@@ -123,6 +147,7 @@ public class AppPassWordController extends BaseUserController {
     @PostMapping(value = "/bank/user/transpassword/setPassword")
     public AppResult<Object> setPassword(@RequestHeader(value = "token") String token, @RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
+        String platform = request.getParameter("platform");
         UserVO user = passWordService.checkStatus(token,sign);
         //判断用户是否设置过交易密码
         Integer passwordFlag = user.getIsSetPassword();
@@ -132,6 +157,19 @@ public class AppPassWordController extends BaseUserController {
         }
         int userId = user.getUserId();
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE6);
+        userOperationLogEntity.setIp(com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(request.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(request.getParameter("realPlatform")));
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(usersInfo.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 调用设置密码接口
         String txcode = "";
@@ -196,6 +234,7 @@ public class AppPassWordController extends BaseUserController {
     @PostMapping(value = "/bank/user/transpassword/resetPassword")
     public AppResult<Object> resetPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
+        String platform = request.getParameter("platform");
         UserVO user = passWordService.checkStatus(token,sign);
         //判断用户是否设置过交易密码
         Integer passwordFlag = user.getIsSetPassword();
@@ -206,6 +245,19 @@ public class AppPassWordController extends BaseUserController {
         int userId = user.getUserId();
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE6);
+        userOperationLogEntity.setIp(com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(request.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(request.getParameter("realPlatform")));
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(usersInfo.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         // 调用设置密码接口
         String txcode = "";
         BankCallBean bean = new BankCallBean(userId,txcode, ClientConstants.APP_CLIENT);

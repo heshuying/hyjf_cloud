@@ -1,13 +1,22 @@
 package com.hyjf.cs.user.controller.app.bindcard;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.bean.BindCardPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -22,7 +31,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * App端绑卡
@@ -37,6 +48,8 @@ public class AppBindCardPageController extends BaseUserController {
     BindCardService bindCardService;
     @Autowired
     SystemConfig systemConfig;
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
 
     /**
      * 页面请求绑卡
@@ -50,6 +63,7 @@ public class AppBindCardPageController extends BaseUserController {
         result.setData(Collections.emptyMap());
         String sign = request.getParameter("sign");
         String token = request.getParameter("token");
+        String platform = request.getParameter("platform");
         WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
         // 检查参数
         String checkResult = bindCardService.checkParamBindCardPageAPP(webViewUserVO);
@@ -59,7 +73,21 @@ public class AppBindCardPageController extends BaseUserController {
             result.setStatusInfo(AppResult.FAIL, checkResult);
             return result;
         }
-
+        UserInfoVO userInfoVO =  bindCardService.getUserInfo(userId);
+        UserVO userVO = bindCardService.getUsersById(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE10);
+        userOperationLogEntity.setIp(com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(request.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(request.getParameter("realPlatform")));
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(userVO.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         // 请求银行接口
         try {
             BindCardPageBean bean = new BindCardPageBean();
