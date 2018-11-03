@@ -454,7 +454,7 @@
         hha.order_status,
         hcu.activity_id,
         hcu.content user_content,
-        hcc.add_flag
+        hcc.add_flag AS add_flg
 
         FROM
         ht_coupon_user hcu
