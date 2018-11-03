@@ -221,18 +221,23 @@ public class HjhLabelController extends BaseController{
 	            	jsonObject.put("resultVO", resultVO);
 	            	jsonObject.put("status", SUCCESS);
 	            }
-	            /*组装3  产品类型(联动)*/
-				List<HjhAssetTypeVO> assetTypeList = this.assetListService.hjhAssetTypeList(resultVO.getInstCode());
-				if (assetTypeList != null && assetTypeList.size() > 0) {
-					for (HjhAssetTypeVO hjhAssetTypeVO : assetTypeList) {
-						Map<String, Object> mapTemp = new HashMap<String, Object>();
-						mapTemp.put("id", hjhAssetTypeVO.getAssetType());
-						mapTemp.put("text", hjhAssetTypeVO.getAssetTypeName());
-						resultList.add(mapTemp);
-					}
-					jsonObject.put("assetTypeList", assetTypeList); 
+	            if(resultVO.getInstCode() == null || StringUtils.isEmpty(resultVO.getInstCode())){
+					jsonObject.put("assetTypeList", ""); 
 					jsonObject.put("status", SUCCESS);
-				}
+	            } else {
+		            /*组装3  产品类型(联动)*/
+					List<HjhAssetTypeVO> assetTypeList = this.assetListService.hjhAssetTypeList(resultVO.getInstCode());
+					if (assetTypeList != null && assetTypeList.size() > 0) {
+						for (HjhAssetTypeVO hjhAssetTypeVO : assetTypeList) {
+							Map<String, Object> mapTemp = new HashMap<String, Object>();
+							mapTemp.put("id", hjhAssetTypeVO.getAssetType());
+							mapTemp.put("text", hjhAssetTypeVO.getAssetTypeName());
+							resultList.add(mapTemp);
+						}
+						jsonObject.put("assetTypeList", assetTypeList); 
+						jsonObject.put("status", SUCCESS);
+					}
+	            }
 			} else {
 				jsonObject.put("status", FAIL);
 				jsonObject.put("message", "根据labelId查询为空！");

@@ -28,10 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,7 +49,6 @@ public class DataSearchController {
     @Autowired
     SmsProducer smsProducer;
     private Logger logger = LoggerFactory.getLogger(DataSearchController.class);
-
 
     /**
      * 千乐数据查询
@@ -200,8 +196,8 @@ public class DataSearchController {
      * @return
      */
     @ApiOperation(value = "千乐数据导出", notes = "千乐数据导出")
-    @PostMapping("/exportdata")
-    public  void exportAction(@RequestBody DataSearchBean request,HttpServletResponse response){
+    @GetMapping("/exportdata")
+    public  void exportAction( DataSearchBean request,HttpServletResponse response){
         DataSearchRequest dataSearchRequest = CommonUtils.convertBean(request, DataSearchRequest.class);
         DataSearchCustomizeResponse result = dataSearchService.findDataList(dataSearchRequest);
         // 表格sheet名称
@@ -209,9 +205,9 @@ public class DataSearchController {
         List<DataSearchCustomizeVO> resultList = result.getResultList();
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[]
-                { "序号", "注册日期", "用户名", "姓名", "手机号", "投资类型",
-                        "项目/计划编号", "项目标题", "投资金额", "投资期限","年化金额"
-                        ,"佣金7%","推荐人姓名","推荐人手机号","投资日期"
+                { "序号", "注册时间", "用户名", "姓名", "手机号", "投资类型",
+                        "项目/计划编号", "投资金额", "投资期限","年化金额"
+                        ,"佣金7%","推荐人姓名","投资时间"
                 };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -262,24 +258,20 @@ public class DataSearchController {
                     else if (celLength == 6) {
                         cell.setCellValue(record.getPlannid());//项目/计划编号
                     }
-                    else if (celLength == 7) {
-                        cell.setCellValue(record.getName());//项目标题
-                    }
 
-                    else if (celLength == 8) {
+
+                    else if (celLength == 7) {
                         cell.setCellValue(record.getAccount());//投资金额
                     }
-                    else if (celLength == 9) {
+                    else if (celLength == 8) {
                         cell.setCellValue(record.getBorrow_period());//投资期限
-                    }else if (celLength == 10) {
+                    }else if (celLength == 9) {
                         cell.setCellValue(record.getYearAccount());//年化金额
-                    }else if (celLength == 11) {
+                    }else if (celLength == 10) {
                         cell.setCellValue(record.getMoney());//佣金7%
-                    }else if (celLength == 12) {
+                    }else if (celLength == 11) {
                         cell.setCellValue(record.getReffername());//推荐人姓名
-                    }else if (celLength == 13) {
-                        cell.setCellValue(record.getReffermobile());//推荐人手机号
-                    }else if (celLength == 14) {
+                    }else if (celLength == 12) {
                         cell.setCellValue(record.getAddtimes());//投资日期
                     }
                 }

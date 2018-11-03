@@ -31,7 +31,7 @@ public class AssetListViewRequest extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "标的编号查询")
 	private String borrowNidSrch;
 	
-	@ApiModelProperty(value = "计划编号查询")
+	@ApiModelProperty(value = "智投编号查询")
 	private String planNidSrch;
 	
 	@ApiModelProperty(value = "用户名查询")
