@@ -36,6 +36,33 @@ public class HjhCommissionViewRequest extends HjhCommissionVO implements Seriali
 	@ApiModelProperty(value = "commission")
 	private BigDecimal commission;
 	
+	@ApiModelProperty(value = "计划订单号")
+	private String accedeOrderIdSearch;
+	
+	@ApiModelProperty(value = "计划编号")
+	private String borrowNidSearch;
+	
+	@ApiModelProperty(value = "提成发送时间开始")
+    private String startDateSend;
+    
+	@ApiModelProperty(value = "提成发送时间结束")
+    private String endDateSend;
+	
+	@ApiModelProperty(value = "提成人")
+	private String referernameSearch;
+	
+	@ApiModelProperty(value = "投资人")
+	private String usernameSearch;
+	
+	@ApiModelProperty(value = "提成发放状态0,未发放；1，已发放")
+	private String statusSearch;
+	
+	@ApiModelProperty(value = "计划订单锁定时间 开始")
+    private String startDatePlan;
+	
+	@ApiModelProperty(value = "计划订单锁定时间 结束")
+    private String endDatePlan;
+	
 	private List<HjhCommissionVO> recordList;
 
 	public Integer getIds() {
