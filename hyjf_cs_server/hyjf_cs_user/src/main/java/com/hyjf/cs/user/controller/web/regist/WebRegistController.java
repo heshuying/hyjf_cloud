@@ -111,6 +111,7 @@ public class WebRegistController extends BaseUserController {
         if (webViewUserVO != null) {
             // add by liuyang 神策数据统计追加 20181029 start
             if (registerRequest != null && StringUtils.isNotBlank(registerRequest.getPresetProps())) {
+                logger.info("用户注册:神策预置属性:[" + registerRequest.getPresetProps() + "]");
                 try {
                     SensorsDataBean sensorsDataBean = new SensorsDataBean();
                     // 将json串转换成Bean
