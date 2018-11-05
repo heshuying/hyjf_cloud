@@ -115,6 +115,9 @@
     </resultMap>
 
     <sql id="where-all-page-condition-detail">
+        <if test="tenderType != null and tenderType != ''">
+            AND tc.tender_type = #{tenderType}
+        </if>
         <if test="borrowNid != null and borrowNid != ''">
             AND tc.borrow_nid = #{borrowNid}
         </if>

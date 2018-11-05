@@ -193,7 +193,12 @@ public class CouponConfigServiceImpl implements CouponConfigService {
         return couponConfigCustomizeMapper.getCouponConfigByOrderId(ordId);
     }
 
-    @Override
+	@Override
+	public CouponConfigVO getCouponConfigById(String couponId) {
+		return couponConfigCustomizeMapper.getCouponConfigById(couponId);
+	}
+
+	@Override
     public Integer countByTenderId(String tenderNid) {
 		CouponRecoverExample checkExample = new CouponRecoverExample();
 		checkExample.createCriteria().andTenderIdEqualTo(tenderNid);
