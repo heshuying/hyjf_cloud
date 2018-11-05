@@ -947,12 +947,12 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         // 异步调用路
         String bgRetUrl = "http://CS-TRADE/hyjf-web/repay/getRepayAsyncReturn";
         bean.setRetUrl(retUrl + "?logOrdId=" + bean.getLogOrderId());
-        if(StringUtils.isNotBlank(borrowNid)){
-            BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
-            bean.setSuccessfulUrl(successfulUrl + "/repaySuccess?borrowNid=" + borrowNid + "&borrowName=" + borrowInfo.getName());
-        }else{
+        //if(StringUtils.isNotBlank(borrowNid)){
+        //    BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
+        //    bean.setSuccessfulUrl(successfulUrl + "/repaySuccess?borrowNid=" + borrowNid + "&borrowName=" + borrowInfo.getName());
+        //}else{
             bean.setSuccessfulUrl(successfulUrl + "/batchSuccess");// 批次成功页面
-        }
+        //}
         bean.setNotifyUrl(bgRetUrl + "?orderId=" + orderId + "&isBatchRepay=" + StringUtils.isBlank(borrowNid));// 页面异步返回URL(必须)
         try {
             logger.info("【代偿冻结】调用还款申请冻结资金接口成功,订单号:{}", orderId);

@@ -1,12 +1,12 @@
 package com.hyjf.am.trade.controller.front.repay;
 
 import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.trade.BankRepayFreezeLogResponse;
+import com.hyjf.am.response.trade.BankRepayOrgFreezeLogResponse;
 import com.hyjf.am.resquest.trade.BankRepayOrgFreezeLogRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BankRepayOrgFreezeLog;
 import com.hyjf.am.trade.service.front.repay.BankRepayOrgFreezeLogService;
-import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
@@ -65,11 +65,11 @@ public class BankRepayOrgFreezeLogController extends BaseController {
      * 获取当前有效的冻结记录
      */
     @RequestMapping("/getValid/{orderId}")
-    public BankRepayFreezeLogResponse getFreezeLogValid(@PathVariable String orderId) {
-        BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
+    public BankRepayOrgFreezeLogResponse getFreezeLogValid(@PathVariable String orderId) {
+        BankRepayOrgFreezeLogResponse response = new BankRepayOrgFreezeLogResponse();
         List<BankRepayOrgFreezeLog> logList = bankRepayOrgFreezeLogService.getBankRepayOrgFreezeLogList(orderId, null);
         if (Validator.isNotNull(logList)) {
-            response.setResultList(CommonUtils.convertBeanList(logList, BankRepayFreezeLogVO.class));
+            response.setResultList(CommonUtils.convertBeanList(logList, BankRepayOrgFreezeLogVO.class));
         }
         return response;
     }
@@ -78,11 +78,11 @@ public class BankRepayOrgFreezeLogController extends BaseController {
      * 获取当前有效的冻结记录
      */
     @RequestMapping("/getByNid/{borrowNid}")
-    public BankRepayFreezeLogResponse getFreezeLogByNid(@PathVariable String borrowNid) {
-        BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
+    public BankRepayOrgFreezeLogResponse getFreezeLogByNid(@PathVariable String borrowNid) {
+        BankRepayOrgFreezeLogResponse response = new BankRepayOrgFreezeLogResponse();
         List<BankRepayOrgFreezeLog> logList = bankRepayOrgFreezeLogService.getBankRepayOrgFreezeLogList(null, borrowNid);
         if (Validator.isNotNull(logList)) {
-            response.setResultList(CommonUtils.convertBeanList(logList, BankRepayFreezeLogVO.class));
+            response.setResultList(CommonUtils.convertBeanList(logList, BankRepayOrgFreezeLogVO.class));
         }
         return response;
     }
@@ -91,11 +91,11 @@ public class BankRepayOrgFreezeLogController extends BaseController {
      * 获取当前有效的冻结记录
      */
     @RequestMapping("/getValid/{orderId}/{borrowNid}")
-    public BankRepayFreezeLogResponse getFreezeLogValid(@PathVariable String orderId, @PathVariable String borrowNid) {
-        BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
+    public BankRepayOrgFreezeLogResponse getFreezeLogValid(@PathVariable String orderId, @PathVariable String borrowNid) {
+        BankRepayOrgFreezeLogResponse response = new BankRepayOrgFreezeLogResponse();
         List<BankRepayOrgFreezeLog> logList = bankRepayOrgFreezeLogService.getBankRepayOrgFreezeLogList(orderId, borrowNid);
         if (Validator.isNotNull(logList)) {
-            response.setResultList(CommonUtils.convertBeanList(logList, BankRepayFreezeLogVO.class));
+            response.setResultList(CommonUtils.convertBeanList(logList, BankRepayOrgFreezeLogVO.class));
         }
         return response;
     }
