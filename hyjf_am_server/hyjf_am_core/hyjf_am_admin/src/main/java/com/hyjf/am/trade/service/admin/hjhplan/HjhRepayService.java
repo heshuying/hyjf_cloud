@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.admin.hjhplan;
 
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 
 import java.util.List;
@@ -22,4 +23,5 @@ public interface HjhRepayService {
 
     List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
 
+    HjhPlan getPlan(String planNid);
 }

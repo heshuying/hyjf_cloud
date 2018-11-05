@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.service.admin.hjhplan.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.HjhRepayMapper;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.auto.HjhPlanExample;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.dao.model.auto.HjhRepayExample;
 import com.hyjf.am.trade.dao.model.customize.HjhRepayCustomize;
@@ -60,5 +62,26 @@ public class HjhRepayServiceImpl extends BaseServiceImpl implements HjhRepayServ
         List<HjhRepay> repayMentList = hjhRepayMapper.selectByExample(example);
         List<HjhRepayVO> repayMentVoList = CommonUtils.convertBeanList(repayMentList, HjhRepayVO.class);
         return repayMentVoList;
+    }
+
+    /**
+     * 根据计划编号获取计划锁定期天月和还款方式
+     * @param planNid
+     * @return
+     */
+    @Override
+    public HjhPlan getPlan(String planNid){
+        if(StringUtils.isEmpty(planNid)){
+            return null;
+        }
+
+        HjhPlanExample example = new HjhPlanExample();
+        example.createCriteria().andPlanNidEqualTo(planNid);
+        List<HjhPlan> planList = hjhPlanMapper.selectByExample(example);
+        if(planList == null || planList.isEmpty()){
+            return null;
+        }
+
+        return planList.get(0);
     }
 }
