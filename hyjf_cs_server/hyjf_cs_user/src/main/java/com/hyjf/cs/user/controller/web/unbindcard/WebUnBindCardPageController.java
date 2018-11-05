@@ -112,10 +112,10 @@ public class WebUnBindCardPageController extends BaseUserController{
     @PostMapping("/searchFiledMess")
     @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
     @ResponseBody
-    public WebResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
-        logger.info("解绑银行卡调用银行失败原因start,logOrdId:{}", param);
+    public WebResult<Object> searchFiledMess(@RequestBody String logOrdId) {
+        logger.info("解绑银行卡调用银行失败原因start,logOrdId:{}", logOrdId);
         WebResult<Object> result = new WebResult<Object>();
-        String retMsg = unBindCardService.getFailedMess(param.get("logOrdId"));
+        String retMsg = unBindCardService.getFailedMess(logOrdId);
         Map<String,String> map = new HashMap<>();
         map.put("error",retMsg);
         result.setData(map);
