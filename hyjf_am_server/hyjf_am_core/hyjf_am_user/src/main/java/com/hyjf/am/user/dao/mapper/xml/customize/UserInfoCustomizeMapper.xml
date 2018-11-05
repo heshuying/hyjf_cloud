@@ -288,7 +288,7 @@
 	</resultMap>
 
 	<sql id="User_Login_Log_Column" >
-		user_id, login_times, login_ip, login_time, last_ip, last_time, create_time, update_time
+		a.user_id, a.login_times, a.login_ip, a.login_time, a.last_ip, a.last_time, a.create_time, a.update_time
 	</sql>
 
 	<select id="selectLoginUserByTime" parameterType="java.util.Map" resultMap="UserLoginLogMap">
