@@ -1003,7 +1003,7 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "代偿冻结的同步回调", notes = "代偿冻结的同步回调")
     @PostMapping("/getRepaySyncReturn")
-    public ModelAndView repayReturn(HttpServletRequest request, @ModelAttribute BankCallBean callBackBean) {
+    public ModelAndView repayReturn(HttpServletRequest request, @RequestBody BankCallBean callBackBean) {
         logger.debug("代偿冻结同步回调开始");
         String orderId = request.getParameter("orderId");
         ModelAndView modelAndView = new ModelAndView();
@@ -1028,7 +1028,7 @@ public class RepayManageController extends BaseTradeController {
     @ResponseBody
     @ApiOperation(value = "代偿冻结的异步回调", notes = "代偿冻结的异步回调")
     @PostMapping("/getRepayAsyncReturn")
-    public BankCallResult repayAsyncReturn(HttpServletRequest request, @ModelAttribute BankCallBean callBackBean) throws IOException {
+    public BankCallResult repayAsyncReturn(HttpServletRequest request, @RequestBody BankCallBean callBackBean) throws IOException {
         BankCallResult result = new BankCallResult();
         result.setStatus(false);
         String orderId = request.getParameter("orderId");
