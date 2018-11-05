@@ -1212,7 +1212,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         String roleIsOpen = systemConfig.getRoleIsopen();
         if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-            if (userInfo.getRoleId() != 1) {
+            if (userInfo.getRoleId().intValue() != 1) {
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
             }
         }

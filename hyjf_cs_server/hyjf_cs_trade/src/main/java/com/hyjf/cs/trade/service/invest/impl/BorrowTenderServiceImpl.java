@@ -342,7 +342,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             String roleIsOpen = systemConfig.getRoleIsopen();
             if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
                 logger.info("userInfo.getRoleId():"+userInfo.getRoleId());
-                if (userInfo.getRoleId() != 1) {
+                if (userInfo.getRoleId().intValue() != 1) {
                     // 仅限出借人进行投资
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
                 }
@@ -479,7 +479,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             String roleIsOpen = systemConfig.getRoleIsopen();
             if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
                 logger.info("userInfo.getRoleId():"+userInfo.getRoleId());
-                if (usersInfo.getRoleId() != 1) {// 非投资用户
+                if (usersInfo.getRoleId().intValue() != 1) {// 非投资用户
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
                 }
             }
@@ -1316,7 +1316,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         UserInfoVO userInfo = amUserClient.findUserInfoById(tender.getUserId());
         String roleIsOpen = systemConfig.getRoleIsopen();
         if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-            if (userInfo.getRoleId() != 1) {
+            if (userInfo.getRoleId().intValue() != 1) {
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
             }
         }
