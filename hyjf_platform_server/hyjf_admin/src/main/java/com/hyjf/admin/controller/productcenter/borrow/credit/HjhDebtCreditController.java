@@ -359,9 +359,9 @@ public class HjhDebtCreditController extends BaseController{
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("planNid", "出让人计划编号");
-        map.put("planOrderId", "出让人计划订单号");
-        map.put("planNidNew", "清算后计划编号");
+        map.put("planNid", "出让人智投编号");
+        map.put("planOrderId", "出让人智投订单号");
+        map.put("planNidNew", "清算后智投编号");
         map.put("userName", "出让人");
         map.put("userName", "债转编号");
         map.put("borrowNid", "原项目编号");

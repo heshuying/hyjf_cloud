@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.repay;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
+import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -11,6 +12,9 @@ import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -148,4 +152,8 @@ public interface RepayManageService extends BaseTradeService {
      * 获取批量还款页面数据
      */
     ProjectBean getOrgBatchRepayData(String userId, String startDate, String endDate);
+
+    File createAgreementPDFFileRepay(HttpServletRequest request, HttpServletResponse response, String borrowNid, String nid, String flag, Integer userId);
+
+    List<WebUserInvestListCustomizeVO> selectUserInvestList(String borrowNid);
 }

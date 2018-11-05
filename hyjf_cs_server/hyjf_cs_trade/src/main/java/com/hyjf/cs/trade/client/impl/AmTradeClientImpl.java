@@ -21,10 +21,7 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
-import com.hyjf.am.resquest.admin.AssetListRequest;
-import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
-import com.hyjf.am.resquest.admin.CouponRepayRequest;
-import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
@@ -5483,6 +5480,40 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<WebUserInvestListCustomizeVO> selectUserInvestList(Map<String, Object> map) {
         String url = "http://AM-TRADE/am-trade/borrow/selectUserInvestLsit";
         WebUserInvestListCustomizeResponse response = restTemplate.postForEntity(url,map,WebUserInvestListCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowCustomizeVO> searchBorrowList(Map<String, Object> params) {
+        String url = urlBase+"borrow/searchBorrowList";
+        BorrowCustomizeXYResponse response = restTemplate.postForEntity(url,params,BorrowCustomizeXYResponse.class).getBody();
+        if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 标的放款记录分期count
+     */
+    @Override
+    public Integer countProjectRepayPlanRecordTotal(Map<String,Object> paraMap) {
+        String url = "http://AM-TRADE/am-trade/borrow/count_project_repay";
+        WebProjectRepayListCustomizeResponse response =
+                restTemplate.postForEntity(url, paraMap, WebProjectRepayListCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getTotal();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<WebProjectRepayListCustomizeVO> selectProjectRepayPlanList(Map<String, Object> map) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectProjectRepayPlanList";
+        WebProjectRepayListCustomizeResponse response = restTemplate.postForEntity(url,map,WebProjectRepayListCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
         }

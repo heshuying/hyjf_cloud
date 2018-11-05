@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.model.customize;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 汇计划加入明细
@@ -307,8 +308,10 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 	 * 计算用已投资金额
 	 */
 	private BigDecimal jalreadyInvest;
-	
-	
+
+	private Integer acctualPaymentTime;
+
+	private Date endDate;
 	
 	public String getAttribute() {
 		return attribute;
@@ -808,5 +811,21 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 	}
 	public void setSumFairValue(String sumFairValue) {
 		this.sumFairValue = sumFairValue;
+	}
+
+	public Integer getAcctualPaymentTime() {
+		return acctualPaymentTime;
+	}
+
+	public void setAcctualPaymentTime(Integer acctualPaymentTime) {
+		this.acctualPaymentTime = acctualPaymentTime;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 }

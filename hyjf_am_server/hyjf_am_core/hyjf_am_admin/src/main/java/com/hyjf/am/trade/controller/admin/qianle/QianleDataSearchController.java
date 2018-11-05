@@ -40,14 +40,7 @@ public class QianleDataSearchController {
             List<DataSearchCustomizeVO> dataSearchCustomizes = qianleDataSearchService.querySanList(dataSearchRequest,paginator.getOffset(),paginator.getLimit());
             if (dataSearchCustomizes!=null&&!dataSearchCustomizes.isEmpty()){
                 for (DataSearchCustomizeVO map : dataSearchCustomizes) {
-                    Integer userId = map.getUserId();
-                    Map<String, Object> stringObjectMap = qianleDataSearchService.queryFirstTender(userId);
-                    String nid = stringObjectMap.get("nid") + "";
-                    if (StringUtils.equals(map.getNid(), nid)) {
-                        map.setFirst("是");
-                    } else {
-                        map.setFirst("否");
-                    }
+                    findFirstTender(map);
                 }
             }
             response.setMoney(findMoneyData(dataSearchRequest));
@@ -71,14 +64,7 @@ public class QianleDataSearchController {
             List<DataSearchCustomizeVO> dataSearchCustomizes = qianleDataSearchService.queryPlanList(dataSearchRequest, paginator.getOffset(), paginator.getLimit());
             if (dataSearchCustomizes!=null&&!dataSearchCustomizes.isEmpty()){
                 for (DataSearchCustomizeVO map : dataSearchCustomizes) {
-                    Integer userId = map.getUserId();
-                    Map<String, Object> stringObjectMap = qianleDataSearchService.queryFirstTender(userId);
-                    String nid = stringObjectMap.get("nid") + "";
-                    if (StringUtils.equals(map.getNid(), nid)) {
-                        map.setFirst("是");
-                    } else {
-                        map.setFirst("否");
-                    }
+                    findFirstTender(map);
                 }
             }
             response.setMoney(findMoneyData(dataSearchRequest));
@@ -103,14 +89,7 @@ public class QianleDataSearchController {
             List<DataSearchCustomizeVO> dataSearchCustomizes = qianleDataSearchService.queryList(dataSearchRequest, paginator.getOffset(), paginator.getLimit());
             if (dataSearchCustomizes!=null&&!dataSearchCustomizes.isEmpty()){
                 for (DataSearchCustomizeVO map : dataSearchCustomizes) {
-                    Integer userId = map.getUserId();
-                    Map<String, Object> stringObjectMap = qianleDataSearchService.queryFirstTender(userId);
-                    String nid = stringObjectMap.get("nid") + "";
-                    if (StringUtils.equals(map.getNid(), nid)) {
-                        map.setFirst("是");
-                    } else {
-                        map.setFirst("否");
-                    }
+                    findFirstTender(map);
                 }
             }
             response.setMoney(findMoneyData(dataSearchRequest));
@@ -144,13 +123,26 @@ public class QianleDataSearchController {
         return response;
     }
 
+    /**
+     * 查询是否首投
+     * @param map
+     */
+    void findFirstTender(DataSearchCustomizeVO map) {
+        Integer userId = map.getUserId();
+        Map<String, Object> stringObjectMap = qianleDataSearchService.queryFirstTender(userId);
+        String nid = stringObjectMap.get("nid") + "";
+        if (StringUtils.equals(map.getNid(), nid)) {
+            map.setFirst("是");
+        } else {
+            map.setFirst("否");
+        }
+    }
 
     /**
      * 查詢千乐金额数据
      * @return
      */
     public Map<String, Object> findMoneyData(DataSearchRequest dataSearchRequest) {
-
         String type = dataSearchRequest.getType();
         HashMap<String, Object> req = new HashMap<>();
         Map<String, Object> res = new HashMap<>();
@@ -197,4 +189,6 @@ public class QianleDataSearchController {
         }
         return res;
     }
+
+
 }

@@ -32,6 +32,7 @@
         <result column="repay_status" 				property="repayStatus" 					jdbcType="VARCHAR" />
         <result column="label_name"       			property="labelName" 				jdbcType="VARCHAR" />
         <result column="remain_credit"              property="remainCredit"             jdbcType="VARCHAR"/>
+        <result column="endDate"                    property="endDate"                  jdbcType="DATE"/>
     </resultMap>
 
     <sql id="Where_Clause">
@@ -84,6 +85,12 @@
             <if test="liquidatesTimeEnd != null and liquidatesTimeEnd != ''">
                 <!-- sqlbug(比较类型不一致) -->
                 AND dc.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{liquidatesTimeEnd},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="endDateStart != null and endDateStart!=''">
+                and hha.end_date <![CDATA[>=]]> CONCAT(#{endDateStart},' 00:00:00')
+            </if>
+            <if test="endDateEnd != null and endDateEnd!=''">
+                and hha.end_date <![CDATA[<=]]> CONCAT(#{endDateEnd},' 23:59:59')
             </if>
             <!-- 下期还款时间 -->
             <if test="repayNextTimeStart != null and repayNextTimeStart != ''">
@@ -147,12 +154,14 @@
         ( dc.liquidation_fair_value - dc.credit_capital_assigned - dc.credit_interest_advance_assigned ) as remain_credit,
         FROM_UNIXTIME(IF(dc.end_time=0, NULL, dc.end_time),'%Y-%m-%d %H:%i:%s') AS end_time,
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN FROM_UNIXTIME(dc.credit_repay_end_time,'%Y-%m-%d %H:%i:%s')  ELSE
-        FROM_UNIXTIME(dc.credit_repay_next_time,'%Y-%m-%d %H:%i:%s') END AS repay_next_time
+        FROM_UNIXTIME(dc.credit_repay_next_time,'%Y-%m-%d %H:%i:%s') END AS repay_next_time,
+        hha.end_date endDate
         FROM
         ht_hjh_debt_credit dc
         INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
         INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
         LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+        left join ht_hjh_accede hha on dc.plan_order_id = hha.accede_order_id
         <include refid="Where_Clause" />
         ORDER BY dc.create_time DESC
         <if  test="limitStart != null and limitEnd != null and limitStart >= 0">

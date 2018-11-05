@@ -3,25 +3,39 @@
  */
 package com.hyjf.cs.user.controller.wechat.evaluation;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.bean.SimpleResultBean;
 import com.hyjf.cs.user.bean.WXBaseResultBean;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.vo.FinancialAdvisorSumitQO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author zhangqingqing
@@ -33,8 +47,11 @@ import java.util.Map;
 @RequestMapping("/hyjf-wechat/wx/financiaadvisor")
 public class WeChatEvaluationController {
 
+    private static final Logger logger = LoggerFactory.getLogger(WeChatEvaluationController.class);
     @Autowired
     EvaluationService evaluationService;
+    @Autowired
+    private UserOperationLogProducer userOperationLogProducer;
 
     @ApiOperation(value = "查询测评结果", notes = "查询测评结果")
     @GetMapping(value = "/queryevaluation.do")
@@ -55,9 +72,24 @@ public class WeChatEvaluationController {
 
     @ApiOperation(value = "用户测评",notes = "用户测评")
     @GetMapping(value = "/queryquestion.do")
-    public WXBaseResultBean queryQuestions(@RequestHeader(value = "userId") Integer userId) {
+    public WXBaseResultBean queryQuestions(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         SimpleResultBean<List<QuestionCustomizeVO>> resultBean = new SimpleResultBean<>();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
+        UserVO userVO = evaluationService.getUsersById(userId);
+        UserInfoVO userInfoVO =  evaluationService.getUserInfo(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE12);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(1);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(userVO.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败" , e);
+        }
         UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(userId);
         if (userEvalationResult != null) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2

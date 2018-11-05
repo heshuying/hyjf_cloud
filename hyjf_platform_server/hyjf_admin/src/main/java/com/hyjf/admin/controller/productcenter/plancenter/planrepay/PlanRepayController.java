@@ -61,7 +61,7 @@ public class PlanRepayController extends BaseController {
      * 资金中心 - 订单退出 检索下拉框
      * @return
      */
-    @ApiOperation(value = "计划还款检索下拉框", notes = "计划还款检索下拉框")
+    @ApiOperation(value = "智投退出检索下拉框", notes = "智投退出检索下拉框")
     @RequestMapping(value = "/dropDownBox", method = RequestMethod.GET)
     public JSONObject dropDownBox() {
         JSONObject jsonObject = new JSONObject();
@@ -108,7 +108,7 @@ public class PlanRepayController extends BaseController {
      * @param repayRequestBean
      * @return
      */
-    @ApiOperation(value = "订单退出", notes = "订单退出初始化列表")
+    @ApiOperation(value = "智投退出", notes = "智投退出初始化列表")
     @PostMapping(value = "/init")
     public AdminResult<ListResult<HjhRepayVO>> init(@RequestBody HjhRepayRequestBean repayRequestBean){
 
@@ -518,7 +518,7 @@ public class PlanRepayController extends BaseController {
      * @param repayRequestBean
      * @return
      */
-    @ApiOperation(value = "订单退出", notes = "订单退出列表导出")
+    @ApiOperation(value = "智投退出", notes = "智投退出列表导出")
     @PostMapping(value = "/exportAction")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhRepayRequestBean repayRequestBean) throws Exception {
         HjhRepayRequest repayRequest = new HjhRepayRequest();
@@ -526,7 +526,7 @@ public class PlanRepayController extends BaseController {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "计划还款";
+        String sheetName = "智投退出";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
         // 声明一个工作薄

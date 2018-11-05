@@ -174,6 +174,11 @@
 		<result column="debtPlanName" property="debtPlanName"  />
 		<!--计划冻结额度-->
 		<result column="frostAccount" property="frostAccount"  />
+		<!-- 预计开始退出时间 -->
+		<result column="end_date" property="endDate"/>
+		<!-- 实际退出时间 -->
+		<result column="acctual_payment_time" property="acctualPaymentTime"/>
+
 	</resultMap>
 	<select id="selectAccedeRecordList" resultMap="BaseResultMap" parameterType="Map">
 			SELECT
@@ -272,8 +277,9 @@
 			    
 				hdpa.actual_apr AS actualApr,
 			  	hdpa.invest_counts AS investCounts,
-			  	hdpa.match_dates AS matchDates
-				
+			  	hdpa.match_dates AS matchDates,
+				hdpa.end_date,
+				hdpa.acctual_payment_time
 			FROM
 				ht_hjh_accede hdpa
 			LEFT JOIN ht_r_user ruser1 ON hdpa.invite_user_id = ruser1.user_id  
@@ -336,6 +342,21 @@
 				<if test="investCountsSrch != null and investCountsSrch != ''">
 					AND hdpa.invest_counts = #{investCountsSrch}
 				</if>
+
+				<if test="endDateStartSrch != null and endDateStartSrch!=''">
+					and hdpa.end_date <![CDATA[>=]]> CONCAT(#{endDateStartSrch},' 00:00:00')
+				</if>
+				<if test="endDateEndSrch != null and endDateEndSrch!=''">
+					and hdpa.end_date <![CDATA[<=]]> CONCAT(#{endDateEndSrch},' 23:59:59')
+				</if>
+
+				<if test="acctualPaymentTimeStartSrch != null and acctualPaymentTimeStartSrch !='' ">
+					AND FROM_UNIXTIME( hdpa.acctual_payment_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{acctualPaymentTimeStartSrch}
+				</if>
+				<if test="acctualPaymentTimeEndSrch != null and acctualPaymentTimeEndSrch !='' ">
+					AND FROM_UNIXTIME( hdpa.acctual_payment_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{acctualPaymentTimeEndSrch}
+				</if>
+
 			</where>
 			ORDER BY
 				add_time_long DESC

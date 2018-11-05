@@ -467,7 +467,7 @@ public class AccedeListController extends BaseController{
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
-		String sheetName = "加入明细";
+		String sheetName = "智投订单";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
 		// 声明一个工作薄
@@ -564,11 +564,11 @@ public class AccedeListController extends BaseController{
 
 	private Map<String, String> buildMap() {
 		Map<String, String> map = Maps.newLinkedHashMap();
-		map.put("planOrderId", "计划订单号");
-		map.put("debtPlanNid", "计划编号");
-		map.put("debtPlanName", "计划名称");
-		map.put("debtLockPeriod", "锁定期");
-		map.put("expectApr", "预期年化收益率");
+		map.put("planOrderId", "智投订单号");
+		map.put("debtPlanNid", "智投编号");
+		map.put("debtPlanName", "智投名称");
+		map.put("debtLockPeriod", "服务回报期限");
+		map.put("expectApr", "参考年回报率");
 		map.put("userName", "用户名（投资人）");
 		map.put("userId", "投资人id");
 		map.put("userAttribute", "投资人用户属性（当前)");
@@ -590,7 +590,7 @@ public class AccedeListController extends BaseController{
 		map.put("inviteUserRegionname", "分公司(投资时)");
 		map.put("inviteUserBranchname", "部门(投资时)");
 		map.put("inviteUserDepartmentname", "团队(投资时)");
-		map.put("accedeAccount", "加入金额");
+		map.put("accedeAccount", "授权服务金额");
 		map.put("investScaleView", "自动投标进度");
 		map.put("availableInvestAccount", "可用余额(元) ");
 		map.put("frostAccount", "冻结金额(元) ");
@@ -599,9 +599,10 @@ public class AccedeListController extends BaseController{
 		map.put("platform", "操作平台");
 		map.put("orderStatus", "订单状态");
 		map.put("matchDates", "匹配期");
-		map.put("countInterestTime", "锁定时间");
-		map.put("createTime", "加入时间");
-
+		map.put("countInterestTime", "开始计息时间");
+		map.put("createTime", "授权服务时间");
+		map.put("endDate", "预计开始退出时间");
+		map.put("acctualPaymentTime", "实际退出时间");
 		return map;
 	}
 	private Map<String, IValueFormatter> buildValueAdapter() {

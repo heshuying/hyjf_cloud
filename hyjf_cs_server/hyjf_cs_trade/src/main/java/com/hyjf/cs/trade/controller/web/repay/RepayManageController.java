@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
+import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -20,6 +21,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.TradeConstant;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.file.ZIPGenerator;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
@@ -51,6 +53,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
@@ -996,5 +999,105 @@ public class RepayManageController extends BaseTradeController {
         }
         result.setStatus(true);
         return JSONObject.toJSONString(result, true);
+    }
+
+    /**
+     *
+     * 下载借款用户的协议
+     *
+     * @author renxingchen
+     */
+    @ApiOperation(value = "下载借款用户的协议", notes = "下载借款用户的协议")
+    @GetMapping("/downloadBorrowerPdf/{borrowNid}")
+    public void downloadBorrowerPdf(@RequestHeader(value = "userId") Integer currentUserId, @PathVariable String borrowNid, HttpServletRequest request, HttpServletResponse response) {
+        List<File> files = new ArrayList<File>();
+
+        //CreateAgreementController createAgreementController = new CreateAgreementController();
+        // 查询用户项目的投资情况
+        List<WebUserInvestListCustomizeVO> investlist;
+        investlist = repayManageService.selectUserInvestList(borrowNid);
+
+        String flag = "1";
+        for (WebUserInvestListCustomizeVO tmp : investlist) {
+            File file;
+            //居间服务于借款协议时展示标的维度的借款方与出借方的关系的，出借方来自于 huiyingdai_borrow_tender
+            //原居间协议(注掉) file = createAgreementPDFFile(request, response, form, tmp.getUserId());
+            //(1)调用新作的居间借款协议
+            //file = createAgreementController.createAgreementPDFFile(request, response, form);
+            file = repayManageService.createAgreementPDFFileRepay(request, response, borrowNid, tmp.getNid(), flag, currentUserId);
+
+            if (file != null) {
+                files.add(file);
+            }
+        }
+        ZIPGenerator.generateZip(response, files, borrowNid);
+        return;
+
+        /*************************************借款人借款列表先不下载债转**********************************/
+		/*// 散标进计划--》建标时打上计划的标签，so散标债转只能转成散标，计划中的标的债转也只能转成计划中的标的
+		// 一个标的一旦开始被投资要么是散标中中的标的，要么是计划中用的标的
+
+		// (2.1)散标的债转协议(原)
+		Borrow borrow = this.repayService.getBorrowByNid(borrowNid);
+		if( borrow != null ){
+			if(StringUtils.isNotEmpty(borrow.getPlanNid())){
+				//计划中的标的
+				List<HjhDebtCreditTender> hjhCreditTenderList = this.repayService.selectHjhCreditTenderList(borrowNid);//hyjf_hjh_debt_credit_tender
+				for (HjhDebtCreditTender hjhCreditTender : hjhCreditTenderList) {
+					//调用下载计划债转协议的方法
+					CreditAssignedBean tenderCreditAssignedBean  = new CreditAssignedBean();
+					tenderCreditAssignedBean.setBidNid(hjhCreditTender.getBorrowNid());// 标号
+					tenderCreditAssignedBean.setCreditNid(hjhCreditTender.getCreditNid());// 债转编号
+					tenderCreditAssignedBean.setCreditTenderNid(hjhCreditTender.getInvestOrderId());//原始投资订单号
+					tenderCreditAssignedBean.setAssignNid(hjhCreditTender.getAssignOrderId());//债转后的新的"投资"订单号
+					if(currentUserId != null){
+						tenderCreditAssignedBean.setCurrentUserId(currentUserId);
+					}
+					// 模板参数对象(查新表)
+					Map<String, Object> creditContract = tenderCreditService.selectHJHUserCreditContract(tenderCreditAssignedBean);
+					try {
+						File file = PdfGenerator.generatePdfFile(request, response, ((HjhDebtCreditTender) creditContract.get("creditTender")).getAssignOrderId() + ".pdf", CustomConstants.HJH_CREDIT_CONTRACT, creditContract);
+						if(file!=null){
+							files.add(file);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+			} else {
+				//散标中的标的
+				// 根据标号判断标的是否有承接
+				List<CreditTender> creditTenderList = this.repayService.selectCreditTenderList(borrowNid);//huiyingdai_credit_tender
+				// 债转协议
+				if(creditTenderList!= null && creditTenderList.size()>0){
+					for (CreditTender creditTender : creditTenderList) {
+						Map<String,String> param = new HashMap<String,String>();
+						// 标号
+						param.put("bidNid", creditTender.getBidNid());
+						// 债转编号
+						param.put("creditNid", creditTender.getCreditNid());
+						// 债转投资订单号
+						param.put("creditTenderNid", creditTender.getCreditTenderNid());
+						// 承接订单号
+						param.put("assignNid", creditTender.getAssignNid());
+						// 当前登陆者
+						param.put("currentUserId", currentUserId.toString());
+
+						// 模板参数对象
+						Map<String, Object> creditContract = this.repayService.selectUserCreditContract(param);
+						try {
+							File file = PdfGenerator.generatePdfFile(request, response, String.valueOf(creditTender.getAssignNid()) + ".pdf", CustomConstants.CREDIT_CONTRACT, creditContract);
+							if(file!=null){
+								files.add(file);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+		ZIPGenerator.generateZip(response, files, borrowNid);*/
     }
 }

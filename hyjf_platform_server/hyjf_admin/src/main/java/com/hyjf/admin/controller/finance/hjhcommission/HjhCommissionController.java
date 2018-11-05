@@ -511,19 +511,19 @@ public class HjhCommissionController extends BaseController{
 		map.put("ordid", "加入订单号");
 		map.put("borrowNid", "计划编号");
 		map.put("borrowStyleHjh", "还款方式");
-		map.put("lockPeriod", "锁定期");
-		map.put("expectApr", "预期年化收益率");
+		map.put("lockPeriod", "服务回报期限");
+		map.put("expectApr", "参考年回报率");
 		map.put("username", "提成人");
 		map.put("trueNameTender", "提成人真实姓名");
 		map.put("attribute", "提成人用户属性(投资时)");
 		map.put("usernameTender", "投资人用户名");
 		map.put("attributeTender", "投资人用户属性(投资时)");
-		map.put("accountTender", "加入金额");
+		map.put("accountTender", "授权服务金额");
 		map.put("commission", "提成金额");
 		map.put("statusName", "提成发放状态");
 		map.put("sendTimeView", "提成发放时间");
-		map.put("addTime", "计划订单加入时间");
-		map.put("countInterestTimeView", "计划订单锁定时间");
+		map.put("addTime", "授权服务订单时间");
+		map.put("countInterestTimeView", "智投订单锁定时间");
 		return map;
 	}
 
