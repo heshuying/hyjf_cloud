@@ -33,7 +33,7 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 
 	@Override
 	public void insert(Account account) {
-		accountMapper.insert(account);
+		accountMapper.insertSelective(account);
 	}
 
 	/**
