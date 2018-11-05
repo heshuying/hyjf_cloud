@@ -652,7 +652,7 @@ public class RepayManageController extends BaseTradeController {
         // 合规四期修改  wgx 2018/10/16
         if (userVO != null) {
             // 还款方法10分钟只能一次
-            boolean result = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId, 600);
+            boolean result = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId, 20);// 联调修改
             if (result) {
                 BankOpenAccountVO userBankOpenAccount = this.repayManageService.getBankOpenAccount(userId);
                 Map<String, Object> map = repayManageService.startOrgRepay(startDate, endDate, userId, requestBean.getPassword(), GetCilentIP.getIpAddr(request), userBankOpenAccount);
