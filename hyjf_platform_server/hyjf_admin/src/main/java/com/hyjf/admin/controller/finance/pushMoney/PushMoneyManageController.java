@@ -8,9 +8,7 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PushMoneyManageService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -203,6 +201,7 @@ public class PushMoneyManageController extends BaseController {
     @ApiOperation(value = "直投提成列表", notes = "直投提成列表")
     @PostMapping(value = "/pushMoneyList")
     public AdminResult pushMoneyList(@RequestBody PushMoneyRequest request){
+        request.setTenderType(1);
         Map<String,Object> result = new HashMap<>();
         Integer count = pushMoneyManageService.getPushMoneyListCount(request);
         count = (count == null)?0:count;
