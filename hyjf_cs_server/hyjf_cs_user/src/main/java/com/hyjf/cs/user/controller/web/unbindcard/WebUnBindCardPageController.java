@@ -44,6 +44,7 @@ public class WebUnBindCardPageController extends BaseUserController{
     @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
     @PostMapping(value = "/deleteCardPage", produces = "application/json; charset=utf-8")
     public WebResult<Object> bindCardPage(@RequestHeader(value = "userId") int userId, @RequestParam(value = "cardId") String cardId, HttpServletRequest request) {
+        logger.info("=======解绑银行卡开始,参数为:user Id = "+userId+"& cardId = "+cardId+"===============");
         // 银行卡id
 //        String cardId = param.get("cardId");
         WebResult<Object> result = new WebResult<>();
@@ -112,7 +113,7 @@ public class WebUnBindCardPageController extends BaseUserController{
     @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
     @ResponseBody
     public WebResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
-        logger.info("调用银行失败原因start,logOrdId:{}", param);
+        logger.info("解绑银行卡调用银行失败原因start,logOrdId:{}", param);
         WebResult<Object> result = new WebResult<Object>();
         String retMsg = unBindCardService.getFailedMess(param.get("logOrdId"));
         Map<String,String> map = new HashMap<>();

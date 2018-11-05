@@ -890,19 +890,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String creditNid = tender.getBorrowNid().substring(3);
         String isConfirm = tender.getIsConfirm();//是否最后确认
 
-
         //add by cwyang APP3.0.9 确认是否为最后一次确认，如果是最后一次确认则必须进行投资校验
         if(isConfirm != null && "1".equals(isConfirm)){
             AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
 
             try{
-                appTenderCheck(tender);
+                getAppTenderUrl(tender);
             }catch (Exception e){
                 resultVo.setStatus("1");
                 resultVo.setStatusDesc("投资校验失败！");
                 return resultVo;
             }
-
         }
 
         logger.info("investType:[{}]",investType);
