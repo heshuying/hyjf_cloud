@@ -44,42 +44,44 @@ public class HjhRepayController {
         HjhRepayResponse response = new HjhRepayResponse();
 
         Map<String, Object> params = new HashedMap();
-        params.put("accedeOrderId", request.getAccedeOrderIdSrch());
-
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getAccedeOrderIdSrch())){
+            params.put("planOrderId", request.getAccedeOrderIdSrch());
+        }
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getPlanNidSrch())){
+            params.put("planNidSrch", request.getPlanNidSrch());
+        }
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getUserNameSrch())){
+            params.put("userName", request.getUserNameSrch());
+        }
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getDebtLockPeriodSrch())){
+            params.put("debtLockPeriodSrch", request.getDebtLockPeriodSrch());
+        }
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getRepayStatusSrch())){
+            params.put("repayStatus", Integer.valueOf(request.getRepayStatusSrch()));
+        }
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getOrderStatusSrch())){
+            params.put("orderStatusSrch", Integer.valueOf(request.getOrderStatusSrch()));
+        }
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getBorrowStyleSrch())){
+            params.put("borrowStyleSrch", request.getBorrowStyleSrch());
+        }
 
         //清算时间
-//        if (org.apache.commons.lang3.StringUtils.isNotEmpty(request.getRepayTimeStart())){
-//            int repayTimeStart = GetDate.getDayEnd10(request.getRepayTimeStart() + " 00:00:00");
-//            int repayTimeEnd;
-//            if (org.apache.commons.lang3.StringUtils.isNotEmpty(request.getRepayTimeEnd())){
-//                repayTimeEnd = GetDate.getDayEnd10(request.getRepayTimeEnd() + " 23:59:59");
-//            }else {
-//                Long logRepayTimeEnd = System.currentTimeMillis()/1000;
-//                repayTimeEnd = logRepayTimeEnd.intValue();
-//            }
         if (StringUtils.isNotEmpty(request.getRepayTimeStart())){
             params.put("repayTimeStart", request.getRepayTimeStart() + " 00:00:00");
             params.put("repayTimeEnd", request.getRepayTimeEnd() + " 23:59:59");
         }
-//        }
 
         //实际退出时间
-//        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getActulRepayTimeStart())){
-//            int actuTimeStart = GetDate.getDayStart10(request.getActulRepayTimeStart() + " 00:00:00");
-//            int actuTimeEnd;
-//            if (StringUtils.isNotEmpty(request.getActulRepayTimeEnd())){
-//                actuTimeEnd = GetDate.getDayEnd10(request.getActulRepayTimeEnd() + "23:59:59");
-//            }else {
-//                Long logAutuTimeEnd = System.currentTimeMillis() / 1000;
-//                actuTimeEnd = logAutuTimeEnd.intValue();
-//            }
         if (StringUtils.isNotEmpty(request.getActulRepayTimeStart())){
             params.put("actulRepayTimeStart", request.getActulRepayTimeStart() + " 00:00:00");
             params.put("actulRepayTimeEnd", request.getActulRepayTimeEnd() + "23:59:59");
         }
 
-//        }
-
+        // 汇计划三期新增 推荐人查询
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getRefereeNameSrch())){
+            params.put("refereeNameSrch", request.getRefereeNameSrch());
+        }
         // 查询 总条数
         Integer count = this.hjhRepayService.getRepayCount(params);
 
