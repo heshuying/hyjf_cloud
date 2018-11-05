@@ -208,7 +208,8 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
      */
     private PushMoneyVO getPushMoney(String type) {
         PushMoneyRequest pushMoneyRequest = new PushMoneyRequest();
-        pushMoneyRequest.setProjectType(Integer.valueOf(type));
+        pushMoneyRequest.setProjectType(1);
+        pushMoneyRequest.setType(type);
         List<PushMoneyVO> list = this.amTradeClient.findPushMoneyList(pushMoneyRequest).getResultList();
         if (list != null && list.size() > 0) {
             return list.get(0);

@@ -1484,4 +1484,6 @@ public interface AmConfigClient {
 	AdminSystemResponse updateMenuPermissionsAction(AdminMenuRequest form);
 
 	List<String> getPermissionId(String string);
+
+	AdminSystemResponse updatePasswordAction(AdminSystemRequest map);
 }
