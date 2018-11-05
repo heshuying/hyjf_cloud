@@ -340,6 +340,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             request.setBorrowNid(borrowNid);
             request.setUserId(String.valueOf(userId));
             request.setPlatform(CustomConstants.CLIENT_PC);
+            request.setMoney("0");
             couponConfig = amTradeClient.selectBestCoupon(request);
             if (couponConfig != null) {
                 other.put("isThereCoupon", 1);
