@@ -99,8 +99,11 @@ public class SensorsDataLoginServiceImpl extends BaseServiceImpl implements Sens
         Map<String, Object> profiles = new HashMap<String, Object>();
         // 用户不可变更属性
         Map<String, Object> userProfiles = new HashMap<String, Object>();
+        // mod liuyang 神策数据统计优化:敏感数据脱敏 20181102 start
         // 手机号
-        profiles.put("phoneNumber", user.getMobile());
+        // profiles.put("phoneNumber", user.getMobile());
+        profiles.put("phoneNumber", "");
+        // mod liuyang 神策数据统计优化:敏感数据脱敏 20181102 end
         // 注册渠道
         // 根据用户ID 查询用户注册渠道
         UtmRegVO utmReg = this.amUserClient.findUtmRegByUserId(userId);
@@ -178,8 +181,11 @@ public class SensorsDataLoginServiceImpl extends BaseServiceImpl implements Sens
         }
 
 
+        // mod by liuyang 神策数据统计优化:敏感数据脱敏 20181102 start
         // 身份证号
-        profiles.put("IDnumber", StringUtils.isBlank(userInfoVO.getIdcard()) ? "" : userInfoVO.getIdcard());
+        // profiles.put("IDnumber", StringUtils.isBlank(userInfoVO.getIdcard()) ? "" : userInfoVO.getIdcard());
+        profiles.put("IDnumber", "");
+        // mod by liuyang 神策数据统计优化:敏感数据脱敏 20181102 end
         // 生日
         if (StringUtils.isNotBlank(userInfoVO.getBirthday())) {
             profiles.put("birthday", userInfoVO.getBirthday());

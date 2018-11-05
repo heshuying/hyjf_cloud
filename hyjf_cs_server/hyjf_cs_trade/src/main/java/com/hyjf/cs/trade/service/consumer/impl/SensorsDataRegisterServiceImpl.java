@@ -101,8 +101,11 @@ public class SensorsDataRegisterServiceImpl extends BaseServiceImpl implements S
         // 不可变更用户属性
         Map<String, Object> userProfiles = new HashMap<String, Object>();
 
+        // mod by liuyang 20181102 神策数据统计优化:敏感数据脱敏 start
         // 手机号
-        profiles.put("phoneNumber", user.getMobile());
+        // profiles.put("phoneNumber", user.getMobile());
+        profiles.put("phoneNumber", "");
+        // mod by liuyang 20181102 神策数据统计优化:敏感数据脱敏 end
 
         // 注册渠道
         // 根据用户ID 查询用户注册渠道
