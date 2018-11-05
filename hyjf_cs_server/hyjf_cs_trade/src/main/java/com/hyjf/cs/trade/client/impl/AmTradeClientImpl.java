@@ -2737,6 +2737,15 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
+    public CouponConfigVO getCouponConfigById(String couponId) {
+        CouponConfigResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/getCouponConfigById/" + couponId, CouponConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
     public Integer getCouponProfitTime(String tenderNid) {
         CouponConfigResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/getcouponprofittime/" + tenderNid, CouponConfigResponse.class).getBody();
         if (response != null) {
