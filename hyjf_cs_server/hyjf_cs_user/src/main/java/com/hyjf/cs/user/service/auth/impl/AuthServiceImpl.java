@@ -67,7 +67,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		if (retBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
 			// 更新user表状态为授权成功
 			UserVO user=this.getUsersById(userId);
-			if(retBean.getPaymentAuth()!=null){
+			if(retBean.getPaymentAuth()!=null&&!"".equals(retBean.getPaymentAuth())){
 				user.setPaymentAuthStatus(Integer.parseInt(retBean.getPaymentAuth()));
 				request.setUser(user);
 			}
@@ -95,7 +95,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				updateHjhUserAuth.setId(hjhUserAuth.getId());
 				updateHjhUserAuth.setUpdateTime(nowTime);
 				updateHjhUserAuth.setUpdateUserId(userId);
-				request.setHjhUserAuth(hjhUserAuth);
+				request.setHjhUserAuth(updateHjhUserAuth);
 			}
 		}
 		amUserClient.updateUserAuth(request);
@@ -291,6 +291,96 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				hjhUserAuth.setAutoRepayEndTime(bean.getRepayDeadline());
 				hjhUserAuth.setRepayMaxAmt(bean.getRepayMaxAmt());
 				hjhUserAuth.setAutoRepayTime(GetDate.getNowTime10());
+			}
+			// 用户ID
+			Integer userId = hjhUserAuth.getUserId();
+			// 根据用户ID 查询用户信息
+			UserVO users = this.getUsersById(userId);
+			switch (authType) {
+				case AuthBean.AUTH_TYPE_AUTO_BID:
+					if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)){
+						// add by liuyang 神策数据统计修改 20180927 start
+						if ("10000000".equals(users.getInstCode())) {
+							try {
+								SensorsDataBean sensorsDataBean = new SensorsDataBean();
+								sensorsDataBean.setUserId(userId);
+								// 汇计划授权结果
+								sensorsDataBean.setEventCode("plan_auth_result");
+								sensorsDataBean.setOrderId(bean.getOrderId());
+								// 授权类型
+								sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_AUTO_BID);
+								this.sendSensorsDataMQ(sensorsDataBean);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+						// add by liuyang 神策数据统计修改 20180927 end
+
+					}
+					break;
+				case AuthBean.AUTH_TYPE_AUTO_CREDIT:
+					if(StringUtils.isNotBlank(autoTransfer)&&"1".equals(autoTransfer)){
+						// add by liuyang 神策数据统计修改 20180927 start
+						if ("10000000".equals(users.getInstCode())) {
+							try {
+								SensorsDataBean sensorsDataBean = new SensorsDataBean();
+								sensorsDataBean.setUserId(userId);
+								// 汇计划授权结果
+								sensorsDataBean.setEventCode("plan_auth_result");
+								sensorsDataBean.setOrderId(bean.getOrderId());
+								// 授权类型
+								sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_AUTO_CREDIT);
+								this.sendSensorsDataMQ(sensorsDataBean);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+						// add by liuyang 神策数据统计修改 20180927 end
+
+					}
+					break;
+				case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
+					if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)){
+						// add by liuyang 神策数据统计修改 20180927 start
+						if ("10000000".equals(users.getInstCode())) {
+							try {
+								SensorsDataBean sensorsDataBean = new SensorsDataBean();
+								sensorsDataBean.setUserId(userId);
+								// 事件类型:服务费授权结果
+								sensorsDataBean.setEventCode("fee_auth_result");
+								sensorsDataBean.setOrderId(bean.getOrderId());
+								// 授权类型
+								sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_PAYMENT_AUTH);
+								this.sendSensorsDataMQ(sensorsDataBean);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+						// add by liuyang 神策数据统计修改 20180927 end
+					}
+					break;
+				case AuthBean.AUTH_TYPE_REPAY_AUTH:
+					break;
+				case AuthBean.AUTH_TYPE_MERGE_AUTH:
+					// add by liuyang 神策数据统计修改 20180927 start
+					if ("10000000".equals(users.getInstCode())) {
+						try {
+							SensorsDataBean sensorsDataBean = new SensorsDataBean();
+							sensorsDataBean.setUserId(userId);
+							// 汇计划授权结果
+							sensorsDataBean.setEventCode("plan_auth_result");
+							sensorsDataBean.setOrderId(bean.getOrderId());
+							// 授权类型
+							sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_MERGE_AUTH);
+							this.sendSensorsDataMQ(sensorsDataBean);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					// add by liuyang 神策数据统计修改 20180927 end
+					break;
+				default:
+					break;
 			}
 		}
 
