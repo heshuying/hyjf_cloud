@@ -5798,7 +5798,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         if(StringUtils.isNotBlank(borrowNid)){
             url.append("/").append(borrowNid);
         }
-        IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
+        BankRepayOrgFreezeLogResponse response = restTemplate.getForEntity(url.toString(), BankRepayOrgFreezeLogResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
         }
@@ -5814,7 +5814,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String borrowNid) {
         StringBuilder url = new StringBuilder("http://AM-TRADE/am-trade/repayOrgFreezeLog/getByNid/");
         url.append("/").append(borrowNid);
-        IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
+        BankRepayOrgFreezeLogResponse response = restTemplate.getForEntity(url.toString(), BankRepayOrgFreezeLogResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
         }
