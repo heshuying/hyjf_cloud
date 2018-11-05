@@ -897,6 +897,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             try{
                 getAppTenderUrl(tender);
             }catch (Exception e){
+                logger.error("报错了。。。",e);
                 resultVo.setStatus("1");
                 resultVo.setStatusDesc("投资校验失败！");
                 return resultVo;
