@@ -221,9 +221,12 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
      * 更新用户画像
      * */
     private int updateInformation(UserPortrait userPortrait) {
-        UserPortraitExample example = new UserPortraitExample();
-        example.createCriteria().andUserIdEqualTo(userPortrait.getUserId());
-        return userPortraitMapper.updateByExample(userPortrait,example);
+        UserPortraitExample select = new UserPortraitExample();
+        select.createCriteria().andUserIdEqualTo(userPortrait.getUserId());
+        UserPortrait userPortraits = userPortraitMapper.selectByExample(select).get(0);
+
+        userPortrait.setId(userPortraits.getId());
+        return userPortraitMapper.updateByPrimaryKey(userPortrait);
     }
     /**
      * 插入用户画像
