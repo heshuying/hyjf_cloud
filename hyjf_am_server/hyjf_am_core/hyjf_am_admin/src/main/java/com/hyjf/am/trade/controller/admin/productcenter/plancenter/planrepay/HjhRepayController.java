@@ -45,7 +45,7 @@ public class HjhRepayController {
 
         Map<String, Object> params = new HashedMap();
         if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getAccedeOrderIdSrch())){
-            params.put("planOrderId", request.getAccedeOrderIdSrch());
+            params.put("accedeOrderId", request.getAccedeOrderIdSrch());
         }
         if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getPlanNidSrch())){
             params.put("planNidSrch", request.getPlanNidSrch());
