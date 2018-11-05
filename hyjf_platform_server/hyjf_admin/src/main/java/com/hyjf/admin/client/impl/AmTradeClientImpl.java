@@ -1234,7 +1234,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AutoTenderExceptionResponse selectAccedeRecordList(AutoTenderExceptionRequest request) {
-        String url = "http://AM-ADMIN/am-trade/autotenderexception/selectAccedeRecordList";
+        String url = "http://AM-TRADE/am-trade/autotenderexception/selectAccedeRecordList";
         AutoTenderExceptionResponse response = restTemplate.
                 postForEntity(url, request, AutoTenderExceptionResponse.class).
                 getBody();
@@ -1254,7 +1254,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhAccedeResponse selectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest) {
-        String url = "http://AM-ADMIN/am-trade/autotenderexception/selectHjhAccedeByParam";
+        String url = "http://AM-TRADE/am-trade/autotenderexception/selectHjhAccedeByParam";
         HjhAccedeResponse response = restTemplate.
                 postForEntity(url, tenderExceptionSolveRequest, HjhAccedeResponse.class).
                 getBody();
@@ -1274,7 +1274,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhPlanBorrowTmpResponse selectBorrowJoinList(TenderExceptionSolveRequest tenderExceptionSolveRequest) {
-        String url = "http://AM-ADMIN/am-trade/autotenderexception/selectBorrowJoinList";
+        String url = "http://AM-TRADE/am-trade/autotenderexception/selectBorrowJoinList";
         HjhPlanBorrowTmpResponse response = restTemplate.
                 postForEntity(url, tenderExceptionSolveRequest, HjhPlanBorrowTmpResponse.class).
                 getBody();
@@ -1293,7 +1293,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateTenderByParam(int status, int accedeId) {
-        String url = "http://AM-ADMIN/am-trade/autotenderexception/updateTenderByParam/" + status + "/" + accedeId;
+        String url = "http://AM-TRADE/am-trade/autotenderexception/updateTenderByParam/" + status + "/" + accedeId;
         Response<Boolean> response = restTemplate.getForEntity(url, Response.class).getBody();
         if (response != null && response.getResult()) {
             return true;
