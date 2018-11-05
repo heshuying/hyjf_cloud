@@ -1044,7 +1044,7 @@ public class RepayManageController extends BaseTradeController {
         }
         logger.info("【代偿冻结异步回调】{}还款冻结开始处理，订单号：{}", isBatchRepay ? "批量" : "", orderId);
         String accountId = callBackBean.getAccountId();//电子账号
-        logger.info("accountId:", callBackBean.getAccountId());
+        logger.info("callBackBean:", JSON.toJSONString(callBackBean));
         Integer userId = orgLogList.get(0).getRepayUserId();
         String userName = orgLogList.get(0).getRepayUserName();
         // 垫付机构还款冻结状态查询
