@@ -67,7 +67,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		if (retBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
 			// 更新user表状态为授权成功
 			UserVO user=this.getUsersById(userId);
-			if(retBean.getPaymentAuth()!=null){
+			if(retBean.getPaymentAuth()!=null&&!"".equals(retBean.getPaymentAuth())){
 				user.setPaymentAuthStatus(Integer.parseInt(retBean.getPaymentAuth()));
 				request.setUser(user);
 			}
@@ -95,7 +95,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				updateHjhUserAuth.setId(hjhUserAuth.getId());
 				updateHjhUserAuth.setUpdateTime(nowTime);
 				updateHjhUserAuth.setUpdateUserId(userId);
-				request.setHjhUserAuth(hjhUserAuth);
+				request.setHjhUserAuth(updateHjhUserAuth);
 			}
 		}
 		amUserClient.updateUserAuth(request);
@@ -714,161 +714,165 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		UserVO user=this.getUsersById(Integer.parseInt(bean.getLogUserId()));
 		// 授权类型
 		String txcode = bean.getTxCode();
-		if(BankCallConstant.TXCODE_TERMS_AUTH_QUERY.equals(txcode)){
-			//自动投标功能开通标志
-			String autoBidStatus = bean.getAutoBid();
-			//缴费授权
-			String paymentAuth = bean.getPaymentAuth();
-			//还款授权
-			String repayAuth = bean.getRepayAuth();
-			switch (authType) {
-				case AuthBean.AUTH_TYPE_AUTO_BID:
-					if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
-							&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
-						if(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
-							return true;
-						}
-						if(user.getUserType()!=1){
-							if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
+		try {
+			if(BankCallConstant.TXCODE_TERMS_AUTH_QUERY.equals(txcode)){
+				//自动投标功能开通标志
+				String autoBidStatus = bean.getAutoBid();
+				//缴费授权
+				String paymentAuth = bean.getPaymentAuth();
+				//还款授权
+				String repayAuth = bean.getRepayAuth();
+				switch (authType) {
+					case AuthBean.AUTH_TYPE_AUTO_BID:
+						if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
+								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
+							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+							if(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
 								return true;
 							}
-						}else{
-							if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
-								return true;
+							if(user.getUserType()!=1){
+								if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
+									return true;
+								}
+							}else{
+								if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
+									return true;
+								}
 							}
-						}
 
+						}
+						break;
+					case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
+						if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
+								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
+							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+							if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
+								return true;
+							}
+							if(user.getUserType()!=1){
+								if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
+									return true;
+								}
+							}else{
+								if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
+									return true;
+								}
+							}
+						}
+						break;
+					case AuthBean.AUTH_TYPE_REPAY_AUTH:
+						if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
+								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
+							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
+							if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
+								return true;
+							}
+							if(user.getUserType()!=1){
+								if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getRepayMaxAmt()))){
+									return true;
+								}
+							}else{
+								if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getRepayMaxAmt()))){
+									return true;
+								}
+							}
+						}
+						break;
+					case AuthBean.AUTH_TYPE_MERGE_AUTH:
+						if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
+								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),AuthBean.AUTH_TYPE_AUTO_BID)){
+							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+							if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
+								return true;
+							}
+							if(user.getUserType()!=1){
+								if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
+									return true;
+								}
+							}else{
+								if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
+									return true;
+								}
+							}
+						}
+						if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
+								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
+							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+							if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
+								return true;
+							}
+							if(user.getUserType()!=1){
+								if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
+									return true;
+								}
+							}else{
+								if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
+									return true;
+								}
+							}
+						}
+						break;
+					default:
+						break;
+				}
+			}else if(BankCallConstant.TXCODE_TERMS_AUTH_PAGE.equals(txcode)){
+				//自动投标功能开通标志
+				String autoBidStatus = bean.getAutoBid();
+				//缴费授权
+				String paymentAuth = bean.getPaymentAuth();
+				//还款授权
+				String repayAuth = bean.getRepayAuth();
+				if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
+						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
+					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+					if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
+						return true;
 					}
-					break;
-				case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
-					if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
-							&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
-						if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
+					if(user.getUserType()!=1){
+						if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
 							return true;
 						}
-						if(user.getUserType()!=1){
-							if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
-								return true;
-							}
-						}else{
-							if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
-								return true;
-							}
-						}
-					}
-					break;
-				case AuthBean.AUTH_TYPE_REPAY_AUTH:
-					if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
-							&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
-						if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
+					}else{
+						if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
 							return true;
 						}
-						if(user.getUserType()!=1){
-							if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getRepayMaxAmt()))){
-								return true;
-							}
-						}else{
-							if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getRepayMaxAmt()))){
-								return true;
-							}
-						}
 					}
-					break;
-				case AuthBean.AUTH_TYPE_MERGE_AUTH:
-					if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
-							&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),AuthBean.AUTH_TYPE_AUTO_BID)){
-						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
-						if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
+				}
+				if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
+						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
+					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+					if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
+						return true;
+					}
+					if(user.getUserType()!=1){
+						if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
 							return true;
 						}
-						if(user.getUserType()!=1){
-							if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
-								return true;
-							}
-						}else{
-							if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
-								return true;
-							}
-						}
-					}
-					if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
-							&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
-						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
-						if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
+					}else{
+						if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
 							return true;
 						}
-						if(user.getUserType()!=1){
-							if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
-								return true;
-							}
-						}else{
-							if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
-								return true;
-							}
+					}
+				}
+				if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
+						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
+					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
+					if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
+						return true;
+					}
+					if(user.getUserType()!=1){
+						if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getRepayMaxAmt()))){
+							return true;
+						}
+					}else{
+						if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getRepayMaxAmt()))){
+							return true;
 						}
 					}
-					break;
-				default:
-					break;
-			}
-		}else if(BankCallConstant.TXCODE_TERMS_AUTH_PAGE.equals(txcode)){
-			//自动投标功能开通标志
-			String autoBidStatus = bean.getAutoBid();
-			//缴费授权
-			String paymentAuth = bean.getPaymentAuth();
-			//还款授权
-			String repayAuth = bean.getRepayAuth();
-			if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
-					&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-				HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
-				if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
-					return true;
-				}
-				if(user.getUserType()!=1){
-					if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
-						return true;
-					}
-				}else{
-					if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getAutoBidMaxAmt()))){
-						return true;
-					}
 				}
 			}
-			if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
-					&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-				HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
-				if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
-					return true;
-				}
-				if(user.getUserType()!=1){
-					if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
-						return true;
-					}
-				}else{
-					if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getPaymentMaxAmt()))){
-						return true;
-					}
-				}
-			}
-			if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
-					&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-				HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
-				if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
-					return true;
-				}
-				if(user.getUserType()!=1){
-					if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getRepayMaxAmt()))){
-						return true;
-					}
-				}else{
-					if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getRepayMaxAmt()))){
-						return true;
-					}
-				}
-			}
+		}catch (Exception e){
+			return true;
 		}
 		return false;
 	}

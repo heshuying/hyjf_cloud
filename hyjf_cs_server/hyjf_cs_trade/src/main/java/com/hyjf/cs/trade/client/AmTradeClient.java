@@ -2361,7 +2361,7 @@ public interface AmTradeClient {
      * @date 2018/10/16
      */
     List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId, String borrowNid);
-
+    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String borrowNid);
     /**
      * 获取有效公告
      * @author cwyang 2018-10-18

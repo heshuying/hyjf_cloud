@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
 import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
@@ -61,6 +62,8 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     private SystemConfig systemConfig;
     @Autowired
     AmUserClient amUserClient;
+    @Autowired
+    AmTradeClient amTradeClient;
     @Autowired
     private AmConfigClient amConfigClient;
 
@@ -294,6 +297,9 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             resultBean.setResult("更新用户详情表失败!");
             return resultBean;
         }
+        // 更新trade  的  account表的电子帐户号
+        boolean tradeAccountFlag = amTradeClient.updateAccountNumberByUserId(userId,requestBean.getAccountId()) ;
+        logger.info("开户掉单  更新 trade 的account 结果{}",tradeAccountFlag);
         // 插入江西银行关联表
         BankOpenAccountRequest openAccount = new BankOpenAccountRequest();
         openAccount.setUserId(userId);

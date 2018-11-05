@@ -77,6 +77,19 @@ public class BankRepayOrgFreezeLogController extends BaseController {
     /**
      * 获取当前有效的冻结记录
      */
+    @RequestMapping("/getByNid/{borrowNid}")
+    public BankRepayFreezeLogResponse getFreezeLogByNid(@PathVariable String borrowNid) {
+        BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
+        List<BankRepayOrgFreezeLog> logList = bankRepayOrgFreezeLogService.getBankRepayOrgFreezeLogList(null, borrowNid);
+        if (Validator.isNotNull(logList)) {
+            response.setResultList(CommonUtils.convertBeanList(logList, BankRepayFreezeLogVO.class));
+        }
+        return response;
+    }
+
+    /**
+     * 获取当前有效的冻结记录
+     */
     @RequestMapping("/getValid/{orderId}/{borrowNid}")
     public BankRepayFreezeLogResponse getFreezeLogValid(@PathVariable String orderId, @PathVariable String borrowNid) {
         BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();

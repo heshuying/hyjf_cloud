@@ -6279,6 +6279,23 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 开户成功  修改trade的account
+     *
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    @Override
+    public boolean updateAccountNumberByUserId(Integer userId, String accountId) {
+        String url = "http://AM-ADMIN/am-trade/"+ "account/updateAccountNumberByUserId/" + userId+"/"+accountId;
+        IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        if(IntegerResponse.isSuccess(response)){
+            return response.getResultInt()>0?true:false;
+        }
+        return false;
+    }
+
+    /**
      * 产品中心-加息投资明细（总计）
      * @param request
      * @auth wenxin
