@@ -46,6 +46,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -719,6 +720,22 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if(tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0){
                 // 用户选择了优惠券
                 couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
+                String config = "";
+                // 加息券标识（0：禁用，1：可用）    1：体验金，2：加息券 3代金券
+                int interestCoupon = borrowInfo.getBorrowInterestCoupon();
+                // 体验金标识（0：禁用，1：可用）
+                int moneyCoupon = borrowInfo.getBorrowTasteMoney();
+                if (interestCoupon == 1) {
+                    config += "2,";
+                }
+                if (moneyCoupon == 1) {
+                    config += "1,";
+                }
+                Map<String, String> validateMap = couponService.validateCoupon(tender.getUserId(), tender.getAccount(), tender.getCouponGrantId(), tender.getPlatform(), borrow.getBorrowPeriod(), config);
+                if (!MapUtils.isEmpty(validateMap)) {
+                    couponUser = null;
+                }
+                logger.info("优惠券投资校验完毕  结果：{}" , validateMap);
                 logger.info("用户优惠券信息为:{}" , JSONObject.toJSONString(couponUser));
             }
             if (couponUser != null) {
