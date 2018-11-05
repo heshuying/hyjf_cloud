@@ -478,6 +478,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (null != usersInfo) {
             String roleIsOpen = systemConfig.getRoleIsopen();
             if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+                logger.info("userInfo.getRoleId():"+userInfo.getRoleId());
                 if (usersInfo.getRoleId() != 1) {// 非投资用户
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
                 }
