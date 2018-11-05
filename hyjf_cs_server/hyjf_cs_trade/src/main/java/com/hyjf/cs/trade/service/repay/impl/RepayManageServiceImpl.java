@@ -312,7 +312,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             throw  new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
 
-        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(),10);// 联调修改
+        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(),300);
         if (!tranactionSetFlag) {//设置失败
             throw  new CheckException(MsgEnum.ERR_SYSTEM_BUSY);
         }

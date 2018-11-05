@@ -97,7 +97,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 			try {
 				MessageExt msg = msgs.get(0);
 				borrowApicron = JSONObject.parseObject(msg.getBody(), BorrowApicron.class);
-	            if(borrowApicron == null || borrowApicron.getBorrowNid() == null){
+	            if(borrowApicron == null || borrowApicron.getId() == null || borrowApicron.getBorrowNid() == null){
 	            	logger.info(" 还款请求异常消息：" + msg.getMsgId());
 	            	return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	            }
@@ -106,6 +106,11 @@ public class BorrowRepayRequestConsumer extends Consumer{
 				logger.error(e.getMessage());
 				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 			}
+
+
+	        // 查询表确认是否真正的成功
+	        borrowApicron = batchBorrowRepayPlanService.selApiCronByPrimaryKey(borrowApicron.getId());
+
 	        Integer repayUserId = borrowApicron.getUserId();// 还款用户userId
 			String borrowNid = borrowApicron.getBorrowNid();// 项目编号
 			Integer periodNow = borrowApicron.getPeriodNow();// 当前期数
@@ -118,10 +123,16 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	            logger.error("【本金还款请求】接收到的消息中信息不全");
             	return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	        }
+	        // 确认是否真的还款请求
+//	        if(borrowApicron.getStatus().intValue() != 1) {
+//	            logger.error(borrowNid+"【本金还款请求】接收到的消息中信息不全");
+//            	return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+//	        }
+
 		    boolean result = this.outRepeatQueue(redisKey, borrowApicron);//modify by cwyang 数据库事故后变更,不设时间,待所有流程结束后再去除防重标示
 	        if(result){
 	            
-	            logger.error("本金还款请求中....");
+	            logger.error(borrowNid+" 本金还款请求中....");
 	            // 还款请求重复,需要判断是否为银行请求成功,平台处理失败的情况,分情况处理
 	            boolean flag = checkLoanRequestException(borrowApicron, redisKey);
 	            if (flag) {//存在请求异常情况,进行后续处理
@@ -138,6 +149,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        boolean delFlag = false;
 	        try{
 	        	String planNid = borrowApicron.getPlanNid();
+	        	logger.info(planNid+" 开始请求还款...."+borrowNid + "状态："+borrowApicron.getStatus());
 	        	Map map = null;
 	        	// 全部发送还款请求
 	        	if (StringUtils.isNotBlank(planNid)) {//计划还款请求
@@ -194,7 +206,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        		delRedisKey(borrowApicron);
 	    		}
 	        }
-			logger.info("----------------------------本金投资还款请求结束--------------------------------");
+			logger.info(borrowNid+"----------------------------本金投资还款请求结束--------------------------------");
 			// 如果没有return success ，consumer会重新消费该消息，直到return success
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 		}

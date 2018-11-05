@@ -20,7 +20,6 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.TradeConstant;
-import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.ZIPGenerator;
 import com.hyjf.common.util.CustomConstants;
@@ -425,8 +424,8 @@ public class RepayManageController extends BaseTradeController {
         webResult.setData(resultMap);
 
         /** redis 锁 */
-        boolean reslut = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_REPAY_REQUEST + requestBean.getBorrowNid(), 10);// 联调修改
-        if(!reslut){
+        boolean isRepay = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_REPAY_REQUEST + requestBean.getBorrowNid(), 60);
+        if(!isRepay){
             webResult.setStatus(WebResult.ERROR);
             webResult.setStatusDesc("项目正在还款中...");
             return webResult;
@@ -607,8 +606,8 @@ public class RepayManageController extends BaseTradeController {
             webResult.setStatusDesc("余额不足");
             return webResult;
         }
-        boolean reslut = RedisUtils.exists(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userVO.getUserId());
-        if(reslut){
+        boolean result = RedisUtils.exists(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userVO.getUserId());
+        if(result){
             msg = "999";
             logger.info("==============垫付机构:" + userVO.getUserId() + "校验处->批量还款失败,项目正在还款中!");
             webResult.setData(msg);
@@ -652,7 +651,7 @@ public class RepayManageController extends BaseTradeController {
         // 合规四期修改  wgx 2018/10/16
         if (userVO != null) {
             // 还款方法10分钟只能一次
-            boolean result = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId, 20);// 联调修改
+            boolean result = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId, 600);
             if (result) {
                 BankOpenAccountVO userBankOpenAccount = this.repayManageService.getBankOpenAccount(userId);
                 Map<String, Object> map = repayManageService.startOrgRepay(startDate, endDate, userId, requestBean.getPassword(), GetCilentIP.getIpAddr(request), userBankOpenAccount);
@@ -1044,7 +1043,6 @@ public class RepayManageController extends BaseTradeController {
         }
         logger.info("【代偿冻结异步回调】{}还款冻结开始处理，订单号：{}", isBatchRepay ? "批量" : "", orderId);
         String accountId = callBackBean.getAccountId();//电子账号
-        logger.info("callBackBean:", JSON.toJSONString(callBackBean));
         Integer userId = orgLogList.get(0).getRepayUserId();
         String userName = orgLogList.get(0).getRepayUserName();
         // 垫付机构还款冻结状态查询
