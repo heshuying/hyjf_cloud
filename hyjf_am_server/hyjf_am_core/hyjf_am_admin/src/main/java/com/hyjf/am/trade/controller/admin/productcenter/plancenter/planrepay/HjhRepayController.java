@@ -4,6 +4,8 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
 import com.hyjf.am.resquest.admin.Paginator;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.service.admin.hjhplan.HjhRepayService;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import com.hyjf.common.util.CommonUtils;
@@ -98,6 +100,20 @@ public class HjhRepayController {
         }
 
         List<HjhRepayVO> repayVOList = this.hjhRepayService.selectByExample(params);
+
+        //根据计划编号获取计划锁定期天月和还款方式
+        for(int i = 0; i < repayVOList.size(); i++){
+            String planNid = repayVOList.get(i).getPlanNid();
+            HjhPlan hjhplan = hjhRepayService.getPlan(planNid);
+            if (hjhplan != null){
+                if (hjhplan.getIsMonth() != null){
+                    repayVOList.get(i).setIsMonth(hjhplan.getIsMonth());
+                }
+                if (hjhplan.getBorrowStyle() != null){
+                    repayVOList.get(i).setBorrowStyle(hjhplan.getBorrowStyle());
+                }
+            }
+        }
 
         // 初始化总计数据
         BigDecimal sumAccedeAccount = BigDecimal.ZERO;
