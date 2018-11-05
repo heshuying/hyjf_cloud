@@ -394,6 +394,9 @@ public class RepayManageController extends BaseTradeController {
         resultMap.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
         resultMap.put("repayProject", detaiResult);
         resultMap.put("roleId", userVO.getRoleId());
+        // 主要用于判断冻结表是否存在数据
+        boolean isFreeze = !repayManageService.checkRepayInfo(null,requestBean.getBorrowNid());
+        resultMap.put("isFreeze", isFreeze);
         result.setData(resultMap);
 
         return result;
@@ -422,7 +425,7 @@ public class RepayManageController extends BaseTradeController {
         webResult.setData(resultMap);
 
         /** redis 锁 */
-        boolean reslut = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_REPAY_REQUEST + requestBean.getBorrowNid(), 60);
+        boolean reslut = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_REPAY_REQUEST + requestBean.getBorrowNid(), 10);// 联调修改
         if(!reslut){
             webResult.setStatus(WebResult.ERROR);
             webResult.setStatusDesc("项目正在还款中...");
