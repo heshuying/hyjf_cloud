@@ -914,7 +914,7 @@ public class AmUserClientImpl implements AmUserClient {
 		UserDepartmentInfoCustomizeRequest request = new UserDepartmentInfoCustomizeRequest();
 		request.setUserId(userId);
 		UserDepartmentInfoCustomizeResponse response = restTemplate
-				.postForEntity(userService + "/user/selectAppChannelStatisticsDetailByUserId", request, UserDepartmentInfoCustomizeResponse.class)
+				.postForEntity(userService + "/user/queryUserDepartmentInfoByUserId", request, UserDepartmentInfoCustomizeResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
