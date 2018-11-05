@@ -118,6 +118,7 @@ public class CreditAuthPagePlusController extends BaseUserController {
     private void checkUserMessage(UserVO user) {
         CheckUtil.check(user != null,MsgEnum.ERR_USER_NOT_EXISTS);
         // 判断用户是否开户
+
         CheckUtil.check(user.getBankOpenAccount() != 0,MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         // 判断用户是否设置过交易密码
         CheckUtil.check(user.getIsSetPassword() != 0,MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);

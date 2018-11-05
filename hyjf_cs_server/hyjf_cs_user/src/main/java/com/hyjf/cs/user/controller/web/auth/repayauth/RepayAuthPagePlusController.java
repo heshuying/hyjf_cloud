@@ -157,6 +157,7 @@ public class RepayAuthPagePlusController extends BaseUserController {
                 // 更新签约状态和日志表
                 this.authService.updateUserAuth(Integer.parseInt(bean.getLogUserId()), bean, AuthBean.AUTH_TYPE_REPAY_AUTH);
             } catch (Exception e) {
+                logger.error("授权报错了   ",e);
                 e.printStackTrace();
                 authService.updateUserAuthLog(bean.getLogOrderId(),authService.getBankRetMsg(bean.getRetCode()));
             }

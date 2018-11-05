@@ -341,7 +341,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 合规校验角色
             String roleIsOpen = systemConfig.getRoleIsopen();
             if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-                if (userInfo.getRoleId() != 1) {
+                logger.info("userInfo.getRoleId():"+userInfo.getRoleId());
+                if (userInfo.getRoleId().intValue() != 1) {
                     // 仅限出借人进行投资
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
                 }
@@ -477,7 +478,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (null != usersInfo) {
             String roleIsOpen = systemConfig.getRoleIsopen();
             if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-                if (usersInfo.getRoleId() != 1) {// 非投资用户
+                logger.info("userInfo.getRoleId()222   :"+userInfo.getRoleId());
+                logger.info("usersInfo.getRoleId().intValue() != 1   :"+(usersInfo.getRoleId().intValue() != 1));
+                if (usersInfo.getRoleId().intValue() != 1) {// 非投资用户
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
                 }
             }
@@ -890,19 +893,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String creditNid = tender.getBorrowNid().substring(3);
         String isConfirm = tender.getIsConfirm();//是否最后确认
 
-
         //add by cwyang APP3.0.9 确认是否为最后一次确认，如果是最后一次确认则必须进行投资校验
         if(isConfirm != null && "1".equals(isConfirm)){
             AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
 
             try{
-                appTenderCheck(tender);
+                getAppTenderUrl(tender);
             }catch (Exception e){
+                logger.error("报错了。。。",e);
                 resultVo.setStatus("1");
                 resultVo.setStatusDesc("投资校验失败！");
                 return resultVo;
             }
-
         }
 
         logger.info("investType:[{}]",investType);
@@ -1315,7 +1317,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         UserInfoVO userInfo = amUserClient.findUserInfoById(tender.getUserId());
         String roleIsOpen = systemConfig.getRoleIsopen();
         if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-            if (userInfo.getRoleId() != 1) {
+            if (userInfo.getRoleId().intValue() != 1) {
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
             }
         }

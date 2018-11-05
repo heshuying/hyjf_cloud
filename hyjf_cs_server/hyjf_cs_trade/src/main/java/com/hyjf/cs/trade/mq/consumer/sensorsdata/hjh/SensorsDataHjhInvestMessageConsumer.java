@@ -107,7 +107,7 @@ public class SensorsDataHjhInvestMessageConsumer extends Consumer {
                 // 发送神策数据
                 sensorsDataHjhInvestService.sendSensorsData(sensorsDataBean);
             } catch (Exception e) {
-                logger.info("神策数据统计:用户登陆相关统计异常:" + e.getMessage());
+                logger.info("神策数据统计:汇计划相关统计异常:" + e.getMessage());
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

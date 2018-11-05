@@ -66,12 +66,13 @@ public class SensorsDataLoginMessageConsumer extends Consumer {
             SensorsDataBean sensorsDataBean = null;
             String msgBody = new String(paramBean.getBody());
 
+            logger.info("msgBody:[" + msgBody + "].");
             try {
 
                 sensorsDataBean = JSONObject.parseObject(msgBody, SensorsDataBean.class);
                 // 预置属性
                 Map<String, Object> presetProps = sensorsDataBean.getPresetProps();
-                logger.info("用户登陆预置属性:[" + presetProps.toString() + "],用户ID:[" + sensorsDataBean.getUserId());
+                logger.info("用户登陆预置属性:[" + presetProps.toString() + "],用户ID:[" + sensorsDataBean.getUserId() + "].");
 
                 // 匿名ID
                 String distinctId = "";
