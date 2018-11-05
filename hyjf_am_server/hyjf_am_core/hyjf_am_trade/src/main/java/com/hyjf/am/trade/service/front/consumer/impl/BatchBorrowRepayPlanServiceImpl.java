@@ -1647,7 +1647,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		// 剩余还款期数
 		Integer periodNext = borrowPeriod - periodNow;
 		// 取得还款详情
-		BorrowRepay borrowRepay = getBorrowRepayAsc(borrowNid);
+		BorrowRepay borrowRepay = getBorrowRepayAsc(borrowNid, apicron);
 		// 投资信息
 		BorrowTender borrowTender = getBorrowTender(tenderOrderId);
 		// 投资用户开户信息
@@ -2648,7 +2648,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		// 剩余还款期数
 		Integer periodNext = borrowPeriod - periodNow;
 		// 取得还款详情
-		BorrowRepay borrowRepay = getBorrowRepayAsc(borrowNid);
+		BorrowRepay borrowRepay = getBorrowRepayAsc(borrowNid, apicron);
 		// 投资信息
 		BorrowTender borrowTender = getBorrowTender(tenderOrderId);
 		// 查询相应的债权转让
@@ -3233,7 +3233,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 					status = 5;
 				}
 				// 还款总表
-				BorrowRepay borrowRepay = this.getBorrowRepayAsc(borrowNid);
+				BorrowRepay borrowRepay = this.getBorrowRepayAsc(borrowNid, apicron);
 				borrowRepay.setRepayType(repayType);
 				borrowRepay.setRepayStatus(repayStatus); // 已还款
 //				borrowRepay.setRepayDays("0");
@@ -3547,7 +3547,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				repayYesTime = nowTime;
 				status = 5;
 				// 还款总表
-				BorrowRepay borrowRepay = this.getBorrowRepayAsc(borrowNid);
+				BorrowRepay borrowRepay = this.getBorrowRepayAsc(borrowNid, apicron);
 				borrowRepay.setRepayType(repayType);
 				borrowRepay.setRepayStatus(repayStatus); // 已还款
 //				borrowRepay.setRepayDays("0");
@@ -4837,12 +4837,17 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 *
 	 * @return
 	 */
-	private BorrowRepay getBorrowRepayAsc(String borrowNid) {
+	private BorrowRepay getBorrowRepayAsc(String borrowNid, BorrowApicron apicron) {
 
 		BorrowRepayExample example = new BorrowRepayExample();
 		BorrowRepayExample.Criteria criteria = example.createCriteria();
 		criteria.andBorrowNidEqualTo(borrowNid);
-		criteria.andRepayStatusEqualTo(0);
+
+		// 一次性还款的情况，因为最后一期会更新导致前期更新不到位 by dxj&wanggongxi
+		if(apicron.getIsAllrepay().intValue() == 0) {
+			criteria.andRepayStatusEqualTo(0); // 0初始 1还款成功 2还款失败
+		}
+		
 		example.setOrderByClause(" id asc ");
 		List<BorrowRepay> list = this.borrowRepayMapper.selectByExample(example);
 		if (list != null && list.size() > 0) {
