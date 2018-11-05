@@ -84,7 +84,8 @@ public class SensorsDataRechargeServiceImpl extends BaseServiceImpl implements S
             properties.put("bank_card_number", "");
         } else {
             properties.put("bank_name", org.apache.commons.lang.StringUtils.isBlank(bankCard.getBank()) ? "" : bankCard.getBank());
-            properties.put("bank_card_number", org.apache.commons.lang.StringUtils.isBlank(bankCard.getCardNo()) ? "" : bankCard.getCardNo());
+            // properties.put("bank_card_number", org.apache.commons.lang.StringUtils.isBlank(bankCard.getCardNo()) ? "" : bankCard.getCardNo());
+            properties.put("bank_card_number", "");
         }
         // 充值类型
         properties.put("recharge_type", "快捷充值");

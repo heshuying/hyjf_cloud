@@ -87,7 +87,8 @@ public class SensorsDataWithdrawServiceImpl extends BaseServiceImpl implements S
             // 银行名称
             properties.put("bank_name", StringUtils.isBlank(bankCard.getBank()) ? "" : bankCard.getBank());
             // 银行卡号
-            properties.put("bank_card_number", StringUtils.isBlank(bankCard.getCardNo()) ? "" : bankCard.getCardNo());
+            // properties.put("bank_card_number", StringUtils.isBlank(bankCard.getCardNo()) ? "" : bankCard.getCardNo());
+            properties.put("bank_card_number", "");
         }
         // 提现金额大于 50001,设置提现方式
         if (accountwithdraw.getTotal().compareTo(new BigDecimal(50001)) >= 0) {

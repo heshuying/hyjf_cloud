@@ -105,11 +105,14 @@ public class SensorsDataOpenAccountServiceImpl extends BaseServiceImpl implement
             properties.put("bank_name", StringUtils.isNotBlank(bankCard.getBank()) ? bankCard.getBank() : "");
         }
         // 身份证号
-        properties.put("id_card", StringUtils.isNotBlank(usersInfo.getIdcard()) ? usersInfo.getIdcard() : "");
+        // properties.put("id_card", StringUtils.isNotBlank(usersInfo.getIdcard()) ? usersInfo.getIdcard() : "");
+        properties.put("id_card", "");
         // 电子账户号
-        properties.put("account_id", StringUtils.isNotBlank(bankOpenAccount.getAccount()) ? bankOpenAccount.getAccount() : "");
+        // properties.put("account_id", StringUtils.isNotBlank(bankOpenAccount.getAccount()) ? bankOpenAccount.getAccount() : "");
+        properties.put("account_id", "");
         // 姓名
-        properties.put("true_name", StringUtils.isNotBlank(usersInfo.getTruename()) ? usersInfo.getTruename() : "");
+        // properties.put("true_name", StringUtils.isNotBlank(usersInfo.getTruename()) ? usersInfo.getTruename() : "");
+        properties.put("true_name", "");
         // 开户时间
         properties.put("open_time", bankOpenAccount.getCreateTime());
         // 调用神策track事件

@@ -66,6 +66,7 @@ public class SensorsDataLoginMessageConsumer extends Consumer {
             SensorsDataBean sensorsDataBean = null;
             String msgBody = new String(paramBean.getBody());
 
+            logger.info("msgBody:[" + msgBody + "].");
             try {
 
                 sensorsDataBean = JSONObject.parseObject(msgBody, SensorsDataBean.class);
