@@ -1150,6 +1150,8 @@ public interface AmTradeClient {
      */
     CouponConfigVO getCouponConfig(String ordId);
 
+    CouponConfigVO getCouponConfigById(String couponId);
+
     /**
      * @Author walter.limeng
      * @Description  取得体验金收益期限
