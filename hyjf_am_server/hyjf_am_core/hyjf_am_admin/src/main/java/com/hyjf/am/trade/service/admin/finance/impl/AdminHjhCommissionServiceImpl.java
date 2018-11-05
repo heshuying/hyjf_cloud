@@ -107,13 +107,13 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 				request.setCombotreeListSrch(new String[] { request.getCombotreeSrch() });
 			}
 		}
-        // 封装查询条件
+/*        // 封装查询条件
         if (limitStart == 0 || limitStart > 0) {
         	request.setLimitStart(limitStart);
         }
         if (limitEnd > 0) {
         	request.setLimitEnd(limitEnd);
-        }
+        }*/
         Map<String, Object> map = this.adminHjhCommissionMapper.queryPushMoneyTotle(request);
 		return map;
 	}

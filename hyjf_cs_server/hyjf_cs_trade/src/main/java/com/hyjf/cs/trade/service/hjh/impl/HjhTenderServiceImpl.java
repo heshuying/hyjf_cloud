@@ -755,8 +755,11 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      */
     private Map<String, Object> getTenderEarnings(TenderRequest request, HjhPlanVO plan, CouponUserVO couponUser) {
         Map<String, Object> result = new HashedMap();
+        if(request.getEarnings()==null){
+            request.setEarnings(BigDecimal.ZERO);
+        }
         // 历史回报
-        result.put("earnings", CommonUtils.formatAmount(null, request.getEarnings().add(request.getEarnings())));
+        result.put("earnings", CommonUtils.formatAmount(null, request.getEarnings()));
         // 优惠券收益
         result.put("couponInterest", request.getCouponInterest()==null?0:request.getCouponInterest());
         // 投资金额

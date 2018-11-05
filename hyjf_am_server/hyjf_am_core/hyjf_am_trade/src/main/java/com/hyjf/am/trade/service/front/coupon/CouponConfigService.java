@@ -82,6 +82,8 @@ public interface CouponConfigService {
 
     CouponConfigVO getCouponConfigByOrderId(String ordId);
 
+    CouponConfigVO getCouponConfigById(String couponId);
+
     /**
      * @Author walter.limeng
      * @Description   根据tenderNid查询放款优惠券总数

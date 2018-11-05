@@ -15,10 +15,8 @@ import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -340,6 +338,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             request.setBorrowNid(borrowNid);
             request.setUserId(String.valueOf(userId));
             request.setPlatform(CustomConstants.CLIENT_PC);
+            request.setMoney("0");
             couponConfig = amTradeClient.selectBestCoupon(request);
             if (couponConfig != null) {
                 other.put("isThereCoupon", 1);
@@ -1281,24 +1280,41 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             int recordTotal = 0;
             //可用优惠券张数
             int availableCouponListCount = 0;
-
-            /*优惠券模块开始 */
-            MyCouponListRequest myCouponListRequest = new MyCouponListRequest();
-            myCouponListRequest.setMoney("0");
-            myCouponListRequest.setPlatform("0");
-            myCouponListRequest.setUserId(userId);
-            myCouponListRequest.setBorrowNid(planNid);
-            availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(myCouponListRequest);
+            BestCouponListVO  bestCouponListVO = null;
+            BigDecimal couponInterest = BigDecimal.ZERO;
+            result.put("interest", BigDecimal.ZERO);
+            if (userId != null){
+                /*优惠券模块开始 */
+                MyCouponListRequest myCouponListRequest = new MyCouponListRequest();
+                myCouponListRequest.setMoney("0");
+                myCouponListRequest.setPlatform("0");
+                myCouponListRequest.setUserId(userId);
+                myCouponListRequest.setBorrowNid(planNid);
+                availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(myCouponListRequest);
+                bestCouponListVO = amTradeClient.selectHJHBestCoupon(myCouponListRequest);
+                if (bestCouponListVO  != null){
+                    result.put("isThereCoupon", 1);
+                    couponInterest = getCouponInterestForHjh(planNid,bestCouponListVO.getUserCouponId(),"0");//amTradeClient.selectHjhCouponInterest(myCouponListRequest);//.getCouponInterest(bestCouponListVO.getUserCouponId(), planNid, "0");
+                    bestCouponListVO.setCouponInterest(df.format(couponInterest));
+                    if(bestCouponListVO!=null && bestCouponListVO.getCouponType()==3){
+                        result.put("interest", df.format(couponInterest.subtract(bestCouponListVO.getCouponQuota())));
+                    }else{
+                        result.put("interest", df.format(couponInterest));
+                    }
+                }else{
+                    result.put("isThereCoupon", 0);
+                }
+            }
             /** 获取用户优惠券总张数开始 pccvip */
-            result.put("recordTotal", recordTotal);
+            //result.put("recordTotal", recordTotal);
             /** 获取用户优惠券总张数结束 pccvip */
              /** 可用优惠券张数开始 pccvip */
             result.put("couponAvailableCount", availableCouponListCount);
             /** 可用优惠券张数结束 pccvip */
-            result.put("interest", BigDecimal.ZERO);
 
 
             /*优惠券模块结束 */
+            result.put("couponConfig",bestCouponListVO);
             result.put("isThereCoupon", 0);
             /** 计算最优优惠券结束 */
             /** 汇添金优惠券使用结束 pcc */
@@ -1411,6 +1427,27 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         }
         webResult.setData(result);
         return webResult;
+    }
+
+    private BigDecimal getCouponInterestForHjh(String planNid, String couponId,String money){
+        BigDecimal couponInterest=BigDecimal.ZERO;
+        CouponConfigVO couponConfig=amTradeClient.getCouponConfigById(couponId);//.getBestCouponById(couponGrantId);
+        HjhPlanVO hjhPlan=amTradeClient.getPlanByNid(planNid);//this.getHjhPlanByPlanNid(planNid);
+        // 收益率
+        BigDecimal planApr =hjhPlan.getExpectApr();
+        // 计划期限
+        int planPeriod = hjhPlan.getLockPeriod();
+        String borrowStyle = hjhPlan.getBorrowStyle();
+        if(!borrowStyle.equals("endday")){
+            borrowStyle = "end";
+        }
+        if(couponConfig.getCouponType()==1){
+            couponInterest =getInterestDj(couponConfig.getCouponQuota(),couponConfig.getCouponProfitTime().intValue(),planApr);
+        }else{
+            couponInterest=getInterest(borrowStyle,couponConfig.getCouponType(),planApr,
+                    couponConfig.getCouponQuota(),money,planPeriod);
+        }
+        return couponInterest;
     }
 
 
