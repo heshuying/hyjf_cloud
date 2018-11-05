@@ -122,7 +122,7 @@ public class CreditAuthPagePlusController extends BaseUserController {
         // 判断用户是否设置过交易密码
         CheckUtil.check(user.getIsSetPassword() != 0,MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         // 判断是否授权过
-        CheckUtil.check(!authService.checkIsAuth(user.getUserId(), AuthBean.AUTH_TYPE_AUTO_CREDIT),MsgEnum.STATUS_CE000009);
+        CheckUtil.check(!authService.checkIsAuth(user.getUserId(), AuthBean.AUTH_TYPE_AUTO_CREDIT),MsgEnum.ERR_AUTHORIZE_REPEAT);
     }
 
     /**

@@ -67,7 +67,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		if (retBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
 			// 更新user表状态为授权成功
 			UserVO user=this.getUsersById(userId);
-			if(retBean.getPaymentAuth()!=null){
+			if(retBean.getPaymentAuth()!=null&&!"".equals(retBean.getPaymentAuth())){
 				user.setPaymentAuthStatus(Integer.parseInt(retBean.getPaymentAuth()));
 				request.setUser(user);
 			}
