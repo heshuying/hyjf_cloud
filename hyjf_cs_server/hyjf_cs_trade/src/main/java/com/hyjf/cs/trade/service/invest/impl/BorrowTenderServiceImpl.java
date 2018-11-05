@@ -481,7 +481,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.info("userInfo.getRoleId()222   :"+userInfo.getRoleId());
                 logger.info("usersInfo.getRoleId().intValue() != 1   :"+(usersInfo.getRoleId().intValue() -1 !=0));
                 logger.info("usersInfo.getRoleId().intValue()11 != 1   :"+(usersInfo.getRoleId().equals(1)));
-                if (usersInfo.getRoleId().intValue() -1 !=0) {// 非投资用户
+                Integer roleId = usersInfo.getRoleId();
+                if (roleId.intValue() -1 >0) {// 非投资用户
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
                 }
             }
