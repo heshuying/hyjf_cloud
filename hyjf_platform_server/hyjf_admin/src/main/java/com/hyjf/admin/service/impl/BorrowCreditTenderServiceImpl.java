@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCreditRepayInfoResultBean;
 import com.hyjf.admin.beans.BorrowCreditRepayResultBean;
 import com.hyjf.admin.beans.BorrowCreditTenderResultBean;
@@ -370,6 +371,30 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         return result;
     }
 
+
+    @Override
+    public AdminResult pdfPreview(BorrowCreditTenderPDFSignReq req) {
+        String nid = req.getNid();
+        CheckUtil.check(StringUtils.isNotBlank(nid),MsgEnum.ERR_OBJECT_REQUIRED,"nid");
+        // 根据订单号查询用户投资协议记录表
+        TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement(nid);
+        if (tenderAgreement != null && org.apache.commons.lang3.StringUtils.isNotBlank(tenderAgreement.getImgUrl())) {
+            JSONObject responseBean = new JSONObject();
+            String imgUrl = tenderAgreement.getImgUrl();
+            String[] imgs = new String[]{};
+            if (StringUtils.isNotBlank(imgUrl)){
+               imgs = imgUrl.split(";");
+            }
+            List<String> imgList = Arrays.asList(imgs);
+            responseBean.put("imgList",imgList);
+            // 文件服务器
+            String fileDomainUrl = systemConfig.getFtpurl() + systemConfig.getFtpbasepathimg();
+            responseBean.put("fileDomainUrl",fileDomainUrl);
+            return new AdminResult(responseBean);
+        } else {
+            return new AdminResult(BaseResult.FAIL, "未查询到用户投资协议");
+        }
+    }
 
     /**
      * 承接信息生成excel

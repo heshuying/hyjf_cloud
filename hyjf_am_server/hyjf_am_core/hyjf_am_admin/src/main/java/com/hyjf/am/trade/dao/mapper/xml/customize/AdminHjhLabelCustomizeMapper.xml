@@ -96,10 +96,44 @@
 			<if test="labelIdSrch != null and labelIdSrch != ''">
 				AND la.id = #{labelIdSrch}
 			</if>
+			<if test="labelNameSrch!=null and labelNameSrch!=''">
+				AND la.label_name like CONCAT( '%',#{labelNameSrch}, '%')
+			</if>
+			<if test="planNidSrch!=null and planNidSrch!=''">
+				and en.plan_nid = #{planNidSrch}
+			</if>
+			<if test="instCodeSrch!=null and instCodeSrch!=''">
+				and la.inst_code = #{instCodeSrch}
+			</if>
+			<if test="assetTypeSrch!=null">
+				and la.asset_type = #{assetTypeSrch}
+			</if>
+			<if test="projectTypeSrch!=null">
+				and la.project_type = #{projectTypeSrch}
+			</if>
+			<if test="borrowStyleSrch!=null and borrowStyleSrch!=''">
+				and la.borrow_style = #{borrowStyleSrch}
+			</if>
+			<if test="labelStateSrch!=null">
+				and la.label_state = #{labelStateSrch}
+			</if>
+			<if test="createTimeStartSrch!=null and createTimeStartSrch!=''">
+				and la.create_time <![CDATA[>=]]> CONCAT(#{createTimeStartSrch},' 00:00:00')
+			</if>
+			<if test="createTimeEndSrch!=null and createTimeEndSrch!=''">
+				and la.create_time <![CDATA[<=]]> CONCAT(#{createTimeEndSrch},' 23:59:59')
+			</if>
+			<if test="updateTimeStartSrch!=null and updateTimeStartSrch!=''">
+				and la.update_time <![CDATA[>=]]> CONCAT(#{updateTimeStartSrch},' 00:00:00')
+			</if>
+			<if test="updateTimeEndSrch!=null and updateTimeEndSrch!=''">
+				and la.update_time <![CDATA[<=]]> CONCAT(#{updateTimeEndSrch},' 23:59:59')
+			</if>
+
 		</where>
 	</sql>
 
-	<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.customize.AdminHjhLabelCustomizeExample">
+	<select id="selectHjhLabelList" resultMap="BaseResultMap" parameterType="java.util.Map">
 		select
 		<if test="distinct">
 			distinct
@@ -107,11 +141,9 @@
 		<include refid="Base_Column_List"/>
 		FROM
 		ht_hjh_label la
-		LEFT JOIN
+		left join
 		ht_hjh_allocation_engine en ON la.id = en.label_id
-		<if test="_parameter != null">
-			<include refid="Example_Where_Clause"/>
-		</if>
+		<include refid="Where_Clause" />
 		order by la.create_time DESC
 		<if test="limitStart >= 0" >
 			limit #{limitStart} , #{limitEnd}

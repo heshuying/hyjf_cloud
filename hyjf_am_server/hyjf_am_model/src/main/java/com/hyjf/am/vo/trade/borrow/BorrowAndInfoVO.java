@@ -292,6 +292,8 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private String verifyTime;
 
+    private Integer verifyTimeInteger;
+
     private String verifyRemark;
 
     private String verifyContents;
@@ -2324,5 +2326,13 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
         this.increaseInterestFlag = increaseInterestFlag;
+    }
+
+    public Integer getVerifyTimeInteger() {
+        return verifyTimeInteger;
+    }
+
+    public void setVerifyTimeInteger(Integer verifyTimeInteger) {
+        this.verifyTimeInteger = verifyTimeInteger;
     }
 }

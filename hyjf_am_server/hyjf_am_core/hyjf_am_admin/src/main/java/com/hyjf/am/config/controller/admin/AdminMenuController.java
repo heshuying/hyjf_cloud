@@ -9,10 +9,13 @@ import com.hyjf.am.config.service.AdminRoleService;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.TreeResponse;
 import com.hyjf.am.resquest.config.AdminMenuRequest;
+import com.hyjf.am.vo.config.AdminMenuVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +36,6 @@ public class AdminMenuController extends BaseConfigController {
 
 	@Autowired
 	private AdminMenuService adminMenuService;
-	@Autowired
-	private AdminRoleService adminRoleService;
 
 	/**
 	 * 菜单管理画面初始化
@@ -207,6 +208,10 @@ public class AdminMenuController extends BaseConfigController {
 			logger.error("menuUuid is null,菜单不存在");
 			return new AdminSystemResponse();
 		}
+		AdminMenuVO amv=new AdminMenuVO();
+		BeanUtils.copyProperties(this.adminMenuService.getRecord(menuUuid),amv);
+		bean.setAdminMenu(amv);
+		
 		return bean;
 		// modelAndView.addObject(AdminMenuDefine.ADMIN_MENU_FORM, bean);
 		// LogUtil.endLog(THIS_CLASS, AdminMenuDefine.SETTING_ACTION);

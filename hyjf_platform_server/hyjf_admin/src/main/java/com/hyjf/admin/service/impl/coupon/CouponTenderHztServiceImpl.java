@@ -86,13 +86,6 @@ public class CouponTenderHztServiceImpl implements CouponTenderHztService {
                 }else{
                     couponTenderDetailVo.setCouponContent("");
                 }
-                String userId = couponTenderDetailVo.getGrantWay();
-                if(null != userId && "40".equals(userId)){
-                    couponTenderDetailVo.setGrantWay("系统");
-                }else{
-                    CouponTenderResponse couponTenderResponses = amConfigClient.getAdminUserByUserId(userId);
-                    couponTenderDetailVo.setGrantWay(couponTenderResponses.getAttrbute());
-                }
             }
             return couponTenderDetailVo;
         }

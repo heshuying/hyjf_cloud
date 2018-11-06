@@ -13,7 +13,7 @@ import java.util.Date;
  * @author fuqiang
  * @version PcChannelStatistics, v0.1 2018/7/2 10:14
  */
-@Document(collection = "t_pc_channel_statistics")
+@Document(collection = "ht_pc_channel_statistics")
 public class PcChannelStatistics implements Serializable {
     private String id;
 

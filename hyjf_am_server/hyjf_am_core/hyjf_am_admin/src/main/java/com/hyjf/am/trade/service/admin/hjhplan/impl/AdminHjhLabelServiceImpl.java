@@ -95,64 +95,60 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 
 	@Override
 	public List<AdminHjhLabelCustomize> selectHjhLabelList(HjhLabelRequest request, int limitStart, int limitEnd) {
-		List<HjhLabel> list = null;
-		AdminHjhLabelCustomizeExample example = new AdminHjhLabelCustomizeExample();
-        AdminHjhLabelCustomizeExample.Criteria crt = example.createCriteria();
-        if (limitStart != -1) {
-            example.setLimitStart(limitStart);
-            example.setLimitEnd(limitEnd);
-        }
+
+		Map<String, Object> paraMap = new HashMap<String, Object>();
+        paraMap.put("limitStart",limitStart);
+        paraMap.put("limitEnd",limitEnd);
+
         // 标签名称搜索
         if (StringUtils.isNotEmpty(request.getLabelNameSrch())) {
-        	crt.andLabelNameLike("%" + request.getLabelNameSrch() + "%");
+			paraMap.put("labelNameSrch",request.getLabelNameSrch());
         }
 
         //智投编号搜索
         if (StringUtils.isNotEmpty(request.getPlanNidSrch())){
-            crt.andPlanNidEqualTo(request.getPlanNidSrch());
+			paraMap.put("planNidSrch",request.getPlanNidSrch());
         }
 
         // 资产来源
         if (StringUtils.isNotEmpty(request.getInstCodeSrch())) {
-        	crt.andInstCodeEqualTo(request.getInstCodeSrch());
+			paraMap.put("instCodeSrch",request.getInstCodeSrch());
         }
         // 产品类型
         if (StringUtils.isNotEmpty(request.getAssetTypeSrch())) {
-        	crt.andAssetTypeEqualTo(Integer.valueOf(request.getAssetTypeSrch()));
+			paraMap.put("assetTypeSrch",Integer.valueOf(request.getAssetTypeSrch()));
+
         }
         // 项目类型  
         if (StringUtils.isNotEmpty(request.getProjectTypeSrch())) {
-        	crt.andProjectTypeEqualTo(Integer.valueOf(request.getProjectTypeSrch()));
+			paraMap.put("projectTypeSrch",Integer.valueOf(request.getProjectTypeSrch()));
         }
         // 还款方式
         if (StringUtils.isNotEmpty(request.getBorrowStyleSrch())) {
-        	crt.andBorrowStyleEqualTo(request.getBorrowStyleSrch());
+			paraMap.put("borrowStyleSrch",request.getBorrowStyleSrch());
         }
         // 标签状态
         if (StringUtils.isNotEmpty(request.getLabelStateSrch())) {
-        	crt.andLabelStateEqualTo(Integer.valueOf(request.getLabelStateSrch()));
+			paraMap.put("labelStateSrch",Integer.valueOf(request.getLabelStateSrch()));
         }
         // 使用状态(DB中已经没有 isEngine 字段了)
 /*        if (StringUtils.isNotEmpty(request.getEngineIdSrch())) {
         }*/
-        if (StringUtils.isNotEmpty(request.getCreateTimeStartSrch()) && StringUtils.isNotEmpty(request.getCreateTimeEndSrch())) {
-        	crt.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getCreateTimeStartSrch()), "yyyy-MM-dd HH:mm:ss"));
+        if (StringUtils.isNotEmpty(request.getCreateTimeStartSrch())) {
+			paraMap.put("createTimeStartSrch",request.getCreateTimeStartSrch());
         }
         if(StringUtils.isNotEmpty(request.getCreateTimeEndSrch())){
-        	crt.andCreateTimeLessThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getCreateTimeEndSrch()), "yyyy-MM-dd HH:mm:ss"));
+			paraMap.put("createTimeEndSrch",request.getCreateTimeEndSrch());
         }
 
         if (StringUtils.isNotEmpty(request.getUpdateTimeStartSrch())) {
-            crt.andUpdateTimeGreaterThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getUpdateTimeStartSrch()),"yyyy-MM-dd HH:mm:ss"));
+			paraMap.put("updateTimeStartSrch",request.getUpdateTimeStartSrch());
         }
         if(StringUtils.isNotEmpty(request.getUpdateTimeEndSrch())){
-            crt.andUpdateTimeLessThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayEnd(request.getUpdateTimeEndSrch()),"yyyy-MM-dd HH:mm:ss"));
+			paraMap.put("updateTimeEndSrch",request.getUpdateTimeEndSrch());
         }
 
-		// 传入排序
-		example.setOrderByClause("create_time Desc");
-        
-        return adminHjhLabelCustomizeMapper.selectByExample(example);
+        return adminHjhLabelCustomizeMapper.selectHjhLabelList(paraMap);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  * @Author sunss
  * @Date 2018/7/7 15:34
  */
-@Document(collection = "t_calculate_invest_interest")
+@Document(collection = "ht_calculate_invest_interest")
 public class CalculateInvestInterest implements Serializable {
     private String id;
 

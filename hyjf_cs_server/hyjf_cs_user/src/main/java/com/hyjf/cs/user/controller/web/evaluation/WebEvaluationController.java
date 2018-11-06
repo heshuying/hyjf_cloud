@@ -3,13 +3,22 @@
  */
 package com.hyjf.cs.user.controller.web.evaluation;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.vo.FinancialAdvisorSumitQO;
 import io.swagger.annotations.Api;
@@ -17,10 +26,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -34,16 +41,31 @@ public class WebEvaluationController extends BaseUserController {
 
     @Autowired
     EvaluationService evaluationService;
-
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
     /**
      * 测评问题以及评分标准
      * @return
      */
     @ApiOperation(value = "测评问题以及评分标准", notes = "测评问题以及评分标准")
     @PostMapping(value = "/questionnaireInit", produces = "application/json; charset=utf-8")
-    public Map<String, Object> questionnaireInit() {
+    public Map<String, Object> questionnaireInit(HttpServletRequest request,@RequestHeader(value = "userId") int userId) {
         Map<String, Object> result = new HashMap<>();
         //测评问题
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY+userId, WebViewUserVO.class);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(12);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(user.getRoleId());
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         List<QuestionCustomizeVO> list = evaluationService.getNewQuestionList();
         result.put("questionList", list);
         result.put("listSize", list.size());
@@ -60,14 +82,27 @@ public class WebEvaluationController extends BaseUserController {
      */
     @ApiOperation(value = "网站改版风险测评页面初始化", notes = "网站改版风险测评页面初始化")
     @PostMapping(value = "/financialAdvisorInit", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String, Object>> financialAdvisorInit(@RequestHeader(value = "userId") Integer userId) {
+    public WebResult<Map<String, Object>> financialAdvisorInit(HttpServletRequest request,@RequestHeader(value = "userId") Integer userId) {
         WebResult<Map<String, Object>> result = new WebResult<>();
         Map<String, Object> resultMap = new HashMap<>();
         CheckUtil.check(null != userId, MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.evaluationService.getUsersById(userId);
         //userError 用户未登录
         CheckUtil.check(userId != null && userId != 0, MsgEnum.ERR_USER_NOT_LOGIN);
-
+        WebViewUserVO users = RedisUtils.getObj(RedisConstants.USERID_KEY+userId, WebViewUserVO.class);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(12);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(users.getUsername());
+        userOperationLogEntity.setUserRole(users.getRoleId());
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         //测评结果
         UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(userId);
         //已测评

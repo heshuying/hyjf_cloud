@@ -65,4 +65,12 @@ public interface BorrowCreditTenderService {
     AdminResult  pdfSign(BorrowCreditTenderPDFSignReq request, AdminSystemVO adminSystemVO);
 
 
+    /**
+     * pdf预览
+     * @author zhangyk
+     * @date 2018/11/6 9:47
+     */
+    AdminResult pdfPreview(BorrowCreditTenderPDFSignReq req);
+
+
 }

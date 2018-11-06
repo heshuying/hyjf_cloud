@@ -257,4 +257,13 @@ public class AdminMenuServiceImpl  implements AdminMenuService {
         }
         return array;
     }
+    /**
+     * 获取菜单列表
+     *
+     * @return
+     */
+    @Override
+    public AdminMenu getRecord(String  uuid) {
+    	return adminMenuMapper.selectByPrimaryKey(uuid);
+    }
 }

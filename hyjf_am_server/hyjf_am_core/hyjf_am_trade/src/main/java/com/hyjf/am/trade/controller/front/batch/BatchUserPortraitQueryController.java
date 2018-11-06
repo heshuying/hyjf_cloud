@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.batch;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.trade.BatchUserPortraitQueryResponse;
 import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -39,7 +40,7 @@ public class BatchUserPortraitQueryController extends BaseController {
     @PostMapping("/search_user_portrait_list")
     public BatchUserPortraitQueryResponse searchUserPortraitList(@RequestBody BatchUserPortraitRequest batchUserPortraitRequest){
         BatchUserPortraitQueryResponse response = new BatchUserPortraitQueryResponse();
-        logger.info("员工画像.....searchUserPortraitList:::::::batchUserPortraitRequest===={}",batchUserPortraitRequest);
+        logger.info("员工画像.....searchUserPortraitList:::::::batchUserPortraitRequest===={}", JSON.toJSONString(batchUserPortraitRequest));
 
         List<BatchUserPortraitQueryVO> list = batchUserPortraitQueryService.selectInfoForUserPortrait(batchUserPortraitRequest);
         if(!CollectionUtils.isEmpty(list)){

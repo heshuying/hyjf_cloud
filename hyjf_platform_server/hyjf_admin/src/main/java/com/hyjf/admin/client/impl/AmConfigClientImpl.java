@@ -2284,4 +2284,15 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+	@Override
+	public AdminSystemResponse updatePasswordAction(AdminSystemRequest map) {
+        AdminSystemResponse adminSystemResponse = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/adminSystem/updatePasswordAction", map,
+                        AdminSystemResponse.class)
+                .getBody();
+        if (adminSystemResponse != null) {
+            return adminSystemResponse;
+        }
+        return null;
+	}
 }

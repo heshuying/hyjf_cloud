@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BankExclusiveLogDao extends BaseMongoDao<BankExclusiveLog>{
 	
-    private static final String EXCLUSENDLOG = "bankexclusivelog";
+    private static final String EXCLUSENDLOG = "ht_bank_exclusive_log";
 
 	@Override
 	protected Class<BankExclusiveLog> getEntityClass() {
