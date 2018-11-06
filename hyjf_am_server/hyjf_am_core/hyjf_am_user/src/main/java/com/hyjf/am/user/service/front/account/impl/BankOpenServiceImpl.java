@@ -132,14 +132,14 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            sexInt = Integer.parseInt(idNo.substring(16, 17));
-            if (sexInt % 2 == 0) {
-                sexInt = 2;
-            } else {
-                sexInt = 1;
-            }
-            birthDayTemp = idNo.substring(6, 14);
         }
+        sexInt = Integer.parseInt(idNo.substring(16, 17));
+        if (sexInt % 2 == 0) {
+            sexInt = 2;
+        } else {
+            sexInt = 1;
+        }
+        birthDayTemp = idNo.substring(6, 14);
         String birthDay = StringUtils.substring(birthDayTemp, 0, 4) + "-" + StringUtils.substring(birthDayTemp, 4, 6) + "-" + StringUtils.substring(birthDayTemp, 6, 8);
         user.setBankOpenAccount(1);
         user.setBankAccountEsb(bankAccountEsb);
