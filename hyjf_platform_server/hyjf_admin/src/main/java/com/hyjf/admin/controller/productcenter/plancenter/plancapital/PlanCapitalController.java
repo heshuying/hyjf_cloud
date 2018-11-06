@@ -12,10 +12,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
@@ -30,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,20 +61,20 @@ public class PlanCapitalController extends BaseController {
         BeanUtils.copyProperties(requestBean, hjhPlanCapitalRequest);
 
         //初始化时时间不能为空
-//        if (StringUtils.isEmpty(requestBean.getDateFromSrch()) && StringUtils.isEmpty(requestBean.getDateToSrch())){
-//            return new AdminResult<>(FAIL, "日期开始或日期结束不能为空!");
-//        }
-//
-//        try{
-//            Date timeStart = dateFormat.parse(requestBean.getDateFromSrch());
-//            Date timeEnd = dateFormat.parse(requestBean.getDateToSrch());
-//
-//            if (timeStart.getTime() > timeEnd.getTime()){
-//                return new AdminResult<>(FAIL, "结束时间应大于等于开始时间!");
-//            }
-//        }catch (ParseException e){
-//            return new AdminResult<>(FAIL, e.getMessage());
-//        }
+        if (StringUtils.isEmpty(requestBean.getDateFromSrch()) && StringUtils.isEmpty(requestBean.getDateToSrch())){
+            return new AdminResult<>(FAIL, "日期开始或日期结束不能为空!");
+        }
+
+        try{
+            Date timeStart = dateFormat.parse(requestBean.getDateFromSrch());
+            Date timeEnd = dateFormat.parse(requestBean.getDateToSrch());
+
+            if (timeStart.getTime() > timeEnd.getTime()){
+                return new AdminResult<>(FAIL, "结束时间应大于等于开始时间!");
+            }
+        }catch (ParseException e){
+            return new AdminResult<>(FAIL, e.getMessage());
+        }
 
         // 初始化返回list
         List<HjhPlanCapitalVO> returnList = new ArrayList<>();
