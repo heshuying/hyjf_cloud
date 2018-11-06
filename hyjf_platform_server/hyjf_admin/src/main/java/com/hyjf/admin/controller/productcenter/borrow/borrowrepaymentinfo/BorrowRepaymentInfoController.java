@@ -125,7 +125,7 @@ public class BorrowRepaymentInfoController extends BaseController {
         // 查询
         List<BorrowRepaymentInfoCustomizeVO> resultList = this.borrowRepaymentInfoService.selectBorrowRepaymentList(copyForm);
         // 列头
-        String[] titles = new String[] { "借款编号", "资产来源", "计划编号", "借款人ID", "借款人用户名", "借款标题", "项目类型",
+        String[] titles = new String[] { "借款编号", "资产来源", "智投编号", "借款人ID", "借款人用户名", "借款标题", "项目类型",
                 "借款期限", "年化收益", "借款金额", "借到金额", "还款方式", "投资人用户名", "投资人ID", "投资人用户属性（当前）",
                 "投资人所属一级分部（当前）", "投资人所属二级分部（当前）", "投资人所属团队（当前）", "推荐人用户名（当前）",
                 "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）", "投资金额",
@@ -425,7 +425,7 @@ public class BorrowRepaymentInfoController extends BaseController {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid","借款编号");
         map.put("instName","资产来源");
-        map.put("planNid","计划编号");
+        map.put("planNid","智投编号");
         map.put("userId","借款人ID");
         map.put("borrowUserName","借款人用户名");
         map.put("borrowName","借款标题");

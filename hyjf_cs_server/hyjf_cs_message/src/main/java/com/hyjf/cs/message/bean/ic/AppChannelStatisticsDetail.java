@@ -11,7 +11,7 @@ import java.util.Date;
  * @version AppChannelStatisticsDetail, v0.1 2018/5/15 15:03
  */
 
-@Document(collection = "t_app_channel_statistics_detail")
+@Document(collection = "ht_app_channel_statistics_detail")
 public class AppChannelStatisticsDetail implements Serializable {
     private String id;
 

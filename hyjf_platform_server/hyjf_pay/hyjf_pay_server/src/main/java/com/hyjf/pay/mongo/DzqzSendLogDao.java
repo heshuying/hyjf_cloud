@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DzqzSendLogDao extends BaseMongoDao<DzqzSendLog>{
 	
-    private static final String SENDLOG = "dzqzsendlog";
+    private static final String SENDLOG = "ht_dzqz_send_log";
 
 
     @Override

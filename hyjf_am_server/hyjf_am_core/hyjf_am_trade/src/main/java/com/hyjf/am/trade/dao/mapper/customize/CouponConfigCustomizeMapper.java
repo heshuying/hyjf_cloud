@@ -44,6 +44,9 @@ public interface CouponConfigCustomizeMapper {
      */
     CouponConfigVO getCouponConfigByOrderId(String ordId);
 
+
+	CouponConfigVO getCouponConfigById(String couponId);
+
 	/**
 	 * @Author walter.limeng
 	 * @Description  更新还款期

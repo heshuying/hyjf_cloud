@@ -15,6 +15,7 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
 import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,4 +157,30 @@ public class AdminSystemController extends BaseConfigController {
 		}
 		return response;
 	}
+    @RequestMapping("/updatePasswordAction")
+    public AdminSystemResponse updatePasswordAction(@RequestBody AdminSystemRequest adminSystemR) {
+    	AdminSystemResponse response = new AdminSystemResponse();
+        if (Validator.isNull(adminSystemR.getPassword()) && Validator.isNull(adminSystemR.getOldPassword())) {
+        	response.setRtn(Response.FAIL);
+        	response.setMessage("新密码和旧密码都不能为空！");
+        } else {
+            if (Validator.isNumber(adminSystemR.getPassword()) || adminSystemR.getPassword().length() < 8 || adminSystemR.getPassword().length() > 16) {
+            	response.setRtn(Response.FAIL);
+            	response.setMessage("密码8-16位，必须有数字字母组成，区分大小写");
+            } else {
+        		AdminSystem adminSystem = new AdminSystem();
+        		adminSystem.setUsername(adminSystemR.getUsername());
+        		adminSystem.setPassword(MD5.toMD5Code(adminSystemR.getOldPassword()));
+        		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
+                    if (adminSystemr == null) {
+                    	response.setRtn(Response.FAIL);
+                    	response.setMessage("旧密码不正确");
+                    }
+
+                    adminSystemService.updatePassword(adminSystemR.getUsername(),adminSystemR.getPassword());
+
+            }
+        }
+        return response;
+    }
 }

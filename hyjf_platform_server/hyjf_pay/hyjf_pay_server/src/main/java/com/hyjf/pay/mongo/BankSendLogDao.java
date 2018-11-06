@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BankSendLogDao extends BaseMongoDao<BankSendlog>{
 	
-	private static final String SENDLOG = "banksendlog";
+	private static final String SENDLOG = "ht_bank_send_log";
 
 	@Override
 	protected Class<BankSendlog> getEntityClass() {

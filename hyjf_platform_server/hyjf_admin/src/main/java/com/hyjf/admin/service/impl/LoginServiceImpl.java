@@ -33,4 +33,9 @@ public class LoginServiceImpl  implements LoginService {
 		return amConfigClient.selectLeftMenuTree2(id);
 	}
 
+	@Override
+	public AdminSystemResponse updatePasswordAction(AdminSystemRequest map) {
+		return amConfigClient.updatePasswordAction(map);
+	}
+
 }

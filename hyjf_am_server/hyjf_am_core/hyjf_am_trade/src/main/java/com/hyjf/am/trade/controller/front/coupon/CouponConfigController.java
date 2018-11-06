@@ -24,6 +24,7 @@ import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -309,6 +310,17 @@ public class CouponConfigController extends BaseController {
     }
 
     /**
+     * @Description  根据优惠券id查询对象
+     */
+    @RequestMapping("/getCouponConfigById/{couponId}")
+    public CouponConfigResponse getCouponConfigById(@PathVariable String couponId) {
+        CouponConfigResponse response = new CouponConfigResponse();
+        CouponConfigVO couponConfigVO = couponConfigService.getCouponConfigById(couponId);
+        response.setResult(couponConfigVO);
+        return response;
+    }
+
+    /**
      * @Author walter.limeng
      * @Description  更新还款期
      * @Date 14:15 2018/7/17
@@ -353,6 +365,9 @@ public class CouponConfigController extends BaseController {
         CouponRecover couponRecover=CommonUtils.convertBean(cr,CouponRecover.class);
         if (!"null".equals(cr.getRecoverPeriod()) && StringUtils.isNotBlank(cr.getRecoverPeriod())){
             couponRecover.setRecoverPeriod(Integer.parseInt(cr.getRecoverPeriod()));
+        }
+        if (cr.getRecoverTime() != null) {
+            couponRecover.setRecoverTime(GetDate.strYYYYMMDD2Timestamp2(cr.getRecoverTime()));
         }
         Integer count = couponConfigService.insertCouponRecover(couponRecover);
         response.setCount(count);

@@ -2105,7 +2105,7 @@ public class BorrowCommonController extends BaseController {
 	   private Map<String, String> buildMap() {
 	        Map<String, String> map = Maps.newLinkedHashMap();
 	        map.put("borrowNid", "借款编号");
-	        map.put("planNid", "计划编号");
+	        map.put("planNid", "智投编号");
 	        map.put("userId", "借款人ID");
 	        map.put("username", "借款人用户名");
 	        map.put("applicant", "项目申请人");

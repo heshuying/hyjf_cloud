@@ -4,6 +4,8 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
 import com.hyjf.am.resquest.admin.Paginator;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.service.admin.hjhplan.HjhRepayService;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import com.hyjf.common.util.CommonUtils;
@@ -44,25 +46,25 @@ public class HjhRepayController {
         HjhRepayResponse response = new HjhRepayResponse();
 
         Map<String, Object> params = new HashedMap();
-        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getAccedeOrderIdSrch())){
-            params.put("planOrderId", request.getAccedeOrderIdSrch());
+        if(StringUtils.isNotEmpty(request.getAccedeOrderIdSrch())){
+            params.put("accedeOrderId", request.getAccedeOrderIdSrch());
         }
-        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getPlanNidSrch())){
+        if(StringUtils.isNotEmpty(request.getPlanNidSrch())){
             params.put("planNidSrch", request.getPlanNidSrch());
         }
-        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getUserNameSrch())){
+        if(StringUtils.isNotEmpty(request.getUserNameSrch())){
             params.put("userName", request.getUserNameSrch());
         }
-        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getDebtLockPeriodSrch())){
+        if(StringUtils.isNotEmpty(request.getDebtLockPeriodSrch())){
             params.put("debtLockPeriodSrch", request.getDebtLockPeriodSrch());
         }
-        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getRepayStatusSrch())){
+        if(StringUtils.isNotEmpty(request.getRepayStatusSrch())){
             params.put("repayStatus", Integer.valueOf(request.getRepayStatusSrch()));
         }
-        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getOrderStatusSrch())){
+        if(StringUtils.isNotEmpty(request.getOrderStatusSrch())){
             params.put("orderStatusSrch", Integer.valueOf(request.getOrderStatusSrch()));
         }
-        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getBorrowStyleSrch())){
+        if(StringUtils.isNotEmpty(request.getBorrowStyleSrch())){
             params.put("borrowStyleSrch", request.getBorrowStyleSrch());
         }
 
@@ -79,7 +81,7 @@ public class HjhRepayController {
         }
 
         // 汇计划三期新增 推荐人查询
-        if(org.apache.commons.lang.StringUtils.isNotEmpty(request.getRefereeNameSrch())){
+        if(StringUtils.isNotEmpty(request.getRefereeNameSrch())){
             params.put("refereeNameSrch", request.getRefereeNameSrch());
         }
         // 查询 总条数
@@ -98,6 +100,20 @@ public class HjhRepayController {
         }
 
         List<HjhRepayVO> repayVOList = this.hjhRepayService.selectByExample(params);
+
+        //根据计划编号获取计划锁定期天月和还款方式
+        for(int i = 0; i < repayVOList.size(); i++){
+            String planNid = repayVOList.get(i).getPlanNid();
+            HjhPlan hjhplan = hjhRepayService.getPlan(planNid);
+            if (hjhplan != null){
+                if (hjhplan.getIsMonth() != null){
+                    repayVOList.get(i).setIsMonth(hjhplan.getIsMonth());
+                }
+                if (hjhplan.getBorrowStyle() != null){
+                    repayVOList.get(i).setBorrowStyle(hjhplan.getBorrowStyle());
+                }
+            }
+        }
 
         // 初始化总计数据
         BigDecimal sumAccedeAccount = BigDecimal.ZERO;
