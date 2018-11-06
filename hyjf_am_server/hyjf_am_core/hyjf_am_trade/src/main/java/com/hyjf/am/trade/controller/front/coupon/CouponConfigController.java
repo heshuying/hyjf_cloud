@@ -367,7 +367,7 @@ public class CouponConfigController extends BaseController {
             couponRecover.setRecoverPeriod(Integer.parseInt(cr.getRecoverPeriod()));
         }
         if (cr.getRecoverTime() != null) {
-            couponRecover.setRecoverTime(GetDate.strYYYYMMDD2Timestamp2(cr.getRecoverTime()));
+            couponRecover.setRecoverTime(cr.getRecoverTime());
         }
         Integer count = couponConfigService.insertCouponRecover(couponRecover);
         response.setCount(count);
