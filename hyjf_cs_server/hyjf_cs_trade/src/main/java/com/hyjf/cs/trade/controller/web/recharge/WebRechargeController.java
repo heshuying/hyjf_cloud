@@ -15,6 +15,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
 import com.hyjf.cs.trade.vo.BankRechargeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -51,7 +52,6 @@ public class WebRechargeController extends BaseTradeController{
 
 	@Autowired
 	private RechargeService userRechargeService;
-
 	@Autowired
 	SystemConfig systemConfig;
 
@@ -85,7 +85,6 @@ public class WebRechargeController extends BaseTradeController{
 		logger.info("web充值服务");
 		WebResult<Object> result = new WebResult<Object>();
 		String ipAddr = CustomUtil.getIpAddr(request);
-
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
 		String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/rechargeError";

@@ -96,8 +96,8 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
     }
 
     @Override
-    public boolean updateUserAccount(Integer userId, String trueName, String orderId, String accountId, String idNo, Integer bankAccountEsb, String mobile, Integer roleId) {
-        logger.info("开户成功后,更新用户账户信息");
+    public boolean updateUserAccount(Integer userId, String trueName, String orderId, String accountId, String idNo, Integer bankAccountEsb, String mobile, Integer roleId,Integer isSetPassword) {
+        logger.info("开户成功后,更新用户账户信息 ");
         // 当前日期
         Date nowDate = new Date();
         // 查询开户记录表
@@ -109,9 +109,9 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             openAccountLog = bankOpenAccountLogs.get(0);
         }
         trueName = openAccountLog.getName();
-        idNo = openAccountLog.getIdNo();
-        mobile = openAccountLog.getMobile();
-
+        if(mobile==null|| "".equals(mobile)){
+            mobile = openAccountLog.getMobile();
+        }
         BankOpenAccountLogExample accountLogExample = new BankOpenAccountLogExample();
         accountLogExample.createCriteria().andUserIdEqualTo(userId);
         boolean deleteLogFlag = this.bankOpenAccountLogMapper.deleteByExample(accountLogExample) > 0 ? true : false;
@@ -132,21 +132,22 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            sexInt = Integer.parseInt(idNo.substring(16, 17));
-            if (sexInt % 2 == 0) {
-                sexInt = 2;
-            } else {
-                sexInt = 1;
-            }
-            birthDayTemp = idNo.substring(6, 14);
         }
+        sexInt = Integer.parseInt(idNo.substring(16, 17));
+        if (sexInt % 2 == 0) {
+            sexInt = 2;
+        } else {
+            sexInt = 1;
+        }
+        birthDayTemp = idNo.substring(6, 14);
         String birthDay = StringUtils.substring(birthDayTemp, 0, 4) + "-" + StringUtils.substring(birthDayTemp, 4, 6) + "-" + StringUtils.substring(birthDayTemp, 6, 8);
         user.setBankOpenAccount(1);
         user.setBankAccountEsb(bankAccountEsb);
         user.setRechargeSms(0);
         user.setWithdrawSms(0);
         user.setUserType(0);
-        user.setMobile(mobile);
+        //user.setMobile(mobile);
+        user.setIsSetPassword(isSetPassword);
         // 更新相应的用户表
         boolean usersFlag = usersMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
         if (!usersFlag) {

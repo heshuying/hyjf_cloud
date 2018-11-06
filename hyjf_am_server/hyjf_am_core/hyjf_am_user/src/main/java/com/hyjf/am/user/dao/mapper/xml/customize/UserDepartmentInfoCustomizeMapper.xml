@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserDepartmentInfoCustomizeMapper">
+
+	<select id="selectUserDepartmentInfo" resultType="com.hyjf.am.user.dao.model.customize.UserDepartmentInfoCustomize" parameterType="int">
+		SELECT
+			a.user_id AS userId,
+			a.username AS userName,
+			CASE ui.attribute
+			WHEN 0 THEN
+				d1. NAME
+			WHEN 1 THEN
+				d1. NAME
+			WHEN 2 THEN
+				dd1. NAME
+			WHEN 3 THEN
+				dd1. NAME
+			END AS regionName,
+			 CASE ui.attribute
+			WHEN 0 THEN
+				d2. NAME
+			WHEN 1 THEN
+				d2. NAME
+			WHEN 2 THEN
+				dd2. NAME
+			WHEN 3 THEN
+				dd2. NAME
+			END AS branchName,
+			 CASE ui.attribute
+			WHEN 0 THEN
+				d3. NAME
+			WHEN 1 THEN
+				d3. NAME
+			WHEN 2 THEN
+				dd3. NAME
+			WHEN 3 THEN
+				dd3. NAME
+			END AS departmentName
+		FROM
+			ht_user a
+		LEFT JOIN ht_user_info ui ON a.user_id = ui.user_id
+		LEFT JOIN ht_spreads_user su ON a.user_id = su.user_id
+		LEFT JOIN ht_user uu ON uu.user_id = su.spreads_user_id
+		LEFT JOIN ht_user_info uui ON uui.user_id = su.spreads_user_id
+		LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = su.spreads_user_id
+		AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN ht_r_oa_department d3 ON ou.departmentid = d3.id
+		LEFT JOIN ht_r_oa_department d2 ON d3.parentid = d2.id
+		LEFT JOIN ht_r_oa_department d1 ON d2.parentid = d1.id
+		LEFT JOIN ht_r_oa_users ouu ON ouu.hyd_id = a.user_id
+		AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN ht_r_oa_department dd3 ON ouu.departmentid = dd3.id
+		LEFT JOIN ht_r_oa_department dd2 ON dd3.parentid = dd2.id
+		LEFT JOIN ht_r_oa_department dd1 ON dd2.parentid = dd1.id
+		WHERE
+			a.user_id = #{userId}
+	</select>
+</mapper>

@@ -1,6 +1,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.admin.common.service.BaseService;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 
 import java.math.BigDecimal;
@@ -15,7 +16,9 @@ public interface BaseAdminService extends BaseService {
 	 */
 	UserVO getUserByUserName(String userName);
 
-	/**
+    BorrowAndInfoVO getBorrowByNid(String borrowNid);
+
+    /**
 	 * 获取银行账户余额
 	 * @auth sunpeikai
 	 * @param

@@ -187,6 +187,8 @@ public interface UserManagerService extends BaseService {
      */
     int updateUserInfoByUserInfo(UserInfo userInfo);
 
+
+
     /**
      * 更新用户表
      *
@@ -194,6 +196,8 @@ public interface UserManagerService extends BaseService {
      * @return
      */
     int updateUser(User user);
+
+
 
     /**
      * 获取某一用户的信息修改列表

@@ -91,6 +91,7 @@
         <result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
         <result column="recover_yestime" property="recoverYestime" jdbcType="VARCHAR" />
         <result column="recover_time" property="recoverTime" jdbcType="VARCHAR" />
+        <result column="recover_time_string" property="recoverTimeString" jdbcType="VARCHAR" />
         <result column="exp_time" property="expTime" jdbcType="VARCHAR" />
         <result column="transfer_id" property="transferId" jdbcType="VARCHAR" />
         <result column="received_flg" property="receivedFlg" jdbcType="VARCHAR" />
@@ -499,6 +500,10 @@
         '%Y-%m-%d'
         ) recover_time,
         FROM_UNIXTIME(
+        hcr.recover_time,
+        '%Y-%m-%d'
+        ) recover_time_string,
+        FROM_UNIXTIME(
         hcr.exp_time,
         '%Y-%m-%d'
         ) exp_time,
@@ -899,12 +904,7 @@
         '%Y-%m-%d'
         ) exp_time,
         hcr.transfer_id transfer_id,
-        CASE
-        WHEN hcr.recover_status = 0 THEN
-        '未还款'
-        WHEN hcr.recover_status = 1 THEN
-        '已还款'
-        END recover_status,
+        hcr.recover_status recover_status,
         -- n.`name` received_flg,
         hcr.received_flg AS received_flg_origin
         FROM
@@ -1245,10 +1245,10 @@
             </if>
             <!-- 时间 -->
             <if test="timeStartSrch != null and timeStartSrch != ''">
-                AND hcr.recover_time <![CDATA[>=]]> #{timeStartSrch}
+                AND hcr.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeStartSrch})
             </if>
             <if test="timeEndSrch != null and timeEndSrch != ''">
-                AND hcr.recover_time <![CDATA[<=]]> #{timeEndSrch}
+                AND hcr.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeEndSrch})
             </if>
         </where>
     </sql>

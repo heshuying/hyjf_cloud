@@ -72,7 +72,7 @@ public class AppBankOpenController extends BaseUserController {
     @ApiOperation(value = "用户开户", notes = "用户开户")
     @PostMapping(value = "/openBankAccount")
     @ResponseBody
-    public AppResult<Object> openBankAccount(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public AppResult<Object> openBankAccount(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign, @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         AppResult<Object> result = new AppResult<Object>();
         // 验证请求参数
@@ -119,9 +119,9 @@ public class AppBankOpenController extends BaseUserController {
     @ApiOperation(value = "开户查询开户失败原因", notes = "查询开户失败原因")
     @PostMapping("/seachFiledMess")
     @ResponseBody
-    public AppResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
+    public AppResult<Object> seachFiledMess(@RequestHeader(value = "userId") int userId,@RequestParam("logOrdId") String logOrdId) {
         logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);
-        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId);
+        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId,userId);
         AppResult<Object> appResult = new AppResult<>();
         appResult.setData(result.getData());
         appResult.setStatus(result.getStatus());

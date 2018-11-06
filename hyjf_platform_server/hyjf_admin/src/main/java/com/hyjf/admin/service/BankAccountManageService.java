@@ -94,4 +94,12 @@ public interface BankAccountManageService extends BaseService {
      * @return
      */
     AccountVO getAccountByUserId(Integer userId);
+
+    /**
+     * 部门查询条件处理
+     *
+     * @param combotreeListSrch
+     * @return
+     */
+    String[] getDeptId(String[] combotreeListSrch);
 }

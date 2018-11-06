@@ -5,9 +5,11 @@ package com.hyjf.cs.user.service.register;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.bean.UserRegisterRequestBean;
 import com.hyjf.cs.user.result.UserRegistResult;
@@ -160,4 +162,12 @@ public interface RegisterService extends BaseUserService {
      * @param webViewUserVO
      */
     void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO);
+
+    /**
+     * 注册成功后,发送神策统计MQ
+     *
+     * @param sensorsDataBean
+     * @throws MQException
+     */
+    void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException;
 }

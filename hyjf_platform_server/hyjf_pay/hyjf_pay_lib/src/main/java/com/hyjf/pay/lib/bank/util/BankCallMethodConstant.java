@@ -204,6 +204,10 @@ public class BankCallMethodConstant implements Serializable {
 	 */
 	public static final String TXCODE_BATCH_REPAY = "batchRepay";
 	/**
+	 * 批次代偿
+	 */
+	public static final String TXCODE_BATCH_SUBST_REPAY = "batchSubstRepay";
+	/**
 	 * 批次融资人还担保账户垫款
 	 */
 	public static final String TXCODE_BATCH_REPAY_BAIL = "batchRepayBail";
@@ -231,6 +235,10 @@ public class BankCallMethodConstant implements Serializable {
 	 * 还款申请撤销资金解冻
 	 */
 	public static final String TXCODE_BALANCE_UNFREEZE = "balanceUnfreeze";
+	/**
+	 * 代偿冻结
+	 */
+	public static final String TXCODE_REFINANCE_FREEZE_PAGE = "refinanceFreezePage";
 	/**
 	 * 电子账户余额查询
 	 */
@@ -264,6 +272,11 @@ public class BankCallMethodConstant implements Serializable {
 	 * 按手机号查询电子账号信息
 	 */
 	public static final String TXCODE_ACCOUNT_QUERY_BY_MOBILE = "accountQueryByMobile";
+
+	/**
+	 * 按手机号查询电子账号信息增强
+	 */
+	public static final String TXCODE_ACCOUNT_QUERY_BY_MOBILE_PLUS = "accountQueryByMobilePlus";
 	/**
 	 * 查询交易状态
 	 */
@@ -369,4 +382,6 @@ public class BankCallMethodConstant implements Serializable {
 
 	/**2.2.5绑定银行卡（页面）*/
 	public static final String TXCODE_BIND_CARD_PAGE = "bindCardPage";
+	/**解绑银行卡*/
+	public  static final String TXCODE_ACCOUNT_UNBINDCARD_PAGE = "unbindCardPage";
 }

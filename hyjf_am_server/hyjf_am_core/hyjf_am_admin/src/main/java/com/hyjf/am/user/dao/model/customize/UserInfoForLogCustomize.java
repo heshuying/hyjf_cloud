@@ -37,6 +37,8 @@ public class UserInfoForLogCustomize {
     private Integer bankOpenAccount;
     
     private String idCard;
+    //
+    private String email;
     
     public Integer getUserId() {
         return userId;
@@ -161,7 +163,13 @@ public class UserInfoForLogCustomize {
 			
 	}
 
-    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
 
     
