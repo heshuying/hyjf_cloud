@@ -904,12 +904,7 @@
         '%Y-%m-%d'
         ) exp_time,
         hcr.transfer_id transfer_id,
-        CASE
-        WHEN hcr.recover_status = 0 THEN
-        '未还款'
-        WHEN hcr.recover_status = 1 THEN
-        '已还款'
-        END recover_status,
+        hcr.recover_status recover_status,
         -- n.`name` received_flg,
         hcr.received_flg AS received_flg_origin
         FROM
