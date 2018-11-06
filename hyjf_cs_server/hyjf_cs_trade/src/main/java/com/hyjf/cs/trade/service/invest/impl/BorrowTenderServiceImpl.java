@@ -1020,6 +1020,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCouponQuota(couponConfig.getCouponQuota().toString());
                 investInfo.setCouponId(tender.getCouponGrantId()+"");
                 investInfo.setIsUsedCoupon("1");
+                investInfo.setIsThereCoupon("1");
             } else {
                 investInfo.setCouponDescribe("暂无可用");
                 investInfo.setCouponName("");
