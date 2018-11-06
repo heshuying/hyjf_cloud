@@ -1,6 +1,7 @@
 package com.hyjf.am.config.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.config.dao.model.auto.AdminMenu;
 import com.hyjf.am.config.dao.model.customize.AdminCustomize;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
@@ -68,4 +69,6 @@ public interface AdminMenuService {
     public void updateMenuPermissions(AdminMenuRequest record);
 
 	JSONArray selectLeftMenuTree2(AdminSystem admin);
+
+	AdminMenu getRecord(String uuid);
 }

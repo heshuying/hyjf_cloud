@@ -104,11 +104,11 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 accountWithdrawExample.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo(2);
                 accountWithdrawExample.setOrderByClause("create_time desc");
                 List<AccountWithdraw> accountWithdraws = accountWithdrawMapper.selectByExample(accountWithdrawExample);
-                if (!CollectionUtils.isEmpty(accountWithdraws)) {
+                if (CollectionUtils.isNotEmpty(accountWithdraws)) {
                     // 数据库取出来的Date时间戳转Str
                     String createTime = GetDate.date2Str(accountWithdraws.get(0).getCreateTime(),GetDate.datetimeFormat);
                     // Str转unix时间戳
-                    int addTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(createTime);
+                    Integer addTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(createTime);
                     batchUserPortraitQueryVO.setLastWithdrawTime(addTime);
                 }
                 // 最后充值时间
@@ -116,11 +116,11 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 accountRechargeExample1.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo(2);
                 accountRechargeExample1.setOrderByClause("create_time desc");
                 List<AccountRecharge> accountRecharges = accountRechargeMapper.selectByExample(accountRechargeExample1);
-                if (!CollectionUtils.isEmpty(accountRecharges)) {
+                if (CollectionUtils.isNotEmpty(accountRecharges)) {
                     // 数据库取出来的Date时间戳转Str
                     String createTime = GetDate.date2Str(accountRecharges.get(0).getCreateTime(),GetDate.datetimeFormat);
                     // Str转unix时间戳
-                    int addTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(createTime);
+                    Integer addTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(createTime);
                     batchUserPortraitQueryVO.setLastRechargeTime(addTime);
                 }
 
@@ -129,7 +129,7 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 borrowRecoverExample.createCriteria().andUserIdEqualTo(userId);
                 borrowRecoverExample.setOrderByClause("create_time desc");
                 List<BorrowRecover> borrowRecovers = borrowRecoverMapper.selectByExample(borrowRecoverExample);
-                if (!CollectionUtils.isEmpty(borrowRecovers)) {
+                if (CollectionUtils.isNotEmpty(borrowRecovers)) {
                     batchUserPortraitQueryVO.setLastRepayTime(borrowRecovers.get(0).getRecoverTime());
                 }
 

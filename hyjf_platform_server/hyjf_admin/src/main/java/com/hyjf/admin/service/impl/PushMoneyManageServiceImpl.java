@@ -163,6 +163,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
                     }
                 }
             }
+            logger.info("提成人用户id：" + tenderCommissionRequest.getUserId() + " 当前标的编号：" + borrowNid + " 当前投资订单号：" + borrowTender.getNid() + " 当前投资用户id：" + borrowTender.getUserId());
             if(tenderCommissionRequest.getUserId()==null ||tenderCommissionRequest.getUserId()==0){
                 //如果没有提成人，返回
                 continue;
@@ -207,7 +208,8 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
      */
     private PushMoneyVO getPushMoney(String type) {
         PushMoneyRequest pushMoneyRequest = new PushMoneyRequest();
-        pushMoneyRequest.setProjectType(Integer.valueOf(type));
+        pushMoneyRequest.setProjectType(1);
+        pushMoneyRequest.setType(type);
         List<PushMoneyVO> list = this.amTradeClient.findPushMoneyList(pushMoneyRequest).getResultList();
         if (list != null && list.size() > 0) {
             return list.get(0);
@@ -329,6 +331,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             }
         }
 
+        logger.info("计算出的提成金额：" + commission + " 提成人：" + commissionUserId + " 投资金额：" +accountTender);
         // 提成金额
         tenderCommission.setCommission(commission == null ? BigDecimal.ZERO : commission);
 
