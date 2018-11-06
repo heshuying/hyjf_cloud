@@ -91,6 +91,7 @@
         <result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
         <result column="recover_yestime" property="recoverYestime" jdbcType="VARCHAR" />
         <result column="recover_time" property="recoverTime" jdbcType="VARCHAR" />
+        <result column="recover_time_string" property="recoverTimeString" jdbcType="VARCHAR" />
         <result column="exp_time" property="expTime" jdbcType="VARCHAR" />
         <result column="transfer_id" property="transferId" jdbcType="VARCHAR" />
         <result column="received_flg" property="receivedFlg" jdbcType="VARCHAR" />
@@ -498,6 +499,10 @@
         hcr.recover_time,
         '%Y-%m-%d'
         ) recover_time,
+        FROM_UNIXTIME(
+        hcr.recover_time,
+        '%Y-%m-%d'
+        ) recover_time_string,
         FROM_UNIXTIME(
         hcr.exp_time,
         '%Y-%m-%d'

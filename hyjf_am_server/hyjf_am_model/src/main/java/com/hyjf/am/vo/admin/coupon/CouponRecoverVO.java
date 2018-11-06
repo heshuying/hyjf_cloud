@@ -35,6 +35,8 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     private Integer recoverTime;
 
+    private String recoverTimeString;
+
     private Integer recoverYestime;
 
     private Integer mainRecoverYestime;
@@ -424,5 +426,13 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public String getRecoverTimeString() {
+        return recoverTimeString;
+    }
+
+    public void setRecoverTimeString(String recoverTimeString) {
+        this.recoverTimeString = recoverTimeString;
     }
 }
