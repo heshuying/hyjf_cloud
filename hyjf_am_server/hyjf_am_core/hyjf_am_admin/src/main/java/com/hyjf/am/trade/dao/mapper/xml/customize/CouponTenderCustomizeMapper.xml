@@ -84,15 +84,15 @@
         <result column="user_content" property="userContent" />
     </resultMap>
 
-    <resultMap id="selectCouponRecoverMap" type="com.hyjf.am.vo.admin.coupon.CouponRecoverVO">
+    <resultMap id="selectCouponRecoverMap" type="com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize">
         <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
         <result column="recover_period" property="recoverPeriod" jdbcType="VARCHAR" />
-        <result column="transfer_time" property="transferTime" jdbcType="VARCHAR" />
+        <result column="transfer_time" property="transferTime" jdbcType="INTEGER" />
         <result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
-        <result column="recover_yestime" property="recoverYestime" jdbcType="VARCHAR" />
-        <result column="recover_time" property="recoverTime" jdbcType="VARCHAR" />
+        <result column="recover_yestime" property="recoverYestime" jdbcType="INTEGER" />
+        <result column="recover_time" property="recoverTime" jdbcType="INTEGER" />
         <result column="recover_time_string" property="recoverTimeString" jdbcType="VARCHAR" />
-        <result column="exp_time" property="expTime" jdbcType="VARCHAR" />
+        <result column="exp_time" property="expTime" jdbcType="INTEGER" />
         <result column="transfer_id" property="transferId" jdbcType="VARCHAR" />
         <result column="received_flg" property="receivedFlg" jdbcType="VARCHAR" />
         <result column="received_flg_origin" property="receivedFlgOrigin" jdbcType="VARCHAR" />
