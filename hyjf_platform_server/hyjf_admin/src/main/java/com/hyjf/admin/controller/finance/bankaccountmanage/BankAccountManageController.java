@@ -61,6 +61,10 @@ public class BankAccountManageController extends BaseController {
 
         BankAccountManageResponseBean bean = new BankAccountManageResponseBean();
 
+        // 查询部门处理
+        String [] strDepts = bankAccountManageService.getDeptId(request.getCombotreeListSrch());
+        request.setCombotreeListSrch(strDepts);
+
         Integer count = bankAccountManageService.selectAccountInfoCount(request);
         count = (count == null) ? 0 : count;
         bean.setTotal(count);
@@ -393,6 +397,10 @@ public class BankAccountManageController extends BaseController {
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         request.setCurrPage(1);
         request.setPageSize(defaultRowMaxCount);
+
+        // 查询部门处理
+        String [] strDepts = bankAccountManageService.getDeptId(request.getCombotreeListSrch());
+        request.setCombotreeListSrch(strDepts);
 
         Integer count = bankAccountManageService.selectAccountInfoCount(request);
 

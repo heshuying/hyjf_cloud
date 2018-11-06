@@ -3,6 +3,7 @@ package com.hyjf.am.vo.user;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class HjhUserAuthVO extends BaseVO implements Serializable {
     private Integer id;
@@ -26,6 +27,8 @@ public class HjhUserAuthVO extends BaseVO implements Serializable {
     private String autoCreditOrderId;
 
     private Integer autoCreditTime;
+
+    private String autoCreditEndTime;
 
     private Integer autoBidTime;
 
@@ -51,15 +54,27 @@ public class HjhUserAuthVO extends BaseVO implements Serializable {
 
     private String repayCancelTime;
 
-    private Integer createTime;
+    private String invesMaxAmt;
 
-    private Integer createUser;
+    private String creditMaxAmt;
 
-    private Integer updateTime;
+    private String paymentMaxAmt;
 
-    private Integer updateUser;
+    private String repayMaxAmt;
 
-    private Integer delFlg;
+    private Integer delFlag;
+
+    private Integer txAmount;
+
+    private Integer totAmount;
+
+    private Integer createUserId;
+
+    private Integer updateUserId;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -149,6 +164,14 @@ public class HjhUserAuthVO extends BaseVO implements Serializable {
 
     public void setAutoCreditTime(Integer autoCreditTime) {
         this.autoCreditTime = autoCreditTime;
+    }
+
+    public String getAutoCreditEndTime() {
+        return autoCreditEndTime;
+    }
+
+    public void setAutoCreditEndTime(String autoCreditEndTime) {
+        this.autoCreditEndTime = autoCreditEndTime == null ? null : autoCreditEndTime.trim();
     }
 
     public Integer getAutoBidTime() {
@@ -247,43 +270,91 @@ public class HjhUserAuthVO extends BaseVO implements Serializable {
         this.repayCancelTime = repayCancelTime == null ? null : repayCancelTime.trim();
     }
 
-    public Integer getCreateTime() {
+    public String getInvesMaxAmt() {
+        return invesMaxAmt;
+    }
+
+    public void setInvesMaxAmt(String invesMaxAmt) {
+        this.invesMaxAmt = invesMaxAmt == null ? null : invesMaxAmt.trim();
+    }
+
+    public String getCreditMaxAmt() {
+        return creditMaxAmt;
+    }
+
+    public void setCreditMaxAmt(String creditMaxAmt) {
+        this.creditMaxAmt = creditMaxAmt == null ? null : creditMaxAmt.trim();
+    }
+
+    public String getPaymentMaxAmt() {
+        return paymentMaxAmt;
+    }
+
+    public void setPaymentMaxAmt(String paymentMaxAmt) {
+        this.paymentMaxAmt = paymentMaxAmt == null ? null : paymentMaxAmt.trim();
+    }
+
+    public String getRepayMaxAmt() {
+        return repayMaxAmt;
+    }
+
+    public void setRepayMaxAmt(String repayMaxAmt) {
+        this.repayMaxAmt = repayMaxAmt == null ? null : repayMaxAmt.trim();
+    }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public Integer getTxAmount() {
+        return txAmount;
+    }
+
+    public void setTxAmount(Integer txAmount) {
+        this.txAmount = txAmount;
+    }
+
+    public Integer getTotAmount() {
+        return totAmount;
+    }
+
+    public void setTotAmount(Integer totAmount) {
+        this.totAmount = totAmount;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
-    }
-
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Integer getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
-    }
-
-    public Integer getDelFlg() {
-        return delFlg;
-    }
-
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
     }
 }

@@ -80,6 +80,16 @@ public class AdminUserAuthListCustomize {
 	private String investEndTimeEnd;
 
 	/**
+	 * 自动债转单笔最大金额
+	 */
+	private String creditMaxAmt;
+
+	/**
+	 * 自动债转授权过期时间
+	 */
+	private String autoCreditEndTime;
+
+	/**
 	 * 构造方法不带参数
 	 */
 	public AdminUserAuthListCustomize() {
@@ -227,6 +237,22 @@ public class AdminUserAuthListCustomize {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public String getCreditMaxAmt() {
+		return creditMaxAmt;
+	}
+
+	public void setCreditMaxAmt(String creditMaxAmt) {
+		this.creditMaxAmt = creditMaxAmt;
+	}
+
+	public String getAutoCreditEndTime() {
+		return autoCreditEndTime;
+	}
+
+	public void setAutoCreditEndTime(String autoCreditEndTime) {
+		this.autoCreditEndTime = autoCreditEndTime;
 	}
 }
 

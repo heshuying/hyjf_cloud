@@ -74,7 +74,8 @@ public class PlatformCountController extends BaseController {
 
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-        String[] titles = new String[] { "序号", "平台", "注册数", "开户数", "投资人数", "累计充值", "累计投资", "汇直投投资金额", "汇消费投资金额", "汇天利投资金额", "汇添金投资金额", "汇计划投资金额", "汇转让投资金额" };
+        String[] titles = new String[] { "序号", "平台", "注册数", "开户数", "投资人数", "累计充值", "累计投资", "汇直投投资金额",
+                "汇消费投资金额", "汇天利投资金额", "汇添金投资金额", "智投服务投资金额", "汇转让投资金额" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -232,7 +233,7 @@ public class PlatformCountController extends BaseController {
         map.put("hxfTenderPrice", "汇消费投资金额");
         map.put("htlTenderPrice", "汇天利投资金额");
         map.put("htjTenderPrice", "汇添金投资金额");
-        map.put("hjhTenderPrice", "汇计划投资金额");
+        map.put("hjhTenderPrice", "智投服务投资金额");
         map.put("hzrTenderPrice", "汇转让投资金额");
     
         return map;

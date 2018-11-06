@@ -10,6 +10,7 @@ import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -42,7 +43,8 @@ public class WechatRechargeController extends BaseTradeController{
 
 	@Autowired
 	private RechargeService userRechargeService;
-
+	@Autowired
+	private AuthService authService;
 	@Autowired
 	SystemConfig systemConfig;
 
@@ -63,6 +65,9 @@ public class WechatRechargeController extends BaseTradeController{
 		// 用户的手机号
 		String mobile = request.getParameter("mobile");
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
+		if (!this.authService.checkPaymentAuthStatus(userId)) {
+			throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+		}
 		// 拼装参数 调用江西银行
 		String retUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/failed/?sign="+sign+"&txAmount="+money;
 		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/success/?sign="+sign+"&txAmount="+money;
@@ -74,6 +79,7 @@ public class WechatRechargeController extends BaseTradeController{
 		directRechargeBean.setPlatform(CommonConstant.CLIENT_WECHAT);
         directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
+
 		Map<String,Object> map = new HashMap<>();
 		try {
 			map = BankCallUtils.callApiMap(bean);

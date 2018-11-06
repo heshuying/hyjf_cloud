@@ -222,7 +222,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
             }else if(couponConfig.getCouponType() == 1 && couponConfig.getRepayTimeConfig()==2){
                 recoverTime = interestInfo.getRepayTime();
             }else{
-                recoverTime = interestInfo.getRepayTime() + (3 * 24 * 60 * 60); // 估计还款时间
+                recoverTime = interestInfo.getRepayTime() ; // 估计还款时间
             }
         }
 
@@ -242,7 +242,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     }else if(couponConfig.getCouponType() == 1 && couponConfig.getRepayTimeConfig()==2){
                         recoverTime = monthly.getRepayTime();
                     }else{
-                        recoverTime = monthly.getRepayTime() + (3 * 24 * 60 * 60); // 估计还款时间
+                        recoverTime = monthly.getRepayTime() ; // 估计还款时间
                     }
                     CouponRecoverVO cr = new CouponRecoverVO();
                     // 投资订单编号
@@ -447,13 +447,8 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         // 年利率
         BigDecimal borrowApr = borrow.getBorrowApr();
         // 借款成功时间
-        String borrowSuccessTimeString = borrow.getVerifyTime();
-        logger.info("标的："+borrowNid + "放款开始，借款满标时间："+borrowSuccessTimeString);
+        Integer borrowSuccessTime = borrow.getVerifyTimeInteger();
         logger.info("标的："+borrowNid + "放款开始，借款满标时间："+borrow.getVerifyTimeInteger());
-        if (null == borrowSuccessTimeString || "0".equals(borrowSuccessTimeString)){
-            return retMsgList;
-        }
-        Integer borrowSuccessTime = Integer.parseInt(borrowSuccessTimeString);
         // 项目类型
         Integer projectType = borrow.getProjectType();
         // 是否月标(true:月标, false:天标)

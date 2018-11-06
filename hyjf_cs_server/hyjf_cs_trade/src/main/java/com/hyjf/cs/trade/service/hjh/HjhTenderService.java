@@ -1,6 +1,8 @@
 package com.hyjf.cs.trade.service.hjh;
 
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
@@ -49,4 +51,11 @@ public interface HjhTenderService extends BaseTradeService {
      * @param tender
      */
     void recoverRedis(TenderRequest tender);
+
+    /**
+     * 加入计划成功后,发送神策数据统计MQ
+     *
+     * @param sensorsDataBean
+     */
+    void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException;
 }

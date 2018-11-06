@@ -11,11 +11,11 @@ import io.swagger.annotations.ApiModelProperty;
 public class HjhDebtCreditListRequest extends BasePage{
 
 
-    @ApiModelProperty(value = "出让人计划编号")
+    @ApiModelProperty(value = "出让人智投编号")
     private String planNid;
-    @ApiModelProperty(value = "出让人计划订单号")
+    @ApiModelProperty(value = "出让人智投订单号")
     private String planOrderId;
-    @ApiModelProperty(value = "清算后计划编号")
+    @ApiModelProperty(value = "清算后智投编号")
     private String planNidNew;
     @ApiModelProperty(value = "出让人")
     private String userName;
@@ -141,5 +141,24 @@ public class HjhDebtCreditListRequest extends BasePage{
 
     public void setRepayNextTimeEnd(String repayNextTimeEnd) {
         this.repayNextTimeEnd = repayNextTimeEnd;
+    }
+
+    @Override
+    public String toString() {
+        return "HjhDebtCreditListRequest{" +
+                "planNid='" + planNid + '\'' +
+                ", planOrderId='" + planOrderId + '\'' +
+                ", planNidNew='" + planNidNew + '\'' +
+                ", userName='" + userName + '\'' +
+                ", creditNid='" + creditNid + '\'' +
+                ", borrowNid='" + borrowNid + '\'' +
+                ", repayStyle='" + repayStyle + '\'' +
+                ", creditStatus='" + creditStatus + '\'' +
+                ", repayStatus='" + repayStatus + '\'' +
+                ", liquidatesTimeStart='" + liquidatesTimeStart + '\'' +
+                ", liquidatesTimeEnd='" + liquidatesTimeEnd + '\'' +
+                ", repayNextTimeStart='" + repayNextTimeStart + '\'' +
+                ", repayNextTimeEnd='" + repayNextTimeEnd + '\'' +
+                '}';
     }
 }

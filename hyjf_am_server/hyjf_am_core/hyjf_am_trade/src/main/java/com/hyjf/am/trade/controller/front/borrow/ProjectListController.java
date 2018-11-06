@@ -3,11 +3,13 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
 import com.hyjf.am.response.app.AppTenderCreditInvestListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.resquest.trade.AppHomePageRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
@@ -20,10 +22,12 @@ import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -447,4 +451,63 @@ public class ProjectListController extends BaseController {
     }
 
     /*---------------------------------------api end ------------------------------------------------*/
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示 ②	若没有可投计划，则显示锁定期限短的
+     * @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    @PostMapping("/apphomepage/selectIndexHjhExtensionPlanListByLockTime")
+    public HjhPlanResponse selectIndexHjhExtensionPlanListByLockTime(@RequestBody @Valid AppHomePageRequest request){
+        HjhPlanResponse response = new HjhPlanResponse();
+        Map map = ConvertUtils.convertObjectToMap(request);
+        List<HjhPlanCustomizeVO> resultList = projectListService.getIndexHjhExtensionPlanListByLockTime(map);
+        response.setResultList(resultList);
+        return response;
+    }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     * @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    @PostMapping("/apphomepage/selectIndexHjhExtensionPlanList")
+    public HjhPlanResponse selectIndexHjhExtensionPlanList(@RequestBody @Valid AppHomePageRequest request){
+        HjhPlanResponse response = new HjhPlanResponse();
+        Map map = ConvertUtils.convertObjectToMap(request);
+        List<HjhPlanCustomizeVO> resultList = projectListService.getIndexHjhExtensionPlanList(map);
+        response.setResultList(resultList);
+        return response;
+    }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     * @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    @PostMapping("/apphomepage/selectHomeProjectList")
+    public AppProjectListResponse selectHomeProjectList(@RequestBody @Valid AppHomePageRequest request){
+        AppProjectListResponse response = new AppProjectListResponse();
+        Map map = ConvertUtils.convertObjectToMap(request);
+        List<AppProjectListCustomizeVO> resultList = projectListService.getHomeProjectList(map);
+        response.setResultList(resultList);
+        return response;
+    }
+
+    /**
+     * app首页获取有效公告
+     * @Author yangchangwei 2018/10/18
+     * @return
+     */
+    @GetMapping("/apphomepage/getAnnouncements")
+    public AppPushManageResponse selectAnnouncements(){
+
+        AppPushManageResponse reponse = new AppPushManageResponse();
+        List<AppPushManageVO> resultList = projectListService.getAnnouncements();
+        reponse.setResultList(resultList);
+        return reponse;
+    }
 }

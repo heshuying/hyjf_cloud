@@ -139,4 +139,20 @@ public class HjhAccedeServiceImpl extends BaseServiceImpl implements HjhAccedeSe
     public boolean updateMatchDays() {
         return this.batchHjhAccedeCustomizeMapper.updateMatchDates() >= 0 ? true : false;
     }
+
+    /**
+     * 根据用户ID查询用户加入记录
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<HjhAccede> selectHjhAccedeListByUserId(Integer userId) {
+        HjhAccedeExample example = new HjhAccedeExample();
+        HjhAccedeExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        example.setOrderByClause("id ASC");
+        List<HjhAccede> list = this.hjhAccedeMapper.selectByExample(example);
+        return list;
+    }
 }

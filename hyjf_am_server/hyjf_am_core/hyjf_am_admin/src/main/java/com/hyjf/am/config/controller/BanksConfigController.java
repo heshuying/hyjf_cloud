@@ -438,5 +438,17 @@ public class BanksConfigController extends BaseConfigController{
         return jxBankConfigResponse;
     }
 
+    @GetMapping("/getBankConfigByBankName/{bankName}")
+    public JxBankConfigResponse getBankConfigByBankName(@PathVariable String bankName){
+        JxBankConfigResponse response = new JxBankConfigResponse();
+        JxBankConfig bankConfig = bankConfigService.getBankConfigByBankName(bankName);
+        if(null != bankConfig){
+            JxBankConfigVO jxBankConfigVO = new JxBankConfigVO();
+            BeanUtils.copyProperties(bankConfig,jxBankConfigVO);
+            response.setResult(jxBankConfigVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 
 }

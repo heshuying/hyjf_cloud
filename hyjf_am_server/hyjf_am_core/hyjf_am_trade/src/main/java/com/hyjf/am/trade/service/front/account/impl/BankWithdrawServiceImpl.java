@@ -91,6 +91,8 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
         // 当前时间
         int nowTime = GetDate.getNowTime10();
 
+        // TODO
+        Date nowDate = new Date();
         if (("00000000".equals(bean.getRetCode()) || "CE999028".equals(bean.getRetCode()))
                 && "00".equals(bean.getResult()) && !("1".equals(bean.getOrFlag()))) {
             CheckResult rtCheck = checkCallRetAndHyjf(bean,accountWithdraw);
@@ -124,7 +126,7 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
             accountWithdraw.setTotal(total); // 更新到总额
             accountWithdraw.setStatus(WITHDRAW_STATUS_SUCCESS);// 4:成功
 
-            accountWithdraw.setUpdateTime(nowTime);
+            accountWithdraw.setUpdateTime(nowDate);
             accountWithdraw.setAccount(bean.getAccountId());
             accountWithdraw.setReason("");
 
@@ -178,7 +180,7 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
             accountList.setRemark(accountWithdraw.getRemark());
             accountList.setCreateTime(GetDate.getDate(nowTime));
             accountList.setOperator(String.valueOf(userId));
-            accountList.setIp(accountWithdraw.getAddip());
+            accountList.setIp(accountWithdraw.getAddIp());
             accountList.setIsBank(1);
             accountList.setWeb(0);
             accountList.setCheckStatus(0);// 对账状态0：未对账 1：已对账
