@@ -141,6 +141,7 @@ public class BorrowController extends BaseController {
 			BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
 			BeanUtils.copyProperties(borrow, borrowVO);
             borrowVO.setVerifyTimeInteger(borrow.getVerifyTime());
+            logger.info("VerifyTime:"+borrow.getVerifyTime());
 			response.setResult(borrowVO);
 		}
 		return response;
