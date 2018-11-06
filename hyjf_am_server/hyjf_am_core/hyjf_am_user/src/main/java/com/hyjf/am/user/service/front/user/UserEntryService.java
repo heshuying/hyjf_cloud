@@ -16,5 +16,5 @@ public interface UserEntryService extends BaseService {
      * @param userId
      * @return
      */
-    void updateUserEntryInfoFromCrm(String userId);
+    boolean updateUserEntryInfoFromCrm(String userId);
 }

@@ -241,7 +241,7 @@
 			case when hydb.borrow_extra_yield=0 then
 			''
 			else
-			 	CONCAT('+',hydb.borrow_extra_yield, '%')
+			 	CONCAT('',hydb.borrow_extra_yield, '%')
 			 end
 			borrow_extra_yield,
 			case 
@@ -519,7 +519,7 @@
 		case when borrowInfo.borrow_extra_yield=0 then
 		''
 		else
-		CONCAT('+',borrowInfo.borrow_extra_yield, '%')
+		CONCAT('',borrowInfo.borrow_extra_yield, '%')
 		end
 		borrow_extra_yield,
 		hydb.contract_period,
@@ -975,7 +975,7 @@
 		case when hydb.borrow_extra_yield=0 then
 		''
 		else
-		 	CONCAT('+',hydb.borrow_extra_yield, '%')
+		 	CONCAT('',hydb.borrow_extra_yield, '%')
 		 end
 		borrow_extra_yield,
 		case 

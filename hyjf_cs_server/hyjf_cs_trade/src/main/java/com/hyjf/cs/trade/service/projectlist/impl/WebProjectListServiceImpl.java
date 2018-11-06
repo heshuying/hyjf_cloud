@@ -238,20 +238,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     if (limit > 0) {
                         request.setLimitEnd(limit);
                     }
-                   List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
-                    // add by nxl 判断是否为产品加息 start
-                    if(null!=projectList&&projectList.size()>0){
-                        for(WebProjectListCustomizeVO webProjectListCustomize:projectList){
-                            int intFlg = Integer.parseInt(StringUtils.isNotBlank(webProjectListCustomize.getIncreaseInterestFlag())?webProjectListCustomize.getIncreaseInterestFlag():"0");
-                            BigDecimal dbYield = new BigDecimal(StringUtils.isNotBlank(webProjectListCustomize.getBorrowExtraYield())?webProjectListCustomize.getBorrowExtraYield():"0");
-                            boolean booleanVal = Validator.isIncrease(intFlg,dbYield);
-                            webProjectListCustomize.setIncrease(booleanVal);
-                        }
-                    }
-                    // add by nxl 判断是否为产品加息 end
+                    List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
                     resultBean.setList( CommonUtils.convertBeanList(projectList, WebProjectListCsVO.class));
                     //int nowTime = GetDate.getNowTime10();
-                   // result.setNowTime(nowTime);
+                    // result.setNowTime(nowTime);
                 } else {
                     resultBean.setList(new ArrayList<WebProjectListCsVO>());
                     page.setTotal(0);
@@ -309,7 +299,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             other.put("isCheckUserRole",systemConfig.getRoleIsopen());
         }
         WebResult webResult = new WebResult();
-       // detailCsVO.setOther(other);
+        // detailCsVO.setOther(other);
         webResult.setData(other);
         return webResult;
     }
@@ -937,7 +927,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         if (borrowInfoVO.getIsNew() == 0) {
             // 如果项目为汇资产项目
             if (projectType == 9) {
-            // 已经没有汇资产项目，不在处理
+                // 已经没有汇资产项目，不在处理
             }
             // 项目为非汇资产项目
             else {
@@ -1324,7 +1314,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             /** 获取用户优惠券总张数开始 pccvip */
             //result.put("recordTotal", recordTotal);
             /** 获取用户优惠券总张数结束 pccvip */
-             /** 可用优惠券张数开始 pccvip */
+            /** 可用优惠券张数开始 pccvip */
             result.put("couponAvailableCount", availableCouponListCount);
             /** 可用优惠券张数结束 pccvip */
 
@@ -1637,16 +1627,16 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     }
 
     private Object getAvailableUserCoupon(String planNid,Integer userId,String money,String platform){
-       MyCouponListRequest request = new MyCouponListRequest();
-       request.setBorrowNid(planNid);
-       request.setUserId(userId.toString());
-       request.setPlatform(platform);
-       request.setMoney(money);
-       CouponResponse response = amTradeClient.getPlanCoupon(request);
-       if (Response.isSuccess(response)){
-           return response.getResult();
-       }
-       return null;
+        MyCouponListRequest request = new MyCouponListRequest();
+        request.setBorrowNid(planNid);
+        request.setUserId(userId.toString());
+        request.setPlatform(platform);
+        request.setMoney(money);
+        CouponResponse response = amTradeClient.getPlanCoupon(request);
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
     }
 
 
@@ -1673,241 +1663,241 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         return result;
     }
 
-   /**
-    * 查询标的详情并封装返回
-    * @author zhangyk
-    * @date 2018/8/17 10:28
-    */
-   private void getPlanBorrowDetail(WebResult result, ProjectCustomeDetailVO borrowDetailVo, Integer userId){
-       JSONObject info = new JSONObject();
-       String borrowNid = borrowDetailVo.getBorrowNid();
-       info.put("projectDeatil",borrowDetailVo);
-       info.put("borrowType",borrowDetailVo.getComOrPer());
+    /**
+     * 查询标的详情并封装返回
+     * @author zhangyk
+     * @date 2018/8/17 10:28
+     */
+    private void getPlanBorrowDetail(WebResult result, ProjectCustomeDetailVO borrowDetailVo, Integer userId){
+        JSONObject info = new JSONObject();
+        String borrowNid = borrowDetailVo.getBorrowNid();
+        info.put("projectDeatil",borrowDetailVo);
+        info.put("borrowType",borrowDetailVo.getComOrPer());
 
-       //借款人企业信息
-       BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
-       //借款人信息
-       BorrowManinfoVO borrowManinfo =amTradeClient.getBorrowManinfo(borrowNid);
-       //房产抵押信息
-       List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
-       //车辆抵押信息
-       List<BorrowCarinfoVO> borrowCarinfoList = amTradeClient.getBorrowCarinfoByNid(borrowNid);
-       //还款计划
-       List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
-       if (CollectionUtils.isEmpty(repayPlanList)){
-           repayPlanList = new ArrayList<>();
-       }
-       info.put("repayPlanList", repayPlanList);
-       // 还款信息
-       BorrowRepayVO borrowRepay = null;
-       List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
-       if (org.apache.commons.collections.CollectionUtils.isNotEmpty(list)){
-           borrowRepay = list.get(0);
-       }
+        //借款人企业信息
+        BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+        //借款人信息
+        BorrowManinfoVO borrowManinfo =amTradeClient.getBorrowManinfo(borrowNid);
+        //房产抵押信息
+        List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
+        //车辆抵押信息
+        List<BorrowCarinfoVO> borrowCarinfoList = amTradeClient.getBorrowCarinfoByNid(borrowNid);
+        //还款计划
+        List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
+        if (CollectionUtils.isEmpty(repayPlanList)){
+            repayPlanList = new ArrayList<>();
+        }
+        info.put("repayPlanList", repayPlanList);
+        // 还款信息
+        BorrowRepayVO borrowRepay = null;
+        List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
+        if (org.apache.commons.collections.CollectionUtils.isNotEmpty(list)){
+            borrowRepay = list.get(0);
+        }
 
-       //资产列表
-       JSONArray json = new JSONArray();
-       List<BorrowDetailBean> emptyTable = new ArrayList<>();
-       //基础信息
-       List<BorrowDetailBean> baseTableData = emptyTable;
-       //资产信息
-       List<BorrowDetailBean> assetsTableData = emptyTable;
-       //项目介绍
-       List<BorrowDetailBean> intrTableData = emptyTable;
-       //信用状况
-       List<BorrowDetailBean> credTableData = emptyTable;
-       //审核信息
-       List<BorrowDetailBean> reviewTableData = emptyTable;
-       //其他信息
-       List<BorrowDetailBean> otherTableData = emptyTable;
+        //资产列表
+        JSONArray json = new JSONArray();
+        List<BorrowDetailBean> emptyTable = new ArrayList<>();
+        //基础信息
+        List<BorrowDetailBean> baseTableData = emptyTable;
+        //资产信息
+        List<BorrowDetailBean> assetsTableData = emptyTable;
+        //项目介绍
+        List<BorrowDetailBean> intrTableData = emptyTable;
+        //信用状况
+        List<BorrowDetailBean> credTableData = emptyTable;
+        //审核信息
+        List<BorrowDetailBean> reviewTableData = emptyTable;
+        //其他信息
+        List<BorrowDetailBean> otherTableData = emptyTable;
 
-       //借款类型
-       int borrowType = Integer.parseInt(borrowDetailVo.getComOrPer());
+        //借款类型
+        int borrowType = Integer.parseInt(borrowDetailVo.getComOrPer());
 
-       if(borrowType == 1 && borrowUsers != null){
-           //基础信息
-           baseTableData = ProjectConstant.packDetail(borrowUsers, 1, borrowType, borrowDetailVo.getBorrowLevel());
-           //信用状况
-           credTableData = ProjectConstant.packDetail(borrowUsers, 4, borrowType, borrowDetailVo.getBorrowLevel());
-           //审核信息
-           reviewTableData =  ProjectConstant.packDetail(borrowUsers, 5, borrowType, borrowDetailVo.getBorrowLevel());
-           //其他信息
-           otherTableData =  ProjectConstant.packDetail(borrowUsers, 6, borrowType, borrowDetailVo.getBorrowLevel());
-       }else{
-           if(borrowManinfo != null){
-               //基础信息
-               baseTableData = ProjectConstant.packDetail(borrowManinfo, 1, borrowType, borrowDetailVo.getBorrowLevel());
-               //信用状况
-               credTableData = ProjectConstant.packDetail(borrowManinfo, 4, borrowType, borrowDetailVo.getBorrowLevel());
-               //审核信息
-               reviewTableData =ProjectConstant.packDetail(borrowManinfo, 5, borrowType, borrowDetailVo.getBorrowLevel());
-               //其他信息
-               otherTableData = ProjectConstant.packDetail(borrowManinfo, 6, borrowType, borrowDetailVo.getBorrowLevel());
-           }
-       }
+        if(borrowType == 1 && borrowUsers != null){
+            //基础信息
+            baseTableData = ProjectConstant.packDetail(borrowUsers, 1, borrowType, borrowDetailVo.getBorrowLevel());
+            //信用状况
+            credTableData = ProjectConstant.packDetail(borrowUsers, 4, borrowType, borrowDetailVo.getBorrowLevel());
+            //审核信息
+            reviewTableData =  ProjectConstant.packDetail(borrowUsers, 5, borrowType, borrowDetailVo.getBorrowLevel());
+            //其他信息
+            otherTableData =  ProjectConstant.packDetail(borrowUsers, 6, borrowType, borrowDetailVo.getBorrowLevel());
+        }else{
+            if(borrowManinfo != null){
+                //基础信息
+                baseTableData = ProjectConstant.packDetail(borrowManinfo, 1, borrowType, borrowDetailVo.getBorrowLevel());
+                //信用状况
+                credTableData = ProjectConstant.packDetail(borrowManinfo, 4, borrowType, borrowDetailVo.getBorrowLevel());
+                //审核信息
+                reviewTableData =ProjectConstant.packDetail(borrowManinfo, 5, borrowType, borrowDetailVo.getBorrowLevel());
+                //其他信息
+                otherTableData = ProjectConstant.packDetail(borrowManinfo, 6, borrowType, borrowDetailVo.getBorrowLevel());
+            }
+        }
 
-       //资产信息
-       if(borrowHousesList != null && borrowHousesList.size() > 0){
-           for (BorrowHousesVO  borrowHouses: borrowHousesList) {
-               json.add(ProjectConstant.packDetail(borrowHouses, 2, borrowType, borrowDetailVo.getBorrowLevel()));
-           }
-       }
-       if(borrowCarinfoList != null && borrowCarinfoList.size() > 0){
-           for (BorrowCarinfoVO borrowCarinfo : borrowCarinfoList) {
-               json.add(ProjectConstant.packDetail(borrowCarinfo, 2, borrowType, borrowDetailVo.getBorrowLevel()));
-           }
-       }
+        //资产信息
+        if(borrowHousesList != null && borrowHousesList.size() > 0){
+            for (BorrowHousesVO  borrowHouses: borrowHousesList) {
+                json.add(ProjectConstant.packDetail(borrowHouses, 2, borrowType, borrowDetailVo.getBorrowLevel()));
+            }
+        }
+        if(borrowCarinfoList != null && borrowCarinfoList.size() > 0){
+            for (BorrowCarinfoVO borrowCarinfo : borrowCarinfoList) {
+                json.add(ProjectConstant.packDetail(borrowCarinfo, 2, borrowType, borrowDetailVo.getBorrowLevel()));
+            }
+        }
 
-       //项目介绍
-       intrTableData = ProjectConstant.packDetail(borrowDetailVo, 3, borrowType, borrowDetailVo.getBorrowLevel());
+        //项目介绍
+        intrTableData = ProjectConstant.packDetail(borrowDetailVo, 3, borrowType, borrowDetailVo.getBorrowLevel());
 
-       //基础信息
-       info.put("baseTableData", baseTableData);
-       //资产信息
-       info.put("assetsTableData", assetsTableData);
-       //项目介绍
-       info.put("intrTableData", intrTableData);
-       //信用状况
-       info.put("credTableData", credTableData);
-       //审核信息
-       info.put("reviewTableData", reviewTableData);
-       // 信批需求新增(放款后才显示)
-       if(borrowDetailVo.getStatusOrginal()>=4 && borrowRepay != null){
-           //其他信息
-           info.put("otherTableData", otherTableData);
-           Date createDate = borrowRepay.getCreateTime();
-           Integer startLong= null ;
-           if (null != createDate){
-               startLong = Integer.valueOf(String.valueOf(createDate.getTime()/1000));
-           }
-          info.put("updateTime", ProjectConstant.getUpdateTime(startLong, borrowRepay.getRepayYestime() == null ? null :borrowRepay.getRepayYestime()));
-       }else{
-           //其他信息
-           info.put("otherTableData", new ArrayList<BorrowDetailBean>());
-       }
+        //基础信息
+        info.put("baseTableData", baseTableData);
+        //资产信息
+        info.put("assetsTableData", assetsTableData);
+        //项目介绍
+        info.put("intrTableData", intrTableData);
+        //信用状况
+        info.put("credTableData", credTableData);
+        //审核信息
+        info.put("reviewTableData", reviewTableData);
+        // 信批需求新增(放款后才显示)
+        if(borrowDetailVo.getStatusOrginal()>=4 && borrowRepay != null){
+            //其他信息
+            info.put("otherTableData", otherTableData);
+            Date createDate = borrowRepay.getCreateTime();
+            Integer startLong= null ;
+            if (null != createDate){
+                startLong = Integer.valueOf(String.valueOf(createDate.getTime()/1000));
+            }
+            info.put("updateTime", ProjectConstant.getUpdateTime(startLong, borrowRepay.getRepayYestime() == null ? null :borrowRepay.getRepayYestime()));
+        }else{
+            //其他信息
+            info.put("otherTableData", new ArrayList<BorrowDetailBean>());
+        }
 
-       //用户未登陆（默认都是否状态）
-       if(userId == null){
-          info.put("loginFlag", "0");//登录状态 0未登陆 1已登录
-           info.put("openFlag", "0"); //开户状态 0未开户 1已开户
-           info.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
-           info.put("riskFlag", "0");//是否进行过风险测评 0未测评 1已测评
-           info.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
-           info.put("viewableFlag", "0");// add by nxl 未登录不可见
-       }else{
-           info.put("loginFlag", "1");//登录状态 0未登陆 1已登录
-           //用户信息
-           UserVO user = amUserClient.findUserById(userId);
-           if (user.getBankOpenAccount() != null) {
-               info.put("openFlag", "1");
-           } else {
-               info.put("openFlag", "0");
-           }
+        //用户未登陆（默认都是否状态）
+        if(userId == null){
+            info.put("loginFlag", "0");//登录状态 0未登陆 1已登录
+            info.put("openFlag", "0"); //开户状态 0未开户 1已开户
+            info.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+            info.put("riskFlag", "0");//是否进行过风险测评 0未测评 1已测评
+            info.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
+            info.put("viewableFlag", "0");// add by nxl 未登录不可见
+        }else{
+            info.put("loginFlag", "1");//登录状态 0未登陆 1已登录
+            //用户信息
+            UserVO user = amUserClient.findUserById(userId);
+            if (user.getBankOpenAccount() != null) {
+                info.put("openFlag", "1");
+            } else {
+                info.put("openFlag", "0");
+            }
 
-           int count = 0;
-           if(userId!=null) {
-               count = amTradeClient.countUserInvest(userId,borrowNid);
-           }
-           if (count > 0) {
-               info.put("investFlag", "1");//是否投资过该项目 0未投资 1已投资
-           }else{
-               info.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
-           }
+            int count = 0;
+            if(userId!=null) {
+                count = amTradeClient.countUserInvest(userId,borrowNid);
+            }
+            if (count > 0) {
+                info.put("investFlag", "1");//是否投资过该项目 0未投资 1已投资
+            }else{
+                info.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+            }
 
-           // add 汇计划二期前端优化  针对区分原始标与债转标 nxl 20180424 start
-           /**
-            * 查看标的详情
-            * 原始标：复审中、还款中、已还款状态下 如果当前用户是否投过此标，是：可看，否则不可见
-            * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有投资者和承接者可查看
-            */
-           String viewableFlag ="0";
-           int intCount = 0;
-           DebtCreditRequest request = new DebtCreditRequest();
-           request.setBorrowNid(borrowNid);
-           List<HjhDebtCreditVO> listHjhDebtCredit = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
-           // add by nxl 是否发生过债转
-           Boolean isDebt = false;
-           if(!CollectionUtils.isEmpty(listHjhDebtCredit)) {
-               // 部分承接
-               request.setCreditStatus(Arrays.asList(0, 1));
-               List<HjhDebtCreditVO> listHjhDebtCreditOnePlace = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
-               if(!CollectionUtils.isEmpty(listHjhDebtCreditOnePlace)) {
-                   //部分债转
-                   viewableFlag ="1";
-               }else {
-                   // 完全债转
-                   for(HjhDebtCreditVO deptcredit:listHjhDebtCredit) {
-                       //待承接本金 = 0
-                       if(null!=deptcredit.getCreditCapitalWait()&&deptcredit.getCreditCapitalWait().compareTo(BigDecimal.ZERO) == 0) {
-                           Map<String, Object> mapParam = new HashMap<String, Object>();
-                           mapParam.put(ProjectConstant.PARAM_USER_ID, userId);
-                           mapParam.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
-                           int tenderCount = amTradeClient.countCreditTenderByBorrowNidAndUserId(mapParam);
-                           if(tenderCount>0 || count>0) {
-                               viewableFlag = "1";
-                           }
-                       }
-                   }
-               }
-               isDebt = true;
-           }else {
-               //原始标
-               //复审中，还款中和已还款状态投资者(可看)(app使用的stattus判断,这里是用statusOriginal判断  不知道是否有影响)
-               if(null != borrowDetailVo.getStatusOrginal() && (borrowDetailVo.getStatusOrginal() == 3 || borrowDetailVo.getStatusOrginal()== 4 || borrowDetailVo.getStatusOrginal() == 5)  ) {
-                   if(count>0) {
-                       //可以查看标的详情
-                       viewableFlag ="1";
-                   }else {
-                       //提示仅投资者可看
-                       viewableFlag ="0";
-                   }
-               }else {
-                   viewableFlag="1";
-               }
-           }
-           info.put("viewableFlag", viewableFlag);
-           info.put("isDebt", isDebt);
-           // add 汇计划二期前端优化  针对区分原始标与债转标  nxl 20180424 end
-           //是否设置交易密码
-           if(null != user.getIsSetPassword() && user.getIsSetPassword() == 1){
-               info.put("setPwdFlag", "1");
-           }else{
-               info.put("setPwdFlag", "0");
-           }
-           try {
-               if(user.getIsEvaluationFlag()==1 && null != user.getEvaluationExpiredTime()){
-                   //测评到期日
-                   Long lCreate = user.getEvaluationExpiredTime().getTime();
-                   //当前日期
-                   Long lNow = System.currentTimeMillis();
-                   if (lCreate <= lNow) {
-                       //已过期需要重新评测
-                       info.put("riskFlag", "2");
-                   } else {
-                       //未到一年有效期
-                       info.put("riskFlag", "1");
-                   }
-               }else{
-                   info.put("riskFlag", "0");
-               }
-               // modify by liuyang 20180411 用户是否完成风险测评标识 end
-           } catch (Exception e) {
-               logger.error("查询用户是否完成风险测评标识出错....", e);
-               info.put("riskFlag", "0");
-           }
+            // add 汇计划二期前端优化  针对区分原始标与债转标 nxl 20180424 start
+            /**
+             * 查看标的详情
+             * 原始标：复审中、还款中、已还款状态下 如果当前用户是否投过此标，是：可看，否则不可见
+             * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有投资者和承接者可查看
+             */
+            String viewableFlag ="0";
+            int intCount = 0;
+            DebtCreditRequest request = new DebtCreditRequest();
+            request.setBorrowNid(borrowNid);
+            List<HjhDebtCreditVO> listHjhDebtCredit = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+            // add by nxl 是否发生过债转
+            Boolean isDebt = false;
+            if(!CollectionUtils.isEmpty(listHjhDebtCredit)) {
+                // 部分承接
+                request.setCreditStatus(Arrays.asList(0, 1));
+                List<HjhDebtCreditVO> listHjhDebtCreditOnePlace = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+                if(!CollectionUtils.isEmpty(listHjhDebtCreditOnePlace)) {
+                    //部分债转
+                    viewableFlag ="1";
+                }else {
+                    // 完全债转
+                    for(HjhDebtCreditVO deptcredit:listHjhDebtCredit) {
+                        //待承接本金 = 0
+                        if(null!=deptcredit.getCreditCapitalWait()&&deptcredit.getCreditCapitalWait().compareTo(BigDecimal.ZERO) == 0) {
+                            Map<String, Object> mapParam = new HashMap<String, Object>();
+                            mapParam.put(ProjectConstant.PARAM_USER_ID, userId);
+                            mapParam.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
+                            int tenderCount = amTradeClient.countCreditTenderByBorrowNidAndUserId(mapParam);
+                            if(tenderCount>0 || count>0) {
+                                viewableFlag = "1";
+                            }
+                        }
+                    }
+                }
+                isDebt = true;
+            }else {
+                //原始标
+                //复审中，还款中和已还款状态投资者(可看)(app使用的stattus判断,这里是用statusOriginal判断  不知道是否有影响)
+                if(null != borrowDetailVo.getStatusOrginal() && (borrowDetailVo.getStatusOrginal() == 3 || borrowDetailVo.getStatusOrginal()== 4 || borrowDetailVo.getStatusOrginal() == 5)  ) {
+                    if(count>0) {
+                        //可以查看标的详情
+                        viewableFlag ="1";
+                    }else {
+                        //提示仅投资者可看
+                        viewableFlag ="0";
+                    }
+                }else {
+                    viewableFlag="1";
+                }
+            }
+            info.put("viewableFlag", viewableFlag);
+            info.put("isDebt", isDebt);
+            // add 汇计划二期前端优化  针对区分原始标与债转标  nxl 20180424 end
+            //是否设置交易密码
+            if(null != user.getIsSetPassword() && user.getIsSetPassword() == 1){
+                info.put("setPwdFlag", "1");
+            }else{
+                info.put("setPwdFlag", "0");
+            }
+            try {
+                if(user.getIsEvaluationFlag()==1 && null != user.getEvaluationExpiredTime()){
+                    //测评到期日
+                    Long lCreate = user.getEvaluationExpiredTime().getTime();
+                    //当前日期
+                    Long lNow = System.currentTimeMillis();
+                    if (lCreate <= lNow) {
+                        //已过期需要重新评测
+                        info.put("riskFlag", "2");
+                    } else {
+                        //未到一年有效期
+                        info.put("riskFlag", "1");
+                    }
+                }else{
+                    info.put("riskFlag", "0");
+                }
+                // modify by liuyang 20180411 用户是否完成风险测评标识 end
+            } catch (Exception e) {
+                logger.error("查询用户是否完成风险测评标识出错....", e);
+                info.put("riskFlag", "0");
+            }
 
-           AccountVO account = amTradeClient.getAccount(userId);
-           String userBalance = "";
-           if (Validator.isNotNull(account) && account.getBankBalance() != null) {
-               userBalance = account.getBankBalance().toString();
-           }else{
-               userBalance = "0.00";
-           }
-           info.put("userBalance", userBalance);
+            AccountVO account = amTradeClient.getAccount(userId);
+            String userBalance = "";
+            if (Validator.isNotNull(account) && account.getBankBalance() != null) {
+                userBalance = account.getBankBalance().toString();
+            }else{
+                userBalance = "0.00";
+            }
+            info.put("userBalance", userBalance);
 
-       }
-    result.setData(info);
-   }
+        }
+        result.setData(info);
+    }
 
 
 

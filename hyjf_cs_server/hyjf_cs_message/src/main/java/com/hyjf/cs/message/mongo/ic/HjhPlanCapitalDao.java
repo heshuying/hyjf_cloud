@@ -5,6 +5,7 @@ import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetDateUtils;
 import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -67,8 +68,9 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
             criteria = Criteria.where("id").ne("").ne(null);
 
             // 日期区间查询
-            if (StringUtils.isNoneBlank(request.getDateFromSrch()) && StringUtils.isNotBlank(request.getDateToSrch())){
-                criteria = criteria.and("date").gte(request.getDateFromSrch()).lte(request.getDateToSrch());
+            if (StringUtils.isNotBlank(request.getDateFromSrch()) && StringUtils.isNotBlank(request.getDateToSrch())){
+                criteria = criteria.and("date").gte(GetDateUtils.parseDateTime(request.getDateFromSrch() + " 00:00:00")).
+                        lte(GetDateUtils.parseDateTime(request.getDateToSrch() + " 23:59:59"));
             }
 
             // 计划编号查询
