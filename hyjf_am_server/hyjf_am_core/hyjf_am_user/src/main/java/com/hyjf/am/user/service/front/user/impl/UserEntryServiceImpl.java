@@ -29,24 +29,21 @@ public class UserEntryServiceImpl extends BaseServiceImpl implements UserEntrySe
      * @return
      */
     @Override
-    public void updateUserEntryInfoFromCrm(String userId) {
+    public boolean updateUserEntryInfoFromCrm(String userId) {
         logger.info("开始更新员工入职信息，ID：" + userId);
+        boolean updateResult = false;
         List<UserInfo> users = this.queryEmployeeEntryList(userId);
         if (users.size() == 1) {
-            try {
-                // 修改客户属性
-                this.updateEmployeeByExampleSelective(users.get(0));
-                // 修改 入职人员作为推荐人的情况，被推荐人属性变为‘有主单’
-                this.updateSpreadAttribute(users.get(0).getUserId());
-                // 删除相应的用户的推荐人
-                this.deleteReferrer(users.get(0).getUserId());
-            } catch (Exception e) {
-                logger.error("员工入职信息更新失败, CRM_ID:" + userId, e);
-                throw e;
-            }
+            this.updateEmployeeByExampleSelective(users.get(0));
+            // 修改 入职人员作为推荐人的情况，被推荐人属性变为‘有主单’
+            this.updateSpreadAttribute(users.get(0).getUserId());
+            // 删除相应的用户的推荐人
+            this.deleteReferrer(users.get(0).getUserId());
+            updateResult = true;
         } else {
             logger.error("员工入职--查询用户信息失败, CRM_ID:" + userId);
         }
+        return updateResult;
     }
 
     /**
