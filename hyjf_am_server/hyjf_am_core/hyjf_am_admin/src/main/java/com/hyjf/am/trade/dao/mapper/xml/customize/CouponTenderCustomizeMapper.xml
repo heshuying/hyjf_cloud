@@ -632,7 +632,7 @@
         ELSE
         CONCAT(hhp.lock_period, '个月')
         END borrow_period,
-        FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i' ) order_date,
+        DATE_FORMAT( hct.create_time, '%Y-%m-%d %H:%i' ) order_date,
         hbt.recover_account_interest_wait recover_account_interest_wait,
         -- pa1.name received_flg,
         hcr.received_flg received_flg,
