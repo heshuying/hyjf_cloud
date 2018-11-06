@@ -13,7 +13,7 @@ import java.util.Date;
  * @author fuqiang
  * @version AppChannelStatistics, v0.1 2018/7/2 10:51
  */
-@Document(collection = "t_app_channel_statistics")
+@Document(collection = "ht_app_channel_statistics")
 public class AppChannelStatistics implements Serializable {
     private String id;
 

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DzqzReturnLogDao extends BaseMongoDao<DzqzReturnLog>{
 
-    private static final String BACKLOG = "dzqzreturnlog";
+    private static final String BACKLOG = "ht_dzqz_return_log";
 
     @Override
     protected Class<DzqzReturnLog> getEntityClass() {
