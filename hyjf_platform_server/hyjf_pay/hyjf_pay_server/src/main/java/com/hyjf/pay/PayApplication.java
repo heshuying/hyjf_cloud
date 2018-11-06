@@ -3,6 +3,7 @@ package com.hyjf.pay;
 import com.hyjf.pay.lib.config.URLSystemConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {"com.hyjf.pay" }, excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
 				URLSystemConfig.class }))
+@EnableCircuitBreaker
 public class PayApplication {
 
 	@Bean
