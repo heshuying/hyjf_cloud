@@ -1,6 +1,40 @@
 package com.hyjf.admin.controller.borrow;
 
 import com.google.common.collect.Maps;
+import java.io.File;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -160,7 +194,17 @@ public class BorrowCommonController extends BaseController {
 			return new AdminResult<>(FAIL, "该用户已被禁用");
 		} else if (usersFlag == 4) {
 			return new AdminResult<>(FAIL, "该用户不是借款人");
+		}else if (usersFlag == 5) {
+			// 服务费授权
+			return new AdminResult<>(FAIL, "未进行服务费授权");
+		} else if (usersFlag == 6) {
+			// 还款授权
+			return new AdminResult<>(FAIL, "未进行还款授权");
+		} else if (usersFlag == 7) {
+			// 还款授权和服务费授权
+			return new AdminResult<>(FAIL, "未进行服务费授权和还款授权");
 		}
+
 		return new AdminResult();
 	}
 
@@ -223,9 +267,10 @@ public class BorrowCommonController extends BaseController {
 				if(userinfo.getRoleId()!=3) {
 					return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
 				}
-//			}else {
-//				return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！");
-//			}
+		Integer authState = CommonUtils.checkPaymentAuthStatus(user.get(0).getPaymentAuthStatus());
+		if (authState == 0) {
+			return new AdminResult<>(FAIL, "未开通服务费授权！");
+		}
 		return new AdminResult();
 	}
 
@@ -1667,6 +1712,8 @@ public class BorrowCommonController extends BaseController {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_IN);
 		} else if (usersFlag == 6) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_IS_DISABLE);
+		} else if (usersFlag == 7) {
+			throw new ReturnMessageException(MsgEnum.ERR_PAYMENT_AUTH);
 		}
 		return new AdminResult<>() ;
 	}
@@ -1791,7 +1838,7 @@ public class BorrowCommonController extends BaseController {
     }
 //	/**
 //	 * 导出功能
-//	 * 
+//	 *
 //	 * @param request
 //	 * @param modelAndView
 //	 * @param form
@@ -1809,14 +1856,14 @@ public class BorrowCommonController extends BaseController {
 //		String fileName =  URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 //
 //		//UPD BY LIUSHOUYI 合规检查 START
-//		/* 
+//		/*
 //		String[] titles = new String[] { "序号", "借款编号", "计划编号", "借款人ID", "借款人用户名", "项目申请人","项目标题", "借款标题", "项目类型", "资产来源", "借款金额（元）", "借款期限", "年化收益", "还款方式", "融资服务费率", "账户管理费率", "合作机构", "已借到金额", "剩余金额", "借款进度", "项目状态", "添加时间",
 //				"初审通过时间", "定时发标时间","预约开始时间","预约截止时间", "实际发标时间", "投资截止时间", "满标时间", "复审通过时间", "放款完成时间", "最后还款日","备案时间","垫付机构用户名","复审人员","所在地区","借款人姓名","属性","是否受托支付","收款人用户名","标签名称","备注" };
 //		*/
 //		String[] titles = new String[] { "序号", "借款编号", "计划编号", "借款人ID", "用户名", "项目申请人", "项目标题", "项目类型", "资产来源", "借款金额（元）", "借款期限", "年化利率", "还款方式", "融资服务费率", "账户管理费率", "合作机构", "已借到金额", "剩余金额", "借款进度", "项目状态", "添加时间",
 //				"初审通过时间", "定时发标时间","预约开始时间","预约截止时间", "实际发标时间", "投资截止时间", "满标时间", "复审通过时间", "放款完成时间", "最后还款日","备案时间","复审人员","所在地区","借款人姓名","属性","是否受托支付","收款人用户名","标签名称","备注" ,"添加标的人员","标的备案人员","垫付机构用户名","加息收益率"};
 //		// UPD BY LIUSHOUYI 合规检查 END
-//		
+//
 //		// 声明一个工作薄
 //		HSSFWorkbook workbook = new HSSFWorkbook();
 //
@@ -2074,7 +2121,7 @@ public class BorrowCommonController extends BaseController {
 
 		 BorrowCustomizeResponse resultList = borrowCommonService.exportBorrowList(form);
 
-        
+
         Integer totalCount = resultList.getRecordTotal();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
@@ -2083,7 +2130,7 @@ public class BorrowCommonController extends BaseController {
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-        	
+
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else {
         	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,resultList.getBorrowCommonCustomizeList());
@@ -2105,7 +2152,7 @@ public class BorrowCommonController extends BaseController {
 	   private Map<String, String> buildMap() {
 	        Map<String, String> map = Maps.newLinkedHashMap();
 	        map.put("borrowNid", "借款编号");
-	        map.put("planNid", "计划编号");
+	        map.put("planNid", "智投编号");
 	        map.put("userId", "借款人ID");
 	        map.put("username", "借款人用户名");
 	        map.put("applicant", "项目申请人");
@@ -2161,7 +2208,7 @@ public class BorrowCommonController extends BaseController {
 	                }else {
 	                	return "否";
 	                }
-	             
+
 	            }
 	        };
 	        IValueFormatter borrowExtraYieldAdapter = new IValueFormatter() {
@@ -2175,7 +2222,7 @@ public class BorrowCommonController extends BaseController {
 	                }
 	            }
 	        };
-	
+
 	        mapAdapter.put("entrustedFlg", entrustedFlgAdapter);
 	        mapAdapter.put("borrowExtraYield", borrowExtraYieldAdapter);
 	        return mapAdapter;

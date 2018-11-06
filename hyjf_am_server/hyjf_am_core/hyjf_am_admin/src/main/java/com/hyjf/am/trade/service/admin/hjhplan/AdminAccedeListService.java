@@ -53,4 +53,10 @@ public interface AdminAccedeListService {
 	 * @return
 	 */
 	UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request);
+	/**
+	 * 判断用户是否有持有中的计划。如果有，则不能解除投资授权和债转授权
+	 * @param userId
+	 * @return
+	 */
+	boolean canCancelAuth(int userId);
 }

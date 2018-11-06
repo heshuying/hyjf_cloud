@@ -30,6 +30,15 @@ public class UserBankOpenAccountCustomizeVO extends BaseVO implements Serializab
     @ApiModelProperty(value = "用户预留手机号")
     private String mobile;
 
+    // add by nxl 合规四期,用户详情添加以下三个字段显示
+    @ApiModelProperty(value = "银行卡号")
+    private String bankNo;
+    @ApiModelProperty(value = "银联号")
+    private String payAllianceCode;
+    @ApiModelProperty(value = "开户银行")
+    private String bankName;
+
+
     public String getAccount() {
         return account;
     }
@@ -68,5 +77,29 @@ public class UserBankOpenAccountCustomizeVO extends BaseVO implements Serializab
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getBankNo() {
+        return bankNo;
+    }
+
+    public void setBankNo(String bankNo) {
+        this.bankNo = bankNo;
+    }
+
+    public String getPayAllianceCode() {
+        return payAllianceCode;
+    }
+
+    public void setPayAllianceCode(String payAllianceCode) {
+        this.payAllianceCode = payAllianceCode;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

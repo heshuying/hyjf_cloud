@@ -56,7 +56,7 @@ public class BankRepayFreezeLogController extends BaseController {
      * @date: 2018/7/11
      */
     @RequestMapping("/deleteby_id/{id}")
-    public IntegerResponse deleteFreezeLogById(Integer id) {
+    public IntegerResponse deleteFreezeLogById(@PathVariable Integer id) {
         return new IntegerResponse(bankRepayFreezeLogService.deleteFreezeLogById(id));
     }
 
@@ -76,12 +76,27 @@ public class BankRepayFreezeLogController extends BaseController {
     }
 
     /**
+     * 根据borrowNid获取当前有效的冻结记录
+     * @auther: wgx
+     * @date: 2018/10/16
+     */
+    @RequestMapping("/get_logvalid/{borrowNid}")
+    public BankRepayFreezeLogResponse getFreezeLogValid(@PathVariable String borrowNid) {
+        BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
+        BankRepayFreezeLog log = bankRepayFreezeLogService.getFreezeLog(null, borrowNid);
+        if (Validator.isNotNull(log)) {
+            response.setResult(CommonUtils.convertBean(log, BankRepayFreezeLogVO.class));
+        }
+        return response;
+    }
+
+    /**
      * 根据orderId获取冻结记录
      * @auther: hesy
      * @date: 2018/7/11
      */
     @RequestMapping("/get_logvalid_byorderid/{orderId}")
-    public BankRepayFreezeLogResponse getBankFreezeLogByOrderId(String orderId) {
+    public BankRepayFreezeLogResponse getBankFreezeLogByOrderId(@PathVariable String orderId) {
         BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
         BankRepayFreezeLog log = bankRepayFreezeLogService.getBankFreezeLogByOrderId(orderId);
         if (Validator.isNotNull(log)){

@@ -46,7 +46,6 @@ public class HjhDebtCreditServiceImpl extends BaseServiceImpl implements HjhDebt
      */
     @Override
     public HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request) {
-
         HjhDebtCreditReponse reponse = amAdminClient.queryHjhDebtCreditList(request);
         return reponse;
     }

@@ -136,7 +136,7 @@ public class WeeklyController {
             for (CreditTenderVO creditTender : ct) {
                 leijie = leijie.add(creditTender.getAssignCapital());
                 yuqi = yuqi.add(creditTender.getAssignInterest());
-                Date mm = creditTender.getAddTime();
+                Date mm = creditTender.getCreateTime();
                 list1.add(sddd.format(mm));
             }
             for (HjhAccedeVO hjhAccede : ae) {

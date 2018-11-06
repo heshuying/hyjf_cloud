@@ -55,6 +55,9 @@ public class AdminUserAuthListVO  extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "自动投资授权过期时间")
 	private String autoInvesEndTime;
 
+	@ApiModelProperty(value = "自动债转授权过期时间")
+	private String autoCreditEndTime;
+
 	@ApiModelProperty(value = "投标订单号")
 	private String autoOrderId;
 
@@ -89,6 +92,19 @@ public class AdminUserAuthListVO  extends BaseVO implements Serializable{
 
 	public void setTotalAmountAutomatic(String totalAmountAutomatic) {
 		this.totalAmountAutomatic = totalAmountAutomatic;
+	}
+	@ApiModelProperty(value = "自动投资单笔最高金额")
+	private String invesMaxAmt;
+
+	@ApiModelProperty(value = "自动债转单笔最大金额")
+	private String creditMaxAmt;
+
+	public String getInvesMaxAmt() {
+		return invesMaxAmt;
+	}
+
+	public void setInvesMaxAmt(String invesMaxAmt) {
+		this.invesMaxAmt = invesMaxAmt;
 	}
 
 	/**
@@ -232,6 +248,22 @@ public class AdminUserAuthListVO  extends BaseVO implements Serializable{
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public String getAutoCreditEndTime() {
+		return autoCreditEndTime;
+	}
+
+	public void setAutoCreditEndTime(String autoCreditEndTime) {
+		this.autoCreditEndTime = autoCreditEndTime;
+	}
+
+	public String getCreditMaxAmt() {
+		return creditMaxAmt;
+	}
+
+	public void setCreditMaxAmt(String creditMaxAmt) {
+		this.creditMaxAmt = creditMaxAmt;
 	}
 }
 

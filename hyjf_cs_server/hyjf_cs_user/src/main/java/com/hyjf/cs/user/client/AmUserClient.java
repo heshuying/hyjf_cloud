@@ -552,4 +552,16 @@ public interface AmUserClient {
 	 * @return
 	 */
 	public void inserLockedUser(LockedUserInfoVO lockedUserInfoVO);
+
+    void updateUserAuth(UserAuthRequest request);
+
+    void updateUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog);
+	/**
+	 * 根据用户Id,银行卡Id查询用户银行卡信息
+	 * @param userId
+	 * @param cardId
+	 * @auther: nxl
+	 * @return
+	 */
+	BankCardVO getBankCardById(int userId, String cardId);
 }

@@ -351,12 +351,12 @@ public class ContentArticleServiceImpl implements ContentArticleService {
             customize.setTitle(contentArticle.getTitle());
             customize.setTime(new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
             customize.setMessageId(contentArticle.getId() + "");
-            customize.setMessageUrl(webUrl + "/find/contentArticle" +
+            customize.setMessageUrl(webUrl + "/hyjf-app/find/contentArticle" +
                     "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId() + "").replace("{type}", (String) params.get("type")));
             customize.setShareTitle(contentArticle.getTitle());
             customize.setShareContent(contentArticle.getSummary());
             customize.setSharePicUrl("https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
-            customize.setShareUrl(webUrl + "/find/contentArticle" +
+            customize.setShareUrl(webUrl + "/hyjf-app/find/contentArticle" +
                     "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId() + "").replace("{type}", (String) params.get("type")));
 
             knowledgeCustomizes.add(customize);
@@ -386,12 +386,12 @@ public class ContentArticleServiceImpl implements ContentArticleService {
             customize.setTitle(contentArticle.getTitle());
             customize.setTime(new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
             customize.setMessageId(contentArticle.getId() + "");
-            customize.setMessageUrl(webUrl + "/find/contentArticle" +
+            customize.setMessageUrl(webUrl + "/hyjf-app/find/contentArticle" +
                     "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
             customize.setShareTitle(contentArticle.getTitle());
             customize.setShareContent(contentArticle.getSummary());
             customize.setSharePicUrl("https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
-            customize.setShareUrl(webUrl + "/find/contentArticle" +
+            customize.setShareUrl(webUrl + "/hyjf-app/find/contentArticle" +
                     "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
             return customize;
         }

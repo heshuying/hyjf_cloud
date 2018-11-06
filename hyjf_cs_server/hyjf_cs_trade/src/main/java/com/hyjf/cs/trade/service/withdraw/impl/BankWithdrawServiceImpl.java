@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
 import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -23,6 +24,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
@@ -39,6 +41,8 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.mq.producer.sensorsdate.withdraw.SensorsDataWithdrawProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.withdraw.BankWithdrawService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
@@ -81,7 +85,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     @Autowired
     AmTradeClient amTradeClient;
 
-
+    @Autowired
+    private AuthService authService;
 
 
     @Autowired
@@ -92,6 +97,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     @Autowired
     SmsProducer smsProducer;
+
+    @Autowired
+    private SensorsDataWithdrawProducer sensorsDataWithdrawProducer;
 
     @Value("${hyjf.bank.fee}")
     private String FEETMP;
@@ -180,6 +188,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 银联行号
         String payAllianceCode = bean.getLogAcqResBean() == null ? "" : bean.getLogAcqResBean().getPayAllianceCode();
         int nowTime = GetDate.getNowTime10(); // 当前时间
+        // TODO
+        Date nowDate = new Date();
         List<AccountWithdrawVO> listAccountWithdraw = this.amTradeClient.selectAccountWithdrawByOrdId(ordId);
 
         if (listAccountWithdraw != null && listAccountWithdraw.size() > 0) {
@@ -261,6 +271,18 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                             }
                             // TODO 活动统计 需要的时候放开
                             /*CommonSoaUtils.listedTwoWithdraw(userId, total);*/
+
+                            try{
+                                // 提现成功后,发送神策数据统计MQ
+                                SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                                sensorsDataBean.setOrderId(bean.getLogOrderId());
+                                sensorsDataBean.setEventCode("withdraw_result");
+                                sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
+                                this.sendSensorsDataMQ(sensorsDataBean);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
                             return jsonMessage("提现成功!", "0");
                         } catch (Exception e) {
                             // 回滚事务
@@ -276,7 +298,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     AccountWithdrawVO accountwithdraw = list.get(0);
                     //mod by nxl 将状态更改为提现中
                     accountwithdraw.setStatus(WITHDRAW_STATUS_WAIT);
-                    accountwithdraw.setUpdateTime(nowTime);
+                    accountwithdraw.setUpdateTime(nowDate);
                     // 失败原因
                     String reason = this.getBankRetMsg(bean.getRetCode());
                     accountwithdraw.setReason(reason);
@@ -290,7 +312,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         }
         return null;
     }
-
 
 
     @Override
@@ -379,7 +400,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             bankCardBean.setCardNoInfo(cardNoInfo);
             bankCardBean.setCardNo(cardNo);
             bankCardBean.setIsDefault("2");// 卡类型
-            bankcards.add(bankCardBean);
 
             Integer bankId = banks.getBankId();
             BanksConfigVO banksConfig = amConfigClient.getBanksConfigByBankId(bankId + "");
@@ -388,6 +408,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 bankCardBean.setBankCode(banksConfig.getBankCode()==null?"":banksConfig.getBankCode());
                 bankCardBean.setLogo(banksConfig.getBankLogo()==null?"":banksConfig.getBankLogo());
             }
+            bankcards.add(bankCardBean);
 
             feeWithdraw = this.getWithdrawFee(userId, banks.getCardNo());
         }
@@ -399,9 +420,11 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         ret.put("bankType", bankType);
         ret.put("feeWithdraw", DF_FOR_VIEW.format(new BigDecimal(feeWithdraw)));
         ret.put("roleId", userRoId);
-//		modelAndView.addObject("paymentAuthStatus", user.getPaymentAuthStatus());
-        //update by jijun 2018/04/09 合规接口改造一期
-        ret.put("paymentAuthStatus", "");
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+        // 是否开启服务费授权 0未开启  1已开启
+        ret.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
+        // 是否开启服务费授权 0未开启  1已开启
+        ret.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
         ret.put("bankBalance", CustomConstants.DF_FOR_VIEW.format(bankBalance));
         result.setData(ret);
         return result;
@@ -603,6 +626,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     private BankWithdrawBeanRequest createBankWithdrawBeanRequest(AccountWithdrawVO accountWithdraw, BigDecimal transAmt, String fee, BigDecimal feeAmt, BigDecimal total, int userId, String ordId, int nowTime, String accountId, String ip) {
         BankWithdrawBeanRequest bankWithdrawBeanRequest = new BankWithdrawBeanRequest();
+        // TODO
+        Date nowDate = new Date();
         bankWithdrawBeanRequest.setUserId(userId);
         bankWithdrawBeanRequest.setTransAmt(transAmt);
         bankWithdrawBeanRequest.setFee(fee);
@@ -618,7 +643,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         accountWithdraw.setCredited(transAmt); // 更新到账金额
         accountWithdraw.setTotal(total); // 更新到总额
         accountWithdraw.setStatus(WITHDRAW_STATUS_SUCCESS);// 4:成功
-        accountWithdraw.setUpdateTime(nowTime);
+        accountWithdraw.setUpdateTime(nowDate);
         accountWithdraw.setAccount(accountId);
         accountWithdraw.setReason("");
         accountWithdraw.setNid(ordId);
@@ -777,15 +802,15 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         if(bankCard.getId() != null){
         	record.setBankId(bankCard.getId());
         }
-        record.setBranch(null);
-        record.setProvince(0);
-        record.setCity(0);
+//        record.setBranch(null);
+//        record.setProvince(0);
+//        record.setCity(0);
         record.setTotal(total);
         record.setCredited(money);
         record.setBankFlag(1);
         record.setFee(CustomUtil.formatAmount(fee.toString()));
-        record.setAddtime(String.valueOf(nowTime));
-        record.setAddip(params.get("ip"));
+        //record.setAddtime(String.valueOf(nowTime));
+        record.setAddIp(params.get("ip"));
         record.setAccountId(bean.getAccountId());
 
         record.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
@@ -954,15 +979,14 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         if(bankCard.getId() != null){
         	record.setBankId(bankCard.getId());
         }
-        record.setBranch(null);
-        record.setProvince(0);
-        record.setCity(0);
+//        record.setBranch(null);
+//        record.setProvince(0);
+//        record.setCity(0);
         record.setTotal(total);
         record.setCredited(money);
         record.setBankFlag(1);
         record.setFee(CustomUtil.formatAmount(fee.toString()));
-        record.setAddtime(String.valueOf(nowTime));
-        record.setAddip(params.get("ip"));
+        record.setAddIp(params.get("ip"));
         record.setAccountId(bean.getAccountId());
         record.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
         record.setTxDate(Integer.parseInt(bean.getTxDate()));
@@ -1875,11 +1899,20 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.setBank(accountWithdrawVO.getBank());
             result.setStatus(map.get(String.valueOf(accountWithdrawVO.getStatus())));
             //TODO:这里有问题，数据库表的字段已经更换。同时由于nxl代码中有关于老字段的应用，所以这里需要确认
-            result.setWithdrawTime(accountWithdrawVO.getAddtime());
-            //result.setWithdrawTime(GetDate.dateToString(accountWithdrawVO.getCreateTime()));
+            // result.setWithdrawTime(accountWithdrawVO.getAddtime());
+            result.setWithdrawTime(GetDate.dateToString(accountWithdrawVO.getCreateTime()));
             resultList.add(result);
         }
         return resultList;
+    }
+
+    /**
+     * 提现成功后,发送神策数据统计MQ
+     *
+     * @param sensorsDataBean
+     */
+    private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataWithdrawProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_WITHDRAW_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
     }
 
 }

@@ -490,5 +490,8 @@ public class AutoMapper {
 
     @Autowired
     protected ApplyAgreementInfoMapper applyAgreementInfoMapper;
+
+    @Resource
+    protected BankRepayOrgFreezeLogMapper bankRepayOrgFreezeLogMapper;
 }
 

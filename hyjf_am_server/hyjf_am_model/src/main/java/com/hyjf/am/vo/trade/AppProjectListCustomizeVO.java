@@ -94,6 +94,10 @@ public class AppProjectListCustomizeVO extends BaseVO {
 	private Integer increaseInterestFlag;
 	/**产品加息数据库字段*/
 	private BigDecimal borrowExtraYieldOld;
+
+	//APP3.0.9新增字段标签描述
+	private String tag;
+
 	/**
 	 * 构造方法
 	 */
@@ -332,5 +336,13 @@ public class AppProjectListCustomizeVO extends BaseVO {
 
 	public void setBorrowExtraYieldOld(BigDecimal borrowExtraYieldOld) {
 		this.borrowExtraYieldOld = borrowExtraYieldOld;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 }

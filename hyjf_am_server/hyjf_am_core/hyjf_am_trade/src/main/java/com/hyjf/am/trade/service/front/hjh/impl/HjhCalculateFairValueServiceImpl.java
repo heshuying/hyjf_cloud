@@ -74,7 +74,7 @@ public class HjhCalculateFairValueServiceImpl extends BaseServiceImpl implements
             int duringDays = 0;
             // 循环有效债权信息
             for (HjhDebtDetail hjhDebtDetail : debtDetails) {
-                logger.info("计算加入订单的当前持有债权价值,计划编号:[" + hjhDebtDetail.getPlanNid() + "],计划加入订单号:" + hjhDebtDetail.getPlanOrderId() + "]," +
+                logger.info("计算加入订单的当前持有债权价值,智投编号:[" + hjhDebtDetail.getPlanNid() + "],计划加入订单号:" + hjhDebtDetail.getPlanOrderId() + "]," +
                         "投资订单号或承接订单号:[" + hjhDebtDetail.getOrderId() + "].");
                 // 债权原标编号
                 String borrowNid = hjhDebtDetail.getBorrowNid();

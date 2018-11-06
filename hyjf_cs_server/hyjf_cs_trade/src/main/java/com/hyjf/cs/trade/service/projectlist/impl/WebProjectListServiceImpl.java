@@ -40,8 +40,10 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
@@ -91,14 +93,17 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     @Autowired
     private RepayPlanService repayPlanService;
-
+    @Autowired
+    private AuthService authService;
     @Autowired
     private BaseClient baseClient;
+
 
     @Autowired
     private SmsProducer smsProducer;
 
-
+    @Autowired
+    private SystemConfig systemConfig;
     /**
      * 获取Web端项目列表
      *
@@ -291,7 +296,18 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         } else {
             getProjectDetailNew(other, projectCustomeDetail, userVO);
         }
-        other.put("paymentAuthStatus","");
+
+        other.put("paymentAuthStatus", "");
+
+        if (userId != null) {
+            HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
+            // 服务费授权状态
+            other.put("paymentAuthStatus", hjhUserAuth == null ? "" : hjhUserAuth.getAutoPaymentStatus());
+            // 是否开启服务费授权 0未开启 1已开启
+            other.put("paymentAuthOn",
+                    authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+            other.put("isCheckUserRole",systemConfig.getRoleIsopen());
+        }
         WebResult webResult = new WebResult();
        // detailCsVO.setOther(other);
         webResult.setData(other);
@@ -1415,7 +1431,15 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 } else {
                     result.put("autoInvesFlag", "0");//自动投标授权状态 0: 未授权    1:已授权
                 }
+                // 合规三期
+                // 是否开启服务费授权 0未开启  1已开启
+                result.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
+                result.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+                result.put("isCheckUserRole",systemConfig.getRoleIsopen());
             } else {
+                //状态位用于判断tab的是否可见
+                result.put("paymentAuthStatus", "0");
+                result.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
                 //状态位用于判断tab的是否可见
                 result.put("loginFlag", "0");//登录状态 0未登陆 1已登录
                 result.put("openFlag", "0"); //开户状态 0未开户 1已开户
