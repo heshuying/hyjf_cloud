@@ -8,6 +8,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.response.admin.HjhAccedeSumResponse;
 import com.hyjf.am.response.admin.UserHjhInvistDetailResponse;
+import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.resquest.admin.AccedeListRequest;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminAccedeListService;
 import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
@@ -18,10 +19,7 @@ import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -141,7 +139,21 @@ public class AdminAccedeListController {
     	}
     	return response;
     }
-    
+	/**
+	 * 判断用户是否有持有中的计划。如果有，则不能解除投资授权和债转授权
+     * @Author: libin
+     * @return
+	 */
+	@GetMapping("/canCancelAuth/{userId}")
+	public HjhAccedeResponse selectByAssignNidAndUserId(@PathVariable Integer userId) {
+		HjhAccedeResponse response = new HjhAccedeResponse();
+		if(adminAccedeListService.canCancelAuth(userId)) {
+			response.setRtn(HjhAccedeResponse.SUCCESS);
+		}else {
+			response.setRtn(HjhAccedeResponse.FAIL);
+		}
+		return response;
+	}
     
     
     

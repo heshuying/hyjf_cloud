@@ -30,4 +30,13 @@ public interface BindCardService extends BaseService {
 	String selectBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode);
 
     boolean updateAfterDeleteCard(BankCardUpdateRequest requestBean) throws Exception;
+	/**
+	 * 根据用户Id,银行卡Id查询用户银行卡信息
+	 *
+	 * @param userId
+	 * @param cardId
+	 * @auther: nxl
+	 * @return
+	 */
+	BankCard getBankCardById(Integer userId, String cardId);
 }

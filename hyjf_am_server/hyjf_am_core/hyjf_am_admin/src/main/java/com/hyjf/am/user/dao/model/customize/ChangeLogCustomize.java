@@ -43,7 +43,8 @@ public class ChangeLogCustomize {
     private int limitStart = -1;
 
     private int limitEnd = -1;
-    
+    // add by nxl 合规四期 添加邮箱显示
+    private String email;
 
     public String getStartTime() {
 		return startTime;
@@ -226,6 +227,13 @@ public class ChangeLogCustomize {
 			
 	}
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
 
 

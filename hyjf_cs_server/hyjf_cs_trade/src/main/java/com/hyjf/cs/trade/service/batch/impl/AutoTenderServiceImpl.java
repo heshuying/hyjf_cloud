@@ -12,6 +12,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.bean.RedisBorrow;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -19,6 +20,7 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.batch.AutoTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -50,6 +52,9 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
     private AmTradeClient amTradeClient;
     @Autowired
     private AmUserClient amUserClient;
+
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 取得自动投资用加入计划列表
@@ -152,6 +157,17 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         if (bankOpenAccount == null) {
             logger.error("====[" + accedeOrderId + "]" + "用户没开户 " + hjhAccede.getUserId());
             return false;
+        }
+
+        UserInfoVO usersInfo = amUserClient.findUsersInfoById(hjhAccede.getUserId());
+        if (null != usersInfo) {
+            String roleIsOpen = systemConfig.getRoleIsopen();
+            if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+                if (usersInfo.getRoleId() != 1) {// 非投资用户
+                    logger.error("====[" + accedeOrderId + "]" + "仅限出借人进行投资 " + hjhAccede.getUserId());
+                    return false;
+                }
+            }
         }
         String tenderUsrcustid = bankOpenAccount.getAccount();//获取江西银行电子账号
 
@@ -334,19 +350,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     BigDecimal assignCapital = resultVO.getAssignCapital();
                     //承接服务费
                     BigDecimal serviceFee = resultVO.getServiceFee();
-                    logger.info("[" + accedeOrderId + "]" + "承接用计算完成"
-                            + "\n,分期数据结果:" + resultVO.getAssignResult().toString()
-                            + "\n,承接总额:" + resultVO.getAssignAccount()
-                            + "\n,承接本金:" + resultVO.getAssignCapital()
-                            + "\n,承接利息:" + resultVO.getAssignInterest()
-                            + "\n,承接支付金额:" + resultVO.getAssignPay()
-                            + "\n,承接垫付利息:" + resultVO.getAssignAdvanceMentInterest()
-                            + "\n,承接延期利息:" + resultVO.getAssignRepayDelayInterest()
-                            + "\n,承接逾期利息:" + resultVO.getAssignRepayLateInterest()
-                            // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
-                            + "\n,承接服务率:" + resultVO.getServiceApr()
-                            // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
-                            + "\n,承接服务费:" + resultVO.getServiceFee());
+                    logger.info("[" + accedeOrderId + "]" + "承接用计算完成\n"
+                            + resultVO.toLog());
 
                     logger.info("[" + accedeOrderId + "]" + " 银行自动购买债权接口调用前  " + credit.getCreditNid());
 

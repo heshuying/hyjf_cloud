@@ -4,8 +4,11 @@
 package com.hyjf.am.trade.service.admin.hjhplan.impl;
 
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
+import com.hyjf.am.trade.dao.mapper.auto.CreditTenderMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditTenderMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AdminHjhCreditTenderCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.UserRepayListCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhCreditTenderService;
@@ -33,6 +36,10 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 	private AdminHjhCreditTenderCustomizeMapper adminHjhCreditTenderCustomizeMapper;
 	@Autowired
 	private HjhDebtCreditTenderMapper hjhDebtCreditTenderMapper;
+	@Autowired
+	private UserRepayListCustomizeMapper userRepayListCustomizeMapper;
+	@Autowired
+	private CreditTenderMapper creditTenderMapper;
 	
 	@Override
 	public Integer countHjhCreditTenderTotal(HjhCreditTenderRequest request) {
@@ -216,5 +223,35 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		HjhCreditTenderSumVO vo = adminHjhCreditTenderCustomizeMapper.getHjhCreditTenderCalcSumByParam(param);
 		return vo;
+	}
+
+	/**
+	 * 查找用户是否未回款的债权
+	 * @param userid
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int isDismissPay(int userid) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", userid);
+		params.put("roleId", 2);
+		params.put("status", 0);
+		int tenderCount = userRepayListCustomizeMapper.countUserPayProjectRecordTotal(params);
+		CreditTenderExample example = new CreditTenderExample();
+		example.createCriteria().andUserIdEqualTo(userid).andStatusEqualTo(0);
+		int creditCount = creditTenderMapper.countByExample(example);
+		return tenderCount + creditCount;
+	}
+
+	/**
+	 * 存在持有中计划
+	 * @param userid
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int isDismissRePay(int userid) {
+		return userRepayListCustomizeMapper.selectCanDismissRePay(userid);
 	}
 }

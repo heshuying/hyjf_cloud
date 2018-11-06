@@ -1,6 +1,7 @@
 package com.hyjf.common.util;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +26,14 @@ import java.util.stream.Collectors;
  * @version CommonUtils, v0.1 2017/11/11 11:51
  */
 public class CommonUtils {
+
 	private final static Logger logger = LoggerFactory.getLogger(CommonUtils.class);
+
+	public final static String KEY_PAYMENT_AUTH = "AUTHCONFIG:paymentAuth"; // 缴费授权
+	public final static String KEY_REPAYMENT_AUTH = "AUTHCONFIG:repaymentAuth"; // 还款授权
+	public final static String KEY_AUTO_TENDER_AUTH = "AUTHCONFIG:autoTenderAuth"; // 自动投标
+	public final static String KEY_AUTO_CREDIT_AUTH = "AUTHCONFIG:autoCreditAuth"; // 自动债转
+	public final static String KEY_IS_CHECK_USER_ROLES = "CHECKE:ISCHECKUSERROLES"; // 是否校验用户角色
 
 	/**
 	 * 提供对象属性null转""方法，目前只支持String的属性
@@ -365,4 +373,67 @@ public class CommonUtils {
 		}
 	}
 
+
+	/**
+	 * 从redis里面获取授权配置
+	 * @param key
+	 * @return
+	 */
+	public static HjhUserAuthConfigVO getAuthConfigFromCache(String key){
+		HjhUserAuthConfigVO hjhUserAuthConfig=RedisUtils.getObj(key,HjhUserAuthConfigVO.class);
+		return hjhUserAuthConfig;
+	}
+
+	/**
+	 * 检查还款授权和服务费授权状态
+	 * @param autoRepayStatus
+	 * @param paymentAuthStatus
+	 * @return
+	 */
+    public static int checkAuthStatus(Integer autoRepayStatus,Integer paymentAuthStatus) {
+		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(KEY_PAYMENT_AUTH);
+		HjhUserAuthConfigVO repayCconfig = getAuthConfigFromCache(KEY_REPAYMENT_AUTH);
+		if (paymenthCconfig != null && repayCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0
+				&& repayCconfig.getEnabledStatus() - 1 == 0) {
+			// 如果两个都开启了
+			if ((paymentAuthStatus == null || paymentAuthStatus - 1 != 0)
+					&& (autoRepayStatus == null || autoRepayStatus - 1 != 0)) {
+				// 借款人必须服务费授权
+				return 7;
+			}
+		}
+		// 服务费授权
+		if (paymenthCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0) {
+			if (paymentAuthStatus == null || paymentAuthStatus - 1 != 0) {
+				// 借款人必须服务费授权
+				return 5;
+			}
+		}
+		// 还款授权
+		if (repayCconfig != null && repayCconfig.getEnabledStatus() - 1 == 0) {
+			if (autoRepayStatus == null || autoRepayStatus - 1 != 0) {
+				// 借款人必须还款授权
+				return 6;
+			}
+		}
+		return 0;
+    }
+
+	/**
+	 * 检查服务费授权
+	 * @author sunss
+	 * @param authStatus
+	 * @return 0未授权   1已授权
+	 */
+	public static Integer checkPaymentAuthStatus(Integer authStatus){
+		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(KEY_PAYMENT_AUTH);
+		// 服务费授权
+		if (paymenthCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0) {
+			if (authStatus == null || authStatus - 1 != 0) {
+				// 借款人必须服务费授权
+				return 0;
+			}
+		}
+		return 1;
+	}
 }

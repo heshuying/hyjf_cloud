@@ -38,6 +38,8 @@ public class UserChangeLog implements Serializable {
 
     private Date updateTime;
 
+    private String email;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -174,5 +176,13 @@ public class UserChangeLog implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
     }
 }

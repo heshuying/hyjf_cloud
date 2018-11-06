@@ -376,9 +376,14 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
                   /*if (projectType.indexOf("5")!=-1) {
                       projectString = projectString + "汇添金,";
                   }*/
-            if (projectType.indexOf("6") != -1) {
+            // mod by nxl 智投服务：修改汇计划->智投服务 start
+            /*if (projectType.indexOf("6") != -1) {
                 projectString = projectString + "汇计划,";
+            }*/
+            if (projectType.indexOf("6")!=-1) {
+                projectString = projectString + "智投,";
             }
+            // mod by nxl 智投服务：修改汇计划->智投服务 end
             projectString = StringUtils.removeEnd(projectString, ",");
         }
         return projectString;

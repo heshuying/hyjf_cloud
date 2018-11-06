@@ -106,11 +106,11 @@ public class BorrowRepayRequestConsumer extends Consumer{
 				logger.error(e.getMessage());
 				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 			}
-			
+
 
 	        // 查询表确认是否真正的成功
 	        borrowApicron = batchBorrowRepayPlanService.selApiCronByPrimaryKey(borrowApicron.getId());
-			
+
 	        Integer repayUserId = borrowApicron.getUserId();// 还款用户userId
 			String borrowNid = borrowApicron.getBorrowNid();// 项目编号
 			Integer periodNow = borrowApicron.getPeriodNow();// 当前期数
@@ -128,7 +128,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 //	            logger.error(borrowNid+"【本金还款请求】接收到的消息中信息不全");
 //            	return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 //	        }
-	        
+
 		    boolean result = this.outRepeatQueue(redisKey, borrowApicron);//modify by cwyang 数据库事故后变更,不设时间,待所有流程结束后再去除防重标示
 	        if(result){
 	            
