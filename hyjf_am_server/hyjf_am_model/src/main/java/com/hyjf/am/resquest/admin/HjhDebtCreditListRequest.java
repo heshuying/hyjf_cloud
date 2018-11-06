@@ -142,4 +142,23 @@ public class HjhDebtCreditListRequest extends BasePage{
     public void setRepayNextTimeEnd(String repayNextTimeEnd) {
         this.repayNextTimeEnd = repayNextTimeEnd;
     }
+
+    @Override
+    public String toString() {
+        return "HjhDebtCreditListRequest{" +
+                "planNid='" + planNid + '\'' +
+                ", planOrderId='" + planOrderId + '\'' +
+                ", planNidNew='" + planNidNew + '\'' +
+                ", userName='" + userName + '\'' +
+                ", creditNid='" + creditNid + '\'' +
+                ", borrowNid='" + borrowNid + '\'' +
+                ", repayStyle='" + repayStyle + '\'' +
+                ", creditStatus='" + creditStatus + '\'' +
+                ", repayStatus='" + repayStatus + '\'' +
+                ", liquidatesTimeStart='" + liquidatesTimeStart + '\'' +
+                ", liquidatesTimeEnd='" + liquidatesTimeEnd + '\'' +
+                ", repayNextTimeStart='" + repayNextTimeStart + '\'' +
+                ", repayNextTimeEnd='" + repayNextTimeEnd + '\'' +
+                '}';
+    }
 }
