@@ -164,7 +164,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 				//测评到期日
 				Long lCreate = user.getEvaluationExpiredTime().getTime();
 				//当前日期
-				Long lNow = new Date().getTime();
+				Long lNow = System.currentTimeMillis();
 				if (lCreate <= lNow) {
 					//已过期需要重新评测
 					return jsonMessage("根据监管要求，投资前必须进行风险测评", "1");// 测评过期

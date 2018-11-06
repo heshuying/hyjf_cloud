@@ -234,13 +234,14 @@ public class ApiPassWordController extends BaseController {
         repwdResult.set("accountId", bankOpenAccount.getAccount());
         // 返回失败
         if (bean.getRetCode()!=null&&!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-            modelAndView = new ModelAndView(PASSWORD_ERROR_PATH);
             BaseResultBean resultBean = new BaseResultBean();
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
             repwdResult.set("chkValue", resultBean.getChkValue());
             repwdResult.set("status", resultBean.getStatus());
             repwdResult.set("acqRes",request.getParameter("acqRes"));
             modelAndView.addObject("statusDesc", "交易密码修改失败,失败原因：" + passWordService.getBankRetMsg(bean.getRetCode()));
+            modelAndView.addObject("callBackForm", repwdResult);
+            logger.info("修改交易密码同步回调end(密码修改失败)");
             return modelAndView;
         }
         modelAndView.addObject("statusDesc", "修改交易密码成功");
