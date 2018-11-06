@@ -478,13 +478,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (null != usersInfo) {
             String roleIsOpen = systemConfig.getRoleIsopen();
             if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-                logger.info("userInfo.getRoleId()222   :"+userInfo.getRoleId());
-                logger.info("usersInfo.getRoleId().intValue() != 1   :"+(usersInfo.getRoleId().intValue() -1 !=0));
-                logger.info("usersInfo.getRoleId().intValue()11 != 1   :"+(usersInfo.getRoleId().equals(1)));
-                int roleId = usersInfo.getRoleId();
-                logger.info("................ :"+(roleId -1 >0));
-                if (1 -1 >0) {// 非投资用户
-                    logger.info("-------"+(roleId -1 >0));
+                logger.info("................ :"+(!(usersInfo.getRoleId()+"").equals("1")));
+                if (!(usersInfo.getRoleId()+"").equals("1")) {// 非投资用户
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
                 }
             }
@@ -903,11 +898,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
             try{
                 getAppTenderUrl(tender);
-            }catch (Exception e){
+            }catch (CheckException e){
                 logger.error("报错了。。。",e);
-                resultVo.setStatus("1");
-                resultVo.setStatusDesc("投资校验失败！");
-                return resultVo;
+                throw  e ;
             }
         }
 
