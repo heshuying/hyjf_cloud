@@ -71,14 +71,12 @@ public class ApiBankOpenController extends BaseUserController {
     private OpenAccountPageBean getOpenAccountPageBean(ApiBankOpenRequestBean requestBean) {
         OpenAccountPageBean bean = new OpenAccountPageBean();
         BeanUtils.copyProperties(requestBean,bean);
-        // 同步调用路径
-        String retUrl = systemConfig.getServerHost()
-                + "/server/autoPlus/return?acqRes="
-                + requestBean.getAcqRes() + "&callback=" + requestBean.getRetUrl().replace("#", "*-*-*");
+        String retUrl = "http://CS-USER/user/password";
         // 异步调用路
-        String bgRetUrl =systemConfig.getServerHost()
-                + "/server/autoPlus/bgReturn?acqRes="
-                +  requestBean.getAcqRes() + "&phone"+requestBean.getMobile()+"&callback=" + requestBean.getBgRetUrl().replace("#", "*-*-*");
+        String bgRetUrl = "http://CS-USER/user/password";
+        // 调用设置密码接口
+        retUrl += "/resetPasswordReturn?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
+        bgRetUrl += "/resetPasswordBgreturn?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getBgRetUrl().replace("#", "*-*-*");
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         return bean;

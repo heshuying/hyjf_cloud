@@ -105,9 +105,6 @@ public class BaseController {
                 }
             }
         }
-        if (StringUtils.isBlank(callBackAction) || param.get(CHECK_SIGN_STR) == null) {
-            return modelAndView;
-        }
         modelAndView.addObject(CALL_BACK_ACTION, callBackAction);
         // 重新加签，无论业务中是否加签,此处屏蔽业务内加签
         param.put(CHECK_VALUE, ApiSignUtil.encryptByRSA(String.valueOf(param.get(CHECK_SIGN_STR))));
