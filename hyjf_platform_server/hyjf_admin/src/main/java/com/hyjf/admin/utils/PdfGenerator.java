@@ -84,7 +84,7 @@ public class PdfGenerator {
             outputStream.close();
             // PDF文件进行加章处理
             try {
-                String path = sealLocal(fileName, systemConfig.getWebPdfHost() + systemConfig.getTempPdfPath() + fileName);
+                String path = sealLocal(fileName, systemConfig.getAdminFrontHost() + systemConfig.getTempPdfPath() + fileName);
                 // 加章完成删除文件
                 file.delete();
                 return path;
