@@ -40,6 +40,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.DateUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1191,29 +1192,33 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         String repayPeriod = "DF-"+request.getRepayPeriod()+"-";
         request.setRepayPeriod(repayPeriod);
         List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectLikeByExample(request);//债转协议
+
         //输出文件集合
         List<File> files = new ArrayList<File>();
-        for (TenderAgreementVO tenderAgreement : tenderAgreementsAss) {
-            if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
-                if("1".equals(status)){
-                    files = createFaddPDFImgFile(files,tenderAgreement);
-                }else {
-                    if(org.apache.commons.lang.StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
-                        File filePdf = null;
-                        try {
-                            filePdf = FileUtil.getFile(null,null,tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
-                        } catch (IOException e) {
-                            filePdf = null;
-                        }//债转协议
-                        if(filePdf!=null){
-                            files.add(filePdf);
+        if (CollectionUtils.isNotEmpty(tenderAgreementsAss)){
+            for (TenderAgreementVO tenderAgreement : tenderAgreementsAss) {
+                if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
+                    if("1".equals(status)){
+                        files = createFaddPDFImgFile(files,tenderAgreement);
+                    }else {
+                        if(org.apache.commons.lang.StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
+                            File filePdf = null;
+                            try {
+                                filePdf = FileUtil.getFile(null,null,tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
+                            } catch (IOException e) {
+                                filePdf = null;
+                            }//债转协议
+                            if(filePdf!=null){
+                                files.add(filePdf);
+                            }
                         }
                     }
+                } else{
+                    return new AdminResult(BaseResult.FAIL, "下载失败，未找到相关协议");
                 }
-            } else{
-                return new AdminResult(BaseResult.FAIL, "下载失败，未找到相关协议");
             }
         }
+
         if(files!=null && files.size()>0){
             ZIPGenerator.generateZip(response, files, repayPeriod);
             return new AdminResult(BaseResult.SUCCESS, "下载成功");

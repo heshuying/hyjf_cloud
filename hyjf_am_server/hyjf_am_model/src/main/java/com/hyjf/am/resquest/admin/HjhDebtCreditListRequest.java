@@ -11,11 +11,11 @@ import io.swagger.annotations.ApiModelProperty;
 public class HjhDebtCreditListRequest extends BasePage{
 
 
-    @ApiModelProperty(value = "出让人计划编号")
+    @ApiModelProperty(value = "出让人智投编号")
     private String planNid;
-    @ApiModelProperty(value = "出让人计划订单号")
+    @ApiModelProperty(value = "出让人智投订单号")
     private String planOrderId;
-    @ApiModelProperty(value = "清算后计划编号")
+    @ApiModelProperty(value = "清算后智投编号")
     private String planNidNew;
     @ApiModelProperty(value = "出让人")
     private String userName;
