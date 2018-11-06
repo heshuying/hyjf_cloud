@@ -362,7 +362,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 设置优惠券
             resultVo.setCapitalInterest("");
             resultVo.setConfirmCouponDescribe("未使用优惠券");
-            resultVo.setRealAmount("");
             resultVo.setCouponType("");
             JSONObject counts =  userCoupon;
             String couponAvailableCount = "0";
