@@ -63,4 +63,15 @@ public class HjhCreditCalcPeriodResultVO extends BaseVO implements Serializable 
     public void setAssignPeriodRepayLateInterest(BigDecimal assignPeriodRepayLateInterest) {
         this.assignPeriodRepayLateInterest = assignPeriodRepayLateInterest;
     }
+
+    @Override
+    public String toString() {
+        return "HjhCreditCalcPeriodResultVO{" +
+                "assignPeriodCapital=" + assignPeriodCapital.toString() +
+                ", assignPeriodInterest=" + assignPeriodInterest +
+                ", assignPeriodAdvanceMentInterest=" + assignPeriodAdvanceMentInterest +
+                ", assignPeriodRepayDelayInterest=" + assignPeriodRepayDelayInterest +
+                ", assignPeriodRepayLateInterest=" + assignPeriodRepayLateInterest +
+                '}';
+    }
 }
