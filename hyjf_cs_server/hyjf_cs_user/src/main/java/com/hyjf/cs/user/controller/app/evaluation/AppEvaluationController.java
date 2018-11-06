@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationBehaviorVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -64,10 +65,12 @@ public class AppEvaluationController {
             }
             modelAndView.addObject("couponResult", couponResult);
         } else {
-            //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
-            Long lCreate = GetDate.countDate(ueResult.getCreateTime(),1,1).getTime();
+            //从user表获取用户测评到期日
+            UserVO user = evaluationService.getUsersById(userId);
+            // 获取评测时间加一年的毫秒数18.2.2评测 19.2.2
+            Long lCreate = user.getEvaluationExpiredTime().getTime();
             //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
-            Long lNow = GetDate.countDate(new Date(), 5,1).getTime();
+            Long lNow = System.currentTimeMillis();
             if (lCreate <= lNow) {
                 //已过期需要重新评测
                 modelAndView.addObject("couponResult", "已过期需要重新评测");
@@ -96,10 +99,12 @@ public class AppEvaluationController {
         }
         UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(userId);
         if (userEvalationResult != null && userEvalationResult.getId() != 0) {
-            //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
-            Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(), 1, 1).getTime();
+            //从user表获取用户测评到期日
+            UserVO user = evaluationService.getUsersById(userId);
+            // 获取评测时间加一年的毫秒数18.2.2评测 19.2.2
+            Long lCreate = user.getEvaluationExpiredTime().getTime();
             //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
-            Long lNow = GetDate.countDate(new Date(), 5, 1).getTime();
+            Long lNow = System.currentTimeMillis();
             if (lCreate <= lNow) {
                 //已过期需要重新评测
                 ret.put(CommonConstant.JSON_IF_EVALUATION_KEY, 2);

@@ -61,10 +61,12 @@ public class WeChatEvaluationController {
         //测评结果
         UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(userId);
         CheckUtil.check(null != userEvalationResult, MsgEnum.STATUS_EV000003);
-        //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
-        Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(), 1, 1).getTime();
+        //从user表获取用户测评到期日
+        UserVO user = evaluationService.getUsersById(userId);
+        // 获取评测时间加一年的毫秒数18.2.2评测 19.2.2
+        Long lCreate = user.getEvaluationExpiredTime().getTime();
         //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
-        Long lNow = GetDate.countDate(new Date(), 5, 1).getTime();
+        Long lNow = System.currentTimeMillis();
         CheckUtil.check(lCreate > lNow, MsgEnum.STATUS_EV000004);
         resultBean.setObject(userEvalationResult);
         return resultBean;
@@ -92,10 +94,12 @@ public class WeChatEvaluationController {
         }
         UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(userId);
         if (userEvalationResult != null) {
-            //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
-            Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(), 1, 1).getTime();
+            //从user表获取用户测评到期日
+            UserVO user = evaluationService.getUsersById(userId);
+            // 获取评测时间加一年的毫秒数18.2.2评测 19.2.2
+            Long lCreate = user.getEvaluationExpiredTime().getTime();
             //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
-            Long lNow = GetDate.countDate(new Date(), 5, 1).getTime();
+            Long lNow = System.currentTimeMillis();
             CheckUtil.check(lCreate > lNow, MsgEnum.STATUS_EV000003);
         }
         //已过期需要重新评测或者未测评
