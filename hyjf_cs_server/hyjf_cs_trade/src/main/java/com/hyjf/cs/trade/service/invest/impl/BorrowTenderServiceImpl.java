@@ -995,20 +995,26 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (tender.getCouponGrantId() != null && tender.getCouponGrantId() > 0) {
                 couponConfig = amTradeClient.getCouponUser(tender.getCouponGrantId(), userId);
             }
-
+            investInfo.setUsedCouponDes("未使用");
             // 设置收益率
             if (couponConfig != null) {
                 if (couponConfig.getCouponType() == 1) {
                     investInfo.setCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");
                     investInfo.setCouponType("体验金");
+                    investInfo.setCouponName("体验金");
+                    investInfo.setUsedCouponDes("体验金: " + couponConfig.getCouponQuota() + "元");
                 }
                 if (couponConfig.getCouponType() == 2) {
                     investInfo.setCouponDescribe("加息券:  " + couponConfig.getCouponQuota() + "%");
                     investInfo.setCouponType("加息券");
+                    investInfo.setCouponName("加息券");
+                    investInfo.setUsedCouponDes("加息券:  " + couponConfig.getCouponQuota() + "%");
                 }
                 if (couponConfig.getCouponType() == 3) {
                     investInfo.setCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     investInfo.setCouponType("代金券");
+                    investInfo.setCouponName("代金券");
+                    investInfo.setUsedCouponDes("代金券: " + couponConfig.getCouponQuota() + "元");
                     investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
                 }
                 investInfo.setCouponQuota(couponConfig.getCouponQuota().toString());
@@ -1208,7 +1214,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setEndTime("");
             investInfo.setButtonWord("");
             investInfo.setStandardValues("");
-            investInfo.setUsedCouponDes("未使用");
             // 投资协议
             if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
                 investInfo.setRealAmount("0");
