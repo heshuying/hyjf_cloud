@@ -74,12 +74,12 @@ public class PlanRepayController extends BaseController {
         Map<String, Object> orderStatusMap1 = new HashedMap();
         Map<String, Object> orderStatusMap2 = new HashedMap();
         //设置对应键值对
-        orderStatusMap.put("key", 8);
-        orderStatusMap.put("value", "未还款");
-        orderStatusMap1.put("key", 10);
-        orderStatusMap1.put("value", "还款中");
-        orderStatusMap2.put("key", 11);
-        orderStatusMap2.put("value", "还款完成");
+        orderStatusMap.put("key", 3);
+        orderStatusMap.put("value", "锁定中");
+        orderStatusMap1.put("key", 5);
+        orderStatusMap1.put("value", "退出中");
+        orderStatusMap2.put("key", 7);
+        orderStatusMap2.put("value", "已退出");
 
         orderStatusList.add(orderStatusMap);
         orderStatusList.add(orderStatusMap1);
