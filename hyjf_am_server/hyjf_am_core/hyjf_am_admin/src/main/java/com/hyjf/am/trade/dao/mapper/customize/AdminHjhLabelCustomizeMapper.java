@@ -22,5 +22,10 @@ public interface AdminHjhLabelCustomizeMapper {
 	 */
 	List<HjhLabelCustomizeVO> selectHjhLabelListById(Map<String, Object> paraMap);
 
-	List<AdminHjhLabelCustomize> selectByExample(AdminHjhLabelCustomizeExample example);
+	/**
+	 * 条件查询列表
+	 * @param paraMap
+	 * @return
+	 */
+	List<AdminHjhLabelCustomize> selectHjhLabelList(Map<String, Object> paraMap);
 }

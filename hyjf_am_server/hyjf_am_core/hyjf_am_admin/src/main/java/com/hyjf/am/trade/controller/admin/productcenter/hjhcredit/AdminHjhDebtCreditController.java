@@ -50,7 +50,7 @@ public class AdminHjhDebtCreditController extends BaseController{
     @ApiOperation(value = "转让列表查询")
     @PostMapping("/getList")
     public HjhDebtCreditReponse getList(@RequestBody HjhDebtCreditListRequest request){
-
+        logger.info("adminHjhDebtCredit/getList start, request is :{}", request);
         HjhDebtCreditReponse reponse = new HjhDebtCreditReponse();
         Integer total = getListTotal(request);
         Paginator paginator = new Paginator(request.getCurrPage(), total,request.getPageSize());
