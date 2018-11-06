@@ -49,15 +49,14 @@ public class ApiBankOpenController extends BaseUserController {
         logger.info("第三方请求页面开户, ApiBankOpenRequestBean is :{}", JSONObject.toJSONString(requestBean));
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = bankOpenService.checkApiParam(requestBean);
+        paramMap.put("callBackAction",requestBean.getRetUrl());
         if("0".equals(paramMap.get("status"))){
-            modelAndView.addObject("callBackForm", paramMap);
-            return modelAndView;
+            return callbackErrorView(paramMap);
         }
         UserVO user = this.bankOpenService.getUsersByMobile(requestBean.getMobile());
         OpenAccountPageBean openAccountPageBean = getOpenAccountPageBean(requestBean);
         openAccountPageBean.setUserId(user.getUserId());
         openAccountPageBean.setClientHeader(ClientConstants.CLIENT_HEADER_API);
-        //modelAndView = bankOpenService.getOpenAccountMV(openAccountPageBean);
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), requestBean.getMobile(), openAccountPageBean.getOrderId(), requestBean.getPlatform(), requestBean.getTrueName(), requestBean.getIdNo(), "", "");
         if (uflag == 0) {
@@ -72,14 +71,12 @@ public class ApiBankOpenController extends BaseUserController {
     private OpenAccountPageBean getOpenAccountPageBean(ApiBankOpenRequestBean requestBean) {
         OpenAccountPageBean bean = new OpenAccountPageBean();
         BeanUtils.copyProperties(requestBean,bean);
-        // 同步调用路径
-        String retUrl = systemConfig.getServerHost()
-                + "/server/autoPlus/return?acqRes="
-                + requestBean.getAcqRes() + "&callback=" + requestBean.getRetUrl().replace("#", "*-*-*");
+        String retUrl = "http://CS-USER/user/password";
         // 异步调用路
-        String bgRetUrl =systemConfig.getServerHost()
-                + "/server/autoPlus/bgReturn?acqRes="
-                +  requestBean.getAcqRes() + "&phone"+requestBean.getMobile()+"&callback=" + requestBean.getBgRetUrl().replace("#", "*-*-*");
+        String bgRetUrl = "http://CS-USER/user/password";
+        // 调用设置密码接口
+        retUrl += "/resetPasswordReturn?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
+        bgRetUrl += "/resetPasswordBgreturn?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getBgRetUrl().replace("#", "*-*-*");
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         return bean;
