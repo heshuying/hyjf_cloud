@@ -50,7 +50,7 @@ public class AutoIssueRecoverController extends BaseController{
         try {
             List statusList = new ArrayList();
             statusList.add(0);
-            statusList.add(1);
+            //statusList.add(1);
             // 查询待录标列表
             List<HjhPlanAsset> sendList = this.autoIssueRecoverService.selectAssetList(statusList);
             logger.info(" 待录标总数: "+sendList.size());
