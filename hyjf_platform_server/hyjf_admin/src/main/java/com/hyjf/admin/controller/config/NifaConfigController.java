@@ -227,6 +227,7 @@ public class NifaConfigController  extends BaseController
         String loginUserId = adminSystemVO.getId();
         if(StringUtils.isNotBlank(loginUserId)){
             nifaFieldDefinitionAddRequest.setCreateUserId(Integer.parseInt(loginUserId));
+            nifaFieldDefinitionAddRequest.setUpdateUserId(Integer.parseInt(loginUserId));
         }
         nifaFieldDefinitionAddRequest.setCreateTime(new Date());
         boolean isInset = nifaConfigService.insertNifaContractTemplate(nifaFieldDefinitionAddRequest);
