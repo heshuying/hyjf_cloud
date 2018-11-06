@@ -495,10 +495,7 @@
         hcr.recover_yestime,
         '%Y-%m-%d %H:%i'
         ) recover_yestime,
-        FROM_UNIXTIME(
-        hcr.recover_time,
-        '%Y-%m-%d'
-        ) recover_time,
+        hcr.recover_time recover_time,
         FROM_UNIXTIME(
         hcr.recover_time,
         '%Y-%m-%d'
