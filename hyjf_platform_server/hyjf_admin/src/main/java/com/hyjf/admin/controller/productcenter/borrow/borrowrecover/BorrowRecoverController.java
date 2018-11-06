@@ -135,7 +135,7 @@ public class BorrowRecoverController extends BaseController {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid","借款编号");
         map.put("instName","资产来源");
-        map.put("planNid","计划编号");
+        map.put("planNid","智投编号");
         map.put("userId","借款人ID");
         map.put("username","借款人用户名");
         map.put("entrustedFlg","是否受托支付");

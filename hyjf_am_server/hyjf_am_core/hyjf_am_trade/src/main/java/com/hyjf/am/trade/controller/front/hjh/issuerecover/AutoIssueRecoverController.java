@@ -50,7 +50,7 @@ public class AutoIssueRecoverController extends BaseController{
         try {
             List statusList = new ArrayList();
             statusList.add(0);
-            statusList.add(1);
+            //statusList.add(1);
             // 查询待录标列表
             List<HjhPlanAsset> sendList = this.autoIssueRecoverService.selectAssetList(statusList);
             logger.info(" 待录标总数: "+sendList.size());
@@ -113,7 +113,8 @@ public class AutoIssueRecoverController extends BaseController{
                 try {
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", planAsset.getBorrowNid());
-                    autoIssueMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                    //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+                    autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
                 } catch (MQException e) {
                     logger.error("发送【关联计划资产修复】MQ失败...");
                 }
@@ -130,7 +131,8 @@ public class AutoIssueRecoverController extends BaseController{
                 try {
                     JSONObject params = new JSONObject();
                     params.put("creditNid", credit.getCreditNid());
-                    autoIssueMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                    //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+                    autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
                 } catch (MQException e) {
                     logger.error("发送【债转待关联计划资产修复】MQ失败...");
                 }
@@ -149,7 +151,8 @@ public class AutoIssueRecoverController extends BaseController{
                 try {
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", borrow.getBorrowNid());
-                    autoIssueMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                    //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+                    autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
                 } catch (MQException e) {
                     logger.error("发送【债转待关联计划资产修复】MQ失败...");
                 }

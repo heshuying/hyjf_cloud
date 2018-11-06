@@ -24,6 +24,7 @@ import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -364,6 +365,9 @@ public class CouponConfigController extends BaseController {
         CouponRecover couponRecover=CommonUtils.convertBean(cr,CouponRecover.class);
         if (!"null".equals(cr.getRecoverPeriod()) && StringUtils.isNotBlank(cr.getRecoverPeriod())){
             couponRecover.setRecoverPeriod(Integer.parseInt(cr.getRecoverPeriod()));
+        }
+        if (cr.getRecoverTime() != null) {
+            couponRecover.setRecoverTime(GetDate.strYYYYMMDD2Timestamp2(cr.getRecoverTime()));
         }
         Integer count = couponConfigService.insertCouponRecover(couponRecover);
         response.setCount(count);
