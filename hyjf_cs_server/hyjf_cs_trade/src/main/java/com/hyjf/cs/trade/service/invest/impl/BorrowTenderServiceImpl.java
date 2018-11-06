@@ -474,17 +474,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
             throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PLAT,tmpInfo);
         }
-        UserInfoVO usersInfo = amUserClient.findUsersInfoById(borrow.getUserId());
-        if (null != usersInfo) {
-            String roleIsOpen = systemConfig.getRoleIsopen();
-            if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-                logger.info("................ :"+(!(usersInfo.getRoleId()+"").equals("1")));
-                if (!(usersInfo.getRoleId()+"").equals("1")) {// 非投资用户
-                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
-                }
-            }
-        }
-
         // 借款人不可以自己投资项目
         if (userId.equals(String.valueOf(borrow.getUserId()))) {
             throw new CheckException(MsgEnum.ERR_TENDER_YOURSELF);
@@ -497,6 +486,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (borrow.getBorrowFullStatus() == 1) {
             throw new CheckException(MsgEnum.ERR_TENDER_FULL_STANDARD);
         }
+        UserInfoVO usersInfo = amUserClient.findUsersInfoById(borrow.getUserId());
+        if (null != usersInfo) {
+            String roleIsOpen = systemConfig.getRoleIsopen();
+            if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+                if (userInfo.getRoleId().intValue() != 1) {
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+                }
+            }
+        }
+
     }
 
     /**
@@ -895,12 +894,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         //add by cwyang APP3.0.9 确认是否为最后一次确认，如果是最后一次确认则必须进行投资校验
         if(isConfirm != null && "1".equals(isConfirm)){
             AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
-
+            tender.setAccount(tender.getMoney());
             try{
                 getAppTenderUrl(tender);
             }catch (CheckException e){
                 logger.error("报错了。。。",e);
-                throw  e ;
+                resultVo.setStatus("1");
+                resultVo.setStatusDesc(e.getMessage());
+                return resultVo;
             }
         }
 
