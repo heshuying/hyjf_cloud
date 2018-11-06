@@ -107,8 +107,8 @@
 		<include refid="Base_Column_List"/>
 		FROM
 		ht_hjh_label la
-		LEFT JOIN
-		ht_hjh_allocation_engine en ON la.id = en.label_id
+		<!-- LEFT JOIN
+		ht_hjh_allocation_engine en ON la.id = en.label_id -->
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause"/>
 		</if>
