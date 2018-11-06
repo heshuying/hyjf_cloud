@@ -261,19 +261,21 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         if (CollectionUtils.isEmpty(mapPerformanceSum)) {
             throw new NullPointerException();
         }
-
+        logger.info("mapPerformanceSum====="+ JSONObject.toJSONString(mapPerformanceSum));
         //本月成交金额
         List<OperationReportJobVO> listMonthDealMoney = getMonthDealMoney(0, 1);
         if (CollectionUtils.isEmpty(listMonthDealMoney)) {
             throw new NullPointerException();
         }
         currentMonthDealMoney = listMonthDealMoney.get(0).getSumAccount();
-
+        logger.info("listMonthDealMoney====="+ JSONObject.toJSONString(listMonthDealMoney));
         //去年本月成交金额
         List<OperationReportJobVO> listLastMonthDealMoney = getMonthDealMoney(12, 13);
-        if (CollectionUtils.isEmpty(listMonthDealMoney)) {
+        logger.info("listLastMonthDealMoney====="+ JSONObject.toJSONString(listLastMonthDealMoney));
+        if (CollectionUtils.isEmpty(listLastMonthDealMoney)) {
             throw new NullPointerException();
         }
+
         lastMonthDealMoney = listLastMonthDealMoney.get(0).getSumAccount();
 
         //今年成交金额 和 去年本月成交金额 同比增长 百分比
@@ -284,6 +286,8 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         if (CollectionUtils.isEmpty(mapRevenueAndYield)) {
             throw new NullPointerException();
         }
+        logger.info("mapRevenueAndYield====="+ JSONObject.toJSONString(mapRevenueAndYield));
+
         operationProfit = mapRevenueAndYield.get("operationProfit");//本月赚钱的收益
         lastYearProfit = mapRevenueAndYield.get("lastYearProfit");//去年本月赚取收益
 

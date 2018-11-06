@@ -84,15 +84,15 @@
         <result column="user_content" property="userContent" />
     </resultMap>
 
-    <resultMap id="selectCouponRecoverMap" type="com.hyjf.am.vo.admin.coupon.CouponRecoverVO">
+    <resultMap id="selectCouponRecoverMap" type="com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize">
         <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
         <result column="recover_period" property="recoverPeriod" jdbcType="VARCHAR" />
-        <result column="transfer_time" property="transferTime" jdbcType="VARCHAR" />
+        <result column="transfer_time" property="transferTime" jdbcType="INTEGER" />
         <result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
-        <result column="recover_yestime" property="recoverYestime" jdbcType="VARCHAR" />
-        <result column="recover_time" property="recoverTime" jdbcType="VARCHAR" />
+        <result column="recover_yestime" property="recoverYestime" jdbcType="INTEGER" />
+        <result column="recover_time" property="recoverTime" jdbcType="INTEGER" />
         <result column="recover_time_string" property="recoverTimeString" jdbcType="VARCHAR" />
-        <result column="exp_time" property="expTime" jdbcType="VARCHAR" />
+        <result column="exp_time" property="expTime" jdbcType="INTEGER" />
         <result column="transfer_id" property="transferId" jdbcType="VARCHAR" />
         <result column="received_flg" property="receivedFlg" jdbcType="VARCHAR" />
         <result column="received_flg_origin" property="receivedFlgOrigin" jdbcType="VARCHAR" />
@@ -462,8 +462,8 @@
         LEFT JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
         LEFT JOIN ht_coupon_tender hct ON hcu.id = hct.coupon_grant_id
         LEFT JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid
-        INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
-        LEFT JOIN ht_r_user u ON hcu.update_user_id = u.user_id
+        INNER JOIN hyjf_user.ht_user hu ON hcu.user_id = hu.user_id
+        LEFT JOIN hyjf_config.ht_admin u ON hcu.update_user_id = u.id
         -- LEFT JOIN ht_activity_list hal ON hcu.activity_id = hal.id
         LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
         LEFT JOIN ht_hjh_plan hhp ON hbt.borrow_nid = hhp.plan_nid

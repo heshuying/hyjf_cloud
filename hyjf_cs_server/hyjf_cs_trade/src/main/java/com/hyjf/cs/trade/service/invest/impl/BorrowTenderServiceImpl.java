@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
@@ -744,6 +745,19 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if(tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0){
                 // 用户选择了优惠券
                 couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
+                if(couponUser==null){
+                    // 获取用户最优优惠券
+                    BestCouponListVO couponConfig = new BestCouponListVO();
+                    MyCouponListRequest request = new MyCouponListRequest();
+                    request.setBorrowNid(tender.getBorrowNid());
+                    request.setUserId(String.valueOf(loginUser.getUserId()));
+                    request.setPlatform(CustomConstants.CLIENT_PC);
+                    request.setMoney("0");
+                    couponConfig = amTradeClient.selectBestCoupon(request);
+                    if (couponConfig != null) {
+                        couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()),tender.getUserId());
+                    }
+                }
                 String config = "";
                 // 加息券标识（0：禁用，1：可用）    1：体验金，2：加息券 3代金券
                 int interestCoupon = borrowInfo.getBorrowInterestCoupon();
