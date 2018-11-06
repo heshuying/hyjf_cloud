@@ -112,6 +112,7 @@ public class HjhDebtCreditController extends BaseController{
     })
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public JSONObject queryHjhDebtCreditDetail(@RequestBody HjhDebtCreditListRequest request) {
+        logger.info("queryHjhDebtCreditDetail start, request is :{}", request);
         JSONObject jsonObject = null;
         HjhDebtCreditReponse hjhDebtCreditReponse = hjhDebtCreditService.queryHjhDebtCreditList(request);
         List<HjhDebtCreditVo> hjhDebtCreditVoList = new ArrayList<HjhDebtCreditVo>();
