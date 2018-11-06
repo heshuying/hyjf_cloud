@@ -84,7 +84,7 @@ public class BankOpenController extends BaseController {
 	 */
 	@RequestMapping("/updateUserAccount")
 	public int updateUserAccount(@RequestBody @Valid BankOpenRequest request) {
-		logger.info("updateUserAccount...param is :{}", JSONObject.toJSONString(request));
+		logger.info("updateUserAccount..dd. param is ::{}", JSONObject.toJSONString(request));
 
 		Integer userId = request.getUserId();
 		String orderId = request.getOrderId();
@@ -94,8 +94,9 @@ public class BankOpenController extends BaseController {
 		String idNo = request.getIdNo();
 		String mobile = request.getMobile();
 		Integer roleId = request.getRoleId();
+		Integer isSetPassword = request.getIsSetPassword();
 
-		boolean result = this.bankOpenService.updateUserAccount(userId, trueName, orderId, accountId, idNo, bankAccountEsb, mobile,roleId);
+		boolean result = this.bankOpenService.updateUserAccount(userId, trueName, orderId, accountId, idNo, bankAccountEsb, mobile,roleId,isSetPassword);
 
 		return result?1:0;
 	}

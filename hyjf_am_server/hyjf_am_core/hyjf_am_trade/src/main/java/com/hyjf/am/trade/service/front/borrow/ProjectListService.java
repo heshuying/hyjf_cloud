@@ -8,10 +8,10 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
 import com.hyjf.am.trade.dao.model.customize.*;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.trade.CreditListVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
+import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
 import javax.validation.Valid;
@@ -217,4 +217,36 @@ public interface ProjectListService {
     List<ApiProjectListCustomize> getApiBorrowList(Map<String,Object> params);
 
     /*-------------------------------  api  end    -------------------------------------------*/
+
+    /**
+     *首页汇计划推广计划列表 - 首页显示 ②	若没有可投计划，则显示锁定期限短的
+     * @Author yangchangwei 2018/10/16
+     * @param map
+     * @return
+     */
+    List<HjhPlanCustomizeVO> getIndexHjhExtensionPlanListByLockTime(Map map);
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     * @Author yangchangwei 2018/10/16
+     * @param map
+     * @return
+     */
+    List<HjhPlanCustomizeVO> getIndexHjhExtensionPlanList(Map map);
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     * @Author yangchangwei 2018/10/16
+     * @param map
+     * @return
+     */
+    List<AppProjectListCustomizeVO> getHomeProjectList(Map map);
+
+    /**
+     * app首页获取有效公告
+     * @author cwyang 2018-10-18
+     * @return
+     */
+    List<AppPushManageVO> getAnnouncements();
+
 }

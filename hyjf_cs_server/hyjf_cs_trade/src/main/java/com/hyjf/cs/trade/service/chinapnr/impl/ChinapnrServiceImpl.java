@@ -341,15 +341,15 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
         // 提现银行
         record.setBank(bank);
         record.setBankId(bankId);
-        record.setBranch(null);
-        record.setProvince(0);
-        record.setCity(0);
+//        record.setBranch(null);
+//        record.setProvince(0);
+//        record.setCity(0);
         record.setTotal(total);
         record.setCredited(money);
         record.setBankFlag(0);
         record.setFee(BigDecimal.ZERO.toString());
-        record.setAddtime(String.valueOf(nowTime));
-        record.setAddip(params.get("ip"));
+//        record.setAddtime(String.valueOf(nowTime));
+        record.setAddIp(params.get("ip"));
         record.setRemark("网站提现");
         // 0pc
         record.setClient(GetterUtil.getInteger(params.get("client")));

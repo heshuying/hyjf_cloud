@@ -40,11 +40,11 @@ public class RepayAuthServiceImpl extends BaseUserServiceImpl implements RepayAu
         hjhUserAuthLog.setOrderStatus(2);
         hjhUserAuthLog.setAuthType(6);
         hjhUserAuthLog.setOperateEsb(client);
-        hjhUserAuthLog.setCreateUser(userVO.getUserId());
+        hjhUserAuthLog.setCreateUserId(userVO.getUserId());
         hjhUserAuthLog.setCreateTime(new Date());
         hjhUserAuthLog.setUpdateTime(new Date());
-        hjhUserAuthLog.setUpdateUser(userId);
-        hjhUserAuthLog.setDelFlg(0);
+        hjhUserAuthLog.setUpdateUserId(userId);
+        hjhUserAuthLog.setDelFlag(0);
         amUserClient.insertUserAuthLog(hjhUserAuthLog);
     }
 

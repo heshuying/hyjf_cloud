@@ -34,10 +34,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author nxl
@@ -54,6 +51,10 @@ public class UserManagerController extends BaseController {
     private JxBankConfigService jxBankConfigService;
     @Autowired
     private BankConfigService bankConfigService;
+
+
+
+
 
     /**
      * 根据筛选条件查找(用户管理列表显示)
@@ -519,6 +520,33 @@ public class UserManagerController extends BaseController {
     }
 
     /**
+     * 更新用户表-开户掉单更新用户
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateUserSelective")
+    public int updateUserSelective(@RequestBody @Valid UserRequest request) {
+        User user = new User();
+        BeanUtils.copyProperties(request, user);
+        int ingFlg = userManagerService.updateUserSelective(user);
+        return ingFlg;
+    }
+
+    /**
+     * 更新用户表-开户掉单更新用户
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateUserInfoByUserInfoSelective")
+    public int updateUserInfoByUserInfoSelective(@RequestBody @Valid UserInfoRequest request) {
+        UserInfo user = new UserInfo();
+        BeanUtils.copyProperties(request, user);
+        int ingFlg = userManagerService.updateUserInfoByUserInfoSelective(user);
+        return ingFlg;
+    }
+    /**
      * 获取某一用户的信息修改列表
      * @param request
      * @return
@@ -857,5 +885,64 @@ public class UserManagerController extends BaseController {
             response.setResultList(oaDepartmentCustomizeVOList);
         }
         return response;
+    }
+    /**
+     * 根据用户id获取开户信息
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/getBankCardByUserId/{userId}")
+    public BankCardResponse getBankCardByUserId(@PathVariable int userId){
+        BankCardResponse response = new BankCardResponse();
+        response.setRtn(Response.FAIL);
+        BankCard bankCard = userManagerService.getBankCardByUserId(userId);
+        if(null!=bankCard){
+            BankCardVO bankCardVO = new BankCardVO();
+            BeanUtils.copyProperties(bankCard,bankCardVO);
+            response.setRtn(Response.SUCCESS);
+            response.setResult(bankCardVO);
+        }
+        return response;
+    }
+
+    /**
+     * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateUserBaseInfo")
+    public IntegerResponse updateUserInfos(@RequestBody UserInfosUpdCustomizeRequest request) {
+        logger.info("---updateUserBaseInfo---  " + JSONObject.toJSONString(request));
+        IntegerResponse integerResponse = new IntegerResponse();
+        int updateUser = userManagerService.updateUserInfos(request);
+        return new IntegerResponse(updateUser);
+    }
+
+    @RequestMapping("/updateUserBankInfo")
+    public IntegerResponse updateUserBankInfo(@RequestBody UserInfosUpdCustomizeRequest request) {
+        logger.info("---updateUserBankInfo---  " + JSONObject.toJSONString(request));
+        //更新银行卡信息
+        BankCard bankCard = userManagerService.selectBankCardByUserId(Integer.parseInt(request.getUserId()));
+        User user = userManagerService.selectUserByUserId(Integer.parseInt(request.getUserId()));
+        // 银行卡操作记录
+        BankCardLog bankAccountLog = new BankCardLog();
+        bankAccountLog.setUserId(Integer.parseInt(request.getUserId()));
+        bankAccountLog.setUserName(user.getUsername());
+        bankAccountLog.setBankCode(String.valueOf(bankCard.getBankId()));
+        bankAccountLog.setCardNo(bankCard.getCardNo());
+        List<JxBankConfig> config = jxBankConfigService.getJxBankConfigByBankId(bankCard.getBankId());
+        if (null!=config&&config.size()>0) {
+            bankAccountLog.setBankName(config.get(0).getBankName());
+        } else {
+            bankAccountLog.setBankName("");
+        }
+        bankAccountLog.setCardType(0);// 卡类型// 0普通提现卡1默认卡2快捷支付卡
+        bankAccountLog.setOperationType(2);// 操作类型 0绑定 1删除 2:修改银行卡
+        bankAccountLog.setStatus(0);// 成功
+        bankAccountLog.setCreateTime(new Date());// 操作时间
+
+        int updateUser = userManagerService.updateUserBankInfo(bankCard,bankAccountLog);
+        return new IntegerResponse(updateUser);
     }
 }

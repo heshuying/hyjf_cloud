@@ -82,6 +82,7 @@ public class CalculateInvestInterestConsumer extends Consumer {
                     update.inc("tenderSum", tenderSum).set("updateTime", nowTime);
                     calculateInvestInterestDao.update(query, update);
                 }
+
                 // 网站累计收益累加
                 else if (MQConstant.STATISTICS_CALCULATE_INTEREST_SUM_TAG.equals(msg.getTags())) {
                     BigDecimal interestSum = (BigDecimal) data.get("interestSum");

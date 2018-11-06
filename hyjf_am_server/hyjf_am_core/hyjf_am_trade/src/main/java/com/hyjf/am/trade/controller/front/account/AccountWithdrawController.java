@@ -226,4 +226,21 @@ public class AccountWithdrawController extends BaseController {
         }
         return response;
     }
+
+
+    /**
+     * 根据用户ID查询用户提现记录
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/selectAccountWithdrawByUserId/{userId}")
+    public AccountWithdrawResponse selectAccountWithdrawByUserId(@PathVariable Integer userId) {
+        AccountWithdrawResponse accountWithdrawResponse = new AccountWithdrawResponse();
+        List<AccountWithdraw> accountWithdrawList = accountWithdrawService.selectAccountWithdrawByUserId(userId);
+        if (CollectionUtils.isNotEmpty(accountWithdrawList)){
+            accountWithdrawResponse.setResultList(CommonUtils.convertBeanList(accountWithdrawList,AccountWithdrawVO.class));
+        }
+        return accountWithdrawResponse;
+    }
 }

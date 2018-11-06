@@ -556,6 +556,8 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
     private String bitMap;
     //开通自动投标功能标志 0：取消 1：开通
     private String autoBid;
+	//开通自动债转功能标志 0：取消 1：开通
+	private String autoCredit;
     //开通自动债转功能标志 0：取消 1：开通
     private String autoTransfer;
     //开通预约取现功能标志 0：取消 1：开通
@@ -617,7 +619,10 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
     public String repayDeadline;
     /** 还款签约最高金额*/
     public String repayMaxAmt;
-
+	/** 自动债转签约最高金额*/
+	public String autoCreditMaxAmt;
+	/** 自动债转签约到期日*/
+	public String autoCreditDeadline;
 
     /** 代扣签约*/
     public String agreeDeduct;
@@ -2194,5 +2199,29 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getAutoCredit() {
+		return autoCredit;
+	}
+
+	public void setAutoCredit(String autoCredit) {
+		this.autoCredit = autoCredit;
+	}
+
+	public String getAutoCreditMaxAmt() {
+		return autoCreditMaxAmt;
+	}
+
+	public void setAutoCreditMaxAmt(String autoCreditMaxAmt) {
+		this.autoCreditMaxAmt = autoCreditMaxAmt;
+	}
+
+	public String getAutoCreditDeadline() {
+		return autoCreditDeadline;
+	}
+
+	public void setAutoCreditDeadline(String autoCreditDeadline) {
+		this.autoCreditDeadline = autoCreditDeadline;
 	}
 }
