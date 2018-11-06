@@ -271,10 +271,10 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         logger.info("listMonthDealMoney====="+ JSONObject.toJSONString(listMonthDealMoney));
         //去年本月成交金额
         List<OperationReportJobVO> listLastMonthDealMoney = getMonthDealMoney(12, 13);
+        logger.info("listLastMonthDealMoney====="+ JSONObject.toJSONString(listLastMonthDealMoney));
         if (CollectionUtils.isEmpty(listLastMonthDealMoney)) {
             throw new NullPointerException();
         }
-        logger.info("listLastMonthDealMoney====="+ JSONObject.toJSONString(listLastMonthDealMoney));
 
         lastMonthDealMoney = listLastMonthDealMoney.get(0).getSumAccount();
 
