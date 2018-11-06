@@ -652,6 +652,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setOnTime(listCustomize.getOnTime());
             homePageCustomize.setBorrowSchedule(listCustomize.getBorrowSchedule());
             homePageCustomize.setBorrowTotalMoney(StringUtils.isBlank(listCustomize.getBorrowTotalMoney())?"0":listCustomize.getBorrowTotalMoney());
+            homePageCustomize.setTag(listCustomize.getTag());
             homePageCustomizes.add(homePageCustomize);
         }
         CommonUtils.convertNullToEmptyString(homePageCustomizes);

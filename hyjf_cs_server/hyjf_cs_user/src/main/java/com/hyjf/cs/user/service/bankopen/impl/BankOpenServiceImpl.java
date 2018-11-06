@@ -22,10 +22,7 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
-import com.hyjf.cs.user.bean.OpenAccountPageBean;
-import com.hyjf.cs.user.bean.OpenAccountPlusRequest;
-import com.hyjf.cs.user.bean.OpenAccountPlusResult;
+import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -384,7 +381,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         if (Validator.isNull(requestBean.getInstCode())) {
             logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
             resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
-            resultMap.put("mess", "机构编号不能为空");
+            resultMap.put("statusDesc", "机构编号不能为空");
             return resultMap;
         }
         // 手机号

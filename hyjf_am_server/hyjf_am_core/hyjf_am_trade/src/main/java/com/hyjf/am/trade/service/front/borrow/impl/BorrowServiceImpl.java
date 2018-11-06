@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
@@ -217,7 +218,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         }
         // 为投资完全掉单优惠券投资时修复做记录
         temp.setCouponGrantId(couponGrantId);
-        logger.info("开始插入temp表");
+        logger.info("开始插入temp表   {}",JSONObject.toJSONString(temp));
         boolean tenderTmpFlag = borrowTenderTmpMapper.insertSelective(temp) > 0 ? true : false;
         if (!tenderTmpFlag) {
             logger.error("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());

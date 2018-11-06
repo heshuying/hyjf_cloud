@@ -13,7 +13,6 @@ import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetCode;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,22 +63,8 @@ public class MobileSynchronizeServiceImpl extends BaseAdminServiceImpl implement
     public JSONObject updateMobile(Integer loginUserId,MobileSynchronizeRequest request) {
         // 返回结果
         JSONObject ret = new JSONObject();
-        // 电子账户号
-        String accountId = request.getAccountId();
         // 用户ID
         String userId = request.getUserId();
-        // 用户ID为空
-        if (StringUtils.isEmpty(userId)) {
-            ret.put("status", "error");
-            ret.put("result", "用户ID为空!");
-            return ret;
-        }
-        // 用户电子账户号为空
-        if (StringUtils.isEmpty(accountId)) {
-            ret.put("status", "error");
-            ret.put("result", "电子账户号为空!");
-            return ret;
-        }
         try {
             AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(loginUserId);
             request.setAdminSystemVO(adminSystemVO);
