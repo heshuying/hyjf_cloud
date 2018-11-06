@@ -1245,10 +1245,10 @@
             </if>
             <!-- 时间 -->
             <if test="timeStartSrch != null and timeStartSrch != ''">
-                AND hcr.recover_time <![CDATA[>=]]> #{timeStartSrch}
+                AND hcr.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeStartSrch})
             </if>
             <if test="timeEndSrch != null and timeEndSrch != ''">
-                AND hcr.recover_time <![CDATA[<=]]> #{timeEndSrch}
+                AND hcr.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeEndSrch})
             </if>
         </where>
     </sql>
