@@ -258,18 +258,17 @@ public class CouponTenderDetailVo implements Serializable {
     }
 
     public String getCouponQuota() {
-        if("加息券".equals(this.couponTypeStr)){
-            return couponQuota+"%";
-        }else if("代金券".equals(this.couponTypeStr)){
-            return "￥"+couponQuota;
-        }else {
-            return "￥"+couponQuota;
-        }
-
+        return couponQuota;
     }
 
     public String getCouponQuotaOriginal(){
-        return couponQuota;
+        if("加息券".equals(this.couponTypeStr)){
+            return getCouponQuota()+"%";
+        }else if("代金券".equals(this.couponTypeStr)){
+            return "￥"+getCouponQuota();
+        }else {
+            return "￥"+getCouponQuota();
+        }
     }
 
     public void setCouponQuota(String couponQuota) {

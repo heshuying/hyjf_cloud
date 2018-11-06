@@ -19,7 +19,7 @@
         <result column="auto_repay_status" property="authType" jdbcType="INTEGER" />
         <result column="account" property="bankid" jdbcType="VARCHAR" />
         <result column="auto_repay_time" property="signDate" jdbcType="VARCHAR" />
-        <result column="repay_max_amt" property="repayMaxAmt" jdbcType="VARCHAR" />
+        <result column="repay_max_amt" property="paymentMaxAmt" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="countRecordTotalPay" resultType="java.lang.Integer" parameterType="Map">
