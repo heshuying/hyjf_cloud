@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class BankLogDao extends BaseMongoDao<BankLog>{
-    private static final String BACKLOG = "banklog";
+    private static final String BACKLOG = "ht_bank_log";
 
 	@Override
 	protected Class<BankLog> getEntityClass() {

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * @author tanyy
  * @version OperationReportEntity, v0.1 2018/8/1 11:32
  */
-@Document(collection = "t_operation_report")
+@Document(collection = "ht_operation_report")
 public class OperationReportEntity {
     /**
      *
