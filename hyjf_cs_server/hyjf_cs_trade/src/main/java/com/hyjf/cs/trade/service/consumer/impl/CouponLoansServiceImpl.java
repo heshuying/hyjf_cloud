@@ -449,6 +449,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         // 借款成功时间
         String borrowSuccessTimeString = borrow.getVerifyTime();
         logger.info("标的："+borrowNid + "放款开始，借款满标时间："+borrowSuccessTimeString);
+        logger.info("标的："+borrowNid + "放款开始，借款满标时间："+borrow.getVerifyTimeInteger());
         if (null == borrowSuccessTimeString || "0".equals(borrowSuccessTimeString)){
             return retMsgList;
         }
