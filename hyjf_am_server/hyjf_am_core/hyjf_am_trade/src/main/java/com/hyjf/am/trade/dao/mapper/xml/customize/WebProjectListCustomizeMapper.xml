@@ -883,7 +883,7 @@
         case when hbi.borrow_extra_yield=0 then
         ''
         else
-        CONCAT('+',hbi.borrow_extra_yield, '%')
+        CONCAT('',hbi.borrow_extra_yield, '%')
         end
         borrowExtraYield,
         case
