@@ -10,16 +10,20 @@ import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
 import com.hyjf.am.resquest.admin.AutoTenderExceptionRequest;
 import com.hyjf.am.resquest.admin.TenderExceptionSolveRequest;
+import com.hyjf.am.resquest.trade.UpdateBorrowForAutoTenderRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.dao.model.customize.AdminPlanAccedeListCustomize;
 import com.hyjf.am.trade.service.admin.exception.AutoTenderExceptionService;
+import com.hyjf.am.trade.service.front.borrow.AutoTenderService;
 import com.hyjf.am.vo.admin.AdminPlanAccedeListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -39,6 +43,9 @@ import java.util.Map;
 public class AutoTenderExceptionController  extends BaseController {
     @Autowired
     private AutoTenderExceptionService autoTenderExceptionService;
+    @Autowired
+    private AutoTenderService autoTenderService;
+
 
     @RequestMapping(value = "/selectAccedeRecordList", method = RequestMethod.POST)
     public AutoTenderExceptionResponse selectAccedeRecordList(@RequestBody @Valid AutoTenderExceptionRequest request) {
@@ -148,5 +155,24 @@ public class AutoTenderExceptionController  extends BaseController {
         mapReturn.put("userId",tenderExceptionSolveRequest.getUserId());
         return mapReturn;
     }
-
+    /**
+     * 银行自动投资成功后，更新投资数据
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateBorrowForAutoTender")
+    public Response updateBorrowForAutoTender(@RequestBody UpdateBorrowForAutoTenderRequest request) {
+        Borrow borrow = new Borrow();
+        HjhAccede hjhAccede = new HjhAccede();
+        BankCallBean bean = new BankCallBean();
+        String borrowNid = request.getBorrowNid();
+        String accedeOrderId = request.getAccedeOrderId();
+        BeanUtils.copyProperties(request.getBankCallBeanVO(), bean);
+        boolean result = this.autoTenderService.updateBorrowForAutoTender(borrowNid, accedeOrderId, bean);
+        if (!result) {
+            return new Response(Response.FAIL, Response.FAIL_MSG);
+        }
+        return new Response();
+    }
 }
