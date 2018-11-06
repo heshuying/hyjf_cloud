@@ -98,7 +98,7 @@ public class ApiAssetPushController extends BaseTradeController {
         }
 
         // 验签
-        if (SignUtil.verifyRequestSign(pushRequestBean, "/pushcompany")) {
+        if (!SignUtil.verifyRequestSign(pushRequestBean, "/pushcompany")) {
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
             logger.info("-------------------验签失败！--------------------");
             resultBean.setStatusDesc("验签失败！");

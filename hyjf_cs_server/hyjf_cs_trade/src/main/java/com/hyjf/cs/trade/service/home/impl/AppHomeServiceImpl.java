@@ -339,13 +339,13 @@ public class AppHomeServiceImpl implements AppHomeService {
                 // 20.立即加入  21.稍后开启
                 homePageCustomize.setStatus("21");
                 homePageCustomize.setStatusName("稍后开启");
-            }/*else if("立即加入".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
+            }else if("立即加入".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
                 homePageCustomize.setStatus("20");
                 homePageCustomize.setStatusName("立即加入");
-            }*/else if(listCustomize.getStatusName().equals("授权服务")){  //1.启用  2.关闭
+            }/*else if(listCustomize.getStatusName().equals("授权服务")){  //1.启用  2.关闭
                 homePageCustomize.setStatus("20");
                 homePageCustomize.setStatusName("授权服务");
-            }
+            }*/
             homePageCustomize.setOnTime(listCustomize.getOnTime());
             homePageCustomize.setBorrowSchedule(listCustomize.getBorrowSchedule());
             homePageCustomize.setBorrowTotalMoney(StringUtils.isBlank(listCustomize.getBorrowTotalMoney())?"0":listCustomize.getBorrowTotalMoney());

@@ -4,6 +4,8 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
 import com.hyjf.am.resquest.admin.Paginator;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.service.admin.hjhplan.HjhRepayService;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import com.hyjf.common.util.CommonUtils;
@@ -44,42 +46,44 @@ public class HjhRepayController {
         HjhRepayResponse response = new HjhRepayResponse();
 
         Map<String, Object> params = new HashedMap();
-        params.put("accedeOrderId", request.getAccedeOrderIdSrch());
-
+        if(StringUtils.isNotEmpty(request.getAccedeOrderIdSrch())){
+            params.put("accedeOrderId", request.getAccedeOrderIdSrch());
+        }
+        if(StringUtils.isNotEmpty(request.getPlanNidSrch())){
+            params.put("planNidSrch", request.getPlanNidSrch());
+        }
+        if(StringUtils.isNotEmpty(request.getUserNameSrch())){
+            params.put("userName", request.getUserNameSrch());
+        }
+        if(StringUtils.isNotEmpty(request.getDebtLockPeriodSrch())){
+            params.put("debtLockPeriodSrch", request.getDebtLockPeriodSrch());
+        }
+        if(StringUtils.isNotEmpty(request.getRepayStatusSrch())){
+            params.put("repayStatus", Integer.valueOf(request.getRepayStatusSrch()));
+        }
+        if(StringUtils.isNotEmpty(request.getOrderStatusSrch())){
+            params.put("orderStatusSrch", Integer.valueOf(request.getOrderStatusSrch()));
+        }
+        if(StringUtils.isNotEmpty(request.getBorrowStyleSrch())){
+            params.put("borrowStyleSrch", request.getBorrowStyleSrch());
+        }
 
         //清算时间
-//        if (org.apache.commons.lang3.StringUtils.isNotEmpty(request.getRepayTimeStart())){
-//            int repayTimeStart = GetDate.getDayEnd10(request.getRepayTimeStart() + " 00:00:00");
-//            int repayTimeEnd;
-//            if (org.apache.commons.lang3.StringUtils.isNotEmpty(request.getRepayTimeEnd())){
-//                repayTimeEnd = GetDate.getDayEnd10(request.getRepayTimeEnd() + " 23:59:59");
-//            }else {
-//                Long logRepayTimeEnd = System.currentTimeMillis()/1000;
-//                repayTimeEnd = logRepayTimeEnd.intValue();
-//            }
         if (StringUtils.isNotEmpty(request.getRepayTimeStart())){
             params.put("repayTimeStart", request.getRepayTimeStart() + " 00:00:00");
             params.put("repayTimeEnd", request.getRepayTimeEnd() + " 23:59:59");
         }
-//        }
 
         //实际退出时间
-//        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getActulRepayTimeStart())){
-//            int actuTimeStart = GetDate.getDayStart10(request.getActulRepayTimeStart() + " 00:00:00");
-//            int actuTimeEnd;
-//            if (StringUtils.isNotEmpty(request.getActulRepayTimeEnd())){
-//                actuTimeEnd = GetDate.getDayEnd10(request.getActulRepayTimeEnd() + "23:59:59");
-//            }else {
-//                Long logAutuTimeEnd = System.currentTimeMillis() / 1000;
-//                actuTimeEnd = logAutuTimeEnd.intValue();
-//            }
         if (StringUtils.isNotEmpty(request.getActulRepayTimeStart())){
             params.put("actulRepayTimeStart", request.getActulRepayTimeStart() + " 00:00:00");
             params.put("actulRepayTimeEnd", request.getActulRepayTimeEnd() + "23:59:59");
         }
 
-//        }
-
+        // 汇计划三期新增 推荐人查询
+        if(StringUtils.isNotEmpty(request.getRefereeNameSrch())){
+            params.put("refereeNameSrch", request.getRefereeNameSrch());
+        }
         // 查询 总条数
         Integer count = this.hjhRepayService.getRepayCount(params);
 
@@ -96,6 +100,20 @@ public class HjhRepayController {
         }
 
         List<HjhRepayVO> repayVOList = this.hjhRepayService.selectByExample(params);
+
+        //根据计划编号获取计划锁定期天月和还款方式
+        for(int i = 0; i < repayVOList.size(); i++){
+            String planNid = repayVOList.get(i).getPlanNid();
+            HjhPlan hjhplan = hjhRepayService.getPlan(planNid);
+            if (hjhplan != null){
+                if (hjhplan.getIsMonth() != null){
+                    repayVOList.get(i).setIsMonth(hjhplan.getIsMonth());
+                }
+                if (hjhplan.getBorrowStyle() != null){
+                    repayVOList.get(i).setBorrowStyle(hjhplan.getBorrowStyle());
+                }
+            }
+        }
 
         // 初始化总计数据
         BigDecimal sumAccedeAccount = BigDecimal.ZERO;

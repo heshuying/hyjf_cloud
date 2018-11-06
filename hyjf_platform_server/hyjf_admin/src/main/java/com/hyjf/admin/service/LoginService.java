@@ -4,6 +4,7 @@ import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
+import com.hyjf.common.constants.MsgCode;
 
 import java.util.List;
 
@@ -33,5 +34,7 @@ public interface LoginService {
      * @return
      */
 	public List<TreeVO> selectLeftMenuTree2(String id);
+
+	public AdminSystemResponse updatePasswordAction(AdminSystemRequest map);
 
 }

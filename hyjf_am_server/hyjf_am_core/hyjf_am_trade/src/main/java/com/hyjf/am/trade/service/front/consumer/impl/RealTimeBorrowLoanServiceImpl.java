@@ -1413,7 +1413,8 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
             //优惠券放款确认
     		try {
     			logger.info("发送优惠券放款---" + borrowNid);
-    			couponLoansMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+				//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+    			couponLoansMessageProducer.messageSendDelay(new MessageContent(MQConstant.HZT_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)),2);
             } catch (MQException e) {
 	            logger.error("放款系统异常", e);
             }

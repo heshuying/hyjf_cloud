@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.front.user.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserPortraitBatchService;
@@ -15,7 +16,6 @@ import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -207,7 +207,7 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
 
             // 更新用户画像表信息
             int count = 0;
-            log.info("userId:{}，保存用户画像", userPortrait.getUserId());
+            log.info("保存用户画像:【{}】", JSON.toJSONString(userPortrait));
             count = updateInformation(userPortrait);
             if (count <= 0) {
                 count = insertInformation(userPortrait);
@@ -221,9 +221,12 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
      * 更新用户画像
      * */
     private int updateInformation(UserPortrait userPortrait) {
-        UserPortraitExample example = new UserPortraitExample();
-        example.createCriteria().andUserIdEqualTo(userPortrait.getUserId());
-        return userPortraitMapper.updateByExampleSelective(userPortrait,example);
+        UserPortraitExample select = new UserPortraitExample();
+        select.createCriteria().andUserIdEqualTo(userPortrait.getUserId());
+        UserPortrait userPortraits = userPortraitMapper.selectByExample(select).get(0);
+
+        userPortrait.setId(userPortraits.getId());
+        return userPortraitMapper.updateByPrimaryKey(userPortrait);
     }
     /**
      * 插入用户画像

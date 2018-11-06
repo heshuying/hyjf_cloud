@@ -309,6 +309,17 @@ public class CouponConfigController extends BaseController {
     }
 
     /**
+     * @Description  根据优惠券id查询对象
+     */
+    @RequestMapping("/getCouponConfigById/{couponId}")
+    public CouponConfigResponse getCouponConfigById(@PathVariable String couponId) {
+        CouponConfigResponse response = new CouponConfigResponse();
+        CouponConfigVO couponConfigVO = couponConfigService.getCouponConfigById(couponId);
+        response.setResult(couponConfigVO);
+        return response;
+    }
+
+    /**
      * @Author walter.limeng
      * @Description  更新还款期
      * @Date 14:15 2018/7/17

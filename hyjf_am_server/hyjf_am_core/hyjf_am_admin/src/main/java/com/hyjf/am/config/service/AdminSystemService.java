@@ -38,4 +38,6 @@ public interface AdminSystemService {
 	 * 通过username获取用户详细信息
 	 */
 	public Admin getUserInfoAll(AdminSystem adminSystem);
+
+	public Boolean updatePassword(String username, String md5Code);
 }
