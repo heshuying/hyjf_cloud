@@ -50,7 +50,16 @@ public class AdminSystemVO extends BasePage implements Serializable {
     private String state;
     private String value;
     private String title;
+    private String oldPassword;
     
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
+	}
+
 	public String getValue() {
 		return value;
 	}

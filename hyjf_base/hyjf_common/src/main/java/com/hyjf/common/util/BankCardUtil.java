@@ -27,4 +27,18 @@ public class BankCardUtil {
         }
         return str;
     }
+
+    /**
+     * 获取格式化后的银行卡，充值页面使用
+     * add by cwyang
+     * @param cardNo
+     * @return
+     */
+    public static String getFormatCardNo(String cardNo){
+        String str = "";
+        if(Validator.isNotNull(cardNo)&&cardNo.length()>10){
+            str = "尾号 " + cardNo.substring(cardNo.length() - 4, cardNo.length());
+        }
+        return str;
+    }
 }

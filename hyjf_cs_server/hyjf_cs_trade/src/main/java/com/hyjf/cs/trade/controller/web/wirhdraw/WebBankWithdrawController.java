@@ -14,6 +14,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.withdraw.BankWithdrawService;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.vo.BankWithdrawVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -45,7 +46,8 @@ public class WebBankWithdrawController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(WebBankWithdrawController.class);
     @Autowired
     private BankWithdrawService bankWithdrawService;
-
+    @Autowired
+    private AuthService authService;
     @Autowired
     SystemConfig systemConfig;
     /**
@@ -61,6 +63,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         CheckUtil.check(null!=user,MsgEnum.ERR_OBJECT_GET,"用户信息");
         CheckUtil.check(user.isBankOpenAccount(),MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         WebResult<Object> objectWebResult=bankWithdrawService.toWithdraw(user);
+
         return objectWebResult;
     }
 
@@ -82,13 +85,17 @@ public class WebBankWithdrawController extends BaseTradeController {
         WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
-        String ip=CustomUtil.getIpAddr(request);
+        if (!this.authService.checkPaymentAuthStatus(userId)) {
+            throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+        }
+        String ipAddr = CustomUtil.getIpAddr(request);
+        logger.info("ipAddr is :{}", ipAddr);
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawError";
         String bgRetUrl ="http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn";
         String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawSuccess";
         String forgotPwdUrl=super.getForgotPwdUrl(CommonConstant.CLIENT_PC,request,systemConfig);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),
-                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip, retUrl, bgRetUrl, successfulUrl,forgotPwdUrl);
+                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ipAddr, retUrl, bgRetUrl, successfulUrl,forgotPwdUrl);
 
         try {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);

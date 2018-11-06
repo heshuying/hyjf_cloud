@@ -36,6 +36,10 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_CE000012 = "CE000012";
     //企业注册地址输入不正确
     public static final String STATUS_CE000013 = "CE000013";
+    // 未进行还款授权 缴费授权
+    public static final String  STATUS_CE000014 = "CE000014";
+    // 未进行还款授权 缴费授权
+    public static final String STATUS_CE000015 = "CE000015";
     // 系统异常
     public static final String STATUS_CE999999 = "CE999999";
     /********************共通相关      end***********************/

@@ -410,7 +410,7 @@ public class AssetListController extends BaseController {
         map.put("instName", "资产来源");
         map.put("assetTypeName", "产品类型");
         map.put("borrowNid", "项目编号");
-        map.put("planNid", "计划编号");
+        map.put("planNid", "智投编号");
         map.put("userName", "用户名");
         map.put("mobile", "手机号");
         map.put("accountId", "银行电子账号");

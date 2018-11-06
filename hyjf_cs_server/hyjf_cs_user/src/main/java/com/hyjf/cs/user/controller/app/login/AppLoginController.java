@@ -8,6 +8,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.alibaba.fastjson.TypeReference;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -43,6 +45,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -82,6 +85,8 @@ public class AppLoginController extends BaseUserController {
         String username = request.getParameter("username");
         // 密码
         String password = request.getParameter("password");
+        // 神策预置属性
+        String presetProps = request.getParameter("presetProps");
         // 唯一标识
         String sign = request.getParameter("sign");
         loginService.checkForApp(version,platform,netStatus);
@@ -139,6 +144,22 @@ public class AppLoginController extends BaseUserController {
                     logger.error("保存用户日志失败", e);
                 }
                 this.appAfterLogin(sign, webViewUserVO, username);
+
+                if (StringUtils.isNotEmpty(presetProps)){
+                    SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                    // 将json串转换成Bean
+                    try {
+                        Map<String, Object> sensorsDataMap = JSONObject.parseObject(presetProps, new TypeReference<Map<String, Object>>() {
+                        });
+                        sensorsDataBean.setPresetProps(sensorsDataMap);
+                        sensorsDataBean.setUserId(webViewUserVO.getUserId());
+                        sensorsDataBean.setEventCode("login");
+                        // 发送神策数据统计MQ
+                        this.loginService.sendSensorsDataMQ(sensorsDataBean);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 ret.put("status", "0");
                 ret.put("statusDesc", "登录成功");
                 ret.put("token", webViewUserVO.getToken());

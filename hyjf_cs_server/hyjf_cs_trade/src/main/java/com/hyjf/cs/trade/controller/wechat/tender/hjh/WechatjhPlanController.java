@@ -3,6 +3,9 @@
  */
 package com.hyjf.cs.trade.controller.wechat.tender.hjh;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -18,11 +21,14 @@ import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Map;
 
 /**
@@ -47,6 +53,10 @@ public class WechatjhPlanController extends BaseTradeController {
         tender.setIp(ip);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
+        // 神策数据统计 add by liuyang 20180726 start
+        // 神策数据统计事件的预置属性
+        String presetProps = request.getParameter("presetProps");
+        // 神策数据统计 add by liuyang 20180726 end
         WebResult result = new WebResult();
         WeChatResult weChatResult = new WeChatResult();
         try {
@@ -57,6 +67,31 @@ public class WechatjhPlanController extends BaseTradeController {
         } finally {
             RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
         }
+        // 神策数据统计 add by liuyang 20180726 start
+        logger.info("神策预置属性presetProps:[" + presetProps + "]");
+        if (StringUtils.isNotBlank(presetProps)){
+            try {
+                presetProps = URLDecoder.decode(presetProps,"UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            logger.info("神策预置属性presetProps2:[" + presetProps + "]");
+            SensorsDataBean sensorsDataBean = new SensorsDataBean();
+            // 将json串转换成Bean
+            try {
+                Map<String, Object> sensorsDataMap = JSONObject.parseObject(presetProps, new TypeReference<Map<String, Object>>() {
+                });
+                sensorsDataBean.setPresetProps(sensorsDataMap);
+                sensorsDataBean.setUserId(userId);
+                sensorsDataBean.setEventCode("submit_intelligent_invest");
+                sensorsDataBean.setOrderId(String.valueOf(((Map<String,Object>)weChatResult.getObject()).get("accedeOrderId")));
+                // 发送神策数据统计MQ
+                this.hjhTenderService.sendSensorsDataMQ(sensorsDataBean);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        // 神策数据统计 add by liuyang 20180726 end
         return weChatResult;
     }
 

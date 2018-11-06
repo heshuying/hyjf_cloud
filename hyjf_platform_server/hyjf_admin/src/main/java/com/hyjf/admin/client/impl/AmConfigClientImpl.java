@@ -18,12 +18,14 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
+import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
+import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -1963,7 +1965,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<JxBankConfigVO> getBankcardList() {
-        JxBankConfigResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/jxBankConfig/selectBankConfigList", JxBankConfigResponse.class).getBody();
+        JxBankConfigResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/config/JxBank/selectBankConfigList", JxBankConfigResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResultList();
         }
@@ -2283,5 +2285,87 @@ public class AmConfigClientImpl implements AmConfigClient {
             return response;
         }
         return null;
+	}
+    /**
+     * 根据银行名获取江西银行配置信息
+     * @param bankName
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public JxBankConfigVO getBankConfigByBankName(String bankName) {
+        String url = "http://AM-ADMIN/am-config/config/getBankConfigByBankName/"+bankName;
+        JxBankConfigResponse response = restTemplate.getForEntity(url,JxBankConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
+
+
+    /**
+     * 授權配置
+     * @return
+     */
+    @Override
+    public AdminAuthConfigCustomizeResponse getAuthConfigList() {
+        String url = "http://AM-ADMIN/am-config/configCenter/authConfig/getAuthConfigList";
+        AdminAuthConfigCustomizeResponse response = restTemplate.getForEntity(url,AdminAuthConfigCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 授权操作记录
+     * @return
+     */
+    @Override
+    public AdminAuthConfigLogResponse getAuthConfigLogList(HjhUserAuthConfigLogCustomizeVO request) {
+        String url = "http://AM-ADMIN/am-config/configCenter/authConfig/getAuthConfigLogList";
+        AdminAuthConfigLogResponse response = restTemplate.postForEntity(url,request,AdminAuthConfigLogResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 授权配置详情
+     * @param id
+     * @return
+     */
+    @Override
+    public AdminAuthConfigResponse getAuthConfigById(Integer id) {
+        String url = "http://AM-ADMIN/am-config/configCenter/authConfig/getAuthConfigById/"+id;
+        AdminAuthConfigResponse response =  restTemplate.getForEntity(url,AdminAuthConfigResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response;
+        }
+        return null;
+    }
+	@Override
+	public AdminSystemResponse updatePasswordAction(AdminSystemRequest map) {
+        AdminSystemResponse adminSystemResponse = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/adminSystem/updatePasswordAction", map,
+                        AdminSystemResponse.class)
+                .getBody();
+        if (adminSystemResponse != null) {
+            return adminSystemResponse;
+        }
+        return null;
+	}
+
+    /**
+     * 修改授权配置
+     * @param form
+     * @return
+     */
+    @Override
+    public int updateAuthConfig(HjhUserAuthConfigVO form) {
+        String url = "http://AM-ADMIN/am-config/configCenter/authConfig/updateAuthConfig";
+        return restTemplate.postForEntity(url,form,Integer.class).getBody();
+    }
+
 }

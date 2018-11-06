@@ -174,7 +174,7 @@
 		ct.user_id as userId,
 		ct.credit_tender_nid as creditTenderNid,
 		hta.download_url AS downloadUrl,
-		hta.viewpdf_url AS viewpdfUrl,
+		hta.viewpdf_url AS viewUrl,
 		hta.img_url AS imgUrl
 		FROM
 		ht_credit_tender ct

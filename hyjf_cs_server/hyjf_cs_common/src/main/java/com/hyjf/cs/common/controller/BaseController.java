@@ -86,7 +86,31 @@ public class BaseController {
         return modelAndView;
     }
 
-
+    /**
+     * 重载一下
+     * @param param
+     * @return
+     */
+    public ModelAndView callbackErrorView(Map<String, String> param) {
+        ModelAndView modelAndView = new ModelAndView(HIDE_SUBMIT_JSP_ERROR);
+        String callBackAction = "" ;
+        if (param != null) {
+            Set<String> keySet = param.keySet();
+            Iterator<String> iterator = keySet.iterator();
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                if (key.equals(CALL_BACK_ACTION)) {
+                    callBackAction = (String) param.get(key);
+                    break;
+                }
+            }
+        }
+        modelAndView.addObject(CALL_BACK_ACTION, callBackAction);
+        // 重新加签，无论业务中是否加签,此处屏蔽业务内加签
+        param.put(CHECK_VALUE, ApiSignUtil.encryptByRSA(String.valueOf(param.get(CHECK_SIGN_STR))));
+        modelAndView.addObject("params", param);
+        return modelAndView;
+    }
 
 
 }

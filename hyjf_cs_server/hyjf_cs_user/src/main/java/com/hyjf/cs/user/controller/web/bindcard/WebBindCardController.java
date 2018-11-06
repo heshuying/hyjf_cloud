@@ -1,18 +1,24 @@
 package com.hyjf.cs.user.controller.web.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.BankCardUtil;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.BindCardVO;
@@ -30,8 +36,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * web端用户解绑卡接口
@@ -48,7 +56,8 @@ public class WebBindCardController extends BaseUserController {
 	SystemConfig systemConfig;
 	@Autowired
 	BindCardService bindCardService;
-
+	@Autowired
+	UserOperationLogProducer userOperationLogProducer;
 	/**
 	 *  我的银行卡页面数据
 	 */
@@ -156,9 +165,20 @@ public class WebBindCardController extends BaseUserController {
 		
 		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY+userId, WebViewUserVO.class);
         String userIp = GetCilentIP.getIpAddr(request);
-        
         bindCardService.checkParamBindCard(bindCardVO, user.getUserId());
-        
+		UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+		userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE10);
+		userOperationLogEntity.setIp(userIp);
+		userOperationLogEntity.setPlatform(0);
+		userOperationLogEntity.setRemark("");
+		userOperationLogEntity.setOperationTime(new Date());
+		userOperationLogEntity.setUserName(user.getUsername());
+		userOperationLogEntity.setUserRole(user.getRoleId());
+		try {
+			userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+		} catch (MQException e) {
+			logger.error("保存用户日志失败", e);
+		}
         // 请求银行绑卡接口
         BankCallBean bankBean = null;
 		try {

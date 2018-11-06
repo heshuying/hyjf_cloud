@@ -5,22 +5,21 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
-import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvestExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.front.borrow.ProjectListService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.trade.CreditListVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
+import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.admin.AppPushManageVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -466,4 +465,60 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         return webProjectListCustomizeMapper.getApiBorrowList(params);
     }
     /*--------------------------------------------  api end  -------------------------------------------*/
+
+    /**
+     *首页汇计划推广计划列表 - 首页显示 ②	若没有可投计划，则显示锁定期限短的
+     * @Author yangchangwei 2018/10/16
+     * @param map
+     * @return
+     */
+    @Override
+    public List<HjhPlanCustomizeVO> getIndexHjhExtensionPlanListByLockTime(Map map) {
+        return this.appProjectListCustomizeMapper.getIndexHjhExtensionPlanListByLockTime(map);
+    }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     * @Author yangchangwei 2018/10/16
+     * @param map
+     * @return
+     */
+    @Override
+    public List<HjhPlanCustomizeVO> getIndexHjhExtensionPlanList(Map map) {
+        return this.appProjectListCustomizeMapper.getIndexHjhExtensionPlanList(map);
+    }
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     * @Author yangchangwei 2018/10/16
+     * @param map
+     * @return
+     */
+    @Override
+    public List<AppProjectListCustomizeVO> getHomeProjectList(Map map) {
+        return this.appProjectListCustomizeMapper.selectHomeProjectList(map);
+    }
+
+
+
+    /**
+     * app首页获取有效公告
+     * @author cwyang 2018-10-18
+     * @return
+     */
+    @Override
+    public List<AppPushManageVO> getAnnouncements() {
+        AppPushManageExample example = new AppPushManageExample();
+        AppPushManageExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(1);
+        criteria.andTimeStartLessThanOrEqualTo(new Date());
+        criteria.andTimeEndGreaterThanOrEqualTo(new Date());
+        example.setOrderByClause(" `order_id` asc ,create_time desc");
+        List<AppPushManage> pushManageList = this.appPushManageMapper.selectByExample(example);
+        if(pushManageList != null && pushManageList.size() > 0){
+            List<AppPushManageVO> appPushManageVOS = CommonUtils.convertBeanList(pushManageList, AppPushManageVO.class);
+            return appPushManageVOS;
+        }
+        return null;
+    }
 }

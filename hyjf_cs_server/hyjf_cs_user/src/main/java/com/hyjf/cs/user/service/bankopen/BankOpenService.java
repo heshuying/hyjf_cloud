@@ -57,7 +57,7 @@ public interface BankOpenService extends BaseUserService {
 	 * @Author sunss
 	 * @Date 2018/6/21 15:34
 	 */
-	WebResult<Object> getFiledMess(String logOrdId);
+	WebResult<Object> getFiledMess(String logOrdId,int userId);
 
 	/**
 	 * 获得担保机构开户调用银行的参数

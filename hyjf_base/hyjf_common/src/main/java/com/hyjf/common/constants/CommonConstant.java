@@ -194,6 +194,25 @@ public class CommonConstant {
     public static final String APP_BANK_REQUEST_TYPE_AUTHCREDIT = "8";
 
     /**
+     * 授权三合一接口
+     */
+    public static final String APP_BANK_REQUEST_TYPE_AUTHMERGE = "11";
+    /**
+     * 授权缴费授权
+     */
+    public static final String APP_BANK_REQUEST_TYPE_AUTHPAYMENT = "12";
+    /**
+     * 授权还款授权
+     */
+    public static final String APP_BANK_REQUEST_TYPE_AUTHREPAY = "13";
+    /**
+     * 解绑银行卡
+     */
+    public static final String APP_BANK_REQUEST_TYPE_UNBINDCARD = "14";
+
+
+
+    /**
      * 数据源控制优先级别(值越小优先级越高)，读方法切面
      */
     public static final String[] DATASOURCE_QUERY_PREFIX = {"select","query","count","search","get","find","check"};

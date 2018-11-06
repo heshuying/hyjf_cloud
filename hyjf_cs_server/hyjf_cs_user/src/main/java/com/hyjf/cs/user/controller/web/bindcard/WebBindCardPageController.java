@@ -1,14 +1,20 @@
 package com.hyjf.cs.user.controller.web.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -27,7 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 绑卡/解绑卡
@@ -43,7 +51,8 @@ public class WebBindCardPageController extends BaseUserController{
 
     @Autowired
     BindCardService bindCardService;
-
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
     /**
      * 绑卡接口
      */
@@ -59,7 +68,19 @@ public class WebBindCardPageController extends BaseUserController{
         String urlstatus = param.get("urlstatus");
         // 条件校验
         bindCardService.checkParamBindCardPage(user);
-
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE10);
+        userOperationLogEntity.setIp(userIp);
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(user.getRoleId());
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         // 请求银行接口
         try {
             Map<String,Object> data = bindCardService.callBankBindCardPage(user, userIp, urlstatus);
@@ -119,7 +140,20 @@ public class WebBindCardPageController extends BaseUserController{
         WebResult<Object> result = new WebResult<Object>();
 
         bindCardService.checkParamUnBindCard(bindCardVO, userId);
-
+        WebViewUserVO user = bindCardService.getUserFromCache(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE11);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(user.getRoleId());
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         // 请求银行绑卡接口
         BankCallBean bankBean = null;
         try {
@@ -137,8 +171,6 @@ public class WebBindCardPageController extends BaseUserController{
             logger.error("请求解绑卡接口失败");
             return result;
         }
-
-        WebViewUserVO user = bindCardService.getUserFromCache(userId);
 
         // 绑卡请求后业务处理
         try {

@@ -10,6 +10,8 @@ import com.hyjf.am.config.dao.model.auto.ConfigApplicantExample;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminSystemService;
+import com.hyjf.common.security.util.MD5;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -206,5 +208,15 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 		}else {
 			return admins.get(0);
 		}
+	}
+	@Override
+	public Boolean updatePassword(String username, String password){
+		password = MD5.toMD5Code(password);
+		AdminSystem adminSystem = new AdminSystem();
+		adminSystem.setUsername(username);
+		adminSystem= adminSystemMapper.getUserInfo(adminSystem);
+		adminSystem.setPassword(password);
+		adminSystemMapper.updatePassword(adminSystem);
+		return true;
 	}
 }

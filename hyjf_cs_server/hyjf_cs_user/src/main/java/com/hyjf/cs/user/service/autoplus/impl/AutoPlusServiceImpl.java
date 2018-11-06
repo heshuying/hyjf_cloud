@@ -610,11 +610,11 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             hjhUserAuthLog.setAuthType(Integer.valueOf(authType));
         }
         hjhUserAuthLog.setOperateEsb(client);
-        hjhUserAuthLog.setCreateUser(user.getUserId());
+        hjhUserAuthLog.setCreateUserId(user.getUserId());
         hjhUserAuthLog.setCreateTime(nowTime);
         hjhUserAuthLog.setUpdateTime(nowTime);
-        hjhUserAuthLog.setUpdateUser(user.getUserId());
-        hjhUserAuthLog.setDelFlg(0);
+        hjhUserAuthLog.setUpdateUserId(user.getUserId());
+        hjhUserAuthLog.setDelFlag(0);
         amUserClient.insertUserAuthLog(hjhUserAuthLog);
     }
 

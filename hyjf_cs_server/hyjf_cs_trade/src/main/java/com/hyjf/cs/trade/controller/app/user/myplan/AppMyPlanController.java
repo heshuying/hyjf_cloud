@@ -1,5 +1,7 @@
 package com.hyjf.cs.trade.controller.app.user.myplan;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
@@ -65,7 +67,7 @@ public class AppMyPlanController extends BaseTradeController {
         String sign = request.getParameter("sign");
 
         // 检查参数正确性
-        if (Validator.isNull(sign) || Validator.isNull(type) || !Arrays.asList("1", "2").contains(type)) {
+        if (Validator.isNull(sign) || Validator.isNull(type) || !Arrays.asList("1", "2", "3").contains(type)) {
             result.setStatus(CustomConstants.APP_STATUS_FAIL);
             result.setStatusDesc(ILLEGAL_PARAMETER_STATUS_DESC);
             return result;
@@ -84,21 +86,54 @@ public class AppMyPlanController extends BaseTradeController {
         AccountVO accountVO=appMyPlanService.getAccountByUserId(userId);
         // 待收金额
         result.setMoney(DF_FOR_VIEW.format(accountVO.getPlanAccountWait()));
-
-        // 查询我的汇计划总数
-        Integer count = appMyPlanService.countAppMyPlan(params);
-        if (count != null && count > 0) {
+        if("3".equals(type)){
+            Integer count = 3;
             result.setProjectTotal(count);
-            List<AppMyPlanCustomizeVO> projectList = appMyPlanService.selectAppMyPlanList(params);
-            result.setProjectList(convertAppMyPlanToReturnBean(projectList, request));
+            List<MyPlanListResultBean.ProjectList> projectList = createExitLabelShowFlag();
+            result.setProjectList(projectList);
+        }else{
+            // 查询我的汇计划总数
+            Integer count = appMyPlanService.countAppMyPlan(params);
+            if (count != null && count > 0) {
+                result.setProjectTotal(count);
+                List<AppMyPlanCustomizeVO> projectList = appMyPlanService.selectAppMyPlanList(params);
+                result.setProjectList(convertAppMyPlanToReturnBean(projectList, request));
 
-        } else {
-            result.setProjectTotal(0);
-            result.setProjectList(new ArrayList<MyPlanListResultBean.ProjectList>());
+            } else {
+                result.setProjectTotal(0);
+                result.setProjectList(new ArrayList<MyPlanListResultBean.ProjectList>());
+            }
         }
+
 
         result.setType(type);
         return result;
+    }
+
+    //临时构建测试参数使用
+    private List<MyPlanListResultBean.ProjectList> createExitLabelShowFlag() {
+        //JSON数组
+        String jsonStr="[{\"borrowName\" : \"月月盈M / 3\",\"borrowTheThirdDesc\" : \"加入时间\",\"label\" : \"\","+
+                "\"borrowUrl\" : \"https: //testapp3.hyjf.com/user/plan/25349235013991517856?type=3&couponType=0\","+
+                "\"borrowTheSecond\" : \"3 个月\",\"type\" : \"1\",\"borrowTheSecondDesc\" : \"锁定期限\","+
+                "\"borrowTheFirstDesc\" : \"加入金额\",\"borrowTheFirst\" : \"200.00\",\"couponType\" : \"2\","+
+                "\"borrowNid\" : \"HJH20180802\",\"borrowTheThird\" : \"2018-08-22\"},"+
+
+                "{\"borrowName\" : \"月月盈M / 3\",\"borrowTheThirdDesc\" : \"加入时间\",\"label\" : \"\","+
+                "\"borrowUrl\" : \"https: //testapp3.hyjf.com/user/plan/25349235013991517856?type=3&couponType=0\","+
+                "\"borrowTheSecond\" : \"3 个月\",\"type\" : \"1\",\"borrowTheSecondDesc\" : \"锁定期限\","+
+                "\"borrowTheFirstDesc\" : \"加入金额\",\"borrowTheFirst\" : \"200.00\",\"couponType\" : \"0\","+
+                "\"borrowNid\" : \"HJH20180802\",\"borrowTheThird\" : \"2018-08-22\"},"+
+
+                "{\"borrowName\" : \"月月盈M / 3\",\"borrowTheThirdDesc\" : \"加入时间\",\"label\" : \"\","+
+                "\"borrowUrl\" : \"https: //testapp3.hyjf.com/user/plan/25349235013991517856?type=3&couponType=0\","+
+                "\"borrowTheSecond\" : \"3 个月\",\"type\" : \"1\",\"borrowTheSecondDesc\" : \"锁定期限\","+
+                "\"borrowTheFirstDesc\" : \"加入金额\",\"borrowTheFirst\" : \"200.00\",\"couponType\" : \"0\","+
+                "\"borrowNid\" : \"HJH20180802\",\"borrowTheThird\" : \"2018-08-22\"}]";
+        JSONArray projectListJson = JSONObject.parseArray(jsonStr);
+        //将JSON数组转换成数组对象
+        List<MyPlanListResultBean.ProjectList> projectList = JSONObject.toJavaObject(projectListJson, List.class);
+        return projectList;
     }
     /**
      * 计划列表响应
@@ -120,10 +155,14 @@ public class AppMyPlanController extends BaseTradeController {
             BeanUtils.copyProperties(entity, project);
             //初始化加入金额
             project.setBorrowTheFirst(DF_FOR_VIEW.format(new BigDecimal(entity.getAccedeAmount())));
-            project.setBorrowTheFirstDesc("加入金额");
+            // mod by nxl 智投服务 修改加入金额->授权金额,锁定期限->回报期限 Start
+//			project.setBorrowTheFirstDesc("加入金额");
+            project.setBorrowTheFirstDesc("授权金额");
             //计划锁定期
             project.setBorrowTheSecond(entity.getLockPeriod());
-            project.setBorrowTheSecondDesc("锁定期限");
+//			project.setBorrowTheSecondDesc("锁定期限");
+            project.setBorrowTheSecondDesc("回报期限");
+            // mod by nxl 智投服务 修改加入金额->授权金额,锁定期限->回报期限 End
             //如果是标签类型有就转换为优惠券类别
             String label = entity.getLabel();
             switch (label) {
@@ -141,7 +180,9 @@ public class AppMyPlanController extends BaseTradeController {
             }
             //根据type判断计划是否已退出
             if ("1".equals(project.getType())) {
-                project.setBorrowTheThirdDesc("加入时间");
+                // mod by nxl 智投服务 修改加入时间-> 授权时间
+//                project.setBorrowTheThirdDesc("加入时间");
+                project.setBorrowTheThirdDesc("授权时间");
                 project.setBorrowTheThird(entity.getCreateTime());
             } else {
                 // mod 汇计划二期前端优化 已退出的计划将回款时间改为退出时间  nxl 20180426 start

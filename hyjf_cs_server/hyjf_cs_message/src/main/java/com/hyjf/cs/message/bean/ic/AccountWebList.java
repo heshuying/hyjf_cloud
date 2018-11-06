@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author xiasq
  * @version AccountWebList, v0.1 2018/6/19 16:47
  */
-@Document(collection = "t_account_web_list")
+@Document(collection = "ht_account_web_list")
 public class AccountWebList implements Serializable {
     private String id;
 

@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * @author zx
  *
  */
-@Document(collection = "t_total_invest_and_interest")
+@Document(collection = "ht_total_invest_and_interest")
 public class TotalInvestAndInterestEntity implements Serializable {
 	/**
 	 * 

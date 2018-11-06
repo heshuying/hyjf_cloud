@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service.recharge.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -17,6 +18,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
@@ -30,6 +32,8 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.mq.producer.sensorsdate.recharge.SensorsDataRechargeProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -45,10 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 用户充值Service实现类
@@ -78,6 +79,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	SmsProducer smsProducer;
 	@Autowired
 	AmConfigClient amConfigClient;
+	@Autowired
+	private AuthService authService;
 
 	// 充值状态:充值中
 	private static final int RECHARGE_STATUS_WAIT = 1;
@@ -86,7 +89,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	// 充值状态:成功
 	private static final int RECHARGE_STATUS_SUCCESS = 2;
 
-
+	@Autowired
+	private SensorsDataRechargeProducer sensorsDataRechargeProducer;
 
 	@Override
 	public AccountVO getAccount(Integer userId) {
@@ -125,6 +129,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		String orderId = bean.getLogOrderId();
 		// 当前时间
 		int nowTime = GetDate.getNowTime10();
+		// 当前日期
+		Date nowDate = new Date();
 		// 错误信息
 		String errorMsg = this.getBankRetMsg(bean.getRetCode());
 		// ip
@@ -160,9 +166,9 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 					try {
 						// 将数据封装更新至充值记录
 						accountRecharge.setFee(BigDecimal.ZERO);
-						accountRecharge.setDianfuFee(BigDecimal.ZERO);
+						// accountRecharge.setDianfuFee(BigDecimal.ZERO);
 						accountRecharge.setBalance(txAmount);
-						accountRecharge.setUpdateTime(nowTime);
+						accountRecharge.setUpdateTime(nowDate);
 						accountRecharge.setStatus(RECHARGE_STATUS_SUCCESS);
 						accountRecharge.setAccountId(accountId);
 						accountRecharge.setBankSeqNo(txDate + txTime + seqNo);
@@ -171,7 +177,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 						accountRecharge.setTxAmount(bean.getTxAmount());
 						accountRecharge.setTxDate(Integer.parseInt(null==bean.getTxDate()?"0":bean.getTxDate()));
 						accountRecharge.setTxTime(Integer.parseInt(null==bean.getTxTime()?"0":bean.getTxTime()));
-						accountRecharge.setSeqNo(seqNo);
+						accountRecharge.setSeqNo(Integer.parseInt(seqNo));
 						BankAccountBeanRequest bankAccountBeanRequest = new BankAccountBeanRequest();
 						bankAccountBeanRequest.setAccountRecharge(accountRecharge);
 						bankAccountBeanRequest.setIp(ip);
@@ -210,6 +216,18 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 								appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
 										UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 							}
+
+							// 神策数据统计 add by liuyang 20180725 start
+							try {
+								SensorsDataBean sensorsDataBean = new SensorsDataBean();
+								sensorsDataBean.setEventCode("recharge_result");
+								sensorsDataBean.setOrderId(bean.getLogOrderId());
+								sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
+								this.sendSensorsDataMQ(sensorsDataBean);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							// 神策数据统计 add by liuyang 20180725 end
 							return jsonMessage("充值成功!", "0");
 						} else {
 							// 查询充值交易状态
@@ -235,7 +253,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			if (accountRecharge != null ) {
 				if (RECHARGE_STATUS_WAIT == accountRecharge.getStatus()) {
 					accountRecharge.setStatus(RECHARGE_STATUS_FAIL);
-					accountRecharge.setUpdateTime(nowTime);
+					accountRecharge.setUpdateTime(nowDate);
 					accountRecharge.setMessage(errorMsg);
 					accountRecharge.setAccountId(accountId);
 					accountRecharge.setBankSeqNo(txDate + txTime + seqNo);
@@ -464,19 +482,18 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		ret.put("userType", userType);
 		// 姓名
 		ret.put("trueName", trueName);
-		// 缴费授权
-		HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
-		// 是否开启服务费授权 0未开启  1已开启
-		ret.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
-		// 是否开启服务费授权 0未开启  1已开启
-		//ret.put("paymentAuthOn", CommonUtils.getAuthConfigFromCache(CommonUtils.KEY_PAYMENT_AUTH).getEnabledStatus());
-		ret.put("paymentAuthOn","");
-
 		// 是否设置交易密码
 		ret.put("isSetPassword", userVO.getIsSetPassword());
 		if(bankCard != null){
 			ret.put("mobile", bankCard.getMobile());
 		}
+		// 缴费授权
+		HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+		// 是否开启服务费授权 0未开启  1已开启
+		ret.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
+		// 是否开启服务费授权 0未开启  1已开启
+		ret.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+		logger.info("paymentAuthOn:"+authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
 		// 江西银行客户号
 		ret.put("accountId", user.getBankAccount());
 		//充值提示语
@@ -523,6 +540,9 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		if (users.getIsSetPassword() == 0) {
 			throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
 		}
+		if (!this.authService.checkPaymentAuthStatus(userId)) {
+			throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+		}
 		if (bankCard == null) {
 			throw new ReturnMessageException(MsgEnum.ERR_AMT_RECHARGE_BANK_CARD_GET);
 		}
@@ -539,6 +559,16 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 				throw new ReturnMessageException(MsgEnum.ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL);
 			}
 		}
+	}
+
+
+	/**
+	 * 充值成功后,发送神策数据统计MQ
+	 *
+	 * @param sensorsDataBean
+	 */
+	private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+		this.sensorsDataRechargeProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_RECHARGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
 	}
 
 

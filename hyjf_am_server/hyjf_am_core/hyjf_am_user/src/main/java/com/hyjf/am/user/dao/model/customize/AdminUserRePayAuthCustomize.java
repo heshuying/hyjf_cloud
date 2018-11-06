@@ -15,7 +15,8 @@ public class AdminUserRePayAuthCustomize {
 	private String signEndDate;
 	//授权时间
 	private String signDate;
-	
+	//还款授权单笔最大金额
+	private String repayMaxAmt;
 	
 	
 	
@@ -62,6 +63,13 @@ public class AdminUserRePayAuthCustomize {
 //	public void setOperateEsb(String operateEsb) {
 //		this.operateEsb = operateEsb;
 //	}
-	
-	
+
+
+	public String getRepayMaxAmt() {
+		return repayMaxAmt;
+	}
+
+	public void setRepayMaxAmt(String repayMaxAmt) {
+		this.repayMaxAmt = repayMaxAmt;
+	}
 }
