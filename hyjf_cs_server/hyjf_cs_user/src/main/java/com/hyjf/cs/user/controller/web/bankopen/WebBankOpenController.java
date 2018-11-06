@@ -1,17 +1,24 @@
 package com.hyjf.cs.user.controller.web.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -29,7 +36,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  *
@@ -48,11 +57,13 @@ public class WebBankOpenController extends BaseUserController {
 
     @Autowired
     SystemConfig systemConfig;
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
 
     @ApiOperation(value = "获取开户信息", notes = "获取开户信息")
     @GetMapping(value = "/init")
     @ResponseBody
-    public WebResult<Object> init(@RequestHeader(value = "userId") int userId) {
+    public WebResult<Object> init(@RequestHeader(value = "userId") int userId,HttpServletRequest request) {
         UserVO user = this.bankOpenService.getUsersById(userId);
         WebResult<Object> result = new WebResult<Object>();
         if(user==null){
@@ -60,6 +71,21 @@ public class WebBankOpenController extends BaseUserController {
         }
         if(user.getBankOpenAccount()==1){
             throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_ALREADY_OPEN);
+        }
+        UserInfoVO userInfoVO = this.bankOpenService.getUserInfo(userId);
+
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(3);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
         }
         result.setStatus(ApiResult.SUCCESS);
         Map<String,String> map = new HashedMap();
