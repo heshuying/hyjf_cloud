@@ -264,19 +264,18 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         logger.info("mapPerformanceSum====="+ JSONObject.toJSONString(mapPerformanceSum));
         //本月成交金额
         List<OperationReportJobVO> listMonthDealMoney = getMonthDealMoney(0, 1);
-        if (CollectionUtils.isEmpty(listMonthDealMoney)) {
-            throw new NullPointerException();
+        if (!CollectionUtils.isEmpty(listMonthDealMoney)) {
+            currentMonthDealMoney = listMonthDealMoney.get(0).getSumAccount();
         }
-        currentMonthDealMoney = listMonthDealMoney.get(0).getSumAccount();
         logger.info("listMonthDealMoney====="+ JSONObject.toJSONString(listMonthDealMoney));
         //去年本月成交金额
         List<OperationReportJobVO> listLastMonthDealMoney = getMonthDealMoney(12, 13);
-        if (CollectionUtils.isEmpty(listLastMonthDealMoney)) {
-            throw new NullPointerException();
-        }
         logger.info("listLastMonthDealMoney====="+ JSONObject.toJSONString(listLastMonthDealMoney));
+        if (!CollectionUtils.isEmpty(listLastMonthDealMoney)) {
+            lastMonthDealMoney = listLastMonthDealMoney.get(0).getSumAccount();
+        }
 
-        lastMonthDealMoney = listLastMonthDealMoney.get(0).getSumAccount();
+
 
         //今年成交金额 和 去年本月成交金额 同比增长 百分比
         dealMoneyPercent = this.computeRiseProportion(currentMonthDealMoney, lastMonthDealMoney);

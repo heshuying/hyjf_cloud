@@ -98,7 +98,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
         // 表格sheet名称
         String sheetName = "PC渠道对账-散标";
 
-        ChannelReconciliationResponse channelReconciliationResponse = channelService.searchAction(request);
+        ChannelReconciliationResponse channelReconciliationResponse = channelService.searchAppAction(request);
         if(channelReconciliationResponse != null) {
             List<ChannelReconciliationVO> recordList = channelReconciliationResponse.getResultList();
 
@@ -203,7 +203,17 @@ public class AppChannelReconciliationRecordController extends BaseController {
         // 表格sheet名称
         String sheetName = "PC渠道对账-智投服务";
 
-        ChannelReconciliationResponse channelReconciliationResponse = channelService.searchHJHAction(request);
+        List<UtmVO> list = channelService.searchUtmList(1);
+        if (request.getUtmPlat() == null) {
+            List<String> utmList = new ArrayList<>();
+            for (UtmVO vo : list) {
+                utmList.add(vo.getSourceId().toString());
+            }
+            String[] integers = new String[utmList.size()];
+            String[] array = utmList.toArray(integers);
+            request.setUtmPlat(array);
+        }
+        ChannelReconciliationResponse channelReconciliationResponse = channelService.searchAppHJHAction(request);
 
         if (channelReconciliationResponse != null) {
             List<ChannelReconciliationVO> recordList = channelReconciliationResponse.getResultList();
