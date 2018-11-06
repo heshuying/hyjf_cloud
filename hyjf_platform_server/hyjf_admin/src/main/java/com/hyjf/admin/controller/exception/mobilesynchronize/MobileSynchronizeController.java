@@ -10,8 +10,11 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.exception.MobileSynchronizeService;
 import com.hyjf.am.resquest.admin.MobileSynchronizeRequest;
 import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.validator.CheckUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,10 +49,17 @@ public class MobileSynchronizeController extends BaseController {
     @ApiOperation(value = "同步手机号",notes = "同步手机号")
     @PostMapping(value = "/modifyAction")
     public AdminResult modifyAction(HttpServletRequest request, @RequestBody MobileSynchronizeRequest mobileSynchronizeRequest){
+        //检查必要参数
+        CheckUtil.check(StringUtils.isNotBlank(mobileSynchronizeRequest.getUserId()), MsgEnum.ERR_OBJECT_REQUIRED,"用户id");
+        CheckUtil.check(StringUtils.isNotBlank(mobileSynchronizeRequest.getAccountId()), MsgEnum.ERR_OBJECT_REQUIRED,"电子账户号");
         Integer userId = Integer.valueOf(getUser(request).getId());
         JSONObject jsonObject = mobileSynchronizeService.updateMobile(userId,mobileSynchronizeRequest);
         String status = jsonObject.getString("status");
         String statusDesc = jsonObject.getString("result");
-        return new AdminResult(status,statusDesc);
+        if("success".equals(status)){
+            return new AdminResult(SUCCESS,statusDesc);
+        }else{
+            return new AdminResult(FAIL,statusDesc);
+        }
     }
 }
