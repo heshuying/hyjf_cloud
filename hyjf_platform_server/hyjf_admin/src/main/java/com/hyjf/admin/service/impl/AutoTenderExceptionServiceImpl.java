@@ -388,19 +388,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                         return  "保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId();
                     }
                     //汇计划自动投资(收债转服务费)
-                    logger.info("[" + hjhAccede.getAccedeOrderId() + "]" + "承接用计算完成"
-                            + "\n,分期数据结果:" + resultVO.getAssignResult().toString()
-                            + "\n,承接总额:" + resultVO.getAssignAccount()
-                            + "\n,承接本金:" + resultVO.getAssignCapital()
-                            + "\n,承接利息:" + resultVO.getAssignInterest()
-                            + "\n,承接支付金额:" + resultVO.getAssignPay()
-                            + "\n,承接垫付利息:" + resultVO.getAssignAdvanceMentInterest()
-                            + "\n,承接延期利息:" + resultVO.getAssignRepayDelayInterest()
-                            + "\n,承接逾期利息:" + resultVO.getAssignRepayLateInterest()
-                            // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
-                            + "\n,承接服务率:" + resultVO.getServiceApr()
-                            // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
-                            + "\n,承接服务费:" + resultVO.getServiceFee());
+                    logger.info("[" + hjhAccede.getAccedeOrderId() + "]" + "承接用计算完成\n"
+                            + resultVO.toLog());
                     // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
                     bean.setOrderId(hjhPlanBorrowTmp.getOrderId());
                     boolean isOK = updateCreditForAutoTender(credit, hjhAccede, hjhPlan, bean, borrowUserAccountId, sellerUsrcustid, resultVO);
