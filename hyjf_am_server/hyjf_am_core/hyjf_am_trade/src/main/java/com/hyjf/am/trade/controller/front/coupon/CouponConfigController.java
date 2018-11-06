@@ -368,7 +368,7 @@ public class CouponConfigController extends BaseController {
                 couponRecover.setRecoverPeriod(Integer.parseInt(cr.getRecoverPeriod()));
             }
             if (cr.getRecoverTime() != null) {
-                couponRecover.setRecoverTime(GetDate.strYYYYMMDD2Timestamp2(cr.getRecoverTime()));
+                couponRecover.setRecoverTime(cr.getRecoverTime());
             }
         }catch(Exception e){
             logger.error("insertcouponrecover->格式化异常,tenderId"+cr.getTenderId(),e);
