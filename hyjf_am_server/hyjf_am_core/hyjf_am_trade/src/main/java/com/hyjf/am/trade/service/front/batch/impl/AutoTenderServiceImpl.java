@@ -2386,10 +2386,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         result = this.hjhPlanCustomizeMapper.updateRepayPlanAccount(hjhPlan) > 0 ? true : false;
         String oldOpenAmount = RedisUtils.get(RedisConstants.HJH_PLAN + hjhAccede.getPlanNid());
         if (!result) {
-            logger.error("[" + hjhAccede.getAccedeOrderId() + "] " + "复投减开放额度更新表失败！,计划编号:" + hjhAccede.getPlanNid() + "redis原开放额度:" + oldOpenAmount + "，应减额度:" + subAmount.toString());
+            logger.error("[" + hjhAccede.getAccedeOrderId() + "] " + "复投减开放额度更新表失败！,智投编号:" + hjhAccede.getPlanNid() + "redis原开放额度:" + oldOpenAmount + "，应减额度:" + subAmount.toString());
             return result;
         }
-        logger.info("[" + hjhAccede.getAccedeOrderId() + "] " + "复投减开封额度！,计划编号:" + hjhAccede.getPlanNid() + "redis原开放额度:" + oldOpenAmount + "，应减额度:" + subAmount.toString());
+        logger.info("[" + hjhAccede.getAccedeOrderId() + "] " + "复投减开封额度！,智投编号:" + hjhAccede.getPlanNid() + "redis原开放额度:" + oldOpenAmount + "，应减额度:" + subAmount.toString());
         RedisUtils.add(RedisConstants.HJH_PLAN + hjhAccede.getPlanNid(), subAmount.negate().toString());//增加redis相应计划可投金额
         return result;
     }
