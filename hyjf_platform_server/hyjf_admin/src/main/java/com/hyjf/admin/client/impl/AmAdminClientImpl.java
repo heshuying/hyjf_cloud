@@ -1,5 +1,6 @@
 package com.hyjf.admin.client.impl;
 
+import com.hyjf.admin.beans.request.AppPushManageRequestBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
@@ -19,6 +20,7 @@ import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
+import com.hyjf.am.response.user.BankRepayFreezeOrgResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
@@ -37,14 +39,17 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -1249,5 +1254,117 @@ public class AmAdminClientImpl implements AmAdminClient {
     public void updateBindCard(BindCardExceptionRequest request) {
         String url = "http://AM-ADMIN/am-user/bindcardexception/updateBindCard";
         restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
+    }
+
+    /**
+     * 异常中心-还款冻结异常列表数据
+     * @param request
+     * @return
+     */
+    @Override
+    public List<BankRepayFreezeOrgCustomizeVO> getBankReapyFreezeOrgList(RepayFreezeOrgRequest request) {
+        String url = "http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/list_data";
+        BankRepayFreezeOrgResponse response = restTemplate.postForEntity(url,request,BankRepayFreezeOrgResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 异常中心-还款冻结异常列表记录数
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer getBankReapyFreezeOrgCount(RepayFreezeOrgRequest request) {
+        String url = "http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/list_count";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据orderId删除
+     */
+    @Override
+    public Integer deleteOrgFreezeLog(String orderId) {
+        StringBuilder url = new StringBuilder("http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/delete");
+        url.append(orderId);
+        IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据条件查询垫付机构冻结日志
+     */
+    @Override
+    public List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId) {
+        StringBuilder url = new StringBuilder("http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/getValid/");
+        url.append(orderId);
+        IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 移动客户端 - App 推送管理 列表
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public AppPushManageResponse getPushManageList(AppPushManageRequestBean requestBean) {
+        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/selectPushManageList/", requestBean, AppPushManageResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 移动客户端 - App 推送管理 添加
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public AppPushManageResponse insterPushManage(AppPushManageRequestBean requestBean){
+        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/insertPushManage/", requestBean, AppPushManageResponse.class).getBody();
+        if (response != null){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 移动客户端 - App 推送管理 更新
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean updatePushManage(AppPushManageRequestBean requestBean) {
+        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/updatePushManage/", requestBean, BooleanResponse.class).getBody();
+        return booleanResponse.getResultBoolean();
+    }
+
+    /**
+     * 移动客户端 - App 推送管理 删除
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean deletePushManage(Integer id) {
+        BooleanResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/appPushManage/deletePushManage/" + id, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
     }
 }

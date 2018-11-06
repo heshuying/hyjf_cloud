@@ -4,6 +4,7 @@ import com.hyjf.admin.client.*;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.BaseAdminService;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,22 @@ public class BaseAdminServiceImpl extends BaseServiceImpl implements BaseAdminSe
 		UserVO user = amUserClient.getUserByUserName(userName);
 		return user;
 	}
+
+	public UserVO getUsersById(Integer userId) {
+		UserVO userVO = amUserClient.findUserById(userId);
+		return userVO;
+	}
+
+	/**
+	 * 根据borrowNid获取borrow
+	 * @param borrowNid
+	 * @return
+	 */
+	@Override
+	public BorrowAndInfoVO getBorrowByNid(String borrowNid) {
+		return amTradeClient.selectBorrowByNid(borrowNid);
+	}
+
 	/**
 	 * 获取银行账户余额
 	 * @auth sunpeikai

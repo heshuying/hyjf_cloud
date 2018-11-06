@@ -15,6 +15,7 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
@@ -37,10 +38,7 @@ import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
-import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
-import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
-import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.*;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -2276,4 +2274,144 @@ public interface AmTradeClient {
     Integer countProjectRepayPlanRecordTotal(Map<String,Object> paraMap);
 
     List<WebProjectRepayListCustomizeVO> selectProjectRepayPlanList(Map<String, Object> map);
+
+    /**
+     * 根据用户ID查询用户提现记录
+     *
+     * @param userId
+     * @return
+     */
+    List<AccountWithdrawVO> selectAccountWithdrawByUserId(Integer userId);
+
+    /**
+     * 根据用户ID查询用户充值记录
+     *
+     * @param userId
+     * @return
+     */
+    List<AccountRechargeVO> selectRechargeListByUserId(Integer userId);
+
+    /**
+     * 根据用户ID查询用户投资记录
+     *
+     * @param userId
+     * @return
+     */
+    List<BorrowTenderVO> selectBorrowTenderByUserId(Integer userId);
+
+    /**
+     * 根据用户ID查询用户承接记录
+     *
+     * @param userId
+     * @return
+     */
+    List<CreditTenderVO> selectCreditTenderByUserId(Integer userId);
+
+    /**
+     * 根据用户ID查询用户加入记录
+     *
+     * @param userId
+     * @return
+     */
+    List<HjhAccedeVO> selectHjhAccedeListByUserId(Integer userId);
+
+    /**
+     * 根据承接订单号查询承接记录
+     *
+     * @param assignOrderId
+     * @return
+     */
+    CreditTenderVO selectCreditTenderByAssignOrderId(String assignOrderId);
+
+    /**
+     * 根据加入订单号查询优惠券投资记录
+     *
+     * @param orderId
+     * @return
+     */
+    CouponRealTenderVO selectCouponRealTenderByOrderId(String orderId);
+
+    /**
+     * 根据优惠券投资ID查询优惠券投资
+     *
+     * @param couponTenderId
+     * @return
+     */
+    CouponTenderVO selectCouponTenderByCouponTenderId(String couponTenderId);
+
+    /**
+     * 根据优惠券ID查询优惠券使用情况
+     *
+     * @param couponGrantId
+     * @return
+     */
+    CouponUserVO selectCouponUserById(Integer couponGrantId);
+
+    /**
+     * 根据优惠券投资ID获取优惠券投资信息
+     *
+     * @param couponTenderId
+     * @return
+     */
+    BorrowTenderCpnVO selectBorrowTenderCpnByCouponTenderId(String couponTenderId);
+
+    /**
+     * 根据投资订单号查询投资信息
+     * @param orderId
+     * @return
+     */
+    BorrowTenderVO selectBorrowTenderByOrderId(String orderId);
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示 ②	若没有可投计划，则显示锁定期限短的
+     * @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanListByLockTime(AppHomePageRequest request);
+
+    /**
+     * 首页汇计划推广计划列表 - 首页显示
+     * @param request
+     * @Author yangchangwei 2018/10/16
+     * @return
+     */
+    List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanList(AppHomePageRequest request);
+
+    /**
+     * 查询首页定时发标,投资中,复审中的项目
+     * @Author yangchangwei 2018/10/16
+     * @param request
+     * @return
+     */
+    List<AppProjectListCustomizeVO> selectHomeProjectList(AppHomePageRequest request);
+
+    /**
+     * 插入垫付机构冻结日志信息
+     * @author wgx
+     * @date 2018/10/16
+     */
+    Integer addOrgFreezeLog(BankRepayOrgFreezeLogRequest requestBean);
+
+    /**
+     * 删除垫付机构冻结日志信息
+     * @author wgx
+     * @date 2018/10/16
+     */
+    Integer deleteOrgFreezeLog(String orderId, String borrowNid);
+
+    /**
+     * 根据条件查询垫付机构冻结日志
+     * @author wgx
+     * @date 2018/10/16
+     */
+    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId, String borrowNid);
+    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String borrowNid);
+    /**
+     * 获取有效公告
+     * @author cwyang 2018-10-18
+     * @return
+     */
+    List<AppPushManageVO> getAnnouncements();
+
 }

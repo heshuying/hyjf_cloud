@@ -547,6 +547,8 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return userFlag;
     }
 
+
+
     /**
      * 更新用户表
      *
@@ -563,6 +565,8 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         return userFlag;
     }
+
+
 
     /**
      * 获取某一用户的信息修改列表

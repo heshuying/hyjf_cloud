@@ -59,6 +59,14 @@ public class WechatHomePageResult extends BaseResultBean {
     private Integer paymentAuthStatus;//服务费授权状态
 
     private Integer userStatus;//用户是否锁定,0未锁定,1锁定
+    private boolean isCheckUserRole;//角色认证是否打开,true认证,false不认证
+
+    private Integer paymentAuthOn;//缴费是否打开,true认证,false不认证
+
+    private Integer invesAuthOn;//自动投资开关是否打开,true认证,false不认证
+    private Integer creditAuthOn;//自动债转开关是否打开,true认证,false不认证
+
+    private Integer roleId;//角色id
 
     private Integer currentPage;//当前页
     private Integer pageSize;//每页显示条数
@@ -282,5 +290,45 @@ public class WechatHomePageResult extends BaseResultBean {
 
     public void setHomeXshProjectList(List<WechatHomeProjectListVO> homeXshProjectList) {
         HomeXshProjectList = homeXshProjectList;
+    }
+
+    public boolean getIsCheckUserRole() {
+        return isCheckUserRole;
+    }
+
+    public void setIsCheckUserRole(boolean checkUserRole) {
+        isCheckUserRole = checkUserRole;
+    }
+
+    public Integer getPaymentAuthOn() {
+        return paymentAuthOn;
+    }
+
+    public void setPaymentAuthOn(Integer paymentAuthOn) {
+        this.paymentAuthOn = paymentAuthOn;
+    }
+
+    public Integer getInvesAuthOn() {
+        return invesAuthOn;
+    }
+
+    public void setInvesAuthOn(Integer invesAuthOn) {
+        this.invesAuthOn = invesAuthOn;
+    }
+
+    public Integer getCreditAuthOn() {
+        return creditAuthOn;
+    }
+
+    public void setCreditAuthOn(Integer creditAuthOn) {
+        this.creditAuthOn = creditAuthOn;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 }

@@ -749,9 +749,9 @@ public class NewAgreementController extends BaseTradeController{
 			
 			// 将int类型时间转成字符串
 			/*creditTender.setAddTime(GetDate.times10toStrYYYYMMDD(Integer.valueOf(creditTender.getAddTime())));*/
-			creditTender.setAddTime(creditTender.getAddTime());
+			creditTender.setCreateTime(creditTender.getCreateTime());
 			
-			creditTender.setAddip(GetDate.getDateMyTimeInMillis(creditTender.getAssignRepayEndTime()));// 借用ip字段存储最后还款时间
+			creditTender.setAddIp(GetDate.getDateMyTimeInMillis(creditTender.getAssignRepayEndTime()));// 借用ip字段存储最后还款时间
 			resultMap.put("assignCapital", df.format(creditTender.getAssignCapital()));
 			resultMap.put("assignPay", df.format(creditTender.getAssignPrice()));
 			if (borrow != null) {

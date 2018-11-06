@@ -103,7 +103,6 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             openAccountLog = bankOpenAccountLogs.get(0);
         }
         trueName = openAccountLog.getName();
-        idNo = openAccountLog.getIdNo();
         mobile = openAccountLog.getMobile();
 
         BankOpenAccountLogExample accountLogExample = new BankOpenAccountLogExample();

@@ -3,12 +3,15 @@
  */
 package com.hyjf.cs.trade.service.credit.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.*;
@@ -16,15 +19,19 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
@@ -40,10 +47,14 @@ import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
+import com.hyjf.cs.trade.mq.producer.sensorsdate.credit.SensorsDataCreditProducer;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.smscode.SmsCodeService;
+import com.jcraft.jsch.UserInfo;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +100,11 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
 
     @Autowired
     private SmsCodeService sendSmsCode;
+    @Autowired
+    private AuthService authService;
 
+    @Autowired
+    private SensorsDataCreditProducer sensorsDataCreditProducer;
     /**
      * 我要债转列表页 获取参数
      *
@@ -176,6 +191,13 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         UserVO user = amUserClient.findUserById(userId);
         DebtConfigResponse response = amConfigClient.getDebtConfig();
         DebtConfigVO config = response.getResult();
+        // 缴费授权
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
+        creditResultBean.setPaymentAuthStatus(hjhUserAuth==null?0:hjhUserAuth.getAutoPaymentStatus());
+        creditResultBean.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+        creditResultBean.setIsCheckUserRole(systemConfig.getRoleIsopen());
+        UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
+        creditResultBean.setRoleId(userInfoVO==null?"0":userInfoVO.getRoleId()+"");
         if(config!=null){
             creditResultBean.setDebtConfigVO(config);
         }else{
@@ -312,6 +334,25 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             data.put("assignCapital",request.getCreditCapital());
             logger.info("债转保存，返回给前端数据 {}", JSONObject.toJSONString(data));
             result.setData(data);
+            // 保存成功后,发送神策数据统计
+            if (StringUtils.isNotEmpty(request.getPresetProps())){
+                logger.info("神策预置属性:["+request.getPresetProps()+"]");
+                SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                // 将json串转换成Bean
+                try {
+                    Map<String, Object> sensorsDataMap = JSONObject.parseObject(request.getPresetProps(), new TypeReference<Map<String, Object>>() {
+                    });
+                    sensorsDataBean.setPresetProps(sensorsDataMap);
+                    sensorsDataBean.setUserId(userId);
+                    sensorsDataBean.setEventCode("submit_credit_assign");
+                    sensorsDataBean.setCreditNid(String.valueOf(request.getCreditNid()));
+                    // 发送神策数据统计MQ
+                    this.sendSensorsDataMQ(sensorsDataBean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
         }catch (Exception e){
         	e.printStackTrace();
             result.setStatusInfo(MsgEnum.ERR_SYSTEM_UNUSUAL);
@@ -322,7 +363,6 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     /**
      * 用户中心查询 债转详细预计服务费计算
      *
-     * @param requestcreditFee
      * @param userId
      * @return
      */
@@ -437,6 +477,11 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                 throw new CheckException(MsgEnum.STATUS_ZC000015);
             }
         }
+
+        // 服务费授权校验
+        if (!authService.checkPaymentAuthStatus(userId)) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
+        }
     }
 
     /**
@@ -473,6 +518,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 获取待债转数据
         TenderCreditCustomizeVO tenderToCreditDetail = amTradeClient.selectTenderToCreditDetail(userId, request.getBorrowNid(),
                 request.getTenderNid());
+        request.setCreditNid(creditNid);
         // 债转nid
         borrowCredit.setCreditNid(Integer.parseInt(creditNid));
         // 转让用户id
@@ -735,4 +781,12 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         return resultMap;
     }
 
+    /**
+     *  发起转让成功后,发送神策数据统计MQ
+     *
+     * @param sensorsDataBean
+     */
+    private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataCreditProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_RECHARGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+    }
 }

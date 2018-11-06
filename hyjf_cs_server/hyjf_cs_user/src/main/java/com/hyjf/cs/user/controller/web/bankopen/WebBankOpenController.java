@@ -5,6 +5,9 @@ import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
@@ -16,6 +19,7 @@ import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
@@ -145,9 +149,11 @@ public class WebBankOpenController extends BaseUserController {
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
     @PostMapping("/bgReturn")
     @ResponseBody
-    public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("phone") String mobile) {
+    public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("phone") String mobile,@RequestParam("roleId")String roleId,@RequestParam("openclient")String openclient) {
         logger.info("web端开户异步处理start,userId:{}", bean.getLogUserId());
         bean.setMobile(mobile);
+        bean.setLogClient(Integer.parseInt(openclient));
+        bean.setIdentity(roleId);
         BankCallResult result = bankOpenService.openAccountBgReturn(bean);
         return result;
     }
@@ -159,9 +165,9 @@ public class WebBankOpenController extends BaseUserController {
     @ApiOperation(value = "查询开户失败原因", notes = "查询开户失败原因")
     @PostMapping("/seachFiledMess")
     @ResponseBody
-    public WebResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
-        logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);
-        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId);
+    public WebResult<Object> seachFiledMess(@RequestHeader(value = "userId") int userId,@RequestParam("logOrdId") String logOrdId) {
+        logger.info("查询开户失败原因start,logOrdId:{}   userId:{}", logOrdId,userId);
+        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId,userId);
         return result;
     }
 }

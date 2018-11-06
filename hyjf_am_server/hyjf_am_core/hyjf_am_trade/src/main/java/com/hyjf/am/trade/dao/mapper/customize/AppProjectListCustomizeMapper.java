@@ -12,6 +12,8 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.customize.AppProjectInvestListCustomize;
+import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -21,4 +23,10 @@ public interface AppProjectListCustomizeMapper {
 	int countProjectInvestRecordTotal(Map<String,Object> params);
 
     List<AppProjectInvestListCustomize> selectProjectInvestList(Map<String,Object> params);
+
+    List<HjhPlanCustomizeVO> getIndexHjhExtensionPlanListByLockTime(Map map);
+
+    List<HjhPlanCustomizeVO> getIndexHjhExtensionPlanList(Map map);
+
+    List<AppProjectListCustomizeVO> selectHomeProjectList(Map map);
 }
