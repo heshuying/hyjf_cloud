@@ -18,6 +18,8 @@ import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.http.HtmlUtil;
+import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author PC-LIUSHOUYI
@@ -168,6 +167,56 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
     @Override
     public AccountVO getAccountByUserId(Integer userId) {
         return this.amTradeClient.getAccountByUserId(userId);
+    }
+
+    /**
+     * 部门查询条件处理
+     *
+     * @param combotreeListSrch
+     * @return
+     */
+    @Override
+    public String[] getDeptId(String[] combotreeListSrch) {
+        String[] strIds = null;
+        List<String> stringList = new ArrayList<String>();
+        if (Validator.isNotNull(combotreeListSrch)) {
+            //判断部门选择里是否有父级部门
+            for (int i = 0; i < combotreeListSrch.length; i++) {
+                String st = combotreeListSrch[i];
+                if (st.contains("P")) {
+                    //选择的是父级部门的情况下
+                    String strDe = st.split("P")[1];
+                    if (StringUtils.isNotBlank(strDe)) {
+                        stringList = getDeptInfoByDeptId(Integer.parseInt(strDe), stringList);
+                    }
+                } else {
+                    //既选择了父级部门又选择子级菜单的情况下
+                    stringList.add(st);
+                }
+                //其他
+                if (("-10086").equals(st)) {
+                    stringList.add("0");
+                }
+            }
+        }
+        if (null != stringList && stringList.size() > 0) {
+            strIds = stringList.toArray(new String[stringList.size()]);
+        }
+        return strIds;
+    }
+
+    /**
+     * 根据部门查找是否有子级部门并循环将部门id设置的list中
+     */
+    private List<String> getDeptInfoByDeptId(int deptId, List<String> keysList) {
+        List<OADepartmentCustomizeVO> list = amUserClient.getDeptInfoByDeptId(deptId);
+        if (null != list && list.size() > 0) {
+            for (OADepartmentCustomizeVO oaDepartmentCustomizeVO : list) {
+                keysList.add(oaDepartmentCustomizeVO.getId().toString());
+                getDeptInfoByDeptId(oaDepartmentCustomizeVO.getId(), keysList);
+            }
+        }
+        return keysList;
     }
 
     /**

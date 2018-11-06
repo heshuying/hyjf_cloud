@@ -158,6 +158,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         userInfo.setMobileIsapprove(1);
         // 修改用户角色
         userInfo.setRoleId(roleId);
+        logger.info("birthDay：：："+birthDay);
         // 更新用户详细信息表
         boolean userInfoFlag = usersInfoMapper.updateByPrimaryKeySelective(userInfo) > 0 ? true : false;
         if (!userInfoFlag) {

@@ -67,7 +67,7 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
             criteria = Criteria.where("id").ne("").ne(null);
 
             // 日期区间查询
-            if (StringUtils.isNoneBlank(request.getDateFromSrch()) && StringUtils.isNotBlank(request.getDateToSrch())){
+            if (StringUtils.isNotBlank(request.getDateFromSrch()) && StringUtils.isNotBlank(request.getDateToSrch())){
                 criteria = criteria.and("date").gte(request.getDateFromSrch()).lte(request.getDateToSrch());
             }
 

@@ -488,7 +488,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		ret.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
 		// 是否开启服务费授权 0未开启  1已开启
 		ret.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-		ret.put("paymentAuthOn","");
 
 		// 是否设置交易密码
 		ret.put("isSetPassword", userVO.getIsSetPassword());

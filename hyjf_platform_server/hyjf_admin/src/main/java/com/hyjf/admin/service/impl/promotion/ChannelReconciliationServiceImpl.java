@@ -63,7 +63,7 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
 
         // app渠道信息
         AppChannelStatisticsDetailRequest request1 = new AppChannelStatisticsDetailRequest();
-        if (request.getUtmPlat() != null) {
+        if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {
             request1.setSourceIdSrch(Integer.valueOf(request.getUtmPlat()[0]));
         }
         AppChannelStatisticsDetailResponse appResponse = csMessageClient.exportStatisticsList(request1);
@@ -109,7 +109,7 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
     public ChannelReconciliationResponse searchAppHJHAction(ChannelReconciliationRequest request) {
         // app渠道信息
         AppChannelStatisticsDetailRequest request1 = new AppChannelStatisticsDetailRequest();
-        if (request.getUtmPlat() != null) {
+        if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {
             request1.setSourceIdSrch(Integer.valueOf(request.getUtmPlat()[0]));
         }
         AppChannelStatisticsDetailResponse appResponse = csMessageClient.exportStatisticsList(request1);
