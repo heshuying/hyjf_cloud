@@ -323,4 +323,8 @@ public interface CsMessageClient {
      * @return
      */
     UserOperationLogResponse  getOperationLogList(UserOperationLogRequest request);
+
+    HjhInfoAccountBalanceResponse  getHjhAccountBalanceMonthCount(HjhAccountBalanceRequest request);
+
+    HjhInfoAccountBalanceResponse  getHjhAccountBalanceDayCount(HjhAccountBalanceRequest request);
 }

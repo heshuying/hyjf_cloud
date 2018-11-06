@@ -80,7 +80,7 @@ public class AccountBalanceController extends BaseController {
 
         //请求第一页5000条
         form.setPageSize(defaultRowMaxCount);
-        form.setPaginatorPage(1);
+        form.setCurrPage(1);
         HjhInfoAccountBalanceResponse resultResponse = accountBalanceService.getSearchListByDay(form);
         // 表格sheet名称
         String sheetName = "每日交易量";
@@ -102,7 +102,7 @@ public class AccountBalanceController extends BaseController {
         for (int i = 1; i < sheetCount; i++) {
             //请求第一页5000条
             form.setPageSize(defaultRowMaxCount);
-            form.setPaginatorPage(i+1);
+            form.setCurrPage(i+1);
             HjhInfoAccountBalanceResponse resultResponse2 = accountBalanceService.getSearchListByDay(form);
             if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
@@ -160,7 +160,7 @@ public class AccountBalanceController extends BaseController {
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         //请求第一页5000条
         form.setPageSize(defaultRowMaxCount);
-        form.setPaginatorPage(1);
+        form.setCurrPage(1);
         HjhInfoAccountBalanceResponse resultResponse = accountBalanceService.getSearchListByMonth(form);
         // 表格sheet名称
         String sheetName = "每月交易量";
@@ -182,7 +182,7 @@ public class AccountBalanceController extends BaseController {
         for (int i = 1; i < sheetCount; i++) {
             //请求第一页5000条
             form.setPageSize(defaultRowMaxCount);
-            form.setPaginatorPage(i+1);
+            form.setCurrPage(i+1);
             HjhInfoAccountBalanceResponse resultResponse2 = accountBalanceService.getSearchListByMonth(form);
             if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
