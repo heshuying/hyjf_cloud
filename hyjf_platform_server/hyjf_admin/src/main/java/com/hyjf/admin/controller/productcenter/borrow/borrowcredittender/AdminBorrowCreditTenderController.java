@@ -81,6 +81,16 @@ public class AdminBorrowCreditTenderController extends BaseController {
     }
 
 
+    @ApiOperation(value = "脱敏图片预览", notes = "脱敏图片预览")
+    @PostMapping("/pdfPreviewAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_PREVIEW)
+    @ResponseBody
+    public Object pdfPreviewAction(@RequestBody BorrowCreditTenderPDFSignReq req){
+        AdminResult result = borrowCreditTenderService.pdfPreview(req);
+        return result;
+    }
+
+
 
 
 

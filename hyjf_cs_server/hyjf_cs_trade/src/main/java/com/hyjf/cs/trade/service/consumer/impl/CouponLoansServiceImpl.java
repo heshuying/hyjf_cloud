@@ -254,7 +254,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     // 还款期数
                     cr.setRecoverPeriod(String.valueOf(j + 1));
                     // 估计还款时间
-                    cr.setRecoverTime(monthly.getRepayTime());
+                    cr.setRecoverTime(GetDate.timestamptoStrYYYYMMDD(monthly.getRepayTime()));
                     // 应还利息
                     cr.setRecoverInterest(monthly.getRepayAccountInterest());
                     if (couponConfig.getCouponType() == 3) {
@@ -300,7 +300,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
             // 还款期数
             cr.setRecoverPeriod(String.valueOf(recoverPeriod));
             // 估计还款时间
-            cr.setRecoverTime(recoverTime);
+            cr.setRecoverTime(GetDate.timestamptoStrYYYYMMDD(recoverTime));
             // 应还利息
             cr.setRecoverInterest(interestTender);
             // 应还本息
@@ -597,7 +597,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     // 还款期数
                     cr.setRecoverPeriod(String.valueOf(j + 1));
                     // 估计还款时间
-                    cr.setRecoverTime(monthly.getRepayTime());
+                    cr.setRecoverTime(GetDate.timestamptoStrYYYYMMDD(monthly.getRepayTime()));
                     // 应还利息
                     cr.setRecoverInterest(monthly.getRepayAccountInterest());
                     if (couponConfig.getCouponType() == 3) {
@@ -643,7 +643,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
             // 还款期数
             cr.setRecoverPeriod(String.valueOf(recoverPeriod));
             // 估计还款时间
-            cr.setRecoverTime(recoverTime);
+            cr.setRecoverTime(GetDate.timestamptoStrYYYYMMDD(recoverTime));
             // 应还利息
             cr.setRecoverInterest(interestTender);
             // 应还本息

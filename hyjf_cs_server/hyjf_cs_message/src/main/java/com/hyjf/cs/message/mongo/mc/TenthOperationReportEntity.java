@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  * @author tanyy
  * @version TenthOperationReportEntity, v0.1 2018/7/23 10:03
  */
-@Document(collection = "tenthoperationreport")
+@Document(collection = "ht_tenth_operation_report")
 public class TenthOperationReportEntity implements Serializable {
     private String id;
 
