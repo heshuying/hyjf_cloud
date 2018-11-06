@@ -71,12 +71,12 @@ public class ApiBankOpenController extends BaseUserController {
     private OpenAccountPageBean getOpenAccountPageBean(ApiBankOpenRequestBean requestBean) {
         OpenAccountPageBean bean = new OpenAccountPageBean();
         BeanUtils.copyProperties(requestBean,bean);
-        String retUrl = "http://CS-USER/user/password";
+        String retUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage";
         // 异步调用路
-        String bgRetUrl = "http://CS-USER/user/password";
+        String bgRetUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage";
         // 调用设置密码接口
-        retUrl += "/resetPasswordReturn?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
-        bgRetUrl += "/resetPasswordBgreturn?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getBgRetUrl().replace("#", "*-*-*");
+        retUrl += "/return?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
+        bgRetUrl += "/bgReturn?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getBgRetUrl().replace("#", "*-*-*");
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         return bean;

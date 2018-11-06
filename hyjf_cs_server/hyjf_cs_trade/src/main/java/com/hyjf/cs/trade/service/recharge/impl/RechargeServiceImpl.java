@@ -482,18 +482,18 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		ret.put("userType", userType);
 		// 姓名
 		ret.put("trueName", trueName);
+		// 是否设置交易密码
+		ret.put("isSetPassword", userVO.getIsSetPassword());
+		if(bankCard != null){
+			ret.put("mobile", bankCard.getMobile());
+		}
 		// 缴费授权
 		HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
 		// 是否开启服务费授权 0未开启  1已开启
 		ret.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
 		// 是否开启服务费授权 0未开启  1已开启
 		ret.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-
-		// 是否设置交易密码
-		ret.put("isSetPassword", userVO.getIsSetPassword());
-		if(bankCard != null){
-			ret.put("mobile", bankCard.getMobile());
-		}
+		logger.info("paymentAuthOn:"+authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
 		// 江西银行客户号
 		ret.put("accountId", user.getBankAccount());
 		//充值提示语
