@@ -187,7 +187,7 @@ public class LoginController extends BaseController {
     }
     /**
      * @Author: dongzeshan
-     * @Desc :获取菜单
+     * @Desc :admin登出
      * @Param: * @param map
      * @Date: 16:43 2018/6/15
      * @Return: JSONObject
@@ -197,6 +197,24 @@ public class LoginController extends BaseController {
 	@ResponseBody
 	public AdminResult loginOut(HttpServletRequest request) {
 		request.getSession().removeAttribute(BaseController.USER);
+		return new AdminResult<>();
+		
+    }
+    /**
+     * @Author: dongzeshan
+     * @Desc :修改密码
+     * @Param: * @param map
+     * @Date: 16:43 2018/6/15
+     * @Return: JSONObject
+     */
+    @ApiOperation(value = "修改密码", notes = "修改密码")
+    @PostMapping(value = "/updatePassword")
+	@ResponseBody
+	public AdminResult updatePasswordAction(@RequestBody AdminSystemRequest map) {
+    	 AdminSystemResponse ar = loginService.updatePasswordAction(map);
+    	 if(!AdminSystemResponse.isSuccess(ar)) {
+    		 return new AdminResult<>(BaseController.FAIL, ar.getMessage());
+    	 }
 		return new AdminResult<>();
 		
     }

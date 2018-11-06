@@ -8,9 +8,7 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PushMoneyManageService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -98,12 +96,14 @@ public class PushMoneyManageController extends BaseController {
             jsonObject.put("record","该项目不存在!");
             status = FAIL;
             jsonObject.put("status",status);
+            logger.error("未在borrow_api表中，borrowNid:" + borrowNid);
             return jsonObject;
         }
         if (GetterUtil.getInteger(apicron.getWebStatus()) == 1) {
             jsonObject.put("record","该标的提成已经计算完成!");
             status = SUCCESS;
             jsonObject.put("status",status);
+            logger.error("提成计算已完成不要重复计算，borrowNid：" + borrowNid);
             return jsonObject;
         }
         int cnt = -1;
@@ -115,14 +115,17 @@ public class PushMoneyManageController extends BaseController {
            jsonObject.put("record","提成计算失败,请重新操作!");
             status = Response.FAIL;
             jsonObject.put("status",status);
+            logger.error("计算提成异常", e);
             return jsonObject;
         }
 
         if (cnt >= 0) {
             jsonObject.put("record","提成计算成功！");
+            logger.info("提成计算成功，borrowNid：" + borrowNid);
             status = SUCCESS;
         } else {
             jsonObject.put("record","提成计算失败,请重新操作!");
+            logger.info("提成计算失败");
             status = FAIL;
         }
         jsonObject.put("status",status);
@@ -203,6 +206,7 @@ public class PushMoneyManageController extends BaseController {
     @ApiOperation(value = "直投提成列表", notes = "直投提成列表")
     @PostMapping(value = "/pushMoneyList")
     public AdminResult pushMoneyList(@RequestBody PushMoneyRequest request){
+        request.setTenderType(1);
         Map<String,Object> result = new HashMap<>();
         Integer count = pushMoneyManageService.getPushMoneyListCount(request);
         count = (count == null)?0:count;

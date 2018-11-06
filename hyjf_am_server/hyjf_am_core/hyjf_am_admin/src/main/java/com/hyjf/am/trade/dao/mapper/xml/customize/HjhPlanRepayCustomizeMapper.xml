@@ -57,8 +57,8 @@
     <sql id="Where_Clause_Repay">
         <where>
             1=1
-            <if test="planOrderId != null and planOrderId != ''">
-                AND hhr.accede_order_id LIKE CONCAT( #{planOrderId}, '%')
+            <if test="accedeOrderId != null and accedeOrderId != ''">
+                AND hhr.accede_order_id LIKE CONCAT( #{accedeOrderId}, '%')
             </if>
             <if test="planNidSrch != null and planNidSrch != ''">
                 AND hhr.plan_nid LIKE CONCAT( #{planNidSrch}, '%')

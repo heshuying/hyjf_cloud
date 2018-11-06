@@ -362,6 +362,7 @@
 		<result column="coupon_quota" property="couponQuota" jdbcType="DECIMAL" />
 		<result column="coupon_type" property="couponType" jdbcType="INTEGER" />
 		<result column="repay_time_config" property="repayTimeConfig" jdbcType="INTEGER" />
+		<result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />
 	</resultMap>
 
 	<select id="getCouponConfigByOrderId" resultMap="couponConfigData" parameterType="java.lang.String">
@@ -379,6 +380,21 @@
 		AND ct.del_flag = 0
 		AND cu.del_flag = 0
 		AND cc.del_flag = 0
+	</select>
+
+	<select id="getCouponConfigById" resultMap="couponConfigData" parameterType="java.lang.String">
+		SELECT
+			hcc.id,
+			hcc.coupon_quota,
+			hcc.coupon_type,
+			hcc.coupon_profit_time coupon_profit_time
+		FROM
+			ht_coupon_user hcu
+		LEFT JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
+		WHERE
+		    hcu.id= #{couponId}
+	   	AND hcu.used_flag = 0
+			AND hcu.del_flag = 0
 	</select>
 
 	<update id="crRecoverPeriod" parameterType="java.util.Map">
