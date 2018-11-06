@@ -648,7 +648,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 江西银行绑卡接口修改
 				if (urlType == 1) {
 					// 绑卡接口类型为新接口
-					result.setBindBankCardUrl(apphost + ClientConstants.REQUEST_BINDCARDPAGE + packageStr(request));
+					result.setBindBankCardUrl(systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
 				} else {
 					// 绑卡接口类型为旧接口
 					result.setBindBankCardUrl(
@@ -660,7 +660,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 江西银行绑卡接口修改
 				if (urlType == 1) {
 					// 绑卡接口类型为新接口
-					result.setBindBankCardUrl(apphost + ClientConstants.REQUEST_BINDCARDPAGE + packageStr(request));
+					result.setBindBankCardUrl(systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
 				} else {
 					// 绑卡接口类型为旧接口
 					result.setBindBankCardUrl(
