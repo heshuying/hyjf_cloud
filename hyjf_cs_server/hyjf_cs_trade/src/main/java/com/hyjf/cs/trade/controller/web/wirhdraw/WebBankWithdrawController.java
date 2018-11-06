@@ -88,13 +88,14 @@ public class WebBankWithdrawController extends BaseTradeController {
         if (!this.authService.checkPaymentAuthStatus(userId)) {
             throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
-        String ip=CustomUtil.getIpAddr(request);
+        String ipAddr = CustomUtil.getIpAddr(request);
+        logger.info("ipAddr is :{}", ipAddr);
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawError";
         String bgRetUrl ="http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn";
         String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawSuccess";
         String forgotPwdUrl=super.getForgotPwdUrl(CommonConstant.CLIENT_PC,request,systemConfig);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),
-                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip, retUrl, bgRetUrl, successfulUrl,forgotPwdUrl);
+                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ipAddr, retUrl, bgRetUrl, successfulUrl,forgotPwdUrl);
 
         try {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);
