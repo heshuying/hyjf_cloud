@@ -1213,10 +1213,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                             }
                         }
                     }
-                } else{
-                    return new AdminResult(BaseResult.FAIL, "下载失败，未找到相关协议");
                 }
             }
+        }else {
+            return new AdminResult(BaseResult.FAIL, "下载失败，未找到相关协议");
         }
 
         if(files!=null && files.size()>0){
