@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -187,6 +188,12 @@ public class HjhPlanCapitalController extends BaseController {
 
         if (CollectionUtils.isNotEmpty(recordList)){
             List<HjhPlanCapitalVO> hjhPlanCapitalVOList = CommonUtils.convertBeanList(recordList, HjhPlanCapitalVO.class);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            for (int i = 0; i < recordList.size(); i++){
+                hjhPlanCapitalVOList.get(i).setStringDate(formatter.format(recordList.get(i).getDate()));
+            }
+
             HjhPlanCapitalVO hjhPlanCapitalVO = new HjhPlanCapitalVO();
             hjhPlanCapitalResponse.setResultList(hjhPlanCapitalVOList);
             hjhPlanCapitalResponse.setCount(count);
