@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * @author zhangqingqing
  */
-@Document(collection = "bankexclusivelog")
+@Document(collection = "ht_bank_exclusive_log")
 public class BankExclusiveLog implements Serializable {
     private String id;
 

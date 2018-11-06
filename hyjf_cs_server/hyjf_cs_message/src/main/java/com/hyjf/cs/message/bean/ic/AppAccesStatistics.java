@@ -10,7 +10,7 @@ import java.util.Date;
  * @version AppAccesStatistics, v0.1 2018/7/19 14:15
  * app登录渠道统计
  */
-@Document(collection = "t_app_access_statistics")
+@Document(collection = "ht_app_access_statistics")
 public class AppAccesStatistics implements Serializable {
     private static final long serialVersionUID = 2906684153855336067L;
     private String id;
