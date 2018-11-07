@@ -172,7 +172,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
             this.copyPlanCouponInfoToResult(result, appCouponCustomize);
 
             // 4.优惠券投资还款计划
-            String  couponRecoverPlanUrl = "http://AM-TRADE/am-trade/borrow/getCounponRecoverList/"+ orderId;
+            String  couponRecoverPlanUrl = "http://AM-TRADE/am-trade/coupon/getCounponRecoverList/"+ orderId;
             CouponRepayResponse res = baseClient.getExe(couponRecoverPlanUrl,CouponRepayResponse.class);
             List<CurrentHoldRepayMentPlanListVO> repaymentPlanList = res.getResultList();
             this.copyPlanCouponRepaymentToResult(result, repaymentPlanList);

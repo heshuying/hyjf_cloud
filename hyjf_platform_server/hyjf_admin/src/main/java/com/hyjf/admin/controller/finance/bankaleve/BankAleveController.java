@@ -67,8 +67,16 @@ public class BankAleveController {
         List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
         String status="000";
         String statusDesc = "未检索到相应的列表数据";
+        Integer count = bankAleveService.queryBankAleveCount(bankAleveRequest);
+        if(count<1){
+            jsonObject.put("count",0);
+            jsonObject.put("record",null);
+            jsonObject.put("status",status);
+            jsonObject.put("statusDesc",statusDesc);
+            return jsonObject;
+        }
+
         if(null!=bankAleveList&&bankAleveList.size()>0){
-            Integer count = bankAleveList.size();
             jsonObject.put("count",count);
             jsonObject.put("record",bankAleveList);
             status =  "000";
