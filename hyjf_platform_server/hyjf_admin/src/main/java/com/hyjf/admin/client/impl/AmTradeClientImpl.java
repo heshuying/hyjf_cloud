@@ -3379,7 +3379,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int saveTenderCommission(TenderCommissionRequest request) {
-        String url = "http://AM-MARKET/am-trade/pushMoneyRecord/insertTenderCommission/";
+        String url = "http://AM-ADMIN/am-trade/pushMoneyRecord/insertTenderCommission/";
         TenderCommissionResponse response = restTemplate.postForEntity(url, request, TenderCommissionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getFlag();
