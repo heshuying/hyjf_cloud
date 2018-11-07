@@ -4796,8 +4796,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public FddTempletCustomizeResponse selectFddTempletList(ProtocolsRequestBean request) {
         ProtocolsRequest requestT = new ProtocolsRequest();
-        requestT.setCurrPage(request.getCurrPage());
-        requestT.setPageSize(request.getPageSize());
+        requestT.setLimitStart(request.getLimitStart());
+        requestT.setLimitEnd(request.getLimitEnd());
         return restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/selectfddtempletlist", requestT, FddTempletCustomizeResponse.class);
     }
 

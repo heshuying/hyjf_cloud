@@ -12,7 +12,7 @@ import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 import com.hyjf.common.file.FavFTPUtil;
-import com.hyjf.common.file.FileUtil;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
@@ -28,7 +28,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,6 +55,11 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 	public FddTempletCustomizeResponse selectFddTempletList(ProtocolsRequestBean request) {
 		FddTempletCustomizeResponse response = amTradeClient.selectFddTempletList(request);
 		if (response != null) {
+			Paginator paginator = new Paginator(request.getCurrPage(), response.getCount(),request.getPageSize()==0?10:request.getPageSize());
+			request.setLimitStart(paginator.getOffset());
+			request.setLimitEnd(paginator.getLimit());
+			response = amTradeClient.selectFddTempletList(request);
+
 			List<FddTempletCustomizeVO> voList = response.getResultList();
 			if (!CollectionUtils.isEmpty(voList)) {
 				List<ParamNameVO> typeList = amConfigClient.getParamNameList("PROTOCOL_TYPE");
