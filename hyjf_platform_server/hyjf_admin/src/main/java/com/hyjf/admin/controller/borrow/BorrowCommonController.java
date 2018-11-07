@@ -186,6 +186,7 @@ public class BorrowCommonController extends BaseController {
 	public AdminResult isExistsUser(@RequestBody @Valid Map<String, String> name) {
 
 		int usersFlag=this.borrowCommonService.isExistsUser(name.get("userName"));
+		logger.info("usersFlag is :{}", usersFlag);
 		if (usersFlag == 1) {
 			return new AdminResult<>(FAIL, "该用户不存在");
 		} else if (usersFlag == 2) {

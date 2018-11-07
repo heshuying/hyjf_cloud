@@ -12,6 +12,8 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.NifaFileDealService;
 import com.hyjf.am.trade.utils.FtpUtil;
 import com.hyjf.am.trade.utils.SFTPParameter;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import org.apache.commons.lang3.StringUtils;
@@ -133,13 +135,24 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
             List<NifaContractTemplateCustomize> nifaContractTemplate = nifaContractTemplateCustomizeMapper.selectNifaContractTemplate();
             if (null != nifaContractTemplate && nifaContractTemplate.size() > 0) {
                 // 合同数据变更时压缩最新合同模板
-                FddTemplet fddTemplet = this.selectFddTemplet(nifaContractTemplate.get(0).getTempletNid());
-                result = downLoadFromUrl(fddTemplet.getFileUrl(), nifaContractTemplate.get(0).getTempletNid() + ".pdf", uploadPath);
+                // redis获取合同模板的下载地址
+                String key = RedisConstants.TEMPLATE_UPLOAD_URL + nifaContractTemplate.get(0).getTempletNid();
+                String httpUrl = RedisUtils.get(key);
+                // redis未存放从数据库取
+                if (StringUtils.isBlank(httpUrl)) {
+                    FddTemplet fddTemplet = this.selectFddTemplet(nifaContractTemplate.get(0).getTempletNid());
+                    if (null != fddTemplet) {
+                        httpUrl = fddTemplet.getFileUrl();
+                    } else{
+                        logger.error("【互金上传文件】:合同模板下载地址为获取到！模板编号：" + nifaContractTemplate.get(0).getTempletNid());
+                    }
+                }
+                result = downLoadFromUrl(httpUrl, nifaContractTemplate.get(0).getTempletNid() + ".pdf", uploadPath);
                 if (result) {
                     sbTemplate.append(uploadPath).append(nifaContractTemplate.get(0).getTempletNid()).append(".pdf,");
                     if (!writeZip(sbTemplate, uploadPath + contractTemplateFileName)) {
                         result = false;
-                        logger.info("【互金上传文件】:合同数据变更时压缩最新合同模板失败！");
+                        logger.error("【互金上传文件】:合同数据变更时压缩最新合同模板失败！");
                     }
                 }
                 // 更新数据库插入一条数据
@@ -163,7 +176,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
                 boolean flag = nifaReportLogMapper.insertSelective(nifaReportLogTemplate) > 0 ? true : false;
                 if (!flag) {
                     result = false;
-                    logger.info("【互金上传文件】:合同模板约定条款、上传日志增加记录失败！");
+                    logger.error("【互金上传文件】:合同模板约定条款、上传日志增加记录失败！");
                 }
                 // list类型转换
                 List<Object> listNCT = toObject(nifaContractTemplate);
@@ -177,7 +190,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
                     fileName.append("合同模板约定条款");
                 } else {
                     result = false;
-                    logger.info("【互金上传文件】:合同模板约定条款导出CSV失败！");
+                    logger.error("【互金上传文件】:合同模板约定条款导出CSV失败！");
                 }
             }
         }
@@ -198,7 +211,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
                     fileName.append("合同要素信息");
                 } else {
                     result = false;
-                    logger.info("【互金上传文件】:合同要素信息导出CSV失败！");
+                    logger.error("【互金上传文件】:合同要素信息导出CSV失败！");
                 }
             }
 
@@ -217,7 +230,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
                     fileName.append("借款人项目还款记录");
                 } else {
                     result = false;
-                    logger.info("【互金上传文件】:借款人项目还款记录导出CSV失败！");
+                    logger.error("【互金上传文件】:借款人项目还款记录导出CSV失败！");
                 }
             }
 
@@ -236,7 +249,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
                     fileName.append("合同状态变更");
                 } else {
                     result = false;
-                    logger.info("【互金上传文件】:合同状态变更导出CSV失败！");
+                    logger.error("【互金上传文件】:合同状态变更导出CSV失败！");
                 }
             }
 
@@ -255,7 +268,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
                     fileName.append("出借人回款记录");
                 } else {
                     result = false;
-                    logger.info("【互金上传文件】:出借人回款记录导出CSV失败！");
+                    logger.error("【互金上传文件】:出借人回款记录导出CSV失败！");
                 }
             }
             // 上传日志增加记录
@@ -279,7 +292,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
                 boolean flag = nifaReportLogMapper.insertSelective(nifaReportLog) > 0 ? true : false;
                 if (!flag) {
                     result = false;
-                    logger.info("【互金上传文件】:上传日志增加记录失败！");
+                    logger.error("【互金上传文件】:上传日志增加记录失败！");
                 }
             }
             // zip打压缩包
@@ -287,10 +300,10 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
                 logger.info("【互金上传文件】压缩包生成！！");
                 if (!writeZip(sb, uploadPath + businessDataFileName)) {
                     result = false;
-                    logger.info("【互金上传文件】压缩包生成失败！！");
+                    logger.error("【互金上传文件】压缩包生成失败！！");
                 }
             } else {
-                logger.info("【互金上传文件】数据文件未生成！！");
+                logger.error("【互金上传文件】数据文件未生成！！");
                 result = false;
             }
         }
@@ -529,7 +542,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            logger.info("【互金上传文件】居间服务协议模板下载失败！");
+            logger.error("【互金上传文件】居间服务协议模板下载失败！");
             return false;
         }
     }
@@ -644,8 +657,8 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
                 }
             }
             // 去掉行数据中多余的回车换行
-            result = result.replace(StringPool.ASCII_TABLE[13],"");
-            result = result.replace(StringPool.ASCII_TABLE[10],"");
+            result = result.replace(StringPool.ASCII_TABLE[13], "");
+            result = result.replace(StringPool.ASCII_TABLE[10], "");
             // 末尾拼接回车换行
             result = result.concat(StringPool.ASCII_TABLE[13]).concat(StringPool.ASCII_TABLE[10]);
             // 拼接成功返回字符串
