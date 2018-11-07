@@ -763,7 +763,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()), tender.getUserId());
                 }
             }
-            if(couponUser!=null){
+            if(couponUser!=null && (tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0)){
                 String config = "";
                 // 加息券标识（0：禁用，1：可用）    1：体验金，2：加息券 3代金券
                 int interestCoupon = borrowInfo.getBorrowInterestCoupon();

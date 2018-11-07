@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.front.batch;
 
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author PC-LIUSHOUYI
  * @version BatchHjhBorrowRepayService, v0.1 2018/6/27 9:21
  */
-public interface BatchHjhBorrowRepayService{
+public interface BatchHjhBorrowRepayService extends BaseService{
 
     List<BorrowTender> selectBorrowTenderListByAccedeOrderId(String accedeOrderId);
 
