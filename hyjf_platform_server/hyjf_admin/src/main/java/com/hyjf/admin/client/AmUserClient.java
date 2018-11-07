@@ -1312,4 +1312,6 @@ public interface AmUserClient {
      * @return
      */
     int sourceIdIsExists(Integer sourceId);
+
+    HjhUserAuthVO getHjhUserAuthByUserId(Integer userId);
 }
