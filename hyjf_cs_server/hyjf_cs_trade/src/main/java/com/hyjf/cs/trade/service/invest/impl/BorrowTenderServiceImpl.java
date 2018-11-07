@@ -65,6 +65,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 /**
@@ -784,7 +785,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.info("用户优惠券信息为:{}" , JSONObject.toJSONString(couponUser));
             }
             if (couponUser != null) {
+                BestCouponListVO couponConfig = new BestCouponListVO();
+                couponConfig.setCouponType(couponUser.getCouponType());
+                couponConfig.setUserCouponId(couponUser.getId()+"");
+                NumberFormat nf = NumberFormat.getInstance();
+                couponConfig.setCouponQuotaStr(nf.format(couponUser.getCouponQuota()));
                 investInfo.setIsThereCoupon(1);
+                investInfo.setCouponConfig(couponConfig);
             } else {
                 investInfo.setIsThereCoupon(0);
             }
