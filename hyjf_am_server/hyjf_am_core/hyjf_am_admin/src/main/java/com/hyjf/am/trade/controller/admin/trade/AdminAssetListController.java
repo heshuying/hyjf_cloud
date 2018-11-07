@@ -101,8 +101,8 @@ public class AdminAssetListController extends BaseController {
 			if(null!=assetList&&assetList.size()>0){
 				List<AssetListCustomizeVO> assetListCustomizeVO = CommonUtils.convertBeanList(assetList,AssetListCustomizeVO.class);
 				response.setResultList(assetListCustomizeVO);
-				response.setCount(registCount);
-				response.setRtn(returnCode);
+				response.setRtn(Response.SUCCESS);
+				response.setMessage(Response.SUCCESS_MSG);
 			}
 		}
 		return response;
