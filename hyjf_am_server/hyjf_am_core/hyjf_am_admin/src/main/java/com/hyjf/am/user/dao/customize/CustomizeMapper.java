@@ -109,4 +109,7 @@ public class CustomizeMapper extends AutoMapper {
     protected AdminUserAuthCustomizeMapper adminUserAuthCustomizeMapper;
     @Autowired
     protected ROaDepartmentMapper rOaDepartmentMapper;
+
+    @Autowired
+    protected MobileSynchronizeCustomizeMapper mobileSynchronizeCustomizeMapper;
 }

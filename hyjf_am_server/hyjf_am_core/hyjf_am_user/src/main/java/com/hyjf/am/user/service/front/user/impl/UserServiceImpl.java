@@ -16,6 +16,8 @@ import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
@@ -23,6 +25,7 @@ import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -1200,11 +1203,52 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             User user = userMapper.selectByPrimaryKey(userEvalationResult.getUserId());
             if (user != null) {
                 user.setIsEvaluationFlag(1);
-                user.setEvaluationExpiredTime(GetDate.countDate(GetDate.countDate(new Date(), 1, 1), 5, -1));
+                // 获取测评到期日期
+                Date evaluationExpiredTime = selectEvaluationExpiredTime(new Date());
+                user.setEvaluationExpiredTime(evaluationExpiredTime);
                 this.userMapper.updateByPrimaryKey(user);
             }
         }
         return insertCount;
+    }
+
+    /**
+     * redis获取测评有效时间计算测评到期时间
+     * redis获取到有效日用redis的、redis获取不到默认有效180天
+     *
+     * @param beginTime
+     * @return
+     */
+    private Date selectEvaluationExpiredTime(Date beginTime) {
+        // 测评过期时间key
+        boolean isExist = RedisUtils.exists(RedisConstants.REVALUATION_EXPIRED_DAY);
+        if (!isExist) {
+            logger.error("redis未设定测评有效日！key：" + RedisConstants.REVALUATION_EXPIRED_DAY);
+            return GetDate.countDate(beginTime, 5, 180);
+        }
+
+        // 从redis获取测评有效日
+        String evaluationExpiredDayStr = RedisUtils.get(RedisConstants.REVALUATION_EXPIRED_DAY);
+        if (org.apache.commons.lang3.StringUtils.isBlank(evaluationExpiredDayStr)) {
+            logger.error("redis测评有效日设置为空！key：" + RedisConstants.REVALUATION_EXPIRED_DAY);
+            return GetDate.countDate(beginTime, 5, 180);
+        }
+
+        // redis设定为非数字报错
+        if (!NumberUtils.isNumber(evaluationExpiredDayStr)) {
+            logger.error("redis测评有效日含非数字！key：" + RedisConstants.REVALUATION_EXPIRED_DAY + "========value:" + evaluationExpiredDayStr);
+            return GetDate.countDate(beginTime, 5, 180);
+        }
+
+        // redis测评到期日计算
+        try {
+            Integer evaluationExpiredDay = Integer.parseInt(evaluationExpiredDayStr);
+            return GetDate.countDate(beginTime, 5, evaluationExpiredDay);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("redis测评有效日格式化失败！key：" + RedisConstants.REVALUATION_EXPIRED_DAY + "========value:" + evaluationExpiredDayStr);
+            return GetDate.countDate(beginTime, 5, 180);
+        }
     }
 
     @Override

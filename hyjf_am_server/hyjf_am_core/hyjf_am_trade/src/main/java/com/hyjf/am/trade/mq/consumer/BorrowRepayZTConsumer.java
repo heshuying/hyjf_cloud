@@ -182,7 +182,7 @@ public class BorrowRepayZTConsumer extends Consumer{
 						JSONObject param = new JSONObject();
 						param.put("borrowNid", borrowApicron.getBorrowNid());
 						param.put("borrowNid", borrowApicron.getPeriodNow());
-						nifaRepayInfoMessageProducer.messageSend(new MessageContent(MQConstant.NIFA_REPAY_INFO_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)));
+						nifaRepayInfoMessageProducer.messageSendDelay(new MessageContent(MQConstant.NIFA_REPAY_INFO_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)),2);
 					} catch (Exception e) {
 						logger.error("发送mq到生成互金还款相关信息失败,放款标的:" + borrowApicron.getBorrowNid());
 					}

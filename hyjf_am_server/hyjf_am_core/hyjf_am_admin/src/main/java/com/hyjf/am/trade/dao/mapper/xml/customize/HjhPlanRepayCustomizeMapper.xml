@@ -144,7 +144,7 @@
         THEN
         NULL
         ELSE
-        FROM_UNIXTIME(hhr.repay_should_time, '%Y-%m-%d %H:%i:%s' )
+        FROM_UNIXTIME(hhr.repay_should_time, '%Y-%m-%d' )
         END AS repay_should_time,
         --         hhr.repay_actual_time,
         --         hhr.repay_should_time,

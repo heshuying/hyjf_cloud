@@ -33,7 +33,7 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     private Integer transferTime;
 
-    private String recoverTime;
+    private Integer recoverTime;
 
     private String recoverTimeString;
 
@@ -180,11 +180,11 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
         this.transferTime = transferTime;
     }
 
-    public String getRecoverTime() {
+    public Integer getRecoverTime() {
         return recoverTime;
     }
 
-    public void setRecoverTime(String recoverTime) {
+    public void setRecoverTime(Integer recoverTime) {
         this.recoverTime = recoverTime;
     }
 

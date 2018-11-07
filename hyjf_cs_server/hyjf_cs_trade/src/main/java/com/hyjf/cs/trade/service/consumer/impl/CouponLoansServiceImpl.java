@@ -254,7 +254,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     // 还款期数
                     cr.setRecoverPeriod(String.valueOf(j + 1));
                     // 估计还款时间
-                    cr.setRecoverTime(GetDate.timestamptoStrYYYYMMDD(monthly.getRepayTime()));
+                    cr.setRecoverTime(monthly.getRepayTime());
                     // 应还利息
                     cr.setRecoverInterest(monthly.getRepayAccountInterest());
                     if (couponConfig.getCouponType() == 3) {
@@ -300,7 +300,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
             // 还款期数
             cr.setRecoverPeriod(String.valueOf(recoverPeriod));
             // 估计还款时间
-            cr.setRecoverTime(GetDate.timestamptoStrYYYYMMDD(recoverTime));
+            cr.setRecoverTime(recoverTime);
             // 应还利息
             cr.setRecoverInterest(interestTender);
             // 应还本息
@@ -592,7 +592,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     // 还款期数
                     cr.setRecoverPeriod(String.valueOf(j + 1));
                     // 估计还款时间
-                    cr.setRecoverTime(GetDate.timestamptoStrYYYYMMDD(monthly.getRepayTime()));
+                    cr.setRecoverTime(monthly.getRepayTime());
                     // 应还利息
                     cr.setRecoverInterest(monthly.getRepayAccountInterest());
                     if (couponConfig.getCouponType() == 3) {
@@ -638,7 +638,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
             // 还款期数
             cr.setRecoverPeriod(String.valueOf(recoverPeriod));
             // 估计还款时间
-            cr.setRecoverTime(GetDate.timestamptoStrYYYYMMDD(recoverTime));
+            cr.setRecoverTime(recoverTime);
             // 应还利息
             cr.setRecoverInterest(interestTender);
             // 应还本息
@@ -683,6 +683,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         account.setBankInvestSum(BigDecimal.ZERO);// 投资人累计投资
         account.setBankFrostCash(BigDecimal.ZERO);// 江西银行冻结金额
 
+        logger.info("更新用户账户："+account.getUserId());
         int accountCnt = this.borrowClient.updateOfLoansTender(account);
         if (accountCnt == 0) {
             throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");

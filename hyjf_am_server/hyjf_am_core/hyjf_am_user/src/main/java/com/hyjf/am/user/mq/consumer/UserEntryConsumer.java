@@ -78,13 +78,21 @@ public class UserEntryConsumer extends Consumer {
 
             //更新入职员工信息
             try {
-                userEntryService.updateUserEntryInfoFromCrm(userId);
+                //为了避免MQ消费时，数据库还没同步的情况，修改了一下逻辑
+                boolean updateResult = userEntryService.updateUserEntryInfoFromCrm(userId);
+                logger.info("更新入职员工信息(CRM)结束，CRM_ID:{} , 更新结果:{}", userId, updateResult);
+                if (updateResult) {
+                    //更新成功时 消费完成
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                } else {
+                    //更新失败时(查询不到数据等情况) 重新发起消费
+                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                }
             } catch (Exception e) {
                 //异常时重发
+                logger.error("员工入职信息更新失败, CRM_ID:" + userId, e);
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
-            logger.info("********************更新入职员工信息(CRM)结束*************************");
-            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         }
     }
 }
