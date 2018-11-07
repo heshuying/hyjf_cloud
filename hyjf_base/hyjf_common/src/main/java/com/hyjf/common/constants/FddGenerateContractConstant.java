@@ -10,6 +10,10 @@ public class FddGenerateContractConstant {
     public static final int PROTOCOL_TYPE_CREDIT = 3;
     /** 汇计划债转投资 */
     public static final int FDD_TRANSTYPE_PLAN_CRIDET = 4;
+    /** 垫付债转投资 */
+    public static final int FDD_TRANSTYPE_APPLY_CRIDET = 5;
+    /** 汇计划垫付债转投资 */
+    public static final int FDD_TRANSTYPE_APPLY_PLAN_CRIDET = 6;
     /**合同标题——居间服务协议*/
     public static final String CONTRACT_DOC_TITLE = "汇盈金服互联网金融服务平台居间服务借款协议";
     /**合同标题——计划加入协议*/
@@ -63,4 +67,7 @@ public class FddGenerateContractConstant {
     public static final String HYJF_FTP_DOMAIN = "hyjf.ftp.domain";
     /**法大大打包临时存放文件*/
     public static final String HYJF_LOC_SAVEPATH ="hyjf.loc.savepath";
+
+    /**失败返回码*/
+    public static final String FDD_RETURN_CODE_2002 = "2002";
 }
