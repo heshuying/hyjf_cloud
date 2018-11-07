@@ -78,6 +78,7 @@ public class GetDate extends PropertyEditorSupport {
 	public static final SimpleDateFormat datetimeFormat = new SimpleDateFormat(datetimeFormat_key);
 	public static final SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat(datetimeFormathhmm_key);
 	public static final SimpleDateFormat datesdf = new SimpleDateFormat(datesdf_key);
+	public static final SimpleDateFormat yyyyMMdf = new SimpleDateFormat(yyyyMM_key);
 
 	// 以毫秒表示的时间
 	private static final long DAY_IN_MILLIS = (long) 24 * 3600 * 1000;
