@@ -54,4 +54,8 @@ public class HjhAccountBalanceDao extends BaseMongoDao<HjhAccountBalance> {
         this.insert(hjhAccountBalance);
         return true;
     }
+
+    public List<HjhAccountBalance> getHjhAccountBalance(Query query){
+        return mongoTemplate.find(query,getEntityClass());
+    }
 }

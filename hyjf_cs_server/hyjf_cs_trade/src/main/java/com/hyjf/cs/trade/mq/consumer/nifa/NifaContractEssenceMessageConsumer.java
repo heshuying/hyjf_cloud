@@ -199,7 +199,7 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                         nifaContractEssence.setInvestorCompany("");
 
                         // 借款人信息1：公司 2：个人
-                        if ("1".equals(borrowInfo.getCompanyOrPersonal())) {
+                        if (null != borrowInfo.getCompanyOrPersonal() && 1 == borrowInfo.getCompanyOrPersonal()) {
                             // 根据借款编号获取借款人公司信息
                             BorrowUserVO borrowUsers = nifaContractEssenceMessageService.selectBorrowUsersByBorrowNid(borrow.getBorrowNid());
                             if (null == borrowUsers) {
@@ -221,8 +221,7 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                             nifaContractEssence.setBorrowerCompany(borrowUsers.getUsername());
                             // 通知与送达
                             nifaContractEssence.setNoticeAddress(borrowUsers.getRegistrationAddress());
-                        }
-                        if ("2".equals(borrowInfo.getCompanyOrPersonal())) {
+                        } else if (null != borrowInfo.getCompanyOrPersonal() && 2 == borrowInfo.getCompanyOrPersonal()) {
                             // 根据借款编号获取借款人信息
                             BorrowManinfoVO borrowManinfo = nifaContractEssenceMessageService.selectBorrowMainfo(borrow.getBorrowNid());
                             if (null == borrowManinfo) {
@@ -243,6 +242,9 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                             nifaContractEssence.setBorrowerAddress(borrowManinfo.getAddress());
                             // 通知与送达
                             nifaContractEssence.setNoticeAddress(borrowManinfo.getAddress());
+                        } else {
+                            logger.error(thisMessName + "未正确获取到借款人属性！" + borrowTender.getNid());
+                            continue;
                         }
 
                         // 借款金额
