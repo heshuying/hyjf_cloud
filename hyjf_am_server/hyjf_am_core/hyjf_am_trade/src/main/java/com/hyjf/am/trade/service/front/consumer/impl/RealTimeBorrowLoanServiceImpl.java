@@ -481,15 +481,6 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 							logger.info("放款成功：" + borrowNid + " 订单: "+tenderOrderId+" 应收利息 "+recoverInterest);
 							recoverInterestSum = recoverInterestSum.add(recoverInterest);
 
-							//crm投资推送 //确认CRM 队列更新
-							try {
-								//与消费端统一 改成发送BorrowTenderVO
-								BorrowTenderVO borrowTenderVO = new BorrowTenderVO();
-								BeanUtils.copyProperties(borrowTenderVO, borrowTender);
-								amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowTenderVO)));
-							} catch (Exception e) {
-								logger.error("发送CRM消息失败:" + e.getMessage());
-							}
 						}else {
 							BigDecimal recoverInterest = (BigDecimal) result.get("recoverInterest");
 							recoverInterestSum = recoverInterestSum.add(recoverInterest);

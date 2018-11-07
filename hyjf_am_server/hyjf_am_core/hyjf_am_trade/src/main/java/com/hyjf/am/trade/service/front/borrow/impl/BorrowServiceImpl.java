@@ -5,6 +5,8 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
+import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
 import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
@@ -14,6 +16,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.AmTradeProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
@@ -66,6 +69,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private AmTradeProducer amTradeProducer;
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -487,6 +493,17 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             }catch (Exception e){
                 e.printStackTrace();
                 logger.error("发送短信失败");
+            }
+            // 投资成功后,发送CRM绩效统计
+            CrmInvestMsgBean crmInvestMsgBean = new CrmInvestMsgBean();
+            crmInvestMsgBean.setInvestType(0);
+            crmInvestMsgBean.setOrderId(borrowTender.getNid());
+            //加入明细表插表成功的前提下，继续
+            //crm投资推送
+            try {
+                amTradeProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(crmInvestMsgBean)),2);
+            } catch (Exception e) {
+                logger.error("发送CRM消息失败:" + e.getMessage());
             }
         } else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
             logger.error("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
