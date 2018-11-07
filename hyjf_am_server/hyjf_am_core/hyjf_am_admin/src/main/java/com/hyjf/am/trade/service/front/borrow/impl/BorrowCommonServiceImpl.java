@@ -841,13 +841,15 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				borrowExample = new BorrowInfoExample();
 				borrowCra = borrowExample.createCriteria();
 				borrowCra.andBorrowPreNidNewEqualTo(borrowList.getBorrowPreNidNew());
-				
+				//添加修改日志
+				BorrowLog borrowLog = new BorrowLog();
 				List<BorrowInfo> borrowAllList = this.borrowInfoMapper.selectByExample(borrowExample);
 				if (borrowAllList != null && borrowAllList.size() > 0) {
 					for (BorrowInfo borrow : borrowAllList) {
 						BorrowWithBLOBs bwb=new BorrowWithBLOBs();
 						 BeanUtils.copyProperties(borrow,bwb);
 						 BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
+						 borrowLog.setBorrowStatus(bwb.getStatus().toString());
 						 bwb.setInfoId(borrow.getId());
 						// 借款表更新(此更新中有关于散标进计划的redis判断)
 						this.updateBorrowCommonData(borrowBean, bwb, borrowNid,adminUsername,adminId,borrow.getId());
@@ -865,13 +867,12 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		                            }
 							}
 						}
-						//添加修改日志
-						BorrowLog borrowLog = new BorrowLog();
+
 						borrowLog.setBorrowNid(borrowNid);
 						Map<String, String> map = CacheUtil.getParamNameMap("BORROW_STATUS");
 						//String statusNameString = getBorrowStatusName(borrowBean.getStatus());
-						borrowLog.setBorrowStatus(map.get(borrowBean.getStatus()));
-						borrowLog.setBorrowStatusCd(StringUtil.isBlank(borrowBean.getStatus())?0:Integer.valueOf(borrowBean.getStatus()));
+						borrowLog.setBorrowStatusCd(StringUtil.isBlank(borrowLog.getBorrowStatus())?0:Integer.valueOf(borrowLog.getBorrowStatus()));
+						borrowLog.setBorrowStatus(map.get(borrowLog.getBorrowStatus()));
 						borrowLog.setType(BORROW_LOG_UPDATE);
 						borrowLog.setCreateTime(new Date());
 						borrowLog.setCreateUserId(adminId);

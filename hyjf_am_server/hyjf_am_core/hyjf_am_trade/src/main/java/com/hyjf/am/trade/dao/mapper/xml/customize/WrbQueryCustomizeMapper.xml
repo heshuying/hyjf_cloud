@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.WrbQueryCustomizeMapper">
+	<resultMap id="getDaySumMap" type="com.hyjf.am.vo.api.WrbDaySumCustomize">
+		<result column="lend_count" property="lend_count" jdbcType="INTEGER"></result>
+		<result column="borrow_count" property="borrow_count" jdbcType="INTEGER"></result>
+		<result column="invest_all_money" property="invest_all_money" jdbcType="DECIMAL"></result>
+		<result column="fc_all_wait_back_money" property="fc_all_wait_back_money" jdbcType="DECIMAL"></result>
+		<result column="all_wait_back_money" property="all_wait_back_money" jdbcType="DECIMAL"></result>
+	</resultMap>
+	<sql id="invest_record_sql">
+		<where>
+			<if test="userId != null">
+				hbt.user_id = #{userId}
+			</if>
+			<if test="nid != null">
+				AND hbt.nid = #{nid}
+			</if>
+			<if test="status == 0">
+				AND hb.status <![CDATA[ <> ]]> 5 AND hb.status <![CDATA[ <> ]]> 6
+			</if>
+			<if test="status == 1">
+				AND hb.status = 5
+			</if>
+			<if test="status == 2">
+				AND 1 = 2
+			</if>
+			<if test="startTime != null">
+				AND hbt.addtime <![CDATA[ >= ]]> #{startTime}
+			</if>
+			<if test="endTime != null">
+				AND hbt.addtime <![CDATA[ <= ]]> #{endTime}
+			</if>
+		</where>
+	</sql>
 
 	<sql id="Where_Clause_New">
 		<where>
@@ -149,4 +181,112 @@
 	</select>
 
 
+	<select id="getDaySum" resultMap="getDaySumMap">
+		SELECT
+		(
+		SELECT
+		COUNT(DISTINCT user_id)
+		FROM
+		ht_borrow
+		WHERE
+		create_time <![CDATA[>=]]> #{timeStart}
+		AND create_time <![CDATA[<=]]> #{timeEnd}
+		) AS borrow_count,
+		(
+		SELECT
+		COUNT(DISTINCT user_id)
+		FROM
+		ht_borrow_tender
+		WHERE
+		create_time<![CDATA[>=]]> #{timeStart}
+		AND create_time<![CDATA[<=]]> #{timeEnd}
+		) AS lend_count,
+		(
+		SELECT
+		SUM(account)
+		FROM
+		ht_borrow_tender
+		WHERE
+		create_time <![CDATA[>=]]> #{timeStart}
+		AND create_time <![CDATA[<=]]> #{timeEnd}
+		) AS invest_all_money,
+		(
+		SELECT
+		SUM(recover_account_capital_wait)
+		FROM
+		ht_borrow_tender
+		) AS all_wait_back_money,
+		(
+		SELECT
+		SUM(recover_account_capital_wait)
+		FROM
+		ht_borrow_tender
+		WHERE tender_from = 'wrb'
+		) AS fc_all_wait_back_money
+	</select>
+
+
+
+	<select id="getInvestRecord" resultType="com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize">
+		SELECT
+		FROM_UNIXTIME(hbt.create_time, '%Y-%c-%d %h:%i:%s') AS invest_time,
+		hbt.account AS invest_money,
+		hbt.recover_account_capital_yes AS all_back_principal,
+		hbt.recover_account_interest_yes AS all_back_interest,
+		hbt.recover_account_interest AS all_interest,
+		cpn.tender_award_account AS invest_reward,
+		hbt.nid AS invest_record_id,
+		info.project_name AS project_title,
+		hb.borrow_nid AS project_id,
+		CONCAT("/borrow/",hb.borrow_nid) AS project_url,
+		hb.borrow_apr AS project_rate,
+		CASE WHEN hb.borrow_style = 'endday' THEN hb.borrow_period ELSE hb.borrow_period*30 END AS project_timelimit,
+		CASE WHEN hb.borrow_style = 'endday' THEN CONCAT(hb.borrow_period,'天') ELSE CONCAT(hb.borrow_period, '个月') END AS project_timelimit_desc,
+		CASE WHEN hb.status = 2 THEN -1 WHEN hb.status = 4 THEN 0 WHEN hb.status = 5 THEN 1 END AS invest_status,
+		0 AS is_auto_bid,
+		CASE WHEN hbt.client = 0 THEN 1 WHEN hbt.client = 2 THEN 2 WHEN hbt.client = 3 THEN 2 ELSE 0 END AS suorce,
+		hbs.`name` AS payback_way,
+		CASE WHEN r.credit_status = 0 THEN 0 ELSE 1 END AS attorn_state,
+		CASE WHEN r.credit_status = 0 THEN '' ELSE FROM_UNIXTIME(hbc.create_time) END AS attorn_time
+		FROM
+		ht_borrow_tender hbt
+		LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
+		LEFT JOIN ht_borrow_credit hbc ON hbc.tender_nid = hbt.nid
+		LEFT JOIN ht_borrow_style hbs ON hb.borrow_style = hbs.nid
+		LEFT JOIN ht_borrow_tender_cpn cpn ON hbt.nid=cpn.nid
+		LEFT JOIN ht_borrow_info info ON info.borrow_nid=hbt.borrow_nid
+		left join ht_borrow_recover r on hbt.nid = r.nid
+		<include refid="invest_record_sql"/>
+		ORDER BY hbt.id DESC
+		<if test="limitStart != null and limitEnd != null">
+			LIMIT #{limitStart}, #{limitEnd}
+		</if>
+	</select>
+
+	<select id="getRecover" resultType="com.hyjf.am.trade.dao.model.customize.WrbRecoverCustomize">
+SELECT
+		CASE WHEN hbr.recover_status = 0 THEN FROM_UNIXTIME(hbr.recover_time, '%d') ELSE '' END AS monthly_back_date,
+		CASE WHEN hbr.recover_status = 0 THEN FROM_UNIXTIME(hbr.recover_time, '%Y-%c-%d') ELSE  '' END AS next_back_date,
+		CASE WHEN hbr.recover_status = 0 THEN hbr.recover_account END AS next_back_money,
+		CASE WHEN hbr.recover_status = 0 THEN hbr.recover_capital END AS next_back_principal,
+		CASE WHEN hbr.recover_status = 0 THEN hbr.recover_interest END AS next_back_interest,
+		CASE WHEN hbr.advance_status = 1 AND hbr.charge_days > 8 THEN 1 ELSE 0 END AS back_early_state,
+		CASE WHEN hbr.advance_status = 1 AND hbr.charge_days > 8 THEN FROM_UNIXTIME(hbr.recover_yestime, '%Y-%c-%d %h:%i:%s') ELSE '' END AS back_early_time
+		FROM ht_borrow_tender hbt
+		inner JOIN ht_borrow_recover hbr ON hbt.nid = hbr.nid
+    	inner JOIN ht_borrow_recover_plan p ON hbr.borrow_nid=p.borrow_nid
+		WHERE hbt.nid = #{nid}
+	</select>
+
+	<select id="getRecoverPlan" resultType="com.hyjf.am.trade.dao.model.customize.WrbRecoverCustomize">
+		SELECT
+		CASE WHEN hbrp.recover_status = 0 THEN FROM_UNIXTIME(hbrp.recover_time, '%d') ELSE '' END AS monthly_back_date,
+		CASE WHEN hbrp.recover_status = 0 THEN FROM_UNIXTIME(hbrp.recover_time, '%Y-%c-%d') ELSE  '' END AS next_back_date,
+		CASE WHEN hbrp.recover_status = 0 THEN hbrp.recover_account END AS next_back_money,
+		CASE WHEN hbrp.recover_status = 0 THEN hbrp.recover_capital END AS next_back_principal,
+		CASE WHEN hbrp.recover_status = 0 THEN hbrp.recover_interest END AS next_back_interest
+		FROM ht_borrow_tender hbt
+		inner JOIN ht_borrow_recover_plan hbrp ON hbt.nid = hbrp.nid
+		WHERE hbt.nid = #{nid}
+	</select>
 </mapper>

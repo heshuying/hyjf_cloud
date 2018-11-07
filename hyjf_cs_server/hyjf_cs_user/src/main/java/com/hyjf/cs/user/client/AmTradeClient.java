@@ -3,6 +3,10 @@
  */
 package com.hyjf.cs.user.client;
 
+import com.hyjf.am.response.trade.WrbInvestRecordResponse;
+import com.hyjf.am.response.trade.wrbInvestRecoverPlanResponse;
+import com.hyjf.am.response.user.WrbAccountResponse;
+import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
@@ -24,6 +28,7 @@ import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
+import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -344,6 +349,43 @@ public interface AmTradeClient {
      */
     CouponConfigVO getCouponByCouponCode(String couponCode);
 
+    /**
+     *获取某天投资情况汇总
+     * @param date
+     * @return
+     */
+    WrbInvestSumResponse getDaySum(Date date);
+
+    /**
+     * 根据平台用户id获取账户信息
+     * @param userId
+     * @return
+     */
+    WrbAccountResponse getAccountInfo(String userId);
+
+    /**
+     * 获取用户优惠券信息
+     * @param userId
+     * @return
+     */
+    WrbAccountResponse getCouponInfo(String userId);
+
+    /**
+     * 投资记录查询
+     * @param request
+     * @return 投资记录
+     * @throws Exception
+     */
+    WrbInvestRecordResponse getInvestRecord(WrbInvestRecordRequest request);
+
+    /**
+     * 获取投资记录回款计划
+     * @param userId
+     * @param investRecordId 流水号
+     * @param borrowNid
+     * @return
+     */
+    wrbInvestRecoverPlanResponse getRecoverPlan(String userId, String investRecordId, String borrowNid);
     /**
      * 获取某天投资情况
      * @param invest_date

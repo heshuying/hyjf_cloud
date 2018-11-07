@@ -281,13 +281,13 @@
         create_user_id = #{createUserId,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime},
       </if>
       <if test="updateUserId != null" >
         update_user_id = #{updateUserId,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -301,9 +301,9 @@
       enabled_status = #{enabledStatus,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
       create_user_id = #{createUserId,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
+      create_time = #{createTime},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER}
+      update_time = #{updateTime}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
