@@ -10,18 +10,38 @@ public class SpreadsUser implements Serializable {
 
     private Integer spreadsUserId;
 
+    /**
+     * 设置
+     *
+     * @mbggenerated
+     */
     private String set;
 
     private String type;
 
+    /**
+     * 操作说明
+     *
+     * @mbggenerated
+     */
     private String opernote;
 
+    /**
+     * 操作人 
+     *
+     * @mbggenerated
+     */
     private String operation;
 
     private String createIp;
 
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

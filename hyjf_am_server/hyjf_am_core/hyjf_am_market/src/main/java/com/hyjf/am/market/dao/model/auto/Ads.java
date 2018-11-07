@@ -8,54 +8,134 @@ public class Ads implements Serializable {
 
     private String name;
 
+    /**
+     * 广告类型
+     *
+     * @mbggenerated
+     */
     private Integer typeId;
 
     private String url;
 
+    /**
+     * 调用代码
+     *
+     * @mbggenerated
+     */
     private String code;
 
+    /**
+     * 内容
+     *
+     * @mbggenerated
+     */
     private String content;
 
     private String image;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer order;
 
     private Integer hits;
 
     private Integer status;
 
+    /**
+     * 分享url
+     *
+     * @mbggenerated
+     */
     private String shareUrl;
 
+    /**
+     * 分享图片url
+     *
+     * @mbggenerated
+     */
     private String shareImage;
 
+    /**
+     * 是否在首页特色banner位置显示，0为不显示，1显示
+     *
+     * @mbggenerated
+     */
     private Integer isIndex;
 
     private String startTime;
 
     private String endTime;
 
+    /**
+     * 是否已结束(只针对活动banner有效0:否,1:是)
+     *
+     * @mbggenerated
+     */
     private Integer isEnd;
 
     private String shareTitle;
 
+    /**
+     * 活动列表图
+     *
+     * @mbggenerated
+     */
     private String activitiImage;
 
+    /**
+     * 活动描述
+     *
+     * @mbggenerated
+     */
     private String activitiDesc;
 
+    /**
+     * 共享内容
+     *
+     * @mbggenerated
+     */
     private String shareContent;
 
+    /**
+     * 客户端类型 0为pc广告  1为手机广告
+     *
+     * @mbggenerated
+     */
     private Integer clientType;
 
+    /**
+     * 是否限制新手 1：限制 2：不限制
+     *
+     * @mbggenerated
+     */
     private Integer newUserShow;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;
 
     private Date updateTime;
 
+    /**
+     * 拆分状态 1：android广告管理 2：ios广告管理 3: 微信广告管理
+     *
+     * @mbggenerated
+     */
     private Integer platformType;
 
     private static final long serialVersionUID = 1L;

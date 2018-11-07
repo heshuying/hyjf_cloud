@@ -4,20 +4,55 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class LandingPage implements Serializable {
+    /**
+     * 主键id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 着落页名称
+     *
+     * @mbggenerated
+     */
     private String pageName;
 
     private String channelName;
 
+    /**
+     * 链接地址
+     *
+     * @mbggenerated
+     */
     private String pageUrl;
 
+    /**
+     * 二维码地址
+     *
+     * @mbggenerated
+     */
     private String codeUrl;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

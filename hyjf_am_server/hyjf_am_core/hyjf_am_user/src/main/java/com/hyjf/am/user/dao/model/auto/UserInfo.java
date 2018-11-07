@@ -4,38 +4,118 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UserInfo implements Serializable {
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户角色1投资人2借款人3担保机构
+     *
+     * @mbggenerated
+     */
     private Integer roleId;
 
+    /**
+     * 生日
+     *
+     * @mbggenerated
+     */
     private String birthday;
 
+    /**
+     * 性别:0未知,1男,2女
+     *
+     * @mbggenerated
+     */
     private Integer sex;
 
+    /**
+     * 真实姓名
+     *
+     * @mbggenerated
+     */
     private String truename;
 
+    /**
+     * 身份证号
+     *
+     * @mbggenerated
+     */
     private String idcard;
 
+    /**
+     * 实名是已否认证
+     *
+     * @mbggenerated
+     */
     private Integer truenameIsapprove;
 
+    /**
+     * 手机是已否认证
+     *
+     * @mbggenerated
+     */
     private Integer mobileIsapprove;
 
+    /**
+     * 邮件是已否认证
+     *
+     * @mbggenerated
+     */
     private Integer emailIsapprove;
 
+    /**
+     * 省份
+     *
+     * @mbggenerated
+     */
     private String province;
 
+    /**
+     * 城市
+     *
+     * @mbggenerated
+     */
     private String city;
 
+    /**
+     * 区域
+     *
+     * @mbggenerated
+     */
     private String area;
 
+    /**
+     * 地址
+     *
+     * @mbggenerated
+     */
     private String address;
 
+    /**
+     * 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
+     *
+     * @mbggenerated
+     */
     private Integer attribute;
 
     private Integer isContact;
 
+    /**
+     * 借款人类型 1：内部机构 2：外部机构
+     *
+     * @mbggenerated
+     */
     private Integer borrowerType;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -232,20 +232,22 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
     private JSONArray treeDepartmentList(List<OADepartmentCustomizeVO> departmentTreeDBList, Map<String, String> map, String[] selectedNode, String topParentDepartmentCd,
                                          String topParentDepartmentName) {
         JSONArray ja = new JSONArray();
+        JSONObject joAttr = new JSONObject();
         if (departmentTreeDBList != null && departmentTreeDBList.size() > 0) {
             JSONObject jo = null;
             for (OADepartmentCustomizeVO departmentTreeRecord : departmentTreeDBList) {
                 jo = new JSONObject();
-
-                jo.put("value", departmentTreeRecord.getId().toString());
                 jo.put("title", departmentTreeRecord.getName());
                 jo.put("key", UUID.randomUUID());
-
+                jo.put("value", departmentTreeRecord.getId().toString());
                 String departmentCd = String.valueOf(departmentTreeRecord.getId());
                 String departmentName = String.valueOf(departmentTreeRecord.getName());
                 String parentDepartmentCd = String.valueOf(departmentTreeRecord.getParentid());
                 if (topParentDepartmentCd.equals(parentDepartmentCd)) {
                     JSONArray array = treeDepartmentList(departmentTreeDBList, map, selectedNode, departmentCd, departmentName);
+                    if(null!=array&&array.size()>0){
+                        jo.put("value", "P"+departmentTreeRecord.getId().toString());
+                    }
                     jo.put("children", array);
                     ja.add(jo);
                 }

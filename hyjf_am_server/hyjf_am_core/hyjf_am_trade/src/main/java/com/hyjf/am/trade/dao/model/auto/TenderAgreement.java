@@ -6,46 +6,151 @@ import java.util.Date;
 public class TenderAgreement implements Serializable {
     private Integer id;
 
+    /**
+     * 投资用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 投资用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 标的编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 投资类型:0:原始投资,1:承接债权,2:加入计划,3:计划承接
+     *
+     * @mbggenerated
+     */
     private Integer tenderType;
 
+    /**
+     * 投资订单号或承接订单号
+     *
+     * @mbggenerated
+     */
     private String tenderNid;
 
+    /**
+     * 合同状态 0:初始,1:生成成功,2,签署成功,3,下载成功
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 合同编号
+     *
+     * @mbggenerated
+     */
     private String contractNumber;
 
+    /**
+     * 合同名称
+     *
+     * @mbggenerated
+     */
     private String contractName;
 
+    /**
+     * 模板编号
+     *
+     * @mbggenerated
+     */
     private String templetId;
 
+    /**
+     * 合同生成时间
+     *
+     * @mbggenerated
+     */
     private Integer contractCreateTime;
 
+    /**
+     * 合同签署时间
+     *
+     * @mbggenerated
+     */
     private Integer contractSignTime;
 
+    /**
+     * 合同下载地址
+     *
+     * @mbggenerated
+     */
     private String downloadUrl;
 
+    /**
+     * 合同查看地址
+     *
+     * @mbggenerated
+     */
     private String viewpdfUrl;
 
+    /**
+     * 脱敏图片存放地址
+     *
+     * @mbggenerated
+     */
     private String imgUrl;
 
+    /**
+     * 本地pdf文件路径
+     *
+     * @mbggenerated
+     */
     private String pdfUrl;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

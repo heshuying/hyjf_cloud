@@ -6,20 +6,60 @@ import java.util.Date;
 public class SmsCode implements Serializable {
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 手机号码
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 加密验证码
+     *
+     * @mbggenerated
+     */
     private String checkfor;
 
+    /**
+     * 验证码
+     *
+     * @mbggenerated
+     */
     private String checkcode;
 
+    /**
+     * 不详
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 发送时间
+     *
+     * @mbggenerated
+     */
     private Integer posttime;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

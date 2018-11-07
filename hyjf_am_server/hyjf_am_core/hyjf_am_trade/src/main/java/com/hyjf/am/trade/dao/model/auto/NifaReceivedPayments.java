@@ -6,34 +6,109 @@ import java.util.Date;
 public class NifaReceivedPayments implements Serializable {
     private Integer id;
 
+    /**
+     * 统一社会信用代码
+     *
+     * @mbggenerated
+     */
     private String platformNo;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String projectNo;
 
+    /**
+     * 合同编号
+     *
+     * @mbggenerated
+     */
     private String contractNo;
 
+    /**
+     * 回款期数
+     *
+     * @mbggenerated
+     */
     private Integer returnNum;
 
+    /**
+     * 回款日期
+     *
+     * @mbggenerated
+     */
     private String returnDate;
 
+    /**
+     * 回款本金
+     *
+     * @mbggenerated
+     */
     private String returnPrincipal;
 
+    /**
+     * 回款利息
+     *
+     * @mbggenerated
+     */
     private String returnInterest;
 
+    /**
+     * 回款来源
+     *
+     * @mbggenerated
+     */
     private Integer returnSource;
 
+    /**
+     * 回款情况
+     *
+     * @mbggenerated
+     */
     private Integer returnSituation;
 
+    /**
+     * 剩余待回本金
+     *
+     * @mbggenerated
+     */
     private String returnPrincipalRest;
 
+    /**
+     * 剩余待回利息
+     *
+     * @mbggenerated
+     */
     private String returnInterestRest;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -6,22 +6,52 @@ import java.util.Date;
 public class Link implements Serializable {
     private Integer id;
 
+    /**
+     * 连接类型1友情连接2合作伙伴
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
     private Integer status;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer order;
 
     private String url;
 
     private String webname;
 
+    /**
+     * 机构介绍
+     *
+     * @mbggenerated
+     */
     private String summary;
 
+    /**
+     * 机构介绍2-用于展示
+     *
+     * @mbggenerated
+     */
     private String summary2;
 
+    /**
+     * 风控措施
+     *
+     * @mbggenerated
+     */
     private String controlMeasures;
 
+    /**
+     * 操作流程
+     *
+     * @mbggenerated
+     */
     private String operatingProcess;
 
     private String logo;
@@ -40,24 +70,64 @@ public class Link implements Serializable {
 
     private String cooperationTime;
 
+    /**
+     * 新网站投资显示logo
+     *
+     * @mbggenerated
+     */
     private String logo1;
 
+    /**
+     * 审批机构
+     *
+     * @mbggenerated
+     */
     private String approvalBy;
 
+    /**
+     * 注册资本
+     *
+     * @mbggenerated
+     */
     private Integer registerCapital;
 
     private Integer partnerType;
 
     private Integer hits;
 
+    /**
+     * 0不显示在首页，1显示首页
+     *
+     * @mbggenerated
+     */
     private Integer isindex;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

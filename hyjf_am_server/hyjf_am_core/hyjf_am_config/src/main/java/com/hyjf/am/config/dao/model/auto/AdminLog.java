@@ -6,22 +6,67 @@ import java.util.Date;
 public class AdminLog implements Serializable {
     private Integer id;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 事件
+     *
+     * @mbggenerated
+     */
     private String event;
 
+    /**
+     * 日志内容
+     *
+     * @mbggenerated
+     */
     private String content;
 
+    /**
+     * IP地址
+     *
+     * @mbggenerated
+     */
     private String createIp;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private String createUser;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private String updateUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

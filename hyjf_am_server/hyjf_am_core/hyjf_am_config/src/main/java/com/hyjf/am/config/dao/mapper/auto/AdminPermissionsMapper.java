@@ -2,9 +2,8 @@ package com.hyjf.am.config.dao.mapper.auto;
 
 import com.hyjf.am.config.dao.model.auto.AdminPermissions;
 import com.hyjf.am.config.dao.model.auto.AdminPermissionsExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface AdminPermissionsMapper {
     int countByExample(AdminPermissionsExample example);

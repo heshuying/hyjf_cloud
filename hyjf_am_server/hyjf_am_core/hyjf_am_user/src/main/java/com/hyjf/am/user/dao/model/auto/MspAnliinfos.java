@@ -5,26 +5,81 @@ import java.io.Serializable;
 public class MspAnliinfos implements Serializable {
     private Integer id;
 
+    /**
+     * 申请编号
+     *
+     * @mbggenerated
+     */
     private String applyId;
 
+    /**
+     * ID号
+     *
+     * @mbggenerated
+     */
     private String anliId;
 
+    /**
+     * 姓名
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 身份证
+     *
+     * @mbggenerated
+     */
     private String papernum;
 
+    /**
+     * 当事人类型
+     *
+     * @mbggenerated
+     */
     private String dangshirentype;
 
+    /**
+     * 性别
+     *
+     * @mbggenerated
+     */
     private String sex;
 
+    /**
+     * 生日
+     *
+     * @mbggenerated
+     */
     private String birthday;
 
+    /**
+     * 案例标题
+     *
+     * @mbggenerated
+     */
     private String anjiantitle;
 
+    /**
+     * 审结日期
+     *
+     * @mbggenerated
+     */
     private String enddate;
 
+    /**
+     * 案件类型
+     *
+     * @mbggenerated
+     */
     private String anjiantype;
 
+    /**
+     * 案件字号
+     *
+     * @mbggenerated
+     */
     private String anjiannum;
 
     private static final long serialVersionUID = 1L;

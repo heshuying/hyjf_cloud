@@ -463,13 +463,13 @@
         LEFT JOIN ht_coupon_tender hct ON hcu.id = hct.coupon_grant_id
         LEFT JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid
         INNER JOIN hyjf_user.ht_user hu ON hcu.user_id = hu.user_id
-        LEFT JOIN hyjf_config.ht_admin u ON hcu.update_user_id = u.id
+        -- LEFT JOIN hyjf_config.ht_admin u ON hcu.update_user_id = u.id
         -- LEFT JOIN ht_activity_list hal ON hcu.activity_id = hal.id
         LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
         LEFT JOIN ht_hjh_plan hhp ON hbt.borrow_nid = hhp.plan_nid
         LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
         LEFT JOIN ht_borrow_style hbss ON hbss.nid = hhp.borrow_style
-        LEFT JOIN hyjf_config.ht_admin ha ON hcu.create_user_id = ha.id
+        LEFT JOIN hyjf_config.ht_admin ha ON ha.id = hcu.create_user_id
         -- LEFT JOIN ht_vip_auth va ON hcu.coupon_code=va.coupon_code
         -- LEFT JOIN ht_vip_info vi ON  va.vip_id=vi.id
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
