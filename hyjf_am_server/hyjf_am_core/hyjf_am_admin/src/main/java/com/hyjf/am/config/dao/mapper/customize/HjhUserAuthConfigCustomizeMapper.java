@@ -7,4 +7,6 @@ import java.util.List;
 public interface HjhUserAuthConfigCustomizeMapper {
 
     List<HjhUserAuthConfigCustomize> selectCustomizeAuthConfigList();
+
+    HjhUserAuthConfigCustomize getAuthConfigById(Integer id);
 }
