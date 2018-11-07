@@ -699,7 +699,9 @@
         WHEN hp.plan_invest_status = 1 AND FORMAT(hp.available_invest_account , 2) <![CDATA[<=]]> 0.00
         THEN '稍后开启'
         WHEN hp.plan_invest_status = 1
-        THEN '立即加入'
+        <!--THEN '立即加入'-->
+        <!--mod by nxl 智投服务 计划 立即加入 -> 授权服务-->
+        THEN '授权服务'
         WHEN hp.plan_invest_status = 2
         THEN '稍后开启'
         ELSE ''
@@ -881,7 +883,7 @@
         case when hbi.borrow_extra_yield=0 then
         ''
         else
-        CONCAT('+',hbi.borrow_extra_yield, '%')
+        CONCAT('',hbi.borrow_extra_yield, '%')
         end
         borrowExtraYield,
         case
@@ -890,7 +892,9 @@
         when hydb.project_type = 13 then 'HJLC'
         else 'HZT'
         end project_type_code,
-        IFNULL(hydb.borrow_account_wait,0) borrowAccountWait
+        IFNULL(hydb.borrow_account_wait,0) borrowAccountWait,
+        hydb.increase_interest_flag increaseInterestFlag,
+        hbi.borrow_extra_yield borrowExtraYieldOld
         FROM
         ht_borrow hydb
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
@@ -1184,7 +1188,9 @@
         AND FORMAT(hp.available_invest_account, 2)  <![CDATA[ <= ]]>    0.00
         THEN '稍后开启'
         WHEN hp.plan_invest_status = 1
-        THEN '立即加入'
+        <!--THEN '立即加入'-->
+        <!--mod by nxl 智投服务 计划 立即加入 -> 授权服务-->
+        THEN '授权服务'
         WHEN hp.plan_invest_status = 2
         THEN '稍后开启'
         ELSE ''
@@ -1319,7 +1325,9 @@
         AND FORMAT(hp.available_invest_account, 2) <![CDATA[<=]]> 0.00
         THEN '稍后开启'
         WHEN hp.plan_invest_status = 1
-        THEN '立即加入'
+        <!--THEN '立即加入'-->
+        <!--mod by nxl 智投服务 计划 立即加入 -> 授权服务-->
+        THEN '授权服务'
         WHEN hp.plan_invest_status = 2
         THEN '稍后开启'
         ELSE ''
@@ -1503,7 +1511,9 @@
 							AND FORMAT(hp.available_invest_account, 2) <![CDATA[<=]]> 0.00
 							THEN '稍后开启'
 							WHEN hp.plan_invest_status = 1
-                            THEN '立即加入'
+                            <!--THEN '立即加入'-->
+                            <!--mod by nxl 智投服务 计划 立即加入 -> 授权服务-->
+                            THEN '授权服务'
 							WHEN hp.plan_invest_status = 2
 							THEN '稍后开启'
 							ELSE ''

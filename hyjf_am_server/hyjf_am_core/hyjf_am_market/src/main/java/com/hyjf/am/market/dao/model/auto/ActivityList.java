@@ -4,12 +4,32 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ActivityList implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 活动名称
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 活动开始时间
+     *
+     * @mbggenerated
+     */
     private Integer timeStart;
 
+    /**
+     * 活动结束时间
+     *
+     * @mbggenerated
+     */
     private Integer timeEnd;
 
     private String imgPc;
@@ -24,20 +44,60 @@ public class ActivityList implements Serializable {
 
     private String activityWeiUrl;
 
+    /**
+     * 主图
+     *
+     * @mbggenerated
+     */
     private String img;
 
+    /**
+     * 二维码
+     *
+     * @mbggenerated
+     */
     private String qr;
 
+    /**
+     * 平台
+     *
+     * @mbggenerated
+     */
     private String platform;
 
+    /**
+     * 前台地址
+     *
+     * @mbggenerated
+     */
     private String urlForeground;
 
+    /**
+     * 后台管理地址
+     *
+     * @mbggenerated
+     */
     private String urlBackground;
 
+    /**
+     * 描述
+     *
+     * @mbggenerated
+     */
     private String description;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

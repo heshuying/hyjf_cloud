@@ -2,9 +2,8 @@ package com.hyjf.am.config.dao.mapper.auto;
 
 import com.hyjf.am.config.dao.model.auto.SmsErrcode;
 import com.hyjf.am.config.dao.model.auto.SmsErrcodeExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface SmsErrcodeMapper {
     int countByExample(SmsErrcodeExample example);

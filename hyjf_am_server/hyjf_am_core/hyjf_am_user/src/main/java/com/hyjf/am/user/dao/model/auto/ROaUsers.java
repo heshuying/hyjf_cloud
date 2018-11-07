@@ -6,80 +6,270 @@ import java.util.Date;
 public class ROaUsers implements Serializable {
     private Integer id;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userLogin;
 
+    /**
+     * 登录密码；oa_password加密
+     *
+     * @mbggenerated
+     */
     private String userPass;
 
+    /**
+     * 姓名
+     *
+     * @mbggenerated
+     */
     private String userRealname;
 
+    /**
+     * 登录邮箱
+     *
+     * @mbggenerated
+     */
     private String userEmail;
 
+    /**
+     * 身份证号
+     *
+     * @mbggenerated
+     */
     private String idcard;
 
+    /**
+     * 用户头像，相对于upload/avatar目录
+     *
+     * @mbggenerated
+     */
     private String avatar;
 
+    /**
+     * 性别；0：保密，1：男；2：女
+     *
+     * @mbggenerated
+     */
     private Short sex;
 
+    /**
+     * 户口省份
+     *
+     * @mbggenerated
+     */
     private String accProvince;
 
+    /**
+     * 户口城市
+     *
+     * @mbggenerated
+     */
     private String accCity;
 
+    /**
+     * 户口所在地址
+     *
+     * @mbggenerated
+     */
     private String accAddress;
 
+    /**
+     * 部门
+     *
+     * @mbggenerated
+     */
     private Integer departmentid;
 
+    /**
+     * 岗位名称
+     *
+     * @mbggenerated
+     */
     private Integer positionid;
 
+    /**
+     * 角色等级: 2-员工/1-leader
+     *
+     * @mbggenerated
+     */
     private Short level;
 
+    /**
+     * 1,兼职/2,正式员工
+     *
+     * @mbggenerated
+     */
     private Integer temporary;
 
+    /**
+     * 是否转正 0：试用期 1：转正
+     *
+     * @mbggenerated
+     */
     private Integer rework;
 
+    /**
+     * 入职时间或角色（正式/兼职）修改时间
+     *
+     * @mbggenerated
+     */
     private String reworkTime;
 
+    /**
+     * Y/N
+     *
+     * @mbggenerated
+     */
     private String ispart;
 
+    /**
+     * 试用期月薪
+     *
+     * @mbggenerated
+     */
     private Integer payrollTry;
 
+    /**
+     * 转正月薪
+     *
+     * @mbggenerated
+     */
     private Integer payroll;
 
+    /**
+     * 入职时间
+     *
+     * @mbggenerated
+     */
     private Date entrydate;
 
+    /**
+     * 入职推荐人
+     *
+     * @mbggenerated
+     */
     private String reference;
 
+    /**
+     * 学历
+     *
+     * @mbggenerated
+     */
     private Integer education;
 
+    /**
+     * 毕业院校
+     *
+     * @mbggenerated
+     */
     private String school;
 
+    /**
+     * 专业
+     *
+     * @mbggenerated
+     */
     private String specialty;
 
+    /**
+     * 手机
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 最后登录ip
+     *
+     * @mbggenerated
+     */
     private String lastLoginIp;
 
+    /**
+     * 最后登录时间
+     *
+     * @mbggenerated
+     */
     private String lastLoginTime;
 
+    /**
+     * 注册时间
+     *
+     * @mbggenerated
+     */
     private String createTime;
 
+    /**
+     * 开户行地址
+     *
+     * @mbggenerated
+     */
     private String bankAddress;
 
+    /**
+     * 开户人姓名
+     *
+     * @mbggenerated
+     */
     private String bankUser;
 
+    /**
+     * 银行卡账号
+     *
+     * @mbggenerated
+     */
     private String bankNum;
 
+    /**
+     * 用户状态 E1:一级未审核;E2二级未审核 ；E已入职；E11一级审核未通过；E21二级审核未通过;E3取消入职；Q已离职；Q1离职一级未审核；Q2离职一级审核未通过；Q2离职二级未审核；Q22离职二级审核未通过；Q3取消离职
+     *
+     * @mbggenerated
+     */
     private String userStatus;
 
+    /**
+     * 年龄
+     *
+     * @mbggenerated
+     */
     private Integer age;
 
+    /**
+     * 平台账号
+     *
+     * @mbggenerated
+     */
     private String hydName;
 
+    /**
+     * //汇盈贷账号ID
+     *
+     * @mbggenerated
+     */
     private Integer hydId;
 
+    /**
+     * 用户类型，1:admin ;2:会员
+     *
+     * @mbggenerated
+     */
     private Short userType;
 
+    /**
+     * 入职终审通过时间
+     *
+     * @mbggenerated
+     */
     private Integer entrySuccessTime;
 
+    /**
+     * 离职终审通过时间
+     *
+     * @mbggenerated
+     */
     private Integer leaveSuccessTime;
 
     private static final long serialVersionUID = 1L;

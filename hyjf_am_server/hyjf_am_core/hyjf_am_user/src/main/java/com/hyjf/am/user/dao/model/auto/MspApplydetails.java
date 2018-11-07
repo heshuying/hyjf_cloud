@@ -5,20 +5,60 @@ import java.io.Serializable;
 public class MspApplydetails implements Serializable {
     private Integer id;
 
+    /**
+     * 申请编号
+     *
+     * @mbggenerated
+     */
     private String applyId;
 
+    /**
+     * 申请日期
+     *
+     * @mbggenerated
+     */
     private String applydate;
 
+    /**
+     * 会员类型
+     *
+     * @mbggenerated
+     */
     private String membertype;
 
+    /**
+     * 申请地点
+     *
+     * @mbggenerated
+     */
     private String creditaddress;
 
+    /**
+     * 借款类型
+     *
+     * @mbggenerated
+     */
     private String loantype;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private String loanmoney;
 
+    /**
+     * 审批结果
+     *
+     * @mbggenerated
+     */
     private String applyresult;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private static final long serialVersionUID = 1L;

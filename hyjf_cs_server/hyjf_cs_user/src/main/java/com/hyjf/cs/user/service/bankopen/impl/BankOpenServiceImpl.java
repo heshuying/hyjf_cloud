@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
@@ -21,10 +22,7 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
-import com.hyjf.cs.user.bean.OpenAccountPageBean;
-import com.hyjf.cs.user.bean.OpenAccountPlusRequest;
-import com.hyjf.cs.user.bean.OpenAccountPlusResult;
+import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -138,39 +136,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                 throw new CheckException(MsgEnum.STATUS_ZC000013);
             }
         }
-        // 身份证号
-        if (StringUtils.isEmpty(bankOpenVO.getIdNo())) {
-            throw new CheckException(MsgEnum.STATUS_ZC000008);
-        }
 
-        if (bankOpenVO.getIdNo().length() != 18) {
-            throw new CheckException(MsgEnum.ERR_FMT_IDCARDNO);
-        }
-        String idNo = bankOpenVO.getIdNo().toUpperCase().trim();
-        bankOpenVO.setIdNo(idNo);
-        //增加身份证唯一性校验
-        boolean isOnly = this.checkIdNo(idNo);
-        if (isOnly) {
-            throw new CheckException(MsgEnum.STATUS_ZC000014);
-        }
         if(!Validator.isMobile(bankOpenVO.getMobile())){
             throw new CheckException(MsgEnum.ERR_FMT_MOBILE);
-        }
-        String mobile = user.getMobile();
-        if (StringUtils.isBlank(mobile)) {
-            if (StringUtils.isNotBlank(bankOpenVO.getMobile())) {
-                if(!this.existUser(bankOpenVO.getMobile())){
-                    mobile = bankOpenVO.getMobile();
-                }else{
-                    throw new CheckException(MsgEnum.ERR_MOBILE_EXISTS);
-                }
-            } else {
-                throw new CheckException(MsgEnum.ERR_MOBILE_IS_NOT_REAL);
-            }
-        } else {
-            if (StringUtils.isNotBlank(bankOpenVO.getMobile()) && !mobile.equals(bankOpenVO.getMobile())) {
-                throw new CheckException(MsgEnum.ERR_MOBILE_IS_NOT_REAL);
-            }
         }
     }
 
@@ -183,36 +151,26 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
     @Override
     public Map<String,Object> getOpenAccountMV(OpenAccountPageBean openBean, String sign) {
         // 根据身份证号码获取性别
-        String gender = "";
-        int sexInt = Integer.parseInt(openBean.getIdNo().substring(16, 17));
-        if (sexInt % 2 == 0) {
-            gender = "F";
-        } else {
-            gender = "M";
-        }
-        // 获取共同参数
+        String gender = "F";
         String idType = BankCallConstant.ID_TYPE_IDCARD;
         // 调用开户接口
-        BankCallBean openAccoutBean =  new BankCallBean(openBean.getUserId(),BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE,Integer.parseInt(openBean.getPlatform()),BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
+        BankCallBean openAccoutBean =  new BankCallBean(openBean.getUserId(),BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE,Integer.parseInt(openBean.getPlatform()),BankCallConstant.BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE);
         openAccoutBean.setIdentity(openBean.getIdentity());
         /**1：出借角色2：借款角色3：代偿角色*/
-        openBean.setIdentity("1");
         openAccoutBean.setChannel(openBean.getChannel());
         openAccoutBean.setIdType(idType);
-        openAccoutBean.setIdNo(openBean.getIdNo());
         openAccoutBean.setName(openBean.getTrueName());
         openAccoutBean.setGender(gender);
         openAccoutBean.setMobile(openBean.getMobile());
         // 代偿角色的账户类型为  00100-担保账户  其他的是 00000-普通账户
         openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
         openAccoutBean.setIdentity(openBean.getIdentity());
-
         // 失败页面
         String errorPath = "/user/openError";
         // 成功页面
         String successPath = "/user/openSuccess";
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId();
+        String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
         String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
         // 如果是移动端  返回别的url
         if((ClientConstants.APP_CLIENT+"").equals(openBean.getPlatform())||(ClientConstants.APP_CLIENT_IOS+"").equals(openBean.getPlatform())||(ClientConstants.WECHAT_CLIENT+"").equals(openBean.getPlatform())){
@@ -224,12 +182,12 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             retUrl += "&token=1&sign=" +sign;
             successUrl += "&token=1&sign=" +sign;
         }
-        String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile();
+        String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile()+"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();
         openAccoutBean.setRetUrl(retUrl);
         openAccoutBean.setSuccessfulUrl(successUrl);
         openAccoutBean.setNotifyUrl(bgRetUrl);
         openAccoutBean.setCoinstName(openBean.getCoinstName()==null?"汇盈金服":openBean.getCoinstName());
-        openAccoutBean.setLogRemark("页面开户");
+        openAccoutBean.setLogRemark("开户+设密码页面");
         openAccoutBean.setLogIp(openBean.getIp());
         openBean.setOrderId(openAccoutBean.getLogOrderId());
         try {
@@ -255,8 +213,8 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 银行返回响应代码
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
 
-        // 开户失败
-        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
+        // State为0时候为0：交易失败 1：交易成功 2：开户成功设置交易密码失败
+        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || "0".equals(bean.getStatus())) {
             // 开户失败   将开户记录状态改为4
             // 查询失败原因
             String retMsg = bean.getRetMsg();
@@ -280,6 +238,12 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 更新redis里面的值
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         user.setBankOpenAccount(true);
+        // 开户+设密的话   状态改为已设置交易密码
+        if (BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE.equals(bean.getTxCode())
+                && "1".equals(bean.getStatus())) {
+            user.setIsSetPassword(1);
+        }
+        user.setRoleId(bean.getIdentity());
         RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
 
         // 更新account表的电子帐户号
@@ -300,6 +264,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             Map<String, String> params = new HashMap<String, String>();
             params.put("mqMsgId", GetCode.getRandomCode(10));
             params.put("userId", String.valueOf(userId));
+            params.put("accountId", bean.getAccountId());
             logger.info("开户异步处理，发送MQ，userId:[{}],mqMgId:[{}]",userId,params.get("mqMsgId"));
             fddCertificateProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
         } catch (MQException e) {
@@ -416,7 +381,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         if (Validator.isNull(requestBean.getInstCode())) {
             logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
             resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
-            resultMap.put("mess", "机构编号不能为空");
+            resultMap.put("statusDesc", "机构编号不能为空");
             return resultMap;
         }
         // 手机号
@@ -531,7 +496,14 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @Date 2018/6/21 15:34
      */
     @Override
-    public WebResult<Object> getFiledMess(String logOrdId) {
+    public WebResult<Object> getFiledMess(String logOrdId,int userId) {
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
+        if(user!=null){
+            if(user.isBankOpenAccount()&&"0".equals(user.getIsSetPassword()+"")){
+                // 已经开户  未设置交易密码  开户成功，设置交易密码失败
+                throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_ERROR);
+            }
+        }
         WebResult<Object> result = new WebResult<Object>();
         String errorMess = amUserClient.getBankOpenAccountFiledMess(logOrdId);
         result.setStatus(WebResult.SUCCESS);

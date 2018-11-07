@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
@@ -578,6 +579,24 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 根据用户List id查找用户信息
+	 *
+	 * @auther: nxl
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public List<UserVO> selectUserByListUserId(List userId) {
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userManager/selectUserByListUserId/" + userId, UserResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
 	 * 根据用户id查找用户信息
 	 *
 	 * @auther: nxl
@@ -753,6 +772,25 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 更新用户信息表--开户掉单
+	 *
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int updateUserInfoByUserInfoSelective(UserInfoVO userInfoVO) {
+		UserInfoRequest request = new UserInfoRequest();
+		BeanUtils.copyProperties(userInfoVO, request);
+		IntegerResponse result = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserInfoByUserInfoSelective", request, IntegerResponse.class)
+				.getBody();
+		if (result == null || !Response.isSuccess(result)) {
+			return 0;
+		}
+		return result.getResultInt().intValue();
+	}
+
+	/**
 	 * 更新用户表
 	 *
 	 * @return
@@ -763,6 +801,24 @@ public class AmUserClientImpl implements AmUserClient {
 		UserRequest request = null;
 		BeanUtils.copyProperties(userVO, request);
 		IntegerResponse result = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/updateUser", request, IntegerResponse.class)
+				.getBody();
+		if (result == null || !Response.isSuccess(result)) {
+			return 0;
+		}
+		return result.getResultInt().intValue();
+	}
+
+	/**
+	 * 更新用户表-开户掉单
+	 *
+	 * @return
+	 * @auther: nxl
+	 */
+	@Override
+	public int updateUserSelective(UserVO userVO) {
+		UserRequest request = new UserRequest();
+		BeanUtils.copyProperties(userVO, request);
+		IntegerResponse result = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserSelective", request, IntegerResponse.class)
 				.getBody();
 		if (result == null || !Response.isSuccess(result)) {
 			return 0;
@@ -2262,7 +2318,7 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/deleteBankOpenAccountLogByUserId/"+userId;
 		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
 		if (Response.isSuccess(response)) {
-			return response.isDeleteFlag();
+			return response.isBankOpenFlag();
 		}
 		return false;
 	}
@@ -2280,7 +2336,7 @@ public class AmUserClientImpl implements AmUserClient {
 		String url = "http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/checkAccountByAccountId/"+accountId;
 		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
 		if (Response.isSuccess(response)) {
-			return response.isDeleteFlag();
+			return response.isBankOpenFlag();
 		}
 		return false;
 	}
@@ -2426,4 +2482,202 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 	}
 
+
+	/**
+	 * 根据用户id获取开户信息
+	 *
+	 * @auther: nxl
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BankCardVO getBankCardByUserId(int userId) {
+		BankCardResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userManager/getBankCardByUserId/" + userId,
+						BankCardResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+	/**
+	 * 更新用户信息(基本信息,手机号,邮箱,用户角色)
+	 *
+	 * @param request
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int updateUserBaseInfo(UserInfosUpdCustomizeRequest request) {
+		IntegerResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserBaseInfo", request, IntegerResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getResultInt().intValue();
+	}
+	/**
+	 * 更新银行卡信息
+	 *
+	 * @param request
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int updateUserBankInfo(UserInfosUpdCustomizeRequest request) {
+		IntegerResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/updateUserBankInfo", request, IntegerResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getResultInt().intValue();
+	}
+
+	@Override
+	public void updateUserAuth(UserAuthRequest request) {
+		restTemplate.postForEntity("http://AM-ADMIN/am-user//userauth/updateUserAuth", request,IntegerResponse.class) ;
+	}
+
+	@Override
+	public HjhUserAuthLogVO selectByExample(String orderId) {
+		HjhUserAuthLogResponse response = restTemplate
+				.getForEntity(userService+"/user/selectByExample/"+orderId, HjhUserAuthLogResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+
+	/**
+	 * 根据用户的查询条件查询用户缴费授权列表
+	 * @param request
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public UserPayAuthResponse selectUserPayAuthList(UserPayAuthRequest request) {
+		UserPayAuthResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userPayAuth/userPayAuthList", request, UserPayAuthResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 根据用户id查询用户签约授权信息
+	 * @param userId
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public HjhUserAuthResponse selectUserPayAuthByUserId(int userId) {
+		HjhUserAuthResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userPayAuth/getHjhUserAuthByUserId/"+userId, HjhUserAuthResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 查看该用户在投资表和标的放款记录中是否存在
+	 * @param userId
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int isDismissPay(int userId) {
+		IntegerResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userPayAuth/isDismissPay/"+userId, IntegerResponse.class)
+				.getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getResultInt().intValue();
+	}
+	/**
+	 * 查看该用户在投标的还款记录中是否存在
+	 * @param userId
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int isDismissRePay(int userId) {
+		IntegerResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userPayAuth/isDismissRePay/"+userId, IntegerResponse.class)
+				.getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getResultInt().intValue();
+	}
+
+	/**
+	 * 缴费授权解约
+	 * @param userId
+	 * @return
+	 * @auther: nxl
+	 */
+	@Override
+	public boolean updateCancelPayAuth(int userId) {
+		BooleanResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userPayAuth/updateCancelPayAuth/"+userId, BooleanResponse.class)
+				.getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return false;
+		}
+		return response.getResultBoolean().booleanValue();
+	}
+	/**
+	 * 插入授权记录表
+	 * @param hjhUserAuthLogRequest
+	 * @return
+	 * @auther: nxl
+	 */
+	@Override
+	public boolean insertUserAuthLog2(HjhUserAuthLogRequest hjhUserAuthLogRequest) {
+		BooleanResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userPayAuth/insertUserAuthLog2",hjhUserAuthLogRequest, BooleanResponse.class)
+				.getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return false;
+		}
+		return response.getResultBoolean().booleanValue();
+	}
+	/**
+	 * 根据用户的查询条件查询用户还款授权列表
+	 * @param request
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public UserPayAuthResponse selectRecordListRePay(UserPayAuthRequest request) {
+		UserPayAuthResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userPayAuth/selectRecordListRePay", request, UserPayAuthResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 还款授权解约
+	 * @param userId
+	 * @return
+	 * @auther: nxl
+	 */
+	@Override
+	public int updateCancelRePayAuth(int userId) {
+		IntegerResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userPayAuth/updateCancelRePayAuth/"+userId, IntegerResponse.class)
+				.getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getResultInt().intValue();
+	}
 }

@@ -4,18 +4,53 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class BorrowSendType implements Serializable {
+    /**
+     * 唯一标识(AUTO_BAIL,AUTO_FULL)
+     *
+     * @mbggenerated
+     */
     private String sendCd;
 
+    /**
+     * 名称(自动发标时间间隔,自动复审时间间隔)
+     *
+     * @mbggenerated
+     */
     private String sendName;
 
+    /**
+     * 发表时间
+     *
+     * @mbggenerated
+     */
     private Integer afterTime;
 
+    /**
+     * 备注说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 删除状态
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

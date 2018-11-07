@@ -3,16 +3,46 @@ package com.hyjf.am.trade.dao.model.auto;
 import java.io.Serializable;
 
 public class BorrowConsumeWithBLOBs extends BorrowConsume implements Serializable {
+    /**
+     * 项目描述
+     *
+     * @mbggenerated
+     */
     private String borrowContents;
 
+    /**
+     * 财务信息
+     *
+     * @mbggenerated
+     */
     private String accountContents;
 
+    /**
+     * 借款冻结金额
+     *
+     * @mbggenerated
+     */
     private String files;
 
+    /**
+     * 合作机构
+     *
+     * @mbggenerated
+     */
     private String borrowMeasuresInstit;
 
+    /**
+     * 机构介绍
+     *
+     * @mbggenerated
+     */
     private String borrowCompanyInstruction;
 
+    /**
+     * 风控措施
+     *
+     * @mbggenerated
+     */
     private String borrowMeasuresMea;
 
     private static final long serialVersionUID = 1L;

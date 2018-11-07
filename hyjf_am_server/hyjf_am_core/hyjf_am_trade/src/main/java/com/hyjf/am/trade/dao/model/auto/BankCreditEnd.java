@@ -6,64 +6,209 @@ import java.util.Date;
 public class BankCreditEnd implements Serializable {
     private Integer id;
 
+    /**
+     * 批次号（批次号当日必须唯一）
+     *
+     * @mbggenerated
+     */
     private String batchNo;
 
+    /**
+     * 本批次交易日期
+     *
+     * @mbggenerated
+     */
     private String txDate;
 
+    /**
+     * 本批次交易时间
+     *
+     * @mbggenerated
+     */
     private String txTime;
 
+    /**
+     * 本批次交易流水号
+     *
+     * @mbggenerated
+     */
     private String seqNo;
 
+    /**
+     * 本批次所有交易笔数
+     *
+     * @mbggenerated
+     */
     private Integer txCounts;
 
+    /**
+     * 融资人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 融资人用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 投资人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer tenderUserId;
 
+    /**
+     * 投资人用户名
+     *
+     * @mbggenerated
+     */
     private String tenderUsername;
 
+    /**
+     * 融资人电子账号
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * 投资人电子账号
+     *
+     * @mbggenerated
+     */
     private String tenderAccountId;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 原始投资订单号
+     *
+     * @mbggenerated
+     */
     private String orgOrderId;
 
+    /**
+     * 标的号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
     private String authCode;
 
+    /**
+     * 结束债权类型（1:还款，2:散标债转，3:计划债转）
+     *
+     * @mbggenerated
+     */
     private Integer creditEndType;
 
+    /**
+     * 银行接受结果（0：fail接收失败，1：success接收成功）
+     *
+     * @mbggenerated
+     */
     private Integer received;
 
+    /**
+     * 异步检查响应代码
+     *
+     * @mbggenerated
+     */
     private String checkRetcode;
 
+    /**
+     * 异步检查响应描述
+     *
+     * @mbggenerated
+     */
     private String checkRetmsg;
 
+    /**
+     * 响应代码
+     *
+     * @mbggenerated
+     */
     private String retcode;
 
+    /**
+     * 响应描述
+     *
+     * @mbggenerated
+     */
     private String retmsg;
 
+    /**
+     * 成功笔数
+     *
+     * @mbggenerated
+     */
     private Integer sucCounts;
 
+    /**
+     * 失败笔数
+     *
+     * @mbggenerated
+     */
     private Integer failCounts;
 
+    /**
+     * 银行交易状态（S-成功;F-失败;A-待处理;D-正在处理;C-撤销;）
+     *
+     * @mbggenerated
+     */
     private String state;
 
+    /**
+     * 0初始 1待请求 2请求成功 3请求失败 4校验成功 5业务全部成功  10校验失败 11业务部分成功 12业务失败 
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 失败描述
+     *
+     * @mbggenerated
+     */
     private String failmsg;
 
+    /**
+     * 添加人
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新人
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -6,28 +6,88 @@ import java.util.Date;
 public class Job implements Serializable {
     private Integer id;
 
+    /**
+     * 职位名称
+     *
+     * @mbggenerated
+     */
     private String officeName;
 
+    /**
+     * 工作地点
+     *
+     * @mbggenerated
+     */
     private String place;
 
+    /**
+     * 是否显示（1：显示，0不显示）
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 管理员
+     *
+     * @mbggenerated
+     */
     private String addAdmin;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer order;
 
+    /**
+     * 招聘人数
+     *
+     * @mbggenerated
+     */
     private Integer persons;
 
+    /**
+     * 邮箱
+     *
+     * @mbggenerated
+     */
     private String email;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 招聘内容
+     *
+     * @mbggenerated
+     */
     private String content;
 
     private static final long serialVersionUID = 1L;

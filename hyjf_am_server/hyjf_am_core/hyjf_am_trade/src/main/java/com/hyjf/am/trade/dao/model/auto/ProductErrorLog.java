@@ -4,20 +4,55 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class ProductErrorLog implements Serializable {
+    /**
+     * Id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 时间
+     *
+     * @mbggenerated
+     */
     private Integer investTime;
 
+    /**
+     * 原因
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 操作金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
     private String date;
 
+    /**
+     * 0:此警报信息未发送  1：此警报信息已发送，不再重复发送
+     *
+     * @mbggenerated
+     */
     private Integer isSms;
 
     private static final long serialVersionUID = 1L;

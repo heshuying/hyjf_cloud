@@ -18,6 +18,10 @@ public class UserBankOpenAccountCustomize {
     private String userType;
     //用户预留手机号
     private String mobile;
+    // add by nxl 合规四期,用户详情添加以下三个字段显示
+    private String bankNo;
+    private String payAllianceCode;
+    private String bankName;
 
     public String getAccount() {
         return account;
@@ -57,5 +61,29 @@ public class UserBankOpenAccountCustomize {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getBankNo() {
+        return bankNo;
+    }
+
+    public void setBankNo(String bankNo) {
+        this.bankNo = bankNo;
+    }
+
+    public String getPayAllianceCode() {
+        return payAllianceCode;
+    }
+
+    public void setPayAllianceCode(String payAllianceCode) {
+        this.payAllianceCode = payAllianceCode;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

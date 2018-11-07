@@ -215,8 +215,8 @@ public class CouponUserServiceImpl implements CouponUserService {
         if (request.getCouponUserCode() != null) {
             map.put("couponUserCode", request.getCouponUserCode());
         }
-        if (request.getUserName() != null) {
-            map.put("username", request.getUserName());
+        if (request.getUserNameSrch() != null) {
+            map.put("username", request.getUserNameSrch());
         }
         if (request.getCouponType() != null) {
             map.put("couponType", request.getCouponType());

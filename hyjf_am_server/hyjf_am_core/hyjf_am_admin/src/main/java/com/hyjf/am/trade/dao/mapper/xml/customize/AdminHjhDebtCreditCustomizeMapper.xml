@@ -122,7 +122,6 @@
         INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
         INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
         LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-        left join hyjf_hjh_accede hha on dc.plan_order_id = hha.accede_order_id
         <include refid="Where_Clause" />
     </select>
 

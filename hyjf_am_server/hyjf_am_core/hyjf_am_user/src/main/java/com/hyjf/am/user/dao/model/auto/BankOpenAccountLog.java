@@ -6,44 +6,134 @@ import java.util.Date;
 public class BankOpenAccountLog implements Serializable {
     private Integer id;
 
+    /**
+     * 开户用户userId
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 开户用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 用户开户订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 用户手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 证件类型
+     *
+     * @mbggenerated
+     */
     private String idType;
 
+    /**
+     * 身份证号码
+     *
+     * @mbggenerated
+     */
     private String idNo;
 
+    /**
+     * 真实姓名
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 银行卡号
+     *
+     * @mbggenerated
+     */
     private String cardNo;
 
+    /**
+     * 账户用途
+     *
+     * @mbggenerated
+     */
     private String acctUse;
 
+    /**
+     * 前导业务授权码
+     *
+     * @mbggenerated
+     */
     private String lastSrvAuthCode;
 
+    /**
+     * 用户ip
+     *
+     * @mbggenerated
+     */
     private String userIp;
 
+    /**
+     * 请求方保留字段
+     *
+     * @mbggenerated
+     */
     private String acqRes;
 
+    /**
+     * 开户平台 0PC 1微官网 2Android 3IOS 4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 开户状态 0初始 1验证码发送成功 2开户中 3开户失败
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
     private String retCode;
 
     private String retMsg;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -53,11 +53,11 @@ public class AdminInterceptor implements HandlerInterceptor {
 				if(val!=null) {
 					RedisUtils.set("admin@" + username, val, 3600);
 				}
-				
+
 			}
 
 		} catch (NullPointerException e) {
-				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
 		}
 
 		if (handler instanceof HandlerMethod) {
@@ -81,10 +81,10 @@ public class AdminInterceptor implements HandlerInterceptor {
 //			res.put("msg", "您没有权限使用此接口");
 //			PrintWriter out = response.getWriter();
 //			out.append(res.toString());
-			
+
 			logger.info("权限的key为:" + authorityAnnotation.key() + "权限的val:" + authorityAnnotation.value());
 			throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
-	//		return false;
+			//		return false;
 
 		}
 

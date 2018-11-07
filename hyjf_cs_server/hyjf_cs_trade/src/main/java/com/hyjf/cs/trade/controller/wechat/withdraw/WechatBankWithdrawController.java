@@ -23,6 +23,7 @@ import com.hyjf.cs.trade.bean.BankCardBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.withdraw.BankWithdrawService;
+import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.vo.BaseResultBean;
 import com.hyjf.cs.trade.vo.SimpleResultBean;
 import com.hyjf.cs.trade.vo.WxQueryWIthdrawInfoVO;
@@ -57,7 +58,8 @@ public class WechatBankWithdrawController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(WechatBankWithdrawController.class);
     @Autowired
     private BankWithdrawService bankWithdrawService;
-
+    @Autowired
+    private AuthService authService;
     @Autowired
     SystemConfig systemConfig;
 
@@ -82,10 +84,6 @@ public class WechatBankWithdrawController extends BaseTradeController {
         SimpleResultBean<WxQueryWIthdrawInfoVO> resultBean = new SimpleResultBean<>();
 
         WxQueryWIthdrawInfoVO vo = new WxQueryWIthdrawInfoVO();
-
-
-
-
         AccountVO account = bankWithdrawService.getAccountByUserId(userId);
         CheckUtil.check(null!=account,MsgEnum.ERR_USER_NOT_EXISTS);
 
@@ -99,7 +97,9 @@ public class WechatBankWithdrawController extends BaseTradeController {
 
         BankCardVO bank = bankWithdrawService.getBankCardVOByUserId(userId);
         CheckUtil.check(null!=bank,MsgEnum.ERR_CARD_NOT_BIND);
-
+        if (!this.authService.checkPaymentAuthStatus(userId)) {
+            throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+        }
         //预留手机号
         String phoneNum = "";
         if(bank!=null){
@@ -196,12 +196,13 @@ public class WechatBankWithdrawController extends BaseTradeController {
         CheckUtil.check(1==userVO.getIsSetPassword(),MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         CheckUtil.check(1==userVO.getBankOpenAccount(),MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         logger.info("user is :{}", JSONObject.toJSONString(user));
-        String ip=CustomUtil.getIpAddr(request);
+        String ipAddr = CustomUtil.getIpAddr(request);
+        logger.info("ipAddr is :{}", ipAddr);
         String retUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/failed";
         String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/bank/withdraw/bgreturn.do";
         String successfulUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/success";
         String forgotPwdUrl=super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig);
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl);
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl);
         Map<String,Object> map = new HashMap<>();
         try {
             map = BankCallUtils.callApiMap(bean);

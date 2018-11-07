@@ -468,6 +468,8 @@ public class UserManagerController extends BaseController {
         return ingFlg;
     }
 
+
+
     /**
      * 更新用户表
      *
@@ -481,6 +483,8 @@ public class UserManagerController extends BaseController {
         int ingFlg = userManagerService.updateUser(user);
         return ingFlg;
     }
+
+
 
     /**
      * 查询条件设置

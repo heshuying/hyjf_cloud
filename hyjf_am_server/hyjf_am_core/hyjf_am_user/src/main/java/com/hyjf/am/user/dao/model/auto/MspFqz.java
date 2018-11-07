@@ -5,34 +5,111 @@ import java.io.Serializable;
 public class MspFqz implements Serializable {
     private Integer id;
 
+    /**
+     * 申请编号
+     *
+     * @mbggenerated
+     */
     private String applyId;
 
+    /**
+     * 姓名+身份证号认证查询结果
+     *
+     * @mbggenerated
+     */
     private String identityauth;
 
+    /**
+     * 姓名+身份证号+照片认证查询结果
+     *
+     * @mbggenerated
+     */
     private String identityandphotoauth;
 
+    /**
+     * 姓名+银行卡认证查询结果
+     *
+     * @mbggenerated
+     */
     private String namewithcardauth;
 
+    /**
+     * 姓名+身份证号+银行卡认证查询结果
+     *
+     * @mbggenerated
+     */
     private String nameidentitycardauth;
 
+    /**
+     * 学历查询状态
+     *
+     * @mbggenerated
+     */
     private String degreecode;
 
+    /**
+     * 多重申请风险信息(一年内)，示例：1笔,总金额222元
+     *
+     * @mbggenerated
+     */
     private String mspapply;
 
+    /**
+     * 多重借贷风险信息(未结清)
+示例：1笔,总金额222元
+     *
+     * @mbggenerated
+     */
     private String mspcontract;
 
+    /**
+     * 多重借贷风险信息（已结清）
+     *
+     * @mbggenerated
+     */
     private String mspendcontract;
 
+    /**
+     * 违约风险信息(五年内)
+示例：1笔,总金额222元
+     *
+     * @mbggenerated
+     */
     private String mspblacklist;
 
+    /**
+     * 小额信贷交易行为评分，示例60
+     *
+     * @mbggenerated
+     */
     private String mspscore;
 
+    /**
+     * 身份证号关联风险数（例：2个风险则返回“2”）
+     *
+     * @mbggenerated
+     */
     private String countriskblack;
 
+    /**
+     * 姓名身份证号匹配的msp黑名单
+     *
+     * @mbggenerated
+     */
     private String mspblack;
 
+    /**
+     * 姓名身份证号匹配的互联网黑名单
+     *
+     * @mbggenerated
+     */
     private String internetblack;
 
+    /**
+     * 合作机构风险库黑名单
+     *
+     * @mbggenerated
+     */
     private String allwinblack;
 
     private String identityrisk1;
@@ -109,6 +186,11 @@ public class MspFqz implements Serializable {
 
     private String sifacode;
 
+    /**
+     * 身份证照片的base64位码（如果有）
+     *
+     * @mbggenerated
+     */
     private String identityphoto;
 
     private static final long serialVersionUID = 1L;

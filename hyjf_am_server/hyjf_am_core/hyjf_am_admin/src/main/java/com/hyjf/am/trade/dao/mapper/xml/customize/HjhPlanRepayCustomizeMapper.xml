@@ -144,7 +144,7 @@
         THEN
         NULL
         ELSE
-        FROM_UNIXTIME(hhr.repay_should_time, '%Y-%m-%d %H:%i:%s' )
+        FROM_UNIXTIME(hhr.repay_should_time, '%Y-%m-%d' )
         END AS repay_should_time,
         --         hhr.repay_actual_time,
         --         hhr.repay_should_time,
@@ -174,7 +174,7 @@
         hha.lqd_service_apr AS lqdServiceApr,
         hha.invest_service_apr AS investServiceApr,
         CONCAT(FORMAT(hha.lqd_progress * 100,0),'%') AS lqdProgress,
-        DATE_ADD(FROM_UNIXTIME(hhr.repay_should_time),INTERVAL 3 DAY) AS lastQuitTime,
+        DATE_ADD(FROM_UNIXTIME(hhr.repay_should_time, '%Y-%m-%d'),INTERVAL 3 DAY) AS lastQuitTime,
         IFNULL(hha.create_time,0) AS joinTime,
         IFNULL(hha.count_interest_time,0) AS orderLockTime,
         hhp.plan_name AS planName

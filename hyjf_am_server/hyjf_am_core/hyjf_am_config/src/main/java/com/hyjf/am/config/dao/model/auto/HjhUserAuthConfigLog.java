@@ -4,28 +4,88 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class HjhUserAuthConfigLog implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 关联的授权配置id
+     *
+     * @mbggenerated
+     */
     private Integer authConfigId;
 
+    /**
+     * 授权类型 1缴费授权 2还款授权 3自动投标 4自动债转
+     *
+     * @mbggenerated
+     */
     private Integer authType;
 
+    /**
+     * 个人最高金额(元)
+     *
+     * @mbggenerated
+     */
     private Integer personalMaxAmount;
 
+    /**
+     * 企业最高金额(元)
+     *
+     * @mbggenerated
+     */
     private Integer enterpriseMaxAmount;
 
+    /**
+     * 授权期限(年)
+     *
+     * @mbggenerated
+     */
     private Integer authPeriod;
 
+    /**
+     * 启用状态 0未启用 1启用
+     *
+     * @mbggenerated
+     */
     private Integer enabledStatus;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * ip地址
+     *
+     * @mbggenerated
+     */
     private String ip;
 
+    /**
+     * mac地址
+     *
+     * @mbggenerated
+     */
     private String mac;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

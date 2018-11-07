@@ -9,12 +9,15 @@ import java.util.List;
 public class AppInvestInfoResultVO implements Serializable {
 
 
+
     /**
      * 此处为属性说明
      */
     private static final long serialVersionUID = -2087974873373127422L;
 
     private List<NewAgreementBean> protocols = new ArrayList<NewAgreementBean>();
+
+    private String usedCouponDes;
 
     private String borrowNid;
 
@@ -172,6 +175,15 @@ public class AppInvestInfoResultVO implements Serializable {
 //    public void setProtocols(List<ProtocolBean> protocols) {
 //        this.protocols = protocols;
 //    }
+
+
+    public String getUsedCouponDes() {
+        return usedCouponDes;
+    }
+
+    public void setUsedCouponDes(String usedCouponDes) {
+        this.usedCouponDes = usedCouponDes;
+    }
 
     public String getDesc0() {
         return desc0;

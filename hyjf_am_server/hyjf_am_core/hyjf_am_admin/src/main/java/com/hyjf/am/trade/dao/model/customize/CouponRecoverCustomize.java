@@ -4,6 +4,8 @@
 package com.hyjf.am.trade.dao.model.customize;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author yaoy
@@ -91,6 +93,36 @@ public class CouponRecoverCustomize implements Serializable{
      * 检索条件 订单id
      */
     private String orderId;
+
+
+    private String recoverTimeString;
+
+
+    private Integer mainRecoverYestime;
+
+
+    private BigDecimal recoverInterestYes;
+
+
+    private BigDecimal recoverAccountYes;
+
+
+    private BigDecimal recoverCapitalYes;
+
+    private Integer currentRecoverFlg;
+
+    private Integer recoverType;
+
+    private Integer noticeFlg;
+
+
+    private Integer delFlag;
+
+    private Integer createUserId;
+
+    private Integer updateUserId;
+
+    private Date createTime;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -309,4 +341,99 @@ public class CouponRecoverCustomize implements Serializable{
         this.couponUserCode = couponUserCode;
     }
 
+    public String getRecoverTimeString() {
+        return recoverTimeString;
+    }
+
+    public void setRecoverTimeString(String recoverTimeString) {
+        this.recoverTimeString = recoverTimeString;
+    }
+
+    public Integer getMainRecoverYestime() {
+        return mainRecoverYestime;
+    }
+
+    public void setMainRecoverYestime(Integer mainRecoverYestime) {
+        this.mainRecoverYestime = mainRecoverYestime;
+    }
+
+    public BigDecimal getRecoverInterestYes() {
+        return recoverInterestYes;
+    }
+
+    public void setRecoverInterestYes(BigDecimal recoverInterestYes) {
+        this.recoverInterestYes = recoverInterestYes;
+    }
+
+    public BigDecimal getRecoverAccountYes() {
+        return recoverAccountYes;
+    }
+
+    public void setRecoverAccountYes(BigDecimal recoverAccountYes) {
+        this.recoverAccountYes = recoverAccountYes;
+    }
+
+    public BigDecimal getRecoverCapitalYes() {
+        return recoverCapitalYes;
+    }
+
+    public void setRecoverCapitalYes(BigDecimal recoverCapitalYes) {
+        this.recoverCapitalYes = recoverCapitalYes;
+    }
+
+    public Integer getCurrentRecoverFlg() {
+        return currentRecoverFlg;
+    }
+
+    public void setCurrentRecoverFlg(Integer currentRecoverFlg) {
+        this.currentRecoverFlg = currentRecoverFlg;
+    }
+
+    public Integer getRecoverType() {
+        return recoverType;
+    }
+
+    public void setRecoverType(Integer recoverType) {
+        this.recoverType = recoverType;
+    }
+
+    public Integer getNoticeFlg() {
+        return noticeFlg;
+    }
+
+    public void setNoticeFlg(Integer noticeFlg) {
+        this.noticeFlg = noticeFlg;
+    }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }

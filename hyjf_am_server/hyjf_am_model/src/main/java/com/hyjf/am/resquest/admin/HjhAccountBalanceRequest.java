@@ -14,7 +14,7 @@ public class HjhAccountBalanceRequest  implements Serializable {
 
     public static final long serialVersionUID = 5454155825314635342L;
 
-    private int paginatorPage = 1;
+    private int currPage = 1;
 
     private int pageSize = 10;
 
@@ -37,11 +37,11 @@ public class HjhAccountBalanceRequest  implements Serializable {
 
 
 
-    public int getPaginatorPage() {
-        if (paginatorPage == 0) {
-            paginatorPage = 1;
+    public int getCurrPage() {
+        if (currPage == 0) {
+            currPage = 1;
         }
-        return paginatorPage;
+        return currPage;
     }
 
     @ApiModelProperty(value = "主键查询条件")
@@ -78,8 +78,8 @@ public class HjhAccountBalanceRequest  implements Serializable {
     public java.lang.Boolean delFlgSer;
 
 
-    public void setPaginatorPage(int paginatorPage) {
-        this.paginatorPage = paginatorPage;
+    public void setCurrPage(int currPage) {
+        this.currPage = currPage;
     }
 
     public String getAddTimeStart() {

@@ -5,46 +5,141 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class BorrowFinmanNewCharge implements Serializable {
+    /**
+     * 主键id
+     *
+     * @mbggenerated
+     */
     private String manChargeCd;
 
+    /**
+     * 管理费类型
+     *
+     * @mbggenerated
+     */
     private String manChargeType;
 
+    /**
+     * 管理费时间
+     *
+     * @mbggenerated
+     */
     private Integer manChargeTime;
 
+    /**
+     * 管理费时间类型
+     *
+     * @mbggenerated
+     */
     private String manChargeTimeType;
 
+    /**
+     * 项目类型
+     *
+     * @mbggenerated
+     */
     private String projectType;
 
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 资产类型
+     *
+     * @mbggenerated
+     */
     private Integer assetType;
 
+    /**
+     * 自动发标利率
+     *
+     * @mbggenerated
+     */
     private String autoBorrowApr;
 
+    /**
+     * 服务费收取方式:1-按比例 2-按金额
+     *
+     * @mbggenerated
+     */
     private Integer chargeMode;
 
+    /**
+     * 服务费率
+     *
+     * @mbggenerated
+     */
     private String chargeRate;
 
+    /**
+     * 管理费率
+     *
+     * @mbggenerated
+     */
     private String manChargeRate;
 
+    /**
+     * 收益差率
+     *
+     * @mbggenerated
+     */
     private String returnRate;
 
+    /**
+     * 逾期利率
+     *
+     * @mbggenerated
+     */
     private String lateInterest;
 
+    /**
+     * 服务费总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal serviceFeeTotal;
 
+    /**
+     * 逾期免息天数
+     *
+     * @mbggenerated
+     */
     private Integer lateFreeDays;
 
+    /**
+     * 是否自动还款:1-是；2-否
+     *
+     * @mbggenerated
+     */
     private Integer autoRepay;
 
+    /**
+     * 扣款账户：1-担保账户；2-借款人账户
+     *
+     * @mbggenerated
+     */
     private Integer repayerType;
 
     private Integer status;
 
     private String remark;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
