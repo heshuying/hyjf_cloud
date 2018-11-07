@@ -5,18 +5,53 @@ import java.io.Serializable;
 public class DebtHouseInfo implements Serializable {
     private Integer id;
 
+    /**
+     * 房产类型
+     *
+     * @mbggenerated
+     */
     private String housesType;
 
+    /**
+     * 房产位置
+     *
+     * @mbggenerated
+     */
     private String housesLocation;
 
+    /**
+     * 建筑面积
+     *
+     * @mbggenerated
+     */
     private String housesArea;
 
+    /**
+     * 市值
+     *
+     * @mbggenerated
+     */
     private String housesPrice;
 
+    /**
+     * 抵押价值（元）
+     *
+     * @mbggenerated
+     */
     private String housesToprice;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 借款预编号
+     *
+     * @mbggenerated
+     */
     private Integer borrowPreNid;
 
     private static final long serialVersionUID = 1L;

@@ -485,7 +485,7 @@ public class RepayManageController extends BaseTradeController {
                 repayManageService.addFreezeLog(userVO.getUserId(), orderId, account, requestBean.getBorrowNid(), repayTotal, userVO.getUsername());
                 // 申请还款冻结资金
                 // 调用江西银行还款申请冻结资金
-                return repayManageService.getBalanceFreeze(userVO, requestBean.getBorrowNid(), repayBean, orderId, account);
+                return repayManageService.getBalanceFreeze(userVO, requestBean.getBorrowNid(), repayBean, orderId, account, webResult);
             }
         } catch (Exception e) {
             logger.error("还款申请冻结资金异常", e);

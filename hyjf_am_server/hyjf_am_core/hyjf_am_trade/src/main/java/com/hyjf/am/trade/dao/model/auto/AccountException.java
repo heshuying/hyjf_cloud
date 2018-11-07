@@ -6,24 +6,69 @@ import java.math.BigDecimal;
 public class AccountException implements Serializable {
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 客户号
+     *
+     * @mbggenerated
+     */
     private Long customId;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 平台可用金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal balancePlat;
 
+    /**
+     * 平台冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal frostPlat;
 
+    /**
+     * 汇付可用金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal balanceHuifu;
 
+    /**
+     * 汇付冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal frostHuifu;
 
     private Integer createTime;
 
+    /**
+     * 账户角色
+     *
+     * @mbggenerated
+     */
     private String role;
 
     private static final long serialVersionUID = 1L;

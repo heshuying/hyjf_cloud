@@ -14,14 +14,34 @@ public class SpreadsUserLog implements Serializable {
 
     private String type;
 
+    /**
+     * 操作说明
+     *
+     * @mbggenerated
+     */
     private String opernote;
 
+    /**
+     * 操作人 
+     *
+     * @mbggenerated
+     */
     private String operation;
 
     private String createIp;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

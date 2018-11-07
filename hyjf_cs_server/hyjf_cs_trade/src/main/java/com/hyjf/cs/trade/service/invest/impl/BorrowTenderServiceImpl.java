@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
@@ -664,7 +665,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 查询优惠券的投资
             //BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
             // 优惠券收益
-            data.put("couponQuota", couponUser.getCouponQuota());
+
             data.put("couponType", couponUser.getCouponType());
             BigDecimal couponInterest = BigDecimal.ZERO;
             if (couponUser.getCouponType() == 1) {
@@ -679,12 +680,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             logger.info("获取投资成功结果  earnings:{} ",earnings.toString());
             logger.info("获取投资成功结果  couponInterest:{} ",couponInterest.toString());
             if (couponUser != null && couponUser.getCouponType() == 3) {
-                couponInterest = couponInterest.subtract(couponUser.getCouponQuota());
+                //couponInterest = couponInterest.subtract(couponUser.getCouponQuota());
                 data.put("income", df.format(earnings.add(couponInterest)));
+                data.put("couponQuota", couponUser.getCouponQuota()+"元");
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
                 data.put("income", df.format(earnings.add(couponInterest)));
+                data.put("couponQuota", couponUser.getCouponQuota()+"元");
             } else {
                 data.put("income", df.format(earnings.add(couponInterest)));
+                data.put("couponQuota", couponUser.getCouponQuota()+ "%");
             }
             //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
             data.put("couponInterest", df.format(couponInterest));
@@ -744,6 +748,27 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if(tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0){
                 // 用户选择了优惠券
                 couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
+                logger.info("用户选择了优惠券  "+JSONObject.toJSONString(couponUser));
+            }else if(tender.getCouponGrantId()==null || tender.getCouponGrantId().intValue()==0){
+                // 获取用户最优优惠券
+                BestCouponListVO couponConfig = new BestCouponListVO();
+                MyCouponListRequest request = new MyCouponListRequest();
+                request.setBorrowNid(tender.getBorrowNid());
+                request.setUserId(String.valueOf(loginUser.getUserId()));
+                request.setPlatform(CustomConstants.CLIENT_PC);
+                request.setMoney("0");
+                couponConfig = amTradeClient.selectBestCoupon(request);
+                logger.info("最优优惠券   " + JSONObject.toJSONString(couponConfig));
+                if (couponConfig != null) {
+                    couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()), tender.getUserId());
+                    BestCouponListVO couponFront = new BestCouponListVO();
+                    couponFront.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
+                    couponFront.setUserCouponId(couponConfig.getUserCouponId());
+                    couponFront.setCouponType(couponConfig.getCouponType());
+                    investInfo.setCouponConfig(couponFront);
+                }
+            }
+            if(couponUser!=null && (tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0)){
                 String config = "";
                 // 加息券标识（0：禁用，1：可用）    1：体验金，2：加息券 3代金券
                 int interestCoupon = borrowInfo.getBorrowInterestCoupon();
@@ -907,7 +932,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String investType = tender.getBorrowNid().substring(0, 3);
         String creditNid = tender.getBorrowNid().substring(3);
         String isConfirm = tender.getIsConfirm();//是否最后确认
-
+        tender.setBorrowType(investType);
         //add by cwyang APP3.0.9 确认是否为最后一次确认，如果是最后一次确认则必须进行投资校验
         if(isConfirm != null && "1".equals(isConfirm)){
             AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
@@ -981,25 +1006,35 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (tender.getCouponGrantId() != null && tender.getCouponGrantId() > 0) {
                 couponConfig = amTradeClient.getCouponUser(tender.getCouponGrantId(), userId);
             }
-
+            investInfo.setUsedCouponDes("未使用");
+            if( "1".equals(isConfirm)){
+                investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money)));
+            }
             // 设置收益率
             if (couponConfig != null) {
                 if (couponConfig.getCouponType() == 1) {
                     investInfo.setCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");
                     investInfo.setCouponType("体验金");
+                    investInfo.setCouponName("体验金");
+                    investInfo.setUsedCouponDes("体验金: " + couponConfig.getCouponQuota() + "元");
                 }
                 if (couponConfig.getCouponType() == 2) {
                     investInfo.setCouponDescribe("加息券:  " + couponConfig.getCouponQuota() + "%");
                     investInfo.setCouponType("加息券");
+                    investInfo.setCouponName("加息券");
+                    investInfo.setUsedCouponDes("加息券:  " + couponConfig.getCouponQuota() + "%");
                 }
                 if (couponConfig.getCouponType() == 3) {
                     investInfo.setCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     investInfo.setCouponType("代金券");
-                    investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
+                    investInfo.setCouponName("代金券");
+                    investInfo.setUsedCouponDes("代金券: " + couponConfig.getCouponQuota() + "元");
+                    //investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
                 }
                 investInfo.setCouponQuota(couponConfig.getCouponQuota().toString());
                 investInfo.setCouponId(tender.getCouponGrantId()+"");
                 investInfo.setIsUsedCoupon("1");
+                investInfo.setIsThereCoupon("1");
             } else {
                 investInfo.setCouponDescribe("暂无可用");
                 investInfo.setCouponName("");
@@ -1066,9 +1101,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             BigDecimal earnings = new BigDecimal("0");
 
             if (!StringUtils.isBlank(money) && Double.parseDouble(money) >= 0) {
-                if( "1".equals(isConfirm)){
-                    investInfo.setRealAmount(money);
-                }
+
                 String borrowStyle = borrow.getBorrowStyle();
                 // 收益率
                 BigDecimal borrowApr = borrow.getBorrowApr();
@@ -1194,13 +1227,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setEndTime("");
             investInfo.setButtonWord("");
             investInfo.setStandardValues("");
-            investInfo.setUsedCouponDes("未使用");
             // 投资协议
             if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
-                investInfo.setRealAmount("0");
+                investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal("0")));
                 investInfo.setButtonWord("确认");
             } else {
-                investInfo.setRealAmount("¥" + money);
+                investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money)));
                 investInfo.setButtonWord("确认投资" + CommonUtils.formatAmount(null, money) + "元");
             }
 

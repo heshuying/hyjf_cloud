@@ -6,28 +6,88 @@ import java.util.Date;
 public class TenderBackHistory implements Serializable {
     private Integer id;
 
+    /**
+     * 撤销方 0：运营方 1：投资方
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 借款标题
+     *
+     * @mbggenerated
+     */
     private String borrowName;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private String account;
 
+    /**
+     * 借到金额
+     *
+     * @mbggenerated
+     */
     private String accountYes;
 
+    /**
+     * 投资用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 撤销金额
+     *
+     * @mbggenerated
+     */
     private String amount;
 
+    /**
+     * 投资订单号
+     *
+     * @mbggenerated
+     */
     private String ordId;
 
+    /**
+     * 解冻订单号
+     *
+     * @mbggenerated
+     */
     private String trxId;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String notes;
 
+    /**
+     * 操作用户
+     *
+     * @mbggenerated
+     */
     private String createUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

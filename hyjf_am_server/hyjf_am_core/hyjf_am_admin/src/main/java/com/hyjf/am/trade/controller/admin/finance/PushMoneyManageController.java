@@ -5,13 +5,17 @@ package com.hyjf.am.trade.controller.admin.finance;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.TenderCommissionResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
+import com.hyjf.am.resquest.admin.TenderCommissionRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.auto.PushMoney;
 import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
 import com.hyjf.am.trade.service.admin.finance.PushMoneyManageService;
+import com.hyjf.am.trade.service.admin.finance.TenderCommissionService;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.common.paginator.Paginator;
@@ -34,6 +38,8 @@ import java.util.Map;
 public class PushMoneyManageController extends BaseController {
     @Autowired
     private PushMoneyManageService pushMoneyManagerService;
+    @Autowired
+    private TenderCommissionService tenderCommissionService;
 
 
     /**
@@ -63,6 +69,23 @@ public class PushMoneyManageController extends BaseController {
                 response.setRtn(Response.SUCCESS);//代表成功
             }
         }
+        return response;
+    }
+
+    /**
+     * 直投提成列表count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/getPushMoney")
+    public PushMoneyResponse getPushMoney(@RequestBody PushMoneyRequest request){
+        PushMoneyResponse response = new PushMoneyResponse();
+        List<PushMoney> pushMoneyList = pushMoneyManagerService.getPushMoney(request);
+        List<PushMoneyVO> pushMoneyVOList = CommonUtils.convertBeanList(pushMoneyList,PushMoneyVO.class);
+        response.setResultList(pushMoneyVOList);
+        response.setRtn(Response.SUCCESS);
+        response.setRtn(Response.SUCCESS);
         return response;
     }
 
@@ -163,5 +186,31 @@ public class PushMoneyManageController extends BaseController {
             response.setResultList(borrowApicronVoList);
         }
         return response;
+    }
+
+    /**
+     * 根据BorrowTender表的id和TenderType查询条数
+     * @param request
+     * @return
+     */
+    @PostMapping("/countTenderCommissionByTenderIdAndTenderType")
+    public TenderCommissionResponse countTenderCommissionByTenderIdAndTenderType(@RequestBody TenderCommissionRequest request){
+        TenderCommissionResponse response =  new TenderCommissionResponse();
+        int count = tenderCommissionService.countTenderCommissionByTenderIdAndTenderType(request);
+        response.setCount(count);
+        return  response;
+    }
+
+    /**
+     * 添加提成
+     * @param request
+     * @return
+     */
+    @PostMapping("/insertTenderCommission")
+    public TenderCommissionResponse insertTenderCommission(TenderCommissionRequest request){
+        TenderCommissionResponse response =  new TenderCommissionResponse();
+        int flag = tenderCommissionService.insertTenderCommission(request);
+        response.setFlag(flag);
+        return  response;
     }
 }

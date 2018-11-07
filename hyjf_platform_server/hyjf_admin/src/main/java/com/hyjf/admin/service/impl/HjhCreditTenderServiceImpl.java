@@ -72,7 +72,9 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
 		String path = "/pdf_tem/";
 		String ftpPath = null;
 		if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType || FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType
-				|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType) {
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType) {
 			savePath = path + "pdf/" + borrowNid;
 			ftpPath = "PDF/" + instCode + "/" + borrowNid + "/" + tenderAgreement.getTenderNid() + "/";
 		} else if (FddGenerateContractConstant.PROTOCOL_TYPE_PLAN == transType) {

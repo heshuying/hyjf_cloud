@@ -4,30 +4,95 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class CardBin implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 发卡行名称及机构代码
+     *
+     * @mbggenerated
+     */
     private String issuingBankName;
 
+    /**
+     * 卡名
+     *
+     * @mbggenerated
+     */
     private String cardName;
 
+    /**
+     * 卡号长度
+     *
+     * @mbggenerated
+     */
     private Integer cardLength;
 
+    /**
+     * 卡号格式
+     *
+     * @mbggenerated
+     */
     private String cardNumFormat;
 
+    /**
+     * BIN长度
+     *
+     * @mbggenerated
+     */
     private Integer binLength;
 
+    /**
+     * 取值
+     *
+     * @mbggenerated
+     */
     private String binValue;
 
+    /**
+     * 卡种
+     *
+     * @mbggenerated
+     */
     private String cardType;
 
+    /**
+     * 银行Id
+     *
+     * @mbggenerated
+     */
     private String bankId;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

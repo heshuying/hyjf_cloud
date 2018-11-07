@@ -19,6 +19,9 @@ public class HjhPlanCapitalVO extends BaseVO implements Serializable {
 
     private Date date;
 
+    /** 给前端的短日期 */
+    private String stringDate;
+
     private String planNid;
 
     private String planName;
@@ -155,5 +158,13 @@ public class HjhPlanCapitalVO extends BaseVO implements Serializable {
 
     public void setLockPeriodView(String lockPeriodView) {
         this.lockPeriodView = lockPeriodView;
+    }
+
+    public String getStringDate() {
+        return stringDate;
+    }
+
+    public void setStringDate(String stringDate) {
+        this.stringDate = stringDate;
     }
 }

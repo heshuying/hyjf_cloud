@@ -230,7 +230,7 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 			try {
 				JSONObject param = new JSONObject();
 				param.put("borrowNid", borrowApicron.getBorrowNid());
-				nifaContractEssenceMessageProducer.messageSend(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)));
+				nifaContractEssenceMessageProducer.messageSendDelay(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)),2);
 			} catch (Exception e) {
 				logger.error("发送mq到生成互金合同要素信息失败,放款标的:" + borrowApicron.getBorrowNid());
 			}

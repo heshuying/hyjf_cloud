@@ -4,26 +4,81 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ContentArticle implements Serializable {
+    /**
+     * 文章管理主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 文章分类
+     *
+     * @mbggenerated
+     */
     private String type;
 
+    /**
+     * 文章标题
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 状态0关闭，1启用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 文章作者
+     *
+     * @mbggenerated
+     */
     private String author;
 
+    /**
+     * 文章图片
+     *
+     * @mbggenerated
+     */
     private String imgurl;
 
+    /**
+     * 简介
+     *
+     * @mbggenerated
+     */
     private String summary;
 
+    /**
+     * 点击率
+     *
+     * @mbggenerated
+     */
     private Integer click;
 
+    /**
+     * 文章内容
+     *
+     * @mbggenerated
+     */
     private String content;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;

@@ -312,7 +312,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,tender.getUserId());
         if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
             money = "0";
-            result.setRealAmount("");
+            result.setRealAmount("¥0.00");
             result.setButtonWord("确认");
         } else {
             result.setRealAmount("¥" + CommonUtils.formatAmount(null, money));
@@ -895,7 +895,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         bean.setTenderType(1);
         try{
             logger.info("债转承接发送法大大协议----ing");
-            fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
+            fddProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(bean)),2);
         }catch (Exception e){
             logger.error("债转承接发送法大大协议失败  {}",JSONObject.toJSONString(bean));
         }

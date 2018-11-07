@@ -10,8 +10,11 @@ import com.hyjf.am.trade.dao.model.auto.FddTemplet;
 import com.hyjf.am.trade.dao.model.auto.FddTempletExample;
 import com.hyjf.am.trade.dao.model.customize.FddTempletCustomize;
 import com.hyjf.am.trade.service.admin.ProtocolsService;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -33,9 +36,9 @@ public class ProtocolsServiceImpl implements ProtocolsService {
     private static final String TEMPLET_ID_REFIX = "HYHT";
 
 	@Override
-	public List<FddTempletCustomize> selectFddTempletList(ProtocolsRequest request) {
+	public List<FddTempletCustomize> selectFddTempletList(ProtocolsRequest request,boolean flag) {
 		FddTempletCustomize fddTemplet = new FddTempletCustomize();
-		if (request.getLimitStart() != -1) {
+		if (request.getLimitStart() != -1 && flag == true) {
 			fddTemplet.setLimitStart(request.getLimitStart());
 			fddTemplet.setLimitEnd(request.getLimitEnd());
 		}
@@ -46,8 +49,17 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 	public void insertAction(ProtocolsRequest request) {
 		FddTemplet record = new FddTemplet();
 		BeanUtils.copyProperties(request, record);
+		// 获取当前模板的下载地址
+		String key = RedisConstants.TEMPLATE_UPLOAD_URL + record.getTempletId();
+		if(RedisUtils.exists(key)){
+			String httpUrl = RedisUtils.get(key);
+			if(StringUtils.isNotBlank(httpUrl)){
+				record.setFileUrl(httpUrl);
+			}
+		}
 		int nowTime = GetDate.getNowTime10();
-		record.setCertificateTime(nowTime);//认证时间
+		//认证时间
+		record.setCertificateTime(nowTime);
 		// 登陆信息
 		record.setCreateTime(new Date());
 		fddTempletMapper.insertSelective(record);

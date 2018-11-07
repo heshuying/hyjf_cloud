@@ -5,28 +5,88 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Product implements Serializable {
+    /**
+     * ID
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 编号
+     *
+     * @mbggenerated
+     */
     private String pnumber;
 
+    /**
+     * 利率（年化）
+     *
+     * @mbggenerated
+     */
     private BigDecimal interestRate;
 
+    /**
+     * 投资上限-投资人
+     *
+     * @mbggenerated
+     */
     private BigDecimal pupper;
 
+    /**
+     * 投资下限-投资人
+     *
+     * @mbggenerated
+     */
     private BigDecimal plower;
 
+    /**
+     * 已卖金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal total;
 
+    /**
+     * 产品上限
+     *
+     * @mbggenerated
+     */
     private BigDecimal allpupper;
 
+    /**
+     * 是否可转入 0:可转入 1:不可转入
+     *
+     * @mbggenerated
+     */
     private Integer isTender;
 
+    /**
+     * 是否可赎回 0:可赎回 1:不可赎回
+     *
+     * @mbggenerated
+     */
     private Integer isRedeem;
 
+    /**
+     * 不可操作注释
+     *
+     * @mbggenerated
+     */
     private String errorRemark;
 
+    /**
+     * 对公账户id
+     *
+     * @mbggenerated
+     */
     private String pnumberNew;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

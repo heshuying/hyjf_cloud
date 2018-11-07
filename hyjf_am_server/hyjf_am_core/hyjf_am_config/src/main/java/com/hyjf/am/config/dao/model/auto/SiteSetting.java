@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class SiteSetting implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
     private String company;
@@ -58,16 +63,46 @@ public class SiteSetting implements Serializable {
 
     private String attachmentMaxupload;
 
+    /**
+     * CDN域名
+     *
+     * @mbggenerated
+     */
     private String cdnDomain;
 
+    /**
+     * 客服电话
+     *
+     * @mbggenerated
+     */
     private String servicePhoneNumber;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

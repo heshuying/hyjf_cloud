@@ -117,7 +117,7 @@ public class HjhReInvestDetailController extends BaseController {
      * @param requestBean
      * @return
      */
-    @ApiOperation(value = "资金计划", notes = "复投详情列表")
+    @ApiOperation(value = "复投原始标的列表", notes = "复投原始标的列表")
     @PostMapping(value = "/hjhReInvest")
     public AdminResult<ListResult<HjhReInvestDetailVO>> hjhReInvestList(@RequestBody HjhReInvestDetailRequestBean requestBean){
 
@@ -291,7 +291,7 @@ public class HjhReInvestDetailController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "资金计划", notes = "复投详情列表导出")
+    @ApiOperation(value = "复投原始标的列表导出", notes = "复投详情列表导出")
     @PostMapping(value = "/exportAction")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, HjhReInvestDetailRequestBean requestBean) throws Exception {
         //sheet默认最大行数

@@ -6,11 +6,13 @@ package com.hyjf.cs.trade.service.hjh.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -192,6 +194,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setMoney(money);
         int availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(request);
         investInfo.setCouponAvailableCount(availableCouponListCount);
+        if(couponId==null || couponId.intValue()==0){
+            BestCouponListVO bestCouponListVO = amTradeClient.selectHJHBestCoupon(request);
+            logger.info("最优优惠券   " + JSONObject.toJSONString(bestCouponListVO));
+            if(bestCouponListVO!=null){
+                couponUser = amTradeClient.getCouponUser(Integer.parseInt(bestCouponListVO.getUserCouponId()),tender.getUserId());
+            }
+            investInfo.setCouponConfig(bestCouponListVO);
+        }
         /** 可用优惠券张数结束 */
 
         /** 获取用户优惠券总张数开始 */
@@ -284,7 +294,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             //resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
             resultVo.setButtonWord("确认授权" + CommonUtils.formatAmount(null, money) + "元");
         }else if(StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0){
-            resultVo.setRealAmount("0");
+            resultVo.setRealAmount("¥0.00");
             resultVo.setButtonWord("确认");
         }
 
@@ -362,7 +372,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 设置优惠券
             resultVo.setCapitalInterest("");
             resultVo.setConfirmCouponDescribe("未使用优惠券");
-            resultVo.setRealAmount("");
+            resultVo.setUsedCouponDes("未使用");
             resultVo.setCouponType("");
             JSONObject counts =  userCoupon;
             String couponAvailableCount = "0";
@@ -377,18 +387,21 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     resultVo.setCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setConfirmCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setCouponType("体验金");
+                    resultVo.setUsedCouponDes("体验金: " + couponConfig.getCouponQuota() + "元");
                 }
                 if (couponConfig != null && couponConfig.getId() > 0 && couponConfig.getCouponType() == 2) {
                     resultVo.setCouponDescribe("加息券: " + couponConfig.getCouponQuota() + "%");
                     resultVo.setConfirmCouponDescribe("加息券: " + couponConfig.getCouponQuota() + "%");
                     resultVo.setCouponType("加息券");
+                    resultVo.setUsedCouponDes("加息券: " + couponConfig.getCouponQuota() + "%");
 
                 }
                 if (couponConfig != null && couponConfig.getId() > 0 && couponConfig.getCouponType() == 3) {
                     resultVo.setCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setConfirmCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setCouponType("代金券");
-                    resultVo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
+                    resultVo.setUsedCouponDes("代金券: " + couponConfig.getCouponQuota() + "元");
+                    //resultVo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
 
                 }
                 resultVo.setCouponName(couponConfig.getCouponName());
@@ -961,9 +974,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         logger.info("投资明细表插入完毕,userId{},平台{},结果{}", userId, request.getPlatform(), trenderFlag);
         if (trenderFlag) {
             //加入明细表插表成功的前提下，继续
+            // 投资成功后,发送CRM绩效统计
+            CrmInvestMsgBean crmInvestMsgBean = new CrmInvestMsgBean();
+            crmInvestMsgBean.setInvestType(1);
+            crmInvestMsgBean.setOrderId(planAccede.getAccedeOrderId());
+            //加入明细表插表成功的前提下，继续
             //crm投资推送
             try {
-                amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(planAccede)));
+                amTradeProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(crmInvestMsgBean)),2);
             } catch (Exception e) {
                 logger.error("发送CRM消息失败:" + e.getMessage());
             }

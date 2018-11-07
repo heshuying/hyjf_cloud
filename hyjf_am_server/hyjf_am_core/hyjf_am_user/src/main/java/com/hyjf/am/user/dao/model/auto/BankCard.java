@@ -6,28 +6,88 @@ import java.util.Date;
 public class BankCard implements Serializable {
     private Integer id;
 
+    /**
+     * 用户userId
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 银行账号
+     *
+     * @mbggenerated
+     */
     private String cardNo;
 
+    /**
+     * 银行ID
+     *
+     * @mbggenerated
+     */
     private Integer bankId;
 
+    /**
+     * 银行绑定的手机号码
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 开户行联行行号
+     *
+     * @mbggenerated
+     */
     private String payAllianceCode;
 
+    /**
+     * 所属银行
+     *
+     * @mbggenerated
+     */
     private String bank;
 
+    /**
+     * 银行卡是否有效 0无效 1有效
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

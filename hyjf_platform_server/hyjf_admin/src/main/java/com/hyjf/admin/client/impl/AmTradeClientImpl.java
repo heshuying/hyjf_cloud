@@ -1235,7 +1235,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AutoTenderExceptionResponse selectAccedeRecordList(AutoTenderExceptionRequest request) {
-        String url = "http://AM-TRADE/am-trade/autotenderexception/selectAccedeRecordList";
+        String url = "http://AM-ADMIN/am-trade/autotenderexception/selectAccedeRecordList";
+        logger.info("=====selectAccedeRecordList ====== url:="+url);
         AutoTenderExceptionResponse response = restTemplate.
                 postForEntity(url, request, AutoTenderExceptionResponse.class).
                 getBody();
@@ -1255,7 +1256,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhAccedeResponse selectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest) {
-        String url = "http://AM-TRADE/am-trade/autotenderexception/selectHjhAccedeByParam";
+        String url = "http://AM-ADMIN/am-trade/autotenderexception/selectHjhAccedeByParam";
         HjhAccedeResponse response = restTemplate.
                 postForEntity(url, tenderExceptionSolveRequest, HjhAccedeResponse.class).
                 getBody();
@@ -1275,7 +1276,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhPlanBorrowTmpResponse selectBorrowJoinList(TenderExceptionSolveRequest tenderExceptionSolveRequest) {
-        String url = "http://AM-TRADE/am-trade/autotenderexception/selectBorrowJoinList";
+        String url = "http://AM-ADMIN/am-trade/autotenderexception/selectBorrowJoinList";
         HjhPlanBorrowTmpResponse response = restTemplate.
                 postForEntity(url, tenderExceptionSolveRequest, HjhPlanBorrowTmpResponse.class).
                 getBody();
@@ -1294,7 +1295,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateTenderByParam(int status, int accedeId) {
-        String url = "http://AM-TRADE/am-trade/autotenderexception/updateTenderByParam/" + status + "/" + accedeId;
+        String url = "http://AM-ADMIN/am-trade/autotenderexception/updateTenderByParam/" + status + "/" + accedeId;
         Response<Boolean> response = restTemplate.getForEntity(url, Response.class).getBody();
         if (response != null && response.getResult()) {
             return true;
@@ -1310,7 +1311,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean) {
-        String url = "http://AM-TRADE/am-trade/autoTenderController/updateBorrowForAutoTender";
+        String url = "http://AM-ADMIN/am-trade/autotenderexception/updateBorrowForAutoTender";
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
         UpdateBorrowForAutoTenderRequest request = new UpdateBorrowForAutoTenderRequest(borrowNid, accedeOrderId, bankCallBeanVO);
@@ -3299,6 +3300,23 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /*** 取得提成配置
+    * @author Zha Daojian
+    * @date 2018/11/7 11:25
+    * @param request
+    * @return java.util.List<com.hyjf.am.vo.trade.PushMoneyVO>
+    **/
+    @Override
+    public List<PushMoneyVO> getPushMoney(PushMoneyRequest request) {
+        PushMoneyResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/pushMoneyRecord/getPushMoney", request, PushMoneyResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
     /**
      * 计划退出查询判断标的是否还款
      * BorrowNidEqualTo(borrowNid)
@@ -3336,7 +3354,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查找汇付银行开户记录列表
+     * 根据BorrowTender表的id和TenderType查询条数
      *
      * @param request
      * @return
@@ -3345,7 +3363,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public Integer getCountTenderCommissionByTenderIdAndTenderType(TenderCommissionRequest request) {
 
         TenderCommissionResponse response = restTemplate
-                .postForEntity("http://AM-ADMIN/am-trade/tenderCommission/countTenderCommissionByTenderIdAndTenderType/",
+                .postForEntity("http://AM-ADMIN/am-trade/pushMoneyRecord/countTenderCommissionByTenderIdAndTenderType/",
                         request, TenderCommissionResponse.class).getBody();
         if (response != null) {
             return response.getCount();
@@ -3361,7 +3379,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int saveTenderCommission(TenderCommissionRequest request) {
-        String url = "http://AM-MARKET/am-trade/tenderCommission/insertTenderCommission/";
+        String url = "http://AM-ADMIN/am-trade/pushMoneyRecord/insertTenderCommission/";
         TenderCommissionResponse response = restTemplate.postForEntity(url, request, TenderCommissionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getFlag();
@@ -4778,8 +4796,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public FddTempletCustomizeResponse selectFddTempletList(ProtocolsRequestBean request) {
         ProtocolsRequest requestT = new ProtocolsRequest();
-        requestT.setCurrPage(request.getCurrPage());
-        requestT.setPageSize(request.getPageSize());
+        requestT.setLimitStart(request.getLimitStart());
+        requestT.setLimitEnd(request.getLimitEnd());
         return restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/selectfddtempletlist", requestT, FddTempletCustomizeResponse.class);
     }
 

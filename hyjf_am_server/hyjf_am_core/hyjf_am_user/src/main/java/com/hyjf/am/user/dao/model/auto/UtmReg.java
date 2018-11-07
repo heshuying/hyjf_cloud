@@ -7,26 +7,81 @@ import java.util.Date;
 public class UtmReg implements Serializable {
     private Integer id;
 
+    /**
+     * 推广链接id
+     *
+     * @mbggenerated
+     */
     private Integer utmId;
 
+    /**
+     * 注册用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 首次投资时间
+     *
+     * @mbggenerated
+     */
     private Integer investTime;
 
+    /**
+     * 首次投标的投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal investAmount;
 
+    /**
+     * 首次投资标的的项目类型
+     *
+     * @mbggenerated
+     */
     private String investProjectType;
 
+    /**
+     * 首次投资标的的项目期限
+     *
+     * @mbggenerated
+     */
     private String investProjectPeriod;
 
+    /**
+     * 开户返回
+     *
+     * @mbggenerated
+     */
     private Integer openAccount;
 
+    /**
+     * 绑卡返回
+     *
+     * @mbggenerated
+     */
     private Integer bindCard;
 
+    /**
+     * 惠享游用户id
+     *
+     * @mbggenerated
+     */
     private Integer hxyid;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

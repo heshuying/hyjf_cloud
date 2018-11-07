@@ -167,7 +167,8 @@ public class RepayCalendarServiceImpl extends BaseServiceImpl implements RepayCa
             result.setBorrowTheThird(customize.getRepayTime());
             //result.setBorrowTheThirdDesc("回款时间");
             result.setLabel(customize.getCouponName());
-
+            // 优惠券类型
+            result.setCouponType(customize.getCouponType());
             // 拼接详情url borrowUrl
             // type = 6,5 是计划详情 其他是散标详情
             if (Arrays.asList("6", "5").contains(customize.getType())) {

@@ -118,7 +118,7 @@ public class TenderInfoResult extends BaseResultBean {
 
     /**优惠券信息*/
     private CouponUserVO couponUser;
-    
+
 	public String getEarnings() {
 		return earnings;
 	}

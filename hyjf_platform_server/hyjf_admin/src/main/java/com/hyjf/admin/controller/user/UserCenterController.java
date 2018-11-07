@@ -125,10 +125,12 @@ public class UserCenterController extends BaseController {
         UserEvalationResultVO userEvalationResultInfo = userCenterService.getUserEvalationResult(userId);
         UserEvalationResultShowVO userEvalationResultShowVO = new UserEvalationResultShowVO();
         if (null != userEvalationResultInfo && null != userEvalationResultInfo.getCreateTime()) {
+            //从user表获取用户测评到期日
+            UserVO user = userCenterService.selectUserByUserId(userId);
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
-            Long lCreate = GetDate.countDate(userEvalationResultInfo.getCreateTime(), 1, 1).getTime();
+            Long lCreate = user.getEvaluationExpiredTime().getTime();
             //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
-            Long lNow = GetDate.countDate(new Date(), 5, 1).getTime();
+            Long lNow = System.currentTimeMillis();
             if (lCreate <= lNow) {
                 //已过期需要重新评测2已过期、1有效
                 userDetailInfoResponseBean.setIsEvalation("2");

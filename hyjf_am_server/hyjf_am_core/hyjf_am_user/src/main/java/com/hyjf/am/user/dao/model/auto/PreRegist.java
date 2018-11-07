@@ -4,34 +4,109 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class PreRegist implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 推荐人
+     *
+     * @mbggenerated
+     */
     private String referrer;
 
+    /**
+     * 关键词ID
+     *
+     * @mbggenerated
+     */
     private Integer utmId;
 
+    /**
+     * 渠道ID
+     *
+     * @mbggenerated
+     */
     private Integer sourceId;
 
+    /**
+     * 预注册时间
+     *
+     * @mbggenerated
+     */
     private Integer preRegistTime;
 
+    /**
+     * 是否已注册 0:否,1:是
+     *
+     * @mbggenerated
+     */
     private Integer registFlag;
 
+    /**
+     * 注册时间
+     *
+     * @mbggenerated
+     */
     private Integer registTime;
 
+    /**
+     * 平台ID
+     *
+     * @mbggenerated
+     */
     private String platformId;
 
+    /**
+     * 平台名称
+     *
+     * @mbggenerated
+     */
     private String platformName;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建者
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 更新者
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -4,28 +4,88 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ApplyAgreementInfo implements Serializable {
+    /**
+     * 计划id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 期数
+     *
+     * @mbggenerated
+     */
     private Integer repayPeriod;
 
+    /**
+     * 合同编号
+     *
+     * @mbggenerated
+     */
     private String contractId;
 
+    /**
+     * 投资人
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 出让人用户ID
+     *
+     * @mbggenerated
+     */
     private String creditUserId;
 
+    /**
+     * 交易类型,5:垫付债转投资,6:汇计划垫付债转投资 
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

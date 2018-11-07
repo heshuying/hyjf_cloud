@@ -6,18 +6,53 @@ import java.util.Date;
 public class UserPlat implements Serializable {
     private Integer id;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 第三方平台ID
+     *
+     * @mbggenerated
+     */
     private Integer pid;
 
+    /**
+     * 平台用户名
+     *
+     * @mbggenerated
+     */
     private String usernamep;
 
+    /**
+     * 是否新注册 0为新 1为关联
+     *
+     * @mbggenerated
+     */
     private Integer ptype;
 
+    /**
+     * 添加IP
+     *
+     * @mbggenerated
+     */
     private String addip;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

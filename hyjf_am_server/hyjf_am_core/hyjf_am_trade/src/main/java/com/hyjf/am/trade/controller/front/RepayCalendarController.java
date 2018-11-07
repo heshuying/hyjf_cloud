@@ -9,6 +9,7 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.user.RepayCalendarService;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,7 @@ public class RepayCalendarController extends BaseController {
      * @param params
      * @return
      */
-    @RequestMapping(value = "/repayCalendar/countBorrowRepayment")
+    @PostMapping(value = "/repayCalendar/countBorrowRepayment")
     public AppReapyCalendarResponse countRepaymentCalendar(@RequestBody Map<String, Object> params){
         logger.info("请求参数:" + JSONObject.toJSON(params));
         AppReapyCalendarResponse response = new AppReapyCalendarResponse();
@@ -46,11 +47,12 @@ public class RepayCalendarController extends BaseController {
      * @param params
      * @return
      */
-    @RequestMapping(value = "/repayCalendar/searchRepaymentCalendar")
+    @PostMapping(value = "/repayCalendar/searchRepaymentCalendar")
     public AppReapyCalendarResponse searchRepaymentCalendar(@RequestBody Map<String, Object> params){
         logger.info("请求参数:" + JSONObject.toJSON(params));
         AppReapyCalendarResponse response = new AppReapyCalendarResponse();
         List<AppReapyCalendarResultVO> appReapyCalendarList = this.repayCalendarService.searchRepaymentCalendar(params);
+
         response.setResultList(appReapyCalendarList);
         return response;
     }
@@ -60,7 +62,7 @@ public class RepayCalendarController extends BaseController {
      * @param params
      * @return
      */
-    @RequestMapping(value = "/repayCalendar/searchNearlyRepaymentTime")
+    @PostMapping(value = "/repayCalendar/searchNearlyRepaymentTime")
     public AppReapyCalendarResponse searchNearlyRepaymentTime(@RequestBody Map<String, Object> params){
         logger.info("请求参数:" + JSONObject.toJSON(params));
         AppReapyCalendarResponse response = new AppReapyCalendarResponse();

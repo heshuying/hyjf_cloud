@@ -6,56 +6,176 @@ import java.util.Date;
 public class Admin implements Serializable {
     private Integer id;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 真实姓名
+     *
+     * @mbggenerated
+     */
     private String truename;
 
+    /**
+     * 部门ID
+     *
+     * @mbggenerated
+     */
     private Integer departmentId;
 
+    /**
+     * 性别 0:男,1:女
+     *
+     * @mbggenerated
+     */
     private String sex;
 
+    /**
+     * 密码
+     *
+     * @mbggenerated
+     */
     private String password;
 
+    /**
+     * 电话
+     *
+     * @mbggenerated
+     */
     private String phone;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * QQ
+     *
+     * @mbggenerated
+     */
     private String qq;
 
+    /**
+     * 邮箱
+     *
+     * @mbggenerated
+     */
     private String email;
 
+    /**
+     * 传真
+     *
+     * @mbggenerated
+     */
     private String fax;
 
+    /**
+     * 地址
+     *
+     * @mbggenerated
+     */
     private String address;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private String state;
 
+    /**
+     * 登录次数
+     *
+     * @mbggenerated
+     */
     private Integer loginNum;
 
+    /**
+     * 最后登录时间
+     *
+     * @mbggenerated
+     */
     private Date lastLoginTime;
 
+    /**
+     * 最后登录IP
+     *
+     * @mbggenerated
+     */
     private String lastLoginIp;
 
+    /**
+     * 操作者
+     *
+     * @mbggenerated
+     */
     private String operator;
 
+    /**
+     * 权限
+     *
+     * @mbggenerated
+     */
     private String role;
 
     private Integer status;
 
     private Integer posttime;
 
+    /**
+     * 作废，每个用户可以有多个角色,关联hyjf_admin_and_role
+     *
+     * @mbggenerated
+     */
     private Integer groupId;
 
+    /**
+     * ???
+     *
+     * @mbggenerated
+     */
     private String accredit;
 
+    /**
+     * 删除FLAG
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

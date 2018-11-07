@@ -6,26 +6,81 @@ import java.util.Date;
 public class DebtPlanBorrow implements Serializable {
     private Integer id;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String debtPlanNid;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 关联类型，0专属项目，1转让债权
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 标的添加类型 0手动添加 1自动添加
+     *
+     * @mbggenerated
+     */
     private Integer addType;
 
+    /**
+     * 删除标志位 0未删除 1删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建人用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 修改人用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

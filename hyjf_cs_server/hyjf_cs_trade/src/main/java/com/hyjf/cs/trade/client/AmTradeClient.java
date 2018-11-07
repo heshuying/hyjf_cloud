@@ -26,6 +26,7 @@ import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
@@ -2413,5 +2414,16 @@ public interface AmTradeClient {
      * @return
      */
     List<AppPushManageVO> getAnnouncements();
+
+    List<BorrowCustomizeVO> searchBorrowCustomizeList(BorrowCommonCustomizeVO borrowCommonCustomize);
+
+    /**
+     * 根据contract_id查询垫付协议生成详情
+     * @author Zha Daojian
+     * @date 2018/8/23 15:47
+     * @param contractId
+     * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
+     **/
+    ApplyAgreementInfoVO selectApplyAgreementInfoByContractId(String contractId);
 
 }

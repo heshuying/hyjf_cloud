@@ -13,10 +13,7 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
-import com.hyjf.am.vo.user.CertificateAuthorityVO;
-import com.hyjf.am.vo.user.LoanSubjectCertificateAuthorityVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -363,7 +360,9 @@ public class FddHandle {
 		} else if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType) {// 居间服务协议
 			callBean.setDoc_title(FddGenerateContractConstant.CONTRACT_DOC_TITLE);
 		} else if (FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType
-				|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType) {// 债转协议
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType) {// 债转协议
 			callBean.setDoc_title(FddGenerateContractConstant.CONTRACT_DOC_TITLE_CREDIT);
 			callBean.setSign_keyword(FddGenerateContractConstant.FDD_SIGN_KEYWORK_BORROWER);
 		}
@@ -375,7 +374,9 @@ public class FddHandle {
 		String code = dzqzCallBean.getCode();
 		if ("success".equals(result) && FddGenerateContractConstant.FDD_RETURN_CODE_1000.equals(code)) {
 			if (FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType
-					|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType) {// 债权转让协议
+					|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType
+					|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType
+					|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType) {// 债权转让协议
 				// 出让人签章
 				Integer creditUserID = bean.getCreditUserID();
 				String creditCustomerID = this.getCustomerIDByUserID(creditUserID);
@@ -553,7 +554,9 @@ public class FddHandle {
                 String path = "/pdf_tem/";
                 String ftpPath = null;
                 if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType || FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType
-                        || FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType){
+                        || FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType
+						|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType
+						|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType){
                     savePath = path + "pdf/" + borrowNid ;
                     ftpPath = "PDF/" + instCode + "/" + borrowNid + "/" + contract_id + "/";
                 }else if(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN == transType){
@@ -709,6 +712,7 @@ public class FddHandle {
             logger.info("债转承接订单号为空");
             throw new RuntimeException("债转承接订单号为空");
         }
+        logger.info("==================债转法大大协议开始生成，订单号：" + assignOrderId);
         // 承接人用户ID
         Integer tenderUserId = bean.getTenderUserId();
         if (tenderUserId == null || tenderUserId == 0) {
@@ -907,6 +911,7 @@ public class FddHandle {
             if (isSign){//单独走签署接口
                 updateSignContract(bean);
             }else {
+				logger.info("==================债转法大大协议开始生成，订单号：" + assignOrderId + ",开始调用接口----");
 				List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT);
 
                 if (fddTemplets != null && fddTemplets.size() == 1) {
@@ -928,7 +933,7 @@ public class FddHandle {
                     dzqzCallBean.setTemplate_id(templetId);
                     if ("success".equals(result) && FddGenerateContractConstant.FDD_RETURN_CODE_1000.equals(code)) {
                         //协议生成成功，开始签署并进行脱敏处理
-
+						logger.info("==================债转法大大协议开始生成，订单号：" + assignOrderId + "，接口调用成功，开始更新数据！");
                         updateSaveDownUrl(dzqzCallBean, bean);
 
                         updateSignContract(bean);
@@ -952,6 +957,112 @@ public class FddHandle {
 		return this.amUserClient.selectCorpOpenAccountRecordByUserId(tenderUserId);
 	}
 
+	/**
+	 * 垫付债转协议
+	 */
+	public void creditGenerateContractApply(FddGenerateContractBean bean) throws Exception {
+		logger.info("开始生成垫付债转协议---------------------承接订单号:" + bean.getOrdid());
+		JSONObject paramter = new JSONObject();
+		paramter = bean.getParamter();
+		String paramStr = paramter.toJSONString();
+		//垫付协议发大大Contract_id
+		String contract_id = bean.getTeString()+"-"+bean.getRepayPeriod()+"-"+bean.getOrdid();
+		bean.setOrdid(contract_id);
+		bean.setContractName(FddGenerateContractConstant.CONTRACT_DOC_TITLE_CREDIT);
+		//bean.setTransType(3);
+		boolean isSign = isCreatContract(contract_id);
+		if (isSign){//单独走签署接口
+			updateSignContract(bean);
+		}else {
+			List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT);
+			if (fddTemplets != null && fddTemplets.size() >0) {
+				FddTempletVO fddTemplet = fddTemplets.get(0);
+				String templetId = fddTemplet.getTempletId();
+				DzqzCallBean callBean = new DzqzCallBean();
+				callBean.setParameter_map(paramStr);
+				callBean.setTemplate_id(templetId);
+				callBean.setTxCode(DzqzConstant.FDD_GENERATECONTRACT);
+				callBean.setContract_id(bean.getOrdid());
+				callBean.setDoc_title(FddGenerateContractConstant.CONTRACT_DOC_TITLE_CREDIT);
+				callBean.setDynamic_tables(null);
+				callBean.setUserId(bean.getTenderUserId());
+				callBean.setFont_size("12");
+				callBean.setFont_type("1");
+				DzqzCallBean dzqzCallBean = DzqzCallUtil.callApiBg(callBean);
+				String result = dzqzCallBean.getResult();
+				String code = dzqzCallBean.getCode();
+				dzqzCallBean.setTemplate_id(templetId);
+				String msg = dzqzCallBean.getMsg();
+				if (("success".equals(result) && FddGenerateContractConstant.FDD_RETURN_CODE_1000.equals(code))
+						|| ("对不起，合同编号重复！".equals(msg) && FddGenerateContractConstant.FDD_RETURN_CODE_2002.equals(code))) {
+					//协议生成成功，开始签署并进行脱敏处理
+					updateSaveDownUrl(dzqzCallBean, bean);
+					updateSignContract(bean);
+				} else {
+					logger.info("--------------开始生成债转投资协议返回错误，订单号：" + bean.getOrdid() + "错误码：" + code + ",错误描述：" + msg);
+				}
+			} else {
+				logger.info("--------------开始生成债转投资协议异常，无法匹配模板----订单号：" + bean.getOrdid());
+			}
+		}
+	}
+	/**
+	 * 生成计划垫付债转协议
+	 * @param bean
+	 */
+	public void planCreditGenerateContractApply(FddGenerateContractBean bean) {
+		logger.info("开始生成生成计划垫付债转协议---------------------承接订单号:" + bean.getOrdid());
+		try {
+			//计划债转是在事务内提交，可能获取不到数据，需要暂时休眠1秒，待数据提交
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		// bean.setTransType(3);
+		//垫付协议发大大Contract_id
+		//GetDate.getNowTime10()測試
+		String contract_id = bean.getTeString()+"-"+bean.getRepayPeriod()+"-"+bean.getOrdid();
+		bean.setOrdid(contract_id);
+		JSONObject paramter = new JSONObject();
+		paramter = bean.getParamter();
+		String paramStr = paramter.toJSONString();
+		bean.setContractName(FddGenerateContractConstant.CONTRACT_DOC_TITLE_CREDIT);
+		boolean isSign = isCreatContract(contract_id);
+		if (isSign){//单独走签署接口
+			updateSignContract(bean);
+		}else {
+			List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT);
+			if (fddTemplets != null && fddTemplets.size() >0) {
+				FddTempletVO fddTemplet = fddTemplets.get(0);
+				String templetId = fddTemplet.getTempletId();
+				DzqzCallBean callBean = new DzqzCallBean();
+				callBean.setParameter_map(paramStr);
+				callBean.setTemplate_id(templetId);
+				callBean.setTxCode(DzqzConstant.FDD_GENERATECONTRACT);
+				callBean.setContract_id(bean.getOrdid());
+				callBean.setDoc_title(FddGenerateContractConstant.CONTRACT_DOC_TITLE_CREDIT);
+				callBean.setDynamic_tables(null);
+				callBean.setFont_size("12");
+				callBean.setFont_type("1");
+				callBean.setUserId(bean.getTenderUserId());
+				DzqzCallBean dzqzCallBean = DzqzCallUtil.callApiBg(callBean);
+				String result = dzqzCallBean.getResult();
+				String code = dzqzCallBean.getCode();
+				dzqzCallBean.setTemplate_id(templetId);
+				String msg = dzqzCallBean.getMsg();
+				if (("success".equals(result) && FddGenerateContractConstant.FDD_RETURN_CODE_1000.equals(code))
+						|| ("对不起，合同编号重复！".equals(msg) && FddGenerateContractConstant.FDD_RETURN_CODE_2002.equals(code))) {
+					//协议生成成功，开始签署并进行脱敏处理
+					updateSaveDownUrl(dzqzCallBean, bean);
+					updateSignContract(bean);
+				} else {
+					logger.info("--------------开始生成计划债转投资协议返回错误，订单号：" + bean.getAssignOrderId() + "错误码：" + code + ",错误描述：" + msg);
+				}
+			} else {
+				logger.info("--------------开始生成计划债转投资协议异常，无法匹配模板----订单号：" + bean.getAssignOrderId());
+			}
+		}
+	}
 	/**
 	 * 计划债转
 	 *
@@ -1346,7 +1457,6 @@ public class FddHandle {
 				userId = creditTender.getUserId();// 承接人
 				borrowNid = creditTender.getBidNid();// 原标的号
 				BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(borrowNid);
-				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = creditTender.getCreditUserId();// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
 			}
@@ -1360,6 +1470,17 @@ public class FddHandle {
 				BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(borrowNid);
 				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = hjhCreditTender.getCreditUserId();// 出让人
+				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
+			}
+		}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType || //垫付债转服务协议
+				FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType){// 垫付计划债转服务协议
+			ApplyAgreementInfoVO applyAgreementInfo =  this.amTradeClient.selectApplyAgreementInfoByContractId(contract_id);
+			if (applyAgreementInfo != null ) {
+				userId = Integer.valueOf(applyAgreementInfo.getUserId());// 承接人
+				borrowNid = applyAgreementInfo.getBorrowNid();// 原标的号
+				BorrowInfoWithBLOBsVO borrow = this.amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
+				instCode = borrow.getInstCode();// 机构编号
+				creditUserId = Integer.valueOf(applyAgreementInfo.getCreditUserId());// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
 			}
 		}
@@ -1408,7 +1529,9 @@ public class FddHandle {
 		}
 
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType || FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType
-				|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType){
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType){
 
 			// 查询借款人签署结果
 			DzqzCallBean borrowCallBean = querySignResult(contract_id, borrowerCustomerID, 123);
@@ -1426,7 +1549,9 @@ public class FddHandle {
 		}
 
 		if ( FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType
-				|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType){
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType
+				|| FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType){
 			logger.info("--------------------合同编号：" + contract_id + "，签署完成，开始更新-------");
 			updateSaveSignInfo(callBean, contract_id, borrowNid, transType, instCode,isTenderCompany,isCreditCompany);
 		}else{
@@ -1505,8 +1630,11 @@ public class FddHandle {
 		String fileType = null;
 		if (Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_TENDER){
 			fileName = FddGenerateContractConstant.CONTRACT_DOC_FILE_NAME_TENDER;
-			fileType = "9.png";
-		}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT || Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+			fileType = "8.png";
+		}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT
+				|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
+				|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
+				|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
 			fileName = FddGenerateContractConstant.CONTRACT_DOC_FILE_NAME_CREDIT;
 			fileType = "2.png";
 		}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_PLAN){
@@ -1578,7 +1706,9 @@ public class FddHandle {
 						Integer.valueOf(transType),tenderCompany,creditCompany);
 
 			}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
-					Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+					Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
+					|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
+					|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
 
 				tmConduct(imageSavePath,imageFilePath,fileName,isCompanyUser,trueImageFilePath,jointPathList,pages,
 						Integer.valueOf(transType),tenderCompany,creditCompany);
@@ -1931,7 +2061,9 @@ public class FddHandle {
 		String tenderCardNoImage = "image/cardno.png";
 
 		if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
-				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
 			if(creditCompany){//出让人为企业
 				borrowTrueNametmImage = "image/companyname.png";
 				borrowSigntmImage = "image/seal.png";
@@ -1958,9 +2090,11 @@ public class FddHandle {
 		String tmName_sign = "";
 		String tmName_content = "tm_0";
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			tmName_sign = "tm_9";
+			tmName_sign = "tm_8";
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
-				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
 			tmName_sign = "tm_2";
 		}
 		String output = imageSavePath;
@@ -1977,66 +2111,67 @@ public class FddHandle {
 		int index_x = 0;
 		int index_y = 0;
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 948;
-			index_y = 953;
+			index_x = 910;
+			index_y = 1190;
 			if(isCompanyUser){
-				index_x = 885;
-				index_y = 835;
+				index_x = 850;
+				index_y = 1070;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
-				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
 			index_x = 430;
-			index_y = 1100;
+			index_y = 990;
 			if(creditCompany){
-				index_x = 410;
-				index_y = 1050;
+				index_x = 400;
+				index_y = 990;
 			}
 		}
-		logger.info("--------下载脱敏开始脱敏图片，图片来源：" + source + ",图片存储地点：" + output);
-		boolean b = FileUtil.judeFileExists(source);
-		logger.info("---------脱敏图片是否存在：" + b);
 		ImageUtil.markImageByMoreIcon(signIcon, source, output, signimageName, imageType, degree, index_x, index_y);
 
-		//受让人/投资人 脱敏签章（个人显示第一个字，企业全部脱敏）
+		//受让人/投资人/出借人 脱敏签章（个人显示第一个字，企业全部脱敏）——最后一页
 		source = output + "/" + signimageName + ".png";
-		boolean ise = FileUtil.judeFileExists(source);
-		logger.info("-----------下载脱敏图片完成，脱敏后图片地址：" + source + ",是否存在：" + ise);
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
 			index_x = 435;
-			index_y = 950;
+			index_y = 1190;
 			if(isTenderConmpany){
-				index_x = 370;
-				index_y = 835;
+				index_x = 405;
+				index_y = 1190;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
-				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
 			index_x = 430;
-			index_y = 1300;
+			index_y = 1290;
 			if(isTenderConmpany){
-				index_x = 368;
-				index_y = 1190;
+				index_x = 400;
+				index_y = 1290;
 			}
 		}
 		ImageUtil.markImageByMoreIcon(tenderSignIcon, source, output, signimageName, imageType, degree, index_x, index_y);
 
-		//脱敏转让人/借款人 真实姓名（个人显示第一个字，其他脱敏，企业全部脱敏）
+		//脱敏转让人/借款人 真实姓名（个人显示第一个字，其他脱敏，企业全部脱敏）——第一页
 		String trueImageName = fileName + tmName_content;//真实姓名脱敏后图片
 		String trueSource = trueImageFilePath;//待脱敏图片路径
 		String icon = fileParent + borrowTrueNametmImage;  //覆盖图片路径
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 374;
-			index_y = 600;
+			index_x = 385;
+			index_y = 690;
 			if(isCompanyUser){
-				index_x = 354;
-				index_y = 600;
+				index_x = 360;
+				index_y = 690;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
-				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
 			index_x = 390;
-			index_y = 450;
+			index_y = 470;
 			if(creditCompany){
 				index_x = 370;
-				index_y = 450;
+				index_y = 470;
 			}
 		}
 		ImageUtil.markImageByMoreIcon(icon, trueSource, output, trueImageName, imageType, degree, index_x, index_y);
@@ -2045,61 +2180,67 @@ public class FddHandle {
 
 		String cardnoIcon = fileParent + borrowCardNoImage;
 
-		//脱敏转让人/借款人 证件号码（个人显示前3后4，企业全部脱敏）
+		//脱敏转让人/借款人 证件号码（个人显示前3后4，企业全部脱敏）——第一页
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 340;
-			index_y = 650;
+			index_x = 355;
+			index_y = 755;
 			if(isCompanyUser){
-				index_x = 300;
-				index_y = 650;
+				index_x = 305;
+				index_y = 755;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
-				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
 			index_x = 340;
-			index_y = 505;
+			index_y = 530;
 			if(creditCompany){
 				index_x = 300;
-				index_y = 505;
+				index_y = 530;
 			}
 		}
 		ImageUtil.markImageByMoreIcon(cardnoIcon, trueSource, output, trueImageName, imageType, degree, index_x, index_y);
 
 		String tenderTrueNameIcon = fileParent + tenderTrueNametmImage;
-		//脱敏受让人/投资人 真实姓名（个人显示第一个，企业全部脱敏）
+		//脱敏受让人/投资人/出借人 真实姓名（个人显示第一个，企业全部脱敏）——第一页
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 378;
-			index_y = 450;
+			index_x = 388;
+			index_y = 490;
 			if(isTenderConmpany){
-				index_x = 348;
-				index_y = 450;
+				index_x = 238;
+				index_y = 490;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
-				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
-			index_x = 385;
-			index_y = 605;
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
+			index_x = 390;
+			index_y = 610;
 			if(isTenderConmpany){
-				index_x = 365;
-				index_y = 605;
+				index_x = 350;
+				index_y = 610;
 			}
 		}
 		ImageUtil.markImageByMoreIcon(tenderTrueNameIcon, trueSource, output, trueImageName, imageType, degree, index_x, index_y);
 
 		cardnoIcon = fileParent + tenderCardNoImage;
-		//脱敏受让人/投资人 证件号码
+		//脱敏受让人/投资人/出借人 证件号码——第一页
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 330;
-			index_y = 500;
+			index_x = 355;
+			index_y = 555;
 			if(isTenderConmpany){
-				index_x = 294;
-				index_y = 500;
+				index_x = 305;
+				index_y = 555;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
-				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET){
-			index_x = 333;
-			index_y = 660;
+				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
+				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
+			index_x = 340;
+			index_y = 680;
 			if(isTenderConmpany){
-				index_x = 295;
-				index_y = 660;
+				index_x = 300;
+				index_y = 680;
 			}
 		}
 		ImageUtil.markImageByMoreIcon(cardnoIcon, trueSource, output, trueImageName, imageType, degree, index_x, index_y);

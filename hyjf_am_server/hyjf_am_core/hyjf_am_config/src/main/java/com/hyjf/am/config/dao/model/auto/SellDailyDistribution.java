@@ -6,22 +6,67 @@ import java.util.Date;
 public class SellDailyDistribution implements Serializable {
     private Integer id;
 
+    /**
+     * 业务名称
+     *
+     * @mbggenerated
+     */
     private String businessName;
 
+    /**
+     * 联系人邮箱
+     *
+     * @mbggenerated
+     */
     private String email;
 
+    /**
+     * 时间点 1:每个工作日 2:每天  3:每月第一个工作日
+     *
+     * @mbggenerated
+     */
     private Integer timePoint;
 
+    /**
+     * 邮件发送具体时间
+     *
+     * @mbggenerated
+     */
     private Date sendTime;
 
+    /**
+     * 状态 1:有效,2:无效
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private String createName;
 
+    /**
+     * 更新人
+     *
+     * @mbggenerated
+     */
     private String updateName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -3,9 +3,8 @@
  */
 package com.hyjf.am.user.service.admin.exception.impl;
 
+import com.hyjf.am.admin.config.SystemConfig;
 import com.hyjf.am.resquest.admin.MobileSynchronizeRequest;
-import com.hyjf.am.user.dao.mapper.customize.MobileSynchronizeCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserChangeLog;
 import com.hyjf.am.user.dao.model.auto.UserChangeLogExample;
@@ -34,16 +33,12 @@ import java.util.List;
 @Service(value = "userAdminMobileSynchronizeServiceImpl")
 public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implements AdminMobileSynchronizeService {
 
-    @Autowired
-    private MobileSynchronizeCustomizeMapper mobileSynchronizeCustomizeMapper;
-    @Autowired
-    private UserCustomizeMapper userCustomizeMapper;
-
-    private static String BANK_BANKCODE = "1000010";
-    private static String BANK_INSTCODE = "1000010";
     public static final Integer CHANGELOG_TYPE_IDCARD = 3;
     public static final Integer CHANGELOG_TYPE_USERINFO = 2;
     public static final Integer CHANGELOG_TYPE_RECOMMEND = 1;
+
+    @Autowired
+    private SystemConfig systemConfig;
 
     /**
      * 查询手机号同步数量  用于前端分页显示
@@ -87,8 +82,8 @@ public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implement
         String mobile = user.getMobile();
         // 调用银行接口查询电子账户手机号
         // 获取共同参数
-        String bankCode = BANK_BANKCODE;
-        String instCode = BANK_INSTCODE;
+        String bankCode = systemConfig.getBankBankcode();
+        String instCode = systemConfig.getBankInstcode();
         String channel = BankCallConstant.CHANNEL_PC;
         String orderId = GetOrderIdUtils.getOrderId2(Integer.parseInt(userId));
         String orderDate = GetOrderIdUtils.getOrderDate();

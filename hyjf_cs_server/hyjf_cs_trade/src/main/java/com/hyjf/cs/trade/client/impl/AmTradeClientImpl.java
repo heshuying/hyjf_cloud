@@ -43,6 +43,7 @@ import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
@@ -1687,7 +1688,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateBeforeChinaPnR(TenderRequest request) {
-        logger.info("散标投资开始插入tmp表");
+        logger.info("散标投资开始插入tmp表  参数 :{}",JSONObject.toJSONString(request));
         IntegerResponse result = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/borrow/insertBeforeTender", request, IntegerResponse.class).getBody();
         if (Response.isSuccess(result)) {
@@ -4799,7 +4800,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "projectlist/app/getIncreaseInterestInvestByOrdId/" + orderId;
         IncreaseInterestInvestResponse response = restTemplate.getForEntity(url,IncreaseInterestInvestResponse.class).getBody();
         if(Response.isSuccess(response)){
-            response.getResult();
+            return response.getResult();
         }
         return null;
     }
@@ -5841,6 +5842,32 @@ public class AmTradeClientImpl implements AmTradeClient {
         AppPushManageResponse response = restTemplate.getForEntity(url, AppPushManageResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowCustomizeVO> searchBorrowCustomizeList(BorrowCommonCustomizeVO borrowCommonCustomize) {
+        String url = "http://AM-TRADE/am-trade/borrow/searchBorrowCustomizeList";
+        BorrowCustomizeResponse response = restTemplate.postForEntity(url,borrowCommonCustomize,BorrowCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据contract_id查询垫付协议生成详情
+     * @author Zha Daojian
+     * @date 2018/8/23 15:47
+     * @param contractId
+     * @return ApplyAgreementInfoVO
+     **/
+    public ApplyAgreementInfoVO selectApplyAgreementInfoByContractId(String contractId) {
+        String url = "http://AM-ADMIN/am-trade/applyAgreement/selectApplyAgreementInfoByContractId/"+contractId;
+        ApplyAgreementInfoResponse response = restTemplate.getForEntity(url,ApplyAgreementInfoResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
         }
         return null;
     }

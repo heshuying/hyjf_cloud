@@ -5,30 +5,95 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class DebtLoanLog implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal money;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal fee;
 
+    /**
+     * 实际到账余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal balance;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 操作者
+     *
+     * @mbggenerated
+     */
     private String operator;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

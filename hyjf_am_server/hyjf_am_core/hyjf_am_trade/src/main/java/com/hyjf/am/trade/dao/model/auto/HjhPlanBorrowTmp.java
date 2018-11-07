@@ -7,56 +7,186 @@ import java.util.Date;
 public class HjhPlanBorrowTmp implements Serializable {
     private Integer id;
 
+    /**
+     * 汇计划加入订单号
+     *
+     * @mbggenerated
+     */
     private String accedeOrderId;
 
+    /**
+     * 自动投标订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 计划nid
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 加入金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeAccount;
 
+    /**
+     * 已投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal alreadyInvest;
 
+    /**
+     * 资产编号
+     *
+     * @mbggenerated
+     */
     private String assetId;
 
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 机构产品类型
+     *
+     * @mbggenerated
+     */
     private Integer assetType;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowAccount;
 
+    /**
+     * 投入金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal account;
 
+    /**
+     * 借款期限
+     *
+     * @mbggenerated
+     */
     private Integer borrowPeriod;
 
+    /**
+     * 还款方式
+     *
+     * @mbggenerated
+     */
     private String borrowStyle;
 
+    /**
+     * 标的类型：0原始标的,1债转标的
+     *
+     * @mbggenerated
+     */
     private Integer borrowType;
 
+    /**
+     * 债转原用户id
+     *
+     * @mbggenerated
+     */
     private Integer sellUserId;
 
+    /**
+     * 债转原投资订单号
+     *
+     * @mbggenerated
+     */
     private String sellOrderId;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 是否标的的最后一笔投资/承接(0:非最后一笔；1:最后一笔)
+     *
+     * @mbggenerated
+     */
     private Integer isLast;
 
+    /**
+     * 返回状态码
+     *
+     * @mbggenerated
+     */
     private String respCode;
 
+    /**
+     * 返回状态详细
+     *
+     * @mbggenerated
+     */
     private String respDesc;
 
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -2,9 +2,8 @@ package com.hyjf.am.config.dao.mapper.auto;
 
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplateExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface MessagePushTemplateMapper {
     int countByExample(MessagePushTemplateExample example);

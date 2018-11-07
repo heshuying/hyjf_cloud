@@ -45,4 +45,25 @@ public class AmTradeProducer extends Producer {
 			throw new MQException("mq InterruptedException send error", e);
 		}
 	}
+
+	/**
+	 *  包含延时参数的消息发送(delayLevel超过最大值,则默认最大值)
+	 *
+	 * @date 2018/8/10 9:49
+	 */
+	public boolean messageSendDelay(MessageContent messageContent,int delayLevel) throws MQException {
+		try {
+			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
+					messageContent.body);
+			if (delayLevel > 0){
+				message.setDelayTimeLevel(delayLevel);
+			}
+			return send(message);
+		} catch (MQClientException | RemotingException | MQBrokerException e) {
+			throw new MQException("mq send error", e);
+		} catch (InterruptedException e){
+			Thread.currentThread().interrupt();
+			throw new MQException("mq InterruptedException send error", e);
+		}
+	}
 }
