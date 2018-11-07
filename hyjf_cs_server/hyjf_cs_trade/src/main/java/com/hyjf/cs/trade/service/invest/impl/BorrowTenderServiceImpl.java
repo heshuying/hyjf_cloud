@@ -65,6 +65,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 /**
@@ -761,11 +762,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.info("最优优惠券   " + JSONObject.toJSONString(couponConfig));
                 if (couponConfig != null) {
                     couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()), tender.getUserId());
-                    BestCouponListVO couponFront = new BestCouponListVO();
-                    couponFront.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
-                    couponFront.setUserCouponId(couponConfig.getUserCouponId());
-                    couponFront.setCouponType(couponConfig.getCouponType());
-                    investInfo.setCouponConfig(couponFront);
+                    investInfo.setCouponConfig(couponConfig);
                 }
             }
             if(couponUser!=null && (tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0)){
@@ -788,7 +785,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.info("用户优惠券信息为:{}" , JSONObject.toJSONString(couponUser));
             }
             if (couponUser != null) {
+                BestCouponListVO couponConfig = new BestCouponListVO();
+                couponConfig.setCouponType(couponUser.getCouponType());
+                couponConfig.setUserCouponId(couponUser.getId()+"");
+                couponConfig.setCouponQuota(couponUser.getCouponQuota());
+                couponConfig.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
                 investInfo.setIsThereCoupon(1);
+                investInfo.setCouponConfig(couponConfig);
             } else {
                 investInfo.setIsThereCoupon(0);
             }
