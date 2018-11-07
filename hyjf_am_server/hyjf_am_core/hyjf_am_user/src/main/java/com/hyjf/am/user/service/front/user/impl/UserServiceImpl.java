@@ -6,7 +6,6 @@ import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserDepartmentInfoCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.UserDepartmentInfoCustomize;
 import com.hyjf.am.user.service.front.user.UserService;
@@ -35,7 +34,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -959,7 +957,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
                 user.setIsEvaluationFlag(1);
                 user.setEvaluationExpiredTime(GetDate.countDate(GetDate.countDate(new Date(),1,1), 5,-1));
                 // 更新用户是否测评标志位
-                this.userMapper.updateByPrimaryKey(user);
+                this.userMapper.updateByPrimaryKeySelective(user);
             }
             for (int j = 0; j < answerList.size(); j++) {
                 UserEvalation userEvalation=new UserEvalation();

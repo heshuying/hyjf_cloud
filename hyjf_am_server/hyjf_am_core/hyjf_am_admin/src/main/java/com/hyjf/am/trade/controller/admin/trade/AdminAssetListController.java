@@ -79,27 +79,30 @@ public class AdminAssetListController extends BaseController {
 		AssetListCustomizeResponse response = new AssetListCustomizeResponse();
 		Integer registCount = assetListService.getRecordCount(request);
 		// 查询列表传入分页
-		Paginator paginator;
-		/*Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());*/
-		if(request.getLimit() == 0){
+		Paginator paginator = new Paginator(request.getCurrPage(), registCount,request.getPageSize());
+		if(request.getPageSize() == 0){
 			// 前台传分页
 			paginator = new Paginator(request.getCurrPage(), registCount);
-		} else {
-			// 前台未传分页那默认 10
-			paginator = new Paginator(request.getCurrPage(), registCount,request.getPageSize());
 		}
+		int limitStart = paginator.getOffset();
+		int limitEnd = paginator.getLimit();
+		if (request.isLimitFlg()) {
+			limitEnd = 0;
+			limitStart = 0;
+		}
+		response.setCount(registCount);
 		//代表成功
 		String returnCode = "0";
 		//设置保证金不足查询条件
 		Map<String, Object> mapParam = setBZJBZQueryCondition(request);
 		//获取保证金不足列表
-		List<AssetListCustomizeVO> assetList = assetListService.findBZJBZList(mapParam,paginator.getOffset(), paginator.getLimit());
+		List<AssetListCustomizeVO> assetList = assetListService.findBZJBZList(mapParam, limitStart, limitEnd);
 		if(registCount>0){
 			if(null!=assetList&&assetList.size()>0){
 				List<AssetListCustomizeVO> assetListCustomizeVO = CommonUtils.convertBeanList(assetList,AssetListCustomizeVO.class);
 				response.setResultList(assetListCustomizeVO);
-				response.setCount(registCount);
-				response.setRtn(returnCode);
+				response.setRtn(Response.SUCCESS);
+				response.setMessage(Response.SUCCESS_MSG);
 			}
 		}
 		return response;

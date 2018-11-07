@@ -73,7 +73,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     public static final String BORROW_RECOVER_PLAN_URL = "http://AM-TRADE/am-trade/recoverplan/getBorrowRecoverPlanListByTenderNid";
 
-    public static final String  COUPON_RECOVER_PLAN_URL = "http://AM-TRADE/am-trade/borrow/getCounponRecoverList";
+    public static final String  COUPON_RECOVER_PLAN_URL = "http://AM-TRADE/am-trade/coupon/getCounponRecoverList";
 
     @Autowired
     private BaseClient baseClient;
