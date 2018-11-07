@@ -252,6 +252,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 // 2. 投资信息 ( 有真实资金，显示投资信息 )
                 this.setTenderInfoToResult(detailBeansList, inc.getTenderNid());
                 jsonObject.put("couponType", "加息"+borrow.getBorrowExtraYield() + "%");
+                jsonObject.put("couponTypeCode","4");
                /* jsonObject.put("couponType", "加息"+inc.getBorrowExtraYield()+"%");
                 preckCredit(borrowBeansList3, "待收利息", CommonUtils.formatAmount(inc.getRepayInterestWait()) + "元");
                 preckCredit(borrowBeansList3, "已收利息", CommonUtils.formatAmount(inc.getRepayInterestYes()) + "元");
@@ -276,18 +277,21 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 switch (appCouponInfoCustomize.getCouponType()) {
                     case "1":
                         jsonObject.put("couponType", "体验金");
+                        jsonObject.put("couponTypeCode",appCouponInfoCustomize.getCouponType());
                         preckCredit(borrowBeansList2, "优惠券面额", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getCouponQuota())) + "元");
                         preckCredit(borrowBeansList2, "优惠券类型", "体验金");
                         preckCredit(borrowBeansList2, "待收利息", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getRecoverAccountInterestWait())) + "元");
                         break;
                     case "2":
                         jsonObject.put("couponType", "加息券");
+                        jsonObject.put("couponTypeCode",appCouponInfoCustomize.getCouponType());
                         preckCredit(borrowBeansList2, "优惠券面额", appCouponInfoCustomize.getCouponQuota() + "%");
                         preckCredit(borrowBeansList2, "优惠券类型", "加息券");
                         preckCredit(borrowBeansList2, "待收利息", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getRecoverAccountInterestWait())) + "元");
                         break;
                     case "3":
                         jsonObject.put("couponType", "代金券");
+                        jsonObject.put("couponTypeCode",appCouponInfoCustomize.getCouponType());
                         preckCredit(borrowBeansList2, "优惠券面额", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getCouponQuota())) + "元");
                         preckCredit(borrowBeansList2, "优惠券类型", "代金券");
                         preckCredit(borrowBeansList2, "待收利息",
@@ -305,6 +309,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 logger.error("未查询到优惠券信息...");
                 preck(detailBeansList, "优惠券信息", new ArrayList<BorrowDetailBean>());
                 jsonObject.put("couponType", "体验金");
+                jsonObject.put("couponTypeCode",appCouponInfoCustomize.getCouponType());
             }
 
             // 3. 优惠券回款计划
