@@ -1251,8 +1251,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         list.add(newAgreementBean);
         investInfo.setProtocols(list);
         investInfo.setProtocolUrlDesc("协议列表");
-        investInfo.setUsedCouponDes("未使用");
-        investInfo.setIsUsedCoupon("0");
     }
 
     /**
