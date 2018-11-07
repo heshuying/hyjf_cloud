@@ -33,9 +33,9 @@ public class ProtocolsServiceImpl implements ProtocolsService {
     private static final String TEMPLET_ID_REFIX = "HYHT";
 
 	@Override
-	public List<FddTempletCustomize> selectFddTempletList(ProtocolsRequest request) {
+	public List<FddTempletCustomize> selectFddTempletList(ProtocolsRequest request,boolean flag) {
 		FddTempletCustomize fddTemplet = new FddTempletCustomize();
-		if (request.getLimitStart() != -1) {
+		if (request.getLimitStart() != -1 && flag == true) {
 			fddTemplet.setLimitStart(request.getLimitStart());
 			fddTemplet.setLimitEnd(request.getLimitEnd());
 		}
