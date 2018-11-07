@@ -6,6 +6,7 @@ import com.hyjf.am.response.trade.WrbInvestResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.trade.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
@@ -178,7 +179,7 @@ public class WrbInfoController {
         }
         try {
             if (startTime == null) {
-                BorrowVO borrow = wrbInvestServcie.selectBorrowByBorrowNid(borrowNid);
+                BorrowAndInfoVO borrow = wrbInvestServcie.selectBorrowByBorrowNid(borrowNid);
                 if (borrow == null) {
                     response.setRetcode(WrbResponse.FAIL_RETCODE);
                     response.setRetmsg("标的不存在");
@@ -276,7 +277,7 @@ public class WrbInfoController {
                 WrbInvestResponse.InvestDetail investDetail = new WrbInvestResponse.InvestDetail();
                 investDetail.setIndex(borrowTender.getNid());// 订单号
                 String borrowNid = borrowTender.getBorrowNid();
-                BorrowVO borrow = wrbInvestServcie.selectBorrowByBorrowNid(borrowNid);
+                BorrowAndInfoVO borrow = wrbInvestServcie.selectBorrowByBorrowNid(borrowNid);
                 if (borrow != null) {
                     investDetail.setBorrow_id(String.valueOf(borrow.getUserId()));// 借款人ID
                 }

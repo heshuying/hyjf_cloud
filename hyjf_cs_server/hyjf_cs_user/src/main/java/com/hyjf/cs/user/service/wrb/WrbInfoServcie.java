@@ -3,6 +3,7 @@ package com.hyjf.cs.user.service.wrb;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.trade.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
@@ -44,7 +45,7 @@ public interface WrbInfoServcie {
      * @param borrowNid
      * @return
      */
-    BorrowVO selectBorrowByBorrowNid(String borrowNid);
+    BorrowAndInfoVO selectBorrowByBorrowNid(String borrowNid);
 
     /**
      * 根据标的号和投资开始时间查询投资信息

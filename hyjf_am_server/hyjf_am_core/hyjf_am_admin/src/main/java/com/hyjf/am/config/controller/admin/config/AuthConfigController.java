@@ -89,7 +89,7 @@ public class AuthConfigController extends BaseConfigController {
     @GetMapping("/getAuthConfigById/{id}")
     public AdminAuthConfigResponse getAuthConfigById(@PathVariable Integer id){
         AdminAuthConfigResponse response = new AdminAuthConfigResponse();
-        HjhUserAuthConfig authConfig = authConfigService.getAuthConfigById(id);
+        HjhUserAuthConfigCustomize authConfig = authConfigService.getAuthConfigById(id);
         String returnCode = "0";
         if (Validator.isNotNull(authConfig)){
             response.setResult(CommonUtils.convertBean(authConfig,HjhUserAuthConfigVO.class));

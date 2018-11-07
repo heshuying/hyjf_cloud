@@ -1,13 +1,10 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
-package com.hyjf.cs.user.bean;
+package com.hyjf.am.resquest.api;
 
 import java.util.Date;
 
 /**
- * @author fq
- * @version WrbInvestRequest, v0.1 2018/9/26 9:40
+ * @author fuqiang
+ * @version WrbInvestRequest, v0.1 2018/11/7 15:53
  */
 public class WrbInvestRequest {
     /** 投资日期 */
@@ -19,14 +16,10 @@ public class WrbInvestRequest {
     /** 页数 */
     private Integer page;
 
-    /**
-     * 投资日期
-     */
+    /** 投资日期 */
     private Date date;
 
-    /**
-     * 标的号
-     */
+    /** 标的编号 */
     private String borrowNid;
 
     public String getInvest_date() {
