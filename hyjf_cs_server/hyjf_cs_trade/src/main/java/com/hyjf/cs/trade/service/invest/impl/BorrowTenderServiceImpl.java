@@ -790,6 +790,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 couponConfig.setUserCouponId(couponUser.getId()+"");
                 couponConfig.setCouponQuota(couponUser.getCouponQuota());
                 couponConfig.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
+                couponConfig.setTenderQuotaType(0);
                 investInfo.setIsThereCoupon(1);
                 investInfo.setCouponConfig(couponConfig);
             } else {
