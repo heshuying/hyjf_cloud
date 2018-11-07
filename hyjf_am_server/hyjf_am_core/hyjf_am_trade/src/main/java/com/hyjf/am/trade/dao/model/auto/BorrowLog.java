@@ -6,22 +6,67 @@ import java.util.Date;
 public class BorrowLog implements Serializable {
     private Integer id;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 项目状态
+     *
+     * @mbggenerated
+     */
     private Integer borrowStatusCd;
 
+    /**
+     * 项目状态名称
+     *
+     * @mbggenerated
+     */
     private String borrowStatus;
 
+    /**
+     * 修改类型-创建标的-新增-修改-删除
+     *
+     * @mbggenerated
+     */
     private String type;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建用户Name
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 创建用户
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
     private static final long serialVersionUID = 1L;

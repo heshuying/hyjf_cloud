@@ -4,24 +4,74 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class LabPlatform implements Serializable {
+    /**
+     * 平台ID
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 平台id
+     *
+     * @mbggenerated
+     */
     private Integer pid;
 
+    /**
+     * 关联用户
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 平台用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 平台密码
+     *
+     * @mbggenerated
+     */
     private String password;
 
+    /**
+     * 固定IP地址
+     *
+     * @mbggenerated
+     */
     private String ip;
 
+    /**
+     * 平台名称
+     *
+     * @mbggenerated
+     */
     private String pName;
 
+    /**
+     * 接口开放状态：0为不开放，1为开放
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -4,40 +4,130 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class CorpOpenAccountRecord implements Serializable {
+    /**
+     * 主键id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户编号
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 组织机构代码/社会信用号
+     *
+     * @mbggenerated
+     */
     private String busiCode;
 
+    /**
+     * 企业名称
+     *
+     * @mbggenerated
+     */
     private String busiName;
 
+    /**
+     * 是否担保类型，Y：是 N：否
+     *
+     * @mbggenerated
+     */
     private String guarType;
 
+    /**
+     * 开户银行编号
+     *
+     * @mbggenerated
+     */
     private String openBankId;
 
+    /**
+     * 银行账号
+     *
+     * @mbggenerated
+     */
     private String account;
 
+    /**
+     * 企业开户状态  0初始 1提交 2审核中 3 审核拒绝 4开户失败 5开户中 6开户成功
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 是否银行 0汇付 1江西银行
+     *
+     * @mbggenerated
+     */
     private Integer isBank;
 
+    /**
+     * 证件类型 20：其他证件（组织机构代码）25：社会信用号
+     *
+     * @mbggenerated
+     */
     private Integer cardType;
 
+    /**
+     * 税务登记证
+     *
+     * @mbggenerated
+     */
     private String taxRegistrationCode;
 
+    /**
+     * 营业执照编号
+     *
+     * @mbggenerated
+     */
     private String buseNo;
 
+    /**
+     * 备注（失败原因）
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建者
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 更新者
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

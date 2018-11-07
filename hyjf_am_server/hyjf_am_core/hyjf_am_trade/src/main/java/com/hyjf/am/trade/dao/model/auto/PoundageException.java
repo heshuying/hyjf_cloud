@@ -7,20 +7,55 @@ import java.util.Date;
 public class PoundageException implements Serializable {
     private Integer id;
 
+    /**
+     * 分账金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal ledgerAmount;
 
     private Integer poundageId;
 
+    /**
+     * 手续费分账配置id
+     *
+     * @mbggenerated
+     */
     private Integer ledgerId;
 
+    /**
+     * 收款人用户名
+     *
+     * @mbggenerated
+     */
     private String payeeName;
 
+    /**
+     * 分账状态:0.未分账;1.已分账
+     *
+     * @mbggenerated
+     */
     private Integer ledgerStatus;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

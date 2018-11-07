@@ -4,30 +4,95 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class NifaReportLog implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 文件包信息
+     *
+     * @mbggenerated
+     */
     private String packageInformation;
 
+    /**
+     * 上传时间
+     *
+     * @mbggenerated
+     */
     private Integer uploadTime;
 
+    /**
+     * 文件上传状态 0：未处理 1：成功 2：失败
+     *
+     * @mbggenerated
+     */
     private Integer fileUploadStatus;
 
+    /**
+     * 文件解析反馈 0：未处理 1：成功 2：失败
+     *
+     * @mbggenerated
+     */
     private Integer feedbackResult;
 
+    /**
+     * 上传文件包名
+     *
+     * @mbggenerated
+     */
     private String uploadName;
 
+    /**
+     * 反馈文件包名
+     *
+     * @mbggenerated
+     */
     private String feedbackName;
 
+    /**
+     * 上传文件包路径
+     *
+     * @mbggenerated
+     */
     private String uploadPath;
 
+    /**
+     * 反馈文件包路径
+     *
+     * @mbggenerated
+     */
     private String feedbackPath;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

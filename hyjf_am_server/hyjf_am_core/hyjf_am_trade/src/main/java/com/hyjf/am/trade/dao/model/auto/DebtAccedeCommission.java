@@ -6,54 +6,179 @@ import java.math.BigDecimal;
 public class DebtAccedeCommission implements Serializable {
     private Integer id;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 计划期限即计划锁定期限
+     *
+     * @mbggenerated
+     */
     private Integer planLockPeriod;
 
+    /**
+     * 充值订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 获得提成的userId
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 提成人用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 是否是51老用户(0:否,1:是)
+     *
+     * @mbggenerated
+     */
     private Integer is51;
 
+    /**
+     * 地区ID
+     *
+     * @mbggenerated
+     */
     private Integer regionId;
 
+    /**
+     * 地区名
+     *
+     * @mbggenerated
+     */
     private String regionName;
 
+    /**
+     * 分公司ID
+     *
+     * @mbggenerated
+     */
     private Integer branchId;
 
+    /**
+     * 分公司名
+     *
+     * @mbggenerated
+     */
     private String branchName;
 
+    /**
+     * 获得提成的部门id
+     *
+     * @mbggenerated
+     */
     private Integer departmentId;
 
+    /**
+     * 部门名
+     *
+     * @mbggenerated
+     */
     private String departmentName;
 
+    /**
+     * 计划加入订单号
+     *
+     * @mbggenerated
+     */
     private String accedeOrderId;
 
+    /**
+     * 加入用户userId
+     *
+     * @mbggenerated
+     */
     private Integer accedeUserId;
 
+    /**
+     * 加入用户名
+     *
+     * @mbggenerated
+     */
     private String accedeUserName;
 
+    /**
+     * 加入人的部门id
+     *
+     * @mbggenerated
+     */
     private Integer accedeDepartmentId;
 
+    /**
+     * 加入金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeAccount;
 
+    /**
+     * 加入时间
+     *
+     * @mbggenerated
+     */
     private Integer accedeTime;
 
+    /**
+     * 提成
+     *
+     * @mbggenerated
+     */
     private BigDecimal commission;
 
+    /**
+     * 0:未发放;1:已发放;100:删除
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 计算时间
+     *
+     * @mbggenerated
+     */
     private Integer computeTime;
 
+    /**
+     * 返现时间
+     *
+     * @mbggenerated
+     */
     private Integer returnTime;
 
+    /**
+     * 返现操作用户ID
+     *
+     * @mbggenerated
+     */
     private Integer returnUserId;
 
+    /**
+     * 返现操作用户名
+     *
+     * @mbggenerated
+     */
     private String returnUserName;
 
     private static final long serialVersionUID = 1L;

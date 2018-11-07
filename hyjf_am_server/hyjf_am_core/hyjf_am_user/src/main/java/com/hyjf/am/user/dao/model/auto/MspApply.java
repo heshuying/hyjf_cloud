@@ -4,62 +4,207 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class MspApply implements Serializable {
+    /**
+     * 主键 id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 申请编号
+     *
+     * @mbggenerated
+     */
     private String applyId;
 
+    /**
+     * 借款人姓名
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 身份证
+     *
+     * @mbggenerated
+     */
     private String identityCard;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobileNo;
 
+    /**
+     * 申请日期
+     *
+     * @mbggenerated
+     */
     private String applyDate;
 
+    /**
+     * ‘01’代表经营，‘02’代表消费，‘99’代表其他
+     *
+     * @mbggenerated
+     */
     private String loanType;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanMoney;
 
+    /**
+     * 借款期数
+     *
+     * @mbggenerated
+     */
     private Integer loanTimeLimit;
 
+    /**
+     * 借款城市（字典）
+     *
+     * @mbggenerated
+     */
     private String creditAddress;
 
+    /**
+     * 共享标识0为未共享,1为已共享
+     *
+     * @mbggenerated
+     */
     private Integer shareIdentification;
 
+    /**
+     * 业务类型
+     *
+     * @mbggenerated
+     */
     private String serviceType;
 
+    /**
+     * 未偿还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal unredeemedMoney;
 
+    /**
+     * 还款状态 01 正常（借款人已按时归还该月还款金额的全部）。提前归还该月应还款金额的全部（但尚未结清），也归入“01 正常”；02 逾期中；03 逾期核销；04 正常结清
+     *
+     * @mbggenerated
+     */
     private String repaymentStatus;
 
+    /**
+     * 逾期总金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal overdueAmount;
 
+    /**
+     * 逾期开始日期
+     *
+     * @mbggenerated
+     */
     private String overdueDate;
 
+    /**
+     * 逾期时长
+     *
+     * @mbggenerated
+     */
     private String overdueLength;
 
+    /**
+     * 逾期原因 01 能力下降；02 恶意拖欠；03 身份欺诈；04 逃逸；05 犯罪入狱；06 疾病；07 死亡；99 其他
+     *
+     * @mbggenerated
+     */
     private String overdueReason;
 
+    /**
+     * 审批结果 01 审批通过；02 审批拒绝；04 重新审批；05 客户取消
+     *
+     * @mbggenerated
+     */
     private String approvalResult;
 
+    /**
+     * 审批日期
+     *
+     * @mbggenerated
+     */
     private String approvalDate;
 
+    /**
+     * 合同开始日期
+     *
+     * @mbggenerated
+     */
     private String contractBegin;
 
+    /**
+     * 合同结束日期
+     *
+     * @mbggenerated
+     */
     private String contractEnd;
 
+    /**
+     * 担保类型A 抵押；B 质押；C 担保；D 信用；E 保证；Y 其他
+     *
+     * @mbggenerated
+     */
     private String guaranteeType;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private String createUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Integer createTime;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private String updateUser;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Integer updateTime;
 
+    /**
+     * 是否删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlg;
 
+    /**
+     * 配置id
+     *
+     * @mbggenerated
+     */
     private Integer configureId;
 
     private static final long serialVersionUID = 1L;

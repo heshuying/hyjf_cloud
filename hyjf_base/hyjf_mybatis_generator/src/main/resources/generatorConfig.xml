@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_user.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -14,7 +14,8 @@
         <property name="endingDelimiter" value="`"/>
         <plugin type="org.hyjf.mybatis.generator.plugins.MysqlPagingPlugin"/>
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
-        <commentGenerator>
+
+        <commentGenerator type="org.hyjf.mybatis.generator.plugins.RemarksCommentGenerator">
             <property name="suppressAllComments" value="true"/>
             <property name="suppressDate" value="true"/>
         </commentGenerator>

@@ -5,124 +5,419 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class DebtLoan implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 投资用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 投资用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 借款用户id
+     *
+     * @mbggenerated
+     */
     private Integer borrowUserId;
 
+    /**
+     * 借款用户名
+     *
+     * @mbggenerated
+     */
     private String borrowUserName;
 
+    /**
+     * 项目标的号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 计划nid
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 计划订单号
+     *
+     * @mbggenerated
+     */
     private String planOrderId;
 
+    /**
+     * 投资id
+     *
+     * @mbggenerated
+     */
     private Integer investId;
 
+    /**
+     * 投资订单号
+     *
+     * @mbggenerated
+     */
     private String investOrderId;
 
+    /**
+     * 放款总本息（应还本息）
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanAccount;
 
+    /**
+     * 放款利息（应还利息）
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanInterest;
 
+    /**
+     * 放款本金（应还本金）
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanCapital;
 
+    /**
+     * 投资人收到的还款本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal receiveAccountYes;
 
+    /**
+     * 投资人收到的还款本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal receiveCapitalYes;
 
+    /**
+     * 投资人收到的还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal receiveInterestYes;
 
+    /**
+     * 剩余期数
+     *
+     * @mbggenerated
+     */
     private Integer remainPeriod;
 
+    /**
+     * 已还款期数
+     *
+     * @mbggenerated
+     */
     private Integer repayPeriod;
 
+    /**
+     * 估计还款时间
+     *
+     * @mbggenerated
+     */
     private String repayTime;
 
+    /**
+     * 实际还款时间
+     *
+     * @mbggenerated
+     */
     private String repayActionTime;
 
+    /**
+     * 已还本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountYes;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterestYes;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapitalYes;
 
+    /**
+     * 待还本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountWait;
 
+    /**
+     * 待还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapitalWait;
 
+    /**
+     * 待还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterestWait;
 
+    /**
+     * 还款状态 0未还款 1还款中 2已还款
+     *
+     * @mbggenerated
+     */
     private Integer repayStatus;
 
+    /**
+     * 账户管理费
+     *
+     * @mbggenerated
+     */
     private BigDecimal manageFee;
 
     private String loanType;
 
+    /**
+     * 是否提前还款 0正常还款 1提前还款 2延期还款 3逾期还款
+     *
+     * @mbggenerated
+     */
     private Integer advanceStatus;
 
+    /**
+     * 提前还款天数
+     *
+     * @mbggenerated
+     */
     private Integer advanceDays;
 
+    /**
+     * 借款人应提前还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAdvanceInterest;
 
+    /**
+     * 借款人已还款提前还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAdvanceInterestYes;
 
+    /**
+     * 逾期天数
+     *
+     * @mbggenerated
+     */
     private Integer lateDays;
 
+    /**
+     * 借款人应还款逾期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayLateInterest;
 
+    /**
+     * 借款人已还款逾期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayLateInterestYes;
 
+    /**
+     * 延期天数
+     *
+     * @mbggenerated
+     */
     private Integer delayDays;
 
+    /**
+     * 借款人应还款延期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayDelayInterest;
 
+    /**
+     * 借款人已还款延期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayDelayInterestYes;
 
+    /**
+     * 投资人收取提前还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal receiveAdvanceInterest;
 
+    /**
+     * 投资人收取逾期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal receiveLateInterest;
 
+    /**
+     * 投资人收取延期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal receiveDelayInterest;
 
+    /**
+     * 投资人已收取提前还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal receiveAdvanceInterestYes;
 
+    /**
+     * 投资人已收取逾期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal receiveLateInterestYes;
 
+    /**
+     * 投资人已收取延期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal receiveDelayInterestYes;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 0发送邮件，1已发送
+     *
+     * @mbggenerated
+     */
     private Integer sendmail;
 
+    /**
+     * 网站收支计算标识
+     *
+     * @mbggenerated
+     */
     private Integer web;
 
+    /**
+     * 已债转金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditAmount;
 
+    /**
+     * 已债转总利息（垫付）
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterestAmount;
 
+    /**
+     * 债转时间
+     *
+     * @mbggenerated
+     */
     private Integer creditTime;
 
+    /**
+     * 债转状态:是否已债转(0:否,1:是)
+     *
+     * @mbggenerated
+     */
     private Integer creditStatus;
 
+    /**
+     * 还款订单号
+     *
+     * @mbggenerated
+     */
     private String repayOrderId;
 
+    /**
+     * 还款订单日期
+     *
+     * @mbggenerated
+     */
     private String repayOrderDate;
 
+    /**
+     * 创建用户userId
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户userId
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

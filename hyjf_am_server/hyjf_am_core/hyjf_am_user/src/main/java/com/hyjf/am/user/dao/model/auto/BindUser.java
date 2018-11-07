@@ -4,22 +4,67 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class BindUser implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 绑定唯一id（第三方提供）
+     *
+     * @mbggenerated
+     */
     private Integer bindUniqueId;
 
+    /**
+     * 绑定用户第三方平台编号 汇晶社：2000000011
+     *
+     * @mbggenerated
+     */
     private Integer bindPlatformId;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建用户
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新用户
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

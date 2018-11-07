@@ -6,18 +6,53 @@ import java.util.Date;
 public class CouponRealTender implements Serializable {
     private Integer id;
 
+    /**
+     * 优惠券投资订单编号
+     *
+     * @mbggenerated
+     */
     private String couponTenderId;
 
+    /**
+     * 真实投资订单编号
+     *
+     * @mbggenerated
+     */
     private String realTenderId;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
