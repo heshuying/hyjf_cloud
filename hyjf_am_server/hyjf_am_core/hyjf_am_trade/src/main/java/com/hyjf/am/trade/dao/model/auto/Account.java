@@ -7,82 +7,277 @@ import java.util.Date;
 public class Account implements Serializable {
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 用户电子账户号(开户后,维护)
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * 资金总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal total;
 
+    /**
+     * 可用金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal balance;
 
+    /**
+     * 可提现
+     *
+     * @mbggenerated
+     */
     private BigDecimal balanceCash;
 
+    /**
+     * 不可提现
+     *
+     * @mbggenerated
+     */
     private BigDecimal balanceFrost;
 
+    /**
+     * 冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal frost;
 
+    /**
+     * 待收金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal await;
 
+    /**
+     * 待还金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repay;
 
+    /**
+     * 计划累计收益
+     *
+     * @mbggenerated
+     */
     private BigDecimal planRepayInterest;
 
+    /**
+     * 计划可用余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planBalance;
 
+    /**
+     * 计划冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planFrost;
 
+    /**
+     * 计划累计加入金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planAccedeTotal;
 
+    /**
+     * 计划加入可用余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planAccedeBalance;
 
+    /**
+     * 投资汇添金标的投资的未放款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planAccedeFrost;
 
+    /**
+     * 计划累计待收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planAccountWait;
 
+    /**
+     * 计划累计待收本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal planCapitalWait;
 
+    /**
+     * 计划待收利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal planInterestWait;
 
+    /**
+     * 银行总资产
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankTotal;
 
+    /**
+     * 江西银行可用余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankBalance;
 
+    /**
+     * 银行冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankFrost;
 
+    /**
+     * 银行待还本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankWaitRepay;
 
+    /**
+     * 银行待还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankWaitCapital;
 
+    /**
+     * 银行待还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankWaitInterest;
 
+    /**
+     * 待还垫付机构金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankWaitRepayOrg;
 
+    /**
+     * 银行累计收益
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankInterestSum;
 
+    /**
+     * 银行累计投资
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankInvestSum;
 
+    /**
+     * 银行待收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankAwait;
 
+    /**
+     * 银行待收本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankAwaitCapital;
 
+    /**
+     * 银行待收利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankAwaitInterest;
 
+    /**
+     * 银行垫付机构待收垫付总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankAwaitOrg;
 
+    /**
+     * 江西银行可提现金额(银行电子账户余额)
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankBalanceCash;
 
+    /**
+     * 江西银行冻结金额(银行电子账户冻结金额)
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankFrostCash;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

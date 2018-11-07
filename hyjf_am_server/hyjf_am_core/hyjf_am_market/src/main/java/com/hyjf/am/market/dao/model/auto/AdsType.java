@@ -8,18 +8,43 @@ public class AdsType implements Serializable {
 
     private String typeName;
 
+    /**
+     * 广告位代码
+     *
+     * @mbggenerated
+     */
     private String code;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer order;
 
     private String remark;
 
     private Integer status;
 
+    /**
+     * 客户端类型 0为pc广告  1为手机广告
+     *
+     * @mbggenerated
+     */
     private Integer clientType;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;

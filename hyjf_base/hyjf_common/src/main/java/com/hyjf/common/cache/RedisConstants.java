@@ -388,4 +388,13 @@ public class RedisConstants {
      * 登录失败配置项
      */
     public static final String LOCKED_CONFIG = "lock_config";
+    /**
+     * 测评到期时间和测评结果投资金额上限用
+     */
+    public static final String REVALUATION = "evaluation:";
+
+    /**
+     * 测评到期时间
+     */
+    public static final String REVALUATION_EXPIRED_DAY = REVALUATION  + "evaluation_expired_day";
 }

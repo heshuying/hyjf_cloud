@@ -7,28 +7,83 @@ import java.util.Date;
 public class AccountBorrow implements Serializable {
     private Integer id;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String nid;
 
     private String borrowNid;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal money;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal fee;
 
+    /**
+     * 实际到账余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal balance;
 
+    /**
+     * 待还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal interest;
 
+    /**
+     * 管理费
+     *
+     * @mbggenerated
+     */
     private BigDecimal manageFee;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

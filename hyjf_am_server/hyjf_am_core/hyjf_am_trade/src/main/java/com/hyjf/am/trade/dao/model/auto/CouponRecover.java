@@ -7,52 +7,172 @@ import java.util.Date;
 public class CouponRecover implements Serializable {
     private Integer id;
 
+    /**
+     * 投资订单编号
+     *
+     * @mbggenerated
+     */
     private String tenderId;
 
+    /**
+     * 转账订单编号，每次转账时生成
+     *
+     * @mbggenerated
+     */
     private String transferId;
 
+    /**
+     * 还款状态，0：未还款，1：已还款
+     *
+     * @mbggenerated
+     */
     private Integer recoverStatus;
 
+    /**
+     * 收益领取状态，1：未回款，2：未领取，3：转账中,4：转账失败，5：已领取，6：已过期
+     *
+     * @mbggenerated
+     */
     private Integer receivedFlg;
 
+    /**
+     * 分期还款的期数，未分期的默认为：1
+     *
+     * @mbggenerated
+     */
     private Integer recoverPeriod;
 
+    /**
+     * 转账时间，手动领取收益时，调用汇付接口之前，需更新的时间
+     *
+     * @mbggenerated
+     */
     private Integer transferTime;
 
+    /**
+     * 应还款时间，放款时生成
+     *
+     * @mbggenerated
+     */
     private Integer recoverTime;
 
+    /**
+     * 已还款时间，还款时生成，体验金的场合为用户的手动领取时间
+     *
+     * @mbggenerated
+     */
     private Integer recoverYestime;
 
+    /**
+     * 相关联的真实本金投资的还款时间，用于体验金收益过期判断
+     *
+     * @mbggenerated
+     */
     private Integer mainRecoverYestime;
 
+    /**
+     * 应还利息,放款时生成
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverInterest;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverInterestYes;
 
+    /**
+     * 应还本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccount;
 
+    /**
+     * 已还本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountYes;
 
+    /**
+     * 应还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverCapital;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverCapitalYes;
 
+    /**
+     * 分期付款的场合，1：还款期，0：非还款期
+     *
+     * @mbggenerated
+     */
     private Integer currentRecoverFlg;
 
+    /**
+     * 还款类别  1：直投类，2：汇添金
+     *
+     * @mbggenerated
+     */
     private Integer recoverType;
 
+    /**
+     * 通知用户标识，0：未通知，1：已通知
+     *
+     * @mbggenerated
+     */
     private Integer noticeFlg;
 
+    /**
+     * 收益过期时间
+     *
+     * @mbggenerated
+     */
     private Integer expTime;
 
+    /**
+     * 删除标识  0：未删除，1：已删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

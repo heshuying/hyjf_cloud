@@ -8,10 +8,25 @@ public class BorrowManinfo implements Serializable {
 
     private String name;
 
+    /**
+     * 1男2女
+     *
+     * @mbggenerated
+     */
     private Integer sex;
 
+    /**
+     * 年龄
+     *
+     * @mbggenerated
+     */
     private Integer old;
 
+    /**
+     * 1已婚2未婚
+     *
+     * @mbggenerated
+     */
     private Integer merry;
 
     private String pro;
@@ -20,70 +35,225 @@ public class BorrowManinfo implements Serializable {
 
     private String industry;
 
+    /**
+     * 岗位职业
+     *
+     * @mbggenerated
+     */
     private String position;
 
+    /**
+     * 个人授信额度
+     *
+     * @mbggenerated
+     */
     private Integer credit;
 
+    /**
+     * 公司规模（人数）
+     *
+     * @mbggenerated
+     */
     private String size;
 
+    /**
+     * 月营业额
+     *
+     * @mbggenerated
+     */
     private BigDecimal business;
 
+    /**
+     * 在现单位工作的时间
+     *
+     * @mbggenerated
+     */
     private String wtime;
 
     private String borrowNid;
 
     private String borrowPreNid;
 
+    /**
+     * 身份证号
+     *
+     * @mbggenerated
+     */
     private String cardNo;
 
+    /**
+     * 户籍地
+     *
+     * @mbggenerated
+     */
     private String domicile;
 
+    /**
+     * 在平台逾期次数
+     *
+     * @mbggenerated
+     */
     private String overdueTimes;
 
+    /**
+     * 在平台逾期金额
+     *
+     * @mbggenerated
+     */
     private String overdueAmount;
 
+    /**
+     * 涉诉情况
+     *
+     * @mbggenerated
+     */
     private String litigation;
 
+    /**
+     * 个贷审核信息 身份证 0未审核 1已审核
+     *
+     * @mbggenerated
+     */
     private Integer isCard;
 
+    /**
+     * 个贷审核信息 收入状况 0未审核 1已审核
+     *
+     * @mbggenerated
+     */
     private Integer isIncome;
 
+    /**
+     * 个贷审核信息 信用状况 0未审核 1已审核
+     *
+     * @mbggenerated
+     */
     private Integer isCredit;
 
+    /**
+     * 个贷审核信息 资产状况 0未审核 1已审核
+     *
+     * @mbggenerated
+     */
     private Integer isAsset;
 
+    /**
+     * 个贷审核信息 车辆状况 0未审核 1已审核
+     *
+     * @mbggenerated
+     */
     private Integer isVehicle;
 
+    /**
+     * 个贷审核信息 行驶证 0未审核 1已审核
+     *
+     * @mbggenerated
+     */
     private Integer isDrivingLicense;
 
+    /**
+     * 个贷审核信息 车辆登记证 0未审核 1已审核
+     *
+     * @mbggenerated
+     */
     private Integer isVehicleRegistration;
 
+    /**
+     * 个贷审核信息 婚姻状况 0未审核 1已审核
+     *
+     * @mbggenerated
+     */
     private Integer isMerry;
 
+    /**
+     * 个贷审核信息 工作状况 0未审核 1已审核
+     *
+     * @mbggenerated
+     */
     private Integer isWork;
 
+    /**
+     * 个贷审核信息 户口本 0未审核 1已审核
+     *
+     * @mbggenerated
+     */
     private Integer isAccountBook;
 
+    /**
+     * 个人年收入:10万以内；10万以上
+     *
+     * @mbggenerated
+     */
     private String annualIncome;
 
+    /**
+     * 征信报告逾期情况:暂未提供；无；已处理
+     *
+     * @mbggenerated
+     */
     private String overdueReport;
 
+    /**
+     * 重大负债状况:无
+     *
+     * @mbggenerated
+     */
     private String debtSituation;
 
+    /**
+     * 其他平台借款情况:无
+     *
+     * @mbggenerated
+     */
     private String otherBorrowed;
 
+    /**
+     * 借款资金运用情况：不正常,正常
+     *
+     * @mbggenerated
+     */
     private String isFunds;
 
+    /**
+     * 借款人经营状况及财务状况：不正常,正常
+     *
+     * @mbggenerated
+     */
     private String isManaged;
 
+    /**
+     * 借款人还款能力变化情况：不正常,正常
+     *
+     * @mbggenerated
+     */
     private String isAbility;
 
+    /**
+     * 借款人逾期情况：暂无,有
+     *
+     * @mbggenerated
+     */
     private String isOverdue;
 
+    /**
+     * 借款人涉诉情况：暂无,有
+     *
+     * @mbggenerated
+     */
     private String isComplaint;
 
+    /**
+     * 借款人受行政处罚情况：暂无,有
+     *
+     * @mbggenerated
+     */
     private String isPunished;
 
+    /**
+     * 借款人地址
+     *
+     * @mbggenerated
+     */
     private String address;
 
     private static final long serialVersionUID = 1L;

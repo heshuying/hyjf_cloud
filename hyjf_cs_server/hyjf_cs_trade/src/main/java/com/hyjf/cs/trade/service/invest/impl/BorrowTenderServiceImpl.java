@@ -745,19 +745,22 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if(tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0){
                 // 用户选择了优惠券
                 couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
-                if(couponUser==null){
-                    // 获取用户最优优惠券
-                    BestCouponListVO couponConfig = new BestCouponListVO();
-                    MyCouponListRequest request = new MyCouponListRequest();
-                    request.setBorrowNid(tender.getBorrowNid());
-                    request.setUserId(String.valueOf(loginUser.getUserId()));
-                    request.setPlatform(CustomConstants.CLIENT_PC);
-                    request.setMoney("0");
-                    couponConfig = amTradeClient.selectBestCoupon(request);
-                    if (couponConfig != null) {
-                        couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()),tender.getUserId());
-                    }
+                logger.info("用户选择了优惠券  "+JSONObject.toJSONString(couponUser));
+            }else if("".equals(tender.getCouponGrantId())){
+                // 获取用户最优优惠券
+                BestCouponListVO couponConfig = new BestCouponListVO();
+                MyCouponListRequest request = new MyCouponListRequest();
+                request.setBorrowNid(tender.getBorrowNid());
+                request.setUserId(String.valueOf(loginUser.getUserId()));
+                request.setPlatform(CustomConstants.CLIENT_PC);
+                request.setMoney("0");
+                couponConfig = amTradeClient.selectBestCoupon(request);
+                logger.info("最优优惠券   " + JSONObject.toJSONString(couponConfig));
+                if (couponConfig != null) {
+                    couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()), tender.getUserId());
                 }
+            }
+            if(couponUser!=null){
                 String config = "";
                 // 加息券标识（0：禁用，1：可用）    1：体验金，2：加息券 3代金券
                 int interestCoupon = borrowInfo.getBorrowInterestCoupon();
@@ -995,25 +998,32 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (tender.getCouponGrantId() != null && tender.getCouponGrantId() > 0) {
                 couponConfig = amTradeClient.getCouponUser(tender.getCouponGrantId(), userId);
             }
-
+            investInfo.setUsedCouponDes("未使用");
             // 设置收益率
             if (couponConfig != null) {
                 if (couponConfig.getCouponType() == 1) {
                     investInfo.setCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");
                     investInfo.setCouponType("体验金");
+                    investInfo.setCouponName("体验金");
+                    investInfo.setUsedCouponDes("体验金: " + couponConfig.getCouponQuota() + "元");
                 }
                 if (couponConfig.getCouponType() == 2) {
                     investInfo.setCouponDescribe("加息券:  " + couponConfig.getCouponQuota() + "%");
                     investInfo.setCouponType("加息券");
+                    investInfo.setCouponName("加息券");
+                    investInfo.setUsedCouponDes("加息券:  " + couponConfig.getCouponQuota() + "%");
                 }
                 if (couponConfig.getCouponType() == 3) {
                     investInfo.setCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     investInfo.setCouponType("代金券");
+                    investInfo.setCouponName("代金券");
+                    investInfo.setUsedCouponDes("代金券: " + couponConfig.getCouponQuota() + "元");
                     investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
                 }
                 investInfo.setCouponQuota(couponConfig.getCouponQuota().toString());
                 investInfo.setCouponId(tender.getCouponGrantId()+"");
                 investInfo.setIsUsedCoupon("1");
+                investInfo.setIsThereCoupon("1");
             } else {
                 investInfo.setCouponDescribe("暂无可用");
                 investInfo.setCouponName("");
@@ -1208,7 +1218,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setEndTime("");
             investInfo.setButtonWord("");
             investInfo.setStandardValues("");
-            investInfo.setUsedCouponDes("未使用");
             // 投资协议
             if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
                 investInfo.setRealAmount("0");

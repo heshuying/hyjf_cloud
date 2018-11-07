@@ -6,28 +6,83 @@ import java.util.Date;
 public class Utm implements Serializable {
     private Integer utmId;
 
+    /**
+     * 平台
+     *
+     * @mbggenerated
+     */
     private String utmSource;
 
+    /**
+     * 账户推广平台
+     *
+     * @mbggenerated
+     */
     private Integer sourceId;
 
+    /**
+     * 媒介
+     *
+     * @mbggenerated
+     */
     private String utmMedium;
 
+    /**
+     * 关键词
+     *
+     * @mbggenerated
+     */
     private String utmTerm;
 
+    /**
+     * 广告系列内容
+     *
+     * @mbggenerated
+     */
     private String utmContent;
 
+    /**
+     * 广告系列名称
+     *
+     * @mbggenerated
+     */
     private String utmCampaign;
 
+    /**
+     * 推荐人id
+     *
+     * @mbggenerated
+     */
     private Integer utmReferrer;
 
+    /**
+     * 链接地址
+     *
+     * @mbggenerated
+     */
     private String linkAddress;
 
     private String remark;
 
+    /**
+     * 状态 1启用 2禁用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

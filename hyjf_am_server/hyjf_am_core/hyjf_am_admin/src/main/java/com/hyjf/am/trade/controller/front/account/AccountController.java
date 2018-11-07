@@ -209,8 +209,12 @@ public class AccountController extends BaseController {
     public AccountResponse updateOfLoansTender(@RequestBody AccountVO accountVO) {
         AccountResponse response = new AccountResponse();
         if (accountVO != null) {
-            int updateFlag = accountService.updateOfLoansTender(accountVO);
-            response.setUpdateFlag(updateFlag);
+            try{
+                int updateFlag = accountService.updateOfLoansTender(accountVO);
+                response.setUpdateFlag(updateFlag);
+            }catch (Exception e){
+                logger.error("updateOfLoansTender更新用户账户异常",e);
+            }
         }
         return response;
     }

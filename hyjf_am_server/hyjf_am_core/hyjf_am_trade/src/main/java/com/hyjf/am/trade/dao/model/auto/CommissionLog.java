@@ -7,44 +7,134 @@ import java.util.Date;
 public class CommissionLog implements Serializable {
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 推广人id
+     *
+     * @mbggenerated
+     */
     private Integer spreadsUserId;
 
+    /**
+     * 标示名
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 类型
+     *
+     * @mbggenerated
+     */
     private String type;
 
+    /**
+     * 推广类型
+     *
+     * @mbggenerated
+     */
     private String spreadsType;
 
+    /**
+     * 资金类型
+     *
+     * @mbggenerated
+     */
     private String accountType;
 
+    /**
+     * 比例
+     *
+     * @mbggenerated
+     */
     private String scales;
 
+    /**
+     * 借款id
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 投资id
+     *
+     * @mbggenerated
+     */
     private Integer tenderId;
 
+    /**
+     * 还款id
+     *
+     * @mbggenerated
+     */
     private Integer repayId;
 
+    /**
+     * 操作总金额本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal accountAll;
 
+    /**
+     * 本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal accountCapital;
 
+    /**
+     * 利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal accountInterest;
 
+    /**
+     * 金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal account;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private String createIp;
 
+    /**
+     * 0:该提成未发放1:该提成已发放
+     *
+     * @mbggenerated
+     */
     private Integer payStatus;
 
+    /**
+     * 0:该提成无效1:该提成有效
+     *
+     * @mbggenerated
+     */
     private Integer isValid;
 
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

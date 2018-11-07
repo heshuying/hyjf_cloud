@@ -7,52 +7,162 @@ import java.util.Date;
 public class AccountRecharge implements Serializable {
     private Integer id;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
     private String username;
 
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * 交易日期
+     *
+     * @mbggenerated
+     */
     private Integer txDate;
 
+    /**
+     * 交易时间
+     *
+     * @mbggenerated
+     */
     private Integer txTime;
 
+    /**
+     * 交易流水号
+     *
+     * @mbggenerated
+     */
     private Integer seqNo;
 
+    /**
+     * 交易日期+交易时间+交易流水号
+     *
+     * @mbggenerated
+     */
     private String bankSeqNo;
 
+    /**
+     * 资金托管平台(0:汇付,1:江西银行)
+     *
+     * @mbggenerated
+     */
     private Integer isBank;
 
+    /**
+     * 充值状态:0:充值中,1:充值失败,2:充值成功
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal money;
 
+    /**
+     * 费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal fee;
 
+    /**
+     * 实际到账余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal balance;
 
+    /**
+     * 所属银行
+     *
+     * @mbggenerated
+     */
     private String payment;
 
+    /**
+     * 网关类型：QP快捷支付;B2C网关充值;B2B企业充值 
+     *
+     * @mbggenerated
+     */
     private String gateType;
 
+    /**
+     * 类型.1网上充值.0线下充值
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private String operator;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 0pc 1WX 2AND 3IOS 4other
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 银行卡号，导出数据关联时用到
+     *
+     * @mbggenerated
+     */
     private String cardid;
 
+    /**
+     * 消息记录
+     *
+     * @mbggenerated
+     */
     private String message;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

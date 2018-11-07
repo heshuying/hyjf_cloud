@@ -6,18 +6,53 @@ import java.util.Date;
 public class PartnerType implements Serializable {
     private Integer id;
 
+    /**
+     * 类别名称
+     *
+     * @mbggenerated
+     */
     private String typename;
 
+    /**
+     * 是否显示（1显示，0不显示）
+     *
+     * @mbggenerated
+     */
     private Integer state;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer order;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -4,26 +4,81 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class CompanyInfo implements Serializable {
+    /**
+     * 分公司id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 公司名称
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 所属省
+     *
+     * @mbggenerated
+     */
     private String provence;
 
+    /**
+     * 所属市
+     *
+     * @mbggenerated
+     */
     private String city;
 
+    /**
+     * 公司注册时间
+     *
+     * @mbggenerated
+     */
     private String registrationTime;
 
+    /**
+     * 公司简介
+     *
+     * @mbggenerated
+     */
     private String brief;
 
+    /**
+     * 联系电话
+     *
+     * @mbggenerated
+     */
     private String tel;
 
+    /**
+     * 公司banner图
+     *
+     * @mbggenerated
+     */
     private String banner;
 
+    /**
+     * 注册图片1
+     *
+     * @mbggenerated
+     */
     private String regImg1;
 
+    /**
+     * 注册图片2
+     *
+     * @mbggenerated
+     */
     private String regImg2;
 
+    /**
+     * 注册图片3
+     *
+     * @mbggenerated
+     */
     private String regImg3;
 
     private String regImg4;
@@ -40,16 +95,46 @@ public class CompanyInfo implements Serializable {
 
     private String weixin;
 
+    /**
+     * 1启用 0停用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 注册资金
+     *
+     * @mbggenerated
+     */
     private String regMoney;
 
+    /**
+     * 排序,大的在前
+     *
+     * @mbggenerated
+     */
     private Integer sort;
 
+    /**
+     * 列表页图片
+     *
+     * @mbggenerated
+     */
     private String listImg;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;

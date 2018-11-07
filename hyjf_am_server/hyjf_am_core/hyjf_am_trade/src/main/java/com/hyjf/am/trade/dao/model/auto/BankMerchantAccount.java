@@ -7,22 +7,67 @@ import java.util.Date;
 public class BankMerchantAccount implements Serializable {
     private Integer id;
 
+    /**
+     * 子账户名称
+     *
+     * @mbggenerated
+     */
     private String accountName;
 
+    /**
+     * 账户类型
+     *
+     * @mbggenerated
+     */
     private String accountType;
 
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
     private String accountCode;
 
+    /**
+     * 账户余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal accountBalance;
 
+    /**
+     * 可用余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal availableBalance;
 
+    /**
+     * 冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal frost;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 平台子账户是否设置交易密码 0未设置  1已设置
+     *
+     * @mbggenerated
+     */
     private Integer isSetPassword;
 
     private static final long serialVersionUID = 1L;

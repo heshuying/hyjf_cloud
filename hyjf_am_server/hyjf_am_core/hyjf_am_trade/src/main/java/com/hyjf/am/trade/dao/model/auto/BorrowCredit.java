@@ -5,84 +5,279 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class BorrowCredit implements Serializable {
+    /**
+     * 债转id
+     *
+     * @mbggenerated
+     */
     private Integer creditId;
 
+    /**
+     * 债转编号
+     *
+     * @mbggenerated
+     */
     private Integer creditNid;
 
+    /**
+     * 出让人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer creditUserId;
 
+    /**
+     * 出让人用户名
+     *
+     * @mbggenerated
+     */
     private String creditUserName;
 
+    /**
+     * 原标标的编号
+     *
+     * @mbggenerated
+     */
     private String bidNid;
 
+    /**
+     * 标的借款人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer borrowUserId;
 
+    /**
+     * 标的借款人用户名
+     *
+     * @mbggenerated
+     */
     private String borrowUserName;
 
+    /**
+     * 原标年化利率
+     *
+     * @mbggenerated
+     */
     private BigDecimal bidApr;
 
+    /**
+     * 原标标题
+     *
+     * @mbggenerated
+     */
     private String bidName;
 
+    /**
+     * 原始投资订单号(对应borrow_tender表的nid字段)
+     *
+     * @mbggenerated
+     */
     private String tenderNid;
 
+    /**
+     * 转让状态，0.承接进行中，1.承接停止，2完全承接
+     *
+     * @mbggenerated
+     */
     private Integer creditStatus;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer creditOrder;
 
+    /**
+     * 债转期数
+     *
+     * @mbggenerated
+     */
     private Integer creditPeriod;
 
+    /**
+     * 债转期限
+     *
+     * @mbggenerated
+     */
     private Integer creditTerm;
 
+    /**
+     * 债券已经持有天数
+     *
+     * @mbggenerated
+     */
     private Integer creditTermHold;
 
+    /**
+     * 债转本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditCapital;
 
+    /**
+     * 债转总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditAccount;
 
+    /**
+     * 债转总利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterest;
 
+    /**
+     * 需垫付利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterestAdvance;
 
+    /**
+     * 折价率
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditDiscount;
 
+    /**
+     * 总收入，本金+垫付利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditIncome;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditFee;
 
+    /**
+     * 出让价格
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditPrice;
 
+    /**
+     * 已认购本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditCapitalAssigned;
 
+    /**
+     * 已承接利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterestAssigned;
 
+    /**
+     * 已承接垫付利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterestAdvanceAssigned;
 
+    /**
+     * 已还款总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditRepayAccount;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditRepayCapital;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditRepayInterest;
 
+    /**
+     * 债转最后还款日
+     *
+     * @mbggenerated
+     */
     private Integer creditRepayEndTime;
 
+    /**
+     * 上次还款日
+     *
+     * @mbggenerated
+     */
     private Integer creditRepayLastTime;
 
+    /**
+     * 下次还款日
+     *
+     * @mbggenerated
+     */
     private Integer creditRepayNextTime;
 
+    /**
+     * 最终实际还款日
+     *
+     * @mbggenerated
+     */
     private Integer creditRepayYesTime;
 
+    /**
+     * 结束时间
+     *
+     * @mbggenerated
+     */
     private Integer endTime;
 
+    /**
+     * 认购时间
+     *
+     * @mbggenerated
+     */
     private Integer assignTime;
 
+    /**
+     * 投资次数
+     *
+     * @mbggenerated
+     */
     private Integer assignNum;
 
     private Integer recoverPeriod;
 
+    /**
+     * 客户端,0pc,1微信,2android,3ios,4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 债转还款状态 0 未还款 1还款中 2还款完成 3还款失败
+     *
+     * @mbggenerated
+     */
     private Integer repayStatus;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;
