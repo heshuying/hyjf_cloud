@@ -91,6 +91,10 @@ public class FddConsumer extends Consumer {
 							fddHandle.creditGenerateContract(bean);
 						} else if (FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType) {// 计划债转
 							fddHandle.planCreditGenerateContract(bean);
+						}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType){//垫付债转投资
+							fddHandle.creditGenerateContractApply(bean);
+						}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType ){//计划垫付债转
+							fddHandle.planCreditGenerateContractApply(bean);
 						}
 
 					} catch (Exception e) {
