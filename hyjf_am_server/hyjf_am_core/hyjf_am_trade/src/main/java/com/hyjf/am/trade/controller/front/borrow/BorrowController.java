@@ -12,6 +12,7 @@ import com.hyjf.am.response.admin.WebUserInvestListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.BorrowAccountResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
+import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
@@ -32,10 +33,13 @@ import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -596,5 +600,14 @@ public class BorrowController extends BaseController {
 		return response;
 	}
 
+	@ApiOperation(value = "查询借款列表")
+	@RequestMapping("/searchBorrowCustomizeList")
+	public BorrowCustomizeResponse searchBorrowCustomizeList(@RequestBody @Valid BorrowCommonCustomizeVO corrowCommonCustomize) {
+		BorrowCustomizeResponse mcr=new BorrowCustomizeResponse();
+		List<BorrowCustomizeVO> recordList = this.borrowService.selectBorrowList(corrowCommonCustomize);
+		mcr.setResultList(recordList);
+		return mcr;
+
+	}
 
 }
