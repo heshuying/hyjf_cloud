@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.AccountBalanceService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.response.admin.HjhInfoAccountBalanceResponse;
@@ -23,6 +24,9 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
     @Autowired
     private AmTradeClient client;
 
+    @Autowired
+    private CsMessageClient csMessageClient;
+
     /**
      * 查询月度
      * @param request
@@ -36,14 +40,14 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
         response.setCount(count);
         if (count > 0) {
             //分页参数
-            Page page = Page.initPage(request.getPaginatorPage(), request.getPageSize());
+            Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
             page.setTotal(count);
             request.setLimitStart(page.getOffset());
             request.setLimitEnd(page.getLimit());
 
-            List<HjhAccountBalanceVO> voList = client.getHjhAccountBalanceMonthList(request);
+            List<HjhAccountBalanceVO> voList = csMessageClient.getHjhAccountBalanceMonthCount(request).getRecordList();
             response.setResultList(voList);
-            response.setSum(client.getHjhAccountBalanceSum(request));
+            response.setSum(csMessageClient.getHjhAccountBalanceMonthCount(request).getSum());
         }
         return response;
     }
@@ -57,18 +61,18 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
     public HjhInfoAccountBalanceResponse getSearchListByDay(HjhAccountBalanceRequest request) {
         HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
 
-        Integer count = client.getHjhAccountBalancecountByDay(request);
+        Integer count = csMessageClient.getHjhAccountBalanceDayCount(request).getCount();
         response.setCount(count);
         if (count > 0) {
             //分页参数
-            Page page = Page.initPage(request.getPaginatorPage(), request.getPageSize());
+            Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
             page.setTotal(count);
             request.setLimitStart(page.getOffset());
             request.setLimitEnd(page.getLimit());
 
-            List<HjhAccountBalanceVO> voList = client.getHjhAccountBalanceListByDay(request);
+            List<HjhAccountBalanceVO> voList = csMessageClient.getHjhAccountBalanceDayCount(request).getRecordList();
             response.setResultList(voList);
-            response.setSum(client.getHjhAccountBalanceSum(request));
+            response.setSum(csMessageClient.getHjhAccountBalanceDayCount(request).getSum());
         }
         return response;
     }
@@ -93,7 +97,7 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
             String mowei= addTimeEnd+mo;
             request.setAddTimeEnd(mowei);
             try {
-                int count = client.getHjhAccountBalanceMonthCountNew(request);
+                int count = csMessageClient.getHjhAccountBalanceMonthCount(request).getCount();
                 return count;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -101,8 +105,8 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
 
         }
         // 排序
-        Integer count = this.client
-                .getHjhAccountBalanceMonthCount(request);
+        Integer count = csMessageClient
+                .getHjhAccountBalanceMonthCount(request).getCount();
         return count;
     }
 

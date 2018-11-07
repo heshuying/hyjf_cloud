@@ -5,68 +5,228 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class HjhRepay implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 汇计划加入订单号
+     *
+     * @mbggenerated
+     */
     private String accedeOrderId;
 
+    /**
+     * 计划nid
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 锁定期(天)
+     *
+     * @mbggenerated
+     */
     private Integer lockPeriod;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 用户属性
+     *
+     * @mbggenerated
+     */
     private Integer userAttribute;
 
+    /**
+     * 加入金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeAccount;
 
+    /**
+     * 应还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterest;
 
+    /**
+     * 应还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapital;
 
+    /**
+     * 回款状态 0 未回款，1 部分回款 2 已回款
+     *
+     * @mbggenerated
+     */
     private Integer repayStatus;
 
+    /**
+     * 已回款
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAlready;
 
+    /**
+     * 待回款
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayWait;
 
+    /**
+     * 应还金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayShould;
 
+    /**
+     * 实还金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayActual;
 
+    /**
+     * 订单状态 0自动投标中 1锁定中 2退出中 3已退出
+     *
+     * @mbggenerated
+     */
     private Integer orderStatus;
 
+    /**
+     * 计划实际还款时间
+     *
+     * @mbggenerated
+     */
     private Integer repayActualTime;
 
+    /**
+     * 计划应还时间
+     *
+     * @mbggenerated
+     */
     private Integer repayShouldTime;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal planRepayCapital;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal planRepayInterest;
 
+    /**
+     * 已还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayTotal;
 
+    /**
+     * 待还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal planWaitCaptical;
 
+    /**
+     * 待还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal planWaitInterest;
 
+    /**
+     * 待还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal waitTotal;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal serviceFee;
 
+    /**
+     * 实际收益(元)
+     *
+     * @mbggenerated
+     */
     private BigDecimal actualRevenue;
 
+    /**
+     * 实际回款总额(元)
+     *
+     * @mbggenerated
+     */
     private BigDecimal actualPayTotal;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -4,26 +4,81 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ProtocolLog implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 协议id
+     *
+     * @mbggenerated
+     */
     private String protocolId;
 
+    /**
+     * 协议模板名称
+     *
+     * @mbggenerated
+     */
     private String protocolName;
 
+    /**
+     * 版本号
+     *
+     * @mbggenerated
+     */
     private String versionNumber;
 
+    /**
+     * 操作（0.创建1.修改2.删除）
+     *
+     * @mbggenerated
+     */
     private Integer operation;
 
+    /**
+     * 删除人id
+     *
+     * @mbggenerated
+     */
     private Integer deleteUser;
 
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 修改人id
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 删除时间
+     *
+     * @mbggenerated
+     */
     private Date deleteTime;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -5,108 +5,368 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class HjhAccede implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 汇计划加入订单号
+     *
+     * @mbggenerated
+     */
     private String accedeOrderId;
 
+    /**
+     * 计划nid
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 用户属性
+     *
+     * @mbggenerated
+     */
     private Integer userAttribute;
 
+    /**
+     * 推荐人用户userId
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserId;
 
+    /**
+     * 推荐人用户名
+     *
+     * @mbggenerated
+     */
     private String inviteUserName;
 
+    /**
+     * 推荐人用户属性（投资时）
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserAttribute;
 
+    /**
+     * 分公司(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteUserRegionname;
 
+    /**
+     * 部门(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteUserBranchname;
 
+    /**
+     * 团队(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteUserDepartmentname;
 
+    /**
+     * 加入金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeAccount;
 
+    /**
+     * 已投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal alreadyInvest;
 
+    /**
+     * 客户端 0PC，1微信，2安卓APP，3IOS，4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     *  0自动投标中 2自动投标成功 3锁定中 5退出中 7已退出 9自动投资异常
+     *
+     * @mbggenerated
+     */
     private Integer orderStatus;
 
+    /**
+     * 计息时间
+     *
+     * @mbggenerated
+     */
     private Integer countInterestTime;
 
+    /**
+     * 协议发送状态0未发送 1已发送
+     *
+     * @mbggenerated
+     */
     private Integer sendStatus;
 
+    /**
+     * 锁定期
+     *
+     * @mbggenerated
+     */
     private Integer lockPeriod;
 
+    /**
+     * 提成计算状态:0:未计算,1:已计算
+     *
+     * @mbggenerated
+     */
     private Integer commissionStatus;
 
+    /**
+     * 提成计算时间
+     *
+     * @mbggenerated
+     */
     private Integer commissionCountTime;
 
+    /**
+     * 可投金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal availableInvestAccount;
 
+    /**
+     * 计划订单结束日期(yyyyMMdd)
+     *
+     * @mbggenerated
+     */
     private Date endDate;
 
+    /**
+     * 是否完成转让标识(0:未完成转让,1:已完成转让)
+     *
+     * @mbggenerated
+     */
     private Integer creditCompleteFlag;
 
+    /**
+     * 冻结金额（待用）
+     *
+     * @mbggenerated
+     */
     private BigDecimal frostAccount;
 
+    /**
+     * 待收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal waitTotal;
 
+    /**
+     * 待收本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal waitCaptical;
 
+    /**
+     * 待收利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal waitInterest;
 
+    /**
+     * 已收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal receivedTotal;
 
+    /**
+     * 已收利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal receivedInterest;
 
+    /**
+     * 已收本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal receivedCapital;
 
+    /**
+     * 退出时间
+     *
+     * @mbggenerated
+     */
     private Integer quitTime;
 
+    /**
+     * 最后回款时间
+     *
+     * @mbggenerated
+     */
     private Integer lastPaymentTime;
 
+    /**
+     * 实际回款时间
+     *
+     * @mbggenerated
+     */
     private Integer acctualPaymentTime;
 
+    /**
+     * 应还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal shouldPayTotal;
 
+    /**
+     * 应还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal shouldPayCapital;
 
+    /**
+     * 应还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal shouldPayInterest;
 
+    /**
+     * 加入时预期年化收益率(可能跟计划表不一致)
+     *
+     * @mbggenerated
+     */
     private BigDecimal expectApr;
 
+    /**
+     * 计划订单当前持有债权(每一小时计算一次)
+     *
+     * @mbggenerated
+     */
     private BigDecimal fairValue;
 
+    /**
+     * 计划订单清算时债权价值
+     *
+     * @mbggenerated
+     */
     private BigDecimal liquidationFairValue;
 
+    /**
+     * 实际年化收益率
+     *
+     * @mbggenerated
+     */
     private BigDecimal actualApr;
 
+    /**
+     * 投资笔数
+     *
+     * @mbggenerated
+     */
     private Integer investCounts;
 
+    /**
+     * 匹配期
+     *
+     * @mbggenerated
+     */
     private Integer matchDates;
 
+    /**
+     * 清算服务费(元)
+     *
+     * @mbggenerated
+     */
     private BigDecimal lqdServiceFee;
 
+    /**
+     * 清算服务费率
+     *
+     * @mbggenerated
+     */
     private BigDecimal lqdServiceApr;
 
+    /**
+     * 投资服务费率
+     *
+     * @mbggenerated
+     */
     private BigDecimal investServiceApr;
 
+    /**
+     * 清算进度
+     *
+     * @mbggenerated
+     */
     private BigDecimal lqdProgress;
 
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

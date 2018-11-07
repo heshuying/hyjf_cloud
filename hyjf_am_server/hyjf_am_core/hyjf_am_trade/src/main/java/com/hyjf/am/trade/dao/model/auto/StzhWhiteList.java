@@ -6,46 +6,151 @@ import java.util.Date;
 public class StzhWhiteList implements Serializable {
     private Integer id;
 
+    /**
+     * 机构/个人userid
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 机构/个人 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
     private String accountid;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 姓名
+     *
+     * @mbggenerated
+     */
     private String customerName;
 
+    /**
+     * 受托支付收款人userid
+     *
+     * @mbggenerated
+     */
     private Integer stUserId;
 
+    /**
+     * 受托支付收款人用户名
+     *
+     * @mbggenerated
+     */
     private String stUserName;
 
+    /**
+     * 收款人电子账号
+     *
+     * @mbggenerated
+     */
     private String stAccountid;
 
+    /**
+     * 收款人  手机号
+     *
+     * @mbggenerated
+     */
     private String stMobile;
 
+    /**
+     * 收款人名称/姓名
+     *
+     * @mbggenerated
+     */
     private String stCustomerName;
 
+    /**
+     * 审批人
+     *
+     * @mbggenerated
+     */
     private String approvalName;
 
+    /**
+     * 审批时间
+     *
+     * @mbggenerated
+     */
     private String approvalTime;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
     private String instcode;
 
+    /**
+     * 机构名称
+     *
+     * @mbggenerated
+     */
     private String instname;
 
+    /**
+     * 状态 1启用  0禁用
+     *
+     * @mbggenerated
+     */
     private Integer state;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

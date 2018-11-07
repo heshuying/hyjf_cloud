@@ -4,84 +4,284 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class BorrowType implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 类型标识名
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 名称
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 标题
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 描述
+     *
+     * @mbggenerated
+     */
     private String description;
 
+    /**
+     * 借款金额的倍数
+     *
+     * @mbggenerated
+     */
     private Integer accountMultiple;
 
+    /**
+     * 是否启用借款密码
+     *
+     * @mbggenerated
+     */
     private Integer passwordStatus;
 
+    /**
+     * 借款额度类型
+     *
+     * @mbggenerated
+     */
     private String amountType;
 
+    /**
+     * 最低借款额度
+     *
+     * @mbggenerated
+     */
     private Integer amountFirst;
 
+    /**
+     * 最高借款额度
+     *
+     * @mbggenerated
+     */
     private Integer amountEnd;
 
+    /**
+     * vip冻结比例
+     *
+     * @mbggenerated
+     */
     private BigDecimal frostScaleVip;
 
+    /**
+     * 是否管理员可以发布
+     *
+     * @mbggenerated
+     */
     private Integer adminStatus;
 
+    /**
+     * 开始年利率
+     *
+     * @mbggenerated
+     */
     private BigDecimal aprFirst;
 
+    /**
+     * 结束年利率
+     *
+     * @mbggenerated
+     */
     private BigDecimal aprEnd;
 
+    /**
+     * 审核最短时间
+     *
+     * @mbggenerated
+     */
     private Integer checkFirst;
 
+    /**
+     * 审核最长时间
+     *
+     * @mbggenerated
+     */
     private Integer checkEnd;
 
+    /**
+     * 最低投标金额
+     *
+     * @mbggenerated
+     */
     private String tenderAccountMin;
 
+    /**
+     * 最高投标金额
+     *
+     * @mbggenerated
+     */
     private String tenderAccountMax;
 
+    /**
+     * 开始有效期
+     *
+     * @mbggenerated
+     */
     private Integer periodFirst;
 
+    /**
+     * 开始结束期
+     *
+     * @mbggenerated
+     */
     private Integer periodEnd;
 
+    /**
+     * 开始有效期
+     *
+     * @mbggenerated
+     */
     private Integer validateFirst;
 
+    /**
+     * 结束有效期
+     *
+     * @mbggenerated
+     */
     private Integer validateEnd;
 
+    /**
+     * 是否启用奖励
+     *
+     * @mbggenerated
+     */
     private Integer awardStatus;
 
+    /**
+     * 奖励的最小值
+     *
+     * @mbggenerated
+     */
     private BigDecimal awardScaleFirst;
 
+    /**
+     * 奖励的最大值
+     *
+     * @mbggenerated
+     */
     private BigDecimal awardScaleEnd;
 
+    /**
+     * 不能小于此奖励金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal awardAccountFirst;
 
+    /**
+     * 不能大于此奖励金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal awardAccountEnd;
 
+    /**
+     * 是否启用奖励失败也进行奖励
+     *
+     * @mbggenerated
+     */
     private Integer awardFalseStatus;
 
+    /**
+     * 初审自动通过
+     *
+     * @mbggenerated
+     */
     private Integer verifyAutoStatus;
 
+    /**
+     * 初审自动通过备注
+     *
+     * @mbggenerated
+     */
     private String verifyAutoRemark;
 
+    /**
+     * 还款方式
+     *
+     * @mbggenerated
+     */
     private String styles;
 
+    /**
+     * 冻结保证金比例
+     *
+     * @mbggenerated
+     */
     private BigDecimal frostScale;
 
+    /**
+     * 多久开始进行垫付
+     *
+     * @mbggenerated
+     */
     private Integer lateDays;
 
+    /**
+     * vip逾期垫付本息比例
+     *
+     * @mbggenerated
+     */
     private BigDecimal vipLateScale;
 
+    /**
+     * 普通会员垫付本金比例
+     *
+     * @mbggenerated
+     */
     private BigDecimal allLateScale;
 
+    /**
+     * 是否启用部分借款
+     *
+     * @mbggenerated
+     */
     private Integer partStatus;
 
+    /**
+     * 系统满标审核
+     *
+     * @mbggenerated
+     */
     private Integer systemBorrowFullStatus;
 
+    /**
+     * 系统用户还款
+     *
+     * @mbggenerated
+     */
     private Integer systemBorrowRepayStatus;
 
+    /**
+     * 系统逾期自动垫付
+     *
+     * @mbggenerated
+     */
     private Integer systemWebRepayStatus;
 
     private static final long serialVersionUID = 1L;

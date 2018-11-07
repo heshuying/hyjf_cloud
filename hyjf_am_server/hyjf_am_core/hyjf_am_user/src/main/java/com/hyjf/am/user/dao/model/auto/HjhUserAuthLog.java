@@ -4,32 +4,102 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class HjhUserAuthLog implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 订单状态 1：完成  2：未完成
+     *
+     * @mbggenerated
+     */
     private Integer orderStatus;
 
+    /**
+     * 签约类型 0全部开通 1:自动投资签约 2:预约取现 3:无密消费 4:自动债转授权 5:缴费授权 6:还款授权 11:自动投资授权、自动债转授权 12:自动投资授权、缴费授权 13:自动债转授权、缴费授权 14:自动投资授权、自动债转授权、缴费授权
+     *
+     * @mbggenerated
+     */
     private Integer authType;
 
+    /**
+     * 签约操作平台 0:pc  1:微信  2:安卓  3:IOS  4:其他
+     *
+     * @mbggenerated
+     */
     private Integer operateEsb;
 
+    /**
+     * 签约授权时间
+     *
+     * @mbggenerated
+     */
     private Integer authCreateTime;
 
+    /**
+     * 删除标识 0: 未删除    1:已删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建者
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新者
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private static final long serialVersionUID = 1L;

@@ -5,20 +5,60 @@ import java.io.Serializable;
 public class MspAbnormalcredit implements Serializable {
     private String id;
 
+    /**
+     * 申请编号
+     *
+     * @mbggenerated
+     */
     private String applyId;
 
+    /**
+     * 借款日期
+     *
+     * @mbggenerated
+     */
     private String creditstartdate;
 
+    /**
+     * 到期日期
+     *
+     * @mbggenerated
+     */
     private String creditenddate;
 
+    /**
+     * 借款类型
+     *
+     * @mbggenerated
+     */
     private String loantype;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private String loanmoney;
 
+    /**
+     * 担保方式
+     *
+     * @mbggenerated
+     */
     private String assuretype;
 
+    /**
+     * 借款日期
+     *
+     * @mbggenerated
+     */
     private String loanperiods;
 
+    /**
+     * 编号
+     *
+     * @mbggenerated
+     */
     private String num;
 
     private static final long serialVersionUID = 1L;

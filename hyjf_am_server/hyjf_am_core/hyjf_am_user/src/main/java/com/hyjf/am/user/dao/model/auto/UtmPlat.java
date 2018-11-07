@@ -10,24 +10,69 @@ public class UtmPlat implements Serializable {
 
     private String sourceName;
 
+    /**
+     * 0 pc渠道 1 app渠道
+     *
+     * @mbggenerated
+     */
     private Integer sourceType;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 债转标识: 1-默认可转让  0-不可转让
+     *
+     * @mbggenerated
+     */
     private Integer attornFlag;
 
     private String remark;
 
+    /**
+     * 创建者部门
+     *
+     * @mbggenerated
+     */
     private String createGroupCd;
 
+    /**
+     * 更新部门id
+     *
+     * @mbggenerated
+     */
     private Integer updateGroupCd;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

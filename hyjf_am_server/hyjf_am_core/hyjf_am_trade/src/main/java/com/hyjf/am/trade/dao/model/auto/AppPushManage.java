@@ -6,30 +6,95 @@ import java.util.Date;
 public class AppPushManage implements Serializable {
     private Integer id;
 
+    /**
+     * 标题名称
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 跳转类型:0:原生;1:H5;
+     *
+     * @mbggenerated
+     */
     private Integer jumpType;
 
+    /**
+     * 跳转内容:原生,0;H5 URL,1;H5自定义:2;
+     *
+     * @mbggenerated
+     */
     private Integer jumpContent;
 
+    /**
+     * 跳转URL
+     *
+     * @mbggenerated
+     */
     private String jumpUrl;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer orderId;
 
+    /**
+     * 0:禁用;1:启用.
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 开始时间
+     *
+     * @mbggenerated
+     */
     private Date timeStart;
 
+    /**
+     * 结束时间
+     *
+     * @mbggenerated
+     */
     private Date timeEnd;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 缩略图
+     *
+     * @mbggenerated
+     */
     private String thumb;
 
+    /**
+     * 内容
+     *
+     * @mbggenerated
+     */
     private String content;
 
     private static final long serialVersionUID = 1L;

@@ -8,10 +8,25 @@ public class CallcenterServiceUsers implements Serializable {
 
     private String username;
 
+    /**
+     * 0:呼叫中心未分配客服,1呼叫中心已分配客服
+     *
+     * @mbggenerated
+     */
     private Integer assigned;
 
+    /**
+     * 登陆时间
+     *
+     * @mbggenerated
+     */
     private Date insdate;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

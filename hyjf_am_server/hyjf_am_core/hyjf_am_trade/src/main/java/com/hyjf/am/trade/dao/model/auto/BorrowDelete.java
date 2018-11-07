@@ -5,28 +5,88 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class BorrowDelete implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal account;
 
+    /**
+     * 异常类型 0:流标 1：删标
+     *
+     * @mbggenerated
+     */
     private Integer exceptionType;
 
+    /**
+     * 异常原因
+     *
+     * @mbggenerated
+     */
     private String exceptionRemark;
 
+    /**
+     * 项目状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 异常时间
+     *
+     * @mbggenerated
+     */
     private String exceptionTime;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

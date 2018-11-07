@@ -507,4 +507,18 @@ public class CsMessageClientImpl implements CsMessageClient {
                 .postForEntity("http://CS-MESSAGE/cs-message/manager/operationlog/init", request, UserOperationLogResponse.class).getBody();
         return response;
     }
+
+    @Override
+    public HjhInfoAccountBalanceResponse  getHjhAccountBalanceMonthCount(HjhAccountBalanceRequest request) {
+        HjhInfoAccountBalanceResponse response  = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/manager/statis/getHjhAccountBalanceMonthCount", request, HjhInfoAccountBalanceResponse.class).getBody();
+        return response;
+    }
+
+    @Override
+    public HjhInfoAccountBalanceResponse  getHjhAccountBalanceDayCount(HjhAccountBalanceRequest request) {
+        HjhInfoAccountBalanceResponse response  = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/manager/statis/getHjhAccountBalanceDayCount", request, HjhInfoAccountBalanceResponse.class).getBody();
+        return response;
+    }
 }

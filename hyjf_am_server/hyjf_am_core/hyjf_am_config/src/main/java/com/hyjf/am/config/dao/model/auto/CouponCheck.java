@@ -6,22 +6,67 @@ import java.util.Date;
 public class CouponCheck implements Serializable {
     private Integer id;
 
+    /**
+     * 文件名
+     *
+     * @mbggenerated
+     */
     private String fileName;
 
+    /**
+     * 文件路径
+     *
+     * @mbggenerated
+     */
     private String filePath;
 
+    /**
+     * 发放状态 待审核:1,审核通过:2,审核不通过:3
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 审核意见备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 删除标记 已删除:1,未删除:0
+     *
+     * @mbggenerated
+     */
     private Integer deFlag;
 
+    /**
+     * 添加人
+     *
+     * @mbggenerated
+     */
     private String createName;
 
+    /**
+     * 更新人
+     *
+     * @mbggenerated
+     */
     private String updateName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
