@@ -3,15 +3,13 @@
  */
 package com.hyjf.am.trade.service.front.batch.impl;
 
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.batch.BatchHjhBorrowRepayService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,25 +19,7 @@ import java.util.List;
  * @version BatchHjhBorrowRepayServiceImpl, v0.1 2018/6/27 9:21
  */
 @Service
-public class BatchHjhBorrowRepayServiceImpl implements BatchHjhBorrowRepayService {
-
-    @Autowired
-    BorrowTenderMapper borrowTenderMapper;
-
-    @Autowired
-    HjhAccedeMapper hjhAccedeMapper;
-
-    @Autowired
-    HjhPlanMapper hjhPlanMapper;
-
-    @Autowired
-    BorrowRecoverMapper borrowRecoverMapper;
-
-    @Autowired
-    HjhRepayMapper hjhRepayMapper;
-
-    @Autowired
-    BatchHjhBorrowRepayCustomizeMapper batchHjhBorrowRepayCustomizeMapper;
+public class BatchHjhBorrowRepayServiceImpl extends BaseServiceImpl implements BatchHjhBorrowRepayService {
 
     @Override
     public List<BorrowTender> selectBorrowTenderListByAccedeOrderId(String accedeOrderId) {

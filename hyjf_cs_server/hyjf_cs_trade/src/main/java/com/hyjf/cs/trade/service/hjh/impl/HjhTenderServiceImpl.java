@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.service.hjh.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
@@ -964,9 +965,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         logger.info("投资明细表插入完毕,userId{},平台{},结果{}", userId, request.getPlatform(), trenderFlag);
         if (trenderFlag) {
             //加入明细表插表成功的前提下，继续
+            // 投资成功后,发送CRM绩效统计
+            CrmInvestMsgBean crmInvestMsgBean = new CrmInvestMsgBean();
+            crmInvestMsgBean.setInvestType(1);
+            crmInvestMsgBean.setOrderId(planAccede.getAccedeOrderId());
+            //加入明细表插表成功的前提下，继续
             //crm投资推送
             try {
-                amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(planAccede)));
+                amTradeProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(crmInvestMsgBean)),2);
             } catch (Exception e) {
                 logger.error("发送CRM消息失败:" + e.getMessage());
             }

@@ -197,7 +197,7 @@ public interface RepayManageService extends BaseTradeService {
      * @auther: wgx
      * @date: 2018/10/16
      */
-    WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account);
+    WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account, WebResult webResult);
     /**
      * 代偿冻结（合规要求）
      * @auther: wgx
