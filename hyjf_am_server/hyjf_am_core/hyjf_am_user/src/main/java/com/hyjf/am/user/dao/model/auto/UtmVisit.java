@@ -6,24 +6,74 @@ import java.util.Date;
 public class UtmVisit implements Serializable {
     private Integer id;
 
+    /**
+     * 推广链接id
+     *
+     * @mbggenerated
+     */
     private Integer utmId;
 
+    /**
+     * 访问ip
+     *
+     * @mbggenerated
+     */
     private String ip;
 
+    /**
+     * 操作系统
+     *
+     * @mbggenerated
+     */
     private String os;
 
+    /**
+     * 浏览器
+     *
+     * @mbggenerated
+     */
     private String browser;
 
+    /**
+     * 国家
+     *
+     * @mbggenerated
+     */
     private String country;
 
+    /**
+     * 省份
+     *
+     * @mbggenerated
+     */
     private String province;
 
+    /**
+     * 城市
+     *
+     * @mbggenerated
+     */
     private String city;
 
+    /**
+     * 是否登录 0未登录 1登录
+     *
+     * @mbggenerated
+     */
     private Integer login;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

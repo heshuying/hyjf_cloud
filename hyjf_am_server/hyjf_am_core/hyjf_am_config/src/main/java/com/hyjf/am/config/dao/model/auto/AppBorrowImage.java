@@ -6,6 +6,11 @@ import java.util.Date;
 public class AppBorrowImage implements Serializable {
     private Integer id;
 
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private String borrowImage;
 
     private String borrowImageTitle;
@@ -18,6 +23,11 @@ public class AppBorrowImage implements Serializable {
 
     private String notes;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer sort;
 
     private String pageUrl;
@@ -26,18 +36,53 @@ public class AppBorrowImage implements Serializable {
 
     private String version;
 
+    /**
+     * 配置状态：0启用 1禁用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 最大版本号
+     *
+     * @mbggenerated
+     */
     private String versionMax;
 
+    /**
+     * 跳转标示
+     *
+     * @mbggenerated
+     */
     private String jumpName;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

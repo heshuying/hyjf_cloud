@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccountInfo;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccountInfoExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BankMerchantAccountInfoMapper {
     int countByExample(BankMerchantAccountInfoExample example);

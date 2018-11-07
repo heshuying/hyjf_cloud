@@ -5,16 +5,41 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class DebtBail implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
     private Integer borrowUid;
 
+    /**
+     * 更新用户
+     *
+     * @mbggenerated
+     */
     private Integer operaterUid;
 
+    /**
+     * 保证金
+     *
+     * @mbggenerated
+     */
     private BigDecimal bailNum;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -412,4 +412,50 @@ public class AccountVO extends BaseVO implements Serializable {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+
+    @Override
+    public String toString() {
+        return "AccountVO{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", accountId='" + accountId + '\'' +
+                ", total=" + total +
+                ", balance=" + balance +
+                ", balanceCash=" + balanceCash +
+                ", balanceFrost=" + balanceFrost +
+                ", frost=" + frost +
+                ", await=" + await +
+                ", repay=" + repay +
+                ", planRepayInterest=" + planRepayInterest +
+                ", planBalance=" + planBalance +
+                ", planFrost=" + planFrost +
+                ", planAccedeTotal=" + planAccedeTotal +
+                ", planAccedeBalance=" + planAccedeBalance +
+                ", planAccedeFrost=" + planAccedeFrost +
+                ", planAccountWait=" + planAccountWait +
+                ", planCapitalWait=" + planCapitalWait +
+                ", planInterestWait=" + planInterestWait +
+                ", bankTotal=" + bankTotal +
+                ", bankBalance=" + bankBalance +
+                ", bankFrost=" + bankFrost +
+                ", bankWaitRepay=" + bankWaitRepay +
+                ", bankWaitCapital=" + bankWaitCapital +
+                ", bankWaitInterest=" + bankWaitInterest +
+                ", bankWaitRepayOrg=" + bankWaitRepayOrg +
+                ", bankInterestSum=" + bankInterestSum +
+                ", bankInvestSum=" + bankInvestSum +
+                ", bankAwait=" + bankAwait +
+                ", bankAwaitCapital=" + bankAwaitCapital +
+                ", bankAwaitInterest=" + bankAwaitInterest +
+                ", bankAwaitOrg=" + bankAwaitOrg +
+                ", bankBalanceCash=" + bankBalanceCash +
+                ", bankFrostCash=" + bankFrostCash +
+                ", delFlag=" + delFlag +
+                ", createUser=" + createUser +
+                ", updateUser=" + updateUser +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

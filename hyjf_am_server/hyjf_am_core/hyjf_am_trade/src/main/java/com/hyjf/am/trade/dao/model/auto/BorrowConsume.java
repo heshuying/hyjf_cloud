@@ -12,10 +12,25 @@ public class BorrowConsume implements Serializable {
 
     private Integer projectType;
 
+    /**
+     * 借款人用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 借款人信息 借款类型 1：公司 2：个人
+     *
+     * @mbggenerated
+     */
     private Integer companyOrPersonal;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private String username;
 
     private String province;
@@ -24,10 +39,25 @@ public class BorrowConsume implements Serializable {
 
     private String area;
 
+    /**
+     * 企业注册时间
+     *
+     * @mbggenerated
+     */
     private String comRegTime;
 
+    /**
+     * 注册资本
+     *
+     * @mbggenerated
+     */
     private Integer regCaptial;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

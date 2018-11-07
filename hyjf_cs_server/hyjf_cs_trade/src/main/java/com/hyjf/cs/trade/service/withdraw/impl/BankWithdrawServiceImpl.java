@@ -727,7 +727,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
 
-        if ((account.compareTo(new BigDecimal(50001)) > 0) && StringUtils.isBlank(payAllianceCode)) {
+        if ((account.compareTo(new BigDecimal(50000)) > 0) && StringUtils.isBlank(payAllianceCode)) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED);
         }
 

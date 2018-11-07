@@ -665,7 +665,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 查询优惠券的投资
             //BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
             // 优惠券收益
-            data.put("couponQuota", couponUser.getCouponQuota());
+
             data.put("couponType", couponUser.getCouponType());
             BigDecimal couponInterest = BigDecimal.ZERO;
             if (couponUser.getCouponType() == 1) {
@@ -682,10 +682,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (couponUser != null && couponUser.getCouponType() == 3) {
                 couponInterest = couponInterest.subtract(couponUser.getCouponQuota());
                 data.put("income", df.format(earnings.add(couponInterest)));
+                data.put("couponQuota", couponUser.getCouponQuota()+"元");
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
                 data.put("income", df.format(earnings.add(couponInterest)));
+                data.put("couponQuota", couponUser.getCouponQuota()+"元");
             } else {
                 data.put("income", df.format(earnings.add(couponInterest)));
+                data.put("couponQuota", couponUser.getCouponQuota()+ "%");
             }
             //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
             data.put("couponInterest", df.format(couponInterest));
@@ -745,19 +748,22 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if(tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0){
                 // 用户选择了优惠券
                 couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
-                if(couponUser==null){
-                    // 获取用户最优优惠券
-                    BestCouponListVO couponConfig = new BestCouponListVO();
-                    MyCouponListRequest request = new MyCouponListRequest();
-                    request.setBorrowNid(tender.getBorrowNid());
-                    request.setUserId(String.valueOf(loginUser.getUserId()));
-                    request.setPlatform(CustomConstants.CLIENT_PC);
-                    request.setMoney("0");
-                    couponConfig = amTradeClient.selectBestCoupon(request);
-                    if (couponConfig != null) {
-                        couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()),tender.getUserId());
-                    }
+                logger.info("用户选择了优惠券  "+JSONObject.toJSONString(couponUser));
+            }else if(tender.getCouponGrantId()==null || tender.getCouponGrantId().intValue()==0){
+                // 获取用户最优优惠券
+                BestCouponListVO couponConfig = new BestCouponListVO();
+                MyCouponListRequest request = new MyCouponListRequest();
+                request.setBorrowNid(tender.getBorrowNid());
+                request.setUserId(String.valueOf(loginUser.getUserId()));
+                request.setPlatform(CustomConstants.CLIENT_PC);
+                request.setMoney("0");
+                couponConfig = amTradeClient.selectBestCoupon(request);
+                logger.info("最优优惠券   " + JSONObject.toJSONString(couponConfig));
+                if (couponConfig != null) {
+                    couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()), tender.getUserId());
                 }
+            }
+            if(couponUser!=null){
                 String config = "";
                 // 加息券标识（0：禁用，1：可用）    1：体验金，2：加息券 3代金券
                 int interestCoupon = borrowInfo.getBorrowInterestCoupon();

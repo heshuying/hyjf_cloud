@@ -4,20 +4,60 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class ProductInterest implements Serializable {
+    /**
+     * ID
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 计息金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 计息天数
+     *
+     * @mbggenerated
+     */
     private Integer interestDays;
 
+    /**
+     * 日利率
+     *
+     * @mbggenerated
+     */
     private BigDecimal interestRate;
 
+    /**
+     * 总利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal interest;
 
+    /**
+     * 时间
+     *
+     * @mbggenerated
+     */
     private Integer interestTime;
 
     private static final long serialVersionUID = 1L;

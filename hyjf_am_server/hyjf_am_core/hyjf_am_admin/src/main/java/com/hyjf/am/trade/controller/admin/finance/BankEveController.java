@@ -42,9 +42,9 @@ public class BankEveController extends BaseController {
 		String returnCode = Response.FAIL;
 		Map<String, Object> mapParam = paramSet(request);
 		int count = eveService.countRecord(mapParam);
-		Paginator paginator = new Paginator(request.getPaginatorPage(), count, request.getLimit());
-		if (request.getLimit() == 0) {
-			paginator = new Paginator(request.getPaginatorPage(), count);
+		Paginator paginator = new Paginator(request.getPaginatorPage(), count, request.getPageSize());
+		if (request.getPageSize() == 0) {
+			paginator = new Paginator(request.getCurrPage(), count);
 		}
 		List<EveLogCustomize> manageList = eveService.selectBankEveInfoList(mapParam, paginator.getOffset(), paginator.getLimit());
 		if (count > 0) {

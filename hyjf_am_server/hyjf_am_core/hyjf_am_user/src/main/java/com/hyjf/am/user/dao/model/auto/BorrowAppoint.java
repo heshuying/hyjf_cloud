@@ -5,44 +5,144 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class BorrowAppoint implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 预约用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 预约订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 投资订单号
+     *
+     * @mbggenerated
+     */
     private String tenderNid;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 项目期限
+     *
+     * @mbggenerated
+     */
     private Integer borrowPeriod;
 
+    /**
+     * 年华收益
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowApr;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowAccount;
 
+    /**
+     * 预约金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal account;
 
+    /**
+     * 预约状态 0 预约失败 1预约成功 2取消预约 
+     *
+     * @mbggenerated
+     */
     private Integer appointStatus;
 
+    /**
+     * 预约时间
+     *
+     * @mbggenerated
+     */
     private Date appointTime;
 
+    /**
+     * 预约备注
+     *
+     * @mbggenerated
+     */
     private String appointRemark;
 
+    /**
+     * 撤销时间
+     *
+     * @mbggenerated
+     */
     private Date cancelTime;
 
+    /**
+     * 投资状态 0投资中 1投资成功 2投资失败
+     *
+     * @mbggenerated
+     */
     private Integer tenderStatus;
 
+    /**
+     * 投资时间
+     *
+     * @mbggenerated
+     */
     private Date tenderTime;
 
+    /**
+     * 投资备注
+     *
+     * @mbggenerated
+     */
     private String tenderRemark;
 
+    /**
+     * 创建者id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

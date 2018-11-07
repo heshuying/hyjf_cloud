@@ -58,10 +58,18 @@ public class BankJournalController {
         JSONObject jsonObject = new JSONObject();
 
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
+        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
         String status="000";
         String statusDesc = "未检索到相应的列表数据";
+        if(count<1){
+            jsonObject.put("count",0);
+            jsonObject.put("record",null);
+            jsonObject.put("status",status);
+            jsonObject.put("statusDesc",statusDesc);
+            return jsonObject;
+        }
+
         if(null!=bankEveList&&bankEveList.size()>0){
-            Integer count = bankEveList.size();
             jsonObject.put("count",count);
             jsonObject.put("record",bankEveList);
             status =  "000";
@@ -84,7 +92,7 @@ public class BankJournalController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "银行交易明细", notes = "银行交易明细导出")
+    @ApiOperation(value = "银行交易明细导出", notes = "银行交易明细导出")
     @PostMapping(value = "/exportbankeeve")
     public void exportBankeeveList(HttpServletRequest request , HttpServletResponse response, @RequestBody BankEveRequest bankEveRequest) throws UnsupportedEncodingException {
 

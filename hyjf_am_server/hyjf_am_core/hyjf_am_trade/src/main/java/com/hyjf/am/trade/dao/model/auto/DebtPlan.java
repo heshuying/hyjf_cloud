@@ -5,140 +5,480 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class DebtPlan implements Serializable {
+    /**
+     * 计划id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 计划类型，关联计划类型表hyjf_debt_plan_config
+     *
+     * @mbggenerated
+     */
     private Integer debtPlanType;
 
+    /**
+     * 计划类型名称
+     *
+     * @mbggenerated
+     */
     private String debtPlanTypeName;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String debtPlanNid;
 
+    /**
+     * 预发布计划编号
+     *
+     * @mbggenerated
+     */
     private Integer debtPrePlanNid;
 
+    /**
+     * 计划名称
+     *
+     * @mbggenerated
+     */
     private String debtPlanName;
 
+    /**
+     * 计划金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtPlanMoney;
 
+    /**
+     * 计划加入金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtPlanMoneyYes;
 
+    /**
+     * 计划余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtPlanMoneyWait;
 
+    /**
+     * 计划完成率
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtPlanAccountScale;
 
+    /**
+     * 计划状态 0 发起中；1 待审核；2审核不通过；3待开放；4募集中；5锁定中；6清算中；7清算完成，8未还款，9还款中，10还款完成
+     *
+     * @mbggenerated
+     */
     private Integer debtPlanStatus;
 
+    /**
+     * 取整金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal roundAmount;
 
+    /**
+     * 计划加入次数
+     *
+     * @mbggenerated
+     */
     private Integer accedeTimes;
 
+    /**
+     * 预期年化利率
+     *
+     * @mbggenerated
+     */
     private BigDecimal expectApr;
 
+    /**
+     * 实际年化利率
+     *
+     * @mbggenerated
+     */
     private BigDecimal actualApr;
 
+    /**
+     * 投资范围
+     *
+     * @mbggenerated
+     */
     private String investmentScope;
 
+    /**
+     * 退出方式:0:到期退出
+     *
+     * @mbggenerated
+     */
     private Integer debtQuitStyle;
 
+    /**
+     * 退出天数
+     *
+     * @mbggenerated
+     */
     private Integer debtQuitPeriod;
 
+    /**
+     * 是否立即审核:yes:立即提交审核,no:暂不提交审核
+     *
+     * @mbggenerated
+     */
     private String isAudits;
 
+    /**
+     * 申购开始时间
+     *
+     * @mbggenerated
+     */
     private Integer buyBeginTime;
 
+    /**
+     * 申购结束时间
+     *
+     * @mbggenerated
+     */
     private Integer buyEndTime;
 
+    /**
+     * 申购期限（天）
+     *
+     * @mbggenerated
+     */
     private Integer buyPeriodDay;
 
+    /**
+     * 申购期限（小时）
+     *
+     * @mbggenerated
+     */
     private Integer buyPeriodHour;
 
+    /**
+     * 申购总期限（小时）
+     *
+     * @mbggenerated
+     */
     private Integer buyPeriod;
 
+    /**
+     * 锁定期(月)
+     *
+     * @mbggenerated
+     */
     private Integer debtLockPeriod;
 
+    /**
+     * 最低投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtMinInvestment;
 
+    /**
+     * 投资增量
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtInvestmentIncrement;
 
+    /**
+     * 最高投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtMaxInvestment;
 
+    /**
+     * 计划可用余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtPlanBalance;
 
+    /**
+     * 计划投资汇资产冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtPlanFrost;
 
+    /**
+     * 满标/到期时间
+     *
+     * @mbggenerated
+     */
     private Integer fullExpireTime;
 
+    /**
+     * 应还款总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountAll;
 
+    /**
+     * 应还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountInterest;
 
+    /**
+     * 应还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountCapital;
 
+    /**
+     * 实还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountYes;
 
+    /**
+     * 实还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountInterestYes;
 
+    /**
+     * 实还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountCapitalYes;
 
+    /**
+     * 未还款总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountWait;
 
+    /**
+     * 未还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountInterestWait;
 
+    /**
+     * 未还款本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountCapitalWait;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal serviceFee;
 
+    /**
+     * 最小投资笔数
+     *
+     * @mbggenerated
+     */
     private Integer minInvestNumber;
 
+    /**
+     * 最大投资笔数
+     *
+     * @mbggenerated
+     */
     private Integer maxInvestNumber;
 
+    /**
+     * 投资循环次数
+     *
+     * @mbggenerated
+     */
     private Integer cycleTimes;
 
+    /**
+     * 无视规则投资次数
+     *
+     * @mbggenerated
+     */
     private Integer unableCycleTimes;
 
+    /**
+     * 投资金额界定
+     *
+     * @mbggenerated
+     */
     private BigDecimal investAccountLimit;
 
+    /**
+     * 最低剩余投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal minSurplusInvestAccount;
 
+    /**
+     * 应清算时间
+     *
+     * @mbggenerated
+     */
     private Integer liquidateShouldTime;
 
+    /**
+     * 实际清算时间
+     *
+     * @mbggenerated
+     */
     private Integer liquidateFactTime;
 
+    /**
+     * 还款时间
+     *
+     * @mbggenerated
+     */
     private Integer repayTime;
 
+    /**
+     * 审核人
+     *
+     * @mbggenerated
+     */
     private Integer auditUserId;
 
+    /**
+     * 审核时间
+     *
+     * @mbggenerated
+     */
     private Integer auditTime;
 
+    /**
+     * 审核备注
+     *
+     * @mbggenerated
+     */
     private String auditRemark;
 
+    /**
+     * 计划进入锁定期时间
+     *
+     * @mbggenerated
+     */
     private Integer planLockTime;
 
+    /**
+     * 提成状态:0:计算提成,1:提成明细
+     *
+     * @mbggenerated
+     */
     private Integer commissionStatus;
 
+    /**
+     * 提成总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal commissionTotal;
 
+    /**
+     * 清算进度百分比
+     *
+     * @mbggenerated
+     */
     private BigDecimal liquidateApr;
 
+    /**
+     * 是否可用券：0 不可用 1 体验金 2 加息券 3 代金券
+     *
+     * @mbggenerated
+     */
     private String couponConfig;
 
+    /**
+     * 清算已经到账金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal liquidateArrivalAmount;
 
+    /**
+     * 最迟还款日
+     *
+     * @mbggenerated
+     */
     private Integer repayTimeLast;
 
+    /**
+     * web是否表示(汇添金测试用:0:表示,1:不表示)
+     *
+     * @mbggenerated
+     */
     private Integer showStatus;
 
+    /**
+     * 删除标识 0：未删除，1：已删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 发起人id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建人用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 修改人用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
