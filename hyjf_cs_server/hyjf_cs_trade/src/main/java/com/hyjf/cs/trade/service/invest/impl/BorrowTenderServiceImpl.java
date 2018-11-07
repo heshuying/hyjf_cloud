@@ -665,7 +665,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 查询优惠券的投资
             //BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
             // 优惠券收益
-            data.put("couponQuota", couponUser.getCouponQuota());
+
             data.put("couponType", couponUser.getCouponType());
             BigDecimal couponInterest = BigDecimal.ZERO;
             if (couponUser.getCouponType() == 1) {
@@ -682,10 +682,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (couponUser != null && couponUser.getCouponType() == 3) {
                 couponInterest = couponInterest.subtract(couponUser.getCouponQuota());
                 data.put("income", df.format(earnings.add(couponInterest)));
+                data.put("couponQuota", couponUser.getCouponQuota()+"元");
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
                 data.put("income", df.format(earnings.add(couponInterest)));
+                data.put("couponQuota", couponUser.getCouponQuota()+"元");
             } else {
                 data.put("income", df.format(earnings.add(couponInterest)));
+                data.put("couponQuota", couponUser.getCouponQuota()+ "%");
             }
             //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
             data.put("couponInterest", df.format(couponInterest));
@@ -742,12 +745,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 未登录，不计算优惠券
         if (loginUser != null) {
             // 获取用户最优优惠券
-            logger.info("优惠券为："+tender.getCouponGrantId());
             if(tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0){
                 // 用户选择了优惠券
                 couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
                 logger.info("用户选择了优惠券  "+JSONObject.toJSONString(couponUser));
-            }else if(tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()==0){
+            }else if(tender.getCouponGrantId()==null || tender.getCouponGrantId().intValue()==0){
                 // 获取用户最优优惠券
                 BestCouponListVO couponConfig = new BestCouponListVO();
                 MyCouponListRequest request = new MyCouponListRequest();
