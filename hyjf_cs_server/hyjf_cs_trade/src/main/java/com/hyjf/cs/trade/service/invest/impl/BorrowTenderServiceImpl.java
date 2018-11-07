@@ -742,11 +742,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 未登录，不计算优惠券
         if (loginUser != null) {
             // 获取用户最优优惠券
+            logger.info("优惠券为："+tender.getCouponGrantId());
             if(tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0){
                 // 用户选择了优惠券
                 couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
                 logger.info("用户选择了优惠券  "+JSONObject.toJSONString(couponUser));
-            }else if("".equals(tender.getCouponGrantId())){
+            }else if(tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()==0){
                 // 获取用户最优优惠券
                 BestCouponListVO couponConfig = new BestCouponListVO();
                 MyCouponListRequest request = new MyCouponListRequest();
