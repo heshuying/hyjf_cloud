@@ -338,7 +338,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
             bean.setTenderType(1);
             // 法大大生成合同
             try {
-                fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                fddProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)),2);
             } catch (MQException e) {
                 logger.error("法大大合同生成MQ发送失败！");
                 return new AdminResult(BaseResult.FAIL, "法大大合同生成MQ发送失败");
