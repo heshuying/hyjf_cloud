@@ -1,6 +1,7 @@
 package com.hyjf.common.util;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.math.NumberUtils;
@@ -393,6 +394,8 @@ public class CommonUtils {
     public static int checkAuthStatus(Integer autoRepayStatus,Integer paymentAuthStatus) {
 		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(KEY_PAYMENT_AUTH);
 		HjhUserAuthConfigVO repayCconfig = getAuthConfigFromCache(KEY_REPAYMENT_AUTH);
+		logger.info("paymenthCconfig is :{}", JSONObject.toJSON(paymenthCconfig));
+		logger.info("repayCconfig is :{}", JSONObject.toJSON(repayCconfig));
 		if (paymenthCconfig != null && repayCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0
 				&& repayCconfig.getEnabledStatus() - 1 == 0) {
 			// 如果两个都开启了

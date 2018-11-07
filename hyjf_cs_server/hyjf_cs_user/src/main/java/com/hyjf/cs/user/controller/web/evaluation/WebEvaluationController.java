@@ -13,7 +13,6 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCilentIP;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -49,7 +48,8 @@ public class WebEvaluationController extends BaseUserController {
      */
     @ApiOperation(value = "测评问题以及评分标准", notes = "测评问题以及评分标准")
     @PostMapping(value = "/questionnaireInit", produces = "application/json; charset=utf-8")
-    public Map<String, Object> questionnaireInit(HttpServletRequest request,@RequestHeader(value = "userId") int userId) {
+    public WebResult<Map<String, Object>> questionnaireInit(HttpServletRequest request,@RequestHeader(value = "userId") int userId) {
+        WebResult<Map<String, Object>> webResult = new WebResult<>();
         Map<String, Object> result = new HashMap<>();
         //测评问题
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY+userId, WebViewUserVO.class);
@@ -72,7 +72,8 @@ public class WebEvaluationController extends BaseUserController {
         //评分标准
         List<EvalationVO> evalationList = evaluationService.getEvalationRecord();
         result.put("evalationList", evalationList);
-        return result;
+        webResult.setData(result);
+        return webResult;
     }
 
     /**

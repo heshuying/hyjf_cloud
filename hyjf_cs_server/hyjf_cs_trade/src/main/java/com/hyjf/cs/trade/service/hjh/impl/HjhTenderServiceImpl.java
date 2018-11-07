@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -193,6 +194,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setMoney(money);
         int availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(request);
         investInfo.setCouponAvailableCount(availableCouponListCount);
+        if(couponId==null || couponId.intValue()==0){
+            BestCouponListVO bestCouponListVO = amTradeClient.selectHJHBestCoupon(request);
+            logger.info("最优优惠券   " + JSONObject.toJSONString(bestCouponListVO));
+            if(bestCouponListVO!=null){
+                couponUser = amTradeClient.getCouponUser(Integer.parseInt(bestCouponListVO.getUserCouponId()),tender.getUserId());
+            }
+            BestCouponListVO couponFront = new BestCouponListVO();
+            couponFront.setCouponQuotaStr(bestCouponListVO.getCouponQuotaStr());
+            couponFront.setUserCouponId(bestCouponListVO.getUserCouponId());
+            couponFront.setCouponType(bestCouponListVO.getCouponType());
+            investInfo.setCouponConfig(couponFront);
+        }
         /** 可用优惠券张数结束 */
 
         /** 获取用户优惠券总张数开始 */

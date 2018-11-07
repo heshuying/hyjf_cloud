@@ -21,6 +21,8 @@ import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -193,6 +195,7 @@ public class ProtocolsController extends BaseController {
 				logger.info("---------------法大大协议上传模板,上传FTP服务器失败！");
 				return adminResult;
 			}
+			logger.info("模板下载地址打印，模板编号：{}，下载地址：{}",templetId,httpUrl);
 
 			String userId = null;
 			AdminSystemVO user = getUser(request);
@@ -236,12 +239,20 @@ public class ProtocolsController extends BaseController {
 					files.add(fileMeta);
 					adminResult.setData(files);
 					adminResult.setStatus(SUCCESS);
-                    adminResult.setStatusDesc(SUCCESS_DESC);
-                    return adminResult;
+					adminResult.setStatusDesc(SUCCESS_DESC);
+					try {
+						// 上传成功后将模板下载地址存入redis
+						String key = RedisConstants.TEMPLATE_UPLOAD_URL + templetId;
+						RedisUtils.set(key,httpUrl);
+					} catch (Exception e) {
+						e.printStackTrace();
+						logger.error("模板下载地址存入redis失败！");
+					}
+					return adminResult;
                 }else{
-                    adminResult.setStatus(FAIL);
-                    adminResult.setStatusDesc(dzqzCallBean.getMsg());
-                    return adminResult;
+					adminResult.setStatus(FAIL);
+					adminResult.setStatusDesc(dzqzCallBean.getMsg());
+					return adminResult;
 
                 }
             }
