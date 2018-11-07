@@ -761,12 +761,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.info("最优优惠券   " + JSONObject.toJSONString(couponConfig));
                 if (couponConfig != null) {
                     couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()), tender.getUserId());
+                    BestCouponListVO couponFront = new BestCouponListVO();
+                    couponFront.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
+                    couponFront.setUserCouponId(couponConfig.getUserCouponId());
+                    couponFront.setCouponType(couponConfig.getCouponType());
+                    investInfo.setCouponConfig(couponFront);
                 }
-                BestCouponListVO couponFront = new BestCouponListVO();
-                couponFront.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
-                couponFront.setUserCouponId(couponConfig.getUserCouponId());
-                couponFront.setCouponType(couponConfig.getCouponType());
-                investInfo.setCouponConfig(couponFront);
             }
             if(couponUser!=null && (tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0)){
                 String config = "";
@@ -1229,10 +1229,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setStandardValues("");
             // 投资协议
             if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
-                investInfo.setRealAmount("0");
+                investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal("0")));
                 investInfo.setButtonWord("确认");
             } else {
-                investInfo.setRealAmount("¥" + money);
+                investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money)));
                 investInfo.setButtonWord("确认投资" + CommonUtils.formatAmount(null, money) + "元");
             }
 
