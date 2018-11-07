@@ -4,28 +4,88 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class DirectionalTransferAssociatedLog implements Serializable {
+    /**
+     * 主键id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 转出账户用户名
+     *
+     * @mbggenerated
+     */
     private String turnOutUsername;
 
+    /**
+     * 转出账户用户编号
+     *
+     * @mbggenerated
+     */
     private Integer turnOutUserId;
 
+    /**
+     * 转出账户用户手机号
+     *
+     * @mbggenerated
+     */
     private String turnOutMobile;
 
+    /**
+     * 转出账户用户汇付客户号
+     *
+     * @mbggenerated
+     */
     private Long turnOutChinapnrUsrcustid;
 
+    /**
+     * 转入账户用户名
+     *
+     * @mbggenerated
+     */
     private String shiftToUsername;
 
+    /**
+     * 转入账户用户编号
+     *
+     * @mbggenerated
+     */
     private Integer shiftToUserId;
 
+    /**
+     * 转入账户用户手机号
+     *
+     * @mbggenerated
+     */
     private String shiftToMobile;
 
+    /**
+     * 转入账户用户汇付客户号
+     *
+     * @mbggenerated
+     */
     private Long shiftToChinapnrUsrcustid;
 
+    /**
+     * 关联状态(0未授权，1成功，2失败)
+     *
+     * @mbggenerated
+     */
     private Integer associatedState;
 
+    /**
+     * 关联时间
+     *
+     * @mbggenerated
+     */
     private Date associatedTime;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private static final long serialVersionUID = 1L;

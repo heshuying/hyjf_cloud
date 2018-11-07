@@ -4,20 +4,60 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UserEvalationBehavior implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 测试用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户行为
+     *
+     * @mbggenerated
+     */
     private String behavior;
 
+    /**
+     * 测评开始时间
+     *
+     * @mbggenerated
+     */
     private Date statrTime;
 
+    /**
+     * 测试结束时间
+     *
+     * @mbggenerated
+     */
     private Date endTime;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remarks;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

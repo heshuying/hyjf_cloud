@@ -4,36 +4,116 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class NifaContractTemplate implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 模版编号
+     *
+     * @mbggenerated
+     */
     private String templetNid;
 
+    /**
+     * 正常还款定义
+     *
+     * @mbggenerated
+     */
     private String normalDefinition;
 
+    /**
+     * 提前还款定义
+     *
+     * @mbggenerated
+     */
     private String prepaymentDefinition;
 
+    /**
+     * 借款人承诺与保证
+     *
+     * @mbggenerated
+     */
     private String borrowerPromises;
 
+    /**
+     * 出借人承诺与保证
+     *
+     * @mbggenerated
+     */
     private String lenderPromises;
 
+    /**
+     * 借款人还款义务
+     *
+     * @mbggenerated
+     */
     private String borrowerObligation;
 
+    /**
+     * 保密
+     *
+     * @mbggenerated
+     */
     private String confidentiality;
 
+    /**
+     * 违约
+     *
+     * @mbggenerated
+     */
     private String breachContract;
 
+    /**
+     * 法律适用
+     *
+     * @mbggenerated
+     */
     private String applicableLaw;
 
+    /**
+     * 争议解决
+     *
+     * @mbggenerated
+     */
     private String disputeResolution;
 
+    /**
+     * 其他条款
+     *
+     * @mbggenerated
+     */
     private String otherConditions;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

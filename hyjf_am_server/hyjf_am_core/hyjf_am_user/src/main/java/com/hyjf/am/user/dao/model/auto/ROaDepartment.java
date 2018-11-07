@@ -3,36 +3,116 @@ package com.hyjf.am.user.dao.model.auto;
 import java.io.Serializable;
 
 public class ROaDepartment implements Serializable {
+    /**
+     * 部门id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 父类部门id
+     *
+     * @mbggenerated
+     */
     private Integer parentid;
 
+    /**
+     * 部门名
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 部门描述
+     *
+     * @mbggenerated
+     */
     private String description;
 
+    /**
+     * 是否为总部(1,0)
+     *
+     * @mbggenerated
+     */
     private Integer ishead;
 
+    /**
+     * 是否人力资源部(1,0)
+     *
+     * @mbggenerated
+     */
     private Integer ishr;
 
+    /**
+     * 是否财务部(1,0)
+     *
+     * @mbggenerated
+     */
     private Integer isfinance;
 
+    /**
+     * 提成发放方式（1线上2线下）
+     *
+     * @mbggenerated
+     */
     private Integer cuttype;
 
+    /**
+     * 所在省份
+     *
+     * @mbggenerated
+     */
     private String provinceid;
 
+    /**
+     * 所在城市
+     *
+     * @mbggenerated
+     */
     private String cityid;
 
+    /**
+     * 负责人：员工ID
+     *
+     * @mbggenerated
+     */
     private String header;
 
+    /**
+     * 督导：用户ID
+     *
+     * @mbggenerated
+     */
     private String manager;
 
+    /**
+     * 岗位类别
+     *
+     * @mbggenerated
+     */
     private Integer positionCategory;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer listorder;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer sort;
 
+    /**
+     * 删除标记 0：已删除  1：未删除
+     *
+     * @mbggenerated
+     */
     private Integer flag;
 
     private static final long serialVersionUID = 1L;

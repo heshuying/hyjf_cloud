@@ -6,30 +6,95 @@ import java.util.Date;
 public class FddTemplet implements Serializable {
     private Integer id;
 
+    /**
+     * 模版编号
+     *
+     * @mbggenerated
+     */
     private String templetId;
 
+    /**
+     * 协议类型
+     *
+     * @mbggenerated
+     */
     private Integer protocolType;
 
+    /**
+     * 启用状态
+     *
+     * @mbggenerated
+     */
     private Integer isActive;
 
+    /**
+     * CA认证 0:初始,1:成功,2:失败
+     *
+     * @mbggenerated
+     */
     private Integer caFlag;
 
+    /**
+     * 认证时间
+     *
+     * @mbggenerated
+     */
     private Integer certificateTime;
 
+    /**
+     * 文件存放地址
+     *
+     * @mbggenerated
+     */
     private String fileUrl;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

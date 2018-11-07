@@ -5,68 +5,228 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class DebtPlanAccede implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 计划nid
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 用户属性
+     *
+     * @mbggenerated
+     */
     private Integer userAttribute;
 
+    /**
+     * 计划加入订单号
+     *
+     * @mbggenerated
+     */
     private String accedeOrderId;
 
+    /**
+     * 加入时的冻结订单号
+     *
+     * @mbggenerated
+     */
     private String freezeOrderId;
 
+    /**
+     * 计划加入总金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeAccount;
 
+    /**
+     * 可用余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeBalance;
 
+    /**
+     * 计划订单冻结金额（专指投资汇添金专属标的冻结）
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeFrost;
 
+    /**
+     * 清算债权承接冻结的余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal liquidatesCreditFrost;
 
+    /**
+     * 清算进度
+     *
+     * @mbggenerated
+     */
     private BigDecimal liquidatesApr;
 
+    /**
+     * 清算还款冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal liquidatesRepayFrost;
 
+    /**
+     * 服务费收取比例
+     *
+     * @mbggenerated
+     */
     private BigDecimal serviceFeeRate;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal serviceFee;
 
+    /**
+     * 到期公允价值
+     *
+     * @mbggenerated
+     */
     private BigDecimal expireFairValue;
 
+    /**
+     * 承接次数
+     *
+     * @mbggenerated
+     */
     private Integer underTakeTimes;
 
+    /**
+     * 最大投资金额（参考值）
+     *
+     * @mbggenerated
+     */
     private BigDecimal investMax;
 
+    /**
+     * 最小投资金额（参考值）
+     *
+     * @mbggenerated
+     */
     private BigDecimal investMin;
 
+    /**
+     * 遍历次数（已经尝试自动投资次数）
+     *
+     * @mbggenerated
+     */
     private Integer cycleTimes;
 
+    /**
+     * 应还本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccount;
 
+    /**
+     * 应还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapital;
 
+    /**
+     * 应还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterest;
 
+    /**
+     * 待还本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountWait;
 
+    /**
+     * 待还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapitalWait;
 
+    /**
+     * 待还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterestWait;
 
+    /**
+     * 已还本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountYes;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapitalYes;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterestYes;
 
+    /**
+     * 推荐人用户userId
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserId;
 
+    /**
+     * 推荐人用户名
+     *
+     * @mbggenerated
+     */
     private String inviteUserName;
 
+    /**
+     * 推荐人用户属性
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserAttribute;
 
     private Integer inviteRegionId;
@@ -81,48 +241,158 @@ public class DebtPlanAccede implements Serializable {
 
     private String inviteDepartmentName;
 
+    /**
+     * 协议发送状态0未发送 1已发送
+     *
+     * @mbggenerated
+     */
     private Integer sendStatus;
 
+    /**
+     * 是否需要计算到期公允价值状态(0:是,1否)
+     *
+     * @mbggenerated
+     */
     private Integer calculationStatus;
 
+    /**
+     * 此笔加入是否已经完成 0投资中 1投资完成 2还款中 3还款完成
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 是否复投 0非复投 1复投
+     *
+     * @mbggenerated
+     */
     private Integer reinvestStatus;
 
+    /**
+     * 是否有其他项目在还款中 0否 1是
+     *
+     * @mbggenerated
+     */
     private Integer repayRunningStatus;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 客户端 0PC，1微信，2安卓APP，3IOS，4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 创建者id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建者用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 更新用户id
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 还款推荐人id
+     *
+     * @mbggenerated
+     */
     private Integer inviteRepayUserId;
 
+    /**
+     * 还款推荐人属性
+     *
+     * @mbggenerated
+     */
     private Integer inviteRepayUserAttribute;
 
+    /**
+     * 推荐人用户名
+     *
+     * @mbggenerated
+     */
     private String inviteRepayUserName;
 
+    /**
+     * 还款推荐人部门id
+     *
+     * @mbggenerated
+     */
     private Integer inviteRepayRegionId;
 
+    /**
+     * 还款推荐人部门名
+     *
+     * @mbggenerated
+     */
     private String inviteRepayRegionName;
 
+    /**
+     * 还款推荐人分部id
+     *
+     * @mbggenerated
+     */
     private Integer inviteRepayBranchId;
 
+    /**
+     * 还款推荐人分部名
+     *
+     * @mbggenerated
+     */
     private String inviteRepayBranchName;
 
+    /**
+     * 还款推荐人所属部门id
+     *
+     * @mbggenerated
+     */
     private Integer inviteRepayDepartmentId;
 
+    /**
+     * 还款推荐人所属部门名
+     *
+     * @mbggenerated
+     */
     private String inviteRepayDepartmentName;
 
     private static final long serialVersionUID = 1L;

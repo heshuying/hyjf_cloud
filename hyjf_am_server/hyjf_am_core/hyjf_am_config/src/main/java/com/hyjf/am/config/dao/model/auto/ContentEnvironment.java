@@ -4,22 +4,62 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ContentEnvironment implements Serializable {
+    /**
+     * 办公环境主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 各个公司名
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 图片地址
+     *
+     * @mbggenerated
+     */
     private String imgUrl;
 
+    /**
+     * 图片类型：0横图，1竖图
+     *
+     * @mbggenerated
+     */
     private Integer imgType;
 
+    /**
+     * 排序数字
+     *
+     * @mbggenerated
+     */
     private Integer orderId;
 
+    /**
+     * 状态：0关闭，1启用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
     private String describe;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;

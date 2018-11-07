@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStaticCount;
 import com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStaticCountExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface DebtPlanInfoStaticCountMapper {
     int countByExample(DebtPlanInfoStaticCountExample example);

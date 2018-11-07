@@ -5,16 +5,46 @@ import java.io.Serializable;
 public class BankMerchantAccountInfo implements Serializable {
     private Integer id;
 
+    /**
+     * 平台子账户电子账户
+     *
+     * @mbggenerated
+     */
     private String accountCode;
 
+    /**
+     * 银行开户名称
+     *
+     * @mbggenerated
+     */
     private String accountName;
 
+    /**
+     * 银行开户手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 证件号
+     *
+     * @mbggenerated
+     */
     private String idNo;
 
+    /**
+     * 证件类型
+     *
+     * @mbggenerated
+     */
     private String idType;
 
+    /**
+     * 绑定银行卡号
+     *
+     * @mbggenerated
+     */
     private String bankCard;
 
     private static final long serialVersionUID = 1L;

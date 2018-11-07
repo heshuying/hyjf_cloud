@@ -6,24 +6,74 @@ import java.util.Date;
 public class Event implements Serializable {
     private Integer id;
 
+    /**
+     * 纪事发生的时间
+     *
+     * @mbggenerated
+     */
     private String eventTime;
 
+    /**
+     * 纪事标题
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 纪事内容
+     *
+     * @mbggenerated
+     */
     private String content;
 
+    /**
+     * 纪事所在年份(用于归类)
+     *
+     * @mbggenerated
+     */
     private Integer eventYear;
 
+    /**
+     * 纪事状态: 0:关闭,1:启用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 管理员
+     *
+     * @mbggenerated
+     */
     private String addAdmin;
 
+    /**
+     * 纪事实际时间戳
+     *
+     * @mbggenerated
+     */
     private Integer actTime;
 
+    /**
+     * 缩略图
+     *
+     * @mbggenerated
+     */
     private String thumb;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;

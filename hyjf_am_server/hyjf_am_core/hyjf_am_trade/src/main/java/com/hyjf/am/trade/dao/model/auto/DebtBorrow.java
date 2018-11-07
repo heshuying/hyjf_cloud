@@ -7,184 +7,584 @@ import java.util.Date;
 public class DebtBorrow implements Serializable {
     private Integer id;
 
+    /**
+     * 用户名称
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 项目申请人
+     *
+     * @mbggenerated
+     */
     private String applicant;
 
+    /**
+     * 担保机构用户名
+     *
+     * @mbggenerated
+     */
     private String repayOrgName;
 
+    /**
+     * 是否可用担保机构还款(0:否,1:是)
+     *
+     * @mbggenerated
+     */
     private Integer isRepayOrgFlag;
 
+    /**
+     * 担保机构用户ID
+     *
+     * @mbggenerated
+     */
     private Integer repayOrgUserId;
 
+    /**
+     * 标题
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer order;
 
     private String borrowPic;
 
+    /**
+     * 点击次数
+     *
+     * @mbggenerated
+     */
     private Integer hits;
 
     private Integer commentCount;
 
+    /**
+     * 缩略图
+     *
+     * @mbggenerated
+     */
     private String litpic;
 
+    /**
+     * 属性
+     *
+     * @mbggenerated
+     */
     private String flag;
 
+    /**
+     * 1房贷2车贷
+     *
+     * @mbggenerated
+     */
     private String type;
 
     private String viewType;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 冻结的额度
+     *
+     * @mbggenerated
+     */
     private BigDecimal amountAccount;
 
+    /**
+     * 额度类型
+     *
+     * @mbggenerated
+     */
     private String amountType;
 
     private Integer cashStatus;
 
+    /**
+     * 借贷总金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal account;
 
     private Integer otherWebStatus;
 
+    /**
+     * 借款类型
+     *
+     * @mbggenerated
+     */
     private String borrowType;
 
+    /**
+     * 借款密码
+     *
+     * @mbggenerated
+     */
     private String borrowPassword;
 
+    /**
+     * 借款种类
+     *
+     * @mbggenerated
+     */
     private String borrowFlag;
 
+    /**
+     * 是否可以进行借款
+     *
+     * @mbggenerated
+     */
     private Integer borrowStatus;
 
+    /**
+     * 满标审核状态
+     *
+     * @mbggenerated
+     */
     private Integer borrowFullStatus;
 
+    /**
+     * 借款的识别名
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
     private Integer borrowPreNid;
 
+    /**
+     * 已借到的金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowAccountYes;
 
     private BigDecimal borrowAccountWait;
 
+    /**
+     * 借贷的完成率
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowAccountScale;
 
+    /**
+     * 用途
+     *
+     * @mbggenerated
+     */
     private String borrowUse;
 
+    /**
+     * 还款方式
+     *
+     * @mbggenerated
+     */
     private String borrowStyle;
 
+    /**
+     * 借款期限
+     *
+     * @mbggenerated
+     */
     private Integer borrowPeriod;
 
+    /**
+     * 流转标的期数
+     *
+     * @mbggenerated
+     */
     private Integer borrowPeriodRoam;
 
     private Integer borrowDay;
 
+    /**
+     * 借款利率
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowApr;
 
+    /**
+     * 借款冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowFrostAccount;
 
+    /**
+     * 冻结资金比例
+     *
+     * @mbggenerated
+     */
     private String borrowFrostScale;
 
+    /**
+     * 秒标复审冻结
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowFrostSecond;
 
+    /**
+     * 借款有效时间
+     *
+     * @mbggenerated
+     */
     private Integer borrowValidTime;
 
+    /**
+     * 借款成功时间
+     *
+     * @mbggenerated
+     */
     private Integer borrowSuccessTime;
 
+    /**
+     * 借款到期时间
+     *
+     * @mbggenerated
+     */
     private String borrowEndTime;
 
+    /**
+     * 是否部分借款
+     *
+     * @mbggenerated
+     */
     private Integer borrowPartStatus;
 
+    /**
+     * 撤销用户
+     *
+     * @mbggenerated
+     */
     private Integer cancelUserid;
 
+    /**
+     * 是否撤销
+     *
+     * @mbggenerated
+     */
     private Integer cancelStatus;
 
+    /**
+     * 撤回时间
+     *
+     * @mbggenerated
+     */
     private String cancelTime;
 
+    /**
+     * 撤销理由
+     *
+     * @mbggenerated
+     */
     private String cancelRemark;
 
+    /**
+     * 撤销管理备注
+     *
+     * @mbggenerated
+     */
     private String cancelContents;
 
+    /**
+     * 最小的投资额
+     *
+     * @mbggenerated
+     */
     private Integer tenderAccountMin;
 
+    /**
+     * 最大的投资额
+     *
+     * @mbggenerated
+     */
     private Integer tenderAccountMax;
 
+    /**
+     * 投标的次数
+     *
+     * @mbggenerated
+     */
     private Integer tenderTimes;
 
+    /**
+     * 最后投资时间
+     *
+     * @mbggenerated
+     */
     private String tenderLastTime;
 
+    /**
+     * 是否提前还款
+     *
+     * @mbggenerated
+     */
     private Integer repayAdvanceStatus;
 
+    /**
+     * 提前还款时间
+     *
+     * @mbggenerated
+     */
     private String repayAdvanceTime;
 
+    /**
+     * 提前还款阶段
+     *
+     * @mbggenerated
+     */
     private Integer repayAdvanceStep;
 
+    /**
+     * 应还款总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountAll;
 
+    /**
+     * 总还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountInterest;
 
+    /**
+     * 总还款本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountCapital;
 
+    /**
+     * 已还款总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountYes;
 
+    /**
+     * 已还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountInterestYes;
 
+    /**
+     * 已还款本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountCapitalYes;
 
+    /**
+     * 未还款总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountWait;
 
+    /**
+     * 未还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountInterestWait;
 
+    /**
+     * 未还款本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountCapitalWait;
 
+    /**
+     * 还款的次数
+     *
+     * @mbggenerated
+     */
     private Integer repayAccountTimes;
 
+    /**
+     * 每月还款金额
+     *
+     * @mbggenerated
+     */
     private Integer repayMonthAccount;
 
+    /**
+     * 最后还款时间
+     *
+     * @mbggenerated
+     */
     private String repayLastTime;
 
+    /**
+     * 每次还款的时间
+     *
+     * @mbggenerated
+     */
     private String repayEachTime;
 
+    /**
+     * 下一笔还款时间
+     *
+     * @mbggenerated
+     */
     private Integer repayNextTime;
 
+    /**
+     * 下一笔还款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayNextAccount;
 
+    /**
+     * 还款次数
+     *
+     * @mbggenerated
+     */
     private Integer repayTimes;
 
+    /**
+     * 是否已经还完
+     *
+     * @mbggenerated
+     */
     private Integer repayFullStatus;
 
+    /**
+     * 正常还款费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayFeeNormal;
 
+    /**
+     * 提前还款费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayFeeAdvance;
 
+    /**
+     * 逾期还款费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayFeeLate;
 
+    /**
+     * 逾期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal lateInterest;
 
+    /**
+     * 逾期催缴费
+     *
+     * @mbggenerated
+     */
     private BigDecimal lateForfeit;
 
+    /**
+     * 是否是担保
+     *
+     * @mbggenerated
+     */
     private Integer vouchStatus;
 
     private Integer vouchAdvanceStatus;
 
+    /**
+     * 担保人担保状态
+     *
+     * @mbggenerated
+     */
     private Integer vouchUserStatus;
 
+    /**
+     * 担保人列表
+     *
+     * @mbggenerated
+     */
     private String vouchUsers;
 
+    /**
+     * 总担保的金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal vouchAccount;
 
+    /**
+     * 已担保的金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal vouchAccountYes;
 
     private BigDecimal vouchAccountWait;
 
+    /**
+     * 已担保的比例
+     *
+     * @mbggenerated
+     */
     private Long vouchAccountScale;
 
+    /**
+     * 担保次数
+     *
+     * @mbggenerated
+     */
     private Integer vouchTimes;
 
+    /**
+     * 是否设置担保奖励
+     *
+     * @mbggenerated
+     */
     private Integer vouchAwardStatus;
 
+    /**
+     * 担保比例
+     *
+     * @mbggenerated
+     */
     private BigDecimal vouchAwardScale;
 
+    /**
+     * 总付出的担保奖励
+     *
+     * @mbggenerated
+     */
     private BigDecimal vouchAwardAccount;
 
     private String voucherName;
@@ -205,32 +605,102 @@ public class DebtBorrow implements Serializable {
 
     private Integer vouchstatus;
 
+    /**
+     * 1圈内;0全见
+     *
+     * @mbggenerated
+     */
     private Integer groupStatus;
 
+    /**
+     * 圈子编号
+     *
+     * @mbggenerated
+     */
     private Integer groupId;
 
+    /**
+     * 是否奖励
+     *
+     * @mbggenerated
+     */
     private Integer awardStatus;
 
+    /**
+     * 投资失败是否也奖励
+     *
+     * @mbggenerated
+     */
     private Integer awardFalse;
 
+    /**
+     * 奖励金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal awardAccount;
 
+    /**
+     * 按比例奖励
+     *
+     * @mbggenerated
+     */
     private BigDecimal awardScale;
 
+    /**
+     * 投标奖励总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal awardAccountAll;
 
+    /**
+     * 公开我的帐户资金情况
+     *
+     * @mbggenerated
+     */
     private Integer openAccount;
 
+    /**
+     * 公开我的借款资金情况
+     *
+     * @mbggenerated
+     */
     private Integer openBorrow;
 
+    /**
+     * 公开我的投标资金情况
+     *
+     * @mbggenerated
+     */
     private Integer openTender;
 
+    /**
+     * 公开我的信用额度情况
+     *
+     * @mbggenerated
+     */
     private Integer openCredit;
 
+    /**
+     * 是否可以评论
+     *
+     * @mbggenerated
+     */
     private Integer commentStaus;
 
+    /**
+     * 评论次数
+     *
+     * @mbggenerated
+     */
     private Integer commentTimes;
 
+    /**
+     * 可评论的用户
+     *
+     * @mbggenerated
+     */
     private String commentUsertype;
 
     private String borrowPawnApp;
@@ -253,124 +723,394 @@ public class DebtBorrow implements Serializable {
 
     private String borrowPawnXin;
 
+    /**
+     * 置顶时间
+     *
+     * @mbggenerated
+     */
     private String orderTop;
 
+    /**
+     * 审核人
+     *
+     * @mbggenerated
+     */
     private String verifyUserid;
 
+    /**
+     * 审核时间
+     *
+     * @mbggenerated
+     */
     private String verifyTime;
 
     private String verifyRemark;
 
+    /**
+     * 审核备注
+     *
+     * @mbggenerated
+     */
     private String verifyContents;
 
     private Integer verifyStatus;
 
+    /**
+     * 审核人
+     *
+     * @mbggenerated
+     */
     private String reverifyUserid;
 
+    /**
+     * 审核时间
+     *
+     * @mbggenerated
+     */
     private String reverifyTime;
 
     private String reverifyRemark;
 
     private Integer reverifyStatus;
 
+    /**
+     * 审核复审标注
+     *
+     * @mbggenerated
+     */
     private String reverifyContents;
 
+    /**
+     *  发标上传图片
+     *
+     * @mbggenerated
+     */
     private String upfilesId;
 
     private String xmupfilesId;
 
     private String dyupfilesId;
 
+    /**
+     * 担保方式0抵押+担保  1抵押 2担保
+     *
+     * @mbggenerated
+     */
     private Integer guaranteeType;
 
+    /**
+     * 0汇保贷 1汇典贷 2汇小贷 3汇车贷 4新手标
+     *
+     * @mbggenerated
+     */
     private Integer projectType;
 
+    /**
+     * 定时发标
+     *
+     * @mbggenerated
+     */
     private Integer ontime;
 
+    /**
+     * 服务费费率
+     *
+     * @mbggenerated
+     */
     private String serviceFeeRate;
 
+    /**
+     * 管理费费率
+     *
+     * @mbggenerated
+     */
     private String manageFeeRate;
 
+    /**
+     * 收益差率
+     *
+     * @mbggenerated
+     */
     private String differentialRate;
 
+    /**
+     * 可投资平台_PC
+     *
+     * @mbggenerated
+     */
     private String canTransactionPc;
 
+    /**
+     * 可投资平台_微网站
+     *
+     * @mbggenerated
+     */
     private String canTransactionWei;
 
+    /**
+     * 可投资平台_IOS
+     *
+     * @mbggenerated
+     */
     private String canTransactionIos;
 
+    /**
+     * 可投资平台_Android
+     *
+     * @mbggenerated
+     */
     private String canTransactionAndroid;
 
+    /**
+     * 运营标签
+     *
+     * @mbggenerated
+     */
     private String operationLabel;
 
+    /**
+     * 借款人信息 借款类型 1：公司 2：个人
+     *
+     * @mbggenerated
+     */
     private Integer companyOrPersonal;
 
+    /**
+     * 融资服务费
+     *
+     * @mbggenerated
+     */
     private String borrowManager;
 
+    /**
+     * 账户管理费
+     *
+     * @mbggenerated
+     */
     private String borrowService;
 
+    /**
+     * 账户管理费率下线
+     *
+     * @mbggenerated
+     */
     private String borrowManagerScaleEnd;
 
+    /**
+     * 满标时间
+     *
+     * @mbggenerated
+     */
     private Integer borrowFullTime;
 
+    /**
+     * 最后一笔的放款完成时间
+     *
+     * @mbggenerated
+     */
     private Integer recoverLastTime;
 
+    /**
+     * 资产包编号
+     *
+     * @mbggenerated
+     */
     private String consumeId;
 
+    /**
+     * 初审通过时间
+     *
+     * @mbggenerated
+     */
     private Integer verifyOverTime;
 
+    /**
+     * 借款人人名
+     *
+     * @mbggenerated
+     */
     private String borrowUserName;
 
+    /**
+     * 售价预估    
+     *
+     * @mbggenerated
+     */
     private String disposalPriceEstimate;
 
+    /**
+     * 处置周期    
+     *
+     * @mbggenerated
+     */
     private String disposalPeriod;
 
+    /**
+     * 处置渠道    
+     *
+     * @mbggenerated
+     */
     private String disposalChannel;
 
+    /**
+     * 处置结果预案
+     *
+     * @mbggenerated
+     */
     private String disposalResult;
 
+    /**
+     * 备注说明    
+     *
+     * @mbggenerated
+     */
     private String disposalNote;
 
+    /**
+     * 项目名称    
+     *
+     * @mbggenerated
+     */
     private String disposalProjectName;
 
+    /**
+     * 项目类型    
+     *
+     * @mbggenerated
+     */
     private String disposalProjectType;
 
+    /**
+     * 所在地区    
+     *
+     * @mbggenerated
+     */
     private String disposalArea;
 
+    /**
+     * 预估价值    
+     *
+     * @mbggenerated
+     */
     private String disposalPredictiveValue;
 
+    /**
+     * 权属类别    
+     *
+     * @mbggenerated
+     */
     private String disposalOwnershipCategory;
 
+    /**
+     * 资产成因    
+     *
+     * @mbggenerated
+     */
     private String disposalAssetOrigin;
 
+    /**
+     * 附件信息    
+     *
+     * @mbggenerated
+     */
     private String disposalAttachmentInfo;
 
+    /**
+     * 递增金额
+     *
+     * @mbggenerated
+     */
     private Long borrowIncreaseMoney;
 
+    /**
+     * 优惠券
+     *
+     * @mbggenerated
+     */
     private Integer borrowInterestCoupon;
 
+    /**
+     * 体验金
+     *
+     * @mbggenerated
+     */
     private Integer borrowTasteMoney;
 
+    /**
+     * 标的是否已录入银行托管 0未托管 1已托管 王坤添加
+     *
+     * @mbggenerated
+     */
     private Integer bankInputFlag;
 
+    /**
+     * 预约开始时间
+     *
+     * @mbggenerated
+     */
     private Integer bookingBeginTime;
 
+    /**
+     * 预约截止时间
+     *
+     * @mbggenerated
+     */
     private Integer bookingEndTime;
 
+    /**
+     * 预约状态 0初始 1预约中 2预约结束
+     *
+     * @mbggenerated
+     */
     private Integer bookingStatus;
 
+    /**
+     * 预约标等待预约金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowAccountWaitAppoint;
 
+    /**
+     * 预约进度
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowAccountScaleAppoint;
 
+    /**
+     * 是否已有计划关联:0:否,1:是
+     *
+     * @mbggenerated
+     */
     private Integer borrowPlanSelected;
 
+    /**
+     * 前台还款扣除的金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowRepayWebAdvance;
 
+    /**
+     * 借款人评级
+     *
+     * @mbggenerated
+     */
     private String borrowLevel;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

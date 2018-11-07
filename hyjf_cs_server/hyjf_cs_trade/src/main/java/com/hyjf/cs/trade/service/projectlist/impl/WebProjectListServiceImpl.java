@@ -1289,6 +1289,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             BestCouponListVO  bestCouponListVO = null;
             BigDecimal couponInterest = BigDecimal.ZERO;
             result.put("interest", BigDecimal.ZERO);
+            result.put("isThereCoupon", 0);
             if (userId != null){
                 /*优惠券模块开始 */
                 MyCouponListRequest myCouponListRequest = new MyCouponListRequest();
@@ -1321,7 +1322,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
             /*优惠券模块结束 */
             result.put("couponConfig",bestCouponListVO);
-            result.put("isThereCoupon", 0);
+
             /** 计算最优优惠券结束 */
             /** 汇添金优惠券使用结束 pcc */
 
