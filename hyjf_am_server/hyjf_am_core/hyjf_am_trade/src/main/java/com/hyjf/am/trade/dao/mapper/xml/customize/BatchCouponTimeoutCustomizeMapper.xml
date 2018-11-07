@@ -21,7 +21,7 @@
 		AND c.coupon_type = 3
 		AND uc.used_flag = 0
 		AND uc.del_flag = 0
-		AND c.del_flg = 0a
+		AND c.del_flag = 0
 		GROUP BY uc.user_id
 	</select>
 	
