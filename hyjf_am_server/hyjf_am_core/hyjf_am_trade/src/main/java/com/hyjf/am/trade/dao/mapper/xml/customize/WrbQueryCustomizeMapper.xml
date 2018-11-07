@@ -78,12 +78,12 @@
 <select id="searchBorrowListByNid">
 		SELECT
 			hydb.borrow_nid invest_id,
-			hydb.`name` AS invest_title,
+			hbi.`name` AS invest_title,
             CONCAT('/borrow/',  hydb.borrow_nid) invest_url,
 			CASE WHEN hydb.borrow_style = 'endday' THEN hydb.borrow_period ELSE hydb.borrow_period*30 END AS time_limit,
 			CASE WHEN hydb.borrow_style = 'endday' THEN CONCAT(hydb.borrow_period,'天') ELSE CONCAT(hydb.borrow_period, '个月') END time_limit_desc ,
-			hydb.tender_account_max buy_limit,
-			hydb.tender_account_min buy_unit,
+			hbi.tender_account_max buy_limit,
+			hbi.tender_account_min buy_unit,
 			hydb.borrow_account_yes invested_amount,
 			hydb.account total_amount,
 			hydb.borrow_apr rate,
@@ -95,14 +95,14 @@
 			END AS start_time,
 			hydbs.`name` AS payback_way,
 			hydbpt.borrow_name AS invest_condition,
-		    hydb.borrow_contents AS project_description,
+			hbi.borrow_contents AS project_description,
 			'0' lose_invest,
 			hydb.status borrow_status
 		FROM
-			huiyingdai_borrow hydb
-		INNER JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		LEFT JOIN huiyingdai_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
-		LEFT JOIN hyjf_param_name pn ON CAST(hydb.`status` AS CHAR) = pn.name_cd AND pn.name_class = 'BORROW_STATUS'
+			ht_borrow hydb
+	    INNER JOIN ht_borrow_info hbi on hydb.borrow_nid = hbi.borrow_nid
+		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
 		<include refid="Where_Clause_New" />
 		ORDER BY
 			hydb.`status` ASC,
@@ -130,6 +130,23 @@
 			
 			limit 0,100
 </select>
+
+	<resultMap id="borrowTenderMap" type="com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize">
+		<result column="user_id" property="userId" jdbcType="INTEGER"/>
+		<result column="addtime" property="investTime" jdbcType="VARCHAR"/>
+		<result column="nid" property="nid" jdbcType="VARCHAR"/>
+		<result column="account" property="account" jdbcType="DECIMAL"/>
+	</resultMap>
+
+	<select id="selectWrbBorrowTender" resultMap="borrowTenderMap">
+		select  t.user_id,
+		DATE_FORMAT(t.create_time,'%Y-%m-%d %H:%i:%s')AS addtime,
+		t.nid,
+		t.account
+		FROM ht_borrow_tender t
+		WHERE t.borrow_nid = #{borrowNid}
+		AND t.create_time >= #{investTime}
+	</select>
 
 
 </mapper>
