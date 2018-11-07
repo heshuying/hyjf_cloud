@@ -3,7 +3,10 @@
  */
 package com.hyjf.am.trade.service.api.wrb;
 
+import com.hyjf.am.resquest.api.WrbInvestRequest;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
 
 import java.util.List;
 
@@ -19,5 +22,16 @@ public interface WrbInfoService {
      */
     List<WrbBorrowListCustomize> borrowList(String borrowNid);
 
+    /**
+     * 获取某天投资数据
+     * @param request
+     * @return
+     */
+    List<BorrowTender> getBorrowTenderList(WrbInvestRequest request);
 
+    /**
+     * 查询标的投资情况
+     * @return
+     */
+    List<WrbBorrowTenderCustomize> getBorrowTenderByBorrowNid(WrbInvestRequest request);
 }

@@ -16,14 +16,17 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -341,4 +344,20 @@ public interface AmTradeClient {
      */
     CouponConfigVO getCouponByCouponCode(String couponCode);
 
+    /**
+     * 获取某天投资情况
+     * @param invest_date
+     * @param limit
+     * @param page
+     * @return
+     */
+    List<BorrowTenderVO> getInvestDetail(Date invest_date, Integer limit, Integer page);
+
+    /**
+     * 查询标的投资情况
+     * @param borrowNid
+     * @param investTime
+     * @return
+     */
+    List<WrbBorrowTenderCustomizeVO> selectWrbBorrowTender(String borrowNid, Date investTime);
 }
