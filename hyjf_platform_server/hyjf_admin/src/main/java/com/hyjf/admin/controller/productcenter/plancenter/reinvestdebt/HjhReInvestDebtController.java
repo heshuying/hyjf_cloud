@@ -111,11 +111,11 @@ public class HjhReInvestDebtController extends BaseController {
     }
 
     /**
-     * 资金计划 - 复投债权列表
+     * 资金计划 - 复投债权列表 初始化只需当前日期和planNid
      * @param request
      * @return
      */
-    @ApiOperation(value = "资金计划", notes = "复投债权列表")
+    @ApiOperation(value = "复投承接债权检列表", notes = "复投债权列表")
     @PostMapping(value = "/hjhReInvestDebtList")
     public AdminResult<ListResult<HjhReInvestDebtVO>> hjhReInvestDebtList(@RequestBody HjhReInvestDebtRequest request) {
 

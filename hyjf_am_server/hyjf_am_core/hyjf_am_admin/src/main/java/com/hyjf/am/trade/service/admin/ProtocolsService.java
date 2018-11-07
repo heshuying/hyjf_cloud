@@ -19,7 +19,7 @@ public interface ProtocolsService {
 	 * @param request
 	 * @return
 	 */
-	List<FddTempletCustomize> selectFddTempletList(ProtocolsRequest request);
+	List<FddTempletCustomize> selectFddTempletList(ProtocolsRequest request,boolean flag);
 
 	/**
 	 * 添加协议列表

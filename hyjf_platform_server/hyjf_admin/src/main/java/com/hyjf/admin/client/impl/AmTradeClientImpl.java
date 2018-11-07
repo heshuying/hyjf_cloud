@@ -3300,6 +3300,23 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /*** 取得提成配置
+    * @author Zha Daojian
+    * @date 2018/11/7 11:25
+    * @param request
+    * @return java.util.List<com.hyjf.am.vo.trade.PushMoneyVO>
+    **/
+    @Override
+    public List<PushMoneyVO> getPushMoney(PushMoneyRequest request) {
+        PushMoneyResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/pushMoneyRecord/getPushMoney", request, PushMoneyResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
     /**
      * 计划退出查询判断标的是否还款
      * BorrowNidEqualTo(borrowNid)
@@ -4779,8 +4796,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public FddTempletCustomizeResponse selectFddTempletList(ProtocolsRequestBean request) {
         ProtocolsRequest requestT = new ProtocolsRequest();
-        requestT.setCurrPage(request.getCurrPage());
-        requestT.setPageSize(request.getPageSize());
+        requestT.setLimitStart(request.getLimitStart());
+        requestT.setLimitEnd(request.getLimitEnd());
         return restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/selectfddtempletlist", requestT, FddTempletCustomizeResponse.class);
     }
 

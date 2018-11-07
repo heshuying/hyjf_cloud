@@ -312,7 +312,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,tender.getUserId());
         if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
             money = "0";
-            result.setRealAmount("");
+            result.setRealAmount("¥0.00");
             result.setButtonWord("确认");
         } else {
             result.setRealAmount("¥" + CommonUtils.formatAmount(null, money));

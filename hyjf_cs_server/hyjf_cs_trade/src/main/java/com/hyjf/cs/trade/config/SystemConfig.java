@@ -20,13 +20,9 @@ public class SystemConfig {
     @Value("${hyjf.app.push.manager.url}")
     public String appPushManagerUrl;
 
-
-
     @Value("${hyjf.weChat.host}")
     public String wechatHost;
 
-    @Value("${hyjf.web.bank.forgetpassword}")
-    public String forgetPassword;
 
     @Value("${fdd.file.upload.real.path}")
     public String fddFileUpload;
@@ -506,13 +502,6 @@ public class SystemConfig {
         this.webHost = webHost;
     }
 
-    public String getForgetPassword() {
-        return forgetPassword;
-    }
-
-    public void setForgetPassword(String forgetPassword) {
-        this.forgetPassword = forgetPassword;
-    }
 
     public String getFrontHost() {
         return frontHost;
