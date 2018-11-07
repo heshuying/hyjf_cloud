@@ -6,26 +6,81 @@ import java.util.Date;
 public class BankSmsAuthCode implements Serializable {
     private Integer id;
 
+    /**
+     * 用户userId
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 请求类型
+     *
+     * @mbggenerated
+     */
     private String srvTxCode;
 
+    /**
+     * 银行卡号
+     *
+     * @mbggenerated
+     */
     private String srvAuthCode;
 
+    /**
+     * 短信序列号
+     *
+     * @mbggenerated
+     */
     private String smsSeq;
 
+    /**
+     * 是否有效 0无效 1有效
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -6,16 +6,46 @@ import java.util.Date;
 public class UserLog implements Serializable {
     private Integer id;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 事件
+     *
+     * @mbggenerated
+     */
     private String event;
 
+    /**
+     * 日志内容
+     *
+     * @mbggenerated
+     */
     private String content;
 
+    /**
+     * IP地址
+     *
+     * @mbggenerated
+     */
     private String ip;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

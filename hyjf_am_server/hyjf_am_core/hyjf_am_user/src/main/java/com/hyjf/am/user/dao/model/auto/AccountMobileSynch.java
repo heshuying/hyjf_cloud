@@ -8,26 +8,81 @@ public class AccountMobileSynch implements Serializable {
 
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 姓名
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
     private String accountid;
 
+    /**
+     * 银行卡号
+     *
+     * @mbggenerated
+     */
     private String account;
 
+    /**
+     * 新银行卡号
+     *
+     * @mbggenerated
+     */
     private String newAccount;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 新手机号
+     *
+     * @mbggenerated
+     */
     private String newMobile;
 
+    /**
+     * 查询次数
+     *
+     * @mbggenerated
+     */
     private Integer searchtime;
 
+    /**
+     * 同步状态：0：未同步1：已同步
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 同步标识：1：手机号同步，2：银行卡同步
+     *
+     * @mbggenerated
+     */
     private Integer flag;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private Date updateTime;
