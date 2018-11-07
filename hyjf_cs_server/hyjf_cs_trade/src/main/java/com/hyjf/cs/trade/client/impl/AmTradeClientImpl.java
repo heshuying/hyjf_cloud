@@ -4800,7 +4800,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "projectlist/app/getIncreaseInterestInvestByOrdId/" + orderId;
         IncreaseInterestInvestResponse response = restTemplate.getForEntity(url,IncreaseInterestInvestResponse.class).getBody();
         if(Response.isSuccess(response)){
-            response.getResult();
+            return response.getResult();
         }
         return null;
     }

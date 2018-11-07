@@ -175,7 +175,7 @@ public class CouponUserServiceImpl implements CouponUserService {
         paraMap.put("userId", request.getUserId());
         paraMap.put("couponCode", request.getCouponCode());
         paraMap.put("couponUserCode", request.getCouponUserCode());
-        paraMap.put("username", request.getUserName());
+        paraMap.put("username", request.getUserNameSrch());
         paraMap.put("couponType", request.getCouponType());
         paraMap.put("usedFlag", request.getUsedFlag());
         paraMap.put("couponFrom", request.getCouponFrom());
