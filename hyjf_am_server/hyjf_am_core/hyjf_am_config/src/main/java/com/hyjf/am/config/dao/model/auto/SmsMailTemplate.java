@@ -6,20 +6,55 @@ import java.util.Date;
 public class SmsMailTemplate implements Serializable {
     private Integer id;
 
+    /**
+     * 模板名称
+     *
+     * @mbggenerated
+     */
     private String mailName;
 
     private String mailValue;
 
+    /**
+     * 是否开启 0关闭 1开启
+     *
+     * @mbggenerated
+     */
     private Integer mailStatus;
 
+    /**
+     * 模板内容
+     *
+     * @mbggenerated
+     */
     private String mailContent;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -4,32 +4,102 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ProtocolTemplate implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 协议id
+     *
+     * @mbggenerated
+     */
     private String protocolId;
 
+    /**
+     * 协议模板名称
+     *
+     * @mbggenerated
+     */
     private String protocolName;
 
+    /**
+     * 前台显示名称
+     *
+     * @mbggenerated
+     */
     private String displayName;
 
+    /**
+     * 协议类型
+     *
+     * @mbggenerated
+     */
     private String protocolType;
 
+    /**
+     * 协议版本号(当前协议使用的版本号)
+     *
+     * @mbggenerated
+     */
     private String versionNumber;
 
+    /**
+     * 状态(0.协议不显示1.协议显示)
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 协议路径(当前协议显示路径)
+     *
+     * @mbggenerated
+     */
     private String protocolUrl;
 
+    /**
+     * pdf图片路径地址
+     *
+     * @mbggenerated
+     */
     private String imgUrl;
 
+    /**
+     * 备注(当前协议)
+     *
+     * @mbggenerated
+     */
     private String remarks;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private static final long serialVersionUID = 1L;

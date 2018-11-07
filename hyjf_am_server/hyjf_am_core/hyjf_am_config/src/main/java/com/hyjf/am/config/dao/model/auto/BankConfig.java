@@ -4,34 +4,109 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class BankConfig implements Serializable {
+    /**
+     * 主键ID
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 名称
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 银行代号
+     *
+     * @mbggenerated
+     */
     private String code;
 
+    /**
+     * appLOGO
+     *
+     * @mbggenerated
+     */
     private String appLogo;
 
+    /**
+     * LOGO
+     *
+     * @mbggenerated
+     */
     private String logo;
 
+    /**
+     * 个人银行
+     *
+     * @mbggenerated
+     */
     private Integer personalEbank;
 
+    /**
+     * 企业银行
+     *
+     * @mbggenerated
+     */
     private Integer enterpriseEbank;
 
+    /**
+     * 快捷支付
+     *
+     * @mbggenerated
+     */
     private Integer quickPayment;
 
+    /**
+     * 即时提现1是,0否
+     *
+     * @mbggenerated
+     */
     private Integer immediatelyWithdraw;
 
+    /**
+     * 快速提现1是,0否
+     *
+     * @mbggenerated
+     */
     private Integer quickWithdraw;
 
+    /**
+     * 一般提现1是,0否
+     *
+     * @mbggenerated
+     */
     private Integer normalWithdraw;
 
+    /**
+     * 默认提现方式,0一般提现,1快速提现,2即时提现,默认0
+     *
+     * @mbggenerated
+     */
     private Integer withdrawDefaulttype;
 
+    /**
+     * 使用状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;

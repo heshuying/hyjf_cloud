@@ -42,9 +42,9 @@ public class BankAleveController extends BaseController {
 		String returnCode = Response.FAIL;
 		Map<String, Object> mapParam = paramSet(request);
 		int count = aleveService.countRecord(mapParam);
-		Paginator paginator = new Paginator(request.getPaginatorPage(), count, request.getLimit());
-		if (request.getLimit() == 0) {
-			paginator = new Paginator(request.getPaginatorPage(), count);
+		Paginator paginator = new Paginator(request.getPaginatorPage(), count, request.getPageSize());
+		if (request.getPageSize() == 0) {
+			paginator = new Paginator(request.getCurrPage(), count);
 		}
 		List<AleveLogCustomize> manageList = aleveService.selectBankAleveInfoList(mapParam, paginator.getOffset(), paginator.getLimit());
 		if (count > 0) {

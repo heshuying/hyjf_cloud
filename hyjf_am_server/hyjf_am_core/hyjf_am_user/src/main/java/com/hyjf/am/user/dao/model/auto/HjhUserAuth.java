@@ -4,74 +4,249 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class HjhUserAuth implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 自动投标授权状态 0: 未授权    1:已授权
+     *
+     * @mbggenerated
+     */
     private Integer autoInvesStatus;
 
+    /**
+     * 自动债转授权状态 0: 未授权    1:已授权
+     *
+     * @mbggenerated
+     */
     private Integer autoCreditStatus;
 
+    /**
+     * 自动预约取现状态 0: 未授权    1:已授权
+     *
+     * @mbggenerated
+     */
     private Integer autoWithdrawStatus;
 
+    /**
+     * 自动无密消费状态 0: 未授权    1:已授权
+     *
+     * @mbggenerated
+     */
     private Integer autoConsumeStatus;
 
+    /**
+     * 授权时间
+     *
+     * @mbggenerated
+     */
     private Integer autoCreateTime;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String autoOrderId;
 
+    /**
+     * 自动债转订单号
+     *
+     * @mbggenerated
+     */
     private String autoCreditOrderId;
 
+    /**
+     * 自动债转授权时间
+     *
+     * @mbggenerated
+     */
     private Integer autoCreditTime;
 
+    /**
+     * 自动债转授权过期时间
+     *
+     * @mbggenerated
+     */
     private String autoCreditEndTime;
 
+    /**
+     * 自动投资授权时间
+     *
+     * @mbggenerated
+     */
     private Integer autoBidTime;
 
+    /**
+     * 自动投资授权过期时间
+     *
+     * @mbggenerated
+     */
     private String autoBidEndTime;
 
+    /**
+     * 缴费授权状态 0: 未授权    1:已授权
+     *
+     * @mbggenerated
+     */
     private Integer autoPaymentStatus;
 
+    /**
+     * 缴费授权时间
+     *
+     * @mbggenerated
+     */
     private Integer autoPaymentTime;
 
+    /**
+     * 缴费授权结束时间
+     *
+     * @mbggenerated
+     */
     private String autoPaymentEndTime;
 
+    /**
+     * 还款授权状态 0: 未授权    1:已授权
+     *
+     * @mbggenerated
+     */
     private Integer autoRepayStatus;
 
+    /**
+     * 还款授权时间
+     *
+     * @mbggenerated
+     */
     private Integer autoRepayTime;
 
+    /**
+     * 还款授权结束时间
+     *
+     * @mbggenerated
+     */
     private String autoRepayEndTime;
 
+    /**
+     * 投资授权解约时间
+     *
+     * @mbggenerated
+     */
     private String invesCancelTime;
 
+    /**
+     * 债转授权解约时间
+     *
+     * @mbggenerated
+     */
     private String creditCancelTime;
 
+    /**
+     * 缴费授权解约时间
+     *
+     * @mbggenerated
+     */
     private String paymentCancelTime;
 
+    /**
+     * 还款授权解约时间
+     *
+     * @mbggenerated
+     */
     private String repayCancelTime;
 
+    /**
+     * 自动投资单笔最大金额
+     *
+     * @mbggenerated
+     */
     private String invesMaxAmt;
 
+    /**
+     * 自动债转单笔最大金额
+     *
+     * @mbggenerated
+     */
     private String creditMaxAmt;
 
+    /**
+     * 缴费授权单笔最大金额
+     *
+     * @mbggenerated
+     */
     private String paymentMaxAmt;
 
+    /**
+     * 还款授权单笔最大金额
+     *
+     * @mbggenerated
+     */
     private String repayMaxAmt;
 
+    /**
+     * 删除标识 0: 未删除    1:已删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 投资交易上限
+     *
+     * @mbggenerated
+     */
     private Integer txAmount;
 
+    /**
+     * 投资交易总额上限
+     *
+     * @mbggenerated
+     */
     private Integer totAmount;
 
+    /**
+     * 创建者
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新者
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

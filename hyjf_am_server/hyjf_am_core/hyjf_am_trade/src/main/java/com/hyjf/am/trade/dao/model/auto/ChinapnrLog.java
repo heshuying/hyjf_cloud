@@ -6,6 +6,11 @@ import java.util.Date;
 public class ChinapnrLog implements Serializable {
     private Integer id;
 
+    /**
+     * 是否后台返回1后台0前台
+     *
+     * @mbggenerated
+     */
     private Integer isbg;
 
     private Integer userId;
@@ -18,26 +23,66 @@ public class ChinapnrLog implements Serializable {
 
     private String respDesc;
 
+    /**
+     * 消息类型
+     *
+     * @mbggenerated
+     */
     private String msgType;
 
+    /**
+     * 异步返回的消息类型
+     *
+     * @mbggenerated
+     */
     private String respType;
 
     private String trxid;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private String remark;
 
     private String ip;
 
+    /**
+     * 交易日期
+     *
+     * @mbggenerated
+     */
     private Integer txDate;
 
+    /**
+     * 交易时间
+     *
+     * @mbggenerated
+     */
     private Integer txTime;
 
+    /**
+     * 交易流水号
+     *
+     * @mbggenerated
+     */
     private String seqNo;
 
+    /**
+     * 交易渠道
+     *
+     * @mbggenerated
+     */
     private String channel;
 
+    /**
+     * 平台 0PC 1微官网 2Android 3IOS 4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
     private String msgdata;

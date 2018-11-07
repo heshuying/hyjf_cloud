@@ -6,94 +6,319 @@ import java.util.Date;
 public class NifaContractEssence implements Serializable {
     private Integer id;
 
+    /**
+     * 统一社会信用代码
+     *
+     * @mbggenerated
+     */
     private String platformNo;
 
+    /**
+     * 从业机构名称
+     *
+     * @mbggenerated
+     */
     private String platformName;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String projectNo;
 
+    /**
+     * 合同名称
+     *
+     * @mbggenerated
+     */
     private String contractName;
 
+    /**
+     * 合同编号
+     *
+     * @mbggenerated
+     */
     private String contractNo;
 
+    /**
+     * 合同签署方
+     *
+     * @mbggenerated
+     */
     private String contractSigner;
 
+    /**
+     * 合同签署日 格式为：YYYY-MM-DD
+     *
+     * @mbggenerated
+     */
     private String contractTime;
 
+    /**
+     * 借款人类型 01-自然人 02-机构
+     *
+     * @mbggenerated
+     */
     private Integer borrowerType;
 
+    /**
+     * 借款人证件类型 0-身份证
+     *
+     * @mbggenerated
+     */
     private String borrowerCertType;
 
+    /**
+     * 借款人证件号码 当借款人类型为01-自然人时，填写该字段
+     *
+     * @mbggenerated
+     */
     private String borrowerCertNo;
 
+    /**
+     * 借款人姓名 当借款人类型为01-自然人时，填写该字段
+     *
+     * @mbggenerated
+     */
     private String borrowerName;
 
+    /**
+     * 借款人地址 当借款人类型为01-自然人时，填写该字段
+     *
+     * @mbggenerated
+     */
     private String borrowerAddress;
 
+    /**
+     * 借款人统一社会信用代码 当借款人类型为02-机构时，填写该字段
+     *
+     * @mbggenerated
+     */
     private String borrowerNacaoNo;
 
+    /**
+     * 借款人组织机构代码 当借款人类型为02-机构时，填写该字段
+     *
+     * @mbggenerated
+     */
     private String borrowerOrgcodeNo;
 
+    /**
+     * 借款人名称 当借款人类型为02-机构时，填写该字段
+     *
+     * @mbggenerated
+     */
     private String borrowerCompany;
 
+    /**
+     * 出借人类型 01-自然人 02-机构
+     *
+     * @mbggenerated
+     */
     private Integer investorType;
 
+    /**
+     * 出借人证件类型 0-身份证
+     *
+     * @mbggenerated
+     */
     private String investorCertType;
 
+    /**
+     * 出借人证件号码
+     *
+     * @mbggenerated
+     */
     private String investorCertNo;
 
+    /**
+     * 出借人姓名
+     *
+     * @mbggenerated
+     */
     private String investorName;
 
+    /**
+     * 出借人统一社会信用代码
+     *
+     * @mbggenerated
+     */
     private String investorNacaoNo;
 
+    /**
+     * 出借人组织机构代码
+     *
+     * @mbggenerated
+     */
     private String investorOrgcodeNo;
 
+    /**
+     * 出借人名称
+     *
+     * @mbggenerated
+     */
     private String investorCompany;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private String investAmount;
 
+    /**
+     * 年化利率
+     *
+     * @mbggenerated
+     */
     private String borrowRate;
 
+    /**
+     * 借款用途
+     *
+     * @mbggenerated
+     */
     private String borrowUse;
 
+    /**
+     * 借款用途限制
+     *
+     * @mbggenerated
+     */
     private String borrowUseLimit;
 
+    /**
+     * 借款放款日
+     *
+     * @mbggenerated
+     */
     private String loanDate;
 
+    /**
+     * 借款放款日判断依据
+     *
+     * @mbggenerated
+     */
     private String loanDateBasis;
 
+    /**
+     * 起息日
+     *
+     * @mbggenerated
+     */
     private String startDate;
 
+    /**
+     * 到期日
+     *
+     * @mbggenerated
+     */
     private String expiryDate;
 
+    /**
+     * 还款方式
+     *
+     * @mbggenerated
+     */
     private Integer repayType;
 
+    /**
+     * 还款方式含义及计算公式
+     *
+     * @mbggenerated
+     */
     private String repayFormula;
 
+    /**
+     * 还款规则
+     *
+     * @mbggenerated
+     */
     private String repayDateRule;
 
+    /**
+     * 还款期数
+     *
+     * @mbggenerated
+     */
     private Integer repayNum;
 
+    /**
+     * 还款计划
+     *
+     * @mbggenerated
+     */
     private String repayPlan;
 
+    /**
+     * 逾期还款定义
+     *
+     * @mbggenerated
+     */
     private String overdueRepayDef;
 
+    /**
+     * 逾期还款责任
+     *
+     * @mbggenerated
+     */
     private String overdueRepayResp;
 
+    /**
+     * 逾期还款流程
+     *
+     * @mbggenerated
+     */
     private String overdueRepayProc;
 
+    /**
+     * 通知与送达
+     *
+     * @mbggenerated
+     */
     private String noticeAddress;
 
+    /**
+     * 合同生效日
+     *
+     * @mbggenerated
+     */
     private String contractEffectiveDate;
 
+    /**
+     * 合同模板编号
+     *
+     * @mbggenerated
+     */
     private String contractTemplateNo;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

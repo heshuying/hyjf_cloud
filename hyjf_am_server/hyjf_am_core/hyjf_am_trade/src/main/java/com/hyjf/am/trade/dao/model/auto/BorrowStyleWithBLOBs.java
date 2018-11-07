@@ -3,8 +3,18 @@ package com.hyjf.am.trade.dao.model.auto;
 import java.io.Serializable;
 
 public class BorrowStyleWithBLOBs extends BorrowStyle implements Serializable {
+    /**
+     * 算法公式
+     *
+     * @mbggenerated
+     */
     private String contents;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private static final long serialVersionUID = 1L;

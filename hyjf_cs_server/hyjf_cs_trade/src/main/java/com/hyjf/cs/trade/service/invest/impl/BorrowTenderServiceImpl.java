@@ -742,23 +742,26 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 未登录，不计算优惠券
         if (loginUser != null) {
             // 获取用户最优优惠券
+            logger.info("优惠券为："+tender.getCouponGrantId());
             if(tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0){
                 // 用户选择了优惠券
                 couponUser = amTradeClient.getCouponUser(tender.getCouponGrantId(),tender.getUserId());
-                if(couponUser==null){
-                    // 获取用户最优优惠券
-                    BestCouponListVO couponConfig = new BestCouponListVO();
-                    MyCouponListRequest request = new MyCouponListRequest();
-                    request.setBorrowNid(tender.getBorrowNid());
-                    request.setUserId(String.valueOf(loginUser.getUserId()));
-                    request.setPlatform(CustomConstants.CLIENT_PC);
-                    request.setMoney("0");
-                    couponConfig = amTradeClient.selectBestCoupon(request);
-                    logger.info("最优优惠券   "+JSONObject.toJSONString(couponConfig));
-                    if (couponConfig != null) {
-                        couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()),tender.getUserId());
-                    }
+                logger.info("用户选择了优惠券  "+JSONObject.toJSONString(couponUser));
+            }else if(tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()==0){
+                // 获取用户最优优惠券
+                BestCouponListVO couponConfig = new BestCouponListVO();
+                MyCouponListRequest request = new MyCouponListRequest();
+                request.setBorrowNid(tender.getBorrowNid());
+                request.setUserId(String.valueOf(loginUser.getUserId()));
+                request.setPlatform(CustomConstants.CLIENT_PC);
+                request.setMoney("0");
+                couponConfig = amTradeClient.selectBestCoupon(request);
+                logger.info("最优优惠券   " + JSONObject.toJSONString(couponConfig));
+                if (couponConfig != null) {
+                    couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()), tender.getUserId());
                 }
+            }
+            if(couponUser!=null){
                 String config = "";
                 // 加息券标识（0：禁用，1：可用）    1：体验金，2：加息券 3代金券
                 int interestCoupon = borrowInfo.getBorrowInterestCoupon();

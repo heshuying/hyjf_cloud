@@ -6,20 +6,60 @@ import java.util.Date;
 public class Invite implements Serializable {
     private Integer id;
 
+    /**
+     * 标题
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 内容
+     *
+     * @mbggenerated
+     */
     private String content;
 
+    /**
+     * 图片地址
+     *
+     * @mbggenerated
+     */
     private String img;
 
+    /**
+     * URL链接
+     *
+     * @mbggenerated
+     */
     private String linkUrl;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

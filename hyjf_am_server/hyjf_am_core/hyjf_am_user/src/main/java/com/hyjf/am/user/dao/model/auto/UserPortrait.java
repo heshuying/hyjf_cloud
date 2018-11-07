@@ -6,80 +6,270 @@ import java.math.BigDecimal;
 public class UserPortrait implements Serializable {
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 年龄
+     *
+     * @mbggenerated
+     */
     private Integer age;
 
+    /**
+     * 性别：男,女
+     *
+     * @mbggenerated
+     */
     private String sex;
 
+    /**
+     * 学历
+     *
+     * @mbggenerated
+     */
     private String education;
 
+    /**
+     * 职业
+     *
+     * @mbggenerated
+     */
     private String occupation;
 
+    /**
+     * 城市
+     *
+     * @mbggenerated
+     */
     private String city;
 
+    /**
+     * 爱好
+     *
+     * @mbggenerated
+     */
     private String interest;
 
+    /**
+     * 累计收益
+     *
+     * @mbggenerated
+     */
     private BigDecimal interestSum;
 
+    /**
+     * 累计年化投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal investSum;
 
+    /**
+     * 累计充值金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal rechargeSum;
 
+    /**
+     * 累计提取金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal withdrawSum;
 
+    /**
+     * 登陆活跃
+     *
+     * @mbggenerated
+     */
     private String loginActive;
 
+    /**
+     * 客户来源
+     *
+     * @mbggenerated
+     */
     private String customerSource;
 
+    /**
+     * 最后一次登陆时间
+     *
+     * @mbggenerated
+     */
     private Integer lastLoginTime;
 
+    /**
+     * 最后一次充值时间
+     *
+     * @mbggenerated
+     */
     private Integer lastRechargeTime;
 
+    /**
+     * 最后一次提现时间
+     *
+     * @mbggenerated
+     */
     private Integer lastWithdrawTime;
 
+    /**
+     * 同时投资平台数
+     *
+     * @mbggenerated
+     */
     private Integer investPlatform;
 
+    /**
+     * 投龄
+     *
+     * @mbggenerated
+     */
     private Integer investAge;
 
+    /**
+     * 交易笔数
+     *
+     * @mbggenerated
+     */
     private Integer tradeNumber;
 
+    /**
+     * 当前拥有人
+     *
+     * @mbggenerated
+     */
     private String currentOwner;
 
+    /**
+     * 是否加微信：否,是
+     *
+     * @mbggenerated
+     */
     private String addWechat;
 
+    /**
+     * 投资进程
+     *
+     * @mbggenerated
+     */
     private String investProcess;
 
+    /**
+     * 客户投诉
+     *
+     * @mbggenerated
+     */
     private String customerComplaint;
 
+    /**
+     * 邀约客户数
+     *
+     * @mbggenerated
+     */
     private Integer inviteCustomer;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 江西银行总资产
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankTotal;
 
+    /**
+     * 资金存留比
+     *
+     * @mbggenerated
+     */
     private BigDecimal fundRetention;
 
+    /**
+     * 最后一笔回款时间
+     *
+     * @mbggenerated
+     */
     private Integer lastRepayTime;
 
+    /**
+     * 邀约注册客户数
+     *
+     * @mbggenerated
+     */
     private Integer inviteRegist;
 
+    /**
+     * 邀约充值客户数
+     *
+     * @mbggenerated
+     */
     private Integer inviteRecharge;
 
+    /**
+     * 邀约投资客户数
+     *
+     * @mbggenerated
+     */
     private Integer inviteTender;
 
+    /**
+     * 客均收益率
+     *
+     * @mbggenerated
+     */
     private BigDecimal yield;
 
+    /**
+     * 是否有主单
+     *
+     * @mbggenerated
+     */
     private Integer attribute;
 
+    /**
+     * 江西银行可用余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankBalance;
 
+    /**
+     * 银行账户待还金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal accountAwait;
 
+    /**
+     * 银行冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankFrost;
 
     private static final long serialVersionUID = 1L;

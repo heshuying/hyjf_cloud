@@ -7,66 +7,221 @@ import java.util.Date;
 public class DebtAccountList implements Serializable {
     private Integer id;
 
+    /**
+     * 交易凭证号
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 推荐人用户userId
+     *
+     * @mbggenerated
+     */
     private Integer refererUserId;
 
+    /**
+     * 推荐人用户名
+     *
+     * @mbggenerated
+     */
     private String refererUserName;
 
+    /**
+     * 计划nid
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 计划订单号
+     *
+     * @mbggenerated
+     */
     private String planOrderId;
 
+    /**
+     * 计划订单余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planOrderBalance;
 
+    /**
+     * 计划订单冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planOrderFrost;
 
+    /**
+     * 计划账户余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planBalance;
 
+    /**
+     * 计划账户冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planFrost;
 
+    /**
+     * 操作金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 收支类型1收入2支出3冻结4解冻
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 交易类型
+     *
+     * @mbggenerated
+     */
     private String trade;
 
+    /**
+     * 操作识别码 balance余额操作 frost冻结操作 await待收操作
+     *
+     * @mbggenerated
+     */
     private String tradeCode;
 
+    /**
+     * 资金总额(可用+冻结+待收)
+     *
+     * @mbggenerated
+     */
     private BigDecimal total;
 
+    /**
+     * 可用金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal balance;
 
+    /**
+     * 冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal frost;
 
+    /**
+     * 待收总金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal accountWait;
 
+    /**
+     * 待收本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal capitalWait;
 
+    /**
+     * 待还收益
+     *
+     * @mbggenerated
+     */
     private BigDecimal interestWait;
 
+    /**
+     * 待还金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayWait;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 操作IP
+     *
+     * @mbggenerated
+     */
     private String ip;
 
+    /**
+     * 网站收支计算标识
+     *
+     * @mbggenerated
+     */
     private Integer web;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

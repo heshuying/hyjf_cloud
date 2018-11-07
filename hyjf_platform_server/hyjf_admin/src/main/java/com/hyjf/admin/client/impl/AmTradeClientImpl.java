@@ -1236,6 +1236,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AutoTenderExceptionResponse selectAccedeRecordList(AutoTenderExceptionRequest request) {
         String url = "http://AM-ADMIN/am-trade/autotenderexception/selectAccedeRecordList";
+        logger.info("=====selectAccedeRecordList ====== url:="+url);
         AutoTenderExceptionResponse response = restTemplate.
                 postForEntity(url, request, AutoTenderExceptionResponse.class).
                 getBody();

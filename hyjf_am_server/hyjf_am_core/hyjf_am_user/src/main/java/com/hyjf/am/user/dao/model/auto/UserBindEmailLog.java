@@ -4,18 +4,53 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UserBindEmailLog implements Serializable {
+    /**
+     * 主键id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 绑定的邮箱
+     *
+     * @mbggenerated
+     */
     private String userEmail;
 
+    /**
+     * 账号邮箱1未验证 2已验证 3过期(已发送新的邮件)
+     *
+     * @mbggenerated
+     */
     private Integer userEmailStatus;
 
+    /**
+     * email激活码
+     *
+     * @mbggenerated
+     */
     private String emailActiveCode;
 
+    /**
+     * email激活链接过期时间
+     *
+     * @mbggenerated
+     */
     private Date emailActiveUrlDeadtime;
 
+    /**
+     * 发送邮件时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

@@ -5,60 +5,200 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class HjhPlan implements Serializable {
+    /**
+     * 计划id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 计划名称
+     *
+     * @mbggenerated
+     */
     private String planName;
 
+    /**
+     * 锁定期(天)
+     *
+     * @mbggenerated
+     */
     private Integer lockPeriod;
 
+    /**
+     * 默认0 天标，1 月标
+     *
+     * @mbggenerated
+     */
     private Integer isMonth;
 
+    /**
+     * 预期年化利率
+     *
+     * @mbggenerated
+     */
     private BigDecimal expectApr;
 
+    /**
+     * 最低加入金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal minInvestment;
 
+    /**
+     * 最高加入金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal maxInvestment;
 
+    /**
+     * 投资增量
+     *
+     * @mbggenerated
+     */
     private BigDecimal investmentIncrement;
 
+    /**
+     * 计划可投金额，之前计划有总金额，现在只有剩余能投金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal availableInvestAccount;
 
+    /**
+     * 待还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayWaitAll;
 
+    /**
+     * 投资状态 0 全部；1 启用；2 关闭
+     *
+     * @mbggenerated
+     */
     private Integer planInvestStatus;
 
+    /**
+     * 显示状态字段 1显示 2 隐藏
+     *
+     * @mbggenerated
+     */
     private Integer planDisplayStatus;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Integer addTime;
 
+    /**
+     * 还款方式
+     *
+     * @mbggenerated
+     */
     private String borrowStyle;
 
+    /**
+     * 是否可用券：0 不可用 1 体验金 2 加息券 3 代金券
+     *
+     * @mbggenerated
+     */
     private String couponConfig;
 
+    /**
+     * 累积加入总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal joinTotal;
 
+    /**
+     * 待还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal planWaitCaptical;
 
+    /**
+     * 待还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal planWaitInterest;
 
+    /**
+     * 已还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayTotal;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal planRepayInterest;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal planRepayCapital;
 
+    /**
+     * 最小自动投资笔数
+     *
+     * @mbggenerated
+     */
     private Integer minInvestCounts;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
