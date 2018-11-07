@@ -87,6 +87,24 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
     }
 
     /**
+     * 取得提成配置
+     *
+     * @param
+     * @return
+     * @auth zdj
+     */
+    @Override
+    public List<PushMoney> getPushMoney(PushMoneyRequest request) {
+        PushMoneyExample example = new PushMoneyExample();
+        example.createCriteria().andProjectTypeEqualTo(1).andTypeEqualTo(request.getType());
+        List<PushMoney> list = pushMoneyMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list;
+        }
+        return null;
+    }
+
+    /**
      * 提成列表list
      *
      * @param

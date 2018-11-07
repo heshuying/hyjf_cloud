@@ -6,11 +6,13 @@ package com.hyjf.cs.trade.service.hjh.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -192,6 +194,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setMoney(money);
         int availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(request);
         investInfo.setCouponAvailableCount(availableCouponListCount);
+        if(couponId==null || couponId.intValue()==0){
+            BestCouponListVO bestCouponListVO = amTradeClient.selectHJHBestCoupon(request);
+            logger.info("最优优惠券   " + JSONObject.toJSONString(bestCouponListVO));
+            if(bestCouponListVO!=null){
+                couponUser = amTradeClient.getCouponUser(Integer.parseInt(bestCouponListVO.getUserCouponId()),tender.getUserId());
+            }
+            BestCouponListVO couponFront = new BestCouponListVO();
+            couponFront.setCouponQuotaStr(bestCouponListVO.getCouponQuotaStr());
+            couponFront.setUserCouponId(bestCouponListVO.getUserCouponId());
+            couponFront.setCouponType(bestCouponListVO.getCouponType());
+            investInfo.setCouponConfig(couponFront);
+        }
         /** 可用优惠券张数结束 */
 
         /** 获取用户优惠券总张数开始 */
@@ -964,9 +978,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         logger.info("投资明细表插入完毕,userId{},平台{},结果{}", userId, request.getPlatform(), trenderFlag);
         if (trenderFlag) {
             //加入明细表插表成功的前提下，继续
+            // 投资成功后,发送CRM绩效统计
+            CrmInvestMsgBean crmInvestMsgBean = new CrmInvestMsgBean();
+            crmInvestMsgBean.setInvestType(1);
+            crmInvestMsgBean.setOrderId(planAccede.getAccedeOrderId());
+            //加入明细表插表成功的前提下，继续
             //crm投资推送
             try {
-                amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(planAccede)));
+                amTradeProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(crmInvestMsgBean)),2);
             } catch (Exception e) {
                 logger.error("发送CRM消息失败:" + e.getMessage());
             }

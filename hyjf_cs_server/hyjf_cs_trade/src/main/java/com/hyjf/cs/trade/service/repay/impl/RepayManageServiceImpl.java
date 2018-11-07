@@ -861,12 +861,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      * @date: 2018/10/16
      */
     @Override
-    public  WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account) {
+    public  WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account, WebResult webResult) {
         Integer userId = userVO.getUserId();
         String userName = userVO.getUsername();
         String ip = repayBean.getIp();
         BigDecimal repayTotal = repayBean.getRepayAccountAll();
-        WebResult webResult = new WebResult();
         BankCallBean bean = new BankCallBean();
         bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_FREEZE);// 交易代码
         bean.setAccountId(account);// 电子账号

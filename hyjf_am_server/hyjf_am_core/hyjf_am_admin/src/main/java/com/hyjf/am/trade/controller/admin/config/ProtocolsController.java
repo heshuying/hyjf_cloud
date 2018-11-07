@@ -57,6 +57,7 @@ public class ProtocolsController extends BaseController {
 		List<FddTempletCustomize> list = protocolsService.selectFddTempletList(request);
 		if (!CollectionUtils.isEmpty(list)) {
 			List<FddTempletCustomizeVO> voList = CommonUtils.convertBeanList(list, FddTempletCustomizeVO.class);
+			response.setCount(voList.size());
 			response.setResultList(voList);
 		}
 		return response;
