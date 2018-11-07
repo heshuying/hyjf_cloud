@@ -388,6 +388,12 @@ public class RedisConstants {
      * 登录失败配置项
      */
     public static final String LOCKED_CONFIG = "lock_config";
+
+    /**
+     * 上传合同模板暂存地址
+     */
+    public static final String TEMPLATE_UPLOAD_URL = "template_upload_url:";
+
     /**
      * 测评到期时间和测评结果投资金额上限用
      */
