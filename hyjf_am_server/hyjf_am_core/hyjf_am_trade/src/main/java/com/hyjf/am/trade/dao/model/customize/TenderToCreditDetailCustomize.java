@@ -12,6 +12,7 @@
 package com.hyjf.am.trade.dao.model.customize;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author jijun 20180628
@@ -77,11 +78,8 @@ public class TenderToCreditDetailCustomize implements Serializable {
 	/**
 	 * 转让时间
 	 */
-	private String creditTime;
-	/**
-	 * 转让时间
-	 */
-	private int creditTimeInt;
+	private Date creditTime;
+
 	/**
 	 * 转让人
 	 */
@@ -219,11 +217,11 @@ public class TenderToCreditDetailCustomize implements Serializable {
 		this.creditPrice = creditPrice;
 	}
 
-	public String getCreditTime() {
+	public Date getCreditTime() {
 		return creditTime;
 	}
 
-	public void setCreditTime(String creditTime) {
+	public void setCreditTime(Date creditTime) {
 		this.creditTime = creditTime;
 	}
 
@@ -271,13 +269,7 @@ public class TenderToCreditDetailCustomize implements Serializable {
 		this.creditRepayEndTime = creditRepayEndTime;
 	}
 
-	public int getCreditTimeInt() {
-		return creditTimeInt;
-	}
 
-	public void setCreditTimeInt(int creditTimeInt) {
-		this.creditTimeInt = creditTimeInt;
-	}
 
 	public String getCreditTermHold() {
 		return creditTermHold;
