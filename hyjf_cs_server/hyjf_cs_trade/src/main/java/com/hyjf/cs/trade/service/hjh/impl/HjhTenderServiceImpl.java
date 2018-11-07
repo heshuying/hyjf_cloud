@@ -200,11 +200,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if(bestCouponListVO!=null){
                 couponUser = amTradeClient.getCouponUser(Integer.parseInt(bestCouponListVO.getUserCouponId()),tender.getUserId());
             }
-            BestCouponListVO couponFront = new BestCouponListVO();
-            couponFront.setCouponQuotaStr(bestCouponListVO.getCouponQuotaStr());
-            couponFront.setUserCouponId(bestCouponListVO.getUserCouponId());
-            couponFront.setCouponType(bestCouponListVO.getCouponType());
-            investInfo.setCouponConfig(couponFront);
+            investInfo.setCouponConfig(bestCouponListVO);
         }
         /** 可用优惠券张数结束 */
 
