@@ -210,6 +210,7 @@ public class AccountController extends BaseController {
         AccountResponse response = new AccountResponse();
         if (accountVO != null) {
             try{
+                logger.info("updateOfLoansTender更新用户账户开始，accountVO："+ accountVO.toString());
                 int updateFlag = accountService.updateOfLoansTender(accountVO);
                 response.setUpdateFlag(updateFlag);
             }catch (Exception e){
