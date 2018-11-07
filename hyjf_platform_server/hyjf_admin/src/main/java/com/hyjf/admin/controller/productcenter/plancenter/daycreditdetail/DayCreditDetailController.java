@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @Api(value = "产品中心-汇计划-资金计划-转让详情",tags ="产品中心-汇计划-资金计划-转让详情")
 @RestController
-@RequestMapping(value = "/dayCreditDetail")
+@RequestMapping(value = "/hyjf-admin/dayCreditDetail")
 public class DayCreditDetailController extends BaseController {
 
     @Autowired
@@ -110,7 +110,7 @@ public class DayCreditDetailController extends BaseController {
      * @return
      */
     @ApiOperation(value = "资金计划", notes = "汇计划按天转让记录列表")
-    @PostMapping(value = "hjhDayCreditDetailList")
+    @PostMapping(value = "/hjhDayCreditDetailList")
     @ResponseBody
     public AdminResult<ListResult<DayCreditDetailVO>> init(@RequestBody @Valid DayCreditDetailRequestBean request){
 

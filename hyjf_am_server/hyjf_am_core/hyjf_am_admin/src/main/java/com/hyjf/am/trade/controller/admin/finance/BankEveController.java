@@ -82,6 +82,8 @@ public class BankEveController extends BaseController {
 		mapParam.put("cardnbr", request.getCardnbr());
 		//系统跟踪号
 		mapParam.put("seqno", request.getSeqno());
+		//交易類型
+		mapParam.put("transtype", request.getTranstype());
 		//入交易传输时间
 		mapParam.put("startDate", request.getStartDate());
 		mapParam.put("endDate", request.getEndDate());
