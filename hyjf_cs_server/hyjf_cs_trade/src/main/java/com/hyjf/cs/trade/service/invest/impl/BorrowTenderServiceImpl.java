@@ -788,8 +788,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 BestCouponListVO couponConfig = new BestCouponListVO();
                 couponConfig.setCouponType(couponUser.getCouponType());
                 couponConfig.setUserCouponId(couponUser.getId()+"");
-                NumberFormat nf = NumberFormat.getInstance();
-                couponConfig.setCouponQuotaStr(nf.format(couponUser.getCouponQuota()));
+                couponConfig.setCouponQuota(couponUser.getCouponQuota());
+                couponConfig.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
                 investInfo.setIsThereCoupon(1);
                 investInfo.setCouponConfig(couponConfig);
             } else {
