@@ -840,6 +840,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if (couponUser.getCouponType() == 1) {
                     couponInterest =couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
                 } else {
+                    logger.info("-----borrowStyle：{}    CouponType:{}   borrowApr:{}   ouponQuota:{}  money:{}    orrowPeriod:{}",
+                            borrowStyle, couponUser.getCouponType(),borrowApr,couponUser.getCouponQuota(),money,borrow.getBorrowPeriod());
                     couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), money, borrow.getBorrowPeriod());
                 }
                 logger.info("优惠券收益：：：{}",couponInterest);
