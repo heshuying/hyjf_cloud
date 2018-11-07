@@ -107,10 +107,10 @@ public class WebEvaluationController extends BaseUserController {
         UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(userId);
         //已测评
         if (userEvalationResult != null && userEvalationResult.getId() != 0) {
-            //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
-            Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(), 1, 1).getTime();
+            // 获取评测时间加一年的毫秒数18.2.2评测 19.2.2
+            Long lCreate = user.getEvaluationExpiredTime().getTime();
             //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
-            Long lNow = GetDate.countDate(new Date(), 5, 1).getTime();
+            Long lNow = System.currentTimeMillis();
             if (lCreate <= lNow) {
                 //已过期需要重新评测
                 //测评问题

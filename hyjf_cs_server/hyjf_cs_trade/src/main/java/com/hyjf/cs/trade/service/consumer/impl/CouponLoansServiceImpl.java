@@ -683,6 +683,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         account.setBankInvestSum(BigDecimal.ZERO);// 投资人累计投资
         account.setBankFrostCash(BigDecimal.ZERO);// 江西银行冻结金额
 
+        logger.info("更新用户账户："+account.getUserId());
         int accountCnt = this.borrowClient.updateOfLoansTender(account);
         if (accountCnt == 0) {
             throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
