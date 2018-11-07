@@ -863,9 +863,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (couponUser != null && couponUser.getCouponType() == 3) {
                 investInfo.setCapitalInterest(df.format(earnings.add(couponUser.getCouponQuota()).subtract(couponInterest)));
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
+                earnings = earnings.add(couponInterest);
                 investInfo.setEarnings(df.format(earnings.add(couponInterest)));
                 investInfo.setCapitalInterest(df.format(earnings));
             } else {
+                earnings = earnings.add(couponInterest);
                 investInfo.setCapitalInterest(df.format(earnings.subtract(couponInterest)));
                 investInfo.setEarnings(df.format(earnings.add(couponInterest)));
             }
