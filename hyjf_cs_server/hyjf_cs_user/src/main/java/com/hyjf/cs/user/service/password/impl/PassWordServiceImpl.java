@@ -131,7 +131,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setTxDate(GetOrderIdUtils.getTxDate());
         bean.setTxTime(GetOrderIdUtils.getTxTime());
         bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
-        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET);
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         if(user.getUserType() == 1){
             //企业用户 传组织机构代码
@@ -162,7 +162,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(userId));
-        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDSET);
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
         bean.setLogOrderId(GetOrderIdUtils.getUsrId(userId));
         bean.setLogRemark("设置交易密码");
         Map<String,Object> map = new HashMap<>();
@@ -386,7 +386,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 异步调用路
         String bgRetUrl = "http://CS-USER/user/password";
         // 调用设置密码接口
-        if(txCode.equals(BankCallConstant.TXCODE_PASSWORD_SET)){
+        if(txCode.equals(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE)){
             retUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
             bgRetUrl += "/passwordBgreturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getBgRetUrl().replace("#", "*-*-*");
         }else {
@@ -524,7 +524,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
 
     @Override
     public Map<String, Object> setAppPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
-        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET);
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
         bean.setChannel(BankCallConstant.CHANNEL_APP);
         if(user.getUserType() == 1){
             //企业用户 传组织机构代码
@@ -547,7 +547,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
-        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDSET);
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
         Map<String,Object> resultMap = new HashMap<>();
         try {
@@ -598,7 +598,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     @Override
     public Map<String, Object> setWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
         // 消息类型
-        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET);
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
         bean.setChannel(BankCallConstant.CHANNEL_WEI);
         if(user.getUserType() == 1){
             //企业用户 传组织机构代码
@@ -622,7 +622,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
-        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDSET);
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
      //   bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         // 跳转到汇付天下画面
@@ -841,7 +841,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         }
         // 判断用户是否设置过交易密码
         Integer passwordFlag = user.getIsSetPassword();
-        if(type.equals(BankCallConstant.TXCODE_PASSWORD_SET)){
+        if(type.equals(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE)){
             if (passwordFlag == 1) {
                 ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
                 repwdResult.setCallBackAction(retUrl);

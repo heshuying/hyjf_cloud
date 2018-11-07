@@ -153,6 +153,7 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
             String key = GetDate.date2Str(vo.getDate(),GetDate.date_sdf);
 
             HjhAccountBalanceVO temp = new HjhAccountBalanceVO();
+            temp.setRptDate(vo.getDate());
             temp.setDataFormt(key);
             temp.setInvestAccount(vo.getInvestAccount());
             temp.setCreditAccount(vo.getCreditAccount());

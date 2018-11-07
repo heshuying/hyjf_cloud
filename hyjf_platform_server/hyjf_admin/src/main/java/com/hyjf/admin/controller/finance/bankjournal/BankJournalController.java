@@ -64,6 +64,8 @@ public class BankJournalController {
         if(count<1){
             jsonObject.put("count",0);
             jsonObject.put("record",null);
+            jsonObject.put("status",status);
+            jsonObject.put("statusDesc",statusDesc);
             return jsonObject;
         }
 
