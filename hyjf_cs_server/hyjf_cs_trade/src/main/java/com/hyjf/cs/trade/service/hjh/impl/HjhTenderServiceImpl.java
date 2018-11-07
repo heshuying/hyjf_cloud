@@ -362,6 +362,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 设置优惠券
             resultVo.setCapitalInterest("");
             resultVo.setConfirmCouponDescribe("未使用优惠券");
+            resultVo.setUsedCouponDes("未使用");
             resultVo.setCouponType("");
             JSONObject counts =  userCoupon;
             String couponAvailableCount = "0";
@@ -376,17 +377,20 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     resultVo.setCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setConfirmCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setCouponType("体验金");
+                    resultVo.setUsedCouponDes("体验金: " + couponConfig.getCouponQuota() + "元");
                 }
                 if (couponConfig != null && couponConfig.getId() > 0 && couponConfig.getCouponType() == 2) {
                     resultVo.setCouponDescribe("加息券: " + couponConfig.getCouponQuota() + "%");
                     resultVo.setConfirmCouponDescribe("加息券: " + couponConfig.getCouponQuota() + "%");
                     resultVo.setCouponType("加息券");
+                    resultVo.setUsedCouponDes("加息券: " + couponConfig.getCouponQuota() + "%");
 
                 }
                 if (couponConfig != null && couponConfig.getId() > 0 && couponConfig.getCouponType() == 3) {
                     resultVo.setCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setConfirmCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setCouponType("代金券");
+                    resultVo.setUsedCouponDes("代金券: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
 
                 }
