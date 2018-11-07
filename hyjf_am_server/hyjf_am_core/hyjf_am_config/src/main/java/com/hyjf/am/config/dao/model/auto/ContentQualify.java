@@ -4,20 +4,60 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ContentQualify implements Serializable {
+    /**
+     * 资质荣誉id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 资质荣誉名
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 证书图片路径
+     *
+     * @mbggenerated
+     */
     private String imgurl;
 
+    /**
+     * 资质描述
+     *
+     * @mbggenerated
+     */
     private String describe;
 
+    /**
+     * 排序数字
+     *
+     * @mbggenerated
+     */
     private Integer orderNum;
 
+    /**
+     * 使用状态：0关闭，1启用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;

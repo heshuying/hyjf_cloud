@@ -4,28 +4,88 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Config implements Serializable {
+    /**
+     * 配置ID
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 配置名称
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 配置类型
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 配置说明
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 配置分组
+     *
+     * @mbggenerated
+     */
     private Integer group;
 
+    /**
+     * 配置值
+     *
+     * @mbggenerated
+     */
     private String extra;
 
+    /**
+     * 配置说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 配置值
+     *
+     * @mbggenerated
+     */
     private String value;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Short sort;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;

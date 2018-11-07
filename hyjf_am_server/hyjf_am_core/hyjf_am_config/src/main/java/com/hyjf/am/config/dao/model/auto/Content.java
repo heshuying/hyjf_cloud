@@ -6,24 +6,74 @@ import java.util.Date;
 public class Content implements Serializable {
     private Integer id;
 
+    /**
+     * 是否单页1单页，0非单页
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 标题
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 分类ID
+     *
+     * @mbggenerated
+     */
     private Integer cateId;
 
+    /**
+     * 别名
+     *
+     * @mbggenerated
+     */
     private String code;
 
+    /**
+     * 文章状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 文章来源
+     *
+     * @mbggenerated
+     */
     private String source;
 
+    /**
+     * 作者
+     *
+     * @mbggenerated
+     */
     private String author;
 
+    /**
+     * 缩略图
+     *
+     * @mbggenerated
+     */
     private String thumb;
 
+    /**
+     * 简要介绍
+     *
+     * @mbggenerated
+     */
     private String summary;
 
+    /**
+     * 内容
+     *
+     * @mbggenerated
+     */
     private String content;
 
     private String seoTitle;
@@ -32,14 +82,34 @@ public class Content implements Serializable {
 
     private String seoDescription;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer order;
 
+    /**
+     * 点击数
+     *
+     * @mbggenerated
+     */
     private Integer hits;
 
     private String outLink;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;
