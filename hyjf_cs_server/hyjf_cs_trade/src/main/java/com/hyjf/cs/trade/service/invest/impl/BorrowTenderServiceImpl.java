@@ -870,7 +870,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setEarnings(df.format(earnings.add(couponInterest)));
             }
             investInfo.setCouponUser(couponUser);
-
+            logger.info("本金+优惠券收益  "+investInfo.getEarnings().toString());
             // 产品加息预期收益
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
                 if (couponUser != null && couponUser.getCouponType() == 3){
