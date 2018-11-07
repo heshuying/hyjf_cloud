@@ -7,88 +7,293 @@ import java.util.Date;
 public class AccountList implements Serializable {
     private Integer id;
 
+    /**
+     * 交易凭证号
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 汇计划加入订单号
+     *
+     * @mbggenerated
+     */
     private String accedeOrderId;
 
+    /**
+     * 该明细是否在前台展示
+     *
+     * @mbggenerated
+     */
     private Integer isShow;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 操作金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 收支类型1收入2支出3冻结
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 交易类型
+     *
+     * @mbggenerated
+     */
     private String trade;
 
+    /**
+     * 操作识别码 balance余额操作 frost冻结操作 await待收操作
+     *
+     * @mbggenerated
+     */
     private String tradeCode;
 
+    /**
+     * 资金总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal total;
 
+    /**
+     * 可用金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal balance;
 
+    /**
+     * 冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal frost;
 
+    /**
+     * 汇添金账户冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planFrost;
 
+    /**
+     * 待收金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal await;
 
+    /**
+     * 待还金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repay;
 
     private String remark;
 
+    /**
+     * 操作员
+     *
+     * @mbggenerated
+     */
     private String operator;
 
+    /**
+     * 操作IP
+     *
+     * @mbggenerated
+     */
     private String ip;
 
+    /**
+     * 网站收支计算标识
+     *
+     * @mbggenerated
+     */
     private Integer web;
 
+    /**
+     * 汇添金账户可用余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planBalance;
 
+    /**
+     * 是否是银行的交易记录(0:否,1:是)
+     *
+     * @mbggenerated
+     */
     private Integer isBank;
 
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * 银行订单日期
+     *
+     * @mbggenerated
+     */
     private Integer txDate;
 
+    /**
+     * 银行订单时间
+     *
+     * @mbggenerated
+     */
     private Integer txTime;
 
+    /**
+     * 银行交易流水号
+     *
+     * @mbggenerated
+     */
     private String seqNo;
 
+    /**
+     * 银行交易订单号
+     *
+     * @mbggenerated
+     */
     private String bankSeqNo;
 
+    /**
+     * 对账状态0：未对账 1：已对账
+     *
+     * @mbggenerated
+     */
     private Integer checkStatus;
 
+    /**
+     * 交易状态0: 失败 1：成功
+     *
+     * @mbggenerated
+     */
     private Integer tradeStatus;
 
+    /**
+     * 银行总资产
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankTotal;
 
+    /**
+     * 银行存管可用余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankBalance;
 
+    /**
+     * 银行存管冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankFrost;
 
+    /**
+     * 银行待还本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankWaitRepay;
 
+    /**
+     * 银行待还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankWaitCapital;
 
+    /**
+     * 银行待还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankWaitInterest;
 
+    /**
+     * 银行累计收益
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankInterestSum;
 
+    /**
+     * 银行累计投资
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankInvestSum;
 
+    /**
+     * 银行待收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankAwait;
 
+    /**
+     * 银行待收本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankAwaitCapital;
 
+    /**
+     * 银行待收利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankAwaitInterest;
 
+    /**
+     * 对账时间
+     *
+     * @mbggenerated
+     */
     private Integer checkDate;
 
+    /**
+     * 到账金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal checkBalance;
 
+    /**
+     * 到账时间
+     *
+     * @mbggenerated
+     */
     private Integer accountDate;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

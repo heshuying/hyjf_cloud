@@ -4,24 +4,74 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class AdminRole implements Serializable {
+    /**
+     * 编号
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 角色名称
+     *
+     * @mbggenerated
+     */
     private String roleName;
 
+    /**
+     * 描述
+     *
+     * @mbggenerated
+     */
     private String description;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer sort;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 删除FLAG
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

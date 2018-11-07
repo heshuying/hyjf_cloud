@@ -2,9 +2,8 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.MspDegreeresult;
 import com.hyjf.am.user.dao.model.auto.MspDegreeresultExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface MspDegreeresultMapper {
     int countByExample(MspDegreeresultExample example);

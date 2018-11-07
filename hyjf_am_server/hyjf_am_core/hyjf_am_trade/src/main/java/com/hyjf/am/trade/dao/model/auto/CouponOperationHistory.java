@@ -8,10 +8,25 @@ public class CouponOperationHistory implements Serializable {
 
     private String couponCode;
 
+    /**
+     * 1：新增，2：修改，3：删除
+     *
+     * @mbggenerated
+     */
     private Integer operationCode;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

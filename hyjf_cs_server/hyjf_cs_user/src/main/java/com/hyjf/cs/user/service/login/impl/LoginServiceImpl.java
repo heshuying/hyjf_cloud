@@ -689,7 +689,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 		{
 			// 二维码
-			result.setQrCodeUrl(systemConfig.getAppFrontHost().replace("{userId}", String.valueOf(userId)));
+			result.setQrCodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", String.valueOf(userId)));
 		}
 		{
 			// 风险测评结果

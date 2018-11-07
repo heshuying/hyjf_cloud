@@ -17,6 +17,11 @@ public class GatewayApiConfig implements Serializable {
 
     private Integer stripPrefix;
 
+    /**
+     * 安全访问控制标识，  0-无需登陆访问 1-需要登陆访问
+     *
+     * @mbggenerated
+     */
     private Integer secureVisitFlag;
 
     private String apiName;

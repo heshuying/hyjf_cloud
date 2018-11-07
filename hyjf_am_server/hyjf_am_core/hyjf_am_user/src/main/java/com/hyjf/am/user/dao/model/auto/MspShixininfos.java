@@ -5,26 +5,81 @@ import java.io.Serializable;
 public class MspShixininfos implements Serializable {
     private Integer id;
 
+    /**
+     * 申请编号
+     *
+     * @mbggenerated
+     */
     private String applyId;
 
+    /**
+     * ID号
+     *
+     * @mbggenerated
+     */
     private String shixinId;
 
+    /**
+     * 姓名
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 身份证
+     *
+     * @mbggenerated
+     */
     private String papernum;
 
+    /**
+     * 案号
+     *
+     * @mbggenerated
+     */
     private String anlinum;
 
+    /**
+     * 被执行人的履行情况
+     *
+     * @mbggenerated
+     */
     private String beizhixingrenlvxingstatus;
 
+    /**
+     * 失信被执行人行为具体情形
+     *
+     * @mbggenerated
+     */
     private String jutistatus;
 
+    /**
+     * 立案时间
+     *
+     * @mbggenerated
+     */
     private String liantime;
 
+    /**
+     * 省份
+     *
+     * @mbggenerated
+     */
     private String province;
 
+    /**
+     * 发布时间
+     *
+     * @mbggenerated
+     */
     private String publictime;
 
+    /**
+     * 执行法院
+     *
+     * @mbggenerated
+     */
     private String zhixingcourt;
 
     private static final long serialVersionUID = 1L;

@@ -8,16 +8,46 @@ public class BankOpenAccount implements Serializable {
 
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 用户客户号
+     *
+     * @mbggenerated
+     */
     private String account;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

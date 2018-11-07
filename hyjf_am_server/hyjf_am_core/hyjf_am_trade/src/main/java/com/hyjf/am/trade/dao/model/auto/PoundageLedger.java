@@ -7,40 +7,130 @@ import java.util.Date;
 public class PoundageLedger implements Serializable {
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 真实姓名
+     *
+     * @mbggenerated
+     */
     private String truename;
 
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
     private String account;
 
+    /**
+     * 分账类型   1:按投资人分账； 2:按借款人分账
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 分账来源  0:全部； 1:服务费； 2:债转服务费； 3:管理费
+     *
+     * @mbggenerated
+     */
     private String source;
 
+    /**
+     * 服务费分账比例
+     *
+     * @mbggenerated
+     */
     private BigDecimal serviceRatio;
 
+    /**
+     * 债转服务费分账比例
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditRatio;
 
+    /**
+     * 管理费分账比例
+     *
+     * @mbggenerated
+     */
     private BigDecimal manageRatio;
 
+    /**
+     * 投资人分公司id
+     *
+     * @mbggenerated
+     */
     private Integer investorCompanyId;
 
+    /**
+     * 投资人分公司名称
+     *
+     * @mbggenerated
+     */
     private String investorCompany;
 
+    /**
+     * 项目类型，可保存所有
+     *
+     * @mbggenerated
+     */
     private String projectType;
 
+    /**
+     * 启用状态  0：禁用    1：启用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 说明
+     *
+     * @mbggenerated
+     */
     private String explan;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

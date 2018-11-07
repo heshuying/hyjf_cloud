@@ -5,154 +5,529 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class HjhDebtCredit implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 债转用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 转让用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 新计划编号
+     *
+     * @mbggenerated
+     */
     private String planNidNew;
 
+    /**
+     * 计划加入订单号(旧计划)
+     *
+     * @mbggenerated
+     */
     private String planOrderId;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 标的名称
+     *
+     * @mbggenerated
+     */
     private String borrowName;
 
+    /**
+     * 原标年化利率
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowApr;
 
+    /**
+     * 原标还款方式
+     *
+     * @mbggenerated
+     */
     private String borrowStyle;
 
+    /**
+     * 原标项目期限
+     *
+     * @mbggenerated
+     */
     private Integer borrowPeriod;
 
+    /**
+     * 原标机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 原标资产类型
+     *
+     * @mbggenerated
+     */
     private Integer assetType;
 
+    /**
+     * 原标项目类型(0汇保贷 1汇典贷 2汇小贷 3汇车贷 4新手标)
+     *
+     * @mbggenerated
+     */
     private Integer projectType;
 
+    /**
+     * 清算后债权实际年华收益率
+     *
+     * @mbggenerated
+     */
     private BigDecimal actualApr;
 
+    /**
+     * 原始标的投资订单号
+     *
+     * @mbggenerated
+     */
     private String investOrderId;
 
+    /**
+     * 原投资订单号
+     *
+     * @mbggenerated
+     */
     private String sellOrderId;
 
+    /**
+     * 债转编号
+     *
+     * @mbggenerated
+     */
     private String creditNid;
 
+    /**
+     * 转让状态：0.承接中，1.部分承接，2完全承接，3承接终止
+     *
+     * @mbggenerated
+     */
     private Integer creditStatus;
 
+    /**
+     * 债转还款状态 0 未还款 1还款中 2还款完成
+     *
+     * @mbggenerated
+     */
     private Integer repayStatus;
 
+    /**
+     * 是否已清算(0:未清算,1:已清算)
+     *
+     * @mbggenerated
+     */
     private Integer isLiquidates;
 
+    /**
+     * 持有天数
+     *
+     * @mbggenerated
+     */
     private Integer holdDays;
 
+    /**
+     * 剩余天数
+     *
+     * @mbggenerated
+     */
     private Integer remainDays;
 
+    /**
+     * 当前期计息天数
+     *
+     * @mbggenerated
+     */
     private Integer duringDays;
 
+    /**
+     * 承接原项目所在期数
+     *
+     * @mbggenerated
+     */
     private Integer assignPeriod;
 
+    /**
+     * 清算时所在期数
+     *
+     * @mbggenerated
+     */
     private Integer liquidatesPeriod;
 
+    /**
+     * 债转期数
+     *
+     * @mbggenerated
+     */
     private Integer creditPeriod;
 
+    /**
+     * 已还款期数
+     *
+     * @mbggenerated
+     */
     private Integer repayPeriod;
 
+    /**
+     * 债转期限
+     *
+     * @mbggenerated
+     */
     private Integer creditTerm;
 
+    /**
+     * 清算时公允价值
+     *
+     * @mbggenerated
+     */
     private BigDecimal liquidationFairValue;
 
+    /**
+     * 清算总本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal liquidatesCapital;
 
+    /**
+     * 债转总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditAccount;
 
+    /**
+     * 债转总本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditCapital;
 
+    /**
+     * 债转总利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterest;
 
+    /**
+     * 垫付总利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterestAdvance;
 
+    /**
+     * 清算时延期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditDelayInterest;
 
+    /**
+     * 清算时逾期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditLateInterest;
 
+    /**
+     * 已承接总金额（此金额为本金加利息与还款相关，同垫付利息无关）
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditAccountAssigned;
 
+    /**
+     * 已承接本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditCapitalAssigned;
 
+    /**
+     * 已承接待还总利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterestAssigned;
 
+    /**
+     * 已承接垫付总利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterestAdvanceAssigned;
 
+    /**
+     * 承接已垫付的延期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditDelayInterestAssigned;
 
+    /**
+     * 承接已垫付的逾期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditLateInterestAssigned;
 
+    /**
+     * 待承接总金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditAccountWait;
 
+    /**
+     * 待承接本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditCapitalWait;
 
+    /**
+     * 待承接利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterestWait;
 
+    /**
+     * 已承接垫付总利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterestAdvanceWait;
 
+    /**
+     * 总收入，本金+垫付利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditIncome;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditServiceFee;
 
+    /**
+     * 出让价格
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditPrice;
 
+    /**
+     * 已还款总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccount;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapital;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterest;
 
+    /**
+     * 待还款本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountWait;
 
+    /**
+     * 待还款本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapitalWait;
 
+    /**
+     * 待还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterestWait;
 
+    /**
+     * 债转计划最后还款时间
+     *
+     * @mbggenerated
+     */
     private Integer creditRepayEndTime;
 
+    /**
+     * 上次还款时间
+     *
+     * @mbggenerated
+     */
     private Integer creditRepayLastTime;
 
+    /**
+     * 下次还款时间
+     *
+     * @mbggenerated
+     */
     private Integer creditRepayNextTime;
 
+    /**
+     * 最终实际还款时间
+     *
+     * @mbggenerated
+     */
     private Integer creditRepayYesTime;
 
+    /**
+     * 债转结束时间（全部承接或者提前还款导致）
+     *
+     * @mbggenerated
+     */
     private Integer endTime;
 
+    /**
+     * 承接次数
+     *
+     * @mbggenerated
+     */
     private Integer assignNum;
 
+    /**
+     * 债转发起客户端,0PC,1微官网,2Android,3iOS,4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 是否原始债权 0非原始 1原始
+     *
+     * @mbggenerated
+     */
     private Integer sourceType;
 
+    /**
+     * 债权出让次数
+     *
+     * @mbggenerated
+     */
     private Integer creditTimes;
 
+    /**
+     * 是否逾期之后的债权
+     *
+     * @mbggenerated
+     */
     private Integer isLateCredit;
 
+    /**
+     * 标签ID
+     *
+     * @mbggenerated
+     */
     private Integer labelId;
 
+    /**
+     * 标签名称
+     *
+     * @mbggenerated
+     */
     private String labelName;
 
+    /**
+     * 删除标识 0 未删除 1已删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户id
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ROaDepartmentMapper {
     int countByExample(ROaDepartmentExample example);
