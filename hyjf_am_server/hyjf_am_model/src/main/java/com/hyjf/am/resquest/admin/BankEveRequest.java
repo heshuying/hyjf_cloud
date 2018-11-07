@@ -21,6 +21,9 @@ public class BankEveRequest extends BasePage implements Serializable {
 	@ApiModelProperty(value = "系统跟踪号检索")
 	private Integer seqno;
 
+	@ApiModelProperty(value = "交易类型")
+	private Integer transtype;
+
 	@ApiModelProperty(value = "交易传输时间 起始")
 	private String startDate;
 	@ApiModelProperty(value = "交易传输时间 结束")
@@ -41,6 +44,14 @@ public class BankEveRequest extends BasePage implements Serializable {
 
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+
+	public Integer getTranstype() {
+		return transtype;
+	}
+
+	public void setTranstype(Integer transtype) {
+		this.transtype = transtype;
 	}
 
 	/**

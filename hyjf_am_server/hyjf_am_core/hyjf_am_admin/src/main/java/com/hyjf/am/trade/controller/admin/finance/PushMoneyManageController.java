@@ -10,6 +10,7 @@ import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.auto.PushMoney;
 import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
 import com.hyjf.am.trade.service.admin.finance.PushMoneyManageService;
 import com.hyjf.am.vo.trade.PushMoneyVO;
@@ -63,6 +64,23 @@ public class PushMoneyManageController extends BaseController {
                 response.setRtn(Response.SUCCESS);//代表成功
             }
         }
+        return response;
+    }
+
+    /**
+     * 直投提成列表count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/getPushMoney")
+    public PushMoneyResponse getPushMoney(@RequestBody PushMoneyRequest request){
+        PushMoneyResponse response = new PushMoneyResponse();
+        List<PushMoney> pushMoneyList = pushMoneyManagerService.getPushMoney(request);
+        List<PushMoneyVO> pushMoneyVOList = CommonUtils.convertBeanList(pushMoneyList,PushMoneyVO.class);
+        response.setResultList(pushMoneyVOList);
+        response.setRtn(Response.SUCCESS);
+        response.setRtn(Response.SUCCESS);
         return response;
     }
 
