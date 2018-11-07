@@ -331,7 +331,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
 
     @Override
     public HjhUserAuthVO getHjhUserAuthByUserId(Integer userId) {
-        HjhUserAuthVO hjhUserAuth = getHjhUserAuthByUserId(userId);
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthByUserId(userId);
         return hjhUserAuth;
     }
 
