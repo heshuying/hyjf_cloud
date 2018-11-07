@@ -72,7 +72,7 @@ public class AccountBalanceController extends BaseController {
      * @param form
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出日交易量")
-    @GetMapping("/exportActionByDay")
+    @PostMapping("/exportActionByDay")
     public void exportActionByDay(@RequestBody HjhAccountBalanceRequest form,HttpServletRequest request,HttpServletResponse response) throws Exception {
 
         //sheet默认最大行数
