@@ -754,6 +754,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     request.setPlatform(CustomConstants.CLIENT_PC);
                     request.setMoney("0");
                     couponConfig = amTradeClient.selectBestCoupon(request);
+                    logger.info("最优优惠券   "+JSONObject.toJSONString(couponConfig));
                     if (couponConfig != null) {
                         couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()),tender.getUserId());
                     }
