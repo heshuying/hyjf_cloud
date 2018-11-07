@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Maps;
+import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
 import com.hyjf.am.response.user.HjhPlanResponse;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
@@ -14,6 +16,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -98,113 +101,136 @@ public class CrmInvestMessageConsumer extends Consumer {
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
             logger.info("======" + CONSUMER_NAME + "消费开始 ========");
             try {
-                logger.info("========" + CONSUMER_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs,SerializerFeature.IgnoreNonFieldGetter));
+                logger.info("========" + CONSUMER_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs, SerializerFeature.IgnoreNonFieldGetter));
                 MessageExt msg = msgs.get(0);
                 String msgBody = new String(msg.getBody());
-                JSONObject json = JSON.parseObject(msgBody);
-                if (json == null) {
+                CrmInvestMsgBean crmInvestMsgBean = null;
+                crmInvestMsgBean = JSONObject.parseObject(msgBody, CrmInvestMsgBean.class);
+                if (crmInvestMsgBean == null) {
                     logger.info("=====" + CONSUMER_NAME + "json解析为空," + CONSUMER_QUIT + "=====");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
-                String accId = json.getString("planNid");
-                Object obj = null;
-                if (StringUtils.isNotBlank(accId)) {
-                    logger.info("------计划投资------");
-                    obj = JSONObject.parseObject(msgBody, HjhAccedeVO.class);
-                } else {
-                    logger.info("-----散标投资------");
-                    obj = JSONObject.parseObject(msgBody, BorrowTenderVO.class);
-                }
-                if (obj == null) {
-                    logger.info("=====" + CONSUMER_NAME + "实体转换异常," + CONSUMER_QUIT + "=====");
+                // 投资或加入订单号
+                String orderId = crmInvestMsgBean.getOrderId();
+                if (StringUtils.isEmpty(orderId)) {
+                    logger.info("=====" + CONSUMER_NAME + "投资或加入订单号为空," + CONSUMER_QUIT + "=====");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
-                String result = "" ;
+                // 投资类型
+                Integer investType = crmInvestMsgBean.getInvestType();
+                String result = "";
                 try {
+                    JSONObject postData = buildData(orderId, investType);
+                    if (postData == null){
+                        logger.error("构造数据出错");
+                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                    }
+                    String postDataStr = postData.toJSONString();
                     String postUrl = systemConfig.getCrmTenderUrl();
-                    String postData = buildData(obj).toJSONString();
                     logger.info("=====" + CONSUMER_NAME + "postUrl:[{}] =====", postUrl);
-                    logger.info("=====" + CONSUMER_NAME + "postParam: [{}] ====",postData);
-                    result =postJson(postUrl, postData);
-                    logger.info("=====" + CONSUMER_NAME + "投递CRM结果 :" +JSON.toJSONString(result));
+                    logger.info("=====" + CONSUMER_NAME + "postParam: [{}] ====", postDataStr);
+                    result = postJson(postUrl, postDataStr);
+                    logger.info("=====" + CONSUMER_NAME + "投递CRM结果 :" + JSON.toJSONString(result));
                 } catch (Exception e) {
-                    logger.error("=====" + CONSUMER_NAME + ",发生异常,重新投递=====",e);
+                    logger.error("=====" + CONSUMER_NAME + ",发生异常,重新投递=====", e);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
-
                 if (TRY.equals(result)) {
                     logger.info("=====" + CONSUMER_NAME + "网络或者链接异常，重新投递======");
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                } else if (SUCCESS.equals(result)){
+                } else if (SUCCESS.equals(result)) {
                     logger.info("=====" + CONSUMER_NAME + "数据同步成功=====");
                     logger.info("=====" + CONSUMER_NAME + "消费结束 =====");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                }else {
+                } else {
                     logger.info("=====" + CONSUMER_NAME + "CRM返回未正常处理,不在重复投递 =====");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             } catch (Exception e) {
-                logger.error("====="+CONSUMER_NAME+"消费过程发生异常,重新投递 =====",e);
+                logger.error("=====" + CONSUMER_NAME + "消费过程发生异常,重新投递 =====", e);
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
         }
     }
 
-
-    /* post数据构造 所取数据为必要数据 */
-    private JSONObject buildData(Object obj) {
+    /**
+     * post数据构造,所取数据为必要数据
+     *
+     * @param orderId
+     * @param investType
+     * @return
+     */
+    private JSONObject buildData(String orderId, Integer investType) {
         JSONObject ret = new JSONObject();
         Map<String, Object> map = Maps.newHashMap();
         // 根据数据类型判断投资类型。直投类
-        if (obj instanceof BorrowTenderVO) {
-            BorrowTenderVO bt = (BorrowTenderVO) obj;
+        if (investType == 0) {
+            BorrowTenderVO bt = amTradeClient.selectBorrowTenderByOrderId(orderId);
+            if (bt == null) {
+                logger.error("根据订单号查询投资记录不存在,投资订单号:[" + orderId + "]");
+                return null;
+            }
+            // 获取投资人用户信息
             UserInfoVO userInfo = amUserClient.findUsersInfoById(bt.getUserId());
+            if (userInfo == null) {
+                logger.error("根据投资人ID查询投资人信息失败,投资人用户ID:[" + bt.getUserId() + "].");
+                return null;
+            }
             RightBorrowVO borrowVO = amTradeClient.getRightBorrowByNid(bt.getBorrowNid());
+            if (borrowVO == null) {
+                logger.error("根据投资标的编号查询标的信息失败,投资标的编号:[" + bt.getBorrowNid() + "].");
+                return null;
+            }
             BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(bt.getBorrowNid());
+            if (borrowInfo == null){
+                logger.error("根据投资标的编号查询标的详情信息失败,投资标的编号:["+ bt.getBorrowNid()+"].");
+                return null;
+            }
             String borrowStyle = borrowVO.getBorrowStyle();
-
+            // 投资人身份证号
             map.put("idNum", userInfo.getIdcard());
-            map.put("referrerIdCard", "");
             map.put("status", 1);
             map.put("borrowType", borrowInfo.getName());
+            // 标的编号
             map.put("borrowNid", bt.getBorrowNid());
+            // 投资订单号
             map.put("investmentNid", bt.getNid());
-            map.put("unit",
-                    CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)
-                            || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
-                            || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)
-                            || CustomConstants.BORROW_STYLE_END.equals(borrowStyle) ? 2 : 1);
+            map.put("unit", CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) ? 1 : 2);
             map.put("term", borrowVO.getBorrowPeriod());
             map.put("account", bt.getAccount());
             map.put("addTime", GetDate.getTime10(bt.getCreateTime()));
-            map.put("loanTime", getDate(bt.getLoanOrderDate()));
-            if (StringUtils.isNotBlank(borrowVO.getPlanNid())) {
-                map.put("productNo", 1007);
-            } else {
-                map.put("productNo", 1001);
-            }
+            map.put("loanTime", GetDate.getTime10(bt.getCreateTime()));
+            map.put("productNo", 1001);
             map.put("referrerDepartmentId", bt.getInviteDepartmentId());
         }
         // 计划类投资
-        else if (obj instanceof HjhAccedeVO) {
-            HjhAccedeVO hj = (HjhAccedeVO) obj;
+        else if (investType == 1) {
+            HjhAccedeVO hj = amTradeClient.getHjhAccede(orderId);
+            if (hj == null){
+                logger.error("根据加入订单号查询计划加入订单失败,加入订单号:[" + orderId + "].");
+                return null;
+            }
             UserInfoVO userInfo = amUserClient.findUsersInfoById(hj.getUserId());
-            HjhPlanResponse response = baseClient.getExe("http://AM-TRADE/am-trade/hjhPlan/getHjhPlanByPlanNid/" + hj.getPlanNid(), HjhPlanResponse.class);
-            HjhPlanVO hjhPlan = response.getResult();
-
+            if (userInfo == null) {
+                logger.error("根据投资人ID查询投资人信息失败,投资人用户ID:[" + hj.getUserId() + "].");
+                return null;
+            }
+            HjhPlanVO hjhPlanVO = amTradeClient.getHjhPlan(hj.getPlanNid());
+            if (hjhPlanVO == null){
+                logger.error("根据智投编号查询智投信息失败,智投编号:["+hj.getPlanNid()+"].");
+                return null;
+            }
             map.put("idNum", userInfo.getIdcard());
-            map.put("referrerIdCard", "");
             map.put("status", 1);
-            map.put("borrowType", hjhPlan.getPlanName());
+            map.put("borrowType", hjhPlanVO.getPlanName());
             map.put("borrowNid", hj.getPlanNid());
             map.put("investmentNid", hj.getAccedeOrderId());
-            map.put("unit", hjhPlan.getIsMonth() == 0 ? 1 : 2);
-            map.put("term", hjhPlan.getLockPeriod());
+            map.put("unit", hjhPlanVO.getIsMonth() == 0 ? 1 : 2);
+            map.put("term", hjhPlanVO.getLockPeriod());
             map.put("account", hj.getAccedeAccount());
             map.put("addTime", GetDate.getTime10(hj.getCreateTime()));
             map.put("loanTime", GetDate.getTime10(hj.getCreateTime()));
             map.put("productNo", 1002);
-
         }
         map.put("instCode", "10000001");
 
@@ -241,13 +267,13 @@ public class CrmInvestMessageConsumer extends Consumer {
             // 执行post方法
             response = httpclient.execute(httpPost);
 
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 String content = EntityUtils.toString(response.getEntity());
-                logger.info("====="+ CONSUMER_NAME +"crm 投递返回值：[{}]=====",content);
-                if (StringUtils.isNotBlank(content)){
-                    JSONObject  jasonObject = JSONObject.parseObject(content);
-                    Map map = (Map)jasonObject;
-                    if (map!=null && "000".equals(String.valueOf(map.get("status")))){
+                logger.info("=====" + CONSUMER_NAME + "crm 投递返回值：[{}]=====", content);
+                if (StringUtils.isNotBlank(content)) {
+                    JSONObject jasonObject = JSONObject.parseObject(content);
+                    Map map = (Map) jasonObject;
+                    if (map != null && "000".equals(String.valueOf(map.get("status")))) {
                         return SUCCESS;
                     }
                 }

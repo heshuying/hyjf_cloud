@@ -892,10 +892,11 @@
         hcr.recover_yestime,
         '%Y-%m-%d %H:%i'
         ) recover_yestime,
+        hcr.recover_time recover_time,
         FROM_UNIXTIME(
         hcr.recover_time,
         '%Y-%m-%d'
-        ) recover_time,
+        ) recover_time_string,
         FROM_UNIXTIME(
         hcr.exp_time,
         '%Y-%m-%d'
