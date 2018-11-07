@@ -790,6 +790,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 couponConfig.setUserCouponId(couponUser.getId()+"");
                 couponConfig.setCouponQuota(couponUser.getCouponQuota());
                 couponConfig.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
+                couponConfig.setTenderQuotaType(0);
                 investInfo.setIsThereCoupon(1);
                 investInfo.setCouponConfig(couponConfig);
             } else {
@@ -839,6 +840,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if (couponUser.getCouponType() == 1) {
                     couponInterest =couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
                 } else {
+                    logger.info("-----borrowStyle：{}    CouponType:{}   borrowApr:{}   ouponQuota:{}  money:{}    orrowPeriod:{}",
+                            borrowStyle, couponUser.getCouponType(),borrowApr,couponUser.getCouponQuota(),money,borrow.getBorrowPeriod());
                     couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), money, borrow.getBorrowPeriod());
                 }
                 logger.info("优惠券收益：：：{}",couponInterest);
@@ -856,17 +859,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             BigDecimal earnings = BorrowEarningsUtil.getBorrowEarnings(new BigDecimal(money),borrow.getBorrowPeriod(),borrow.getBorrowStyle(),borrow.getBorrowApr());
 
             investInfo.setEarnings(df.format(earnings));
+            logger.info("本金收益  "+earnings.toString());
             if (couponUser != null && couponUser.getCouponType() == 3) {
                 investInfo.setCapitalInterest(df.format(earnings.add(couponUser.getCouponQuota()).subtract(couponInterest)));
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
+                earnings = earnings.add(couponInterest);
                 investInfo.setEarnings(df.format(earnings.add(couponInterest)));
                 investInfo.setCapitalInterest(df.format(earnings));
             } else {
+                earnings = earnings.add(couponInterest);
                 investInfo.setCapitalInterest(df.format(earnings.subtract(couponInterest)));
                 investInfo.setEarnings(df.format(earnings.add(couponInterest)));
             }
             investInfo.setCouponUser(couponUser);
-
+            logger.info("本金+优惠券收益  "+investInfo.getEarnings().toString());
             // 产品加息预期收益
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
                 if (couponUser != null && couponUser.getCouponType() == 3){
