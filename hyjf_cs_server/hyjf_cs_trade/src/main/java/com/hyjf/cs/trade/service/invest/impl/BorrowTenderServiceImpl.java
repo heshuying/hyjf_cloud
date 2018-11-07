@@ -762,7 +762,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if (couponConfig != null) {
                     couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()), tender.getUserId());
                 }
-                investInfo.setCouponConfig(couponConfig);
+                BestCouponListVO couponFront = new BestCouponListVO();
+                couponFront.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
+                couponFront.setUserCouponId(couponConfig.getUserCouponId());
+                couponFront.setCouponType(couponConfig.getCouponType());
+                investInfo.setCouponConfig(couponFront);
             }
             if(couponUser!=null && (tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0)){
                 String config = "";
