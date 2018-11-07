@@ -709,6 +709,7 @@ public class FddHandle {
             logger.info("债转承接订单号为空");
             throw new RuntimeException("债转承接订单号为空");
         }
+        logger.info("==================债转法大大协议开始生成，订单号：" + assignOrderId);
         // 承接人用户ID
         Integer tenderUserId = bean.getTenderUserId();
         if (tenderUserId == null || tenderUserId == 0) {
@@ -907,6 +908,7 @@ public class FddHandle {
             if (isSign){//单独走签署接口
                 updateSignContract(bean);
             }else {
+				logger.info("==================债转法大大协议开始生成，订单号：" + assignOrderId + ",开始调用接口----");
 				List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT);
 
                 if (fddTemplets != null && fddTemplets.size() == 1) {
@@ -928,7 +930,7 @@ public class FddHandle {
                     dzqzCallBean.setTemplate_id(templetId);
                     if ("success".equals(result) && FddGenerateContractConstant.FDD_RETURN_CODE_1000.equals(code)) {
                         //协议生成成功，开始签署并进行脱敏处理
-
+						logger.info("==================债转法大大协议开始生成，订单号：" + assignOrderId + "，接口调用成功，开始更新数据！");
                         updateSaveDownUrl(dzqzCallBean, bean);
 
                         updateSignContract(bean);
