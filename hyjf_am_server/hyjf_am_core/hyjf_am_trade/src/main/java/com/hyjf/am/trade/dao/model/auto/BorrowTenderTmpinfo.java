@@ -10,6 +10,11 @@ public class BorrowTenderTmpinfo implements Serializable {
 
     private String tmpArray;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

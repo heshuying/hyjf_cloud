@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransfer;
 import com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransferExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface AccountDirectionalTransferMapper {
     int countByExample(AccountDirectionalTransferExample example);

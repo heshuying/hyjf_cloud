@@ -4,24 +4,74 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class DebtCommissionConfig implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 提成类型:0:普通提成,1:超额提成
+     *
+     * @mbggenerated
+     */
     private Integer commissionType;
 
+    /**
+     * 用户类型:0:线上员工
+     *
+     * @mbggenerated
+     */
     private Integer userType;
 
+    /**
+     * 费率
+     *
+     * @mbggenerated
+     */
     private String rate;
 
+    /**
+     * 状态 0关闭  1启用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 删除状态 1:删除  0:未删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建人用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

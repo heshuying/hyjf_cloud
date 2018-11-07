@@ -4,26 +4,76 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class PushMoney implements Serializable {
+    /**
+     * 提成设置表：主键id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户类型：属于什么用户
+     *
+     * @mbggenerated
+     */
     private String type;
 
+    /**
+     * 产品类型：1 汇直投 2 汇计划
+     *
+     * @mbggenerated
+     */
     private Integer projectType;
 
+    /**
+     * 是否发放提成：0 不发放 1 发放
+     *
+     * @mbggenerated
+     */
     private Integer rewardSend;
 
+    /**
+     * 天标
+     *
+     * @mbggenerated
+     */
     private String dayTender;
 
+    /**
+     * 月标
+     *
+     * @mbggenerated
+     */
     private String monthTender;
 
     private Integer createBy;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateBy;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 备注说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private static final long serialVersionUID = 1L;

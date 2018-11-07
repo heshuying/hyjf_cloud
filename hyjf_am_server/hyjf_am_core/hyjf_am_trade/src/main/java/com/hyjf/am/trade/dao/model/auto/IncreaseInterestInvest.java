@@ -7,92 +7,307 @@ import java.util.Date;
 public class IncreaseInterestInvest implements Serializable {
     private Integer id;
 
+    /**
+     * 投资用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
     private String investUserName;
 
+    /**
+     * 对应tender表里的id
+     *
+     * @mbggenerated
+     */
     private Integer tenderId;
 
+    /**
+     * 对应tender表里的nid
+     *
+     * @mbggenerated
+     */
     private String tenderNid;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 借款利率
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowApr;
 
+    /**
+     * 产品加息收益率（风险缓释金）
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowExtraYield;
 
+    /**
+     * 借款期限
+     *
+     * @mbggenerated
+     */
     private Integer borrowPeriod;
 
+    /**
+     * 借款类型
+     *
+     * @mbggenerated
+     */
     private String borrowStyle;
 
+    /**
+     * 借款类型名称
+     *
+     * @mbggenerated
+     */
     private String borrowStyleName;
 
+    /**
+     * 投资订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 投资订单日期
+     *
+     * @mbggenerated
+     */
     private String orderDate;
 
+    /**
+     * 投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal account;
 
+    /**
+     * 投资状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 放款订单日期
+     *
+     * @mbggenerated
+     */
     private String loanOrderDate;
 
+    /**
+     * 放款订单号
+     *
+     * @mbggenerated
+     */
     private String loanOrderId;
 
+    /**
+     * 收款总利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterest;
 
+    /**
+     * 已收利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterestYes;
 
+    /**
+     * 待收利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterestWait;
 
+    /**
+     * 已还款次数
+     *
+     * @mbggenerated
+     */
     private Integer repayTimes;
 
+    /**
+     * 放款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanAmount;
 
+    /**
+     * 客户端0PC，1微信2安卓APP，3IOS APP，4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 网站收支计算标识
+     *
+     * @mbggenerated
+     */
     private Integer web;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 投资类型 0手动投标 1预约投标 2自动投标
+     *
+     * @mbggenerated
+     */
     private Integer investType;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 推荐人用户id(投资时)
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserId;
 
+    /**
+     * 推荐人用户名(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteUserName;
 
+    /**
+     * 一级部门id(投资时)
+     *
+     * @mbggenerated
+     */
     private Integer inviteRegionId;
 
+    /**
+     * 一级部门名称(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteRegionName;
 
+    /**
+     * 二级部门id(投资时)
+     *
+     * @mbggenerated
+     */
     private Integer inviteBranchId;
 
+    /**
+     * 二级部门名称(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteBranchName;
 
+    /**
+     * 三级部门id(投资时)
+     *
+     * @mbggenerated
+     */
     private Integer inviteDepartmentId;
 
+    /**
+     * 三级部门名称(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteDepartmentName;
 
+    /**
+     * 投资人用户属性
+     *
+     * @mbggenerated
+     */
     private Integer tenderUserAttribute;
 
+    /**
+     * 推荐人用户属性
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserAttribute;
 
+    /**
+     * 应还款时间
+     *
+     * @mbggenerated
+     */
     private Integer repayTime;
 
+    /**
+     * 实际还款时间
+     *
+     * @mbggenerated
+     */
     private Integer repayActionTime;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

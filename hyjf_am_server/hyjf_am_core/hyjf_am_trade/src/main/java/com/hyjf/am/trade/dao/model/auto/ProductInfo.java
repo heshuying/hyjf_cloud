@@ -7,24 +7,74 @@ import java.util.Date;
 public class ProductInfo implements Serializable {
     private Integer id;
 
+    /**
+     * 转入用户数
+     *
+     * @mbggenerated
+     */
     private Integer inCount;
 
+    /**
+     * 转出用户数
+     *
+     * @mbggenerated
+     */
     private Integer outCount;
 
+    /**
+     * 转入金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal inAmount;
 
+    /**
+     * 转出金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal outAmount;
 
+    /**
+     * 转出利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal outInterest;
 
+    /**
+     * 资管公司账户余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanBalance;
 
+    /**
+     * 投资总金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal investAmount;
 
+    /**
+     * 日期
+     *
+     * @mbggenerated
+     */
     private String dataDate;
 
+    /**
+     * 统计数据月份
+     *
+     * @mbggenerated
+     */
     private String dataMonth;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

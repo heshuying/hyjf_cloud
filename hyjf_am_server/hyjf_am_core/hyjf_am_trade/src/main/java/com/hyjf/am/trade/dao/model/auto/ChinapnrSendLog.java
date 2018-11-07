@@ -17,16 +17,41 @@ public class ChinapnrSendLog implements Serializable {
 
     private String remark;
 
+    /**
+     * 平台 0PC 1微官网 2Android 3IOS 4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
     private Integer createTime;
 
+    /**
+     * 交易日期
+     *
+     * @mbggenerated
+     */
     private Integer txDate;
 
+    /**
+     * 交易时间
+     *
+     * @mbggenerated
+     */
     private Integer txTime;
 
+    /**
+     * 交易流水号
+     *
+     * @mbggenerated
+     */
     private String seqNo;
 
+    /**
+     * 交易渠道
+     *
+     * @mbggenerated
+     */
     private String channel;
 
     private static final long serialVersionUID = 1L;
