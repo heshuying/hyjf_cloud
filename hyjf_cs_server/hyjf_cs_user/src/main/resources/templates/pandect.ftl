@@ -31,7 +31,8 @@
                         <#assign user = datas.data.user >
                     </#if>
                   "iconUrl": "${user.iconUrl!''}",
-                  "isSetPassword": "${user.isSetPassword!'0'}"
+                  "isSetPassword": "${user.isSetPassword!'0'}",
+                  "evaluation_expired_time":"${user.evaluation_expired_time!''}"
         },
          "account": {
                     <#if datas.data.account??>
