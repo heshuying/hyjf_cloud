@@ -223,9 +223,12 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
     private int updateInformation(UserPortrait userPortrait) {
         UserPortraitExample select = new UserPortraitExample();
         select.createCriteria().andUserIdEqualTo(userPortrait.getUserId());
-        UserPortrait userPortraits = userPortraitMapper.selectByExample(select).get(0);
-
-        userPortrait.setId(userPortraits.getId());
+        List<UserPortrait> userPortraits = userPortraitMapper.selectByExample(select);
+        if(CollectionUtils.isEmpty(userPortraits)){
+           // 如果为空，说明没有查询出已存在数据
+           return 0;
+        }
+        userPortrait.setId(userPortraits.get(0).getId());
         return userPortraitMapper.updateByPrimaryKey(userPortrait);
     }
     /**
