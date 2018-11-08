@@ -69,6 +69,7 @@
                         <#list recoverLatestList as recoverLatest>
                       {
                         "investDate":"${(recoverLatest.investDate)!''}",
+                        "projectNid":"${(recoverLatest.projectNid)!''}",
                         "projectName":"${(recoverLatest.projectName)!''}",
                         "type":"${(recoverLatest.type)!''}",
                         "couponType":"${(recoverLatest.couponType)!''}",
