@@ -1314,4 +1314,11 @@ public interface AmUserClient {
     int sourceIdIsExists(Integer sourceId);
 
     HjhUserAuthVO getHjhUserAuthByUserId(Integer userId);
+
+    /**
+     * 根据用户Id查询开户信息
+     * @param userId
+     * @return
+     */
+    List<BankOpenAccountLogVO>  getBankOpenAccountLogVOByUserId(Integer userId);
 }
