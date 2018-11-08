@@ -749,9 +749,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BankRepayFreezeLogVO> getFreezeLogValidAll(Integer limitStart, Integer limitEnd) {
-        Map<String, String> params = new HashMap<>();
-        params.put("limitStart", "1");
-        params.put("limitEnd", "10");
+        Map<String, Object> params = new HashMap<>();
+        params.put("limitStart", limitStart);
+        params.put("limitEnd", limitEnd);
         String url = "http://AM-ADMIN/am-admin/repayfreezelog/get_logvalid_all";
         BankRepayFreezeLogResponse response = restTemplate.postForEntity(url, params, BankRepayFreezeLogResponse.class).getBody();
         if (response != null) {
@@ -1371,7 +1371,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhCreditCalcResultVO saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
-        String url = "http://AM-TRADE/am-trade/autoTenderController/saveCreditTenderLogNoSave";
+        String url = "http://AM-ADMIN/am-trade/autotenderexception/saveCreditTenderLogNoSave";
         SaveCreditTenderLogRequest request = new SaveCreditTenderLogRequest(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
         HjhCreditCalcResultResponse response = restTemplate.postForEntity(url, request, HjhCreditCalcResultResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
@@ -1389,7 +1389,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
                                              String tenderUsrcustid, String sellerUsrcustid, HjhCreditCalcResultVO resultVO) {
-        String url = "http://AM-TRADE/am-trade/autoTenderController/updateCreditForAutoTender";
+        String url = "http://AM-TRADE/am-trade/autotenderexception/updateCreditForAutoTender";
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
         UpdateCreditForAutoTenderRequest request = new UpdateCreditForAutoTenderRequest(creditNid, accedeOrderId, planNid, bankCallBeanVO, tenderUsrcustid, sellerUsrcustid, resultVO);
@@ -6691,5 +6691,19 @@ public class AmTradeClientImpl implements AmTradeClient {
             return JSON.parseObject(response.getResultStr(),RepayBean.class);
         }
         return null;
+    }
+    /**
+     * 删除 自动投资临时表
+     * @auther: nxl
+     * @date: 2018/7/10
+     */
+    @Override
+    public Boolean deleteBorrowTmp(String borrowNid, String accedeOrderId){
+        BooleanResponse response = restTemplate
+                .getForEntity( "http://AM-ADMIN/am-trade/autotenderexception/deleteBorrowTmp/"+borrowNid+"/"+accedeOrderId, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
     }
 }

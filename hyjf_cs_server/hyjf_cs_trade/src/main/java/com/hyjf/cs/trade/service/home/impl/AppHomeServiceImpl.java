@@ -263,16 +263,23 @@ public class AppHomeServiceImpl implements AppHomeService {
 
         String[] split = totalInvest.split("\\.");
         String money = split[0];
-        String substring = "";
+        String substring ;
         if(money.length() > 8){
             substring = money.substring(0, money.length() - 8);
             totalInvest = substring + "亿元";
-        }else{
-            totalInvest = totalInvest + "元";
+        }else if (money.length() <= 8){
+            int index = 8 - money.length();
+            String flagStr = "";
+            for (int i = 0; i < index; i++) {
+                flagStr += "0";
+            }
+            money = flagStr + money;
+            substring = money.substring(0, 2);
+            totalInvest = "0." + substring + "亿元";
         }
-
         return totalInvest;
     }
+
 
     /**
      * 获取有效的公告内容

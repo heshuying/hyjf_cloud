@@ -61,4 +61,10 @@ public interface BankOpenAccountLogService extends BaseService {
      **/
     Boolean deleteBankOpenAccountLogByUserId(Integer userId);
 
+    /**
+     * 根据USERID查询开户掉单
+     * @param userId
+     * @return
+     */
+    List<BankOpenAccountLog> selectBankOpenAccountLogByUserId(Integer userId);
 }

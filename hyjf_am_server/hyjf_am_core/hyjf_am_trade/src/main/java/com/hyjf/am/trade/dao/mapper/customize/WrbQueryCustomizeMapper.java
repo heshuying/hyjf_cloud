@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbRecoverCustomize;
 import com.hyjf.am.vo.api.WrbDaySumCustomize;
@@ -35,7 +36,7 @@ public interface WrbQueryCustomizeMapper {
      * @param timeEnd
      * @return
      */
-    WrbDaySumCustomize getDaySum(@Param("timeStart")Integer timeStart, @Param("timeEnd") Integer timeEnd);
+    WrbDaySumCustomize getDaySum(@Param("timeStart")Date timeStart, @Param("timeEnd") Date timeEnd);
 
     /**
      * 获取投资记录

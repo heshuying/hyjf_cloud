@@ -3,7 +3,7 @@ package com.hyjf.cs.user.service.auth;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.common.service.BaseService;
+import com.hyjf.cs.user.bean.ApiAuthRequesBean;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -126,4 +126,8 @@ public interface AuthService extends BaseUserService {
 
     Integer checkAuthStatus(Integer autoRepayStatus,Integer paymentAuthStatus);
     HjhUserAuthConfigVO getAuthConfigFromCache(String key);
+
+    Map<String,String> checkApiParam(ApiAuthRequesBean requestBean);
+
+    ModelAndView getApiCallbankMV(AuthBean authBean);
 }

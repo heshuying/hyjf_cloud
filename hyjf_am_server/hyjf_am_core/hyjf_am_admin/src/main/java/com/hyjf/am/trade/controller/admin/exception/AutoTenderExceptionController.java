@@ -4,16 +4,21 @@
 package com.hyjf.am.trade.controller.admin.exception;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AutoTenderExceptionResponse;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
+import com.hyjf.am.response.trade.calculate.HjhCreditCalcResultResponse;
 import com.hyjf.am.resquest.admin.AutoTenderExceptionRequest;
 import com.hyjf.am.resquest.admin.TenderExceptionSolveRequest;
+import com.hyjf.am.resquest.trade.SaveCreditTenderLogRequest;
 import com.hyjf.am.resquest.trade.UpdateBorrowForAutoTenderRequest;
+import com.hyjf.am.resquest.trade.UpdateCreditForAutoTenderRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.dao.model.customize.AdminPlanAccedeListCustomize;
 import com.hyjf.am.trade.service.admin.exception.AutoTenderExceptionService;
@@ -21,6 +26,7 @@ import com.hyjf.am.trade.service.front.borrow.AutoTenderService;
 import com.hyjf.am.vo.admin.AdminPlanAccedeListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
+import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -85,6 +91,8 @@ public class AutoTenderExceptionController  extends BaseController {
         mapParam.put("refereeName",request.getRefereeNameSrch());
         mapParam.put("searchStartDate",request.getSearchStartDate());
         mapParam.put("searchEndDate",request.getSearchEndDate());
+        // 订单状态
+        mapParam.put("orderStatus", 80);
         return mapParam;
     }
 
@@ -169,10 +177,69 @@ public class AutoTenderExceptionController  extends BaseController {
         String borrowNid = request.getBorrowNid();
         String accedeOrderId = request.getAccedeOrderId();
         BeanUtils.copyProperties(request.getBankCallBeanVO(), bean);
-        boolean result = this.autoTenderService.updateBorrowForAutoTender(borrowNid, accedeOrderId, bean);
+        boolean result = this.autoTenderExceptionService.updateBorrowForAutoTender(borrowNid, accedeOrderId, bean);
         if (!result) {
             return new Response(Response.FAIL, Response.FAIL_MSG);
         }
         return new Response();
+    }
+    /**
+     * 保存用户的债转承接log数据
+     * @param request
+     * @return
+     * @author nxl
+     */
+    @RequestMapping("/saveCreditTenderLogNoSave")
+    public HjhCreditCalcResultResponse saveCreditTenderLogNoSave(@RequestBody SaveCreditTenderLogRequest request) {
+        HjhCreditCalcResultResponse response = new HjhCreditCalcResultResponse();
+        HjhCreditCalcResultVO resultVO = this.autoTenderExceptionService.saveCreditTenderLogNoSave(
+                request.getCredit(),
+                request.getHjhAccede(),
+                request.getOrderId(),
+                request.getOrderDate(),
+                request.getYujiAmoust(),
+                request.isLast());
+        response.setResult(resultVO);
+        return response;
+    }
+    /**
+     * 银行自动债转成功后，更新债转数据
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateCreditForAutoTender")
+    public Response updateCreditForAutoTender(@RequestBody UpdateCreditForAutoTenderRequest request) throws InterruptedException {
+        //参数转换
+        BankCallBean bean = new BankCallBean();
+        String creditNid = request.getCreditNid();
+        String accedeOrderId = request.getAccedeOrderId();
+        String planNid = request.getPlanNid();
+        String tenderUsrcustid = request.getTenderUsrcustid();
+        String sellerUsrcustid = request.getSellerUsrcustid();
+        HjhCreditCalcResultVO resultVO = request.getResultVO();
+        BeanUtils.copyProperties(request.getBankCallBeanVO(), bean);
+        //银行自动投资成功后，更新投资数据
+        boolean result = this.autoTenderExceptionService.updateCreditForAutoTender(
+                creditNid, accedeOrderId, planNid, bean,
+                tenderUsrcustid, sellerUsrcustid, resultVO
+        );
+        if (!result) {
+            return new Response(Response.FAIL, Response.FAIL_MSG);
+        }
+        // ^^^^^^^^^^^^^^TODO
+        Thread.sleep(1000);
+        HjhDebtCredit credits = autoTenderService.selectCreditByNid(creditNid);
+        logger.info("^^^^^^^^^^^^^^updateCreditForAutoTender结束"+credits.getCreditAccountWait());
+        // ^^^^^^^^^^^^^^TODO
+        return new Response();
+    }
+
+    @RequestMapping("/deleteBorrowTmp/{borrowNid}/{accedeOrderId}")
+    public BooleanResponse deleteBorrowTmp(@PathVariable  String borrowNid, @PathVariable String accedeOrderId){
+        Boolean bool =autoTenderExceptionService.deleteBorrowTmp(borrowNid,accedeOrderId);
+        BooleanResponse response = new BooleanResponse();
+        response.setResultBoolean(bool);
+        return response;
     }
 }

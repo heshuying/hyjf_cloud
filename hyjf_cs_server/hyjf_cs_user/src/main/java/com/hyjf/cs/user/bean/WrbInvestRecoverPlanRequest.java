@@ -15,6 +15,8 @@ public class WrbInvestRecoverPlanRequest {
     /** 项目id */
     private String bid_id;
 
+
+
     public String getPf_user_id() {
         return pf_user_id;
     }

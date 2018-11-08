@@ -888,7 +888,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 //								msg.put(VAL_SEX, "先生");
 //							}
 //						}
-						AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_JIAXIFANGKUAN);
+						AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_JIAXIFANGKUAN);
 //						appMsProcesser.gather(smsMessage);
 
 						try {
@@ -1033,7 +1033,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 					msg.append("详细错误信息：<br/>").append(sbError.toString());
 					
 					MailMessage message = new MailMessage(null, null, "[" + online + "] " + apicron.getBorrowNid() + " 融通宝加息放款失败", msg.toString(), null, toMail, null,
-							MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
+							MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
 					
 					try {
 						mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, apicron.getBorrowNid(), JSON.toJSONBytes(message)));

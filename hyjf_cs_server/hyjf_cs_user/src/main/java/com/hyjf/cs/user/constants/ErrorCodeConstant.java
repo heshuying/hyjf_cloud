@@ -179,4 +179,11 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     /**证件号不能为空  TP000003 */
     public static final String STATUS_TR000003 = "TR000003";
     /********************受托支付接口    end***********************/
+
+    /********************多合一授权接口    start***********************/
+    /**授权类型不能为空 SQ000001 */
+    public static final String STATUS_SQ000001 = "SQ000001";
+    /**授权类型不是指定类型 SQ000002 */
+    public static final String STATUS_SQ000002 = "SQ000002";
+    /********************多合一授权接口    end***********************/
 }
