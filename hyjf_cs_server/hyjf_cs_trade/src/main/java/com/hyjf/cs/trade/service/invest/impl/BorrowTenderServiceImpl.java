@@ -881,12 +881,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCapitalInterest(df.format(earnings.add(couponUser.getCouponQuota()).subtract(couponInterest)));
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
                 earnings = earnings.add(couponInterest);
-                investInfo.setEarnings(df.format(earnings.add(couponInterest)));
+                investInfo.setEarnings(df.format(earnings));
                 investInfo.setCapitalInterest(df.format(earnings));
             } else {
                 earnings = earnings.add(couponInterest);
                 investInfo.setCapitalInterest(df.format(earnings.subtract(couponInterest)));
-                investInfo.setEarnings(df.format(earnings.add(couponInterest)));
+                investInfo.setEarnings(df.format(earnings));
             }
             investInfo.setCouponUser(couponUser);
             logger.info("本金+优惠券收益  "+investInfo.getEarnings().toString());
