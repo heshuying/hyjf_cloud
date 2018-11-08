@@ -132,7 +132,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                     AdminCouponCheckRequest accr = new AdminCouponCheckRequest();
                     accr.setFileName(originalFilename);
                     accr.setCreateTime(String.valueOf(createTime));
-                    accr.setFilePath(logoRealPathDir + "/" + fileRealName);
+                    accr.setFilePath(FILEUPLOADPATH + "/" + fileRealName);
                     accr.setDeFlag(0);
                     accr.setStatus(1);
                     checkResponse = amConfigClient.insert(accr);
