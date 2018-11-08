@@ -59,6 +59,7 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
                 }
                 //判断type是否为4（4加息），将couponType设置为4
                 if("4".equals(customize.getType())){
+                    logger.info("微信端查询我的资产...[{}]数据的type:[{}]",customize.getBorrowNid(),customize.getType());
                     customize.setCouponType("4");
                     //将"borrowExtraYield": 替换为 "data":
                     customize.setData(customize.getBorrowExtraYield());
