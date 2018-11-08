@@ -1,18 +1,21 @@
 package com.hyjf.cs.user.service.auth.impl;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.UserAuthRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.bean.ApiAuthRequesBean;
 import com.hyjf.cs.user.bean.AuthBean;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.sensorsdate.auth.SensorsDataAuthProducer;
 import com.hyjf.cs.user.service.auth.AuthService;
@@ -26,11 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -1038,6 +1040,248 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 	public HjhUserAuthConfigVO getAuthConfigFromCache(String key){
 		HjhUserAuthConfigVO hjhUserAuthConfig=RedisUtils.getObj(key,HjhUserAuthConfigVO.class);
 		return hjhUserAuthConfig;
+	}
+
+	@Override
+	public Map<String, String> checkApiParam(ApiAuthRequesBean requestBean) {
+		Map<String, String> resultMap = new HashMap<>();
+		resultMap.put("status", "0");
+		if (Validator.isNull(requestBean.getInstCode())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+			resultMap.put("statusDesc", "机构编号不能为空");
+			return resultMap;
+		}
+		if (Validator.isNull(requestBean.getRetUrl())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+			resultMap.put("mess", "同步地址不能为空");
+			return resultMap;
+		}
+		if (Validator.isNull(requestBean.getBgRetUrl())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+			resultMap.put("mess", "异步地址不能为空");
+			return resultMap;
+		}
+		// 渠道
+		if (Validator.isNull(requestBean.getChannel())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+			resultMap.put("mess", "渠道号不能为空");
+			return resultMap;
+		}
+		if (Validator.isNull(requestBean.getAuthType())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_SQ000001);
+			resultMap.put("mess", "授权类型不能为空");
+			return resultMap;
+		}
+		if (!Arrays.asList(AuthBean.AUTH_TYPE_AUTO_CREDIT,
+				AuthBean.AUTH_TYPE_AUTO_BID,
+				AuthBean.AUTH_TYPE_PAYMENT_AUTH,
+				AuthBean.AUTH_TYPE_REPAY_AUTH).contains(requestBean.getAuthType())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_SQ000002);
+			resultMap.put("mess", "授权类型不是指定类型");
+			return resultMap;
+		}
+		// 验签
+        if (!this.verifyRequestSign(requestBean, "/server/user/mergeAuthPagePlus/page")) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000002);
+			resultMap.put("mess", "验签失败");
+			return resultMap;
+        }
+
+
+		// 根据电子账户号查询用户ID
+		BankOpenAccountVO bankOpenAccount = this.amUserClient.selectBankOpenAccountByAccountId(requestBean.getAccountId());
+		if(bankOpenAccount == null){
+			logger.info("没有根据电子银行卡找到用户[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000004);
+			resultMap.put("mess", "没有根据电子银行卡找到用户");
+			return resultMap;
+		}
+
+
+		// 检查用户是否存在
+		UserVO user = this.getUsersById(bankOpenAccount.getUserId());//用户ID
+		if (user == null) {
+			logger.info("用户不存在汇盈金服账户[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000007);
+			resultMap.put("mess", "用户不存在汇盈金服账户");
+			return resultMap;
+		}
+
+
+		if (user.getBankOpenAccount().intValue() != 1) {// 未开户
+			logger.info("用户未开户！[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000006);
+			resultMap.put("mess", "用户未开户！");
+			return resultMap;
+		}
+
+		// 检查是否设置交易密码
+		Integer passwordFlag = user.getIsSetPassword();
+		if (passwordFlag != 1) {// 未设置交易密码
+			logger.info("未设置交易密码！[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_TP000002);
+			resultMap.put("mess", "未设置交易密码！");
+			return resultMap;
+		}
+
+		// 查询是否已经授权过
+		boolean isAuth = this.checkIsAuth(user.getUserId(),requestBean.getAuthType());
+		if(isAuth){
+			logger.info("已授权,请勿重复授权！[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000009);
+			resultMap.put("mess", "已授权,请勿重复授权！");
+			return resultMap;
+		}
+		resultMap.put("status", "1");
+		return resultMap;
+	}
+
+	@Override
+	public ModelAndView getApiCallbankMV(AuthBean authBean) {
+		// 获取共同参数
+		String orderDate = GetOrderIdUtils.getOrderDate();
+		String txDate = GetOrderIdUtils.getTxDate();
+		String txTime = GetOrderIdUtils.getTxTime();
+		String seqNo = GetOrderIdUtils.getSeqNo(6);
+		// 调用开户接口
+		BankCallBean bean = new BankCallBean();
+		bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+		bean.setTxCode(BankCallConstant.TXCODE_TERMS_AUTH_PAGE);// 多合一授权
+		bean.setTxDate(txDate);
+		bean.setTxTime(txTime);
+		bean.setSeqNo(seqNo);
+		bean.setChannel(authBean.getChannel());
+
+
+		bean.setAccountId(authBean.getAccountId());
+		if(authBean.getUserType()==1){
+			CorpOpenAccountRecordVO corpOpenAccountRecordVO=amUserClient.getCorpOpenAccountRecord(authBean.getUserId());
+			if (corpOpenAccountRecordVO !=null) {
+				bean.setName(corpOpenAccountRecordVO.getBusiName());
+				bean.setIdNo(corpOpenAccountRecordVO.getBusiCode());
+			}
+
+		}else{
+			bean.setName(authBean.getName());
+			bean.setIdNo(authBean.getIdNo());
+		}
+
+		bean.setIdentity(authBean.getIdentity());
+		HjhUserAuthConfigVO config=null;
+		switch (authBean.getAuthType()) {
+			case AuthBean.AUTH_TYPE_AUTO_BID:
+				config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+				bean.setAutoBid(AuthBean.AUTH_START_OPEN);
+				if(authBean.getUserType()!=1){
+					bean.setAutoBidMaxAmt(config.getPersonalMaxAmount()+"");
+				}else{
+					bean.setAutoBidMaxAmt(config.getEnterpriseMaxAmount()+"");
+				}
+				bean.setAutoBidDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+				bean.setLogRemark("自动投资授权");
+				break;
+			case AuthBean.AUTH_TYPE_AUTO_CREDIT:
+				config=this.getAuthConfigFromCache(this.KEY_AUTO_CREDIT_AUTH);
+				bean.setAutoCredit(AuthBean.AUTH_START_OPEN);
+				if(authBean.getUserType()!=1){
+					bean.setAutoCreditMaxAmt(config.getPersonalMaxAmount()+"");
+				}else{
+					bean.setAutoCreditMaxAmt(config.getEnterpriseMaxAmount()+"");
+				}
+				bean.setAutoCreditDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+				bean.setLogRemark("自动债转授权");
+				break;
+			case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
+				config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+				bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
+				if(authBean.getUserType()!=1){
+					bean.setPaymentMaxAmt(config.getPersonalMaxAmount()+"");
+				}else{
+					bean.setPaymentMaxAmt(config.getEnterpriseMaxAmount()+"");
+				}
+				bean.setPaymentDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+				bean.setLogRemark("服务费授权");
+				break;
+			case AuthBean.AUTH_TYPE_REPAY_AUTH:
+				config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
+				bean.setRepayAuth(AuthBean.AUTH_START_OPEN);
+				if(authBean.getUserType()!=1){
+					bean.setRepayMaxAmt(config.getPersonalMaxAmount()+"");
+				}else{
+					bean.setRepayMaxAmt(config.getEnterpriseMaxAmount()+"");
+				}
+				bean.setRepayDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+				bean.setLogRemark("还款授权");
+				break;
+			case AuthBean.AUTH_TYPE_MERGE_AUTH:
+
+				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_AUTO_BID)){
+					config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+					bean.setAutoBid(AuthBean.AUTH_START_OPEN);
+					if(authBean.getUserType()!=1){
+						bean.setAutoBidMaxAmt(config.getPersonalMaxAmount()+"");
+					}else{
+						bean.setAutoBidMaxAmt(config.getEnterpriseMaxAmount()+"");
+					}
+					bean.setAutoBidDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+					authBean.setAutoBidStatus(true);
+				}
+
+				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_AUTO_CREDIT)){
+					config=this.getAuthConfigFromCache(this.KEY_AUTO_CREDIT_AUTH);
+					bean.setAutoCredit(AuthBean.AUTH_START_OPEN);
+					if(authBean.getUserType()!=1){
+						bean.setAutoCreditMaxAmt(config.getPersonalMaxAmount()+"");
+					}else{
+						bean.setAutoCreditMaxAmt(config.getEnterpriseMaxAmount()+"");
+					}
+					bean.setAutoCreditDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+					authBean.setAutoCreditStatus(true);
+				}
+				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
+					config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+					bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
+					if(authBean.getUserType()!=1){
+						bean.setPaymentMaxAmt(config.getPersonalMaxAmount()+"");
+					}else{
+						bean.setPaymentMaxAmt(config.getEnterpriseMaxAmount()+"");
+					}
+					bean.setPaymentDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
+					authBean.setPaymentAuthStatus(true);
+				}
+				bean.setLogRemark("多个授权");
+				break;
+			default:
+				break;
+		}
+
+		bean.setRetUrl(authBean.getRetUrl());
+		bean.setSuccessfulUrl(authBean.getSuccessUrl());
+		bean.setNotifyUrl(authBean.getNotifyUrl());
+		bean.setForgotPwdUrl(authBean.getForgotPwdUrl());
+
+		// 页面调用必须传的
+		bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_TERMS_AUTH_PAGE);
+		bean.setLogOrderId(authBean.getOrderId());
+		bean.setLogOrderDate(orderDate);
+		bean.setLogUserId(String.valueOf(authBean.getUserId()));
+		bean.setLogIp(authBean.getIp());
+		bean.setLogClient(Integer.parseInt(authBean.getPlatform()));
+		bean.setOrderId(authBean.getOrderId());
+		try {
+			ModelAndView model = BankCallUtils.callApi(bean);
+			return model;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 

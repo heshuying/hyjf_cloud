@@ -625,6 +625,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
                 logger.info("获取投资成功结果2为:"+JSONObject.toJSONString(borrowTender));
             }
+            if(borrowTender==null){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {}
+                borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
+                logger.info("获取投资成功结果3为:"+JSONObject.toJSONString(borrowTender));
+            }
         }
 
         BigDecimal earnings = new BigDecimal("0");
@@ -874,12 +881,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCapitalInterest(df.format(earnings.add(couponUser.getCouponQuota()).subtract(couponInterest)));
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
                 earnings = earnings.add(couponInterest);
-                investInfo.setEarnings(df.format(earnings.add(couponInterest)));
+                investInfo.setEarnings(df.format(earnings));
                 investInfo.setCapitalInterest(df.format(earnings));
             } else {
                 earnings = earnings.add(couponInterest);
                 investInfo.setCapitalInterest(df.format(earnings.subtract(couponInterest)));
-                investInfo.setEarnings(df.format(earnings.add(couponInterest)));
+                investInfo.setEarnings(df.format(earnings));
             }
             investInfo.setCouponUser(couponUser);
             logger.info("本金+优惠券收益  "+investInfo.getEarnings().toString());
@@ -1397,6 +1404,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
         vo.setBorrowApr(borrow.getBorrowApr() + "%");
+
+        // 产品加息
+        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+            vo.setBorrowApr(borrow.getBorrowApr() + "% + "
+                    + borrowInfo.getBorrowExtraYield() + "%");
+        }
+
         vo.setBorrowNid(tender.getBorrowNid());
 
         //设置是否有可用优惠券
@@ -1460,8 +1474,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 couponInterest = calculateCouponTenderInterest(couponConfig, money, borrow);
             }
             vo.setDesc("年化利率: " + borrow.getBorrowApr() + "%      预期收益: " + CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
-            vo.setProspectiveEarnings(CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
+            earnings = earnings.add(couponInterest);
+            vo.setProspectiveEarnings(CommonUtils.formatAmount(null,earnings ) + "元");
 
+        }
+
+        // 产品加息预期收益
+        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+            BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrowInfo.getBorrowExtraYield());
+            earnings = incEarnings.add(earnings);
+            vo.setProspectiveEarnings(CommonUtils.formatAmount(null, earnings) + "元");
         }
 
         vo.setInitMoney(borrowInfo.getTenderAccountMin() + "");

@@ -68,10 +68,8 @@ public class AutoTenderExceptionController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<AdminPlanAccedeListVO>> selectAccedeRecordList(@RequestBody AutoTenderExceptionRequestBean autoTenderExceptionRequestBean) {
         AutoTenderExceptionRequest autoTenderExceptionRequest = new AutoTenderExceptionRequest();
-        logger.info("=============amdin 汇计划投资异常列表显示,参数为:"+ JSONObject.toJSON(autoTenderExceptionRequestBean+"============="));
         BeanUtils.copyProperties(autoTenderExceptionRequestBean, autoTenderExceptionRequest);
         AutoTenderExceptionResponse autoTenderExceptionResponse = autoTenderExceptionService.selectAccedeRecordList(autoTenderExceptionRequest);
-        logger.info("=============amdin 汇计划投资异常列表显示,返回:"+ JSONObject.toJSON(autoTenderExceptionResponse+"============="));
         if (autoTenderExceptionResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
