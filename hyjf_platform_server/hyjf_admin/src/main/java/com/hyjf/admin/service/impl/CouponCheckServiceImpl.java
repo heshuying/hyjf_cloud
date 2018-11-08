@@ -62,8 +62,12 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     AmUserClient amUserClient;
     @Autowired
     AmTradeClient amTradeClient;
+
     @Value("${file.upload.path}")
     private String FILEUPLOADPATH;
+
+    @Value("${file.physical.path}")
+    private String PHYSICAL_PATH;
 
     /**
      * 查询优惠券列表
@@ -99,7 +103,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         CouponCheckResponse checkResponse = new CouponCheckResponse();
         String errorMessage = "";
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
-        String filePhysicalPath = UploadFileUtils.getDoPath(FILEUPLOADPATH);
+        String filePhysicalPath = PHYSICAL_PATH + FILEUPLOADPATH;
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         String today = format.format(date);
