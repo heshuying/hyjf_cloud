@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.myproject.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
@@ -63,6 +64,7 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
                     customize.setData(customize.getBorrowExtraYield());
                 }
             }
+            logger.info("微信端查询我的资产:[{}]", JSON.toJSONString(lst));
             vo.getLstProject().addAll(lst);
         }
         boolean isEnd = pageSize * currentPage >= total;
