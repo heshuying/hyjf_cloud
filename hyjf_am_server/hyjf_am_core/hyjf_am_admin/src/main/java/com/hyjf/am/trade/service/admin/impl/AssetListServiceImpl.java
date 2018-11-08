@@ -122,6 +122,16 @@ public class AssetListServiceImpl extends BaseServiceImpl implements AssetListSe
 		return list;
 	}
 
+	/**
+	 * 查询保证金不足总记录数
+	 * @param mapParam
+	 * @return
+	 */
+	@Override
+	public Integer getBZJBZCount(Map<String, Object> mapParam) {
+		return assetListServiceCustomizeMapper.getBZJBZCount(mapParam);
+	}
+
 
 	@Override
 	public List<AssetListCustomizeVO> findAssetListWithoutPage(Map<String, Object> mapParam) {
