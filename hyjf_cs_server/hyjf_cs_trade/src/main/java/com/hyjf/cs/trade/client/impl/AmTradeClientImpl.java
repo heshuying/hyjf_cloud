@@ -5003,7 +5003,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         AccountResponse result = restTemplate.postForEntity(
                 "http://AM-TRADE/am-trade/account/updateofloanstender",account,
                 AccountResponse.class).getBody();
-        if (result == null) {
+        if (result != null) {
             return result.getUpdateFlag();
         }
         return 0;
