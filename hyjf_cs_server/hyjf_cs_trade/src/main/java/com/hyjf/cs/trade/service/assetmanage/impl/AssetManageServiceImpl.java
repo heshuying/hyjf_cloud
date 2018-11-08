@@ -401,6 +401,15 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
                 hjhInvistDetailVO.setRepayActualTime("— —");
             }*/
             // add 汇计划二期前端优化 持有中计划详情修改锁定期和实际退出时间 nxl 20180419 end
+            String addTime = hjhInvistDetailVO.getAddTime();
+            if (StringUtils.isNotBlank(addTime)){
+                SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                try {
+                    hjhInvistDetailVO.setAddTime(dt.format(dt.parse(addTime)));
+                } catch (ParseException e) {
+                    logger.info("时间格式转换异常");
+                }
+            }
             info.put("userHjhInvistDetail", hjhInvistDetailVO);
             info.put("type", type);
 

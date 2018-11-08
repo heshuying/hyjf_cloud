@@ -188,7 +188,11 @@ public class AppHomeServiceImpl implements AppHomeService {
         TotalInvestAndInterestResponse res = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = res.getResult();
         if (null != totalInvestAndInterestVO){
-            info.put("totalInvestmentAmount", DF_FOR_VIEW.format(totalInvestAndInterestVO.getTotalInvestAmount()));
+            BigDecimal totalInvestAmount = totalInvestAndInterestVO.getTotalInvestAmount();
+            String totalInvest = totalInvestAmount.toString();
+            logger.info("-----------------app首页累计投资金额：" + totalInvest);
+//            String totalInvestStr = formatTotalInvest(totalInvest);
+//            info.put("totalInvestmentAmount", totalInvestStr);
         }else{
             info.put("totalInvestmentAmount", DF_FOR_VIEW.format(new BigDecimal("0")));
         }
@@ -250,6 +254,19 @@ public class AppHomeServiceImpl implements AppHomeService {
                 ProjectConstant.REQUEST_HOME + HomePageDefine.REQUEST_MAPPING + HomePageDefine.PROJECT_LIST_ACTION);
         CommonUtils.convertNullToEmptyString(info);
         return info;
+    }
+
+    /**
+     * 格式化金额
+     * @param totalInvest
+     */
+    private String formatTotalInvest(String totalInvest) {
+
+        String[] split = totalInvest.split("\\.");
+        String money = split[0];
+        String substring = money.substring(0, money.length() - 8);
+        totalInvest = substring + "亿元";
+        return totalInvest;
     }
 
     /**
