@@ -161,6 +161,14 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             if (ifprojectType) {
                 continue;
             }
+            //是否与本金公用
+            boolean addFlg = false;
+            if (bestCoupon.getAddFlag()!=null&&bestCoupon.getAddFlag() == 1 && (!"0".equals(money) || !"".equals(money))) {
+                addFlg = true;
+            }
+            if (addFlg) {
+                continue;
+            }
             // 验证使用平台
             boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
             if(!ifcouponSystem){

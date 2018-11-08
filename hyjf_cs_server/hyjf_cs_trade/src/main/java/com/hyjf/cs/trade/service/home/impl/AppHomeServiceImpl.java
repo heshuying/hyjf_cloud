@@ -190,9 +190,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (null != totalInvestAndInterestVO){
             BigDecimal totalInvestAmount = totalInvestAndInterestVO.getTotalInvestAmount();
             String totalInvest = totalInvestAmount.toString();
-            logger.info("-----------------app首页累计投资金额：" + totalInvest);
-//            String totalInvestStr = formatTotalInvest(totalInvest);
-//            info.put("totalInvestmentAmount", totalInvestStr);
+            String totalInvestStr = formatTotalInvest(totalInvest);
+            info.put("totalInvestmentAmount", totalInvestStr);
         }else{
             info.put("totalInvestmentAmount", DF_FOR_VIEW.format(new BigDecimal("0")));
         }
@@ -264,8 +263,14 @@ public class AppHomeServiceImpl implements AppHomeService {
 
         String[] split = totalInvest.split("\\.");
         String money = split[0];
-        String substring = money.substring(0, money.length() - 8);
-        totalInvest = substring + "亿元";
+        String substring = "";
+        if(money.length() > 8){
+            substring = money.substring(0, money.length() - 8);
+            totalInvest = substring + "亿元";
+        }else{
+            totalInvest = totalInvest + "元";
+        }
+
         return totalInvest;
     }
 

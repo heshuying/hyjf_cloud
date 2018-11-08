@@ -663,7 +663,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		BigDecimal bankBalance = this.queryBankBlance(webViewUserVO.getUserId(), webViewUserVO.getBankAccount());
 		if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
 				|| ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))) {
-			return "账户尚有余额，不能解绑银行卡";
+			return "抱歉，请先清空当前余额和待收后，再申请解绑。";
 		}
 
 		// 待解绑卡校验

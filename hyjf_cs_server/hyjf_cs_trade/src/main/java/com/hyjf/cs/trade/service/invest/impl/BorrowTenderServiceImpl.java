@@ -609,13 +609,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         // 查看tmp表
         BorrowTenderVO borrowTender = null;
+        data.put("borrowNid",borrow.getBorrowNid());
+        data.put("investDesc","恭喜您，投资成功！");
         if(isPrincipal!=null && "1".equals(isPrincipal)){
             BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
             borrowTenderRequest.setBorrowNid(borrowNid);
             borrowTenderRequest.setTenderNid(logOrdId);
             borrowTenderRequest.setTenderUserId(userId);
-            data.put("borrowNid",borrow.getBorrowNid());
-            data.put("investDesc","恭喜您，投资成功！");
             logger.info("获取投资成功结果参数 userId {}  logOrdId {} borrowNid {}",userId,logOrdId,borrowNid);
             borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
             logger.info("获取投资成功结果为:"+JSONObject.toJSONString(borrowTender));
