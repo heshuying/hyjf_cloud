@@ -65,6 +65,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 /**
@@ -208,7 +209,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
         //成功页
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
-                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId());
+                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId()+"&isPrincipal=1");
         if(request.getToken() != null && !"".equals(request.getToken())){
             retUrl += "&token=1";
             successUrl += "&token=1";
@@ -601,21 +602,32 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId) {
+    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal) {
         Map<String, Object> data = new HashedMap();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         // 查看tmp表
-        BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
-        borrowTenderRequest.setBorrowNid(borrowNid);
-        borrowTenderRequest.setTenderNid(logOrdId);
-        borrowTenderRequest.setTenderUserId(userId);
+        BorrowTenderVO borrowTender = null;
         data.put("borrowNid",borrow.getBorrowNid());
         data.put("investDesc","恭喜您，投资成功！");
-        logger.info("获取投资成功结果参数 userId {}  logOrdId {} borrowNid {}",userId,logOrdId,borrowNid);
-        BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
-        logger.info("获取投资成功结果为:"+JSONObject.toJSONString(borrowTender));
+        if(isPrincipal!=null && "1".equals(isPrincipal)){
+            BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
+            borrowTenderRequest.setBorrowNid(borrowNid);
+            borrowTenderRequest.setTenderNid(logOrdId);
+            borrowTenderRequest.setTenderUserId(userId);
+            logger.info("获取投资成功结果参数 userId {}  logOrdId {} borrowNid {}",userId,logOrdId,borrowNid);
+            borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
+            logger.info("获取投资成功结果为:"+JSONObject.toJSONString(borrowTender));
+            if(borrowTender==null){
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {}
+                borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
+                logger.info("获取投资成功结果2为:"+JSONObject.toJSONString(borrowTender));
+            }
+        }
+
         BigDecimal earnings = new BigDecimal("0");
         // 计算历史回报
         String interest = null;
@@ -756,17 +768,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 request.setBorrowNid(tender.getBorrowNid());
                 request.setUserId(String.valueOf(loginUser.getUserId()));
                 request.setPlatform(CustomConstants.CLIENT_PC);
-                request.setMoney("0");
+                request.setMoney(tender.getAccount()==null?"0":tender.getAccount());
                 couponConfig = amTradeClient.selectBestCoupon(request);
                 logger.info("最优优惠券   " + JSONObject.toJSONString(couponConfig));
                 if (couponConfig != null) {
                     couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()), tender.getUserId());
+                    investInfo.setCouponConfig(couponConfig);
                 }
-                BestCouponListVO couponFront = new BestCouponListVO();
-                couponFront.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
-                couponFront.setUserCouponId(couponConfig.getUserCouponId());
-                couponFront.setCouponType(couponConfig.getCouponType());
-                investInfo.setCouponConfig(couponFront);
             }
             if(couponUser!=null && (tender.getCouponGrantId()!=null && tender.getCouponGrantId().intValue()>0)){
                 String config = "";
@@ -788,7 +796,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.info("用户优惠券信息为:{}" , JSONObject.toJSONString(couponUser));
             }
             if (couponUser != null) {
+                BestCouponListVO couponConfig = new BestCouponListVO();
+                couponConfig.setCouponType(couponUser.getCouponType());
+                couponConfig.setUserCouponId(couponUser.getId()+"");
+                couponConfig.setCouponQuota(couponUser.getCouponQuota());
+                couponConfig.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
+                couponConfig.setTenderQuotaType(0);
                 investInfo.setIsThereCoupon(1);
+                investInfo.setCouponConfig(couponConfig);
             } else {
                 investInfo.setIsThereCoupon(0);
             }
@@ -836,6 +851,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if (couponUser.getCouponType() == 1) {
                     couponInterest =couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
                 } else {
+                    logger.info("-----borrowStyle：{}    CouponType:{}   borrowApr:{}   ouponQuota:{}  money:{}    orrowPeriod:{}",
+                            borrowStyle, couponUser.getCouponType(),borrowApr,couponUser.getCouponQuota(),money,borrow.getBorrowPeriod());
                     couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), money, borrow.getBorrowPeriod());
                 }
                 logger.info("优惠券收益：：：{}",couponInterest);
@@ -853,17 +870,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             BigDecimal earnings = BorrowEarningsUtil.getBorrowEarnings(new BigDecimal(money),borrow.getBorrowPeriod(),borrow.getBorrowStyle(),borrow.getBorrowApr());
 
             investInfo.setEarnings(df.format(earnings));
+            logger.info("本金收益  "+earnings.toString());
             if (couponUser != null && couponUser.getCouponType() == 3) {
                 investInfo.setCapitalInterest(df.format(earnings.add(couponUser.getCouponQuota()).subtract(couponInterest)));
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
+                earnings = earnings.add(couponInterest);
                 investInfo.setEarnings(df.format(earnings.add(couponInterest)));
                 investInfo.setCapitalInterest(df.format(earnings));
             } else {
+                earnings = earnings.add(couponInterest);
                 investInfo.setCapitalInterest(df.format(earnings.subtract(couponInterest)));
                 investInfo.setEarnings(df.format(earnings.add(couponInterest)));
             }
             investInfo.setCouponUser(couponUser);
-
+            logger.info("本金+优惠券收益  "+investInfo.getEarnings().toString());
             // 产品加息预期收益
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
                 if (couponUser != null && couponUser.getCouponType() == 3){
@@ -1229,10 +1249,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setStandardValues("");
             // 投资协议
             if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
-                investInfo.setRealAmount("0");
+                investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal("0")));
                 investInfo.setButtonWord("确认");
             } else {
-                investInfo.setRealAmount("¥" + money);
+                investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money)));
                 investInfo.setButtonWord("确认投资" + CommonUtils.formatAmount(null, money) + "元");
             }
 
@@ -1251,8 +1271,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         list.add(newAgreementBean);
         investInfo.setProtocols(list);
         investInfo.setProtocolUrlDesc("协议列表");
-        investInfo.setUsedCouponDes("未使用");
-        investInfo.setIsUsedCoupon("0");
     }
 
     /**

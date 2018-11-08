@@ -210,6 +210,9 @@ public class AdminMenuController extends BaseConfigController {
 		}
 		AdminMenuVO amv=new AdminMenuVO();
 		BeanUtils.copyProperties(this.adminMenuService.getRecord(menuUuid),amv);
+		if(!amv.getMenuPuuid().endsWith("0")) {
+			amv.setpMenuName(this.adminMenuService.getRecord(amv.getMenuPuuid()).getMenuName());
+		}
 		bean.setAdminMenu(amv);
 		
 		return bean;

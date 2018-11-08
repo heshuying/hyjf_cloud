@@ -976,7 +976,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 			// 循环进行还款
 			for (BorrowApicron apicron : listApicron) {
 				//判断是否为一次性还款，并且排序正确
-				if("1".equals(apicron.getIsAllrepay()) && !sortRepay(apicron)){
+				if(1 == apicron.getIsAllrepay().intValue() && !sortRepay(apicron)){
 					continue;
 				}
 				int errorCnt = 0;

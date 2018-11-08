@@ -337,7 +337,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setInviteDepartmentName(tenderBg.getInviteDepartmentName());
         borrowTender.setInviteUserId(tenderBg.getInviteUserId());
         borrowTender.setInviteUserName(tenderBg.getInviteUserName());
-        borrowTender.setInviteUserAttribute(tenderBg.getAttribute());
+        borrowTender.setInviteUserAttribute(tenderBg.getInviteUserAttribute());
+        borrowTender.setTenderUserAttribute(tenderBg.getTenderUserAttribute());
         borrowTender.setInvestType(0);
         // 单笔投资的融资服务费
         borrowTender.setLoanFee(tenderBg.getPerService());

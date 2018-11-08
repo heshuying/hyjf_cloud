@@ -1604,7 +1604,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 				return 2;
 			}
 			UserInfo info = userInfoMapper.selectByPrimaryKey(user.get(0).getUserId());
-			if(info.getRoleId()!=2) {
+			if(info==null || info.getRoleId()!=2) {
 				return 4;
 			}
 			// 判断是否服务费授权 和还款授权
