@@ -76,7 +76,7 @@ public class WrbInfoSericeImpl implements WrbInfoServcie {
 
     @Override
     public WrbBorrowTenderSumCustomizeVO searchBorrowTenderSumByNidAndTime(String borrowNid, Date investTime) {
-        return null;
+        return amTradeClient.searchBorrowTenderSumByNidAndTime(borrowNid, investTime);
     }
 
     @Override

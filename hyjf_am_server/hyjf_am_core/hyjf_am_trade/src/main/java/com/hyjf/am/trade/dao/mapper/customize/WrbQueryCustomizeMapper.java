@@ -9,6 +9,7 @@ import com.hyjf.am.trade.dao.model.customize.WrbRecoverCustomize;
 import com.hyjf.am.vo.api.WrbDaySumCustomize;
 import org.apache.ibatis.annotations.Param;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
+import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderSumCustomize;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -65,4 +66,12 @@ public interface WrbQueryCustomizeMapper {
      * @return
      */
     List<WrbBorrowTenderCustomize> selectWrbBorrowTender(@Param("borrowNid") String borrowNid, @Param("investTime")Date date);
+
+    /**
+     * 根据标的号和日期查询投资情况
+     * @param borrowNid
+     * @param date
+     * @return
+     */
+    WrbBorrowTenderSumCustomize getBorrowTenderByBorrowNidAndTime(@Param("borrowNid") String borrowNid, @Param("investTime")Date date);
 }

@@ -46,6 +46,7 @@ public class TenderCommissionServiceImpl  extends BaseServiceImpl implements Ten
         TenderCommissionExample.Criteria criteria = tenderCommissionExample.createCriteria();
         criteria.andBorrowNidEqualTo(request.getBorrowNid());
         criteria.andOrdidEqualTo(request.getOrdid());
+        criteria.andTenderIdEqualTo(request.getTenderId());
         criteria.andTenderTypeEqualTo(1);
         return tenderCommissionMapper.countByExample(tenderCommissionExample);
     }

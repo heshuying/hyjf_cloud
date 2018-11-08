@@ -10,6 +10,7 @@
         <result column="account" property="account" />
         <result column="commission" property="commission" />
         <result column="recover_last_time" property="recoverLastTime" />
+        <result column="web_status" property="webStatus" />
     </resultMap>
     <!-- *****************************************查找直投提成列表***************************************** -->
     <select id="queryPushMoneyCount" resultType="java.lang.Integer"

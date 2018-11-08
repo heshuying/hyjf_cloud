@@ -57,6 +57,17 @@ public class PushMoneyCustomize {
     // 提成发放时间
     private String sendTimeView;
 
+    //计算提成状态 0未计算 1已计算
+    private String webStatus;
+
+    public String getWebStatus() {
+        return webStatus;
+    }
+
+    public void setWebStatus(String webStatus) {
+        this.webStatus = webStatus;
+    }
+
     public Integer getId() {
         return id;
     }

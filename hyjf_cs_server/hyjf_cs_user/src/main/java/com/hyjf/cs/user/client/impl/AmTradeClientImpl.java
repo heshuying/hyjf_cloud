@@ -34,6 +34,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.validator.Validator;
@@ -752,6 +753,18 @@ public class AmTradeClientImpl implements AmTradeClient {
         WrbBorrowTenderCustomizeResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/wrb/wrb_borrow_tender", request, WrbBorrowTenderCustomizeResponse.class);
         if (response != null) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public WrbBorrowTenderSumCustomizeVO searchBorrowTenderSumByNidAndTime(String borrowNid, Date investTime) {
+        WrbInvestRequest request = new WrbInvestRequest();
+        request.setDate(investTime);
+        request.setBorrowNid(borrowNid);
+        WrbBorrowTenderSumCustomizeResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/wrb/search_borrow_tender_sum", request, WrbBorrowTenderSumCustomizeResponse.class);
+        if (response != null) {
+            return response.getResult();
         }
         return null;
     }
