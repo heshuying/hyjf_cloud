@@ -210,9 +210,9 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             String[] split = path.split(",");
             String filePath = split[1];
             Map<String, String> nameMaps = new HashMap<>();
-            nameMaps.put("couponCode", "couponCode");
-            nameMaps.put("activityId", "activityId");
             nameMaps.put("userName", "userName");
+            nameMaps.put("activityId", "activityId");
+            nameMaps.put("couponCode", "couponCode");
             ReadExcel readExcel = new ReadExcel();
             List<JSONObject> list = new ArrayList<>();
             try {
