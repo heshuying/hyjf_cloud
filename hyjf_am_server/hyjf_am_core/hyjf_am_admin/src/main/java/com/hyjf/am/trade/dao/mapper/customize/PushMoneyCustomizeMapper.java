@@ -6,6 +6,7 @@ package com.hyjf.am.trade.dao.mapper.customize;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -62,5 +63,5 @@ public interface PushMoneyCustomizeMapper {
      */
     int queryCrmCuttype(Integer userId);
 
-    UserInfoCustomizeVO queryUserInfoByUserId(Integer userId);
+    UserInfoCustomizeVO queryUserInfoByUserId(@Param("userId")Integer userId);
 }

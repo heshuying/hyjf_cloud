@@ -13,6 +13,7 @@ import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbRecoverCustomize;
+import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderSumCustomize;
 import com.hyjf.am.trade.service.api.wrb.WrbInfoService;
 import com.hyjf.am.vo.api.WrbDaySumCustomize;
 import com.hyjf.common.util.GetDate;
@@ -249,10 +250,12 @@ public class WrbInfoServiceImpl implements WrbInfoService {
 
     @Override
     public List<WrbBorrowTenderCustomize> getBorrowTenderByBorrowNid(WrbInvestRequest request) {
-        /**
-         * 查询标的投资情况
-         */
         return wrbQueryCustomizeMapper.selectWrbBorrowTender(request.getBorrowNid(), request.getDate());
+    }
+
+    @Override
+    public WrbBorrowTenderSumCustomize getBorrowTenderByBorrowNidAndTime(WrbInvestRequest request) {
+        return wrbQueryCustomizeMapper.getBorrowTenderByBorrowNidAndTime(request.getBorrowNid(), request.getDate());
     }
 
 

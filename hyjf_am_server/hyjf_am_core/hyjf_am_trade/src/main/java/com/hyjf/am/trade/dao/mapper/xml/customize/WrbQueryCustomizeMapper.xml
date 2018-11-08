@@ -107,7 +107,26 @@
 		</where>
 	</sql>
 
-<select id="searchBorrowListByNid">
+	<resultMap id="borrowListMap" type="com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize">
+		<id column="invest_id" property="invest_id"/>
+		<id column="invest_title" property="invest_title"/>
+		<id column="invest_url" property="invest_url"/>
+		<id column="time_limit" property="time_limit"/>
+		<id column="time_limit_desc" property="time_limit_desc"/>
+		<id column="buy_limit" property="buy_limit"/>
+		<id column="buy_unit" property="buy_unit"/>
+		<id column="invested_amount" property="invested_amount"/>
+		<id column="total_amount" property="total_amount"/>
+		<id column="rate" property="rate"/>
+		<id column="progress" property="progress"/>
+		<id column="start_time" property="start_time"/>
+		<id column="payback_way" property="payback_way"/>
+		<id column="invest_condition" property="invest_condition"/>
+		<id column="project_description" property="project_description"/>
+		<id column="lose_invest" property="lose_invest"/>
+	</resultMap>
+
+<select id="searchBorrowListByNid" resultMap="borrowListMap">
 		SELECT
 			hydb.borrow_nid invest_id,
 			hbi.`name` AS invest_title,
@@ -176,6 +195,25 @@
 		t.nid,
 		t.account
 		FROM ht_borrow_tender t
+		WHERE t.borrow_nid = #{borrowNid}
+		AND t.create_time >= #{investTime}
+	</select>
+
+	<resultMap id="borrowTenderSumMap" type="com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderSumCustomize">
+		<result column="first_invest_time" property="firstInvestTime" jdbcType="VARCHAR"/>
+		<result column="last_invest_time" property="lastInvestTime" jdbcType="VARCHAR"/>
+		<result column="all_investors" property="allInvestors" jdbcType="VARCHAR"/>
+		<result column="invest_all_money" property="investAllMoney" jdbcType="DECIMAL"/>
+		<result column="borrow_id" property="borrowId" jdbcType="DECIMAL"/>
+	</resultMap>
+
+	<select id="getBorrowTenderByBorrowNidAndTime" resultMap="borrowTenderSumMap">
+		select  DATE_FORMAT(MIN(t.create_time),'%Y-%m-%d %H:%i:%s') AS first_invest_time,
+		DATE_FORMAT(MAX(t.create_time),'%Y-%m-%d %H:%i:%s') AS last_invest_time,
+		COUNT(*) AS all_investors,
+		SUM(t.account) AS invest_all_money,
+		i.user_id AS borrow_id
+		FROM ht_borrow_tender t LEFT JOIN ht_borrow i ON i.borrow_nid = t.borrow_nid
 		WHERE t.borrow_nid = #{borrowNid}
 		AND t.create_time >= #{investTime}
 	</select>

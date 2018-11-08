@@ -185,7 +185,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setTxDate(GetOrderIdUtils.getTxDate());
         bean.setTxTime(GetOrderIdUtils.getTxTime());
         // 消息类型(密码重置)
-        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET);
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
         if(user.getUserType() == 1){
             //企业用户 传组织机构代码
             CorpOpenAccountRecordVO record= getCorpOpenAccountRecord(userId);
@@ -561,7 +561,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
 
     @Override
     public Map<String, Object> resetAppPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
-        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET);
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
         bean.setChannel(BankCallConstant.CHANNEL_APP);
         if(user.getUserType() == 1){
             CorpOpenAccountRecordVO record= this.getCorpOpenAccountRecord(user.getUserId());
@@ -582,7 +582,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
-        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         Map<String,Object> resultMap = new HashMap<>();
@@ -653,7 +653,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     @Override
     public Map<String, Object> resetWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
         // 消息类型
-        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET);
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
         bean.setChannel(BankCallConstant.CHANNEL_APP);
         if(user.getUserType() == 1){
             //企业用户 传组织机构代码
@@ -676,7 +676,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
-        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         // 跳转到汇付天下画面
