@@ -82,10 +82,12 @@ public class BankAleveController extends BaseController {
 	 */
 	private Map<String, Object> paramSet(BankAleveRequest request) {
 		Map<String, Object> mapParam = new HashMap<String, Object>();
-		//自动同步用生成订单id
-		mapParam.put("orderId", request.getOrderId());
-		//userid
-		mapParam.put("userId", request.getUserId());
+		//电子账号
+		mapParam.put("cardnbr", request.getCardnbr());
+		//系统跟踪号
+		mapParam.put("seqno", request.getSeqno());
+		//交易类型
+		mapParam.put("transtype", request.getTranstype());
 		//入账日期起止
 		mapParam.put("startValdate", request.getStartValdate());
 		mapParam.put("endValdate", request.getEndValdate());
